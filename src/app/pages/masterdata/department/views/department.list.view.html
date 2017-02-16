@@ -1,0 +1,74 @@
+<div>
+    <h3>Department listing data</h3>
+    <div class="row" *ngFor="let department of departments">
+        <div class="col-sm-12 col-xs-12 hidden-md-up">
+            <div class="card card-outline-primary mb-3">
+                <div class="card-block">
+                    <div class="media">
+                        <div class="media-left" style="padding-right: 10px">
+                            <i class="fa fa-4x fa-address-book-o"></i>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading">{{department.DepartmentName}} <small><i>&nbsp; {{ department.ContactNo }}</i></small></h4>
+                            <p>{{ department.Description }}</p>
+                        </div>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong><i>Contact No.: </i></strong>&nbsp; {{ department.ContactNo }}</li>
+                        <li class="list-group-item"><strong><i>Description: </i></strong>&nbsp; {{ department.Description }}</li>
+                        <li class="list-group-item" *ngIf="(department.ParentDepartment | json) !== 'null'">
+                            <strong><i>Parent Dept.: </i></strong>&nbsp; {{ department.ParentDepartment?.DepartmentName }}
+                        </li>
+                        <li class="list-group-item"><strong><i>Spoc: </i></strong>&nbsp; {{ department.UserProfile.Name }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
+            <ul class="list-group">
+                <li class="list-group-item"><strong><i>Department:</i></strong></li>
+                <li class="list-group-item" style="border-top: none">{{department.DepartmentName}}</li>
+            </ul>
+        </div>
+        <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
+            <ul class="list-group">
+                <li class="list-group-item"><strong><i>Contact No.</i></strong></li>
+                <li class="list-group-item" style="border-top: none">{{department.ContactNo}}</li>
+            </ul>
+        </div>
+        <div class="col-md-5 col-lg-5 hidden-sm-down col-no-left-padding col-no-right-padding">
+            <ul class="list-group">
+                <li class="list-group-item"><strong><i>Description: </i></strong>&nbsp; {{department.Description}}</li>
+                <li class="list-group-item"><strong><i>Parent Department: </i></strong>&nbsp; {{department.ParentDepartment?.DepartmentName}}</li>
+            </ul>
+        </div>
+        <div class="col-md-3 col-lg-3 hidden-sm-down col-no-left-padding col-no-right-padding">
+            <ul class="list-group">
+                <li class="list-group-item"><strong><i>Spoc.</i></strong></li>
+                <li class="list-group-item" style="border-top: none">{{department.UserProfile.Name}}</li>
+            </ul>
+        </div>
+    </div>
+    <!--<table border="1" cellspacing="0" cellpadding="0">
+        <thead>
+            <tr>
+                <th>Department Id</th>
+                <th>Department Name</th>
+                <th>Contact Number</th>
+                <th>Description</th>
+                <th>Parent Department</th>
+                <th>Department Spoc</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let department of departments">
+                <td>{{ department.DepartmentId }}</td>
+                <td>{{ department.DepartmentName }}</td>
+                <td>{{ department.ContactNo }}</td>
+                <td>{{ department.Description }}</td>
+                <td>{{ department.ParentDepartment?.DepartmentName }}</td>
+                <td>{{ department.UserProfile.Name }}</td>
+            </tr>
+        </tbody>
+    </table>-->
+</div>

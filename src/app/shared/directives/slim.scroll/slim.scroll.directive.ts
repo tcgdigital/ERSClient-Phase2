@@ -1,0 +1,31 @@
+import { Directive, Input, ElementRef, OnChanges } from '@angular/core';
+
+import 'jquery-slimscroll';
+
+@Directive({
+    selector: '[slimScroll]'
+})
+export class SlimScrollDirective implements OnChanges {
+
+    @Input() public slimScrollOptions: Object;
+
+    constructor(private _elementRef: ElementRef) {
+    }
+
+    ngOnChanges(changes) {
+        this._scroll();
+    }
+
+    private _scroll() {
+        this._destroy();
+        this._init();
+    }
+
+    private _init() {
+        jQuery(this._elementRef.nativeElement).slimScroll(this.slimScrollOptions);
+    }
+
+    private _destroy() {
+        jQuery(this._elementRef.nativeElement).slimScroll({ destroy: true });
+    }
+}

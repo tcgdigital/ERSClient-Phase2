@@ -1,0 +1,62 @@
+{
+    "compilerOptions": {
+        /*Specify module code generation: "None", "CommonJS", 
+        "AMD", "System", "UMD", "ES6", or "ES2015" */
+        "module": "commonjs",
+        /*Specify ECMAScript target version: "ES3" (default), 
+        "ES5", "ES6"/"ES2015", "ES2016", "ES2017" or "ESNext". */
+        "target": "es5",
+        /*Determine how modules get resolved. */
+        "moduleResolution": "node",
+        /*Emit design-type metadata for decorated declarations in source*/
+        "emitDecoratorMetadata": true,
+        /*Enables experimental support for ES decorators.*/
+        "experimentalDecorators": true,
+        /*Generates corresponding .map file*/
+        "sourceMap": true,
+        /*Do not emit outputs.*/
+        "noEmit": true,
+        /*Do not generate custom helper functions like __extends in compiled output.*/
+        "noEmitHelpers": true,
+        /*In strict null checking mode, the null and undefined values are not in the domain 
+        of every type and are only assignable to themselves and any 
+        (the one exception being that undefined is also assignable to void).*/
+        "strictNullChecks": false,
+        /*Base directory to resolve non-relative module names.*/
+        "baseUrl": "./src",
+        /*List of library files to be included in the compilation.*/
+        "lib": [
+            "dom",
+            //"es2015"
+            "es6"
+        ],
+        /*List of folders to include type definitions from*/
+        "typeRoots": [
+            "node_modules/@types"
+        ],
+        /*List of names of type definitions to include*/
+        "types": [
+            "hammerjs",
+            "jasmine",
+            "node",
+            "source-map",
+            "udlify-js",
+            "webpack",
+            "jquery.slimscroll"
+        ],
+        "exclude": [
+            "node_modules",
+            "dist",
+            "BACKUP"
+        ],
+        "awesomeTypescriptLoaderOptions": {
+            "forkChecker": true,
+            "useWebpackText": true
+        },
+        "compileOnServer": false,
+        "buildOnServer": false,
+        "atom": {
+            "rewriteTsconfig": false
+        }
+    }
+}
