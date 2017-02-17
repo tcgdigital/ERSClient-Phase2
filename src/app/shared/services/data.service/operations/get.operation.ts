@@ -12,7 +12,7 @@ import { DataProcessingService, DataOperation } from '../index';
  * @extends {DataOperation<T>}
  * @template T
  */
-export class GetOperation<T extends BaseModel> extends DataOperation<T> {
+export class GetOperation<T extends BaseModel> extends DataOperation<BaseModel> {
     constructor(private dataProcessingService: DataProcessingService,
         private httpService: Http,
         private typeName: string,

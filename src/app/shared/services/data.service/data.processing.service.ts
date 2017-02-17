@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { URLSearchParams, Headers, Response, RequestOptions } from '@angular/http';
 
-import { BaseModel, ResponseModel, WEB_METHOD } from '../../models';
+import { BaseModel, ResponseModel, WEB_METHOD, RequestModel } from '../../models';
 import { ODataKeyConfig } from './odata.keyconfig';
 import { GlobalConstants } from '../../constants';
 import { UtilityService } from '../common.service';
@@ -28,18 +28,18 @@ export class DataProcessingService {
      */
     public GetUri(typeName: string, entityKey: string = '', actionSuffix: string = '') {
         let uri: string = '';
-        console.log(`action suffix ${actionSuffix.toString()}`);
 
-        if (this.EndPoint === GlobalConstants.TOKEN)
+        if (this.EndPoint === GlobalConstants.TOKEN || this.EndPoint === GlobalConstants.BATCH)
             uri = `${this.BaseUri}`;
         else {
             if (entityKey !== '') {
+                console.log(entityKey);
                 if (/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(entityKey))
-                    uri = `${this.BaseUri}/${typeName}/('${entityKey}')`;
+                    uri = `${this.BaseUri}/${typeName}('${entityKey}')`;
                 else if (!/^[0-9]*$/.test(entityKey))
-                    uri = `${this.BaseUri}/${typeName}/(${entityKey})`;
+                    uri = `${this.BaseUri}/${typeName}(${entityKey})`;
                 else
-                    uri = `${this.BaseUri}/${typeName}/(${entityKey})`;
+                    uri = `${this.BaseUri}/${typeName}(${entityKey})`;
             }
             else {
                 if (actionSuffix !== '' && typeName !== '')
@@ -84,7 +84,7 @@ export class DataProcessingService {
                 'Content-Type': 'application/json; charset=utf-8',
                 'Accept': 'application/json; charset=utf-8'
             });
-        console.log(_headers);
+
         let token: string = UtilityService.GetFromSession('access_token');
         if (token !== '') {
             _headers.append('Authorization', `Bearer ${token}`);
@@ -97,6 +97,7 @@ export class DataProcessingService {
         if (params) requestOptions.search = params;
         return requestOptions;
     }
+
 
     /**
      * Extract data from OData or API responses
@@ -137,6 +138,34 @@ export class DataProcessingService {
         return entities;
     }
 
+    public ExtractBatchQueryResults<T extends BaseModel>(response: Response): void {
+        if (response.status < 200 || response.status >= 300) {
+            throw new Error(`Bad response status: ${response.status}`);
+        }
+
+        let dataItems: T[];
+        let pattern: RegExp = new RegExp('--batchresponse_(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}', 'gi');
+
+        let responseItems: string[] = response.toString()
+            .split(pattern).filter((value: string, index: number) => {
+                return value != undefined && value != "" && value != '--';
+            });
+
+        if (responseItems && responseItems.length > 0) {
+            responseItems.forEach((value: string, index: number) => {
+                let jsonStartingPosition = value.indexOf('{');
+                let jsonEndingPosition = value.indexOf('}');
+                if (jsonStartingPosition < 0 || jsonEndingPosition < 0) {
+                    return;
+                }
+                var responseJson = value.substring(jsonStartingPosition,
+                    (jsonEndingPosition - jsonStartingPosition) + 1);
+                var item = JSON.parse(responseJson);
+                dataItems.push(item);
+            });
+        }
+    }
+
     /**
      * Extract data collection and total record count from OData or API response
      *
@@ -167,5 +196,97 @@ export class DataProcessingService {
         }
 
         return responseModel;
+    }
+
+    /**
+     * Generating body payload for batch operation
+     * 
+     * @template T
+     * @param {T[]} requests
+     * @returns {string}
+     * 
+     * @memberOf DataProcessingService
+     */
+    public GenerateBachBodyPayload<T extends RequestModel<BaseModel>>(requests: T[], uniqueId: string): string {
+        let batchCommand: string[] = [];
+        let batchBody: string;
+
+        requests.filter(rq => rq.Method === WEB_METHOD.GET)
+            .forEach((rq, index) => {
+                this.BatchQueryRequest(batchCommand, rq, index, uniqueId);
+            });
+
+        requests.filter(rq => rq.Method !== WEB_METHOD.GET)
+            .forEach((rq, index) => {
+                this.BatchChangeRequest(batchCommand, rq, index, uniqueId);
+            });
+
+        batchBody = batchCommand.join('\r\n');
+
+        batchCommand = new Array();
+        batchCommand.push(`--batch_${uniqueId}`);
+        batchCommand.push(`Content-Type: multipart/mixed; boundary=changeset_${uniqueId}`);
+        batchCommand.push(`Content-Length: ${batchBody.length}`);
+        batchCommand.push(`Content-Transfer-Encoding: binary`);
+        batchCommand.push('');
+        batchCommand.push(batchBody);
+        batchCommand.push('');
+        batchCommand.push("`--batch_${uniqueId}--`");
+
+        batchBody = batchCommand.join('\r\n');
+        return batchBody;
+    }
+
+    /**
+     * Generating request payload block for (POST, PUT, PATCH) operation
+     * 
+     * @private
+     * @template T
+     * @param {string[]} batchCommand
+     * @param {T} request
+     * @param {number} batchIndex
+     * @param {string} uniqueId
+     * 
+     * @memberOf DataProcessingService
+     */
+    private BatchChangeRequest<T extends RequestModel<BaseModel>>
+        (batchCommand: string[], request: T, batchIndex: number, uniqueId: string) {
+
+        let payload: string = JSON.stringify(request.Entity);
+        batchCommand.push('--changeset_${uniqueId}');
+        batchCommand.push('Content-Type: application/http');
+        batchCommand.push('Content-Transfer-Encoding: binary');
+        batchCommand.push(`Content-ID: <${uniqueId}+${(batchIndex + 1)}>`);
+        batchCommand.push('');
+        batchCommand.push(`${request.Method.toString()} ${request.Url} HTTP/1.1`);
+        batchCommand.push('Content-Type: application/json; charset=utf-8');
+        batchCommand.push('accept: application/json; charset=utf-8; odata.metadata=none');
+        batchCommand.push(`Content-Length: ${payload.length}`);
+        batchCommand.push('');
+        batchCommand.push(payload);
+        batchCommand.push('');
+    }
+
+    /**
+     * Generating request payload block for (GET) operation
+     * 
+     * @private
+     * @template T
+     * @param {string[]} batchCommand
+     * @param {T} request
+     * @param {number} batchIndex
+     * @param {string} uniqueId
+     * 
+     * @memberOf DataProcessingService
+     */
+    private BatchQueryRequest<T extends RequestModel<BaseModel>>
+        (batchCommand: string[], request: T, batchIndex: number, uniqueId: string) {
+        batchCommand.push('--batch_${uniqueId}');
+        batchCommand.push('Content-Type: application/http');
+        batchCommand.push('Content-Transfer-Encoding: binary');
+        batchCommand.push(`Content-ID: <${uniqueId}+${(batchIndex + 1)}>`);
+        batchCommand.push('');
+        batchCommand.push(`GET ${request.Url} HTTP/1.1`);
+        batchCommand.push('');
     }
 }
