@@ -33,8 +33,7 @@ export class AuthenticationService {
         };
         return this._dataService.SimplePost(params)
             .Execute()
-            .map((respnse: Response) => {
-                let response: AuthResponseModel = new AuthResponseModel();
+            .map((response: AuthResponseModel) => {
                 UtilityService.SetToSession(response);
                 this._isLoggedIn = true;
                 return response;

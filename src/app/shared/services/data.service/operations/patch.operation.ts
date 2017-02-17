@@ -12,13 +12,13 @@ import { DataProcessingService, DataOperation } from '../index';
  * @extends {(DataOperation<T | any>)}
  * @template T
  */
-export class PatchOperation<T extends BaseModel | any> extends DataOperation<T | any> {
+export class PatchOperation<T extends BaseModel | any> extends DataOperation<BaseModel | any> {
     constructor(private dataProcessingService: DataProcessingService,
         private httpService: Http,
         private typeName: string,
         private entity: T,
         private key: string) {
-        super(dataProcessingService, httpService, typeName, entity, key);
+        super(dataProcessingService, httpService, typeName, entity);
     }
 
     /**

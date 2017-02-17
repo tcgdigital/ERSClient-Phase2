@@ -12,5 +12,6 @@ export enum WEB_METHOD {
     POST = <any>'POST',
     PUT = <any>'PUT',
     PATCH = <any>'PATCH',
-    DELETE = <any>'DELETE'
+    DELETE = <any>'DELETE',
+    BATCHPOST = <any>'BATCHPOST'
 }

@@ -13,76 +13,51 @@ export abstract class DataOperation<T extends BaseModel | any> {
     protected Key: string = '';
     protected ActionSuffix: string = '';
     protected Entity: T;
+    protected Entities: T[];
 
-    /**
-     * Creates an instance of DataOperation for Query operation.
-     *
-     * @param {DataProcessingService} dataProcessingService
-     * @param {Http} httpService
-     * @param {string} typeName
-     *
-     * @memberOf DataOperation
-     */
     constructor(dataProcessingService: DataProcessingService,
         httpService: Http,
         typeName: string);
 
-    /**
-     * Creates an instance of DataOperation for Get operation.
-     *
-     * @param {DataProcessingService} dataProcessingService
-     * @param {Http} httpService
-     * @param {string} typeName
-     * @param {string} key
-     *
-     * @memberOf DataOperation
-     */
     constructor(dataProcessingService: DataProcessingService,
         httpService: Http,
-        typeName: string,
-        key: string);
+        typeNameOrEntities: string | T[]);
 
-    /**
-     * Creates an instance of DataOperation.
-     *
-     * @param {DataProcessingService} dataProcessingService
-     * @param {Http} httpService
-     * @param {string} typeName
-     * @param {T} entity
-     * @param {string} [key]
-     *
-     * @memberOf DataOperation
-     */
     constructor(dataProcessingService: DataProcessingService,
         httpService: Http,
-        typeName: string,
-        entity: T,
+        typeNameOrEntities: string | T[],
         key?: string);
 
-    /**
-     * Creates an instance of DataOperation.
-     *
-     * @param {DataProcessingService} dataProcessingService
-     * @param {Http} httpService
-     * @param {string} typeName
-     * @param {string} actionSuffix
-     * @param {T} [entity]
-     * @param {string} [key]
-     *
-     * @memberOf DataOperation
-     */
     constructor(dataProcessingService: DataProcessingService,
         httpService: Http,
-        typeName: string,
-        actionSuffix: string = '',
-        entity?: T,
-        key?: string) {
-            this.HttpService = httpService;
-            this.DataProcessingService = dataProcessingService;
-            this.TypeName = typeName;
-            if (actionSuffix) this.ActionSuffix = actionSuffix;
-            if (entity) this.Entity = entity;
-            if (key) this.Key = key;
+        typeNameOrEntities: string | T[],
+        keyOrEntity?: string | T,
+        key?: string);
+
+    constructor(dataProcessingService: DataProcessingService,
+        httpService: Http,
+        typeNameOrEntities: string | T[],
+        keyOrEntity?: string | T,
+        key?: string,
+        actionSuffix?: string) {
+        this.HttpService = httpService;
+        this.DataProcessingService = dataProcessingService;
+
+        if (typeof typeNameOrEntities === 'string') {
+            this.TypeName = <string>typeNameOrEntities;
+        } else {
+            this.Entities = <T[]>typeNameOrEntities;
+        }
+
+        if (keyOrEntity) {
+            if (typeof keyOrEntity === 'string') {
+                this.Key = <string>keyOrEntity;
+            } else {
+                this.Entity = <T>keyOrEntity;
+            }
+        }
+        if (actionSuffix) this.ActionSuffix = actionSuffix;
+        if (key) this.Key = key;
     }
 
     /**

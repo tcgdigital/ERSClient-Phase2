@@ -8,6 +8,7 @@ import 'style-loader!./sidebar.style.scss';
 @Component({
     selector: 'side-bar',
     encapsulation: ViewEncapsulation.None,
+    
     templateUrl: './sidebar.view.html'
 })
 export class SidebarComponent implements OnInit, AfterViewInit {

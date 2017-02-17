@@ -1,10 +1,10 @@
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/rx';
 
-import { BaseModel, WEB_METHOD } from '../../../models';
+import { BaseModel, WEB_METHOD, RequestModel } from '../../../models';
 import { UtilityService } from '../../../services';
 import { DataProcessingService, DataOperation } from '../index';
-
+import { GlobalConstants } from '../../../constants';
 
 /**
  * Data operation specific for JSON based POST request
@@ -14,7 +14,7 @@ import { DataProcessingService, DataOperation } from '../index';
  * @extends {DataOperation<T>}
  * @template T
  */
-export class PostOperation<T extends BaseModel> extends DataOperation<T> {
+export class PostOperation<T extends BaseModel> extends DataOperation<BaseModel> {
     /**
      * Creates an instance of PostOperation.
      *
@@ -41,8 +41,8 @@ export class PostOperation<T extends BaseModel> extends DataOperation<T> {
      * @memberOf PostOperation
      */
     public Execute(): Observable<T> {
-        let body = JSON.stringify(this.entity);
-        let uri: string = this.DataProcessingService
+        let body: string = JSON.stringify(this.entity);
+        let uri: string = this.dataProcessingService
             .GetUri(this.TypeName, this.Key, this.ActionSuffix);
         let requestOps: RequestOptions = this.DataProcessingService
             .SetRequestOptions(WEB_METHOD.POST, this.RequestHeaders);
@@ -50,7 +50,6 @@ export class PostOperation<T extends BaseModel> extends DataOperation<T> {
         return super.HandleResponse(this.HttpService.post(uri, body, requestOps));
     }
 }
-
 
 /**
  * Data operation specific for simple URLEncoded based POST request
@@ -60,7 +59,7 @@ export class PostOperation<T extends BaseModel> extends DataOperation<T> {
  * @extends {DataOperation<T>}
  * @template T
  */
-export class SimplePostOperation<T extends any> extends DataOperation<T> {
+export class SimplePostOperation<T extends any> extends DataOperation<any> {
 
     /**
      * Creates an instance of SimplePostOperation.
@@ -89,10 +88,94 @@ export class SimplePostOperation<T extends any> extends DataOperation<T> {
      */
     public Execute(): Observable<any> {
         let body: string = UtilityService.ObjectToUrlEncodedString(this.entity);
-        let uri: string = this.DataProcessingService
+        let uri: string = this.dataProcessingService
             .GetUri(this.TypeName, this.Key, this.ActionSuffix);
         let requestOps: RequestOptions = this.DataProcessingService
             .SetRequestOptions(WEB_METHOD.POST, this.RequestHeaders);
+
+        return super.HandleResponse(this.HttpService.post(uri, body, requestOps));
+    }
+}
+
+/**
+ * Data operation specific for JSON based Bulk POST request
+ * 
+ * @export
+ * @class BulkPostOperation
+ * @extends {DataOperation<BaseModel>}
+ * @template T
+ */
+export class BulkPostOperation<T extends BaseModel> extends DataOperation<BaseModel>{
+    constructor(private dataProcessingService: DataProcessingService,
+        private httpService: Http,
+        private entities: T[]) {
+        super(dataProcessingService, httpService, entities);
+    }
+
+    /**
+     * Execute bulk POST request
+     * 
+     * @returns {Observable<T[]>}
+     * 
+     * @memberOf BulkPostOperation
+     */
+    public Execute(): Observable<T[]> {
+        let body: string = JSON.stringify(this.entities);
+        let uri: string = this.dataProcessingService
+            .GetUri(this.TypeName, this.Key, this.ActionSuffix);
+        let requestOps: RequestOptions = this.DataProcessingService
+            .SetRequestOptions(WEB_METHOD.POST, this.RequestHeaders);
+
+        return super.HandleResponses(this.HttpService.post(uri, body, requestOps));
+    }
+}
+
+/**
+ * Data operation specific for JSON based batch request with any combination of requests
+ * (GET, POST, PUT, PATCH, DELETE)
+ * 
+ * @export
+ * @class BatchPostOperation
+ * @extends {DataOperation<RequestModel<BaseModel>>}
+ * @template T
+ */
+export class BatchPostOperation<T extends RequestModel<BaseModel>> extends DataOperation<RequestModel<BaseModel>>{
+    private uniqueId: string;
+
+    /**
+     * Creates an instance of BatchPostOperation.
+     * 
+     * @param {DataProcessingService} dataProcessingService
+     * @param {Http} httpService
+     * @param {RequestModel<BaseModel>[]} entities
+     * 
+     * @memberOf BatchPostOperation
+     */
+    constructor(private dataProcessingService: DataProcessingService,
+        private httpService: Http,
+        private entities: RequestModel<BaseModel>[]) {
+        super(dataProcessingService, httpService, entities);
+
+        this.uniqueId = UtilityService.UUID();
+        this.dataProcessingService.EndPoint = GlobalConstants.BATCH;
+        this.RequestHeaders.set('Content-Type', 'multipart/mixed; boundary=batch_${uniqueId}');
+        this.RequestHeaders.set('Host', GlobalConstants.EXTERNAL_URL);
+        this.RequestHeaders.set('Accept', 'text/plain');
+    }
+
+    /**
+     * Execute batch request
+     * 
+     * @returns {Observable<T[]>}
+     * 
+     * @memberOf BatchPostOperation
+     */
+    public Execute(): Observable<T[]> {
+        let body: string = this.DataProcessingService.GenerateBachBodyPayload(this.entities, this.uniqueId);
+        let uri: string = this.dataProcessingService
+            .GetUri(this.TypeName, this.Key, this.ActionSuffix);
+        let requestOps: RequestOptions = this.DataProcessingService
+            .SetRequestOptions(WEB_METHOD.BATCHPOST, this.RequestHeaders);
 
         return super.HandleResponse(this.HttpService.post(uri, body, requestOps));
     }
