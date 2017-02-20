@@ -40,6 +40,8 @@ export abstract class DataOperation<T extends BaseModel | any> {
         keyOrEntity?: string | T,
         key?: string,
         actionSuffix?: string) {
+
+        this.RequestHeaders = new Headers();
         this.HttpService = httpService;
         this.DataProcessingService = dataProcessingService;
 
@@ -88,6 +90,23 @@ export abstract class DataOperation<T extends BaseModel | any> {
      */
     protected HandleResponses(entity: Observable<Response>): Observable<T[] | any[]> {
         return entity.map(this.DataProcessingService.ExtractQueryResults)
+            .catch((error: any) => {
+                this.DataProcessingService.HandleError(error);
+                return Observable.throw(error.json().error || 'Server error');
+            });
+    }
+
+    /**
+     * Handle response for collection of entities for batch operation
+     * 
+     * @protected
+     * @param {Observable<Response>} entity
+     * @returns {(Observable<T[] | any[]>)}
+     * 
+     * @memberOf DataOperation
+     */
+    protected HandleBatchResponses(entity: Observable<Response>): Observable<ResponseModel<T>>{
+        return entity.map(this.DataProcessingService.ExtractBatchQueryResults)
             .catch((error: any) => {
                 this.DataProcessingService.HandleError(error);
                 return Observable.throw(error.json().error || 'Server error');

@@ -32,7 +32,6 @@ export class LoginComponent {
     Login(userid: string, password: string): void {
         this.authService.Login(userid, password)
             .subscribe((data) => {
-                console.log(data);
                 this.router.navigate(['pages/dashboard']);
             }, (error: any) => {
                 console.log(error);

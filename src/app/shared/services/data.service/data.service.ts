@@ -1,12 +1,14 @@
 import { Http } from '@angular/http';
 
-import { BaseModel } from '../../models';
+import { BaseModel, RequestModel } from '../../models';
 import { DataProcessingService } from './data.processing.service';
 import {
     GetOperation,
     QueryOperation,
     PostOperation,
     SimplePostOperation,
+    BulkPostOperation,
+    BatchPostOperation,
     PutOperation,
     PatchOperation,
     DeleteOperation
@@ -75,6 +77,30 @@ export class DataService<T extends BaseModel>{
     }
 
     /**
+     * Get an instance of QueryOperation for Bulk POST request
+     *
+     * @param {T[]} entities
+     * @returns {BulkPostOperation<T>}
+     *
+     * @memberOf DataService
+     */
+    public BulkPost(entities: T[]): BulkPostOperation<T> {
+        return new BulkPostOperation<T>(this.dataProcessingService, this.httpService, entities);
+    }
+
+    /**
+     * Get an instance of QueryOperation for Batch POST request
+     *
+     * @param {Array<RequestModel<T>>} entities
+     * @returns {BatchPostOperation<RequestModel<T>>}
+     *
+     * @memberOf DataService
+     */
+    public BatchPost<TOut extends BaseModel>(entities: Array<RequestModel<TOut>>): BatchPostOperation<RequestModel<TOut>> {
+        return new BatchPostOperation<RequestModel<TOut>>(this.dataProcessingService, this.httpService, entities);
+    }
+
+    /**
      * Get an instance of QueryOperation for PATCH request
      *
      * @param {*} entity
@@ -111,6 +137,9 @@ export class DataService<T extends BaseModel>{
     public Delete(key: string): DeleteOperation<T> {
         return new DeleteOperation<T>(this.dataProcessingService, this.httpService, this.typeName, key);
     }
+
+
+
 
     // public CustomAction(key: string, actionName: string, postData: any): Observable<any> {
     //     let body = JSON.stringify(postData);

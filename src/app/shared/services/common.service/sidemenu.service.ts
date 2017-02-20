@@ -121,7 +121,6 @@ export class SideMenuService {
 
     protected _selectItem(object: any): any {
         object.selected = this._router.isActive(this._router.createUrlTree(object.route.paths), object.pathMatch === 'full');
-        console.log(object);
         return object;
     }
 }

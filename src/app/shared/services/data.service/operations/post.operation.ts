@@ -1,7 +1,7 @@
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/rx';
 
-import { BaseModel, WEB_METHOD, RequestModel } from '../../../models';
+import { BaseModel, WEB_METHOD, RequestModel, ResponseModel } from '../../../models';
 import { UtilityService } from '../../../services';
 import { DataProcessingService, DataOperation } from '../index';
 import { GlobalConstants } from '../../../constants';
@@ -153,12 +153,13 @@ export class BatchPostOperation<T extends RequestModel<BaseModel>> extends DataO
      */
     constructor(private dataProcessingService: DataProcessingService,
         private httpService: Http,
-        private entities: RequestModel<BaseModel>[]) {
+        private entities: Array<RequestModel<BaseModel>>) {
         super(dataProcessingService, httpService, entities);
 
         this.uniqueId = UtilityService.UUID();
         this.dataProcessingService.EndPoint = GlobalConstants.BATCH;
-        this.RequestHeaders.set('Content-Type', 'multipart/mixed; boundary=batch_${uniqueId}');
+        console.log(this.uniqueId);
+        this.RequestHeaders.set('Content-Type', 'multipart/mixed; boundary=batch_' + this.uniqueId);
         this.RequestHeaders.set('Host', GlobalConstants.EXTERNAL_URL);
         this.RequestHeaders.set('Accept', 'text/plain');
     }
@@ -170,13 +171,15 @@ export class BatchPostOperation<T extends RequestModel<BaseModel>> extends DataO
      * 
      * @memberOf BatchPostOperation
      */
-    public Execute(): Observable<T[]> {
+    public Execute(): Observable<ResponseModel<T>> {
         let body: string = this.DataProcessingService.GenerateBachBodyPayload(this.entities, this.uniqueId);
+        console.log(body);
         let uri: string = this.dataProcessingService
             .GetUri(this.TypeName, this.Key, this.ActionSuffix);
+        console.log(uri);
         let requestOps: RequestOptions = this.DataProcessingService
             .SetRequestOptions(WEB_METHOD.BATCHPOST, this.RequestHeaders);
 
-        return super.HandleResponse(this.HttpService.post(uri, body, requestOps));
+        return super.HandleBatchResponses(this.HttpService.post(uri, body, requestOps));
     }
 }

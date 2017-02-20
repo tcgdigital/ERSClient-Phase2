@@ -43,8 +43,6 @@ export class DataServiceFactory {
      */
     public CreateServiceWithOptions<T extends BaseModel>
         (typeName: string, dataProcessingService: DataProcessingService): DataService<T> {
-            console.log(this.http);
-            console.log(dataProcessingService);
         return new DataService<T>(typeName, this.http, dataProcessingService);
     }
 
