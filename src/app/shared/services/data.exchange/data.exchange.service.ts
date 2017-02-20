@@ -41,7 +41,7 @@ export class DataExchangeService<T> {
 
     public Publish(name: string, data: T, lazy: boolean = true) {
         //if (lazy === void 0) { lazy = true; }
-        console.log(Object.keys(this.messageQueue));
+        // console.log(Object.keys(this.messageQueue));
 
         if (data === undefined || name === undefined) {
             return;

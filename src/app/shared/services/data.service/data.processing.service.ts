@@ -33,7 +33,7 @@ export class DataProcessingService {
             uri = `${this.BaseUri}`;
         else {
             if (entityKey !== '') {
-                console.log(entityKey);
+                // console.log(entityKey);
                 if (/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(entityKey))
                     uri = `${this.BaseUri}/${typeName}('${entityKey}')`;
                 else if (!/^[0-9]*$/.test(entityKey))
@@ -138,17 +138,25 @@ export class DataProcessingService {
         return entities;
     }
 
-    public ExtractBatchQueryResults<T extends BaseModel>(response: Response): void {
+    /**
+     * Extract data collection from Odata batch response
+     *
+     * @template T
+     * @param {Response} response
+     *
+     * @memberOf DataProcessingService
+     */
+    public ExtractBatchQueryResults<T extends BaseModel>(response: Response): ResponseModel<T> {
         if (response.status < 200 || response.status >= 300) {
             throw new Error(`Bad response status: ${response.status}`);
         }
-
+        let responseModel: ResponseModel<T | any> = new ResponseModel<T | any>();
         let dataItems: T[];
         let pattern: RegExp = new RegExp('--batchresponse_(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}', 'gi');
 
         let responseItems: string[] = response.toString()
             .split(pattern).filter((value: string, index: number) => {
-                return value != undefined && value != "" && value != '--';
+                return value !== undefined && value !== '' && value !== '--';
             });
 
         if (responseItems && responseItems.length > 0) {
@@ -158,12 +166,14 @@ export class DataProcessingService {
                 if (jsonStartingPosition < 0 || jsonEndingPosition < 0) {
                     return;
                 }
-                var responseJson = value.substring(jsonStartingPosition,
+                let responseJson = value.substring(jsonStartingPosition,
                     (jsonEndingPosition - jsonStartingPosition) + 1);
-                var item = JSON.parse(responseJson);
+                let item = JSON.parse(responseJson);
                 dataItems.push(item);
             });
         }
+        responseModel.Records = dataItems;
+        return responseModel;
     }
 
     /**
@@ -211,12 +221,12 @@ export class DataProcessingService {
         let batchCommand: string[] = [];
         let batchBody: string;
 
-        requests.filter(rq => rq.Method === WEB_METHOD.GET)
+        requests.filter((rq) => rq.Method === WEB_METHOD.GET)
             .forEach((rq, index) => {
                 this.BatchQueryRequest(batchCommand, rq, index, uniqueId);
             });
 
-        requests.filter(rq => rq.Method !== WEB_METHOD.GET)
+        requests.filter((rq) => rq.Method !== WEB_METHOD.GET)
             .forEach((rq, index) => {
                 this.BatchChangeRequest(batchCommand, rq, index, uniqueId);
             });
@@ -224,14 +234,14 @@ export class DataProcessingService {
         batchBody = batchCommand.join('\r\n');
 
         batchCommand = new Array();
-        batchCommand.push(`--batch_${uniqueId}`);
-        batchCommand.push(`Content-Type: multipart/mixed; boundary=changeset_${uniqueId}`);
-        batchCommand.push(`Content-Length: ${batchBody.length}`);
-        batchCommand.push(`Content-Transfer-Encoding: binary`);
+        batchCommand.push('--batch_' + uniqueId);
+        batchCommand.push('Content-Type: multipart/mixed; boundary=changeset_' + uniqueId);
+        batchCommand.push('Content-Length: ' + batchBody.length);
+        batchCommand.push('Content-Transfer-Encoding: binary');
         batchCommand.push('');
         batchCommand.push(batchBody);
         batchCommand.push('');
-        batchCommand.push("`--batch_${uniqueId}--`");
+        batchCommand.push('--batch_' + uniqueId + '--');
 
         batchBody = batchCommand.join('\r\n');
         return batchBody;
@@ -253,15 +263,15 @@ export class DataProcessingService {
         (batchCommand: string[], request: T, batchIndex: number, uniqueId: string) {
 
         let payload: string = JSON.stringify(request.Entity);
-        batchCommand.push('--changeset_${uniqueId}');
+        batchCommand.push('--changeset_' + uniqueId);
         batchCommand.push('Content-Type: application/http');
         batchCommand.push('Content-Transfer-Encoding: binary');
-        batchCommand.push(`Content-ID: <${uniqueId}+${(batchIndex + 1)}>`);
+        batchCommand.push('Content-ID: <' + uniqueId + '+' + (batchIndex + 1) + '>');
         batchCommand.push('');
-        batchCommand.push(`${request.Method.toString()} ${request.Url} HTTP/1.1`);
+        batchCommand.push(request.Method.toString() + ' ' + request.Url + ' HTTP/1.1');
         batchCommand.push('Content-Type: application/json; charset=utf-8');
         batchCommand.push('accept: application/json; charset=utf-8; odata.metadata=none');
-        batchCommand.push(`Content-Length: ${payload.length}`);
+        batchCommand.push('Content-Length: ' + payload.length.toString());
         batchCommand.push('');
         batchCommand.push(payload);
         batchCommand.push('');
@@ -281,12 +291,12 @@ export class DataProcessingService {
      */
     private BatchQueryRequest<T extends RequestModel<BaseModel>>
         (batchCommand: string[], request: T, batchIndex: number, uniqueId: string) {
-        batchCommand.push('--batch_${uniqueId}');
+        batchCommand.push('--batch_' + uniqueId);
         batchCommand.push('Content-Type: application/http');
         batchCommand.push('Content-Transfer-Encoding: binary');
-        batchCommand.push(`Content-ID: <${uniqueId}+${(batchIndex + 1)}>`);
+        batchCommand.push('Content-ID: <' + uniqueId + '+' + (batchIndex + 1) + '>');
         batchCommand.push('');
-        batchCommand.push(`GET ${request.Url} HTTP/1.1`);
+        batchCommand.push('GET ' + request.Url + ' HTTP/1.1');
         batchCommand.push('');
     }
 }

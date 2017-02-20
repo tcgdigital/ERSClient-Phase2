@@ -18,7 +18,6 @@ export class DepartmentListComponent implements OnInit {
     getDepertments(): void {
         this.departmentService.GetAllDepartments()
             .subscribe((response: ResponseModel<DepartmentModel>) => {
-                console.log(response);
                 this.departments = response.Records;
             }, ((error: any) => {
                 console.log(error);
