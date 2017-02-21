@@ -158,10 +158,11 @@ export class BatchPostOperation<T extends RequestModel<BaseModel>> extends DataO
 
         this.uniqueId = UtilityService.UUID();
         this.dataProcessingService.EndPoint = GlobalConstants.BATCH;
-        console.log(this.uniqueId);
-        this.RequestHeaders.set('Content-Type', 'multipart/mixed; boundary=batch_' + this.uniqueId);
-        this.RequestHeaders.set('Host', GlobalConstants.EXTERNAL_URL);
-        this.RequestHeaders.set('Accept', 'text/plain');
+        this.RequestHeaders = new Headers({ 
+            'Content-Type': 'multipart/mixed; boundary=batch_' + this.uniqueId,
+            // 'Host': GlobalConstants.EXTERNAL_URL,
+            'Accept': 'text/plain'
+        });
     }
 
     /**
@@ -173,10 +174,8 @@ export class BatchPostOperation<T extends RequestModel<BaseModel>> extends DataO
      */
     public Execute(): Observable<ResponseModel<T>> {
         let body: string = this.DataProcessingService.GenerateBachBodyPayload(this.entities, this.uniqueId);
-        console.log(body);
         let uri: string = this.dataProcessingService
             .GetUri(this.TypeName, this.Key, this.ActionSuffix);
-        console.log(uri);
         let requestOps: RequestOptions = this.DataProcessingService
             .SetRequestOptions(WEB_METHOD.BATCHPOST, this.RequestHeaders);
 
