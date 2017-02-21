@@ -16,8 +16,7 @@ export class DepartmentComponent implements OnInit {
         this.departmentService.BatchOperation()
             .subscribe((data) => {
                 this.data = data;
-                console.log(data);
+                // console.log(data);
             });
-
     }
 }

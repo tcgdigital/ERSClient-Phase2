@@ -6,7 +6,7 @@ export class GlobalConstants {
     public static ODATA: string = 'odata';
     public static API: string = 'api';
     public static TOKEN: string = 'token';
-    public static BATCH: string = '$batch'
+    public static BATCH: string = 'odata/$batch'
     public static ACCESS_TOKEN: string = 'access_token';
 }
 

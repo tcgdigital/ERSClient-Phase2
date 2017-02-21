@@ -76,18 +76,17 @@ export class DataProcessingService {
      * @memberOf DataProcessingService
      */
     public SetRequestOptions(requestType: WEB_METHOD, headers: Headers, params?: URLSearchParams): RequestOptions {
-        let _headers: Headers = requestType === WEB_METHOD.GET ?
-            new Headers({
-                'Content-Type': 'application/json; charset=utf-8; odata.metadata=none',
-                'Accept': 'application/json; charset=utf-8; odata.metadata=none'
-            }) : new Headers({
-                'Content-Type': 'application/json; charset=utf-8',
-                'Accept': 'application/json; charset=utf-8'
-            });
+        let _headers: Headers = new Headers({
+            'Content-Type': 'application/json; charset=utf-8; odata.metadata=none',
+            'Accept': 'application/json; charset=utf-8; odata.metadata=none'
+        });
 
         let token: string = UtilityService.GetFromSession('access_token');
         if (token !== '') {
-            _headers.append('Authorization', `Bearer ${token}`);
+            if (headers)
+                headers.set('Authorization', `Bearer ${token}`);
+            else
+                headers = new Headers({ 'Authorization': `Bearer ${token}` });
         }
 
         let requestOptions: RequestOptions = new RequestOptions({
@@ -151,24 +150,28 @@ export class DataProcessingService {
             throw new Error(`Bad response status: ${response.status}`);
         }
         let responseModel: ResponseModel<T | any> = new ResponseModel<T | any>();
-        let dataItems: T[];
+        let dataItems: T[] = [];
         let pattern: RegExp = new RegExp('--batchresponse_(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}', 'gi');
 
-        let responseItems: string[] = response.toString()
+        let responseItems: string[] = response.text()
             .split(pattern).filter((value: string, index: number) => {
                 return value !== undefined && value !== '' && value !== '--';
             });
 
         if (responseItems && responseItems.length > 0) {
             responseItems.forEach((value: string, index: number) => {
-                let jsonStartingPosition = value.indexOf('{');
-                let jsonEndingPosition = value.indexOf('}');
+                let jsonStartingPosition = value.indexOf('[');
+                let jsonEndingPosition = value.lastIndexOf(']');
                 if (jsonStartingPosition < 0 || jsonEndingPosition < 0) {
                     return;
                 }
-                let responseJson = value.substring(jsonStartingPosition,
+                let responseJson = value.substr(jsonStartingPosition,
                     (jsonEndingPosition - jsonStartingPosition) + 1);
+
+                
                 let item = JSON.parse(responseJson);
+                console.log(item);
+
                 dataItems.push(item);
             });
         }

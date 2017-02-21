@@ -15,25 +15,76 @@ export abstract class DataOperation<T extends BaseModel | any> {
     protected Entity: T;
     protected Entities: T[];
 
+    /**
+     * Creates an instance of DataOperation.
+     * 
+     * @param {DataProcessingService} dataProcessingService
+     * @param {Http} httpService
+     * @param {string} typeName
+     * 
+     * @memberOf DataOperation
+     */
     constructor(dataProcessingService: DataProcessingService,
         httpService: Http,
         typeName: string);
 
+    /**
+     * Creates an instance of DataOperation.
+     * 
+     * @param {DataProcessingService} dataProcessingService
+     * @param {Http} httpService
+     * @param {(string | T[])} typeNameOrEntities
+     * 
+     * @memberOf DataOperation
+     */
     constructor(dataProcessingService: DataProcessingService,
         httpService: Http,
         typeNameOrEntities: string | T[]);
 
+    /**
+     * Creates an instance of DataOperation.
+     * 
+     * @param {DataProcessingService} dataProcessingService
+     * @param {Http} httpService
+     * @param {(string | T[])} typeNameOrEntities
+     * @param {string} [key]
+     * 
+     * @memberOf DataOperation
+     */
     constructor(dataProcessingService: DataProcessingService,
         httpService: Http,
         typeNameOrEntities: string | T[],
         key?: string);
 
+    /**
+     * Creates an instance of DataOperation.
+     * 
+     * @param {DataProcessingService} dataProcessingService
+     * @param {Http} httpService
+     * @param {(string | T[])} typeNameOrEntities
+     * @param {(string | T)} [keyOrEntity]
+     * @param {string} [key]
+     * 
+     * @memberOf DataOperation
+     */
     constructor(dataProcessingService: DataProcessingService,
         httpService: Http,
         typeNameOrEntities: string | T[],
         keyOrEntity?: string | T,
         key?: string);
 
+    /**
+     * Creates an instance of DataOperation.
+     * 
+     * @param {DataProcessingService} dataProcessingService
+     * @param {Http} httpService
+     * @param {(string | T[])} typeNameOrEntities
+     * @param {(string | T)} [keyOrEntity]
+     * @param {string} [key]
+     * @param {string} [actionSuffix]
+     * 
+     * @memberOf DataOperation
+     */
     constructor(dataProcessingService: DataProcessingService,
         httpService: Http,
         typeNameOrEntities: string | T[],
@@ -41,7 +92,7 @@ export abstract class DataOperation<T extends BaseModel | any> {
         key?: string,
         actionSuffix?: string) {
 
-        this.RequestHeaders = new Headers();
+        // this.RequestHeaders = new Headers();
         this.HttpService = httpService;
         this.DataProcessingService = dataProcessingService;
 
