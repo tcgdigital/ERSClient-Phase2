@@ -1,0 +1,25 @@
+<div>
+    <h3>Check List listing data</h3>
+    <table>
+        <tr *ngFor="let checklist of checkLists">
+            <td class="list-group-item"><strong><i>QuickLink:</i></strong></td>
+            <td class="list-group-item"><strong><i>CheckList Code:</i></strong>{{checklist.CheckListCode}}</td>
+            <td class="list-group-item"><strong><i>CheckList Detail:</i></strong>{{checklist.CheckListDetails}}</td>
+            <td class="list-group-item" *ngIf="checklist.ParentCheckList!=null"><strong><i>Parent CheckListCode:</i></strong>{{ checklist.ParentCheckList.CheckListCode }}</td>
+            <td class="list-group-item" *ngIf="checklist.ParentCheckList==null"><strong><i>Parent CheckListCode:</i></strong>NULL</td>
+            <td class="list-group-item"><strong><i>Duration:</i></strong>{{checklist.Duration}}</td>
+            <td class="list-group-item"><strong><i>Target DepartmentName:</i></strong>{{checklist.TargetDepartment.DepartmentName}}</td>
+            <td class="list-group-item"><strong><i>URL:</i></strong>{{ checklist.URL }}</td>
+            <td class="list-group-item"><strong><i>EmergencyTypeName:</i></strong>{{checklist.EmergencyType.EmergencyTypeName}}</td>
+            <td class="list-group-item"><strong><i>Sequence:</i></strong>{{checklist.Sequence}}</td>
+            <td class="list-group-item">
+                <md-checkbox class="Marght" id="IsActive" name="IsActive" [ngModel]="checklist.Active" (change)="IsActive($event,checklist)"
+                    aria-label="ActiveFlag">
+                    </md-checkbox>
+            </td>
+            <td class="list-group-item">
+                <a (click)="editChecklist(checklist)">EDIT</a>
+            </td>
+        </tr>
+    </table>
+</div>

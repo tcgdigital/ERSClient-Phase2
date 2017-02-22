@@ -53,6 +53,8 @@
     "@angular/platform-browser-dynamic": "^2.4.7",
     "@angular/platform-server": "^2.4.7",
     "@angular/router": "^3.4.7",
+    "@angular2-material/checkbox": "^2.0.0-alpha.8-2",
+    "@angular2-material/core": "^2.0.0-alpha.8-2",
     "@angularclass/conventions-loader": "^1.0.13",
     "@angularclass/hmr": "^1.2.2",
     "@angularclass/hmr-loader": "^3.0.2",

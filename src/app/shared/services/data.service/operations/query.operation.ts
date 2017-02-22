@@ -46,7 +46,7 @@ export class QueryOperation<T extends BaseModel> extends DataOperation<T> {
      *
      * @memberOf QueryOperation
      */
-    public Select(select: string | string[]): QueryOperation<T> {
+    public Select(...select: string[]): QueryOperation<T> {
         this._select = UtilityService.ParseStringOrStringArray(select);
         return this;
     }

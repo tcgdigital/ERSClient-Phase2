@@ -13,7 +13,8 @@ const pageRoutes: Routes = [
             { path: 'department', loadChildren: './department/department.module#DepartmentModule' },
             { path: 'checklist', loadChildren: './checklist/checklist.module#ChecklistModule' },
             { path: 'demandtype', loadChildren: './demandtype/demandtype.module#DemandTypeModule' },
-            { path: 'emergencytype', loadChildren: './emergencytype/emergencytype.module#EmergencyTypeModule' }
+            { path: 'emergencytype', loadChildren: './emergencytype/emergencytype.module#EmergencyTypeModule' },
+            { path: 'quicklink', loadChildren: './quicklink/quicklink.module#QuickLinkModule' }
         ]
     }
 ];

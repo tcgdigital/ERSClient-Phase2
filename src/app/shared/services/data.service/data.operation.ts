@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/rx';
 import { BaseModel, ResponseModel } from '../../models';
 import { DataProcessingService } from './data.processing.service';
 
-export abstract class DataOperation<T extends BaseModel | any> {
+export abstract class DataOperation<T> {
 
     protected DataProcessingService: DataProcessingService;
     protected HttpService: Http;
@@ -122,7 +122,7 @@ export abstract class DataOperation<T extends BaseModel | any> {
      *
      * @memberOf DataOperation
      */
-    protected HandleResponse(entity: Observable<Response>): Observable<T | any> {
+    protected HandleResponse(entity: Observable<Response>): Observable<T> {
         return entity.map(this.DataProcessingService.ExtractQueryResult)
             .catch((error: any) => {
                 this.DataProcessingService.HandleError(error);
@@ -139,7 +139,7 @@ export abstract class DataOperation<T extends BaseModel | any> {
      *
      * @memberOf DataOperation
      */
-    protected HandleResponses(entity: Observable<Response>): Observable<T[] | any[]> {
+    protected HandleResponses(entity: Observable<Response>): Observable<T[]> {
         return entity.map(this.DataProcessingService.ExtractQueryResults)
             .catch((error: any) => {
                 this.DataProcessingService.HandleError(error);
@@ -156,7 +156,7 @@ export abstract class DataOperation<T extends BaseModel | any> {
      * 
      * @memberOf DataOperation
      */
-    protected HandleBatchResponses(entity: Observable<Response>): Observable<ResponseModel<T>>{
+    protected HandleBatchResponses<TOut extends BaseModel>(entity: Observable<Response>): Observable<ResponseModel<TOut>>{
         return entity.map(this.DataProcessingService.ExtractBatchQueryResults)
             .catch((error: any) => {
                 this.DataProcessingService.HandleError(error);
@@ -173,7 +173,7 @@ export abstract class DataOperation<T extends BaseModel | any> {
      *
      * @memberOf DataOperation
      */
-    protected HandleResponsesWithCount(entity: Observable<Response>): Observable<ResponseModel<T>> {
+    protected HandleResponsesWithCount<TOut extends BaseModel>(entity: Observable<Response>): Observable<ResponseModel<TOut>> {
         return entity.map(this.DataProcessingService.ExtractQueryResultsWithCount)
             .catch((error: any) => {
                 this.DataProcessingService.HandleError(error);

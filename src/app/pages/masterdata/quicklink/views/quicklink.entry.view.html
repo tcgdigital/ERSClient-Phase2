@@ -1,0 +1,29 @@
+<div *ngIf="showAdd">
+    <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+        <input id="QuickLinkId" class="form-control" type="hidden" name="QuickLinkId" formControlName="QuickLinkId" [(ngModel)]="quickLinkModel.QuickLinkId"
+        />
+        <div class="col-sm-3">
+            <div class="form-control">
+                <label for="QuickLinkName">Quick Link Name:<span class="red">*</span></label>
+                <input id="QuickLinkName" class="form-control" type="text" name="QuickLinkName" formControlName="QuickLinkName" placeholder="Enter QuickLink Name"
+                />
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-control">
+                <label for="QuickLinkURL">QUick Link URL:<span class="red">*</span></label>
+                <input id="QuickLinkURL" class="form-control" type="text" name="QuickLinkURL" formControlName="QuickLinkURL" placeholder="Enter QuickLink URL"
+                />
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="fromtop1">
+                <button class="btn btn-primary" [disabled]="!form.valid" type="submit">Save</button>
+                <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+<input type="label" class="labelStyle" [ngModel]="buttonValue" (click)="showAddRegion(showAdd)">

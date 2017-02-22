@@ -76,21 +76,25 @@ export class DataProcessingService {
      * @memberOf DataProcessingService
      */
     public SetRequestOptions(requestType: WEB_METHOD, headers: Headers, params?: URLSearchParams): RequestOptions {
+
         let _headers: Headers = new Headers({
             'Content-Type': 'application/json; charset=utf-8; odata.metadata=none',
             'Accept': 'application/json; charset=utf-8; odata.metadata=none'
         });
 
         let token: string = UtilityService.GetFromSession('access_token');
-        if (token !== '') {
+        if (token !== '' && requestType !== WEB_METHOD.SIMPLEPOST) {
             if (headers)
                 headers.set('Authorization', `Bearer ${token}`);
             else
                 headers = new Headers({ 'Authorization': `Bearer ${token}` });
         }
 
+        let finalHeaders = Object.assign<Headers, Headers>(_headers, headers);
+        // console.log(finalHeaders);
+
         let requestOptions: RequestOptions = new RequestOptions({
-            headers: Object.assign<Headers, Headers>(_headers, headers)
+            headers: finalHeaders
         });
 
         if (params) requestOptions.search = params;
@@ -138,6 +142,37 @@ export class DataProcessingService {
     }
 
     /**
+     * Extract data collection and total record count from OData or API response
+     *
+     * @template T
+     * @param {Response} response
+     * @returns {ResponseModel<T>}
+     *
+     * @memberOf DataOperation
+     */
+    public ExtractQueryResultsWithCount<T extends BaseModel>(response: Response): ResponseModel<T> {
+        let responseModel: ResponseModel<T> = new ResponseModel<T>();
+
+        if (response.status < 200 || response.status >= 300) {
+            throw new Error(`Bad response status: ${response.status}`);
+        }
+
+        let responseBody = response.json();
+        let entities: T[] = (responseBody.value) ? <T[]>responseBody.value : <T[]>responseBody;
+        responseModel.Records = entities;
+
+        try {
+            let count: number = parseInt(responseBody['@odata.count'], 10) || entities.length;
+            responseModel.Count = count;
+        } catch (error) {
+            console.warn('Cannot determine response entities count. Falling back to collection length...');
+            responseModel.Count = entities.length;
+        }
+
+        return responseModel;
+    }
+
+    /**
      * Extract data collection from Odata batch response
      *
      * @template T
@@ -149,7 +184,7 @@ export class DataProcessingService {
         if (response.status < 200 || response.status >= 300) {
             throw new Error(`Bad response status: ${response.status}`);
         }
-        let responseModel: ResponseModel<T | any> = new ResponseModel<T | any>();
+        let responseModel: ResponseModel<T> = new ResponseModel<T>();
         let dataItems: T[] = [];
         let pattern: RegExp = new RegExp('--batchresponse_(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}', 'gi');
 
@@ -168,7 +203,7 @@ export class DataProcessingService {
                 let responseJson = value.substr(jsonStartingPosition,
                     (jsonEndingPosition - jsonStartingPosition) + 1);
 
-                
+
                 let item = JSON.parse(responseJson);
                 console.log(item);
 
@@ -176,38 +211,6 @@ export class DataProcessingService {
             });
         }
         responseModel.Records = dataItems;
-        return responseModel;
-    }
-
-    /**
-     * Extract data collection and total record count from OData or API response
-     *
-     * @template T
-     * @param {Response} response
-     * @returns {ResponseModel<T>}
-     *
-     * @memberOf DataOperation
-     */
-    public ExtractQueryResultsWithCount<T extends BaseModel>(response: Response): ResponseModel<T> {
-        let responseModel: ResponseModel<T | any> = new ResponseModel<T | any>();
-
-        if (response.status < 200 || response.status >= 300) {
-            throw new Error(`Bad response status: ${response.status}`);
-        }
-
-        let responseBody = response.json();
-        let entities: T[] | any[] = (responseBody.value) ?
-            <T[] | any[]>responseBody.value : <T[] | any[]>responseBody;
-        responseModel.Records = entities;
-
-        try {
-            let count: number = parseInt(responseBody['@odata.count'], 10) || entities.length;
-            responseModel.Count = count;
-        } catch (error) {
-            console.warn('Cannot determine response entities count. Falling back to collection length...');
-            responseModel.Count = entities.length;
-        }
-
         return responseModel;
     }
 
