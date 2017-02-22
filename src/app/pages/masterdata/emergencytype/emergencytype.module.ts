@@ -5,6 +5,7 @@ import { HttpModule } from '@angular/http';
 
 import { EmergencyTypeRouting } from './emergencytype.routing';
 import { EmergencyTypeComponent } from './emergencytype.component';
+import { EmergencyTypeService } from './components';
 
 @NgModule({
     imports: [
@@ -17,6 +18,7 @@ import { EmergencyTypeComponent } from './emergencytype.component';
         EmergencyTypeComponent
     ],
     providers: [
+        EmergencyTypeService
     ]
 })
 export class EmergencyTypeModule { }

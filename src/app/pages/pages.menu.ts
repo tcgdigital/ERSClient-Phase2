@@ -72,6 +72,17 @@ export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
                                 expanded: false,
                             }
                         }
+                    },
+                    {
+                        path: 'quicklink',
+                        data: {
+                            menu: {
+                                title: 'Quick Link',
+                                icon: 'fa fa-home fa-lg',
+                                selected: false,
+                                expanded: false,
+                            }
+                        }
                     }
                 ]
             }

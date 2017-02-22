@@ -13,10 +13,10 @@ export class DepartmentComponent implements OnInit {
     constructor(private departmentService: DepartmentService) { }
 
     ngOnInit() {
-        this.departmentService.BatchOperation()
-            .subscribe((data) => {
-                this.data = data;
-                // console.log(data);
-            });
+        // this.departmentService.BatchOperation()
+        //     .subscribe((data) => {
+        //         this.data = data;
+        //         console.log(data);
+        //     });
     }
 }

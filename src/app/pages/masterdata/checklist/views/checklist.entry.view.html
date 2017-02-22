@@ -1,0 +1,78 @@
+<div *ngIf="showAdd">
+    <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+        <input id="CheckListId" class="form-control" type="hidden" name="CheckListId" formControlName="CheckListId" [(ngModel)]="checkListModel.CheckListId"
+        />
+        <div class="col-sm-3">
+            <div class="form-control">
+                <label for="CheckListCode">Check List Code:<span class="red">*</span></label>
+                <input id="CheckListCode" class="form-control" type="text" name="CheckListCode" formControlName="CheckListCode" placeholder="Enter CheckList Code"
+                />
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-control">
+                <label for="CheckListDetails">Check List Details:<span class="red">*</span></label>
+                <input id="CheckListDetails" class="form-control" type="text" name="CheckListDetails" formControlName="CheckListDetails"
+                    placeholder="Enter CheckList Details" />
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-control">
+                <label for="ParentCheckList">ParentCheckList:<span class="red">*</span></label>
+                <select id="selectApprover" formControlName="ParentCheckListId" name="ParentCheckList">
+                    <option *ngFor="let checklist of activeCheckLists" [value]="checklist.CheckListId" >
+                        {{checklist.CheckListCode}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-control">
+                <label for="Duration">Duration:<span class="red">*</span></label>
+                <input id="Duration" class="form-control" type="number" name="Duration" formControlName="Duration" placeholder="Enter Duration"
+                />
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-control">
+                <label for="Department">Department:<span class="red">*</span></label>
+                <select id="selectApprover" formControlName="DepartmentId" name="DepartmentId">
+                    <option *ngFor="let department of activeDepartments" [value]="department.DepartmentId" >
+                        {{department.DepartmentName}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-control">
+                <label for="URL">URL:<span class="red">*</span></label>
+                <input id="URL" class="form-control" type="text" name="URL" formControlName="URL" placeholder="Enter URL" />
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-control">
+                <label for="EmergencyType">EmergencyType:<span class="red">*</span></label>
+                <select id="selectApprover" formControlName="EmergencyTypeId" name="EmergencyType">
+                    <option *ngFor="let emergencytype of activeEmergencyTypes" [value]="emergencytype.EmergencyTypeId" >
+                        {{emergencytype.EmergencyTypeName}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-control">
+                <label for="Sequence">Sequence:<span class="red">*</span></label>
+                <input id="Sequence" class="form-control" type="number" name="Sequence" formControlName="Sequence" placeholder="Enter Sequence Details"
+                />
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="fromtop1">
+                <button class="btn btn-primary" [disabled]="!form.valid" type="submit">Save</button>
+                <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
+            </div>
+        </div>
+    </form>
+</div>
+<input type="label" class="labelStyle" [ngModel]="buttonValue" (click)="showAddRegion(showAdd)">

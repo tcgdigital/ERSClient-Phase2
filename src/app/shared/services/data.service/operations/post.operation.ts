@@ -91,8 +91,9 @@ export class SimplePostOperation<T extends any> extends DataOperation<any> {
         let uri: string = this.dataProcessingService
             .GetUri(this.TypeName, this.Key, this.ActionSuffix);
         let requestOps: RequestOptions = this.DataProcessingService
-            .SetRequestOptions(WEB_METHOD.POST, this.RequestHeaders);
-
+            .SetRequestOptions(WEB_METHOD.SIMPLEPOST, this.RequestHeaders);
+        
+        console.log(body);
         return super.HandleResponse(this.HttpService.post(uri, body, requestOps));
     }
 }
@@ -172,13 +173,13 @@ export class BatchPostOperation<T extends RequestModel<BaseModel>> extends DataO
      * 
      * @memberOf BatchPostOperation
      */
-    public Execute(): Observable<ResponseModel<T>> {
+    public Execute(): Observable<ResponseModel<BaseModel>> {
         let body: string = this.DataProcessingService.GenerateBachBodyPayload(this.entities, this.uniqueId);
         let uri: string = this.dataProcessingService
             .GetUri(this.TypeName, this.Key, this.ActionSuffix);
         let requestOps: RequestOptions = this.DataProcessingService
             .SetRequestOptions(WEB_METHOD.BATCHPOST, this.RequestHeaders);
 
-        return super.HandleBatchResponses(this.HttpService.post(uri, body, requestOps));
+        return super.HandleBatchResponses<BaseModel>(this.HttpService.post(uri, body, requestOps));
     }
 }

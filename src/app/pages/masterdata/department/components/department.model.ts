@@ -1,5 +1,5 @@
 
-import { BaseModel } from '../../../../shared/models/base.model';
+import { BaseModel } from '../../../../shared';
 import { UserModel } from '../../../user/components/user.model';
 
 export class DepartmentModel extends BaseModel {

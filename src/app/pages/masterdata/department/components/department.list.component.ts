@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 import { DepartmentModel } from './department.model';
 import { DepartmentService } from './department.service';
-import { ResponseModel } from '../../../../shared/models';
+import { ResponseModel } from '../../../../shared';
 
 @Component({
     selector: 'dept-list',
@@ -16,7 +16,7 @@ export class DepartmentListComponent implements OnInit {
     constructor(private departmentService: DepartmentService) { }
 
     getDepertments(): void {
-        this.departmentService.GetAllDepartments()
+        this.departmentService.GetAll()
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
             }, ((error: any) => {
