@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MdCheckboxModule } from '@angular2-material/checkbox';
 
 import { SharedModule } from '../../shared/shared.module';
 import { MasterDateComponent } from './masterdata.component';
@@ -13,14 +14,11 @@ import { MasterDateRouting } from './masterdata.routing';
         CommonModule,
         FormsModule,
         SharedModule,
-        // DepartmentModule,
+        MdCheckboxModule,
         MasterDateRouting
     ],
     declarations: [
         MasterDateComponent
-        // DepartmentEntryComponent,
-        // DepartmentListComponent,
-        // DepartmentComponent
     ]
 })
 export class MasterDateModule {

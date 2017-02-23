@@ -111,6 +111,8 @@ export class BulkPostOperation<T extends BaseModel> extends DataOperation<BaseMo
         private httpService: Http,
         private entities: T[]) {
         super(dataProcessingService, httpService, entities);
+
+        this.dataProcessingService.EndPoint = GlobalConstants.API;
     }
 
     /**

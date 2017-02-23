@@ -16,3 +16,8 @@ export enum WEB_METHOD {
     DELETE = <any>'DELETE',
     BATCHPOST = <any>'BATCHPOST'
 }
+
+export class KeyValue {
+    constructor(public Key: string, public Value: number) { }
+}
+

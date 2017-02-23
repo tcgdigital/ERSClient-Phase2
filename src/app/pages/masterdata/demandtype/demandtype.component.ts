@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 
 @Component({
-    selector: 'demand-type',
-    template: `Welcome to demand type`
+    selector: 'demandtype-main',
+    encapsulation: ViewEncapsulation.None,
+    templateUrl: './views/demandtype.view.html'
 })
 export class DemandTypeComponent {
 }

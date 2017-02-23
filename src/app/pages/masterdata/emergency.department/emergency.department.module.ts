@@ -4,9 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MdCheckboxModule } from '@angular2-material/checkbox';
 
-import { DepartmentFunctionalityeRouting } from './department.functionality.routing';
-import { DepartmentFunctionalityComponent } from './department.functionality.component';
-import { PageService, PagePermissionService } from './components';
+import { EmergencyDepartmentypeRouting } from './emergency.department.routing';
+import { EmergencyDepartmentComponent } from './emergency.department.component';
+import { EmergencyTypeDepartmentService } from './components';
+import { EmergencyTypeService } from '../emergencytype';
 import { DepartmentService } from '../department';
 import { DataExchangeService, SharedModule } from '../../../shared';
 
@@ -17,16 +18,16 @@ import { DataExchangeService, SharedModule } from '../../../shared';
         HttpModule,
         MdCheckboxModule,
         SharedModule,
-        DepartmentFunctionalityeRouting
+        EmergencyDepartmentypeRouting
     ],
     declarations: [
-        DepartmentFunctionalityComponent
+        EmergencyDepartmentComponent
     ],
     providers: [
-        PageService, 
-        PagePermissionService,
+        EmergencyTypeService,
         DepartmentService,
-        DataExchangeService
+        DataExchangeService,
+        EmergencyTypeDepartmentService
     ]
 })
-export class DepartmentFunctionalityModule { }
+export class EmergencyDepartmentModule { }

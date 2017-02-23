@@ -11,7 +11,8 @@ import {
     MenuItemComponent,
     PageHeaderComponent,
     ContentHeaderComponent,
-    TopMenuComponent
+    TopMenuComponent,
+    AutocompleteComponent
 } from './components';
 
 import {
@@ -50,7 +51,8 @@ const SHARED_COMPONENTS: any[] = [
     MenuItemComponent,
     PageHeaderComponent,
     ContentHeaderComponent,
-    TopMenuComponent
+    TopMenuComponent,
+    AutocompleteComponent
 ];
 
 const SHARED_DIRECTIVES: any[] = [

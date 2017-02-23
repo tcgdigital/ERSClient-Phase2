@@ -20,8 +20,8 @@ import { DataExchangeService } from '../../../shared';
         FormsModule,
         HttpModule,
         ReactiveFormsModule,
-        ChecklistRouting,
-        MdCheckboxModule
+        MdCheckboxModule,
+        ChecklistRouting
     ],
     declarations: [
         ChecklistEntryComponent,

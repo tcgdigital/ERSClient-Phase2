@@ -1,0 +1,35 @@
+<div>
+    <!--<form (ngSubmit)="onSubmit()" #demandTypeForm="ngForm">-->
+    <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+        <input type="hidden" formControlName="DemandTypeId" name="DemandTypeId" />
+        <div class="col-sm-3">
+            <div class="form-control">
+                <label for="DemandTypeName">Request Type:<span class="red">*</span></label>
+                <input id="DemandTypeName" type="text" formControlName="DemandTypeName" placeholder="Enter RequestType Name" required autofocus
+                />
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <label for="IsAutoApproved">Is Auto Approved:</label>
+            <md-checkbox class="Marght" id="IsAutoApproved" formControlName="IsAutoApproved" aria-label="Add">
+            </md-checkbox>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-control">
+                <div [hidden]="demandTypeModel.IsAutoApproved">
+                    <select id="selectApprover" [(ngModel)]="demandTypeModel.DepartmentId" formControlName="ApproverDept">
+                        <option *ngFor="let department of departments" [value]="department.DepartmentId" >
+                        {{department.DepartmentName}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="fromtop1">
+                <button class="btn btn-primary" type="submit">{{Action}}</button>
+                <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
+            </div>
+        </div>
+    </form>
+</div>
