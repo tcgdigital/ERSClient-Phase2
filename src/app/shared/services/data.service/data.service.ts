@@ -24,7 +24,8 @@ import {
 export class DataService<T extends BaseModel>{
     constructor(private typeName: string,
         private httpService: Http,
-        private dataProcessingService: DataProcessingService) {
+        private dataProcessingService: DataProcessingService,
+        private actionSuffix?: string) {
     }
 
     /**
@@ -39,7 +40,7 @@ export class DataService<T extends BaseModel>{
     }
 
     /**
-     * Get an instance of QueryOperation for GET request
+     * Get an instance of QueryOperation for OData GET request
      *
      * @param {string} key
      * @returns {GetOperation<T>}
@@ -64,7 +65,7 @@ export class DataService<T extends BaseModel>{
     }
 
     /**
-     * Get an instance of QueryOperation for POST request
+     * Get an instance of QueryOperation for OData POST request
      *
      * @param {T} entity
      * @param {string} key
@@ -77,7 +78,7 @@ export class DataService<T extends BaseModel>{
     }
 
     /**
-     * Get an instance of QueryOperation for Bulk POST request
+     * Get an instance of QueryOperation for Bulk API POST request
      *
      * @param {T[]} entities
      * @returns {BulkPostOperation<T>}
@@ -85,11 +86,12 @@ export class DataService<T extends BaseModel>{
      * @memberOf DataService
      */
     public BulkPost(entities: T[]): BulkPostOperation<T> {
-        return new BulkPostOperation<T>(this.dataProcessingService, this.httpService, entities);
+        return new BulkPostOperation<T>(this.dataProcessingService, 
+            this.httpService, this.typeName, entities, this.actionSuffix);
     }
 
     /**
-     * Get an instance of QueryOperation for Batch POST request
+     * Get an instance of QueryOperation for Batch OData POST request
      *
      * @param {Array<RequestModel<T>>} entities
      * @returns {BatchPostOperation<RequestModel<T>>}
@@ -101,7 +103,7 @@ export class DataService<T extends BaseModel>{
     }
 
     /**
-     * Get an instance of QueryOperation for PATCH request
+     * Get an instance of QueryOperation for OData PATCH request
      *
      * @param {*} entity
      * @param {string} key
@@ -137,14 +139,6 @@ export class DataService<T extends BaseModel>{
     public Delete(key: string): DeleteOperation<T> {
         return new DeleteOperation<T>(this.dataProcessingService, this.httpService, this.typeName, key);
     }
-
-
-
-
-    // public CustomAction(key: string, actionName: string, postData: any): Observable<any> {
-    //     let body = JSON.stringify(postData);
-    //     return new PutOperation<any>(this.dataProcessingService, this.httpService, this.typeName, body, key, actionName);
-    // }
 
     /**
      * Get an instance of QueryOperation for custom function request

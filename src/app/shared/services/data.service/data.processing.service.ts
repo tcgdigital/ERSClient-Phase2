@@ -8,10 +8,17 @@ import { UtilityService } from '../common.service';
 
 @Injectable()
 export class DataProcessingService {
-
     public Key: ODataKeyConfig = new ODataKeyConfig();
     public EndPoint: string = GlobalConstants.ODATA;
 
+    /**
+     * Get base URI
+     * 
+     * @readonly
+     * @private
+     * @type {string}
+     * @memberOf DataProcessingService
+     */
     private get BaseUri(): string {
         return `${GlobalConstants.EXTERNAL_URL}${this.EndPoint}`;
     }
@@ -28,6 +35,7 @@ export class DataProcessingService {
      */
     public GetUri(typeName: string, entityKey: string = '', actionSuffix: string = '') {
         let uri: string = '';
+        
 
         if (this.EndPoint === GlobalConstants.TOKEN || this.EndPoint === GlobalConstants.BATCH)
             uri = `${this.BaseUri}`;
@@ -42,6 +50,10 @@ export class DataProcessingService {
                     uri = `${this.BaseUri}/${typeName}(${entityKey})`;
             }
             else {
+                console.log(`Base URL: ${this.BaseUri}`);
+                console.log(`Type Name: ${typeName}`);
+                console.log(`Action Suffix: ${actionSuffix}`);
+
                 if (actionSuffix !== '' && typeName !== '')
                     uri = `${this.BaseUri}/${typeName}/${actionSuffix}`;
                 else if (actionSuffix !== '' && typeName === '')
@@ -100,7 +112,6 @@ export class DataProcessingService {
         if (params) requestOptions.search = params;
         return requestOptions;
     }
-
 
     /**
      * Extract data from OData or API responses

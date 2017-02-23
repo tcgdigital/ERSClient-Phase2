@@ -92,7 +92,7 @@ export class SimplePostOperation<T extends any> extends DataOperation<any> {
             .GetUri(this.TypeName, this.Key, this.ActionSuffix);
         let requestOps: RequestOptions = this.DataProcessingService
             .SetRequestOptions(WEB_METHOD.SIMPLEPOST, this.RequestHeaders);
-        
+
         console.log(body);
         return super.HandleResponse(this.HttpService.post(uri, body, requestOps));
     }
@@ -109,10 +109,19 @@ export class SimplePostOperation<T extends any> extends DataOperation<any> {
 export class BulkPostOperation<T extends BaseModel> extends DataOperation<BaseModel>{
     constructor(private dataProcessingService: DataProcessingService,
         private httpService: Http,
-        private entities: T[]) {
+        private typeName: string,
+        private entities: T[],
+        private actionSufix?: string) {
         super(dataProcessingService, httpService, entities);
 
+        this.TypeName = typeName;
+        if (actionSufix)
+            this.ActionSuffix = actionSufix;
         this.dataProcessingService.EndPoint = GlobalConstants.API;
+        this.RequestHeaders = new Headers({
+            'Content-Type': 'application/json; charset=utf-8; odata.metadata=none',
+            'Accept': 'application/json; charset=utf-8; odata.metadata=none'
+        });
     }
 
     /**
@@ -126,6 +135,8 @@ export class BulkPostOperation<T extends BaseModel> extends DataOperation<BaseMo
         let body: string = JSON.stringify(this.entities);
         let uri: string = this.dataProcessingService
             .GetUri(this.TypeName, this.Key, this.ActionSuffix);
+        
+        console.log(uri);
         let requestOps: RequestOptions = this.DataProcessingService
             .SetRequestOptions(WEB_METHOD.POST, this.RequestHeaders);
 
@@ -161,7 +172,7 @@ export class BatchPostOperation<T extends RequestModel<BaseModel>> extends DataO
 
         this.uniqueId = UtilityService.UUID();
         this.dataProcessingService.EndPoint = GlobalConstants.BATCH;
-        this.RequestHeaders = new Headers({ 
+        this.RequestHeaders = new Headers({
             'Content-Type': 'multipart/mixed; boundary=batch_' + this.uniqueId,
             // 'Host': GlobalConstants.EXTERNAL_URL,
             'Accept': 'text/plain'
