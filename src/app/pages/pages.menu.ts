@@ -83,6 +83,28 @@ export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
                                 expanded: false,
                             }
                         }
+                    },
+                    {
+                        path: 'emergencydepartment',
+                        data: {
+                            menu: {
+                                title: 'Emergency Department',
+                                icon: 'fa fa-home fa-lg',
+                                selected: false,
+                                expanded: false,
+                            }
+                        }
+                    },
+                    {
+                        path: 'departmentfunctionality',
+                        data: {
+                            menu: {
+                                title: 'Department Functionality',
+                                icon: 'fa fa-home fa-lg',
+                                selected: false,
+                                expanded: false,
+                            }
+                        }
                     }
                 ]
             }

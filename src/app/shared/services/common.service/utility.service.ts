@@ -1,9 +1,18 @@
 import { URLSearchParams } from '@angular/http';
+import { KeyValue } from '../../models';
 
 export class UtilityService {
     public static IsEmptyObject = (obj: {}): boolean => Object.keys(obj).length === 0 && obj.constructor === Object;
 
     public static IsEmptyArray = (obj: any[]): boolean => obj.length > 0 && obj[0] !== null;
+
+    public static GetKeyValues(obj: any): KeyValue[] {
+        let keyValues: KeyValue[] = [];
+        Object.keys(obj).forEach(key => {
+            keyValues.push({ Key: key, Value: obj[key] });
+        });
+        return keyValues;
+    }
 
     /**
      * Convert string into simple comma seperated string
@@ -129,9 +138,9 @@ export class UtilityService {
         return keys;
     }
 
-    private static isSessionKeyExists(key: string): boolean{
+    private static isSessionKeyExists(key: string): boolean {
         let keys: string[] = this.listAllSessionItems();
-        return (keys.some((x: string) => x === key)) 
+        return (keys.some((x: string) => x === key))
     }
     /**
      * Color Helpers

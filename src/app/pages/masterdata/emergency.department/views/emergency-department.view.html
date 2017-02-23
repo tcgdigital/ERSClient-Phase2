@@ -1,0 +1,24 @@
+
+<div>
+    <h3>Emergency Department Mapping</h3>
+
+<autocomplete [items]="items" (notify)='onNotify($event)'></autocomplete>
+
+<button class="btn btn-primary" type="button" (click)="save()">Save</button>
+ <div class="row" *ngFor="let departmentForEmergency of departmentsForEmergency">
+  <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
+            <ul class="list-group">
+                <li class="list-group-item"><strong><i>Department Name:</i></strong></li>
+                <li class="list-group-item" style="border-top: none">{{departmentForEmergency.DepartmentName}}</li>
+            </ul>
+        </div>
+        <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
+            <ul class="list-group">
+                <li class="list-group-item"><strong><i>Select Department.</i></strong></li>
+                <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="departmentForEmergency.IsSelected" aria-label="Add">
+                                    </md-checkbox>
+            </ul>
+        </div>        
+ </div>
+
+</div>
