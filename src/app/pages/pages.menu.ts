@@ -107,6 +107,17 @@ export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
                         }
                     }
                 ]
+            },
+            {
+                path: 'incident',
+                data: {
+                    menu: {
+                        title: 'Incident',
+                        icon: 'fa fa-home fa-lg',
+                        selected: false,
+                        expanded: false,
+                    }
+                }
             }
         ]
     }

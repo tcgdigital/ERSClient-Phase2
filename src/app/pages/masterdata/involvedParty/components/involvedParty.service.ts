@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Rx';
 
 import { InvolvedPartyModel } from './involvedParty.model';
 import { ResponseModel,DataService,DataServiceFactory,DataProcessingService } from '../../../../shared';
-import { IncidentService,IncidentModel } from '../../incident';
+import { IncidentService,IncidentModel } from '../../../incident';
 
 @Injectable()
 export class InvolvedPartyService {

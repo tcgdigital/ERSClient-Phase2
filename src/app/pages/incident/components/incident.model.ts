@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
-import { BaseModel,KeyValue } from '../../../../shared';
-import { EmergencyTypeModel } from '../../emergencyType/components/emergencyType.model';
-import { DepartmentModel } from '../../department/components/department.model';
+import { BaseModel,KeyValue } from '../../../shared';
+import { EmergencyTypeModel } from '../../masterdata/emergencytype';
+import { DepartmentModel } from '../../masterdata/department';
 
 export class IncidentModel extends BaseModel {
     public IncidentId: number;

@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
-import { BaseModel,KeyValue } from '../../../../shared';
+import { BaseModel,KeyValue } from '../../../shared';
 import { IncidentModel } from './incident.model';
-import { InvolvedPartyModel } from '../../involvedParty/components/involvedParty.model';
-import { FlightModel } from '../../flight/components/flight.model';
-import { DepartmentModel } from '../../department/components/department.model';
+import { InvolvedPartyModel } from '../../masterdata/involvedParty';
+import { FlightModel } from '../../masterdata/flight';
+import { DepartmentModel } from '../../masterdata/department';
 
 export class IncidentDataExchangeModel {
 

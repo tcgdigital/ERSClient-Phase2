@@ -1,0 +1,40 @@
+<div>
+    <form (ngSubmit)="onSubmit()" #demandTypeForm="ngForm">
+     <input type="hidden" *ngIf="emergencyTypeModel.EmergencyTypeId != undefined" [(ngModel)]="emergencyTypeModel.EmergencyTypeId" name="EmergencyTypeId"/>
+            <div class="col-sm-3" >
+                <div class="form-control">
+                    <label for="EmergencyTypeName">Emergency Type Name:<span class="red">*</span></label>
+                    <input id="txtEmergencyTypeName" type="text" name="EmergencyTypeName" 
+                            placeholder="Enter Emergency Type Name" [(ngModel)]="emergencyTypeModel.EmergencyTypeName" required autofocus />
+                    </div>
+            </div>                           
+            <div class="col-sm-3" >
+                <div class="form-control">
+                    <label for="EmergencyTypeCategory">Emergency Type Category:<span class="red">*</span></label>
+                                       
+                    <select id="selectEmergencyCategory"  class="form-control" [(ngModel)]="emergencyTypeModel.EmergencyCategory" name="EmergencyCategory">
+                        <option *ngFor="let category of emergencyCategory" [value]="category.value">
+                                {{category.value}}
+                        </option>
+                   </select>                     
+                </div>
+            </div>  
+
+            <div class="col-sm-3" >
+                <div class="form-control">
+                    <label for="Status">Status:<span class="red">*</span></label>                                    
+                    <select class="form-control" id="selectStatus" [(ngModel)]="emergencyTypeModel.ActiveFlag" name="ActiveFlag">                                           
+                        <option value="Active">Active </option>
+                        <option Value="InActive">InActive </option>> 
+                    </select>
+                    </div>
+            </div>  
+            
+            <div class="col-sm-3">
+                <div class="fromtop1">
+                    <button class="btn btn-primary" type="submit">Save</button>
+                    <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
+                </div>
+            </div>                        
+    </form>
+</div>

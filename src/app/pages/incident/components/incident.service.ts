@@ -3,15 +3,15 @@ import { Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { IncidentModel } from './incident.model';
-import { ResponseModel,DataService,DataServiceFactory,DataProcessingService } from '../../../../shared';
-import { DepartmentService } from '../../department/components/department.service';
-import { EmergencyTypeService } from '../../emergencyType/components/emergencyType.service';
-import { DepartmentModel } from '../../department/components/department.model';
-import { EmergencyTypeModel } from '../../emergencyType/components/emergencyType.Model';
-import { InvolvedPartyModel } from '../../involvedParty/components/involvedParty.model';
-import { InvolvedPartyService } from '../../involvedParty/components/involvedParty.service';
-import { FlightModel } from '../../flight/components/flight.model';
-import { FlightService } from '../../flight/components/flight.service';
+import { ResponseModel,DataService,DataServiceFactory,DataProcessingService } from '../../../shared';
+import { DepartmentService } from '../../masterdata/department';
+import { EmergencyTypeService } from '../../masterdata/emergencytype';
+import { DepartmentModel } from '../../masterdata/department';
+import { EmergencyTypeModel } from '../../masterdata/emergencytype';
+import { InvolvedPartyModel } from '../../masterdata/involvedParty';
+import { InvolvedPartyService } from '../../masterdata/involvedParty';
+import { FlightModel } from '../../masterdata/flight';
+import { FlightService } from '../../masterdata/flight';
 
 @Injectable()
 export class IncidentService {

@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, AbstractControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { IncidentModel } from './incident.model';
-import { EmergencyTypeModel, EmergencyTypeService } from '../../emergencyType';
+import { EmergencyTypeModel, EmergencyTypeService } from '../../masterdata/emergencytype';
 
 import { 
     ResponseModel,
@@ -11,9 +11,9 @@ import {
     IncidentStatus, 
     InvolvedPartyType,
     UtilityService 
-} from '../../../../shared';
-import { InvolvedPartyModel } from '../../involvedParty';
-import { FlightModel } from '../../flight';
+} from '../../../shared';
+import { InvolvedPartyModel } from '../../masterdata/involvedParty';
+import { FlightModel } from '../../masterdata/flight';
 import { IncidentDataExchangeModel } from './incidentDataExchange.model';
 
 @Component({
