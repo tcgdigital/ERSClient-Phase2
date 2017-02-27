@@ -21,4 +21,6 @@ import { EmergencyTypeService } from './components';
         EmergencyTypeService
     ]
 })
-export class EmergencyTypeModule { }
+export class EmergencyTypeModule { 
+    
+}
