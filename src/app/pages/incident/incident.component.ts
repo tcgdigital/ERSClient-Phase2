@@ -1,13 +1,13 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { IncidentModel } from '../incident';
-import { DataExchangeService } from '../../../shared';
+import { DataExchangeService } from '../../shared';
 
 @Component({
 
     selector: 'incident-main',
 
     encapsulation: ViewEncapsulation.None,
-    templateUrl: '../views/incident.html'
+    templateUrl: './views/incident.html'
 })
 export class IncidentComponent implements OnInit {
     

@@ -1,6 +1,6 @@
 
 export class GlobalConstants {
-    public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
+    public static EXTERNAL_URL: string = 'http://localhost:5001/';
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
     public static GRANT_TYPE: string = 'password';
     public static ODATA: string = 'odata';
@@ -8,6 +8,8 @@ export class GlobalConstants {
     public static TOKEN: string = 'token';
     public static BATCH: string = 'odata/$batch'
     public static ACCESS_TOKEN: string = 'access_token';
+    public static EmergencyCategories : Object= [{value : "FlightRelated",key : 1},{value : "NonFlightRelated",key : 2}];
+    public static ActiveFlag : Object= [{value : "Active",key : 0},{value : "InActive",key : 1}];
 }
 
 export enum DataModels {

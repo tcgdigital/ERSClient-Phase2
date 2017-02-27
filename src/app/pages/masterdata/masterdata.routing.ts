@@ -15,6 +15,7 @@ const pageRoutes: Routes = [
             { path: 'quicklink', loadChildren: './quicklink/quicklink.module#QuickLinkModule' },
             { path: 'emergencydepartment', loadChildren: './emergency.department/emergency.department.module#EmergencyDepartmentModule' },
             { path: 'departmentfunctionality', loadChildren: './department.functionality/department.functionality.module#DepartmentFunctionalityModule' }
+            
         ]
     }
 ];

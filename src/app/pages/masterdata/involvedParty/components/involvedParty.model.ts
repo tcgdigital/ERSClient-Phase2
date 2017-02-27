@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BaseModel, KeyValue } from '../../../../shared';
-import { IncidentModel } from '../../incident';
+import { IncidentModel } from '../../../incident';
 
 export class InvolvedPartyModel extends BaseModel {
     public InvolvedPartyId: number;
