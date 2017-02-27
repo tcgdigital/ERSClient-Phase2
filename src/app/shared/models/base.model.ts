@@ -21,3 +21,23 @@ export class KeyValue {
     constructor(public Key: string, public Value: number) { }
 }
 
+// export interface KeyValue {
+//     Key: string;
+//     Value: any;
+// }
+
+export class IncidentStatus {
+    static Open: number = 1;
+    static Close: number = 0;
+}
+
+export class Severity {
+    static High: number = 1;
+    static Medium: number = 2;
+    static Low: number = 3;
+}
+
+export class InvolvedPartyType {
+    static Flight: number = 1;
+    static NonFlight: number = 2
+}
