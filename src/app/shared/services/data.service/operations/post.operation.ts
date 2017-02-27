@@ -31,6 +31,10 @@ export class PostOperation<T extends BaseModel> extends DataOperation<BaseModel>
         private entity: T) {
         super(dataProcessingService, httpService, typeName, entity);
         this.ActionSuffix = '';
+        this.RequestHeaders = new Headers({
+            'Content-Type': 'application/json; charset=utf-8; odata.metadata=none',
+            'Accept': 'application/json; charset=utf-8; odata.metadata=none'
+        });
     }
 
     /**
@@ -77,6 +81,7 @@ export class SimplePostOperation<T extends any> extends DataOperation<any> {
         private entity: any) {
         super(dataProcessingService, httpService, typeName, entity);
         this.RequestHeaders = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
+        
     }
 
     /**
