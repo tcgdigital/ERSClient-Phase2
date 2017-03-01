@@ -142,6 +142,10 @@ export class UtilityService {
         let keys: string[] = this.listAllSessionItems();
         return (keys.some((x: string) => x === key))
     }
+
+    
+
+
     /**
      * Color Helpers
      */
