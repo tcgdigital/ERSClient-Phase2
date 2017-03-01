@@ -19,6 +19,10 @@ export class UtilityService {
         return keyValues;
     }
 
+      public static pluck<T, K extends keyof T>(o: T, names: K[]): T[K][] {
+       return names.map(n => o[n]);
+     } 
+
     /**
      * Convert string into simple comma seperated string
      *
@@ -243,5 +247,4 @@ export class UtilityService {
         }
         throw new Error('Bad Hex');
     }
-
 }
