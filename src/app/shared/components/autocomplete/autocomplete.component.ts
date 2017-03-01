@@ -35,8 +35,6 @@ export class AutocompleteComponent {
         } else {
             this.filteredList = this.Items;
         }
-        console.log('filter executed');
-       
     }
 
     select(item: KeyValue) {

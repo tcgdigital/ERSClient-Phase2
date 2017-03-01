@@ -8,6 +8,32 @@ export class GlobalConstants {
     public static TOKEN: string = 'token';
     public static BATCH: string = 'odata/$batch'
     public static ACCESS_TOKEN: string = 'access_token';
+    public static EnquiryType: Object= [
+         {
+             value: "1",
+             caption: "Passenger",
+             text: "Passenger related"
+         },
+         {
+             value: "2",
+             caption: "Cargo",
+             text: "Cargo related"
+         },
+         {
+             value: "3",
+             caption: 'Media',
+             text: "Media related",
+         },
+         {
+             value: "4",
+             caption: 'Others',
+             text: "Others",
+         },
+         {
+             value: "5",
+             caption: 'Crew',
+             text: "Crew",
+         }];
 }
 
 export enum DataModels {

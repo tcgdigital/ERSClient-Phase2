@@ -45,7 +45,7 @@ export class AffectedPeopleService {
             let item = new AffectedPeopleToView();
             item.AffectedId = dataItem.AffectedId;
             item.AffectedPersonId = dataItem.AffectedPersonId,
-                item.PassengerName = dataItem.Passenger != null ? dataItem.Passenger.PassengerName : '';
+            item.PassengerName = dataItem.Passenger != null ? dataItem.Passenger.PassengerName : '';
             item.Pnr = dataItem.Passenger != null ? (dataItem.Passenger.Pnr == null ? 'NA' : dataItem.Passenger.Pnr) : 'NA';
             item.CrewName = dataItem.Crew != null ? dataItem.Crew.CrewName : '';
             item.CrewNameWithCategory = dataItem.Crew != null ? dataItem.Crew.CrewName + '(' + dataItem.Crew.AsgCat + ')' : '';
