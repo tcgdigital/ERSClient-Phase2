@@ -44,27 +44,4 @@ export class EmergencyTypeService implements IServiceInretface<EmergencyTypeMode
 
     Delete(entity: EmergencyTypeModel): void {
     }
-
-
-
-    // GetAllEmergencyTypes(): Observable<ResponseModel<EmergencyTypeModel>> {
-    //     return this._dataService.Query()
-    //         .Execute();
-    // }
-
-    // CreateEmergencyType(EmergencyType: EmergencyTypeModel): Observable<EmergencyTypeModel> {
-    //     return this._dataService.Post(EmergencyType)
-    //         .Execute();
-    // }
-
-    // UpdateEmergencyType(emergencyTypeModel: EmergencyTypeModel): Observable<EmergencyTypeModel> {
-    //     let key: string = emergencyTypeModel.EmergencyTypeId.toString();
-    //     return this._dataService.Patch(emergencyTypeModel, key)
-    //         .Execute();
-    // }
-
-    // GetEmergencyTypeById(id: number): Observable<EmergencyTypeModel> {
-    //     return this._dataService.Get(id.toString())
-    //         .Execute();
-    // }
 }

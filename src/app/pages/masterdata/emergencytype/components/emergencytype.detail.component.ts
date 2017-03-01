@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { EmergencyTypeModel } from './emergencytype.model';
 import { EmergencyTypeService } from './emergencytype.service';
-import { ResponseModel,DataExchangeService } from '../../../../shared';
+import { ResponseModel, DataExchangeService } from '../../../../shared';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -9,34 +9,57 @@ import { ReactiveFormsModule } from '@angular/forms';
     encapsulation: ViewEncapsulation.None,
     templateUrl: '../views/emergencytype.detail.view.html'
 })
-export class EmergencyTypeDetailComponent{
+export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
     emergencyTypes: EmergencyTypeModel[] = [];
 
+    /**
+     * Creates an instance of EmergencyTypeDetailComponent.
+     * @param {EmergencyTypeService} emergencyTypeService 
+     * @param {DataExchangeService<EmergencyTypeModel>} dataExchange 
+     * 
+     * @memberOf EmergencyTypeDetailComponent
+     */
     constructor(private emergencyTypeService: EmergencyTypeService,
-    private dataExchange: DataExchangeService<EmergencyTypeModel>) { }
+        private dataExchange: DataExchangeService<EmergencyTypeModel>) { }
 
+    /**
+     * Get all emergency types
+     * 
+     * @memberOf EmergencyTypeDetailComponent
+     */
     getEmergencyTypes(): void {
         this.emergencyTypeService.GetAll()
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
-                console.log(response);
                 this.emergencyTypes = response.Records;
-            });    
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
     }
 
-     onEmergencyTypeSuccess(data: EmergencyTypeModel): void {        
-        console.log("EventCalling");
-       this.getEmergencyTypes();
-    }
-   
-    UpdateEmergencyType(emergencyTypeModelUpdate: EmergencyTypeModel): void{
-        let emergencyModelToSend=Object.assign({}, emergencyTypeModelUpdate)
-        this.dataExchange.Publish("OnEmergencyTypeUpdate",emergencyModelToSend);
-    }
-
-
-    ngOnInit(): any {
+    onSuccess(data: EmergencyTypeModel): void {
         this.getEmergencyTypes();
-        this.dataExchange.Subscribe("EmergencyTypeModelSaved", model => this.onEmergencyTypeSuccess(model));
-        this.dataExchange.Subscribe("EmergencyTypeModelUpdated", model =>this.onEmergencyTypeSuccess(model))
+    }
+
+    UpdateEmergencyType(emergencyTypeModelUpdate: EmergencyTypeModel): void {
+        let emergencyModelToSend = Object.assign({}, emergencyTypeModelUpdate)
+        this.dataExchange.Publish("OnEmergencyTypeUpdate", emergencyModelToSend);
+    }
+
+
+    ngOnInit(): void {
+        this.getEmergencyTypes();
+        this.dataExchange.Subscribe('EmergencyTypeModelSaved', model => this.onSuccess(model));
+        this.dataExchange.Subscribe('EmergencyTypeModelUpdated', model => this.onSuccess(model))
+    }
+
+    /**
+     * Destroy all subscription
+     * 
+     * @memberOf EmergencyTypeDetailComponent
+     */
+    ngOnDestroy(): void {
+        this.dataExchange.Unsubscribe('OnEmergencyTypeUpdate');
+        this.dataExchange.Unsubscribe('EmergencyTypeModelUpdated');
+        this.dataExchange.Unsubscribe('EmergencyTypeModelUpdated');
     }
 }
