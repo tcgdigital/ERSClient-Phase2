@@ -5,7 +5,7 @@ import { HttpModule } from '@angular/http';
 
 import { EmergencyTypeRouting } from './emergencytype.routing';
 import { EmergencyTypeComponent } from './emergencytype.component';
-import { EmergencyTypeService } from './components';
+import { EmergencyTypeService, EmergencyTypeEntryComponent, EmergencyTypeDetailComponent } from './components';
 
 @NgModule({
     imports: [
@@ -15,6 +15,8 @@ import { EmergencyTypeService } from './components';
         EmergencyTypeRouting
     ],
     declarations: [
+        EmergencyTypeEntryComponent,
+        EmergencyTypeDetailComponent,
         EmergencyTypeComponent
     ],
     providers: [

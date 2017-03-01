@@ -1,7 +1,12 @@
 import { URLSearchParams } from '@angular/http';
-import { KeyValue } from '../../models';
+import { FormGroup } from '@angular/forms'
+import { KeyValue, BaseModel } from '../../models';
 
 export class UtilityService {
+    private static STRIP_COMMENTS: RegExp = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
+    private static ARGUMENT_NAMES: RegExp = /([^\s,]+)/g;
+    private static CACHE_PROPERTY: string = '__paramNames';
+
     public static IsEmptyObject = (obj: {}): boolean => Object.keys(obj).length === 0 && obj.constructor === Object;
 
     public static IsEmptyArray = (obj: any[]): boolean => obj.length > 0 && obj[0] !== null;
@@ -78,19 +83,6 @@ export class UtilityService {
         return UtilityService.mix('#ffffff', color, weight);
     }
 
-    static hexToRgbA(hex, alpha) {
-        let c;
-        if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
-            c = hex.substring(1).split('');
-            if (c.length === 3) {
-                c = [c[0], c[0], c[1], c[1], c[2], c[2]];
-            }
-            c = '0x' + c.join('');
-            return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ',' + alpha + ')';
-        }
-        throw new Error('Bad Hex');
-    }
-
     public static mix(color1, color2, weight) {
         let d2h = (d) => d.toString(16);
         let h2d = (h) => parseInt(h, 16);
@@ -113,6 +105,102 @@ export class UtilityService {
         } else {
             return this.random4() + this.random4() + "-" + this.random4() + "-" + this.random4() + "-" +
                 this.random4() + "-" + this.random4() + this.random4() + this.random4();
+        }
+    }
+
+    /**
+     * Given a function, obtain it's name
+     * Example: console.log("function name: ", reflection.nameOf(function hello() { }));
+     * @static
+     * @param {Function} func 
+     * @returns {string} 
+     * 
+     * @memberOf UtilityService
+     */
+    public static nameOf(func: Function): string {
+        return func instanceof Function ? func["name"] : null;
+    }
+
+    /**
+     * Given a function, obtain a list of argument names
+     * Example: console.log(UtilityService.getParamNames((baz, bam) => baz + bam)); // => [ 'baz', 'bam' ]
+     * @static
+     * @param {Function} func 
+     * @returns {string[]} 
+     * 
+     * @memberOf UtilityService
+     */
+    public static getParamNames(func: Function): string[] {
+        if (!func[UtilityService.CACHE_PROPERTY]) {
+            var fnStr = func.toString().replace(UtilityService.STRIP_COMMENTS, '');
+            console.log(fnStr);
+            func[UtilityService.CACHE_PROPERTY] = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')'))
+                .match(UtilityService.ARGUMENT_NAMES) || [];
+        }
+
+        return func[UtilityService.CACHE_PROPERTY];
+    }
+
+    public static getReturnType(func: Function): string {
+        var fnStr = func.toString().replace(UtilityService.STRIP_COMMENTS, '');
+        let props = fnStr.slice(fnStr.indexOf('{') + 1, fnStr.indexOf('}'))
+            .match(UtilityService.ARGUMENT_NAMES) || [];
+
+        let pattern = new RegExp(/\.(.*?)\;/gi);
+        func[UtilityService.CACHE_PROPERTY] = props
+            .filter((x: string) => pattern.test(x))
+            .map((x: string) => {
+                // let prop = x.match(/\.(.*?)\;/gi);
+                let prop = /\.(.*?)\;/gi.exec(x);
+                // console.log(test);
+                return prop[1];
+            });
+
+        console.log(func[UtilityService.CACHE_PROPERTY]);
+        return func[UtilityService.CACHE_PROPERTY];
+    }
+
+    /**
+     * Given an arbitrary function, and an argument factory function, dispatch the arbitrary function
+     * Example: console.log(UtilityService.dispatch((baz, bam) => baz + bam,(name) => name + "!")); // => "baz!bam!"
+     * @static
+     * @param {Function} func 
+     * @param {{ [name: string]: any }} factory 
+     * 
+     * @memberOf UtilityService
+     */
+    public static dispatch(func: Function, factory: { [name: string]: any });
+    /**
+     * Given an arbitrary function, and a map of argument names/values, dispatch the arbitrary function
+     * Example: console.log(UtilityService.dispatch((baz, bam) => baz + bam, { baz: "wop!", bam: "bam!" })); // => "baz!bam!"
+     * @static
+     * @param {Function} func 
+     * @param {{ (name: string): any }} factory 
+     * 
+     * @memberOf UtilityService
+     */
+    public static dispatch(func: Function, factory: { (name: string): any });
+    public static dispatch(func: Function, factory: any) {
+        var params = [];
+
+        UtilityService.getParamNames(func).forEach((name) => params.push(
+            factory instanceof Function ? factory(name) : factory[name]));
+
+        return func.apply(null, params);
+    }
+
+    public static setModelFromFormGroup<T extends BaseModel>(entity: T, fromGroup: FormGroup, ...params: ((entity: T) => any)[]): void {
+        let paramNames: string[] = [];
+        if (params.length > 0) {
+            params.forEach((x: Function) => {
+                paramNames.push(UtilityService.getReturnType(x)[0]);
+            });
+
+            if (paramNames.length > 0) {
+                paramNames.forEach((x: string) => {
+                    entity[x] = fromGroup.controls[x].value;
+                })
+            }
         }
     }
 
@@ -143,12 +231,17 @@ export class UtilityService {
         return (keys.some((x: string) => x === key))
     }
 
-    
-
-
-    /**
-     * Color Helpers
-     */
-
+    public static hexToRgbA(hex, alpha) {
+        let c;
+        if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+            c = hex.substring(1).split('');
+            if (c.length === 3) {
+                c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+            }
+            c = '0x' + c.join('');
+            return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ',' + alpha + ')';
+        }
+        throw new Error('Bad Hex');
+    }
 
 }
