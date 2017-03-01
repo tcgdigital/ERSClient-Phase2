@@ -15,7 +15,30 @@ export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
                         expanded: false,
                         order: 0
                     }
-                }
+                },
+                children: [
+                    {
+                        path: 'affectedPeople',
+                        data: {
+                            menu: {
+                                title: 'AffectedPeople',
+                                icon: 'fa fa-home fa-lg',
+                                selected: false,
+                                expanded: false,
+                            }
+                        }
+                },
+                {
+                        path: 'affectedObjects',
+                        data: {
+                            menu: {
+                                title: 'AffectedObjects',
+                                icon: 'fa fa-home fa-lg',
+                                selected: false,
+                                expanded: false,
+                            }
+                        }
+                }]
             },
             {
                 path: 'masterdata',

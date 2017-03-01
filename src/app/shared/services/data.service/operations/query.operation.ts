@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/rx';
 import { BaseModel, WEB_METHOD, ResponseModel } from '../../../models';
 import { UtilityService } from '../../../services';
 import { DataProcessingService, DataOperation } from '../index';
+import { GlobalConstants } from '../../../constants';
 
 /**
  * Data operation specific for odata query
@@ -36,6 +37,7 @@ export class QueryOperation<T extends BaseModel> extends DataOperation<T> {
         private httpService: Http,
         private typeName: string) {
         super(dataProcessingService, httpService, typeName);
+         this.dataProcessingService.EndPoint = GlobalConstants.ODATA;
     }
 
     /**

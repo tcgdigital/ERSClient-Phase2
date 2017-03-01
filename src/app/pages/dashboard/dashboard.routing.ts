@@ -6,7 +6,10 @@ const dashboardRoutes: Routes = [
     {
         path: '',
         component: DashboardComponent,
-        children: []
+        children: [
+            { path: 'affectedPeople', loadChildren: './affected.people/affected.people.module#AffectedPeopleModule' },
+            { path: 'affectedObjects', loadChildren: './affected.objects/affected.objects.module#AffectedObjectsModule' }
+        ]
     }
 ];
 
