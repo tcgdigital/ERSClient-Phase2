@@ -3,8 +3,14 @@ export abstract class BaseModel {
     public ActiveFlag: string;
     public CreatedBy: number;
     public CreatedOn: Date;
-    public UpdatedBy: number;
-    public UpdatedOn: Date;
+    public UpdatedBy?: number;
+    public UpdatedOn?: Date;
+
+    constructor(){
+        this.ActiveFlag = 'Active';
+        this.CreatedBy = 1;
+        this.CreatedOn = new Date();
+    }
 }
 
 export enum WEB_METHOD {
