@@ -18,13 +18,7 @@ export class PatchOperation<T extends BaseModel | any> extends DataOperation<Bas
         private typeName: string,
         private entity: T,
         private key: string) {
-        super(dataProcessingService, httpService, typeName, entity);
-        // do not commit
-        this.Key = key;
-        this.RequestHeaders = new Headers({
-            'Content-Type': 'application/json; charset=utf-8; odata.metadata=none',
-            'Accept': 'application/json; charset=utf-8; odata.metadata=none'
-        });
+        super(dataProcessingService, httpService, typeName, entity);       
     }
 
     /**
