@@ -38,7 +38,7 @@ export class AffectedPeopleService {
             .Execute();
     }
 
-    FlattenData(involvedParty: InvolvedPartyModel): any {
+    FlattenAffectedPeople(involvedParty: InvolvedPartyModel): any {
         let affectedPeopleForView: AffectedPeopleToView[];
         let affectedPeople: AffectedPeopleModel[];
         let affected: AffectedModel;
@@ -81,11 +81,28 @@ export class AffectedPeopleService {
         return this._bulkDataService.BulkPost(entities).Execute();
     }
 
-    Update(entity: AffectedPeopleModel , key): Observable<AffectedPeopleModel> {
+    Update(entity: AffectedPeopleModel, key): Observable<AffectedPeopleModel> {
         return this._dataServiceAffectedPeople.Patch(entity, key)
             .Execute();
     }
 
     Delete(entity: InvolvedPartyModel): void {
+    }
+
+    MapAffectedPeople(affectedPeopleForVerification) {
+        let verifiedAffectedPeople: AffectedPeopleModel[];
+        verifiedAffectedPeople = affectedPeopleForVerification.map(function (affected) {
+            let item = new AffectedPeopleModel;
+            item.AffectedPersonId = affected.AffectedPersonId;
+            item.IsVerified = affected.IsVerified;
+            item.UpdatedBy = 1;
+            item.UpdatedOn = new Date();
+            item.ActiveFlag = 'Active';
+            item.CreatedBy = 1;
+            item.CreatedOn = new Date();
+            return item;
+        });
+        return verifiedAffectedPeople;
+
     }
 }

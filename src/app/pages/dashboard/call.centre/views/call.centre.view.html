@@ -49,7 +49,8 @@ Call centre
     <label for="DiscussionNote">Discussion Note:<span class="red">*</span></label>
     <input id="DiscussionNote" type="text" formControlName="Queries" style="width: 89%;" placeholder="Enter Discussion Note" required autofocus />
 </div>
- <div class="col-sm-3">
+<div [hidden]="enquiry.EnquiryType!=1  && enquiry.EnquiryType!=2 && enquiry.EnquiryType!=5"> 
+ <div class="col-sm-3" >
             <label for="Callback">Callbcak:</label>
             <md-checkbox class="Marght" id="IsCallBack" formControlName="IsCallBack" aria-label="Add">
             </md-checkbox>
@@ -64,4 +65,5 @@ Call centre
             <md-checkbox class="Marght" id="IsAdminRequest" formControlName="IsAdminRequest" aria-label="Add">
             </md-checkbox>
         </div>
+</div>
 </form>

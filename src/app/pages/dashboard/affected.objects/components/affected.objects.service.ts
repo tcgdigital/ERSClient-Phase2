@@ -14,13 +14,13 @@ import {
 @Injectable()
 export class AffectedObjectsService {
     private _dataService: DataService<InvolvedPartyModel>;
- private _bulkDataService: DataService<AffectedObjectModel>;
+    private _bulkDataService: DataService<AffectedObjectModel>;
     constructor(private dataServiceFactory: DataServiceFactory) {
         let option: DataProcessingService = new DataProcessingService();
         this._dataService = this.dataServiceFactory
             .CreateServiceWithOptions<InvolvedPartyModel>('InvolvedParties', option);
-         this._bulkDataService = this.dataServiceFactory
-       .CreateServiceWithOptions<AffectedObjectModel>('AffectedObjectBatch', option);
+        this._bulkDataService = this.dataServiceFactory
+            .CreateServiceWithOptions<AffectedObjectModel>('AffectedObjectBatch', option);
     }
 
     GetAll(): Observable<ResponseModel<InvolvedPartyModel>> {
@@ -35,7 +35,7 @@ export class AffectedObjectsService {
             .Execute();
     }
 
-    FlattenData(involvedParty: InvolvedPartyModel): any {
+    FlattenAffactedObjects(involvedParty: InvolvedPartyModel): any {
         let affectedObjectsToView: AffectedObjectsToView[];
         let affectedObjects: AffectedObjectModel[];
         let affected: AffectedModel;
@@ -70,7 +70,7 @@ export class AffectedObjectsService {
     }
 
     CreateBulk(entities: AffectedObjectModel[]): Observable<AffectedObjectModel[]> {
-        return this._bulkDataService.BulkPost(entities).Execute();       
+        return this._bulkDataService.BulkPost(entities).Execute();
     }
 
     Update(entity: InvolvedPartyModel): Observable<InvolvedPartyModel> {
@@ -78,5 +78,21 @@ export class AffectedObjectsService {
     }
 
     Delete(entity: InvolvedPartyModel): void {
+    }
+
+    MapAffectedPeopleToSave(affectedObjectsForVerification) {
+        let verifiedAffectedObjects: AffectedObjectModel[];
+        verifiedAffectedObjects = affectedObjectsForVerification.map(function (affected) {
+            let item = new AffectedObjectModel;
+            item.AffectedObjectId = affected.AffectedObjectId;
+            item.IsVerified = affected.IsVerified;
+            item.UpdatedBy = 1;
+            item.UpdatedOn = new Date();
+            item.ActiveFlag = 'Active';
+            item.CreatedBy = 1;
+            item.CreatedOn = new Date();
+            return item;
+        });
+        return verifiedAffectedObjects;
     }
 }

@@ -10,7 +10,7 @@ import { ResponseModel, DataExchangeService } from '../../../../shared';
     encapsulation: ViewEncapsulation.None,
     templateUrl: '../views/affected.objects.verification.html'
 })
-export class AffectedObjectsVerificationComponent {
+export class AffectedObjectsVerificationComponent implements OnInit {
     constructor(private affectedObjectsService: AffectedObjectsService) { }
     affectedObjectsForVerification: AffectedObjectsToView[];
     verifiedAffectedObjects: AffectedObjectModel[];
@@ -19,7 +19,7 @@ export class AffectedObjectsVerificationComponent {
     getAffectedObjects() {
         this.affectedObjectsService.GetFilterByIncidentId()
             .subscribe((response: ResponseModel<InvolvedPartyModel>) => {
-                this.affectedObjectsForVerification = this.affectedObjectsService.FlattenData(response.Records[0]);
+                this.affectedObjectsForVerification = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
             }, (error: any) => {
                 console.log("error:  " + error);
             });
@@ -28,17 +28,7 @@ export class AffectedObjectsVerificationComponent {
 
     save() {
         let datenow = this.date;
-        this.verifiedAffectedObjects = this.affectedObjectsForVerification.map(function (affected) {
-            let item = new AffectedObjectModel;
-            item.AffectedObjectId = affected.AffectedObjectId;
-            item.IsVerified = affected.IsVerified,
-            item.UpdatedBy = 1;
-            item.UpdatedOn = datenow;
-            item.ActiveFlag = 'Active';
-            item.CreatedBy = 1;
-            item.CreatedOn = datenow;
-            return item;
-        });
+        this.verifiedAffectedObjects = this.affectedObjectsService.MapAffectedPeopleToSave(this.affectedObjectsForVerification);
         this.affectedObjectsService.CreateBulk(this.verifiedAffectedObjects)
             .subscribe((response: AffectedObjectModel[]) => {
                 alert("Selected Objects are verified");

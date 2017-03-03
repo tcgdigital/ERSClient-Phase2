@@ -10,7 +10,7 @@ import { ResponseModel, DataExchangeService, GlobalConstants } from '../../../..
     encapsulation: ViewEncapsulation.None,
     templateUrl: '../views/affected.people.list.view.html'
 })
-export class AffectedPeopleListComponent {
+export class AffectedPeopleListComponent implements OnInit {
     constructor(private affectedPeopleService: AffectedPeopleService) { }
     affectedPeople: AffectedPeopleToView[];
     currentIncident: number = 88;
@@ -49,7 +49,7 @@ export class AffectedPeopleListComponent {
         this.affectedPeopleService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvedPartyModel>) => {
 
-                this.affectedPeople = this.affectedPeopleService.FlattenData(response.Records[0]);
+                this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
                 this.affectedPeople.forEach(x =>
                     function () {
                         x["showDiv"] = false;

@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation , OnInit } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, AbstractControl, Validators } from '@angular/forms';
 
 
@@ -20,10 +20,10 @@ import { DepartmentService, DepartmentModel } from '../../masterdata/department'
     templateUrl: './views/call.centre.view.html'
 })
 
-export class EnquiryComponent {
+export class EnquiryComponent implements OnInit {
     constructor(private affectedPeopleService: AffectedPeopleService, private affectedObjectsService: AffectedObjectsService,
         private departmentService: DepartmentService, private enquiryService: EnquiryService,
-        private demandService: DemandService) { };
+        private demandService: DemandService, private dataExchange: DataExchangeService<string>) { };
     public form: FormGroup;
     enquiryTypes: Object = GlobalConstants.EnquiryType;
     enquiryType: number;
@@ -74,7 +74,7 @@ export class EnquiryComponent {
     getPassengersCrews(currentIncident) {
         this.affectedPeopleService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvedPartyModel>) => {
-                this.affectedPeople = this.affectedPeopleService.FlattenData(response.Records[0]);
+                this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
                 let passengerModels = this.affectedPeople.filter(this.ispassenger);
                 let crewModels = this.affectedPeople.filter(this.iscrew);
                 for (let affectedPerson of passengerModels) {
@@ -90,7 +90,7 @@ export class EnquiryComponent {
     getCargo() {
         this.affectedObjectsService.GetFilterByIncidentId()
             .subscribe((response: ResponseModel<InvolvedPartyModel>) => {
-                this.affectedObjects = this.affectedObjectsService.FlattenData(response.Records[0]);
+                this.affectedObjects = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
                 for (let affectedObject of this.affectedObjects) {
                     this.awbs.push(new KeyValue(affectedObject.AWB, affectedObject.AffectedObjectId));
                 }
@@ -134,7 +134,7 @@ export class EnquiryComponent {
                 : (isAdmin ? GlobalConstants.ScheduleTimeForAdmin : GlobalConstants.ScheduleTimeForDemandForCrew));
             this.demand.AffectedPersonId = (this.enquiry.EnquiryType == 1 || this.enquiry.EnquiryType == 5) ?
                 this.enquiry.AffectedPersonId : 0;
-            this.demand.AffectedObjectId = (this.enquiry.EnquiryType == 3) ?
+            this.demand.AffectedObjectId = (this.enquiry.EnquiryType == 2) ?
                 this.enquiry.AffectedObjectId : 0;
             this.selctedEnquiredPerson = (this.demand.AffectedPersonId != 0) ?
                 this.affectedPeople.find(x => x.AffectedPersonId == this.demand.AffectedPersonId) : null;
@@ -145,12 +145,12 @@ export class EnquiryComponent {
             this.demand = new DemandModel();
             this.demand.AffectedPersonId = (this.enquiry.EnquiryType == 1 || this.enquiry.EnquiryType == 5) ?
                 this.enquiry.AffectedPersonId : null;
-            this.demand.AffectedObjectId = (this.enquiry.EnquiryType == 3) ?
+            this.demand.AffectedObjectId = (this.enquiry.EnquiryType == 2) ?
                 this.enquiry.AffectedObjectId : null;
             this.demand.AffectedId = (this.enquiry.EnquiryType == 1 || this.enquiry.EnquiryType == 5) ?
                 this.affectedPeople.find(x => x.AffectedPersonId == this.demand.AffectedPersonId).AffectedId :
-                ((this.enquiry.EnquiryType == 3) ? this.affectedObjects.find(x => x.AffectedObjectId == this.demand.AffectedObjectId).AffectedId : 0);
-            this.demand.AWB = (this.enquiry.EnquiryType == 3) ? this.affectedObjects.find(x => x.AffectedObjectId == this.demand.AffectedObjectId).AWB : null;
+                ((this.enquiry.EnquiryType == 2) ? this.affectedObjects.find(x => x.AffectedObjectId == this.demand.AffectedObjectId).AffectedId : 0);
+            this.demand.AWB = (this.enquiry.EnquiryType == 2) ? this.affectedObjects.find(x => x.AffectedObjectId == this.demand.AffectedObjectId).AWB : null;
             this.demand.ContactNumber = this.caller.ContactNumber;
             this.demand.TargetDepartmentId = isCallback ? this.currentDepartmentId : (isTravelRequest ? GlobalConstants.TargetDepartmentTravel
                 : (isAdmin ? GlobalConstants.TargetDepartmentAdmin : GlobalConstants.TargetDepartmentCrew));
@@ -185,10 +185,12 @@ export class EnquiryComponent {
             x => x.EnquiryType, x => x.IsAdminRequest, x => x.IsCallBack, x => x.IsTravelRequest, x => x.Queries);
         this.enquiry.IncidentId = 88;
         this.enquiry.Remarks = '';
+        debugger;
         this.enquiry.Caller = this.setCallerModel();
         this.enquiry.CommunicationLogs = this.SetCommunicationLog(GlobalConstants.RequesterTypeEnquiry, GlobalConstants.InteractionDetailsTypeEnquiry);
         this.enquiry.CommunicationLogs[0].Queries = this.enquiry.Queries;
         this.demands = new Array<DemandModel>();
+        debugger;
         if (this.enquiry.IsCallBack) {
             this.SetDemands(true, false, false, false);
         }
@@ -204,11 +206,27 @@ export class EnquiryComponent {
 
         this.enquiryService.Create(this.enquiry)
             .subscribe((response: EnquiryModel) => {
-                debugger;
+                alert("Enquiry Saved successfully");
+                this.form = new FormGroup({
+                    EnquiryId: new FormControl(0),
+                    EnquiryType: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+                    CallerName: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+                    ContactNumber: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+                    AlternateContactNumber: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+                    Queries: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+                    Relationship: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+                    IsAdminRequest: new FormControl(false),
+                    IsCallBack: new FormControl(false),
+                    IsTravelRequest: new FormControl(false)
+                });
+               this.dataExchange.Publish("clearAutoCompleteInput", "");
                 if (this.demands.length != 0)
                     this.demandService.CreateBulk(this.demands)
                         .subscribe((response: DemandModel[]) => {
-                            alert("Enquiry Saved successfully");
+
+
+                            this.demands = [];
+                            this.communicationLogs = [];
                         }, (error: any) => {
                             console.log(error);
                         });
