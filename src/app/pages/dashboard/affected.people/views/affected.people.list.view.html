@@ -83,7 +83,7 @@
     </div>
     <div class="col-sm-3">
         <div class="form-control">
-            <select id="selectStatus" [(ngModel)]="medicalStatusForm">
+            <select id="selectStatus" [(ngModel)]="affectedperson.MedicalStatusToshow">
                         <option *ngFor="let status of medicalStatus" [value]="status.value" >
                         {{status.caption}}
                         </option>
@@ -92,10 +92,10 @@
     </div>
     <ul class="list-group">
         <li class="list-group-item"><strong><i>Remarks:</i></strong></li>
-        <li><input value="{{affectedperson.Remarks}}" type="text"/> </li>
+        <li><input value="{{affectedperson.Remarks}}"  [(ngModel)]="affectedperson.Remarks" type="text"/> </li>
     </ul>
      <button class="btn btn-primary" type="button" (click)="ok(affectedperson)">Ok</button>
-      <button class="btn btn-primary" type="button" (click)="cancel()">Cancel</button>
+      <button class="btn btn-primary" type="button" (click)="cancel(affectedperson)">Cancel</button>
 
 </div>
 </div>

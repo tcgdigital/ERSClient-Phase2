@@ -17,7 +17,7 @@ export class AffectedObjectsListComponent {
  ngOnInit(): any {
        this.affectedObjectService.GetFilterByIncidentId()
         .subscribe((response: ResponseModel<InvolvedPartyModel>) => {
-                this.affectedObjects =this.affectedObjectService.FlattenData( response.Records[0]);
+                this.affectedObjects =this.affectedObjectService.FlattenData( response.Records[0]);                
             },(error: any) => {
                 console.log("error:  "+error);
             });

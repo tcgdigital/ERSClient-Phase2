@@ -1,4 +1,4 @@
-import { Http } from '@angular/http';
+import { Http, Headers } from '@angular/http';
 import { Observable } from 'rxjs/rx';
 
 import { BaseModel, WEB_METHOD } from '../../../models';
@@ -19,6 +19,12 @@ export class PatchOperation<T extends BaseModel | any> extends DataOperation<Bas
         private entity: T,
         private key: string) {
         super(dataProcessingService, httpService, typeName, entity);
+        // do not commit
+        this.Key = key;
+        this.RequestHeaders = new Headers({
+            'Content-Type': 'application/json; charset=utf-8; odata.metadata=none',
+            'Accept': 'application/json; charset=utf-8; odata.metadata=none'
+        });
     }
 
     /**

@@ -20,8 +20,7 @@ export class AffectedPeopleVerificationComponent {
   getAffectedPeople(currentIncident){
      this.affectedPeopleService.GetFilterByIncidentId(currentIncident)
         .subscribe((response: ResponseModel<InvolvedPartyModel>) => {
-                this.affectedPeopleForVerification =this.affectedPeopleService.FlattenData( response.Records[0]);
-                console.log("affected:  "+this.affectedPeopleForVerification);
+                this.affectedPeopleForVerification =this.affectedPeopleService.FlattenData( response.Records[0]);                
             },(error: any) => {
                 console.log("error:  "+error);
             });
@@ -43,9 +42,11 @@ export class AffectedPeopleVerificationComponent {
          });
         this.affectedPeopleService.CreateBulk(this.verifiedAffectedPeople)
             .subscribe((response: AffectedPeopleModel[]) => { 
+                alert("Selected People directly affected are verified");
                 this.getAffectedPeople(this.currentIncident);
+                
             }, (error: any) => {
-                console.log(error);
+               alert(error);
             });
     };
 

@@ -41,7 +41,9 @@ export class AffectedObjectsVerificationComponent {
         });
         this.affectedObjectsService.CreateBulk(this.verifiedAffectedObjects)
             .subscribe((response: AffectedObjectModel[]) => {
+                alert("Selected Objects are verified");
                 this.getAffectedObjects();
+
             }, (error: any) => {
                 console.log(error);
             });

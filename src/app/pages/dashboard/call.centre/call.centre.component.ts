@@ -208,7 +208,7 @@ export class EnquiryComponent {
                 if (this.demands.length != 0)
                     this.demandService.CreateBulk(this.demands)
                         .subscribe((response: DemandModel[]) => {
-                            console.log("success");
+                            alert("Enquiry Saved successfully");
                         }, (error: any) => {
                             console.log(error);
                         });
