@@ -30,7 +30,6 @@ export class PatchOperation<T extends BaseModel | any> extends DataOperation<Bas
      */
     public Execute(): Observable<T | any> {
         let body = JSON.stringify(this.entity);
-        debugger;
         let uri: string = this.DataProcessingService
             .GetUri(this.TypeName, this.Key, this.ActionSuffix);
         let requestOps = this.DataProcessingService
