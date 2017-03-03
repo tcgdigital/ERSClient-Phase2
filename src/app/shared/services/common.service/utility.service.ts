@@ -18,10 +18,6 @@ export class UtilityService {
         });
         return keyValues;
     }
-      public static findwhere(Obj: any , prop, value)
-      {
-
-      }
       public static pluck<T, K extends keyof T>(o: T, names: K[]): T[K][] {
        return names.map(n => o[n]);
      } 
