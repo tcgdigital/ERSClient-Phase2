@@ -14,11 +14,14 @@ import {
 @Injectable()
 export class AffectedPeopleService {
     private _dataService: DataService<InvolvedPartyModel>;
+    private _dataServiceAffectedPeople: DataService<AffectedPeopleModel>;
     private _bulkDataService: DataService<AffectedPeopleModel>;
     constructor(private dataServiceFactory: DataServiceFactory) {
         let option: DataProcessingService = new DataProcessingService();
         this._dataService = this.dataServiceFactory
             .CreateServiceWithOptions<InvolvedPartyModel>('InvolvedParties', option);
+        this._dataServiceAffectedPeople = this.dataServiceFactory
+            .CreateServiceWithOptions<AffectedPeopleModel>('AffectedPeople', option);
         this._bulkDataService = this.dataServiceFactory
             .CreateServiceWithOptions<AffectedPeopleModel>('AffectedPersonBatch', option);
     }
@@ -28,9 +31,9 @@ export class AffectedPeopleService {
             .Expand('Affecteds($expand=AffectedPeople($expand=Passenger))')
             .Execute();
     }
-    GetFilterByIncidentId(): Observable<ResponseModel<InvolvedPartyModel>> {
+    GetFilterByIncidentId(IncidentId): Observable<ResponseModel<InvolvedPartyModel>> {
         return this._dataService.Query()
-            .Filter('IncidentId eq ' + '88')
+            .Filter(`IncidentId eq  ${IncidentId}`)
             .Expand('Affecteds($expand=AffectedPeople($expand=Passenger,Crew))')
             .Execute();
     }
@@ -45,7 +48,7 @@ export class AffectedPeopleService {
             let item = new AffectedPeopleToView();
             item.AffectedId = dataItem.AffectedId;
             item.AffectedPersonId = dataItem.AffectedPersonId,
-            item.PassengerName = dataItem.Passenger != null ? dataItem.Passenger.PassengerName : '';
+                item.PassengerName = dataItem.Passenger != null ? dataItem.Passenger.PassengerName : '';
             item.Pnr = dataItem.Passenger != null ? (dataItem.Passenger.Pnr == null ? 'NA' : dataItem.Passenger.Pnr) : 'NA';
             item.CrewName = dataItem.Crew != null ? dataItem.Crew.CrewName : '';
             item.CrewNameWithCategory = dataItem.Crew != null ? dataItem.Crew.CrewName + '(' + dataItem.Crew.AsgCat + ')' : '';
@@ -65,7 +68,7 @@ export class AffectedPeopleService {
         return affectedPeopleForView;
 
     }
-  
+
     Get(id: string | number): Observable<InvolvedPartyModel> {
         return this._dataService.Get(id.toString()).Execute();
     }
@@ -78,8 +81,9 @@ export class AffectedPeopleService {
         return this._bulkDataService.BulkPost(entities).Execute();
     }
 
-    Update(entity: InvolvedPartyModel): Observable<InvolvedPartyModel> {
-        return Observable.of(entity);
+    Update(entity: AffectedPeopleModel , key): Observable<AffectedPeopleModel> {
+        return this._dataServiceAffectedPeople.Patch(entity, key)
+            .Execute();
     }
 
     Delete(entity: InvolvedPartyModel): void {

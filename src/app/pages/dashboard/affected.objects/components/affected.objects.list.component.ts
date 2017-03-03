@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation , OnInit } from '@angular/core';
 
 import { InvolvedPartyModel } from '../../InvolvedParty';
 import { AffectedObjectsToView } from './affected.objects.model';

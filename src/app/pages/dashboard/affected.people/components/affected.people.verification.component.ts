@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation , OnInit } from '@angular/core';
 
 import { InvolvedPartyModel } from '../../InvolvedParty';
 import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';
@@ -14,10 +14,11 @@ export class AffectedPeopleVerificationComponent {
      constructor(private affectedPeopleService: AffectedPeopleService) { }
      affectedPeopleForVerification : AffectedPeopleToView[];
      verifiedAffectedPeople : AffectedPeopleModel[];
-      date: Date = new Date(); 
+     date: Date = new Date(); 
+     currentIncident : number = 88;
 
-  getAffectedPeople(){
-     this.affectedPeopleService.GetFilterByIncidentId()
+  getAffectedPeople(currentIncident){
+     this.affectedPeopleService.GetFilterByIncidentId(currentIncident)
         .subscribe((response: ResponseModel<InvolvedPartyModel>) => {
                 this.affectedPeopleForVerification =this.affectedPeopleService.FlattenData( response.Records[0]);
                 console.log("affected:  "+this.affectedPeopleForVerification);
@@ -42,7 +43,7 @@ export class AffectedPeopleVerificationComponent {
          });
         this.affectedPeopleService.CreateBulk(this.verifiedAffectedPeople)
             .subscribe((response: AffectedPeopleModel[]) => { 
-                this.getAffectedPeople();
+                this.getAffectedPeople(this.currentIncident);
             }, (error: any) => {
                 console.log(error);
             });
@@ -52,7 +53,7 @@ export class AffectedPeopleVerificationComponent {
     
 
  ngOnInit(): any {
-    this.getAffectedPeople();
+    this.getAffectedPeople(this.currentIncident);
  }
 
 }

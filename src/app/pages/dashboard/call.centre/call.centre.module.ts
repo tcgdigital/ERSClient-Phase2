@@ -9,6 +9,8 @@ import { CallCentreRouting } from './call.centre.routing';
 import { EnquiryService} from './components';
 import { AffectedPeopleService } from '../affected.people';
 import { AffectedObjectsService } from '../affected.objects';
+import { DepartmentService } from '../../masterdata/department';
+import { DemandService } from '../demand';
 import { DataExchangeService,SharedModule } from '../../../shared';
 
 @NgModule({
@@ -28,7 +30,9 @@ import { DataExchangeService,SharedModule } from '../../../shared';
         EnquiryService,
         DataExchangeService,
         AffectedPeopleService,
-        AffectedObjectsService
+        AffectedObjectsService,
+        DepartmentService,
+        DemandService
     ]
 })
 export class CallCentreModule { }

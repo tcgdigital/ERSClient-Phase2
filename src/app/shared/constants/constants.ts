@@ -39,6 +39,60 @@ export class GlobalConstants {
             caption: 'Crew',
             text: "Crew",
         }];
+    public static Priority: any[] = [
+        {
+            value: "1",
+            caption: "High",
+            text: "Priority High"
+        },
+        {
+            value: "2",
+            caption: 'Medium',
+            text: "Priority Medium",
+        },
+        {
+            value: "3",
+            caption: "Low",
+            text: "Priority Low"
+        }
+    ];
+    public static TargetDepartmentTravel: number = 3;
+    public static TargetDepartmentAdmin: number = 4;
+    public static TargetDepartmentCrew: number = 6;
+    public static DemandTypeId: number = 1;
+    public static RequiredLocation: string = "Office";
+    public static ScheduleTimeForCallback: number = 75;
+    public static ScheduleTimeForTravel: number = 90;
+    public static ScheduleTimeForAdmin: number = 60;
+    public static ScheduleTimeForDemandForCrew: number = 70;
+    public static RequesterTypeDemand: string = "Demand";
+    public static RequesterTypeEnquiry: string = "Enquiry";
+    public static InteractionDetailsTypeDemand: string = "DemandType";
+    public static InteractionDetailsTypeEnquiry: string = "EnquiryType";
+    public static MedicalStatus : any[] =[
+         {
+            key: 1,
+            value: 'Injury',
+            caption: 'Minor Injury'
+        },
+        {
+            key: 2,
+            value: 'Critical',
+            caption: 'Critical'
+        },
+        {
+            key: 3,
+            value: 'Reunited',
+            caption: 'Reunited'
+        },
+        {
+            key: 4,
+            value: 'Deceased',
+            caption: 'Deceased'
+        }
+    ];
+
+
 }
 
 export enum DataModels {

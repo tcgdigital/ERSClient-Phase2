@@ -17,7 +17,7 @@ import {
 @Injectable()
 export class EnquiryService implements IServiceInretface<EnquiryModel> {
     private _dataService: DataService<EnquiryModel>;
-    private _batchDataService: DataService<BaseModel>;
+   // private _batchDataService: DataService<BaseModel>;
 
     /**
      * Creates an instance of DepartmentService.
@@ -29,8 +29,6 @@ export class EnquiryService implements IServiceInretface<EnquiryModel> {
         let option: DataProcessingService = new DataProcessingService();
         this._dataService = this.dataServiceFactory
             .CreateServiceWithOptions<EnquiryModel>('Enquiries', option);
-        option = new DataProcessingService();
-        option.EndPoint = GlobalConstants.BATCH;      
     }
 
     GetAll(): Observable<ResponseModel<EnquiryModel>> {
@@ -43,7 +41,7 @@ export class EnquiryService implements IServiceInretface<EnquiryModel> {
     }
 
     Create(entity: EnquiryModel): Observable<EnquiryModel> {
-        return Observable.of(entity);
+        return this._dataService.Post(entity).Execute();
     }
 
     CreateBulk(entities: EnquiryModel[]): Observable<EnquiryModel[]> {

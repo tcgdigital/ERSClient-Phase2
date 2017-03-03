@@ -18,7 +18,10 @@ export class UtilityService {
         });
         return keyValues;
     }
+      public static findwhere(Obj: any , prop, value)
+      {
 
+      }
       public static pluck<T, K extends keyof T>(o: T, names: K[]): T[K][] {
        return names.map(n => o[n]);
      } 
@@ -208,6 +211,19 @@ export class UtilityService {
         }
     }
 
+    public static hexToRgbA(hex, alpha) {
+        let c;
+        if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+            c = hex.substring(1).split('');
+            if (c.length === 3) {
+                c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+            }
+            c = '0x' + c.join('');
+            return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ',' + alpha + ')';
+        }
+        throw new Error('Bad Hex');
+    }
+
     private static pad4(num: number): string {
         let ret: string = num.toString(16);
         while (ret.length < 4) {
@@ -233,18 +249,5 @@ export class UtilityService {
     private static isSessionKeyExists(key: string): boolean {
         let keys: string[] = this.listAllSessionItems();
         return (keys.some((x: string) => x === key))
-    }
-
-    public static hexToRgbA(hex, alpha) {
-        let c;
-        if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
-            c = hex.substring(1).split('');
-            if (c.length === 3) {
-                c = [c[0], c[0], c[1], c[1], c[2], c[2]];
-            }
-            c = '0x' + c.join('');
-            return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ',' + alpha + ')';
-        }
-        throw new Error('Bad Hex');
     }
 }

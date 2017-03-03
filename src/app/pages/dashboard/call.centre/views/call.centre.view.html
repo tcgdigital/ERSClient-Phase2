@@ -3,9 +3,9 @@ Call centre
 <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
     <input type="hidden" formControlName="EnquiryId" name="EnquiryId" />
     <div class="form-control">
-        <label for="EnquiryTypeName">Enquiry Type:<span class="red">*</span></label>
+        <label for="EnquiryType">Enquiry Type:<span class="red">*</span></label>
         <select id="selectenquiryType" class="form-control" [(ngModel)]="enquiry.EnquiryType"
-            formControlName="EnquiryTypeName">
+            formControlName="EnquiryType">
                         <option *ngFor="let enquiryType of enquiryTypes" [value]="enquiryType.value">
                                 {{enquiryType.text}}
                         </option>
@@ -19,12 +19,12 @@ Call centre
 
 <div class="form-control">
     <label for="ContactNo">Contact No:<span class="red">*</span></label>
-    <input id="ContactNo" type="text" style="width: 89%;" formControlName="ContactNo" placeholder="Enter Contact No" required autofocus />
+    <input id="ContactNo" type="text" style="width: 89%;" formControlName="ContactNumber" placeholder="Enter Contact No" required autofocus />
 </div>
 
 <div class="form-control">
     <label for="AlterNateContactNo">Alt Contact No:<span class="red">*</span></label>
-    <input id="AlterNateContactNo" type="text" style="width: 89%;" formControlName="AlterNateContactNo" placeholder="Enter AlterNate Contact No" required autofocus />
+    <input id="AlterNateContactNo" type="text" style="width: 89%;" formControlName="AlternateContactNumber" placeholder="Enter AlterNate Contact No" required autofocus />
 
 </div>
 <div [hidden]="enquiry.EnquiryType!=1">
@@ -47,21 +47,21 @@ Call centre
 
 <div class="form-control">
     <label for="DiscussionNote">Discussion Note:<span class="red">*</span></label>
-    <input id="DiscussionNote" type="text" formControlName="DiscussionNote" style="width: 89%;" placeholder="Enter Discussion Note" required autofocus />
+    <input id="DiscussionNote" type="text" formControlName="Queries" style="width: 89%;" placeholder="Enter Discussion Note" required autofocus />
 </div>
  <div class="col-sm-3">
             <label for="Callback">Callbcak:</label>
-            <md-checkbox class="Marght" id="Callback" formControlName="Callback" aria-label="Add">
+            <md-checkbox class="Marght" id="IsCallBack" formControlName="IsCallBack" aria-label="Add">
             </md-checkbox>
         </div>
          <div class="col-sm-3">
             <label for="TravelRequest">Travel Request:</label>
-            <md-checkbox class="Marght" id="TravelRequest" formControlName="TravelRequest" aria-label="Add">
+            <md-checkbox class="Marght" id="IsTravelRequest" formControlName="IsTravelRequest" aria-label="Add">
             </md-checkbox>
         </div>
          <div class="col-sm-3">
             <label for="AdminRequest">Admin Request:</label>
-            <md-checkbox class="Marght" id="AdminRequest" formControlName="AdminRequest" aria-label="Add">
+            <md-checkbox class="Marght" id="IsAdminRequest" formControlName="IsAdminRequest" aria-label="Add">
             </md-checkbox>
         </div>
 </form>
