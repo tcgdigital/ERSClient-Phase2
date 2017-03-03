@@ -1,4 +1,4 @@
-import { Http } from '@angular/http';
+import { Http, Headers } from '@angular/http';
 import { Observable } from 'rxjs/rx';
 
 import { BaseModel, WEB_METHOD } from '../../../models';
@@ -18,7 +18,7 @@ export class PatchOperation<T extends BaseModel | any> extends DataOperation<Bas
         private typeName: string,
         private entity: T,
         private key: string) {
-        super(dataProcessingService, httpService, typeName, entity);
+        super(dataProcessingService, httpService, typeName, entity);       
     }
 
     /**

@@ -1,9 +1,10 @@
 import {
     Component, ViewEncapsulation,
     ElementRef, Input, Output,
-    EventEmitter, HostListener
+    EventEmitter, HostListener, OnDestroy, OnInit
 } from '@angular/core';
 import { KeyValue } from '../../models';
+import { DataExchangeService } from '../../services/data.exchange';
 
 @Component({
     selector: 'autocomplete',
@@ -12,7 +13,7 @@ import { KeyValue } from '../../models';
     },
     templateUrl: './autocomplete.view.html'
 })
-export class AutocompleteComponent {
+export class AutocompleteComponent  implements OnInit{
     @Input('items') Items: Array<KeyValue> = [];
     @Output() notify: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
 
@@ -22,7 +23,7 @@ export class AutocompleteComponent {
     public filteredList: Array<KeyValue> = [];
     public query: string = '';
 
-    constructor(public myElement: ElementRef) {
+    constructor(public myElement: ElementRef,private dataExchange: DataExchangeService<string>) {
          this.elementRef = myElement;
         this.filteredList = this.Items;
     }
@@ -35,8 +36,6 @@ export class AutocompleteComponent {
         } else {
             this.filteredList = this.Items;
         }
-        console.log('filter executed');
-       
     }
 
     select(item: KeyValue) {
@@ -60,5 +59,11 @@ export class AutocompleteComponent {
         }
 
     }
+    ngOnInit(){
+             this.dataExchange.Subscribe("clearAutoCompleteInput",model => this.query = model);
+    };
+    ngOnDestroy(){
+        this.dataExchange.Unsubscribe("clearAutoCompleteInput");
+    };
 }
 
