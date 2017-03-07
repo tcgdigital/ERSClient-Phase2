@@ -18,6 +18,7 @@ export class EmergencyDepartmentComponent {
     departmentsForEmergencyConstant: DepartmesForEmergency[] = [];
     emergencyDepartmentModelToSave: EmergencyDepartmentModel[] = [];
     selectedEmergencyType: number;
+    date: Date = new Date();
     private items: Array<KeyValue> = [];
 
     constructor(private emergencyDepartmentService: EmergencyTypeDepartmentService, private emergencyTypeService: EmergencyTypeService,
@@ -64,13 +65,17 @@ export class EmergencyDepartmentComponent {
     save(): void {
         let model = this.departmentsForEmergency.filter(this.istrue);
         let selectedEmergencyType = this.selectedEmergencyType;
-        this.emergencyDepartmentModelToSave = model.map(function (this, data) {
+        let datenow=this.date;
+        this.emergencyDepartmentModelToSave = model.map(function (data) {
             {
                 let item = new EmergencyDepartmentModel();
                 item.EmergencyTypeDepartmentId = 0;
                 item.EmergencyTypeId = selectedEmergencyType;
                 //item.EmergencyTypeId=this.selectedEmergencyType;
                 item.DepartmentId = data.DepartmentId;
+                item.ActiveFlag = 'Active';
+                item.CreatedBy = 1;
+                item.CreatedOn = datenow;
                 return item;
             }
         });

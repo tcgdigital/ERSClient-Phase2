@@ -18,6 +18,9 @@ export class UtilityService {
         });
         return keyValues;
     }
+      public static pluck<T, K extends keyof T>(o: T, names: K[]): T[K][] {
+       return names.map(n => o[n]);
+     } 
 
     /**
      * Convert string into simple comma seperated string
@@ -217,11 +220,6 @@ export class UtilityService {
         throw new Error('Bad Hex');
     }
 
-    public static resetForm(form: FormGroup): void {
-        for (let contorl in form.controls) {
-        }
-    }
-
     private static pad4(num: number): string {
         let ret: string = num.toString(16);
         while (ret.length < 4) {
@@ -249,3 +247,4 @@ export class UtilityService {
         return (keys.some((x: string) => x === key))
     }
 }
+
