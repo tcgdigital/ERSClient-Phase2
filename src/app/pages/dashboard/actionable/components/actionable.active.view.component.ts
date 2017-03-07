@@ -1,11 +1,20 @@
-import { Component, ViewEncapsulation, Input, OnInit, OnDestroy, AfterContentInit, ViewChild } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, AbstractControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+    Component, ViewEncapsulation, Input,
+    OnInit, OnDestroy, AfterContentInit, ViewChild
+} from '@angular/core';
+import {
+    FormGroup, FormControl, FormBuilder,
+    AbstractControl, Validators, ReactiveFormsModule
+} from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
 
 import { ActionableModel } from './actionable.model';
 import { ActionableService } from './actionable.service';
-import { ResponseModel, DataExchangeService, UtilityService } from '../../../shared';
-import { GlobalConstants } from '../../../shared/constants';
+import {
+    ResponseModel, DataExchangeService,
+    UtilityService, GlobalConstants,
+    FileUploadService
+} from '../../../../shared';
 
 @Component({
     selector: 'actionable-active',
@@ -26,10 +35,28 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     filesToUpload: Array<File>;
     filepathWithLinks: string = null;
     fileName: string = null;
+
+    /**
+     * Creates an instance of ActionableActiveComponent.
+     * @param {FormBuilder} formBuilder 
+     * @param {ActionableService} actionableService 
+     * @param {DataExchangeService<boolean>} dataExchange 
+     * 
+     * @memberOf ActionableActiveComponent
+     */
     constructor(formBuilder: FormBuilder, private actionableService: ActionableService,
+        private fileUploadService: FileUploadService,
         private dataExchange: DataExchangeService<boolean>) {
         this.filesToUpload = [];
     }
+
+    /**
+     * 
+     * 
+     * @returns {*} 
+     * 
+     * @memberOf ActionableActiveComponent
+     */
     ngOnInit(): any {
         this.departmentId = Number(this.DepartmentId);
         this.incidentId = Number(this.IncidentId);
@@ -37,12 +64,30 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         this.form = this.resetActionableForm();
         this.dataExchange.Subscribe("OpenActionablePageInitiate", model => this.onOpenActionablePageInitiate(model));
     }
+
+    /**
+     * 
+     * 
+     * @private
+     * @param {ActionableModel} [actionable] 
+     * @returns {FormGroup} 
+     * 
+     * @memberOf ActionableActiveComponent
+     */
     private resetActionableForm(actionable?: ActionableModel): FormGroup {
         return new FormGroup({
             Comments: new FormControl(''),
             URL: new FormControl('')
         });
     }
+
+    /**
+     * 
+     * 
+     * @param {boolean} isOpen 
+     * 
+     * @memberOf ActionableActiveComponent
+     */
     onOpenActionablePageInitiate(isOpen: boolean): void {
         this.departmentId = Number(this.DepartmentId);
         this.incidentId = Number(this.IncidentId);
@@ -69,47 +114,31 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         });
         tempActionable[0].Done = editedActionable.Done;
     }
+
     upload(actionableClicked: ActionableModel) {
         console.log(this.filesToUpload.length);
+
         if (this.filesToUpload.length > 0) {
             let baseUrl = GlobalConstants.EXTERNAL_URL;
-            this.makeFileRequest(baseUrl + "api/fileUpload/upload", [], this.filesToUpload)
-                .then((result: string) => {
+            this.fileUploadService.uploadFiles<string>(baseUrl + "api/fileUpload/upload", this.filesToUpload)
+                .subscribe((result: string) => {
                     console.log(result);
-                    this.filepathWithLinks = GlobalConstants.EXTERNAL_URL + "UploadFiles/" + result.replace(/^.*[\\\/]/, '');
+                    this.filepathWithLinks = `${GlobalConstants.EXTERNAL_URL}UploadFiles/${result.replace(/^.*[\\\/]/, '')}`;
                     let extension = result.replace(/^.*[\\\/]/, '').split('.').pop();
-                    this.fileName = "Checklist_" + actionableClicked.CheckListCode + "_" + actionableClicked.IncidentId + "." + extension;
-                    //actionableClicked.UploadLinks = this.filepathWithLinks;
-                    //actionableClicked.FileName = this.fileName;
+                    this.fileName = `Checklist_${actionableClicked.CheckListCode}_${actionableClicked.IncidentId}.${extension}`;
+
                 }, (error) => {
                     console.error(error);
                 });
         }
+
     }
     fileChangeEvent(fileInput: any) {
         this.filesToUpload = <Array<File>>fileInput.target.files;
+        console.log(this.filesToUpload);
     }
 
-    makeFileRequest(url: string, params: Array<string>, files: Array<File>): Promise<{}> {
-        return new Promise((resolve, reject) => {
-            var formData: any = new FormData();
-            var xhr = new XMLHttpRequest();
-            for (var i = 0; i < files.length; i++) {
-                formData.append("uploads[]", files[i], files[i].name);
-            }
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4) {
-                    if (xhr.status == 200) {
-                        resolve(JSON.parse(xhr.response));
-                    } else {
-                        reject(xhr.response);
-                    }
-                }
-            }
-            xhr.open("POST", url, true);
-            xhr.send(formData);
-        });
-    }
+
     clearFileUpload(event: any): void {
 
         console.log(this.myInputVariable.nativeElement.files);
@@ -122,22 +151,6 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     getAllActiveActionable(incidentId: number, departmentId: number): void {
         this.actionableService.GetAllOpenByIncidentIdandDepartmentId(incidentId, departmentId)
             .subscribe((response: ResponseModel<ActionableModel>) => {
-                for (var x of response.Records) {
-                    if (x.ActiveFlag == 'Active') {
-                        x.Active = true;
-
-                    }
-                    else {
-                        x.Active = false;
-                    }
-                    x.Done = false;
-                    x.IsDisabled = false;
-                    x.show = false;
-                    if (x.CheckList.ParentCheckListId != null) {
-                        x.IsDisabled = true;
-                    }
-                    x.RagColor = this.actionableService.setRagColor(x.AssignedDt, x.ScheduleClose);
-                }
                 this.activeActionables = response.Records;
             });
     }
@@ -192,10 +205,10 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
     activeActionableClick(activeActionablesUpdate: ActionableModel[]): void {
         console.log(activeActionablesUpdate);
-        let filterActionableUpdate = activeActionablesUpdate.filter(function (item: ActionableModel) {
+        
+        let filterActionableUpdate = activeActionablesUpdate.filter((item: ActionableModel) => {
             return (item.Done == true);
         });
-
         this.batchUpdate(filterActionableUpdate.map(x => {
             return {
                 ActionId: x.ActionId,

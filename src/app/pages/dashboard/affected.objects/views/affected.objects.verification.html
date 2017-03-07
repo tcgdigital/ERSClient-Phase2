@@ -1,0 +1,54 @@
+<div>
+
+    <h3>Cargo Verification</h3>
+
+    <a [routerLink]="['../']">Back to affected Objects</a>
+    <button class="btn btn-primary" type="button" (click)="save()">Verify</button>
+    <div class="row" *ngFor="let affectedObject of affectedObjectsForVerification">    
+       <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
+            <ul class="list-group">
+                <li class="list-group-item"><strong><i>Verify:</i></strong></li>
+                <md-checkbox class="Marght" id="IsVerified" [(ngModel)]="affectedObject.IsVerified" aria-label="Add">
+                                    </md-checkbox>                
+            </ul>
+        </div>  
+        <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
+            <ul class="list-group">
+                <li class="list-group-item"><strong><i>Reference Number:</i></strong></li>
+                <li class="list-group-item" style="border-top: none">{{affectedObject.TicketNumber}}</li>
+            </ul>
+        </div>
+        <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
+            <ul class="list-group">
+                <li class="list-group-item"><strong><i>Air Way Bill.</i></strong></li>
+                <li class="list-group-item" style="border-top: none">{{affectedObject.AWB}}</li>
+            </ul>
+        </div>
+        <div class="col-md-5 col-lg-5 hidden-sm-down col-no-left-padding col-no-right-padding">
+            <ul class="list-group">
+                <li class="list-group-item"><strong><i>Manifest Pieces: </i></strong></li>       
+                <li class="list-group-item" style="border-top: none">{{affectedObject.mftpcs}}</li>        
+            </ul>
+        </div>
+        <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
+            <ul class="list-group">
+                <li class="list-group-item"><strong><i>Manifest weight(kg):</i></strong></li>
+                <li class="list-group-item" style="border-top: none">{{affectedObject.mftwgt}}</li>
+               
+            </ul>
+        </div>
+        <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
+            <ul class="list-group">
+                <li class="list-group-item"><strong><i>POU:</i></strong></li>
+                <li class="list-group-item" style="border-top: none">{{affectedObject.POU}}</li>
+            </ul>
+        </div>
+        <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
+            <ul class="list-group">
+                <li class="list-group-item"><strong><i>POL:</i></strong></li>
+                <li class="list-group-item" style="border-top: none">{{affectedObject.POL}}</li>
+            </ul>
+        </div>
+       
+    </div>
+</div>

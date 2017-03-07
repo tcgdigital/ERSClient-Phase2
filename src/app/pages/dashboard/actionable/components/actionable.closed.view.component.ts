@@ -1,10 +1,18 @@
-import { Component, ViewEncapsulation, Input, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, AbstractControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+    Component, ViewEncapsulation,
+    Input, OnInit, OnDestroy
+} from '@angular/core';
+import {
+    FormGroup, FormControl, FormBuilder,
+    AbstractControl, Validators, ReactiveFormsModule
+} from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
 import { ActionableModel } from './actionable.model';
 import { ActionableService } from './actionable.service';
-import { ResponseModel, DataExchangeService, UtilityService } from '../../../shared';
-import { GlobalConstants } from '../../../shared/constants';
+import {
+    ResponseModel, DataExchangeService,
+    UtilityService, GlobalConstants
+} from '../../../../shared';
 
 
 @Component({
@@ -41,7 +49,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
         this.departmentId = Number(this.DepartmentId);
         this.incidentId = Number(this.IncidentId);
         this.getAllCloseActionable(this.incidentId, this.departmentId);
-        
+
     }
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe("CloseActionablePageInitiate");
@@ -62,14 +70,6 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     getAllCloseActionable(incidentId: number, departmentId: number): void {
         this.actionableService.GetAllCloseByIncidentIdandDepartmentId(incidentId, departmentId)
             .subscribe((response: ResponseModel<ActionableModel>) => {
-                for (var x of response.Records) {
-                    if (x.ActiveFlag == 'Active') {
-                        x.Active = true;
-                    }
-                    else {
-                        x.Active = false;
-                    }
-                }
                 this.closeActionables = response.Records;
             });
     }
@@ -84,7 +84,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     }
     closedActionableClick(closedActionablesUpdate: ActionableModel[]): void {
         console.log(closedActionablesUpdate);
-        let filterActionableUpdate = closedActionablesUpdate.filter(function (item: ActionableModel) {
+        let filterActionableUpdate = closedActionablesUpdate.filter((item: ActionableModel) => {
             return (item.Done == true);
         });
         this.batchUpdate(filterActionableUpdate.map(x => {

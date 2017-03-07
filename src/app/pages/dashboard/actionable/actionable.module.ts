@@ -7,11 +7,11 @@ import { MdCheckboxModule } from '@angular2-material/checkbox';
 import { ActionableRouting } from './actionable.routing';
 import { ActionableComponent } from './actionable.component';
 import { ActionableActiveComponent,ActionableClosedComponent,ActionableService } from './components';
-import { DepartmentService } from '../masterdata/department';
-import { EmergencyTypeService } from '../masterdata/emergencytype';
-import { DataExchangeService } from '../../shared';
-import { FlightService } from '../masterdata/flight';
-import { InvolvedPartyService } from '../masterdata/involvedParty';
+import { DepartmentService } from '../../masterdata/department';
+import { EmergencyTypeService } from '../../masterdata/emergencytype';
+import { DataExchangeService,FileUploadService } from '../../../shared';
+import { FlightService } from '../../masterdata/flight';
+import { InvolvedPartyService } from '../../masterdata/involvedParty';
 import {MomentModule} from 'angular2-moment';
 
 
@@ -36,7 +36,8 @@ import {MomentModule} from 'angular2-moment';
         InvolvedPartyService,
         FlightService,
         EmergencyTypeService,
-        DataExchangeService
+        DataExchangeService,
+        FileUploadService
     ]
 })
 export class ActionableModule { }

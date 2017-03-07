@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { ActionableModel } from '../actionable';
-import { DataExchangeService } from '../../shared';
+import { DataExchangeService } from '../../../shared';
 
 @Component({
 

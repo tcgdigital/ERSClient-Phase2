@@ -81,7 +81,6 @@ export class SimplePostOperation<T extends any> extends DataOperation<any> {
         private entity: any) {
         super(dataProcessingService, httpService, typeName, entity);
         this.RequestHeaders = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
-        
     }
 
     /**
@@ -140,7 +139,7 @@ export class BulkPostOperation<T extends BaseModel> extends DataOperation<BaseMo
         let body: string = JSON.stringify(this.entities);
         let uri: string = this.dataProcessingService
             .GetUri(this.TypeName, this.Key, this.ActionSuffix);
-        
+
         console.log(uri);
         let requestOps: RequestOptions = this.DataProcessingService
             .SetRequestOptions(WEB_METHOD.POST, this.RequestHeaders);

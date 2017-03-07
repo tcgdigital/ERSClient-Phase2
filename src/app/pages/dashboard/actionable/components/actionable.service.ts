@@ -8,13 +8,13 @@ import {
     DataProcessingService, IServiceInretface,
     RequestModel, WEB_METHOD, GlobalConstants,
     BaseModel
-} from '../../../shared';
+} from '../../../../shared';
 
 @Injectable()
 export class ActionableService {
     private _dataService: DataService<ActionableModel>;
     private _batchDataService: DataService<ActionableModel>;
-
+private _actionables:ResponseModel<ActionableModel>;
     /**
          * Creates an instance of ActionableService.
          * @param {DataServiceFactory} dataServiceFactory 
@@ -42,14 +42,47 @@ export class ActionableService {
             .Expand('CheckList($select=CheckListId,CheckListCode,ParentCheckListId)')
             .Filter("CompletionStatus eq 'Open' and IncidentId eq " + incidentId + " and DepartmentId eq " + departmentId)
             .OrderBy("CreatedOn desc")
-            .Execute();
+            .Execute()
+            .map((actionables: ResponseModel<ActionableModel>) => {
+                this._actionables = actionables;
+                this._actionables.Records.forEach(element => {
+                    if (element.ActiveFlag == 'Active') {
+                        element.Active = true;
+                    }
+                    else {
+                        element.Active = false;
+                    }
+                    element.Done = false;
+                    element.IsDisabled = false;
+                    element.show = false;
+                    if (element.CheckList.ParentCheckListId != null) {
+                        element.IsDisabled = true;
+                    }
+                    element.RagColor = this.setRagColor(element.AssignedDt, element.ScheduleClose);
+                });
+                
+                return actionables;
+            });
     }
     GetAllCloseByIncidentIdandDepartmentId(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
             .Expand('CheckList($select=CheckListId,CheckListCode)')
             .Filter("CompletionStatus eq 'Close' and IncidentId eq " + incidentId + " and DepartmentId eq " + departmentId)
             .OrderBy("CreatedOn desc")
-            .Execute();
+            .Execute()
+            .map((actionables: ResponseModel<ActionableModel>) => {
+                this._actionables = actionables;
+                this._actionables.Records.forEach(element => {
+                    if (element.ActiveFlag == 'Active') {
+                        element.Active = true;
+                    }
+                    else {
+                        element.Active = false;
+                    }
+                });
+                
+                return actionables;
+            });
     }
     Update(entity: ActionableModel): Observable<ActionableModel> {
         let key: string = entity.ActionId.toString();
@@ -93,4 +126,5 @@ export class ActionableService {
         });
         return this._batchDataService.BatchPost<BaseModel>(requests).Execute();
     }
+    
 }

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
-import { BaseModel } from '../../../shared';
-import { ChecklistModel } from '../../masterdata/checklist';
-import { IncidentModel } from '../../incident';
+import { BaseModel } from '../../../../shared';
+import { ChecklistModel } from '../../../masterdata/checklist';
+import { IncidentModel } from '../../../incident';
 
 export class ActionableModel extends BaseModel {
     public ActionId: number;

@@ -15,8 +15,7 @@ const pageRoutes: Routes = [
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
             { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' },
             { path: 'masterdata', loadChildren: './masterdata/masterdata.module#MasterDateModule' },
-            { path: 'incident', loadChildren: './incident/incident.module#IncidentModule' },
-            { path: 'actionable', loadChildren: './actionable/actionable.module#ActionableModule' }
+            { path: 'incident', loadChildren: './incident/incident.module#IncidentModule' }
         ]
     }
 ];
