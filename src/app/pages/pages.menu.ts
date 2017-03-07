@@ -105,6 +105,17 @@ export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
                                 expanded: false,
                             }
                         }
+                    },
+                    {
+                        path: 'userprofile',
+                        data: {
+                            menu: {
+                                title: 'User Profile',
+                                icon: 'fa fa-home fa-lg',
+                                selected: false,
+                                expanded: false,
+                            }
+                        }
                     }
                 ]
             },

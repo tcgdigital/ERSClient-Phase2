@@ -1,0 +1,32 @@
+<div class="panel-body WidthHun">
+    <table class="table footable default">
+        <thead>
+            <tr>
+                <th>User Id</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Main Contact</th>
+                <th>Alternate Contact</th>
+                <th>Location</th>
+                <th>IsActive</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let userprofile of userProfiles">
+                <td>{{userprofile.UserId}}</td>
+                <td>{{userprofile.Name}}</td>
+                <td>{{userprofile.Email }}</td>
+                <td>{{userprofile.MainContact}}</td>
+                <td>{{userprofile.AlternateContact}}</td>
+                <td>{{userprofile.Location}}</td>
+                <td>
+                    <input type="checkbox" [(ngModel)]="userprofile.isActive" [disabled]="true" />
+                </td>
+                <td>
+                    <button class="btn btn-warning" type="button" (click)="UpdateUserProfile(userprofile)">Edit</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

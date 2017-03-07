@@ -1,0 +1,22 @@
+<div class="search-container">
+    <form (ngSubmit)="onSubmit()" [formGroup]="form">
+        <div class="search-block form-group" *ngFor="let filterConfig of filterConfigs; let i = index; trackBy: Name">
+            <label [attr.for]="filterConfig.Name">{{filterConfig.Description}}</label>
+
+            <div [ngSwitch]="filterConfig.Type">
+                <input *ngSwitchCase="controlType.TEXTBOX" [formControlName]="filterConfig.Name" [id]="filterConfig.Name" class="form-control"
+                    type="text" attr.placeholder="{{(filterConfig.PlaceHolder)?filterConfig.PlaceHolder:filterConfig.Description}}">
+
+                    <select *ngSwitchCase="controlType.DROPDOWN" [formControlName]="filterConfig.Name" [id]="filterConfig.Name" class="form-control"
+                        attr.label="{{(filterConfig.PlaceHolder)?filterConfig.PlaceHolder:filterConfig.Description}}">
+                        <option value="" selected>{{(filterConfig.PlaceHolder)?filterConfig.PlaceHolder:filterConfig.Description}}</option>
+                        <option *ngFor="let item of filterConfig.ListData | async" [value]="item.Value">{{item.Name}}</option>
+                        </select>
+            </div>
+        </div>
+        <div class="search-block form-group">
+            <input type="button" class="btn btn-primary" (click)="doSearch()" value="Search" />
+            <input *ngIf="showReset" type="button" class="btn btn-primary" (click)="doReset()" value="Reset" />
+        </div>
+    </form>
+</div>
