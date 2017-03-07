@@ -24,6 +24,7 @@ export class DepartmentFunctionalityComponent implements OnInit {
     pagesForDepartmentConstant: PagesForDepartmentModel[] = [];
     pagesForDepartment: PagesForDepartmentModel[] = [];
     items: Array<KeyValue> = [];
+    date: Date = new Date();
     pagePermissionModelToSave : PagePermissionModel[]=[];
 
     constructor(private pageService: PageService,
@@ -40,7 +41,7 @@ export class DepartmentFunctionalityComponent implements OnInit {
             });
     }
 
-    private SetAllSelectedToFalse(pagesForDepartmentModel: PagesForDepartmentModel[]): any {
+    SetAllSelectedToFalse(pagesForDepartmentModel: PagesForDepartmentModel[]): any {
         for (let item of pagesForDepartmentModel) {
             item.AllowView = false;
             item.OnlyForHod = false;
@@ -55,7 +56,8 @@ export class DepartmentFunctionalityComponent implements OnInit {
       save(): void {
         let model = this.pagesForDepartment.filter(this.canViewd);
         let selectedDepartment = this.selectedDepartment;
-        this.pagePermissionModelToSave = model.map(function (this, data) {
+        let dateNow= this.date;
+        this.pagePermissionModelToSave = model.map(function ( data) {
             {
                 let item = new PagePermissionModel();
                 item.PermissionId = 0;
@@ -64,6 +66,9 @@ export class DepartmentFunctionalityComponent implements OnInit {
                 item.PageId = data.PageId;
                 item.CanView= data.AllowView;
                 item.OnlyHOD= data.OnlyForHod;
+                 item.ActiveFlag = 'Active';
+                item.CreatedBy = 1;
+                item.CreatedOn = dateNow;
                 return item;
             }
         });
@@ -81,6 +86,7 @@ export class DepartmentFunctionalityComponent implements OnInit {
         this.pagePermissionService.GetFilter(message.Value.toString())
             .subscribe((response: ResponseModel<PagePermissionModel>) => {
                 this.pagesForDepartment = this.SetAllSelectedToFalse(this.pagesForDepartmentConstant);
+                console.log(this.pagesForDepartment);
                 for (let item2 of this.pagesForDepartment) {
                     if (response.Count != 0) {
                         for (let model of response.Records) {
