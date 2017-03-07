@@ -29,10 +29,11 @@ export class DataService<T extends BaseModel>{
     }
 
     /**
-     * Get an instance of QueryOperation for OData request
-     *
-     * @returns {QueryOperation<T>}
-     *
+     * Get an instance of QueryOperation for OData query request
+     * 
+     * @param {string} [query] 
+     * @returns {QueryOperation<T>} 
+     * 
      * @memberOf DataService
      */
     public Query(): QueryOperation<T> {
@@ -86,7 +87,7 @@ export class DataService<T extends BaseModel>{
      * @memberOf DataService
      */
     public BulkPost(entities: T[]): BulkPostOperation<T> {
-        return new BulkPostOperation<T>(this.dataProcessingService, 
+        return new BulkPostOperation<T>(this.dataProcessingService,
             this.httpService, this.typeName, entities, this.actionSuffix);
     }
 

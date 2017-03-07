@@ -1,5 +1,7 @@
 <div>
     <h3>Department listing data</h3>
+    <generic-search [filterConfigs] = "searchConfigs" 
+        (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();"></generic-search>
     <div class="row" *ngFor="let department of departments">
         <div class="col-sm-12 col-xs-12 hidden-md-up">
             <div class="card card-outline-primary mb-3">

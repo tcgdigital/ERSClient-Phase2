@@ -25,16 +25,19 @@ import {
 export class ActionableActiveComponent implements OnInit, OnDestroy, AfterContentInit {
     @Input() DepartmentId: any;
     @Input() IncidentId: any;
-    public form: FormGroup;
     @ViewChild('myFileInput') myInputVariable: any;
-    private departmentId: number = null;
-    private incidentId: number = null;
+
     editActionableModel: ActionableModel = null;
     tempActionable: ActionableModel = null;
     activeActionables: ActionableModel[] = [];
     filesToUpload: Array<File>;
     filepathWithLinks: string = null;
     fileName: string = null;
+
+    public form: FormGroup;
+
+    private departmentId: number = null;
+    private incidentId: number = null;
 
     /**
      * Creates an instance of ActionableActiveComponent.
@@ -102,7 +105,6 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     IsDone(event: any, editedActionable: ActionableModel): void {
-        console.log(event.checked);
         if (!event.checked) {
             editedActionable.Done = false;
         }
@@ -116,8 +118,6 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     upload(actionableClicked: ActionableModel) {
-        console.log(this.filesToUpload.length);
-
         if (this.filesToUpload.length > 0) {
             let baseUrl = GlobalConstants.EXTERNAL_URL;
             this.fileUploadService.uploadFiles<string>(baseUrl + "api/fileUpload/upload", this.filesToUpload)
@@ -126,32 +126,28 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                     this.filepathWithLinks = `${GlobalConstants.EXTERNAL_URL}UploadFiles/${result.replace(/^.*[\\\/]/, '')}`;
                     let extension = result.replace(/^.*[\\\/]/, '').split('.').pop();
                     this.fileName = `Checklist_${actionableClicked.CheckListCode}_${actionableClicked.IncidentId}.${extension}`;
-
                 }, (error) => {
                     console.error(error);
                 });
         }
-
     }
+
     fileChangeEvent(fileInput: any) {
         this.filesToUpload = <Array<File>>fileInput.target.files;
-        console.log(this.filesToUpload);
     }
 
-
     clearFileUpload(event: any): void {
-
-        console.log(this.myInputVariable.nativeElement.files);
         this.myInputVariable.nativeElement.value = "";
         this.filepathWithLinks = null;
         this.fileName = null;
-        console.log(this.myInputVariable.nativeElement.files);
-
     }
+
     getAllActiveActionable(incidentId: number, departmentId: number): void {
         this.actionableService.GetAllOpenByIncidentIdandDepartmentId(incidentId, departmentId)
             .subscribe((response: ResponseModel<ActionableModel>) => {
                 this.activeActionables = response.Records;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -161,54 +157,51 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                 item.RagColor = this.actionableService.setRagColor(item.AssignedDt, item.ScheduleClose);
                 console.log(`Schedule run RAG ststus: ${item.RagColor}`);
             });
+        }, (error: any) => {
+            console.log(`Error: ${error}`);
         });
     }
+
     actionableDetail(editedActionableModel: ActionableModel): void {
-        console.log(editedActionableModel);
         this.form = new FormGroup({
             Comments: new FormControl(editedActionableModel.Comments),
             URL: new FormControl(editedActionableModel.URL)
         });
         editedActionableModel.show = true;
     }
+
     cancelUpdateCommentAndURL(editedActionableModel: ActionableModel): void {
-        console.log(editedActionableModel);
         this.myInputVariable.nativeElement.value = "";
         this.filepathWithLinks = null;
         this.fileName = null;
         editedActionableModel.show = false;
     }
-    updateCommentAndURL(values: Object, editedActionableModel: ActionableModel): void {
-        console.log(editedActionableModel);
 
+    updateCommentAndURL(values: Object, editedActionableModel: ActionableModel): void {
         this.editActionableModel = new ActionableModel();
         this.editActionableModel.ActionId = editedActionableModel.ActionId;
         this.editActionableModel.Comments = this.form.controls['Comments'].value;
         if (this.filepathWithLinks != "") {
             this.editActionableModel.UploadLinks = this.filepathWithLinks;
-            console.log(this.editActionableModel.UploadLinks);
         }
 
-        console.log(this.editActionableModel);
         this.actionableService.Update(this.editActionableModel)
             .subscribe((response: ActionableModel) => {
                 editedActionableModel.show = false;
-                this.tempActionable = this.activeActionables.filter(function (item: ActionableModel) {
-                    return (item.ActionId == editedActionableModel.ActionId);
-                })[0];
+                this.tempActionable = this.activeActionables
+                    .find((item: ActionableModel) => item.ActionId == editedActionableModel.ActionId);
                 this.tempActionable.Comments = this.editActionableModel.Comments;
                 this.tempActionable.UploadLinks = this.filepathWithLinks;
                 this.tempActionable.FileName = this.fileName;
             }, (error: any) => {
-                console.log("Error");
+                console.log(`Error: ${error}`);
             });
     }
+
     activeActionableClick(activeActionablesUpdate: ActionableModel[]): void {
-        console.log(activeActionablesUpdate);
-        
-        let filterActionableUpdate = activeActionablesUpdate.filter((item: ActionableModel) => {
-            return (item.Done == true);
-        });
+        let filterActionableUpdate = activeActionablesUpdate
+            .filter((item: ActionableModel) => item.Done == true);
+
         this.batchUpdate(filterActionableUpdate.map(x => {
             return {
                 ActionId: x.ActionId,
@@ -218,15 +211,15 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                 ClosedOn: new Date()
             };
         }));
-        console.log(filterActionableUpdate);
-
     }
 
-    batchUpdate(data: any[]) {
+    private batchUpdate(data: any[]) {
         this.actionableService.BatchOperation(data)
             .subscribe(x => {
                 console.log(x.StatusCodes);
                 this.getAllActiveActionable(this.incidentId, this.departmentId);
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 

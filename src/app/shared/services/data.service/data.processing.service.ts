@@ -36,7 +36,6 @@ export class DataProcessingService {
     public GetUri(typeName: string, entityKey: string = '', actionSuffix: string = '') {
         let uri: string = '';
 
-
         if (this.EndPoint === GlobalConstants.TOKEN || this.EndPoint === GlobalConstants.BATCH)
             uri = `${this.BaseUri}`;
         else {
@@ -50,10 +49,6 @@ export class DataProcessingService {
                     uri = `${this.BaseUri}/${typeName}(${entityKey})`;
             }
             else {
-                console.log(`Base URL: ${this.BaseUri}`);
-                console.log(`Type Name: ${typeName}`);
-                console.log(`Action Suffix: ${actionSuffix}`);
-
                 if (actionSuffix !== '' && typeName !== '')
                     uri = `${this.BaseUri}/${typeName}/${actionSuffix}`;
                 else if (actionSuffix !== '' && typeName === '')

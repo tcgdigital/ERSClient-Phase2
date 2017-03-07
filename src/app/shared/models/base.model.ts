@@ -6,7 +6,7 @@ export abstract class BaseModel {
     public UpdatedBy?: number;
     public UpdatedOn?: Date;
 
-    constructor(){
+    constructor() {
         this.ActiveFlag = 'Active';
         this.CreatedBy = 1;
         this.CreatedOn = new Date();
@@ -27,10 +27,9 @@ export class KeyValue {
     constructor(public Key: string, public Value: number) { }
 }
 
-// export interface KeyValue {
-//     Key: string;
-//     Value: any;
-// }
+export class NameValue<T>{
+    constructor(public Name: string, public Value: T) { }
+}
 
 export class IncidentStatus {
     static Open: number = 1;
