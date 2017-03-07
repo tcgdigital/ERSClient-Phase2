@@ -36,6 +36,13 @@ export class DepartmentService implements IServiceInretface<DepartmentModel> {
             .CreateServiceWithOptions<DepartmentModel>('', option);
     }
 
+    /**
+     * Get all active departments
+     * 
+     * @returns {Observable<ResponseModel<DepartmentModel>>} 
+     * 
+     * @memberOf DepartmentService
+     */
     GetAll(): Observable<ResponseModel<DepartmentModel>> {
         return this._dataService.Query()
             .Expand('ParentDepartment($select=DepartmentName)', 'UserProfile($select=Name)')
@@ -43,22 +50,75 @@ export class DepartmentService implements IServiceInretface<DepartmentModel> {
             .Execute();
     }
 
+    /**
+     * Get Departments by filter criteria
+     * 
+     * @param {string} query 
+     * @returns {Observable<ResponseModel<DepartmentModel>>} 
+     * 
+     * @memberOf DepartmentService
+     */
+    GetQuery(query: string): Observable<ResponseModel<DepartmentModel>> {
+        return this._dataService.Query()
+            .Expand('ParentDepartment($select=DepartmentName)', 'UserProfile($select=Name)')
+            .Filter(query).Execute();
+    }
+
+    /**
+     * Get Department by Identity
+     * 
+     * @param {(string | number)} id 
+     * @returns {Observable<DepartmentModel>} 
+     * 
+     * @memberOf DepartmentService
+     */
     Get(id: string | number): Observable<DepartmentModel> {
         return this._dataService.Get(id.toString()).Execute();
     }
 
+    /**
+     * Create Department
+     * 
+     * @param {DepartmentModel} entity 
+     * @returns {Observable<DepartmentModel>} 
+     * 
+     * @memberOf DepartmentService
+     */
     Create(entity: DepartmentModel): Observable<DepartmentModel> {
         return Observable.of(entity);
     }
 
+    /**
+     * Create Department in Bulk
+     * 
+     * @param {DepartmentModel[]} entities 
+     * @returns {Observable<DepartmentModel[]>} 
+     * 
+     * @memberOf DepartmentService
+     */
     CreateBulk(entities: DepartmentModel[]): Observable<DepartmentModel[]> {
         return Observable.of(entities);
     }
 
+    /**
+     * Update Department
+     * 
+     * @param {DepartmentModel} entity 
+     * @returns {Observable<DepartmentModel>} 
+     * 
+     * @memberOf DepartmentService
+     */
     Update(entity: DepartmentModel): Observable<DepartmentModel> {
         return Observable.of(entity);
     }
 
+    /**
+     * Delete Department
+     * 
+     * @param {DepartmentModel} entity 
+     * 
+     * @memberOf DepartmentService
+     */
     Delete(entity: DepartmentModel): void {
     }
 
