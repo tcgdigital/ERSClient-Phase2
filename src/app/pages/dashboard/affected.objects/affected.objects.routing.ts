@@ -8,16 +8,19 @@ import { AffectedObjectsListComponent, AffectedObjectsVerificationComponent } fr
 const affectedObjectsRoutes: Routes = [
     {
         path: '',
-        component: AffectedObjectsComponent
+        component: AffectedObjectsComponent,
+        children: [
+            {
+                path: 'detail',
+                component: AffectedObjectsListComponent
+            },
+            {
+                path: 'verify',
+                component: AffectedObjectsVerificationComponent
+            }
+        ]
     },
-     {
-        path: 'affectedObjects',
-        component: AffectedObjectsListComponent
-    },
-     {
-        path: 'affectedObjectsVerify',
-        component: AffectedObjectsVerificationComponent
-    }
+
 ];
 
 export const AffectedObjectsRouting: ModuleWithProviders

@@ -8,16 +8,19 @@ import { AffectedPeopleListComponent, AffectedPeopleVerificationComponent } from
 const affectedPeopleRoutes: Routes = [
     {
         path: '',
-        component: AffectedPeopleComponent
+        component: AffectedPeopleComponent,
+        children: [
+            {
+                path: 'detail',
+                component: AffectedPeopleListComponent
+            },
+            {
+                path: 'verify',
+                component: AffectedPeopleVerificationComponent
+            }
+        ]
     },
-     {
-        path: 'affectedPeopleList',
-        component: AffectedPeopleListComponent
-    },
-     {
-        path: 'affectedPeopleToVerify',
-        component: AffectedPeopleVerificationComponent
-    }
+
 ];
 
 export const AffectedPeopleRouting: ModuleWithProviders
