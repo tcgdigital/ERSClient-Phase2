@@ -1,2 +1,8 @@
-<a [routerLink]="['../affectedObjects']">Cargo</a> 
-<a [routerLink]="['../affectedObjectsVerify']">Verify Cargo</a>
+<h2>
+  Affecteds
+</h2>
+<nav>
+  <a [routerLink]="['/pages/dashboard/cargo/detail']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Cargo</a>
+  <a [routerLink]="['/pages/dashboard/cargo/verify']" routerLinkActive="active">Verify Cargo</a>
+</nav>
+<router-outlet></router-outlet>
