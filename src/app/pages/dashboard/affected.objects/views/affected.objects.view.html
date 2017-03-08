@@ -1,8 +1,18 @@
 <h2>
   Affecteds
 </h2>
-<nav>
-  <a [routerLink]="['/pages/dashboard/cargo/detail']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Cargo</a>
-  <a [routerLink]="['/pages/dashboard/cargo/verify']" routerLinkActive="active">Verify Cargo</a>
-</nav>
-<router-outlet></router-outlet>
+<div class="card">
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+                 <a class="nav-link active" [routerLink]="['/pages/dashboard/cargo/detail']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Cargo</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/pages/dashboard/cargo/verify']" routerLinkActive="active">Verify Cargo</a>
+            </li>
+        </ul>
+    </div>
+    <div class="card-block">
+        <router-outlet></router-outlet>
+    </div>
+</div>

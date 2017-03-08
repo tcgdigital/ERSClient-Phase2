@@ -26,6 +26,9 @@ import { DataExchangeService,SharedModule } from '../../../shared';
     declarations: [
        EnquiryComponent
     ],
+    exports:[
+        EnquiryComponent
+    ],
     providers: [
         EnquiryService,
         DataExchangeService,

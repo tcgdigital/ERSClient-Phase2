@@ -219,7 +219,7 @@ export class EnquiryComponent implements OnInit {
                     IsCallBack: new FormControl(false),
                     IsTravelRequest: new FormControl(false)
                 });
-               this.dataExchange.Publish("clearAutoCompleteInput", "");
+                this.dataExchange.Publish("clearAutoCompleteInput", "");
                 if (this.demands.length != 0)
                     this.demandService.CreateBulk(this.demands)
                         .subscribe((response: DemandModel[]) => {

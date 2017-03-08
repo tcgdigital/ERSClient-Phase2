@@ -7,6 +7,7 @@ import { SharedModule } from '../../shared/shared.module';
 
 import { DashboardRouting } from './dashboard.routing';
 import { DashboardComponent } from './dashboard.component';
+// import { CallCentreModule, EnquiryComponent } from './call.centre';
 
 
 @NgModule({
@@ -15,10 +16,12 @@ import { DashboardComponent } from './dashboard.component';
         FormsModule,
         HttpModule,
         SharedModule,
+        // CallCentreModule,
         DashboardRouting
     ],
     declarations: [
         DashboardComponent
+        // EnquiryComponent
     ]
 })
 export class DashboardModule { }

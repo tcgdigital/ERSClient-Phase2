@@ -1,8 +1,18 @@
 <h2>
   Affected People
 </h2>
-<nav>
-  <a [routerLink]="['/pages/dashboard/people/detail']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Affected People</a>
-  <a [routerLink]="['/pages/dashboard/people/verify']" routerLinkActive="active">Affected People Verify</a>
-</nav>
-<router-outlet></router-outlet>
+<div class="card">
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+                 <a class="nav-link active" [routerLink]="['/pages/dashboard/people/detail']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Affected People</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/pages/dashboard/people/verify']" routerLinkActive="active">Affected People Verify</a>
+            </li>
+        </ul>
+    </div>
+    <div class="card-block">
+        <router-outlet></router-outlet>
+    </div>
+</div>
