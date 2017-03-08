@@ -18,26 +18,74 @@ export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
                 },
                 children: [
                     {
-                        path: 'affectedPeople',
+                        path: 'people',
                         data: {
                             menu: {
-                                title: 'AffectedPeople',
+                                title: 'Affected People',
                                 icon: 'fa fa-home fa-lg',
                                 selected: false,
                                 expanded: false,
                             }
-                        }
+                        },
+                        children: [
+                            {
+                                path: 'detail',
+                                data: {
+                                    menu: {
+                                        title: 'Detail',
+                                        icon: 'fa fa-home fa-lg',
+                                        selected: false,
+                                        expanded: false,
+                                    }
+                                }
+                            },
+                            {
+                                path: 'verify',
+                                data: {
+                                    menu: {
+                                        title: 'Verified',
+                                        icon: 'fa fa-home fa-lg',
+                                        selected: false,
+                                        expanded: false,
+                                    }
+                                }
+                            },
+                        ]
                     },
                     {
-                        path: 'affectedObjects',
+                        path: 'cargo',
                         data: {
                             menu: {
-                                title: 'AffectedObjects',
+                                title: 'Cargo',
                                 icon: 'fa fa-home fa-lg',
                                 selected: false,
                                 expanded: false,
                             }
-                        }
+                        },
+                        children: [
+                            {
+                                path: 'detail',
+                                data: {
+                                    menu: {
+                                        title: 'Detail',
+                                        icon: 'fa fa-home fa-lg',
+                                        selected: false,
+                                        expanded: false,
+                                    }
+                                }
+                            },
+                            {
+                                path: 'verify',
+                                data: {
+                                    menu: {
+                                        title: 'Verified',
+                                        icon: 'fa fa-home fa-lg',
+                                        selected: false,
+                                        expanded: false,
+                                    }
+                                }
+                            },
+                        ]
                     },
                     {
                         path: 'actionable',
