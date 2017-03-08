@@ -29,41 +29,45 @@ export class UserPermissionComponent {
         this.userProfileService.GetAll()
             .subscribe((response: ResponseModel<UserProfileModel>) => {
                 this.userProfileItems = response.Records;
-                for (let userProfile of this.userProfileItems) {
+                this.userProfileItems.forEach(userProfile => {
                     this.items.push(new KeyValue(userProfile.Name, userProfile.UserProfileId));
-                }
+                });
+
             }, (error: any) => {
                 console.log(error);
             });
     };
 
-    SetAllSelectedToFalse(departmentsToViewModel: DepartmentsToView[]): any {
-        for (let item of departmentsToViewModel) {
+    SetAllSelectedToFalse(departmentsToViewModel: DepartmentsToView[]): void {
+        departmentsToViewModel.forEach(item => {
             item.IsMemberOf = false;
             item.IsHod = false;
-        }
-        return departmentsToViewModel;
+        });
     }
 
     invokeReset(): void {
-        this.departmentsToView=[];
+        this.departmentsToView = [];
     }
 
     onNotify(message: KeyValue): void {
         this.selectedUser = message.Value;
         this.userPermissionService.GetFilterByUsers(message.Value)
             .subscribe((response: ResponseModel<UserPermissionModel>) => {
-                this.departmentsToView = this.SetAllSelectedToFalse(this.departmentsToViewConstant);
-                for (let departmentToView of this.departmentsToView) {
+                this.SetAllSelectedToFalse(this.departmentsToViewConstant);
+                this.departmentsToView = this.departmentsToViewConstant;
+
+                this.departmentsToView.forEach(departmentToView => {
                     if (response.Count != 0) {
-                        for (let userpermission of response.Records) {
-                            if (departmentToView.DepartmentId == userpermission.DepartmentId) {
-                                departmentToView.IsHod = userpermission.IsHod;
-                                departmentToView.IsMemberOf = userpermission.IsMemberOf;
+                        let userPermissionObject = response.Records
+                            .find(x => {
+                                return (x.DepartmentId == departmentToView.DepartmentId);
+                            });
+                            if(userPermissionObject){
+                                departmentToView.IsHod = userPermissionObject.IsHod;
+                                departmentToView.IsMemberOf = userPermissionObject.IsMemberOf;
                             }
-                        }
                     }
-                }
+                });
             }, (error: any) => {
                 console.log(error);
             });
@@ -85,7 +89,6 @@ export class UserPermissionComponent {
         this.userPermissionModelToSave = model.map(function (data) {
             {
                 let item = new UserPermissionModel();
-                item.UserPermissionId = 0;
                 item.UserId = selectedUser;
                 item.DepartmentId = data.DepartmentId;
                 item.ActiveFlag = 'Active';
@@ -110,14 +113,8 @@ export class UserPermissionComponent {
         this.departmentService.GetAll()
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
-                for (let department of this.departments) {
-                    let departmentsToView = new DepartmentsToView();
-                    departmentsToView.DepartmentId = department.DepartmentId;
-                    departmentsToView.DepartmentName = department.DepartmentName;
-                    departmentsToView.IsMemberOf = false;
-                    departmentsToView.IsHod = false;
-                    this.departmentsToViewConstant.push(departmentsToView);
-                }
+                this.departmentsToViewConstant=this.userPermissionService
+                .CreateDefaultDepartmentList(this.departments);
             }, (error: any) => {
                 console.log(error);
             });
