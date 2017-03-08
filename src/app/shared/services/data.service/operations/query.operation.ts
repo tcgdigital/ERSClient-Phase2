@@ -32,11 +32,11 @@ export class QueryOperation<T extends BaseModel> extends DataOperation<T> {
      * 
      * @memberOf QueryOperation
      */
-    constructor(dataProcessingService: DataProcessingService,
-        httpService: Http,
-        typeName: string) {
+    constructor(private dataProcessingService: DataProcessingService,
+        private httpService: Http,
+        private typeName: string) {
         super(dataProcessingService, httpService, typeName);
-         this.dataProcessingService.EndPoint = GlobalConstants.ODATA;
+        this.dataProcessingService.EndPoint = GlobalConstants.ODATA;
     }
 
     /**
