@@ -1,0 +1,19 @@
+<table class="table footable default">
+    <thead>
+        <tr>
+            <th>Published Releases</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngIf="!mediaReleases.length">
+            <td colspan="10">No Releases to show.</td>
+        </tr>
+        <tr *ngFor="let query of mediaReleases">
+            <td>{{query.Message}}</td>
+            <td>
+                <button class="btn btn-warning" type="button" (click)="UpdateMediaRelease(query)">Edit</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
