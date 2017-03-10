@@ -1,0 +1,29 @@
+<div class="panel-body WidthHun">
+    <table class="table footable default WidthHun">
+        <thead>
+            <tr>
+                <th>Broadcast Message</th>
+                <th>Created On</th>
+                <th>Submitted On</th>
+                <th>Priority</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngIf="!broadcastMessages.length">
+                <td colspan="10">No Message is broadcasted yet.</td>
+            </tr>
+            <tr *ngFor="let broadcastMessage of broadcastMessages">
+                <td>{{broadcastMessage.Message}}</td>
+                <td>{{broadcastMessage.CreatedOn}}</td>
+                <td>{{broadcastMessage.SubmittedOn}}</td>
+                <td>{{broadcastMessage.Priority}}</td>
+                <td>
+                    <button class="md-icon-button" aria-label="Edit" type="button" (click)="UpdateBroadcast(broadcastMessage)">
+                        <span class="fa fa-edit"></span>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+<div>
