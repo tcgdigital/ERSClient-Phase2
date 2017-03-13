@@ -1,7 +1,31 @@
 <h1>Welcome to Dashboard</h1>
-<nav>
-    <a [routerLink]="['/pages/dashboard/people']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Affected People</a>
-    <a [routerLink]="['/pages/dashboard/cargo']" routerLinkActive="active">Affected Objects</a>
-    <a [routerLink]="['/pages/dashboard/actionable']" routerLinkActive="active">Actionable</a>
-</nav>
-<router-outlet></router-outlet>
+<div class="card">
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" [routerLink]="['/pages/dashboard/people']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Affected People</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/pages/dashboard/cargo']" routerLinkActive="active">Affected Objects</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/pages/dashboard/actionable']" routerLinkActive="active">Actionables</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/pages/dashboard/callCentre']" routerLinkActive="active">Call Centers</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/pages/dashboard/broadcast']" routerLinkActive="active">Broadcast Messages</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/pages/dashboard/presidentMessage']" routerLinkActive="active">President Messages</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/pages/dashboard/media']" routerLinkActive="active">Medias</a>
+            </li>
+        </ul>
+    </div>
+    <div class="card-block">
+        <router-outlet></router-outlet>
+    </div>
+</div>

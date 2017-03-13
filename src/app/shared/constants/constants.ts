@@ -75,8 +75,8 @@ export class GlobalConstants {
     public static RequesterTypeEnquiry: string = "Enquiry";
     public static InteractionDetailsTypeDemand: string = "DemandType";
     public static InteractionDetailsTypeEnquiry: string = "EnquiryType";
-    public static MedicalStatus : any[] =[
-         {
+    public static MedicalStatus: any[] = [
+        {
             key: 1,
             value: 'Injury',
             caption: 'Minor Injury'

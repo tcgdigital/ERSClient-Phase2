@@ -4,3 +4,4 @@ export * from './data.operation';
 export * from './data.service';
 export * from './data.service.factory';
 export * from './service.interface';
+export * from './service.base';

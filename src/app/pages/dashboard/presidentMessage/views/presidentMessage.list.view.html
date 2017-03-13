@@ -1,0 +1,21 @@
+<div class="panel-body WidthHun">
+    <table class="table footable default">
+        <thead>
+            <tr>
+                <th>President's Messages</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngIf="!PresidentsMessages.length">
+                <td colspan="10">No Message to show.</td>
+            </tr>
+            <tr *ngFor="let message of PresidentsMessages">
+                <td>{{message.Message}}</td>
+                <td>
+                    <button class="btn btn-warning" type="button" (click)="UpdatePresidentMessage(message)">Edit</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
