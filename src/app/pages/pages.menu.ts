@@ -141,6 +141,17 @@ export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
                         }
                     },
                     {
+                        path: 'template',
+                        data: {
+                            menu: {
+                                title: 'Notification Template',
+                                icon: 'fa fa-home fa-lg',
+                                selected: false,
+                                expanded: false,
+                            }
+                        }
+                    },
+                    {
                         path: 'userpermission',
                         data: {
                             menu: {
