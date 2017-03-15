@@ -30,8 +30,8 @@
     <div class="col-sm-3">
         <label for="Priority">Priority<span class="red">*</span></label>
         <select id="selectPriority" class="form-control" [(ngModel)]="broadcast.Priority" formControlName="Priority">
-            <option *ngFor="let priority of priorities" [value]="priority.value">
-                    {{priority.value}}
+            <option *ngFor="let priority of priorities" [value]="priority.caption">
+                    {{priority.caption}}
             </option>
         </select>
     </div>

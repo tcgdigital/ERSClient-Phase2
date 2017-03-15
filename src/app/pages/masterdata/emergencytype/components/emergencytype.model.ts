@@ -5,7 +5,7 @@ export class EmergencyTypeModel extends BaseModel {
     public EmergencyTypeName: string;
     public EmergencyCategory: string;
 
-    public Active: boolean;
+    public Active?: boolean;
 
     constructor(){
         super();

@@ -23,7 +23,7 @@ export class PresidentMessageService
      * @memberOf PresidentMessageService
      */
     constructor(dataServiceFactory: DataServiceFactory) {
-        super(dataServiceFactory, 'PresidentsMessages')
+        super(dataServiceFactory, 'PresidentsMessages');
     }
 
     /**

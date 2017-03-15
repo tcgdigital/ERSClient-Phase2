@@ -19,6 +19,7 @@ import {
 export class EmergencyTypeEntryComponent implements OnInit {
     public form: FormGroup;
     emergencyTypeModel: EmergencyTypeModel = new EmergencyTypeModel();
+    emergencyTypeModelWithoutActive: EmergencyTypeModel = new EmergencyTypeModel();
     date: Date = new Date();
     emergencyTypes: EmergencyTypeModel[] = [];
     Action: string;
@@ -32,6 +33,8 @@ export class EmergencyTypeEntryComponent implements OnInit {
         this.emergencyTypeModel = model;
         this.emergencyTypeModel.EmergencyTypeId = model.EmergencyTypeId;
         this.Action = "Edit";
+        console.log(this.emergencyTypeModel);
+        
     }
 
     ngOnInit(): void {
@@ -51,6 +54,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
         this.emergencyTypeModel.ActiveFlag = this.form.controls["ActiveFlag"].value;
 
         if (this.emergencyTypeModel.EmergencyTypeId == 0) {
+            console.log(this.emergencyTypeModel);
             this.emergencyTypeService.Create(this.emergencyTypeModel)
                 .subscribe((response: EmergencyTypeModel) => {
                     this.dataExchange.Publish("EmergencyTypeModelSaved", response);
@@ -59,7 +63,11 @@ export class EmergencyTypeEntryComponent implements OnInit {
                 });
         }
         else {
-            this.emergencyTypeService.Update(this.emergencyTypeModel)
+            this.emergencyTypeModelWithoutActive = this.emergencyTypeModel;
+            delete this.emergencyTypeModelWithoutActive.Active;
+
+            console.log(this.emergencyTypeModelWithoutActive);
+            this.emergencyTypeService.Update(this.emergencyTypeModelWithoutActive)
                 .subscribe((response: EmergencyTypeModel) => {
                     this.dataExchange.Publish("EmergencyTypeModelUpdated", response);
                 }, (error: any) => {
@@ -71,6 +79,8 @@ export class EmergencyTypeEntryComponent implements OnInit {
     cancel(): void {
         this.emergencyTypeModel = new EmergencyTypeModel();
         this.Action = "Save";
+        this.initiateForm();
+        this.emergencyTypeModel.EmergencyCategory = "FlightRelated";
     }
 
     private initiateForm(): void {

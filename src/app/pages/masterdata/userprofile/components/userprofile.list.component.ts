@@ -27,7 +27,7 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
 
     UpdateUserProfile(userProfileModelUpdate: UserProfileModel): void {
         let userProfileModelToSend = Object.assign({}, userProfileModelUpdate)
-        this.dataExchange.Publish("UserProfileModelModified", userProfileModelToSend);
+        this.dataExchange.Publish("UserProfileModelToBeModified", userProfileModelToSend);
     }
 
     ngOnInit(): any {

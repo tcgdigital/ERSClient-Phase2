@@ -1,4 +1,4 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+<form [formGroup]="form">
     <div class="panel panel-default panel-minimal">
         <div class="panel-body InnerHolder">
             <input type="hidden" *ngIf="PresidentsMessage.PresidentsMessageId != undefined" [(ngModel)]="PresidentsMessage.PresidentsMessageId"
