@@ -38,7 +38,7 @@ export class QuickLinkListComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.getQuickLinks();
-        this.dataExchange.Subscribe("quickLinkModelSaved", 
+        this.dataExchange.Subscribe("quickLinkModelSaved",
             model => this.onQuickLinkSaveSuccess(model));
     }
 

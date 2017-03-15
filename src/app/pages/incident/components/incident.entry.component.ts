@@ -85,7 +85,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
 
     ngOnInit(): any {
         console.log('Hello ' + this.DepartmentId);
-        //this.showAdd = true;
+        // this.showAdd = true;
         this.initiateIncidentModel();
         console.log(this.severities);
         console.log(this.incidentStatuses);
