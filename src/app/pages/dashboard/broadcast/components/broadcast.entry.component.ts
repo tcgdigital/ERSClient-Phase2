@@ -35,6 +35,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     BroadCastDepartmentMappings: BroadCastDepartmentModel[] = [];
     currentDepartment: BroadCastDepartmentModel = new BroadCastDepartmentModel();
     Action: string;
+    priorities: any[] = GlobalConstants.Priority;
 
     /**
      * Creates an instance of BroadcastEntryComponent.
@@ -70,26 +71,29 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         this.broadcast.IncidentId = +this.currentIncidentId;
         this.broadcast.InitiateDepartmentId = +this.initiatedDepartmentId;
         this.broadcast.IsSubmitted = false;
-        this.broadcast.Priority = 'High';
+        this.broadcast.Priority = this.priorities.find(x=> x.value == '1').caption;
         this.BroadCastDepartmentMappings.forEach(element => {
             element.IsSelected = false;
         });
         this.broadcast.DepartmentBroadcasts = [];
         this.Action = 'Save';
-
-        this.form = new FormGroup({
-            BroadcastId: new FormControl(0),
-            Message: new FormControl('', [Validators.required, Validators.maxLength(1000)]),
-            SelectAllDepartment: new FormControl(0),
-            BroadCastDepartmentMappings: new FormControl(0),
-            Priority: new FormControl('High')
-        });
-
+        this.initiateForm();
+        
         this.dataExchange.Subscribe('OnBroadcastUpdate', model => this.onBroadcastUpdate(model))
     }
 
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe('OnBroadcastUpdate')
+    }
+
+    initiateForm():void{
+        this.form = new FormGroup({
+            BroadcastId: new FormControl(0),
+            Message: new FormControl('', [Validators.required, Validators.maxLength(1000)]),
+            SelectAllDepartment: new FormControl(0),
+            BroadCastDepartmentMappings: new FormControl(0),
+            Priority: new FormControl(this.priorities.find(x=> x.value == '1').caption)
+        });
     }
 
     selectAllDepartment(IsAllSelected: boolean): void {
@@ -180,5 +184,9 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         });
     }
 
-    cancel(): void { }
+    cancel(): void {
+        this.broadcast = new BroadCastModel();
+        this.initiateForm();
+        this.broadcast.Priority = this.priorities.find(x=> x.value == '1').caption;
+     }
 }

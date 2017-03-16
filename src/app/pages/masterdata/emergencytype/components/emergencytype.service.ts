@@ -8,18 +8,24 @@ import {
     DataService,
     DataServiceFactory,
     DataProcessingService,
-    IServiceInretface
+    IServiceInretface,
+    ServiceBase
 } from '../../../../shared/services';
 
 @Injectable()
-export class EmergencyTypeService implements IServiceInretface<EmergencyTypeModel> {
-    private _dataService: DataService<EmergencyTypeModel>;
+export class EmergencyTypeService extends ServiceBase<EmergencyTypeModel> {
+    
+
+    /**
+     * Creates an instance of EmergencyTypeService.
+     * @param {DataServiceFactory} dataServiceFactory 
+     * 
+     * @memberOf EmergencyTypeService
+     */
     private _emergencyTypes: ResponseModel<EmergencyTypeModel>;
-    constructor(private dataServiceFactory: DataServiceFactory) {
-        let option: DataProcessingService = new DataProcessingService();
-        this._dataService = this.dataServiceFactory
-            .CreateServiceWithOptions<EmergencyTypeModel>('EmergencyTypes', option);
-    }
+    constructor(dataServiceFactory: DataServiceFactory) {
+        super(dataServiceFactory, 'EmergencyTypes');
+    }   
 
     GetAll(): Observable<ResponseModel<EmergencyTypeModel>> {
         return this._dataService.Query()
@@ -38,24 +44,5 @@ export class EmergencyTypeService implements IServiceInretface<EmergencyTypeMode
                 return emergencyTypes;
             });
     }
-
-    Get(id: string | number): Observable<EmergencyTypeModel> {
-        return this._dataService.Get(id.toString()).Execute();
-    }
-
-    Create(entity: EmergencyTypeModel): Observable<EmergencyTypeModel> {
-        return this._dataService.Post(entity).Execute();
-    }
-
-    CreateBulk(entities: EmergencyTypeModel[]): Observable<EmergencyTypeModel[]> {
-        return Observable.of(entities);
-    }
-
-    Update(entity: EmergencyTypeModel): Observable<EmergencyTypeModel> {
-        let key: string = entity.EmergencyTypeId.toString();
-        return this._dataService.Patch(entity, key).Execute();
-    }
-
-    Delete(entity: EmergencyTypeModel): void {
-    }
+   
 }

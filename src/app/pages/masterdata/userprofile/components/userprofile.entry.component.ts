@@ -27,7 +27,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.initiateForm();
-        this.dataExchange.Subscribe("UserProfileModelModified", model => this.onUserProfileModified(model))
+        this.dataExchange.Subscribe("UserProfileModelToBeModified", model => this.onUserProfileModified(model))
     }
 
     onUserProfileModified(userProfileModel: UserProfileModel): void {
@@ -60,7 +60,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
         }
 
         else {
-            this.userProfileService.Create(this.userProfileModel)
+            this.userProfileService.Update(this.userProfileModel)
                 .subscribe((response: UserProfileModel) => {
                     this.dataExchange.Publish("UserProfileModelModified", response);
                 }, (error: any) => {

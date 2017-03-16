@@ -25,7 +25,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     @Input() currentIncidentId: string;
 
     public form: FormGroup;
-    media: MediaModel;
+    media: MediaModel = new MediaModel();
     date: Date = new Date();
     // medias: MediaModel[] = [];
     Action: string;
@@ -83,7 +83,8 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
             (this.media, this.form, x => x.Message, x => x.Remarks);
 
         if (this.media.MediaqueryId == 0) {
-            this.media.MediaqueryId = this.form.controls["MediaqueryId"].value;
+            console.log(this.media);
+            //this.media.MediaqueryId = this.form.controls["MediaqueryId"].value;
 
             this.mediaQueryService.Create(this.media)
                 .subscribe((response: MediaModel) => {

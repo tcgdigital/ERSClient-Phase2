@@ -58,8 +58,8 @@ export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
      * @memberOf EmergencyTypeDetailComponent
      */
     ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe('OnEmergencyTypeUpdate');
-        this.dataExchange.Unsubscribe('EmergencyTypeModelUpdated');
+        //this.dataExchange.Unsubscribe('OnEmergencyTypeUpdate');
+        this.dataExchange.Unsubscribe('EmergencyTypeModelSaved');
         this.dataExchange.Unsubscribe('EmergencyTypeModelUpdated');
     }
 }

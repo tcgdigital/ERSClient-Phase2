@@ -21,7 +21,7 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
         private dataExchange: DataExchangeService<MediaModel>) { }
 
     getMediaReleases(): void {
-        this.mediaService.GetPublished(+this.currentIncidentId)
+        this.mediaService.Query(+this.initiatedDepartmentId,+this.currentIncidentId)
             .subscribe((response: ResponseModel<MediaModel>) => {                
                 this.mediaReleases = response.Records;               
             }, (error: any)=>{
@@ -39,9 +39,9 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.getMediaReleases();
+        this.getMediaReleases();       
+        this.dataExchange.Subscribe("MediaModelSaved", model => this.onMediaSuccess(model));
         this.dataExchange.Subscribe("MediaModelUpdated", model => this.onMediaSuccess(model));
-        this.dataExchange.Subscribe("MediaModelSaved", model => this.onMediaSuccess(model))
     }
 
     ngOnDestroy(): void {

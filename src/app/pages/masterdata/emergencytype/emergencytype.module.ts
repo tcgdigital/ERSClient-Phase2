@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { EmergencyTypeRouting } from './emergencytype.routing';
@@ -11,6 +11,7 @@ import { EmergencyTypeService, EmergencyTypeEntryComponent, EmergencyTypeDetailC
     imports: [
         CommonModule,
         FormsModule,
+        ReactiveFormsModule,
         HttpModule,
         EmergencyTypeRouting
     ],
