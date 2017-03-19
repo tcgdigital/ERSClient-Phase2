@@ -12,6 +12,7 @@ import {
 } from '../../../../shared';
 import { DepartmentService, DepartmentModel } from '../../department';
 import { EmergencyTypeModel, EmergencyTypeService } from '../../emergencytype';
+import { PeopleOnBoardWidgetService } from '../../../widgets';
 
 @Injectable()
 export class ChecklistService implements IServiceInretface<ChecklistModel> {

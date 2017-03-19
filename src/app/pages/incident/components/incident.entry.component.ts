@@ -1,7 +1,8 @@
 import { Component, ViewEncapsulation, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+
 import { IncidentModel } from './incident.model';
-import { EmergencyTypeModel, EmergencyTypeService } from '../../masterdata/emergencytype';
+import { EmergencyTypeModel, EmergencyTypeService } from '../../masterdata';
 
 import {
     ResponseModel,
@@ -12,8 +13,7 @@ import {
     InvolvedPartyType,
     UtilityService
 } from '../../../shared';
-import { InvolvedPartyModel } from '../../masterdata/involvedParty';
-import { FlightModel } from '../../masterdata/flight';
+import {  FlightModel,InvolvePartyModel } from '../../shared.components';
 import { IncidentDataExchangeModel } from './incidentDataExchange.model';
 
 @Component({
@@ -21,14 +21,13 @@ import { IncidentDataExchangeModel } from './incidentDataExchange.model';
     encapsulation: ViewEncapsulation.None,
     templateUrl: '../views/incident.entry.html'
 })
-
 export class IncidentEntryComponent implements OnInit, OnDestroy {
     @Input() DepartmentId: any;
     showInsert: boolean = null;
     isFlightRelated: boolean = false;
     buttonValue: String = '';
     incidentModel: IncidentModel = null;
-    involvedPartyModel: InvolvedPartyModel = null;
+    involvedPartyModel: InvolvePartyModel = null;
     incidentDataExchangeModel: IncidentDataExchangeModel = null;
     flightModel: FlightModel = null;
     date: Date = new Date();
@@ -158,7 +157,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     fillIncidentDataExchangeModelData(incidentModel: IncidentModel,
-        involvedPartyModel?: InvolvedPartyModel, flightModel?: FlightModel): void {
+        involvedPartyModel?: InvolvePartyModel, flightModel?: FlightModel): void {
         this.incidentDataExchangeModel = new IncidentDataExchangeModel();
         this.incidentDataExchangeModel.IncidentModel = incidentModel;
         this.incidentDataExchangeModel.InvolvedPartyModel = involvedPartyModel;
@@ -170,7 +169,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     createInvolvedPartyModel(isFlightRelated: boolean): void {
-        this.involvedPartyModel = new InvolvedPartyModel();
+        this.involvedPartyModel = new InvolvePartyModel();
         this.involvedPartyModel.InvolvedPartyId = 0;
         this.involvedPartyModel.IncidentId = 0;
         if (isFlightRelated) {

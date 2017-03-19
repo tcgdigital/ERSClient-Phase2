@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
-//import { Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { IncidentModel } from './incident.model';
-import { ResponseModel, DataService, DataServiceFactory, DataProcessingService } from '../../../shared';
-import { DepartmentService } from '../../masterdata/department';
-import { EmergencyTypeService } from '../../masterdata/emergencytype';
-//import { DepartmentModel } from '../../masterdata/department';
-//import { EmergencyTypeModel } from '../../masterdata/emergencytype';
-import { InvolvedPartyModel } from '../../masterdata/involvedParty';
-import { InvolvedPartyService } from '../../masterdata/involvedParty';
-import { FlightModel } from '../../masterdata/flight';
-import { FlightService } from '../../masterdata/flight';
+import {
+    ResponseModel, DataService,
+    DataServiceFactory, DataProcessingService
+} from '../../../shared';
+import { DepartmentService, EmergencyTypeService } from '../../masterdata';
+import {
+
+    FlightModel, FlightService,InvolvePartyModel, InvolvePartyService
+} from '../../shared.components';
 
 @Injectable()
 export class IncidentService {
@@ -19,7 +18,7 @@ export class IncidentService {
 
     constructor(private dataServiceFactory: DataServiceFactory,
         private departmentService: DepartmentService,
-        private involvedPartyService: InvolvedPartyService,
+        private involvedPartyService: InvolvePartyService,
         private flightService: FlightService, private emergencyTypeService: EmergencyTypeService) {
         let option: DataProcessingService = new DataProcessingService();
         this._dataService = this.dataServiceFactory
@@ -43,7 +42,11 @@ export class IncidentService {
             .Execute();
     }
 
-    CreateIncident(incidentModel: IncidentModel, isFlightRelated: boolean, involvedParty?: InvolvedPartyModel,
+    Get(id: string | number): Observable<IncidentModel> {
+        return this._dataService.Get(id.toString()).Execute();
+    }
+
+    CreateIncident(incidentModel: IncidentModel, isFlightRelated: boolean, involvedParty?: InvolvePartyModel,
         flight?: FlightModel): Observable<IncidentModel> {
         let incident: IncidentModel;
         if (isFlightRelated) {
@@ -51,18 +54,12 @@ export class IncidentService {
                 .Execute()
                 .map((data: IncidentModel) => {
                     incident = data;
-                    if (incident.ActiveFlag === 'Active') {
-                        incident.Active = true;
-                    }
-                    else {
-                        incident.Active = false;
-                    }
-                    console.log('Insert Successful');
+                    incident.Active = (incident.ActiveFlag === 'Active');
                     involvedParty.IncidentId = incident.IncidentId;
                     return data;
                 })
                 .flatMap((data: IncidentModel) => this.involvedPartyService.CreateInvolvedParty(involvedParty))
-                .map((data: InvolvedPartyModel) => {
+                .map((data: InvolvePartyModel) => {
                     flight.InvolvedPartyId = data.InvolvedPartyId;
                     return incident;
                 })
@@ -77,10 +74,7 @@ export class IncidentService {
             return this._dataService.Post(incidentModel)
                 .Execute();
         }
-
     }
-
-
 
     GetIncidentById(id: number): Observable<IncidentModel> {
         return this._dataService.Get(id.toString())

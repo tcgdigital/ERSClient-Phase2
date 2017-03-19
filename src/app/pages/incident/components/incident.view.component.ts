@@ -1,8 +1,13 @@
-import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, AbstractControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+    Component, ViewEncapsulation,
+    OnInit, OnDestroy
+} from '@angular/core';
+import {
+    FormGroup, FormControl, FormBuilder,
+    AbstractControl, Validators, ReactiveFormsModule
+} from '@angular/forms';
 import { IncidentModel } from './incident.model';
-import { EmergencyTypeModel } from '../../masterdata/emergencytype';
-import { EmergencyTypeService } from '../../masterdata/emergencytype';
+import { EmergencyTypeModel, EmergencyTypeService } from '../../masterdata';
 import { IncidentService } from './incident.service';
 import {
     ResponseModel,
@@ -12,9 +17,8 @@ import {
     IncidentStatus,
     InvolvedPartyType
 } from '../../../shared';
-import { UtilityService } from '../../../shared/services';
-import { InvolvedPartyModel } from '../../masterdata/involvedParty';
-import { FlightModel } from '../../masterdata/flight';
+import { UtilityService } from '../../../shared';
+import { FlightModel,InvolvePartyModel } from '../../shared.components';
 import { IncidentDataExchangeModel } from './incidentDataExchange.model';
 
 @Component({
@@ -33,6 +37,7 @@ export class IncidentViewComponent implements OnInit, OnDestroy {
     incidentModel: IncidentModel = null;
     activeEmergencyTypes: EmergencyTypeModel[] = [];
     incidentDataExchangeModel: IncidentDataExchangeModel = null;
+
     constructor(formBuilder: FormBuilder,
         private incidentService: IncidentService,
         private emergencyTypeService: EmergencyTypeService,
@@ -69,11 +74,12 @@ export class IncidentViewComponent implements OnInit, OnDestroy {
         });
         this.disable = true;
         this.dataExchange.Subscribe("incidentCreatedPreCheck", model => this.onIncidentCreatedPreCheck(model));
-
     }
+
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe("incidentCreatedPreCheck");
     }
+
     initiateIncidentModel(): void {
         this.incidentModel = new IncidentModel();
         this.incidentModel.IncidentId = 0;
@@ -96,6 +102,7 @@ export class IncidentViewComponent implements OnInit, OnDestroy {
         this.incidentModel.CreatedBy = 1;
         this.incidentModel.CreatedOn = this.date;
     }
+
     getAllActiveEmergencyTypes(): void {
         this.emergencyTypeService.GetAll()
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
@@ -114,6 +121,7 @@ export class IncidentViewComponent implements OnInit, OnDestroy {
 
             });
     }
+
     onIncidentCreatedPreCheck(incidentDataExchangeModel: IncidentDataExchangeModel): void {
         console.log('Incident create..');
         console.log(incidentDataExchangeModel);
@@ -157,9 +165,6 @@ export class IncidentViewComponent implements OnInit, OnDestroy {
             .subscribe((response: IncidentModel) => {
                 console.log('VV');
                 console.log(response);
-                //this.dataExchange.Publish("checkListModelSaved", response);
-                //this.resetCheckListForm();
-                //this.initiateCheckListModel();
                 console.log("Success");
             }, (error: any) => {
                 console.log("Error");
@@ -169,6 +174,5 @@ export class IncidentViewComponent implements OnInit, OnDestroy {
     cancel(): void {
         this.showView = false;
         this.dataExchangeDecision.Publish("incidentViewPreCheck", true);
-
     }
 }

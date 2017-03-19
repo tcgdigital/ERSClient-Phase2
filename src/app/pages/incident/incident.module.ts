@@ -6,12 +6,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { MdCheckboxModule } from '@angular2-material/checkbox';
 import { IncidentRouting } from './incident.routing';
 import { IncidentComponent } from './incident.component';
-import { IncidentEntryComponent,IncidentViewComponent,IncidentService } from './components';
-import { DepartmentService } from '../masterdata/department';
-import { EmergencyTypeService } from '../masterdata/emergencytype';
+import { IncidentEntryComponent, IncidentViewComponent, IncidentService } from './components';
+import { DepartmentService, EmergencyTypeService } from '../masterdata';
 import { DataExchangeService } from '../../shared';
-import { FlightService } from '../masterdata/flight';
-import { InvolvedPartyService } from '../masterdata/involvedParty';
+import { FlightService } from '../shared.components';
+import { InvolvePartyService } from '../shared.components';
 
 @NgModule({
     imports: [
@@ -30,7 +29,7 @@ import { InvolvedPartyService } from '../masterdata/involvedParty';
     providers: [
         IncidentService,
         DepartmentService,
-        InvolvedPartyService,
+        InvolvePartyService,
         FlightService,
         EmergencyTypeService,
         DataExchangeService

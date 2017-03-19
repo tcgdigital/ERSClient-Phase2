@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BaseModel } from '../../../../shared';
-import { EmergencySituationModel } from '../../emergencysituation';
+import { EmergencySituationModel } from '../../emergency.situation';
 
 export class TemplateModel extends BaseModel {
     public TemplateId: number;
@@ -11,4 +11,8 @@ export class TemplateModel extends BaseModel {
     public Active: boolean;
 
     public EmergencySituation: EmergencySituationModel;
+
+    constructor(){
+        super();
+    }
 }

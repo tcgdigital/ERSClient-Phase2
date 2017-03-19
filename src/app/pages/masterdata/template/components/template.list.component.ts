@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { TemplateModel } from './template.model';
 import { TemplateService } from './template.service';
-import { EmergencySituationService } from '../../emergencysituation';
+import { EmergencySituationService } from '../../emergency.situation';
 import {
     ResponseModel, DataExchangeService,
     GlobalConstants, UtilityService,
     SearchTextBox, SearchDropdown,
-    NameValue,SearchConfigModel
+    NameValue, SearchConfigModel
 } from '../../../../shared';
 
 @Component({
@@ -22,11 +22,10 @@ export class TemplateListComponent implements OnInit, OnDestroy {
     templateModelPatch: TemplateModel = null;
     date: Date = new Date();
     templateMediaTypes: any[] = GlobalConstants.TemplateMediaType;
+
     constructor(private templateService: TemplateService,
         private emergencySituationService: EmergencySituationService,
         private dataExchange: DataExchangeService<TemplateModel>) {
-
-
     }
 
     initiateQuickLinkModelPatch(): void {

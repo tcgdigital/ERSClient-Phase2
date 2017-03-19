@@ -98,7 +98,6 @@ export class DataProcessingService {
         }
 
         let finalHeaders = Object.assign<Headers, Headers>(_headers, headers);
-        // console.log(finalHeaders);
 
         let requestOptions: RequestOptions = new RequestOptions({
             headers: finalHeaders
@@ -107,6 +106,25 @@ export class DataProcessingService {
         if (params) requestOptions.search = params;
         return requestOptions;
     }
+
+
+    /**
+     * Extract record count from OData or API responses
+     * 
+     * @param {Response} response 
+     * @returns {number} 
+     * 
+     * @memberOf DataProcessingService
+     */
+    public ExtractCount(response: Response): number {
+        if (response.status < 200 || response.status >= 300) {
+            throw new Error(`Bad response status: ${response.status}`);
+        }
+
+        let responseBody: number = +response;
+        return responseBody;
+    }
+
 
     /**
      * Extract data from OData or API responses
@@ -195,7 +213,7 @@ export class DataProcessingService {
         let responseBody: string = response.text();
         let pattern: RegExp = new RegExp('--batchresponse_(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}', 'gi');
 
-        let statusCodes: string[] = responseBody.match(/HTTP\/1\.1.*/gim); 
+        let statusCodes: string[] = responseBody.match(/HTTP\/1\.1.*/gim);
         if (statusCodes.length > 0) {
             responseModel.StatusCodes = statusCodes;
         }

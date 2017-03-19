@@ -1,5 +1,5 @@
 import { BaseModel } from '../../../../shared';
-import { CommunicationLogModel } from '../../call.centre';
+import { CommunicationLogModel } from '../../../shared.components';
 
 export class DemandModel extends BaseModel {
     public DemandId: number;
@@ -43,8 +43,8 @@ export class DemandModel extends BaseModel {
 
     public ParentDemand ?: DemandModel;
     public CommunicationLogs ? : CommunicationLogModel[];
+
     constructor() {
         super();
     }
-
 }

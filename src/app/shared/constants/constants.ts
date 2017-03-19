@@ -18,7 +18,7 @@ export class GlobalConstants {
         { value: "PushNotification", key: 2 },
         { value: "Email", key: 3 },
         { value: "Pdf", key: 4 }
-        ];
+    ];
     public static EnquiryType: Object = [
         {
             value: "1",
@@ -61,6 +61,10 @@ export class GlobalConstants {
             caption: "Low",
             text: "Priority Low"
         }
+    ];
+    public static InvolvedPartyType: Object = [
+        { value: "Flight", key: 1 },
+        { value: "NonFlight", key: 2 }
     ];
     public static TargetDepartmentTravel: number = 3;
     public static TargetDepartmentAdmin: number = 4;
