@@ -182,6 +182,23 @@ export abstract class DataOperation<T> {
     }
 
     /**
+     *  Handle response for number of record count
+     * 
+     * @protected
+     * @param {Observable<Response>} entity 
+     * @returns {Observable<number>} 
+     * 
+     * @memberOf DataOperation
+     */
+    protected HandleResponseCount(entity: Observable<Response>): Observable<number> {
+        return entity.map(this.DataProcessingService.ExtractCount)
+            .catch((error: any) => {
+                this.DataProcessingService.HandleError(error);
+                return Observable.throw(error.json().error || 'Server error');
+            });
+    }
+
+    /**
      * Definition of abstruct execute functon
      *
      * @abstract

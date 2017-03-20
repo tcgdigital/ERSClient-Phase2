@@ -1,14 +1,11 @@
-import { Injectable, Output, EventEmitter } from '@angular/core';
-import { Headers } from '@angular/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
 import { PageModel } from './department.functionality.model';
 import {
     ResponseModel,
     DataService,
-    DataServiceFactory,
-    DataOperation,
-    GlobalConstants,
+    DataServiceFactory, 
     DataProcessingService,
     IServiceInretface
 } from '../../../../shared';
@@ -61,4 +58,10 @@ export class PageService implements IServiceInretface<PageModel>{
     //     return this._dataServiceForPagePermission.Query().Filter('DepartmentId eq ' + departmentId)
     //         .Execute();
     // }
+    GetDepartmentsByPageCode(pageCode : string): Observable<ResponseModel<PageModel>> {
+           return this._dataServiceForPage.Query()
+           .Filter(`PageCode eq '${pageCode}'`)
+            .Expand('PagePermissions ($expand = Department)')
+           .Execute();
+    }
 }

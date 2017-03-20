@@ -1,0 +1,26 @@
+<!--<div><a [routerLink]="['../assignedDemand']">Assigned To Me</a></div>
+<div><a [routerLink]="['../myDemands']">My Demands</a></div>
+<div><a [routerLink]="['../approvalDemands']">Approval Pending</a></div>
+<div><a [routerLink]="['../completedDemands']">Completed</a></div>-->
+
+<div class="card">
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" [routerLink]="['/pages/dashboard/demand/assignedDemand']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Assigned To Me</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/pages/dashboard/demand/myDemands']" routerLinkActive="active">My Demands</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " [routerLink]="['/pages/dashboard/demand/approvalDemands']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Approval Pending</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/pages/dashboard/demand/completedDemands']" routerLinkActive="active">Completed</a>
+            </li>
+        </ul>
+    </div>
+    <div class="card-block">
+        <router-outlet></router-outlet>
+    </div>
+</div>

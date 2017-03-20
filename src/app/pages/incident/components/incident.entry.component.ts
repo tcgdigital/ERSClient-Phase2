@@ -1,19 +1,19 @@
 import { Component, ViewEncapsulation, Input, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, AbstractControl, Validators, ReactiveFormsModule } from '@angular/forms';
-import { IncidentModel } from './incident.model';
-import { EmergencyTypeModel, EmergencyTypeService } from '../../masterdata/emergencytype';
+import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 
-import { 
+import { IncidentModel } from './incident.model';
+import { EmergencyTypeModel, EmergencyTypeService } from '../../masterdata';
+
+import {
     ResponseModel,
     DataExchangeService,
-    Severity, 
-    KeyValue, 
-    IncidentStatus, 
+    Severity,
+    KeyValue,
+    IncidentStatus,
     InvolvedPartyType,
-    UtilityService 
+    UtilityService
 } from '../../../shared';
-import { InvolvedPartyModel } from '../../masterdata/involvedParty';
-import { FlightModel } from '../../masterdata/flight';
+import {  FlightModel,InvolvePartyModel } from '../../shared.components';
 import { IncidentDataExchangeModel } from './incidentDataExchange.model';
 
 @Component({
@@ -21,13 +21,13 @@ import { IncidentDataExchangeModel } from './incidentDataExchange.model';
     encapsulation: ViewEncapsulation.None,
     templateUrl: '../views/incident.entry.html'
 })
-export class IncidentEntryComponent implements OnInit {
+export class IncidentEntryComponent implements OnInit, OnDestroy {
     @Input() DepartmentId: any;
     showInsert: boolean = null;
     isFlightRelated: boolean = false;
-    buttonValue: String = "";
+    buttonValue: String = '';
     incidentModel: IncidentModel = null;
-    involvedPartyModel: InvolvedPartyModel = null;
+    involvedPartyModel: InvolvePartyModel = null;
     incidentDataExchangeModel: IncidentDataExchangeModel = null;
     flightModel: FlightModel = null;
     date: Date = new Date();
@@ -35,7 +35,7 @@ export class IncidentEntryComponent implements OnInit {
     severities: KeyValue[] = [];
     incidentStatuses: KeyValue[] = [];
     public form: FormGroup;
-    
+
     constructor(formBuilder: FormBuilder,
         private emergencyTypeService: EmergencyTypeService,
         private dataExchange: DataExchangeService<IncidentDataExchangeModel>,
@@ -47,21 +47,8 @@ export class IncidentEntryComponent implements OnInit {
 
     initiateIncidentModel(): void {
         this.incidentModel = new IncidentModel();
-        this.incidentModel.IncidentId = 0;
-        this.incidentModel.IsDrill = false;
-        this.incidentModel.EmergencyTypeId = 0;
         this.incidentModel.IncidentStatus = UtilityService.GetKeyValues(IncidentStatus)[0].Key;
-        this.incidentModel.EmergencyName = '';
-        this.incidentModel.AlertMessage = '';
-        this.incidentModel.Description = '';
-        this.incidentModel.ClosureNote = '';
-        this.incidentModel.EmergencyDate = this.date;
         this.incidentModel.Severity = UtilityService.GetKeyValues(Severity)[0].Key;
-        this.incidentModel.EmergencyLocation = '';
-        this.incidentModel.IsSubmitted = false;
-        this.incidentModel.IsSaved = false;
-        this.incidentModel.Remarks = '';
-        this.incidentModel.DepartmentId = 0;
 
         this.incidentModel.ActiveFlag = 'Active';
         this.incidentModel.CreatedBy = 1;
@@ -77,7 +64,7 @@ export class IncidentEntryComponent implements OnInit {
                 console.log(`Error: ${error}`);
             });
     }
-    
+
     emergencyTypeChange(emergencyTypeId: string, emergencyTypes: EmergencyTypeModel[]): void {
         console.log(emergencyTypeId);
 
@@ -85,7 +72,7 @@ export class IncidentEntryComponent implements OnInit {
             .find((x: EmergencyTypeModel) => x.EmergencyTypeId === +emergencyTypeId);
         console.log(emergencyType);
         this.isFlightRelated = false;
-        if (emergencyType != undefined && emergencyType.EmergencyCategory == 'FlightRelated') {
+        if (emergencyType !== undefined && emergencyType.EmergencyCategory === 'FlightRelated') {
             this.isFlightRelated = true;
         }
 
@@ -97,13 +84,17 @@ export class IncidentEntryComponent implements OnInit {
 
     ngOnInit(): any {
         console.log('Hello ' + this.DepartmentId);
-        //this.showAdd = true;
+        // this.showAdd = true;
         this.initiateIncidentModel();
         console.log(this.severities);
         console.log(this.incidentStatuses);
         this.getAllActiveEmergencyTypes();
         this.resetIncidentForm();
-        this.dataExchangeDecision.Subscribe("incidentViewPreCheck", model => this.onIncidentViewPreCheck(model));
+        this.dataExchangeDecision.Subscribe('incidentViewPreCheck', model => this.onIncidentViewPreCheck(model));
+    }
+
+    ngOnDestroy() {
+
     }
 
     onIncidentViewPreCheck(isInsertShow: Boolean): void {
@@ -137,7 +128,7 @@ export class IncidentEntryComponent implements OnInit {
     }
 
     onSubmit(values: Object): void {
-        if (this.form.controls['EmergencyTypeId'].value != '0' && this.form.controls['Severity'].value != '0') {
+        if (this.form.controls['EmergencyTypeId'].value !== '0' && this.form.controls['Severity'].value !== '0') {
             this.createIncidentModel();
             console.log(this.incidentModel);
             if (this.isFlightRelated) {
@@ -151,10 +142,10 @@ export class IncidentEntryComponent implements OnInit {
             this.fillIncidentDataExchangeModelData(this.incidentModel, this.involvedPartyModel, this.flightModel);
         }
         else {
-            if (this.form.controls['EmergencyTypeId'].value == '0') {
+            if (this.form.controls['EmergencyTypeId'].value === '0') {
                 console.log('Please select Emergency type');
             }
-            if (this.form.controls['Severity'].value == '0') {
+            if (this.form.controls['Severity'].value === '0') {
                 console.log('Please select Severity');
             }
         }
@@ -166,19 +157,19 @@ export class IncidentEntryComponent implements OnInit {
     }
 
     fillIncidentDataExchangeModelData(incidentModel: IncidentModel,
-        involvedPartyModel?: InvolvedPartyModel, flightModel?: FlightModel): void {
+        involvedPartyModel?: InvolvePartyModel, flightModel?: FlightModel): void {
         this.incidentDataExchangeModel = new IncidentDataExchangeModel();
         this.incidentDataExchangeModel.IncidentModel = incidentModel;
         this.incidentDataExchangeModel.InvolvedPartyModel = involvedPartyModel;
         this.incidentDataExchangeModel.FLightModel = flightModel;
         this.incidentDataExchangeModel.IsFlightRelated = this.isFlightRelated;
         console.log('Going to the View page.........................');
-        this.dataExchangeDecision.Publish("instructionToCloseInsertOpenViewCommand", true);
-        this.dataExchange.Publish("incidentCreatedPreCheck", this.incidentDataExchangeModel);
+        this.dataExchangeDecision.Publish('instructionToCloseInsertOpenViewCommand', true);
+        this.dataExchange.Publish('incidentCreatedPreCheck', this.incidentDataExchangeModel);
     }
 
     createInvolvedPartyModel(isFlightRelated: boolean): void {
-        this.involvedPartyModel = new InvolvedPartyModel();
+        this.involvedPartyModel = new InvolvePartyModel();
         this.involvedPartyModel.InvolvedPartyId = 0;
         this.involvedPartyModel.IncidentId = 0;
         if (isFlightRelated) {

@@ -156,10 +156,6 @@ export class ChecklistEntryComponent implements OnInit {
 
     initiateCheckListModel(): void {
         this.checkListModel = new ChecklistModel();
-        this.checkListModel.CheckListId = 0;
-        this.checkListModel.ParentCheckListId = 0;
-        this.checkListModel.DepartmentId = 0;
-        this.checkListModel.EmergencyTypeId = 0;
         this.checkListModel.ActiveFlag = 'Active';
         this.checkListModel.CreatedBy = 1;
         this.checkListModel.CreatedOn = this.date;
@@ -205,7 +201,7 @@ export class ChecklistEntryComponent implements OnInit {
             this.checkListModel.URL = this.form.controls['URL'].value;
             this.checkListModel.EmergencyTypeId = this.form.controls['EmergencyTypeId'].value;
             this.checkListModel.Sequence = this.form.controls['Sequence'].value;
-
+            delete this.checkListModel['Active'];
             this.checkListService.Create(this.checkListModel)
                 .subscribe((response: ChecklistModel) => {
                     this.dataExchange.Publish("checkListModelSaved", response);

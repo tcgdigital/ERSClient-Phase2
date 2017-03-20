@@ -20,7 +20,6 @@ export class QuickLinkListComponent implements OnInit, OnDestroy {
 
     initiateQuickLinkModelPatch(): void {
         this.quickLinkModelPatch = new QuickLinkModel();
-        this.quickLinkModelPatch.QuickLinkId = 0;
         this.quickLinkModelPatch.ActiveFlag = 'Active';
         this.quickLinkModelPatch.CreatedBy = 1;
         this.quickLinkModelPatch.CreatedOn = this.date;
@@ -39,7 +38,7 @@ export class QuickLinkListComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.getQuickLinks();
-        this.dataExchange.Subscribe("quickLinkModelSaved", 
+        this.dataExchange.Subscribe("quickLinkModelSaved",
             model => this.onQuickLinkSaveSuccess(model));
     }
 
