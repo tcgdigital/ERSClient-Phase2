@@ -1,46 +1,32 @@
-import {
-    Component, OnInit, ViewEncapsulation,
-    Input, OnDestroy
-} from '@angular/core';
-import { MediaModel } from './media.model';
-import { MediaService } from './media.service';
-import { ResponseModel, DataExchangeService } from '../../../../shared';
+import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+
+import { EnquiryService, EnquiryModel, QueryModel } from '../../call.centre/components';
+import { ResponseModel,GlobalConstants } from '../../../../shared';
 
 @Component({
-    selector: 'mediaQuery-list',
+    selector: 'media-query',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: '../views/media.release.list.view.html'
+    templateUrl: '../views/media.query.list.view.html'
 })
-export class MediaQueryListComponent implements OnInit, OnDestroy {
-    @Input() initiatedDepartmentId: string;
-    @Input() currentIncidentId: string;
+export class MediaQueryListComponent implements OnInit {
+    mediaQueries: QueryModel[];
+    incidentId: number;
+    constructor(private enquiryService: EnquiryService) {        
+        this.incidentId = 3;
+    };
 
-    MediaQueries: MediaModel[] = [];
-
-    constructor(private mediaQueryService: MediaService,
-        private dataExchange: DataExchangeService<MediaModel>) { }
-
-    getMediaQueries(): void {
-        this.mediaQueryService.Query(+this.initiatedDepartmentId, +this.currentIncidentId)
-            .subscribe((response: ResponseModel<MediaModel>) => {
-                this.MediaQueries = response.Records;
+    getMediaQueries(incidentId): void {
+        this.enquiryService.getMediaQueryByIncident(incidentId)
+            .subscribe((response: ResponseModel<EnquiryModel>) => {
+                this.mediaQueries = this.enquiryService.MapQuery(response.Records);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log("error:  " + error);
             });
+    };
+
+    ngOnInit(): any {
+        this.getMediaQueries(this.incidentId);
+
     }
 
-    onMediaSuccess(mediaQuery: MediaModel): void {
-        this.getMediaQueries();
-    }
-
-    ngOnInit(): void {
-        this.getMediaQueries();
-        this.dataExchange.Subscribe("MediaModelUpdated", model => this.onMediaSuccess(model));
-        this.dataExchange.Subscribe("MediaModelSaved", model => this.onMediaSuccess(model))
-    }
-
-    ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe('MediaModelSaved');
-        this.dataExchange.Unsubscribe('MediaModelUpdated');
-    }
 }

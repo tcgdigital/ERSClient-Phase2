@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
-import { EnquiryModel } from './call.centre.model';
+import { EnquiryModel , QueryModel } from './call.centre.model';
 import {
     RequestModel,
     ResponseModel,
@@ -17,7 +17,7 @@ import {
 @Injectable()
 export class EnquiryService implements IServiceInretface<EnquiryModel> {
     private _dataService: DataService<EnquiryModel>;
-   // private _batchDataService: DataService<BaseModel>;
+    // private _batchDataService: DataService<BaseModel>;
 
     /**
      * Creates an instance of DepartmentService.
@@ -32,7 +32,7 @@ export class EnquiryService implements IServiceInretface<EnquiryModel> {
     }
 
     GetAll(): Observable<ResponseModel<EnquiryModel>> {
-        return this._dataService.Query()           
+        return this._dataService.Query()
             .Execute();
     }
 
@@ -55,4 +55,36 @@ export class EnquiryService implements IServiceInretface<EnquiryModel> {
     Delete(entity: EnquiryModel): void {
     }
 
- }
+    getOtherQueryByIncident(IncidentId: string | number): Observable<ResponseModel<EnquiryModel>> {
+        return this._dataService.Query().Filter(`IncidentId eq  ${IncidentId}  and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Others'`)
+            .Expand('Caller')
+            .Execute();
+    }
+   
+     getCrewQueryByIncident(IncidentId: string | number): Observable<ResponseModel<EnquiryModel>> {
+        return this._dataService.Query().Filter(`IncidentId eq  ${IncidentId}  and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Crew'`)
+            .Expand('Caller')
+            .Execute();
+    }
+    getMediaQueryByIncident(IncidentId: string | number): Observable<ResponseModel<EnquiryModel>> {
+        return this._dataService.Query().Filter(`IncidentId eq  ${IncidentId}  and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Media'`)
+            .Expand('Caller')
+            .Execute();
+    }
+
+    MapQuery(enquiryModel: EnquiryModel[]): QueryModel[] {
+        let otherQueryModel: QueryModel[];
+        otherQueryModel = enquiryModel.map(function (enquiry) {
+            let item = new QueryModel();
+            item.EnquiryId = enquiry.EnquiryId;
+            item.Queries = enquiry.Queries;
+            item.CallerName = enquiry.Caller.CallerName;
+            item.ContactNumber = enquiry.Caller.ContactNumber;
+            item.AlternateContactNumber = enquiry.Caller.AlternateContactNumber;
+            return item;
+        });
+        return otherQueryModel;
+
+    }
+
+}

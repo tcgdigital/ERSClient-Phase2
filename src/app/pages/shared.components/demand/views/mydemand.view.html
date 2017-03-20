@@ -1,0 +1,108 @@
+<style>
+.statusRed {
+    background: #F00 none repeat scroll 0 0;
+    border-radius: 20px;
+    float: left;
+    height: 12px;
+    margin-left: 10px;
+    width: 12px;
+}
+
+.statusGreen {
+    background: #090 none repeat scroll 0 0;
+    border-radius: 20px;
+    float: left;
+    height: 12px;
+    margin-left: 10px;
+    width: 12px;
+}
+.statusAmber {
+    background: #FFC200 none repeat scroll 0 0;
+    border-radius: 20px;
+    float: left;
+    height: 12px;
+    margin-left: 10px;
+    width: 12px;
+}
+</style>
+My Demand
+
+<demand-entry></demand-entry>
+
+<div class="row" *ngFor="let demand of mydemands">
+    <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
+        <ul class="list-group">
+            <li class="list-group-item"><strong><i>Demand Type:</i></strong></li>
+            <li class="list-group-item" style="border-top: none">{{demand.DemandTypeName}}</li>
+</ul>
+</div>
+<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
+    <ul class="list-group">
+        <li class="list-group-item"><strong><i>Demand Description:</i></strong></li>
+        <li class="list-group-item" style="border-top: none">{{demand.DemandDesc}}</li>
+</ul>
+</div>
+<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
+    <ul class="list-group">
+        <li class="list-group-item"><strong><i>Requester Department:</i></strong></li>
+        <li class="list-group-item" style="border-top: none">{{demand.RequesterDepartmentName}}</li>
+</ul>
+</div>
+<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
+    <ul class="list-group">
+        <li class="list-group-item"><strong><i>Priority:</i></strong></li>
+        <li class="list-group-item" style="border-top: none">{{demand.Priority}}</li>
+</ul>
+</div>
+<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
+    <ul class="list-group">
+        <li class="list-group-item"><strong><i>Schedule Time Close:</i></strong></li>
+        <li class="list-group-item" style="border-top: none">{{demand.ScheduleTime}}</li>
+</ul>
+</div>
+<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
+    <ul class="list-group">
+        <li class="list-group-item"><strong><i>Requester Contact Number:</i></strong></li>
+        <li class="list-group-item" style="border-top: none">{{demand.ContactNumber}}</li>
+</ul>
+</div>
+<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
+    <ul class="list-group">
+        <li class="list-group-item"><strong><i>Required Location:</i></strong></li>
+        <li class="list-group-item" style="border-top: none">{{demand.RequiredLocation}}</li>
+</ul>
+</div>
+<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
+    <ul class="list-group">
+        <li class="list-group-item"><strong><i>Demand Status:</i></strong></li>
+        <li class="list-group-item" style="border-top: none">{{demand.DemandStatusDescription}}</li>
+</ul>
+</div>
+<!--<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
+            <ul class="list-group">
+                <li class="list-group-item"><strong><i>Remarks:</i></strong></li>
+                <li class="list-group-item" style="border-top: none">{{demand.Remarks}}</li>
+</ul>
+</div>-->
+<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
+    <ul class="list-group">
+        <li class="list-group-item"><strong><i>Remarks:</i></strong></li>
+        <button class="gmd-icon-button fa fa-list-alt" (click)="remarks(demand.DemandId)" aria-label="Edit"></button>
+    </ul>
+</div>
+<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
+    <ul class="list-group">
+        <li class="list-group-item"><strong><i>RAG:</i></strong></li>
+        <span [ngClass]="demand.RagStatus"></span>
+    </ul>
+</div>
+<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
+    <ul class="list-group">
+        <li class="list-group-item"><strong><i>Edit:</i></strong></li>
+        <button class="md-icon-button fa fa-edit" (click)="open(demand.DemandId)" aria-label="Edit">
+                </button>
+    </ul>
+</div>
+
+
+</div>

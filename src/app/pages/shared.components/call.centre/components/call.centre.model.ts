@@ -57,6 +57,14 @@ export class EnquiryModel extends BaseModel {
     }
 }
 
+export class QueryModel extends BaseModel {
+              public  EnquiryId: number;
+              public  Queries: string;
+              public  CallerName: string;
+              public  ContactNumber: string;
+              public  AlternateContactNumber: string;
+ }
+
 
 
 

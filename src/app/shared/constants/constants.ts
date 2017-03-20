@@ -101,6 +101,29 @@ export class GlobalConstants {
             caption: 'Deceased'
         }
     ];
+     public static RequesterType: any[] = [
+           {
+               value: "1",
+               enumtype: 'PDA',
+               caption: 'PDA'
+           },
+           {
+               value: "2",
+               enumtype: 'NOK',
+               caption: 'NOK'
+           },
+           {
+               value: "3",
+               enumtype: 'Staff',
+               caption: 'Staff'
+           },
+           {
+               value: "4",
+               enumtype: 'Others',
+               caption: 'Others'
+           }
+        ];
+
 
 
 }

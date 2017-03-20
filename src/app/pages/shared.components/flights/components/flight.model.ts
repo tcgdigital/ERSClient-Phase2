@@ -1,6 +1,11 @@
 import { NgModule } from '@angular/core';
 import { BaseModel } from '../../../../shared';
-import { InvolvePartyModel } from '../../../shared.components';
+import {
+    InvolvePartyModel,
+    CrewModel,
+    PassengerModel,
+    CargoModel
+} from '../../../shared.components';
 
 export class FlightModel extends BaseModel {
     public FlightId: number;
@@ -15,6 +20,10 @@ export class FlightModel extends BaseModel {
     public Active: boolean;
 
     public InvolvedParty: InvolvePartyModel;
+
+    public Crewes?: CrewModel[];
+    public Passengers?: PassengerModel[];
+    public Cargoes?: CargoModel[];
 
     constructor() {
         super();

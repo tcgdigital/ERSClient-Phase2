@@ -2,8 +2,7 @@ import { Injectable, Output, EventEmitter } from '@angular/core';
 import { Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
-import { InvolvePartyModel } from '../../../shared.components';
-import { AffectedModel } from '../../affected';
+import { InvolvePartyModel, AffectedModel } from '../../../shared.components';
 import { AffectedObjectModel, AffectedObjectsToView } from './affected.objects.model';
 import {
     ResponseModel, DataService,
@@ -28,9 +27,9 @@ export class AffectedObjectsService {
             .Expand('Affecteds($expand=AffectedObjects($expand=Cargo))')
             .Execute();
     }
-    GetFilterByIncidentId(): Observable<ResponseModel<InvolvePartyModel>> {
+    GetFilterByIncidentId(incidentId): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
-            .Filter('IncidentId eq ' + '88')
+            .Filter(`IncidentId eq ${incidentId}`)
             .Expand('Affecteds($expand=AffectedObjects($expand=Cargo))')
             .Execute();
     }

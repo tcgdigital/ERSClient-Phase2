@@ -34,14 +34,14 @@ export class AffectedObjectModel extends BaseModel {
                 this.AffectedObjectId = 0;
                 this.AffectedId = 0;
                 this.CargoId = null;
-                this.TicketNumber='';
-                this.AWB='';
-                this.ObjectDesc='';
-                this.IsVerified=false;
-                this.IsLostFlag=false;
-                this.IsFoundFlag=false;
-                this.IdentificationDesc='';
-                this.LostFoundStatus='';
+                this.TicketNumber = '';
+                this.AWB = '';
+                this.ObjectDesc = '';
+                this.IsVerified = false;
+                this.IsLostFlag = false;
+                this.IsFoundFlag = false;
+                this.IdentificationDesc = '';
+                this.LostFoundStatus = '';
                 this.Active = false;
         }
 }

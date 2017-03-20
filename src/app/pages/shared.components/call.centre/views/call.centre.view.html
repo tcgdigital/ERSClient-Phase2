@@ -1,5 +1,5 @@
 <button class="btn btn-primary" type="button" (click)="save()">Save</button>
-<form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+<form [formGroup]="form" >
     <input type="hidden" formControlName="EnquiryId" name="EnquiryId" />
     <div class="form-control">
         <label for="EnquiryType">Enquiry Type:<span class="red">*</span></label>
@@ -29,14 +29,17 @@
 <div [hidden]="enquiry.EnquiryType!=1">
     <label for="Passengers">PDA Name:<span class="red">*</span></label>
     <autocomplete [items]="passengers" (notify)='onNotifyPassenger($event)'></autocomplete>
+     
 </div>
 <div [hidden]="enquiry.EnquiryType!=5">
         <label for="Passengers">PDA Name:<span class="red">*</span></label>
     <autocomplete [items]="crews" (notify)='onNotifyCrew($event)'></autocomplete>
+    
     </div>
 <div [hidden]="enquiry.EnquiryType!=2">
     <label for="awb">AWB:<span class="red">*</span></label>
     <autocomplete [items]="awbs" (notify)='onNotifyCargo($event)'></autocomplete>
+    
 </div>
   
   <div class="form-control" [hidden]="enquiry.EnquiryType!=1  && enquiry.EnquiryType!=2 && enquiry.EnquiryType!=5">

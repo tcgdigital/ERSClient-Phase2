@@ -10,7 +10,7 @@ import { EnquiryService} from './components';
 import { AffectedPeopleService } from '../affected.people';
 import { AffectedObjectsService } from '../affected.objects';
 import { DepartmentService } from '../../masterdata/department';
-import { DemandService } from '../../dashboard/demand';
+import { DemandService } from '../../shared.components';
 import { DataExchangeService,SharedModule } from '../../../shared';
 
 @NgModule({

@@ -15,3 +15,4 @@ export * from './caller';
 export * from './communicationlogs';
 export * from './nextofkins';
 export * from './interestedparties';
+export * from './demand';

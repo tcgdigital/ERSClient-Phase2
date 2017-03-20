@@ -15,9 +15,10 @@ export class AffectedObjectsVerificationComponent implements OnInit {
     affectedObjectsForVerification: AffectedObjectsToView[];
     verifiedAffectedObjects: AffectedObjectModel[];
     date: Date = new Date();
+    currentIncident : number =88;
 
     getAffectedObjects() {
-        this.affectedObjectsService.GetFilterByIncidentId()
+        this.affectedObjectsService.GetFilterByIncidentId(this.currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedObjectsForVerification = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
             }, (error: any) => {
