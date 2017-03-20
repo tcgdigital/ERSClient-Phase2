@@ -1,7 +1,11 @@
 import { BaseModel } from '../../../../shared';
 import { DepartmentModel } from '../../../masterdata/department';
-import { AffectedPeopleModel, AffectedObjectModel, EnquiryModel } from '../../../shared.components';
-import { DemandModel } from '../../../dashboard/demand';
+import {
+    AffectedPeopleModel,
+    AffectedObjectModel,
+    EnquiryModel,
+    DemandModel
+} from '../../../shared.components';
 
 export class CommunicationLogModel extends BaseModel {
     public InteractionDetailsId: number;
@@ -15,7 +19,6 @@ export class CommunicationLogModel extends BaseModel {
     public RequesterName: string;
     public RequesterDepartment: string;
     public RequesterType: string;
-
 
     public AffectedPerson?: AffectedPeopleModel;
     public AffectedObject?: AffectedObjectModel;

@@ -3,9 +3,9 @@ import {
         AffectedModel,
         EnquiryModel,
         CommunicationLogModel,
-        CargoModel
+        CargoModel,
+        DemandModel
 } from '../../../shared.components';
-import { DemandModel } from '../../../dashboard/demand';
 
 export class AffectedObjectModel extends BaseModel {
         public AffectedObjectId: number;

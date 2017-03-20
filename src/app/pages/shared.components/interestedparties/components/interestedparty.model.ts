@@ -4,9 +4,9 @@ import {
     AffectedModel,
     AffectedPeopleModel,
     AffectedObjectModel,
-    EnquiryModel
+    EnquiryModel,
+    DemandModel
 } from '../../../shared.components';
-import { DemandModel } from '../../../dashboard/demand';
 
 export class InterestedpartyModel extends BaseModel {
     public InterestedPartyId: number;
