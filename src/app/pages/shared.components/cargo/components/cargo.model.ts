@@ -12,8 +12,6 @@ export class CargoModel extends BaseModel {
         public mftpcs?: number;
         public mftwgt?: number;
 
-        public Active: boolean;
-
         public Flight: FlightModel;
 
         public AffectedObjects?: AffectedObjectModel[];
@@ -29,8 +27,6 @@ export class CargoModel extends BaseModel {
                 this.AWB = '';
                 this.mftpcs = null;
                 this.mftwgt = null;
-
-                this.Active = false;
         }
 
 }

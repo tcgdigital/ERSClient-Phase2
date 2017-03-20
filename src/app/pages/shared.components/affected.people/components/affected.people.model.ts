@@ -5,9 +5,9 @@ import {
         CrewModel,
         NextOfKinModel,
         EnquiryModel,
-        CommunicationLogModel
+        CommunicationLogModel,
+        DemandModel
 } from '../../../shared.components';
-import { DemandModel } from '../../../dashboard/demand';
 
 export class AffectedPeopleModel extends BaseModel {
         public AffectedPersonId: number;

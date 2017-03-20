@@ -1,7 +1,6 @@
 import { BaseModel } from '../../../../shared';
 import { DepartmentModel } from '../../../masterdata/department';
-import { EnquiryModel } from '../../../shared.components';
-import { DemandModel } from '../../../dashboard/demand';
+import { EnquiryModel,DemandModel } from '../../../shared.components';
 
 export class CallerModel extends BaseModel {
     public CallerId: number;
