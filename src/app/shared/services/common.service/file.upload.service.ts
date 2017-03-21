@@ -44,8 +44,7 @@ export class FileUploadService {
     public uploadFiles<T>(url: string, files: Array<File>, fieldName: string = ''): Observable<T> {
         //return Observable.fromPromise(
         if (files.length > 0) {
-
-
+                    
             let fileUploadPromise: Promise<T> = new Promise((resolve, reject) => {
                 let formData: FormData = new FormData(),
                     xhr: XMLHttpRequest = new XMLHttpRequest();
