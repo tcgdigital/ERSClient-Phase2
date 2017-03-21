@@ -122,12 +122,11 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
             let baseUrl = GlobalConstants.EXTERNAL_URL;
             this.fileUploadService.uploadFiles<string>(baseUrl + "api/fileUpload/upload", this.filesToUpload)
                 .subscribe((result: string) => {
-                    console.log(result);
                     this.filepathWithLinks = `${GlobalConstants.EXTERNAL_URL}UploadFiles/${result.replace(/^.*[\\\/]/, '')}`;
                     let extension = result.replace(/^.*[\\\/]/, '').split('.').pop();
                     this.fileName = `Checklist_${actionableClicked.CheckListCode}_${actionableClicked.IncidentId}.${extension}`;
                 }, (error) => {
-                    console.error(error);
+                    console.log(`Error: ${error}`);
                 });
         }
     }
@@ -216,7 +215,6 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     private batchUpdate(data: any[]) {
         this.actionableService.BatchOperation(data)
             .subscribe(x => {
-                console.log(x.StatusCodes);
                 this.getAllActiveActionable(this.incidentId, this.departmentId);
             }, (error: any) => {
                 console.log(`Error: ${error}`);

@@ -26,9 +26,8 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
         this.demandService.GetByApproverDepartment(deptId,incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demandsForApproval = this.demandService.DemandMapper(response.Records);
-                console.log(this.demandsForApproval);
             }, (error: any) => {
-                console.log("error:  " + error);
+                console.log(`Error: ${error}`);
             });
     };
     
@@ -133,7 +132,7 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
                     .subscribe((response: DemandModel[]) => {
                         this.getDemandsForApproval(this.currentDepartmentId,this.currentIncident);
                     }, (error: any) => {
-                        console.log(error);
+                        console.log(`Error: ${error}`);
                     });
             };
         }

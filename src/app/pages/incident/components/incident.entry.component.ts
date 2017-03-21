@@ -40,14 +40,12 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         private emergencyTypeService: EmergencyTypeService,
         private dataExchange: DataExchangeService<IncidentDataExchangeModel>,
         private dataExchangeDecision: DataExchangeService<Boolean>) {
-        console.log('Constructor.');
         this.showInsert = true;
         this.severities = UtilityService.GetKeyValues(Severity);
         this.incidentStatuses = UtilityService.GetKeyValues(IncidentStatus);
     }
 
     initiateIncidentModel(): void {
-        console.log('Initiate.');
         this.incidentModel = new IncidentModel();
         this.incidentModel.IncidentStatus = UtilityService.GetKeyValues(IncidentStatus)[0].Key;
         this.incidentModel.Severity = UtilityService.GetKeyValues(Severity)[0].Key;
@@ -61,18 +59,14 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.emergencyTypeService.GetAll()
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                 this.activeEmergencyTypes = response.Records;
-                console.log(this.activeEmergencyTypes);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
     }
 
     emergencyTypeChange(emergencyTypeId: string, emergencyTypes: EmergencyTypeModel[]): void {
-        console.log(emergencyTypeId);
-
         let emergencyType: EmergencyTypeModel = emergencyTypes
             .find((x: EmergencyTypeModel) => x.EmergencyTypeId === +emergencyTypeId);
-        console.log(emergencyType);
         this.isFlightRelated = false;
         if (emergencyType !== undefined && emergencyType.EmergencyCategory === 'FlightRelated') {
             this.isFlightRelated = true;
@@ -85,12 +79,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): any {
-        // debugger;
-        console.log('Hello ' + this.DepartmentId);
-        // this.showAdd = true;
         this.initiateIncidentModel();
-        console.log(this.severities);
-        console.log(this.incidentStatuses);
         this.getAllActiveEmergencyTypes();
         this.resetIncidentForm();
         this.dataExchangeDecision.Subscribe('incidentViewPreCheck', model => this.onIncidentViewPreCheck(model));
@@ -132,14 +121,10 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     onSubmit(values: Object): void {
         if (this.form.controls['EmergencyTypeId'].value !== '0' && this.form.controls['Severity'].value !== '0') {
             this.createIncidentModel();
-            console.log(this.incidentModel);
             if (this.isFlightRelated) {
                 this.createInvolvePartyModel(this.isFlightRelated);
-                console.log(this.involvePartyModel);
                 this.createFlightModel();
-                console.log(this.flightModel);
             }
-            console.log('filling the incident and involved party and flight records.....');
             this.showInsert = false;
             this.fillIncidentDataExchangeModelData(this.incidentModel, this.involvePartyModel, this.flightModel);
         }

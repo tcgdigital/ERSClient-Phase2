@@ -68,7 +68,6 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
                 });
         }
         else {
-            console.log('else part in incident insert');
             return this._dataService.Post(incidentModel)
                 .Execute();
         }

@@ -83,9 +83,6 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
             (this.media, this.form, x => x.Message, x => x.Remarks);
 
         if (this.media.MediaqueryId == 0) {
-            console.log(this.media);
-            //this.media.MediaqueryId = this.form.controls["MediaqueryId"].value;
-
             this.mediaQueryService.Create(this.media)
                 .subscribe((response: MediaModel) => {
                     this.dataExchange.Publish("MediaModelSaved", response);

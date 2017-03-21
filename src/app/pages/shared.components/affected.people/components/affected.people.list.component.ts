@@ -57,13 +57,11 @@ export class AffectedPeopleListComponent implements OnInit {
                     });
                 console.log("affected:  " + this.affectedPeople);
             }, (error: any) => {
-                console.log("error:  " + error);
+                console.log(`Error: ${error}`);
             });
     };
 
     ngOnInit(): any {
         this.getAffectedPeople(this.currentIncident);
-
     }
-
 }
