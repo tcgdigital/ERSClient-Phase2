@@ -23,9 +23,8 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit {
         this.demandService.GetForAssignedDept(deptId, incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demands = this.demandService.DemandMapper(response.Records);
-                // console.log(this.demands);
             }, (error: any) => {
-                console.log("error:  " + error);
+                console.log(`Error: ${error}`);
             });
     };
 
@@ -65,8 +64,6 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit {
                             x.RagStatus = 'statusAmber';
                         }
                     }
-                    console.log(x);
-
                 });
             }
         });
@@ -101,11 +98,10 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit {
                     .subscribe((response: DemandModel[]) => {
                         this.getAssignedDemands(this.currentDepartmentId,this.currentIncident);
                     }, (error: any) => {
-                        console.log(error);
+                        console.log(`Error: ${error}`);
                     });
             };
         }
-
     };
 
     ngOnInit() {
@@ -117,8 +113,6 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit {
     };
 
     ngAfterContentInit() {
-        console.log(this.demands);
         this.setRagStatus();
     };
-
 }

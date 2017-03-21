@@ -31,8 +31,9 @@ export class BroadcastWidgetComponent implements OnInit {
             .flatMap(x=>x).take(2)            
             .subscribe(x => {
                 data.push(x);
-                console.log(data);
-            },(error: any)=>{},
+            },(error: any)=>{
+                console.log(`Error: ${error}`);
+            },
             ()=>this.LatestBroadcasts = Observable.of(data));
             //console.log(this.LatestBroadcasts);            
     } 
@@ -44,7 +45,9 @@ export class BroadcastWidgetComponent implements OnInit {
             .flatMap(x=>x)            
             .subscribe(x => {
                 data.push(x);
-            },(error: any)=>{},
+            },(error: any)=>{
+            console.log(`Error: ${error}`);
+            },
             ()=>this.AllPublishedBroadcasts = Observable.of(data));
     } 
 

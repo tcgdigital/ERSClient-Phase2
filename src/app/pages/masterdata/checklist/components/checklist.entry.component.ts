@@ -208,7 +208,7 @@ export class ChecklistEntryComponent implements OnInit {
                     this.resetCheckListForm();
                     this.initiateCheckListModel();
                 }, (error: any) => {
-                    console.log("Error");
+                    console.log(`Error: ${error}`);
                 });
         }
         else {//EDIT REGION
@@ -220,7 +220,7 @@ export class ChecklistEntryComponent implements OnInit {
                         this.dataExchange.Publish("checkListListReload", response);
                         this.showAddRegion(true);
                     }, (error: any) => {
-                        console.log("Error");
+                        console.log(`Error: ${error}`);
                     });
             }
         }

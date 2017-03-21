@@ -32,9 +32,8 @@ export class UserPermissionComponent {
                 this.userProfileItems.forEach(userProfile => {
                     this.items.push(new KeyValue(userProfile.Name, userProfile.UserProfileId));
                 });
-
             }, (error: any) => {
-                console.log(error);
+                console.log(`Error: ${error}`);
             });
     };
 
@@ -69,7 +68,7 @@ export class UserPermissionComponent {
                     }
                 });
             }, (error: any) => {
-                console.log(error);
+                console.log(`Error: ${error}`);
             });
     };
 
@@ -85,7 +84,6 @@ export class UserPermissionComponent {
         let model = this.departmentsToView.filter(this.isMemberOf);
         let selectedUser = this.selectedUser;
         let datenow = this.date;
-        console.log(model);
         this.userPermissionModelToSave = model.map(function (data) {
             {
                 let item = new UserPermissionModel();
@@ -99,12 +97,11 @@ export class UserPermissionComponent {
                 return item;
             }
         });
-        console.log(this.userPermissionModelToSave);
         this.userPermissionService.CreateBulk(this.userPermissionModelToSave)
             .subscribe((response: UserPermissionModel[]) => {
                 console.log("Success");
             }, (error: any) => {
-                console.log(error);
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -116,7 +113,7 @@ export class UserPermissionComponent {
                 this.departmentsToViewConstant=this.userPermissionService
                 .CreateDefaultDepartmentList(this.departments);
             }, (error: any) => {
-                console.log(error);
+                console.log(`Error: ${error}`);
             });
     }
 }

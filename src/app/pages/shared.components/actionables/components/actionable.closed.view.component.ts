@@ -64,7 +64,6 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     }
 
     IsReopen(event: any, editedActionable: ActionableModel): void {
-        console.log(event.checked);
         if (!event.checked) {
             editedActionable.Done = false;
         }

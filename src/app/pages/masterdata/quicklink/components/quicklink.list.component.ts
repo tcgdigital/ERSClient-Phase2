@@ -61,7 +61,7 @@ export class QuickLinkListComponent implements OnInit, OnDestroy {
             .subscribe((response: QuickLinkModel) => {
                 this.getQuickLinks();
             }, (error: any) => {
-                console.log("Error");
+                console.log(`Error: ${error}`);
             });
     }
 }

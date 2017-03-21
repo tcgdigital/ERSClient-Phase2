@@ -55,7 +55,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
                 .subscribe((response: UserProfileModel) => {
                     this.dataExchange.Publish("UserProfileModelCreated", response);
                 }, (error: any) => {
-                    console.log("Error");
+                    console.log(`Error: ${error}`);
                 });
         }
 
@@ -64,7 +64,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
                 .subscribe((response: UserProfileModel) => {
                     this.dataExchange.Publish("UserProfileModelModified", response);
                 }, (error: any) => {
-                    console.log("Error");
+                    console.log(`Error: ${error}`);
                 });
         }
     }

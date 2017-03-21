@@ -34,7 +34,9 @@ export class MediaReleaseWidgetComponent implements OnInit {
             .take(2)
             .subscribe(x => {
                 data.push(x);
-            },(error: any)=>{},
+            },(error: any)=>{
+                console.log(`Error: ${error}`);
+            },
             ()=>this.mediaReleases = Observable.of(data));
     }
 
@@ -45,7 +47,9 @@ export class MediaReleaseWidgetComponent implements OnInit {
             .flatMap(x=>x)            
             .subscribe(x => {
                 data.push(x);
-            },(error: any)=>{},
+            },(error: any)=>{
+                console.log(`Error: ${error}`);
+            },
             ()=>this.AllMediaReleases = Observable.of(data));
     }
 

@@ -5,20 +5,16 @@ import { HttpModule } from '@angular/http';
 import { MdCheckboxModule } from '@angular2-material/checkbox';
 
 import { InvolvePartyService } from './components';
-import { IncidentService } from '../../incident';
-import { DataExchangeService } from '../../../shared';
+// import { IncidentService } from '../../incident';
+import { SharedModule, DataExchangeService } from '../../../shared';
 
 @NgModule({
     imports: [
-        CommonModule,
-        FormsModule,
         HttpModule,
-        ReactiveFormsModule,
-        MdCheckboxModule
+        SharedModule
     ],
     providers: [
         InvolvePartyService,
-        IncidentService,
         DataExchangeService
     ]
 })

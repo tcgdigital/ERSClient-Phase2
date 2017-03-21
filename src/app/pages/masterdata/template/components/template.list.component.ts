@@ -71,7 +71,7 @@ export class TemplateListComponent implements OnInit, OnDestroy {
             .subscribe((response: TemplateModel) => {
                 this.getTemplates();
             }, (error: any) => {
-                console.log("Error");
+                console.log(`Error: ${error}`);
             });
     }
     invokeSearch(query: string): void {
@@ -80,7 +80,7 @@ export class TemplateListComponent implements OnInit, OnDestroy {
                 .subscribe((response: ResponseModel<TemplateModel>) => {
                     this.templates = response.Records;
                 }, ((error: any) => {
-                    console.log(error);
+                    console.log(`Error: ${error}`);
                 }));
         }
     }
@@ -118,7 +118,5 @@ export class TemplateListComponent implements OnInit, OnDestroy {
                     .map(x => x.map(y => new NameValue<number>(y.EmergencySituationName, y.EmergencySituationId)))
             })
         ];
-
-        // console.log(this.searchConfigs);
     }
 }
