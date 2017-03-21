@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
@@ -12,15 +12,14 @@ import {
 import {
     InvolvePartyModel,
     InvolvePartyService
-} from '../../../shared.components';
+} from '../../involveparties';
 
 @Injectable()
 export class FlightService {
     private _dataService: DataService<FlightModel>;
 
     constructor(private dataServiceFactory: DataServiceFactory,
-        private InvolvedPartyService: InvolvePartyService
-    ) {
+        private involvePartyService: InvolvePartyService) {
         let option: DataProcessingService = new DataProcessingService();
         this._dataService = this.dataServiceFactory
             .CreateServiceWithOptions<FlightModel>('Flights', option);
@@ -32,7 +31,7 @@ export class FlightService {
             .OrderBy("CreatedOn desc")
             .Execute();
     }
-    
+
     GetAllActiveFlights(): Observable<ResponseModel<FlightModel>> {
         return this._dataService.Query()
             .Select('FlightId', 'FlightNo', 'FlightTaleNumber', 'OriginCode',
@@ -48,15 +47,11 @@ export class FlightService {
             .Execute()
             .map((data: FlightModel) => {
                 flight = data;
-                if (flight.ActiveFlag == 'Active') {
-                    flight.Active = true;
-                }
-                else {
-                    flight.Active = false;
-                }
                 return data;
             })
-            .flatMap((data: FlightModel) => this.InvolvedPartyService.GetInvolvedPartyById(data.InvolvedPartyId))
+            .flatMap((data: FlightModel) =>
+                this.involvePartyService.Get(data.InvolvedPartyId)
+            )
             .map((data: InvolvePartyModel) => {
                 flight.InvolvedParty = data;
                 return flight;

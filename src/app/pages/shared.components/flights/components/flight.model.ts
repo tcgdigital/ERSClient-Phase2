@@ -17,7 +17,6 @@ export class FlightModel extends BaseModel {
     public DepartureDate: Date;
     public ArrivalDate?: Date;
     public LoadAndTrimInfo?: string;
-    public Active: boolean;
 
     public InvolvedParty: InvolvePartyModel;
 
@@ -36,6 +35,5 @@ export class FlightModel extends BaseModel {
         this.DepartureDate = new Date();
         this.ArrivalDate = null;
         this.LoadAndTrimInfo = null;
-        this.Active = false;
     }
 }
