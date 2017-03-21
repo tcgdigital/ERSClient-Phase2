@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
@@ -10,13 +10,17 @@ import {
     DataServiceFactory,
     DataProcessingService
 } from '../../../../shared';
-import { InvolvePartyService, InvolvePartyModel } from '../../../shared.components';
+import {
+    InvolvePartyService,
+    InvolvePartyModel
+} from '../../../shared.components';
 
 @Injectable()
 export class AffectedService implements IServiceInretface<AffectedModel> {
     private _dataService: DataService<AffectedModel>;
+    // @Inject(DataServiceFactory) private dataServiceFactory: DataServiceFactory;
+    // @Inject(InvolvePartyService) private involvedPartyService: InvolvePartyService;
 
-    
     constructor(private dataServiceFactory: DataServiceFactory,
         private involvedPartyService: InvolvePartyService) {
         let option: DataProcessingService = new DataProcessingService();
@@ -35,7 +39,7 @@ export class AffectedService implements IServiceInretface<AffectedModel> {
         return this._dataService.Get(id.toString()).Execute();
     }
 
-     Create(entity: AffectedModel): Observable<AffectedModel> {
+    Create(entity: AffectedModel): Observable<AffectedModel> {
         let affected: AffectedModel;
         return this._dataService.Post(entity)
             .Execute()
@@ -71,10 +75,10 @@ export class AffectedService implements IServiceInretface<AffectedModel> {
     Delete(entity: AffectedModel): void {
     }
 
-    
+
     GetAllActiveAffecteds(): Observable<ResponseModel<AffectedModel>> {
         return this._dataService.Query()
-            .Select('AffectedId', 'InvolvedPartyId','Severity')
+            .Select('AffectedId', 'InvolvedPartyId', 'Severity')
             .Filter("ActiveFlag eq 'Active'")
             .OrderBy("CreatedOn desc")
             .Execute();

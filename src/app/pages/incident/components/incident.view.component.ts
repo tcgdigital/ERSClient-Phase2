@@ -54,23 +54,23 @@ export class IncidentViewComponent implements OnInit, OnDestroy {
         this.initiateIncidentModel();
         this.form = new FormGroup({
             IncidentId: new FormControl(0),
-            IsDrill: new FormControl(true), //IsDrill: new FormControl(incidentDataExchangeModel.IncidentModel.IsDrill),
-            EmergencyTypeId: new FormControl(1), //EmergencyTypeId: new FormControl(incidentDataExchangeModel.IncidentModel.EmergencyTypeId),
-            EmergencyName: new FormControl(''), //EmergencyName: new FormControl(incidentDataExchangeModel.IncidentModel.EmergencyName),
-            AlertMessage: new FormControl(''), //AlertMessage: new FormControl(incidentDataExchangeModel.IncidentModel.AlertMessage),
-            Description: new FormControl(''), //Description: new FormControl(incidentDataExchangeModel.IncidentModel.Description),
-            ClosureNote: new FormControl(''), //ClosureNote: new FormControl(incidentDataExchangeModel.IncidentModel.ClosureNote),
-            EmergencyDate: new FormControl(''), //EmergencyDate: new FormControl(incidentDataExchangeModel.IncidentModel.EmergencyDate),
-            Severity: new FormControl(''), //Severity: new FormControl(incidentDataExchangeModel.IncidentModel.Severity),
-            EmergencyLocation: new FormControl(''), //EmergencyLocation: new FormControl(incidentDataExchangeModel.IncidentModel.EmergencyLocation),
-            Remarks: new FormControl(''), //Remarks: new FormControl(incidentDataExchangeModel.IncidentModel.Remarks),
+            IsDrill: new FormControl(true), 
+            EmergencyTypeId: new FormControl(1), 
+            EmergencyName: new FormControl(''), 
+            AlertMessage: new FormControl(''), 
+            Description: new FormControl(''), 
+            ClosureNote: new FormControl(''), 
+            EmergencyDate: new FormControl(''),
+            Severity: new FormControl(''), 
+            EmergencyLocation: new FormControl(''),
+            Remarks: new FormControl(''),
 
-            FlightNumber: new FormControl(''), //FlightNumber: new FormControl(incidentDataExchangeModel.FLightModel.FlightNo),
-            Origin: new FormControl(''), //Origin: new FormControl(incidentDataExchangeModel.FLightModel.OriginCode),
-            Destination: new FormControl(''), //Destination: new FormControl(incidentDataExchangeModel.FLightModel.DestinationCode),
-            Scheduleddeparture: new FormControl(''), //Scheduleddeparture: new FormControl(incidentDataExchangeModel.FLightModel.DepartureDate),
-            Scheduledarrival: new FormControl(''), //Scheduledarrival: new FormControl(incidentDataExchangeModel.FLightModel.ArrivalDate),
-            FlightTailNumber: new FormControl('') //FlightTailNumber: new FormControl(incidentDataExchangeModel.FLightModel.FlightTaleNumber)
+            FlightNumber: new FormControl(''),
+            Origin: new FormControl(''),
+            Destination: new FormControl(''),
+            Scheduleddeparture: new FormControl(''),
+            Scheduledarrival: new FormControl(''), 
+            FlightTailNumber: new FormControl('') 
         });
         this.disable = true;
         this.dataExchange.Subscribe("incidentCreatedPreCheck", model => this.onIncidentCreatedPreCheck(model));
@@ -158,6 +158,7 @@ export class IncidentViewComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(values: Object): void {
+        console.log('Incident Created.');
         console.log(this.incidentDataExchangeModel);
         this.incidentService.CreateIncident(this.incidentDataExchangeModel.IncidentModel,
             this.incidentDataExchangeModel.IsFlightRelated,

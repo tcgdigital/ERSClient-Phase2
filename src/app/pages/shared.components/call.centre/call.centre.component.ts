@@ -85,7 +85,7 @@ export class EnquiryComponent implements OnInit {
                     this.crews.push(new KeyValue((affectedPerson.PassengerName || affectedPerson.CrewName), affectedPerson.AffectedPersonId));
                 }
             }, (error: any) => {
-                console.log('error:  ' + error);
+                console.log(`Error: ${error}`);
             });
     };
     getCargo(currentIncident) {
@@ -96,7 +96,7 @@ export class EnquiryComponent implements OnInit {
                     this.awbs.push(new KeyValue(affectedObject.AWB, affectedObject.AffectedObjectId));
                 }
             }, (error: any) => {
-                console.log('error:  ' + error);
+                console.log(`Error: ${error}`);
             });
 
     };
@@ -105,7 +105,7 @@ export class EnquiryComponent implements OnInit {
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
             }, (error: any) => {
-                console.log('error:  ' + error);
+                console.log(`Error: ${error}`);
             });
     };
     setCallerModel(): CallerModel {
@@ -186,12 +186,10 @@ export class EnquiryComponent implements OnInit {
             x => x.EnquiryType, x => x.IsAdminRequest, x => x.IsCallBack, x => x.IsTravelRequest, x => x.Queries);
         this.enquiry.IncidentId = 19;
         this.enquiry.Remarks = '';
-        debugger;
         this.enquiry.Caller = this.setCallerModel();
         this.enquiry.CommunicationLogs = this.SetCommunicationLog(GlobalConstants.RequesterTypeEnquiry, GlobalConstants.InteractionDetailsTypeEnquiry);
         this.enquiry.CommunicationLogs[0].Queries = this.enquiry.Queries;
         this.demands = new Array<DemandModel>();
-        debugger;
         if (this.enquiry.IsCallBack) {
             this.SetDemands(true, false, false, false);
         }
@@ -227,11 +225,11 @@ export class EnquiryComponent implements OnInit {
                             this.demands = [];
                             this.communicationLogs = [];
                         }, (error: any) => {
-                            console.log(error);
+                            console.log(`Error: ${error}`);
                         });
 
             }, (error: any) => {
-                console.log(error);
+                console.log(`Error: ${error}`);
             });
 
     };
@@ -252,8 +250,5 @@ export class EnquiryComponent implements OnInit {
         this.getCargo(this.currentIncident);
         this.getDepartments();
         this.enquiry.EnquiryType = this.enquiryTypes[0].value;
-        console.log('Call centre');
-
     };
-
 }

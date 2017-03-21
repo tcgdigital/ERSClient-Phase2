@@ -160,7 +160,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
                 .subscribe((response: BroadCastModel) => {
                     this.dataExchange.Publish('BroadcastModelSaved', response);
                 }, (error: any) => {
-                    console.log('Error');
+                    console.log(`Error: ${error}`);
                 });
         }
         else {
@@ -168,7 +168,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
                 .subscribe((response: BroadCastModel) => {
                     this.dataExchange.Publish('BroadcastModelUpdated', response);
                 }, (error: any) => {
-                    console.log('Error');
+                    console.log(`Error: ${error}`);
                 });
         }
     }

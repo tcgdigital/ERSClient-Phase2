@@ -74,10 +74,8 @@ export class DepartmentFunctionalityComponent implements OnInit {
         });
         this.pagePermissionService.CreateBulk(this.pagePermissionModelToSave)
             .subscribe((response: PagePermissionModel[]) => {
-                // this.dataExchange.Publish("demandTypeModelSaved", response);
-                console.log("Success");
             }, (error: any) => {
-                console.log(error);
+                console.log(`Error: ${error}`);
             });
     };
 
@@ -86,7 +84,6 @@ export class DepartmentFunctionalityComponent implements OnInit {
         this.pagePermissionService.GetFilter(message.Value.toString())
             .subscribe((response: ResponseModel<PagePermissionModel>) => {
                 this.pagesForDepartment = this.SetAllSelectedToFalse(this.pagesForDepartmentConstant);
-                console.log(this.pagesForDepartment);
                 for (let item2 of this.pagesForDepartment) {
                     if (response.Count != 0) {
                         for (let model of response.Records) {

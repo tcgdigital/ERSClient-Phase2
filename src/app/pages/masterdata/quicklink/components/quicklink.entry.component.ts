@@ -64,7 +64,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
                     this.dataExchange.Publish("quickLinkModelSaved", response);
                     this.initiateQuickLinkModel();
                 }, (error: any) => {
-                    console.log("Error");
+                    console.log(`Error: ${error}`);
                 });
         }
         else {//EDIT REGION
@@ -82,14 +82,13 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
                         });
                         this.showAddRegion(true);
                     }, (error: any) => {
-                        console.log("Error");
+                        console.log(`Error: ${error}`);
                     });
             }
         }
     }
 
     cancel(): void {
-        console.log("HELLO");
         this.initiateQuickLinkModel();
         this.form = new FormGroup({
             QuickLinkId: new FormControl(0),

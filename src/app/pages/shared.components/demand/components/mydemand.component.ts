@@ -22,10 +22,9 @@ export class MyDemandComponent implements OnInit {
     getMyDemands(deptId, incidentId): void {
         this.demandService.GetByRequesterDepartment(deptId, incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
-                debugger;
                 this.mydemands = this.demandService.DemandMapper(response.Records);
             }, (error: any) => {
-                console.log("error:  " + error);
+                console.log(`Error: ${error}`);
             });
     };
 
@@ -70,7 +69,6 @@ export class MyDemandComponent implements OnInit {
     };
 
     open(demandId) {   
-        console.log("Event to publish" + demandId);     
          this.dataExchange.Publish("OnDemandUpdate", demandId);
     };
 

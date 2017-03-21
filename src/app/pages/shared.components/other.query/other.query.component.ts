@@ -21,7 +21,7 @@ export class OtherQueryComponent implements OnInit {
             .subscribe((response: ResponseModel<EnquiryModel>) => {
                 this.otherqueries = this.enquiryService.MapQuery(response.Records);
             }, (error: any) => {
-                console.log("error:  " + error);
+                console.log(`Error: ${error}`);
             });
     };
 

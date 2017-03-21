@@ -26,9 +26,8 @@ export class CompletedDemandComponent implements OnInit {
         this.demandService.GetCompletedDemands(deptId, incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.completedDemands = this.demandService.DemandMapper(response.Records);
-                console.log(this.completedDemands);
             }, (error: any) => {
-                console.log("error:  " + error);
+                console.log(`Error: ${error}`);
             });
     };
 
@@ -87,7 +86,6 @@ export class CompletedDemandComponent implements OnInit {
                 }
                 return item;
             });
-            debugger;
             if (demandCompletion.length == 0) {
                 alert("Please select at least one request");
             }
@@ -97,7 +95,7 @@ export class CompletedDemandComponent implements OnInit {
                         alert("Demand updated successfully");
                         this.getCompletedDemands(this.currentDepartmentId,this.currentIncident);
                     }, (error: any) => {
-                        console.log(error);
+                        console.log(`Error: ${error}`);
                     });
             };
         }

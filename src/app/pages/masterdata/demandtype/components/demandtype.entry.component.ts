@@ -51,7 +51,6 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
     cancel(): void {
         this.demandTypeModel = new DemandTypeModel();
         this.Action = "Save";
-        console.log("Cancel");
         this.demandTypeModel.ActiveFlag = 'Active';
         this.demandTypeModel.CreatedBy = 1;
         this.demandTypeModel.CreatedOn = this.date;
@@ -83,7 +82,6 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
 
     onSubmit() {
         if (this.demandTypeModel.DemandTypeId == 0) {
-            console.log("Create");
             this.demandTypeModel.DemandTypeName = this.form.controls['DemandTypeName'].value;
             this.demandTypeModel.IsAutoApproved = this.form.controls['IsAutoApproved'].value;
             this.demandTypeModel.DepartmentId = this.form.controls['ApproverDept'].value;
@@ -91,17 +89,15 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
                 .subscribe((response: DemandTypeModel) => {
                     this.dataExchange.Publish("demandTypeModelSaved", response);
                 }, (error: any) => {
-                    console.log(error);
+                    console.log(`Error: ${error}`);
                 });
         }
         else {
-            console.log("Edit");
-            // this.formControlDirtyCheck();
             this.demandTypeService.Update(this.demandTypeModel)
                 .subscribe((response: DemandTypeModel) => {
                     this.dataExchange.Publish("demandTypeModelUpdated", response);
                 }, (error: any) => {
-                    console.log(error);
+                    console.log(`Error: ${error}`);
                 });
         }
     }
@@ -109,22 +105,4 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe("OnDemandUpdate");
     }
-
-    //  formControlDirtyCheck() {
-    //     this.demandTypeModel.DemandTypeId = this.form.controls['DemandTypeId'].value;
-    //     if (this.form.controls['DemandTypeName'].touched) {
-    //         console.log('DemandTypeName changed');
-    //         this.demandTypeModel.DemandTypeName = this.form.controls['DemandTypeName'].value;
-    //     }
-    //     if (this.form.controls['IsAutoApproved'].touched) {
-    //         console.log('IsAutoApproved changed');
-    //         this.demandTypeModel.IsAutoApproved = this.form.controls['IsAutoApproved'].value;
-    //     }
-    //     if (this.form.controls['ApproverDept'].touched) {
-    //         console.log('DepartmentId changed');
-    //         this.demandTypeModel.DepartmentId = this.form.controls['ApproverDept'].value;
-    //     }
-    // }
-
-
 }

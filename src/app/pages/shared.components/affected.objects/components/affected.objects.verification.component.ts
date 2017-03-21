@@ -22,7 +22,7 @@ export class AffectedObjectsVerificationComponent implements OnInit {
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedObjectsForVerification = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
             }, (error: any) => {
-                console.log("error:  " + error);
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -34,17 +34,12 @@ export class AffectedObjectsVerificationComponent implements OnInit {
             .subscribe((response: AffectedObjectModel[]) => {
                 alert("Selected Objects are verified");
                 this.getAffectedObjects();
-
             }, (error: any) => {
-                console.log(error);
+                console.log(`Error: ${error}`);
             });
     };
-
-
-
 
     ngOnInit(): any {
         this.getAffectedObjects();
     }
-
 }
