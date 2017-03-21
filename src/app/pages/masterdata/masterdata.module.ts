@@ -50,13 +50,13 @@ const MASTER_SERVICES: any[] = [
     ]
 })
 export class MasterDateModule {
-    static expose(): ModuleWithProviders {
-        let moduleProvider: ModuleWithProviders = <ModuleWithProviders>{
-            ngModule: MasterDateModule,
-            providers: [
-                ...MASTER_SERVICES
-            ]
-        };
-        return moduleProvider;
-    }
+    // static expose(): ModuleWithProviders {
+    //     let moduleProvider: ModuleWithProviders = <ModuleWithProviders>{
+    //         ngModule: MasterDateModule,
+    //         providers: [
+    //             ...MASTER_SERVICES
+    //         ]
+    //     };
+    //     return moduleProvider;
+    // }
 }
