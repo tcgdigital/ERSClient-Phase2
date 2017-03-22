@@ -2,9 +2,12 @@ import { Component, ViewEncapsulation, OnInit, AfterContentInit } from '@angular
 import { Observable } from 'rxjs/Rx';
 
 
-import { InvolvePartyModel } from '../../../shared.components';
-import { DemandModel, DemandModelToView } from './demand.model';
+import { InvolvePartyModel } from '../../involveparties';
+import { DemandModel, DemandModelToView, DemandRemarkLogModel } from './demand.model';
+
 import { DemandService } from './demand.service';
+import { DemandRemarkLogService } from './demand.remarklogs.service';
+
 import { ResponseModel, DataExchangeService, GlobalConstants } from '../../../../shared';
 
 @Component({
@@ -13,17 +16,28 @@ import { ResponseModel, DataExchangeService, GlobalConstants } from '../../../..
     templateUrl: '../views/mydemand.view.html'
 })
 export class MyDemandComponent implements OnInit {
-
-    constructor(private demandService: DemandService,private dataExchange: DataExchangeService<number>) { }
     mydemands: DemandModelToView[];
     currentDepartment: number;
+    currentDepartmentName: string;
     currentIncident: number;
+    createdByName: string ="Anwesha Ray";
+    createdBy: number;
+    demandRemarks: DemandRemarkLogModel[] = [];
+    Remarks: string;
+    RemarkToCreate: DemandRemarkLogModel;    
+    constructor(private demandService: DemandService,
+        private demandRemarkLogsService: DemandRemarkLogService, private dataExchange: DataExchangeService<number>) {
+    }
+
 
     getMyDemands(deptId, incidentId): void {
         this.demandService.GetByRequesterDepartment(deptId, incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
-                debugger;
                 this.mydemands = this.demandService.DemandMapper(response.Records);
+                this.mydemands.forEach(x =>
+                    function () {
+                        x["showRemarks"] = false;
+                    });
             }, (error: any) => {
                 console.log("error:  " + error);
             });
@@ -69,19 +83,54 @@ export class MyDemandComponent implements OnInit {
         });
     };
 
-    open(demandId) {   
-        console.log("Event to publish" + demandId);     
-         this.dataExchange.Publish("OnDemandUpdate", demandId);
+    open(demandId) {
+        console.log("Event to publish" + demandId);
+        this.dataExchange.Publish("OnDemandUpdate", demandId);
     };
 
+    getDemandRemarks(demandId): void {
+        this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
+            .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
+                debugger;
+                this.demandRemarks = response.Records;
+            }, (error: any) => {
+                console.log("error:  " + error);
+            });
+    }
+
+    openDemandRemarks(demand) {
+        this.getDemandRemarks(demand.DemandId);
+        demand["showRemarks"] = true;
+    }
+    cancel(demand) {
+        demand["showRemarks"] = false;
+    }
+    ok(remarks, demand) {
+        this.RemarkToCreate = new DemandRemarkLogModel();
+        this.RemarkToCreate.Remark = remarks;
+        this.RemarkToCreate.DemandId = demand.DemandId;
+        this.RemarkToCreate.RequesterDepartmentName = demand.RequesterDepartmentName;
+        this.RemarkToCreate.TargetDepartmentName = demand.TargetDepartmentName;
+        this.RemarkToCreate.CreatedByName = this.createdByName;
+        this.demandRemarkLogsService.Create(this.RemarkToCreate)
+            .subscribe((response: DemandRemarkLogModel) => {
+                alert("Remark saved successfully");
+                this.getDemandRemarks(demand.DemandId);
+                this.Remarks = "";
+            }, (error: any) => {
+                console.log("error:  " + error);
+                alert("Error occured during saving the remark");
+            });
+    }
     ngOnInit() {
-        
-        this.currentDepartment=4;
+
+        this.currentDepartment = 4;
         this.currentIncident = 1;
-        this.getMyDemands(this.currentDepartment,this.currentIncident);
+        this.getMyDemands(this.currentDepartment, this.currentIncident);
+        this.Remarks = "";
 
     };
-    
+
     ngAfterContentInit() {
         this.setRagStatus();
     };

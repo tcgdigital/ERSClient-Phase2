@@ -3,23 +3,22 @@ import { Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { DemandModel, DemandModelToView } from './demand.model';
+import { IDemandService } from './IDemandService';
 import {
     ResponseModel, DataService,
-    DataServiceFactory, DataProcessingService,
+    DataServiceFactory, DataProcessingService, ServiceBase,
     IServiceInretface, BaseModel, RequestModel, GlobalConstants, WEB_METHOD
 } from '../../../../shared';
 
 @Injectable()
-export class DemandService implements IServiceInretface<DemandModel> {
-    private _dataService: DataService<DemandModel>;
+export class DemandService extends ServiceBase<DemandModel> implements IDemandService {
     private _bulkDataService: DataService<DemandModel>;
     private _bulkDataServiceForCompletion: DataService<DemandModel>;
     private _bulkDataServiceForApproval: DataService<DemandModel>;
 
     constructor(private dataServiceFactory: DataServiceFactory) {
+        super(dataServiceFactory, 'Demands');
         let option: DataProcessingService = new DataProcessingService();
-        this._dataService = this.dataServiceFactory
-            .CreateServiceWithOptions<DemandModel>('Demands', option);
         this._bulkDataService = this.dataServiceFactory
             .CreateServiceWithOptionsAndActionSuffix<DemandModel>
             ('DemandBatch', 'BatchPostAsync', option);
@@ -41,13 +40,9 @@ export class DemandService implements IServiceInretface<DemandModel> {
             .Execute();
     };
 
-    Get(id: any): Observable<DemandModel> {
-        return this._dataService.Get(id.toString()).Execute();
-    };
-
     GetForAssignedDept(targetDeptId: number, incidentId: number): Observable<ResponseModel<DemandModel>> {
         return this._dataService.Query()
-            .Filter(`IncidentId eq  ${incidentId} and TargetDepartmentId eq ${targetDeptId}  and IsClosed eq false and IsApproved eq true and IsCompleted eq false`)
+            .Filter(`IncidentId eq ${incidentId} and TargetDepartmentId eq ${targetDeptId}  and IsClosed eq false and IsApproved eq true and IsCompleted eq false`)
             .Expand('RequesterDepartment($select=DepartmentName) , DemandType($select=DemandTypeName)')
             .Execute();
     };
@@ -72,10 +67,6 @@ export class DemandService implements IServiceInretface<DemandModel> {
             .Filter(`RequesterDepartmentId eq ${deptId} and IncidentId eq ${incidentId} and IsClosed eq false and IsCompleted eq true and IsApproved eq true`)
             .Expand('TargetDepartment($select=DepartmentName), RequesterDepartment($select=DepartmentName) , DemandType($select=DemandTypeName)')
             .Execute();
-    };
-
-    Create(entity: DemandModel): Observable<DemandModel> {
-        return this._dataService.Post(entity).Execute();
     };
 
     CreateBulk(entities: DemandModel[]): Observable<DemandModel[]> {
@@ -116,15 +107,6 @@ export class DemandService implements IServiceInretface<DemandModel> {
         return demandModelToView;
     };
 
-    Update(entity: DemandModel): Observable<DemandModel> {
-        let key: string = entity.DemandId.toString()
-        return this._dataService.Patch(entity, key)
-            .Execute();
-    };
-
-    Delete(entity: DemandModel): void {
-    };
-   
     UpdateBulkForCompletion(entities: DemandModel[]): Observable<DemandModel[]> {
         return this._bulkDataServiceForCompletion.BulkPost(entities).Execute();
     };

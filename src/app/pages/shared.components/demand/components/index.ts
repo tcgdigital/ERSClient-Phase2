@@ -5,3 +5,5 @@ export * from './assigned.demand.component';
 export * from './completed.demand.component';
 export * from './mydemand.component';
 export * from './demand.entry.component';
+export * from './demand.remarklogs.service';
+export * from './demandtrail.service';

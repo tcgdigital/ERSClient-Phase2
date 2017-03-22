@@ -87,8 +87,39 @@ My Demand
 <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
     <ul class="list-group">
         <li class="list-group-item"><strong><i>Remarks:</i></strong></li>
-        <button class="gmd-icon-button fa fa-list-alt" (click)="remarks(demand.DemandId)" aria-label="Edit"></button>
+        <button class="gmd-icon-button fa fa-list-alt" (click)="openDemandRemarks(demand)" aria-label="Edit"></button>
     </ul>
+</div>
+
+<div class="col-lg-6 col-md-6" [hidden]="!demand.showRemarks">
+    <strong>Request Remarks</strong>
+    <ul class="list-group">
+        <li class="list-group-item"><strong><i>Remarks:</i></strong></li>
+        <li><input [(ngModel)]="Remarks" type="text" /> </li>
+    </ul>
+    <div class="row" *ngFor="let remark of demandRemarks">
+        <ul class="list-group">
+            <li class="list-group-item"><strong><i>Requester Department:</i></strong></li>
+            <li class="list-group-item" style="border-top: none">{{remark.RequesterDepartmentName}}</li>
+           </ul>
+           <ul class="list-group">
+            <li class="list-group-item"><strong><i>Remarks added by:</i></strong></li>
+            <li class="list-group-item" style="border-top: none">{{remark.CreatedByName}}</li>
+           </ul>
+           <ul class="list-group">
+            <li class="list-group-item"><strong><i>Remarks added on:</i></strong></li>
+            <li class="list-group-item" style="border-top: none">{{remark.CreatedOn | date:"dd-MMM-yy h:mma"}}</li>
+           </ul>
+           <ul class="list-group">
+            <li class="list-group-item"><strong><i>Remarks:</i></strong></li>
+            <li class="list-group-item" style="border-top: none">{{remark.Remark}}</li>
+           </ul>
+</div>
+
+
+<button class="btn btn-primary" type="button" (click)="ok(Remarks, demand)">Ok</button>
+<button class="btn btn-primary" type="button" (click)="cancel(demand)">Cancel</button>
+
 </div>
 <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
     <ul class="list-group">

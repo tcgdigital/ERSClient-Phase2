@@ -1,9 +1,10 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 
 import { InvolvePartyModel } from '../../involveparties';
-import { DemandModel, DemandModelToView } from './demand.model';
+import { DemandModel, DemandModelToView, DemandRemarkLogModel } from './demand.model';
 import { DemandService } from './demand.service';
 import { CommunicationLogModel } from '../../communicationlogs';
+import { DemandRemarkLogService } from './demand.remarklogs.service';
 import { ResponseModel, DataExchangeService, GlobalConstants } from '../../../../shared';
 
 @Component({
@@ -12,23 +13,67 @@ import { ResponseModel, DataExchangeService, GlobalConstants } from '../../../..
     templateUrl: '../views/completed.demand.view.html'
 })
 export class CompletedDemandComponent implements OnInit {
-
-    constructor(private demandService: DemandService) { }
     completedDemands: DemandModelToView[];
     currentDepartmentId: number;
-    currentDepartmentName: string ;
+    currentDepartmentName: string;
     currentIncident: number;
     createdBy: number = 2;
     communicationLogs: CommunicationLogModel[];
     communicationLog: CommunicationLogModel;
+    demandRemarks: DemandRemarkLogModel[];
+    Remarks: string;
+    RemarkToCreate: DemandRemarkLogModel;
+    createdByName: string;
+    constructor(private demandService: DemandService, private demandRemarkLogsService: DemandRemarkLogService) {
+        this.createdByName = "Anwesha Ray";
+        this.demandRemarks = [];
+    }
 
-    getCompletedDemands(deptId,incidentId): void {
+
+    getCompletedDemands(deptId, incidentId): void {
         this.demandService.GetCompletedDemands(deptId, incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.completedDemands = this.demandService.DemandMapper(response.Records);
                 console.log(this.completedDemands);
             }, (error: any) => {
                 console.log("error:  " + error);
+            });
+    };
+
+    getDemandRemarks(demandId): void {
+        this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
+            .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
+                debugger;
+                this.demandRemarks = response.Records;
+            }, (error: any) => {
+                console.log("error:  " + error);
+            });
+    };
+
+    openDemandRemarks(demand) {
+        this.getDemandRemarks(demand.DemandId);
+        demand["showRemarks"] = true;
+    };
+
+    cancel(demand) {
+        demand["showRemarks"] = false;
+    };
+
+    ok(remarks, demand) {
+        this.RemarkToCreate = new DemandRemarkLogModel();
+        this.RemarkToCreate.Remark = remarks;
+        this.RemarkToCreate.DemandId = demand.DemandId;
+        this.RemarkToCreate.RequesterDepartmentName = demand.RequesterDepartmentName;
+        this.RemarkToCreate.TargetDepartmentName = demand.TargetDepartmentName;
+        this.RemarkToCreate.CreatedByName = this.createdByName;
+        this.demandRemarkLogsService.Create(this.RemarkToCreate)
+            .subscribe((response: DemandRemarkLogModel) => {
+                alert("Remark saved successfully");
+                this.getDemandRemarks(demand.DemandId);
+                this.Remarks = "";
+            }, (error: any) => {
+                console.log("error:  " + error);
+                alert("Error occured during saving the remark");
             });
     };
 
@@ -95,7 +140,7 @@ export class CompletedDemandComponent implements OnInit {
                 this.demandService.UpdateBulkForClosure(demandCompletion)
                     .subscribe((response: DemandModel[]) => {
                         alert("Demand updated successfully");
-                        this.getCompletedDemands(this.currentDepartmentId,this.currentIncident);
+                        this.getCompletedDemands(this.currentDepartmentId, this.currentIncident);
                     }, (error: any) => {
                         console.log(error);
                     });
@@ -106,9 +151,9 @@ export class CompletedDemandComponent implements OnInit {
 
     ngOnInit() {
         this.currentDepartmentId = 1;
-    this.currentDepartmentName = "Command Center";
-    this.currentIncident = 88;
-        this.getCompletedDemands(this.currentDepartmentId,this.currentIncident);
+        this.currentDepartmentName = "Command Center";
+        this.currentIncident = 88;
+        this.getCompletedDemands(this.currentDepartmentId, this.currentIncident);
 
     };
 

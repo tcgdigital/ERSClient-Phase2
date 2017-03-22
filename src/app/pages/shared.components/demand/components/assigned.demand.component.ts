@@ -2,8 +2,9 @@ import { Component, ViewEncapsulation, OnInit, AfterContentInit } from '@angular
 import { Observable } from 'rxjs/RX';
 
 import { InvolvePartyModel } from '../../involveparties';
-import { DemandModel, DemandModelToView } from './demand.model';
+import { DemandModel, DemandModelToView, DemandRemarkLogModel } from './demand.model';
 import { DemandService } from './demand.service';
+import { DemandRemarkLogService } from './demand.remarklogs.service';
 import { ResponseModel, DataExchangeService, GlobalConstants } from '../../../../shared';
 
 @Component({
@@ -12,12 +13,19 @@ import { ResponseModel, DataExchangeService, GlobalConstants } from '../../../..
     templateUrl: '../views/assigned.demand.view.html'
 })
 export class AssignedDemandComponent implements OnInit, AfterContentInit {
-
-    constructor(private demandService: DemandService) { }
     demands: DemandModelToView[];
     currentDepartmentId: number;
     currentDepartmentName: string;
     currentIncident: number;
+    Remarks: string;
+    demandRemarks: DemandRemarkLogModel[];
+    RemarkToCreate: DemandRemarkLogModel;
+    createdByName: string;
+    constructor(private demandService: DemandService, private demandRemarkLogsService: DemandRemarkLogService) {
+        this.createdByName = "Anwesha Ray";
+        this.demandRemarks = [];
+    }
+
 
     getAssignedDemands(deptId, incidentId): void {
         this.demandService.GetForAssignedDept(deptId, incidentId)
@@ -72,6 +80,43 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit {
         });
     };
 
+    getDemandRemarks(demandId): void {
+        this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
+            .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
+                debugger;
+                this.demandRemarks = response.Records;
+            }, (error: any) => {
+                console.log("error:  " + error);
+            });
+    };
+
+    openDemandRemarks(demand) {
+        this.getDemandRemarks(demand.DemandId);
+        demand["showRemarks"] = true;
+    };
+
+    cancel(demand) {
+        demand["showRemarks"] = false;
+    };
+    
+    ok(remarks, demand) {
+        this.RemarkToCreate = new DemandRemarkLogModel();
+        this.RemarkToCreate.Remark = remarks;
+        this.RemarkToCreate.DemandId = demand.DemandId;
+        this.RemarkToCreate.RequesterDepartmentName = demand.RequesterDepartmentName;
+        this.RemarkToCreate.TargetDepartmentName = demand.TargetDepartmentName;
+        this.RemarkToCreate.CreatedByName = this.createdByName;
+        this.demandRemarkLogsService.Create(this.RemarkToCreate)
+            .subscribe((response: DemandRemarkLogModel) => {
+                alert("Remark saved successfully");
+                this.getDemandRemarks(demand.DemandId);
+                this.Remarks = "";
+            }, (error: any) => {
+                console.log("error:  " + error);
+                alert("Error occured during saving the remark");
+            });
+    };
+
     isCompleted(item: DemandModelToView) {
         return item.IsCompleted == true;
 
@@ -99,7 +144,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit {
             else {
                 this.demandService.UpdateBulkForCompletion(demandCompletion)
                     .subscribe((response: DemandModel[]) => {
-                        this.getAssignedDemands(this.currentDepartmentId,this.currentIncident);
+                        this.getAssignedDemands(this.currentDepartmentId, this.currentIncident);
                     }, (error: any) => {
                         console.log(error);
                     });
@@ -109,10 +154,10 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit {
     };
 
     ngOnInit() {
-        this.currentDepartmentId = 1;
-    this.currentDepartmentName = "Command Center";
-    this.currentIncident = 88;
-        this.getAssignedDemands(this.currentDepartmentId,this.currentIncident);
+        this.currentDepartmentId = 4;
+        this.currentDepartmentName = "Command Center";
+        this.currentIncident = 1;
+        this.getAssignedDemands(this.currentDepartmentId, this.currentIncident);
 
     };
 
