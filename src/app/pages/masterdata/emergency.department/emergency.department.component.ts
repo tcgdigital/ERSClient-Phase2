@@ -81,10 +81,8 @@ export class EmergencyDepartmentComponent {
         });
         this.emergencyDepartmentService.CreateBulk(this.emergencyDepartmentModelToSave)
             .subscribe((response: EmergencyDepartmentModel[]) => {
-                // this.dataExchange.Publish("demandTypeModelSaved", response);
-                console.log("Success");
             }, (error: any) => {
-                console.log(error);
+                console.log(`Error: ${error}`);
             });
     };
 

@@ -34,7 +34,7 @@ export class LoginComponent {
             .subscribe((data) => {
                 this.router.navigate(['pages/dashboard']);
             }, (error: any) => {
-                console.log(error);
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -44,7 +44,6 @@ export class LoginComponent {
             console.log('Invalid Information');
         }
         else {
-            console.log(this.userId.value);
             this.Login(this.userId.value, this.password.value);
         }
     }

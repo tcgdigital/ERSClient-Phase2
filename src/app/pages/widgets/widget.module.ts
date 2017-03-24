@@ -4,14 +4,14 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
 import {
-    BroadcastWidgetComponent,
+    BroadcastWidgetComponent,    
     CasualtySummaryWidgetComponent,
     ChecklistSummaryWidgetComponent,
     ClockWidgetComponent,
     DemandSummaryWidgetComponent,
-    MediaQueryWidgetComponent,
+    MediaReleaseWidgetComponent,
     PeopleOnBoardWidgetComponent,
-    PresidentMessageWidgetComponent
+    PresidentMessageWidgetComponent,    
 } from './index';
 
 import {
@@ -20,20 +20,20 @@ import {
     ChecklistSummaryWidgetService,
     ClockWidgetService,
     DemandSummaryWidgetService,
-    MediaQueryWidgetService,
+    MediaReleaseWidgetService,
     PeopleOnBoardWidgetService,
     PresidentMessageWidgetService
 } from './index';
 
 const WIDGET_COMPONENTS: any[] = [
-    BroadcastWidgetComponent,
+    BroadcastWidgetComponent,  
     CasualtySummaryWidgetComponent,
     ChecklistSummaryWidgetComponent,
     ClockWidgetComponent,
     DemandSummaryWidgetComponent,
-    MediaQueryWidgetComponent,
+    MediaReleaseWidgetComponent,
     PeopleOnBoardWidgetComponent,
-    PresidentMessageWidgetComponent
+    PresidentMessageWidgetComponent,   
 ];
 
 const WIDGET_SERVICE: any[] = [
@@ -42,7 +42,7 @@ const WIDGET_SERVICE: any[] = [
     ChecklistSummaryWidgetService,
     ClockWidgetService,
     DemandSummaryWidgetService,
-    MediaQueryWidgetService,
+    MediaReleaseWidgetService,
     PeopleOnBoardWidgetService,
     PresidentMessageWidgetService
 ];

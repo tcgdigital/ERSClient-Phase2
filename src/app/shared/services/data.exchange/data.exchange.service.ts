@@ -40,9 +40,6 @@ export class DataExchangeService<T> {
     }
 
     public Publish(name: string, data: T, lazy: boolean = true) {
-        //if (lazy === void 0) { lazy = true; }
-        // console.log(Object.keys(this.messageQueue));
-
         if (data === undefined || name === undefined) {
             return;
         }
@@ -83,8 +80,6 @@ export class DataExchangeService<T> {
     }
 
     private IsKeyExists(name: string) {
-        // console.log(this.messageQueue);
-        // return false;
         return Object.keys(this.messageQueue).some(key => key === name)
     }
 }

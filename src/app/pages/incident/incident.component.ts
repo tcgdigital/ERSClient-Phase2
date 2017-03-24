@@ -18,7 +18,6 @@ export class IncidentComponent implements OnInit {
         
     }
     ngOnInit(): any {
-        //console.log(this.DepartmentId);
         
     }
     ngOnDestroy(): void {

@@ -13,6 +13,12 @@ export class GlobalConstants {
         { value: "NonFlightRelated", key: 2 }
     ];
     public static ActiveFlag: Object = [{ value: "Active", key: 0 }, { value: "InActive", key: 1 }];
+    public static TemplateMediaType: any[] = [
+        { value: "Sms", key: 1 },
+        { value: "PushNotification", key: 2 },
+        { value: "Email", key: 3 },
+        { value: "Pdf", key: 4 }
+    ];
     public static EnquiryType: Object = [
         {
             value: "1",
@@ -56,6 +62,10 @@ export class GlobalConstants {
             text: "Priority Low"
         }
     ];
+    public static InvolvedPartyType: Object = [
+        { value: "Flight", key: 1 },
+        { value: "NonFlight", key: 2 }
+    ];
     public static TargetDepartmentTravel: number = 3;
     public static TargetDepartmentAdmin: number = 4;
     public static TargetDepartmentCrew: number = 6;
@@ -91,6 +101,29 @@ export class GlobalConstants {
             caption: 'Deceased'
         }
     ];
+     public static RequesterType: any[] = [
+           {
+               value: "1",
+               enumtype: 'PDA',
+               caption: 'PDA'
+           },
+           {
+               value: "2",
+               enumtype: 'NOK',
+               caption: 'NOK'
+           },
+           {
+               value: "3",
+               enumtype: 'Staff',
+               caption: 'Staff'
+           },
+           {
+               value: "4",
+               enumtype: 'Others',
+               caption: 'Others'
+           }
+        ];
+
 
 
 }

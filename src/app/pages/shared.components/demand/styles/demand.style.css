@@ -1,0 +1,17 @@
+.statusRed {
+    background: #F00 none repeat scroll 0 0;
+    border-radius: 20px;
+    float: left;
+    height: 12px;
+    margin-left: 10px;
+    width: 12px;
+}
+
+.statusGreen {
+    background: #090 none repeat scroll 0 0;
+    border-radius: 20px;
+    float: left;
+    height: 12px;
+    margin-left: 10px;
+    width: 12px;
+}
