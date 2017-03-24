@@ -1,0 +1,110 @@
+@import '../../config/config';
+
+.messaging-widget-container {
+    @include box-shadow(0px, 3px, 5px, 0, $header-shadow);
+    background-color: $message-widget-bg;
+    height: 150px;
+}
+
+.message-icon {
+    display: block;
+    width: 100%;
+    margin-top: 21%;
+    i {
+        text-align: center;
+        margin-left: 30%;
+    }
+    span {
+        font-family: $font-family-widget;
+        text-transform: uppercase;
+        float: left;
+        text-align: center;
+        width: 100%;
+    }
+}
+
+.border-seperator {
+    border-width: 0 2px 0 0;
+    border-style: solid;
+    @include linear-gradient-border(to top, $message-widget-border-s, $message-widget-border-m, $message-widget-border-e);
+}
+
+.message-icon a {
+    text-decoration: none;
+    float: left;
+    width: 85%;
+    text-align: center;
+    text-transform: uppercase;
+    @include linear-gradient-bg(to bottom, $message-widget-button-s, $message-widget-button-e);
+    margin: 2px 9px;
+    border-radius: 8px;
+    height: 20px;
+    color: $message-widget-button-text;
+    @include box-shadow(0px, 1px, 6px, 1px, $header-shadow);
+    &:hover,
+    &:active {
+        text-decoration: none;
+    }
+}
+
+@media screen and (max-width: $resXS-E) {
+    .message-icon {
+        margin-top: 25% !important;
+        i {
+            margin-left: 20%;
+        }
+        span {
+            font-size: 11px;
+        }
+        a {
+            font-size: 10px;
+            padding-top: 3px;
+            margin-left: 6px !important;
+        }
+    }
+}
+
+@media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {}
+
+@media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
+    .messaging-widget-container {
+        height: 240px !important;
+    }
+    .message-icon {
+        margin-top: 2% !important;
+        i {
+            margin-left: 38% !important;
+        }
+        span {
+            font-size: 11px;
+        }
+        a {
+            font-size: 10px;
+            padding-top: 3px;
+            width: 91% !important;
+        }
+    }
+    .border-seperator {
+        border-width: 0 0 2px 0 !important;
+        height: 91px;
+    }
+}
+
+@media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {
+    .message-icon {
+        margin-top: 40% !important;
+        i {
+            margin-left: 20%;
+        }
+        span {
+            font-size: 11px;
+        }
+        a {
+            font-size: 10px;
+            padding-top: 3px;
+            margin-left: 6px !important;
+        }
+    }
+}
+
+@media screen and (min-width: $resXL-S) {}

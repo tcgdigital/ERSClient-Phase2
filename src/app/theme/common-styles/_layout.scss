@@ -1,228 +1,115 @@
 @import '../config/config';
-
-$left-space: $sidebar-width;
-
-@include scrollbars(.5em, #d9d9d9, rgba(0, 0, 0, 0));
-
 html {
-  position: relative;
-  min-width: 320px;
-}
-
-html, body {
-  min-height: 100%;
-  height: 100%;
-  min-width: $resMin;
-}
-
-main {
-  min-height: 100%;
-  position: relative;
-  font: 14px/16px $font-family;
-  color: $default-text;
-
-  @include body-bg();
-
-  .additional-bg {
-    display: none;
-    @include additional-bg();
-  }
-}
-
-@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-  html {
-    overflow: hidden;
+    position: relative;
     height: 100%;
-  }
-  body {
-    overflow: auto;
+}
+
+body {
     height: 100%;
-  }
+    margin: 0 auto;
+    font-size: $font-size-normal;
+    font-family: $font-family-body;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 a {
-  transition: color 0.5s ease;
-  outline: 0 !important;
+    text-decoration: none;
+    font-size: $font-size-small;
 }
 
-.body-bg {
-  display: none;
+.no-gutters {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
 }
 
-.al-header {
-  display: block;
-  height: 49px;
-  margin: 0;
-  background-repeat: repeat-x;
-  position: relative;
-  z-index: 905;
-  color: #444444;
-}
-
-.al-main {
-  margin-left: $left-space;
-  padding: 66px 0 34px 0;
-  min-height: 500px;
-  position: relative;
-}
-
-.al-footer {
-  height: 34px;
-  padding: 0 18px 0 ($left-space + 20px);
-  width: 100%;
-  position: absolute;
-  display: block;
-  bottom: 0;
-  font-size: 13px;
-  color: $default-text;
-  transition: padding-left 0.5s ease;
-}
-
-.al-footer-main {
-  float: left;
-  margin-left: 15px;
-}
-
-.al-copy {
-  float: left;
-}
-
-.al-footer-right {
-  float: right;
-  margin-right: 12px;
-  i {
-    margin: 0 4px;
-    color: $danger;
-    font-size: 12px;
-  }
-  a {
-    margin-left: 4px;
-    color: $default-text;
-    &:hover {
-      color: $danger;
+.row.no-gutters {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    > {
+        [class^="col-"],
+        [class*=" col-"] {
+            padding-right: 0 !important;
+            padding-left: 0 !important;
+        }
     }
-  }
 }
 
-.al-share {
-  margin: -6px 0 0 12px;
-  padding: 0;
-  list-style: none;
-  float: left;
-  li {
-    list-style: none;
-    float: left;
-    margin-left: 16px;
-    i {
-      cursor: pointer;
-      transition: all 0.1s ease;
-      color: white;
-      padding: 6px;
-      box-sizing: content-box;
-      font-size: 16px;
-      &:hover {
-        transform: scale(1.2);
-      }
-    }
-    i.fa-facebook-square {
-      color: $facebook-color;
-    }
-    i.fa-twitter-square {
-      color: $twitter-color;
-    }
-    i.fa-google-plus-square {
-      color: $google-color;
-    }
-  }
+header.branding {
+    background: $header-bg;
+    @include box-shadow(0, 2px, 10px, 0, $header-shadow);
+    position: fixed;
+    width: 100%;
+    z-index: 99;
+    height: $header-height;
 }
 
-.al-content {
-  padding: 8px 32px 8px 40px;
+footer {
+    position: absolute;
+    z-index: 99;
 }
 
-@media screen and (max-width: $resXS) {
-  .al-content {
-    padding: 8px 20px;
-  }
-}
-
-.vis-hidden {
-  visibility: hidden;
-  position: absolute;
-  top: -9999px;
-  left: -9999px;
-}
-
-.icon-up, .icon-down {
-  width: 5px;
-  height: 13px;
-  display: block;
-}
-
-.icon-up {
-  // @include bg-nr('arrow-green-up.svg');
-}
-
-.icon-down {
-  // @include bg-nr('arrow-red-down.svg');
-}
-
-.disable-text-selection {
-  -webkit-touch-callout: none;
-  user-select: none;
-}
-
-.align-right {
-  text-align: right
-}
-
-.amcharts-chart-div > a {
-  font-size: 6px !important;
-}
-
-.content-panel {
-  padding-left: 22px;
-  padding-top: 26px;
-}
-
-@media (max-width: 590px) {
-  .al-footer-right {
-    float: none;
-    margin-bottom: 19px;
-    margin-right: 0;
-  }
-  .al-footer {
-    height: 76px;
+footer .row {
+    bottom: 0;
+    height: $footer-height;
+    position: fixed;
+    background-color: $footer-bg;
+    width: 100%;
+    @include box-shadow(0px, -2px, 2px, 0px, $footer-shadow);
     text-align: center;
-  }
-  .al-main {
-    padding-bottom: 76px;
-  }
-  .al-footer-main {
-    float: none;
-    display: inline-block;
-  }
+    font-size: $font-size-small;
+    vertical-align: middle;
+    padding-top: 9px;
 }
 
-.full-invisible {
-  visibility: hidden !important;
-  * {
-    visibility: hidden !important;
-  }
+.container-fluid {
+    background-color: $body-bg;
 }
 
-.irs-grid-text {
-  color: $default-text;
+section.body-container>.row {
+    padding-right: 15px;
 }
 
-.text-right {
-  text-align: right;
+@media screen and (max-width: $resXS-E) {
+    .body-container {
+        margin-top: 50px;
+    }
 }
 
-.text-left {
-  text-align: left;
+@media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {}
+
+@media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
+    .body-container {
+        padding-top: 60px;
+        padding-left: 17%;
+    }
 }
 
-.text-center {
-  text-align: center;
+@media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {
+    .body-container {
+        padding-top: 35px;
+        padding-left: 15%;
+    }
 }
+
+@media screen and (min-width: $resXL-S) {
+    .body-container {
+        padding-top: 35px;
+        padding-left: 10%;
+    }
+}
+
+
+/*
+@media screen and (max-width: $resXS-E) {}
+@media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {}
+@media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {}
+@media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {}
+@media screen and (min-width: $resXL-S) {}
+*/

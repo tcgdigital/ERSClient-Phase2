@@ -1,0 +1,105 @@
+@import '../../config/config';
+
+.widget-container {
+    @include box-shadow(0px, 3px, 5px, 0, $header-shadow);
+    background-color: $summary-widget-bg;
+    height: 92px;
+}
+
+.widget-title {
+    text-transform: uppercase;
+    font-family: $font-family-widget;
+    font-size: $font-size-below-normal;
+    font-weight: $font-weight-bold;
+    background-color: $summary-widget-title;
+    padding: 2px;
+    border-bottom: 1px solid $summary-widget-title-border;
+    span {
+        margin-left: 5px;
+    }
+}
+
+.widget-block {
+    margin-right: 10px;
+    text-align: right;
+}
+
+.widget-number {
+    span {
+        font-family: $font-family-widget;
+        font-size: 30px;
+    }
+    i {
+        display: none;
+    }
+}
+
+.widget-text {
+    display: block;
+    margin-top: -10px;
+    font-family: $font-family-widget;
+    text-transform: uppercase;
+    font-size: 10px;
+    padding-left: 1px;
+    line-height: 13px;
+}
+
+.widget-layout-fix {
+    padding-right: 0 !important;
+    padding-top: 15px !important;
+}
+
+@media screen and (max-width: $resXS-E) {
+    .widget-container {
+        margin-top: 5px;
+    }
+}
+
+@media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {}
+
+@media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
+    .people-onboard-layout {
+        top: 107px;
+        left: 20.5%;
+        -webkit-box-flex: 0;
+        @include flex(0, 0, 51%);
+        max-width: 50%;
+    }
+    .casualty-layout {
+        -webkit-box-flex: 0;
+        @include flex(0, 0, 51%);
+        max-width: 51%;
+    }
+    .demand-received-layout {
+        position: absolute;
+        left: 40%;
+        width: 155px;
+    }
+    .demand-raised-layout {
+        position: absolute;
+        left: 59.3%;
+        width: 156px;
+    }
+    .checklist-layout {
+        left: 78.5%;
+        width: 155px;
+        position: absolute;
+    }
+}
+
+@media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {}
+
+@media screen and (min-width: $resXL-S) {
+    .casualty-layout {
+        max-width: 22%;
+    }
+    .demand-received-layout {
+        max-width: 12%;
+    }
+    .demand-raised-layout {
+        max-width: 12%;
+    }
+    .checklist-layout {
+        max-width: 12%;
+    }
+}

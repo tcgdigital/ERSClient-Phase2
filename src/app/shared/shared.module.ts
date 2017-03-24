@@ -4,12 +4,19 @@ import { HttpModule } from '@angular/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { DropdownModule } from 'ng2-bootstrap';
+import { NgSelectizeModule } from 'ng-selectize';
 
 import {
-    SidebarComponent,
-    SideMenuComponent,
-    MenuItemComponent,
+    BrandHeaderComponent,
+    CommandHeaderComponent,
     PageHeaderComponent,
+
+    SidebarComponent,
+    SideMenuItemComponent,
+    // SideMenuComponent,
+    // MenuItemComponent,
+    PageFooterComponent,
+    
     ContentHeaderComponent,
     TopMenuComponent,
     AutocompleteComponent,
@@ -47,10 +54,13 @@ import {
 } from './constants';
 
 const SHARED_COMPONENTS: any[] = [
-    SidebarComponent,
-    SideMenuComponent,
-    MenuItemComponent,
     PageHeaderComponent,
+    
+    SidebarComponent,
+    SideMenuItemComponent,
+    // SideMenuComponent,
+    // MenuItemComponent,
+    PageFooterComponent,
     ContentHeaderComponent,
     TopMenuComponent,
     AutocompleteComponent,
@@ -89,6 +99,8 @@ const SHARED_CONSTANTS: any[] = [
 
 @NgModule({
     declarations: [
+        BrandHeaderComponent,
+        CommandHeaderComponent,
         ...SHARED_COMPONENTS,
         ...SHARED_DIRECTIVES
     ],
@@ -98,6 +110,7 @@ const SHARED_CONSTANTS: any[] = [
         FormsModule,
         ReactiveFormsModule,
         HttpModule,
+        NgSelectizeModule,
         DropdownModule.forRoot()
     ],
     exports: [
