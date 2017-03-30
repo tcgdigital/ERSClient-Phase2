@@ -9,7 +9,7 @@
 .message-icon {
     display: block;
     width: 100%;
-    margin-top: 21%;
+    margin-top: 15%;
     i {
         text-align: center;
         margin-left: 30%;
@@ -20,13 +20,15 @@
         float: left;
         text-align: center;
         width: 100%;
+        line-height: 16px;
+        font-size: $font-size-below-normal;
     }
 }
 
 .border-seperator {
     border-width: 0 2px 0 0;
     border-style: solid;
-    @include linear-gradient-border(to top, $message-widget-border-s, $message-widget-border-m, $message-widget-border-e);
+    @include linear-gradient-border($message-widget-border-s, $message-widget-border-m, $message-widget-border-e);
 }
 
 .message-icon a {
@@ -40,6 +42,7 @@
     border-radius: 8px;
     height: 20px;
     color: $message-widget-button-text;
+    line-height: 18px;
     @include box-shadow(0px, 1px, 6px, 1px, $header-shadow);
     &:hover,
     &:active {
@@ -48,6 +51,9 @@
 }
 
 @media screen and (max-width: $resXS-E) {
+    .messaging-widget{
+        max-width: 98%;;
+    }
     .message-icon {
         margin-top: 25% !important;
         i {
@@ -67,8 +73,11 @@
 @media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {}
 
 @media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
+    .messaging-widget{
+        max-width: 32.8%;
+    }
     .messaging-widget-container {
-        height: 240px !important;
+        height: 245px !important;
     }
     .message-icon {
         margin-top: 2% !important;
@@ -86,11 +95,15 @@
     }
     .border-seperator {
         border-width: 0 0 2px 0 !important;
-        height: 91px;
+        height: 102px;
+        border-image: linear-gradient(to right, rgb(255, 255, 255), #000000, rgb(255, 255, 255)) 0 0 2 0 !important;
     }
 }
 
 @media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {
+    .messaging-widget{
+        max-width: 32.8%;
+    }
     .message-icon {
         margin-top: 40% !important;
         i {
@@ -107,4 +120,8 @@
     }
 }
 
-@media screen and (min-width: $resXL-S) {}
+@media screen and (min-width: $resXL-S) {
+    .messaging-widget{
+        max-width: 32.9%;
+    }
+}

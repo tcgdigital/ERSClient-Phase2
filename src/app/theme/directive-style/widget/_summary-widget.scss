@@ -1,5 +1,4 @@
 @import '../../config/config';
-
 .widget-container {
     @include box-shadow(0px, 3px, 5px, 0, $header-shadow);
     background-color: $summary-widget-bg;
@@ -50,8 +49,21 @@
 }
 
 @media screen and (max-width: $resXS-E) {
+    .widget-layout-fix {
+        padding-top: 5px !important;
+        padding-left: 9px !important;
+    }
     .widget-container {
         margin-top: 5px;
+    }
+    .people-onboard-layout .widget-container,
+    .casualty-layout .widget-container,
+    .demand-received-layout .widget-container {
+        max-width: 98%;
+    }
+    .demand-raised-layout .widget-container,
+    .checklist-layout .widget-container {
+        max-width: 96%;
     }
 }
 
@@ -60,25 +72,33 @@
 @media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
     .people-onboard-layout {
         top: 107px;
-        left: 20.5%;
-        -webkit-box-flex: 0;
-        @include flex(0, 0, 51%);
-        max-width: 50%;
+        left: 19.5%;
+        max-width: 49%;
     }
     .casualty-layout {
-        -webkit-box-flex: 0;
-        @include flex(0, 0, 51%);
         max-width: 51%;
+    }
+    .dock-menu-enabled .checklist-layout {
+        left: 75.5%;
+        width: 23%;
     }
     .demand-received-layout {
         position: absolute;
         left: 40%;
         width: 155px;
     }
+    .dock-menu-enabled .demand-received-layout {
+        left: 32.5%;
+        width: 22%;
+    }
     .demand-raised-layout {
         position: absolute;
         left: 59.3%;
         width: 156px;
+    }
+    .dock-menu-enabled .demand-raised-layout {
+        left: 54%;
+        width: 22%;
     }
     .checklist-layout {
         left: 78.5%;
@@ -87,11 +107,20 @@
     }
 }
 
-@media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {}
+@media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {
+    .casualty-layout {
+        max-width: 31.7%;
+    }
+    .demand-received-layout,
+    .demand-raised-layout,
+    .checklist-layout {
+        max-width: 32.8%;
+    }
+}
 
 @media screen and (min-width: $resXL-S) {
     .casualty-layout {
-        max-width: 22%;
+        max-width: 21%;
     }
     .demand-received-layout {
         max-width: 12%;

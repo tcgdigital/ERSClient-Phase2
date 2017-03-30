@@ -7,7 +7,7 @@ import { DemandTypeService, DemandTypeModel } from '../../../masterdata/demandty
 import { DemandModel } from './demand.model';
 import { AffectedObjectsService, AffectedObjectsToView } from '../../affected.objects';
 import { AffectedPeopleService, AffectedPeopleToView } from '../../affected.people';
-import { InvolvePartyModel } from '../../involveparties';
+import { InvolvePartyModel, InvolvePartyService } from '../../involveparties';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
 import { CommunicationLogModel } from '../../communicationlogs';
 import { PageService , PageModel } from '../../../masterdata/department.functionality';
@@ -43,6 +43,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     constructor(private demandService: DemandService, private demandTypeService: DemandTypeService,
      private departmentService: DepartmentService, private pageService : PageService,
+     private involvedPartyService : InvolvePartyService,
         private affectedObjectsService: AffectedObjectsService, private affectedPeopleService: AffectedPeopleService,
         private dataExchange: DataExchangeService<number>) {
         this.showAdd = false;
@@ -74,7 +75,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     };
 
     getPassengersCrews(currentIncident) {
-        this.affectedPeopleService.GetFilterByIncidentId(currentIncident)
+        this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
             }, (error: any) => {

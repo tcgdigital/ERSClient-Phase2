@@ -22,6 +22,12 @@ a {
     font-size: $font-size-small;
 }
 
+.fill-height {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+}
+
 .no-gutters {
     margin-right: 0 !important;
     margin-left: 0 !important;
@@ -72,6 +78,13 @@ footer .row {
     background-color: $body-bg;
 }
 
+.tab-root-container {
+    @include box-shadow(0, 2px, 10px, 0, $header-shadow);
+    background-color: $body-bg;
+    height: 150px;
+    width: 98.8%;
+}
+
 section.body-container>.row {
     padding-right: 15px;
 }
@@ -79,6 +92,9 @@ section.body-container>.row {
 @media screen and (max-width: $resXS-E) {
     .body-container {
         margin-top: 50px;
+    }
+    .tab-root-container{
+        width: 98%;
     }
 }
 
@@ -89,18 +105,24 @@ section.body-container>.row {
         padding-top: 60px;
         padding-left: 17%;
     }
+    .tab-root-container{
+        width: 98.3%;
+    }
 }
 
 @media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {
     .body-container {
-        padding-top: 35px;
+        padding-top: 36px;
         padding-left: 15%;
+    }
+    .tab-root-container{
+        width: 98.4%;
     }
 }
 
 @media screen and (min-width: $resXL-S) {
     .body-container {
-        padding-top: 35px;
+        padding-top: 36px;
         padding-left: 10%;
     }
 }

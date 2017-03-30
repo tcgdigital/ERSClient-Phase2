@@ -7,20 +7,22 @@ import { DropdownModule } from 'ng2-bootstrap';
 import { NgSelectizeModule } from 'ng-selectize';
 
 import {
+    PaddingFormatterPipe
+} from './pipes';
+
+import {
     BrandHeaderComponent,
     CommandHeaderComponent,
     PageHeaderComponent,
-
     SidebarComponent,
     SideMenuItemComponent,
-    // SideMenuComponent,
-    // MenuItemComponent,
     PageFooterComponent,
-    
     ContentHeaderComponent,
     TopMenuComponent,
     AutocompleteComponent,
     GenericSearchComponent,
+    TextAccordionComponent,
+    TabControlComponent,
 } from './components';
 
 import {
@@ -55,16 +57,15 @@ import {
 
 const SHARED_COMPONENTS: any[] = [
     PageHeaderComponent,
-    
     SidebarComponent,
     SideMenuItemComponent,
-    // SideMenuComponent,
-    // MenuItemComponent,
     PageFooterComponent,
     ContentHeaderComponent,
     TopMenuComponent,
     AutocompleteComponent,
-    GenericSearchComponent
+    GenericSearchComponent,
+    TextAccordionComponent,
+    TabControlComponent
 ];
 
 const SHARED_DIRECTIVES: any[] = [
@@ -97,12 +98,17 @@ const SHARED_CONSTANTS: any[] = [
     decorateModuleRef
 ];
 
+const SHARED_PIPES: any[] = [
+    PaddingFormatterPipe
+];
+
 @NgModule({
     declarations: [
         BrandHeaderComponent,
         CommandHeaderComponent,
         ...SHARED_COMPONENTS,
-        ...SHARED_DIRECTIVES
+        ...SHARED_DIRECTIVES,
+        ...SHARED_PIPES
     ],
     imports: [
         CommonModule,
@@ -115,7 +121,8 @@ const SHARED_CONSTANTS: any[] = [
     ],
     exports: [
         ...SHARED_COMPONENTS,
-        ...SHARED_DIRECTIVES
+        ...SHARED_DIRECTIVES,
+        ...SHARED_PIPES
     ]
 })
 export class SharedModule {

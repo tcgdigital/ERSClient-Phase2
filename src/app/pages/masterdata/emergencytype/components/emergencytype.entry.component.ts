@@ -5,7 +5,7 @@ import {
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { EmergencyTypeService } from './emergencytype.service';
-import { EmergencyTypeModel } from './emergencytype.Model';
+import { EmergencyTypeModel } from './emergencytype.model';
 import {
     ResponseModel, DataExchangeService, GlobalConstants,
     BaseModel, UtilityService

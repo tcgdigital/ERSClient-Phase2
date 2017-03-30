@@ -35,6 +35,7 @@
     .client-name,
     .prod-name {
         width: 100%;
+        padding-top: 0;
     }
 }
 
@@ -86,7 +87,7 @@
     .hambarger-menu {
         position: absolute;
         left: 8.2%;
-        top: 3px;
+        top: 1px;
     }
 }
 
@@ -98,6 +99,6 @@
     .hambarger-menu {
         position: absolute;
         left: 7.2%;
-        top: 3px;
+        top: 1px;
     }
 }

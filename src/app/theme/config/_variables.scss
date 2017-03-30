@@ -2,8 +2,9 @@
 // $font-family-prod: 'oswaldbook';
 
 $font-family-body: Arial, Helvetica, sans-serif;
-$font-family-prod: Arial, Helvetica, sans-serif;
+$font-family-prod: $font-family-body;
 $font-family-widget: "Arial Narrow", Arial, sans-serif;
+$font-family-ribbon: sans-serif;
 
 $resXL-S: 1200px;
 $resLG-E: 1199px;
@@ -18,6 +19,7 @@ $assets-root: './assets/';
 $images-root: $assets-root + 'images/';
 $fonts-root: $assets-root + 'fonts/';
 
+$font-size-tiny: 7px;
 $font-size-small: 10px;
 $font-size-mid-small: 11px;
 $font-size-below-normal: 12px;
@@ -35,4 +37,9 @@ $font-weight-ultraBold: 900;
 
 $header-height: 40px;
 $footer-height: 30px;
+
+$text-accordion-item-translate3d-middle:-100px;
+$text-accordion-item-translate3d-back:-200px;
+$text-accordion-item-translate3d-out:-300px;
+
 

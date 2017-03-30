@@ -73,3 +73,27 @@ $message-widget-border-e:$body-bg;
 $widget-accordion-bg: $body-bg;
 $widget-accordion-nav-bg:rgba(216, 216, 216, 0.4);
 $widget-accordion-nav-hover-bg:rgba(216, 216, 216, 0.6);
+
+$text-accordion-bg: $body-bg;
+$text-accordion-nav-bg: $widget-accordion-nav-bg;
+$text-accordion-nav-hover-bg: $widget-accordion-nav-hover-bg;
+$text-accordion-date:#0275d8;
+
+$ribbon-text: #333;
+$ribbon-text-shadow: rgba(255, 255, 255, 0.5) 0.07em 0.05em 0px;
+$ribbon-bg:#BFDC7A;
+$ribbon-bg-s:#BFDC7A;
+$ribbon-bg-e:#8EBF45;
+$ribbon-back-border-bg: #3a4803;
+
+$tab-item-bg:rgba(86, 76, 75, 0.14);
+$tab-item-selected-bg:$default;
+$tab-item-selected-border:#03A9F4;
+$tab-nav-bg:rgba(64, 64, 66, 0.15);
+$tab-nav-hover-bg:rgba(64, 64, 66, 0.3);
+$tab-nav-arrow:$default;
+$tab-slider-bg:#de7464;
+$tab-ripple-on:rgba(41, 32, 30, 0.47);
+$tab-ripple-off:$default;
+
+

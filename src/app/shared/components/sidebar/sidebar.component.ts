@@ -79,7 +79,7 @@ import { SideMenuService, GlobalStateService } from '../../services';
     styleUrls: ['./sidebar.style.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class SidebarComponent implements OnInit, OnDestroy {
+export class SidebarComponent implements OnInit, OnChanges, OnDestroy {
     @Input() dockingState: boolean;
 
     public menuItems: any[];

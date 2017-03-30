@@ -93,11 +93,11 @@
          $color-stops: ($direction, $color-stops);
          $direction: 180deg;
      }
-     background-image: nth(nth($color-stops, 1), 1);
-     background-image: -webkit-linear-gradient(legacy-direction($direction), $color-stops) 1;
-     background-image: -o-linear-gradient(legacy-direction($direction), $color-stops) 1;
-     background-image: -moz-linear-gradient(legacy-direction($direction), $color-stops) 1;
-     background-image: linear-gradient($direction, $color-stops) 1;
+     border-image: nth(nth($color-stops, 1), 1);
+     border-image: -webkit-linear-gradient(legacy-direction($direction), $color-stops) 1;
+     border-image: -o-linear-gradient(legacy-direction($direction), $color-stops) 1;
+     border-image: -moz-linear-gradient(legacy-direction($direction), $color-stops) 1;
+     border-image: linear-gradient($direction, $color-stops) 1;
  }
  
  @mixin translate3d($tx, $ty, $tz) {
@@ -160,4 +160,9 @@
      -ms-transform: translateY($y) rotate($rotate);
      -o-transform: translateY($y) rotate($rotate);
      transform: translateY($y) rotate($rotate);
+ }
+
+ @mixin backface-visibility($prop){
+    -webkit-backface-visibility: $prop;
+    backface-visibility: $prop;
  }
