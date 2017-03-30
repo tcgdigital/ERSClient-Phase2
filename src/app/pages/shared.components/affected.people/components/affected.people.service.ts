@@ -1,9 +1,7 @@
-import { Injectable, Output, EventEmitter } from '@angular/core';
-import { Headers } from '@angular/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
-import { InvolvePartyModel } from '../../../shared.components';
-import { AffectedModel } from '../../affected';
+import { InvolvePartyModel, AffectedModel } from '../../../shared.components';
 import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';
 import { IAffectedPeopleService } from './IAffectedPeopleService';
 import {
@@ -88,8 +86,6 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
             let item = new AffectedPeopleModel();
             item.AffectedPersonId = affected.AffectedPersonId;
             item.IsVerified = affected.IsVerified;
-            // item.UpdatedBy = 1;
-            // item.UpdatedOn = new Date();
             return item;
         });
         return verifiedAffectedPeople;

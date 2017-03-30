@@ -11,13 +11,14 @@ import {
 import { MENU } from './app.memu';
 import { LayoutPaths } from './shared/constants';
 
-import 'style-loader!./app.style.scss';
-import 'style-loader!./theme/initial.scss';
+// import 'style-loader!./app.style.scss';
+// import 'style-loader!./theme/initial.scss';
 
 @Component({
     selector: 'app',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './app.view.html'
+    templateUrl: './app.view.html',
+    styleUrls:['./app.style.scss']
 })
 export class AppComponent implements OnInit {
     isMenuCollapsed: boolean = false;

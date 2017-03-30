@@ -1,23 +1,26 @@
 import { Injectable } from '@angular/core';
-import { Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { EmergencySituationModel } from './emergencysituation.model';
+import { IEmergencySituationService } from './IEmergencySituationService';
 import {
     ResponseModel,
-    DataService,
     DataServiceFactory,
-    DataProcessingService
+    ServiceBase
 } from '../../../../shared';
 
 @Injectable()
-export class EmergencySituationService {
-    private _dataService: DataService<EmergencySituationModel>;
+export class EmergencySituationService extends ServiceBase<EmergencySituationModel>
+    implements IEmergencySituationService {
 
+    /**
+     * Creates an instance of EmergencySituationService.
+     * @param {DataServiceFactory} dataServiceFactory 
+     * 
+     * @memberOf EmergencySituationService
+     */
     constructor(private dataServiceFactory: DataServiceFactory) {
-        let option: DataProcessingService = new DataProcessingService();
-        this._dataService = this.dataServiceFactory
-            .CreateServiceWithOptions<EmergencySituationModel>('EmergencySituations', option);
+        super(dataServiceFactory, 'EmergencySituations')
     }
 
     GetAll(): Observable<ResponseModel<EmergencySituationModel>> {
@@ -26,6 +29,7 @@ export class EmergencySituationService {
             .OrderBy("CreatedOn desc")
             .Execute();
     }
+
     GetAllActiveEmergencySituations(): Observable<ResponseModel<EmergencySituationModel>> {
         return this._dataService.Query()
             .Select('EmergencySituationId', 'EmergencySituationName', 'ActiveFlag', 'CreatedBy', 'CreatedOn')
@@ -34,31 +38,13 @@ export class EmergencySituationService {
             .Execute();
     }
 
-    CreateEmergencySituation(emergencySituationModel: EmergencySituationModel): Observable<EmergencySituationModel> {
+    Create(entity: EmergencySituationModel): Observable<EmergencySituationModel> {
         let emergencySituation: EmergencySituationModel;
-        return this._dataService.Post(emergencySituationModel)
-            .Execute()
+        return this._dataService.Post(entity).Execute()
             .map((data: EmergencySituationModel) => {
                 emergencySituation = data;
-                if (emergencySituation.ActiveFlag == 'Active') {
-                    emergencySituation.Active = true;
-                }
-                else {
-                    emergencySituation.Active = false;
-                }
+                emergencySituation.Active = (emergencySituation.ActiveFlag == 'Active');
                 return data;
             });
-    }
-
-    EditEmergencySituation(emergencySituationModel: EmergencySituationModel): Observable<EmergencySituationModel> {
-        let key: string = emergencySituationModel.EmergencySituationId.toString()
-        return this._dataService.Patch(emergencySituationModel, key)
-            .Execute();
-
-    }
-
-    GetEmergencySituationById(id: number): Observable<EmergencySituationModel> {
-        return this._dataService.Get(id.toString())
-            .Execute();
     }
 }

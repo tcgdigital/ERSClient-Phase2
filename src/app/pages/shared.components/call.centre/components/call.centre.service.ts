@@ -4,14 +4,8 @@ import { Observable } from 'rxjs/Rx';
 import { EnquiryModel, QueryModel } from './call.centre.model';
 import { IEnquiryService } from './IEnquiryService';
 import {
-    RequestModel,
     ResponseModel,
-    BaseModel,
-    WEB_METHOD,
-    DataProcessingService,
-    DataService,
     DataServiceFactory,
-    GlobalConstants,
     ServiceBase
 } from '../../../../shared';
 

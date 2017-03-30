@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { BroadCastModel } from './broadcast.model';
 import { IBroadcastService } from './IBroadcastService';
-// import { BroadCastDepartmentModel } from '../../../masterdata/broadcast.department'
 import {
     ResponseModel,
     DataServiceFactory,

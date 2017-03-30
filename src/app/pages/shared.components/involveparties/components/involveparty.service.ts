@@ -1,15 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { InvolvePartyModel } from './involveparty.model';
 import { IInvolvePartyService } from './IInvolvePartyService';
 import {
-    IServiceInretface,
     ResponseModel,
     DataService,
     DataServiceFactory,
-    DataProcessingService,
     ServiceBase
 } from '../../../../shared';
 import {
@@ -23,6 +20,12 @@ export class InvolvePartyService
     implements IInvolvePartyService {
     private _incidentDataService: DataService<IncidentModel>;
 
+    /**
+     * Creates an instance of InvolvePartyService.
+     * @param {DataServiceFactory} dataServiceFactory 
+     * 
+     * @memberOf InvolvePartyService
+     */
     constructor(private dataServiceFactory: DataServiceFactory) {
         super(dataServiceFactory, 'InvolvedParties');
     }
@@ -76,5 +79,4 @@ export class InvolvePartyService
             .Expand('Affecteds($expand=AffectedPeople($expand=Passenger,Crew))')
             .Execute();
     }
-
 }

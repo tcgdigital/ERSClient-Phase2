@@ -3,23 +3,29 @@ import { Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { DemandModel, DemandModelToView } from './demand.model';
+import { IDemandService } from './IDemandService';
 import {
     ResponseModel, DataService,
     DataServiceFactory, DataProcessingService,
-    IServiceInretface, BaseModel, RequestModel, GlobalConstants, WEB_METHOD
+    ServiceBase, BaseModel, RequestModel, GlobalConstants, WEB_METHOD
 } from '../../../../shared';
 
 @Injectable()
-export class DemandService implements IServiceInretface<DemandModel> {
-    private _dataService: DataService<DemandModel>;
+export class DemandService extends ServiceBase<DemandModel> implements IDemandService {
     private _bulkDataService: DataService<DemandModel>;
     private _bulkDataServiceForCompletion: DataService<DemandModel>;
     private _bulkDataServiceForApproval: DataService<DemandModel>;
 
+    /**
+     * Creates an instance of DemandService.
+     * @param {DataServiceFactory} dataServiceFactory 
+     * 
+     * @memberOf DemandService
+     */
     constructor(private dataServiceFactory: DataServiceFactory) {
+        super(dataServiceFactory, 'Demands');
         let option: DataProcessingService = new DataProcessingService();
-        this._dataService = this.dataServiceFactory
-            .CreateServiceWithOptions<DemandModel>('Demands', option);
+
         this._bulkDataService = this.dataServiceFactory
             .CreateServiceWithOptionsAndActionSuffix<DemandModel>
             ('DemandBatch', 'BatchPostAsync', option);
@@ -32,34 +38,28 @@ export class DemandService implements IServiceInretface<DemandModel> {
         this._bulkDataServiceForCompletion = this.dataServiceFactory
             .CreateServiceWithOptionsAndActionSuffix<DemandModel>
             ('DemandClosureBatch', '', option);
-
     }
 
-    GetAll(): Observable<ResponseModel<DemandModel>> {
+    public GetAll(): Observable<ResponseModel<DemandModel>> {
         return this._dataService.Query()
-            .Expand('ApproverDepartment($select=DepartmentName)')
-            .Execute();
+            .Expand('ApproverDepartment($select=DepartmentName)').Execute();
     };
 
-    Get(id: any): Observable<DemandModel> {
-        return this._dataService.Get(id.toString()).Execute();
-    };
-
-    GetForAssignedDept(targetDeptId: number, incidentId: number): Observable<ResponseModel<DemandModel>> {
+    public GetForAssignedDept(targetDeptId: number, incidentId: number): Observable<ResponseModel<DemandModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq  ${incidentId} and TargetDepartmentId eq ${targetDeptId}  and IsClosed eq false and IsApproved eq true and IsCompleted eq false`)
             .Expand('RequesterDepartment($select=DepartmentName) , DemandType($select=DemandTypeName)')
             .Execute();
     };
 
-    GetByRequesterDepartment(requesterDeptId: number, incidentId: number): Observable<ResponseModel<DemandModel>> {
+    public GetByRequesterDepartment(requesterDeptId: number, incidentId: number): Observable<ResponseModel<DemandModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq  ${incidentId} and RequesterDepartmentId eq ${requesterDeptId}`)
             .Expand('TargetDepartment($select=DepartmentName) , DemandType($select=DemandTypeName)')
             .Execute();
     };
 
-    GetByApproverDepartment(approverDeptId: number, incidentId: number): Observable<ResponseModel<DemandModel>> {
+    public GetByApproverDepartment(approverDeptId: number, incidentId: number): Observable<ResponseModel<DemandModel>> {
         return this._dataService.Query()
             .Filter(`ApproverDepartmentId eq ${approverDeptId} and IncidentId eq ${incidentId} and
              IsClosed eq false and IsApproved eq false and IsRejected eq false and IsCompleted eq false`)
@@ -67,22 +67,18 @@ export class DemandService implements IServiceInretface<DemandModel> {
             .Execute();
     };
 
-    GetCompletedDemands(deptId: number, incidentId: number): Observable<ResponseModel<DemandModel>> {
+    public GetCompletedDemands(deptId: number, incidentId: number): Observable<ResponseModel<DemandModel>> {
         return this._dataService.Query()
             .Filter(`RequesterDepartmentId eq ${deptId} and IncidentId eq ${incidentId} and IsClosed eq false and IsCompleted eq true and IsApproved eq true`)
-            .Expand('TargetDepartment($select=DepartmentName), RequesterDepartment($select=DepartmentName) , DemandType($select=DemandTypeName)')
+            .Expand('TargetDepartment($select=DepartmentName), RequesterDepartment($select=DepartmentName), DemandType($select=DemandTypeName)')
             .Execute();
     };
 
-    Create(entity: DemandModel): Observable<DemandModel> {
-        return this._dataService.Post(entity).Execute();
-    };
-
-    CreateBulk(entities: DemandModel[]): Observable<DemandModel[]> {
+    public CreateBulk(entities: DemandModel[]): Observable<DemandModel[]> {
         return this._bulkDataService.BulkPost(entities).Execute();
     };
 
-    DemandMapper(entities: DemandModel[]): DemandModelToView[] {
+    public DemandMapper(entities: DemandModel[]): DemandModelToView[] {
         let demandModelToView: DemandModelToView[];
         demandModelToView = entities.map(function (demand) {
             let item = new DemandModelToView;
@@ -116,25 +112,15 @@ export class DemandService implements IServiceInretface<DemandModel> {
         return demandModelToView;
     };
 
-    Update(entity: DemandModel): Observable<DemandModel> {
-        let key: string = entity.DemandId.toString()
-        return this._dataService.Patch(entity, key)
-            .Execute();
-    };
-
-    Delete(entity: DemandModel): void {
-    };
-   
-    UpdateBulkForCompletion(entities: DemandModel[]): Observable<DemandModel[]> {
+    public UpdateBulkForCompletion(entities: DemandModel[]): Observable<DemandModel[]> {
         return this._bulkDataServiceForCompletion.BulkPost(entities).Execute();
     };
 
-    UpdateBulkForApproval(entities: DemandModel[]): Observable<DemandModel[]> {
+    public UpdateBulkForApproval(entities: DemandModel[]): Observable<DemandModel[]> {
         return this._bulkDataServiceForApproval.BulkPost(entities).Execute();
     };
 
-    UpdateBulkForClosure(entities: DemandModel[]): Observable<DemandModel[]> {
+    public UpdateBulkForClosure(entities: DemandModel[]): Observable<DemandModel[]> {
         return this._bulkDataServiceForCompletion.BulkPost(entities).Execute();
     };
-
 }

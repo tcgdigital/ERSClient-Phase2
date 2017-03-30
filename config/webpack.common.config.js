@@ -43,8 +43,8 @@ module.exports = function (options) {
             'polyfills': './src/polyfills.browser.ts',
             'twbs': 'bootstrap-loader',
             'vendor': './src/vendor.browser.ts',
-            'main': './src/main.browser.ts'
-            // 'main': AOT ? './src/main.browser.aot.ts' : './src/main.browser.ts'
+            // 'main': './src/main.browser.ts'
+            'main': AOT ? './src/main.browser.aot.ts' : './src/main.browser.ts'
         },
         /**Options affecting the resolving of modules.
          * See: http://webpack.github.io/docs/configuration.html#resolve

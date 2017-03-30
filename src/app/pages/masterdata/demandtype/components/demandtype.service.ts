@@ -6,17 +6,18 @@ import { DemandTypeModel } from './demandtype.model';
 import {
     ResponseModel, DataService,
     DataServiceFactory, DataProcessingService,
-    IServiceInretface
+    IServiceInretface, ServiceBase
 } from '../../../../shared';
 
 @Injectable()
-export class DemandTypeService implements IServiceInretface<DemandTypeModel> {
-    private _dataService: DataService<DemandTypeModel>;
+export class DemandTypeService extends ServiceBase<DemandTypeModel> {
+    // private _dataService: DataService<DemandTypeModel>;
 
     constructor(private dataServiceFactory: DataServiceFactory) {
-        let option: DataProcessingService = new DataProcessingService();
-        this._dataService = this.dataServiceFactory
-            .CreateServiceWithOptions<DemandTypeModel>('DemandTypes', option);
+        super(dataServiceFactory, 'DemandTypes');
+        // let option: DataProcessingService = new DataProcessingService();
+        // this._dataService = this.dataServiceFactory
+        //     .CreateServiceWithOptions<DemandTypeModel>('DemandTypes', option);
     }
 
     GetAll(): Observable<ResponseModel<DemandTypeModel>> {
@@ -25,24 +26,24 @@ export class DemandTypeService implements IServiceInretface<DemandTypeModel> {
             .Execute();
     }
 
-    Get(id: string | number): Observable<DemandTypeModel> {
-        return this._dataService.Get(id.toString()).Execute();
-    }
+    // Get(id: string | number): Observable<DemandTypeModel> {
+    //     return this._dataService.Get(id.toString()).Execute();
+    // }
 
-    Create(entity: DemandTypeModel): Observable<DemandTypeModel> {
-        return this._dataService.Post(entity).Execute();
-    }
+    // Create(entity: DemandTypeModel): Observable<DemandTypeModel> {
+    //     return this._dataService.Post(entity).Execute();
+    // }
 
-    CreateBulk(entities: DemandTypeModel[]): Observable<DemandTypeModel[]> {
-        return Observable.of(entities);
-    }
+    // CreateBulk(entities: DemandTypeModel[]): Observable<DemandTypeModel[]> {
+    //     return Observable.of(entities);
+    // }
 
-    Update(entity: DemandTypeModel): Observable<DemandTypeModel> {
-        let key: string = entity.DemandTypeId.toString()
-        return this._dataService.Patch(entity, key)
-            .Execute();
-    }
+    // Update(entity: DemandTypeModel): Observable<DemandTypeModel> {
+    //     let key: string = entity.DemandTypeId.toString()
+    //     return this._dataService.Patch(entity, key)
+    //         .Execute();
+    // }
 
-    Delete(entity: DemandTypeModel): void {
-    }
+    // Delete(entity: DemandTypeModel): void {
+    // }
 }
