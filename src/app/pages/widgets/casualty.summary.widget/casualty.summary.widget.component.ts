@@ -1,12 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
 
 @Component({
     selector: 'casualty-summary-widget',
     templateUrl: './casualty.summary.widget.view.html',
-    styleUrls: ['./casualty.summary.widget.style.scss']
+    encapsulation: ViewEncapsulation.None
 })
 export class CasualtySummaryWidgetComponent implements OnInit {
+    @Input('initiatedDepartmentId') departmentId: number;
+    @Input('currentIncidentId') incidentId: number;
+
     constructor() { }
 
-    ngOnInit() { }
+    public ngOnInit(): void { }
 }

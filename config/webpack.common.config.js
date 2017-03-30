@@ -38,12 +38,13 @@ module.exports = function (options) {
         /**Entry point for the bundle 
          * Our Angular.js app
          * See: http://webpack.github.io/docs/configuration.html#entry
-        */
+         */
         entry: {
             'polyfills': './src/polyfills.browser.ts',
             'twbs': 'bootstrap-loader',
             'vendor': './src/vendor.browser.ts',
-            'main': AOT ? './src/main.browser.aot.ts' : './src/main.browser.ts'
+            'main': './src/main.browser.ts'
+            // 'main': AOT ? './src/main.browser.aot.ts' : './src/main.browser.ts'
         },
         /**Options affecting the resolving of modules.
          * See: http://webpack.github.io/docs/configuration.html#resolve
@@ -55,6 +56,7 @@ module.exports = function (options) {
              * Default: [".webpack.js", ".web.js", ".js"]
              */
             extensions: ['.ts', '.js', '.json'],
+            // extensions: ['.ts', '.js', '.css', '.scss', '.json'],
             /**An array of directory names to be resolved to the current directory as well as its ancestors, 
              * and searched for modules. This functions similarly to how node finds “node_modules” directories. 
              * For example, if the value is ["mydir"], webpack will look in “./mydir”, “../mydir”, “../../mydir”, etc.
@@ -67,18 +69,18 @@ module.exports = function (options) {
         module: {
             rules: [
                 /*
-                * Typescript loader support for .ts
-                *
-                * Component Template/Style integration using `angular2-template-loader`
-                * Angular 2 lazy loading (async routes) via `ng-router-loader`
-                *
-                * `ng-router-loader` expects vanilla JavaScript code, not TypeScript code. This is why the
-                * order of the loader matter.
-                *
-                * See: https://github.com/s-panferov/awesome-typescript-loader
-                * See: https://github.com/TheLarkInn/angular2-template-loader
-                * See: https://github.com/shlomiassaf/ng-router-loader
-                */
+                 * Typescript loader support for .ts
+                 *
+                 * Component Template/Style integration using `angular2-template-loader`
+                 * Angular 2 lazy loading (async routes) via `ng-router-loader`
+                 *
+                 * `ng-router-loader` expects vanilla JavaScript code, not TypeScript code. This is why the
+                 * order of the loader matter.
+                 *
+                 * See: https://github.com/s-panferov/awesome-typescript-loader
+                 * See: https://github.com/TheLarkInn/angular2-template-loader
+                 * See: https://github.com/shlomiassaf/ng-router-loader
+                 */
                 {
                     test: /\.ts$/,
                     use: [
@@ -127,21 +129,25 @@ module.exports = function (options) {
                  */
                 {
                     test: /\.css$/,
-                    use: ['raw-loader']                   
+                    use: ['raw-loader']
                 },
                 /**
-                * to string and sass loader support for *.scss files (from Angular components)
-                * Returns compiled css content as string
-                */
+                 * to string and sass loader support for *.scss files (from Angular components)
+                 * Returns compiled css content as string
+                 */
                 {
                     test: /\.scss$/,
                     use: ['to-string-loader', 'css-loader', 'sass-loader']
                 },
+                // {
+                //     test: /\.scss$/,
+                //     use: ['raw-loader', 'sass-loader']
+                // },
                 {
                     test: /initial\.scss$/,
-                    loader: ExtractTextWebpackPlugin.extract({
-                        fallbackLoader: 'style-loader',
-                        loader: 'css-loader!sass-loader?sourceMap'
+                    use: ExtractTextWebpackPlugin.extract({
+                        fallback: 'style-loader',
+                        use: 'css-loader!sass-loader?sourceMap'
                     })
                 },
                 /**Raw loader support for *.html
@@ -164,14 +170,17 @@ module.exports = function (options) {
                  * Font loaders, required for font-awesome-sass-loader and bootstrap-loader
                  */
                 {
-                    test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                    test: /\.woff(2)?(\?v=.+)?$/,
                     use: 'url-loader?limit=10000&mimetype=application/font-woff'
                 },
                 {
-                    test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                    test: /\.(ttf|eot|svg)(\?v=.+)?$/,
                     use: 'file-loader'
                 },
-
+                // {
+                //     test: /\.(eot|woff|woff2|ttf)$/,
+                //     loader: 'url-loader?limit=30000&name=[name]-[hash].[ext]'
+                // },
                 {
                     test: /\.(jpg|png|gif)$/,
                     use: 'file-loader'
@@ -186,7 +195,10 @@ module.exports = function (options) {
          */
         plugins: [
             new WebpackDashboard(),
-            new ExtractTextWebpackPlugin({ filename: 'initial.css', allChunks: true }),
+            new ExtractTextWebpackPlugin({
+                filename: 'initial.css',
+                allChunks: true
+            }),
 
             new AssetsPlugin({
                 path: helpers.root('dist'),
@@ -239,8 +251,10 @@ module.exports = function (options) {
              *
              * See: https://www.npmjs.com/package/copy-webpack-plugin
              */
-            new CopyWebpackPlugin([
-                {from: 'src/assets', to: 'assets'}
+            new CopyWebpackPlugin([{
+                    from: 'src/assets',
+                    to: 'assets'
+                }
                 // { from: 'src/meta' }
             ]),
 

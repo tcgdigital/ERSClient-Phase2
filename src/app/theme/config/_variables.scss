@@ -1,41 +1,45 @@
-$font-family: 'Roboto', sans-serif;
+// $font-family-body: 'sansregular';
+// $font-family-prod: 'oswaldbook';
 
-$resXXL: 1280px;
-$resXL: 1170px;
-$resL: 991px;
-$resM: 768px;
-$resS: 660px;
-$resXS: 500px;
-$resXXS: 435px;
-$resMin: 320px;
+$font-family-body: Arial, Helvetica, sans-serif;
+$font-family-prod: $font-family-body;
+$font-family-widget: "Arial Narrow", Arial, sans-serif;
+$font-family-ribbon: sans-serif;
 
-$top-height: 66px;
-$sidebar-width: 180px;
+$resXL-S: 1200px;
+$resLG-E: 1199px;
+$resLG-S: 992px;
+$resMD-E: 991px;
+$resMD-S: 768px;
+$resSM-E: 767px;
+$resSM-S: 576px;
+$resXS-E: 575px;
 
-$small-card-height: 114px;
-$xsmall-card-height: 187px;
-$medium-card-height: 400px;
-$extra-medium-card-height: 550px;
-$large-card-height: 974px;
-
-$default-animation-duration: 0.2s;
-$default-animation-style: ease-out;
-
-$assets-root: 'assets/';
+$assets-root: './assets/';
 $images-root: $assets-root + 'images/';
 $fonts-root: $assets-root + 'fonts/';
-$font-thin: 100;
-$font-light: 300;
-$font-normal: 400;
-$font-bold: 700;
-$font-bolder: 500;
-$font-ultraBold: 900;
 
-$facebook-color: #3b5998;
-$twitter-color: #55acee;
-$google-color: #dd4b39;
-$linkedin-color: #0177B5;
-$github-color: #6b6b6b;
-$stackoverflow-color: #2F96E8;
-$dribble-color: #F26798;
-$behace-color: #0093FA;
+$font-size-tiny: 7px;
+$font-size-small: 10px;
+$font-size-mid-small: 11px;
+$font-size-below-normal: 12px;
+$font-size-normal: 14px;
+$font-size-above-normal: 16px;
+$font-size-mid-large: 17px;
+$font-size-large: 18px;
+
+$font-weight-thin: 100;
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-bold: 700;
+$font-weight-bolder: 500;
+$font-weight-ultraBold: 900;
+
+$header-height: 40px;
+$footer-height: 30px;
+
+$text-accordion-item-translate3d-middle:-100px;
+$text-accordion-item-translate3d-back:-200px;
+$text-accordion-item-translate3d-out:-300px;
+
+

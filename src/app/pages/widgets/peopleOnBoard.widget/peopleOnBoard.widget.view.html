@@ -1,0 +1,39 @@
+<div class="row widget-container no-gutters">
+    <div class="col-12">
+        <div class="row no-gutters">
+            <div class="col-12 widget-title">
+                <span>people on board</span>
+            </div>
+        </div>
+        <div class="row no-gutters">
+            <div class="col widget-block">
+                <span class="widget-number">
+                    <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
+                    <span>{{peopleOnBoard.enquiredAffectedPassengerCount | padding: '0': 2}}</span>
+                </span>
+                <span class="widget-text">total passengers</span>
+            </div>
+            <div class="col widget-block">
+                <span class="widget-number">
+                    <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
+                    <span>{{peopleOnBoard.totalAffectedPassengerCount | padding: '0': 2}}</span>
+                </span>
+                <span class="widget-text">enquired passengers</span>
+            </div>
+            <div class="col widget-block">
+                <span class="widget-number">
+                    <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
+                    <span>{{peopleOnBoard.enquiredAffectedCrewCount | padding: '0': 2}}</span>
+                </span>
+                <span class="widget-text">total crew members</span>
+            </div>
+            <div class="col widget-block">
+                <span class="widget-number">
+                    <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
+                    <span>{{peopleOnBoard.totalAffectedCrewCount | padding: '0': 2}}</span>
+                </span>
+                <span class="widget-text">enquired crew</span>
+            </div>
+        </div>
+    </div>
+</div>

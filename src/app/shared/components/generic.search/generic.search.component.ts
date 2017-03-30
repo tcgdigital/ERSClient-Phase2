@@ -12,37 +12,7 @@ import { GenericSearchService } from './generic.search.service';
     selector: 'generic-search',
     templateUrl: './generic.search.view.html',
     providers: [GenericSearchService],
-    styles: [`
-        .search-container {
-            background: #eee;
-            position: relative;
-        }
-        
-        .search-block {
-            width: 200px;
-            display: inline-block;
-            margin: 5px;
-        }
-        .search-block input[type="text"],
-        .search-block select{
-            padding: 4px;
-            height: 33px;
-        }
-
-        .button-block {
-            width: 85px !important;
-        }
-
-        .search-block label {
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            display: block;
-            font-size: 14px;
-            margin-bottom: 2px;
-            margin-left: 3px;
-        }
-    `]
+    styleUrls: ['./generic.search.style.scss']
 })
 export class GenericSearchComponent implements OnInit, AfterContentInit {
     @Input() filterConfigs: SearchConfigModel<any>[] = [];

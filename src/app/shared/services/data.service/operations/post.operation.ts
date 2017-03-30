@@ -1,5 +1,5 @@
 import { Http, Headers, RequestOptions } from '@angular/http';
-import { Observable } from 'rxjs/rx';
+import { Observable } from 'rxjs/Rx';
 
 import { BaseModel, WEB_METHOD, RequestModel, ResponseModel } from '../../../models';
 import { UtilityService } from '../../../services';

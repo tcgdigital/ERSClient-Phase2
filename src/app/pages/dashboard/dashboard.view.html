@@ -1,4 +1,47 @@
-<h1>Welcome to Dashboard</h1>
+<!-- KPI Section Starts-->
+<div class="row">
+    <clock-widget [initiationDateTime]="incidentDate" class="col-12 col-md-4 col-lg-4 col-xl-2 clock-layout widget-layout-fix">
+    </clock-widget>
+    <peopleOnBoard-widget [initiatedDepartmentId]="47" [currentIncidentId]="91" class="col-12 col-md-6 col-lg-4 col-xl-3 people-onboard-layout widget-layout-fix">
+    </peopleOnBoard-widget>
+    <casualty-summary-widget [initiatedDepartmentId]="47" [currentIncidentId]="91" class="col-12 col-md-6 col-lg-4 col-xl-3 casualty-layout widget-layout-fix">
+    </casualty-summary-widget>
+    <demand-received-summary-widget [initiatedDepartmentId]="47" [currentIncidentId]="91" class="col-12 col-md-3 col-lg-4 col-xl-2 demand-received-layout widget-layout-fix">
+    </demand-received-summary-widget>
+    <demand-raised-summary-widget [initiatedDepartmentId]="47" [currentIncidentId]="91" class="col-6 col-md-3 col-lg-4 col-xl-2 demand-raised-layout widget-layout-fix">
+    </demand-raised-summary-widget>
+    <checklist-summary-widget [initiatedDepartmentId]="47" [currentIncidentId]="91" class="col-6 col-md col-md-3 col-lg-4 col-xl-2 checklist-layout widget-layout-fix">
+    </checklist-summary-widget>
+</div>
+<!-- KPI Section Ends-->
+<!-- Messaging Section Starts-->
+<div class="row">
+    <broadcast-widget [initiatedDepartmentId]="47" [currentIncidentId]="91" class="col-12 col-md-4 messaging-widget widget-layout-fix">
+    </broadcast-widget>
+    <presidentMessage-widget [initiatedDepartmentId]="47" [currentIncidentId]="91" class="col-12 col-md-4 messaging-widget widget-layout-fix">
+    </presidentMessage-widget>
+    <mediaRelease-widget [initiatedDepartmentId]="47" [currentIncidentId]="91" class="col-12 col-md-4 messaging-widget widget-layout-fix">
+    </mediaRelease-widget>
+</div>
+<!-- Messaging Section Ends-->
+<!-- Tab Section Starts-->
+<div class="row">
+    <div class="col-12 widget-layout-fix">
+        <div class="row tab-root-container no-gutters">
+            <div class="col-12">
+                <div tab-control [tabLinks]="tablinks" class="tab-control"></div>
+                <div class="tab-containet">
+                    <router-outlet></router-outlet>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Tab Section Ends-->
+
+
+
+<!--<h1>Welcome to Dashboard</h1>
 
 <div class="row">
     <div class="col-4">
@@ -50,4 +93,4 @@
     <div class="card-block">
         <router-outlet></router-outlet>
     </div>
-</div>
+</div>-->

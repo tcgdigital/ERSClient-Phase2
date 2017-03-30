@@ -1,0 +1,130 @@
+@import '../../config/config';
+.tab-control {
+    .tab-nav a {
+        top: 0;
+        border-radius: 4px;
+        position: absolute;
+        z-index: 2;
+        overflow: hidden;
+        white-space: nowrap;
+        height: 48px;
+        width: 25px;
+        display: none;
+        background: $tab-nav-bg;
+        transition: background-color 0.3s, opacity 0.3s, visibility 0.3s, transform 0.3s;
+        &.visible {
+            display: block;
+            @include animation(cd-fade-in, 0.4s);
+        }
+        &:hover {
+            background-color: $tab-nav-hover-bg;
+        }
+        margin-top: 5px;
+        &.prev {
+            left: 0;
+            margin-left: 5px;
+        }
+        &.next {
+            right: 0;
+            margin-right: 5px;
+        }
+        i {
+            color: $tab-nav-arrow;
+            padding: 6px;
+        }
+    }
+    .tab-link {
+        background: $tab-item-bg;
+        white-space: nowrap;
+        overflow-x: hidden;
+        ul {
+            font-size: 0;
+            position: relative;
+            padding: 0;
+            user-select: none;
+            margin: 0;
+            li {
+                &.selected {
+                    background: $tab-item-selected-bg;
+                    border-top: 3px solid $tab-item-selected-border;
+                }
+                display: inline-block;
+                width: 135px;
+                height: 60px;
+                text-align: center;
+                line-height: 51px;
+                color: #000;
+                text-transform: uppercase;
+                position: relative;
+                overflow: hidden;
+                cursor: pointer;
+                &.tab-item a {
+                    white-space: normal;
+                    line-height: 12px;
+                    display: block;
+                    padding-top: 7px;
+                    height: 57px;
+                    color: rgba(84, 77, 77, 0.55);
+                    &:hover {
+                        color: rgba(84, 77, 77, 0.99);
+                    }
+                    &:active,
+                    &:focus,
+                    &:hover {
+                        text-decoration: none;
+                    }
+                    > {
+                        i {
+                            display: block;
+                        }
+                        span {
+                            display: block;
+                            margin-top: 5px;
+                            font-size: $font-size-below-normal;
+                            font-weight: 500;
+                        }
+                    }
+                }
+                &.slider {
+                    display: none;
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    height: 2px;
+                    background: $tab-slider-bg;
+                    @include transition(all, 0.5s);
+                }
+                &.tab-item span.ripple {
+                    width: 0;
+                    height: 0;
+                    border-radius: 50%;
+                    background: $tab-ripple-on;
+                    @include transform(scale(0));
+                    position: absolute;
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}
+
+.rippleEffect {
+    &:parent {
+        background: $tab-ripple-off;
+    }
+    @include animation(rippleDrop, .6s linear);
+}
+
+@-webkit-keyframes rippleDrop {
+    100% {
+        @include transform(scale(2));
+        opacity: 0;
+    }
+}
+
+@keyframes rippleDrop {
+    100% {
+        @include transform(scale(2));
+        opacity: 0;
+    }
+}

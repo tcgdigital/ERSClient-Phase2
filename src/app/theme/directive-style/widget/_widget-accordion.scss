@@ -1,0 +1,263 @@
+@import '../../config/config';
+.cd-container {
+    width: 90%;
+    max-width: 1170px;
+    margin: 0 auto;
+    &::after {
+        content: '';
+        display: table;
+        clear: both;
+    }
+}
+
+.cd-img-replace {
+    display: inline-block;
+    overflow: hidden;
+    text-indent: 100%;
+    white-space: nowrap;
+}
+
+.cd-container {
+    margin-top: 1.2em;
+    >li {
+        position: relative;
+        span {
+            width: 100%;
+            display: block;
+            height: 120px;
+            overflow: hidden;
+            font-size: 11px;
+            text-align: justify;
+            padding: 14px 13px;
+            background: $widget-accordion-bg;
+            line-height: 1.6em;
+            >i {
+                position: absolute;
+                top: 0;
+                right: 15px;
+            }
+        }
+    }
+}
+
+.cd-item-wrapper {
+    @include perspective(500px);
+    @include perspective-origin(50%, -30%);
+    li {
+        position: absolute;
+        top: 0;
+        left: 0;
+        @include translate3d(0, 0, 0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        @include transition(all, 0.4s);
+        &.cd-item-front {
+            position: relative;
+            z-index: 3;
+            @include box-shadow(0, 0, 6px, 2px, $header-shadow);
+        }
+        &.cd-item-middle {
+            z-index: 2;
+        }
+    }
+}
+
+.active .cd-item-wrapper li.cd-item-middle {
+    /* 3D effect on touch devices */
+    @include translate3d(0, 0, -100px);
+    @include box-shadow(0, 1px, 4px, 1px, $header-shadow);
+    opacity: .8;
+}
+
+.cd-item-wrapper li.cd-item-back {
+    z-index: 1;
+}
+
+.active .cd-item-wrapper li.cd-item-back {
+    /* 3D effect on touch devices */
+    @include translate3d(0, 0, -200px);
+    @include box-shadow(0, 1px, 4px, 1px, $header-shadow);
+    opacity: .4;
+}
+
+.cd-item-wrapper li {
+    &.cd-item-out {
+        /* picture not visible - use this class in case you have more than 3 pictures per item */
+        z-index: 0;
+        opacity: 0;
+        @include translate3d(0, 0, -300px);
+    }
+    &.move-right {
+        @include translate3d(200px, 0, 0);
+        opacity: 0;
+        z-index: 4 !important;
+    }
+    &.hidden {
+        /* used to hide the picture once it's pushed out - to the right */
+        display: none !important;
+    }
+}
+
+.no-csstransitions .cd-item-wrapper li {
+    &.cd-item-middle,
+    &.cd-item-back {
+        /* 3D effect not visible on browsers that don't support transitions */
+        display: none;
+    }
+}
+
+.cd-item-navigation {
+    a {
+        position: absolute;
+        top: 50%;
+        @include translateY(-50%);
+        width: 22px;
+        height: 46px;
+        background-color: $widget-accordion-nav-bg;
+        background-image: url("../img/cd-icon-arrow.svg");
+        background-repeat: no-repeat;
+        background-position: center center;
+        z-index: 4;
+        display: none;
+        border-radius: 0.25em;
+        &:hover {
+            background-color: $widget-accordion-nav-hover-bg;
+        }
+        &.visible {
+            display: block;
+            @include animation(cd-fade-in, 0.4s)
+        }
+    }
+    li {
+        &:nth-child(1) a {
+            left: 6px;
+            @include translateY-rotate(-50%, 180deg);
+        }
+        &:nth-child(2) a {
+            right: 6px;
+        }
+    }
+}
+
+.no-csstransitions .cd-item-navigation {
+    display: none;
+}
+
+@-webkit-keyframes cd-fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@-moz-keyframes cd-fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes cd-fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.cd-3d-trigger {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 44px;
+    height: 44px;
+    background: url("../img/cd-icon-3d.svg") no-repeat center center;
+    z-index: 4;
+    display: none;
+}
+
+.cd-container>li:hover {
+    .cd-item-middle,
+    .cd-item-back {
+        @include box-shadow(0,1px,4px,1px,$header-shadow);
+    }
+    .cd-item-middle {
+        /* 3D effect on no-touch devices */
+        @include translate3d(0,0,-100px);
+        opacity: .8;
+    }
+    .cd-item-back {
+        /* 3D effect on no-touch devices */
+        @include translate3d(0,0,-200px);
+        opacity: .4;
+    }
+}
+
+.ribbon-wrapper {
+    margin: 50px auto;
+    width: 280px;
+    height: 370px;
+    background: white;
+    border-radius: 10px;
+    @include box-shadow(0,0,0,8px,$header-shadow);
+    position: relative;
+    z-index: 90;
+}
+
+.ribbon-wrapper-green {
+    width: 2.9em;
+    height: 2.9em;
+    overflow: hidden;
+    position: absolute;
+    top: -0.29em;
+    left: -0.27em;
+}
+
+.ribbon-green {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font: 7px Sans-Serif;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    text-shadow: rgba(255, 255, 255, 0.5) 0.07em 0.05em 0px;
+    transform: rotate(-45deg);
+    position: relative;
+    padding: 3px 0;
+    left: -2.0em;
+    top: 1.20em;
+    width: 58px;
+    background-color: #BFDC7A;
+    background: -webkit-gradient(linear, left top, left bottom, from(#BFDC7A), to(#8EBF45));
+    box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.3);
+    &:before,
+    &:after {
+        content: "";
+        border-top: 3px solid #6e8900;
+        border-left: 3px solid transparent;
+        border-right: 3px solid transparent;
+        position: absolute;
+        bottom: -3px;
+    }
+    &:before {
+        left: 0;
+    }
+    &:after {
+        right: 0;
+    }
+}
+
+@media screen and (max-width: $resXS-E) {}
+@media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {}
+@media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
+    .cd-container {
+ 		margin-top: 0.8em;
+ 	}
+}
+@media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {}
+@media screen and (min-width: $resXL-S) {}

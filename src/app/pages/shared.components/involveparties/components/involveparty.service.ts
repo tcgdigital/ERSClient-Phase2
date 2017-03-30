@@ -64,4 +64,17 @@ export class InvolvePartyService
         return this._incidentDataService.Get(id.toString()).Execute();
     }
 
+     GetAllPassengers(): Observable<ResponseModel<InvolvePartyModel>> {
+        return this._dataService.Query()
+            .Expand('Affecteds($expand=AffectedPeople($expand=Passenger))')
+            .Execute();
+    }
+
+     GetFilterByIncidentId(IncidentId): Observable<ResponseModel<InvolvePartyModel>> {
+        return this._dataService.Query()
+            .Filter(`IncidentId eq  ${IncidentId}`)
+            .Expand('Affecteds($expand=AffectedPeople($expand=Passenger,Crew))')
+            .Execute();
+    }
+
 }

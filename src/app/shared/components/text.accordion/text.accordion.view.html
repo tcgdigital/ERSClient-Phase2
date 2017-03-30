@@ -1,0 +1,31 @@
+<ul class="cd-container">
+    <li (mouseenter)="onMouseEnter($event)" (mouseleave)="onMouseLeave($event)">
+        <ul class="cd-item-wrapper">
+            <ng-container *ngFor="let accordionItem of (accordionItems | async); let i = index;">
+                <li [ngClass]="{'cd-item-front': i===0,'cd-item-middle': i===1,'cd-item-back': i===2,'cd-item-out': i===3 }">
+                    <div *ngIf="i === 0" class="ribbon-wrapper-green">
+                        <div class="ribbon-green">new</div>
+                    </div>
+                    <span>
+                        {{accordionItem.Message}}
+                        <i>{{accordionItem.PublishedOn | date:'medium'}}</i>    
+                    </span>
+                </li>
+            </ng-container>
+        </ul>
+        <nav>
+            <ul class="cd-item-navigation">
+                <li>
+                    <a class="cd-img-replace" href="javascript:void(0);" (click)="onPreviousClick($event)">
+                        <i class="fa fa-angle-left fa-4x" aria-hidden="true"></i>
+                    </a>
+                </li>
+                <li>
+                    <a class="cd-img-replace" href="javascript:void(0);" (click)="onNextClick($event)">
+                        <i class="fa fa-angle-right fa-4x" aria-hidden="true"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </li>
+</ul>
