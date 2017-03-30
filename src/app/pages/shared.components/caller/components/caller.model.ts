@@ -1,5 +1,5 @@
 import { BaseModel } from '../../../../shared';
-import { DepartmentModel } from '../../../masterdata/department';
+import { DepartmentModel } from '../../../masterdata';
 import { EnquiryModel,DemandModel } from '../../../shared.components';
 
 export class CallerModel extends BaseModel {
@@ -11,10 +11,14 @@ export class CallerModel extends BaseModel {
     public EmailId: string;
     public Location: string;
 
-
     public Demands?: DemandModel[];
     public Enquiries?: EnquiryModel[];
 
+    /**
+     * Creates an instance of CallerModel.
+     * 
+     * @memberOf CallerModel
+     */
     constructor() {
         super();
 

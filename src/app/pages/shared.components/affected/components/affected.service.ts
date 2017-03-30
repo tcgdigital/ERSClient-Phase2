@@ -1,14 +1,12 @@
 import { Injectable, Inject } from '@angular/core';
-import { Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { AffectedModel } from './affected.model';
+import { IAffectedService } from './IAffectedService';
 import {
-    IServiceInretface,
+    ServiceBase,
     ResponseModel,
-    DataService,
-    DataServiceFactory,
-    DataProcessingService
+    DataServiceFactory
 } from '../../../../shared';
 import {
     InvolvePartyService,
@@ -16,16 +14,18 @@ import {
 } from '../../../shared.components';
 
 @Injectable()
-export class AffectedService implements IServiceInretface<AffectedModel> {
-    private _dataService: DataService<AffectedModel>;
-    // @Inject(DataServiceFactory) private dataServiceFactory: DataServiceFactory;
-    // @Inject(InvolvePartyService) private involvedPartyService: InvolvePartyService;
+export class AffectedService extends ServiceBase<AffectedModel> implements IAffectedService {
 
+    /**
+     * Creates an instance of AffectedService.
+     * @param {DataServiceFactory} dataServiceFactory 
+     * @param {InvolvePartyService} involvedPartyService 
+     * 
+     * @memberOf AffectedService
+     */
     constructor(private dataServiceFactory: DataServiceFactory,
         private involvedPartyService: InvolvePartyService) {
-        let option: DataProcessingService = new DataProcessingService();
-        this._dataService = this.dataServiceFactory
-            .CreateServiceWithOptions<AffectedModel>('Affecteds', option);
+            super(dataServiceFactory, 'Affecteds');
     }
 
     GetAll(): Observable<ResponseModel<AffectedModel>> {
@@ -35,22 +35,13 @@ export class AffectedService implements IServiceInretface<AffectedModel> {
             .Execute();
     }
 
-    Get(id: string | number): Observable<AffectedModel> {
-        return this._dataService.Get(id.toString()).Execute();
-    }
-
     Create(entity: AffectedModel): Observable<AffectedModel> {
         let affected: AffectedModel;
         return this._dataService.Post(entity)
             .Execute()
             .map((data: AffectedModel) => {
                 affected = data;
-                if (affected.ActiveFlag == 'Active') {
-                    affected.Active = true;
-                }
-                else {
-                    affected.Active = false;
-                }
+                affected.Active = (affected.ActiveFlag == 'Active');
                 return data;
             })
             .flatMap((data: AffectedModel) =>
@@ -60,21 +51,6 @@ export class AffectedService implements IServiceInretface<AffectedModel> {
                 return affected;
             });
     }
-
-    CreateBulk(entities: AffectedModel[]): Observable<AffectedModel[]> {
-        return Observable.of(entities);
-    }
-
-    Update(entity: AffectedModel): Observable<AffectedModel> {
-        let key: string = entity.InvolvedPartyId.toString()
-        let affected: AffectedModel;
-        return this._dataService.Patch(entity, key)
-            .Execute();
-    }
-
-    Delete(entity: AffectedModel): void {
-    }
-
 
     GetAllActiveAffecteds(): Observable<ResponseModel<AffectedModel>> {
         return this._dataService.Query()

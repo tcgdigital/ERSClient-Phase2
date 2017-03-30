@@ -30,7 +30,7 @@ export class AffectedObjectsVerificationComponent implements OnInit {
     save() {
         let datenow = this.date;
         this.verifiedAffectedObjects = this.affectedObjectsService.MapAffectedPeopleToSave(this.affectedObjectsForVerification);
-        this.affectedObjectsService.CreateBulk(this.verifiedAffectedObjects)
+        this.affectedObjectsService.CreateBulkObjects(this.verifiedAffectedObjects)
             .subscribe((response: AffectedObjectModel[]) => {
                 alert("Selected Objects are verified");
                 this.getAffectedObjects();

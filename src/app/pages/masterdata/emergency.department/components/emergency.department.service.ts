@@ -1,19 +1,19 @@
-import { Injectable, Output, EventEmitter } from '@angular/core';
-import { Headers } from '@angular/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
 import { EmergencyDepartmentModel } from './emergency.department.model';
+import { IEmergencyTypeDepartmentService } from './IEmergencyTypeDepartmentService';
 import {
-    ResponseModel, GlobalConstants,
+    ResponseModel,
     DataService, DataServiceFactory,
-    DataOperation, DataProcessingService,
-    IServiceInretface,
+    DataProcessingService,
+    ServiceBase
 } from '../../../../shared';
 
 
 @Injectable()
-export class EmergencyTypeDepartmentService implements IServiceInretface<EmergencyDepartmentModel> {
-    private _dataService: DataService<EmergencyDepartmentModel>;
+export class EmergencyTypeDepartmentService extends ServiceBase<EmergencyDepartmentModel>
+    implements IEmergencyTypeDepartmentService {
     private _bulkDataService: DataService<EmergencyDepartmentModel>;
 
     /**
@@ -23,24 +23,12 @@ export class EmergencyTypeDepartmentService implements IServiceInretface<Emergen
      * @memberOf EmergencyTypeDepartmentService
      */
     constructor(private dataServiceFactory: DataServiceFactory) {
+        super(dataServiceFactory, 'EmergencyTypeDepartments');
         let option: DataProcessingService = new DataProcessingService();
-        this._dataService = this.dataServiceFactory
-            .CreateServiceWithOptions<EmergencyDepartmentModel>('EmergencyTypeDepartments', option);
 
         this._bulkDataService = this.dataServiceFactory
             .CreateServiceWithOptionsAndActionSuffix<EmergencyDepartmentModel>
             ('EmergencyTypeDepartmentBatch', 'BatchPostAsync', option);
-    }
-
-    /**
-     * Get all EmergencyDepartmentModel
-     * 
-     * @returns {Observable<ResponseModel<EmergencyDepartmentModel>>} 
-     * 
-     * @memberOf EmergencyTypeDepartmentService
-     */
-    GetAll(): Observable<ResponseModel<EmergencyDepartmentModel>> {
-        return this._dataService.Query().Execute();
     }
 
     /**
@@ -58,30 +46,6 @@ export class EmergencyTypeDepartmentService implements IServiceInretface<Emergen
     }
 
     /**
-     * Get EmergencyDepartmentModel by id
-     * 
-     * @param {(string | number)} id 
-     * @returns {Observable<EmergencyDepartmentModel>} 
-     * 
-     * @memberOf EmergencyTypeDepartmentService
-     */
-    Get(id: string | number): Observable<EmergencyDepartmentModel> {
-        return this._dataService.Get(id.toString()).Execute();
-    }
-
-    /**
-     * Create EmergencyDepartmentModel
-     * 
-     * @param {EmergencyDepartmentModel} entity 
-     * @returns {Observable<EmergencyDepartmentModel>} 
-     * 
-     * @memberOf EmergencyTypeDepartmentService
-     */
-    Create(entity: EmergencyDepartmentModel): Observable<EmergencyDepartmentModel> {
-        return Observable.of(entity);
-    }
-
-    /**
      * Create bulk EmergencyDepartmentModels
      * 
      * @param {EmergencyDepartmentModel[]} entities 
@@ -91,27 +55,5 @@ export class EmergencyTypeDepartmentService implements IServiceInretface<Emergen
      */
     CreateBulk(entities: EmergencyDepartmentModel[]): Observable<EmergencyDepartmentModel[]> {
         return this._bulkDataService.BulkPost(entities).Execute();
-    }
-
-    /**
-     * Update EmergencyDepartmentModel
-     * 
-     * @param {EmergencyDepartmentModel} entity 
-     * @returns {Observable<EmergencyDepartmentModel>} 
-     * 
-     * @memberOf EmergencyTypeDepartmentService
-     */
-    Update(entity: EmergencyDepartmentModel): Observable<EmergencyDepartmentModel> {
-        return Observable.of(entity);
-    }
-
-    /**
-     * 
-     * 
-     * @param {EmergencyDepartmentModel} entity 
-     * 
-     * @memberOf EmergencyTypeDepartmentService
-     */
-    Delete(entity: EmergencyDepartmentModel): void {
     }
 }
