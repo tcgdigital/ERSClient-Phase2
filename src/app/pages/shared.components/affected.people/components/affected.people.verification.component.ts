@@ -22,7 +22,7 @@ export class AffectedPeopleVerificationComponent implements OnInit {
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeopleForVerification = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
             }, (error: any) => {
-                console.log("error:  " + error);
+                console.log(`Error: ${error}`);
             });
     }
 

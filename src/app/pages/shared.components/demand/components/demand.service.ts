@@ -43,9 +43,15 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
     GetForAssignedDept(targetDeptId: number, incidentId: number): Observable<ResponseModel<DemandModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq ${incidentId} and TargetDepartmentId eq ${targetDeptId}  and IsClosed eq false and IsApproved eq true and IsCompleted eq false`)
-            .Expand('RequesterDepartment($select=DepartmentName) , DemandType($select=DemandTypeName)')
+            .Expand('RequesterDepartment($select=DepartmentName) , DemandType($select=DemandTypeName), RequesterParentDepartment($select=DepartmentName)')
             .Execute();
     };
+    GetByDemandId(id: string | number): Observable<ResponseModel<DemandModel>> {
+        return this._dataService.Query()
+            .Filter(`DemandId eq ${id}`)  
+            .Expand('Caller')      
+        .Execute();
+    }
 
     GetByRequesterDepartment(requesterDeptId: number, incidentId: number): Observable<ResponseModel<DemandModel>> {
         return this._dataService.Query()
@@ -58,14 +64,14 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
         return this._dataService.Query()
             .Filter(`ApproverDepartmentId eq ${approverDeptId} and IncidentId eq ${incidentId} and
              IsClosed eq false and IsApproved eq false and IsRejected eq false and IsCompleted eq false`)
-            .Expand('TargetDepartment($select=DepartmentName), RequesterDepartment($select=DepartmentName) , DemandType($select=DemandTypeName)')
+            .Expand('TargetDepartment($select=DepartmentName), RequesterDepartment($select=DepartmentName) , DemandType($select=DemandTypeName), RequesterParentDepartment($select=DepartmentName)')
             .Execute();
     };
 
     GetCompletedDemands(deptId: number, incidentId: number): Observable<ResponseModel<DemandModel>> {
         return this._dataService.Query()
             .Filter(`RequesterDepartmentId eq ${deptId} and IncidentId eq ${incidentId} and IsClosed eq false and IsCompleted eq true and IsApproved eq true`)
-            .Expand('TargetDepartment($select=DepartmentName), RequesterDepartment($select=DepartmentName) , DemandType($select=DemandTypeName)')
+            .Expand('TargetDepartment($select=DepartmentName), RequesterDepartment($select=DepartmentName) ,RequesterParentDepartment($select=DepartmentName), DemandType($select=DemandTypeName)')
             .Execute();
     };
 
@@ -82,6 +88,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
             item.DemandTypeName = demand.DemandType.DemandTypeName;
             item.DemandDesc = demand.DemandDesc;
             item.RequesterDepartmentName = (!demand.RequesterDepartment) ? "" : demand.RequesterDepartment.DepartmentName;
+            item.RequesterParentDepartmentName = (!demand.RequesterParentDepartment) ? "" : demand.RequesterParentDepartment.DepartmentName;
             item.Priority = demand.Priority;
             item.RequiredLocation = demand.RequiredLocation;
             item.ScheduleTime = demand.ScheduleTime;
@@ -101,6 +108,9 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
             item.AffectedObjectId = demand.AffectedObjectId;
             item.AffectedPersonId = demand.AffectedPersonId;
             item.IsClosed = demand.IsClosed;
+            item.ApproverDeptId = demand.ApproverDepartmentId;
+            item.CreatedBy = demand.CreatedBy;
+            item.CreatedOn= demand.CreatedOn;
             return item;
 
         });

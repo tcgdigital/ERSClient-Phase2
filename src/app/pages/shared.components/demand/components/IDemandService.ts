@@ -24,4 +24,6 @@ UpdateBulkForApproval(entities: DemandModel[]): Observable<DemandModel[]>;
 
 UpdateBulkForClosure(entities: DemandModel[]): Observable<DemandModel[]>;
 
+GetByDemandId(id: string | number): Observable<ResponseModel<DemandModel>>;
+
 }

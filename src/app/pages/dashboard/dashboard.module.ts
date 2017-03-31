@@ -7,6 +7,7 @@ import { SharedModule } from '../../shared/shared.module';
 
 import { DashboardRouting } from './dashboard.routing';
 import { DashboardComponent } from './dashboard.component';
+import { WidgetModule } from '../widgets';
 // import { CallCentreModule, EnquiryComponent } from './call.centre';
 
 
@@ -16,6 +17,7 @@ import { DashboardComponent } from './dashboard.component';
         FormsModule,
         HttpModule,
         SharedModule,
+        WidgetModule,
         // CallCentreModule,
         DashboardRouting
     ],

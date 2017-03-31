@@ -89,7 +89,7 @@ export class ChecklistListComponent implements OnInit {
             .subscribe((response: ChecklistModel) => {
                 this.getCheckLists();
             }, (error: any) => {
-                console.log("Error");
+                console.log(`Error: ${error}`);
             });
     }
 }

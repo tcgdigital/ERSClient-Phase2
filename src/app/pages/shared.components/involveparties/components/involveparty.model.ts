@@ -11,8 +11,6 @@ export class InvolvePartyModel extends BaseModel {
     public InvolvedPartyType: InvolvedPartyType;
     public InvolvedPartyDesc: string;
 
-    public Active: boolean;
-
     public Incident: IncidentModel;
 
     public Affecteds ? : AffectedModel[] ;
@@ -24,6 +22,5 @@ export class InvolvePartyModel extends BaseModel {
         this.IncidentId = 0;
         this.InvolvedPartyType = GlobalConstants.EmergencyCategories
         this.InvolvedPartyDesc = '';
-        this.Active = false;
     }
 }

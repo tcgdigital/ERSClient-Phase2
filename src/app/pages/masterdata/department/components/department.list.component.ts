@@ -28,7 +28,7 @@ export class DepartmentListComponent implements OnInit {
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
             }, ((error: any) => {
-                console.log(error);
+                console.log(`Error: ${error}`);
             }));
     }
 
@@ -43,7 +43,7 @@ export class DepartmentListComponent implements OnInit {
                 .subscribe((response: ResponseModel<DepartmentModel>) => {
                     this.departments = response.Records;
                 }, ((error: any) => {
-                    console.log(error);
+                    console.log(`Error: ${error}`);
                 }));
         }
     }
@@ -99,7 +99,5 @@ export class DepartmentListComponent implements OnInit {
                 Value: '',
             })
         ];
-
-        // console.log(this.searchConfigs);
     }
 }

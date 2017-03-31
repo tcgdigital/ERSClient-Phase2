@@ -17,13 +17,15 @@ export class CallerModel extends BaseModel {
 
     constructor() {
         super();
-
         this.CallerId = 0;
-        this.CallerName = '';
-        this.ContactNumber = '';
-        this.AlternateContactNumber = '';
-        this.Relationship = '';
-        this.EmailId = '';
-        this.Location = '';
     }
+
+    //     
+    //     this.CallerName = '';
+    //     this.ContactNumber = '';
+    //     this.AlternateContactNumber = '';
+    //     this.Relationship = '';
+    //     this.EmailId = '';
+    //     this.Location = '';
+    // }
 }

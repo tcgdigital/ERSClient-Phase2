@@ -136,7 +136,6 @@ export class UtilityService {
     public static getParamNames(func: Function): string[] {
         if (!func[UtilityService.CACHE_PROPERTY]) {
             var fnStr = func.toString().replace(UtilityService.STRIP_COMMENTS, '');
-            console.log(fnStr);
             func[UtilityService.CACHE_PROPERTY] = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')'))
                 .match(UtilityService.ARGUMENT_NAMES) || [];
         }
@@ -153,9 +152,7 @@ export class UtilityService {
         func[UtilityService.CACHE_PROPERTY] = props
             .filter((x: string) => pattern.test(x))
             .map((x: string) => {
-                // let prop = x.match(/\.(.*?)\;/gi);
                 let prop = /\.(.*?)\;/gi.exec(x);
-                // console.log(test);
                 return prop[1];
             });
 

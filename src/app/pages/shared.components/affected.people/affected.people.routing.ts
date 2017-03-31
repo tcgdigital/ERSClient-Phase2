@@ -11,6 +11,10 @@ const affectedPeopleRoutes: Routes = [
         component: AffectedPeopleComponent,
         children: [
             {
+                path: '',
+                component: AffectedPeopleListComponent
+            },
+            {
                 path: 'detail',
                 component: AffectedPeopleListComponent
             },

@@ -20,7 +20,7 @@ export class AffectedObjectsListComponent implements OnInit {
         .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedObjects =this.affectedObjectService.FlattenAffactedObjects( response.Records[0]);                
             },(error: any) => {
-                console.log("error:  "+error);
+                console.log(`Error: ${error}`);
             });
     }
 

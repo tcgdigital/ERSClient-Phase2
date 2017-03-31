@@ -3,25 +3,28 @@ import { Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { InvolvePartyModel } from './involveparty.model';
+import { IInvolvePartyService } from './IInvolvePartyService';
 import {
     IServiceInretface,
     ResponseModel,
     DataService,
     DataServiceFactory,
-    DataProcessingService
+    DataProcessingService,
+    ServiceBase
 } from '../../../../shared';
-import { IncidentService, IncidentModel } from '../../../incident';
+import {
+    IncidentService,
+    IncidentModel
+} from '../../../incident';
 
 @Injectable()
-export class InvolvePartyService implements IServiceInretface<InvolvePartyModel> {
-    private _dataService: DataService<InvolvePartyModel>;
+export class InvolvePartyService
+    extends ServiceBase<InvolvePartyModel>
+    implements IInvolvePartyService {
+    private _incidentDataService: DataService<IncidentModel>;
 
-
-    constructor(private dataServiceFactory: DataServiceFactory,
-        private incidentService: IncidentService) {
-        let option: DataProcessingService = new DataProcessingService();
-        this._dataService = this.dataServiceFactory
-            .CreateServiceWithOptions<InvolvePartyModel>('InvolvedParties', option);
+    constructor(private dataServiceFactory: DataServiceFactory) {
+        super(dataServiceFactory, 'InvolvedParties');
     }
 
     GetAll(): Observable<ResponseModel<InvolvePartyModel>> {
@@ -31,66 +34,22 @@ export class InvolvePartyService implements IServiceInretface<InvolvePartyModel>
             .Execute();
     }
 
-    Get(id: string | number): Observable<InvolvePartyModel> {
-        return this._dataService.Get(id.toString()).Execute();
-    }
-
     Create(entity: InvolvePartyModel): Observable<InvolvePartyModel> {
         let involvedParty: InvolvePartyModel;
+
         return this._dataService.Post(entity)
             .Execute()
             .map((data: InvolvePartyModel) => {
                 involvedParty = data;
-                if (involvedParty.ActiveFlag == 'Active') {
-                    involvedParty.Active = true;
-                }
-                else {
-                    involvedParty.Active = false;
-                }
                 return data;
             })
             .flatMap((data: InvolvePartyModel) =>
-                this.incidentService.Get(data.IncidentId))
+                this.GetIncidentById(data.IncidentId)
+            )
             .map((data: IncidentModel) => {
                 involvedParty.Incident = data;
                 return involvedParty;
             });
-    }
-
-    CreateBulk(entities: InvolvePartyModel[]): Observable<InvolvePartyModel[]> {
-        return Observable.of(entities);
-    }
-
-    Update(entity: InvolvePartyModel): Observable<InvolvePartyModel> {
-        let key: string = entity.InvolvedPartyId.toString()
-        let involvedParty: InvolvePartyModel;
-        return this._dataService.Patch(entity, key)
-            .Execute();
-    }
-
-    Delete(entity: InvolvePartyModel): void {
-    }
-
-
-    CreateInvolvedParty(involvedPartyModel: InvolvePartyModel): Observable<InvolvePartyModel> {
-        let involvedParty: InvolvePartyModel;
-        return this._dataService.Post(involvedPartyModel)
-            .Execute()
-            .map((data: InvolvePartyModel) => {
-                involvedParty = data;
-                if (involvedParty.ActiveFlag == 'Active') {
-                    involvedParty.Active = true;
-                }
-                else {
-                    involvedParty.Active = false;
-                }
-                return data;
-            });
-        // .flatMap((data: InvolvedPartyModel) => this.incidentService.GetIncidentById(data.IncidentId))
-        // .map((data: IncidentModel) => {
-        //     involvedParty.Incident = data;
-        //     return involvedParty;
-        // });
     }
 
     GetAllActiveInvolvedParties(): Observable<ResponseModel<InvolvePartyModel>> {
@@ -101,8 +60,8 @@ export class InvolvePartyService implements IServiceInretface<InvolvePartyModel>
             .Execute();
     }
 
-    GetInvolvedPartyById(id: number): Observable<InvolvePartyModel> {
-        return this._dataService.Get(id.toString())
-            .Execute();
+    GetIncidentById(id: string | number): Observable<IncidentModel> {
+        return this._incidentDataService.Get(id.toString()).Execute();
     }
+
 }
