@@ -2,6 +2,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
+import { ModalModule } from 'ng2-bootstrap';
 import { SharedModule } from '../../shared';
 
 import {
@@ -66,6 +67,7 @@ const WIDGET_SERVICE: any[] = [
     imports: [
         CommonModule,
         HttpModule,
+        ModalModule,
         SharedModule,
         RouterModule
     ],
