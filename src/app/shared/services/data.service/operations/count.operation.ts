@@ -1,5 +1,5 @@
 import { URLSearchParams, Http } from '@angular/http';
-import { Observable } from 'rxjs/rx';
+import { Observable } from 'rxjs/Rx';
 
 import { BaseModel, WEB_METHOD, ResponseModel } from '../../../models';
 import { UtilityService } from '../../../services';
@@ -18,6 +18,7 @@ export class CountOperation<T extends BaseModel> extends DataOperation<T> {
 
     private _filter: string;
     private _count: string = 'true';
+    private _top: string = '0';
 
     /**
      * Creates an instance of CountOperation.
@@ -55,10 +56,10 @@ export class CountOperation<T extends BaseModel> extends DataOperation<T> {
      * 
      * @memberOf CountOperation
      */
-    public Count(count: string): CountOperation<T> {
-        this._count = count;
-        return this;
-    }
+    // public Count(count: string): CountOperation<T> {
+    //     this._count = count;
+    //     return this;
+    // }
 
     /**
      * Execute the count operation
@@ -91,6 +92,7 @@ export class CountOperation<T extends BaseModel> extends DataOperation<T> {
         let params = new URLSearchParams();
         if (this._filter) { params.set(this.DataProcessingService.Key.filter, this._filter); }
         if (this._count) { params.set(this.DataProcessingService.Key.count, this._count); }
+        if (this._top) { params.set(this.DataProcessingService.Key.top, this._top); }
 
         return params;
     }

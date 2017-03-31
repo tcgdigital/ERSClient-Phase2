@@ -1,5 +1,5 @@
 import { BaseModel } from '../../../../shared';
-import { DepartmentModel } from '../../../masterdata/department';
+import { DepartmentModel } from '../../../masterdata';
 import {
     AffectedModel,
     AffectedPeopleModel,
@@ -23,6 +23,11 @@ export class InterestedpartyModel extends BaseModel {
     public Affected?: AffectedModel;
     public Enquiries?: EnquiryModel[];
 
+    /**
+     * Creates an instance of InterestedpartyModel.
+     * 
+     * @memberOf InterestedpartyModel
+     */
     constructor() {
         super();
 

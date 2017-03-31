@@ -10,9 +10,6 @@ export class PeopleOnBoardModel extends BaseModel {
     
     constructor() {
         super();
-        this.enquiredAffectedPassengerCount = 0;
-        this.totalAffectedPassengerCount = 0;
-        this.enquiredAffectedCrewCount = 0;
-        this.totalAffectedCrewCount = 0;
+        
     }
 }

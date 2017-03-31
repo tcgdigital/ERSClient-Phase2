@@ -1,5 +1,5 @@
 import { Http, Headers } from '@angular/http';
-import { Observable } from 'rxjs/rx';
+import { Observable } from 'rxjs/Rx';
 
 import { BaseModel, WEB_METHOD } from '../../../models';
 import { DataProcessingService, DataOperation } from '../index';

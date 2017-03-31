@@ -1,5 +1,5 @@
 import { BaseModel } from '../../../../shared';
-import { DepartmentModel } from '../../../masterdata/department';
+import { DepartmentModel } from '../../../masterdata';
 import { AffectedPeopleModel, EnquiryModel } from '../../../shared.components';
 
 export class NextOfKinModel extends BaseModel {
@@ -16,6 +16,11 @@ export class NextOfKinModel extends BaseModel {
     public AffectedPerson?: AffectedPeopleModel;
     public Enquiries?: EnquiryModel[];
 
+    /**
+     * Creates an instance of NextOfKinModel.
+     * 
+     * @memberOf NextOfKinModel
+     */
     constructor() {
         super();
 

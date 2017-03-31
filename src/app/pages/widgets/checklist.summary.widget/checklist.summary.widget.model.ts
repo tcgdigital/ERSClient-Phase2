@@ -2,13 +2,11 @@ import { NgModule } from '@angular/core';
 import { BaseModel } from '../../../shared';
 
 
-export class CheckListSummeryModel extends BaseModel {
-    public openActionableCount: number = 0;
-    public closeActionableCount: number = 0;
-    
+export class CheckListSummeryModel {
+    public openActionableCount: number;
+    public closeActionableCount: number;
+
     constructor() {
-        super();
-    
         this.openActionableCount = 0;
         this.closeActionableCount = 0;
     }

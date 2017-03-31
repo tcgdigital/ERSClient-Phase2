@@ -13,31 +13,33 @@ import {
 } from '../../../shared';
 
 @Injectable()
-export class ChecklistSummaryWidgetService implements OnInit {
+export class ChecklistSummaryWidgetService {
+    checkListSummery: CheckListSummeryModel;
 
-    checkListSummery: CheckListSummeryModel = null;
+    /**
+     * Creates an instance of ChecklistSummaryWidgetService.
+     * @param {DataServiceFactory} dataServiceFactory 
+     * @param {ActionableService} actionableService 
+     * 
+     * @memberOf ChecklistSummaryWidgetService
+     */
     constructor(private dataServiceFactory: DataServiceFactory,
         private actionableService: ActionableService) {
-
-    }
-
-    ngOnInit() {
         this.checkListSummery = new CheckListSummeryModel();
     }
 
-    GetActionableCount(incidentId: string | number, departmentId: string | number): Observable<CheckListSummeryModel> {
+    GetActionableCount(incidentId: number, departmentId: number): Observable<CheckListSummeryModel> {
         this.checkListSummery = new CheckListSummeryModel();
 
-        return this.actionableService.GetOpenActionableCount(incidentId,departmentId)
+        return this.actionableService.GetOpenActionableCount(incidentId, departmentId)
             .map((dataOpenActionableCount: number) => {
                 this.checkListSummery.openActionableCount = isNaN(dataOpenActionableCount) ? 0 : dataOpenActionableCount;
                 return this.checkListSummery;
             })
-            .flatMap((checkListSummery: CheckListSummeryModel) => this.actionableService.GetCloseActionableCount(incidentId,departmentId))
+            .flatMap((checkListSummery: CheckListSummeryModel) => this.actionableService.GetCloseActionableCount(incidentId, departmentId))
             .map((dataOpenActionableCount: number) => {
                 this.checkListSummery.closeActionableCount = isNaN(dataOpenActionableCount) ? 0 : dataOpenActionableCount;
                 return this.checkListSummery;
             });
-
     }
 }

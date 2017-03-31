@@ -20,26 +20,26 @@ import {
 export class DepartmentService
     extends ServiceBase<DepartmentModel>
     implements IDepartmentService {
-        // private _dataService: DataService<DepartmentModel>;
-        private _batchDataService: DataService<BaseModel>;
+    // private _dataService: DataService<DepartmentModel>;
+    private _batchDataService: DataService<BaseModel>;
 
-        /**
-         * Creates an instance of DepartmentService.
-         * @param {DataServiceFactory} dataServiceFactory 
-         * 
-         * @memberOf DepartmentService
-         */
-        constructor(private dataServiceFactory: DataServiceFactory) {
-            // let option: DataProcessingService = new DataProcessingService();
-            // this._dataService = this.dataServiceFactory
-            //     .CreateServiceWithOptions<DepartmentModel>('Departments', option);
-            super(dataServiceFactory, 'Departments');
+    /**
+     * Creates an instance of DepartmentService.
+     * @param {DataServiceFactory} dataServiceFactory 
+     * 
+     * @memberOf DepartmentService
+     */
+    constructor(private dataServiceFactory: DataServiceFactory) {
+        // let option: DataProcessingService = new DataProcessingService();
+        // this._dataService = this.dataServiceFactory
+        //     .CreateServiceWithOptions<DepartmentModel>('Departments', option);
+        super(dataServiceFactory, 'Departments');
 
-            let option: DataProcessingService = new DataProcessingService();
-            option.EndPoint = GlobalConstants.BATCH;
-            this._batchDataService = this.dataServiceFactory
-                .CreateServiceWithOptions<DepartmentModel>('', option);
-        }
+        let option: DataProcessingService = new DataProcessingService();
+        option.EndPoint = GlobalConstants.BATCH;
+        this._batchDataService = this.dataServiceFactory
+            .CreateServiceWithOptions<DepartmentModel>('', option);
+    }
 
     /**
      * Get all active departments
@@ -49,11 +49,11 @@ export class DepartmentService
      * @memberOf DepartmentService
      */
     GetAll(): Observable<ResponseModel<DepartmentModel>> {
-            return this._dataService.Query()
-                .Expand('ParentDepartment($select=DepartmentName)', 'UserProfile($select=Name)')
-                .Filter('ActiveFlag eq CMS.DataModel.Enum.ActiveFlag\'Active\'')
-                .Execute();
-        }
+        return this._dataService.Query()
+            .Expand('ParentDepartment($select=DepartmentName)', 'UserProfile($select=Name)')
+            .Filter('ActiveFlag eq CMS.DataModel.Enum.ActiveFlag\'Active\'')
+            .Execute();
+    }
 
     /**
      * Get Departments by filter criteria
@@ -64,10 +64,10 @@ export class DepartmentService
      * @memberOf DepartmentService
      */
     GetQuery(query: string): Observable<ResponseModel<DepartmentModel>> {
-            return this._dataService.Query()
-                .Expand('ParentDepartment($select=DepartmentName)', 'UserProfile($select=Name)')
-                .Filter(query).Execute();
-        }
+        return this._dataService.Query()
+            .Expand('ParentDepartment($select=DepartmentName)', 'UserProfile($select=Name)')
+            .Filter(query).Execute();
+    }
 
 
     /**
@@ -78,11 +78,11 @@ export class DepartmentService
      * @memberOf DepartmentService
      */
     BatchOperation(): Observable<ResponseModel<BaseModel>> {
-            let requests: Array<RequestModel<BaseModel>> = [];
-            requests.push(new RequestModel<BaseModel>('/odata/Departments', WEB_METHOD.GET));
-            requests.push(new RequestModel<BaseModel>('/odata/EmergencyTypes', WEB_METHOD.GET));
+        let requests: Array<RequestModel<BaseModel>> = [];
+        requests.push(new RequestModel<BaseModel>('/odata/Departments', WEB_METHOD.GET));
+        requests.push(new RequestModel<BaseModel>('/odata/EmergencyTypes', WEB_METHOD.GET));
 
-            return this._batchDataService.BatchPost<BaseModel>(requests)
-                .Execute();
-        }
+        return this._batchDataService.BatchPost<BaseModel>(requests)
+            .Execute();
     }
+}

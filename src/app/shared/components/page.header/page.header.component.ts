@@ -1,29 +1,19 @@
-import { Component } from '@angular/core';
+import {
+    Component, ViewEncapsulation,
+    Output, EventEmitter
+} from '@angular/core';
 import { GlobalStateService } from '../../services';
 
-import 'style-loader!./page.header.style.scss';
-
 @Component({
-    selector: 'page-header',
-    templateUrl: './page.header.view.html'
+    selector: '[page-header]',
+    templateUrl: './page.header.view.html',
+    encapsulation: ViewEncapsulation.None
 })
 export class PageHeaderComponent {
-    public isScrolled: boolean = false;
-    public isMenuCollapsed: boolean = false;
+    @Output() toggleSideMenu: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor(private globalState: GlobalStateService) {
-        this.globalState.Subscribe('menu.isCollapsed', (isCollapsed) => {
-            this.isMenuCollapsed = isCollapsed;
-        });
-    }
-
-    public ToggleMenu() {
-        this.isMenuCollapsed = !this.isMenuCollapsed;
-        this.globalState.NotifyDataChanged('menu.isCollapsed', this.isMenuCollapsed);
-        return false;
-    }
-
-    public ScrolledChanged(isScrolled) {
-        this.isScrolled = isScrolled;
+    public onToggleSideMenu($event): void {
+        console.log('page header click');
+        this.toggleSideMenu.emit($event);
     }
 }

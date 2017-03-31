@@ -10,7 +10,6 @@ import {
     DataServiceFactory,
     DataProcessingService,
     ServiceBase
-
 } from '../../../shared';
 
 @Injectable()
@@ -27,7 +26,7 @@ export class PeopleOnBoardWidgetService implements OnInit {
         this.peopleOnBoard = new PeopleOnBoardModel();
     }
 
-    GetPeopleOnBoardDataCount(incidentId: string | number): Observable<PeopleOnBoardModel> {
+    GetPeopleOnBoardDataCount(incidentId: number): Observable<PeopleOnBoardModel> {
         this.peopleOnBoard = new PeopleOnBoardModel();
 
         return this.affectedPeopleService.GetAffectedPeopleCount(incidentId)

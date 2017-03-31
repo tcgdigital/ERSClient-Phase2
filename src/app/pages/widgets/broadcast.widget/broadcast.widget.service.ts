@@ -38,11 +38,11 @@ export class BroadcastWidgetService {
         let initiateDepartmentProjection: string = 'DepartmentId,DepartmentName,Description,ContactNo';
         let boradcastProjection: string = 'BroadcastId,Message,InitiateDepartmentId,IncidentId,IsSubmitted,SubmittedBy,SubmittedOn,CreatedOn,ActiveFlag,CreatedBy,UpdatedOn,Priority';
 
-            return this._dataService.Query()
-        .Expand(`InitiateDepartment($select= ${initiateDepartmentProjection})`)
-        .Filter(`IncidentId eq ${incidentId} and IsSubmitted eq true and DepartmentBroadcasts/any(x: x/DepartmentId eq ${departmentId})`)
-        .OrderBy(`Priority,SubmittedOn desc`).Top(`3`).Select(boradcastProjection)
-        .Execute().map(x=>x.Records);
+        return this._dataService.Query()
+            .Expand(`InitiateDepartment($select= ${initiateDepartmentProjection})`)
+            .Filter(`IncidentId eq ${incidentId} and IsSubmitted eq true and DepartmentBroadcasts/any(x: x/DepartmentId eq ${departmentId})`)
+            .OrderBy(`Priority,SubmittedOn desc`).Top(`3`).Select(boradcastProjection)
+            .Execute().map(x=>x.Records);
     }
 
      /**

@@ -2,22 +2,16 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
 import { EnquiryModel, QueryModel } from './call.centre.model';
+import { IEnquiryService } from './IEnquiryService';
 import {
-    RequestModel,
     ResponseModel,
-    BaseModel,
-    WEB_METHOD,
-    DataProcessingService,
-    DataService,
     DataServiceFactory,
-    GlobalConstants,
-    IServiceInretface
+    ServiceBase
 } from '../../../../shared';
 
 @Injectable()
-export class EnquiryService implements IServiceInretface<EnquiryModel> {
-    private _dataService: DataService<EnquiryModel>;
-    // private _batchDataService: DataService<BaseModel>;
+export class EnquiryService extends ServiceBase<EnquiryModel>
+    implements IEnquiryService {
 
     /**
      * Creates an instance of DepartmentService.
@@ -26,53 +20,30 @@ export class EnquiryService implements IServiceInretface<EnquiryModel> {
      * @memberOf DepartmentService
      */
     constructor(private dataServiceFactory: DataServiceFactory) {
-        let option: DataProcessingService = new DataProcessingService();
-        this._dataService = this.dataServiceFactory
-            .CreateServiceWithOptions<EnquiryModel>('Enquiries', option);
+        super(dataServiceFactory, 'Enquiries');
     }
 
-    GetAll(): Observable<ResponseModel<EnquiryModel>> {
-        return this._dataService.Query()
-            .Execute();
-    }
-
-    Get(id: string | number): Observable<EnquiryModel> {
-        return this._dataService.Get(id.toString()).Execute();
-    }
-
-    Create(entity: EnquiryModel): Observable<EnquiryModel> {
-        return this._dataService.Post(entity).Execute();
-    }
-
-    CreateBulk(entities: EnquiryModel[]): Observable<EnquiryModel[]> {
-        return Observable.of(entities);
-    }
-
-    Update(entity: EnquiryModel): Observable<EnquiryModel> {
-        return Observable.of(entity);
-    }
-
-    Delete(entity: EnquiryModel): void {
-    }
-
-    getOtherQueryByIncident(IncidentId: string | number): Observable<ResponseModel<EnquiryModel>> {
+    public getOtherQueryByIncident(IncidentId: number): Observable<ResponseModel<EnquiryModel>> {
         return this._dataService.Query().Filter(`IncidentId eq  ${IncidentId}  and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Others'`)
-            .Expand('Caller')
-            .Execute();
+            .Expand('Caller').Execute();
     }
 
-    getCrewQueryByIncident(IncidentId: string | number): Observable<ResponseModel<EnquiryModel>> {
+    public getCrewQueryByIncident(IncidentId: number): Observable<ResponseModel<EnquiryModel>> {
         return this._dataService.Query().Filter(`IncidentId eq  ${IncidentId}  and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Crew'`)
-            .Expand('Caller')
-            .Execute();
-    }
-    getMediaQueryByIncident(IncidentId: string | number): Observable<ResponseModel<EnquiryModel>> {
-        return this._dataService.Query().Filter(`IncidentId eq  ${IncidentId}  and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Media'`)
-            .Expand('Caller')
-            .Execute();
+            .Expand('Caller').Execute();
     }
 
-    MapQuery(enquiryModel: EnquiryModel[]): QueryModel[] {
+    public getMediaQueryByIncident(IncidentId: number): Observable<ResponseModel<EnquiryModel>> {
+        return this._dataService.Query().Filter(`IncidentId eq  ${IncidentId}  and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Media'`)
+            .Expand('Caller').Execute();
+    }
+
+    public GetEnquiredAffectedPeopleCount(incidentId: number): Observable<number> {
+        return this._dataService.Count()
+            .Filter(`IncidentId eq ${incidentId} and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Passenger' and AffectedPersonId ne null`).Execute();
+    }
+
+    public MapQuery(enquiryModel: EnquiryModel[]): QueryModel[] {
         let otherQueryModel: QueryModel[];
         otherQueryModel = enquiryModel.map(function (enquiry) {
             let item = new QueryModel();
@@ -84,13 +55,6 @@ export class EnquiryService implements IServiceInretface<EnquiryModel> {
             return item;
         });
         return otherQueryModel;
-
-    }
-
-    GetEnquiredAffectedPeopleCount(incidentId: string | number): Observable<number> {
-        return this._dataService.Count()
-            .Filter(`IncidentId eq ${incidentId} and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Passenger' and AffectedPersonId ne null`)
-            .Execute();
     }
 
     GetEnquiredAffectedCrewCount(incidentId: string | number): Observable<number> {

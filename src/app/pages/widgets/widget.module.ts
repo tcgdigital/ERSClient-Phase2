@@ -5,13 +5,16 @@ import { RouterModule } from '@angular/router';
 import { AffectedPeopleService } from '../shared.components/affected.people';
 import { EnquiryService } from '../shared.components/call.centre';
 import { ActionableService } from '../shared.components/actionables';
+import { ModalModule } from 'ng2-bootstrap';
+import { SharedModule } from '../../shared';
 
 import {
     BroadcastWidgetComponent,
     CasualtySummaryWidgetComponent,
     ChecklistSummaryWidgetComponent,
     ClockWidgetComponent,
-    DemandSummaryWidgetComponent,
+    DemandReceivedSummaryWidgetComponent,
+    DemandRaisedSummaryWidgetComponent,
     MediaReleaseWidgetComponent,
     PeopleOnBoardWidgetComponent,
     PresidentMessageWidgetComponent,
@@ -22,7 +25,8 @@ import {
     CasualtySummaryWidgetService,
     ChecklistSummaryWidgetService,
     ClockWidgetService,
-    DemandSummaryWidgetService,
+    DemandReceivedSummaryWidgetService,
+    DemandRaisedSummaryWidgetService,
     MediaReleaseWidgetService,
     PeopleOnBoardWidgetService,
     PresidentMessageWidgetService
@@ -33,10 +37,11 @@ const WIDGET_COMPONENTS: any[] = [
     CasualtySummaryWidgetComponent,
     ChecklistSummaryWidgetComponent,
     ClockWidgetComponent,
-    DemandSummaryWidgetComponent,
+    DemandReceivedSummaryWidgetComponent,
+    DemandRaisedSummaryWidgetComponent,
     MediaReleaseWidgetComponent,
     PeopleOnBoardWidgetComponent,
-    PresidentMessageWidgetComponent
+    PresidentMessageWidgetComponent,
 ];
 
 const WIDGET_SERVICE: any[] = [
@@ -44,7 +49,8 @@ const WIDGET_SERVICE: any[] = [
     CasualtySummaryWidgetService,
     ChecklistSummaryWidgetService,
     ClockWidgetService,
-    DemandSummaryWidgetService,
+    DemandReceivedSummaryWidgetService,
+    DemandRaisedSummaryWidgetService,
     MediaReleaseWidgetService,
     PeopleOnBoardWidgetService,
     PresidentMessageWidgetService,
@@ -57,6 +63,8 @@ const WIDGET_SERVICE: any[] = [
     imports: [
         CommonModule,
         HttpModule,
+        ModalModule,
+        SharedModule,
         RouterModule
     ],
     exports: [

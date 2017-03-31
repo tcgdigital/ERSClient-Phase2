@@ -1,58 +1,69 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { DataServiceFactory, DataExchangeService } from '../../../shared'
+import { DataServiceFactory, DataExchangeService, TextAccordionModel } from '../../../shared'
 import { BroadcastWidgetModel } from './broadcast.widget.model'
 import { BroadcastWidgetService } from './broadcast.widget.service'
 
 @Component({
     selector: 'broadcast-widget',
     templateUrl: './broadcast.widget.view.html',
-    styleUrls:['./broadcast.widget.style.scss']
+    styleUrls: ['./broadcast.widget.style.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class BroadcastWidgetComponent implements OnInit {
     @Input('initiatedDepartmentId') departmentId: number;
     @Input('currentIncidentId') incidentId: number;
-    LatestBroadcasts: Observable<BroadcastWidgetModel[]>;  
-    AllPublishedBroadcasts: Observable<BroadcastWidgetModel[]>; 
+
+    LatestBroadcasts: Observable<TextAccordionModel[]>;
+    AllPublishedBroadcasts: Observable<BroadcastWidgetModel[]>;
     isHidden: boolean = true;
 
+    /**
+     * Creates an instance of BroadcastWidgetComponent.
+     * @param {BroadcastWidgetService} broadcastWidgetService 
+     * @param {DataExchangeService<BroadcastWidgetModel>} dataExchange 
+     * 
+     * @memberOf BroadcastWidgetComponent
+     */
     constructor(private broadcastWidgetService: BroadcastWidgetService,
         private dataExchange: DataExchangeService<BroadcastWidgetModel>) { }
 
-    ngOnInit() { 
+    public ngOnInit(): void {
         this.getLatestBroadcasts();
         this.getAllPublishedBroadcasts();
     }
 
-    getLatestBroadcasts(): void {
+    public getLatestBroadcasts(): void {
         let data: BroadcastWidgetModel[] = [];
         this.broadcastWidgetService
-            .GetLatestBroadcastsByIncidentAndDepartment(this.departmentId,this.incidentId)
-            .flatMap(x=>x).take(2)            
+            .GetLatestBroadcastsByIncidentAndDepartment(this.departmentId, this.incidentId)
+            .flatMap(x => x).take(2)
             .subscribe(x => {
                 data.push(x);
-            },(error: any)=>{
+            }, (error: any) => {
                 console.log(`Error: ${error}`);
-            },
-            ()=>this.LatestBroadcasts = Observable.of(data));
-            //console.log(this.LatestBroadcasts);            
-    } 
+            }, () => {
+                this.LatestBroadcasts = Observable.of(data
+                    .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn)));
+            });        
+    }
 
-    getAllPublishedBroadcasts(): void {
+    public getAllPublishedBroadcasts(): void {
         let data: BroadcastWidgetModel[] = [];
         this.broadcastWidgetService
             .GetAllPublishedBroadcastsByIncident(this.incidentId)
-            .flatMap(x=>x)            
+            .flatMap(x => x)
             .subscribe(x => {
                 data.push(x);
-            },(error: any)=>{
-            console.log(`Error: ${error}`);
-            },
-            ()=>this.AllPublishedBroadcasts = Observable.of(data));
-    } 
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            }, () =>
+                this.AllPublishedBroadcasts = Observable.of(data)
+            );
+    }
 
-    openBroadcastMessages(isHide: boolean, event: Event){
-         this.isHidden = isHide;
-         event.preventDefault();
-     }  
+    public openBroadcastMessages(isHide: boolean, event: Event) {
+        this.isHidden = isHide;
+        event.preventDefault();
+    }
 }

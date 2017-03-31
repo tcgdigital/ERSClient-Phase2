@@ -12,7 +12,13 @@ export interface IActionableService extends IServiceInretface<ActionableModel> {
     
     BatchOperation(data: any[]): Observable<ResponseModel<BaseModel>>;
 
+<<<<<<< HEAD
     GetOpenActionableCount(incidentId: string | number, departmentId: string | number): Observable<number>;
 
     GetCloseActionableCount(incidentId: string | number, departmentId: string | number): Observable<number>;
+=======
+    GetOpenActionableCount(incidentId: number, departmentId: number): Observable<number>;
+
+    GetCloseActionableCount(incidentId: number, departmentId: number): Observable<number>;
+>>>>>>> master
 }
