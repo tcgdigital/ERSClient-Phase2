@@ -19,7 +19,7 @@ export class ChecklistListComponent implements OnInit {
     activeEmergencyTypes: EmergencyTypeModel[] = [];
     checkListModelPatch: ChecklistModel = null;
     date: Date = new Date();
-    
+
     constructor(private checkListService: ChecklistService,
         private dataExchange: DataExchangeService<ChecklistModel>) { }
 
@@ -33,14 +33,9 @@ export class ChecklistListComponent implements OnInit {
     getCheckLists(): void {
         this.checkListService.GetAll()
             .subscribe((response: ResponseModel<ChecklistModel>) => {
-                for (var x of response.Records) {
-                    if (x.ActiveFlag == 'Active') {
-                        x.Active = true;
-                    }
-                    else {
-                        x.Active = false;
-                    }
-                }
+                response.Records.forEach(x => {
+                    x.Active = (x.ActiveFlag == 'Active');
+                });
                 this.checkLists = response.Records;
             });
     }
@@ -59,9 +54,9 @@ export class ChecklistListComponent implements OnInit {
     ngOnInit(): void {
         this.getAllActiveCheckLists();
         this.getCheckLists();
-        this.dataExchange.Subscribe("checkListModelSaved", 
+        this.dataExchange.Subscribe("checkListModelSaved",
             model => this.onCheckListModelSavedSuccess(model));
-        this.dataExchange.Subscribe("checkListListReload", 
+        this.dataExchange.Subscribe("checkListListReload",
             model => this.onCheckListModelReloadSuccess(model));
     }
 

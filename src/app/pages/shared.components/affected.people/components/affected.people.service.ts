@@ -10,6 +10,7 @@ import {
     DataServiceFactory, DataProcessingService,
     IServiceInretface, UtilityService
 } from '../../../../shared';
+import { CountOperation } from '../../../../shared/services/data.service/operations';
 
 @Injectable()
 export class AffectedPeopleService {
@@ -24,6 +25,7 @@ export class AffectedPeopleService {
             .CreateServiceWithOptions<AffectedPeopleModel>('AffectedPeople', option);
         this._bulkDataService = this.dataServiceFactory
             .CreateServiceWithOptions<AffectedPeopleModel>('AffectedPersonBatch', option);
+
     }
 
     GetAll(): Observable<ResponseModel<InvolvePartyModel>> {
@@ -105,4 +107,18 @@ export class AffectedPeopleService {
         return verifiedAffectedPeople;
 
     }
+
+    GetAffectedPeopleCount(incidentId: string | number): Observable<number> {
+        return this._dataServiceAffectedPeople.Count()
+            .Filter(`IsCrew eq false and Affected/InvolvedParty/IncidentId eq ${incidentId}`)
+            .Execute();
+    }
+    GetAffectedCrewCount(incidentId: string | number): Observable<number> {
+        return this._dataServiceAffectedPeople.Count()
+            .Filter(`IsCrew eq true and Affected/InvolvedParty/IncidentId eq ${incidentId}`)
+            .Execute();
+
+    }
+
+
 }

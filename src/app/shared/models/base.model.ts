@@ -20,7 +20,8 @@ export enum WEB_METHOD {
     PUT = <any>'PUT',
     PATCH = <any>'PATCH',
     DELETE = <any>'DELETE',
-    BATCHPOST = <any>'BATCHPOST'
+    BATCHPOST = <any>'BATCHPOST',
+    COUNT = <any>'COUNT'
 }
 
 export class KeyValue {

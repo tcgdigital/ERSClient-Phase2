@@ -1,17 +1,20 @@
-import { NgModule, ModuleWithProviders} from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
+import { AffectedPeopleService } from '../shared.components/affected.people';
+import { EnquiryService } from '../shared.components/call.centre';
+import { ActionableService } from '../shared.components/actionables';
 
 import {
-    BroadcastWidgetComponent,    
+    BroadcastWidgetComponent,
     CasualtySummaryWidgetComponent,
     ChecklistSummaryWidgetComponent,
     ClockWidgetComponent,
     DemandSummaryWidgetComponent,
     MediaReleaseWidgetComponent,
     PeopleOnBoardWidgetComponent,
-    PresidentMessageWidgetComponent,    
+    PresidentMessageWidgetComponent,
 } from './index';
 
 import {
@@ -26,14 +29,14 @@ import {
 } from './index';
 
 const WIDGET_COMPONENTS: any[] = [
-    BroadcastWidgetComponent,  
+    BroadcastWidgetComponent,
     CasualtySummaryWidgetComponent,
     ChecklistSummaryWidgetComponent,
     ClockWidgetComponent,
     DemandSummaryWidgetComponent,
     MediaReleaseWidgetComponent,
     PeopleOnBoardWidgetComponent,
-    PresidentMessageWidgetComponent,   
+    PresidentMessageWidgetComponent
 ];
 
 const WIDGET_SERVICE: any[] = [
@@ -44,7 +47,10 @@ const WIDGET_SERVICE: any[] = [
     DemandSummaryWidgetService,
     MediaReleaseWidgetService,
     PeopleOnBoardWidgetService,
-    PresidentMessageWidgetService
+    PresidentMessageWidgetService,
+    AffectedPeopleService,
+    EnquiryService,
+    ActionableService
 ];
 
 @NgModule({

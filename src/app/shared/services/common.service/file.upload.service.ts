@@ -45,15 +45,17 @@ export class FileUploadService {
         //return Observable.fromPromise(
         if (files.length > 0) {
 
-
+            debugger;
             let fileUploadPromise: Promise<T> = new Promise((resolve, reject) => {
                 let formData: FormData = new FormData(),
                     xhr: XMLHttpRequest = new XMLHttpRequest();
-
+                debugger;
                 for (var i = 0; i < files.length; i++) {
+
                     formData.append("uploads[]", files[i], files[i].name);
+                    console.log(formData);
                 }
-                
+
 
                 xhr.onreadystatechange = () => {
                     if (xhr.readyState === 4) {

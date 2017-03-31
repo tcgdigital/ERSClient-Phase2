@@ -28,15 +28,9 @@ export class TemplateService implements IServiceInretface<TemplateModel> {
             .OrderBy("CreatedOn desc")
             .Execute().map((data: ResponseModel<TemplateModel>) => {
                 templates = data;
-                for (var x of templates.Records) {
-                    if (x.ActiveFlag == 'Active') {
-                        x.Active = true;
-                    }
-                    else {
-                        x.Active = false;
-                    }
-
-                }
+                templates.Records.forEach(x => {
+                    x.Active = (x.ActiveFlag == 'Active');
+                });
 
                 return templates;
             });

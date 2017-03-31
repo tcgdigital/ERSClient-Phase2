@@ -34,12 +34,7 @@ export class EmergencyTypeService extends ServiceBase<EmergencyTypeModel> {
                 this._emergencyTypes = emergencyTypes;
                 
                 this._emergencyTypes.Records.forEach(element => {
-                    if (element.ActiveFlag == 'Active') {
-                        element.Active = true;
-                    }
-                    else {
-                        element.Active = false;
-                    }
+                    element.Active = (element.ActiveFlag == 'Active');
                 });
                 return emergencyTypes;
             });

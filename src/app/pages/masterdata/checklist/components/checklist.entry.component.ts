@@ -80,12 +80,7 @@ export class ChecklistEntryComponent implements OnInit {
         this.checkListService.GetAllActiveCheckLists()
             .subscribe((response: ResponseModel<ChecklistModel>) => {
                 for (var x of response.Records) {
-                    if (x.ActiveFlag == 'Active') {
-                        x.Active = true;
-                    }
-                    else {
-                        x.Active = false;
-                    }
+                    x.Active = (x.ActiveFlag == 'Active');
                 }
                 this.activeCheckLists = response.Records;
                 this.checkListModel.ParentCheckListId = this.activeCheckLists[0].CheckListId;
@@ -96,12 +91,7 @@ export class ChecklistEntryComponent implements OnInit {
         this.checkListService.GetAll()
             .subscribe((response: ResponseModel<ChecklistModel>) => {
                 for (var x of response.Records) {
-                    if (x.ActiveFlag == 'Active') {
-                        x.Active = true;
-                    }
-                    else {
-                        x.Active = false;
-                    }
+                    x.Active = (x.ActiveFlag == 'Active');
                 }
                 this.activeCheckLists = response.Records;
 
@@ -111,14 +101,6 @@ export class ChecklistEntryComponent implements OnInit {
     getAllActiveDepartments(): void {
         this.departmentService.GetAll()
             .subscribe((response: ResponseModel<DepartmentModel>) => {
-                for (var x of response.Records) {
-                    // if (x.ActiveFlag == 'Active') {
-                    //     x.Active = true;
-                    // }
-                    // else {
-                    //     x.Active = false;
-                    // }
-                }
                 this.activeDepartments = response.Records;
                 this.checkListModel.DepartmentId = this.activeDepartments[0].DepartmentId;
             });
@@ -128,12 +110,7 @@ export class ChecklistEntryComponent implements OnInit {
         this.emergencyTypeService.GetAll()
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                 for (var x of response.Records) {
-                    // if (x.ActiveFlag == 'Active') {
-                    //     x.Active = true;
-                    // }
-                    // else {
-                    //     x.Active = false;
-                    // }
+                    x.Active = (x.ActiveFlag == 'Active');
                 }
                 this.activeEmergencyTypes = response.Records;
                 this.checkListModel.EmergencyTypeId = this.activeEmergencyTypes[0].EmergencyTypeId;

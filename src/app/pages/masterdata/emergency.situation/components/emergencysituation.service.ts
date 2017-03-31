@@ -40,12 +40,7 @@ export class EmergencySituationService {
             .Execute()
             .map((data: EmergencySituationModel) => {
                 emergencySituation = data;
-                if (emergencySituation.ActiveFlag == 'Active') {
-                    emergencySituation.Active = true;
-                }
-                else {
-                    emergencySituation.Active = false;
-                }
+                 emergencySituation.Active = (emergencySituation.ActiveFlag == 'Active');
                 return data;
             });
     }

@@ -27,14 +27,9 @@ export class QuickLinkService implements IServiceInretface<QuickLinkModel> {
             .OrderBy("CreatedOn desc")
             .Execute().map((data: ResponseModel<QuickLinkModel>) => {
                 checkLists = data;
-                for (var x of checkLists.Records) {
-                    if (x.ActiveFlag == 'Active') {
-                        x.Active = true;
-                    }
-                    else {
-                        x.Active = false;
-                    }
-                }
+                checkLists.Records.forEach(x => {
+                    x.Active = (x.ActiveFlag == 'Active');
+                });
                 return checkLists;
             });
     }

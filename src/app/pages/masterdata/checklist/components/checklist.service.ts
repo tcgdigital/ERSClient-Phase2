@@ -53,12 +53,7 @@ export class ChecklistService implements IServiceInretface<ChecklistModel> {
             .Execute()
             .map((data: ChecklistModel) => {
                 checkList = data;
-                if (checkList.ActiveFlag == 'Active') {
-                    checkList.Active = true;
-                }
-                else {
-                    checkList.Active = false;
-                }
+                checkList.Active = (checkList.ActiveFlag == 'Active');
                 return data;
             })
             .flatMap((data: ChecklistModel) =>

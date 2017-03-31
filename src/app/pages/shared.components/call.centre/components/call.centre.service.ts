@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
-import { EnquiryModel , QueryModel } from './call.centre.model';
+import { EnquiryModel, QueryModel } from './call.centre.model';
 import {
     RequestModel,
     ResponseModel,
@@ -60,8 +60,8 @@ export class EnquiryService implements IServiceInretface<EnquiryModel> {
             .Expand('Caller')
             .Execute();
     }
-   
-     getCrewQueryByIncident(IncidentId: string | number): Observable<ResponseModel<EnquiryModel>> {
+
+    getCrewQueryByIncident(IncidentId: string | number): Observable<ResponseModel<EnquiryModel>> {
         return this._dataService.Query().Filter(`IncidentId eq  ${IncidentId}  and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Crew'`)
             .Expand('Caller')
             .Execute();
@@ -87,4 +87,15 @@ export class EnquiryService implements IServiceInretface<EnquiryModel> {
 
     }
 
+    GetEnquiredAffectedPeopleCount(incidentId: string | number): Observable<number> {
+        return this._dataService.Count()
+            .Filter(`IncidentId eq ${incidentId} and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Passenger' and AffectedPersonId ne null`)
+            .Execute();
+    }
+
+    GetEnquiredAffectedCrewCount(incidentId: string | number): Observable<number> {
+        return this._dataService.Count()
+            .Filter(`IncidentId eq ${incidentId} and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Crew' and AffectedPersonId ne null`)
+            .Execute();
+    }
 }

@@ -18,8 +18,6 @@ import {
 @Injectable()
 export class AffectedService implements IServiceInretface<AffectedModel> {
     private _dataService: DataService<AffectedModel>;
-    // @Inject(DataServiceFactory) private dataServiceFactory: DataServiceFactory;
-    // @Inject(InvolvePartyService) private involvedPartyService: InvolvePartyService;
 
     constructor(private dataServiceFactory: DataServiceFactory,
         private involvedPartyService: InvolvePartyService) {
@@ -45,12 +43,7 @@ export class AffectedService implements IServiceInretface<AffectedModel> {
             .Execute()
             .map((data: AffectedModel) => {
                 affected = data;
-                if (affected.ActiveFlag == 'Active') {
-                    affected.Active = true;
-                }
-                else {
-                    affected.Active = false;
-                }
+                affected.Active = (affected.ActiveFlag == 'Active');
                 return data;
             })
             .flatMap((data: AffectedModel) =>

@@ -24,4 +24,9 @@ export class AffectedObjectsListComponent implements OnInit {
             });
     }
 
+    onIncidentDepartmentChange(): void {
+    }
+
+    GetAffectedObjectByIncidentId
+
 }

@@ -119,8 +119,8 @@ export class DataProcessingService {
         if (response.status < 200 || response.status >= 300) {
             throw new Error(`Bad response status: ${response.status}`);
         }
-
-        let responseBody: number = +response;
+        let totalObject = JSON.parse(response.text());
+        let responseBody: number = totalObject.value.length;
         return responseBody;
     }
 

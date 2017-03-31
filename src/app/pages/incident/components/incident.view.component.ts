@@ -18,7 +18,7 @@ import {
     InvolvedPartyType
 } from '../../../shared';
 import { UtilityService } from '../../../shared';
-import { FlightModel,InvolvePartyModel } from '../../shared.components';
+import { FlightModel, InvolvePartyModel } from '../../shared.components';
 import { IncidentDataExchangeModel } from './incidentDataExchange.model';
 
 @Component({
@@ -54,14 +54,14 @@ export class IncidentViewComponent implements OnInit, OnDestroy {
         this.initiateIncidentModel();
         this.form = new FormGroup({
             IncidentId: new FormControl(0),
-            IsDrill: new FormControl(true), 
-            EmergencyTypeId: new FormControl(1), 
-            EmergencyName: new FormControl(''), 
-            AlertMessage: new FormControl(''), 
-            Description: new FormControl(''), 
-            ClosureNote: new FormControl(''), 
+            IsDrill: new FormControl(true),
+            EmergencyTypeId: new FormControl(1),
+            EmergencyName: new FormControl(''),
+            AlertMessage: new FormControl(''),
+            Description: new FormControl(''),
+            ClosureNote: new FormControl(''),
             EmergencyDate: new FormControl(''),
-            Severity: new FormControl(''), 
+            Severity: new FormControl(''),
             EmergencyLocation: new FormControl(''),
             Remarks: new FormControl(''),
 
@@ -69,8 +69,8 @@ export class IncidentViewComponent implements OnInit, OnDestroy {
             Origin: new FormControl(''),
             Destination: new FormControl(''),
             Scheduleddeparture: new FormControl(''),
-            Scheduledarrival: new FormControl(''), 
-            FlightTailNumber: new FormControl('') 
+            Scheduledarrival: new FormControl(''),
+            FlightTailNumber: new FormControl('')
         });
         this.disable = true;
         this.dataExchange.Subscribe("incidentCreatedPreCheck", model => this.onIncidentCreatedPreCheck(model));
@@ -107,16 +107,10 @@ export class IncidentViewComponent implements OnInit, OnDestroy {
         this.emergencyTypeService.GetAll()
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                 console.log(response);
-                for (var x of response.Records) {
-                    if (x.ActiveFlag == 'Active') {
-                        x.Active = true;
-                    }
-                    else {
-                        x.Active = false;
-                    }
-                }
+                response.Records.forEach(x => {
+                    x.Active = (x.ActiveFlag == 'Active');
+                });
                 this.activeEmergencyTypes = response.Records;
-                //this.activeEmergencyTypes.unshift(data);
                 console.log(this.activeEmergencyTypes);
 
             });
