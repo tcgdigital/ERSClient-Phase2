@@ -39,7 +39,7 @@ export class MyDemandComponent implements OnInit {
                         x["showRemarks"] = false;
                     });
             }, (error: any) => {
-                console.log("error:  " + error);
+                console.log(`Error: ${error}`);
             });
     };
 
@@ -83,9 +83,14 @@ export class MyDemandComponent implements OnInit {
         });
     };
 
+<<<<<<< HEAD
     open(demandId) {
         console.log("Event to publish" + demandId);
         this.dataExchange.Publish("OnDemandUpdate", demandId);
+=======
+    open(demandId) {   
+         this.dataExchange.Publish("OnDemandUpdate", demandId);
+>>>>>>> ec0391781432d11b378fc3419888d710fd2349e2
     };
 
     getDemandRemarks(demandId): void {

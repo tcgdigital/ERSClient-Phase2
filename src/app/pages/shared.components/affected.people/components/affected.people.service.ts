@@ -1,49 +1,44 @@
-import { Injectable, Output, EventEmitter } from '@angular/core';
-import { Headers } from '@angular/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
-import { InvolvePartyModel } from '../../../shared.components';
-import { AffectedModel } from '../../affected';
+import { InvolvePartyModel, AffectedModel } from '../../../shared.components';
 import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';
+import { IAffectedPeopleService } from './IAffectedPeopleService';
 import {
-    ResponseModel, DataService,
+    ResponseModel, DataService, ServiceBase,
     DataServiceFactory, DataProcessingService,
     IServiceInretface, UtilityService
 } from '../../../../shared';
 
 @Injectable()
-export class AffectedPeopleService {
-    private _dataService: DataService<InvolvePartyModel>;
+export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
+    implements IAffectedPeopleService {
+
     private _dataServiceAffectedPeople: DataService<AffectedPeopleModel>;
     private _bulkDataService: DataService<AffectedPeopleModel>;
+
+    /**
+     * Creates an instance of AffectedPeopleService.
+     * @param {DataServiceFactory} dataServiceFactory 
+     * 
+     * @memberOf AffectedPeopleService
+     */
     constructor(private dataServiceFactory: DataServiceFactory) {
+        super(dataServiceFactory, 'AffectedPeople');
         let option: DataProcessingService = new DataProcessingService();
-        this._dataService = this.dataServiceFactory
-            .CreateServiceWithOptions<InvolvePartyModel>('InvolvedParties', option);
-        this._dataServiceAffectedPeople = this.dataServiceFactory
-            .CreateServiceWithOptions<AffectedPeopleModel>('AffectedPeople', option);
+
         this._bulkDataService = this.dataServiceFactory
             .CreateServiceWithOptions<AffectedPeopleModel>('AffectedPersonBatch', option);
     }
 
-    GetAll(): Observable<ResponseModel<InvolvePartyModel>> {
-        return this._dataService.Query()
-            .Expand('Affecteds($expand=AffectedPeople($expand=Passenger))')
-            .Execute();
-    }
-    GetFilterByIncidentId(IncidentId): Observable<ResponseModel<InvolvePartyModel>> {
-        return this._dataService.Query()
-            .Filter(`IncidentId eq  ${IncidentId}`)
-            .Expand('Affecteds($expand=AffectedPeople($expand=Passenger,Crew))')
-            .Execute();
-    }
-
-    FlattenAffectedPeople(involvedParty: InvolvePartyModel): any {
+    public FlattenAffectedPeople(involvedParty: InvolvePartyModel): any {
         let affectedPeopleForView: AffectedPeopleToView[];
         let affectedPeople: AffectedPeopleModel[];
         let affected: AffectedModel;
+
         affected = UtilityService.pluck(involvedParty, ['Affecteds'])[0][0];
         affectedPeople = UtilityService.pluck(affected, ['AffectedPeople'])[0];
+
         affectedPeopleForView = affectedPeople.map(function (dataItem) {
             let item = new AffectedPeopleToView();
             item.AffectedId = dataItem.AffectedId;
@@ -69,40 +64,30 @@ export class AffectedPeopleService {
 
     }
 
-    Get(id: string | number): Observable<InvolvePartyModel> {
-        return this._dataService.Get(id.toString()).Execute();
-    }
-
-    Create(entity: InvolvePartyModel): Observable<InvolvePartyModel> {
-        return this._dataService.Post(entity).Execute();
-    }
-
-    CreateBulk(entities: AffectedPeopleModel[]): Observable<AffectedPeopleModel[]> {
+    public CreateBulk(entities: AffectedPeopleModel[]): Observable<AffectedPeopleModel[]> {
         return this._bulkDataService.BulkPost(entities).Execute();
     }
 
-    Update(entity: AffectedPeopleModel, key): Observable<AffectedPeopleModel> {
-        return this._dataServiceAffectedPeople.Patch(entity, key)
+    public GetAffectedPeopleCount(incidentId: number): Observable<number> {
+        return this._dataService.Count()
+            .Filter(`IsCrew eq false and Affected/InvolvedParty/IncidentId eq ${incidentId}`)
             .Execute();
     }
 
-    Delete(entity: InvolvePartyModel): void {
+    public GetAffectedCrewCount(incidentId: number): Observable<number> {
+        return this._dataService.Count()
+            .Filter(`IsCrew eq true and Affected/InvolvedParty/IncidentId eq ${incidentId}`)
+            .Execute();
     }
 
-    MapAffectedPeople(affectedPeopleForVerification) {
+    public MapAffectedPeople(affectedPeopleForVerification): AffectedPeopleModel[] {
         let verifiedAffectedPeople: AffectedPeopleModel[];
         verifiedAffectedPeople = affectedPeopleForVerification.map(function (affected) {
-            let item = new AffectedPeopleModel;
+            let item = new AffectedPeopleModel();
             item.AffectedPersonId = affected.AffectedPersonId;
             item.IsVerified = affected.IsVerified;
-            item.UpdatedBy = 1;
-            item.UpdatedOn = new Date();
-            item.ActiveFlag = 'Active';
-            item.CreatedBy = 1;
-            item.CreatedOn = new Date();
             return item;
         });
         return verifiedAffectedPeople;
-
     }
 }

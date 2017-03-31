@@ -1,7 +1,50 @@
 import { IMenuItem } from '../shared/components/sidemenu';
 
 export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
-    // export const PAGES_MENU = [
+    {
+        path: 'pages',
+        children: [
+            {
+                path: 'dashboard',
+                data: {
+                    menu: {
+                        title: 'Dashboard',
+                        icon: 'fa fa-home fa-lg',
+                        selected: true,
+                        expanded: false,
+                        order: 0
+                    }
+                }
+            },
+            {
+                path: 'masterdata',
+                data: {
+                    menu: {
+                        title: 'Master Data',
+                        icon: 'fa fa-database fa-lg',
+                        selected: false,
+                        expanded: false,
+                        order: 0
+                    }
+                }
+            },
+            {
+                path: 'incident',
+                data: {
+                    menu: {
+                        title: 'Incident',
+                        icon: 'fa fa-bell fa-lg',
+                        selected: false,
+                        expanded: false,
+                    }
+                }
+            }
+        ]
+    }
+];
+
+
+/*export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
     {
         path: 'pages',
         children: [
@@ -247,4 +290,4 @@ export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
             }
         ]
     }
-];
+];*/

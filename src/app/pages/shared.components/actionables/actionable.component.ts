@@ -28,7 +28,6 @@ export class ActionableComponent implements OnInit, OnDestroy {
     }
 
     OpenActionable(event: any): void {
-        console.log(event.checked);
         if (event.checked) {
             this.showActive = true;
             this.showClose = false;

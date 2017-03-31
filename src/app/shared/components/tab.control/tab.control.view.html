@@ -1,0 +1,28 @@
+<div class="tab-link" (mouseenter)="onContainerMouseEnter($event)" (mouseleave)="onContainerMouseLeave($event)">
+    <ul class="tab-column">
+        <ng-container *ngFor="let tabLink of tabLinks; let i = index;">
+            <li [ngClass]="(tabLink.selected)? 'tab-item selected': 'tab-item'" (click)="onTabItemClick($event, i)" (mouseenter)="onTabLinkMouseEnter($event, i)"
+                (mouseleave)="onTabLinkMouseLeave($event, i)">
+                <a [routerLink]="tabLink.url" (click)="onTabLinkClick($event, i)">
+                    <i class="{{ tabLink.icon }}" aria-hidden="true"></i>
+                    <span>{{ tabLink.title }}</span>
+                </a>
+            </li>
+        </ng-container>
+        <li class="slider"></li>
+    </ul>
+</div>
+<div class="tab-nav">
+    <ul class="cd-table-navigation">
+        <li>
+            <a href="javascript:void(0);" class="prev" (click)="gotoPrevious($event)">
+                <i class="fa fa-angle-left fa-3x" aria-hidden="true"></i>
+            </a>
+        </li>
+        <li>
+            <a href="javascript:void(0);" class="next" (click)="gotoNext($event)">
+                <i class="fa fa-angle-right fa-3x" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>

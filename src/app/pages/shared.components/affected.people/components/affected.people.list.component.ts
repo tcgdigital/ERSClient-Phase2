@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 
 import { InvolvePartyModel } from '../../../shared.components';
+import { InvolvePartyService } from '../../involveparties';
 import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';
 import { AffectedPeopleService } from './affected.people.service';
 import { ResponseModel, DataExchangeService, GlobalConstants } from '../../../../shared';
@@ -11,7 +12,8 @@ import { ResponseModel, DataExchangeService, GlobalConstants } from '../../../..
     templateUrl: '../views/affected.people.list.view.html'
 })
 export class AffectedPeopleListComponent implements OnInit {
-    constructor(private affectedPeopleService: AffectedPeopleService) { }
+    constructor(private affectedPeopleService: AffectedPeopleService,
+    private involvedPartyService : InvolvePartyService) { }
     affectedPeople: AffectedPeopleToView[];
     currentIncident: number = 88;
     medicalStatus: any[] = GlobalConstants.MedicalStatus;
@@ -46,7 +48,7 @@ export class AffectedPeopleListComponent implements OnInit {
     };
 
     getAffectedPeople(currentIncident) {
-        this.affectedPeopleService.GetFilterByIncidentId(currentIncident)
+        this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
 
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
@@ -57,13 +59,11 @@ export class AffectedPeopleListComponent implements OnInit {
                     });
                 console.log("affected:  " + this.affectedPeople);
             }, (error: any) => {
-                console.log("error:  " + error);
+                console.log(`Error: ${error}`);
             });
     };
 
     ngOnInit(): any {
         this.getAffectedPeople(this.currentIncident);
-
     }
-
 }

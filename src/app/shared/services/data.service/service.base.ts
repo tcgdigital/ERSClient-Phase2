@@ -39,13 +39,13 @@ export abstract class ServiceBase<T extends BaseModel> implements IServiceInretf
         return this._dataService.BulkPost(entities).Execute();
     }
 
-    public Update(entity: T): Observable<T> {
-        let key: string = entity[Object.keys(entity)[0]].toString();
-        return this._dataService.Patch(entity, key).Execute();
+    public Update(entity: T, key?: number): Observable<T> {
+        key = (key) ? key : entity[Object.keys(entity)[0]].toString();
+        return this._dataService.Patch(entity, key.toString()).Execute();
     }
 
-    public Delete(entity: T): void {
-        let key: string = entity[Object.keys(entity)[0]].toString();
-        this._dataService.Delete(key).Execute();
+    public Delete(entity: T, key?: number): void {
+        key = (key) ? key : entity[Object.keys(entity)[0]].toString();
+        this._dataService.Delete(key.toString()).Execute();
     }
 }

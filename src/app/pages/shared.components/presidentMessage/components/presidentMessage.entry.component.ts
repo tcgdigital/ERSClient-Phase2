@@ -83,8 +83,6 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
             (this.PresidentsMessage, this.form, x => x.Message, x => x.Remarks);
             
         if (this.PresidentsMessage.PresidentsMessageId == 0) {
-            //this.PresidentsMessage.PresidentsMessageId = this.form.controls["PresidentsMessageId"].value;
-            console.log(this.PresidentsMessage);
             this.presidentMessageService.Create(this.PresidentsMessage)
                 .subscribe((response: PresidentMessageModel) => {
                     this.dataExchange.Publish("PresidentMessageModelSaved", response);

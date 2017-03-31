@@ -40,7 +40,6 @@ export class DataProcessingService {
             uri = `${this.BaseUri}`;
         else {
             if (entityKey !== '') {
-                // console.log(entityKey);
                 if (/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(entityKey))
                     uri = `${this.BaseUri}/${typeName}('${entityKey}')`;
                 else if (!/^[0-9]*$/.test(entityKey))
@@ -120,8 +119,11 @@ export class DataProcessingService {
         if (response.status < 200 || response.status >= 300) {
             throw new Error(`Bad response status: ${response.status}`);
         }
+        let responseData = JSON.parse(response.text());
+        let responseBody: number = +responseData['@odata.count'];
 
-        let responseBody: number = +response;
+        // console.log(response);
+        // let responseBody: number = +response;
         return responseBody;
     }
 
@@ -233,7 +235,6 @@ export class DataProcessingService {
                         (jsonEndingPosition - jsonStartingPosition) + 1);
 
                     let item = JSON.parse(responseJson);
-                    console.log(item);
                     dataItems.push(item);
                 }
             });

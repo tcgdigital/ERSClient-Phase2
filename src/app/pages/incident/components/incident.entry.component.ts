@@ -13,7 +13,7 @@ import {
     InvolvedPartyType,
     UtilityService
 } from '../../../shared';
-import {  FlightModel,InvolvePartyModel } from '../../shared.components';
+import { FlightModel, InvolvePartyModel } from '../../shared.components';
 import { IncidentDataExchangeModel } from './incidentDataExchange.model';
 
 @Component({
@@ -27,7 +27,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     isFlightRelated: boolean = false;
     buttonValue: String = '';
     incidentModel: IncidentModel = null;
-    involvedPartyModel: InvolvePartyModel = null;
+    involvePartyModel: InvolvePartyModel = null;
     incidentDataExchangeModel: IncidentDataExchangeModel = null;
     flightModel: FlightModel = null;
     date: Date = new Date();
@@ -59,18 +59,14 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.emergencyTypeService.GetAll()
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                 this.activeEmergencyTypes = response.Records;
-                console.log(this.activeEmergencyTypes);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
     }
 
     emergencyTypeChange(emergencyTypeId: string, emergencyTypes: EmergencyTypeModel[]): void {
-        console.log(emergencyTypeId);
-
         let emergencyType: EmergencyTypeModel = emergencyTypes
             .find((x: EmergencyTypeModel) => x.EmergencyTypeId === +emergencyTypeId);
-        console.log(emergencyType);
         this.isFlightRelated = false;
         if (emergencyType !== undefined && emergencyType.EmergencyCategory === 'FlightRelated') {
             this.isFlightRelated = true;
@@ -83,11 +79,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): any {
-        console.log('Hello ' + this.DepartmentId);
-        // this.showAdd = true;
         this.initiateIncidentModel();
-        console.log(this.severities);
-        console.log(this.incidentStatuses);
         this.getAllActiveEmergencyTypes();
         this.resetIncidentForm();
         this.dataExchangeDecision.Subscribe('incidentViewPreCheck', model => this.onIncidentViewPreCheck(model));
@@ -104,7 +96,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     resetIncidentForm(): void {
-        console.log(this.activeEmergencyTypes);
         this.form = new FormGroup({
             IncidentId: new FormControl(0),
             IsDrill: new FormControl(false),
@@ -130,16 +121,12 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     onSubmit(values: Object): void {
         if (this.form.controls['EmergencyTypeId'].value !== '0' && this.form.controls['Severity'].value !== '0') {
             this.createIncidentModel();
-            console.log(this.incidentModel);
             if (this.isFlightRelated) {
-                this.createInvolvedPartyModel(this.isFlightRelated);
-                console.log(this.involvedPartyModel);
+                this.createInvolvePartyModel(this.isFlightRelated);
                 this.createFlightModel();
-                console.log(this.flightModel);
             }
-            console.log('filling the incident and involved party and flight records.....');
             this.showInsert = false;
-            this.fillIncidentDataExchangeModelData(this.incidentModel, this.involvedPartyModel, this.flightModel);
+            this.fillIncidentDataExchangeModelData(this.incidentModel, this.involvePartyModel, this.flightModel);
         }
         else {
             if (this.form.controls['EmergencyTypeId'].value === '0') {
@@ -168,21 +155,21 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.dataExchange.Publish('incidentCreatedPreCheck', this.incidentDataExchangeModel);
     }
 
-    createInvolvedPartyModel(isFlightRelated: boolean): void {
-        this.involvedPartyModel = new InvolvePartyModel();
-        this.involvedPartyModel.InvolvedPartyId = 0;
-        this.involvedPartyModel.IncidentId = 0;
+    createInvolvePartyModel(isFlightRelated: boolean): void {
+        this.involvePartyModel = new InvolvePartyModel();
+        this.involvePartyModel.InvolvedPartyId = 0;
+        this.involvePartyModel.IncidentId = 0;
         if (isFlightRelated) {
-            this.involvedPartyModel.InvolvedPartyDesc = 'FlightRelated';
-            this.involvedPartyModel.InvolvedPartyType = UtilityService.GetKeyValues(InvolvedPartyType)[0].Key;
+            this.involvePartyModel.InvolvedPartyDesc = 'FlightRelated';
+            this.involvePartyModel.InvolvedPartyType = UtilityService.GetKeyValues(InvolvedPartyType)[0].Key;
         }
         else {
-            this.involvedPartyModel.InvolvedPartyDesc = 'NonFlightRelated';
-            this.involvedPartyModel.InvolvedPartyType = UtilityService.GetKeyValues(InvolvedPartyType)[1].Key;
+            this.involvePartyModel.InvolvedPartyDesc = 'NonFlightRelated';
+            this.involvePartyModel.InvolvedPartyType = UtilityService.GetKeyValues(InvolvedPartyType)[1].Key;
         }
-        this.involvedPartyModel.ActiveFlag = 'Active';
-        this.involvedPartyModel.CreatedBy = 1;
-        this.involvedPartyModel.CreatedOn = this.date;
+        this.involvePartyModel.ActiveFlag = 'Active';
+        this.involvePartyModel.CreatedBy = 1;
+        this.involvePartyModel.CreatedOn = this.date;
     }
 
     createFlightModel(): void {

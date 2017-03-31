@@ -11,7 +11,7 @@ import { DepartmentService, DepartmentModel } from '../../../masterdata/departme
 import { PageService, PageModel } from '../../../masterdata/department.functionality';
 import {
     AffectedObjectsService, AffectedObjectsToView, AffectedPeopleService,
-    AffectedPeopleToView, InvolvePartyModel, CommunicationLogModel
+    AffectedPeopleToView, InvolvePartyModel, CommunicationLogModel,InvolvePartyService
 
 } from '../../../shared.components';
 
@@ -57,6 +57,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     constructor(private demandService: DemandService, private demandTypeService: DemandTypeService,
         private departmentService: DepartmentService, private pageService: PageService,
         private demandTrailService: DemandTrailService, private callerService: CallerService,
+     private involvedPartyService : InvolvePartyService,
         private affectedObjectsService: AffectedObjectsService, private affectedPeopleService: AffectedPeopleService,
         private dataExchange: DataExchangeService<number>) {
         this.showAdd = false;
@@ -84,7 +85,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 pagePermissions.forEach(x => {
                     this.departments.push(UtilityService.pluck(x, ['Department'])[0]);
                 });
-                console.log(this.departments);
                 this.demandModel.TargetDepartmentId = (this.demandModel.TargetDepartmentId == 0)
                     ? this.departments[0].DepartmentId
                     : this.demandModel.TargetDepartmentId;
@@ -188,15 +188,11 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
 
     getPassengersCrews(currentIncident) {
-        this.affectedPeopleService.GetFilterByIncidentId(currentIncident)
+        this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
-                // this.affectedPeople.forEach(x => {
-                //     this.pdas.push(new KeyValue((x.PassengerName || x.CrewName), x.AffectedPersonId));
-                // });
-                console.log(this.pdas);
             }, (error: any) => {
-                console.log("error:  " + error);
+                console.log(`Error: ${error}`);
             });
     };
 
@@ -204,14 +200,9 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.affectedObjectsService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedObjects = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
-                // this.affectedObjects.forEach(x => {
-                //     this.awbs.push(new KeyValue(x.AWB, x.AffectedObjectId));
-                // });
-                console.log(this.pdas);
             }, (error: any) => {
-                console.log("error:  " + error);
+                console.log(`Error: ${error}`);
             });
-
     };
 
     ChangeAffectedPeople() {
@@ -225,10 +216,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             this.form.controls["AffectedObjectId"].reset({ value: 0, disabled: false });
             this.form.controls["PDATicketNumber"].reset({ value: "", disabled: true });
         }
-
-
-
-        console.log(this.demandModel.PDATicketNumber);
     };
 
     ChangeAffectedObjects() {
@@ -274,7 +261,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     };
 
     setModelForUpdate(id) {
-        console.log("event demand update");
         this.demandService.Get(id).subscribe((response: DemandModel) => {
             this.demandModel = response;
             this.setModelFormGroup(response, x => x.DemandId, x => x.DemandTypeId, x => x.Priority, x => x.DemandDesc
@@ -289,9 +275,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             this.form.controls["DemandTypeId"].reset({ value: this.demandModel.DemandTypeId, disabled: true });
 
         }, (error: any) => {
-            console.log("error:  " + error);
+            console.log(`Error: ${error}`);
         });
-
     };
 
     ngOnInit(): any {
@@ -438,9 +423,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                     this.showAdd = false;
                     this.buttonValue = "Create Demand";
                 }, (error: any) => {
-                    console.log(error);
+                    console.log(`Error: ${error}`);
                 });
-
         }
         else {
 
@@ -483,13 +467,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             //     }, (error: any) => {
             //         console.log(error);
             //     });
-
-
-
-
         }
-
-
     };
 
     ngOnDestroy(): void {

@@ -1,5 +1,5 @@
 import { Http, Headers, RequestOptions } from '@angular/http';
-import { Observable } from 'rxjs/rx';
+import { Observable } from 'rxjs/Rx';
 
 import { BaseModel, WEB_METHOD, RequestModel, ResponseModel } from '../../../models';
 import { UtilityService } from '../../../services';
@@ -97,7 +97,6 @@ export class SimplePostOperation<T extends any> extends DataOperation<any> {
         let requestOps: RequestOptions = this.DataProcessingService
             .SetRequestOptions(WEB_METHOD.SIMPLEPOST, this.RequestHeaders);
 
-        console.log(body);
         return super.HandleResponse(this.HttpService.post(uri, body, requestOps));
     }
 }
@@ -140,7 +139,6 @@ export class BulkPostOperation<T extends BaseModel> extends DataOperation<BaseMo
         let uri: string = this.dataProcessingService
             .GetUri(this.TypeName, this.Key, this.ActionSuffix);
 
-        console.log(uri);
         let requestOps: RequestOptions = this.DataProcessingService
             .SetRequestOptions(WEB_METHOD.POST, this.RequestHeaders);
 

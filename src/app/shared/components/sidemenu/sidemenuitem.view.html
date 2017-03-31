@@ -1,0 +1,8 @@
+<li [title]="menuItem.title" [ngClass]="{'active': menuItem.selected}" (click)="onToggleMenu($event, menuItem)" (mouseenter)="onHoverItem($event)">
+	<a [routerLink]="menuItem.route.paths">
+		<span class="menu-icon">
+      <i *ngIf="menuItem.icon" class="{{ menuItem.icon }}" aria-hidden="true"></i>
+    </span>
+		<span class="menu-text">{{ menuItem.title }}</span>
+	</a>
+</li>

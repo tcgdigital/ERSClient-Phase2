@@ -20,7 +20,7 @@ export class MediaQueryListComponent implements OnInit {
             .subscribe((response: ResponseModel<EnquiryModel>) => {
                 this.mediaQueries = this.enquiryService.MapQuery(response.Records);
             }, (error: any) => {
-                console.log("error:  " + error);
+                console.log(`Error: ${error}`);
             });
     };
 

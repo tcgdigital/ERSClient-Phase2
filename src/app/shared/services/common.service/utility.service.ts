@@ -18,9 +18,9 @@ export class UtilityService {
         });
         return keyValues;
     }
-      public static pluck<T, K extends keyof T>(o: T, names: K[]): T[K][] {
-       return names.map(n => o[n]);
-     } 
+    public static pluck<T, K extends keyof T>(o: T, names: K[]): T[K][] {
+        return names.map(n => o[n]);
+    }
 
     /**
      * Convert string into simple comma seperated string
@@ -136,7 +136,6 @@ export class UtilityService {
     public static getParamNames(func: Function): string[] {
         if (!func[UtilityService.CACHE_PROPERTY]) {
             var fnStr = func.toString().replace(UtilityService.STRIP_COMMENTS, '');
-            console.log(fnStr);
             func[UtilityService.CACHE_PROPERTY] = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')'))
                 .match(UtilityService.ARGUMENT_NAMES) || [];
         }
@@ -153,9 +152,7 @@ export class UtilityService {
         func[UtilityService.CACHE_PROPERTY] = props
             .filter((x: string) => pattern.test(x))
             .map((x: string) => {
-                // let prop = x.match(/\.(.*?)\;/gi);
                 let prop = /\.(.*?)\;/gi.exec(x);
-                // console.log(test);
                 return prop[1];
             });
 
@@ -183,6 +180,7 @@ export class UtilityService {
      * @memberOf UtilityService
      */
     public static dispatch(func: Function, factory: { (name: string): any });
+
     public static dispatch(func: Function, factory: any) {
         var params = [];
 
@@ -218,6 +216,22 @@ export class UtilityService {
             return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ',' + alpha + ')';
         }
         throw new Error('Bad Hex');
+    }
+
+    public static textToDate(dateString: string): Date {
+        // let dateString = "2010-08-09 01:02:03";
+        var reggie: RegExp = new RegExp('(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})');
+        var dateArray: RegExpExecArray = reggie.exec(dateString);
+        var dateObject = new Date(
+            (+dateArray[1]),
+            (+dateArray[2]) - 1, // Careful, month starts at 0!
+            (+dateArray[3]),
+            (+dateArray[4]),
+            (+dateArray[5]),
+            (+dateArray[6])
+        );
+
+        return dateObject;
     }
 
     private static pad4(num: number): string {
