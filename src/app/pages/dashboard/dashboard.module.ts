@@ -9,6 +9,7 @@ import { DashboardRouting } from './dashboard.routing';
 import { DashboardComponent } from './dashboard.component';
 import { WidgetModule } from '../widgets';
 
+
 @NgModule({
     imports: [
         CommonModule,

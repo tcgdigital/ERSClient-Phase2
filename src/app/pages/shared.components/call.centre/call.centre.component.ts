@@ -7,9 +7,11 @@ import {
     GlobalConstants, UtilityService
 } from '../../../shared';
 import { EnquiryModel, EnquiryService} from './components';
-import {CallerModel, CommunicationLogModel, InvolvePartyModel,
+import { CommunicationLogModel, InvolvePartyModel,
 AffectedPeopleService, AffectedPeopleToView ,
-AffectedObjectsService, AffectedObjectsToView,DemandModel, DemandService } from '../../shared.components';
+AffectedObjectsService, AffectedObjectsToView,DemandModel  } from '../../shared.components';
+import { DemandService  } from '../demand';
+import { CallerModel } from '../caller';
 import { DepartmentService, DepartmentModel } from '../../masterdata/department';
 import { InvolvePartyService } from '../involveparties';
 

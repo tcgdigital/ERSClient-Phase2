@@ -8,11 +8,12 @@ import { DemandeRouting } from './demand.routing';
 import { DemandComponent } from './demand.component';
 import {
     DemandService, ApprovedDemandComponent, AssignedDemandComponent,
-    CompletedDemandComponent, MyDemandComponent, DemandEntryComponent
+    CompletedDemandComponent, MyDemandComponent, DemandEntryComponent, DemandRemarkLogService ,DemandTrailService
 } from './components';
-import {AffectedObjectsService } from '../affected.objects';
-import {AffectedPeopleService } from '../affected.people';
+import {  AffectedPeopleService, AffectedObjectsService } from '../../shared.components';
+import { CallerService } from '../caller';
 import { DemandTypeService } from '../../masterdata/demandtype';
+import { InvolvePartyService } from '../involveparties';
 import { DepartmentService } from '../../masterdata/department';
 import { PageService } from '../../masterdata/department.functionality';
 
@@ -30,6 +31,7 @@ import { DataExchangeService, SharedModule } from '../../../shared';
         SharedModule,
         MdCheckboxModule,
         DemandeRouting
+        
     ],
     declarations: [
         DemandComponent,
@@ -45,7 +47,12 @@ import { DataExchangeService, SharedModule } from '../../../shared';
         DepartmentService,
         AffectedObjectsService,
         AffectedPeopleService,
-        PageService
+        PageService,
+        DemandRemarkLogService,
+        CallerService,
+        DemandTrailService,
+        InvolvePartyService
+        
     ]
 })
 export class DemandModule { }
