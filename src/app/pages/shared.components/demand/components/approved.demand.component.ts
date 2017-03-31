@@ -84,7 +84,6 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
     getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
-                debugger;
                 this.demandRemarks = response.Records;
             }, (error: any) => {
                 console.log("error:  " + error);
