@@ -19,7 +19,7 @@ export class AffectedPeopleVerificationComponent implements OnInit {
     date: Date = new Date();
     currentIncident: number = 88;
 
-    getAffectedPeople(currentIncident) {
+    getAffectedPeople(currentIncident) : void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeopleForVerification = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
@@ -29,7 +29,7 @@ export class AffectedPeopleVerificationComponent implements OnInit {
     }
 
 
-    save() {
+    saveVerifiedAffectedPeople() : void {
         let datenow = this.date;
         this.verifiedAffectedPeople = this.affectedPeopleService.MapAffectedPeople(this.affectedPeopleForVerification);
         this.affectedPeopleService.CreateBulk(this.verifiedAffectedPeople)

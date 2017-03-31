@@ -59,7 +59,7 @@
     <ul class="list-group">
         <li class="list-group-item"><strong><i>Action:</i></strong></li>
         <li>
-            <i class="fa fa-edit" (click)="open(affectedperson)"></i>
+            <i class="fa fa-edit" (click)="openAffectedPersonDetail(affectedperson)"></i>
         </li>
     </ul>
 </div>
@@ -94,8 +94,8 @@
         <li class="list-group-item"><strong><i>Remarks:</i></strong></li>
         <li><input value="{{affectedperson.Remarks}}"  [(ngModel)]="affectedperson.Remarks" type="text"/> </li>
     </ul>
-     <button class="btn btn-primary" type="button" (click)="ok(affectedperson)">Ok</button>
-      <button class="btn btn-primary" type="button" (click)="cancel(affectedperson)">Cancel</button>
+     <button class="btn btn-primary" type="button" (click)="saveUpdateAffectedPerson(affectedperson)">Ok</button>
+      <button class="btn btn-primary" type="button" (click)="cancelUpdate(affectedperson)">Cancel</button>
 
 </div>
 </div>

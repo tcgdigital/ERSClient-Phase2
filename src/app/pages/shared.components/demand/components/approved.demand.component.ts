@@ -80,23 +80,22 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
     getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
-                debugger;
                 this.demandRemarks = response.Records;
             }, (error: any) => {
                 console.log("error:  " + error);
             });
     };
 
-    openDemandRemarks(demand) {
+    openDemandRemarks(demand) : void {
         this.getDemandRemarks(demand.DemandId);
         demand["showRemarks"] = true;
     };
 
-    cancel(demand) {
+    cancelRemarkUpdate(demand) : void {
         demand["showRemarks"] = false;
     };
 
-    ok(remarks, demand) {
+    saveRemark(remarks, demand) : void {
         this.RemarkToCreate = new DemandRemarkLogModel();
         this.RemarkToCreate.Remark = remarks;
         this.RemarkToCreate.DemandId = demand.DemandId;
@@ -114,7 +113,7 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
             });
     };
 
-    isApprovedOrRejected(item: DemandModelToView) {
+    isApprovedOrRejected(item: DemandModelToView) : any {
         return (item.IsApproved == true || item.IsRejected == true);
 
     };
@@ -148,7 +147,7 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
         return this.communicationLogs;
     };
 
-    submit() {
+    submit() : void {
         if (this.demandsForApproval.length > 0) {
             let demandCompletion: DemandModel[] = this.demandsForApproval.filter(this.isApprovedOrRejected).map(x => {
                 let item: DemandModel = new DemandModel();
@@ -179,7 +178,7 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
         }
     };
 
-    ngOnInit() {
+    ngOnInit() : any {
 
         this.currentDepartmentId = 1;
         this.currentIncident = 1;
@@ -187,7 +186,7 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
         this.currentDepartmentName = "Command Center";
     };
 
-    ngAfterContentInit() {
+    ngAfterContentInit() : any {
         this.setRagStatus();
     };
 

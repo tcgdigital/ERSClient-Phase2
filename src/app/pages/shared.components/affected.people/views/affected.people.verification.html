@@ -2,7 +2,7 @@
     <h3>Passenger Directly Affected</h3>
     <a [routerLink]="['../']">Back to affected People</a>
 
-    <button class="btn btn-primary" type="button" (click)="save()">Verify</button>
+    <button class="btn btn-primary" type="button" (click)="saveVerifiedAffectedPeople()">Verify</button>
     <div class="row" *ngFor="let affectedperson of affectedPeopleForVerification"> 
         <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
             <ul class="list-group">

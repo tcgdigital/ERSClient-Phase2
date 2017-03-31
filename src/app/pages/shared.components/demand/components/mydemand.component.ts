@@ -83,34 +83,29 @@ export class MyDemandComponent implements OnInit {
         });
     };
 
-<<<<<<< HEAD
-    open(demandId) {
-        console.log("Event to publish" + demandId);
-        this.dataExchange.Publish("OnDemandUpdate", demandId);
-=======
-    open(demandId) {   
+    open(demandId) : void {   
          this.dataExchange.Publish("OnDemandUpdate", demandId);
->>>>>>> ec0391781432d11b378fc3419888d710fd2349e2
     };
 
     getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
-                debugger;
                 this.demandRemarks = response.Records;
             }, (error: any) => {
                 console.log("error:  " + error);
             });
-    }
+    };
 
-    openDemandRemarks(demand) {
+    openDemandRemarks(demand) : void {
         this.getDemandRemarks(demand.DemandId);
         demand["showRemarks"] = true;
-    }
-    cancel(demand) {
+    };
+
+    cancelRemarkUpdate(demand) : void {
         demand["showRemarks"] = false;
-    }
-    ok(remarks, demand) {
+    };
+
+    saveRemark(remarks, demand) : void {
         this.RemarkToCreate = new DemandRemarkLogModel();
         this.RemarkToCreate.Remark = remarks;
         this.RemarkToCreate.DemandId = demand.DemandId;
@@ -126,8 +121,9 @@ export class MyDemandComponent implements OnInit {
                 console.log("error:  " + error);
                 alert("Error occured during saving the remark");
             });
-    }
-    ngOnInit() {
+    };
+
+    ngOnInit() : any {
 
         this.currentDepartment = 4;
         this.currentIncident = 1;
@@ -136,7 +132,7 @@ export class MyDemandComponent implements OnInit {
 
     };
 
-    ngAfterContentInit() {
+    ngAfterContentInit() : any {
         this.setRagStatus();
     };
 

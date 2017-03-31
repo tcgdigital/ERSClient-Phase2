@@ -42,23 +42,22 @@ export class CompletedDemandComponent implements OnInit {
     getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
-                debugger;
                 this.demandRemarks = response.Records;
             }, (error: any) => {
                 console.log("error:  " + error);
             });
     };
 
-    openDemandRemarks(demand) {
+    openDemandRemarks(demand) : void {
         this.getDemandRemarks(demand.DemandId);
         demand["showRemarks"] = true;
     };
 
-    cancel(demand) {
+    cancelRemarkUpdate(demand) : void {
         demand["showRemarks"] = false;
     };
 
-    ok(remarks, demand) {
+    saveRemark(remarks, demand) : void {
         this.RemarkToCreate = new DemandRemarkLogModel();
         this.RemarkToCreate.Remark = remarks;
         this.RemarkToCreate.DemandId = demand.DemandId;
@@ -76,7 +75,7 @@ export class CompletedDemandComponent implements OnInit {
             });
     };
 
-    isClosedOrRejected(item: DemandModelToView) {
+    isClosedOrRejected(item: DemandModelToView) : any {
         return (item.IsClosed == true || item.IsRejected == true);
 
     };
@@ -110,7 +109,7 @@ export class CompletedDemandComponent implements OnInit {
         return this.communicationLogs;
     };
 
-    submit() {
+    submit() : void {
         if (this.completedDemands.length > 0) {
             let demandCompletion: DemandModel[] = this.completedDemands.filter(this.isClosedOrRejected).map(x => {
                 let item: DemandModel = new DemandModel();
@@ -147,7 +146,7 @@ export class CompletedDemandComponent implements OnInit {
 
     };
 
-    ngOnInit() {
+    ngOnInit() : any {
         this.currentDepartmentId = 1;
         this.currentDepartmentName = "Command Center";
         this.currentIncident = 88;

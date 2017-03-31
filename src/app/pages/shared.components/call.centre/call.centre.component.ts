@@ -68,13 +68,15 @@ export class EnquiryComponent implements OnInit {
         delete this.communicationLog.AffectedPersonId;
     };
    
-    iscrew(item: AffectedPeopleToView) {
+    iscrew(item: AffectedPeopleToView) : any  {
         return item.IsCrew === true;
     };
-    ispassenger(item: AffectedPeopleToView) {
+
+    ispassenger(item: AffectedPeopleToView) : any {
         return item.IsCrew === false;
     };
-    getPassengersCrews(currentIncident) {
+
+    getPassengersCrews(currentIncident) : void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
@@ -90,7 +92,8 @@ export class EnquiryComponent implements OnInit {
                 console.log(`Error: ${error}`);
             });
     };
-    getCargo(currentIncident) {
+
+    getCargo(currentIncident) : void {
         this.affectedObjectsService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedObjects = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
@@ -102,7 +105,8 @@ export class EnquiryComponent implements OnInit {
             });
 
     };
-    getDepartments() {
+
+    getDepartments() : void {
         this.departmentService.GetAll()
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
@@ -110,11 +114,12 @@ export class EnquiryComponent implements OnInit {
                 console.log(`Error: ${error}`);
             });
     };
+
     setCallerModel(): CallerModel {
         UtilityService.setModelFromFormGroup<CallerModel>(this.caller, this.form,
             x => x.AlternateContactNumber, x => x.CallerName, x => x.ContactNumber, x => x.Relationship);
         return this.caller;
-    }
+    };
 
     SetCommunicationLog(requestertype, interactionType): CommunicationLogModel[] {
         this.communicationLogs = new Array<CommunicationLogModel>();
@@ -128,8 +133,9 @@ export class EnquiryComponent implements OnInit {
         this.communicationLog.RequesterType = requestertype;
         this.communicationLogs.push(this.communicationLog);
         return this.communicationLogs;
-    }
-    SetDemands(isCallback, isTravelRequest, isAdmin, isCrew) {
+    };
+
+    SetDemands(isCallback, isTravelRequest, isAdmin, isCrew) : void {
         if (isCallback || isCrew || isTravelRequest || isAdmin) {
             this.demand = new DemandModel();
             let type = isCallback ? 'Call Back' : (isTravelRequest ? 'Travel' : (isAdmin ? 'Admin' : 'Crew'));
@@ -182,8 +188,9 @@ export class EnquiryComponent implements OnInit {
             this.demands.push(this.demand);
         }
 
-    }
-    save() {
+    };
+
+    saveEnquiryDemandCaller() : void {
         UtilityService.setModelFromFormGroup<EnquiryModel>(this.enquiry, this.form,
             x => x.EnquiryType, x => x.IsAdminRequest, x => x.IsCallBack, x => x.IsTravelRequest, x => x.Queries);
         this.enquiry.IncidentId = 19;
@@ -235,6 +242,7 @@ export class EnquiryComponent implements OnInit {
             });
 
     };
+    
     ngOnInit(): any {
         this.form = new FormGroup({
             EnquiryId: new FormControl(0),

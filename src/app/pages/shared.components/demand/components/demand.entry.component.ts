@@ -67,7 +67,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.credentialName = "Anwesha Ray";
     }
 
-    getDemandType() {
+    getDemandType() : void {
         this.demandTypeService.GetAll()
             .subscribe((response: ResponseModel<DemandTypeModel>) => {
                 this.demandTypes = response.Records;
@@ -91,7 +91,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             });
     };
 
-    getAllDepartments() {
+    getAllDepartments() : void {
         this.departmentService.GetAll()
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
@@ -187,7 +187,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     };
 
 
-    getPassengersCrews(currentIncident) {
+    getPassengersCrews(currentIncident) : void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
@@ -196,7 +196,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             });
     };
 
-    getCargo(currentIncident) {
+    getCargo(currentIncident) : void {
         this.affectedObjectsService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedObjects = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
@@ -205,7 +205,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             });
     };
 
-    ChangeAffectedPeople() {
+    ChangeAffectedPeople() : void {
 
         if (this.demandModel.AffectedPersonId != 0) {
             this.form.controls["AffectedObjectId"].reset({ value: 0, disabled: true });
@@ -218,7 +218,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         }
     };
 
-    ChangeAffectedObjects() {
+    ChangeAffectedObjects() : void{
         //  this.demandModel.AffectedObjectId = message.Value;
 
         if (this.demandModel.AffectedObjectId != 0) {
@@ -260,7 +260,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         }
     };
 
-    setModelForUpdate(id) {
+    setModelForUpdate(id) : void {
         this.demandService.Get(id).subscribe((response: DemandModel) => {
             this.demandModel = response;
             this.setModelFormGroup(response, x => x.DemandId, x => x.DemandTypeId, x => x.Priority, x => x.DemandDesc
@@ -335,7 +335,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         return this.communicationLogs;
     };
 
-    initializeForm() {
+    initializeForm() : void {
         this.form = new FormGroup({
             DemandId: new FormControl(0),
             DemandTypeId: new FormControl(0),
@@ -354,7 +354,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     };
 
-    formControlDirtyCheck() {
+    formControlDirtyCheck() : void {
         this.demandModelEdit = new DemandModel();
         this.caller = new CallerModel();
         this.demandModelEdit.DemandId = this.form.controls['DemandId'].value;
@@ -386,7 +386,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         }
     }
 
-    onSubmit() {
+    onSubmit() : void {
         if (this.demandModel.DemandId == 0) {
             UtilityService.setModelFromFormGroup<DemandModel>(this.demandModel, this.form, x => x.DemandId, x => x.DemandTypeId, x => x.Priority,
                 x => x.DemandDesc, x => x.RequesterType, x => x.PDATicketNumber, x => x.TargetDepartmentId,

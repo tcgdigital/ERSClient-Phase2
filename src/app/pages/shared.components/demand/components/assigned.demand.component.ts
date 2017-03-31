@@ -80,23 +80,22 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit {
     getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
-                debugger;
                 this.demandRemarks = response.Records;
             }, (error: any) => {
                 console.log("error:  " + error);
             });
     };
 
-    openDemandRemarks(demand) {
+    openDemandRemarks(demand) : void {
         this.getDemandRemarks(demand.DemandId);
         demand["showRemarks"] = true;
     };
 
-    cancel(demand) {
+    cancelRemarkUpdate(demand) : void {
         demand["showRemarks"] = false;
     };
     
-    ok(remarks, demand) {
+    saveRemark(remarks, demand) : void {
         this.RemarkToCreate = new DemandRemarkLogModel();
         this.RemarkToCreate.Remark = remarks;
         this.RemarkToCreate.DemandId = demand.DemandId;
@@ -114,7 +113,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit {
             });
     };
 
-    isCompleted(item: DemandModelToView) {
+    isCompleted(item: DemandModelToView) : any {
         return item.IsCompleted == true;
 
     };
@@ -149,7 +148,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit {
         }
     };
 
-    ngOnInit() {
+    ngOnInit() : any {
         this.currentDepartmentId = 4;
         this.currentDepartmentName = "Command Center";
         this.currentIncident = 1;
@@ -157,7 +156,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit {
 
     };
 
-    ngAfterContentInit() {
+    ngAfterContentInit() : any {
         this.setRagStatus();
     };
 }

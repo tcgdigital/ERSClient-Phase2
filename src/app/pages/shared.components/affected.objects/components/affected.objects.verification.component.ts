@@ -17,7 +17,7 @@ export class AffectedObjectsVerificationComponent implements OnInit {
     date: Date = new Date();
     currentIncident : number =88;
 
-    getAffectedObjects() {
+    getAffectedObjects() : void {
         this.affectedObjectsService.GetFilterByIncidentId(this.currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedObjectsForVerification = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
@@ -27,7 +27,7 @@ export class AffectedObjectsVerificationComponent implements OnInit {
     }
 
 
-    save() {
+    saveVerifiedObjects() : void {
         let datenow = this.date;
         this.verifiedAffectedObjects = this.affectedObjectsService.MapAffectedPeopleToSave(this.affectedObjectsForVerification);
         this.affectedObjectsService.CreateBulkObjects(this.verifiedAffectedObjects)

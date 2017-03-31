@@ -20,11 +20,11 @@ export class AffectedPeopleListComponent implements OnInit {
     affectedPersonToUpdate: AffectedPeopleModel = new AffectedPeopleModel();
     //   medicalStatusForm: string = "";
 
-    open(affectedPerson: AffectedPeopleToView) {
+    openAffectedPersonDetail(affectedPerson: AffectedPeopleToView) : void {
         affectedPerson["showDiv"] = !affectedPerson["showDiv"];
     }
 
-    ok(affectedModifiedForm: AffectedPeopleToView) {
+    saveUpdateAffectedPerson(affectedModifiedForm: AffectedPeopleToView) : void {
 
         this.affectedPersonToUpdate.AffectedPersonId = affectedModifiedForm.AffectedPersonId;
         this.affectedPersonToUpdate.Identification = affectedModifiedForm.Identification;
@@ -41,13 +41,13 @@ export class AffectedPeopleListComponent implements OnInit {
             });
 
     }
-    cancel(affectedModifiedForm: AffectedPeopleToView) {
+    cancelUpdate(affectedModifiedForm: AffectedPeopleToView) : void {
         affectedModifiedForm["showDiv"] = false;
         affectedModifiedForm["MedicalStatusToshow"] = affectedModifiedForm.MedicalStatus;
 
     };
 
-    getAffectedPeople(currentIncident) {
+    getAffectedPeople(currentIncident) : void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
 
