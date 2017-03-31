@@ -9,11 +9,8 @@ export interface IInvolvePartyService extends IServiceInretface<InvolvePartyMode
     GetAllActiveInvolvedParties(): Observable<ResponseModel<InvolvePartyModel>>;
 
     GetIncidentById(id: string | number): Observable<IncidentModel>;
-<<<<<<< HEAD
-=======
 
     GetAllPassengers(): Observable<ResponseModel<InvolvePartyModel>>;
 
     GetFilterByIncidentId(IncidentId): Observable<ResponseModel<InvolvePartyModel>>
->>>>>>> master
 }

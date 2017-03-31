@@ -13,6 +13,7 @@ import {
 import {  AffectedPeopleService, AffectedObjectsService } from '../../shared.components';
 import { CallerService } from '../caller';
 import { DemandTypeService } from '../../masterdata/demandtype';
+import { InvolvePartyService } from '../involveparties';
 import { DepartmentService } from '../../masterdata/department';
 import { PageService } from '../../masterdata/department.functionality';
 
@@ -49,7 +50,8 @@ import { DataExchangeService, SharedModule } from '../../../shared';
         PageService,
         DemandRemarkLogService,
         CallerService,
-        DemandTrailService
+        DemandTrailService,
+        InvolvePartyService
         
     ]
 })

@@ -11,9 +11,10 @@ import { DepartmentService, DepartmentModel } from '../../../masterdata/departme
 import { PageService, PageModel } from '../../../masterdata/department.functionality';
 import {
     AffectedObjectsService, AffectedObjectsToView, AffectedPeopleService,
-    AffectedPeopleToView, InvolvePartyModel, CommunicationLogModel,InvolvePartyService
+    AffectedPeopleToView, InvolvePartyModel, CommunicationLogModel
 
 } from '../../../shared.components';
+import { InvolvePartyService } from '../../involveparties';
 
 import { CallerService, CallerModel } from '../../caller';
 
