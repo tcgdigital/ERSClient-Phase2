@@ -11,7 +11,7 @@ import { DepartmentService, DepartmentModel } from '../../../masterdata/departme
 import { PageService, PageModel } from '../../../masterdata/department.functionality';
 import {
     AffectedObjectsService, AffectedObjectsToView, AffectedPeopleService,
-    AffectedPeopleToView, InvolvePartyModel, CommunicationLogModel
+    AffectedPeopleToView, InvolvePartyModel, CommunicationLogModel,InvolvePartyService
 
 } from '../../../shared.components';
 
@@ -57,6 +57,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     constructor(private demandService: DemandService, private demandTypeService: DemandTypeService,
         private departmentService: DepartmentService, private pageService: PageService,
         private demandTrailService: DemandTrailService, private callerService: CallerService,
+     private involvedPartyService : InvolvePartyService,
         private affectedObjectsService: AffectedObjectsService, private affectedPeopleService: AffectedPeopleService,
         private dataExchange: DataExchangeService<number>) {
         this.showAdd = false;
@@ -84,7 +85,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 pagePermissions.forEach(x => {
                     this.departments.push(UtilityService.pluck(x, ['Department'])[0]);
                 });
-                console.log(this.departments);
                 this.demandModel.TargetDepartmentId = (this.demandModel.TargetDepartmentId == 0)
                     ? this.departments[0].DepartmentId
                     : this.demandModel.TargetDepartmentId;
@@ -188,7 +188,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
 
     getPassengersCrews(currentIncident) {
-        this.affectedPeopleService.GetFilterByIncidentId(currentIncident)
+        this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
             }, (error: any) => {
@@ -480,8 +480,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             //     }, (error: any) => {
             //         console.log(error);
             //     });
-
-
         }
     };
 

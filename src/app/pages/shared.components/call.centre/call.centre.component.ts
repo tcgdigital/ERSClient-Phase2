@@ -13,6 +13,7 @@ AffectedObjectsService, AffectedObjectsToView,DemandModel  } from '../../shared.
 import { DemandService  } from '../demand';
 import { CallerModel } from '../caller';
 import { DepartmentService, DepartmentModel } from '../../masterdata/department';
+import { InvolvePartyService } from '../involveparties';
 
 
 @Component({
@@ -24,6 +25,7 @@ import { DepartmentService, DepartmentModel } from '../../masterdata/department'
 export class EnquiryComponent implements OnInit {
     constructor(private affectedPeopleService: AffectedPeopleService, private affectedObjectsService: AffectedObjectsService,
         private departmentService: DepartmentService, private enquiryService: EnquiryService,
+        private involvedPartyService : InvolvePartyService,
         private demandService: DemandService, private dataExchange: DataExchangeService<string>) { };
     public form: FormGroup;
     enquiryTypes: Object = GlobalConstants.EnquiryType;
@@ -75,7 +77,7 @@ export class EnquiryComponent implements OnInit {
         return item.IsCrew === false;
     };
     getPassengersCrews(currentIncident) {
-        this.affectedPeopleService.GetFilterByIncidentId(currentIncident)
+        this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
                 let passengerModels = this.affectedPeople.filter(this.ispassenger);

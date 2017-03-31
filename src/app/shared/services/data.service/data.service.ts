@@ -5,6 +5,7 @@ import { DataProcessingService } from './data.processing.service';
 import {
     GetOperation,
     QueryOperation,
+    CountOperation,
     PostOperation,
     SimplePostOperation,
     BulkPostOperation,
@@ -50,6 +51,18 @@ export class DataService<T extends BaseModel>{
      */
     public Get(key: string): GetOperation<T> {
         return new GetOperation<T>(this.dataProcessingService, this.httpService, this.typeName, key);
+    }
+
+
+    /**
+     * Get an instance of CountOperation for OData GET Count request
+     * 
+     * @returns {CountOperation<T>} 
+     * 
+     * @memberOf DataService
+     */
+    public Count(): CountOperation<T>{
+        return new CountOperation<T>(this.dataProcessingService, this.httpService, this.typeName);
     }
 
     /**

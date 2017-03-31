@@ -88,9 +88,9 @@ export class MyDemandComponent implements OnInit {
         });
     };
 
-
     open(demandId) {   
          this.dataExchange.Publish("OnDemandUpdate", demandId);
+
     };
 
     getDemandRemarks(demandId): void {

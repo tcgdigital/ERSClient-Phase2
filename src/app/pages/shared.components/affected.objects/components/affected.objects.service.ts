@@ -1,40 +1,41 @@
-import { Injectable, Output, EventEmitter } from '@angular/core';
-import { Headers } from '@angular/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
+import { IAffectedObjectsService } from './IAffectedObjectsService';
 import { InvolvePartyModel, AffectedModel } from '../../../shared.components';
 import { AffectedObjectModel, AffectedObjectsToView } from './affected.objects.model';
 import {
     ResponseModel, DataService,
     DataServiceFactory, DataProcessingService,
-    IServiceInretface, UtilityService
+    ServiceBase, UtilityService
 } from '../../../../shared';
 
 @Injectable()
-export class AffectedObjectsService {
-    private _dataService: DataService<InvolvePartyModel>;
+export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> implements IAffectedObjectsService {
+    // private _dataService: DataService<InvolvePartyModel>;
     private _bulkDataService: DataService<AffectedObjectModel>;
+
     constructor(private dataServiceFactory: DataServiceFactory) {
+        super(dataServiceFactory, 'InvolvedParties');
+
         let option: DataProcessingService = new DataProcessingService();
-        this._dataService = this.dataServiceFactory
-            .CreateServiceWithOptions<InvolvePartyModel>('InvolvedParties', option);
         this._bulkDataService = this.dataServiceFactory
             .CreateServiceWithOptions<AffectedObjectModel>('AffectedObjectBatch', option);
     }
 
-    GetAll(): Observable<ResponseModel<InvolvePartyModel>> {
+    public GetAll(): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
-            .Expand('Affecteds($expand=AffectedObjects($expand=Cargo))')
-            .Execute();
+            .Expand('Affecteds($expand=AffectedObjects($expand=Cargo))').Execute();
     }
-    GetFilterByIncidentId(incidentId): Observable<ResponseModel<InvolvePartyModel>> {
+
+    public GetFilterByIncidentId(incidentId): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq ${incidentId}`)
             .Expand('Affecteds($expand=AffectedObjects($expand=Cargo))')
             .Execute();
     }
 
-    FlattenAffactedObjects(involvedParty: InvolvePartyModel): any {
+    public FlattenAffactedObjects(involvedParty: InvolvePartyModel): AffectedObjectsToView[] {
         let affectedObjectsToView: AffectedObjectsToView[];
         let affectedObjects: AffectedObjectModel[];
         let affected: AffectedModel;
@@ -60,26 +61,11 @@ export class AffectedObjectsService {
 
     }
 
-    Get(id: string | number): Observable<InvolvePartyModel> {
-        return this._dataService.Get(id.toString()).Execute();
-    }
-
-    Create(entity: InvolvePartyModel): Observable<InvolvePartyModel> {
-        return this._dataService.Post(entity).Execute();
-    }
-
-    CreateBulk(entities: AffectedObjectModel[]): Observable<AffectedObjectModel[]> {
+    public CreateBulkObjects(entities: AffectedObjectModel[]): Observable<AffectedObjectModel[]> {
         return this._bulkDataService.BulkPost(entities).Execute();
     }
 
-    Update(entity: InvolvePartyModel): Observable<InvolvePartyModel> {
-        return Observable.of(entity);
-    }
-
-    Delete(entity: InvolvePartyModel): void {
-    }
-
-    MapAffectedPeopleToSave(affectedObjectsForVerification) {
+    public MapAffectedPeopleToSave(affectedObjectsForVerification): AffectedObjectModel[] {
         let verifiedAffectedObjects: AffectedObjectModel[];
         verifiedAffectedObjects = affectedObjectsForVerification.map(function (affected) {
             let item = new AffectedObjectModel;

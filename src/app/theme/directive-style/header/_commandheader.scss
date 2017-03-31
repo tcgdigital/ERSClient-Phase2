@@ -1,0 +1,57 @@
+@import '../../config/config';
+.branding .command-icons {
+    position: absolute;
+    right: 0;
+    top: 7px;
+}
+
+@media screen and (max-width: $resXS-E) {
+    .command-menu {
+        position: relative;
+        text-align: center;
+        background: $default;
+        top: 41px;
+        .row {
+            @include box-shadow(0, 2px, 5px, 0, $header-shadow);
+            background-color: $body-bg;
+        }
+    }
+}
+
+@media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {}
+
+@media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
+    .command-menu {
+        position: fixed;
+        z-index: 100;
+        right: 12%;
+        width: 70%;
+    }
+    .top-dw-align {
+        margin-top: 7px;
+    }
+}
+
+@media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {
+    .command-menu {
+        position: fixed;
+        z-index: 100;
+        right: 17%;
+        width: 70%;
+    }
+    .top-dw-align {
+        margin-top: 7px;
+    }
+}
+
+@media screen and (min-width: $resXL-S) {
+    .command-menu {
+        position: fixed;
+        z-index: 100;
+        right: 17%;
+        width: 72%;
+    }
+    .top-dw-align {
+        margin-top: 7px;
+    }
+}

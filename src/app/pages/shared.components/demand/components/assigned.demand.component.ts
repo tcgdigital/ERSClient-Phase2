@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, OnInit, AfterContentInit } from '@angular/core';
-import { Observable } from 'rxjs/RX';
+import { Observable } from 'rxjs/Rx';
 
 import { InvolvePartyModel } from '../../involveparties';
 import { DemandModel, DemandModelToView, DemandRemarkLogModel } from './demand.model';

@@ -1,4 +1,4 @@
-import { BaseModel } from '../../../../shared/models';
+import { BaseModel } from '../../../../shared';
 
 export class EmergencyTypeModel extends BaseModel {
     public EmergencyTypeId: number;

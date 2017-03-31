@@ -8,7 +8,6 @@ import { SharedModule } from '../../shared/shared.module';
 import { DashboardRouting } from './dashboard.routing';
 import { DashboardComponent } from './dashboard.component';
 import { WidgetModule } from '../widgets';
-// import { CallCentreModule, EnquiryComponent } from './call.centre';
 
 
 @NgModule({
@@ -18,12 +17,10 @@ import { WidgetModule } from '../widgets';
         HttpModule,
         SharedModule,
         WidgetModule,
-        // CallCentreModule,
         DashboardRouting
     ],
     declarations: [
         DashboardComponent
-        // EnquiryComponent
     ]
 })
 export class DashboardModule { }
