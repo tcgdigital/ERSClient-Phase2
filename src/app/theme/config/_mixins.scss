@@ -1,15 +1,15 @@
  @mixin bg-nr($relativeUrl) {
      background: url($images-root + $relativeUrl) no-repeat 0 0;
  }
- 
+
  @mixin bg($relativeUrl) {
      background: url($images-root + $relativeUrl);
  }
- 
+
  @mixin bg-image($relativeUrl) {
      background-image: url($images-root + $relativeUrl);
  }
- 
+
  @mixin placeholderStyle($color, $opacity) {
      &::-webkit-input-placeholder {
          color: $color;
@@ -30,13 +30,13 @@
          opacity: $opacity;
      }
  }
- 
+
  @mixin rounded($radius: 0.5em) {
      -webkit-border-radius: $radius;
      -moz-border-radius: $radius;
      border-radius: $radius;
  }
- 
+
  @mixin box-shadow($top, $left, $blur, $spread, $color, $inset: false) {
      @if $inset {
          -webkit-box-shadow: inset $top $left $blur $spread $color;
@@ -49,7 +49,7 @@
          box-shadow: $top $left $blur $spread $color;
      }
  }
- 
+
  @function convert-angle($value, $unit) {
      $convertable-units: deg grad turn rad;
      $conversion-factors: 1 (10grad/9deg) (1turn/360deg) (3.1415926rad/180deg);
@@ -58,13 +58,13 @@
      }
      @warn "Cannot convert `#{unit($value)}` to `#{$unit}`.";
  }
- 
+
  @function is-direction($value) {
      $is-direction: index((to top, to top right, to right top, to right, to bottom right, to right bottom, to bottom, to bottom left, to left bottom, to left, to left top, to top left), $value);
      $is-angle: type-of($value)=='number' and index('deg' 'grad' 'turn' 'rad', unit($value));
      @return $is-direction or $is-angle;
  }
- 
+
  @function legacy-direction($value) {
      @if is-direction($value)==false {
          @warn "Cannot convert `#{$value}` to legacy syntax because it doesn't seem to be an angle or a direction";
@@ -75,7 +75,7 @@
      }
      @return 90deg - convert-angle($value, 'deg');
  }
- 
+
  @mixin linear-gradient-bg($direction, $color-stops...) {
      @if is-direction($direction)==false {
          $color-stops: ($direction, $color-stops);
@@ -87,7 +87,7 @@
      background: -moz-linear-gradient(legacy-direction($direction), $color-stops);
      background: linear-gradient($direction, $color-stops);
  }
- 
+
  @mixin linear-gradient-border($direction, $color-stops...) {
      @if is-direction($direction)==false {
          $color-stops: ($direction, $color-stops);
@@ -99,7 +99,7 @@
      border-image: -moz-linear-gradient(legacy-direction($direction), $color-stops) 1;
      border-image: linear-gradient($direction, $color-stops) 1;
  }
- 
+
  @mixin translate3d($tx, $ty, $tz) {
      -webkit-transform: translate3d($tx, $ty, $tz);
      -moz-transform: translate3d($tx, $ty, $tz);
@@ -107,25 +107,25 @@
      -o-transform: translate3d($tx, $ty, $tz);
      transform: translate3d($tx, $ty, $tz);
  }
- 
+
  @mixin perspective($length) {
      -webkit-perspective: $length;
      -moz-perspective: $length;
      perspective: $length;
  }
- 
+
  @mixin perspective-origin($x, $y) {
      -webkit-perspective-origin: $x $y;
      -moz-perspective-origin: $x $y;
      perspective-origin: $x $y;
  }
- 
+
  @mixin transition($prop, $delay) {
      -webkit-transition: $prop $delay;
      -moz-transition: $prop $delay;
      transition: $prop $delay;
  }
- 
+
  @mixin transform($prop-stops...) {
      -webkit-transform: $prop-stops;
      -moz-transform: $prop-stops;
@@ -133,19 +133,25 @@
      -o-transform: $prop-stops;
      transform: $prop-stops;
  }
- 
+
+ @mixin box-shadow-multi($prop-stops...) {
+     -webkit-box-shadow: $prop-stops;
+     -moz-box-shadow: $prop-stops;
+     box-shadow: $prop-stops;
+ }
+
  @mixin flex($grow, $shrink, $basis) {
      -webkit-flex: $grow $shrink $basis;
      -ms-flex: $grow $shrink $basis;
      flex: $grow $shrink $basis;
  }
- 
+
  @mixin animation($type, $duration) {
      -webkit-animation: $type $duration;
      -moz-animation: $type $duration;
      animation: $type $duration;
  }
- 
+
  @mixin translateY($y) {
      -webkit-transform: translateY($y);
      -moz-transform: translateY($y);
@@ -153,7 +159,7 @@
      -o-transform: translateY($y);
      transform: translateY($y);
  }
- 
+
  @mixin translateY-rotate($y, $rotate) {
      -webkit-transform: translateY($y) rotate($rotate);
      -moz-transform: translateY($y) rotate($rotate);
@@ -162,7 +168,7 @@
      transform: translateY($y) rotate($rotate);
  }
 
- @mixin backface-visibility($prop){
-    -webkit-backface-visibility: $prop;
-    backface-visibility: $prop;
+ @mixin backface-visibility($prop) {
+     -webkit-backface-visibility: $prop;
+     backface-visibility: $prop;
  }
