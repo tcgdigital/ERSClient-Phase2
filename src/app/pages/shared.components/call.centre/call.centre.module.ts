@@ -10,8 +10,9 @@ import { EnquiryService} from './components';
 import { AffectedPeopleService } from '../affected.people';
 import { AffectedObjectsService } from '../affected.objects';
 import { DepartmentService } from '../../masterdata/department';
-import { DemandService } from '../../shared.components';
+import { DemandService } from '../demand';
 import { DataExchangeService,SharedModule } from '../../../shared';
+import { InvolvePartyService } from '../involveparties';
 
 @NgModule({
     imports: [
@@ -35,7 +36,8 @@ import { DataExchangeService,SharedModule } from '../../../shared';
         AffectedPeopleService,
         AffectedObjectsService,
         DepartmentService,
-        DemandService
+        DemandService,
+        InvolvePartyService
     ]
 })
 export class CallCentreModule { }

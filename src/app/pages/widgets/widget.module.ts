@@ -12,7 +12,7 @@ import {
 } from '../shared.components';
 
 import {
-    BroadcastWidgetComponent,
+    BroadcastWidgetComponent,    
     CasualtySummaryWidgetComponent,
     ChecklistSummaryWidgetComponent,
     ClockWidgetComponent,
@@ -36,7 +36,7 @@ import {
 } from './index';
 
 const WIDGET_COMPONENTS: any[] = [
-    BroadcastWidgetComponent,
+    BroadcastWidgetComponent,  
     CasualtySummaryWidgetComponent,
     ChecklistSummaryWidgetComponent,
     ClockWidgetComponent,
