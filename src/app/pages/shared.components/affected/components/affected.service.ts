@@ -1,4 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
+import { Headers } from '@angular/http';
+
 import { Observable } from 'rxjs/Rx';
 
 import { AffectedModel } from './affected.model';
@@ -14,6 +16,7 @@ import {
 } from '../../../shared.components';
 
 @Injectable()
+
 export class AffectedService extends ServiceBase<AffectedModel> implements IAffectedService {
 
     /**
@@ -34,6 +37,7 @@ export class AffectedService extends ServiceBase<AffectedModel> implements IAffe
             .OrderBy("CreatedOn desc")
             .Execute();
     }
+
 
     Create(entity: AffectedModel): Observable<AffectedModel> {
         let affected: AffectedModel;

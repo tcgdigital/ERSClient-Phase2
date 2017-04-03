@@ -4,6 +4,8 @@ import { InvolvePartyModel } from '../../involveparties';
 import { DemandModel, DemandModelToView, DemandRemarkLogModel } from './demand.model';
 import { CommunicationLogModel } from '../../communicationlogs';
 import { DemandService } from './demand.service';
+import { DemandTrailService } from './demandtrail.service';
+import { DemandTrailModel } from './demand.trail.model';
 import { DemandRemarkLogService } from './demand.remarklogs.service';
 import { ResponseModel, DataExchangeService, GlobalConstants } from '../../../../shared';
 
@@ -15,15 +17,17 @@ import { ResponseModel, DataExchangeService, GlobalConstants } from '../../../..
 export class ApprovedDemandComponent implements OnInit, AfterContentInit {
     demandsForApproval: DemandModelToView[];
     currentDepartmentId: number;
+    currentDepartmentName: string;
     currentIncident: number;
     createdBy: number = 2;
-    currentDepartmentName: string;
     communicationLogs: CommunicationLogModel[];
     communicationLog: CommunicationLogModel;
     demandRemarks: DemandRemarkLogModel[];
     Remarks: string;
     RemarkToCreate: DemandRemarkLogModel;
     createdByName: string;
+    demandTrails: DemandTrailModel[];
+    demandTrail: DemandTrailModel;
     constructor(private demandService: DemandService, private demandRemarkLogsService: DemandRemarkLogService) {
         this.createdByName = "Anwesha Ray";
         this.demandRemarks = [];
@@ -89,6 +93,63 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
     openDemandRemarks(demand) : void {
         this.getDemandRemarks(demand.DemandId);
         demand["showRemarks"] = true;
+    };
+    createDemandTrailModel(demand: DemandModelToView, flag, originalDemand?: DemandModel): DemandTrailModel[] {
+
+        this.demandTrails = [];
+        this.demandTrail = new DemandTrailModel();
+        this.demandTrail.Answers = "";
+        this.demandTrail.DemandId = demand.DemandId;
+        this.demandTrail.IncidentId = this.currentIncident;
+        this.demandTrail.ScheduleTime = demand.ScheduleTime;
+        this.demandTrail.ContactNumber = demand.ContactNumber;
+        this.demandTrail.Priority = demand.Priority;
+        this.demandTrail.RequesterName = demand.RequestedBy;
+        this.demandTrail.RequesterDepartmentName = demand.RequesterDepartmentName;
+        //this.demandTrail.RequesterParentDepartmentName = demand.RequesterParentDepartmentName ;
+        this.demandTrail.TargetDepartmentName = demand.TargetDepartmentName;
+        this.demandTrail.ApproverDepartmentName = flag ? this.currentDepartmentName : null;
+        this.demandTrail.DemandDesc = demand.DemandDesc;
+        this.demandTrail.IsApproved = demand.IsApproved;
+        this.demandTrail.ApprovedDt = flag ? new Date() : null;
+        this.demandTrail.IsCompleted = false;
+        this.demandTrail.ScheduledClose = null;
+        this.demandTrail.IsClosed = false;
+        this.demandTrail.ClosedOn = null;
+        this.demandTrail.IsRejected = demand.IsRejected;
+        this.demandTrail.RejectedDate = flag ? null : new Date();
+        this.demandTrail.RejectedByDepartmentName = flag ? null : this.currentDepartmentName;
+        this.demandTrail.DemandStatusDescription = demand.DemandStatusDescription;
+        this.demandTrail.Remarks = demand.Remarks;
+        this.demandTrail.ActiveFlag = "Active";
+        this.demandTrail.CreatedBy = this.createdBy;
+        this.demandTrail.CreatedOn = demand.CreatedOn
+
+        let date = new Date();
+        let answer = '<div><p>' + demand.DemandStatusDescription + '   <strong>Date :</strong>  ' + date.toLocaleString() + '  </p><div>';
+        if (originalDemand != undefined) {
+            this.demandTrail.DemandTypeId = originalDemand.DemandTypeId;
+            this.demandTrail.DemandCode = originalDemand.DemandCode;
+            this.demandTrail.IsRejected = false;
+            this.demandTrail.IsApproved = false;
+            this.demandTrail.ApprovedDt = null;
+            this.demandTrail.RejectedDate = null;
+            this.demandTrail.ContactNumber = originalDemand.ContactNumber;
+            this.demandTrail.DemandStatusDescription = originalDemand.DemandStatusDescription;
+            this.demandTrail.RequiredLocation = originalDemand.RequiredLocation;
+            this.demandTrail.RequesterType = originalDemand.RequesterType;
+            answer = '<div><p> Request Edited By ' + this.demandTrail.RequesterDepartmentName + '  <strong>Date :</strong>  ' + date + '  </p><div>';
+            if (originalDemand.ScheduleTime) {
+                var minutesInt = parseInt(originalDemand.ScheduleTime);
+                var d = new Date(originalDemand.CreatedOn);
+                d.setMinutes(d.getMinutes() + minutesInt);
+                var editedDate = new Date(d);
+                answer = answer + '<strong>Expected Resolution Time</strong> : ' + editedDate + '  ';
+            }
+        }
+        this.demandTrail.Answers = answer;
+        this.demandTrails.push(this.demandTrail);
+        return this.demandTrails;
     };
 
     cancelRemarkUpdate(demand) : void {
@@ -161,6 +222,7 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
                 item.DemandStatusDescription = item.IsApproved ? 'Approved and pending with ' + x.TargetDepartmentName :
                     'On Hold by ' + this.currentDepartmentName;
                 item.CommunicationLogs = this.SetCommunicationLog(x);
+                item.DemandTrails = x.IsApproved ? this.createDemandTrailModel(x, true) : this.createDemandTrailModel(x, false);
                 return item;
             });
 

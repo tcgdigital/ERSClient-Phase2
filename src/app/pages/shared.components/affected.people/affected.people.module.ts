@@ -11,6 +11,7 @@ import {
     AffectedPeopleService,
     AffectedPeopleVerificationComponent
 } from './components';
+import { InvolvePartyService } from '../involveparties';
 import { DataExchangeService } from '../../../shared';
 
 @NgModule({
@@ -29,7 +30,8 @@ import { DataExchangeService } from '../../../shared';
     ],
     providers: [
         AffectedPeopleService,
-        DataExchangeService
+        DataExchangeService,
+        InvolvePartyService
     ]
 })
 export class AffectedPeopleModule { }

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Observable } from 'rxjs/Rx';
 import { DemandModel, DemandModelToView } from './demand.model';
 import { ResponseModel, IServiceInretface } from '../../../../shared';

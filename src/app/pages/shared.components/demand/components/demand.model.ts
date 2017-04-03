@@ -48,6 +48,7 @@ export class DemandModel extends BaseModel {
     public ParentDemand?: DemandModel;
     public DemandType: DemandTypeModel;
     public RequesterDepartment: DepartmentModel;
+    public RequesterParentDepartment : DepartmentModel;
     public TargetDepartment: DepartmentModel;
     public ClosedByDepartment: DepartmentModel;
     public ApproverDepartment: DepartmentModel;
@@ -63,7 +64,7 @@ export class DemandModel extends BaseModel {
 
 }
 
-export class DemandModelToView {
+export class DemandModelToView extends BaseModel {
 
     public DemandId: number;
     public DemandTypeName: string;
@@ -80,7 +81,7 @@ export class DemandModelToView {
     public Remarks: string;
     public RequesterDepartmentId: number;
     public IsCompleted: boolean;
-    public CreatedOn: Date;
+  //  public CreatedOn: Date;
     public ContactNumber: string;
     public DemandStatusDescription: string;
     public RequestedBy: string;
@@ -89,6 +90,9 @@ export class DemandModelToView {
     public AffectedPersonId: number;
     public AffectedObjectId: number;
     public IsClosed: boolean;
+    public ApproverDeptId : number;
+    public ApproverDepartmentName : string;
+    public RequesterParentDepartmentName : string;
 }
 
 export class DemandRemarkLogModel extends BaseModel {

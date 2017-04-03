@@ -40,7 +40,28 @@ My Demand
     <ul class="list-group">
         <li class="list-group-item"><strong><i>Demand Description:</i></strong></li>
         <li class="list-group-item" style="border-top: none">{{demand.DemandDesc}}</li>
+         <button class="md-icon-button fa fa-edit" (click)="openTrail(demand)" aria-label="Trail">
+                </button>
 </ul>
+</div>
+<div class="col-lg-6 col-md-6" [hidden]="!demand.showTrails">
+    <strong>Demadn Trail</strong>
+    <ul class="list-group">
+        <li class="list-group-item" ><strong><i>DemandType:</i></strong></li>
+        <li><input style="width: 100%;" [(ngModel)]="demand.DemandTypeName" type="text" /> </li>
+    </ul>
+    <ul class="list-group" style="width: 100%;">
+        <li class="list-group-item"><strong><i>Requester Department:</i></strong></li>
+        <li><input style="width: 100%;" [(ngModel)]="demand.RequesterDepartmentName" type="text" /> </li>
+    </ul>
+    <div class="row" *ngFor="let trail of demandTrails">
+        <ul class="list-group">           
+           <div [innerHTML]="trail.Answers" type="text"></div>
+           </ul>           
+</div>
+
+<button class="btn btn-primary" type="button" (click)="canceltrail(demand)">Cancel</button>
+
 </div>
 <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
     <ul class="list-group">

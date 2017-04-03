@@ -11,9 +11,10 @@ import { DepartmentService, DepartmentModel } from '../../../masterdata/departme
 import { PageService, PageModel } from '../../../masterdata/department.functionality';
 import {
     AffectedObjectsService, AffectedObjectsToView, AffectedPeopleService,
-    AffectedPeopleToView, InvolvePartyModel, CommunicationLogModel,InvolvePartyService
+    AffectedPeopleToView, InvolvePartyModel, CommunicationLogModel
 
 } from '../../../shared.components';
+import { InvolvePartyService } from '../../involveparties';
 
 import { CallerService, CallerModel } from '../../caller';
 
@@ -38,7 +39,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     pdas: Array<KeyValue> = [];
     awbs: Array<KeyValue> = [];
     currentIncident: number = 1;
-    currentDeptId: number = 2;
+    currentDeptId: number = 4;
     parentDeptId: number = null;
     currentDepartmentName: string = "Command Centre";
     communicationLogs: CommunicationLogModel[];
@@ -140,12 +141,12 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
         var TargetDepartmentName = this.departments.find(x => { return x.DepartmentId == demandForAnswer.TargetDepartmentId; }) ?
             this.departments.find(x => { return x.DepartmentId == demandForAnswer.TargetDepartmentId; }).DepartmentName : undefined;
-        let date = new Date().toLocaleDateString;
+        let date = new Date();
         if (flag) {
-            answer = '<div><p>' + demand.DemandStatusDescription + '   <strong>Date :</strong>  ' + date + '  </p><div>';
+            answer = '<div><p>' + demand.DemandStatusDescription + '   <strong>Date :</strong>  ' + date.toLocaleString() + '  </p><div>';
         }
         else {
-            answer = '<div><p> Request Edited By ' + demandTrail.RequesterDepartmentName + '  <strong>Date :</strong>  ' + date + '  </p><div>';
+            answer = '<div><p> Request Edited By ' + demandTrail.RequesterDepartmentName + '  <strong>Date :</strong>  ' + date.toLocaleString() + '  </p><div>';
         }
         if (!flag && (demandForAnswer != undefined)) {
 
@@ -260,13 +261,15 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         }
     };
 
-    setModelForUpdate(id) : void {
-        this.demandService.Get(id).subscribe((response: DemandModel) => {
-            this.demandModel = response;
-            this.setModelFormGroup(response, x => x.DemandId, x => x.DemandTypeId, x => x.Priority, x => x.DemandDesc
+
+    setModelForUpdate(id) {
+        this.demandService.GetByDemandId(id)
+        .subscribe((response: ResponseModel<DemandModel>) => {
+            this.demandModel = response.Records[0];
+            this.setModelFormGroup(response.Records[0], x => x.DemandId, x => x.DemandTypeId, x => x.Priority, x => x.DemandDesc
                 , x => x.RequestedBy, x => x.RequesterType, x => x.PDATicketNumber, x => x.TargetDepartmentId, x => x.ContactNumber
                 , x => x.ScheduleTime, x => x.RequiredLocation);
-            this.caller = this.demandModel.Caller;
+            this.caller = this.demandModel.Caller || new CallerModel();
             this.showAdd = true;
             this.buttonValue = "Cancel";
             this.form.controls["PDATicketNumber"].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
@@ -356,7 +359,14 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     formControlDirtyCheck() : void {
         this.demandModelEdit = new DemandModel();
-        this.caller = new CallerModel();
+        delete this.demandModelEdit.ActiveFlag;
+        delete this.demandModelEdit.CreatedBy;
+        delete this.demandModelEdit.CreatedOn;
+
+       // this.caller = new CallerModel();
+        delete this.caller.ActiveFlag;
+        delete this.caller.CreatedBy;
+        delete this.caller.CreatedOn;
         this.demandModelEdit.DemandId = this.form.controls['DemandId'].value;
 
         if (this.form.controls['Priority'].touched) {
@@ -393,13 +403,14 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 x => x.ContactNumber, x => x.RequiredLocation, x => x.ScheduleTime, x => x.ContactNumber);
             this.demandModel.Caller.CallerName = this.form.controls["RequestedBy"].value;
             this.demandModel.Caller.ContactNumber = this.form.controls["ContactNumber"].value;
+            debugger;
             if (this.demandTypes.find(x => x.DemandTypeId == this.demandModel.DemandTypeId).IsAutoApproved) {
                 this.demandModel.IsApproved = true;
                 this.demandModel.ApproverDepartmentId = null;
 
             }
             else {
-                this.demandModel.IsApproved = true;
+                this.demandModel.IsApproved = false;
                 this.demandModel.ApproverDepartmentId = this.demandTypes.find(x => x.DemandTypeId == this.demandModel.DemandTypeId).DepartmentId;
             }
             this.demandModel.DemandStatusDescription = 'New Request by ' + this.currentDepartmentName;
@@ -427,23 +438,27 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 });
         }
         else {
-
             if (this.form.dirty) {
                 this.formControlDirtyCheck();
                 this.demandService.Update(this.demandModelEdit)
                     .subscribe((response: DemandModel) => {
                         alert("Demand successfully updated");
-                        let demandTrail = this.createDemandTrailModel(this.demandModel, this.demandModelEdit, false);
-                        this.demandTrailService.Create(demandTrail[0])
+                        debugger;
+                        let demandTrail = this.createDemandTrailModel(this.demandModel, this.demandModelEdit, false)[0];
+                        demandTrail.DemandId = this.demandModel.DemandId;
+                        this.demandTrailService.Create(demandTrail)
                             .subscribe((response: DemandTrailModel) => { },
                             (error: any) => {
                                 console.log("Error in demandTrail");
                             });
+                        if(this.caller.CallerId !=0)
+                        {    
                         this.callerService.Update(this.caller)
                             .subscribe((response: CallerModel) => { },
                             (error: any) => {
                                 console.log("Error in demandTrail");
                             });
+                        }
                         this.initializeForm();
                         this.demandModel = new DemandModel();
                         this.showAdd = false;
