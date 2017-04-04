@@ -14,6 +14,7 @@ export class BroadcastWidgetComponent implements OnInit {
     @Input('initiatedDepartmentId') departmentId: number;
     @Input('currentIncidentId') incidentId: number;
 
+
     LatestBroadcasts: Observable<TextAccordionModel[]>;
     AllPublishedBroadcasts: Observable<BroadcastWidgetModel[]>;
     isHidden: boolean = true;
@@ -32,7 +33,6 @@ export class BroadcastWidgetComponent implements OnInit {
         this.getLatestBroadcasts();
         this.getAllPublishedBroadcasts();
     }
-
     public getLatestBroadcasts(): void {
         let data: BroadcastWidgetModel[] = [];
         this.broadcastWidgetService

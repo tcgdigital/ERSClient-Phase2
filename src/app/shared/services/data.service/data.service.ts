@@ -6,7 +6,6 @@ import { Observable } from 'rxjs/Rx';
 import {
     GetOperation,
     QueryOperation,
-    CountOperation,
     PostOperation,
     SimplePostOperation,
     BulkPostOperation,
@@ -157,16 +156,7 @@ export class DataService<T extends BaseModel>{
     }
 
     
-    /**
-     * Get an instance of CountOperation for Count request
-     * 
-     * @returns {CountOperation<T>} 
-     * 
-     * @memberOf DataService
-     */
-    public Count(): CountOperation<T> {
-        return new CountOperation<T>(this.dataProcessingService, this.httpService, this.typeName);
-    }
+    
     /**
      * Get an instance of QueryOperation for custom function request
      *

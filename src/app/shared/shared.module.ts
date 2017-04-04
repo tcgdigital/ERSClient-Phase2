@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { DropdownModule } from 'ng2-bootstrap';
+import { Ng2BootstrapModule } from 'ng2-bootstrap';
 import { NgSelectizeModule } from 'ng-selectize';
 
 import {
@@ -117,7 +117,7 @@ const SHARED_PIPES: any[] = [
         ReactiveFormsModule,
         HttpModule,
         NgSelectizeModule,
-        DropdownModule.forRoot()
+        Ng2BootstrapModule.forRoot()
     ],
     exports: [
         ...SHARED_COMPONENTS,

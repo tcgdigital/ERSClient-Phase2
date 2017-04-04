@@ -5,11 +5,12 @@ import { RouterModule } from '@angular/router';
 import { AffectedPeopleService } from '../shared.components/affected.people';
 import { EnquiryService } from '../shared.components/call.centre';
 import { ActionableService } from '../shared.components/actionables';
+import { DemandService } from '../shared.components/demand';
+import { DepartmentAccessOwnerService } from '../shared.components/departmentaccessowner';
 import { ModalModule } from 'ng2-bootstrap';
 import { SharedModule } from '../../shared';
-
 import {
-    BroadcastWidgetComponent,
+    BroadcastWidgetComponent, 
     CasualtySummaryWidgetComponent,
     ChecklistSummaryWidgetComponent,
     ClockWidgetComponent,
@@ -33,7 +34,7 @@ import {
 } from './index';
 
 const WIDGET_COMPONENTS: any[] = [
-    BroadcastWidgetComponent,
+    BroadcastWidgetComponent,  
     CasualtySummaryWidgetComponent,
     ChecklistSummaryWidgetComponent,
     ClockWidgetComponent,
@@ -56,7 +57,9 @@ const WIDGET_SERVICE: any[] = [
     PresidentMessageWidgetService,
     AffectedPeopleService,
     EnquiryService,
-    ActionableService
+    ActionableService,
+    DemandService,
+    DepartmentAccessOwnerService
 ];
 
 @NgModule({

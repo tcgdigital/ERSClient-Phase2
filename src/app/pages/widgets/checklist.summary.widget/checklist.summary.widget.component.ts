@@ -3,7 +3,7 @@ import { CheckListSummeryModel } from './checklist.summary.widget.model';
 import { ChecklistSummaryWidgetService } from './checklist.summary.widget.service';
 
 @Component({
-    selector: 'checklistSummary-widget',
+    selector: 'checklist-summary-widget',
     templateUrl: './checklist.summary.widget.view.html',
     encapsulation: ViewEncapsulation.None
 })

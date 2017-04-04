@@ -10,7 +10,6 @@ import { MediaReleaseWidgetService } from './mediaRelease.widget.service'
     styleUrls: ['./mediaRelease.widget.style.scss']
 })
 export class MediaReleaseWidgetComponent implements OnInit {
-
     @Input('initiatedDepartmentId') departmentId: number;
     @Input('currentIncidentId') incidentId: number;
     isHidden: boolean = true;

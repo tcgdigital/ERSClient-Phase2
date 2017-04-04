@@ -2,9 +2,14 @@ import { Component, ViewEncapsulation, OnInit, AfterContentInit } from '@angular
 import { Observable } from 'rxjs/Rx';
 
 
-import { InvolvePartyModel } from '../../../shared.components';
-import { DemandModel, DemandModelToView } from './demand.model';
+import { InvolvePartyModel } from '../../involveparties';
+import { DemandModel, DemandModelToView, DemandRemarkLogModel } from './demand.model';
+
 import { DemandService } from './demand.service';
+import { DemandRemarkLogService } from './demand.remarklogs.service';
+import { DemandTrailService } from './demandtrail.service';
+import { DemandTrailModel } from './demand.trail.model';
+
 import { ResponseModel, DataExchangeService, GlobalConstants } from '../../../../shared';
 
 @Component({
@@ -13,16 +18,31 @@ import { ResponseModel, DataExchangeService, GlobalConstants } from '../../../..
     templateUrl: '../views/mydemand.view.html'
 })
 export class MyDemandComponent implements OnInit {
-
-    constructor(private demandService: DemandService,private dataExchange: DataExchangeService<number>) { }
     mydemands: DemandModelToView[];
     currentDepartment: number;
+    currentDepartmentName: string;
     currentIncident: number;
+    createdByName: string ="Anwesha Ray";
+    createdBy: number;
+    demandRemarks: DemandRemarkLogModel[] = [];
+    Remarks: string;
+    RemarkToCreate: DemandRemarkLogModel;  
+    demandTrails : DemandTrailModel[];  
+    constructor(private demandService: DemandService,
+        private demandRemarkLogsService: DemandRemarkLogService, private dataExchange: DataExchangeService<number>,
+        private demandTrailService : DemandTrailService) {
+    }
+
 
     getMyDemands(deptId, incidentId): void {
         this.demandService.GetByRequesterDepartment(deptId, incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.mydemands = this.demandService.DemandMapper(response.Records);
+                this.mydemands.forEach(x =>
+                    function () {
+                        x["showRemarks"] = false;
+                        x["showRemarks"] = false;
+                    });
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -70,16 +90,71 @@ export class MyDemandComponent implements OnInit {
 
     open(demandId) {   
          this.dataExchange.Publish("OnDemandUpdate", demandId);
-    };
-
-    ngOnInit() {
-        
-        this.currentDepartment=4;
-        this.currentIncident = 1;
-        this.getMyDemands(this.currentDepartment,this.currentIncident);
 
     };
+
+    getDemandRemarks(demandId): void {
+        this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
+            .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
+                this.demandRemarks = response.Records;
+            }, (error: any) => {
+                console.log("error:  " + error);
+            });
+    }
+
     
+    getDemandTrails(demandId): void {
+        this.demandTrailService.getDemandTrailByDemandId(demandId)
+            .subscribe((response: ResponseModel<DemandTrailModel>) => {                
+                this.demandTrails = response.Records;
+            }, (error: any) => {
+                console.log("error:  " + error);
+            });
+    }
+
+    openDemandRemarks(demand) {
+        this.getDemandRemarks(demand.DemandId);
+        demand["showRemarks"] = true;
+    }
+    cancel(demand) {
+        demand["showRemarks"] = false;
+    };
+    ok(remarks, demand) {
+        this.RemarkToCreate = new DemandRemarkLogModel();
+        this.RemarkToCreate.Remark = remarks;
+        this.RemarkToCreate.DemandId = demand.DemandId;
+        this.RemarkToCreate.RequesterDepartmentName = demand.RequesterDepartmentName;
+        this.RemarkToCreate.TargetDepartmentName = demand.TargetDepartmentName;
+        this.RemarkToCreate.CreatedByName = this.createdByName;
+        this.demandRemarkLogsService.Create(this.RemarkToCreate)
+            .subscribe((response: DemandRemarkLogModel) => {
+                alert("Remark saved successfully");
+                this.getDemandRemarks(demand.DemandId);
+                this.Remarks = "";
+            }, (error: any) => {
+                console.log("error:  " + error);
+                alert("Error occured during saving the remark");
+            });
+    };
+
+    openTrail(demand : DemandModelToView): void{
+            this.getDemandTrails(demand.DemandId);
+            demand["showTrails"] = true;
+
+    };
+
+    canceltrail(demand){
+               demand["showTrails"] = false;
+    }
+    ngOnInit() {
+
+        this.currentDepartment = 4;
+        this.currentIncident = 1;
+        this.getMyDemands(this.currentDepartment, this.currentIncident);
+        this.Remarks = "";
+
+    };
+
     ngAfterContentInit() {
         this.setRagStatus();
     };
