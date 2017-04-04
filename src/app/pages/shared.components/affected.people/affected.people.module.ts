@@ -12,7 +12,7 @@ import {
     AffectedPeopleVerificationComponent
 } from './components';
 import { InvolvePartyService } from '../involveparties';
-import { DataExchangeService } from '../../../shared';
+import { SharedModule, DataExchangeService } from '../../../shared';
 
 @NgModule({
     imports: [
@@ -21,6 +21,7 @@ import { DataExchangeService } from '../../../shared';
         FormsModule,
         HttpModule,
         MdCheckboxModule,
+        SharedModule,
         AffectedPeopleRouting
     ],
     declarations: [

@@ -1,0 +1,9 @@
+<div class="wrapper-dropdown" (click)="onDropdownClick($event)">
+    <span>{{placeholder}}</span>
+    <!--<i class="fa fa-caret-right" aria-hidden="true"></i>-->
+    <ul class="dropdown">
+        <li *ngFor="let dataItem of dataItems" (click)="onItemClick($event, dataItem)">
+            <a href="javascript:void(0);">{{dataItem.Key}}</a>
+        </li>
+    </ul>
+</div>

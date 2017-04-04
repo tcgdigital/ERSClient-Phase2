@@ -12,6 +12,8 @@ import { GlobalStateService } from '../../services';
 })
 export class BrandHeaderComponent {
     @Output() hambargerClicked: EventEmitter<any> = new EventEmitter<any>();
+    @Output() contactClicked: EventEmitter<any> = new EventEmitter<any>();
+    @Output() helpClicked: EventEmitter<any> = new EventEmitter<any>();
 
     public logoImage: string = 'assets/images/logo.png';
     public logoUrl: string = '#';
@@ -21,23 +23,11 @@ export class BrandHeaderComponent {
         this.hambargerClicked.emit($event);
     }
 
+    public onContactClicked($event): void {
+        this.contactClicked.emit($event);
+    }
 
-    // public isScrolled: boolean = false;
-    // public isMenuCollapsed: boolean = false;
-
-    // constructor(private globalState: GlobalStateService) {
-    //     this.globalState.Subscribe('menu.isCollapsed', (isCollapsed) => {
-    //         this.isMenuCollapsed = isCollapsed;
-    //     });
-    // }
-
-    // public ToggleMenu() {
-    //     this.isMenuCollapsed = !this.isMenuCollapsed;
-    //     this.globalState.NotifyDataChanged('menu.isCollapsed', this.isMenuCollapsed);
-    //     return false;
-    // }
-
-    // public ScrolledChanged(isScrolled) {
-    //     this.isScrolled = isScrolled;
-    // }
+    public onHelpClicked($event): void {
+        this.helpClicked.emit($event);
+    }
 }

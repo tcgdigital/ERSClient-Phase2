@@ -43,14 +43,12 @@ export class FileUploadService {
      * @memberOf FileUploadService
      */
     public uploadFiles<T>(url: string, files: Array<FileData> | Array<File>, fieldName: string = ''): Observable<T> {
-        //return Observable.fromPromise(
+
         if (files.length > 0) {
 
             let fileUploadPromise: Promise<T> = new Promise((resolve, reject) => {
                 let formData: FormData = new FormData(),
-                    xhr: XMLHttpRequest = new XMLHttpRequest();
-
-                console.log(`Is FileData: ${files[0] instanceof FileData}`);
+                    xhr: XMLHttpRequest = new XMLHttpRequest();                
 
                 if (files[0] instanceof FileData) {
                     for (var i = 0; i < files.length; i++) {
@@ -74,13 +72,10 @@ export class FileUploadService {
                             reject(xhr.response);
                         }
                     }
-                };
-
-                //FileUploadService.setUploadUpdateInterval(500);
+                };                
 
                 xhr.upload.onprogress = (event: ProgressEvent) => {
-                    this.progress = Math.round(event.loaded / event.total * 100);
-                    //this.progressObserver.next(this.progress);
+                    this.progress = Math.round(event.loaded / event.total * 100);                    
                 };
 
                 xhr.upload.ontimeout = (event: ProgressEvent) => {
@@ -90,6 +85,7 @@ export class FileUploadService {
                 xhr.open('POST', url, true);
                 xhr.send(formData);
             });
+
             return Observable.fromPromise(fileUploadPromise);
         }
     }
