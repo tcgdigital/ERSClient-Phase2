@@ -403,7 +403,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 x => x.ContactNumber, x => x.RequiredLocation, x => x.ScheduleTime, x => x.ContactNumber);
             this.demandModel.Caller.CallerName = this.form.controls["RequestedBy"].value;
             this.demandModel.Caller.ContactNumber = this.form.controls["ContactNumber"].value;
-            debugger;
             if (this.demandTypes.find(x => x.DemandTypeId == this.demandModel.DemandTypeId).IsAutoApproved) {
                 this.demandModel.IsApproved = true;
                 this.demandModel.ApproverDepartmentId = null;
@@ -443,7 +442,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.demandService.Update(this.demandModelEdit)
                     .subscribe((response: DemandModel) => {
                         alert("Demand successfully updated");
-                        debugger;
                         let demandTrail = this.createDemandTrailModel(this.demandModel, this.demandModelEdit, false)[0];
                         demandTrail.DemandId = this.demandModel.DemandId;
                         this.demandTrailService.Create(demandTrail)
