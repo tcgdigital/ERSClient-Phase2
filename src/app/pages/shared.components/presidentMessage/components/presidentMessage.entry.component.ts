@@ -12,7 +12,7 @@ import { PresidentMessageService } from './presidentMessage.service';
 import { PresidentMessageModel } from './presidentMessage.model';
 import {
     ResponseModel, DataExchangeService,
-    GlobalConstants, UtilityService
+    GlobalConstants, UtilityService, GlobalStateService
 } from '../../../../shared';
 
 @Component({
@@ -22,13 +22,15 @@ import {
 })
 export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
     @Input() initiatedDepartmentId: string;
-    @Input() currentIncidentId: string;
+    @Input() incidentId: string;
 
     public form: FormGroup;
     PresidentsMessage: PresidentMessageModel;
     date: Date = new Date();
     precidentMessages: PresidentMessageModel[] = [];
     Action: string;
+    currentIncidentId: number;
+    currentDepartmentId: number;
 
     /**
      * Creates an instance of PresidentMessageEntryComponent.
@@ -39,23 +41,36 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
      * @memberOf PresidentMessageEntryComponent
      */
     constructor(private presidentMessageService: PresidentMessageService,
-        private dataExchange: DataExchangeService<PresidentMessageModel>,
+        private dataExchange: DataExchangeService<PresidentMessageModel>, private globalState: GlobalStateService,
         private builder: FormBuilder) { }
 
     ngOnInit(): void {
         this.InitiateForm();
-        this.dataExchange.Subscribe("OnPresidentMessageUpdate", model => this.onPresidentMessageUpdate(model))
+        this.currentIncidentId = +this.incidentId;
+        this.currentDepartmentId = +this.initiatedDepartmentId;
+        this.dataExchange.Subscribe("OnPresidentMessageUpdate", model => this.onPresidentMessageUpdate(model));
+        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
     }
 
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe("OnPresidentMessageUpdate");
+        this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('departmentChange');
     }
+
+    private incidentChangeHandler(incidentId): void {
+        this.currentIncidentId = incidentId;
+    }
+
+    private departmentChangeHandler(departmentId): void {
+        this.currentDepartmentId = departmentId;
+    }
+
 
     onPresidentMessageUpdate(presedientMessageModel: PresidentMessageModel): void {
         this.PresidentsMessage = presedientMessageModel;
         this.PresidentsMessage.PresidentsMessageId = presedientMessageModel.PresidentsMessageId;
-        this.PresidentsMessage.IncidentId = +this.currentIncidentId;
-        this.PresidentsMessage.InitiateDepartmentId = +this.initiatedDepartmentId;
         this.PresidentsMessage.IsUpdated = true;
         this.Action = "Edit";
     }
@@ -81,8 +96,9 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
     private CreateOrUpdatePresidentMessage(): void {
         UtilityService.setModelFromFormGroup<PresidentMessageModel>
             (this.PresidentsMessage, this.form, x => x.Message, x => x.Remarks);
-            
         if (this.PresidentsMessage.PresidentsMessageId == 0) {
+            this.PresidentsMessage.IncidentId = this.currentIncidentId;
+            this.PresidentsMessage.InitiateDepartmentId = this.currentDepartmentId;
             this.presidentMessageService.Create(this.PresidentsMessage)
                 .subscribe((response: PresidentMessageModel) => {
                     this.dataExchange.Publish("PresidentMessageModelSaved", response);
@@ -112,8 +128,8 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
         });
 
         this.PresidentsMessage = new PresidentMessageModel()
-        this.PresidentsMessage.IncidentId = +this.currentIncidentId;
-        this.PresidentsMessage.InitiateDepartmentId = +this.initiatedDepartmentId;
+       // this.PresidentsMessage.IncidentId = +this.currentIncidentId;
+       // this.PresidentsMessage.InitiateDepartmentId = +this.initiatedDepartmentId;
         this.Action = "Save";
     }
 }

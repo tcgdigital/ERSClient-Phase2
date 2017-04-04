@@ -23,19 +23,19 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
             .CreateServiceWithOptions<AffectedObjectModel>('AffectedObjectBatch', option);
     }
 
-    public GetAll(): Observable<ResponseModel<InvolvePartyModel>> {
+    GetAll(): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
             .Expand('Affecteds($expand=AffectedObjects($expand=Cargo))').Execute();
     }
 
-    public GetFilterByIncidentId(incidentId): Observable<ResponseModel<InvolvePartyModel>> {
+    GetFilterByIncidentId(incidentId): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq ${incidentId}`)
             .Expand('Affecteds($expand=AffectedObjects($expand=Cargo))')
             .Execute();
     }
 
-    public FlattenAffactedObjects(involvedParty: InvolvePartyModel): AffectedObjectsToView[] {
+    FlattenAffactedObjects(involvedParty: InvolvePartyModel): AffectedObjectsToView[] {
         let affectedObjectsToView: AffectedObjectsToView[];
         let affectedObjects: AffectedObjectModel[];
         let affected: AffectedModel;
@@ -61,11 +61,11 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
 
     }
 
-    public CreateBulkObjects(entities: AffectedObjectModel[]): Observable<AffectedObjectModel[]> {
+    CreateBulkObjects(entities: AffectedObjectModel[]): Observable<AffectedObjectModel[]> {
         return this._bulkDataService.BulkPost(entities).Execute();
     }
 
-    public MapAffectedPeopleToSave(affectedObjectsForVerification): AffectedObjectModel[] {
+    MapAffectedPeopleToSave(affectedObjectsForVerification): AffectedObjectModel[] {
         let verifiedAffectedObjects: AffectedObjectModel[];
         verifiedAffectedObjects = affectedObjectsForVerification.map(function (affected) {
             let item = new AffectedObjectModel;

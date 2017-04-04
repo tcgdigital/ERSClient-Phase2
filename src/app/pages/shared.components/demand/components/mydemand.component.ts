@@ -10,7 +10,9 @@ import { DemandRemarkLogService } from './demand.remarklogs.service';
 import { DemandTrailService } from './demandtrail.service';
 import { DemandTrailModel } from './demand.trail.model';
 
-import { ResponseModel, DataExchangeService, GlobalConstants } from '../../../../shared';
+import { ResponseModel, DataExchangeService, GlobalConstants, GlobalStateService } from '../../../../shared';
+import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
+
 
 @Component({
     selector: 'my-demand',
@@ -19,22 +21,22 @@ import { ResponseModel, DataExchangeService, GlobalConstants } from '../../../..
 })
 export class MyDemandComponent implements OnInit {
     mydemands: DemandModelToView[];
-    currentDepartment: number;
-    currentDepartmentName: string;
-    currentIncident: number;
-    createdByName: string ="Anwesha Ray";
+    currentDepartmentId: number;
+    currentIncidentId: number;
+    createdByName: string = "Anwesha Ray";
     createdBy: number;
     demandRemarks: DemandRemarkLogModel[] = [];
     Remarks: string;
-    RemarkToCreate: DemandRemarkLogModel;  
-    demandTrails : DemandTrailModel[];  
+    RemarkToCreate: DemandRemarkLogModel;
+    demandTrails: DemandTrailModel[];
     constructor(private demandService: DemandService,
         private demandRemarkLogsService: DemandRemarkLogService, private dataExchange: DataExchangeService<number>,
-        private demandTrailService : DemandTrailService) {
+        private demandTrailService: DemandTrailService, private globalState: GlobalStateService) {
     }
 
 
     getMyDemands(deptId, incidentId): void {
+        debugger;
         this.demandService.GetByRequesterDepartment(deptId, incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.mydemands = this.demandService.DemandMapper(response.Records);
@@ -88,25 +90,25 @@ export class MyDemandComponent implements OnInit {
         });
     };
 
-    open(demandId) {   
-         this.dataExchange.Publish("OnDemandUpdate", demandId);
+
+    open(demandId) {
+        this.dataExchange.Publish("OnDemandUpdate", demandId);
 
     };
 
     getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
-                debugger;
                 this.demandRemarks = response.Records;
             }, (error: any) => {
                 console.log("error:  " + error);
             });
-    }
+    };
 
-    
+
     getDemandTrails(demandId): void {
         this.demandTrailService.getDemandTrailByDemandId(demandId)
-            .subscribe((response: ResponseModel<DemandTrailModel>) => {                
+            .subscribe((response: ResponseModel<DemandTrailModel>) => {
                 this.demandTrails = response.Records;
             }, (error: any) => {
                 console.log("error:  " + error);
@@ -116,11 +118,13 @@ export class MyDemandComponent implements OnInit {
     openDemandRemarks(demand) {
         this.getDemandRemarks(demand.DemandId);
         demand["showRemarks"] = true;
-    }
-    cancel(demand) {
+    };
+
+    cancelRemarkUpdate(demand): void {
         demand["showRemarks"] = false;
     };
-    ok(remarks, demand) {
+
+    saveRemark(remarks, demand): void {
         this.RemarkToCreate = new DemandRemarkLogModel();
         this.RemarkToCreate.Remark = remarks;
         this.RemarkToCreate.DemandId = demand.DemandId;
@@ -138,26 +142,42 @@ export class MyDemandComponent implements OnInit {
             });
     };
 
-    openTrail(demand : DemandModelToView): void{
-            this.getDemandTrails(demand.DemandId);
-            demand["showTrails"] = true;
+    openTrail(demand: DemandModelToView): void {
+        this.getDemandTrails(demand.DemandId);
+        demand["showTrails"] = true;
 
     };
 
-    canceltrail(demand){
-               demand["showTrails"] = false;
+    canceltrail(demand) {
+        demand["showTrails"] = false;
     }
     ngOnInit() {
-
-        this.currentDepartment = 4;
-        this.currentIncident = 1;
-        this.getMyDemands(this.currentDepartment, this.currentIncident);
+        this.currentDepartmentId = 1;
+        this.currentIncidentId = 1;
+        this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
         this.Remarks = "";
+        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
 
     };
 
-    ngAfterContentInit() {
+    private incidentChangeHandler(incidentId): void {
+        this.currentIncidentId = incidentId;
+        this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
+    };
+
+    private departmentChangeHandler(departmentId): void {
+        this.currentDepartmentId = departmentId;
+        this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
+    };
+
+    ngAfterContentInit(): any {
         this.setRagStatus();
     };
+
+     ngOnDestroy(): void {
+        this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('departmentChange');
+    }
 
 }

@@ -8,7 +8,8 @@ import { DemandTrailService } from './demandtrail.service';
 import { DemandTrailModel } from './demand.trail.model';
 import { DemandRemarkLogService } from './demand.remarklogs.service';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
-import { ResponseModel, DataExchangeService, GlobalConstants } from '../../../../shared';
+import { ResponseModel, DataExchangeService, GlobalConstants, GlobalStateService } from '../../../../shared';
+
 
 @Component({
     selector: 'assigned-demand',
@@ -19,7 +20,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit {
     demands: DemandModelToView[];
     currentDepartmentId: number;
     currentDepartmentName: string;
-    currentIncident: number;
+    currentIncidentId: number;
     Remarks: string;
     demandRemarks: DemandRemarkLogModel[];
     RemarkToCreate: DemandRemarkLogModel;
@@ -28,7 +29,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit {
     demandTrails: DemandTrailModel[];
     departments: DepartmentModel[];
     constructor(private demandService: DemandService, private departmentService: DepartmentService,
-        private demandRemarkLogsService: DemandRemarkLogService) {
+        private demandRemarkLogsService: DemandRemarkLogService, private globalState: GlobalStateService) {
         this.createdByName = "Anwesha Ray";
         this.demandRemarks = [];
     }
@@ -87,24 +88,28 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit {
     getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
-                debugger;
                 this.demandRemarks = response.Records;
             }, (error: any) => {
                 console.log("error:  " + error);
             });
     };
 
+    getCurrentDepartmentName(departmentId): string {
+        return this.departments.find(x => { return x.DepartmentId == departmentId; }).DepartmentName;
+    };
+
     getAllDepartments() {
         this.departmentService.GetAll()
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
+                this.getCurrentDepartmentName(this.currentDepartmentId);
             }, (error: any) => {
                 console.log("error:  " + error);
             });
     }
 
 
-    createDemandTrailModel(demand: DemandModelToView, flag, OriginalDemand ?: DemandModel): DemandTrailModel[] {
+    createDemandTrailModel(demand: DemandModelToView, flag, OriginalDemand?: DemandModel): DemandTrailModel[] {
         this.demandTrails = [];
         this.demandTrail = new DemandTrailModel();
         let description = flag ? 'Completed by ' + this.currentDepartmentName : demand.DemandDesc;
@@ -169,11 +174,12 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit {
         demand["showRemarks"] = true;
     };
 
-    cancel(demand) {
+    cancelRemarkUpdate(demand): void {
         demand["showRemarks"] = false;
     };
 
-    ok(remarks, demand) {
+    saveRemark(remarks, demand): void {
+
         this.RemarkToCreate = new DemandRemarkLogModel();
         this.RemarkToCreate.Remark = remarks;
         this.RemarkToCreate.DemandId = demand.DemandId;
@@ -191,7 +197,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit {
             });
     };
 
-    isCompleted(item: DemandModelToView) {
+    isCompleted(item: DemandModelToView): any {
         return item.IsCompleted == true;
 
     };
@@ -209,7 +215,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit {
                 item.RejectedDate = null;
                 item.RejectedBy = null;
                 item.Remarks = x.Remarks;
-                item.DemandTrails = this.createDemandTrailModel(x,true);
+                item.DemandTrails = this.createDemandTrailModel(x, true);
                 return item;
             });
 
@@ -219,7 +225,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit {
             else {
                 this.demandService.UpdateBulkForCompletion(demandCompletion)
                     .subscribe((response: DemandModel[]) => {
-                        this.getAssignedDemands(this.currentDepartmentId, this.currentIncident);
+                        this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                     });
@@ -227,16 +233,33 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit {
         }
     };
 
-    ngOnInit() {
-        this.currentDepartmentId = 4;
-        this.currentDepartmentName = "Command Center";
-        this.currentIncident = 1;
-        this.getAssignedDemands(this.currentDepartmentId, this.currentIncident);
+    ngOnInit(): any {
+        this.currentDepartmentId = 1;
+        this.currentIncidentId = 1;
+        this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
         this.getAllDepartments();
+        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
 
     };
 
-    ngAfterContentInit() {
+    private incidentChangeHandler(incidentId): void {
+        this.currentIncidentId = incidentId;
+        this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
+    };
+
+    private departmentChangeHandler(departmentId): void {
+        this.currentDepartmentId = departmentId;
+        this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
+        this.getCurrentDepartmentName(this.currentDepartmentId);
+    };
+
+    ngOnDestroy(): void {
+        this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('departmentChange');
+    }
+
+    ngAfterContentInit(): any {
         this.setRagStatus();
     };
 }

@@ -11,7 +11,7 @@ import { ActionableModel } from './actionable.model';
 import { ActionableService } from './actionable.service';
 import {
     ResponseModel, DataExchangeService,
-    UtilityService, GlobalConstants
+    UtilityService, GlobalConstants, GlobalStateService
 } from '../../../../shared';
 
 
@@ -34,7 +34,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
 
 
     constructor(formBuilder: FormBuilder, private actionableService: ActionableService,
-        private dataExchange: DataExchangeService<boolean>) {
+        private dataExchange: DataExchangeService<boolean>, private globalState: GlobalStateService) {
 
     }
 
@@ -44,7 +44,20 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
         this.getAllCloseActionable(this.incidentId, this.departmentId);
         this.form = this.resetActionableForm();
         this.dataExchange.Subscribe("CloseActionablePageInitiate", model => this.onCloseActionablePageInitiate(model));
+        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
     }
+
+    private incidentChangeHandler(incidentId): void {
+        this.incidentId = incidentId;
+        this.getAllCloseActionable(this.incidentId, this.departmentId);
+    }
+
+    private departmentChangeHandler(departmentId): void {
+        this.departmentId = departmentId;
+        this.getAllCloseActionable(this.incidentId, this.departmentId);
+    }
+
 
     private resetActionableForm(actionable?: ActionableModel): FormGroup {
         return new FormGroup({
@@ -76,6 +89,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     }
 
     getAllCloseActionable(incidentId: number, departmentId: number): void {
+         alert(incidentId +"  :  "+ departmentId);
         this.actionableService.GetAllCloseByIncidentIdandDepartmentId(incidentId, departmentId)
             .subscribe((response: ResponseModel<ActionableModel>) => {
                 this.closeActionables = response.Records;
