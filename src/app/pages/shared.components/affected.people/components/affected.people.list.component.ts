@@ -17,7 +17,6 @@ export class AffectedPeopleListComponent implements OnInit {
     private globalState: GlobalStateService) { }
     affectedPeople: AffectedPeopleToView[];
     currentIncident: number = 1;
-    medicalStatus: any[] = GlobalConstants.MedicalStatus;
     affectedPersonToUpdate: AffectedPeopleModel = new AffectedPeopleModel();
     //   medicalStatusForm: string = "";
 

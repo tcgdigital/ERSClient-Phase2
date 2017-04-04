@@ -4,15 +4,13 @@
         <span class="client-name prod-align">Crisis Management system</span>
     </div>
 
-    <div class="col-6 col-md-2 top-dw-align no-gutters">
+    <div class="col-6 col-md-3 top-dw-align no-gutters">
         <div class="btn-group">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Incident
-                        </a>
-            <select id="selectRequesterType" class="form-control" [(ngModel)]="incidentId" (ngModelChange)="onChangeIncident($event)">
+           
+            <!-- <select id="selectRequesterType" class="form-control" [(ngModel)]="incidentId" (ngModelChange)="onChangeIncident($event)">
              <option [value]="1">Test Emergency1- AR</option>
                         <option [value]="27">Emergency @ Nagpur (Testing)</option>
-                   </select>
+                   </select>-->
             <!--<div class="dropdown-menu">
                     <a class="dropdown-item" href="#">Action</a>
                     <a class="dropdown-item" href="#">Another action</a>
@@ -20,18 +18,16 @@
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="#">Separated link</a>
                 </div>-->
+            <custom-dropdown [dataItems]="incidents" [placeholder]="incidentPlaceholder" (onChange)="onIncidentChange(selectedIncident)"></custom-dropdown>
         </div>
     </div>
-    <div class="col-6 col-md-2 top-dw-align no-gutters">
+    <div class="col-6 col-md-3 top-dw-align no-gutters">
         <div class="btn-group">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Department
-                        </a>
 
-            <select id="selectRequesterType" class="form-control" [(ngModel)]="departmentId" (ngModelChange)="onChangeDepartment($event)">
+            <!--<select id="selectRequesterType" class="form-control" [(ngModel)]="departmentId" (ngModelChange)="onChangeDepartment($event)">
                          <option [value]="1">ERC</option>
                          <option [value]="2">ERM</option>
-                   </select>
+                   </select>-->
             <!--<div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="#">Action</a>
                     <a class="dropdown-item" href="#">Another action</a>
@@ -53,6 +49,7 @@
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="#">Separated link</a>
                 </div>-->
+            <custom-dropdown [dataItems]="departments" [placeholder]="departmentPlaceholder" (onChange)="onDepartmentChange(selectedDepartment)"></custom-dropdown>
         </div>
     </div>
 </div>

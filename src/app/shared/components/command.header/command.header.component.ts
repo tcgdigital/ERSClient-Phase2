@@ -1,6 +1,5 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
-import {  DataExchangeService } from '../../services/data.exchange';
-import { GlobalStateService } from '../../services';
+import { Component, ViewEncapsulation, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { KeyValue } from '../../models/base.model';
 
 @Component({
     selector: '[command-header]',
@@ -9,22 +8,31 @@ import { GlobalStateService } from '../../services';
     encapsulation: ViewEncapsulation.None
 })
 export class CommandHeaderComponent implements OnInit {
-    incidentId : number;
-    departmentId: number;   
-    constructor(private dataExchange: DataExchangeService<number>, private globalState : GlobalStateService) {
-        this.incidentId = 1;
-        this.departmentId = 1;
-     }
 
-    onChangeIncident(value){
-      this.globalState.NotifyDataChanged('incidentChange', value);
+    @Input() departments: KeyValue[];
+    @Input() incidents: KeyValue[];
+    @Output() departmentChange: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
+    @Output() incidentChange: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
+
+    incidentPlaceholder: string='Incident';
+    departmentPlaceholder: string= 'Department';
+    
+    constructor() { }
+
+    ngOnInit() { }
+
+// onChangeIncident(value){
+//       this.globalState.NotifyDataChanged('incidentChange', value);
+//     }
+
+//     onChangeDepartment(value){
+//       this.globalState.NotifyDataChanged('departmentChange', value);
+//     }
+    public onDepartmentChange(selectedDepartment: KeyValue): void {
+        this.departmentChange.emit(selectedDepartment);
     }
 
-    onChangeDepartment(value){
-      this.globalState.NotifyDataChanged('departmentChange', value);
+    public onIncidentChange(selectedIncident: KeyValue): void {
+        this.incidentChange.emit(selectedIncident);
     }
-
-    ngOnInit() {
-
-     }
 }

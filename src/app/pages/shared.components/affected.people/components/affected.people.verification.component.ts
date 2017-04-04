@@ -19,6 +19,7 @@ export class AffectedPeopleVerificationComponent implements OnInit {
     date: Date = new Date();
     currentIncident: number = 1;
 
+
     getAffectedPeople(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {

@@ -5,7 +5,8 @@ import { AffectedPeopleListComponent, AffectedPeopleVerificationComponent } from
 @Component({
     selector: 'affectedpeople-main',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './views/affected.people.view.html'
+    templateUrl: './views/affected.people.view.html',
+    styleUrls:['./styles/affected.people.style.scss']
 })
 
 export class AffectedPeopleComponent {
