@@ -18,10 +18,31 @@
     margin-top: 6px;
 }
 
-@media screen and (max-width: $resXS-E) {
+@media screen and (max-width: $resXXS-S) {
     .branding {
         img {
-            width: 35%;
+            width: 54%;
+            text-align: center;
+        }
+        .logo-align {
+            text-align: center;
+        }
+        .prod-align {
+            text-align: center;
+            margin-bottom: 2px;
+        }
+    }
+    .client-name,
+    .prod-name {
+        width: 100%;
+        padding-top: 0;
+    }
+}
+
+@media screen and (min-width: $resXS-S) and (max-width: $resXS-E) {
+    .branding {
+        img {
+            width: 42%;
             text-align: center;
         }
         .logo-align {
@@ -64,7 +85,7 @@
             padding-left: 5px !important;
         }
     }
-    .prod-name{
+    .prod-name {
         margin-top: 9px;
     }
     .client-name {

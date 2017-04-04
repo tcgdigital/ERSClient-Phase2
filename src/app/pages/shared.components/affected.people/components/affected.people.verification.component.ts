@@ -17,7 +17,7 @@ export class AffectedPeopleVerificationComponent implements OnInit {
     affectedPeopleForVerification: AffectedPeopleToView[];
     verifiedAffectedPeople: AffectedPeopleModel[];
     date: Date = new Date();
-    currentIncident: number = 88;
+    currentIncident: number = 1112;
 
     getAffectedPeople(currentIncident) : void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)

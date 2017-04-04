@@ -15,7 +15,7 @@ export class AffectedPeopleListComponent implements OnInit {
     constructor(private affectedPeopleService: AffectedPeopleService,
     private involvedPartyService : InvolvePartyService) { }
     affectedPeople: AffectedPeopleToView[];
-    currentIncident: number = 88;
+    currentIncident: number = 1112;
     medicalStatus: any[] = GlobalConstants.MedicalStatus;
     affectedPersonToUpdate: AffectedPeopleModel = new AffectedPeopleModel();
     //   medicalStatusForm: string = "";

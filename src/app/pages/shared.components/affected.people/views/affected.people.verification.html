@@ -1,16 +1,46 @@
 <div>
     <h3>Passenger Directly Affected</h3>
-    <a [routerLink]="['../']">Back to affected People</a>
 
-    <button class="btn btn-primary" type="button" (click)="saveVerifiedAffectedPeople()">Verify</button>
-    <div class="row" *ngFor="let affectedperson of affectedPeopleForVerification"> 
+    <button class="btn btn-primary" type="button" (click)="save()">Verify</button>
+
+
+    <responsive-table>
+        <table responsive-table-body>
+            <thead>
+                <tr>
+                    <th>Verify</th>
+                    <th>Reference Number</th>
+                    <th>PDA Name</th>
+                    <th>PDA Contact</th>
+                    <th>PNR</th>
+                    <th>Passenger Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let affectedperson of affectedPeopleForVerification">
+                    <td data-title="Verify">
+                        <md-checkbox class="Marght" id="IsVerified" [(ngModel)]="affectedperson.IsVerified" aria-label="Add">
+                        </md-checkbox>
+                    </td>
+                    <td data-title="Reference Number">{{affectedperson.TicketNumber}}&nbsp;</td>
+                    <td data-title="PDA Name">{{affectedperson.CrewName}}&nbsp;</td>
+                    <td data-title="PDA Contact">{{affectedperson.ContactNumber}}&nbsp;</td>
+                    <td data-title="PNR">{{affectedperson.Pnr}}&nbsp;</td>
+                    <td data-title="Passenger Type">{{affectedperson.PaxType}}&nbsp;</td>
+                </tr>
+            </tbody>
+        </table>
+    </responsive-table>
+
+
+    <!--<div class="row" *ngFor="let affectedperson of affectedPeopleForVerification">
         <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
             <ul class="list-group">
                 <li class="list-group-item"><strong><i>Verify:</i></strong></li>
                 <md-checkbox class="Marght" id="IsVerified" [(ngModel)]="affectedperson.IsVerified" aria-label="Add">
-                                    </md-checkbox>                
+                </md-checkbox>
             </ul>
-        </div>   
+        </div>
         <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
             <ul class="list-group">
                 <li class="list-group-item"><strong><i>Reference Number:</i></strong></li>
@@ -25,15 +55,15 @@
         </div>
         <div class="col-md-5 col-lg-5 hidden-sm-down col-no-left-padding col-no-right-padding">
             <ul class="list-group">
-                <li class="list-group-item"><strong><i>PDA Contact: </i></strong></li>       
-                <li class="list-group-item" style="border-top: none">{{affectedperson.ContactNumber}}</li>        
+                <li class="list-group-item"><strong><i>PDA Contact: </i></strong></li>
+                <li class="list-group-item" style="border-top: none">{{affectedperson.ContactNumber}}</li>
             </ul>
         </div>
         <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
             <ul class="list-group">
                 <li class="list-group-item"><strong><i>PNR:</i></strong></li>
                 <li class="list-group-item" style="border-top: none">{{affectedperson.Pnr}}</li>
-               
+
             </ul>
         </div>
         <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
@@ -42,6 +72,5 @@
                 <li class="list-group-item" style="border-top: none">{{affectedperson.PaxType}}</li>
             </ul>
         </div>
-        
-    </div>
+    </div>-->
 </div>
