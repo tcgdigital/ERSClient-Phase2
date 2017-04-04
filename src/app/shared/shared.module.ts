@@ -123,7 +123,11 @@ const SHARED_PIPES: any[] = [
         ...SHARED_COMPONENTS,
         ...SHARED_DIRECTIVES,
         ...SHARED_PIPES
-    ]
+    ],
+     providers: [
+         DataExchangeService
+     ]
+
 })
 export class SharedModule {
     static forRoot(): ModuleWithProviders {

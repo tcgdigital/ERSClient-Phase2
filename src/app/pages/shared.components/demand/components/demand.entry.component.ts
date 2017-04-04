@@ -18,7 +18,10 @@ import { InvolvePartyService } from '../../involveparties';
 
 import { CallerService, CallerModel } from '../../caller';
 
-import { ResponseModel, DataExchangeService, GlobalConstants, KeyValue, AutocompleteComponent, UtilityService } from '../../../../shared';
+import {
+    ResponseModel, DataExchangeService, GlobalConstants, KeyValue, AutocompleteComponent,
+    UtilityService, GlobalStateService
+} from '../../../../shared';
 
 @Component({
     selector: 'demand-entry',
@@ -38,8 +41,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     affectedObjects: AffectedObjectsToView[];
     pdas: Array<KeyValue> = [];
     awbs: Array<KeyValue> = [];
-    currentIncident: number = 1;
-    currentDeptId: number = 4;
+    currentIncidentId: number;
+    currentDepartmentId: number;
     parentDeptId: number = null;
     currentDepartmentName: string = "Command Centre";
     communicationLogs: CommunicationLogModel[];
@@ -58,9 +61,9 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     constructor(private demandService: DemandService, private demandTypeService: DemandTypeService,
         private departmentService: DepartmentService, private pageService: PageService,
         private demandTrailService: DemandTrailService, private callerService: CallerService,
-     private involvedPartyService : InvolvePartyService,
+        private involvedPartyService: InvolvePartyService,
         private affectedObjectsService: AffectedObjectsService, private affectedPeopleService: AffectedPeopleService,
-        private dataExchange: DataExchangeService<number>) {
+        private globalState: GlobalStateService, private dataExchange: DataExchangeService<number>) {
         this.showAdd = false;
         this.buttonValue = "Create Demand";
         this.createdBy = 2;
@@ -68,7 +71,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.credentialName = "Anwesha Ray";
     }
 
-    getDemandType() : void {
+    getDemandType(): void {
         this.demandTypeService.GetAll()
             .subscribe((response: ResponseModel<DemandTypeModel>) => {
                 this.demandTypes = response.Records;
@@ -92,7 +95,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             });
     };
 
-    getAllDepartments() : void {
+    getAllDepartments(): void {
         this.departmentService.GetAll()
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
@@ -188,7 +191,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     };
 
 
-    getPassengersCrews(currentIncident) : void {
+    getPassengersCrews(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
@@ -197,7 +200,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             });
     };
 
-    getCargo(currentIncident) : void {
+    getCargo(currentIncident): void {
         this.affectedObjectsService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedObjects = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
@@ -206,7 +209,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             });
     };
 
-    ChangeAffectedPeople() : void {
+    ChangeAffectedPeople(): void {
 
         if (this.demandModel.AffectedPersonId != 0) {
             this.form.controls["AffectedObjectId"].reset({ value: 0, disabled: true });
@@ -219,7 +222,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         }
     };
 
-    ChangeAffectedObjects() : void{
+    ChangeAffectedObjects(): void {
         //  this.demandModel.AffectedObjectId = message.Value;
 
         if (this.demandModel.AffectedObjectId != 0) {
@@ -264,37 +267,37 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     setModelForUpdate(id) {
         this.demandService.GetByDemandId(id)
-        .subscribe((response: ResponseModel<DemandModel>) => {
-            this.demandModel = response.Records[0];
-            this.setModelFormGroup(response.Records[0], x => x.DemandId, x => x.DemandTypeId, x => x.Priority, x => x.DemandDesc
-                , x => x.RequestedBy, x => x.RequesterType, x => x.PDATicketNumber, x => x.TargetDepartmentId, x => x.ContactNumber
-                , x => x.ScheduleTime, x => x.RequiredLocation);
-            this.caller = this.demandModel.Caller || new CallerModel();
-            this.showAdd = true;
-            this.buttonValue = "Cancel";
-            this.form.controls["PDATicketNumber"].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
-            this.form.controls["AffectedPersonId"].reset({ value: this.demandModel.AffectedPersonId, disabled: true });
-            this.form.controls["AffectedObjectId"].reset({ value: this.demandModel.AffectedObjectId, disabled: true });
-            this.form.controls["DemandTypeId"].reset({ value: this.demandModel.DemandTypeId, disabled: true });
+            .subscribe((response: ResponseModel<DemandModel>) => {
+                this.demandModel = response.Records[0];
+                this.setModelFormGroup(response.Records[0], x => x.DemandId, x => x.DemandTypeId, x => x.Priority, x => x.DemandDesc
+                    , x => x.RequestedBy, x => x.RequesterType, x => x.PDATicketNumber, x => x.TargetDepartmentId, x => x.ContactNumber
+                    , x => x.ScheduleTime, x => x.RequiredLocation);
+                this.caller = this.demandModel.Caller || new CallerModel();
+                this.showAdd = true;
+                this.buttonValue = "Cancel";
+                this.form.controls["PDATicketNumber"].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
+                this.form.controls["AffectedPersonId"].reset({ value: this.demandModel.AffectedPersonId, disabled: true });
+                this.form.controls["AffectedObjectId"].reset({ value: this.demandModel.AffectedObjectId, disabled: true });
+                this.form.controls["DemandTypeId"].reset({ value: this.demandModel.DemandTypeId, disabled: true });
 
-        }, (error: any) => {
-            console.log(`Error: ${error}`);
-        });
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
     };
 
     ngOnInit(): any {
+        this.currentIncidentId = 1;
+        this.currentDepartmentId = 1;
         this.getDemandType();
         this.getPageSpecifiedDepartments();
         this.getAllDepartments();
-        this.getPassengersCrews(this.currentIncident);
-        this.getCargo(this.currentIncident);
-
+        this.getPassengersCrews(this.currentIncidentId);
+        this.getCargo(this.currentIncidentId);
         this.initializeForm();
-
+        this.getDepartmentNameAndParentDepartment(this.currentDepartmentId);
         this.demandModel.DemandId = 0;
-        this.demandModel.IncidentId = this.currentIncident;
-        this.demandModel.RequesterDepartmentId = this.currentDeptId;
-        this.demandModel.RequesterParentDepartmentId = this.parentDeptId;
+        this.demandModel.IncidentId = this.currentIncidentId;
+        this.demandModel.RequesterDepartmentId = this.currentDepartmentId;
         this.demandModel.AffectedObjectId = 0;
         this.demandModel.AffectedPersonId = 0;
         this.demandModel.DemandTypeId = 0;
@@ -306,7 +309,31 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.demandModel.Caller.CallerName = this.credentialName;
         this.Action = "Save";
         this.dataExchange.Subscribe("OnDemandUpdate", model => this.setModelForUpdate(model));
+        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
     };
+
+    private incidentChangeHandler(incidentId): void {
+        this.currentIncidentId = incidentId;
+        this.getPassengersCrews(this.currentIncidentId);
+        this.getCargo(this.currentIncidentId);
+    };
+
+    private departmentChangeHandler(departmentId): void {
+        this.currentDepartmentId = departmentId;
+        this.getDepartmentNameAndParentDepartment(this.currentDepartmentId);
+    };
+
+    getDepartmentNameAndParentDepartment(departmentId): void {
+        this.departmentService.Get(departmentId)
+            .subscribe((response: DepartmentModel) => {
+                this.currentDepartmentName = response.DepartmentName;
+                this.parentDeptId = response.ParentDepartmentId;
+                this.demandModel.RequesterParentDepartmentId = this.parentDeptId;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
+    }
 
     SetCommunicationLog(demand: DemandModel): CommunicationLogModel[] {
         this.communicationLogs = new Array<CommunicationLogModel>();
@@ -338,7 +365,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         return this.communicationLogs;
     };
 
-    initializeForm() : void {
+    initializeForm(): void {
         this.form = new FormGroup({
             DemandId: new FormControl(0),
             DemandTypeId: new FormControl(0),
@@ -357,13 +384,13 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     };
 
-    formControlDirtyCheck() : void {
+    formControlDirtyCheck(): void {
         this.demandModelEdit = new DemandModel();
         delete this.demandModelEdit.ActiveFlag;
         delete this.demandModelEdit.CreatedBy;
         delete this.demandModelEdit.CreatedOn;
 
-       // this.caller = new CallerModel();
+        // this.caller = new CallerModel();
         delete this.caller.ActiveFlag;
         delete this.caller.CreatedBy;
         delete this.caller.CreatedOn;
@@ -396,14 +423,15 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         }
     }
 
-    onSubmit() : void {
+    onSubmit(): void {
         if (this.demandModel.DemandId == 0) {
             UtilityService.setModelFromFormGroup<DemandModel>(this.demandModel, this.form, x => x.DemandId, x => x.DemandTypeId, x => x.Priority,
                 x => x.DemandDesc, x => x.RequesterType, x => x.PDATicketNumber, x => x.TargetDepartmentId,
                 x => x.ContactNumber, x => x.RequiredLocation, x => x.ScheduleTime, x => x.ContactNumber);
             this.demandModel.Caller.CallerName = this.form.controls["RequestedBy"].value;
             this.demandModel.Caller.ContactNumber = this.form.controls["ContactNumber"].value;
-            debugger;
+            this.demandModel.IncidentId = this.currentIncidentId;
+            this.demandModel.RequesterDepartmentId = this.currentDepartmentId;
             if (this.demandTypes.find(x => x.DemandTypeId == this.demandModel.DemandTypeId).IsAutoApproved) {
                 this.demandModel.IsApproved = true;
                 this.demandModel.ApproverDepartmentId = null;
@@ -451,13 +479,12 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                             (error: any) => {
                                 console.log("Error in demandTrail");
                             });
-                        if(this.caller.CallerId !=0)
-                        {    
-                        this.callerService.Update(this.caller)
-                            .subscribe((response: CallerModel) => { },
-                            (error: any) => {
-                                console.log("Error in demandTrail");
-                            });
+                        if (this.caller.CallerId != 0) {
+                            this.callerService.Update(this.caller)
+                                .subscribe((response: CallerModel) => { },
+                                (error: any) => {
+                                    console.log("Error in demandTrail");
+                                });
                         }
                         this.initializeForm();
                         this.demandModel = new DemandModel();
@@ -467,25 +494,12 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                         console.log("Error");
                     });
             }
-            // this.demandModel = new DemandModel();
-            // UtilityService.setModelFromFormGroup<DemandModel>(this.demandModel, this.form, x => x.DemandId, x => x.Priority,
-            //     x => x.DemandDesc, x => x.RequestedBy, x => x.RequesterType, x => x.TargetDepartmentId,
-            //     x => x.ContactNumber, x => x.RequiredLocation, x => x.ScheduleTime);
-
-            // this.demandService.Update(this.demandModel)
-            //     .subscribe((response: DemandModel) => {
-            //         alert("Demand successfully updated");
-            //         this.initializeForm();
-            //         this.demandModel = new DemandModel();
-            //         this.showAdd = false;
-            //         this.buttonValue = "Create Demand";
-            //     }, (error: any) => {
-            //         console.log(error);
-            //     });
         }
     };
 
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe("OnDemandUpdate");
+        this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('departmentChange');
     };
 }

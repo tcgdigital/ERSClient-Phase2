@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { Routes } from '@angular/router';
-import { SideMenuService } from '../shared';
+import { SideMenuService, DataExchangeService } from '../shared';
 import { PAGES_MENU } from './pages.menu';
 
 @Component({
@@ -11,6 +11,7 @@ import { PAGES_MENU } from './pages.menu';
 })
 export class PagesComponent implements OnInit {
     sideMenuState: boolean = false;
+    incidentId : number;
 
     /**
      * Creates an instance of PagesComponent.
@@ -18,7 +19,9 @@ export class PagesComponent implements OnInit {
      * 
      * @memberOf PagesComponent
      */
-    constructor(private sideMenuService: SideMenuService) { }
+    constructor(private sideMenuService: SideMenuService,private dataExchange: DataExchangeService<number>) {
+        this.incidentId = 1;
+     }
 
     ngOnInit(): void {
         this.sideMenuService.updateMenuByRoutes(<Routes>PAGES_MENU)

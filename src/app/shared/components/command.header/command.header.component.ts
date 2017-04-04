@@ -1,4 +1,6 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import {  DataExchangeService } from '../../services/data.exchange';
+import { GlobalStateService } from '../../services';
 
 @Component({
     selector: '[command-header]',
@@ -7,7 +9,22 @@ import { Component, ViewEncapsulation, OnInit } from '@angular/core';
     encapsulation: ViewEncapsulation.None
 })
 export class CommandHeaderComponent implements OnInit {
-    constructor() { }
+    incidentId : number;
+    departmentId: number;   
+    constructor(private dataExchange: DataExchangeService<number>, private globalState : GlobalStateService) {
+        this.incidentId = 1;
+        this.departmentId = 1;
+     }
 
-    ngOnInit() { }
+    onChangeIncident(value){
+      this.globalState.NotifyDataChanged('incidentChange', value);
+    }
+
+    onChangeDepartment(value){
+      this.globalState.NotifyDataChanged('departmentChange', value);
+    }
+
+    ngOnInit() {
+
+     }
 }

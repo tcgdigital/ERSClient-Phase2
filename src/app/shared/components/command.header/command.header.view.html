@@ -9,6 +9,10 @@
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Incident
                         </a>
+            <select id="selectRequesterType" class="form-control" [(ngModel)]="incidentId" (ngModelChange)="onChangeIncident($event)">
+             <option [value]="1">Test Emergency1- AR</option>
+                        <option [value]="27">Emergency @ Nagpur (Testing)</option>
+                   </select>
             <!--<div class="dropdown-menu">
                     <a class="dropdown-item" href="#">Action</a>
                     <a class="dropdown-item" href="#">Another action</a>
@@ -23,6 +27,11 @@
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Department
                         </a>
+
+            <select id="selectRequesterType" class="form-control" [(ngModel)]="departmentId" (ngModelChange)="onChangeDepartment($event)">
+                         <option [value]="1">ERC</option>
+                         <option [value]="2">ERM</option>
+                   </select>
             <!--<div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="#">Action</a>
                     <a class="dropdown-item" href="#">Another action</a>
