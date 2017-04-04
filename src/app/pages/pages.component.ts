@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { Routes } from '@angular/router';
-import { SideMenuService, KeyValue, ResponseModel } from '../shared';
+import { SideMenuService, KeyValue, ResponseModel, GlobalStateService } from '../shared';
 import { DepartmentService, DepartmentModel } from './masterdata';
 import { IncidentService, IncidentModel } from './incident';
 import { PAGES_MENU } from './pages.menu';
@@ -26,7 +26,7 @@ export class PagesComponent implements OnInit {
      */
     constructor(private sideMenuService: SideMenuService,
         private incidentService: IncidentService,
-        private departmentService: DepartmentService) { }
+        private departmentService: DepartmentService, private globalState : GlobalStateService) { }
 
     ngOnInit(): void {
         this.sideMenuService.updateMenuByRoutes(<Routes>PAGES_MENU);
@@ -47,11 +47,11 @@ export class PagesComponent implements OnInit {
     }
 
     public onDepartmentChange(selectedDepartment: KeyValue): void {
-        console.log(selectedDepartment);
+       this.globalState.NotifyDataChanged('departmentChange', selectedDepartment.Value);
     }
 
     public onIncidentChange(selectedIncident: KeyValue): void {
-        console.log(selectedIncident);
+       this.globalState.NotifyDataChanged('incidentChange', selectedIncident.Value);
     }
 
     private getDepartments(): void {
