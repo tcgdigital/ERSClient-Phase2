@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewEncapsulation, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { DataServiceFactory, DataExchangeService, TextAccordionModel } from '../../../shared'
+import { DataServiceFactory, DataExchangeService, TextAccordionModel, GlobalStateService } from '../../../shared'
 import { BroadcastWidgetModel } from './broadcast.widget.model'
 import { BroadcastWidgetService } from './broadcast.widget.service'
 import { ModalDirective } from 'ng2-bootstrap/modal';
@@ -19,6 +19,8 @@ export class BroadcastWidgetComponent implements OnInit {
     LatestBroadcasts: Observable<TextAccordionModel[]>;
     AllPublishedBroadcasts: Observable<BroadcastWidgetModel[]>;
     isHidden: boolean = true;
+    currentIncidentId: number;
+    currentDepartmentId: number;
 
     /**
      * Creates an instance of BroadcastWidgetComponent.
@@ -28,16 +30,20 @@ export class BroadcastWidgetComponent implements OnInit {
      * @memberOf BroadcastWidgetComponent
      */
     constructor(private broadcastWidgetService: BroadcastWidgetService,
-        private dataExchange: DataExchangeService<BroadcastWidgetModel>) { }
+        private dataExchange: DataExchangeService<BroadcastWidgetModel>, private globalState: GlobalStateService) { }
 
     public ngOnInit(): void {
-        this.getLatestBroadcasts();
+        this.currentIncidentId = this.incidentId;
+        this.currentDepartmentId = this.departmentId;
+        this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
         this.getAllPublishedBroadcasts();
     }
-    public getLatestBroadcasts(): void {
+  
+
+    public getLatestBroadcasts(departmentId, incidentId): void {
         let data: BroadcastWidgetModel[] = [];
         this.broadcastWidgetService
-            .GetLatestBroadcastsByIncidentAndDepartment(this.departmentId, this.incidentId)
+            .GetLatestBroadcastsByIncidentAndDepartment(departmentId, incidentId)
             .flatMap(x => x).take(2)
             .subscribe(x => {
                 data.push(x);
@@ -46,13 +52,13 @@ export class BroadcastWidgetComponent implements OnInit {
             }, () => {
                 this.LatestBroadcasts = Observable.of(data
                     .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn)));
-            });        
+            });
     }
 
     public getAllPublishedBroadcasts(callback?: Function): void {
         let data: BroadcastWidgetModel[] = [];
         this.broadcastWidgetService
-            .GetAllPublishedBroadcastsByIncident(this.incidentId)
+            .GetAllPublishedBroadcastsByIncident(this.currentIncidentId)
             .flatMap(x => x)
             .subscribe(x => {
                 data.push(x);                

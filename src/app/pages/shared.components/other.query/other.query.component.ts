@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 
 import { EnquiryService, EnquiryModel, QueryModel } from '../call.centre/components';
-import { ResponseModel,GlobalConstants } from '../../../shared';
+import { ResponseModel,GlobalConstants,GlobalStateService } from '../../../shared';
 
 @Component({
     selector: 'other-query',
@@ -10,10 +10,10 @@ import { ResponseModel,GlobalConstants } from '../../../shared';
 })
 export class OtherQueryComponent implements OnInit {
     otherqueries: QueryModel[];
-    incidentId: number;
+    currentincidentId: number;
     
-    constructor(private enquiryService: EnquiryService) {       
-        this.incidentId = 19;
+    constructor(private enquiryService: EnquiryService, private globalState: GlobalStateService) {       
+        this.currentincidentId = 1;
     };
 
     getOtherQueries(incidentId): void {
@@ -26,8 +26,19 @@ export class OtherQueryComponent implements OnInit {
     };
 
     ngOnInit(): any {
-        this.getOtherQueries(this.incidentId);
+        this.getOtherQueries(this.currentincidentId);
+        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
 
+    }
+
+     private incidentChangeHandler(incidentId): void {
+        this.currentincidentId = incidentId;
+        this.getOtherQueries(this.currentincidentId);
+    }
+
+   ngOnDestroy(): void {
+        this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('departmentChange');
     }
 
 }

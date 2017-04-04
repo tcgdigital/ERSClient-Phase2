@@ -7,6 +7,7 @@ import { BroadcastRouting } from './broadcast.routing';
 import { BroadcastComponent } from './broadcast.component';
 import { BroadcastEntryComponent, BroadcastListComponent, BroadcastService } from './components';
 import { BroadcastDepartmentService } from '../../masterdata/broadcast.department';
+import { DepartmentService } from '../../masterdata/department';
 import { BrowserModule } from '@angular/platform-browser';
 import { DataExchangeService } from '../../../shared';
 
@@ -26,7 +27,8 @@ import { DataExchangeService } from '../../../shared';
     providers: [
         BroadcastDepartmentService,
         DataExchangeService,
-        BroadcastService
+        BroadcastService,
+        DepartmentService
     ]
 })
 export class BroadcastModule { }

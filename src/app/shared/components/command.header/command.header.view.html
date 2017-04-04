@@ -6,12 +6,12 @@
 
     <div class="col-6 col-md-3 top-dw-align no-gutters">
         <div class="btn-group">
-            <custom-dropdown [dataItems]="incidents" [placeholder]="incidentPlaceholder" (onChange)="onIncidentChange(selectedIncident)"></custom-dropdown>
+            <custom-dropdown [dataItems]="incidents" [placeholder]="incidentPlaceholder" (onChange)="onIncidentChange($event)"></custom-dropdown>
         </div>
     </div>
     <div class="col-6 col-md-3 top-dw-align no-gutters">
         <div class="btn-group">
-            <custom-dropdown [dataItems]="departments" [placeholder]="departmentPlaceholder" (onChange)="onDepartmentChange(selectedDepartment)"></custom-dropdown>
+            <custom-dropdown [dataItems]="departments" [placeholder]="departmentPlaceholder" (onChange)="onDepartmentChange($event)"></custom-dropdown>
         </div>
     </div>
 </div>

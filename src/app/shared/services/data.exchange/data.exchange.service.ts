@@ -40,6 +40,7 @@ export class DataExchangeService<T> {
     }
 
     public Publish(name: string, data: T, lazy: boolean = true) {
+        debugger;
         if (data === undefined || name === undefined) {
             return;
         }
@@ -54,6 +55,7 @@ export class DataExchangeService<T> {
 
     public Subscribe(name: string, callback: (type: T) => void, lazy: boolean = true): string {
         //if (lazy === void 0) { lazy = true; }
+        debugger;
         if (name === undefined || callback === undefined) {
             return '';
         }

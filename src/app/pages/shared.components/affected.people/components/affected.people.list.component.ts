@@ -4,7 +4,7 @@ import { InvolvePartyModel } from '../../../shared.components';
 import { InvolvePartyService } from '../../involveparties';
 import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';
 import { AffectedPeopleService } from './affected.people.service';
-import { ResponseModel, DataExchangeService, GlobalConstants } from '../../../../shared';
+import { ResponseModel, DataExchangeService, GlobalConstants,GlobalStateService } from '../../../../shared';
 
 @Component({
     selector: 'affectedpeople-list',
@@ -13,19 +13,18 @@ import { ResponseModel, DataExchangeService, GlobalConstants } from '../../../..
 })
 export class AffectedPeopleListComponent implements OnInit {
     constructor(private affectedPeopleService: AffectedPeopleService,
-    private involvedPartyService : InvolvePartyService) { }
+    private involvedPartyService : InvolvePartyService, private dataExchange: DataExchangeService<number>,
+    private globalState: GlobalStateService) { }
     affectedPeople: AffectedPeopleToView[];
-    currentIncident: number = 1112;
-    medicalStatus: any[] = GlobalConstants.MedicalStatus;
+    currentIncident: number = 1;
     affectedPersonToUpdate: AffectedPeopleModel = new AffectedPeopleModel();
     //   medicalStatusForm: string = "";
 
-    open(affectedPerson: AffectedPeopleToView) {
-        alert('Hellow');
+    openAffectedPersonDetail(affectedPerson: AffectedPeopleToView) : void {
         affectedPerson["showDiv"] = !affectedPerson["showDiv"];
     }
 
-    ok(affectedModifiedForm: AffectedPeopleToView) {
+    saveUpdateAffectedPerson(affectedModifiedForm: AffectedPeopleToView) : void {
 
         this.affectedPersonToUpdate.AffectedPersonId = affectedModifiedForm.AffectedPersonId;
         this.affectedPersonToUpdate.Identification = affectedModifiedForm.Identification;
@@ -42,13 +41,13 @@ export class AffectedPeopleListComponent implements OnInit {
             });
 
     }
-    cancel(affectedModifiedForm: AffectedPeopleToView) {
+    cancelUpdate(affectedModifiedForm: AffectedPeopleToView) : void {
         affectedModifiedForm["showDiv"] = false;
         affectedModifiedForm["MedicalStatusToshow"] = affectedModifiedForm.MedicalStatus;
 
     };
 
-    getAffectedPeople(currentIncident) {
+    getAffectedPeople(currentIncident) : void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
 
@@ -63,8 +62,18 @@ export class AffectedPeopleListComponent implements OnInit {
                 console.log(`Error: ${error}`);
             });
     };
+    incidentChangeHandler(incidentId){
+        alert(incidentId);
+             this.currentIncident=incidentId;
+             this.getAffectedPeople(incidentId);
+    }
 
     ngOnInit(): any {
         this.getAffectedPeople(this.currentIncident);
+        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
+    }
+
+      ngOnDestroy(): void {
+        this.globalState.Unsubscribe('incidentChange');
     }
 }
