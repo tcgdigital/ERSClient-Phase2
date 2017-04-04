@@ -39,13 +39,30 @@ export class TabControlComponent implements OnInit, AfterViewInit {
         this.$slider = this.$rootItems.find('li.slider');
 
         this.$rootItems.css('width', `${this.$tabItems.eq(0).width() * this.$tabItems.length}px`);
+
+        this.$rootContainer.hover(
+            ($event: JQueryEventObject) => {
+                let $itemWrapper: JQuery = jQuery($event.currentTarget);
+                let $navigation = $itemWrapper.find('.tab-nav');
+                let $tabColumns = $itemWrapper.find('.tab-column');
+
+                this.updateNavigation($navigation, $itemWrapper, $tabColumns);
+                this.$slider.show();
+            },
+            ($event: JQueryEventObject) => {
+                let $itemWrapper: JQuery = jQuery($event.currentTarget);
+                let $navigation = $itemWrapper.find('.tab-nav');
+                this.hideNavigation($navigation);
+                this.$slider.hide();
+            }
+        );
     }
 
     public onTabLinkClick($event, index: number): void {
         $event.preventDefault();
         let $self: JQuery = jQuery($event.currentTarget);
         let $currentItem: JQuery = $self.parent('li.tab-item');
-        
+
         this.resetSelection();
         this.setSelection($currentItem, $event.pageX, $event.pageY)
         this.$slider.hide();
@@ -81,16 +98,19 @@ export class TabControlComponent implements OnInit, AfterViewInit {
     }
 
     public onContainerMouseEnter($event): void {
-        let $itemWrapper: JQuery = jQuery($event.currentTarget);
-        let $navigation = $itemWrapper.siblings('.tab-nav');
-        let $tabColumns = $itemWrapper.find('.tab-column');
-        this.updateNavigation($navigation, $itemWrapper, $tabColumns);
+        // let $itemWrapper: JQuery = jQuery($event.currentTarget);
+        // let $navigation = $itemWrapper.siblings('.tab-nav');
+        // let $tabColumns = $itemWrapper.find('.tab-column');
+
+        // this.updateNavigation($navigation, $itemWrapper, $tabColumns);
+        // this.$slider.show();
     }
 
     public onContainerMouseLeave($event): void {
-        let $self: JQuery = jQuery($event.currentTarget);
-        let $navigation = $self.find('.tab-nav');
-        this.hideNavigation($navigation)
+        // let $itemWrapper: JQuery = jQuery($event.currentTarget);
+        // let $navigation = $itemWrapper.siblings('.tab-nav');
+        // this.hideNavigation($navigation);
+        // this.$slider.hide();
     }
 
     private updateSlider($currentElm, bool): void {

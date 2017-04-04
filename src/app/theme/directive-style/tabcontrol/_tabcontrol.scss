@@ -46,7 +46,13 @@
             li {
                 &.selected {
                     background: $tab-item-selected-bg;
-                    border-top: 3px solid $tab-item-selected-border;
+                    border-top: 2px solid $tab-item-selected-border;
+                    i{
+                        color: $tab-item-selected-border;
+                    }
+                    span{
+                        color: $tab-item-selected-border;
+                    }
                 }
                 display: inline-block;
                 width: 135px;

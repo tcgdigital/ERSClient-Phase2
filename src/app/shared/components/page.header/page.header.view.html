@@ -1,2 +1,11 @@
-<header brand-header class="row branding" (hambargerClicked)="onToggleSideMenu($event)"></header>
-<section command-header class="command-menu"></section>
+<header brand-header class="row branding" 
+    (hambargerClicked)="onToggleSideMenu($event)"
+    (contactClicked)="onContactClicked($event)"
+    (helpClicked)="onHelpClicked($event)">
+</header>
+<section command-header class="command-menu" 
+    [departments]="departments" 
+    [incidents]="incidents"
+    (departmentChange)="onDepartmentChange(selectedDepartment)"
+    (incidentChange)="onIncidentChange(selectedIncident)">
+</section>

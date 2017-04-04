@@ -2,7 +2,7 @@
 .branding .command-icons {
     position: absolute;
     right: 0;
-    top: 7px;
+    top: 11px;
 }
 
 @media screen and (max-width: $resXS-E) {
@@ -36,8 +36,8 @@
     .command-menu {
         position: fixed;
         z-index: 100;
-        right: 17%;
-        width: 70%;
+        right: 10%;
+        width: 76%;
     }
     .top-dw-align {
         margin-top: 7px;

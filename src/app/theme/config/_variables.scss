@@ -14,6 +14,8 @@ $resMD-S: 768px;
 $resSM-E: 767px;
 $resSM-S: 576px;
 $resXS-E: 575px;
+$resXS-S: 321px;
+$resXXS-S: 320px;
 
 $assets-root: './assets/';
 $images-root: $assets-root + 'images/';
@@ -41,5 +43,9 @@ $footer-height: 30px;
 $text-accordion-item-translate3d-middle:-100px;
 $text-accordion-item-translate3d-back:-200px;
 $text-accordion-item-translate3d-out:-300px;
+
+$table-header-font-weight: $font-weight-normal;
+$table-cell-padding: 1rem;
+$table-condensed-cell-padding:  $table-cell-padding/2;
 
 
