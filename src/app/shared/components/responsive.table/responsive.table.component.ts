@@ -1,12 +1,14 @@
 import {
     Component, OnInit, AfterViewInit,
-    AfterContentInit, ElementRef, Input
+    AfterContentInit, ElementRef, Input,
+    ViewEncapsulation
 } from '@angular/core';
 
 @Component({
     selector: 'responsive-table',
     templateUrl: './responsive.table.view.html',
-    styleUrls: ['./responsive.table.style.scss']
+    styleUrls: ['./responsive.table.style.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class ResponsiveTableComponent implements AfterContentInit {
     @Input() isbordered: boolean = false;
