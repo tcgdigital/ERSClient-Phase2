@@ -10,7 +10,9 @@ export class CasualtySummaryWidgetComponent implements OnInit {
     @Input('currentIncidentId') incidentId: number;
 
     public casualtySummery: CasualtySummeryModel;
-    constructor(private casualtySummaryWidgetService: CasualtySummaryWidgetService) { }
+    constructor(
+        private casualtySummaryWidgetService: CasualtySummaryWidgetService
+        ) { }
 
     public ngOnInit(): void {
         this.casualtySummery = new CasualtySummeryModel();

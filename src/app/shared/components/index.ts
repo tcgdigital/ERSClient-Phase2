@@ -14,3 +14,5 @@ export * from './autocomplete';
 export * from './generic.search';
 export * from './text.accordion';
 export * from './tab.control';
+export * from './responsive.table';
+export * from './dropdown';

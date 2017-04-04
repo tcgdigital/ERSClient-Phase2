@@ -1,6 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { AffectedPeopleModel, AffectedPeopleService } from '../../shared.components/affected.people';
+import { AffectedPeopleModel } from '../../shared.components/affected.people';
+import { AffectedPeopleService } from '../../shared.components/affected.people';
 import { CasualtySummeryModel } from './casualty.summary.widget.model';
 import {
     IServiceInretface,

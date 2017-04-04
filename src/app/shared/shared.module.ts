@@ -23,6 +23,8 @@ import {
     GenericSearchComponent,
     TextAccordionComponent,
     TabControlComponent,
+    ResponsiveTableComponent,
+    CustomDropdownComponent
 } from './components';
 
 import {
@@ -65,7 +67,9 @@ const SHARED_COMPONENTS: any[] = [
     AutocompleteComponent,
     GenericSearchComponent,
     TextAccordionComponent,
-    TabControlComponent
+    TabControlComponent,
+    ResponsiveTableComponent,
+    CustomDropdownComponent
 ];
 
 const SHARED_DIRECTIVES: any[] = [

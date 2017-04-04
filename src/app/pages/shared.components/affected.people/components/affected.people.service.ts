@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Rx';
 import { InvolvePartyModel, AffectedModel } from '../../../shared.components';
 import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';
 import { IAffectedPeopleService } from './IAffectedPeopleService';
-import { CasualtySummeryModel } from '../../../widgets/casualty.summary.widget';
+import { CasualtySummeryModel } from '../../../widgets/casualty.summary.widget/casualty.summary.widget.model';
 import {
     ResponseModel, DataService, ServiceBase,
     DataServiceFactory, DataProcessingService,
