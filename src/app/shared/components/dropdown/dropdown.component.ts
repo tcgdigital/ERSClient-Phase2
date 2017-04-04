@@ -41,7 +41,6 @@ export class CustomDropdownComponent implements AfterContentInit {
         this.value = dataItem;
         this.index = $self.index();
         this.$placeholder.text(`${this.placeholder}: ${this.value.Key.substring(0,10)}`);
-
         this.onChange.emit(dataItem);
     }
 }

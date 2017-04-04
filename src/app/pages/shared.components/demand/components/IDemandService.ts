@@ -1,6 +1,4 @@
-import { Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
-
 import { DemandModel, DemandModelToView } from './demand.model';
 import {
     ServiceBase, ResponseModel
@@ -30,4 +28,5 @@ export interface IDemandService extends ServiceBase<DemandModel> {
     GetDemandByTargetDepartment(incidentId: number, departmentIdProjection: string): Observable<ResponseModel<DemandModel>>;
 
     GetDemandByRequesterDepartment(incidentId: number, departmentIdProjection: string): Observable<ResponseModel<DemandModel>>;
+
 }

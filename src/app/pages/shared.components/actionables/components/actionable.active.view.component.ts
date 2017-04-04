@@ -13,7 +13,7 @@ import { ActionableService } from './actionable.service';
 import {
     ResponseModel, DataExchangeService,
     UtilityService, GlobalConstants,
-    FileUploadService
+    FileUploadService, GlobalStateService
 } from '../../../../shared';
 
 @Component({
@@ -47,7 +47,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
      */
     constructor(formBuilder: FormBuilder, private actionableService: ActionableService,
         private fileUploadService: FileUploadService,
-        private dataExchange: DataExchangeService<boolean>) {
+        private dataExchange: DataExchangeService<boolean>, private globalState: GlobalStateService) {
         this.filesToUpload = [];
     }
 
@@ -65,6 +65,18 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         this.getAllActiveActionable(this.incidentId, this.departmentId);
         this.form = this.resetActionableForm();
         this.dataExchange.Subscribe("OpenActionablePageInitiate", model => this.onOpenActionablePageInitiate(model));
+        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
+    }
+
+    private incidentChangeHandler(incidentId): void {
+        this.incidentId = incidentId;
+        this.getAllActiveActionable(this.incidentId, this.departmentId);
+    }
+
+    private departmentChangeHandler(departmentId): void {
+        this.departmentId = departmentId;
+        this.getAllActiveActionable(this.incidentId, this.departmentId);
     }
 
     /**
@@ -96,6 +108,8 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
 
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe("OpenActionablePageInitiate");
+        this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('departmentChange');
     }
 
     onIncidentDepartmentChange():void{
@@ -147,6 +161,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     getAllActiveActionable(incidentId: number, departmentId: number): void {
+        alert(incidentId +"  :  "+ departmentId);
         this.actionableService.GetAllOpenByIncidentIdandDepartmentId(incidentId, departmentId)
             .subscribe((response: ResponseModel<ActionableModel>) => {
                 this.activeActionables = response.Records;

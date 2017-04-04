@@ -1,3 +1,4 @@
+
 <!--<div page-header 
     [departments]="departments"
     [incidents]="incidents"
@@ -10,7 +11,9 @@
 <div page-header 
     [departments]="departments"
     [incidents]="incidents"
-    (toggleSideMenu)="toggleSideMenu($event)">
+    (toggleSideMenu)="toggleSideMenu($event)"
+    (departmentChange)="onDepartmentChange($event)"
+    (incidentChange)="onIncidentChange($event)">
 </div>
 <side-bar [dockingState]="sideMenuState"></side-bar>
 <section class="body-container">

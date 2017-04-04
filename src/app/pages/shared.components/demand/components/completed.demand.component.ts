@@ -7,7 +7,9 @@ import { CommunicationLogModel } from '../../communicationlogs';
 import { DemandRemarkLogService } from './demand.remarklogs.service';
 import { DemandTrailService } from './demandtrail.service';
 import { DemandTrailModel } from './demand.trail.model';
-import { ResponseModel, DataExchangeService, GlobalConstants } from '../../../../shared';
+import { ResponseModel, DataExchangeService, GlobalConstants, GlobalStateService } from '../../../../shared';
+import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
+
 
 @Component({
     selector: 'completed-demand',
@@ -18,7 +20,7 @@ export class CompletedDemandComponent implements OnInit {
     completedDemands: DemandModelToView[];
     currentDepartmentId: number;
     currentDepartmentName: string;
-    currentIncident: number;
+    currentIncidentId: number;
     createdBy: number = 2;
     communicationLogs: CommunicationLogModel[];
     communicationLog: CommunicationLogModel;
@@ -28,7 +30,8 @@ export class CompletedDemandComponent implements OnInit {
     createdByName: string;
     demandTrail: DemandTrailModel;
     demandTrails: DemandTrailModel[];
-    constructor(private demandService: DemandService, private demandRemarkLogsService: DemandRemarkLogService) {
+    constructor(private demandService: DemandService, private demandRemarkLogsService: DemandRemarkLogService,
+        private globalState: GlobalStateService, private departmentService: DepartmentService) {
         this.createdByName = "Anwesha Ray";
         this.demandRemarks = [];
     }
@@ -97,11 +100,11 @@ export class CompletedDemandComponent implements OnInit {
         demand["showRemarks"] = true;
     };
 
-    cancel(demand) {
+    cancelRemarkUpdate(demand): void {
         demand["showRemarks"] = false;
     };
 
-    ok(remarks, demand) {
+    saveRemark(remarks, demand): void {
         this.RemarkToCreate = new DemandRemarkLogModel();
         this.RemarkToCreate.Remark = remarks;
         this.RemarkToCreate.DemandId = demand.DemandId;
@@ -119,7 +122,7 @@ export class CompletedDemandComponent implements OnInit {
             });
     };
 
-    isClosedOrRejected(item: DemandModelToView) {
+    isClosedOrRejected(item: DemandModelToView): any {
         return (item.IsClosed == true || item.IsRejected == true);
 
     };
@@ -153,7 +156,7 @@ export class CompletedDemandComponent implements OnInit {
         return this.communicationLogs;
     };
 
-    submit() {
+    submit(): void {
         if (this.completedDemands.length > 0) {
             let demandCompletion: DemandModel[] = this.completedDemands.filter(this.isClosedOrRejected).map(x => {
                 let item: DemandModel = new DemandModel();
@@ -165,7 +168,7 @@ export class CompletedDemandComponent implements OnInit {
                     item.DemandStatusDescription = 'Closed by ' + this.currentDepartmentName;
                     item.CommunicationLogs = this.SetCommunicationLog(x);
                     x.DemandStatusDescription = item.DemandStatusDescription;
-                    item.DemandTrails = this.createDemandTrailModel(x,true);
+                    item.DemandTrails = this.createDemandTrailModel(x, true);
                 }
                 if (x.IsRejected) {
                     item.IsRejected = x.IsRejected;
@@ -174,7 +177,7 @@ export class CompletedDemandComponent implements OnInit {
                     item.RejectedDate = new Date;
                     item.DemandStatusDescription = 'Approved and pending with ' + x.TargetDepartmentName;
                     x.DemandStatusDescription = item.DemandStatusDescription;
-                    item.DemandTrails = this.createDemandTrailModel(x,false);
+                    item.DemandTrails = this.createDemandTrailModel(x, false);
                 }
                 return item;
             });
@@ -185,7 +188,7 @@ export class CompletedDemandComponent implements OnInit {
                 this.demandService.UpdateBulkForClosure(demandCompletion)
                     .subscribe((response: DemandModel[]) => {
                         alert("Demand updated successfully");
-                        this.getCompletedDemands(this.currentDepartmentId, this.currentIncident);
+                        this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                     });
@@ -194,12 +197,41 @@ export class CompletedDemandComponent implements OnInit {
 
     };
 
+
     ngOnInit() {
-        this.currentDepartmentId = 4;
+        this.currentDepartmentId = 1;
+        this.currentIncidentId = 1;
         this.currentDepartmentName = "Command Center";
-        this.currentIncident = 1;
-        this.getCompletedDemands(this.currentDepartmentId, this.currentIncident);
+        this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
+        this.getCurrentDepartmentName(this.currentDepartmentId);
+        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
 
     };
+
+    private incidentChangeHandler(incidentId): void {
+        this.currentIncidentId = incidentId;
+        this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
+    };
+
+    private departmentChangeHandler(departmentId): void {
+        this.currentDepartmentId = departmentId;
+        this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
+        this.getCurrentDepartmentName(this.currentDepartmentId);
+    };
+
+    getCurrentDepartmentName(departmentId): void {
+        this.departmentService.Get(departmentId)
+            .subscribe((response: DepartmentModel) => {
+                this.currentDepartmentName = response.DepartmentName;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
+    };
+
+    ngOnDestroy(): void {
+        this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('departmentChange');
+    }
 
 }
