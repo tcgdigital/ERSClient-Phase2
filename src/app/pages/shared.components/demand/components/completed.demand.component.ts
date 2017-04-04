@@ -1,9 +1,12 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 
 import { InvolvePartyModel } from '../../involveparties';
-import { DemandModel, DemandModelToView } from './demand.model';
+import { DemandModel, DemandModelToView, DemandRemarkLogModel } from './demand.model';
 import { DemandService } from './demand.service';
 import { CommunicationLogModel } from '../../communicationlogs';
+import { DemandRemarkLogService } from './demand.remarklogs.service';
+import { DemandTrailService } from './demandtrail.service';
+import { DemandTrailModel } from './demand.trail.model';
 import { ResponseModel, DataExchangeService, GlobalConstants } from '../../../../shared';
 
 @Component({
@@ -12,22 +15,108 @@ import { ResponseModel, DataExchangeService, GlobalConstants } from '../../../..
     templateUrl: '../views/completed.demand.view.html'
 })
 export class CompletedDemandComponent implements OnInit {
-
-    constructor(private demandService: DemandService) { }
     completedDemands: DemandModelToView[];
     currentDepartmentId: number;
-    currentDepartmentName: string ;
+    currentDepartmentName: string;
     currentIncident: number;
     createdBy: number = 2;
     communicationLogs: CommunicationLogModel[];
     communicationLog: CommunicationLogModel;
+    demandRemarks: DemandRemarkLogModel[];
+    Remarks: string;
+    RemarkToCreate: DemandRemarkLogModel;
+    createdByName: string;
+    demandTrail: DemandTrailModel;
+    demandTrails: DemandTrailModel[];
+    constructor(private demandService: DemandService, private demandRemarkLogsService: DemandRemarkLogService) {
+        this.createdByName = "Anwesha Ray";
+        this.demandRemarks = [];
+    }
 
-    getCompletedDemands(deptId,incidentId): void {
+
+    getCompletedDemands(deptId, incidentId): void {
         this.demandService.GetCompletedDemands(deptId, incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.completedDemands = this.demandService.DemandMapper(response.Records);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
+            });
+    };
+
+    getDemandRemarks(demandId): void {
+        this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
+            .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
+                debugger;
+                this.demandRemarks = response.Records;
+            }, (error: any) => {
+                console.log("error:  " + error);
+            });
+    };
+
+    createDemandTrailModel(demand: DemandModelToView, flag): DemandTrailModel[] {
+        this.demandTrails = [];
+        this.demandTrail = new DemandTrailModel();
+        let createdOn = new Date(demand.CreatedOn);
+        let totaTime = createdOn.getTime() + Number(demand.ScheduleTime) * 60000;
+        let scheduleClose: Date = new Date();
+        scheduleClose.setTime(totaTime);
+        this.demandTrail.Answers = "";
+        this.demandTrail.DemandId = demand.DemandId;
+        this.demandTrail.ContactNumber = demand.ContactNumber;
+        this.demandTrail.Priority = demand.Priority;
+        this.demandTrail.RequesterName = demand.RequestedBy;
+        this.demandTrail.RequesterDepartmentName = demand.RequesterDepartmentName;
+        //  this.demandTrail.RequesterParentDepartmentName= demand.RequesterParentDepartmentName;
+        this.demandTrail.TargetDepartmentName = demand.TargetDepartmentName;
+        this.demandTrail.ApproverDepartmentName = demand.ApproverDepartmentName;
+        //   this.demandTrail.RequesterType= demand.RequesterType;
+        this.demandTrail.DemandDesc = demand.DemandDesc;
+        this.demandTrail.IsApproved = demand.IsApproved;
+        this.demandTrail.IsCompleted = demand.IsCompleted;
+        this.demandTrail.ScheduledClose = scheduleClose;
+        this.demandTrail.IsClosed = flag;
+        this.demandTrail.ClosedOn = flag ? new Date() : null;
+        this.demandTrail.ClosedByDepartmentName = flag ? this.currentDepartmentName : null;
+        this.demandTrail.IsRejected = demand.IsRejected;
+        this.demandTrail.RejectedDate = flag ? null : new Date();
+        this.demandTrail.RejectedByDepartmentName = flag ? null : this.currentDepartmentName;
+        this.demandTrail.DemandStatusDescription = demand.DemandStatusDescription;
+        this.demandTrail.Remarks = demand.Remarks;
+        this.demandTrail.ActiveFlag = "Active";
+        this.demandTrail.CreatedBy = demand.CreatedBy;
+        this.demandTrail.CreatedOn = demand.CreatedOn
+
+        let date = new Date();
+        let answer = '<div><p>' + demand.DemandStatusDescription + '   <strong>Date :</strong>  ' + date.toLocaleString() + '  </p><div>';
+        this.demandTrail.Answers = answer;
+        this.demandTrails.push(this.demandTrail);
+        return this.demandTrails;
+    };
+
+    openDemandRemarks(demand) {
+        this.getDemandRemarks(demand.DemandId);
+        demand["showRemarks"] = true;
+    };
+
+    cancel(demand) {
+        demand["showRemarks"] = false;
+    };
+
+    ok(remarks, demand) {
+        this.RemarkToCreate = new DemandRemarkLogModel();
+        this.RemarkToCreate.Remark = remarks;
+        this.RemarkToCreate.DemandId = demand.DemandId;
+        this.RemarkToCreate.RequesterDepartmentName = demand.RequesterDepartmentName;
+        this.RemarkToCreate.TargetDepartmentName = demand.TargetDepartmentName;
+        this.RemarkToCreate.CreatedByName = this.createdByName;
+        this.demandRemarkLogsService.Create(this.RemarkToCreate)
+            .subscribe((response: DemandRemarkLogModel) => {
+                alert("Remark saved successfully");
+                this.getDemandRemarks(demand.DemandId);
+                this.Remarks = "";
+            }, (error: any) => {
+                console.log("error:  " + error);
+                alert("Error occured during saving the remark");
             });
     };
 
@@ -76,6 +165,8 @@ export class CompletedDemandComponent implements OnInit {
                     item.ClosedOn = new Date;
                     item.DemandStatusDescription = 'Closed by ' + this.currentDepartmentName;
                     item.CommunicationLogs = this.SetCommunicationLog(x);
+                    x.DemandStatusDescription = item.DemandStatusDescription;
+                    item.DemandTrails = this.createDemandTrailModel(x,true);
                 }
                 if (x.IsRejected) {
                     item.IsRejected = x.IsRejected;
@@ -83,6 +174,8 @@ export class CompletedDemandComponent implements OnInit {
                     item.RejectedBy = this.createdBy;
                     item.RejectedDate = new Date;
                     item.DemandStatusDescription = 'Approved and pending with ' + x.TargetDepartmentName;
+                    x.DemandStatusDescription = item.DemandStatusDescription;
+                    item.DemandTrails = this.createDemandTrailModel(x,false);
                 }
                 return item;
             });
@@ -93,7 +186,7 @@ export class CompletedDemandComponent implements OnInit {
                 this.demandService.UpdateBulkForClosure(demandCompletion)
                     .subscribe((response: DemandModel[]) => {
                         alert("Demand updated successfully");
-                        this.getCompletedDemands(this.currentDepartmentId,this.currentIncident);
+                        this.getCompletedDemands(this.currentDepartmentId, this.currentIncident);
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                     });
@@ -103,10 +196,10 @@ export class CompletedDemandComponent implements OnInit {
     };
 
     ngOnInit() {
-        this.currentDepartmentId = 1;
-    this.currentDepartmentName = "Command Center";
-    this.currentIncident = 88;
-        this.getCompletedDemands(this.currentDepartmentId,this.currentIncident);
+        this.currentDepartmentId = 4;
+        this.currentDepartmentName = "Command Center";
+        this.currentIncident = 1;
+        this.getCompletedDemands(this.currentDepartmentId, this.currentIncident);
 
     };
 

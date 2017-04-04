@@ -22,6 +22,7 @@ import 'rxjs/add/operator/mergeMap';
 // Web dependencies
 import 'jquery';
 // import 'jquery-slimscroll';
+import 'selectize';
 import 'bootstrap';
 import 'font-awesome-sass-loader';
 import 'lodash';

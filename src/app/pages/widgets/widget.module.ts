@@ -1,17 +1,26 @@
-import { NgModule, ModuleWithProviders} from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
+import { ModalModule, ModalDirective } from 'ng2-bootstrap';
+import { SharedModule } from '../../shared';
+
+import {
+    AffectedPeopleService,
+    EnquiryService,
+    ActionableService
+} from '../shared.components';
 
 import {
     BroadcastWidgetComponent,    
     CasualtySummaryWidgetComponent,
     ChecklistSummaryWidgetComponent,
     ClockWidgetComponent,
-    DemandSummaryWidgetComponent,
+    DemandReceivedSummaryWidgetComponent,
+    DemandRaisedSummaryWidgetComponent,
     MediaReleaseWidgetComponent,
     PeopleOnBoardWidgetComponent,
-    PresidentMessageWidgetComponent,    
+    PresidentMessageWidgetComponent,
 } from './index';
 
 import {
@@ -19,7 +28,8 @@ import {
     CasualtySummaryWidgetService,
     ChecklistSummaryWidgetService,
     ClockWidgetService,
-    DemandSummaryWidgetService,
+    DemandReceivedSummaryWidgetService,
+    DemandRaisedSummaryWidgetService,
     MediaReleaseWidgetService,
     PeopleOnBoardWidgetService,
     PresidentMessageWidgetService
@@ -30,10 +40,11 @@ const WIDGET_COMPONENTS: any[] = [
     CasualtySummaryWidgetComponent,
     ChecklistSummaryWidgetComponent,
     ClockWidgetComponent,
-    DemandSummaryWidgetComponent,
+    DemandReceivedSummaryWidgetComponent,
+    DemandRaisedSummaryWidgetComponent,
     MediaReleaseWidgetComponent,
     PeopleOnBoardWidgetComponent,
-    PresidentMessageWidgetComponent,   
+    PresidentMessageWidgetComponent,
 ];
 
 const WIDGET_SERVICE: any[] = [
@@ -41,16 +52,23 @@ const WIDGET_SERVICE: any[] = [
     CasualtySummaryWidgetService,
     ChecklistSummaryWidgetService,
     ClockWidgetService,
-    DemandSummaryWidgetService,
+    DemandReceivedSummaryWidgetService,
+    DemandRaisedSummaryWidgetService,
     MediaReleaseWidgetService,
     PeopleOnBoardWidgetService,
-    PresidentMessageWidgetService
+    PresidentMessageWidgetService,
+
+    AffectedPeopleService,
+    EnquiryService,
+    ActionableService
 ];
 
 @NgModule({
     imports: [
         CommonModule,
         HttpModule,
+        ModalModule.forRoot(),        
+        SharedModule,
         RouterModule
     ],
     exports: [

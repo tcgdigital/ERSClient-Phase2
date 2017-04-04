@@ -4,16 +4,25 @@ import { HttpModule } from '@angular/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { DropdownModule } from 'ng2-bootstrap';
+import { NgSelectizeModule } from 'ng-selectize';
 
 import {
-    SidebarComponent,
-    SideMenuComponent,
-    MenuItemComponent,
+    PaddingFormatterPipe
+} from './pipes';
+
+import {
+    BrandHeaderComponent,
+    CommandHeaderComponent,
     PageHeaderComponent,
+    SidebarComponent,
+    SideMenuItemComponent,
+    PageFooterComponent,
     ContentHeaderComponent,
     TopMenuComponent,
     AutocompleteComponent,
     GenericSearchComponent,
+    TextAccordionComponent,
+    TabControlComponent,
 } from './components';
 
 import {
@@ -47,14 +56,16 @@ import {
 } from './constants';
 
 const SHARED_COMPONENTS: any[] = [
-    SidebarComponent,
-    SideMenuComponent,
-    MenuItemComponent,
     PageHeaderComponent,
+    SidebarComponent,
+    SideMenuItemComponent,
+    PageFooterComponent,
     ContentHeaderComponent,
     TopMenuComponent,
     AutocompleteComponent,
-    GenericSearchComponent
+    GenericSearchComponent,
+    TextAccordionComponent,
+    TabControlComponent
 ];
 
 const SHARED_DIRECTIVES: any[] = [
@@ -87,10 +98,17 @@ const SHARED_CONSTANTS: any[] = [
     decorateModuleRef
 ];
 
+const SHARED_PIPES: any[] = [
+    PaddingFormatterPipe
+];
+
 @NgModule({
     declarations: [
+        BrandHeaderComponent,
+        CommandHeaderComponent,
         ...SHARED_COMPONENTS,
-        ...SHARED_DIRECTIVES
+        ...SHARED_DIRECTIVES,
+        ...SHARED_PIPES
     ],
     imports: [
         CommonModule,
@@ -98,11 +116,13 @@ const SHARED_CONSTANTS: any[] = [
         FormsModule,
         ReactiveFormsModule,
         HttpModule,
+        NgSelectizeModule,
         DropdownModule.forRoot()
     ],
     exports: [
         ...SHARED_COMPONENTS,
-        ...SHARED_DIRECTIVES
+        ...SHARED_DIRECTIVES,
+        ...SHARED_PIPES
     ]
 })
 export class SharedModule {

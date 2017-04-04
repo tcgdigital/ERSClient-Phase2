@@ -3,27 +3,28 @@ import { Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { ActionableModel } from './actionable.model';
+import { IActionableService } from './IActionableService';
 import {
     ResponseModel, DataService, DataServiceFactory,
     DataProcessingService, IServiceInretface,
     RequestModel, WEB_METHOD, GlobalConstants,
-    BaseModel
+    ServiceBase, BaseModel
 } from '../../../../shared';
 
 @Injectable()
-export class ActionableService {
-    private _dataService: DataService<ActionableModel>;
+export class ActionableService extends ServiceBase<ActionableModel> implements IActionableService {
     private _batchDataService: DataService<ActionableModel>;
-private _actionables:ResponseModel<ActionableModel>;
+    private _actionables: ResponseModel<ActionableModel>;
+
     /**
-         * Creates an instance of ActionableService.
-         * @param {DataServiceFactory} dataServiceFactory 
-         * @memberOf ActionableService
-         */
+     * Creates an instance of ActionableService.
+     * @param {DataServiceFactory} dataServiceFactory 
+     * 
+     * @memberOf ActionableService
+     */
     constructor(private dataServiceFactory: DataServiceFactory) {
+        super(dataServiceFactory, 'Actionables');
         let option: DataProcessingService = new DataProcessingService();
-        this._dataService = this.dataServiceFactory
-            .CreateServiceWithOptions<ActionableModel>('Actionables', option);
 
         option = new DataProcessingService();
         option.EndPoint = GlobalConstants.BATCH;
@@ -31,27 +32,24 @@ private _actionables:ResponseModel<ActionableModel>;
             .CreateServiceWithOptions<ActionableModel>('', option);
     }
 
-    GetAll(): Observable<ResponseModel<ActionableModel>> {
+    public GetAll(): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
             .Expand('CheckList($select=CheckListId,CheckListCode)')
             .OrderBy("CreatedOn desc")
             .Execute();
     }
-    GetAllOpenByIncidentIdandDepartmentId(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
+
+    public GetAllOpenByIncidentIdandDepartmentId(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
+
         return this._dataService.Query()
             .Expand('CheckList($select=CheckListId,CheckListCode,ParentCheckListId)')
-            .Filter("CompletionStatus eq 'Open' and IncidentId eq " + incidentId + " and DepartmentId eq " + departmentId)
+            .Filter(`CompletionStatus eq 'Open' and IncidentId eq ${incidentId} and DepartmentId eq ${departmentId}`)
             .OrderBy("CreatedOn desc")
             .Execute()
             .map((actionables: ResponseModel<ActionableModel>) => {
                 this._actionables = actionables;
                 this._actionables.Records.forEach(element => {
-                    if (element.ActiveFlag == 'Active') {
-                        element.Active = true;
-                    }
-                    else {
-                        element.Active = false;
-                    }
+                    element.Active = (element.ActiveFlag == 'Active');
                     element.Done = false;
                     element.IsDisabled = false;
                     element.show = false;
@@ -60,36 +58,33 @@ private _actionables:ResponseModel<ActionableModel>;
                     }
                     element.RagColor = this.setRagColor(element.AssignedDt, element.ScheduleClose);
                 });
-                
                 return actionables;
             });
     }
-    GetAllCloseByIncidentIdandDepartmentId(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
+
+    public GetAllCloseByIncidentIdandDepartmentId(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
             .Expand('CheckList($select=CheckListId,CheckListCode)')
-            .Filter("CompletionStatus eq 'Close' and IncidentId eq " + incidentId + " and DepartmentId eq " + departmentId)
+            .Filter(`CompletionStatus eq 'Close' and IncidentId eq ${incidentId} and DepartmentId eq ${departmentId}`)
             .OrderBy("CreatedOn desc")
             .Execute()
             .map((actionables: ResponseModel<ActionableModel>) => {
                 this._actionables = actionables;
                 this._actionables.Records.forEach(element => {
-                    if (element.ActiveFlag == 'Active') {
-                        element.Active = true;
-                    }
-                    else {
-                        element.Active = false;
-                    }
+                    element.Active = (element.ActiveFlag == 'Active');
                 });
-                
+
                 return actionables;
             });
     }
-    Update(entity: ActionableModel): Observable<ActionableModel> {
+
+    public Update(entity: ActionableModel): Observable<ActionableModel> {
         let key: string = entity.ActionId.toString();
 
         return this._dataService.Patch(entity, key).Execute();
     }
-    setRagColor(businessTimeStart?: Date, businessTimeEnd?: Date): string {
+
+    public setRagColor(businessTimeStart?: Date, businessTimeEnd?: Date): string {
         if (businessTimeStart != undefined && businessTimeEnd != undefined) {
             let startTime: number = (new Date(businessTimeStart)).getTime();
             let endTime: number = (new Date(businessTimeEnd)).getTime();
@@ -114,10 +109,9 @@ private _actionables:ResponseModel<ActionableModel>;
                 return "statusGreen";
             }
         }
-
     }
 
-    BatchOperation(data: any[]): Observable<ResponseModel<BaseModel>> {
+    public BatchOperation(data: any[]): Observable<ResponseModel<BaseModel>> {
         let requests: Array<RequestModel<BaseModel>> = [];
 
         data.forEach(x => {
@@ -126,5 +120,16 @@ private _actionables:ResponseModel<ActionableModel>;
         });
         return this._batchDataService.BatchPost<BaseModel>(requests).Execute();
     }
-    
+
+    public GetOpenActionableCount(incidentId: number, departmentId: number): Observable<number> {
+        return this._dataService.Count()
+            .Filter(`IncidentId eq ${incidentId} and DepartmentId eq ${departmentId} and CompletionStatus eq 'Open'`)
+            .Execute();
+    }
+
+    public GetCloseActionableCount(incidentId: number, departmentId: number): Observable<number> {
+        return this._dataService.Count()
+            .Filter(`IncidentId eq ${incidentId} and DepartmentId eq ${departmentId} and CompletionStatus eq 'Close'`)
+            .Execute();
+    }
 }

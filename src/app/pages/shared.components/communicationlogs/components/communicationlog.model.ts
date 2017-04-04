@@ -1,5 +1,5 @@
 import { BaseModel } from '../../../../shared';
-import { DepartmentModel } from '../../../masterdata/department';
+import { DepartmentModel } from '../../../masterdata';
 import {
     AffectedPeopleModel,
     AffectedObjectModel,
@@ -25,6 +25,11 @@ export class CommunicationLogModel extends BaseModel {
     public Enquiry?: EnquiryModel;
     public Demand?: DemandModel;
 
+    /**
+     * Creates an instance of CommunicationLogModel.
+     * 
+     * @memberOf CommunicationLogModel
+     */
     constructor() {
         super();
 

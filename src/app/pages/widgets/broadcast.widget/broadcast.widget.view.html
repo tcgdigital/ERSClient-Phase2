@@ -1,20 +1,53 @@
-<h2>Broadcast Messages</h2>
-<ul>
-    <li *ngFor="let broadcast of LatestBroadcasts | async">
-        <span>{{broadcast.Message}}
-            <i>{{broadcast.SubmittedOn}}</i>
-        </span>
-    </li>
-</ul>
+<div class="row messaging-widget-container no-gutters">
+    <div class="col-3 col-md-12 col-lg-3 border-seperator">
+        <div class="message-icon">
+            <i class="fa fa-bullhorn fa-3x" aria-hidden="true"></i>
+            <span>broadcast message</span>
+            <a href="javascript:void(0);" (click)="openBroadcastMessages()">view all</a>
+        </div>
+    </div>
+    <div class="col-9 col-md-12 col-lg-9">
+        <text-accordion [accordionItems]="LatestBroadcasts"></text-accordion>
+    </div>
+</div>
 
-<!--"View All Broadcasts" modal pop up Panel-->
-<br />
-<a (click) = "openBroadcastMessages(false,$event)" href="">View All Broadcast Messages</a>
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Broadcast Messages</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideAllBroadcastMessages()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         <table class="table footable default ">
+            <thead>
+                <tr>
+                    <th width="40%">Broadcast Messages</th>
+                    <th width="20%">Priority</th>
+                    <th width="20%">Initiated Department</th>
+                    <th width="20%">Published On</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let broadcast of AllPublishedBroadcasts | async">
+                    <td width="40%">{{broadcast.Message}}</td>
+                    <td width="20%">{{broadcast.Priority}}</td>
+                    <td width="20%">{{broadcast.InitiateDepartment.DepartmentName}}</td>
+                    <td width="20%">{{broadcast.SubmittedOn}}</td>
+                </tr>
+            </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 
-<div [hidden]="isHidden">
-     <div class="modalcross">
-         <br />
-        <a (click) = "openBroadcastMessages(true,$event)" href=""><i class="fa fa-times" aria-hidden="true" ></i> </a>
+<!--<div [hidden]="isHidden">
+    <div class="modalcross">
+        <br />
+        <a (click)="openBroadcastMessages(true,$event)" href=""><i class="fa fa-times" aria-hidden="true" ></i> </a>
     </div>
     <br />
     <h4>All Published Broadcasts</h4>
@@ -30,9 +63,6 @@
                 </tr>
             </thead>
             <tbody>
-                <!--<tr *ngIf="!AllPublishedBroadcasts.length">
-                    <td colspan="10">No Broadcast to show.</td>
-                </tr>-->
                 <tr *ngFor="let broadcast of AllPublishedBroadcasts | async">
                     <td width="40%">{{broadcast.Message}}</td>
                     <td width="20%">{{broadcast.Priority}}</td>
@@ -42,5 +72,6 @@
             </tbody>
         </table>
     </div>
+
 </div>
-<br />
+-->

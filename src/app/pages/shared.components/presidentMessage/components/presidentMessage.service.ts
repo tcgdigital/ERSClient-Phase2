@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { PresidentMessageModel } from './presidentMessage.model';

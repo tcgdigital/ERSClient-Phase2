@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
-import { DropdownModule } from 'ng2-bootstrap';
+import { DropdownModule, ModalModule } from 'ng2-bootstrap';
 
 import { routing } from './app.routing';
 import { SharedModule } from './shared';
@@ -37,6 +37,7 @@ type StoreType = {
         FormsModule,
         ReactiveFormsModule,
         DropdownModule.forRoot(),
+        ModalModule.forRoot(),
         SharedModule.forRoot(),
         PagesModule,
         routing

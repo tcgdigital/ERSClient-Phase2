@@ -1,108 +1,168 @@
-/// Slightly lighten a color
-/// @access public
-/// @param {Color} $color - color to tint
-/// @param {Number} $percentage - percentage of `$color` in returned color
-/// @return {Color}
-@function tint($color, $percentage) {
-  @return mix(white, $color, $percentage);
-}
+ @mixin bg-nr($relativeUrl) {
+     background: url($images-root + $relativeUrl) no-repeat 0 0;
+ }
+ 
+ @mixin bg($relativeUrl) {
+     background: url($images-root + $relativeUrl);
+ }
+ 
+ @mixin bg-image($relativeUrl) {
+     background-image: url($images-root + $relativeUrl);
+ }
+ 
+ @mixin placeholderStyle($color, $opacity) {
+     &::-webkit-input-placeholder {
+         color: $color;
+         opacity: $opacity;
+     }
+     &:-moz-placeholder {
+         /* Firefox 18- */
+         color: $color;
+         opacity: $opacity;
+     }
+     &::-moz-placeholder {
+         /* Firefox 19+ */
+         color: $color;
+         opacity: $opacity;
+     }
+     &:-ms-input-placeholder {
+         color: $color;
+         opacity: $opacity;
+     }
+ }
+ 
+ @mixin rounded($radius: 0.5em) {
+     -webkit-border-radius: $radius;
+     -moz-border-radius: $radius;
+     border-radius: $radius;
+ }
+ 
+ @mixin box-shadow($top, $left, $blur, $spread, $color, $inset: false) {
+     @if $inset {
+         -webkit-box-shadow: inset $top $left $blur $spread $color;
+         -moz-box-shadow: inset $top $left $blur $spread $color;
+         box-shadow: inset $top $left $blur $spread $color;
+     }
+     @else {
+         -webkit-box-shadow: $top $left $blur $spread $color;
+         -moz-box-shadow: $top $left $blur $spread $color;
+         box-shadow: $top $left $blur $spread $color;
+     }
+ }
+ 
+ @function convert-angle($value, $unit) {
+     $convertable-units: deg grad turn rad;
+     $conversion-factors: 1 (10grad/9deg) (1turn/360deg) (3.1415926rad/180deg);
+     @if index($convertable-units, unit($value)) and index($convertable-units, $unit) {
+         @return $value / nth($conversion-factors, index($convertable-units, unit($value))) * nth($conversion-factors, index($convertable-units, $unit));
+     }
+     @warn "Cannot convert `#{unit($value)}` to `#{$unit}`.";
+ }
+ 
+ @function is-direction($value) {
+     $is-direction: index((to top, to top right, to right top, to right, to bottom right, to right bottom, to bottom, to bottom left, to left bottom, to left, to left top, to top left), $value);
+     $is-angle: type-of($value)=='number' and index('deg' 'grad' 'turn' 'rad', unit($value));
+     @return $is-direction or $is-angle;
+ }
+ 
+ @function legacy-direction($value) {
+     @if is-direction($value)==false {
+         @warn "Cannot convert `#{$value}` to legacy syntax because it doesn't seem to be an angle or a direction";
+     }
+     $conversion-map: ( to top: bottom, to top right: bottom left, to right top: left bottom, to right: left, to bottom right: top left, to right bottom: left top, to bottom: top, to bottom left: top right, to left bottom: right top, to left: right, to left top: right bottom, to top left: bottom right);
+     @if map-has-key($conversion-map, $value) {
+         @return map-get($conversion-map, $value);
+     }
+     @return 90deg - convert-angle($value, 'deg');
+ }
+ 
+ @mixin linear-gradient-bg($direction, $color-stops...) {
+     @if is-direction($direction)==false {
+         $color-stops: ($direction, $color-stops);
+         $direction: 180deg;
+     }
+     background: nth(nth($color-stops, 1), 1);
+     background: -webkit-linear-gradient(legacy-direction($direction), $color-stops);
+     background: -o-linear-gradient(legacy-direction($direction), $color-stops);
+     background: -moz-linear-gradient(legacy-direction($direction), $color-stops);
+     background: linear-gradient($direction, $color-stops);
+ }
+ 
+ @mixin linear-gradient-border($direction, $color-stops...) {
+     @if is-direction($direction)==false {
+         $color-stops: ($direction, $color-stops);
+         $direction: 180deg;
+     }
+     border-image: nth(nth($color-stops, 1), 1);
+     border-image: -webkit-linear-gradient(legacy-direction($direction), $color-stops) 1;
+     border-image: -o-linear-gradient(legacy-direction($direction), $color-stops) 1;
+     border-image: -moz-linear-gradient(legacy-direction($direction), $color-stops) 1;
+     border-image: linear-gradient($direction, $color-stops) 1;
+ }
+ 
+ @mixin translate3d($tx, $ty, $tz) {
+     -webkit-transform: translate3d($tx, $ty, $tz);
+     -moz-transform: translate3d($tx, $ty, $tz);
+     -ms-transform: translate3d($tx, $ty, $tz);
+     -o-transform: translate3d($tx, $ty, $tz);
+     transform: translate3d($tx, $ty, $tz);
+ }
+ 
+ @mixin perspective($length) {
+     -webkit-perspective: $length;
+     -moz-perspective: $length;
+     perspective: $length;
+ }
+ 
+ @mixin perspective-origin($x, $y) {
+     -webkit-perspective-origin: $x $y;
+     -moz-perspective-origin: $x $y;
+     perspective-origin: $x $y;
+ }
+ 
+ @mixin transition($prop, $delay) {
+     -webkit-transition: $prop $delay;
+     -moz-transition: $prop $delay;
+     transition: $prop $delay;
+ }
+ 
+ @mixin transform($prop-stops...) {
+     -webkit-transform: $prop-stops;
+     -moz-transform: $prop-stops;
+     -ms-transform: $prop-stops;
+     -o-transform: $prop-stops;
+     transform: $prop-stops;
+ }
+ 
+ @mixin flex($grow, $shrink, $basis) {
+     -webkit-flex: $grow $shrink $basis;
+     -ms-flex: $grow $shrink $basis;
+     flex: $grow $shrink $basis;
+ }
+ 
+ @mixin animation($type, $duration) {
+     -webkit-animation: $type $duration;
+     -moz-animation: $type $duration;
+     animation: $type $duration;
+ }
+ 
+ @mixin translateY($y) {
+     -webkit-transform: translateY($y);
+     -moz-transform: translateY($y);
+     -ms-transform: translateY($y);
+     -o-transform: translateY($y);
+     transform: translateY($y);
+ }
+ 
+ @mixin translateY-rotate($y, $rotate) {
+     -webkit-transform: translateY($y) rotate($rotate);
+     -moz-transform: translateY($y) rotate($rotate);
+     -ms-transform: translateY($y) rotate($rotate);
+     -o-transform: translateY($y) rotate($rotate);
+     transform: translateY($y) rotate($rotate);
+ }
 
-/// Slightly darken a color
-/// @access public
-/// @param {Color} $color - color to shade
-/// @param {Number} $percentage - percentage of `$color` in returned color
-/// @return {Color}
-@function shade($color, $percentage) {
-  @return mix(black, $color, $percentage);
-}
-
-@mixin scrollbars($size, $foreground-color, $background-color: mix($foreground-color, white, 50%)) {
-  ::-webkit-scrollbar {
-    width: $size;
-    height: $size;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: $foreground-color;
-    cursor: pointer;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: $background-color;
-  }
-
-  // For Internet Explorer
-  body {
-    scrollbar-face-color: $foreground-color;
-    scrollbar-track-color: $background-color;
-  }
-}
-
-@mixin bg-nr($relativeUrl) {
-  background: url($images-root + $relativeUrl) no-repeat 0 0;
-}
-@mixin bg($relativeUrl) {
-  background: url($images-root + $relativeUrl);
-}
-
-@mixin bg-image($relativeUrl) {
-  background-image: url($images-root + $relativeUrl);
-}
-
-@mixin bg-translucent-dark($opacity) {
-  background: rgba(0, 0, 0, $opacity);
-}
-
-@mixin placeholderStyle($color, $opacity) {
-  &::-webkit-input-placeholder {
-    color: $color;
-    opacity: $opacity;
-  }
-  &:-moz-placeholder {
-    /* Firefox 18- */
-    color: $color;
-    opacity: $opacity;
-  }
-  &::-moz-placeholder {
-    /* Firefox 19+ */
-    color: $color;
-    opacity: $opacity;
-  }
-  &:-ms-input-placeholder {
-    color: $color;
-    opacity: $opacity;
-  }
-}
-
-@mixin overrideColors($color) {
-  p,
-  h1,h2,h3,h4,h5,h6,
-  .pie-chart-item,
-  .panel-heading>.dropdown .dropdown-toggle,
-  .panel-title,
-  ol.blur span,
-  ul.blur,
-  .popular-app-cost,
-  .popular-app-info,
-  .panel-title>.small,
-  .panel-title>.small>a,
-  .panel-title>a,
-  .panel-title>small,
-  .panel-title>small>a,
-  .traffic-text span,
-  .form-group label,
-  .help-block{
-    color: $color;
-  }
-  .feed-message .message-time, .text-muted {
-    color: darken($color, 20);
-  }
-}
-
-@mixin gradient($color-1, $color-2, $color-3) {
-  background: $color-2; /* Old browsers */
-  background: -moz-radial-gradient(bottom, ellipse cover,  $color-1 0%, $color-2 45%, $color-3 100%); /* FF3.6-15 */
-  background: -webkit-radial-gradient(bottom, ellipse cover,  $color-1 0%,$color-2 45%,$color-3 100%); /* Chrome10-25,Safari5.1-6 */
-  background: radial-gradient(ellipse at bottom,  $color-1 0%,$color-2 45%,$color-3 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$color-1', endColorstr='$color-3',GradientType=1); /* IE6-9 fallback on horizontal gradient */
-}
+ @mixin backface-visibility($prop){
+    -webkit-backface-visibility: $prop;
+    backface-visibility: $prop;
+ }
