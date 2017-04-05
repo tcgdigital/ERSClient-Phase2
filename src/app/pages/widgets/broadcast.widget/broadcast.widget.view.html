@@ -10,6 +10,7 @@
         <text-accordion [accordionItems]="LatestBroadcasts"></text-accordion>
     </div>
 </div>
+
 <div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -20,25 +21,26 @@
         </button>
       </div>
       <div class="modal-body">
-         <table class="table footable default ">
-
-            <thead>
-                <tr>
-                    <th width="40%">Broadcast Messages</th>
-                    <th width="20%">Priority</th>
-                    <th width="20%">Initiated Department</th>
-                    <th width="20%">Published On</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let broadcast of AllPublishedBroadcasts | async">
-                    <td width="40%">{{broadcast.Message}}</td>
-                    <td width="20%">{{broadcast.Priority}}</td>
-                    <td width="20%">{{broadcast.InitiateDepartment.DepartmentName}}</td>
-                    <td width="20%">{{broadcast.SubmittedOn}}</td>
-                </tr>
-            </tbody>
-        </table>
+         <responsive-table> 
+            <table responsive-table-body>
+                <thead>
+                    <tr>
+                        <th>Broadcast Messages</th>
+                        <th>Priority</th>
+                        <th>Initiated Department</th>
+                        <th>Published On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let broadcast of AllPublishedBroadcasts | async">
+                        <td data-title="Broadcast Messages">{{broadcast.Message}}</td>
+                        <td data-title="Priority">{{broadcast.Priority}}</td>
+                        <td data-title="Initiated Department">{{broadcast.InitiateDepartment.DepartmentName}}</td>
+                        <td data-title="Published On">{{broadcast.SubmittedOn}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </responsive-table>
       </div>
     </div>
   </div>
