@@ -2,17 +2,15 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
+import { AffectedPeopleService } from '../shared.components/affected.people';
+import { EnquiryService } from '../shared.components/call.centre';
+import { ActionableService } from '../shared.components/actionables';
+import { DemandService } from '../shared.components/demand';
+import { DepartmentAccessOwnerService } from '../shared.components/departmentaccessowner';
 import { ModalModule, ModalDirective } from 'ng2-bootstrap';
 import { SharedModule } from '../../shared';
-
 import {
-    AffectedPeopleService,
-    EnquiryService,
-    ActionableService
-} from '../shared.components';
-
-import {
-    BroadcastWidgetComponent,    
+    BroadcastWidgetComponent, 
     CasualtySummaryWidgetComponent,
     ChecklistSummaryWidgetComponent,
     ClockWidgetComponent,
@@ -57,10 +55,11 @@ const WIDGET_SERVICE: any[] = [
     MediaReleaseWidgetService,
     PeopleOnBoardWidgetService,
     PresidentMessageWidgetService,
-
     AffectedPeopleService,
     EnquiryService,
-    ActionableService
+    ActionableService,
+    DemandService,
+    DepartmentAccessOwnerService
 ];
 
 @NgModule({

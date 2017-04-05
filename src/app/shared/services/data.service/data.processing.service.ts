@@ -122,8 +122,6 @@ export class DataProcessingService {
         let responseData = JSON.parse(response.text());
         let responseBody: number = +responseData['@odata.count'];
 
-        // console.log(response);
-        // let responseBody: number = +response;
         return responseBody;
     }
 
