@@ -52,7 +52,6 @@ export class MasterDataUploadListComponent implements OnInit{
         let param = "IncidentId=" + this.IncidentId + "&CreatedBy=" + this.CreatedBy;
         this.fileUploadService.uploadFiles<string>(baseUrl + "./api/MasterDataUploadBatch?" + param, this.filesToUpload)
             .subscribe((result: any) => {
-                    debugger;
                     console.log("success");                    
                     alert("Uploaded Data is processed successfully." + '\n' + "To check any invalid records, please refer \"View Invalid Records\" link for the current timestamp.");
                 },(error) => {

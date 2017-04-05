@@ -36,7 +36,6 @@ export class MyDemandComponent implements OnInit {
 
 
     getMyDemands(deptId, incidentId): void {
-        debugger;
         this.demandService.GetByRequesterDepartment(deptId, incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.mydemands = this.demandService.DemandMapper(response.Records);

@@ -57,7 +57,6 @@ export class BroadcastWidgetComponent implements OnInit {
 
     public getAllPublishedBroadcasts(callback?: Function): void {
         let data: BroadcastWidgetModel[] = [];
-        debugger;
         this.broadcastWidgetService
             .GetAllPublishedBroadcastsByIncident(this.currentIncidentId)
             .flatMap(x => x)
@@ -75,7 +74,6 @@ export class BroadcastWidgetComponent implements OnInit {
 
     public openBroadcastMessages(): void {   
         this.getAllPublishedBroadcasts(()=>{
-            debugger;
             this.childModal.show();
         });                 
     }

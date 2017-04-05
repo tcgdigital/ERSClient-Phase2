@@ -16,7 +16,6 @@ export class AffectedObjectsListComponent implements OnInit {
     currentIncident: number = 1;
 
     getAffectedObjects(incidentId): void {
-        debugger;
         this.affectedObjectService.GetFilterByIncidentId(incidentId)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedObjects = this.affectedObjectService.FlattenAffactedObjects(response.Records[0]);
