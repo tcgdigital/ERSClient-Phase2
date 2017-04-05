@@ -471,7 +471,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.demandService.Update(this.demandModelEdit)
                     .subscribe((response: DemandModel) => {
                         alert("Demand successfully updated");
-                        debugger;
                         let demandTrail = this.createDemandTrailModel(this.demandModel, this.demandModelEdit, false)[0];
                         demandTrail.DemandId = this.demandModel.DemandId;
                         this.demandTrailService.Create(demandTrail)
