@@ -83,7 +83,6 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     }
 
     private getBroadcastDepartmentMappings(departmentId): void {
-        debugger;
         this.broadcastDepartmentMappingService.Query(departmentId)
             .subscribe((response: ResponseModel<BroadCastDepartmentModel>) => {
                 let broadcastmappingIds: number[] = this.BroadCastDepartmentMappings.map(item => item.BroadcastDepartmentMappingId);
@@ -145,7 +144,6 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
 
     save(isSubmitted: boolean): void {
 
-        debugger;
         this.broadcast.IsSubmitted = isSubmitted;
         if (isSubmitted) {
             this.broadcast.SubmittedOn = new Date();

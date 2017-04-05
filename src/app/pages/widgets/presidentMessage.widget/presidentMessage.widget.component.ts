@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { PresidentMessageWidgetModel } from './presidentMessage.widget.model';
 import { PresidentMessageWidgetService } from './presidentMessage.widget.service'
-import { DataServiceFactory, DataExchangeService } from '../../../shared'
+import { DataServiceFactory, DataExchangeService ,GlobalStateService } from '../../../shared'
 import { ModalDirective } from 'ng2-bootstrap/modal';
 
 @Component({
@@ -16,22 +16,37 @@ export class PresidentMessageWidgetComponent implements OnInit {
     @ViewChild('childModalPresidentMsg') public childModal:ModalDirective;
 
     isHidden: boolean = true;
+    currentDepartmentId: number;
+    currentIncidentId: number;
 
     presidentMessages: Observable<PresidentMessageWidgetModel[]>; 
     AllPresidentMessages: Observable<PresidentMessageWidgetModel[]>;   
 
     constructor(private presidentMessagewidgetService: PresidentMessageWidgetService,
-        private dataExchange: DataExchangeService<PresidentMessageWidgetModel>) { }
+        private dataExchange: DataExchangeService<PresidentMessageWidgetModel>,
+        private globalState: GlobalStateService) { }
 
     ngOnInit() {
-        this.getLatestPresidentsMessages();
+        this.currentIncidentId = this.incidentId;
+        this.currentDepartmentId = this.departmentId;
+        this.getLatestPresidentsMessages(this.currentIncidentId);
         this.getAllPresidentsMessages();
+        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
     }
+     private incidentChangeHandler(incidentId): void {
+        this.currentIncidentId = incidentId;
+        this.getLatestPresidentsMessages(this.currentIncidentId);
+        this.getAllPresidentsMessages();
+    };
 
-    getLatestPresidentsMessages(): void {
+    ngOnDestroy(): void {
+        this.globalState.Unsubscribe('incidentChange');
+    };
+
+    getLatestPresidentsMessages(incidentId): void {
         let data: PresidentMessageWidgetModel[] = [];
         this.presidentMessagewidgetService
-            .GetAllPresidentMessageByIncident(this.incidentId)
+            .GetAllPresidentMessageByIncident(incidentId)
             .flatMap(x=>x)
             .take(2)
             .subscribe(x => {
@@ -43,7 +58,7 @@ export class PresidentMessageWidgetComponent implements OnInit {
     getAllPresidentsMessages(callback?: Function): void {
         let data: PresidentMessageWidgetModel[] = [];
         this.presidentMessagewidgetService
-            .GetAllPresidentMessageByIncident(this.incidentId)
+            .GetAllPresidentMessageByIncident(this.currentIncidentId)
             .flatMap(x=>x)
             .subscribe(x => {
                 data.push(x);

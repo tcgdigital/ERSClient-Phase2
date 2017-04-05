@@ -19,25 +19,25 @@ export class ActionableComponent implements OnInit, OnDestroy {
 
     }
     ngOnInit(): any {
-        this.IsOpenActionable=true;
-        this.showActive = true;
-        this.showClose = false;
+        // this.IsOpenActionable=true;
+        // this.showActive = true;
+        // this.showClose = false;
     }
     ngOnDestroy(): void {
 
     }
 
-    OpenActionable(event: any): void {
-        if (event.checked) {
-            this.showActive = true;
-            this.showClose = false;
-            this.dataExchange.Publish("OpenActionablePageInitiate", true);
-        }
-        else {
-            this.showActive = false;
-            this.showClose = true;
-            this.dataExchange.Publish("CloseActionablePageInitiate", true);
-        }
-    }
+    // OpenActionable(event: any): void {
+    //     if (event.checked) {
+    //         this.showActive = true;
+    //         this.showClose = false;
+    //         this.dataExchange.Publish("OpenActionablePageInitiate", true);
+    //     }
+    //     else {
+    //         this.showActive = false;
+    //         this.showClose = true;
+    //         this.dataExchange.Publish("CloseActionablePageInitiate", true);
+    //     }
+    // }
 
 }

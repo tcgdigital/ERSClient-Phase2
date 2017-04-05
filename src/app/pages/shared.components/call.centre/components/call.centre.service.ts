@@ -43,12 +43,6 @@ export class EnquiryService extends ServiceBase<EnquiryModel>
             .Filter(`IncidentId eq ${incidentId} and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Passenger' and AffectedPersonId ne null`).Execute();
     }
 
-    public GetEnquiredAffectedCrewCount(incidentId: number): Observable<number> {
-        return this._dataService.Count()
-            .Filter(`IncidentId eq ${incidentId} and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Crew' and AffectedPersonId ne null`)
-            .Execute();
-    }
-
     public MapQuery(enquiryModel: EnquiryModel[]): QueryModel[] {
         let otherQueryModel: QueryModel[];
         otherQueryModel = enquiryModel.map(function (enquiry) {
@@ -61,5 +55,11 @@ export class EnquiryService extends ServiceBase<EnquiryModel>
             return item;
         });
         return otherQueryModel;
+    }
+
+    GetEnquiredAffectedCrewCount(incidentId: string | number): Observable<number> {
+        return this._dataService.Count()
+            .Filter(`IncidentId eq ${incidentId} and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Crew' and AffectedPersonId ne null`)
+            .Execute();
     }
 }

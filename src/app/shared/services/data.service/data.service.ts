@@ -2,17 +2,18 @@ import { Http } from '@angular/http';
 
 import { BaseModel, RequestModel } from '../../models';
 import { DataProcessingService } from './data.processing.service';
+import { Observable } from 'rxjs/Rx';
 import {
     GetOperation,
     QueryOperation,
-    CountOperation,
     PostOperation,
     SimplePostOperation,
     BulkPostOperation,
     BatchPostOperation,
     PutOperation,
     PatchOperation,
-    DeleteOperation
+    DeleteOperation,
+    CountOperation
 } from './operations';
 
 /**
@@ -154,6 +155,8 @@ export class DataService<T extends BaseModel>{
         return new DeleteOperation<T>(this.dataProcessingService, this.httpService, this.typeName, key);
     }
 
+    
+    
     /**
      * Get an instance of QueryOperation for custom function request
      *

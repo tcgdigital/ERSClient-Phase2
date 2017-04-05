@@ -63,7 +63,6 @@ export class AffectedPeopleListComponent implements OnInit {
             });
     };
     incidentChangeHandler(incidentId){
-        alert(incidentId);
              this.currentIncident=incidentId;
              this.getAffectedPeople(incidentId);
     }

@@ -22,9 +22,6 @@ import {
     styleUrls: ['../styles/actionable.style.scss']
 })
 export class ActionableClosedComponent implements OnInit, OnDestroy {
-    @Input() DepartmentId: any;
-    @Input() IncidentId: any;
-
     closeActionables: ActionableModel[] = [];
 
     public form: FormGroup;
@@ -39,14 +36,15 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): any {
-        this.departmentId = Number(this.DepartmentId);
-        this.incidentId = Number(this.IncidentId);
+        this.departmentId = 1;
+        this.incidentId = 96;
         this.getAllCloseActionable(this.incidentId, this.departmentId);
         this.form = this.resetActionableForm();
         this.dataExchange.Subscribe("CloseActionablePageInitiate", model => this.onCloseActionablePageInitiate(model));
         this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
     }
+
 
     private incidentChangeHandler(incidentId): void {
         this.incidentId = incidentId;
@@ -67,8 +65,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     }
 
     onCloseActionablePageInitiate(isClosed: boolean): void {
-        this.departmentId = Number(this.DepartmentId);
-        this.incidentId = Number(this.IncidentId);
+
         this.getAllCloseActionable(this.incidentId, this.departmentId);
     }
 
@@ -89,7 +86,6 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     }
 
     getAllCloseActionable(incidentId: number, departmentId: number): void {
-         alert(incidentId +"  :  "+ departmentId);
         this.actionableService.GetAllCloseByIncidentIdandDepartmentId(incidentId, departmentId)
             .subscribe((response: ResponseModel<ActionableModel>) => {
                 this.closeActionables = response.Records;

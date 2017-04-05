@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { DataServiceFactory, DataExchangeService } from '../../../shared'
+import { DataServiceFactory, DataExchangeService, GlobalStateService } from '../../../shared'
 import { MediaReleaseWidgetModel } from './mediaRelease.widget.model'
 import { MediaReleaseWidgetService } from './mediaRelease.widget.service'
 import { ModalDirective } from 'ng2-bootstrap/modal';
@@ -14,10 +14,12 @@ export class MediaReleaseWidgetComponent implements OnInit {
     @Input('initiatedDepartmentId') departmentId: number;
     @Input('currentIncidentId') incidentId: number;
     isHidden: boolean = true;
-    @ViewChild('childModalMediaRelease') public childModal:ModalDirective;
+    @ViewChild('childModalMediaRelease') public childModal: ModalDirective;
 
     mediaReleases: Observable<MediaReleaseWidgetModel[]>;
     AllMediaReleases: Observable<MediaReleaseWidgetModel[]>;
+    currentDepartmentId: number;
+    currentIncidentId: number;
 
     /**
      * Creates an instance of MediaReleaseWidgetComponent.
@@ -27,17 +29,27 @@ export class MediaReleaseWidgetComponent implements OnInit {
      * @memberOf MediaReleaseWidgetComponent
      */
     constructor(private mediaReleaseWidgetService: MediaReleaseWidgetService,
-        private dataExchange: DataExchangeService<MediaReleaseWidgetModel>) { }
+        private dataExchange: DataExchangeService<MediaReleaseWidgetModel>, private globalState: GlobalStateService) { }
 
     public ngOnInit(): void {
-        this.getLatestMediaReleases();
+        this.currentIncidentId = this.incidentId;
+        this.currentDepartmentId = this.departmentId;
+        this.getLatestMediaReleases(this.currentIncidentId);
         this.getAllMediaReleases();
-    }
+        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
+    };
 
-    public getLatestMediaReleases(): void {
+    private incidentChangeHandler(incidentId): void {
+        this.currentIncidentId = incidentId;
+        this.getLatestMediaReleases(this.currentIncidentId);
+        this.getAllMediaReleases();
+    };
+  
+
+    public getLatestMediaReleases(incidentId): void {
         let data: MediaReleaseWidgetModel[] = [];
         this.mediaReleaseWidgetService
-            .GetAllMediaReleaseByIncident(this.incidentId)
+            .GetAllMediaReleaseByIncident(incidentId)
             .flatMap(x => x)
             .take(2)
             .subscribe(x => {
@@ -51,7 +63,7 @@ export class MediaReleaseWidgetComponent implements OnInit {
     public getAllMediaReleases(callback?: Function): void {
         let data: MediaReleaseWidgetModel[] = [];
         this.mediaReleaseWidgetService
-            .GetAllMediaReleaseByIncident(this.incidentId)
+            .GetAllMediaReleaseByIncident(this.currentIncidentId)
             .flatMap(x => x)
             .subscribe(x => {
                 data.push(x);
@@ -59,20 +71,24 @@ export class MediaReleaseWidgetComponent implements OnInit {
                 console.log(`Error: ${error}`);
             },
             () => {
-                    this.AllMediaReleases = Observable.of(data);
-                    if(callback){
-                        callback();
-                    }
-                });
+                this.AllMediaReleases = Observable.of(data);
+                if (callback) {
+                    callback();
+                }
+            });
     }
 
     public openMediaReleases(): void {
-        this.getAllMediaReleases(()=>{
+        this.getAllMediaReleases(() => {
             this.childModal.show();
-        });        
+        });
     }
 
     public hideMediaReleases(): void {
         this.childModal.hide();
+    }
+
+    ngOnDestroy(): void {
+        this.globalState.Unsubscribe('incidentChange');
     }
 }

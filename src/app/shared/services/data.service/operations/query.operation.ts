@@ -112,17 +112,16 @@ export class QueryOperation<T extends BaseModel> extends DataOperation<T> {
      *
      * @memberOf QueryOperation
      */
-    public Count(count: string): Observable<number> {
+    public Count(): Observable<number> {
         // this._count = count;
         // return this;
 
         let params: URLSearchParams = this.GetQueryParams();
         let uri: string = this.DataProcessingService
             .GetUri(this.TypeName, this.Key, this.ActionSuffix);
-
+        
         let requestOps = this.DataProcessingService
             .SetRequestOptions(WEB_METHOD.GET, this.RequestHeaders, params);
-
         return super.HandleResponseCount(this.HttpService.get(uri, requestOps));
     }
 

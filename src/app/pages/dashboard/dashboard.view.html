@@ -2,25 +2,27 @@
 <div class="row">
     <clock-widget [initiationDateTime]="incidentDate" class="col-12 col-md-4 col-lg-4 col-xl-2 clock-layout widget-layout-fix">
     </clock-widget>
-    <peopleOnBoard-widget [initiatedDepartmentId]="47" [currentIncidentId]="91" class="col-12 col-md-6 col-lg-4 col-xl-3 people-onboard-layout widget-layout-fix">
+
+    <peopleOnBoard-widget [initiatedDepartmentId]="1" [currentIncidentId]="1" class="col-12 col-md-6 col-lg-4 col-xl-3 people-onboard-layout widget-layout-fix">
     </peopleOnBoard-widget>
-    <casualty-summary-widget [initiatedDepartmentId]="47" [currentIncidentId]="91" class="col-12 col-md-6 col-lg-4 col-xl-3 casualty-layout widget-layout-fix">
+    <casualty-summary-widget [initiatedDepartmentId]="1" [currentIncidentId]="1" class="col-12 col-md-6 col-lg-4 col-xl-3 casualty-layout widget-layout-fix">
     </casualty-summary-widget>
-    <demand-received-summary-widget [initiatedDepartmentId]="47" [currentIncidentId]="91" class="col-12 col-md-3 col-lg-4 col-xl-2 demand-received-layout widget-layout-fix">
+    <demand-received-summary-widget [initiatedDepartmentId]="1" [currentIncidentId]="1" class="col-12 col-md-3 col-lg-4 col-xl-2 demand-received-layout widget-layout-fix">
     </demand-received-summary-widget>
-    <demand-raised-summary-widget [initiatedDepartmentId]="47" [currentIncidentId]="91" class="col-6 col-md-3 col-lg-4 col-xl-2 demand-raised-layout widget-layout-fix">
+    <demand-raised-summary-widget [initiatedDepartmentId]="1" [currentIncidentId]="1" class="col-6 col-md-3 col-lg-4 col-xl-2 demand-raised-layout widget-layout-fix">
     </demand-raised-summary-widget>
-    <checklist-summary-widget [initiatedDepartmentId]="47" [currentIncidentId]="91" class="col-6 col-md col-md-3 col-lg-4 col-xl-2 checklist-layout widget-layout-fix">
+    <checklist-summary-widget [initiatedDepartmentId]="1" [currentIncidentId]="1" class="col-6 col-md col-md-3 col-lg-4 col-xl-2 checklist-layout widget-layout-fix">
     </checklist-summary-widget>
 </div>
 <!-- KPI Section Ends-->
 <!-- Messaging Section Starts-->
 <div class="row">
-    <broadcast-widget [initiatedDepartmentId]="1" [currentIncidentId]="114" class="col-12 col-md-4 messaging-widget widget-layout-fix">
+
+    <broadcast-widget [initiatedDepartmentId]="1" [currentIncidentId]="1" class="col-12 col-md-4 messaging-widget widget-layout-fix">
     </broadcast-widget>
-    <presidentMessage-widget [initiatedDepartmentId]="1" [currentIncidentId]="114" class="col-12 col-md-4 messaging-widget widget-layout-fix">
+    <presidentMessage-widget [initiatedDepartmentId]="1" [currentIncidentId]="1" class="col-12 col-md-4 messaging-widget widget-layout-fix">
     </presidentMessage-widget>
-    <mediaRelease-widget [initiatedDepartmentId]="1" [currentIncidentId]="114" class="col-12 col-md-4 messaging-widget widget-layout-fix">
+    <mediaRelease-widget [initiatedDepartmentId]="1" [currentIncidentId]="1" class="col-12 col-md-4 messaging-widget widget-layout-fix">
     </mediaRelease-widget>
 </div>
 <!-- Messaging Section Ends-->
@@ -50,6 +52,12 @@
     </div>
     <div class="col-4">
         <presidentMessage-widget initiatedDepartmentId="1" currentIncidentId="92"></presidentMessage-widget>
+    </div>
+    <div class="col-4">
+        <peopleOnBoard-widget initiatedDepartmentId="1" currentIncidentId="1"></peopleOnBoard-widget>
+    </div>
+    <div class="col-4">
+        <checklistSummary-widget initiatedDepartmentId="25" currentIncidentId="146"></checklistSummary-widget>
     </div>
     <div class="col-4">
         <mediaRelease-widget initiatedDepartmentId="1" currentIncidentId="92"></mediaRelease-widget>

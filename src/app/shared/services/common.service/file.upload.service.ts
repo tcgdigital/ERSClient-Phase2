@@ -44,6 +44,7 @@ export class FileUploadService {
      */
     public uploadFiles<T>(url: string, files: Array<FileData> | Array<File>, fieldName: string = ''): Observable<T> {
 
+
         if (files.length > 0) {
 
             let fileUploadPromise: Promise<T> = new Promise((resolve, reject) => {

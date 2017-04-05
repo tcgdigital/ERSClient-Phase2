@@ -4,11 +4,13 @@ import { Observable } from 'rxjs/Rx';
 import { InvolvePartyModel, AffectedModel } from '../../../shared.components';
 import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';
 import { IAffectedPeopleService } from './IAffectedPeopleService';
+import { CasualtySummeryModel } from '../../../widgets/casualty.summary.widget/casualty.summary.widget.model';
 import {
     ResponseModel, DataService, ServiceBase,
     DataServiceFactory, DataProcessingService,
     IServiceInretface, UtilityService
 } from '../../../../shared';
+import { CountOperation } from '../../../../shared/services/data.service/operations';
 
 @Injectable()
 export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
@@ -16,7 +18,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
 
     private _dataServiceAffectedPeople: DataService<AffectedPeopleModel>;
     private _bulkDataService: DataService<AffectedPeopleModel>;
-
+    private _casualtySummery: CasualtySummeryModel;
     /**
      * Creates an instance of AffectedPeopleService.
      * @param {DataServiceFactory} dataServiceFactory 
@@ -29,6 +31,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
 
         this._bulkDataService = this.dataServiceFactory
             .CreateServiceWithOptions<AffectedPeopleModel>('AffectedPersonBatch', option);
+
     }
 
     public FlattenAffectedPeople(involvedParty: InvolvePartyModel): any {
@@ -90,5 +93,70 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
             return item;
         });
         return verifiedAffectedPeople;
+    }
+
+    public GetDeceasedPeopleCount(incidentId: number): Observable<number> {
+        return this._dataService.Count()
+            .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
+             ActiveFlag eq 'Active' and tolower(MedicalStatus) eq 'deceased'`)
+            .Execute();
+    }
+
+    public GetReunitedPeopleCount(incidentId: number): Observable<number> {
+        return this._dataService.Count()
+            .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
+             ActiveFlag eq 'Active' and tolower(MedicalStatus) eq 'reunited'`)
+            .Execute();
+    }
+
+    public GetMinorInjuryPeopleCount(incidentId: number): Observable<number> {
+        return this._dataService.Count()
+            .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
+             ActiveFlag eq 'Active' and tolower(MedicalStatus) eq 'injury'`)
+            .Execute();
+    }
+
+    public GetCriticalPeopleCount(incidentId: number): Observable<number> {
+        return this._dataService.Count()
+            .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
+             ActiveFlag eq 'Active' and tolower(MedicalStatus) eq 'critical'`)
+            .Execute();
+    }
+
+    public GetImmediateCarePeopleCount(incidentId: number): Observable<number> {
+        return this._dataService.Count()
+            .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
+             ActiveFlag eq 'Active' and tolower(MedicalStatus) eq 'immediatecare'`)
+            .Execute();
+    }
+
+
+    public GetCasualtyStatus(incidentId: number): Observable<CasualtySummeryModel> {
+        this._casualtySummery = new CasualtySummeryModel();
+        return this.GetDeceasedPeopleCount(incidentId)
+            .map((dataDeceasedPeopleCount: number) => {
+                this._casualtySummery.deceasedCasualtyCount = dataDeceasedPeopleCount;
+                return this._casualtySummery;
+            })
+            .flatMap(() => this.GetReunitedPeopleCount(incidentId))
+            .map((dataReunitedPeopleCount: number) => {
+                this._casualtySummery.reunitedCasualtyCount = dataReunitedPeopleCount;
+                return this._casualtySummery;
+            })
+             .flatMap(() => this.GetMinorInjuryPeopleCount(incidentId))
+            .map((dataMinorInjuryPeople: number) => {
+                this._casualtySummery.minorCasualtyCount = dataMinorInjuryPeople;
+                return this._casualtySummery;
+            })
+            .flatMap(() => this.GetCriticalPeopleCount(incidentId))
+            .map((dataCriticalPeopleCount: number) => {
+                this._casualtySummery.criticalCasualtyCount = dataCriticalPeopleCount;
+                return this._casualtySummery;
+             });
+            // .flatMap(() => this.GetImmediateCarePeopleCount(incidentId))
+            // .map((dataImmediateCarePeopleCount: number) => {
+            //     this._casualtySummery.immediateCareCasualtyCount = dataImmediateCarePeopleCount;
+            //     return this._casualtySummery;
+            // });
     }
 }

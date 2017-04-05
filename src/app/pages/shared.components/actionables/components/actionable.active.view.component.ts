@@ -23,8 +23,6 @@ import {
     styleUrls: ['../styles/actionable.style.scss']
 })
 export class ActionableActiveComponent implements OnInit, OnDestroy, AfterContentInit {
-    @Input() DepartmentId: any;
-    @Input() IncidentId: any;
     @ViewChild('myFileInput') myInputVariable: any;
 
     editActionableModel: ActionableModel = null;
@@ -61,8 +59,9 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
      * @memberOf ActionableActiveComponent
      */
     ngOnInit(): any {
-        this.departmentId = Number(this.DepartmentId);
-        this.incidentId = Number(this.IncidentId);
+
+        this.departmentId = 1;
+        this.incidentId = 96;
         this.getAllActiveActionable(this.incidentId, this.departmentId);
         this.form = this.resetActionableForm();
         this.dataExchange.Subscribe("OpenActionablePageInitiate", model => this.onOpenActionablePageInitiate(model));
@@ -104,14 +103,21 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
      * @memberOf ActionableActiveComponent
      */
     onOpenActionablePageInitiate(isOpen: boolean): void {
-        this.departmentId = Number(this.DepartmentId);
-        this.incidentId = Number(this.IncidentId);
         this.getAllActiveActionable(this.incidentId, this.departmentId);
-    }
+
+    };
+
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe("OpenActionablePageInitiate");
         this.globalState.Unsubscribe('incidentChange');
         this.globalState.Unsubscribe('departmentChange');
+    }
+
+    onIncidentDepartmentChange():void{
+        this.departmentId = 1;
+        this.incidentId = 96;
+        this.getAllActiveActionable(this.incidentId, this.departmentId);
+        this.form = this.resetActionableForm();
     }
 
     ngAfterContentInit(): void {
@@ -156,7 +162,6 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     getAllActiveActionable(incidentId: number, departmentId: number): void {
-        alert(incidentId +"  :  "+ departmentId);
         this.actionableService.GetAllOpenByIncidentIdandDepartmentId(incidentId, departmentId)
             .subscribe((response: ResponseModel<ActionableModel>) => {
                 this.activeActionables = response.Records;
