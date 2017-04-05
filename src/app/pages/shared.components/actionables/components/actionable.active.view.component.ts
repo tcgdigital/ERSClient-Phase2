@@ -104,7 +104,8 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
      */
     onOpenActionablePageInitiate(isOpen: boolean): void {
         this.getAllActiveActionable(this.incidentId, this.departmentId);
-    }
+
+    };
 
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe("OpenActionablePageInitiate");
@@ -161,7 +162,6 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     getAllActiveActionable(incidentId: number, departmentId: number): void {
-        alert(incidentId +"  :  "+ departmentId);
         this.actionableService.GetAllOpenByIncidentIdandDepartmentId(incidentId, departmentId)
             .subscribe((response: ResponseModel<ActionableModel>) => {
                 this.activeActionables = response.Records;

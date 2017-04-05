@@ -37,8 +37,21 @@ export class BroadcastWidgetComponent implements OnInit {
         this.currentDepartmentId = this.departmentId;
         this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
         this.getAllPublishedBroadcasts();
-    }
-  
+        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
+    };
+
+    private incidentChangeHandler(incidentId): void {
+        this.currentIncidentId = incidentId;
+        this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
+        this.getAllPublishedBroadcasts();
+    };
+
+    private departmentChangeHandler(departmentId): void {
+        this.currentDepartmentId = departmentId;
+        this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
+    };
+
 
     public getLatestBroadcasts(departmentId, incidentId): void {
         let data: BroadcastWidgetModel[] = [];
@@ -61,24 +74,29 @@ export class BroadcastWidgetComponent implements OnInit {
             .GetAllPublishedBroadcastsByIncident(this.currentIncidentId)
             .flatMap(x => x)
             .subscribe(x => {
-                data.push(x);                
+                data.push(x);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
-            }, () =>{
+            }, () => {
                 this.AllPublishedBroadcasts = Observable.of(data);
-                if(callback){
+                if (callback) {
                     callback();
                 }
             });
-    }
+    };
 
-    public openBroadcastMessages(): void {   
-        this.getAllPublishedBroadcasts(()=>{
+    public openBroadcastMessages(): void {
+        this.getAllPublishedBroadcasts(() => {
             this.childModal.show();
-        });                 
-    }
+        });
+    };
 
-    public hideAllBroadcastMessages(): void{
+    public hideAllBroadcastMessages(): void {
         this.childModal.hide();
+    };
+
+    ngOnDestroy(): void {
+        this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('departmentChange');
     }
 }
