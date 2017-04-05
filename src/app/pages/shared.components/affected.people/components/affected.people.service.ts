@@ -35,7 +35,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
         let affectedPeopleForView: AffectedPeopleToView[];
         let affectedPeople: AffectedPeopleModel[];
         let affected: AffectedModel;
-
+        if(involvedParty != null){
         affected = UtilityService.pluck(involvedParty, ['Affecteds'])[0][0];
         affectedPeople = UtilityService.pluck(affected, ['AffectedPeople'])[0];
 
@@ -47,7 +47,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
             item.Pnr = dataItem.Passenger != null ? (dataItem.Passenger.Pnr == null ? 'NA' : dataItem.Passenger.Pnr) : 'NA';
             item.CrewName = dataItem.Crew != null ? dataItem.Crew.CrewName : '';
             item.CrewNameWithCategory = dataItem.Crew != null ? dataItem.Crew.CrewName + '(' + dataItem.Crew.AsgCat + ')' : '';
-            item.ContactNumber = dataItem.Passenger != null ? (dataItem.Passenger.ContactNumber == null ? 'NA' : dataItem.Passenger.ContactNumber) : (dataItem.Crew.ContactNumber == null ? 'NA' : dataItem.Crew.ContactNumber);
+            item.ContactNumber = dataItem.Passenger != null ? (dataItem.Passenger.ContactNumber == null ? 'NA' : dataItem.Passenger.ContactNumber) : (dataItem.Crew == null ? 'NA' : dataItem.Crew.ContactNumber);
             item.TicketNumber = dataItem.TicketNumber;
             item.IsVerified = dataItem.IsVerified;
             item.IsCrew = dataItem.IsCrew;
@@ -60,6 +60,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
             item.PaxType = dataItem.Passenger != null ? dataItem.Passenger.PassengerType : dataItem.Crew != null ? 'Crew' : '';
             return item;
         });
+        }
         return affectedPeopleForView;
 
     }
