@@ -13,7 +13,8 @@ import {
 } from './components';
 import { DepartmentService, EmergencyTypeService } from '../../masterdata';
 import { DataExchangeService, FileUploadService } from '../../../shared';
-import { FlightService,InvolvePartyService } from '../../shared.components';
+import { FlightService } from '../flights';
+import { InvolvePartyService } from '../involveparties';
 import { MomentModule } from 'angular2-moment';
 
 
