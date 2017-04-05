@@ -7,7 +7,7 @@ import { EnquiryService } from '../shared.components/call.centre';
 import { ActionableService } from '../shared.components/actionables';
 import { DemandService } from '../shared.components/demand';
 import { DepartmentAccessOwnerService } from '../shared.components/departmentaccessowner';
-import { ModalModule } from 'ng2-bootstrap';
+import { ModalModule, ModalDirective } from 'ng2-bootstrap';
 import { SharedModule } from '../../shared';
 import {
     BroadcastWidgetComponent, 
@@ -66,7 +66,7 @@ const WIDGET_SERVICE: any[] = [
     imports: [
         CommonModule,
         HttpModule,
-        ModalModule,
+        ModalModule.forRoot(),        
         SharedModule,
         RouterModule
     ],

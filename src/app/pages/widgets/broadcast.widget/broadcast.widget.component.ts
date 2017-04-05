@@ -1,8 +1,9 @@
-import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { DataServiceFactory, DataExchangeService, TextAccordionModel, GlobalStateService } from '../../../shared'
 import { BroadcastWidgetModel } from './broadcast.widget.model'
 import { BroadcastWidgetService } from './broadcast.widget.service'
+import { ModalDirective } from 'ng2-bootstrap/modal';
 
 @Component({
     selector: 'broadcast-widget',
@@ -13,7 +14,7 @@ import { BroadcastWidgetService } from './broadcast.widget.service'
 export class BroadcastWidgetComponent implements OnInit {
     @Input('initiatedDepartmentId') departmentId: number;
     @Input('currentIncidentId') incidentId: number;
-
+    @ViewChild('childModal') public childModal: ModalDirective;
 
     LatestBroadcasts: Observable<TextAccordionModel[]>;
     AllPublishedBroadcasts: Observable<BroadcastWidgetModel[]>;
@@ -35,21 +36,9 @@ export class BroadcastWidgetComponent implements OnInit {
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.departmentId;
         this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
-        this.getAllPublishedBroadcasts(this.currentIncidentId);
-        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
+        this.getAllPublishedBroadcasts();
     }
-
-    private incidentChangeHandler(incidentId): void {
-        this.incidentId = incidentId;
-        this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
-        this.getAllPublishedBroadcasts(this.currentIncidentId);
-    }
-
-    private departmentChangeHandler(departmentId): void {
-        this.departmentId = departmentId;
-        this.getAllPublishedBroadcasts(this.currentIncidentId);
-    }
+  
 
     public getLatestBroadcasts(departmentId, incidentId): void {
         let data: BroadcastWidgetModel[] = [];
@@ -66,22 +55,32 @@ export class BroadcastWidgetComponent implements OnInit {
             });
     }
 
-    public getAllPublishedBroadcasts(incidentId): void {
+    public getAllPublishedBroadcasts(callback?: Function): void {
         let data: BroadcastWidgetModel[] = [];
+        debugger;
         this.broadcastWidgetService
-            .GetAllPublishedBroadcastsByIncident(incidentId)
+            .GetAllPublishedBroadcastsByIncident(this.currentIncidentId)
             .flatMap(x => x)
             .subscribe(x => {
-                data.push(x);
+                data.push(x);                
             }, (error: any) => {
                 console.log(`Error: ${error}`);
-            }, () =>
-                this.AllPublishedBroadcasts = Observable.of(data)
-            );
+            }, () =>{
+                this.AllPublishedBroadcasts = Observable.of(data);
+                if(callback){
+                    callback();
+                }
+            });
     }
 
-    public openBroadcastMessages(isHide: boolean, event: Event) {
-        this.isHidden = isHide;
-        event.preventDefault();
+    public openBroadcastMessages(): void {   
+        this.getAllPublishedBroadcasts(()=>{
+            debugger;
+            this.childModal.show();
+        });                 
+    }
+
+    public hideAllBroadcastMessages(): void{
+        this.childModal.hide();
     }
 }
