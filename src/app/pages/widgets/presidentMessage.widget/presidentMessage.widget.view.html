@@ -21,20 +21,22 @@
         </button>
       </div>
       <div class="modal-body">
-       <table class="table footable default ">
+      <responsive-table>   
+        <table responsive-table-body>           
             <thead>
                 <tr>
-                    <th width="80%">President's Messages</th>
-                    <th width="20%">Date</th>
+                    <th>President's Messages</th>
+                    <th>Date</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let presidentMessage of AllPresidentMessages | async">
-                    <td width="80%">{{presidentMessage.Message}}</td>
-                    <td width="20%">{{presidentMessage.PublishedOn}}</td>
+                    <td data-title="President's Messages">{{presidentMessage.Message}}</td>
+                    <td data-title="Date">{{presidentMessage.PublishedOn}}</td>
                 </tr>
             </tbody>
-        </table>
+          </table>
+        </responsive-table> 
       </div>
     </div>
   </div>

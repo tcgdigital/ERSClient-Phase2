@@ -40,4 +40,9 @@ export class AffectedObjectsListComponent implements OnInit {
         this.globalState.Unsubscribe('incidentChange');
     }
 
+    onIncidentDepartmentChange(): void {
+    }
+
+    GetAffectedObjectByIncidentId
+
 }

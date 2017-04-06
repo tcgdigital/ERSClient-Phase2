@@ -13,6 +13,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit {
     @Input('initiatedDepartmentId') departmentId: number;
     @Input('currentIncidentId') incidentId: number;
 
+
     public checkListSummery: CheckListSummeryModel;
     currentDepartmentId: number;
     currentIncidentId: number;

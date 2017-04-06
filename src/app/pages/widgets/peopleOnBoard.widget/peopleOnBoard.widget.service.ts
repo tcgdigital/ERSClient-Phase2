@@ -1,8 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-
-import { AffectedPeopleModel, AffectedPeopleService, EnquiryService } from '../../shared.components';
-import { AffectedPersonModel } from './AffectedPerson.model';
+import { AffectedPeopleModel, AffectedPeopleService } from '../../shared.components/affected.people';
+import { EnquiryService } from '../../shared.components/call.centre';
 import { PeopleOnBoardModel } from './peopleOnBoard.widget.model';
 import {
     IServiceInretface,
@@ -14,12 +13,17 @@ import {
 } from '../../../shared';
 
 @Injectable()
-export class PeopleOnBoardWidgetService {
+export class PeopleOnBoardWidgetService implements OnInit {
+
     peopleOnBoard: PeopleOnBoardModel = null;
 
     constructor(private dataServiceFactory: DataServiceFactory,
         private affectedPeopleService: AffectedPeopleService,
         private enquiryService: EnquiryService) {
+
+    }
+    ngOnInit() {
+        this.peopleOnBoard = new PeopleOnBoardModel();
     }
 
     GetPeopleOnBoardDataCount(incidentId: number): Observable<PeopleOnBoardModel> {
@@ -45,5 +49,6 @@ export class PeopleOnBoardWidgetService {
                 this.peopleOnBoard.enquiredAffectedCrewCount = isNaN(dataEnquiredAffectedCrewCount) ? 0 : dataEnquiredAffectedCrewCount;
                 return this.peopleOnBoard;
             });
+
     }
 }

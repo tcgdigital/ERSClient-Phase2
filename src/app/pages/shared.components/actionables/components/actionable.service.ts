@@ -15,7 +15,6 @@ import {
 export class ActionableService extends ServiceBase<ActionableModel> implements IActionableService {
     private _batchDataService: DataService<ActionableModel>;
     private _actionables: ResponseModel<ActionableModel>;
-
     /**
      * Creates an instance of ActionableService.
      * @param {DataServiceFactory} dataServiceFactory 
@@ -40,7 +39,6 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
     }
 
     public GetAllOpenByIncidentIdandDepartmentId(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
-
         return this._dataService.Query()
             .Expand('CheckList($select=CheckListId,CheckListCode,ParentCheckListId)')
             .Filter(`CompletionStatus eq 'Open' and IncidentId eq ${incidentId} and DepartmentId eq ${departmentId}`)
@@ -80,7 +78,6 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
 
     public Update(entity: ActionableModel): Observable<ActionableModel> {
         let key: string = entity.ActionId.toString();
-
         return this._dataService.Patch(entity, key).Execute();
     }
 

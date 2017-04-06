@@ -1,4 +1,3 @@
-
 import { Observable } from 'rxjs/Rx';
 import { IncidentModel } from './incident.model';
 import { InvolvePartyModel } from '../../shared.components';

@@ -75,7 +75,6 @@ export class CountOperation<T extends BaseModel> extends DataOperation<T> {
 
         let requestOps = this.DataProcessingService
             .SetRequestOptions(WEB_METHOD.GET, this.RequestHeaders, params);
-
         return super.HandleResponseCount(this.HttpService.get(uri, requestOps));
     }
 
@@ -92,9 +91,9 @@ export class CountOperation<T extends BaseModel> extends DataOperation<T> {
     private GetQueryParams(externalFilter: string = ''): URLSearchParams {
         let params = new URLSearchParams();
         if (this._filter) { params.set(this.DataProcessingService.Key.filter, this._filter); }
+        if (this._count) { params.set(this.DataProcessingService.Key.count, this._count); }
+        if (this._top) { params.set(this.DataProcessingService.Key.top, this._top); }
 
-        params.set(this.DataProcessingService.Key.count, this._count);
-        params.set(this.DataProcessingService.Key.top, this._top);
         return params;
     }
 }

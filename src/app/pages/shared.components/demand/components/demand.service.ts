@@ -10,20 +10,24 @@ import {
     IServiceInretface, BaseModel, RequestModel, GlobalConstants, WEB_METHOD
 
 } from '../../../../shared';
+import { DemandReceivedSummeryModel } from '../../../widgets/demand.received.summary.widget';
+import { DepartmentAccessOwnerModel, DepartmentAccessOwnerService } from '../../../shared.components/departmentaccessowner';
+
 
 @Injectable()
 export class DemandService extends ServiceBase<DemandModel> implements IDemandService {
     private _bulkDataService: DataService<DemandModel>;
     private _bulkDataServiceForCompletion: DataService<DemandModel>;
     private _bulkDataServiceForApproval: DataService<DemandModel>;
-
+    public departmentAccessOwnerModels: DepartmentAccessOwnerModel[];
     /**
      * Creates an instance of DemandService.
      * @param {DataServiceFactory} dataServiceFactory 
      * 
      * @memberOf DemandService
      */
-    constructor(private dataServiceFactory: DataServiceFactory) {
+    constructor(private dataServiceFactory: DataServiceFactory,
+        private departmentAccessOwnerService: DepartmentAccessOwnerService) {
         super(dataServiceFactory, 'Demands');
         let option: DataProcessingService = new DataProcessingService();
         this._bulkDataService = this.dataServiceFactory
@@ -53,9 +57,9 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
     };
     GetByDemandId(id: string | number): Observable<ResponseModel<DemandModel>> {
         return this._dataService.Query()
-            .Filter(`DemandId eq ${id}`)  
-            .Expand('Caller')      
-        .Execute();
+            .Filter(`DemandId eq ${id}`)
+            .Expand('Caller')
+            .Execute();
     }
 
     public GetByRequesterDepartment(requesterDeptId: number, incidentId: number): Observable<ResponseModel<DemandModel>> {
@@ -115,7 +119,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
             item.IsClosed = demand.IsClosed;
             item.ApproverDeptId = demand.ApproverDepartmentId;
             item.CreatedBy = demand.CreatedBy;
-            item.CreatedOn= demand.CreatedOn;
+            item.CreatedOn = demand.CreatedOn;
             return item;
 
         });
@@ -133,4 +137,34 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
     public UpdateBulkForClosure(entities: DemandModel[]): Observable<DemandModel[]> {
         return this._bulkDataServiceForCompletion.BulkPost(entities).Execute();
     };
+
+    public GetDepartmentIdProjection(departmentId: number): Observable<ResponseModel<DepartmentAccessOwnerModel>> {
+        let departmentIdProjection: string = '';
+        let departmentIds: number[];
+        return this.departmentAccessOwnerService.GetDependentDepartmentAccessOwners(departmentId);
+    }
+
+    public GetDemandByTargetDepartment(incidentId: number, departmentIdProjection: string): Observable<ResponseModel<DemandModel>> {
+        let demandprojection: string = `DemandId,TargetDepartmentId,IsCompleted,
+        ClosedOn,ScheduleTime,CreatedOn,DemandDesc,IsClosed,DemandStatusDescription`;
+        return this._dataService.Query()
+            .Expand('RequesterDepartment($select=DepartmentName)')
+            .Filter(`IncidentId eq ${incidentId} and ActiveFlag eq 'Active' and
+             ${departmentIdProjection}`)
+            .Select(`${demandprojection}`)
+            .Execute();
+
+    }
+
+    public GetDemandByRequesterDepartment(incidentId: number, departmentIdProjection: string): Observable<ResponseModel<DemandModel>> {
+        let demandprojection: string = `DemandId,RequesterDepartmentId,IsClosed,ClosedOn,ScheduleTime,CreatedOn,DemandDesc`;
+        return this._dataService.Query()
+            .Expand('TargetDepartment($select=DepartmentId,DepartmentName)')
+            .Filter(`IncidentId eq ${incidentId} and ActiveFlag eq 'Active' and
+             ${departmentIdProjection}`)
+            .Select(`${demandprojection}`)
+            .Execute();
+
+    }
+
 }

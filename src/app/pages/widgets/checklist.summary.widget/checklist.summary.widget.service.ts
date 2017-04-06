@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { ActionableModel, ActionableService } from '../../shared.components/actionables';
 import { CheckListSummeryModel } from './checklist.summary.widget.model';

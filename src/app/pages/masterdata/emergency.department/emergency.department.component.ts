@@ -71,7 +71,6 @@ export class EmergencyDepartmentComponent {
                 let item = new EmergencyDepartmentModel();
                 item.EmergencyTypeDepartmentId = 0;
                 item.EmergencyTypeId = selectedEmergencyType;
-                //item.EmergencyTypeId=this.selectedEmergencyType;
                 item.DepartmentId = data.DepartmentId;
                 item.ActiveFlag = 'Active';
                 item.CreatedBy = 1;

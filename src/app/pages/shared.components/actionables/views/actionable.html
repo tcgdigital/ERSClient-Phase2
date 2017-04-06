@@ -1,6 +1,16 @@
+<div class="card">
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" [routerLink]="['/pages/dashboard/actionable/openActionable']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Open Actionable</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/pages/dashboard/actionable/closeActionable']" routerLinkActive="active">Close Actionable</a>
+            </li>
 
-<md-checkbox class="Marght" id="IsOpenActionable" name="IsOpenActionable" [ngModel]="IsOpenActionable" (change)="OpenActionable($event)"
-    aria-label="IsOpenActionable">
-</md-checkbox>
-<actionable-active [hidden]="!showActive" [DepartmentId]="1" [IncidentId]="1"></actionable-active>
-<actionable-close [hidden]="!showClose" [DepartmentId]="1" [IncidentId]="1"></actionable-close>
+        </ul>
+    </div>
+    <div class="card-block">
+        <router-outlet></router-outlet>
+    </div>
+</div>
