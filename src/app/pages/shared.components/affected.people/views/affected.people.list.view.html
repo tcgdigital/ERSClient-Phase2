@@ -14,6 +14,7 @@
             </tr>
         </thead>
         <tbody>
+            <tr [hidden]="affectedPeople.length != 0"><td colspan="9">No PDA is available.</td></tr>
             <tr *ngFor="let affectedperson of affectedPeople">
                 <td data-title="Reference Number">{{affectedperson.TicketNumber}}&nbsp;</td>
                 <td data-title="PDA Name">{{affectedperson.CrewName}}&nbsp;</td>

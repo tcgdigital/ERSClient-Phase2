@@ -9,7 +9,7 @@ import { AffectedObjectsRouting } from './affected.objects.routing';
 import { AffectedObjectsService,
      AffectedObjectsListComponent, 
      AffectedObjectsVerificationComponent} from './components';
-import { DataExchangeService } from '../../../shared';
+import {SharedModule, DataExchangeService } from '../../../shared';
 
 @NgModule({
     imports: [
@@ -18,7 +18,9 @@ import { DataExchangeService } from '../../../shared';
         FormsModule,
         HttpModule,
         MdCheckboxModule,
-        AffectedObjectsRouting
+        AffectedObjectsRouting,
+        SharedModule
+        
     ],
     declarations: [
         AffectedObjectsComponent,

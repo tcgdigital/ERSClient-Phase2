@@ -32,11 +32,12 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     }
 
     public FlattenAffectedPeople(involvedParty: InvolvePartyModel): any {
-        let affectedPeopleForView: AffectedPeopleToView[];
+        let affectedPeopleForView: AffectedPeopleToView[] =[];
         let affectedPeople: AffectedPeopleModel[];
         let affected: AffectedModel;
         if(involvedParty != null){
         affected = UtilityService.pluck(involvedParty, ['Affecteds'])[0][0];
+        if(affected != null){
         affectedPeople = UtilityService.pluck(affected, ['AffectedPeople'])[0];
 
         affectedPeopleForView = affectedPeople.map(function (dataItem) {
@@ -61,6 +62,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
             return item;
         });
         }
+        }
         return affectedPeopleForView;
 
     }
@@ -82,13 +84,15 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     }
 
     public MapAffectedPeople(affectedPeopleForVerification): AffectedPeopleModel[] {
-        let verifiedAffectedPeople: AffectedPeopleModel[];
+        let verifiedAffectedPeople: AffectedPeopleModel[] =[];
+        if(affectedPeopleForVerification != null){
         verifiedAffectedPeople = affectedPeopleForVerification.map(function (affected) {
             let item = new AffectedPeopleModel();
             item.AffectedPersonId = affected.AffectedPersonId;
             item.IsVerified = affected.IsVerified;
             return item;
         });
+        }
         return verifiedAffectedPeople;
     }
 }

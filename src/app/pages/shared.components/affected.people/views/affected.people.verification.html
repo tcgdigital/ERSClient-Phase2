@@ -1,7 +1,7 @@
 <div>
     <h3>Passenger Directly Affected</h3>
 
-    <button class="btn btn-primary" type="button" (click)="save()">Verify</button>
+    <button class="btn btn-primary" type="button" (click)="saveVerifiedAffectedPeople()">Verify</button>
 
 
     <responsive-table>
@@ -17,6 +17,7 @@
                 </tr>
             </thead>
             <tbody>
+                <tr [hidden]="affectedPeopleForVerification.length != 0"><td colspan="9">No Verified PDA is available.</td></tr>
                 <tr *ngFor="let affectedperson of affectedPeopleForVerification">
                     <td data-title="Verify">
                         <md-checkbox class="Marght" id="IsVerified" [(ngModel)]="affectedperson.IsVerified" aria-label="Add">
@@ -72,5 +73,5 @@
                 <li class="list-group-item" style="border-top: none">{{affectedperson.PaxType}}</li>
             </ul>
         </div>
-    </div>-->
-</div>
+    </div>
+</div>-->

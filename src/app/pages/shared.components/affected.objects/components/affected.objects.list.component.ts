@@ -4,6 +4,8 @@ import { InvolvePartyModel } from '../../../shared.components';
 import { AffectedObjectsToView } from './affected.objects.model';
 import { AffectedObjectsService } from './affected.objects.service';
 import { ResponseModel, DataExchangeService, GlobalStateService } from '../../../../shared';
+import { UtilityService } from '../../../../shared/services';
+
 
 @Component({
     selector: 'affectedobject-list',
@@ -12,8 +14,8 @@ import { ResponseModel, DataExchangeService, GlobalStateService } from '../../..
 })
 export class AffectedObjectsListComponent implements OnInit {
     constructor(private affectedObjectService: AffectedObjectsService, private globalState: GlobalStateService) { }
-    affectedObjects: AffectedObjectsToView[];
-    currentIncident: number = 1;
+    affectedObjects: AffectedObjectsToView[] =[];
+    currentIncident: number;
 
     getAffectedObjects(incidentId): void {
         this.affectedObjectService.GetFilterByIncidentId(incidentId)
@@ -26,15 +28,15 @@ export class AffectedObjectsListComponent implements OnInit {
     };
 
     incidentChangeHandler(incidentId) {
-         this.currentIncident=incidentId;
+        this.currentIncident = incidentId;
         this.getAffectedObjects(incidentId);
     }
     ngOnInit(): any {
-
+        this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
         this.getAffectedObjects(this.currentIncident);
         this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
     }
-      ngOnDestroy(): void {
+    ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChange');
     }
 
