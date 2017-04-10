@@ -21,20 +21,22 @@
         </button>
       </div>
       <div class="modal-body">
-        <table class="table footable default ">
-            <thead>
-                <tr>
-                    <th width="80%">Media Releases</th>
-                    <th width="20%">Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let mediaRelease of AllMediaReleases | async">
-                    <td width="80%">{{mediaRelease.Message}}</td>
-                    <td width="20%">{{mediaRelease.PublishedOn}}</td>
-                </tr>
-            </tbody>
-        </table>
+        <responsive-table>
+            <table responsive-table-body>
+                <thead>
+                    <tr>
+                        <th>Media Releases</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let mediaRelease of AllMediaReleases | async">
+                        <td data-title="Media Releases">{{mediaRelease.Message}}</td>
+                        <td data-title="Date">{{mediaRelease.PublishedOn}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </responsive-table>
       </div>
     </div>
   </div>
