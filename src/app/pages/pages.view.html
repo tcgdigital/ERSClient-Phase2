@@ -1,19 +1,11 @@
-
-<!--<div page-header 
-    [departments]="departments"
-    [incidents]="incidents"
-    (toggleSideMenu)="toggleSideMenu($event)" 
-    (contactClicked)="onContactClicked($event)" 
-    (helpClicked)="onHelpClicked($event)",
-    (departmentChange)="onDepartmentChange(selectedDepartment)",
-    (incidentChange)="onIncidentChange(selectedIncident)">
-</div>-->
 <div page-header 
     [departments]="departments"
     [incidents]="incidents"
     (toggleSideMenu)="toggleSideMenu($event)"
     (departmentChange)="onDepartmentChange($event)"
-    (incidentChange)="onIncidentChange($event)">
+    (incidentChange)="onIncidentChange($event)"
+    (contactClicked)="onContactClicked($event)" 
+    (helpClicked)="onHelpClicked($event)">
 </div>
 <side-bar [dockingState]="sideMenuState"></side-bar>
 <section class="body-container">

@@ -1,15 +1,8 @@
-<!--<aside class="al-sidebar">
-    <side-menu [menuHeight]="menuHeight" 
-        [sidebarCollapsed]="isMenuCollapsed" 
-        (expandMenu)="MenuExpand()">
-    </side-menu>
-</aside>-->
-
 <aside class="side-menu">
     <ul>
         <side-menu-item 
             [menuItem]="item" 
-            (itemHover)="itemHover($event)"
+            (itemHover)="hoverItem($event)"
             (toggleMenu)="toggleMenu($event)"
             *ngFor="let item of menuItems">
         </side-menu-item>
