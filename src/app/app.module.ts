@@ -3,8 +3,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
-import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
+import {
+    removeNgStyles, createNewHosts,
+    createInputTransfer
+} from '@angularclass/hmr';
 import { Ng2BootstrapModule, ModalModule } from 'ng2-bootstrap';
+import { ToastrModule } from 'ngx-toastr';
 
 import { routing } from './app.routing';
 import { SharedModule } from './shared';
@@ -39,6 +43,7 @@ type StoreType = {
         Ng2BootstrapModule.forRoot(),
         ModalModule.forRoot(),
         SharedModule.forRoot(),
+        ToastrModule.forRoot(),
         PagesModule,
         routing
     ],

@@ -60,13 +60,13 @@
             margin-top: -3px;
         }
         background: $dropdown-bg; // @include linear-gradient-bg($dropdown-bg 0%, $dropdown-bg 78%, $dropdown-text 78%, $dropdown-text 100%); 
-        background: -moz-linear-gradient(left, #9bc7de 0%, #9bc7de 78%, #ffffff 78%, #ffffff 100%);
-        background: -webkit-gradient(linear, left top, right top, color-stop(0%, #9bc7de), color-stop(78%, #9bc7de), color-stop(78%, #ffffff), color-stop(100%, #ffffff));
-        background: -webkit-linear-gradient(left, #9bc7de 0%, #9bc7de 78%, #ffffff 78%, #ffffff 100%);
-        background: -o-linear-gradient(left, #9bc7de 0%, #9bc7de 78%, #ffffff 78%, #ffffff 100%);
-        background: -ms-linear-gradient(left, #9bc7de 0%, #9bc7de 78%, #ffffff 78%, #ffffff 100%);
-        background: linear-gradient(to right, #9bc7de 0%, #9bc7de 78%, #eceeef 78%, #eceeef 100%);
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#9bc7de', endColorstr='#ffffff', GradientType=1);
+        background: -moz-linear-gradient(left, $dropdown-bg 0%, $dropdown-bg 78%, $dropdown-text 78%, $dropdown-text 100%);
+        background: -webkit-gradient(linear, left top, right top, color-stop(0%, $dropdown-bg), color-stop(78%, $dropdown-bg), color-stop(78%, $dropdown-text), color-stop(100%, $dropdown-text));
+        background: -webkit-linear-gradient(left, $dropdown-bg 0%, $dropdown-bg 78%, $dropdown-text 78%, $dropdown-text 100%);
+        background: -o-linear-gradient(left, $dropdown-bg 0%, $dropdown-bg 78%, $dropdown-text 78%, $dropdown-text 100%);
+        background: -ms-linear-gradient(left, $dropdown-bg 0%, $dropdown-bg 78%, $dropdown-text 78%, $dropdown-text 100%);
+        background: linear-gradient(to right, $dropdown-bg 0%, $dropdown-bg 78%, $dropdown-text 78%, $dropdown-text 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$dropdown-bg', endColorstr='$dropdown-text', GradientType=1);
     }
 }
 
@@ -124,6 +124,17 @@
 
 @media screen and (min-width: $resXL-S) {
     .wrapper-dropdown {
-        width: 248px;
+        width: 240px;
+        &:after{
+            right: 10px;
+        }
+        &.active {
+            background: -moz-linear-gradient(left, $dropdown-bg 0%, $dropdown-bg 87%, $dropdown-text 87%, $dropdown-text 100%);
+            background: -webkit-gradient(linear, left top, right top, color-stop(0%, $dropdown-bg), color-stop(87%, $dropdown-bg), color-stop(87%, $dropdown-text), color-stop(100%, $dropdown-text));
+            background: -webkit-linear-gradient(left, $dropdown-bg 0%, $dropdown-bg 87%, $dropdown-text 87%, $dropdown-text 100%);
+            background: -o-linear-gradient(left, $dropdown-bg 0%, $dropdown-bg 87%, $dropdown-text 87%, $dropdown-text 100%);
+            background: -ms-linear-gradient(left, $dropdown-bg 0%, $dropdown-bg 87%, $dropdown-text 87%, $dropdown-text 100%);
+            background: linear-gradient(to right, $dropdown-bg 0%, $dropdown-bg 87%, $dropdown-text 87%, $dropdown-text 100%);
+        }
     }
 }
