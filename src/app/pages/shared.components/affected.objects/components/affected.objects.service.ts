@@ -14,6 +14,7 @@ import {
 export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> implements IAffectedObjectsService {
     // private _dataService: DataService<InvolvePartyModel>;
     private _bulkDataService: DataService<AffectedObjectModel>;
+    private _dataServiceForCargo : DataService<AffectedObjectModel>;
 
     constructor(private dataServiceFactory: DataServiceFactory) {
         super(dataServiceFactory, 'InvolvedParties');
@@ -21,6 +22,8 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
         let option: DataProcessingService = new DataProcessingService();
         this._bulkDataService = this.dataServiceFactory
             .CreateServiceWithOptions<AffectedObjectModel>('AffectedObjectBatch', option);
+       this._dataServiceForCargo = this.dataServiceFactory.CreateServiceWithOptions<AffectedObjectModel>('AffectedObjects',option);
+        
     }
 
     GetAll(): Observable<ResponseModel<InvolvePartyModel>> {
@@ -83,5 +86,12 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
             return item;
         });
         return verifiedAffectedObjects;
+    }
+
+     public GetCommunicationByAWB(id: number): Observable<ResponseModel<AffectedObjectModel>> {
+        return this._dataServiceForCargo.Query()
+            .Filter(`AffectedObjectId eq ${id}`)
+            .Expand('Cargo,CommunicationLogs')
+            .Execute();
     }
 }

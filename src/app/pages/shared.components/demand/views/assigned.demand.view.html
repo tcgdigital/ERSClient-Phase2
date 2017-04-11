@@ -1,134 +1,90 @@
-<style>
-.statusRed {
-    background: #F00 none repeat scroll 0 0;
-    border-radius: 20px;
-    float: left;
-    height: 12px;
-    margin-left: 10px;
-    width: 12px;
-}
-
-.statusGreen {
-    background: #090 none repeat scroll 0 0;
-    border-radius: 20px;
-    float: left;
-    height: 12px;
-    margin-left: 10px;
-    width: 12px;
-}
-.statusAmber {
-    background: #FFC200 none repeat scroll 0 0;
-    border-radius: 20px;
-    float: left;
-    height: 12px;
-    margin-left: 10px;
-    width: 12px;
-}
-</style>
-Assigned Demand
-
 <button class="btn btn-primary" type="button" (click)="submit()">Submit</button>
 
-<div class="row" *ngFor="let demand of demands">
-    <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-        <ul class="list-group">
-            <li class="list-group-item"><strong><i>Demand Type:</i></strong></li>
-            <li class="list-group-item" style="border-top: none">{{demand.DemandTypeName}}</li>
-</ul>
-</div>
-<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-    <ul class="list-group">
-        <li class="list-group-item"><strong><i>Demand Description:</i></strong></li>
-        <li class="list-group-item" style="border-top: none">{{demand.DemandDesc}}</li>
-</ul>
-</div>
-<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-    <ul class="list-group">
-        <li class="list-group-item"><strong><i>Requester Department:</i></strong></li>
-        <li class="list-group-item" style="border-top: none">{{demand.RequesterDepartmentName}}</li>
-</ul>
-</div>
-<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-    <ul class="list-group">
-        <li class="list-group-item"><strong><i>Priority:</i></strong></li>
-        <li class="list-group-item" style="border-top: none">{{demand.Priority}}</li>
-</ul>
-</div>
-<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-    <ul class="list-group">
-        <li class="list-group-item"><strong><i>Schedule Time Close:</i></strong></li>
-        <li class="list-group-item" style="border-top: none">{{demand.ScheduleTime}}</li>
-</ul>
-</div>
-<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-    <ul class="list-group">
-        <li class="list-group-item"><strong><i>Requester Contact Number:</i></strong></li>
-        <li class="list-group-item" style="border-top: none">{{demand.ContactNumber}}</li>
-</ul>
-</div>
-<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-    <ul class="list-group">
-        <li class="list-group-item"><strong><i>Required Location:</i></strong></li>
-        <li class="list-group-item" style="border-top: none">{{demand.RequiredLocation}}</li>
-</ul>
-</div>
-<!--<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-            <ul class="list-group">
-                <li class="list-group-item"><strong><i>Remarks:</i></strong></li>
-                <li class="list-group-item" style="border-top: none">{{demand.Remarks}}</li>
-                <input type="text" [(ngModel)]="demand.Remarks" />
-</ul>
-</div>-->
-<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-    <ul class="list-group">
-        <li class="list-group-item"><strong><i>Remarks:</i></strong></li>
-        <button class="gmd-icon-button fa fa-list-alt" (click)="openDemandRemarks(demand)" aria-label="Edit"></button>
-    </ul>
-</div>
-<div class="col-lg-6 col-md-6" [hidden]="!demand.showRemarks">
-    <strong>Request Remarks</strong>
-    <ul class="list-group">
-        <li class="list-group-item"><strong><i>Remarks:</i></strong></li>
-        <li><input [(ngModel)]="Remarks" type="text" /> </li>
-    </ul>
-    <div class="row" *ngFor="let remark of demandRemarks">
-        <ul class="list-group">
-            <li class="list-group-item"><strong><i>Requester Department:</i></strong></li>
-            <li class="list-group-item" style="border-top: none">{{remark.RequesterDepartmentName}}</li>
-           </ul>
-           <ul class="list-group">
-            <li class="list-group-item"><strong><i>Remarks added by:</i></strong></li>
-            <li class="list-group-item" style="border-top: none">{{remark.CreatedByName}}</li>
-           </ul>
-           <ul class="list-group">
-            <li class="list-group-item"><strong><i>Remarks added on:</i></strong></li>
-            <li class="list-group-item" style="border-top: none">{{remark.CreatedOn | date:"dd-MMM-yy h:mma"}}</li>
-           </ul>
-           <ul class="list-group">
-            <li class="list-group-item"><strong><i>Remarks:</i></strong></li>
-            <li class="list-group-item" style="border-top: none">{{remark.Remark}}</li>
-           </ul>
+<responsive-table>
+    <table responsive-table-body>
+        <thead>
+            <tr>
+                <th>Demand Type</th>
+                <th>Demand Description</th>
+                <th>Requester Department</th>
+                <th>Priority</th>
+                <th>Schedule Time Close</th>
+                <th>Requester Contact Number</th>
+                <th>Required Location</th>
+                <th>Remarks</th>
+                <th>RAG</th>
+                <th>Done</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr [hidden]="demands.length != 0">
+                <td colspan="9">No Demand is Assigned.</td>
+            </tr>
+            <tr *ngFor="let demand of demands">
+                <td data-title="Reference Number">{{demand.DemandTypeName}}&nbsp;</td>
+                <td data-title="PDA Name">{{demand.DemandDesc}}&nbsp;</td>
+                <td data-title="PDA Contact">{{demand.RequesterDepartmentName}}&nbsp;</td>
+                <td data-title="PNR">{{demand.Priority}}&nbsp;</td>
+                <td data-title="Passenger Type">{{demand.ScheduleTime}}&nbsp;</td>
+                <td data-title="Medical Status">{{demand.ContactNumber}}&nbsp;</td>
+                <td data-title="Medical Status">{{demand.RequiredLocation}}&nbsp;</td>
+                <td><i class="fa fa-list-alt" (click)="openDemandRemarks(demand)"></i></td>
+                <td><span [ngClass]="demand.RagStatus"></span></td>
+                <td>
+                    <md-checkbox class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsCompleted" aria-label="Done">
+                    </md-checkbox>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</responsive-table>
+
+
+<div bsModal #childModalRemarks="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Demand Remarks</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="cancelRemarkUpdate()">
+                  <span aria-hidden="true">&times;</span>
+                   </button>
+            </div>
+            <div class="modal-body">
+                <div class="holderStyle">
+                    <div class="col-sm-12">
+                        <label>Remarks</label>
+                        <input [(ngModel)]="Remarks" type="text" />
+                    </div>
+                    <button class="btn btn-primary" type="button" (click)="saveRemark(Remarks)">Save</button>
+                    <button class="btn btn-primary" type="button" (click)="cancelRemarkUpdate()">Cancel</button>
+                    <responsive-table>
+                        <table responsive-table-body>
+                            <thead>
+                                <th>Requester Department</th>
+                                <th>Remarks added by</th>
+                                <th>Remarks added on</th>
+                                <th>Remarks</th>
+                            </thead>
+                            <tbody>
+                                <tr [hidden]="demandRemarks.length != 0">
+                                    <td colspan="9">No Remark is added yet.</td>
+                                </tr>
+                                <tr *ngFor="let remark of demandRemarks">
+                                    <td data-title="Requester Department">{{remark.RequesterDepartmentName}}</td>
+                                    <td data-title="Remarks added by">{{remark.CreatedByName}}</td>
+                                    <td data-title="Remarks added on">{{remark.CreatedOn}}</td>
+                                    <td data-title="Remarks">{{remark.Remark}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </responsive-table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
-<button class="btn btn-primary" type="button" (click)="saveRemark(Remarks, demand)">Ok</button>
-<button class="btn btn-primary" type="button" (click)="cancelRemarkUpdate(demand)">Cancel</button>
-
-</div>
-<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-    <ul class="list-group">
-        <li class="list-group-item"><strong><i>RAG:</i></strong></li>
-        <span [ngClass]="demand.RagStatus"></span>
-    </ul>
-</div>
-<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-    <ul class="list-group">
-        <li class="list-group-item"><strong><i>Done:</i></strong></li>
-        <!--<li class="list-group-item" style="border-top: none">{{demand.TicketNumber}}</li>-->
-        <md-checkbox class="Marght" id="Done" [(ngModel)]="demand.IsCompleted" aria-label="Add">
-        </md-checkbox>
-    </ul>
-</div>
 
 
-</div>

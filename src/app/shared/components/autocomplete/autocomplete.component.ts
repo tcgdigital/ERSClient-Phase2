@@ -11,7 +11,9 @@ import { DataExchangeService } from '../../services/data.exchange';
     host: {
         '(document:click)': 'onDocunentClick($event)',
     },
-    templateUrl: './autocomplete.view.html'
+    templateUrl: './autocomplete.view.html',
+    styleUrls: ['./autocomplete.style.scss']
+
 })
 export class AutocompleteComponent implements OnInit {
     @Input('items') Items: Array<KeyValue> = [];

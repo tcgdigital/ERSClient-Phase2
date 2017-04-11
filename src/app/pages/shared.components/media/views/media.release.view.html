@@ -1,2 +1,8 @@
-<mediaRelease-entry [initiatedDepartmentId]="1" [incidentId]="1"></mediaRelease-entry>
-<mediaRelease-list [initiatedDepartmentId]="1" [incidentId]="1"></mediaRelease-list>
+<div class="card card-without-top-border ">
+    <div class="card-header entryHolder">
+        <mediaRelease-entry [initiatedDepartmentId]="initiatedDepartment" [incidentId]="incidentId"></mediaRelease-entry>
+    </div>
+    <div class="card-block">
+        <mediaRelease-list [initiatedDepartmentId]="initiatedDepartment" [incidentId]="incidentId"></mediaRelease-list>
+    </div>
+</div>

@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 
 import { EnquiryService, EnquiryModel, QueryModel } from '../../call.centre/components';
-import { ResponseModel,GlobalConstants, GlobalStateService } from '../../../../shared';
+import { ResponseModel,GlobalConstants, GlobalStateService, UtilityService } from '../../../../shared';
 
 @Component({
     selector: 'media-query',
@@ -9,10 +9,9 @@ import { ResponseModel,GlobalConstants, GlobalStateService } from '../../../../s
     templateUrl: '../views/media.query.list.view.html'
 })
 export class MediaQueryListComponent implements OnInit {
-    mediaQueries: QueryModel[];
+    mediaQueries: QueryModel[] =[];
     currentincidentId: number;
     constructor(private enquiryService: EnquiryService,  private globalState: GlobalStateService) {        
-        this.currentincidentId = 1;
     };
 
     getMediaQueries(incidentId): void {        
@@ -25,6 +24,7 @@ export class MediaQueryListComponent implements OnInit {
     };
 
     ngOnInit(): any {
+        this.currentincidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.getMediaQueries(this.currentincidentId);
         this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
 

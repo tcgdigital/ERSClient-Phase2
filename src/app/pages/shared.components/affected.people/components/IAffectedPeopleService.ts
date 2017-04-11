@@ -30,4 +30,6 @@ export interface IAffectedPeopleService extends IServiceInretface<AffectedPeople
     GetImmediateCarePeopleCount(incidentId: number): Observable<number>;
 
     GetCasualtyStatus(incidentId: number): Observable<CasualtySummeryModel>;
+
+    GetCommunicationByPDA(id: number): Observable<ResponseModel<AffectedPeopleModel>>;
 }

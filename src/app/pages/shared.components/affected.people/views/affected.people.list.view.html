@@ -14,10 +14,12 @@
             </tr>
         </thead>
         <tbody>
-            <tr [hidden]="affectedPeople.length != 0"><td colspan="9">No PDA is available.</td></tr>
+            <tr [hidden]="affectedPeople.length != 0">
+                <td colspan="9">No PDA is available.</td>
+            </tr>
             <tr *ngFor="let affectedperson of affectedPeople">
                 <td data-title="Reference Number">{{affectedperson.TicketNumber}}&nbsp;</td>
-                <td data-title="PDA Name">{{affectedperson.CrewName}}&nbsp;</td>
+                <td data-title="PDA Name">{{affectedperson.CrewName || affectedperson.PassengerName}}&nbsp;</td>
                 <td data-title="PDA Contact">{{affectedperson.ContactNumber}}&nbsp;</td>
                 <td data-title="PNR">{{affectedperson.Pnr}}&nbsp;</td>
                 <td data-title="Passenger Type">{{affectedperson.PaxType}}&nbsp;</td>
@@ -26,14 +28,141 @@
                     <i class="fa fa-check fa-lg fontGreen" aria-hidden="true" [hidden]="affectedperson.IsVerified == false"></i>
                     <i class="fa fa-question fa-lg fontAmber" aria-hidden="true" [hidden]="affectedperson.IsVerified == true"></i>
                 </td>
-                <td data-title="Interaction Details">Interaction Details</td>
+                <td data-title="Interaction Details"><i class="fa fa-comments trailButtonStyle" (click)="openChatTrails(affectedperson.AffectedPersonId)"></i>
+                </td>
                 <td data-title="Action">
-                    <i class="fa fa-edit fa-lg" (click)="open(affectedperson)"></i>
+                    <i class="fa fa-edit fa-lg" (click)="openAffectedPersonDetail(affectedperson)"></i>
                 </td>
             </tr>
         </tbody>
     </table>
 </responsive-table>
+
+
+
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Additional Information</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="cancelModal(actionableModelToUpdate)">
+                  <span aria-hidden="true">&times;</span>
+                   </button>
+            </div>
+            <div class="modal-body">
+                <div class="holderStyle">
+                    <div class="row modalBodyHeaderStyle">
+                        <div class="col-sm-6 form-group">
+                            <label class="lebelHeaderStyle"><strong>PDA Name</strong></label>
+                            <br>
+                            <label class="form-control">{{affectedPersonModelForStatus.CrewName || affectedPersonModelForStatus.PassengerName}}</label>
+                        </div>
+                        <div class="col-sm-6 form-group">
+                            <label class="lebelHeaderStyle"><strong>Reference Number</strong></label>
+                             <br>
+                            <label class="form-control">{{affectedPersonModelForStatus.TicketNumber}}</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                    <div class="form-group col-lg-6 col-sm-12 col-md-6">
+                        <label for="DiscussionNote">Identification Details:</label>
+                        <input value="{{affectedPersonModelForStatus.Identification}}" type="text" class="form-control" />
+                    </div>
+                    
+                    <div class="form-group col-lg-6 col-sm-12 col-md-6">
+                        <label for="DiscussionNote">Status:</label>
+                        <select id="selectStatus" [(ngModel)]="affectedPersonModelForStatus.MedicalStatusToshow" class="form-control">
+                                  <option *ngFor="let status of medicalStatus" [value]="status.value" >{{status.caption}} </option>                      
+                               </select>
+                    </div>
+                    </div>
+                    <div class="row">
+                    <div class="form-group col-lg-6 col-sm-12 col-md-6">
+                        <label for="DiscussionNote">Remarks:</label>
+                        <input value="{{affectedPersonModelForStatus.Remarks}}" [(ngModel)]="affectedPersonModelForStatus.Remarks" class="form-control"
+                            type="text" />
+                    </div>
+                    <div class="col-lg-6 col-sm-12 col-md-6">
+                        <div class="buttonholder">
+                        <button class="btn btn-primary" type="button" (click)="saveUpdateAffectedPerson(affectedPersonModelForStatus)">Ok</button>
+                        <button class="btn btn-primary" type="button" (click)="cancelUpdate(affectedPersonModelForStatus)">Cancel</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div bsModal #childModalForTrail="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Communication Trail</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="cancelTrailModal()">
+                  <span aria-hidden="true">&times;</span>
+                   </button>
+            </div>
+            <div class="modal-body">
+                 <div class="row modalBodyHeaderStyle">
+                        <div class="col-sm-6 form-group">
+                            <label class="lebelHeaderStyle"><strong>PDA Name</strong></label>
+                            <br>
+                            <label class="form-control">{{pdaNameForTrail}}</label>
+                        </div>
+                        <div class="col-sm-6 form-group">
+                            <label class="lebelHeaderStyle"><strong>Reference Number</strong></label>
+                             <br>
+                            <label class="form-control">{{ticketNumber}}</label>
+                        </div>
+                    </div>
+                <!--<div class="col-sm-12">
+                    <div class="col-sm-6 form-group">
+                        <label>PDA Name</label>
+                        <label>{{pdaNameForTrail}}</label>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label>Reference Number</label>
+                        <label>{{ticketNumber}}</label>
+                    </div>
+                </div>-->
+                <br>
+                <responsive-table>
+                    <table responsive-table-body>
+                        <tbody>
+                            <tr *ngFor="let comm of communications">
+                                <td data-title="comm"><strong>{{comm.RequesterType}}</strong> logged by
+                                    <span [hidden]="comm.RequesterDepartment.length==0"><strong>{{comm.RequesterName}} (Dept: {{comm.RequesterDepartment}})</strong></span>
+                                    <span> on <strong>{{comm.CreatedOn | date:"dd-MMM-yy h:mma"}}&nbsp;:</strong></span> {{comm.Answers}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </responsive-table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <!--<div>
     <h3>Passenger Directly Affected</h3>

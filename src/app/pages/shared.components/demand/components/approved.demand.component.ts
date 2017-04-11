@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnInit, AfterContentInit } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, AfterContentInit ,ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { InvolvePartyModel } from '../../involveparties';
 import { DemandModel, DemandModelToView, DemandRemarkLogModel } from './demand.model';
@@ -7,8 +7,10 @@ import { DemandService } from './demand.service';
 import { DemandTrailService } from './demandtrail.service';
 import { DemandTrailModel } from './demand.trail.model';
 import { DemandRemarkLogService } from './demand.remarklogs.service';
-import { ResponseModel, DataExchangeService, GlobalConstants, GlobalStateService } from '../../../../shared';
+import { ResponseModel, DataExchangeService, GlobalConstants, GlobalStateService ,UtilityService } from '../../../../shared';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
+import { ModalDirective } from 'ng2-bootstrap/modal';
+
 
 @Component({
     selector: 'approved-demand',
@@ -16,7 +18,10 @@ import { DepartmentService, DepartmentModel } from '../../../masterdata/departme
     templateUrl: '../views/approved.demand.view.html'
 })
 export class ApprovedDemandComponent implements OnInit, AfterContentInit {
-    demandsForApproval: DemandModelToView[];
+        @ViewChild('childModalRemarks') public childModalRemarks: ModalDirective;
+
+
+    demandsForApproval: DemandModelToView[] =[];
     currentDepartmentId: number;
     currentDepartmentName: string;
     currentIncidentId: number;
@@ -28,12 +33,14 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
     RemarkToCreate: DemandRemarkLogModel;
     createdByName: string;
     demandTrails: DemandTrailModel[];
+    demandForRemarks : DemandModelToView ;
     demandTrail: DemandTrailModel;
     constructor(private demandService: DemandService, private demandRemarkLogsService: DemandRemarkLogService,
         private globalState: GlobalStateService, private departmentService: DepartmentService) {
         this.createdByName = "Anwesha Ray";
         this.demandRemarks = [];
-    }
+        this.demandForRemarks = new DemandModelToView();
+    };
 
 
     getDemandsForApproval(deptId, incidentId): void {
@@ -87,14 +94,15 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
                 this.demandRemarks = response.Records;
+                this.childModalRemarks.show();
             }, (error: any) => {
                 console.log("error:  " + error);
             });
     };
 
-    openDemandRemarks(demand): void {
+    openDemandRemarks(demand : DemandModelToView): void {
+        this.demandForRemarks = demand;
         this.getDemandRemarks(demand.DemandId);
-        demand["showRemarks"] = true;
     };
     createDemandTrailModel(demand: DemandModelToView, flag, originalDemand?: DemandModel): DemandTrailModel[] {
 
@@ -154,11 +162,13 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
         return this.demandTrails;
     };
 
-    cancelRemarkUpdate(demand): void {
-        demand["showRemarks"] = false;
+    cancelRemarkUpdate(): void {
+       this.childModalRemarks.hide();
     };
 
-    saveRemark(remarks, demand): void {
+    saveRemark(remarks): void {
+
+        let demand : DemandModelToView = this.demandForRemarks;
         this.RemarkToCreate = new DemandRemarkLogModel();
         this.RemarkToCreate.Remark = remarks;
         this.RemarkToCreate.DemandId = demand.DemandId;
@@ -167,7 +177,6 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
         this.RemarkToCreate.CreatedByName = this.createdByName;
         this.demandRemarkLogsService.Create(this.RemarkToCreate)
             .subscribe((response: DemandRemarkLogModel) => {
-                alert("Remark saved successfully");
                 this.getDemandRemarks(demand.DemandId);
                 this.Remarks = "";
             }, (error: any) => {
@@ -244,8 +253,8 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
 
     ngOnInit(): any {
 
-        this.currentDepartmentId = 1;
-        this.currentIncidentId = 1;
+        this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
         this.getCurrentDepartmentName(this.currentDepartmentId);
         this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));

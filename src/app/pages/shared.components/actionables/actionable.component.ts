@@ -4,10 +4,10 @@ import { DataExchangeService } from '../../../shared';
 
 @Component({
 
-    selector: 'actionable-main',
-   
+    selector: 'actionable-main',   
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './views/actionable.html'
+    templateUrl: './views/actionable.html',
+    styleUrls:['./styles/actionable.style.scss']
 })
 export class ActionableComponent implements OnInit, OnDestroy {
     showActive: boolean = null;

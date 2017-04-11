@@ -31,6 +31,7 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
     Action: string;
     currentIncidentId: number;
     currentDepartmentId: number;
+    showAdd: boolean;
 
     /**
      * Creates an instance of PresidentMessageEntryComponent.
@@ -42,7 +43,10 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
      */
     constructor(private presidentMessageService: PresidentMessageService,
         private dataExchange: DataExchangeService<PresidentMessageModel>, private globalState: GlobalStateService,
-        private builder: FormBuilder) { }
+        private builder: FormBuilder) {
+        this.showAdd = false;
+
+    }
 
     ngOnInit(): void {
         this.InitiateForm();
@@ -73,6 +77,7 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
         this.PresidentsMessage.PresidentsMessageId = presedientMessageModel.PresidentsMessageId;
         this.PresidentsMessage.IsUpdated = true;
         this.Action = "Edit";
+        this.showAdd = true;
     }
 
     save(): void {
@@ -102,6 +107,7 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
             this.presidentMessageService.Create(this.PresidentsMessage)
                 .subscribe((response: PresidentMessageModel) => {
                     this.dataExchange.Publish("PresidentMessageModelSaved", response);
+                    this.showAdd = false;
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
                 });
@@ -110,6 +116,7 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
             this.presidentMessageService.Update(this.PresidentsMessage)
                 .subscribe((response: PresidentMessageModel) => {
                     this.dataExchange.Publish("PresidentMessageModelUpdated", response);
+                    this.showAdd = false;
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
                 });
@@ -118,7 +125,8 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
 
     cancel(): void {
         this.InitiateForm();
-    }
+        this.showAdd = false;
+    };
 
     private InitiateForm(): void {
         this.form = new FormGroup({
@@ -128,8 +136,13 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
         });
 
         this.PresidentsMessage = new PresidentMessageModel()
-       // this.PresidentsMessage.IncidentId = +this.currentIncidentId;
-       // this.PresidentsMessage.InitiateDepartmentId = +this.initiatedDepartmentId;
+        // this.PresidentsMessage.IncidentId = +this.currentIncidentId;
+        // this.PresidentsMessage.InitiateDepartmentId = +this.initiatedDepartmentId;
         this.Action = "Save";
-    }
+    };
+
+    showAddRegion(ShowAdd: Boolean): void {
+        this.showAdd = true;
+    };
+
 }

@@ -1,116 +1,113 @@
-<div>
-    <h3>Cargo</h3>
-
-    <responsive-table>
-        <table responsive-table-body>
-            <thead>
-                <tr>
-                    <th>Reference Number</th>
-                    <th>Air Way Bill</th>
-                    <th>Manifest Pieces</th>
-                    <th>Manifest weight(kg)</th>
-                    <th>POU</th>
-                    <th>POL</th>
-                    <th>Verification Status</th>
-                    <th>Interaction Details</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr [hidden]="affectedObjects.length != 0">
-                    <td colspan="8">No Verified PDA is available.</td>
-                </tr>
-                <tr *ngFor="let affectedObject of affectedObjects">
-                    <td data-title="Reference Number">{{affectedObject.TicketNumber}}&nbsp;</td>
-                    <td data-title="Air Way Bill">{{affectedObject.AWB}}&nbsp;</td>
-                    <td data-title="Manifest Pieces">{{affectedObject.mftpcs}}&nbsp;</td>
-                    <td data-title="Manifest weight">{{affectedObject.mftwgt}}&nbsp;</td>
-                    <td data-title="POU">{{affectedObject.POU}}&nbsp;</td>
-                    <td data-title="POL">{{affectedObject.POL}}&nbsp;</td>
-                    <td data-title="Verification Status"> <i class="fa fa-check fa-2x fontGreen" aria-hidden="true" [hidden]="affectedObject.IsVerified == false"></i>
-                        <i class="fa fa-question fa-2x fontAmber" aria-hidden="true" [hidden]="affectedObject.IsVerified == true"></i>&nbsp;</td>
-                    <td data-title="Interaction Details">&nbsp;</td>
-                </tr>
-            </tbody>
-        </table>
-    </responsive-table>
-
-
-
-
+<responsive-table>
+    <table responsive-table-body>
+        <thead>
+            <tr>
+                <th>Reference Number</th>
+                <th>Air Way Bill</th>
+                <th>Manifest Pieces</th>
+                <th>Manifest weight(kg)</th>
+                <th>POU</th>
+                <th>POL</th>
+                <th>Verification Status</th>
+                <th>Interaction Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr [hidden]="affectedObjects.length != 0">
+                <td colspan="8">No Cargo is available.</td>
+            </tr>
+            <tr *ngFor="let affectedObject of affectedObjects">
+                <td data-title="Reference Number">{{affectedObject.TicketNumber}}&nbsp;</td>
+                <td data-title="Air Way Bill">{{affectedObject.AWB}}&nbsp;</td>
+                <td data-title="Manifest Pieces">{{affectedObject.mftpcs}}&nbsp;</td>
+                <td data-title="Manifest weight">{{affectedObject.mftwgt}}&nbsp;</td>
+                <td data-title="POU">{{affectedObject.POU}}&nbsp;</td>
+                <td data-title="POL">{{affectedObject.POL}}&nbsp;</td>
+                <td data-title="Verification Status">
+                    <i class="fa fa-check fa-lg fontGreen" aria-hidden="true" [hidden]="affectedObject.IsVerified == false"></i>
+                    <i class="fa fa-question fa-lg fontAmber" aria-hidden="true" [hidden]="affectedObject.IsVerified == true"></i>
+                </td>
+                <!--<td data-title="Verification Status"> <i class="fa fa-check fa-2x fontGreen" aria-hidden="true" [hidden]="affectedObject.IsVerified == false"></i>
+                    <i class="fa fa-question fa-2x fontAmber" aria-hidden="true" [hidden]="affectedObject.IsVerified == true"></i>&nbsp;</td>-->
+                <td data-title="Interaction Details"><i class="fa fa-comments trailButtonStyle" (click)="openChatTrails(affectedObject.AffectedObjectId)"></i>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</responsive-table>
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <!--<h3>Cargo</h3>
-
-    <a [routerLink]="['../']">Back to affected Objects</a>
-    <div class="row" *ngFor="let affectedObject of affectedObjects">
-        <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-            <ul class="list-group">
-                <li class="list-group-item"><strong><i>Reference Number:</i></strong></li>
-                <li class="list-group-item" style="border-top: none">{{affectedObject.TicketNumber}}</li>
-</ul>
-</div>
-<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-    <ul class="list-group">
-        <li class="list-group-item"><strong><i>Air Way Bill.</i></strong></li>
-        <li class="list-group-item" style="border-top: none">{{affectedObject.AWB}}</li>
-</ul>
-</div>
-<div class="col-md-5 col-lg-5 hidden-sm-down col-no-left-padding col-no-right-padding">
-    <ul class="list-group">
-        <li class="list-group-item"><strong><i>Manifest Pieces: </i></strong></li>
-        <li class="list-group-item" style="border-top: none">{{affectedObject.mftpcs}}</li>
-</ul>
-</div>
-<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-    <ul class="list-group">
-        <li class="list-group-item"><strong><i>Manifest weight(kg):</i></strong></li>
-        <li class="list-group-item" style="border-top: none">{{affectedObject.mftwgt}}</li>
-
-</ul>
-</div>
-<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-    <ul class="list-group">
-        <li class="list-group-item"><strong><i>POU:</i></strong></li>
-        <li class="list-group-item" style="border-top: none">{{affectedObject.POU}}</li>
-</ul>
-</div>
-<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-    <ul class="list-group">
-        <li class="list-group-item"><strong><i>POL:</i></strong></li>
-        <li class="list-group-item" style="border-top: none">{{affectedObject.POL}}</li>
-</ul>
-</div>
-<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-    <ul class="list-group">
-        <li class="list-group-item"><strong><i>Verification Status:</i></strong></li>
-       <li class="list-group-item" style="border-top: none">{{affectedperson.TicketNumber}}</li>             
-        <li>
-            <i class="fa fa-check fa-2x fontGreen" aria-hidden="true" [hidden]="affectedObject.IsVerified == false"></i>
-            <i class="fa fa-question fa-2x fontAmber" aria-hidden="true" [hidden]="affectedObject.IsVerified == true"></i>
-        </li>
-    </ul>
-</div>
-<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-    <ul class="list-group">
-        <li class="list-group-item"><strong><i>Interaction Details:</i></strong></li>
-    </ul>
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Communication Trail</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="cancelTrailModal()">
+                  <span aria-hidden="true">&times;</span>
+                   </button>
+            </div>
+            <div class="modal-body">
+                 <div class="row modalBodyHeaderStyle">
+                        <div class="col-sm-6 form-group">
+                            <label class="lebelHeaderStyle"><strong>AWB Number</strong></label>
+                            <br>
+                            <label class="form-control">{{AWBNumber}}</label>
+                        </div>
+                        <div class="col-sm-6 form-group">
+                            <label class="lebelHeaderStyle"><strong>Reference Number</strong></label>
+                             <br>
+                            <label class="form-control">ticketNumber</label>
+                        </div>
+                    </div>
+                    <br>
+                <!--<div class="col-sm-12">
+                    <div class="col-sm-6 form-group">
+                        <label>AWB Number</label>
+                        <label>{{AWBNumber}}</label>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label>Reference Number</label>
+                        <label>{{ticketNumber}}</label>
+                    </div>
+                </div>-->
+                <responsive-table>
+                    <table responsive-table-body>
+                        <tbody>
+                            <tr *ngFor="let comm of communications">
+                                <td data-title="comm"><strong>{{comm.RequesterType}}</strong> logged by
+                                    <span [hidden]="comm.RequesterDepartment.length==0"><strong>{{comm.RequesterName}} (Dept: {{comm.RequesterDepartment}})</strong></span>
+                                    <span> on <strong>{{comm.CreatedOn | date:"dd-MMM-yy h:mma"}}&nbsp;:</strong></span> {{comm.Answers}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </responsive-table>
+            </div>
+        </div>
+    </div>
 </div>
 
-</div>
-</div>-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

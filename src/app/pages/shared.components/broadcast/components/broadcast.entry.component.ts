@@ -38,6 +38,10 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     priorities: any[] = GlobalConstants.Priority;
     currentIncidentId: number;
     currentDepartmentId: number;
+    buttonValue: String = "";
+    showAdd : boolean;
+    listSelected: boolean;
+    selectedcount : number;
 
 
 
@@ -55,6 +59,10 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         private dataExchange: DataExchangeService<BroadCastModel>, private departmentService: DepartmentService,
         private builder: FormBuilder, private globalState: GlobalStateService) {
         this.deptBrodCastModels = [];
+        this.buttonValue = "Add New Broadcast Message";
+        this.showAdd = false;
+        this.listSelected =false;
+        this.selectedcount = 0;
     }
 
     ngOnInit(): void {
@@ -117,7 +125,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
             BroadCastDepartmentMappings: new FormControl(0),
             Priority: new FormControl(this.priorities.find(x => x.value == '1').caption)
         });
-    }
+    };
 
     selectAllDepartment(IsAllSelected: boolean): void {
         this.broadcast.DepartmentBroadcasts = [];
@@ -126,12 +134,14 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
             if (IsAllSelected) {
                 this.deptBroadcast = new DepartmentBroadcastModel();
                 this.deptBroadcast.DepartmentId = element.TargetDepartmentId;
-                this.broadcast.DepartmentBroadcasts.push(this.deptBroadcast);
+                this.broadcast.DepartmentBroadcasts.push(this.deptBroadcast);                
             }
             else {
                 this.broadcast.DepartmentBroadcasts = [];
+                 this.selectedcount =0;
             }
         });
+         this.selectedcount = this.broadcast.DepartmentBroadcasts.length;
     }
 
     selectDepartment(event, department: BroadCastDepartmentModel): void {
@@ -140,6 +150,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
                 item.IsSelected = event.target.checked;
             }
         });
+        this.selectedcount = this.BroadCastDepartmentMappings.filter(x=>{return x.IsSelected == true;}).length;
     }
 
     save(isSubmitted: boolean): void {
@@ -184,6 +195,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
             this.broadcastService.Create(this.broadcast)
                 .subscribe((response: BroadCastModel) => {
                     this.dataExchange.Publish('BroadcastModelSaved', response);
+                    this.showAdd = false;
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
                 });
@@ -192,6 +204,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
             this.broadcastService.Create(this.broadcast)
                 .subscribe((response: BroadCastModel) => {
                     this.dataExchange.Publish('BroadcastModelUpdated', response);
+                    this.showAdd = false;
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
                 });
@@ -202,16 +215,36 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         this.broadcast = broadcastModel;
         this.broadcast.IncidentId = this.currentIncidentId;
         this.broadcast.IsUpdated = true;
+        this.showAdd = true;
 
         this.BroadCastDepartmentMappings.forEach(item => {
             item.IsSelected = this.broadcast.DepartmentBroadcasts
                 .some(x => x.DepartmentId === item.TargetDepartmentId);
         });
+        this.selectedcount = this.BroadCastDepartmentMappings.filter(x=> {return x.IsSelected == true;}).length;
     }
 
     cancel(): void {
         this.broadcast = new BroadCastModel();
+        this.showAdd = false;
         this.initiateForm();
         this.broadcast.Priority = this.priorities.find(x => x.value == '1').caption;
     }
+
+
+    showAddRegion(ShowAdd: Boolean): void {
+                   this.showAdd = true;
+            this.listSelected = false;
+    };
+
+   showList = function (e) {
+            if (this.listSelected)
+                this.listSelected = false;
+            else
+                this.listSelected = true;
+        };
+
+    showList1 = function (e) {
+            this.listSelected = false;
+        };
 }

@@ -1,6 +1,6 @@
 import {
     Component, ViewEncapsulation,
-    Input, OnInit, OnDestroy
+    Input, OnInit, OnDestroy,ViewChild
 } from '@angular/core';
 import {
     FormGroup, FormControl, FormBuilder,
@@ -13,21 +13,23 @@ import {
     ResponseModel, DataExchangeService,
     UtilityService, GlobalConstants, GlobalStateService
 } from '../../../../shared';
+import { ModalDirective } from 'ng2-bootstrap/modal';
+
 
 
 @Component({
     selector: 'actionable-close',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: '../views/actionable.close.html',
-    styleUrls: ['../styles/actionable.style.scss']
+    templateUrl: '../views/actionable.close.html'
 })
 export class ActionableClosedComponent implements OnInit, OnDestroy {
+    @ViewChild('childModal') public childModal: ModalDirective;
+
     closeActionables: ActionableModel[] = [];
-
     public form: FormGroup;
-
-    private departmentId: number = null;
-    private incidentId: number = null;
+    private currentDepartmentId: number = null;
+    private currentIncident: number = null;
+    actionableModelToUpdate : ActionableModel;
 
 
     constructor(formBuilder: FormBuilder, private actionableService: ActionableService,
@@ -36,10 +38,11 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): any {
-        this.departmentId = 1;
-        this.incidentId = 96;
-        this.getAllCloseActionable(this.incidentId, this.departmentId);
+        this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
+        this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.getAllCloseActionable(this.currentIncident, this.currentDepartmentId);
         this.form = this.resetActionableForm();
+        this.actionableModelToUpdate = new ActionableModel();
         this.dataExchange.Subscribe("CloseActionablePageInitiate", model => this.onCloseActionablePageInitiate(model));
         this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
@@ -47,13 +50,13 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
 
 
     private incidentChangeHandler(incidentId): void {
-        this.incidentId = incidentId;
-        this.getAllCloseActionable(this.incidentId, this.departmentId);
+        this.currentIncident = incidentId;
+        this.getAllCloseActionable(this.currentIncident, this.currentDepartmentId);
     }
 
     private departmentChangeHandler(departmentId): void {
-        this.departmentId = departmentId;
-        this.getAllCloseActionable(this.incidentId, this.departmentId);
+        this.currentDepartmentId = departmentId;
+        this.getAllCloseActionable(this.currentIncident, this.currentDepartmentId);
     }
 
 
@@ -66,7 +69,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
 
     onCloseActionablePageInitiate(isClosed: boolean): void {
 
-        this.getAllCloseActionable(this.incidentId, this.departmentId);
+        this.getAllCloseActionable(this.currentIncident, this.currentDepartmentId);
     }
 
     ngOnDestroy(): void {
@@ -94,12 +97,13 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
             });
     }
 
-    actionableDetail(editedActionableModel: ActionableModel): void {
+    openActionableDetail(editedActionableModel: ActionableModel): void {
         this.form = new FormGroup({
             Comments: new FormControl(editedActionableModel.Comments),
             URL: new FormControl(editedActionableModel.URL)
         });
-        editedActionableModel.show = true;
+       this.actionableModelToUpdate = editedActionableModel;
+        this.childModal.show();
     }
 
     closedActionableClick(closedActionablesUpdate: ActionableModel[]): void {
@@ -120,13 +124,13 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     batchUpdate(data: any[]) {
         this.actionableService.BatchOperation(data)
             .subscribe(x => {
-                this.getAllCloseActionable(this.incidentId, this.departmentId);
+                this.getAllCloseActionable(this.currentIncident, this.currentDepartmentId);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
     }
 
-    cancelUpdateCommentAndURL(editedActionableModel: ActionableModel): void {
-        editedActionableModel.show = false;
+    cancelUpdateCommentAndURL(): void {
+         this.childModal.hide();
     }
 }

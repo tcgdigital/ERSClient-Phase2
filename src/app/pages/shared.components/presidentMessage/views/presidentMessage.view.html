@@ -1,2 +1,8 @@
-<presidentMessage-entry [initiatedDepartmentId]="1" [incidentId]="1"></presidentMessage-entry>
-<presidentMessage-detail [initiatedDepartmentId]="1" [incidentId]="1"></presidentMessage-detail>
+<div class="card card-without-top-border ">
+    <div class="card-header entryHolder">
+        <presidentMessage-entry [initiatedDepartmentId]="initiatedDepartment" [incidentId]="incidentId"></presidentMessage-entry>
+    </div>
+    <div class="card-block">
+        <presidentMessage-detail [initiatedDepartmentId]="initiatedDepartment" [incidentId]="incidentId"></presidentMessage-detail>
+    </div>
+</div>

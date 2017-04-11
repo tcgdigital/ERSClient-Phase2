@@ -9,6 +9,10 @@ const mediaRoutes: Routes = [
         path: '',
         component: MediaComponent,
         children:[
+             {
+                path: '',
+                component: MediaQueryListComponent
+            },
             {
                 path: 'release',
                 component: MediaReleaseComponent

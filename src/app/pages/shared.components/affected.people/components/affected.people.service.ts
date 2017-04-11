@@ -35,36 +35,36 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     }
 
     public FlattenAffectedPeople(involvedParty: InvolvePartyModel): any {
-        let affectedPeopleForView: AffectedPeopleToView[] =[];
+        let affectedPeopleForView: AffectedPeopleToView[] = [];
         let affectedPeople: AffectedPeopleModel[];
         let affected: AffectedModel;
-        if(involvedParty != null){
-        affected = UtilityService.pluck(involvedParty, ['Affecteds'])[0][0];
-        if(affected != null){
-        affectedPeople = UtilityService.pluck(affected, ['AffectedPeople'])[0];
+        if (involvedParty != null) {
+            affected = UtilityService.pluck(involvedParty, ['Affecteds'])[0][0];
+            if (affected != null) {
+                affectedPeople = UtilityService.pluck(affected, ['AffectedPeople'])[0];
 
-        affectedPeopleForView = affectedPeople.map(function (dataItem) {
-            let item = new AffectedPeopleToView();
-            item.AffectedId = dataItem.AffectedId;
-            item.AffectedPersonId = dataItem.AffectedPersonId,
-                item.PassengerName = dataItem.Passenger != null ? dataItem.Passenger.PassengerName : '';
-            item.Pnr = dataItem.Passenger != null ? (dataItem.Passenger.Pnr == null ? 'NA' : dataItem.Passenger.Pnr) : 'NA';
-            item.CrewName = dataItem.Crew != null ? dataItem.Crew.CrewName : '';
-            item.CrewNameWithCategory = dataItem.Crew != null ? dataItem.Crew.CrewName + '(' + dataItem.Crew.AsgCat + ')' : '';
-            item.ContactNumber = dataItem.Passenger != null ? (dataItem.Passenger.ContactNumber == null ? 'NA' : dataItem.Passenger.ContactNumber) : (dataItem.Crew == null ? 'NA' : dataItem.Crew.ContactNumber);
-            item.TicketNumber = dataItem.TicketNumber;
-            item.IsVerified = dataItem.IsVerified;
-            item.IsCrew = dataItem.IsCrew;
-            item.IsStaff = dataItem.IsStaff != null ? dataItem.IsStaff : false;
-            item.MedicalStatus = dataItem.MedicalStatus != null ? dataItem.MedicalStatus : 'NA';
-            item.Remarks = dataItem.Remarks.trim() != null ? dataItem.Remarks : 'NA';
-            item.Identification = dataItem.Identification != null ? dataItem.Identification : 'NA';
-            item.SeatNo = dataItem.Passenger != null ? dataItem.Passenger.Seatno : 'No Seat Number Available';
-            // item.CommunicationLogs: dataItem.CommunicationLogs,
-            item.PaxType = dataItem.Passenger != null ? dataItem.Passenger.PassengerType : dataItem.Crew != null ? 'Crew' : '';
-            return item;
-        });
-        }
+                affectedPeopleForView = affectedPeople.map(function (dataItem) {
+                    let item = new AffectedPeopleToView();
+                    item.AffectedId = dataItem.AffectedId;
+                    item.AffectedPersonId = dataItem.AffectedPersonId,
+                        item.PassengerName = dataItem.Passenger != null ? dataItem.Passenger.PassengerName : '';
+                    item.Pnr = dataItem.Passenger != null ? (dataItem.Passenger.Pnr == null ? 'NA' : dataItem.Passenger.Pnr) : 'NA';
+                    item.CrewName = dataItem.Crew != null ? dataItem.Crew.CrewName : '';
+                    item.CrewNameWithCategory = dataItem.Crew != null ? dataItem.Crew.CrewName + '(' + dataItem.Crew.AsgCat + ')' : '';
+                    item.ContactNumber = dataItem.Passenger != null ? (dataItem.Passenger.ContactNumber == null ? 'NA' : dataItem.Passenger.ContactNumber) : (dataItem.Crew == null ? 'NA' : dataItem.Crew.ContactNumber);
+                    item.TicketNumber = dataItem.TicketNumber;
+                    item.IsVerified = dataItem.IsVerified;
+                    item.IsCrew = dataItem.IsCrew;
+                    item.IsStaff = dataItem.IsStaff != null ? dataItem.IsStaff : false;
+                    item.MedicalStatus = dataItem.MedicalStatus != null ? dataItem.MedicalStatus : 'NA';
+                    item.Remarks = dataItem.Remarks.trim() != null ? dataItem.Remarks : 'NA';
+                    item.Identification = dataItem.Identification != null ? dataItem.Identification : 'NA';
+                    item.SeatNo = dataItem.Passenger != null ? dataItem.Passenger.Seatno : 'No Seat Number Available';
+                    // item.CommunicationLogs: dataItem.CommunicationLogs,
+                    item.PaxType = dataItem.Passenger != null ? dataItem.Passenger.PassengerType : dataItem.Crew != null ? 'Crew' : '';
+                    return item;
+                });
+            }
         }
         return affectedPeopleForView;
 
@@ -87,14 +87,14 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     }
 
     public MapAffectedPeople(affectedPeopleForVerification): AffectedPeopleModel[] {
-        let verifiedAffectedPeople: AffectedPeopleModel[] =[];
-        if(affectedPeopleForVerification != null){
-        verifiedAffectedPeople = affectedPeopleForVerification.map(function (affected) {
-            let item = new AffectedPeopleModel();
-            item.AffectedPersonId = affected.AffectedPersonId;
-            item.IsVerified = affected.IsVerified;
-            return item;
-        });
+        let verifiedAffectedPeople: AffectedPeopleModel[] = [];
+        if (affectedPeopleForVerification != null) {
+            verifiedAffectedPeople = affectedPeopleForVerification.map(function (affected) {
+                let item = new AffectedPeopleModel();
+                item.AffectedPersonId = affected.AffectedPersonId;
+                item.IsVerified = affected.IsVerified;
+                return item;
+            });
         }
         return verifiedAffectedPeople;
     }
@@ -147,7 +147,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
                 this._casualtySummery.reunitedCasualtyCount = dataReunitedPeopleCount;
                 return this._casualtySummery;
             })
-             .flatMap(() => this.GetMinorInjuryPeopleCount(incidentId))
+            .flatMap(() => this.GetMinorInjuryPeopleCount(incidentId))
             .map((dataMinorInjuryPeople: number) => {
                 this._casualtySummery.minorCasualtyCount = dataMinorInjuryPeople;
                 return this._casualtySummery;
@@ -156,11 +156,19 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
             .map((dataCriticalPeopleCount: number) => {
                 this._casualtySummery.criticalCasualtyCount = dataCriticalPeopleCount;
                 return this._casualtySummery;
-             });
-            // .flatMap(() => this.GetImmediateCarePeopleCount(incidentId))
-            // .map((dataImmediateCarePeopleCount: number) => {
-            //     this._casualtySummery.immediateCareCasualtyCount = dataImmediateCarePeopleCount;
-            //     return this._casualtySummery;
-            // });
+            });
+        // .flatMap(() => this.GetImmediateCarePeopleCount(incidentId))
+        // .map((dataImmediateCarePeopleCount: number) => {
+        //     this._casualtySummery.immediateCareCasualtyCount = dataImmediateCarePeopleCount;
+        //     return this._casualtySummery;
+        // });
+    }
+
+
+    public GetCommunicationByPDA(id: number): Observable<ResponseModel<AffectedPeopleModel>> {
+        return this._dataService.Query()
+            .Filter(`AffectedPersonId eq ${id}`)
+            .Expand('Passenger , Crew, CommunicationLogs')
+            .Execute();
     }
 }
