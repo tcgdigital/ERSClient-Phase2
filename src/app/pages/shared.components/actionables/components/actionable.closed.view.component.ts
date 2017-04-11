@@ -86,7 +86,6 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     }
 
     getAllCloseActionable(incidentId: number, departmentId: number): void {
-         alert(incidentId +"  :  "+ departmentId);
         this.actionableService.GetAllCloseByIncidentIdandDepartmentId(incidentId, departmentId)
             .subscribe((response: ResponseModel<ActionableModel>) => {
                 this.closeActionables = response.Records;

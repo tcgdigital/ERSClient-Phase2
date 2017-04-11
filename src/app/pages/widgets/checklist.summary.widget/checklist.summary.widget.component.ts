@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Rx';
 import { ActionableModel } from '../../shared.components/actionables/components/actionable.model';
 import { ResponseModel } from '../../../shared';
 import { DepartmentModel } from '../../masterdata/department/components/department.model';
+import { GlobalStateService } from '../../../shared';
 
 @Component({
     selector: 'checklist-summary-widget',
@@ -30,19 +31,31 @@ export class ChecklistSummaryWidgetComponent implements OnInit {
     public subDeptCompletedCheckLists: Observable<SubDeptCheckListModel[]>;
     public subDeptPendingCheckLists: SubDeptCheckListModel[];
     public subdeptChecklistsLoc: ActionableModel[];
+    currentDepartmentId: number;
+    currentIncidentId: number;
+
     /**
      * Creates an instance of ChecklistSummaryWidgetComponent.
      * @param {ChecklistSummaryWidgetService} checklistSummaryWidgetService 
      * 
      * @memberOf ChecklistSummaryWidgetComponent
      */
-    constructor(private checklistSummaryWidgetService: ChecklistSummaryWidgetService) { }
+    constructor(private checklistSummaryWidgetService: ChecklistSummaryWidgetService,
+        private globalState: GlobalStateService) { }
 
     public ngOnInit(): void {
+        this.currentIncidentId = this.incidentId;
+        this.currentDepartmentId = this.departmentId;
+        this.getActionableCount(this.currentIncidentId, this.currentDepartmentId);
+        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
         this.showAllDeptSubChecklistCompleted = false;
         this.showAllDeptSubChecklistPending = false;
+    }
+
+    getActionableCount(incidentId, departmentId): void {
         this.checkListSummery = new CheckListSummeryModel();
-        this.checklistSummaryWidgetService.GetActionableCount(this.incidentId, this.departmentId)
+        this.checklistSummaryWidgetService.GetActionableCount(incidentId, departmentId)
             .subscribe(checkListSummeryObservable => {
                 this.checkListSummery = checkListSummeryObservable;
             }, (error: any) => {
@@ -256,10 +269,6 @@ export class ChecklistSummaryWidgetComponent implements OnInit {
         });
     }
 
-
-    //////////////////
-
-
     public showSubDeptSubTableCompleted(deptCheckListModel: DeptCheckListModel): void {
         this.showSubDeptSubChecklistCompleted = false;
         this.showSubDeptSubChecklistPending = false;
@@ -318,8 +327,8 @@ export class ChecklistSummaryWidgetComponent implements OnInit {
     }
 
     public setSubDeptRagStatusForPending(Actionables: ActionableModel[]): void {
-        this.subDeptPendingCheckLists=[];
-         let subdeptChecklists: SubDeptCheckListModel[] = [];
+        this.subDeptPendingCheckLists = [];
+        let subdeptChecklists: SubDeptCheckListModel[] = [];
         Actionables.forEach((itemActionable: ActionableModel) => {
             let subdeptChecklist: SubDeptCheckListModel = new SubDeptCheckListModel();
             subdeptChecklist.checkListDesc = itemActionable.CheckListDetails;
@@ -348,5 +357,21 @@ export class ChecklistSummaryWidgetComponent implements OnInit {
                 }
             });
         });
+    }
+
+
+    private incidentChangeHandler(incidentId): void {
+        this.currentIncidentId = incidentId;
+        this.getActionableCount(this.currentIncidentId, this.currentDepartmentId);
+    };
+
+    private departmentChangeHandler(departmentId): void {
+        this.currentDepartmentId = departmentId;
+        this.getActionableCount(this.currentIncidentId, this.currentDepartmentId);
+    };
+
+    ngOnDestroy(): void {
+        this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('departmentChange');
     }
 }

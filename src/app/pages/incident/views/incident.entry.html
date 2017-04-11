@@ -1,4 +1,4 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>-->
 <div [hidden]="!showInsert">
     <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
         <input id="IncidentId" class="form-control" type="hidden" name="IncidentId" formControlName="IncidentId" [(ngModel)]="incidentModel.IncidentId"
@@ -8,20 +8,19 @@
                 <label for="IsDrill">IsDrill:<span class="red">*</span></label>
                 <md-checkbox class="Marght" id="IsDrill" name="IsDrill" formControlName="IsDrill" [ngModel]="incidentModel.IsDrill" (change)="IsDrill($event)"
                     aria-label="Drill">
-                    </md-checkbox>
+                </md-checkbox>
             </div>
         </div>
         <div class="col-sm-3">
             <div class="form-control">
                 <label for="EmergencyType">EmergencyType:<span class="red">*</span></label>
-                <select id="selectApprover" formControlName="EmergencyTypeId" name="EmergencyTypeId"
-                 (change)="emergencyTypeChange($event.target.value,activeEmergencyTypes)">
-                                         <option value="0" >Select Emergency Type</option>
-                                         <option *ngFor="let emergencyType of activeEmergencyTypes" 
-                                         [value]="emergencyType.EmergencyTypeId" >
-                                         {{emergencyType.EmergencyTypeName}}
-                                         </option>
-                                     </select>
+                <select id="selectApprover" formControlName="EmergencyTypeId" name="EmergencyTypeId" (change)="emergencyTypeChange($event.target.value,activeEmergencyTypes)">
+                    <option value="0" >Select Emergency Type</option>
+                    <option *ngFor="let emergencyType of activeEmergencyTypes" 
+                    [value]="emergencyType.EmergencyTypeId" >
+                    {{emergencyType.EmergencyTypeName}}
+                    </option>
+                </select>
             </div>
         </div>
         <div class="col-sm-3">
@@ -52,22 +51,23 @@
                 />
             </div>
         </div>
-        <!--<div class="col-sm-3">
+        <div class="col-sm-3">
             <div class="form-control">
-                <label for="Sequence">EmergencyDate:<span class="red">*</span></label>
-                <input [ngModel]="EmergencyDate" formControlName="EmergencyDate" ng2-datetime-picker date-format="DD-MM-YYYY hh:mm:tt"  close-on-select="false"  />
+                <label for="ClosureNote">Date of Crisis:<span class="red">*</span>(UTC)</label>
+                <!--<air-datepicker [airOptions]="datePickerOption" [(airDate)]="date"></air-datepicker>-->
+                <input id="ClosureNote" class="form-control" type="text" name="ClosureNote" formControlName="ClosureNote" placeholder="Enter ClosureNote" datetime-picker
+                />
             </div>
-        </div>-->
-
+        </div>
         <div class="col-sm-3">
             <div class="form-control">
                 <label for="Severity">Severity:<span class="red">*</span></label>
                 <select id="selectApprover" formControlName="Severity" name="Severity">
                     <option value="0" >Select Severity</option>
-                                         <option *ngFor="let severity of severities" [value]="severity.Key" >
-                                         {{severity.Key}}
-                                         </option>
-                                     </select>
+                        <option *ngFor="let severity of severities" [value]="severity.Key" >
+                        {{severity.Key}}
+                        </option>
+                    </select>
             </div>
         </div>
         <div class="col-sm-3">

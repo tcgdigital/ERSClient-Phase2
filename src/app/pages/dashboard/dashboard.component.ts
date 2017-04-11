@@ -17,7 +17,7 @@ export class DashboardComponent implements OnInit {
     public tablinks: ITabLinkInterface[]
 
     constructor() {
-        this.incidentDate = new Date(2017, 3, 24, 1, 20, 25);
+        this.incidentDate = new Date('apr,10,2017,00:00:00');
     }
 
     public ngOnInit(): void {

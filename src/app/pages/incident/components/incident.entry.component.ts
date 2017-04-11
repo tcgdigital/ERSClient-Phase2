@@ -15,6 +15,7 @@ import {
 } from '../../../shared';
 import { FlightModel, InvolvePartyModel } from '../../shared.components';
 import { IncidentDataExchangeModel } from './incidentDataExchange.model';
+import { } from 'angular2-air-datepicker/lib';
 
 @Component({
     selector: 'incident-entry',
@@ -23,6 +24,15 @@ import { IncidentDataExchangeModel } from './incidentDataExchange.model';
 })
 export class IncidentEntryComponent implements OnInit, OnDestroy {
     @Input() DepartmentId: any;
+
+    datePickerOption: any = {
+        timepicker: true,
+        format12h: true,
+        fullDays: false,
+        language: 'en',
+        hourStep: 1,
+        minuteStep: 1
+    };
     showInsert: boolean = null;
     isFlightRelated: boolean = false;
     buttonValue: String = '';
@@ -36,6 +46,15 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     incidentStatuses: KeyValue[] = [];
     public form: FormGroup;
 
+    /**
+     * Creates an instance of IncidentEntryComponent.
+     * @param {FormBuilder} formBuilder 
+     * @param {EmergencyTypeService} emergencyTypeService 
+     * @param {DataExchangeService<IncidentDataExchangeModel>} dataExchange 
+     * @param {DataExchangeService<Boolean>} dataExchangeDecision 
+     * 
+     * @memberOf IncidentEntryComponent
+     */
     constructor(formBuilder: FormBuilder,
         private emergencyTypeService: EmergencyTypeService,
         private dataExchange: DataExchangeService<IncidentDataExchangeModel>,
@@ -49,10 +68,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.incidentModel = new IncidentModel();
         this.incidentModel.IncidentStatus = UtilityService.GetKeyValues(IncidentStatus)[0].Key;
         this.incidentModel.Severity = UtilityService.GetKeyValues(Severity)[0].Key;
-
-        this.incidentModel.ActiveFlag = 'Active';
-        this.incidentModel.CreatedBy = 1;
-        this.incidentModel.CreatedOn = this.date;
     }
 
     getAllActiveEmergencyTypes(): void {
@@ -71,7 +86,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         if (emergencyType !== undefined && emergencyType.EmergencyCategory === 'FlightRelated') {
             this.isFlightRelated = true;
         }
-
     }
 
     IsDrill(event: any): void {
@@ -90,9 +104,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     onIncidentViewPreCheck(isInsertShow: Boolean): void {
-
         this.showInsert = true;
-
     }
 
     resetIncidentForm(): void {
@@ -100,12 +112,10 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             IncidentId: new FormControl(0),
             IsDrill: new FormControl(false),
             EmergencyTypeId: new FormControl('0'),
-            //IncidentStatus: new FormControl(this.incidentStatuses[0].Value),
             EmergencyName: new FormControl(''),
             AlertMessage: new FormControl(''),
             Description: new FormControl(''),
             ClosureNote: new FormControl(''),
-            //EmergencyDate: new FormControl(''),
             Severity: new FormControl('0'),
             EmergencyLocation: new FormControl(''),
             Remarks: new FormControl(''),
@@ -136,11 +146,10 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                 console.log('Please select Severity');
             }
         }
-
     }
+
     cancel(): void {
         this.resetIncidentForm();
-
     }
 
     fillIncidentDataExchangeModelData(incidentModel: IncidentModel,
@@ -177,14 +186,12 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.flightModel.FlightId = 0;
         this.flightModel.InvolvedPartyId = 0;
         this.flightModel.FlightNo = this.form.controls['FlightNumber'].value;
-
         this.flightModel.OriginCode = this.form.controls['Origin'].value;
         this.flightModel.DestinationCode = this.form.controls['Destination'].value;
         this.flightModel.DepartureDate = this.date;
         this.flightModel.ArrivalDate = this.date;
         this.flightModel.FlightTaleNumber = this.form.controls['FlightTailNumber'].value;
         this.flightModel.LoadAndTrimInfo = null;
-
         this.flightModel.ActiveFlag = 'Active';
         this.flightModel.CreatedBy = 1;
         this.flightModel.CreatedOn = this.date;
@@ -216,7 +223,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.incidentModel.SubmittedOn = null;
         this.incidentModel.SavedBy = null;
         this.incidentModel.SavedOn = null;
-
         this.incidentModel.ActiveFlag = 'Active';
         this.incidentModel.CreatedBy = 1;
         this.incidentModel.CreatedOn = this.date;

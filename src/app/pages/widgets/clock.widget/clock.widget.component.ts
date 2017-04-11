@@ -14,11 +14,22 @@ import { ClockWidgetService } from './clock.widget.service';
 })
 export class ClockWidgetComponent implements OnInit, OnChanges, OnDestroy {
     @Input() initiationDateTime: Date;
-    counter: TimeCount;
+    days: number = 0;
+    hours: number = 0;
+    minutes: number = 0;
+    seconds: number = 0;
+
     styleClass: string = '';
     subscriptionId: string;
 
-    constructor(private clockWidgetService: ClockWidgetService) { }
+    /**
+     * Creates an instance of ClockWidgetComponent.
+     * @param {ClockWidgetService} clockWidgetService 
+     * 
+     * @memberOf ClockWidgetComponent
+     */
+    constructor(private clockWidgetService: ClockWidgetService) {
+    }
 
     public ngOnInit() {
         this.initiateTimer();
@@ -36,13 +47,16 @@ export class ClockWidgetComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private counterSubscription(): void {
-        this.subscriptionId = this.clockWidgetService.subscribe('counter', (x) => {
-            this.counter = <TimeCount>x;
+        this.subscriptionId = this.clockWidgetService.subscribe('counter', (x: TimeCount) => {
+            this.days = x.Days;
+            this.hours = x.Hours;
+            this.minutes = x.Minutes;
+            this.seconds = x.Seconds;
         });
     }
 
     private initiateTimer(): void {
-        this.clockWidgetService.initiateTimer('counter', this.initiationDateTime);
-        this.counterSubscription();
+        if (this.clockWidgetService.initiateTimer('counter', this.initiationDateTime))
+            this.counterSubscription();
     }
 }

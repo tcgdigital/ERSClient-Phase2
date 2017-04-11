@@ -15,6 +15,7 @@ import {
     DataProcessingService,
     ServiceBase, UtilityService
 } from '../../../shared';
+import { GlobalStateService } from '../../../shared';
 
 @Component({
     selector: 'peopleOnBoard-widget',
@@ -35,6 +36,10 @@ export class PeopleOnBoardWidgetComponent implements OnInit {
     public enquiries: ResponseModel<EnquiryModel>;
     public affectedEnquiredPeoples: Observable<PassengerModel[]>;
     public affectedEnquiredCrews: Observable<CrewModel[]>;
+    currentDepartmentId: number;
+    currentIncidentId: number;
+
+
     /**
      * Creates an instance of PeopleOnBoardWidgetComponent.
      * @param {PeopleOnBoardWidgetService} peopleOnBoardWidgetService 
@@ -42,18 +47,33 @@ export class PeopleOnBoardWidgetComponent implements OnInit {
      * @memberOf PeopleOnBoardWidgetComponent
      */
 
-    constructor(private peopleOnBoardWidgetService: PeopleOnBoardWidgetService) { }
+    constructor(private peopleOnBoardWidgetService: PeopleOnBoardWidgetService,
+        private globalState: GlobalStateService) { }
 
-    public ngOnInit(): void {
+    getPeopleOnboardCounts(incident): void {
         this.peopleOnBoard = new PeopleOnBoardModel();
-        this.peopleOnBoardWidgetService.GetPeopleOnBoardDataCount(this.incidentId)
+        this.peopleOnBoardWidgetService.GetPeopleOnBoardDataCount(incident)
             .subscribe(peopleOnBoardObservable => {
+                console.log(peopleOnBoardObservable);
                 this.peopleOnBoard = peopleOnBoardObservable;
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
+    };
 
-    }
+    public ngOnInit(): void {
+        this.currentIncidentId = this.incidentId;
+        this.currentDepartmentId = this.departmentId;
+        this.getPeopleOnboardCounts(this.currentIncidentId);
+        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
+
+    };
+
+    private incidentChangeHandler(incidentId): void {
+        this.currentIncidentId = incidentId;
+        this.getPeopleOnboardCounts(this.currentIncidentId);
+    };
+
     public openAllPassengersDetails(): void {
         let involvedParties: InvolvePartyModel[] = [];
         let passengerListLocal: PassengerModel[] = [];
@@ -163,4 +183,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit {
     public hideEnquiredCrews(): void {
         this.childModalEnquiredCrew.hide();
     }
+    ngOnDestroy(): void {
+        this.globalState.Unsubscribe('incidentChange');
+    };
 }

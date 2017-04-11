@@ -73,37 +73,8 @@ export class DemandRaisedSummaryWidgetService {
                     let totalMilliSecondsAfterAddingScheduleTime: number = totalMinutesAfterAddingScheduleTime * 60000;
                     demand.ScheduledClose = new Date(totalMilliSecondsAfterAddingScheduleTime);
                 });
-
-
                 callback(this.allocatedDemandDetails);
             });
-
-
-        // this.demandService.GetDepartmentIdProjection(departmentId)
-        //     .subscribe((result) => {
-        //         this.departmentAccessOwnerModels = result.Records;
-        //         this.departmentAccessOwnerModels.forEach((item, index) => {
-        //             departmentIds.push(item.DepartmentDependentId);
-        //         });
-        //         departmentIds.forEach((item, index) => {
-        //             if (departmentIds.length > 1) {
-        //                 if (index == 0) {
-        //                     departmentIdProjection = `(TargetDepartmentId eq ${item})`;
-        //                 }
-        //                 else {
-        //                     departmentIdProjection = departmentIdProjection +
-        //                         ` or (TargetDepartmentId eq ${item})`;
-        //                 }
-        //             }
-        //             else {
-        //                 departmentIdProjection = `TargetDepartmentId eq ${item}`;
-        //             }
-        //         });
-
-
-        //     });
-
-
     }
 
     FillAllDemandRaisedSummaryObject(initialObject: AllDemandRaisedSummaryModel, fillObject: DemandModel): AllDemandRaisedSummaryModel {
