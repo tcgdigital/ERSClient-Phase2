@@ -1,0 +1,54 @@
+@import '../../config/config';
+
+.statusRed {
+    background: $rag-red  none repeat scroll 0 0;
+    border-radius: 20px;
+    float: left;
+    height: 12px;
+    margin-left: 10px;
+    width: 12px;
+}
+
+.statusGreen {
+    background: $rag-green none repeat scroll 0 0;
+    border-radius: 20px;
+    float: left;
+    height: 12px;
+    margin-left: 10px;
+    width: 12px;
+}
+
+.statusAmber {
+    background: $rag-amber none repeat scroll 0 0;
+    border-radius: 20px;
+    float: left;
+    height: 12px;
+    margin-left: 10px;
+    width: 12px;
+}
+
+.entryHolder{
+    background: $entryholder-background;
+    padding: 15px;
+    border:$entryholder-color solid 1px;
+    float: left;
+    margin: 15px 23px;
+}
+
+.addbuttonHolder{
+    padding: 15px;
+    float: right;
+}
+
+.formStyle{
+    width : 97%;
+}
+
+.noBorder{
+    border : none !important;
+}
+
+.halfBoxStyle{
+        width: 49.5%;
+    padding-left: 14px;
+}

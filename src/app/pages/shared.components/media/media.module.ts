@@ -11,7 +11,7 @@ import {
 } from './components';
 import { BrowserModule } from '@angular/platform-browser';
 import { EnquiryService } from '../../shared.components';
-import { DataExchangeService } from '../../../shared';
+import { DataExchangeService , SharedModule } from '../../../shared';
 
 @NgModule({
     imports: [
@@ -19,7 +19,8 @@ import { DataExchangeService } from '../../../shared';
         FormsModule,
         HttpModule,
         ReactiveFormsModule,
-        MediaRouting
+        MediaRouting,
+        SharedModule
     ],
     declarations: [
         MediaComponent,

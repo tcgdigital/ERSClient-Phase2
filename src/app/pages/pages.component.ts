@@ -9,6 +9,8 @@ import {
 import { DepartmentService, DepartmentModel } from './masterdata';
 import { IncidentService, IncidentModel } from './incident';
 import { PAGES_MENU } from './pages.menu';
+import { UtilityService } from '../shared/services';
+
 
 @Component({
     selector: 'pages',
@@ -20,6 +22,8 @@ export class PagesComponent implements OnInit {
     sideMenuState: boolean = false;
     departments: KeyValue[] = [];
     incidents: KeyValue[] = [];
+    private sub: any;
+    userId: number;
 
     /**
      * Creates an instance of PagesComponent.
@@ -46,8 +50,15 @@ export class PagesComponent implements OnInit {
     ngOnInit(): void {
         this.sideMenuService.updateMenuByRoutes(<Routes>PAGES_MENU);
         this.getDepartments();
-        this.getIncidents();
+        this.getIncidents();       
     }
+
+    // private loggedInhandler(storageData: StorageData): void {
+    //     storageData.DepartmentId = this.departments[0].Value;
+    //     storageData.IncidentId = this.incidents[0].Value;
+    //     this.globalState.NotifyDataChanged('stoargeDataInitialization', storageData);
+
+    // }
 
     public toggleSideMenu($event): void {
         this.sideMenuState = !this.sideMenuState;
@@ -64,10 +75,12 @@ export class PagesComponent implements OnInit {
     }
 
     public onDepartmentChange(selectedDepartment: KeyValue): void {
+        UtilityService.SetToSession({"CurrentDepartmentId" : selectedDepartment.Value});
         this.globalState.NotifyDataChanged('departmentChange', selectedDepartment.Value);
     }
 
     public onIncidentChange(selectedIncident: KeyValue): void {
+        UtilityService.SetToSession({"CurrentIncidentId" :  selectedIncident.Value});
         this.globalState.NotifyDataChanged('incidentChange', selectedIncident.Value);
     }
 
@@ -80,6 +93,7 @@ export class PagesComponent implements OnInit {
             })).subscribe((x: DepartmentModel[]) => {
                 this.departments = x.map((y: DepartmentModel) => new KeyValue(y.DepartmentName, y.DepartmentId));
                 console.log(this.departments);
+                UtilityService.SetToSession({"CurrentDepartmentId" : this.departments[0].Value});
             });
     }
 
@@ -92,6 +106,7 @@ export class PagesComponent implements OnInit {
             })).subscribe((x: IncidentModel[]) => {
                 this.incidents = x.map((y: IncidentModel) => new KeyValue(y.EmergencyName, y.IncidentId));
                 console.log(this.incidents);
+                UtilityService.SetToSession({"CurrentIncidentId" : this.incidents[0].Value});
             });
     }
 }

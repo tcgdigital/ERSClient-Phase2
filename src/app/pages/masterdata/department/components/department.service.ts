@@ -101,4 +101,10 @@ export class DepartmentService
             .OrderBy("CreatedOn desc")
             .Execute();
     }
+    
+    GetDepartmentNameIds(): Observable<ResponseModel<DepartmentModel>> {
+        return this._dataService.Query()
+            .Select('DepartmentId,DepartmentName')
+            .Execute();
+    }
 }

@@ -83,17 +83,31 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
                 this._actionables.Records.forEach(element => {
                     element.Active = (element.ActiveFlag == 'Active');
                     element.Done = false;
-                    element.IsDisabled = false;
+                   // element.IsDisabled = false;
                     element.show = false;
-                    if (element.CheckList.ParentCheckListId != null) {
-                        element.IsDisabled = true;
-                    }
+                   // if (element.CheckList.ParentCheckListId != null) {
+                     //   element.IsDisabled = true;
+                    //}
                     element.RagColor = this.setRagColor(element.AssignedDt, element.ScheduleClose);
                 });
                 return actionables;
             });
     }
 
+    public GetAllOpenByIncidentId(incidentId: number): Observable<ResponseModel<ActionableModel>> {
+        return this._dataService.Query()
+            .Filter(`CompletionStatus eq 'Open' and IncidentId eq ${incidentId} and ParentCheckListId ne null`)
+            .Select('ParentCheckListId')
+            .Execute();
+    }
+
+    public GetChildActionables(checklistId, incidentId): Observable<ResponseModel<ActionableModel>> {
+        return this._dataService.Query()
+            .Filter(`ParentCheckListId eq ${checklistId} and IncidentId eq ${incidentId}`)
+            .Select('ActionId,Description,ScheduleClose,ActualClose,ActionId,DepartmentId')
+            .Execute();
+
+    }
     public GetAllCloseByIncidentIdandDepartmentId(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
             .Expand('CheckList($select=CheckListId,CheckListCode)')
@@ -157,6 +171,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
             .Filter(`IncidentId eq ${incidentId} and DepartmentId eq ${departmentId} and CompletionStatus eq 'Open'`)
             .Execute();
     }
+
 
     public GetCloseActionableCount(incidentId: number, departmentId: number): Observable<number> {
         return this._dataService.Count()

@@ -1,5 +1,5 @@
-<div class="panel-body WidthHun">
-    <table class="table footable default">
+<responsive-table>
+    <table responsive-table-body>
         <thead>
             <tr>
                 <th>President's Messages</th>
@@ -11,11 +11,11 @@
                 <td colspan="10">No Message to show.</td>
             </tr>
             <tr *ngFor="let message of PresidentsMessages">
-                <td>{{message.Message}}</td>
-                <td>
+                <td data-title="President's Messages">{{message.Message}}</td>
+                <td data-title="Edit">
                     <button class="btn btn-warning" type="button" (click)="UpdatePresidentMessage(message)">Edit</button>
                 </td>
             </tr>
         </tbody>
     </table>
-</div>
+</responsive-table>

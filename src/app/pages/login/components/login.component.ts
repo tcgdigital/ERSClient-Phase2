@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, AbstractControl, Validators } from '@angular/forms';
 import { AuthenticationService } from './authentication.service';
 import { UtilityService } from '../../../shared/services';
+import {  GlobalStateService } from '../../../shared';
 import { AuthRequestModel, AuthResponseModel } from './auth.model';
 
 import * as jwtDecode from 'jwt-decode';
@@ -21,7 +22,7 @@ export class LoginComponent {
     public submitted: boolean;
 
     constructor(formBuilder: FormBuilder,
-        private authService: AuthenticationService,
+        private authService: AuthenticationService, private globalState : GlobalStateService,
         private router: Router) {
         this.form = formBuilder.group({
             userId: ['', Validators.compose([Validators.required, Validators.minLength(4)])],

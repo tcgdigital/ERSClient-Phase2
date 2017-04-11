@@ -1,39 +1,39 @@
-<div>
-    <h3>Passenger Directly Affected</h3>
-
-    <button class="btn btn-primary" type="button" (click)="save()">Verify</button>
+<button class="btn btn-primary" type="button" (click)="saveVerifiedAffectedPeople()">Verify</button>
 
 
-    <responsive-table>
-        <table responsive-table-body>
-            <thead>
-                <tr>
-                    <th>Verify</th>
-                    <th>Reference Number</th>
-                    <th>PDA Name</th>
-                    <th>PDA Contact</th>
-                    <th>PNR</th>
-                    <th>Passenger Type</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let affectedperson of affectedPeopleForVerification">
-                    <td data-title="Verify">
-                        <md-checkbox class="Marght" id="IsVerified" [(ngModel)]="affectedperson.IsVerified" aria-label="Add">
-                        </md-checkbox>
-                    </td>
-                    <td data-title="Reference Number">{{affectedperson.TicketNumber}}&nbsp;</td>
-                    <td data-title="PDA Name">{{affectedperson.CrewName}}&nbsp;</td>
-                    <td data-title="PDA Contact">{{affectedperson.ContactNumber}}&nbsp;</td>
-                    <td data-title="PNR">{{affectedperson.Pnr}}&nbsp;</td>
-                    <td data-title="Passenger Type">{{affectedperson.PaxType}}&nbsp;</td>
-                </tr>
-            </tbody>
-        </table>
-    </responsive-table>
+<responsive-table>
+    <table responsive-table-body>
+        <thead>
+            <tr>
+                <th>Verify</th>
+                <th>Reference Number</th>
+                <th>PDA Name</th>
+                <th>PDA Contact</th>
+                <th>PNR</th>
+                <th>Passenger Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr [hidden]="affectedPeopleForVerification.length != 0">
+                <td colspan="9">No Verified PDA is available.</td>
+            </tr>
+            <tr *ngFor="let affectedperson of affectedPeopleForVerification">
+                <td data-title="Verify">
+                    <md-checkbox class="Marght" id="IsVerified" [(ngModel)]="affectedperson.IsVerified" aria-label="Add">
+                    </md-checkbox>
+                </td>
+                <td data-title="Reference Number">{{affectedperson.TicketNumber}}&nbsp;</td>
+                <td data-title="PDA Name">{{affectedperson.CrewName || affectedperson.PassengerName}}&nbsp;</td>
+                <td data-title="PDA Contact">{{affectedperson.ContactNumber}}&nbsp;</td>
+                <td data-title="PNR">{{affectedperson.Pnr}}&nbsp;</td>
+                <td data-title="Passenger Type">{{affectedperson.PaxType}}&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+</responsive-table>
 
 
-    <!--<div class="row" *ngFor="let affectedperson of affectedPeopleForVerification">
+<!--<div class="row" *ngFor="let affectedperson of affectedPeopleForVerification">
         <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
             <ul class="list-group">
                 <li class="list-group-item"><strong><i>Verify:</i></strong></li>
@@ -72,5 +72,5 @@
                 <li class="list-group-item" style="border-top: none">{{affectedperson.PaxType}}</li>
             </ul>
         </div>
-    </div>-->
-</div>
+    </div>
+</div>-->

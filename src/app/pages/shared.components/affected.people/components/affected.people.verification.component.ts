@@ -5,6 +5,8 @@ import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.mod
 import { AffectedPeopleService } from './affected.people.service';
 import { ResponseModel, DataExchangeService, GlobalStateService } from '../../../../shared';
 import { InvolvePartyService } from '../../involveparties';
+import { UtilityService } from '../../../../shared/services';
+
 
 @Component({
     selector: 'affectedpeople-verify',
@@ -14,10 +16,10 @@ import { InvolvePartyService } from '../../involveparties';
 export class AffectedPeopleVerificationComponent implements OnInit {
     constructor(private affectedPeopleService: AffectedPeopleService,
         private involvedPartyService: InvolvePartyService, private globalState: GlobalStateService) { }
-    affectedPeopleForVerification: AffectedPeopleToView[];
+    affectedPeopleForVerification: AffectedPeopleToView[] = [];
     verifiedAffectedPeople: AffectedPeopleModel[];
     date: Date = new Date();
-    currentIncident: number = 1;
+    currentIncident: number ;
 
 
     getAffectedPeople(currentIncident): void {
@@ -50,6 +52,7 @@ export class AffectedPeopleVerificationComponent implements OnInit {
     }
 
     ngOnInit(): any {
+        this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
         this.getAffectedPeople(this.currentIncident);
         this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
     }

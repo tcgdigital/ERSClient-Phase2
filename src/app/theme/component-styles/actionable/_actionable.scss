@@ -1,0 +1,60 @@
+@import '../../config/config';
+
+.col-no-left-padding{
+    padding-left: 0 !important;
+}
+.col-no-right-padding{
+    padding-right: 0 !important;
+}
+.row-no-padding > [class*="col-"] {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.labelStyle{
+    border: none;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.statusGreen {
+    background: $rag-green none repeat scroll 0 0;
+    border-radius: 20px;
+    float: left;
+    height: 12px;
+    margin-left: 10px;
+    width: 12px;
+}
+
+.statusAmber {
+    background: $rag-amber none repeat scroll 0 0;
+    border-radius: 20px;
+    float: left;
+    height: 12px;
+    margin-left: 10px;
+    width: 12px;
+}
+
+.statusRed {
+    background: $rag-red none repeat scroll 0 0;
+    border-radius: 20px;
+    float: left;
+    height: 12px;
+    margin-left: 10px;
+    width: 12px;
+}
+
+.card-without-top-border {
+    border-top: none !important;
+}
+
+.holderStyle{
+    float: left;
+    padding-left: 5px;
+    padding-right: 5px;
+    width: 100%;
+}
+
+.buttonholder{
+        float: right;
+    vertical-align: middle;
+    padding-top: 27px;
+}

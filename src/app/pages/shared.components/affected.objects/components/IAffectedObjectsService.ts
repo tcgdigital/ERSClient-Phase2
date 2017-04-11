@@ -11,4 +11,6 @@ export interface IAffectedObjectsService extends IServiceInretface<InvolvePartyM
     MapAffectedPeopleToSave(affectedObjectsForVerification):AffectedObjectModel[];
 
     CreateBulkObjects(entities: AffectedObjectModel[]): Observable<AffectedObjectModel[]>;
+
+    GetCommunicationByAWB(id: number): Observable<ResponseModel<AffectedObjectModel>>;
 }

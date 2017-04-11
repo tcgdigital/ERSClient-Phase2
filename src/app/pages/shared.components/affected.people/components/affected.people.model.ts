@@ -35,8 +35,9 @@ export class AffectedPeopleModel extends BaseModel {
 	public CommunicationLogs?: CommunicationLogModel[];
 	public Demands?: DemandModel[];
 
-	constructor() {
-		super();
+	constructor( initialize ? : boolean) {		
+		if(initialize){
+			super();
 		this.AffectedPersonId = 0;
 		this.AffectedId = 0;
 		this.PassengerId = null;
@@ -51,6 +52,7 @@ export class AffectedPeopleModel extends BaseModel {
 		this.IsStaff = false;
 		this.IsCrew = false;
 		this.IsVerified = false;
+		}
 	}
 }
 
@@ -73,3 +75,4 @@ export class AffectedPeopleToView extends BaseModel {
 	// public  CommunicationLogs: dataItem.CommunicationLogs,
 	public PaxType: string;
 }
+

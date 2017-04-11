@@ -16,6 +16,8 @@ import { DemandTypeService } from '../../masterdata/demandtype';
 import { InvolvePartyService } from '../involveparties';
 import { DepartmentService } from '../../masterdata/department';
 import { PageService } from '../../masterdata/department.functionality';
+import { ModalModule} from 'ng2-bootstrap/modal';
+
 
 
 
@@ -30,7 +32,8 @@ import { DataExchangeService, SharedModule } from '../../../shared';
         HttpModule,
         SharedModule,
         MdCheckboxModule,
-        DemandeRouting
+        DemandeRouting,
+        ModalModule
         
     ],
     declarations: [

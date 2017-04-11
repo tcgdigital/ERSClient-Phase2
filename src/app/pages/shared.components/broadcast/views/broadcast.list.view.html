@@ -1,5 +1,5 @@
-<div class="panel-body WidthHun">
-    <table class="table footable default WidthHun">
+<responsive-table>
+    <table responsive-table-body>
         <thead>
             <tr>
                 <th>Broadcast Message</th>
@@ -14,11 +14,11 @@
                 <td colspan="10">No Message is broadcasted yet.</td>
             </tr>
             <tr *ngFor="let broadcastMessage of broadcastMessages">
-                <td>{{broadcastMessage.Message}}</td>
-                <td>{{broadcastMessage.CreatedOn}}</td>
-                <td>{{broadcastMessage.SubmittedOn}}</td>
-                <td>{{broadcastMessage.Priority}}</td>
-                <td>
+                <td data-title="Broadcast Message">{{broadcastMessage.Message}}</td>
+                <td data-title="Created On">{{broadcastMessage.CreatedOn | date:"dd-MMM-yy h:mma"}}</td>
+                <td data-title="Submitted On">{{broadcastMessage.SubmittedOn | date:"dd-MMM-yy h:mma"}}</td>
+                <td data-title="Priority">{{broadcastMessage.Priority}}</td>
+                <td data-title="Edit">
                     <button class="md-icon-button" aria-label="Edit" type="button" (click)="UpdateBroadcast(broadcastMessage)">
                         <span class="fa fa-edit"></span>
                     </button>
@@ -26,4 +26,4 @@
             </tr>
         </tbody>
     </table>
-<div>
+</responsive-table>

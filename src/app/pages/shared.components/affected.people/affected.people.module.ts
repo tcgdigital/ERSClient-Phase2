@@ -13,6 +13,8 @@ import {
 } from './components';
 import { InvolvePartyService } from '../involveparties';
 import { SharedModule, DataExchangeService } from '../../../shared';
+import { ModalModule} from 'ng2-bootstrap/modal';
+
 
 @NgModule({
     imports: [
@@ -22,7 +24,8 @@ import { SharedModule, DataExchangeService } from '../../../shared';
         HttpModule,
         MdCheckboxModule,
         SharedModule,
-        AffectedPeopleRouting
+        AffectedPeopleRouting,
+        ModalModule
     ],
     declarations: [
         AffectedPeopleComponent,

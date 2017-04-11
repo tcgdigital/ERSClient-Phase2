@@ -1,19 +1,21 @@
-<table class="table footable default">
-    <thead>
-        <tr>
-            <th>Published Releases</th>
-            <th>Edit</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngIf="!mediaReleases.length">
-            <td colspan="10">No Releases to show.</td>
-        </tr>
-        <tr *ngFor="let query of mediaReleases">
-            <td>{{query.Message}}</td>
-            <td>
-                <button class="btn btn-warning" type="button" (click)="UpdateMediaRelease(query)">Edit</button>
-            </td>
-        </tr>
-    </tbody>
-</table>
+<responsive-table>
+    <table responsive-table-body>
+        <thead>
+            <tr>
+                <th>Published Releases</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngIf="!mediaReleases.length">
+                <td colspan="10">No Releases to show.</td>
+            </tr>
+            <tr *ngFor="let query of mediaReleases">
+                <td data-title="Published Releases">{{query.Message}}</td>
+                <td data-title="Edit">
+                    <button class="btn btn-warning" type="button" (click)="UpdateMediaRelease(query)">Edit</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</responsive-table>

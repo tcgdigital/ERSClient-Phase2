@@ -9,7 +9,7 @@ import { BroadcastEntryComponent, BroadcastListComponent, BroadcastService } fro
 import { BroadcastDepartmentService } from '../../masterdata/broadcast.department';
 import { DepartmentService } from '../../masterdata/department';
 import { BrowserModule } from '@angular/platform-browser';
-import { DataExchangeService } from '../../../shared';
+import { DataExchangeService , SharedModule } from '../../../shared';
 
 @NgModule({
     imports: [
@@ -17,7 +17,8 @@ import { DataExchangeService } from '../../../shared';
         FormsModule,
         HttpModule,
         ReactiveFormsModule,
-        BroadcastRouting        
+        BroadcastRouting ,
+        SharedModule       
     ],
     declarations: [
         BroadcastEntryComponent,
