@@ -1,0 +1,17 @@
+@import '../config/config';
+
+.btn {
+    padding: 5px 15px;
+    font-size: 12px;
+}
+
+.btn-primary {
+    background-color: $button-e;
+    border-color: $button-e;
+    // background: linear-gradient(to bottom, $button-s, $button-e);
+    @include linear-gradient-bg(to bottom, $button-s, $button-e);
+    &:hover {
+        @include linear-gradient-bg(to bottom, $button-s, $button-hover);
+        // background: linear-gradient(to bottom, $button-s, $button-hover);
+    }
+}
