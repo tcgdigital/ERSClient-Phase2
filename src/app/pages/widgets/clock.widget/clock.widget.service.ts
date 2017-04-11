@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subscription } from 'rxjs/Rx';
+import * as moment from 'moment';
 
 import { TimeCount } from './clock.widget.model';
 import { UtilityService } from '../../../shared';
@@ -23,22 +24,34 @@ export class ClockWidgetService {
     private timer: TimerList = {};
     private subscription: SubscriptionList = {};
 
+    private days: number = 24 * 60 * 60;
+    private hours: number = 60 * 60;
+    private minutes: number = 60;
+    private timePassed: number = 0;
+    private counter: TimeCount = new TimeCount();
+
     constructor() { }
 
     initiateTimer(name: string, initialDate: Date): boolean {
         if (name === undefined || initialDate === undefined || this.timer[name]) {
             return false;
         }
-        let o: Observable<TimeCount> = Observable.timer(1000)
+        // let past = moment(initialDate);
+        let o: Observable<TimeCount> = Observable.interval(1000)
             .map(x => {
-                let diffMs: number = Math.abs((new Date().getTime()) - initialDate.getTime());
+                this.timePassed = Math.floor((new Date().getTime() - initialDate.getTime()) / 1000);
+                
+                this.counter.Days = Math.floor(this.timePassed / this.days);
+                this.timePassed -= this.counter.Days * this.days;
 
-                let counter: TimeCount = new TimeCount();
-                counter.Days = Math.floor(diffMs / 86400000); // days
-                counter.Hours = Math.floor((diffMs % 86400000) / 3600000); // hours
-                counter.Minutes = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
+                this.counter.Hours = Math.floor(this.timePassed / this.hours);
+                this.timePassed -= this.counter.Hours * this.hours;
 
-                return counter
+                this.counter.Minutes = Math.floor(this.timePassed / this.minutes);
+                this.timePassed -= this.counter.Minutes * this.minutes;
+
+                this.counter.Seconds = this.timePassed;
+                return this.counter
             });
 
         this.timer[name] = { name: name, observable: o };
