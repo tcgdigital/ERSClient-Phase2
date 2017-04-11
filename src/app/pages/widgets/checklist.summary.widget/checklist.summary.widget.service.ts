@@ -2,6 +2,7 @@ import { Injectable, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { ActionableModel, ActionableService } from '../../shared.components/actionables';
 import { CheckListSummeryModel } from './checklist.summary.widget.model';
+import { DepartmentModel, DepartmentService } from '../../masterdata/department';
 import {
     IServiceInretface,
     ResponseModel,
@@ -15,7 +16,7 @@ import {
 @Injectable()
 export class ChecklistSummaryWidgetService {
     checkListSummery: CheckListSummeryModel;
-
+    public activeDepartments: DepartmentModel[];
     /**
      * Creates an instance of ChecklistSummaryWidgetService.
      * @param {DataServiceFactory} dataServiceFactory 
@@ -24,7 +25,8 @@ export class ChecklistSummaryWidgetService {
      * @memberOf ChecklistSummaryWidgetService
      */
     constructor(private dataServiceFactory: DataServiceFactory,
-        private actionableService: ActionableService) {
+        private actionableService: ActionableService,
+        private departmentService: DepartmentService) {
         this.checkListSummery = new CheckListSummeryModel();
     }
 
@@ -42,4 +44,13 @@ export class ChecklistSummaryWidgetService {
                 return this.checkListSummery;
             });
     }
+
+    GetAllDepartmentChecklists(incidentId: number): Observable<ResponseModel<ActionableModel>> {
+        return this.actionableService.GetAllByIncident(incidentId);
+    }
+
+    GetAllSubDepartmentChecklists(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
+        return this.actionableService.GetAllByIncidentandSubDepartment(incidentId,departmentId);
+    }
+
 }

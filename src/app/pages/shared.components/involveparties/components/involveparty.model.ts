@@ -13,7 +13,7 @@ export class InvolvePartyModel extends BaseModel {
 
     public Incident: IncidentModel;
 
-    public Affecteds ? : AffectedModel[] ;
+    public Affecteds ? : AffectedModel[];
     public Flights ? : FlightModel[];
 
     constructor() {

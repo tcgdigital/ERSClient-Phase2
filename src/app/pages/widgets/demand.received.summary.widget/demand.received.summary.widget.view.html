@@ -1,4 +1,3 @@
-<!--<div class="demand-received-layout">-->
 <div class="row widget-container no-gutters">
     <div class="col-12">
         <div class="row no-gutters">
@@ -10,18 +9,236 @@
             <div class="col widget-block">
                 <span class="widget-number">
                         <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
-                        <span>{{demandReceivedSummery.demandAllocatedCount | padding: '0': 2}}</span>
+                        <span>{{demandReceivedSummary.demandAllocatedCount | padding: '0': 2}}</span>
                 </span>
-                <span class="widget-text">Demand<br/>Allocated</span>
+                <span class="widget-text">Allocated</span>
+                <span (click)="openViewAllDemandReceivedSummary()" class="widget-text view-all-style">View All</span>
+
             </div>
             <div class="col widget-block">
                 <span class="widget-number">
                         <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
-                        <span>{{demandReceivedSummery.demandCompletedCount | padding: '0': 2}}</span>
+                        <span>{{demandReceivedSummary.demandCompletedCount | padding: '0': 2}}</span>
                 </span>
-                <span class="widget-text">Demand<br/>Completed</span>
+                <span class="widget-text">Completed</span>
+                <span (click)="openViewAllSubDeptDemandReceivedSummary()" class="widget-text view-all-style">Sub-Dept</span>
             </div>
         </div>
     </div>
 </div>
-<!--</div>-->
+
+
+<!--Depand Popup-->
+<div bsModal #childModalViewAllDemandReceivedSummary="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left"><strong>View All Received Demands</strong></h4>
+                <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideViewAllDemandReceivedSummary()"></i>
+            </div>
+            <div class="modal-body">
+                <responsive-table>
+                    <table responsive-table-body>
+
+                        <thead>
+                            <tr>
+                                <th>Requester Department</th>
+                                <th>Allocated</th>
+                                <th>Completed</th>
+                                <th>Pending</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngIf="!(allDemandReceivedList | async)?.length>0">
+                                <td data-title="Records" colspan="4">No demands to show.</td>
+                            </tr>
+                            <tr *ngFor="let demand of allDemandReceivedList | async">
+                                <td data-title="Requester Department">{{demand.requesterDepartmentName}}</td>
+                                <td data-title="Allocated">{{demand.assigned}}</td>
+                                <td data-title="Completed"><span (click)="showAllDeptSubCompletedFunc(demand.demandModelList)">{{demand.completed}}</span></td>
+                                <td data-title="Pending"><span (click)="showAllDeptSubPendingFunc(demand.demandModelList)">{{demand.pending}}</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </responsive-table>
+
+                <div class="card" *ngIf="showAllDeptSubCompleted">
+                    <div class="card-header">
+                        <strong>Completed Demand</strong>
+                        <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideAllDeptSubCompleted()"></i>
+                    </div>
+                    <div class="card-block">
+                        
+                        <responsive-table>
+                            <table responsive-table-body>
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>Target Department</th>
+                                        <th>Schedule Close Time</th>
+                                        <th>RAG</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="!(allDeptDemandReceivedSummaries)?.length>0">
+                                        <td data-title="Records" colspan="4">No demands to show.</td>
+                                    </tr>
+                                    <tr *ngFor="let allDeptDemandReceivedCompleted of allDeptDemandReceivedSummaries">
+                                        <td data-title="Description">{{allDeptDemandReceivedCompleted.description}}</td>
+                                        <td data-title="Target Department">{{allDeptDemandReceivedCompleted.targetDepartmentName}}</td>
+                                        <td data-title="Schedule Close Time">{{allDeptDemandReceivedCompleted.scheduleCloseTime | date:"dd-MMM-yy h:mma"}}</td>
+                                        <td data-title="RAG"><span [ngClass]="allDeptDemandReceivedCompleted.RagStatus"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </responsive-table>
+                    </div>
+                </div>
+                <div class="card" *ngIf="showAllDeptSubPending">
+                    <div class="card-header">
+                        <strong>Pending Demand</strong>
+                        <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideAllDeptSubPending()"></i>
+                    </div>
+                    <div class="card-block">
+                        <responsive-table>
+                            <table responsive-table-body>
+
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>Target Department</th>
+                                        <th>Schedule Close Time</th>
+                                        <th>RAG</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="!(allDeptDemandReceivedSummaries)?.length>0">
+                                        <td data-title="Records" colspan="4">No demands to show.</td>
+                                    </tr>
+                                    <tr *ngFor="let allDeptDemandReceivedCompleted of allDeptDemandReceivedSummaries">
+                                        <td data-title="Description">{{allDeptDemandReceivedCompleted.description}}</td>
+                                        <td data-title="Target Department">{{allDeptDemandReceivedCompleted.targetDepartmentName}}</td>
+                                        <td data-title="Schedule Close Time">{{allDeptDemandReceivedCompleted.scheduleCloseTime | date:"dd-MMM-yy h:mma"}}</td>
+                                        <td data-title="RAG"><span [ngClass]="allDeptDemandReceivedCompleted.RagStatus"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </responsive-table>
+                    </div>
+                </div>
+                <div class="pull-right">
+                    <button type="submit" class="pull-right btn btn-primary" aria-label="Close" (click)="hideViewAllDemandReceivedSummary()">Close</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div bsModal #childModalViewAllSubDeptDemandReceivedSummary="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left"><strong>View All Sub Department Received Demands</strong></h4>
+                <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideViewAllSubDeptDemandReceivedSummary()"></i>
+            </div>
+            <div class="modal-body">
+                <responsive-table>
+                    <table responsive-table-body>
+                        <thead>
+                            <tr>
+                                <th>Requester Department</th>
+                                <th>Allocated</th>
+                                <th>Completed</th>
+                                <th>Pending</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngIf="!(subDemandReceivedList | async)?.length>0">
+                                <td data-title="Records" colspan="5">No demands to show.</td>
+                            </tr>
+                            <tr *ngFor="let demand of subDemandReceivedList | async">
+                                <td data-title="Requester Department">{{demand.requesterDepartmentName}}</td>
+                                <td data-title="Allocated">{{demand.assigned}}</td>
+                                <td data-title="Completed"><span (click)="showSubDeptSubCompletedFunc(demand.demandModelList)">{{demand.completed}}</span></td>
+                                <td data-title="Pending"><span (click)="showSubDeptSubPendingFunc(demand.demandModelList)">{{demand.pending}}</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </responsive-table>
+
+                <div class="card" *ngIf="showSubDeptSubCompleted">
+                    <div class="card-header">
+                        <strong>Completed Demand</strong>
+                        <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideSubDeptSubCompleted()"></i>
+                    </div>
+                    <div class="card-block">
+                        <responsive-table>
+                            <table responsive-table-body>
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>Target Department</th>
+                                        <th>Schedule Close Time</th>
+                                        <th>RAG</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="!(subDeptDemandReceivedSummaries)?.length>0">
+                                        <td data-title="Records" colspan="4">No demands to show.</td>
+                                    </tr>
+                                    <tr *ngFor="let subDeptDemandReceivedCompleted of subDeptDemandReceivedSummaries">
+                                        <td data-title="Description">{{subDeptDemandReceivedCompleted.description}}</td>
+                                        <td data-title="Target Department">{{subDeptDemandReceivedCompleted.targetDepartmentName}}</td>
+                                        <td data-title="Schedule Close Time">{{subDeptDemandReceivedCompleted.scheduleCloseTime | date:"dd-MMM-yy h:mma"}}</td>
+                                        <td data-title="RAG"><span [ngClass]="subDeptDemandReceivedCompleted.RagStatus"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </responsive-table>
+                    </div>
+                </div>
+                <div class="card" *ngIf="showSubDeptSubPending">
+                    <div class="card-header">
+                        <strong>Pending Demand</strong>
+                        <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideSubDeptSubPending()"></i>
+                    </div>
+                    <div class="card-block">
+                        <responsive-table>
+                            <table responsive-table-body>
+
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>Target Department</th>
+                                        <th>Schedule Close Time</th>
+                                        <th>RAG</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="!(subDeptDemandReceivedSummaries)?.length>0">
+                                        <td data-title="Records" colspan="4">No demands to show.</td>
+                                    </tr>
+                                    <tr *ngFor="let subDeptDemandReceivedCompleted of subDeptDemandReceivedSummaries">
+                                        <td data-title="Description">{{subDeptDemandReceivedCompleted.description}}</td>
+                                        <td data-title="Target Department">{{subDeptDemandReceivedCompleted.targetDepartmentName}}</td>
+                                        <td data-title="Schedule Close Time">{{subDeptDemandReceivedCompleted.scheduleCloseTime | date:"dd-MMM-yy h:mma"}}</td>
+                                        <td data-title="RAG"><span [ngClass]="subDeptDemandReceivedCompleted.RagStatus"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </responsive-table>
+                    </div>
+                </div>
+                <div class="pull-right">
+                    <button type="submit" class="pull-right btn btn-primary" aria-label="Close" (click)="hideViewAllSubDeptDemandReceivedSummary()">Close</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
