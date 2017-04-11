@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
 import { CasualtySummeryModel } from './casualty.summary.widget.model';
 import { CasualtySummaryWidgetService } from './casualty.summary.widget.service';
+
+
 @Component({
     selector: 'casualty-summary-widget',
     templateUrl: './casualty.summary.widget.view.html',
@@ -8,11 +10,9 @@ import { CasualtySummaryWidgetService } from './casualty.summary.widget.service'
 })
 export class CasualtySummaryWidgetComponent implements OnInit {
     @Input('currentIncidentId') incidentId: number;
-
+    
     public casualtySummery: CasualtySummeryModel;
-    constructor(
-        private casualtySummaryWidgetService: CasualtySummaryWidgetService
-        ) { }
+    constructor(private casualtySummaryWidgetService: CasualtySummaryWidgetService) { }
 
     public ngOnInit(): void {
         this.casualtySummery = new CasualtySummeryModel();
@@ -23,4 +23,6 @@ export class CasualtySummaryWidgetComponent implements OnInit {
                 console.log(`Error: ${error}`);
             });
     }
+
+   
 }

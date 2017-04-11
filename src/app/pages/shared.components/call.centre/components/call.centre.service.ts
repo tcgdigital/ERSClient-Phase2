@@ -6,7 +6,7 @@ import { IEnquiryService } from './IEnquiryService';
 import {
     ResponseModel,
     DataServiceFactory,
-    ServiceBase
+    ServiceBase, UtilityService
 } from '../../../../shared';
 
 @Injectable()
@@ -57,9 +57,38 @@ export class EnquiryService extends ServiceBase<EnquiryModel>
         return otherQueryModel;
     }
 
-    GetEnquiredAffectedCrewCount(incidentId: string | number): Observable<number> {
+    GetEnquiredAffectedCrewCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
             .Filter(`IncidentId eq ${incidentId} and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Crew' and AffectedPersonId ne null`)
             .Execute();
+    }
+
+
+    GetEnquiredAffectedPeople(incidentId: number): Observable<ResponseModel<EnquiryModel>> {
+        return this._dataService.Query()
+            .Filter(`IncidentId eq ${incidentId} and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Passenger' and AffectedPersonId ne null`)
+            .Select(`AffectedPersonId`)
+            .Execute()
+            .map((enquiryModelList: ResponseModel<EnquiryModel>) => {
+                let affectedEnquiredPeopleIds: number[] = [];
+                enquiryModelList.Records.forEach((item: EnquiryModel) => {
+                    affectedEnquiredPeopleIds.push(UtilityService.pluck(item, ['AffectedPersonId'])[0]);
+                });
+                return enquiryModelList;
+            });
+    }
+
+    GetEnquiredAffectedCrew(incidentId: number): Observable<ResponseModel<EnquiryModel>> {
+        return this._dataService.Query()
+            .Filter(`IncidentId eq ${incidentId} and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Crew' and AffectedPersonId ne null`)
+            .Select(`AffectedPersonId`)
+            .Execute()
+            .map((enquiryModelList: ResponseModel<EnquiryModel>) => {
+                let affectedEnquiredPeopleIds: number[] = [];
+                enquiryModelList.Records.forEach((item: EnquiryModel) => {
+                    affectedEnquiredPeopleIds.push(UtilityService.pluck(item, ['AffectedPersonId'])[0]);
+                });
+                return enquiryModelList;
+            });
     }
 }

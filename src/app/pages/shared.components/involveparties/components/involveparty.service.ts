@@ -3,12 +3,13 @@ import { Observable } from 'rxjs/Rx';
 
 import { InvolvePartyModel } from './involveparty.model';
 import { IInvolvePartyService } from './IInvolvePartyService';
+import { AffectedPeopleModel } from '../../affected.people/components/affected.people.model';
 import {
     ResponseModel,
     DataService,
     DataServiceFactory,
     DataProcessingService,
-    ServiceBase
+    ServiceBase,UtilityService
 } from '../../../../shared';
 import {
     IncidentService,
@@ -20,7 +21,7 @@ export class InvolvePartyService
     extends ServiceBase<InvolvePartyModel>
     implements IInvolvePartyService {
     private _incidentDataService: DataService<IncidentModel>;
-
+public affectedPeoples: ResponseModel<AffectedPeopleModel>;
     /**
      * Creates an instance of InvolvePartyService.
      * @param {DataServiceFactory} dataServiceFactory 
@@ -78,6 +79,32 @@ export class InvolvePartyService
         return this._dataService.Query()
             .Filter(`IncidentId eq  ${IncidentId}`)
             .Expand('Affecteds($expand=AffectedPeople($expand=Passenger,Crew))')
+            .Execute();
+    }
+
+    public GetAllPassengersByIncident(incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
+        let involvePartyProjection: string = 'InvolvedPartyType,InvolvedPartyDesc';
+        let affectedProjection: string = 'Severity';
+        let affectedPeopleProjection: string = 'AffectedPersonId,TicketNumber,IsStaff,IsCrew,IsVerified,Identification';
+        let passengerPrjection: string = 'PassengerId,FlightNumber,PassengerName,PassengerGender,BaggageCount,Destination,PassengerDob,Pnr,PassengerType,DepartureDateTime,ArrivalDateTime,ContactNumber,Seatno';
+        return this._dataService.Query()
+            .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=PassengerId ne null;$select=${affectedPeopleProjection};$expand=Passenger($select=${passengerPrjection}),NextOfKins))`)
+            .Filter(`IncidentId eq ${incidentId}`)
+            .Select(`${involvePartyProjection}`)
+            .OrderBy("CreatedOn desc")
+            .Execute();
+    }
+
+    public GetAllCrewsByIncident(incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
+        let involvePartyProjection: string = 'InvolvedPartyType,InvolvedPartyDesc';
+        let affectedProjection: string = 'Severity';
+        let affectedCrewProjection: string = 'AffectedPersonId,TicketNumber,IsStaff,IsCrew,IsVerified,Identification';
+        let crewPrjection: string = 'CrewId,EmployeeNumber,CrewName,AsgCat,DeadheadCrew,BaseLocation,Email,DepartureStationCode,ArrivalStationCode,FlightNo,WorkPosition,ContactNumber';
+        return this._dataService.Query()
+            .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=CrewId ne null;$select=${affectedCrewProjection};$expand=Crew($select=${crewPrjection}),NextOfKins))`)
+            .Filter(`IncidentId eq ${incidentId}`)
+            .Select(`${involvePartyProjection}`)
+            .OrderBy("CreatedOn desc")
             .Execute();
     }
 

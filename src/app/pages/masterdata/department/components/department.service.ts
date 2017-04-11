@@ -85,4 +85,20 @@ export class DepartmentService
         return this._batchDataService.BatchPost<BaseModel>(requests)
             .Execute();
     }
+
+    GetAllActiveDepartments(): Observable<ResponseModel<DepartmentModel>> {
+        return this._dataService.Query()
+            .Select('DepartmentId', 'DepartmentName', 'Description', 'ParentDepartmentId')
+            .Filter(`ActiveFlag eq 'Active'`)
+            .OrderBy("CreatedOn desc")
+            .Execute();
+    }
+
+    GetAllActiveSubDepartments(departmentId: number): Observable<ResponseModel<DepartmentModel>> {
+        return this._dataService.Query()
+            .Select('DepartmentId', 'DepartmentName', 'Description', 'ParentDepartmentId')
+            .Filter(`ActiveFlag eq 'Active' and ParentDepartmentId eq ${departmentId}`)
+            .OrderBy("CreatedOn desc")
+            .Execute();
+    }
 }

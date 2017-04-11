@@ -1,4 +1,3 @@
-
 <div class="row widget-container no-gutters">
     <div class="col-12">
         <div class="row no-gutters">
@@ -12,15 +11,233 @@
                     <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
                     <span>{{checkListSummery.openActionableCount | padding: '0': 2}}</span>
                 </span>
-                <span class="widget-text">Checklist<br/>Assigned</span>
+                <span class="widget-text">Assigned</span>
+                <span (click)="openViewAllChecklist()" class="widget-text view-all-style">View All</span>
             </div>
             <div class="col widget-block">
                 <span class="widget-number">
                     <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
                     <span>{{checkListSummery.closeActionableCount | padding: '0': 2}}</span>
                 </span>
-                <span class="widget-text">Checklist<br/>Completed</span>
+                <span class="widget-text">Completed</span>
+                <span (click)="openViewSubDeptChecklist()" class="widget-text view-all-style">Sub-Dept</span>
             </div>
         </div>
+    </div>
+</div>
+
+<!--Checklist All-->
+<div bsModal #childModalViewAllChecklist="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">All Checklist</h4>
+                <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideViewAllChecklist()"></i>
+            </div>
+            <div class="modal-body">
+                <responsive-table>
+                    <table responsive-table-body>
+
+                        <thead>
+                            <tr>
+                                <th>Department</th>
+                                <th>Assigned</th>
+                                <th>Completed</th>
+                                <th>Pending</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table">
+                            <tr *ngIf="!(deptCheckListsAll | async)?.length>0">
+                                <td data-title="Records" colspan="4">No records to show.</td>
+                            </tr>
+                            <tr *ngFor="let deptCheckList of deptCheckListsAll | async">
+                                <td data-title="Department">{{deptCheckList.departmentName}}</td>
+                                <td data-title="Assigned">{{deptCheckList.assigned}}</td>
+                                <td data-title="Completed" *ngIf="deptCheckList.completed>0"><span (click)="showAllDeptSubTableCompleted(deptCheckList)">{{deptCheckList.completed}}</span></td>
+                                <td data-title="Completed" *ngIf="deptCheckList.completed==0">{{deptCheckList.completed}}</td>
+                                <td data-title="Pending" *ngIf="deptCheckList.pending>0"><span (click)="showAllDeptSubTablePending(deptCheckList)">{{deptCheckList.pending}}</span></td>
+                                <td data-title="Pending" *ngIf="deptCheckList.pending==0">{{deptCheckList.pending}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </responsive-table>
+                <div class="card" *ngIf="showAllDeptSubChecklistCompleted">
+                    <div class="card-header">
+                        <strong>Completed Sub Department Checklist</strong>
+                        <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideAllDeptSubTableCompleted()"></i>
+                    </div>
+                    <div class="card-block">
+
+                        <responsive-table>
+                            <table responsive-table-body>
+
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>Schedule Close Time</th>
+                                        <th>RAG</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="!(subDeptCompletedCheckLists | async)?.length>0">
+                                        <td data-title="Records" colspan="4">No demands to show.</td>
+                                    </tr>
+                                    <tr *ngFor="let subDeptCheckList of subDeptCompletedCheckLists | async">
+                                        <td data-title="Description">{{subDeptCheckList.checkListDesc}}</td>
+                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date:"dd-MMM-yy h:mma"}}</td>
+                                        <td data-title="RAG"><span [ngClass]="subDeptCheckList.RAG"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </responsive-table>
+                    </div>
+                </div>
+                <div class="card" *ngIf="showAllDeptSubChecklistPending">
+                    <div class="card-header">
+                        <strong>Pending Sub Department Checklist</strong>
+                        <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideAllDeptSubTablePending()"></i>
+                    </div>
+                    <div class="card-block">
+                        <!--<button type="button" class="close pull-right" aria-label="Close" (click)="hideAllDeptSubTablePending()">
+                    <span aria-hidden="true">&times;</span>
+                    </button>-->
+
+                        <responsive-table>
+                            <table responsive-table-body>
+
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>Schedule Close Time</th>
+                                        <th>RAG</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="!(subDeptPendingCheckLists)?.length>0">
+                                        <td data-title="Records" colspan="5">No records to show.</td>
+                                    </tr>
+                                    <tr *ngFor="let subDeptCheckList of subDeptPendingCheckLists">
+                                        <td data-title="Description">{{subDeptCheckList.checkListDesc}}</td>
+                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date:"dd-MMM-yy h:mma"}}</td>
+                                        <td data-title="RAG"><span [ngClass]="subDeptCheckList.RAG"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </responsive-table>
+                    </div>
+                </div>
+                <div class="pull-right">
+                    <button type="submit" class="pull-right btn btn-primary" aria-label="Close" (click)="hideViewAllChecklist()">Close</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<!--Checklist Sub Dept-->
+<div bsModal #childModalViewSubDeptChecklist="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Sub Department Checklist</h4>
+                <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideViewSubDeptChecklist()"></i>
+            </div>
+            <div class="modal-body">
+                <responsive-table>
+                    <table responsive-table-body>
+                        <thead>
+                            <tr>
+                                <th>Department</th>
+                                <th>Assigned</th>
+                                <th>Completed</th>
+                                <th>Pending</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngIf="!(deptCheckListsSubDept | async)?.length>0">
+                                <td data-title="Records" colspan="5">No records to show.</td>
+                            </tr>
+                            <tr *ngFor="let deptCheckList of deptCheckListsSubDept | async">
+                                <td data-title="Description">{{deptCheckList.departmentName}}</td>
+                                <td data-title="Assigned">{{deptCheckList.assigned}}</td>
+                                <td data-title="Completed" *ngIf="deptCheckList.completed>0"><span (click)="showSubDeptSubTableCompleted(deptCheckList)">{{deptCheckList.completed}}</span></td>
+                                <td data-title="Completed" *ngIf="deptCheckList.completed==0">{{deptCheckList.completed}}</td>
+                                <td data-title="Pending" *ngIf="deptCheckList.pending>0"><span (click)="showSubDeptSubTablePending(deptCheckList)">{{deptCheckList.pending}}</span></td>
+                                <td data-title="Pending" *ngIf="deptCheckList.pending==0">{{deptCheckList.pending}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </responsive-table>
+                <div class="card" *ngIf="showSubDeptSubChecklistCompleted">
+                    <div class="card-header">
+                        <strong>Completed Sub Department Checklist</strong>
+                        <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideSubDeptSubTableCompleted()"></i>
+                    </div>
+                    <div class="card-block">
+                        <responsive-table>
+                            <table responsive-table-body>
+
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>Schedule Close Time</th>
+                                        <th>RAG</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="!(subDeptCompletedCheckLists | async)?.length>0">
+                                        <td colspan="4">No demands to show.</td>
+                                    </tr>
+                                    <tr *ngFor="let subDeptCheckList of subDeptCompletedCheckLists | async">
+                                        <td data-title="Description">{{subDeptCheckList.checkListDesc}}</td>
+                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date:"dd-MMM-yy h:mma"}}</td>
+                                        <td data-title="RAG"><span [ngClass]="subDeptCheckList.RAG"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </responsive-table>
+                    </div>
+                </div>
+                <div class="card" *ngIf="showSubDeptSubChecklistPending">
+                    <div class="card-header">
+                        <strong>Pending Sub Department Checklist</strong>
+                        <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideSubDeptSubTablePending()"></i>
+                    </div>
+                    <div class="card-block">
+                        <responsive-table>
+                            <table responsive-table-body>
+
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>Schedule Close Time</th>
+                                        <th>RAG</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="!(subDeptPendingCheckLists)?.length>0">
+                                        <td colspan="4">No checklists to show.</td>
+                                    </tr>
+                                    <tr *ngFor="let subDeptCheckList of subDeptPendingCheckLists">
+                                        <td data-title="Description">{{subDeptCheckList.checkListDesc}}</td>
+                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date:"dd-MMM-yy h:mma"}}</td>
+                                        <td data-title="RAG"><span [ngClass]="subDeptCheckList.RAG"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </responsive-table>
+                    </div>
+                </div>
+                <div class="pull-right">
+                    <button type="submit" class="pull-right btn btn-primary" aria-label="Close" (click)="hideViewSubDeptChecklist()">Close</button>
+                </div>
+            </div>
+
+        </div>
+
     </div>
 </div>
