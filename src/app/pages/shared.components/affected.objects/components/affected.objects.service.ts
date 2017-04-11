@@ -14,6 +14,7 @@ import {
 export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> implements IAffectedObjectsService {
     // private _dataService: DataService<InvolvePartyModel>;
     private _bulkDataService: DataService<AffectedObjectModel>;
+    private _dataServiceForCargo : DataService<AffectedObjectModel>;
 
     constructor(private dataServiceFactory: DataServiceFactory) {
         super(dataServiceFactory, 'InvolvedParties');
@@ -21,6 +22,8 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
         let option: DataProcessingService = new DataProcessingService();
         this._bulkDataService = this.dataServiceFactory
             .CreateServiceWithOptions<AffectedObjectModel>('AffectedObjectBatch', option);
+       this._dataServiceForCargo = this.dataServiceFactory.CreateServiceWithOptions<AffectedObjectModel>('AffectedObjects',option);
+        
     }
 
     GetAll(): Observable<ResponseModel<InvolvePartyModel>> {
@@ -36,29 +39,33 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
     }
 
     FlattenAffactedObjects(involvedParty: InvolvePartyModel): AffectedObjectsToView[] {
-        let affectedObjectsToView: AffectedObjectsToView[];
+        let affectedObjectsToView: AffectedObjectsToView[] = [];
         let affectedObjects: AffectedObjectModel[];
         let affected: AffectedModel;
-        affected = UtilityService.pluck(involvedParty, ['Affecteds'])[0][0];
-        affectedObjects = UtilityService.pluck(affected, ['AffectedObjects'])[0];
-        affectedObjectsToView = affectedObjects.map(function (data) {
-            let item = new AffectedObjectsToView();
-            item.AffectedId = data.AffectedId;
-            item.AffectedObjectId = data.AffectedObjectId;
-            item.TicketNumber = data.TicketNumber;
-            item.CargoId = data.Cargo.CargoId;
-            item.AWB = data.AWB;
-            item.POL = data.Cargo.POL;
-            item.POU = data.Cargo.POU;
-            item.mftpcs = data.Cargo.mftpcs;
-            item.mftwgt = data.Cargo.mftwgt;
-            item.IsVerified = data.IsVerified;
-            item.Details = data.Cargo.Details;
-            // item.CommunicationLogs: data.CommunicationLogs
-            return item;
-        });
-        return affectedObjectsToView;
+        if (involvedParty != null) {
+            affected = UtilityService.pluck(involvedParty, ['Affecteds'])[0][0];
+            if (affected != null) {
+                affectedObjects = UtilityService.pluck(affected, ['AffectedObjects'])[0];
+                affectedObjectsToView = affectedObjects.map(function (data) {
+                    let item = new AffectedObjectsToView();
+                    item.AffectedId = data.AffectedId;
+                    item.AffectedObjectId = data.AffectedObjectId;
+                    item.TicketNumber = data.TicketNumber;
+                    item.CargoId = data.Cargo.CargoId;
+                    item.AWB = data.AWB;
+                    item.POL = data.Cargo.POL;
+                    item.POU = data.Cargo.POU;
+                    item.mftpcs = data.Cargo.mftpcs;
+                    item.mftwgt = data.Cargo.mftwgt;
+                    item.IsVerified = data.IsVerified;
+                    item.Details = data.Cargo.Details;
+                    // item.CommunicationLogs: data.CommunicationLogs
+                    return item;
+                });
 
+            }
+        }
+        return affectedObjectsToView;
     }
 
     CreateBulkObjects(entities: AffectedObjectModel[]): Observable<AffectedObjectModel[]> {
@@ -66,7 +73,7 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
     }
 
     MapAffectedPeopleToSave(affectedObjectsForVerification): AffectedObjectModel[] {
-        let verifiedAffectedObjects: AffectedObjectModel[];
+        let verifiedAffectedObjects: AffectedObjectModel[] =[];
         verifiedAffectedObjects = affectedObjectsForVerification.map(function (affected) {
             let item = new AffectedObjectModel;
             item.AffectedObjectId = affected.AffectedObjectId;
@@ -79,5 +86,12 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
             return item;
         });
         return verifiedAffectedObjects;
+    }
+
+     public GetCommunicationByAWB(id: number): Observable<ResponseModel<AffectedObjectModel>> {
+        return this._dataServiceForCargo.Query()
+            .Filter(`AffectedObjectId eq ${id}`)
+            .Expand('Cargo,CommunicationLogs')
+            .Execute();
     }
 }

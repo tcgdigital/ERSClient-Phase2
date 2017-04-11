@@ -1,3 +1,25 @@
+@import '../../config/config';
+
 .card-without-top-border {
     border-top: none !important;
+}
+
+.trailButtonStyle {
+    font-size:20px;
+    color:$trail-green;
+}
+
+.modalBodyHeaderStyle {
+    background-color: #ccc;
+    padding: 5px;
+}
+
+.lebelHeaderStyle{
+    text-align: center;
+}
+
+.buttonholder{
+        float: right;
+    vertical-align: middle;
+    padding-top: 27px;
 }

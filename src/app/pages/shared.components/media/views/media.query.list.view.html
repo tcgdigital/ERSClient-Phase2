@@ -1,29 +1,25 @@
-
-Mediaaaaaaqedwgf
-<div class="row" *ngFor="let query of mediaQueries">
-    <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-        <ul class="list-group">
-            <li class="list-group-item"><strong><i>Media Queries:</i></strong></li>
-            <li class="list-group-item" style="border-top: none">{{query.Queries}}</li>
-</ul>
-</div>
-<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-    <ul class="list-group">
-        <li class="list-group-item"><strong><i>Caller Name:</i></strong></li>
-        <li class="list-group-item" style="border-top: none">{{query.CallerName}}</li>
-</ul>
-</div>
-<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-    <ul class="list-group">
-        <li class="list-group-item"><strong><i>Contact Number:</i></strong></li>
-        <li class="list-group-item" style="border-top: none">{{query.ContactNumber}}</li>
-</ul>
-</div>
-<div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-    <ul class="list-group">
-        <li class="list-group-item"><strong><i>Alternate Number:</i></strong></li>
-        <li class="list-group-item" style="border-top: none">{{query.AlternateContactNumber}}</li>
-</ul>
-</div>
-
-</div>
+ <div class="card-block">
+ <responsive-table>
+        <table responsive-table-body>
+            <thead>
+                <tr>
+                    <th>Media Queries</th>
+                    <th>Caller Name</th>
+                    <th>Contact Number</th>
+                    <th>Alternate Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr [hidden]="mediaQueries.length != 0">
+                    <td colspan="8">No media queries to show.</td>
+                </tr>
+                <tr *ngFor="let query of mediaQueries">
+                    <td data-title="Media Queries">{{query.Queries}}&nbsp;</td>
+                    <td data-title="Caller Name">{{query.CallerName}}&nbsp;</td>
+                    <td data-title="Contact Number">{{query.ContactNumber}}&nbsp;</td>
+                    <td data-title="Alternate Number">{{query.AlternateContactNumber}}&nbsp;</td>
+                </tr>
+            </tbody>
+        </table>
+    </responsive-table>
+ </div>

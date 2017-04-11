@@ -21,7 +21,8 @@ import { InvolvePartyService } from '../involveparties';
 @Component({
     selector: 'call-centre-main',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './views/call.centre.view.html'
+    templateUrl: './views/call.centre.view.html',
+      styleUrls: ['./styles/call.center.style.scss']
 })
 
 export class EnquiryComponent implements OnInit {
@@ -45,9 +46,9 @@ export class EnquiryComponent implements OnInit {
     demand: DemandModel;
     demands: Array<DemandModel> = new Array<DemandModel>();
     affectedObjects: AffectedObjectsToView[];
-    currentDepartmentId: number = 2;
+    currentDepartmentId: number ;
     currentDepartmentName: string = 'Command Centre';
-    currentIncident: number = 1;
+    currentIncident: number;
     departments: DepartmentModel[];
     selctedEnquiredPerson: AffectedPeopleToView;
     selctedEnquiredObject: AffectedObjectsToView;
@@ -264,6 +265,8 @@ export class EnquiryComponent implements OnInit {
             IsCallBack: new FormControl(false),
             IsTravelRequest: new FormControl(false)
         });
+        this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
+        this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.getPassengersCrews(this.currentIncident);
         this.getCargo(this.currentIncident);
         this.getDepartments();

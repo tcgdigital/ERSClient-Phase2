@@ -1,0 +1,43 @@
+@import '../../config/config';
+
+.multiselect-selector {
+    background: $multiselect-background none repeat scroll 0 0;
+    border: $multiselect-border solid 1px;
+    border-radius: 3px;
+    color: $multiselect-color;
+    padding: 7px 8px;
+    width: 100%;
+    font-size: 14px;
+}
+
+.multiselect-list {
+    background: $multiselect-background none repeat scroll 0 0;
+    border: $multiselect-border solid 1px;
+    border-radius: 0 0 6px 6px;
+    color: $multiselect-color;
+    padding: 5px 8px;
+    width: 96%;
+    font-size: 12px;
+    height: 150px;
+    position: absolute;
+    z-index: 999;
+    overflow-x: hidden;
+    overflow-y: auto;
+    top: 90%;
+}
+
+.inputStyle{
+    width: 90% !important;
+    display: -webkit-inline-box !important;
+    border: none !important;
+    font-size: 14px;
+    padding: 0px;
+    line-height: 1.25;
+    color: $multiselect-color;
+}
+
+.crossStyle{
+     font-size:20px;
+     color:$cross-color;
+      float: right;
+}

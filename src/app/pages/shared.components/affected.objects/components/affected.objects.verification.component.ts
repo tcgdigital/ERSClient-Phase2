@@ -4,6 +4,8 @@ import { InvolvePartyModel } from '../../../shared.components';
 import { AffectedObjectModel, AffectedObjectsToView } from './affected.objects.model';
 import { AffectedObjectsService } from './affected.objects.service';
 import { ResponseModel, DataExchangeService, GlobalStateService } from '../../../../shared';
+import { UtilityService } from '../../../../shared/services';
+
 
 @Component({
     selector: 'affectedpeople-verify',
@@ -12,10 +14,10 @@ import { ResponseModel, DataExchangeService, GlobalStateService } from '../../..
 })
 export class AffectedObjectsVerificationComponent implements OnInit {
     constructor(private affectedObjectsService: AffectedObjectsService, private globalState: GlobalStateService) { }
-    affectedObjectsForVerification: AffectedObjectsToView[];
+    affectedObjectsForVerification: AffectedObjectsToView[] =[];
     verifiedAffectedObjects: AffectedObjectModel[];
     date: Date = new Date();
-    currentIncident: number = 1;
+    currentIncident: number;
 
     getAffectedObjects(incidentId): void {
         this.affectedObjectsService.GetFilterByIncidentId(incidentId)
@@ -43,10 +45,11 @@ export class AffectedObjectsVerificationComponent implements OnInit {
         this.getAffectedObjects(incidentId);
     }
     ngOnInit(): any {
+        this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
         this.getAffectedObjects(this.currentIncident);
         this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
     }
-      ngOnDestroy(): void {
+    ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChange');
     }
 }

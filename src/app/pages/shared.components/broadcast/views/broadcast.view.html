@@ -1,2 +1,8 @@
-<broadcast-entry [initiatedDepartmentId]="1" [incidentId]="1"></broadcast-entry>
-<broadcast-list [initiatedDepartmentId]="1" [incidentId]="1"></broadcast-list>
+<div class="card card-without-top-border card-block">
+    <div class="card-header entryHolder">
+        <broadcast-entry [initiatedDepartmentId]="initiatedDepartment" [incidentId]="incidentId"></broadcast-entry>
+    </div>
+    <div class="card-block">
+        <broadcast-list [initiatedDepartmentId]="initiatedDepartment" [incidentId]="incidentId"></broadcast-list>
+    </div>
+</div>

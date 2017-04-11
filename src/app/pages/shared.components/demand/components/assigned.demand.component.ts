@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnInit, AfterContentInit } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, AfterContentInit , ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
 import { InvolvePartyModel } from '../../involveparties';
@@ -8,7 +8,9 @@ import { DemandTrailService } from './demandtrail.service';
 import { DemandTrailModel } from './demand.trail.model';
 import { DemandRemarkLogService } from './demand.remarklogs.service';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
-import { ResponseModel, DataExchangeService, GlobalConstants, GlobalStateService } from '../../../../shared';
+import { ResponseModel, DataExchangeService, GlobalConstants, GlobalStateService, UtilityService } from '../../../../shared';
+import { ModalDirective } from 'ng2-bootstrap/modal';
+
 
 
 @Component({
@@ -17,7 +19,9 @@ import { ResponseModel, DataExchangeService, GlobalConstants, GlobalStateService
     templateUrl: '../views/assigned.demand.view.html'
 })
 export class AssignedDemandComponent implements OnInit, AfterContentInit {
-    demands: DemandModelToView[];
+    @ViewChild('childModalRemarks') public childModalRemarks: ModalDirective;
+
+    demands: DemandModelToView[] = [];
     currentDepartmentId: number;
     currentDepartmentName: string;
     currentIncidentId: number;
@@ -28,10 +32,12 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit {
     demandTrail: DemandTrailModel;
     demandTrails: DemandTrailModel[];
     departments: DepartmentModel[];
+    demandForRemarks: DemandModelToView;
     constructor(private demandService: DemandService, private departmentService: DepartmentService,
         private demandRemarkLogsService: DemandRemarkLogService, private globalState: GlobalStateService) {
         this.createdByName = "Anwesha Ray";
         this.demandRemarks = [];
+        this.demandForRemarks = new DemandModelToView();
     }
 
 
@@ -89,6 +95,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
                 this.demandRemarks = response.Records;
+                this.childModalRemarks.show();
             }, (error: any) => {
                 console.log("error:  " + error);
             });
@@ -170,16 +177,16 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit {
     };
 
     openDemandRemarks(demand) {
+        this.demandForRemarks = demand;
         this.getDemandRemarks(demand.DemandId);
-        demand["showRemarks"] = true;
     };
 
-    cancelRemarkUpdate(demand): void {
-        demand["showRemarks"] = false;
+   cancelRemarkUpdate(): void {
+       this.childModalRemarks.hide();
     };
 
-    saveRemark(remarks, demand): void {
-
+    saveRemark(remarks): void {
+       let demand : DemandModelToView = this.demandForRemarks;
         this.RemarkToCreate = new DemandRemarkLogModel();
         this.RemarkToCreate.Remark = remarks;
         this.RemarkToCreate.DemandId = demand.DemandId;
@@ -234,8 +241,8 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit {
     };
 
     ngOnInit(): any {
-        this.currentDepartmentId = 1;
-        this.currentIncidentId = 1;
+        this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
         this.getAllDepartments();
         this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));

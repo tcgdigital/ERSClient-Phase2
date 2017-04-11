@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 
 import { EnquiryService, EnquiryModel, QueryModel } from '../call.centre/components';
-import { ResponseModel, GlobalConstants, GlobalStateService } from '../../../shared';
+import { ResponseModel, GlobalConstants, GlobalStateService ,UtilityService } from '../../../shared';
 
 @Component({
     selector: 'crew-query',
@@ -9,10 +9,9 @@ import { ResponseModel, GlobalConstants, GlobalStateService } from '../../../sha
     templateUrl: './views/crew.query.view.html'
 })
 export class CrewQueryComponent implements OnInit {
-    crewqueries: QueryModel[];
+    crewqueries: QueryModel[] = [];
     currentincidentId: number;
     constructor(private enquiryService: EnquiryService, private globalState: GlobalStateService) {
-        this.currentincidentId = 1;
     };
 
     getOtherQueries(incidentId): void {
@@ -25,6 +24,7 @@ export class CrewQueryComponent implements OnInit {
     };
 
     ngOnInit(): any {
+        this.currentincidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.getOtherQueries(this.currentincidentId);
         this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
 

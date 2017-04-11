@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit , ViewChild } from '@angular/core';
 
 import { InvolvePartyModel } from '../../involveparties';
 import { DemandModel, DemandModelToView, DemandRemarkLogModel } from './demand.model';
@@ -7,8 +7,10 @@ import { CommunicationLogModel } from '../../communicationlogs';
 import { DemandRemarkLogService } from './demand.remarklogs.service';
 import { DemandTrailService } from './demandtrail.service';
 import { DemandTrailModel } from './demand.trail.model';
-import { ResponseModel, DataExchangeService, GlobalConstants, GlobalStateService } from '../../../../shared';
+import { ResponseModel, DataExchangeService, GlobalConstants, GlobalStateService, UtilityService } from '../../../../shared';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
+import { ModalDirective } from 'ng2-bootstrap/modal';
+
 
 
 @Component({
@@ -17,7 +19,10 @@ import { DepartmentService, DepartmentModel } from '../../../masterdata/departme
     templateUrl: '../views/completed.demand.view.html'
 })
 export class CompletedDemandComponent implements OnInit {
-    completedDemands: DemandModelToView[];
+    @ViewChild('childModalRemarks') public childModalRemarks: ModalDirective;
+
+
+    completedDemands: DemandModelToView[] = [];
     currentDepartmentId: number;
     currentDepartmentName: string;
     currentIncidentId: number;
@@ -30,10 +35,13 @@ export class CompletedDemandComponent implements OnInit {
     createdByName: string;
     demandTrail: DemandTrailModel;
     demandTrails: DemandTrailModel[];
+    demandForRemarks: DemandModelToView;
+
     constructor(private demandService: DemandService, private demandRemarkLogsService: DemandRemarkLogService,
         private globalState: GlobalStateService, private departmentService: DepartmentService) {
         this.createdByName = "Anwesha Ray";
         this.demandRemarks = [];
+        this.demandForRemarks = new DemandModelToView();
     }
 
 
@@ -50,6 +58,7 @@ export class CompletedDemandComponent implements OnInit {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
                 this.demandRemarks = response.Records;
+                 this.childModalRemarks.show();
             }, (error: any) => {
                 console.log("error:  " + error);
             });
@@ -96,15 +105,16 @@ export class CompletedDemandComponent implements OnInit {
     };
 
     openDemandRemarks(demand) {
+        this.demandForRemarks = demand;
         this.getDemandRemarks(demand.DemandId);
-        demand["showRemarks"] = true;
     };
 
-    cancelRemarkUpdate(demand): void {
-        demand["showRemarks"] = false;
+    cancelRemarkUpdate(): void {
+        this.childModalRemarks.hide();
     };
 
-    saveRemark(remarks, demand): void {
+    saveRemark(remarks): void {
+        let demand: DemandModelToView = this.demandForRemarks;
         this.RemarkToCreate = new DemandRemarkLogModel();
         this.RemarkToCreate.Remark = remarks;
         this.RemarkToCreate.DemandId = demand.DemandId;
@@ -199,8 +209,8 @@ export class CompletedDemandComponent implements OnInit {
 
 
     ngOnInit() {
-        this.currentDepartmentId = 1;
-        this.currentIncidentId = 1;
+        this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.currentDepartmentName = "Command Center";
         this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
         this.getCurrentDepartmentName(this.currentDepartmentId);

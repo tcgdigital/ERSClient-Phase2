@@ -10,20 +10,24 @@ import { Observable } from 'rxjs/Rx';
 
 import { ActionableModel } from './actionable.model';
 import { ActionableService } from './actionable.service';
+import { DepartmentService, DepartmentModel } from '../../../masterdata/department/components';
 import {
     ResponseModel, DataExchangeService,
     UtilityService, GlobalConstants,
-    FileUploadService, GlobalStateService
+    FileUploadService, GlobalStateService, SharedModule
 } from '../../../../shared';
+import { ModalDirective } from 'ng2-bootstrap/modal';
+
+
 
 @Component({
     selector: 'actionable-active',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: '../views/actionable.active.html',
-    styleUrls: ['../styles/actionable.style.scss']
+    templateUrl: '../views/actionable.active.html'
 })
 export class ActionableActiveComponent implements OnInit, OnDestroy, AfterContentInit {
     @ViewChild('myFileInput') myInputVariable: any;
+    @ViewChild('childModal') public childModal: ModalDirective;
 
     editActionableModel: ActionableModel = null;
     tempActionable: ActionableModel = null;
@@ -31,11 +35,14 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     filesToUpload: Array<File>;
     filepathWithLinks: string = null;
     fileName: string = null;
+    actionableModelToUpdate: ActionableModel = null;
+    actionableWithParents: ActionableModel[] = [];
+    parentChecklistIds: number[] = [];
 
     public form: FormGroup;
 
-    private departmentId: number = null;
-    private incidentId: number = null;
+    private currentDepartmentId: number = null;
+    private currentIncident: number = null;
 
     /**
      * Creates an instance of ActionableActiveComponent.
@@ -46,7 +53,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
      * @memberOf ActionableActiveComponent
      */
     constructor(formBuilder: FormBuilder, private actionableService: ActionableService,
-        private fileUploadService: FileUploadService,
+        private fileUploadService: FileUploadService, private departmentService: DepartmentService,
         private dataExchange: DataExchangeService<boolean>, private globalState: GlobalStateService) {
         this.filesToUpload = [];
     }
@@ -60,23 +67,57 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
      */
     ngOnInit(): any {
 
-        this.departmentId = 1;
-        this.incidentId = 96;
-        this.getAllActiveActionable(this.incidentId, this.departmentId);
+        this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
+        this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
         this.form = this.resetActionableForm();
+        this.actionableModelToUpdate = new ActionableModel();
         this.dataExchange.Subscribe("OpenActionablePageInitiate", model => this.onOpenActionablePageInitiate(model));
         this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
     }
 
+
+    private hasChildChecklist(checkListId): boolean {
+        if (this.parentChecklistIds.length != 0)
+            return this.parentChecklistIds.some(x => x == checkListId);
+        else
+            return false;
+
+    }
+
+
+    openChildActionable(actionable: ActionableModel): void {
+        actionable["expanded"] = !actionable["expanded"];
+        this.actionableService.GetChildActionables(actionable.ChklistId, this.currentIncident)
+            .subscribe((responseActionable: ResponseModel<ActionableModel>) => {
+                this.departmentService.GetDepartmentNameIds()
+                    .subscribe((response: ResponseModel<DepartmentModel>) => {
+                        let childActionables : ActionableModel[] = [];
+                        childActionables = responseActionable.Records;
+                        childActionables.forEach(x=>{
+                            x["DepartmentName"] = response.Records.find(y=>{return y.DepartmentId == x.DepartmentId;}).DepartmentName;
+                        });
+                        actionable["actionableChilds"] = childActionables;
+                        
+                    }, (error: any) => {
+                        console.log(`Error: ${error}`);
+                    });
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
+    }
+
     private incidentChangeHandler(incidentId): void {
-        this.incidentId = incidentId;
-        this.getAllActiveActionable(this.incidentId, this.departmentId);
+        this.currentIncident = incidentId;
+        this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
+        this.form = this.resetActionableForm();
     }
 
     private departmentChangeHandler(departmentId): void {
-        this.departmentId = departmentId;
-        this.getAllActiveActionable(this.incidentId, this.departmentId);
+        this.currentDepartmentId = departmentId;
+        this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
+        this.form = this.resetActionableForm();
     }
 
     /**
@@ -103,7 +144,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
      * @memberOf ActionableActiveComponent
      */
     onOpenActionablePageInitiate(isOpen: boolean): void {
-        this.getAllActiveActionable(this.incidentId, this.departmentId);
+        this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
 
     };
 
@@ -111,18 +152,11 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         this.dataExchange.Unsubscribe("OpenActionablePageInitiate");
         this.globalState.Unsubscribe('incidentChange');
         this.globalState.Unsubscribe('departmentChange');
-    }
-
-    onIncidentDepartmentChange():void{
-        this.departmentId = 1;
-        this.incidentId = 96;
-        this.getAllActiveActionable(this.incidentId, this.departmentId);
-        this.form = this.resetActionableForm();
-    }
+    };
 
     ngAfterContentInit(): void {
         this.setRagIntervalHandler();
-    }
+    };
 
     IsDone(event: any, editedActionable: ActionableModel): void {
         if (!event.checked) {
@@ -165,6 +199,24 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         this.actionableService.GetAllOpenByIncidentIdandDepartmentId(incidentId, departmentId)
             .subscribe((response: ResponseModel<ActionableModel>) => {
                 this.activeActionables = response.Records;
+                this.activeActionables.forEach(x => {
+                    x["expanded"] = false;
+                    x["actionableChilds"] = [];
+                });
+                this.getAllActiveActionableByIncident(this.currentIncident);
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
+    }
+
+    getAllActiveActionableByIncident(incidentId): void {
+        this.actionableService.GetAllOpenByIncidentId(incidentId)
+            .subscribe((response: ResponseModel<ActionableModel>) => {
+                this.actionableWithParents = response.Records;
+                this.parentChecklistIds = this.actionableWithParents.map(function (actionable) {
+                    let Id = actionable.ParentCheckListId;
+                    return Id;
+                })
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -181,19 +233,21 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         });
     }
 
-    actionableDetail(editedActionableModel: ActionableModel): void {
+    openActionableDetail(editedActionableModel: ActionableModel): void {
         this.form = new FormGroup({
             Comments: new FormControl(editedActionableModel.Comments),
             URL: new FormControl(editedActionableModel.URL)
         });
-        editedActionableModel.show = true;
+        // editedActionableModel.show = true;
+        this.actionableModelToUpdate = editedActionableModel;
+        this.childModal.show();
     }
 
     cancelUpdateCommentAndURL(editedActionableModel: ActionableModel): void {
         this.myInputVariable.nativeElement.value = "";
         this.filepathWithLinks = null;
         this.fileName = null;
-        editedActionableModel.show = false;
+        this.childModal.hide();
     }
 
     updateCommentAndURL(values: Object, editedActionableModel: ActionableModel): void {
@@ -212,6 +266,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                 this.tempActionable.Comments = this.editActionableModel.Comments;
                 this.tempActionable.UploadLinks = this.filepathWithLinks;
                 this.tempActionable.FileName = this.fileName;
+                this.childModal.hide();
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -220,7 +275,11 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     activeActionableClick(activeActionablesUpdate: ActionableModel[]): void {
         let filterActionableUpdate = activeActionablesUpdate
             .filter((item: ActionableModel) => item.Done == true);
+        filterActionableUpdate.forEach(x => {
+            delete x["expanded"];
+            delete x["actionableChilds"];
 
+        });
         this.batchUpdate(filterActionableUpdate.map(x => {
             return {
                 ActionId: x.ActionId,
@@ -235,7 +294,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     private batchUpdate(data: any[]) {
         this.actionableService.BatchOperation(data)
             .subscribe(x => {
-                this.getAllActiveActionable(this.incidentId, this.departmentId);
+                this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });

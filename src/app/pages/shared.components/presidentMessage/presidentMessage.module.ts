@@ -7,7 +7,7 @@ import { PresidentMessageRouting } from './presidentMessage.routing';
 import { PresidentMessageComponent } from './presidentMessage.component';
 import { PresidentMessageEntryComponent, PresidentMessageListComponent, PresidentMessageService } from './components';
 import { BrowserModule } from '@angular/platform-browser';
-import { DataExchangeService } from '../../../shared';
+import { DataExchangeService , SharedModule } from '../../../shared';
 
 @NgModule({
     imports: [
@@ -15,7 +15,8 @@ import { DataExchangeService } from '../../../shared';
         FormsModule,
         HttpModule,
         ReactiveFormsModule,
-        PresidentMessageRouting        
+        PresidentMessageRouting ,       
+        SharedModule
     ],
     declarations: [
         PresidentMessageEntryComponent,

@@ -11,6 +11,10 @@ const affectedObjectsRoutes: Routes = [
         component: AffectedObjectsComponent,
         children: [
             {
+                path: '',
+                component: AffectedObjectsListComponent
+            },
+            {
                 path: 'detail',
                 component: AffectedObjectsListComponent
             },

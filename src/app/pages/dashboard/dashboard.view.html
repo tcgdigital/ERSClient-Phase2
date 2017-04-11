@@ -3,26 +3,26 @@
     <clock-widget [initiationDateTime]="incidentDate" class="col-12 col-md-4 col-lg-4 col-xl-2 clock-layout widget-layout-fix">
     </clock-widget>
 
-    <peopleOnBoard-widget [initiatedDepartmentId]="1" [currentIncidentId]="1" class="col-12 col-md-6 col-lg-4 col-xl-3 people-onboard-layout widget-layout-fix">
+    <peopleOnBoard-widget [initiatedDepartmentId]="currentDepartmentId" [currentIncidentId]="currentIncidentId" class="col-12 col-md-6 col-lg-4 col-xl-3 people-onboard-layout widget-layout-fix">
     </peopleOnBoard-widget>
-    <casualty-summary-widget [currentIncidentId]="1" class="col-12 col-md-6 col-lg-4 col-xl-3 casualty-layout widget-layout-fix">
+    <casualty-summary-widget [currentIncidentId]="currentIncidentId" class="col-12 col-md-6 col-lg-4 col-xl-3 casualty-layout widget-layout-fix">
     </casualty-summary-widget>
-    <demand-received-summary-widget [initiatedDepartmentId]="1" [currentIncidentId]="1" class="col-12 col-md-3 col-lg-4 col-xl-2 demand-received-layout widget-layout-fix">
+    <demand-received-summary-widget [initiatedDepartmentId]="currentDepartmentId" [currentIncidentId]="currentIncidentId" class="col-12 col-md-3 col-lg-4 col-xl-2 demand-received-layout widget-layout-fix">
     </demand-received-summary-widget>
-    <demand-raised-summary-widget [initiatedDepartmentId]="1" [currentIncidentId]="1" class="col-6 col-md-3 col-lg-4 col-xl-2 demand-raised-layout widget-layout-fix">
+    <demand-raised-summary-widget [initiatedDepartmentId]="currentDepartmentId" [currentIncidentId]="currentIncidentId" class="col-6 col-md-3 col-lg-4 col-xl-2 demand-raised-layout widget-layout-fix">
     </demand-raised-summary-widget>
-    <checklist-summary-widget [initiatedDepartmentId]="1" [currentIncidentId]="1" class="col-6 col-md col-md-3 col-lg-4 col-xl-2 checklist-layout widget-layout-fix">
+    <checklist-summary-widget [initiatedDepartmentId]="currentDepartmentId" [currentIncidentId]="currentIncidentId" class="col-6 col-md col-md-3 col-lg-4 col-xl-2 checklist-layout widget-layout-fix">
     </checklist-summary-widget>
 </div>
 <!-- KPI Section Ends-->
 <!-- Messaging Section Starts-->
 <div class="row">
 
-    <broadcast-widget [initiatedDepartmentId]="1" [currentIncidentId]="1" class="col-12 col-md-4 messaging-widget widget-layout-fix">
+    <broadcast-widget [initiatedDepartmentId]="currentDepartmentId" [currentIncidentId]="currentIncidentId" class="col-12 col-md-4 messaging-widget widget-layout-fix">
     </broadcast-widget>
-    <presidentMessage-widget [initiatedDepartmentId]="1" [currentIncidentId]="1" class="col-12 col-md-4 messaging-widget widget-layout-fix">
+    <presidentMessage-widget [initiatedDepartmentId]="currentDepartmentId" [currentIncidentId]="currentIncidentId" class="col-12 col-md-4 messaging-widget widget-layout-fix">
     </presidentMessage-widget>
-    <mediaRelease-widget [initiatedDepartmentId]="1" [currentIncidentId]="1" class="col-12 col-md-4 messaging-widget widget-layout-fix">
+    <mediaRelease-widget [initiatedDepartmentId]="currentDepartmentId" [currentIncidentId]="currentIncidentId" class="col-12 col-md-4 messaging-widget widget-layout-fix">
     </mediaRelease-widget>
 </div>
 <!-- Messaging Section Ends-->

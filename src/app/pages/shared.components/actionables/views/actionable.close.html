@@ -1,60 +1,104 @@
-<div>
-    <h3>Closed Actionable Data</h3>
-    <table style="width:100%;">
-        <tr>
-            <td><strong><i>Serial Number</i></strong></td>
-            <td><strong><i>Description:</i></strong></td>
-            <td><strong><i>Schedule Close Time:</i></strong></td>
-            <td><strong><i>Actual Close Time:</i></strong></td>
-            <td><strong><i>Reopen:</i></strong></td>
-            <td><strong><i>Download:</i></strong></td>
-            <td><strong><i>View:</i></strong></td>
-        </tr>
-        <div *ngFor="let actionable of closeActionables; let i = index;">
-        <tr>
-            <td>{{i+1}}</td>
-            <td>{{actionable.Description}}</td>
-            <td>{{actionable.ScheduleClose | amDateFormat:'LL - HH:mm:ss'}}</td>
-            <td>{{actionable.ActualClose | amDateFormat:'LL - HH:mm:ss'}}</td>
-            <td>
-                <md-checkbox class="Marght" [disabled]="actionable.IsReopen" id="Reopen" name="Reopen" [ngModel]="actionable.Reopen" (change)="IsReopen($event,actionable)"
-                    aria-label="Reopen">
+<responsive-table>
+    <table responsive-table-body>
+        <thead>
+            <tr>
+                <th> Serial Number</th>
+                <th> Description</th>
+                <th> Schedule Close Time</th>
+                <th> Actual Close Time</th>
+                <th> Reopen</th>
+                <th> Download</th>
+                <th> View</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr [hidden]="closeActionables.length != 0">
+                <td colspan="8">No records found.</td>
+            </tr>
+            <tr *ngFor="let actionable of closeActionables; let i = index;">
+                <td  data-title="Serial Number">{{i+1}}</td>
+                <td  data-title="Description">{{actionable.Description}}</td>
+                <td  data-title="Schedule Close Time">{{actionable.ScheduleClose | amDateFormat:'LL - HH:mm:ss'}}</td>
+                <td  data-title="Actual Close Time">{{actionable.ActualClose | amDateFormat:'LL - HH:mm:ss'}}</td>
+                <td  data-title="Reopen">
+                    <md-checkbox class="Marght" [disabled]="actionable.IsReopen" id="Reopen" name="Reopen" [ngModel]="actionable.Reopen" (change)="IsReopen($event,actionable)"
+                        aria-label="Reopen">
                     </md-checkbox>
-            </td>
-            <td>
-                <a class="glyphicon glyphicon-download-alt" target="_self" *ngIf="actionable.UploadLinks!=null" href="{{actionable.UploadLinks}}"
-                    download="{{actionable.FileName}}">Download</a>
-            </td>
-            <td><a (click)="actionableDetail(actionable)">View</a></td>
+                </td>
+                <td  data-title="Download">
+                    <a class="glyphicon glyphicon-download-alt" target="_self" *ngIf="actionable.UploadLinks!=null" href="{{actionable.UploadLinks}}"
+                        download="{{actionable.FileName}}">Download</a>
+                </td>
+                <td  data-title="View"><a (click)="openActionableDetail(actionable)">View</a></td>
 
-        </tr>
-        <tr [hidden]="!actionable.show">
-                <form [formGroup]="form">
-                    <td colspan="6">
-                        <div>
-                            <div class="Comments">
-                                <div class="Comments">
-                                    <strong><i>Comments:</i></strong>
-                                    <input disabled type="text" [ngModel]="actionable.Comments" formControlName="Comments" value="{{actionable.Comments}}" placeholder="Comments"
-                                    />
-                                </div>
+            </tr>
+            <!--<tr [hidden]="!actionable.show">
+                        <form [formGroup]="form">
+                            <td colspan="6">
                                 <div>
-                                    <strong><i>URL:</i></strong>
-                                    <input disabled type="text" [ngModel]="actionable.URL" formControlName="URL" value="{{actionable.URL}}" placeholder="URL"
-                                    />
+                                    <div class="Comments">
+                                        <div class="Comments">
+                                            <strong><i>Comments:</i></strong>
+                                            <input disabled type="text" [ngModel]="actionable.Comments" formControlName="Comments" value="{{actionable.Comments}}" placeholder="Comments"
+                                            />
+                                        </div>
+                                        <div>
+                                            <strong><i>URL:</i></strong>
+                                            <input disabled type="text" [ngModel]="actionable.URL" formControlName="URL" value="{{actionable.URL}}" placeholder="URL"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <button disabled class="btn btn-primary" type="submit">Save</button>
+                                            <button class="btn btn-primary" type="button" (click)="cancelUpdateCommentAndURL(actionable)">Cancel</button>
+                                        </div>
+                                    </div>
                                 </div>
-                                
-                                <div>
-                                    <button disabled class="btn btn-primary" type="submit">Save</button>
-                                    <button class="btn btn-primary" type="button" (click)="cancelUpdateCommentAndURL(actionable)">Cancel</button>
-                                </div>
+                            </td>
+
+                        </form>
+                    </tr>-->
+        </tbody>
+    </table>
+</responsive-table>
+<button class="btn btn-primary" type="submit" (click)="closedActionableClick(closeActionables)">Save</button>
+
+
+
+
+
+
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Additional Information</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="cancelUpdateCommentAndURL()">
+                  <span aria-hidden="true">&times;</span>
+                   </button>
+            </div>
+            <div class="modal-body">
+                <div class="holderStyle">
+                    <form [formGroup]="form">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label><i>Comments:</i></label>
+                                <input type="text" [ngModel]="actionableModelToUpdate.Comments" formControlName="Comments" value="{{actionableModelToUpdate.Comments}}"
+                                    placeholder="Comments" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label><i>URL:</i></label>
+                                <input disabled type="text" [ngModel]="actionableModelToUpdate.URL" formControlName="URL" value="{{actionableModelToUpdate.URL}}"
+                                    placeholder="URL" />
                             </div>
                         </div>
-                    </td>
-
-                </form>
-            </tr>
-        </div>
-    </table>
-    <button class="btn btn-primary" type="submit" (click)="closedActionableClick(closeActionables)">Save</button>
+                        <div style="float: right">
+<button class="btn btn-primary" type="submit">Save</button>
+<button class="btn btn-primary" type="button" (click)="cancelUpdateCommentAndURL()">Cancel</button>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>
 </div>

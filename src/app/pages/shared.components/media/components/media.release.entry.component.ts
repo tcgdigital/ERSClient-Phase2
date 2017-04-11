@@ -31,6 +31,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     Action: string;
     currentIncidentId: number;
     currentDepartmentId: number;
+    showAdd : boolean;
 
     /**
      * Creates an instance of MediaQueryEntryComponent.
@@ -42,7 +43,9 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
      */
     constructor(private mediaQueryService: MediaService,
         private dataExchange: DataExchangeService<MediaModel>, private globalState: GlobalStateService,
-        private builder: FormBuilder) { }
+        private builder: FormBuilder) { 
+            this.showAdd =false;
+        }
 
     ngOnInit(): void {
         this.currentIncidentId = +this.currentIncidentId;
@@ -73,6 +76,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
         //this.media.InitiateDepartmentId = +this.initiatedDepartmentId;
         this.media.IsUpdated = true;
         this.Action = "Edit";
+        this.showAdd =true;
     }
 
     save(): void {
@@ -103,6 +107,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
             this.mediaQueryService.Create(this.media)
                 .subscribe((response: MediaModel) => {
                     this.dataExchange.Publish("MediaModelSaved", response);
+                    this.showAdd =false;
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
                 });
@@ -111,6 +116,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
             this.mediaQueryService.Update(this.media)
                 .subscribe((response: MediaModel) => {
                     this.dataExchange.Publish("MediaModelUpdated", response);
+                    this.showAdd =false;
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
                 });
@@ -119,6 +125,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
 
     cancel(): void {
         this.formInit();
+        this.showAdd =false
     }
 
     private formInit(): void {
@@ -131,4 +138,9 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
         this.media = new MediaModel();
         this.Action = "Save";
     }
+
+     showAddRegion(ShowAdd: Boolean): void {
+        this.showAdd = true;
+    };
+
 }

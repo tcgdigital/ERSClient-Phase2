@@ -9,7 +9,9 @@ import { AffectedObjectsRouting } from './affected.objects.routing';
 import { AffectedObjectsService,
      AffectedObjectsListComponent, 
      AffectedObjectsVerificationComponent} from './components';
-import { DataExchangeService } from '../../../shared';
+import {SharedModule, DataExchangeService } from '../../../shared';
+import { ModalModule} from 'ng2-bootstrap/modal';
+
 
 @NgModule({
     imports: [
@@ -18,7 +20,10 @@ import { DataExchangeService } from '../../../shared';
         FormsModule,
         HttpModule,
         MdCheckboxModule,
-        AffectedObjectsRouting
+        AffectedObjectsRouting,
+        SharedModule,
+        ModalModule
+        
     ],
     declarations: [
         AffectedObjectsComponent,

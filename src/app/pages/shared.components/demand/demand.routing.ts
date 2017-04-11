@@ -11,6 +11,10 @@ const demandRoutes: Routes = [
         component: DemandComponent,
         children: [
             {
+                path: '',
+                component: AssignedDemandComponent
+            },
+            {
                 path: 'assignedDemand',
                 component: AssignedDemandComponent
             },

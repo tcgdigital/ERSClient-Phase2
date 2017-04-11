@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewEncapsulation, Output, EventEmitter, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, AbstractControl, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -22,6 +22,8 @@ import {
     ResponseModel, DataExchangeService, GlobalConstants, KeyValue, AutocompleteComponent,
     UtilityService, GlobalStateService
 } from '../../../../shared';
+import { ModalDirective } from 'ng2-bootstrap/modal';
+
 
 @Component({
     selector: 'demand-entry',
@@ -29,6 +31,8 @@ import {
     templateUrl: '../views/demand.entry.view.html'
 })
 export class DemandEntryComponent implements OnInit, OnDestroy {
+    @ViewChild('childModal') public childModal: ModalDirective;
+
     public form: FormGroup;
     demandModel: DemandModel = new DemandModel();
     demandTypes: DemandTypeModel[];
@@ -238,15 +242,10 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     };
 
     showAddRegion(ShowAdd: Boolean): void {
-        if (ShowAdd) {
-            this.showAdd = false;
-            this.buttonValue = "Create Demand";
-        }
-        else {
-            this.showAdd = true;
-            this.buttonValue = "Cancel";
-            // this.form = this.resetCheckListForm();
-        }
+        this.showAdd = true;
+        this.buttonValue = "Create Demand";
+        this.childModal.show();
+
     };
 
     setModelFormGroup(model: DemandModel, ...params: ((entity: DemandModel) => any)[]): void {
@@ -274,7 +273,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                     , x => x.ScheduleTime, x => x.RequiredLocation);
                 this.caller = this.demandModel.Caller || new CallerModel();
                 this.showAdd = true;
-                this.buttonValue = "Cancel";
+                this.buttonValue = "Create Demand";
+                this.childModal.show();
                 this.form.controls["PDATicketNumber"].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
                 this.form.controls["AffectedPersonId"].reset({ value: this.demandModel.AffectedPersonId, disabled: true });
                 this.form.controls["AffectedObjectId"].reset({ value: this.demandModel.AffectedObjectId, disabled: true });
@@ -285,9 +285,13 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             });
     };
 
+    cancelModal(): void {
+        this.childModal.hide();
+    }
+
     ngOnInit(): any {
-        this.currentIncidentId = 1;
-        this.currentDepartmentId = 1;
+        this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.getDemandType();
         this.getPageSpecifiedDepartments();
         this.getAllDepartments();
@@ -461,6 +465,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                     this.demandModel = new DemandModel();
                     this.showAdd = false;
                     this.buttonValue = "Create Demand";
+                    this.childModal.hide();
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
                 });
@@ -489,6 +494,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                         this.demandModel = new DemandModel();
                         this.showAdd = false;
                         this.buttonValue = "Create Demand";
+                        this.childModal.hide();
                     }, (error: any) => {
                         console.log("Error");
                     });
