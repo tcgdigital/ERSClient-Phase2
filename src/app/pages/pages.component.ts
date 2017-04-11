@@ -1,6 +1,11 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
-import { Routes, ActivatedRoute } from '@angular/router';
-import { SideMenuService, KeyValue, ResponseModel, GlobalStateService } from '../shared';
+import { Routes } from '@angular/router';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
+import {
+    SideMenuService, KeyValue,
+    ResponseModel, GlobalStateService
+} from '../shared';
 import { DepartmentService, DepartmentModel } from './masterdata';
 import { IncidentService, IncidentModel } from './incident';
 import { PAGES_MENU } from './pages.menu';
@@ -25,19 +30,25 @@ export class PagesComponent implements OnInit {
      * @param {SideMenuService} sideMenuService 
      * @param {IncidentService} incidentService 
      * @param {DepartmentService} departmentService 
+     * @param {GlobalStateService} globalState 
+     * @param {ToastrService} toastrService 
+     * @param {ToastrConfig} toastrConfig 
      * 
      * @memberOf PagesComponent
      */
-    constructor(private sideMenuService: SideMenuService, private route: ActivatedRoute,
+    constructor(private sideMenuService: SideMenuService,
         private incidentService: IncidentService,
-        private departmentService: DepartmentService, private globalState: GlobalStateService) { }
+        private departmentService: DepartmentService, 
+        private globalState: GlobalStateService,
+        private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig) { 
+            toastrConfig.closeButton = true;
+            toastrConfig.progressBar = true;
+            toastrConfig.enableHtml = true;
+        }
 
     ngOnInit(): void {
         this.sideMenuService.updateMenuByRoutes(<Routes>PAGES_MENU);
-        this.sub = this.route.params.subscribe(params => {
-            this.userId = params['userId'];
-
-        });
         this.getDepartments();
         this.getIncidents();       
     }
@@ -54,10 +65,12 @@ export class PagesComponent implements OnInit {
     }
 
     public onContactClicked($event): void {
+        this.toastrService.info('Contacts command has been clicked', 'Contact', this.toastrConfig);
         console.log('Contacts Clicked');
     }
 
     public onHelpClicked($event): void {
+        this.toastrService.info('Help command has been clicked', 'Help', this.toastrConfig);
         console.log('Help Clicked');
     }
 

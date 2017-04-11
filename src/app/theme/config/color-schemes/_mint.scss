@@ -60,11 +60,15 @@ $clock-widget-bg:#caf1ff;
 $clock-widget-title:$body-bg;
 $clock-widget-border:#dad8d8;
 
+$button-s:#de796a;
+$button-e:#8e1e18;
+$button-hover: rgba(142, 30, 24, 0.86);
+
 $message-widget-bg:$body-bg;
 $message-widget-text:$body-bg;
 $message-widget-button-text:$body-bg;
-$message-widget-button-s:#de796a;
-$message-widget-button-e:#8e1e18;
+$message-widget-button-s:$button-s;
+$message-widget-button-e:$button-e;
 $message-widget-title-border:#dad8d8;
 $message-widget-border-s:$body-bg;
 $message-widget-border-m:#000000;

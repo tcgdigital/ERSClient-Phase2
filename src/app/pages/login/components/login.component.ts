@@ -4,6 +4,9 @@ import { FormGroup, FormBuilder, AbstractControl, Validators } from '@angular/fo
 import { AuthenticationService } from './authentication.service';
 import { UtilityService } from '../../../shared/services';
 import {  GlobalStateService } from '../../../shared';
+import { AuthRequestModel, AuthResponseModel } from './auth.model';
+
+import * as jwtDecode from 'jwt-decode';
 
 @Component({
     selector: 'login',
@@ -32,7 +35,8 @@ export class LoginComponent {
 
     Login(userid: string, password: string): void {
         this.authService.Login(userid, password)
-            .subscribe((data) => {
+            .subscribe((data: AuthResponseModel) => {
+                console.log(jwtDecode(data.access_token));
                 this.router.navigate(['pages/dashboard']);
             }, (error: any) => {
                 console.log(`Error: ${error}`);

@@ -21,8 +21,9 @@ export class DashboardComponent implements OnInit {
     private sub: any;
     userId: number;
 
-    constructor(private globalState : GlobalStateService) {
-        this.incidentDate = new Date(2017, 3, 24, 1, 20, 25);
+
+    constructor( private globalState : GlobalStateService) {
+        this.incidentDate = new Date('apr,10,2017,00:00:00');
     }
 
     public ngOnInit(): void {

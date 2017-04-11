@@ -30,7 +30,8 @@ import {
 import {
     SlimScrollDirective,
     ScrollPositionDirective,
-    ThemeRunDirective
+    ThemeRunDirective,
+    DateTimePickerDirective
 } from './directives';
 
 import {
@@ -75,7 +76,8 @@ const SHARED_COMPONENTS: any[] = [
 const SHARED_DIRECTIVES: any[] = [
     SlimScrollDirective,
     ScrollPositionDirective,
-    ThemeRunDirective
+    ThemeRunDirective,
+    DateTimePickerDirective
 ];
 
 const SHARED_SERVICES: any[] = [

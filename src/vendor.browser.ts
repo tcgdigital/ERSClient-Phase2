@@ -26,6 +26,9 @@ import 'selectize';
 import 'bootstrap';
 import 'font-awesome-sass-loader';
 import 'lodash';
+import 'air-datepicker';
+import 'moment';
+import '../node_modules/air-datepicker/dist/js/i18n/datepicker.en';
 
 if ('production' === ENV) {
     // Production
