@@ -10,7 +10,7 @@ import {
     IServiceInretface, BaseModel, RequestModel, GlobalConstants, WEB_METHOD
 
 } from '../../../../shared';
-import { DemandReceivedSummeryModel } from '../../../widgets/demand.received.summary.widget';
+import { DemandReceivedSummaryModel } from '../../../widgets/demand.received.summary.widget';
 import { DepartmentAccessOwnerModel, DepartmentAccessOwnerService } from '../../../shared.components/departmentaccessowner';
 
 
@@ -144,24 +144,54 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
         return this.departmentAccessOwnerService.GetDependentDepartmentAccessOwners(departmentId);
     }
 
-    public GetDemandByTargetDepartment(incidentId: number, departmentIdProjection: string): Observable<ResponseModel<DemandModel>> {
+    
+
+    public GetDemandByTargetDepartments(incidentId: number, departmentIdProjection: string): Observable<ResponseModel<DemandModel>> {
         let demandprojection: string = `DemandId,TargetDepartmentId,IsCompleted,
         ClosedOn,ScheduleTime,CreatedOn,DemandDesc,IsClosed,DemandStatusDescription`;
         return this._dataService.Query()
             .Expand('RequesterDepartment($select=DepartmentName)')
-            .Filter(`IncidentId eq ${incidentId} and ActiveFlag eq 'Active' and
-             ${departmentIdProjection}`)
+            .Filter(`IncidentId eq ${incidentId} and ActiveFlag eq 'Active' and ${departmentIdProjection}`)
             .Select(`${demandprojection}`)
             .Execute();
 
     }
 
-    public GetDemandByRequesterDepartment(incidentId: number, departmentIdProjection: string): Observable<ResponseModel<DemandModel>> {
+    public GetDemandByRequesterDepartments(incidentId: number, departmentIdProjection: string): Observable<ResponseModel<DemandModel>> {
         let demandprojection: string = `DemandId,RequesterDepartmentId,IsClosed,ClosedOn,ScheduleTime,CreatedOn,DemandDesc`;
         return this._dataService.Query()
             .Expand('TargetDepartment($select=DepartmentId,DepartmentName)')
-            .Filter(`IncidentId eq ${incidentId} and ActiveFlag eq 'Active' and
-             ${departmentIdProjection}`)
+            .Filter(`IncidentId eq ${incidentId} and ActiveFlag eq 'Active' and ${departmentIdProjection}`)
+            .Select(`${demandprojection}`)
+            .Execute();
+
+    }
+
+    public GetDemandByIncident(incidentId: number): Observable<ResponseModel<DemandModel>> {
+        let demandprojection: string = `DemandId,RequesterDepartmentId,TargetDepartmentId,IsClosed,ClosedOn,ScheduleTime,CreatedOn,DemandDesc`;
+        return this._dataService.Query()
+             .Expand('TargetDepartment($select=DepartmentId,DepartmentName),RequesterDepartment($select=DepartmentId,DepartmentName)')
+            .Filter(`IncidentId eq ${incidentId} and ActiveFlag eq 'Active'`)
+            .Select(`${demandprojection}`)
+            .Execute();
+
+    }
+
+     public GetDemandByRequesterDepartment(incidentId: number, departmentId: number): Observable<ResponseModel<DemandModel>> {
+        let demandprojection: string = `DemandId,RequesterDepartmentId,TargetDepartmentId,IsClosed,ClosedOn,ScheduleTime,CreatedOn,DemandDesc`;
+        return this._dataService.Query()
+             .Expand('TargetDepartment($select=DepartmentId,DepartmentName),RequesterDepartment($select=DepartmentId,DepartmentName)')
+            .Filter(`IncidentId eq ${incidentId} and ActiveFlag eq 'Active' and RequesterDepartmentId eq ${departmentId}`)
+            .Select(`${demandprojection}`)
+            .Execute();
+
+    }
+
+    public GetDemandByTargetDepartment(incidentId: number, departmentId: number): Observable<ResponseModel<DemandModel>> {
+        let demandprojection: string = `DemandId,RequesterDepartmentId,TargetDepartmentId,IsClosed,ClosedOn,ScheduleTime,CreatedOn,DemandDesc`;
+        return this._dataService.Query()
+             .Expand('TargetDepartment($select=DepartmentId,DepartmentName),RequesterDepartment($select=DepartmentId,DepartmentName)')
+            .Filter(`IncidentId eq ${incidentId} and ActiveFlag eq 'Active' and TargetDepartmentId eq ${departmentId}`)
             .Select(`${demandprojection}`)
             .Execute();
 

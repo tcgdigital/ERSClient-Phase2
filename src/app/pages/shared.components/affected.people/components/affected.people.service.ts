@@ -19,6 +19,8 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     private _dataServiceAffectedPeople: DataService<AffectedPeopleModel>;
     private _bulkDataService: DataService<AffectedPeopleModel>;
     private _casualtySummery: CasualtySummeryModel;
+
+    public affectedPeoples: ResponseModel<AffectedPeopleModel>;
     /**
      * Creates an instance of AffectedPeopleService.
      * @param {DataServiceFactory} dataServiceFactory 
@@ -40,6 +42,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
         let affected: AffectedModel;
         if (involvedParty != null) {
             affected = UtilityService.pluck(involvedParty, ['Affecteds'])[0][0];
+
             if (affected != null) {
                 affectedPeople = UtilityService.pluck(affected, ['AffectedPeople'])[0];
 
@@ -157,11 +160,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
                 this._casualtySummery.criticalCasualtyCount = dataCriticalPeopleCount;
                 return this._casualtySummery;
             });
-        // .flatMap(() => this.GetImmediateCarePeopleCount(incidentId))
-        // .map((dataImmediateCarePeopleCount: number) => {
-        //     this._casualtySummery.immediateCareCasualtyCount = dataImmediateCarePeopleCount;
-        //     return this._casualtySummery;
-        // });
+
     }
 
 

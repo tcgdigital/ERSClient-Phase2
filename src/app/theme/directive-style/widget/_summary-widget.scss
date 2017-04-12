@@ -27,6 +27,10 @@
     span {
         font-family: $font-family-widget;
         font-size: 30px;
+        &.marker{
+            text-decoration: overline;
+            cursor: pointer;
+        }
     }
     i {
         display: none;
@@ -41,11 +45,37 @@
     font-size: 10px;
     padding-left: 1px;
     line-height: 13px;
+    &.view-all-style {
+        padding-top: 12px;
+        font-weight: bold;
+        padding-top: 12px;
+        font-weight: bold;
+        font-size: 11px;
+        text-decoration: underline;
+        cursor: pointer;
+    }
 }
 
 .widget-layout-fix {
     padding-right: 0 !important;
     padding-top: 15px !important;
+}
+
+.statusRed, .statusGreen, .statusAmber {
+    border-radius: 20px;
+    float: left;
+    height: 12px;
+    margin-left: 10px;
+    width: 12px;
+}
+.statusRed{
+    background: $rag-red none repeat scroll 0 0;
+}
+.statusGreen {
+    background: $rag-green none repeat scroll 0 0;
+}
+.statusAmber {
+    background: $rag-amber none repeat scroll 0 0;
 }
 
 @media screen and (max-width: $resXS-E) {

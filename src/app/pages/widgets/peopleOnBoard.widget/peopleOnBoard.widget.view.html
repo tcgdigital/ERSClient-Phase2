@@ -1,4 +1,3 @@
-
 <div class="row widget-container no-gutters">
     <div class="col-12">
         <div class="row no-gutters">
@@ -10,30 +9,233 @@
             <div class="col widget-block">
                 <span class="widget-number">
                     <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
-                    <span>{{peopleOnBoard.enquiredAffectedPassengerCount | padding: '0': 2}}</span>
+                    <span class="marker" (click)="openAllPassengersDetails()">{{peopleOnBoard.totalAffectedPassengerCount | padding: '0': 2}}</span>
                 </span>
                 <span class="widget-text">total passengers</span>
             </div>
             <div class="col widget-block">
                 <span class="widget-number">
                     <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
-                    <span>{{peopleOnBoard.totalAffectedPassengerCount | padding: '0': 2}}</span>
+                    <span class="marker" (click)="openEnquiredPassengersDetails()">{{peopleOnBoard.enquiredAffectedPassengerCount | padding: '0': 2}}</span>
                 </span>
                 <span class="widget-text">enquired passengers</span>
             </div>
             <div class="col widget-block">
                 <span class="widget-number">
                     <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
-                    <span>{{peopleOnBoard.enquiredAffectedCrewCount | padding: '0': 2}}</span>
+                    <span class="marker" (click)="openAllCrewsDetails()">{{peopleOnBoard.totalAffectedCrewCount | padding: '0': 2}}</span>
                 </span>
                 <span class="widget-text">total crew members</span>
             </div>
             <div class="col widget-block">
                 <span class="widget-number">
                     <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
-                    <span>{{peopleOnBoard.totalAffectedCrewCount | padding: '0': 2}}</span>
+                    <span class="marker" (click)="openEnquiredCrewsDetails()">{{peopleOnBoard.enquiredAffectedCrewCount | padding: '0': 2}}</span>
                 </span>
                 <span class="widget-text">enquired crew</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--All Passengers Popup-->
+<div bsModal #childModalPassengers="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left"><strong>All Passengers</strong></h4>
+                <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideAllPassengers()"></i>
+            </div>
+            <div class="modal-body">
+                <responsive-table>
+                    <table responsive-table-body>
+                        <thead>
+                            <tr>
+                                <th>Passenge Name</th>
+                                <th>PNR</th>
+                                <th>Seat Number</th>
+                                <th>Baggage Count</th>
+                                <th>Destination</th>
+                                <th>Contact Number</th>
+                                <th>PAX Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr *ngFor="let passenger of passengerList | async">
+                                <td data-title="Passenge Name">{{passenger.PassengerName}}</td>
+                                <td data-title="PNR">{{passenger.Pnr}}</td>
+                                <td data-title="Seat Number">{{passenger.Seatno}}</td>
+                                <td data-title="Baggage Count">{{passenger.BaggageCount}}</td>
+                                <td data-title="Destination">{{passenger.Destination}}</td>
+                                <td data-title="Contact Number">{{passenger.ContactNumber}}</td>
+                                <td data-title="PAX Type">{{passenger.PassengerType}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </responsive-table>
+                <div class="pull-right">
+                    <button type="submit" class="pull-right btn btn-primary" aria-label="Close" (click)="hideAllPassengers()">Close</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<!--Enquired Passengers Popup-->
+<div bsModal #childModalEnquiredPassengers="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Enquired Passengers</h4>
+                <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideEnquiredPassengers()"></i>
+            </div>
+            <div class="modal-body">
+                <responsive-table>
+                    <table responsive-table-body>
+                        <thead>
+                            <tr>
+                                <th>Passenge Name</th>
+                                <th>PNR</th>
+                                <th>Seat Number</th>
+                                <th>Baggage Count</th>
+                                <th>Destination</th>
+                                <th>Contact Number</th>
+                                <th>PAX Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let passenger of affectedEnquiredPeoples | async">
+                                <td data-title="Passenge Name">{{passenger.PassengerName}}</td>
+                                <td data-title="PNR">{{passenger.Pnr}}</td>
+                                <td data-title="Seat Number">{{passenger.Seatno}}</td>
+                                <td data-title="Baggage Count">{{passenger.BaggageCount}}</td>
+                                <td data-title="Destination">{{passenger.Destination}}</td>
+                                <td data-title="Contact Number">{{passenger.ContactNumber}}</td>
+                                <td data-title="PAX Type">{{passenger.PassengerType}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </responsive-table>
+                <div class="pull-right">
+                    <button type="submit" class="pull-right btn btn-primary" aria-label="Close" (click)="hideEnquiredPassengers()">Close</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<!--All Crews Popup-->
+<div bsModal #childModalCrews="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left"><strong>All Crews</strong></h4>
+
+                <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideAllCrews()"></i>
+            </div>
+            <div class="modal-body">
+                <responsive-table>
+                    <table responsive-table-body>
+                        <thead>
+                            <tr>
+                                <th>Employee Number</th>
+                                <th>Employee Name</th>
+                                <th>Contact Number</th>
+                                <th>Assigned Category</th>
+                                <th>Operating Crew</th>
+                                <th>Base Location</th>
+                                <th>Departure Station</th>
+                                <th>Arrival Station</th>
+                                <th>Flight Number</th>
+                                <th>Work Position</th>
+                                <th>Email Id</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr *ngFor="let crew of crewList | async">
+                                <td data-title="Employee Number">{{crew.EmployeeNumber}}</td>
+                                <td data-title="Employee Name">{{crew.CrewName | uppercase}}</td>
+                                <td data-title="Contact Number">{{crew.ContactNumber}}</td>
+                                <td data-title="Assigned Category">{{crew.AsgCat}}</td>
+                                <td data-title="Operating Crew">{{crew.DeadheadCrew.toString().trim()=='' ? 'Yes':'No'}}</td>
+                                <td data-title="Base Location">{{crew.BaseLocation}}</td>
+                                <td data-title="Departure Station">{{crew.DepartureStationCode}}</td>
+                                <td data-title="Arrival Station">{{crew.ArrivalStationCode}}</td>
+                                <td data-title="Flight Number">{{crew.FlightNo}}</td>
+                                <td data-title="Work Position">{{crew.WorkPosition}}</td>
+                                <td data-title="Email Id">{{crew.Email}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </responsive-table>
+                <div class="pull-right">
+                    <button type="submit" class="pull-right btn btn-primary" aria-label="Close" (click)="hideAllCrews()">Close</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<!--Enquired Crews Popup-->
+<div bsModal #childModalEnquiredCrew="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left"><strong>Enquired Crews</strong></h4>
+                <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideEnquiredCrews()"></i>
+            </div>
+            <div class="modal-body">
+                <responsive-table>
+                    <table responsive-table-body>
+
+                        <thead>
+                            <tr>
+                                <th>Employee Number</th>
+                                <th>Employee Name</th>
+                                <th>Contact Number</th>
+                                <th>Assigned Category</th>
+                                <th>Operating Crew</th>
+                                <th>Base Location</th>
+                                <th>Departure Station</th>
+                                <th>Arrival Station</th>
+                                <th>Flight Number</th>
+                                <th>Work Position</th>
+                                <th>Email Id</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr *ngFor="let crew of affectedEnquiredCrews | async">
+                                <td data-title="Employee Number">{{crew.EmployeeNumber}}</td>
+                                <td data-title="Employee Name">{{crew.CrewName | uppercase}}</td>
+                                <td data-title="Contact Number">{{crew.ContactNumber}}</td>
+                                <td data-title="Assigned Category">{{crew.AsgCat}}</td>
+                                <td data-title="Operating Crew">{{crew.DeadheadCrew.toString().trim()=='' ? 'Yes':'No'}}</td>
+                                <td data-title="Base Location">{{crew.BaseLocation}}</td>
+                                <td data-title="Departure Station">{{crew.DepartureStationCode}}</td>
+                                <td data-title="Arrival Station">{{crew.ArrivalStationCode}}</td>
+                                <td data-title="Flight Number">{{crew.FlightNo}}</td>
+                                <td data-title="Work Position">{{crew.WorkPosition}}</td>
+                                <td data-title="Email Id">{{crew.Email}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </responsive-table>
+                <div class="pull-right">
+                    <button type="submit" class="pull-right btn btn-primary" aria-label="Close" (click)="hideEnquiredCrews()">Close</button>
+                </div>
             </div>
         </div>
     </div>

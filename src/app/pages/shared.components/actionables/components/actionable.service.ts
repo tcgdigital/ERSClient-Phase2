@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
-
+import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
 import { ActionableModel } from './actionable.model';
 import { IActionableService } from './IActionableService';
 import {
@@ -15,13 +15,16 @@ import {
 export class ActionableService extends ServiceBase<ActionableModel> implements IActionableService {
     private _batchDataService: DataService<ActionableModel>;
     private _actionables: ResponseModel<ActionableModel>;
+    public departmentIds: number[];
+    public subDepartmentProjection: string;
     /**
      * Creates an instance of ActionableService.
      * @param {DataServiceFactory} dataServiceFactory 
      * 
      * @memberOf ActionableService
      */
-    constructor(private dataServiceFactory: DataServiceFactory) {
+    constructor(private dataServiceFactory: DataServiceFactory,
+        private departmentService: DepartmentService) {
         super(dataServiceFactory, 'Actionables');
         let option: DataProcessingService = new DataProcessingService();
 
@@ -36,6 +39,37 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
             .Expand('CheckList($select=CheckListId,CheckListCode)')
             .OrderBy("CreatedOn desc")
             .Execute();
+    }
+
+    public GetAllByIncident(incidentId: number): Observable<ResponseModel<ActionableModel>> {
+        return this._dataService.Query()
+            .Expand('CheckList($expand=TargetDepartment)')
+            .Filter(`IncidentId eq ${incidentId} and ActiveFlag eq 'Active'`)
+            .OrderBy("CreatedOn desc")
+            .Execute();
+
+    }
+
+    public GetAllByIncidentandSubDepartment(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
+        this.departmentIds = [];
+        return this.departmentService.GetAllActiveSubDepartments(departmentId)
+            .map((departmentResponse: ResponseModel<DepartmentModel>) => {
+                this.subDepartmentProjection = '';
+                departmentResponse.Records.forEach((itemDepartment: DepartmentModel, index: number) => {
+                    this.departmentIds.push(itemDepartment.DepartmentId);
+                    if (index == 0) {
+                        this.subDepartmentProjection = `DepartmentId eq ${itemDepartment.DepartmentId}`;
+                    }
+                    else {
+                        this.subDepartmentProjection = this.subDepartmentProjection + `or DepartmentId eq ${itemDepartment.DepartmentId}`;
+                    }
+                });
+            })
+            .flatMap((x) => this._dataService.Query()
+                .Expand('CheckList($expand=TargetDepartment)')
+                .Filter(`IncidentId eq ${incidentId} and ${this.subDepartmentProjection} and ActiveFlag eq 'Active'`)
+                .OrderBy("CreatedOn desc")
+                .Execute());
     }
 
     public GetAllOpenByIncidentIdandDepartmentId(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {

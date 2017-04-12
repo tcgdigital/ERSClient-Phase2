@@ -25,8 +25,9 @@ export interface IDemandService extends ServiceBase<DemandModel> {
 
     GetDepartmentIdProjection(departmentId: number): Observable<ResponseModel<DepartmentAccessOwnerModel>>;
 
-    GetDemandByTargetDepartment(incidentId: number, departmentIdProjection: string): Observable<ResponseModel<DemandModel>>;
+    GetDemandByTargetDepartments(incidentId: number, departmentIdProjection: string): Observable<ResponseModel<DemandModel>>;
 
-    GetDemandByRequesterDepartment(incidentId: number, departmentIdProjection: string): Observable<ResponseModel<DemandModel>>;
+    GetDemandByRequesterDepartments(incidentId: number, departmentIdProjection: string): Observable<ResponseModel<DemandModel>>;
 
+    GetDemandByRequesterDepartment(incidentId: number, departmentId: number): Observable<ResponseModel<DemandModel>>;
 }
