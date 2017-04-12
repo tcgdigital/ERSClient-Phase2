@@ -65,11 +65,19 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
                     }
                 });
             })
-            .flatMap((x) => this._dataService.Query()
-                .Expand('CheckList($expand=TargetDepartment)')
-                .Filter(`IncidentId eq ${incidentId} and ${this.subDepartmentProjection} and ActiveFlag eq 'Active'`)
-                .OrderBy("CreatedOn desc")
-                .Execute());
+            .flatMap((x) => {
+                if (this.subDepartmentProjection == '') {
+                    return Observable.of();
+                }
+                else {
+                    return this._dataService.Query()
+                        .Expand('CheckList($expand=TargetDepartment)')
+                        .Filter(`IncidentId eq ${incidentId} and ${this.subDepartmentProjection} and ActiveFlag eq 'Active'`)
+                        .OrderBy("CreatedOn desc")
+                        .Execute()
+                }
+
+            });
     }
 
     public GetAllOpenByIncidentIdandDepartmentId(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
@@ -83,10 +91,10 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
                 this._actionables.Records.forEach(element => {
                     element.Active = (element.ActiveFlag == 'Active');
                     element.Done = false;
-                   // element.IsDisabled = false;
+                    // element.IsDisabled = false;
                     element.show = false;
-                   // if (element.CheckList.ParentCheckListId != null) {
-                     //   element.IsDisabled = true;
+                    // if (element.CheckList.ParentCheckListId != null) {
+                    //   element.IsDisabled = true;
                     //}
                     element.RagColor = this.setRagColor(element.AssignedDt, element.ScheduleClose);
                 });

@@ -35,6 +35,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     };
     showInsert: boolean = null;
     isFlightRelated: boolean = false;
+    isOffSet: boolean = false;
     buttonValue: String = '';
     incidentModel: IncidentModel = null;
     involvePartyModel: InvolvePartyModel = null;
@@ -44,6 +45,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     activeEmergencyTypes: EmergencyTypeModel[] = [];
     severities: KeyValue[] = [];
     incidentStatuses: KeyValue[] = [];
+    affectedStations: KeyValue[] = [];
     public form: FormGroup;
 
     /**
@@ -62,17 +64,38 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.showInsert = true;
         this.severities = UtilityService.GetKeyValues(Severity);
         this.incidentStatuses = UtilityService.GetKeyValues(IncidentStatus);
+
+        this.affectedStations = [
+            new KeyValue('Offset', 1),
+            new KeyValue('Airport1', 2),
+            new KeyValue('Airport2', 3),
+            new KeyValue('Airport3', 4),
+            new KeyValue('Airport4', 5),
+            new KeyValue('Airport5', 6),
+            new KeyValue('Airport6', 7),
+            new KeyValue('Airport7', 8),
+            new KeyValue('Airport8', 9),
+            new KeyValue('Airport9', 10),
+            new KeyValue('Airport10', 11),
+            new KeyValue('Airport11', 12),
+            new KeyValue('Airport12', 13),
+            new KeyValue('Airport13', 14),
+            new KeyValue('Airport14', 15)
+        ]
     }
 
     initiateIncidentModel(): void {
+        debugger;
         this.incidentModel = new IncidentModel();
         this.incidentModel.IncidentStatus = UtilityService.GetKeyValues(IncidentStatus)[0].Key;
         this.incidentModel.Severity = UtilityService.GetKeyValues(Severity)[0].Key;
     }
 
     getAllActiveEmergencyTypes(): void {
+        debugger;
         this.emergencyTypeService.GetAll()
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
+                debugger;
                 this.activeEmergencyTypes = response.Records;
             }, (error: any) => {
                 console.log(`Error: ${error}`);
@@ -80,11 +103,25 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     emergencyTypeChange(emergencyTypeId: string, emergencyTypes: EmergencyTypeModel[]): void {
+        debugger;
         let emergencyType: EmergencyTypeModel = emergencyTypes
             .find((x: EmergencyTypeModel) => x.EmergencyTypeId === +emergencyTypeId);
-        this.isFlightRelated = false;
+        
         if (emergencyType !== undefined && emergencyType.EmergencyCategory === 'FlightRelated') {
             this.isFlightRelated = true;
+        }
+    }
+
+    affectedStationChange(affectedStationId: string, affectedStations: KeyValue[]): void {
+        debugger;
+        let affectedStation: KeyValue = affectedStations
+            .find((x: KeyValue) => x.Value === +affectedStationId);
+        
+        if (affectedStation !== undefined && affectedStation.Key === 'Offset') {
+            this.isOffSet = true;
+        }
+        else{
+            this.isOffSet = false;
         }
     }
 
@@ -93,6 +130,9 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): any {
+        debugger;
+        this.isFlightRelated = false;
+        this.isOffSet = false;
         this.initiateIncidentModel();
         this.getAllActiveEmergencyTypes();
         this.resetIncidentForm();
@@ -108,17 +148,20 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     resetIncidentForm(): void {
+        debugger;
         this.form = new FormGroup({
             IncidentId: new FormControl(0),
             IsDrill: new FormControl(false),
             EmergencyTypeId: new FormControl('0'),
+            AffectedStationId: new FormControl('0'),
+            OffsiteDetails:new  FormControl(''),
             EmergencyName: new FormControl(''),
             AlertMessage: new FormControl(''),
             Description: new FormControl(''),
-            ClosureNote: new FormControl(''),
+            EmergencyDate: new FormControl(''),
             Severity: new FormControl('0'),
-            EmergencyLocation: new FormControl(''),
-            Remarks: new FormControl(''),
+            //EmergencyLocation: new FormControl(''),
+            //Remarks: new FormControl(''),
             FlightNumber: new FormControl(''),
             Origin: new FormControl(''),
             Destination: new FormControl(''),
@@ -129,6 +172,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(values: Object): void {
+        debugger;
         if (this.form.controls['EmergencyTypeId'].value !== '0' && this.form.controls['Severity'].value !== '0') {
             this.createIncidentModel();
             if (this.isFlightRelated) {
@@ -154,6 +198,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
 
     fillIncidentDataExchangeModelData(incidentModel: IncidentModel,
         involvedPartyModel?: InvolvePartyModel, flightModel?: FlightModel): void {
+        debugger;
         this.incidentDataExchangeModel = new IncidentDataExchangeModel();
         this.incidentDataExchangeModel.IncidentModel = incidentModel;
         this.incidentDataExchangeModel.InvolvedPartyModel = involvedPartyModel;
@@ -165,6 +210,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     createInvolvePartyModel(isFlightRelated: boolean): void {
+        debugger;
         this.involvePartyModel = new InvolvePartyModel();
         this.involvePartyModel.InvolvedPartyId = 0;
         this.involvePartyModel.IncidentId = 0;
@@ -182,6 +228,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     createFlightModel(): void {
+        debugger;
         this.flightModel = new FlightModel();
         this.flightModel.FlightId = 0;
         this.flightModel.InvolvedPartyId = 0;
@@ -198,6 +245,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     createIncidentModel(): void {
+        debugger;
         this.initiateIncidentModel();
         this.incidentModel.IsDrill = this.form.controls['IsDrill'].value;
         this.incidentModel.EmergencyTypeId = Number(this.form.controls['EmergencyTypeId'].value);

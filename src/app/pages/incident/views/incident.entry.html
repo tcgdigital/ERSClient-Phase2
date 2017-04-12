@@ -1,146 +1,185 @@
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>-->
-<div [hidden]="!showInsert">
-    <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
-        <input id="IncidentId" class="form-control" type="hidden" name="IncidentId" formControlName="IncidentId" [(ngModel)]="incidentModel.IncidentId"
-        />
-        <div class="col-sm-3">
-            <div class="form-control">
-                <label for="IsDrill">IsDrill:<span class="red">*</span></label>
-                <md-checkbox class="Marght" id="IsDrill" name="IsDrill" formControlName="IsDrill" [ngModel]="incidentModel.IsDrill" (change)="IsDrill($event)"
-                    aria-label="Drill">
-                </md-checkbox>
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="form-control">
-                <label for="EmergencyType">EmergencyType:<span class="red">*</span></label>
-                <select id="selectApprover" formControlName="EmergencyTypeId" name="EmergencyTypeId" (change)="emergencyTypeChange($event.target.value,activeEmergencyTypes)">
-                    <option value="0" >Select Emergency Type</option>
-                    <option *ngFor="let emergencyType of activeEmergencyTypes" 
-                    [value]="emergencyType.EmergencyTypeId" >
-                    {{emergencyType.EmergencyTypeName}}
-                    </option>
-                </select>
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="form-control">
-                <label for="EmergencyName">EmergencyName:<span class="red">*</span></label>
-                <input id="EmergencyName" class="form-control" type="text" name="EmergencyName" formControlName="EmergencyName" placeholder="Enter Emergency Name"
-                />
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="form-control">
-                <label for="AlertMessage">AlertMessage:<span class="red">*</span></label>
-                <input id="AlertMessage" class="form-control" type="text" name="AlertMessage" formControlName="AlertMessage" placeholder="Enter Alert Message"
-                />
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="form-control">
-                <label for="Description">Description:<span class="red">*</span></label>
-                <input id="Description" class="form-control" type="text" name="Description" formControlName="Description" placeholder="Enter Description"
-                />
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="form-control">
-                <label for="ClosureNote">ClosureNote:<span class="red">*</span></label>
-                <input id="ClosureNote" class="form-control" type="text" name="ClosureNote" formControlName="ClosureNote" placeholder="Enter ClosureNote"
-                />
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="form-control">
-                <label for="ClosureNote">Date of Crisis:<span class="red">*</span>(UTC)</label>
-                <!--<air-datepicker [airOptions]="datePickerOption" [(airDate)]="date"></air-datepicker>-->
-                <input id="ClosureNote" class="form-control" type="text" name="ClosureNote" formControlName="ClosureNote" placeholder="Enter ClosureNote" datetime-picker
-                />
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="form-control">
-                <label for="Severity">Severity:<span class="red">*</span></label>
-                <select id="selectApprover" formControlName="Severity" name="Severity">
-                    <option value="0" >Select Severity</option>
-                        <option *ngFor="let severity of severities" [value]="severity.Key" >
-                        {{severity.Key}}
-                        </option>
-                    </select>
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="form-control">
-                <label for="EmergencyLocation">EmergencyLocation:<span class="red">*</span></label>
-                <input id="EmergencyLocation" class="form-control" type="text" name="EmergencyLocation" formControlName="EmergencyLocation"
-                    placeholder="Enter Emergency Location" />
-            </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="form-control">
-                <label for="Remarks">Remarks:<span class="red">*</span></label>
-                <input id="Remarks" class="form-control" type="text" name="Remarks" formControlName="Remarks" placeholder="Enter Remarks"
-                />
-            </div>
-        </div>
-        <div *ngIf="isFlightRelated">
-            <div class="form-control">
-                <label for="FlightInfo">Flight Information:</label>
-                <table>
-                    <tr>
-                        <td>
-                            <label for="FlightNumber">Flight Number*</label>
-                        </td>
-                        <td>
-                            <label for="Origin">Origin*</label>
-                        </td>
-                        <td>
-                            <label for="Destination">Destination*</label>
-                        </td>
-                        <td>
-                            <label for="Scheduleddeparture(UTC)">Scheduled departure (UTC)*</label>
-                        </td>
-                        <td>
-                            <label for="Scheduledarrival(UTC)">Scheduled arrival (UTC)*</label>
-                        </td>
-                        <td>
-                            <label for="FlightTailNumber">FlightTailNumber*</label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input id="FlightNumber" class="form-control" type="text" name="FlightNumber" formControlName="FlightNumber" placeholder="Enter FlightNumber"
+<style>
+    .textarea {
+        height: 121px;
+    }
+</style>
+<div class="row">
+    <div class="col-12">
+        <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+            <div class="card card-without-top-border noBorder">
+                <div class="card-header">
+                    <strong>Incident</strong>
+                    <div>
+                        <input id="IncidentId" type="hidden" name="IncidentId" formControlName="IncidentId" [(ngModel)]="incidentModel.IncidentId"
+                        />
+                        <label for="IsDrill">IsDrill:<span class="red">*</span></label>
+                        <md-checkbox id="IsDrill" name="IsDrill" formControlName="IsDrill" [ngModel]="incidentModel.IsDrill" (change)="IsDrill($event)"
+                            aria-label="Drill">
+                        </md-checkbox>
+                    </div>
+                </div>
+                <div class="card-block">
+
+                    <div class="row">
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <label for="EmergencyType">EmergencyType:<span class="red">*</span></label>
+                            <select id="EmergencyTypeId" class="form-control" formControlName="EmergencyTypeId" name="EmergencyTypeId" (change)="emergencyTypeChange($event.target.value,activeEmergencyTypes)">
+                                    <option value="0" >Select Emergency Type</option>
+                                    <option *ngFor="let emergencyType of activeEmergencyTypes" [value]="emergencyType.EmergencyTypeId" >
+                                        {{emergencyType.EmergencyTypeName}}
+                                    </option>
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <label for="AffectedStation">Affected Station:<span class="red">*</span></label>
+                            <select id="AffectedStationId" class="form-control" formControlName="AffectedStationId" name="AffectedStationId" (change)="affectedStationChange($event.target.value,affectedStations)">
+                                    <option value="0" >Select Affected Station</option>
+                                    <option *ngFor="let affectedStation of affectedStations" [value]="affectedStation.Value" >
+                                        {{affectedStation.Key}}
+                                    </option>
+                            </select>
+                        </div>
+                        <div *ngIf="isOffSet" class="form-group col-lg-2 col-sm-12 col-md-6">
+                            <label for="OffsiteDetails">Offsite Details:<span class="red">*</span></label>
+                            <input id="OffsiteDetails" class="form-control" type="text" name="OffsiteDetails" formControlName="OffsiteDetails" placeholder="Enter Offsite Details"
                             />
-                        </td>
-                        <td>
-                            <input id="Origin" class="form-control" type="text" name="Origin" formControlName="Origin" placeholder="Enter Origin" />
-                        </td>
-                        <td>
-                            <input id="Destination" class="form-control" type="text" name="Destination" formControlName="Destination" placeholder="Enter Destination"
-                            />
-                        </td>
-                        <td>
-                            <input id="Scheduleddeparture" class="form-control" type="text" name="Scheduleddeparture" formControlName="Scheduleddeparture"
-                                placeholder="Enter Scheduled Departure" />
-                        </td>
-                        <td>
-                            <input id="Scheduledarrival" class="form-control" type="text" name="Scheduledarrival" formControlName="Scheduledarrival"
-                                placeholder="Enter Scheduled Arrival" />
-                        </td>
-                        <td>
-                            <input id="FlightTailNumber" class="form-control" type="text" name="FlightTailNumber" formControlName="FlightTailNumber"
-                                placeholder="Enter Flight Tail Number" />
-                        </td>
-                    </tr>
-                </table>
+                        </div>
+                        <div class="form-group col-lg-2 col-sm-12 col-md-6">
+                            <label for="EmergencyDate">Date of Crisis:<span class="red">*</span>(UTC)</label>
+                            <input id="EmergencyDate" class="form-control" type="text" name="EmergencyDate" formControlName="EmergencyDate" placeholder="Enter EmergencyDate"
+                                datetime-picker />
+
+                        </div>
+                        <div class="form-group col-lg-2 col-sm-12 col-md-6">
+                            <label for="Severity">Severity:<span class="red">*</span></label>
+                            <select id="selectApprover" class="form-control" formControlName="Severity" name="Severity">
+                                    <option value="0" >Select Severity</option>
+                                    <option *ngFor="let severity of severities" [value]="severity.Key" >
+                                        {{severity.Key}}
+                                    </option>
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="EmergencyName">Emergency Name:<span class="red">*</span></label>
+                                <input id="EmergencyName" class="form-control" type="text" name="EmergencyName" formControlName="EmergencyName" placeholder="Enter Emergency Name"
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label for="AlertMessage">Dashboard Alert Message:<span class="red">*</span></label>
+                                <input id="AlertMessage" class="form-control" type="text" name="AlertMessage" formControlName="AlertMessage" placeholder="Enter Alert Message"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-9 col-sm-12 col-md-6">
+                            <label for="Description">Note:<span class="red">*</span></label>
+                            <textarea id="Description" class="form-control textarea" type="text" name="Description" formControlName="Description" placeholder="Enter Description"></textarea>
+                        </div>
+
+                    </div>
+
+                    <div class="card" *ngIf=" isFlightRelated ">
+                        <div class="card-header ">
+                            <strong>Flight Information:</strong>
+                        </div>
+                        <div class="card-block form-control">
+                            <div class="row">
+                                <div class="form-group col-lg-2 col-sm-12 col-md-6">
+                                    <label for="FlightNumber">Flight Number:<span class="red">*</span></label>
+                                    <input id="FlightNumber" class="form-control" type="text" name="FlightNumber" formControlName="FlightNumber" placeholder="Enter FlightNumber "
+                                    />
+                                </div>
+                                <div class="form-group col-lg-2 col-sm-12 col-md-6">
+                                    <label for="Origin">Origin:<span class="red">*</span></label>
+                                    <input id="Origin" class="form-control" type="text" name="Origin" formControlName="Origin" placeholder="Enter Origin" /></div>
+                                <div class="form-group col-lg-2 col-sm-12 col-md-6">
+                                    <label for="Destination">Destination:<span class="red">*</span></label>
+                                    <input id="Destination " class="form-control " type="text " name="Destination" formControlName="Destination " placeholder="Enter Destination "
+                                    />
+                                </div>
+                                <div class="form-group col-lg-2 col-sm-12 col-md-6">
+                                    <label for="Scheduleddeparture(UTC)">Scheduled departure (UTC):<span class="red">*</span></label>
+                                    <input id="Scheduleddeparture " class="form-control " type="text " name="Scheduleddeparture" formControlName="Scheduleddeparture "
+                                        placeholder="Enter Scheduled Departure " />
+
+                                </div>
+                                <div class="form-group col-lg-2 col-sm-12 col-md-6">
+                                    <label for="Scheduledarrival(UTC)">Scheduled arrival (UTC):<span class="red">*</span></label>
+                                    <input id="Scheduledarrival " class="form-control " type="text " name="Scheduledarrival" formControlName="Scheduledarrival "
+                                        placeholder="Enter Scheduled Arrival " />
+
+                                </div>
+                                <div class="form-group col-lg-2 col-sm-12 col-md-6">
+                                    <label for="FlightTailNumber">FlightTailNumber:<span class="red">*</span></label>
+                                    <input id="FlightTailNumber " class="form-control " type="text " name="FlightTailNumber" formControlName="FlightTailNumber "
+                                        placeholder="Enter Flight Tail Number " />
+
+                                </div>
+
+                            </div>
+
+                            <!--<table>
+                                <tr>
+                                    <td>
+                                        <label for="FlightNumber ">Flight Number*</label>
+                                    </td>
+                                    <td>
+                                        <label for="Origin ">Origin*</label>
+                                    </td>
+                                    <td>
+                                        <label for="Destination ">Destination*</label>
+                                    </td>
+                                    <td>
+                                        <label for="Scheduleddeparture(UTC) ">Scheduled departure (UTC)*</label>
+                                    </td>
+                                    <td>
+                                        <label for="Scheduledarrival(UTC) ">Scheduled arrival (UTC)*</label>
+                                    </td>
+                                    <td>
+                                        <label for="FlightTailNumber ">FlightTailNumber*</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input id="FlightNumber " class="form-control " type="text " name="FlightNumber" formControlName="FlightNumber " placeholder="Enter FlightNumber "
+                                        />
+                                    </td>
+                                    <td>
+                                        <input id="Origin " class="form-control " type="text " name="Origin" formControlName="Origin " placeholder="Enter Origin "
+                                        />
+                                    </td>
+                                    <td>
+                                        <input id="Destination " class="form-control " type="text " name="Destination" formControlName="Destination " placeholder="Enter Destination "
+                                        />
+                                    </td>
+                                    <td>
+                                        <input id="Scheduleddeparture " class="form-control " type="text " name="Scheduleddeparture" formControlName="Scheduleddeparture "
+                                            placeholder="Enter Scheduled Departure " />
+                                    </td>
+                                    <td>
+                                        <input id="Scheduledarrival " class="form-control " type="text " name="Scheduledarrival" formControlName="Scheduledarrival "
+                                            placeholder="Enter Scheduled Arrival " />
+                                    </td>
+                                    <td>
+                                        <input id="FlightTailNumber " class="form-control " type="text " name="FlightTailNumber" formControlName="FlightTailNumber "
+                                            placeholder="Enter Flight Tail Number " />
+                                    </td>
+                                </tr>
+                            </table>-->
+                        </div>
+                    </div>
+                    <div class="col-sm-3 ">
+                        <div class="fromtop1 ">
+                            <button class="btn btn-primary " [disabled]="!form.valid " type="submit ">Save</button>
+                            <button class="btn btn-warning " type="button " (click)="cancel() ">Cancel</button>
+                        </div>
+                    </div>
+
+                </div>
             </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="fromtop1">
-                <button class="btn btn-primary" [disabled]="!form.valid" type="submit">Save</button>
-                <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
