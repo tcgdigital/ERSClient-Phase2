@@ -4,6 +4,7 @@
         <div class="panel-body InnerHolder">
             <input type="hidden" *ngIf="media.MediaqueryId != undefined" [(ngModel)]="media.MediaqueryId" formControlName="MediaqueryId">
             <div class="AllSearchHolder">
+                <div class="row">
                <div class="col-sm-6 col-lg-4 col-md-6">
                     <div class="form-group">
                         <label for="Message">Media Releases:<span class="red">*</span></label><span class="MaxChartr">Max 500 chars</span>
@@ -18,12 +19,11 @@
                             placeholder="Enter Remarks" [(ngModel)]="media.Remarks" required autofocus></textarea>
                     </div>
                 </div>
+                </div>
                 <div class="col-sm-6 col-lg-4 col-md-6">
-                    <div class="fromtop1">
                         <button class="btn btn-primary"  (click)="publish()" [disabled]="media.IsPublished">Publish</button>
                         <button class="btn btn-warning"  (click)="cancel()">Cancel</button>
                         <button class="btn btn-primary"  (click)="save()" [disabled]="media.IsPublished">Save</button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -32,5 +32,5 @@
 </div>
 
 <div class="addbuttonHolder">
-<button class="btn btn-primary" type="submit" (click)="showAddRegion(showAdd)" [disabled]="media.IsPublished">Add New President's Message to publish</button>
+<button class="btn btn-primary" type="submit" (click)="showAddRegion(showAdd)" [disabled]="media.IsPublished">Add New Media Release</button>
 </div>

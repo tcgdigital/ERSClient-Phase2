@@ -55,12 +55,18 @@
             </div>
             <div class="modal-body">
                 <div class="holderStyle">
-                    <div class="col-sm-12">
+                    <div class="col-lg-8 col-sm-12 col-md-12 form-group">
                         <label>Remarks</label>
-                        <input [(ngModel)]="Remarks" type="text" />
+                        <input [(ngModel)]="Remarks" class="form-control" type="text" />
                     </div>
-                    <button class="btn btn-primary" type="button" (click)="saveRemark(Remarks)">Save</button>
-                    <button class="btn btn-primary" type="button" (click)="cancelRemarkUpdate()">Cancel</button>
+                    <div class="col-12 form-group">
+                        <div class="buttonholder">
+                            <button class="btn btn-primary" type="button" (click)="saveRemark(Remarks)">Save</button>
+                            <button class="btn btn-primary" type="button" (click)="cancelRemarkUpdate()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-block">
                     <responsive-table>
                         <table responsive-table-body>
                             <thead>
@@ -83,8 +89,7 @@
                         </table>
                     </responsive-table>
                 </div>
-            </div>
         </div>
     </div>
 </div>
-
+</div>
