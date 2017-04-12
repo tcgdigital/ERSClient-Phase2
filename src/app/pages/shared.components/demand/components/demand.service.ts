@@ -65,7 +65,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
     public GetByRequesterDepartment(requesterDeptId: number, incidentId: number): Observable<ResponseModel<DemandModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq  ${incidentId} and RequesterDepartmentId eq ${requesterDeptId}`)
-            .Expand('TargetDepartment($select=DepartmentName) , DemandType($select=DemandTypeName)')
+            .Expand('TargetDepartment($select=DepartmentName) , DemandType($select=DemandTypeName) ,RequesterDepartment($select=DepartmentName)')
             .Execute();
     };
 
@@ -96,7 +96,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
             item.DemandId = demand.DemandId;
             item.DemandTypeName = demand.DemandType.DemandTypeName;
             item.DemandDesc = demand.DemandDesc;
-            item.RequesterDepartmentName = (!demand.RequesterDepartment) ? "" : demand.RequesterDepartment.DepartmentName;
+            item.RequesterDepartmentName = (!demand.RequesterDepartment) ? " " : demand.RequesterDepartment.DepartmentName;
             item.RequesterParentDepartmentName = (!demand.RequesterParentDepartment) ? "" : demand.RequesterParentDepartment.DepartmentName;
             item.Priority = demand.Priority;
             item.RequiredLocation = demand.RequiredLocation;
