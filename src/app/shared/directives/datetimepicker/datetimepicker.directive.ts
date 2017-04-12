@@ -39,6 +39,7 @@ export class DateTimePickerDirective implements AfterViewInit {
 
     public ngAfterViewInit(): void {
         let $self: JQuery = jQuery(this.elementRef.nativeElement);
+        this.addPickerIcon($self);
         let options: DateTimePickerOptions = Object.assign(new DateTimePickerOptions(), this.options);
 
         options.onSelect = (formattedDate: string, date: Date | Array<Date>, inst: Object) => {
@@ -78,6 +79,20 @@ export class DateTimePickerDirective implements AfterViewInit {
             this.renderCellHandler.emit(args);
         };
 
-        $self.datepicker(options);
+        let datePicker = $self.datepicker(options).data('datepicker');
+
+        $('.input-group-addon').on('click', function () {
+            if (datePicker) {
+                datePicker.show();
+            }
+        })
+    }
+
+    private addPickerIcon($element: JQuery): void {
+        $element.wrap('<div class="input-group date"></div>');
+        let $root: JQuery = $element.closest('.input-group');
+        $root.append(`<span class="input-group-addon">
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                    </span>`);
     }
 }
