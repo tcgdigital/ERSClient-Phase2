@@ -160,7 +160,6 @@ export class MyDemandComponent implements OnInit {
     };
 
     openTrail(demand: DemandModelToView): void {
-        debugger;
         this.demandTypeName = demand.DemandTypeName;
         this.requesterDepartmentName = demand.RequesterDepartmentName;
         this.getDemandTrails(demand.DemandId);
