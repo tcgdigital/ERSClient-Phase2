@@ -1,8 +1,3 @@
-<style>
-    .textarea {
-        height: 121px;
-    }
-</style>
 <div class="row">
     <div class="col-12">
         <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
@@ -12,10 +7,10 @@
                     <div>
                         <input id="IncidentId" type="hidden" name="IncidentId" formControlName="IncidentId" [(ngModel)]="incidentModel.IncidentId"
                         />
-                        <label for="IsDrill">IsDrill:<span class="red">*</span></label>
-                        <md-checkbox id="IsDrill" name="IsDrill" formControlName="IsDrill" [ngModel]="incidentModel.IsDrill" (change)="IsDrill($event)"
-                            aria-label="Drill">
+                        <md-checkbox md-no-ink id="IsDrill" name="IsDrill" formControlName="IsDrill" [ngModel]="incidentModel.IsDrill" (change)="IsDrill($event)"
+                            aria-label="Drill">IsDrill:<span class="red">*</span>
                         </md-checkbox>
+
                     </div>
                 </div>
                 <div class="card-block">
@@ -30,7 +25,7 @@
                                     </option>
                             </select>
                         </div>
-                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                        <div class="form-group col-lg-2 col-sm-12 col-md-6">
                             <label for="AffectedStation">Affected Station:<span class="red">*</span></label>
                             <select id="AffectedStationId" class="form-control" formControlName="AffectedStationId" name="AffectedStationId" (change)="affectedStationChange($event.target.value,affectedStations)">
                                     <option value="0" >Select Affected Station</option>
@@ -44,7 +39,7 @@
                             <input id="OffsiteDetails" class="form-control" type="text" name="OffsiteDetails" formControlName="OffsiteDetails" placeholder="Enter Offsite Details"
                             />
                         </div>
-                        <div class="form-group col-lg-2 col-sm-12 col-md-6">
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="EmergencyDate">Date of Crisis:<span class="red">*</span>(UTC)</label>
                             <input id="EmergencyDate" class="form-control" type="text" name="EmergencyDate" formControlName="EmergencyDate" placeholder="Enter EmergencyDate"
                                 datetime-picker />
@@ -81,7 +76,7 @@
 
                     </div>
 
-                    <div class="card" *ngIf=" isFlightRelated ">
+                    <div class="card" *ngIf="isFlightRelated">
                         <div class="card-header ">
                             <strong>Flight Information:</strong>
                         </div>
@@ -89,86 +84,36 @@
                             <div class="row">
                                 <div class="form-group col-lg-2 col-sm-12 col-md-6">
                                     <label for="FlightNumber">Flight Number:<span class="red">*</span></label>
-                                    <input id="FlightNumber" class="form-control" type="text" name="FlightNumber" formControlName="FlightNumber" placeholder="Enter FlightNumber "
+                                    <input id="FlightNumber" class="form-control" type="text" name="FlightNumber" formControlName="FlightNumber" placeholder="FlightNumber"
                                     />
                                 </div>
                                 <div class="form-group col-lg-2 col-sm-12 col-md-6">
                                     <label for="Origin">Origin:<span class="red">*</span></label>
-                                    <input id="Origin" class="form-control" type="text" name="Origin" formControlName="Origin" placeholder="Enter Origin" /></div>
+                                    <input id="Origin" class="form-control" type="text" name="Origin" formControlName="Origin" placeholder="Origin" />
+                                </div>
                                 <div class="form-group col-lg-2 col-sm-12 col-md-6">
                                     <label for="Destination">Destination:<span class="red">*</span></label>
-                                    <input id="Destination " class="form-control " type="text " name="Destination" formControlName="Destination " placeholder="Enter Destination "
+                                    <input id="Destination" class="form-control" type="text" name="Destination" formControlName="Destination" placeholder="Destination"
                                     />
                                 </div>
                                 <div class="form-group col-lg-2 col-sm-12 col-md-6">
-                                    <label for="Scheduleddeparture(UTC)">Scheduled departure (UTC):<span class="red">*</span></label>
-                                    <input id="Scheduleddeparture " class="form-control " type="text " name="Scheduleddeparture" formControlName="Scheduleddeparture "
-                                        placeholder="Enter Scheduled Departure " />
+                                    <label for="Scheduleddeparture(UTC)">Scheduled departure:<span class="red">*</span></label>
+                                    <input id="Scheduleddeparture" class="form-control" type="text" name="Scheduleddeparture" formControlName="Scheduleddeparture"
+                                        placeholder="Scheduled Departure" datetime-picker />
 
                                 </div>
                                 <div class="form-group col-lg-2 col-sm-12 col-md-6">
-                                    <label for="Scheduledarrival(UTC)">Scheduled arrival (UTC):<span class="red">*</span></label>
-                                    <input id="Scheduledarrival " class="form-control " type="text " name="Scheduledarrival" formControlName="Scheduledarrival "
-                                        placeholder="Enter Scheduled Arrival " />
+                                    <label for="Scheduledarrival(UTC)">Scheduled arrival:<span class="red">*</span></label>
+                                    <input id="Scheduledarrival" class="form-control" type="text" name="Scheduledarrival" formControlName="Scheduledarrival"
+                                        placeholder="Scheduled Arrival" datetime-picker />
 
                                 </div>
                                 <div class="form-group col-lg-2 col-sm-12 col-md-6">
                                     <label for="FlightTailNumber">FlightTailNumber:<span class="red">*</span></label>
-                                    <input id="FlightTailNumber " class="form-control " type="text " name="FlightTailNumber" formControlName="FlightTailNumber "
-                                        placeholder="Enter Flight Tail Number " />
-
+                                    <input id="FlightTailNumber" class="form-control" type="text" name="FlightTailNumber" formControlName="FlightTailNumber"
+                                        placeholder="Flight Tail Number" />
                                 </div>
-
                             </div>
-
-                            <!--<table>
-                                <tr>
-                                    <td>
-                                        <label for="FlightNumber ">Flight Number*</label>
-                                    </td>
-                                    <td>
-                                        <label for="Origin ">Origin*</label>
-                                    </td>
-                                    <td>
-                                        <label for="Destination ">Destination*</label>
-                                    </td>
-                                    <td>
-                                        <label for="Scheduleddeparture(UTC) ">Scheduled departure (UTC)*</label>
-                                    </td>
-                                    <td>
-                                        <label for="Scheduledarrival(UTC) ">Scheduled arrival (UTC)*</label>
-                                    </td>
-                                    <td>
-                                        <label for="FlightTailNumber ">FlightTailNumber*</label>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input id="FlightNumber " class="form-control " type="text " name="FlightNumber" formControlName="FlightNumber " placeholder="Enter FlightNumber "
-                                        />
-                                    </td>
-                                    <td>
-                                        <input id="Origin " class="form-control " type="text " name="Origin" formControlName="Origin " placeholder="Enter Origin "
-                                        />
-                                    </td>
-                                    <td>
-                                        <input id="Destination " class="form-control " type="text " name="Destination" formControlName="Destination " placeholder="Enter Destination "
-                                        />
-                                    </td>
-                                    <td>
-                                        <input id="Scheduleddeparture " class="form-control " type="text " name="Scheduleddeparture" formControlName="Scheduleddeparture "
-                                            placeholder="Enter Scheduled Departure " />
-                                    </td>
-                                    <td>
-                                        <input id="Scheduledarrival " class="form-control " type="text " name="Scheduledarrival" formControlName="Scheduledarrival "
-                                            placeholder="Enter Scheduled Arrival " />
-                                    </td>
-                                    <td>
-                                        <input id="FlightTailNumber " class="form-control " type="text " name="FlightTailNumber" formControlName="FlightTailNumber "
-                                            placeholder="Enter Flight Tail Number " />
-                                    </td>
-                                </tr>
-                            </table>-->
                         </div>
                     </div>
                     <div class="col-sm-3 ">
@@ -181,5 +126,26 @@
                 </div>
             </div>
         </form>
+    </div>
+</div>
+
+
+<div bsModal #childModalViewIncident="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <strong>Incident View</strong>
+        <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideIncidentView()"></i>
+            </div>
+            <div class="modal-body">
+                VIEW
+                <div class="pull-right">
+                    <button type="submit" class="pull-right btn btn-primary" aria-label="Close" (click)="hideIncidentView()">Close</button>
+                </div>
+            </div>
+
+        </div>
+
     </div>
 </div>

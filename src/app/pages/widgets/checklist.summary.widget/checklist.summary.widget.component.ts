@@ -113,13 +113,11 @@ export class ChecklistSummaryWidgetComponent implements OnInit {
     }
 
     public ViewSubDeptChecklist(callback?: Function): void {
-        debugger;
         let deptCheckListsLocal: DeptCheckListModel[] = [];
         let data: ActionableModel[] = [];
         let uniqueDepartments: DepartmentModel[] = [];
         this.checklistSummaryWidgetService.GetAllSubDepartmentChecklists(this.incidentId, this.departmentId)
             .subscribe((result: ResponseModel<ActionableModel>) => {
-                debugger;
                 result.Records.forEach((record) => {
                     data.push(record);
                 });
@@ -127,7 +125,6 @@ export class ChecklistSummaryWidgetComponent implements OnInit {
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             }, () => {
-                debugger;
                 //Getting unique departments from the acctionable>checklist>target department.
                 data.forEach((itemActionable: ActionableModel) => {
                     let department = uniqueDepartments.find(x => x.DepartmentId == itemActionable.CheckList.DepartmentId);
@@ -174,7 +171,6 @@ export class ChecklistSummaryWidgetComponent implements OnInit {
     }
 
     public openViewSubDeptChecklist(): void {
-        debugger;
         this.ViewSubDeptChecklist(() => {
             this.childModalViewSubDeptChecklist.show();
         });

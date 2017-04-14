@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MdCheckboxModule } from '@angular2-material/checkbox';
-
+import { ModalModule, ModalDirective } from 'ng2-bootstrap';
 import { IncidentRouting } from './incident.routing';
 import { IncidentComponent } from './incident.component';
 import { IncidentEntryComponent, IncidentViewComponent, IncidentService } from './components';
@@ -21,7 +21,8 @@ import { FlightModule, InvolvePartyModule } from '../shared.components';
         SharedModule,
         FlightModule,
         InvolvePartyModule,
-        IncidentRouting
+        IncidentRouting,
+        ModalModule.forRoot(),    
     ],
     declarations: [
         IncidentEntryComponent,

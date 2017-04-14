@@ -111,7 +111,6 @@ export class DemandReceivedSummaryWidgetService {
         let localDemandList: DemandModel[] = [];
         this.allDemands = [];
         this.subDepartments = [];
-        debugger;
         this.demandService.GetDemandByIncident(incidentId)
             .map((result: ResponseModel<DemandModel>) => {
                 result.Records.forEach((itemDemand: DemandModel) => {
@@ -125,7 +124,6 @@ export class DemandReceivedSummaryWidgetService {
                 });
             })
             .subscribe((x) => {
-                debugger;
                 if (this.subDepartments.length == 0) {
                     callback(this.demandReceivedModelList);
                 }
@@ -155,12 +153,10 @@ export class DemandReceivedSummaryWidgetService {
     }
 
     GetAllDepartmentDemandByIncident(incidentId: number, callback?: ((_: DemandReceivedModel[]) => void)): void {
-        debugger;
         this.demandReceivedModelList = [];
         let uniqueDepartments: DepartmentModel[] = [];
         this.demandService.GetDemandByIncident(incidentId)
             .subscribe((result: ResponseModel<DemandModel>) => {
-                debugger;
                 result.Records.forEach((itemDemand: DemandModel) => {
                     let department = uniqueDepartments.find(x => x.DepartmentId == itemDemand.TargetDepartmentId);
                     if (department == null) {
@@ -168,7 +164,6 @@ export class DemandReceivedSummaryWidgetService {
                     }
                 });
                 uniqueDepartments.forEach((itemDepartment: DepartmentModel) => {
-                    debugger;
                     let demandReceivedModel: DemandReceivedModel = new DemandReceivedModel();
                     let demandModels = result.Records.filter((item: DemandModel) => {
                         return item.RequesterDepartmentId == itemDepartment.DepartmentId;
@@ -191,10 +186,8 @@ export class DemandReceivedSummaryWidgetService {
     }
 
     public showAllDeptSubCompletedFunc(demandModelList: DemandModel[]): void {
-        debugger;
         this.allDeptDemandReceivedSummaries = [];
         demandModelList.forEach((item: DemandModel) => {
-            debugger;
             if (item.IsClosed == true) {
                 let allDeptDemandReceivedSummary: AllDeptDemandReceivedSummary = new AllDeptDemandReceivedSummary();
                 allDeptDemandReceivedSummary.description = item.DemandDesc;
@@ -238,7 +231,6 @@ export class DemandReceivedSummaryWidgetService {
     public showAllDeptSubPendingFunc(demandModelList: DemandModel[]): void {
         this.allDeptDemandReceivedSummaries = [];
         demandModelList.forEach((item: DemandModel) => {
-            debugger;
             if (item.IsClosed == false) {
                 let allDeptDemandReceivedSummary: AllDeptDemandReceivedSummary = new AllDeptDemandReceivedSummary();
                 allDeptDemandReceivedSummary.description = item.DemandDesc;

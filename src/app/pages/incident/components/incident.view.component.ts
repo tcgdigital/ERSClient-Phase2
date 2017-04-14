@@ -152,6 +152,7 @@ export class IncidentViewComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(values: Object): void {
+        debugger;
         console.log('Incident Created.');
         console.log(this.incidentDataExchangeModel);
         this.incidentService.CreateIncident(this.incidentDataExchangeModel.IncidentModel,
@@ -170,4 +171,5 @@ export class IncidentViewComponent implements OnInit, OnDestroy {
         this.showView = false;
         this.dataExchangeDecision.Publish("incidentViewPreCheck", true);
     }
+    
 }
