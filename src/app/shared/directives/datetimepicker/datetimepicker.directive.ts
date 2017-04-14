@@ -7,7 +7,7 @@ import {
 import {
     DateTimePickerOptions, DateTimePickerSelectEventArgs,
     DateTimePickerChangeMonthEventArgs, DateTimePickerRenderCellEventArgs
-} from './datetimepicker.model'
+} from './datetimepicker.model';
 
 @Directive({ selector: '[datetime-picker]' })
 export class DateTimePickerDirective implements AfterViewInit {
@@ -29,12 +29,12 @@ export class DateTimePickerDirective implements AfterViewInit {
 
     /**
      * Creates an instance of DateTimePickerDirective.
-     * @param {ElementRef} elementRef 
-     * @param {Renderer} renderer 
-     * 
+     * @param {ElementRef} elementRef
+     * @param {Renderer} renderer
+     *
      * @memberOf DateTimePickerDirective
      */
-    constructor(private elementRef: ElementRef, renderer: Renderer) {
+    constructor(private elementRef: ElementRef, private renderer: Renderer) {
     }
 
     public ngAfterViewInit(): void {
@@ -42,10 +42,13 @@ export class DateTimePickerDirective implements AfterViewInit {
         this.addPickerIcon($self);
         let options: DateTimePickerOptions = Object.assign(new DateTimePickerOptions(), this.options);
 
-        options.onSelect = (formattedDate: string, date: Date | Array<Date>, inst: Object) => {
+        options.onSelect = (formattedDate: string, date: Date | Date[], inst: Object) => {
             let args: DateTimePickerSelectEventArgs = new DateTimePickerSelectEventArgs();
             args.FormattedDate = formattedDate;
             args.SelectedDate = date;
+
+            if (this.elementRef.nativeElement)
+                this.renderer.setElementProperty(this.elementRef.nativeElement, 'value', formattedDate);
             this.selectHandler.emit(args);
         };
 
@@ -81,11 +84,11 @@ export class DateTimePickerDirective implements AfterViewInit {
 
         let datePicker = $self.datepicker(options).data('datepicker');
 
-        $('.input-group-addon').on('click', function () {
+        $self.closest('.input-group-addon').on('click', () => {
             if (datePicker) {
                 datePicker.show();
             }
-        })
+        });
     }
 
     private addPickerIcon($element: JQuery): void {
