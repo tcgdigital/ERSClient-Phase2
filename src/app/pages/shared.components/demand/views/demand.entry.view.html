@@ -21,7 +21,7 @@
                                                 <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
                                                         <input type="hidden" formControlName="DemandId" name="EnquiryId" />
                                                         <div class="row">
-                                                                <div class="form-group halfBoxStyle">
+                                                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                                                         <label for="DemandTypeId">Demand Type:<span class="red">*</span></label>
                                                                         <select id="selectDemandTypeId" class="form-control" [(ngModel)]="demandModel.DemandTypeId" formControlName="DemandTypeId">
                                                                <option [value]="0">Select Demand Type</option>
@@ -30,7 +30,7 @@
                                                                </option>
                                                                </select>
                                                                 </div>
-                                                                <div class="form-group halfBoxStyle">
+                                                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                                                         <label for="Priority">Priority:<span class="red">*</span></label>
                                                                         <select id="selectPriority" class="form-control" [(ngModel)]="demandModel.Priority" formControlName="Priority"><option [value]="0">Select Priority</option>
                                                           <option *ngFor="let priority of priorities" [value]="priority.caption">
@@ -40,7 +40,7 @@
                                                                 </div>
                                                         </div>
 
-                                                        <div class="form-group">
+                                                        <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                                                 <label for="DemandDesc">Demand Description:<span class="red">*</span></label>
                                                                 <textarea class="form-control" maxlength="500" id="DemandDesc" name="DemandDesc" rows="4" cols="50" ng-disabled="disableDemandSubmit"
                                                                         placeholder="Enter Request Desc" formControlName="DemandDesc"
@@ -48,13 +48,13 @@
                                                                 <!--<input id="DemandDesc" type="text" formControlName="DemandDesc" style="width: 89%;" placeholder="Enter Demand Description" required autofocus />-->
                                                         </div>
                                                         <div class="row">
-                                                                <div class="form-group halfBoxStyle">
+                                                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                                                         <label for="RequestedBy">Requested By:<span class="red">*</span></label>
                                                                         <input id="RequestedBy" type="text" formControlName="RequestedBy" class="form-control" placeholder="Enter Requested By" required
                                                                                 autofocus />
                                                                 </div>
 
-                                                                <div class="form-group halfBoxStyle">
+                                                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                                                         <label for="RequesterType">Requester Type:<span class="red">*</span></label>
                                                                         <select id="selectRequesterType" class="form-control" [(ngModel)]="demandModel.RequesterType" formControlName="RequesterType">
                                                                          <option [value]="0">Select Requester Type</option>
@@ -66,7 +66,7 @@
                                                         </div>
 
                                                         <div class="row">
-                                                                <div class="form-group halfBoxStyle">
+                                                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                                                         <label for="PDA">PDA Name:<span class="red">*</span></label>
                                                                         <!--<autocomplete [items]="pdas" (notify)='onNotifyPassengerCrew($event)'></autocomplete>-->
                                                                         <select id="selectenquiryType" class="form-control" [(ngModel)]="demandModel.AffectedPersonId" formControlName="AffectedPersonId"
@@ -79,7 +79,7 @@
                                                               </select>
                                                                 </div>
 
-                                                                <div class="form-group halfBoxStyle">
+                                                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                                                         <label for="awb">AWB:<span class="red">*</span></label>
                                                                         <!--<autocomplete [items]="awbs" (notify)='onNotifyCargo($event)'></autocomplete>-->
                                                                         <select id="selectenquiryType" class="form-control" [(ngModel)]="demandModel.AffectedObjectId" formControlName="AffectedObjectId"
@@ -92,14 +92,14 @@
                                                                 </div>
                                                         </div>
                                                         <div class="row">
-                                                                <div class="form-group halfBoxStyle">
+                                                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                                                         <label for="ReferenceNumber">Reference Number:<span class="red">*</span></label>
                                                                         <input id="PDATicketNumber" type="text" formControlName="PDATicketNumber" class="form-control" [disabled]="true" placeholder="Enter Requested By"
                                                                                 required autofocus />
                                                                         <!--<input id="PDATicketNumber" type="text" formControlName="PDATicketNumber" style="width: 89%;" [disabled]="true"/>-->
                                                                 </div>
 
-                                                                <div class="form-group halfBoxStyle">
+                                                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                                                         <label for="DepartmentId">Target Department:<span class="red">*</span></label>
                                                                         <select id="selectTargetDepartmentId" class="form-control" [(ngModel)]="demandModel.TargetDepartmentId" formControlName="TargetDepartmentId">
                                                                  <option [value]="0">Select Target Department</option>
@@ -110,29 +110,32 @@
                                                                 </div>
                                                         </div>
                                                         <div class="row">
-                                                                <div class="form-group halfBoxStyle">
+                                                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                                                         <label for="ContactNumber"> Contact Number:<span class="red">*</span></label>
                                                                         <input id="ContactNumber" type="text" formControlName="ContactNumber" class="form-control" placeholder="Enter Requested By"
                                                                                 required autofocus />
                                                                         <!--<input id="ContactNumber" type="text" formControlName="ContactNumber" style="width: 89%;" placeholder="Enter Contact Number" required autofocus />-->
                                                                 </div>
 
-                                                                <div class="form-group halfBoxStyle">
+                                                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                                                         <label for="ExpectedResolutionTime">Expected Resolution Time:<span class="red">*</span></label>
                                                                         <input id="ExpectedResolutionTime" type="text" formControlName="ScheduleTime"  class="form-control" placeholder="Enter Requested By" required autofocus
                                                                         />
                                                                         <!--<input id="ExpectedResolutionTime" type="text" formControlName="ScheduleTime" style="width: 89%;" />-->
                                                                 </div>
                                                         </div>
-                                                        <div class="form-group">
+                                                        <div class="row">
+                                                        <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                                                 <label for="RequiredLocation">Required Location:<span class="red">*</span></label>
                                                                 <input id="RequiredLocation" type="text" formControlName="RequiredLocation"  class="form-control" placeholder="Enter Requested By" required autofocus
                                                                 />
                                                                 <!--<input id="RequiredLocation" type="text" formControlName="RequiredLocation" style="width: 89%;" />-->
                                                         </div>
-
+                                                         <div class="col-lg-6 col-md-6 col-sm-4">
                                                         <button class="btn btn-primary" type="submit">{{Action}}</button>
                                                         <button class="btn btn-primary" type="submit" (click)="cancelModal()">Cancel</button>
+                                                         </div>
+                                                        </div>
                                                 </form>
 
                                         </div>

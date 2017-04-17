@@ -1,4 +1,61 @@
-<div class="panel-body WidthHun">
+<responsive-table>
+    <table responsive-table-body>
+        <thead>
+            <tr>
+                 <th>User Id</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Main Contact</th>
+                <th>Alternate Contact</th>
+                <th>Location</th>
+                <th>IsActive</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr [hidden]="userProfiles.length != 0">
+                <td colspan="6">No records found.</td>
+            </tr>
+            <tr *ngFor="let userprofile of userProfiles">
+                <td data-title="User Id">{{userprofile.UserId}}</td>
+                <td data-title="Name">{{userprofile.Name}}</td>
+                <td data-title="Email">{{userprofile.Email }}</td>
+                <td data-title="Main Contact">{{userprofile.MainContact}}</td>
+                <td data-title="Alternate Contact">{{userprofile.AlternateContact}}</td>
+                <td data-title="Location">{{userprofile.Location}}</td>
+                 <td data-title="IsActive">
+                    <md-checkbox class="Marght" id="IsActive" name="IsActive" [(ngModel)]="userprofile.isActive" [disabled]="true"
+                        aria-label="ActiveFlag">
+                    </md-checkbox>
+                </td>
+                <td data-title="Action">
+                    <i class="fa fa-edit fa-lg" (click)="UpdateUserProfile(userprofile)"></i>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</responsive-table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<div class="panel-body WidthHun">
     <table class="table footable default">
         <thead>
             <tr>
@@ -29,4 +86,4 @@
             </tr>
         </tbody>
     </table>
-</div>
+</div>-->

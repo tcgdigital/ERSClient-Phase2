@@ -1,8 +1,52 @@
-<div>
-    <h3>Department Functionality</h3>
-    <autocomplete [items]="items" (notify)='onNotify($event)'></autocomplete>
+<div class="card-block">
+    <div class="row">
+        <div class="form-group col-lg-6 col-sm-12 col-md-12">
+            <label for="Passengers">Departments:<span class="red">*</span></label>
+            <autocomplete [items]="items" (notify)='onNotify($event)' (InvokeAutoCompleteReset)="invokeReset();"></autocomplete>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 buttonholder">
+            <button class="btn btn-primary" type="button" (click)="save()">Save</button>
+        </div>
+    </div>
+    <responsive-table>
+        <table responsive-table-body>
+            <thead>
+                <tr>
+                    <th>Page Name</th>
+                    <th>Can View</th>
+                    <th>Only HOD</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr [hidden]="pagesForDepartment.length != 0">
+                    <td colspan="6">No records found.</td>
+                </tr>
+                <tr *ngFor="let pageFordepartment of pagesForDepartment">
+                    <td data-title="Page Name">{{pageFordepartment.PageName}}</td>
+                    <td data-title="Can View">
+                        <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="pageFordepartment.AllowView" aria-label="Add"></md-checkbox>
+                    </td>
+                    <td data-title="Is HOD">
+                        <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="pageFordepartment.OnlyForHod" aria-label="Add"></md-checkbox>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </responsive-table>
+    <div class="row">
+        <div class="col-12 buttonholder">
+            <button class="btn btn-primary" type="button" (click)="save()">Save</button>
+        </div>
+    </div>
+</div>
 
-    <button class="btn btn-primary" type="button" (click)="save()">Save</button>
+
+
+
+
+<!--<button class="btn btn-primary" type="button" (click)="save()">Save</button>
     <div class="row" *ngFor="let pageFordepartment of pagesForDepartment">
         <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
             <ul class="list-group">
@@ -25,4 +69,4 @@
             </ul>
         </div>
     </div>
-</div>
+</div>-->

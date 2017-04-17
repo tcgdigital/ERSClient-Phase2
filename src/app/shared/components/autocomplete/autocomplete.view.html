@@ -1,20 +1,21 @@
 <div class="container  multiselect-container">
     <div class="input-field col s12  multiselect-selector">
-        <input id="item" type="text" class="validate filter-input form-control inputStyle"
-         [(ngModel)]="query" (keyup)="filter()" (click)="filter()">
+        <input id="item" type="text" class="validate filter-input form-control inputStyle" [(ngModel)]="query" (keyup)="filter()"
+            (click)="filter()">
         <!--<label for="item">Item</label>-->
         <i class="fa fa-times crossStyle" aria-hidden="true" *ngIf="showClose()" (click)="clear()"></i>
+        <i class="fa fa-caret-down expandStyle" aria-hidden="true" [hidden]="showClose()" (click)="filter()"></i>
         <!--<a *ngIf="showClose()" class="close" class="validate filter-input" aria-label="Close" (click)="clear()">Close</a>-->
 
     </div>
     <!--<pre>{{filteredList | json}}</pre>-->
     <!--<div class="suggestions" *ngIf="filteredList.length > 0">-->
-        <ul class="multiselect-list" [hidden]="filteredList.length == 0">
-            <li *ngFor="let item of filteredList" >
-                <span>
+    <ul class="multiselect-list" [hidden]="filteredList.length == 0">
+        <li *ngFor="let item of filteredList">
+            <span>
                     <a (click)="select(item)">{{item.Key}}</a>
                 </span>
-            </li>
-        </ul>
+        </li>
+    </ul>
     <!--</div>-->
 </div>

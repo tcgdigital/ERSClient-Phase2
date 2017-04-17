@@ -1,33 +1,30 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
-    <input type="hidden" *ngIf="userProfileModel.UserProfileId != undefined" [(ngModel)]="userProfileModel.UserProfileId" formControlName="UserProfileId">
-    <div class="AllSearchHolder">
-        <div class="AllSearchHolderRow">
-            <div class="col-sm-6">
+<div *ngIf="showAdd" class="formStyle card-block entryHolder">
+    <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+        <input type="hidden" *ngIf="userProfileModel.UserProfileId != undefined" [(ngModel)]="userProfileModel.UserProfileId" formControlName="UserProfileId">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-12">
                 <div class="form-group">
-                    <div class="col-sm-9" style="padding-right:0;">
-                        <label for="Email">Email:<span class="red">*</span></label>
-                        <input class="form-control" id="txtEmail" type="email" formControlName="Email" ngControl="mailAddress" placeholder="Enter Email"
-                            [(ngModel)]="userProfileModel.Email" required autofocus />
-                    </div>
+                    <label for="Email">Email:<span class="red">*</span></label>
+                    <input class="form-control" id="txtEmail" type="email" formControlName="Email" ngControl="mailAddress" placeholder="Enter Email"
+                        [(ngModel)]="userProfileModel.Email" required autofocus />
                 </div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-lg-3 col-md-6 col-12">
                 <div class="form-group">
                     <label for="UserId">User Id:<span class="red">*</span></label>
                     <input class="form-control" id="txtUserId" type="text" formControlName="UserId" placeholder="Enter User Id" [(ngModel)]="userProfileModel.UserId"
                         required autofocus />
                 </div>
             </div>
-        </div>
-        <div class="AllSearchHolderRow">
-            <div class="col-sm-6">
+
+            <div class="col-lg-3 col-md-6 col-12">
                 <div class="form-group">
                     <label for="Name">Name:<span class="red">*</span></label>
                     <input class="form-control" id="txtName" type="text" formControlName="Name" placeholder="Enter Name" [(ngModel)]="userProfileModel.Name"
                         required autofocus />
                 </div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-lg-3 col-md-6 col-12">
                 <div class="form-group">
                     <label for="MainContact">MainContact:<span class="red">*</span></label>
                     <input class="form-control" id="txtMainContact" type="text" formControlName="MainContact" placeholder="Enter MainContact"
@@ -35,32 +32,40 @@
                 </div>
             </div>
         </div>
-
-        <div class="AllSearchHolderRow">
-            <div class="col-sm-6">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-12">
                 <div class="form-group">
                     <label for="AlternateContact">AlternateContact:</label>
                     <input class="form-control" id="txtAlternateContact" type="text" formControlName="AlternateContact" placeholder="Enter AlternateContact"
                         [(ngModel)]="userProfileModel.AlternateContact" required autofocus />
                 </div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-lg-3 col-md-6 col-12">
                 <div class="form-group">
                     <label for="Location">Location:<span class="red">*</span></label>
                     <input class="form-control" id="Location" type="text" formControlName="Location" placeholder="Enter Location" [(ngModel)]="userProfileModel.Location"
                         required autofocus />
                 </div>
             </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="form-group">
-                <label for="Active">Active:</label>
-                <input type="checkbox" [(ngModel)]="userProfileModel.isActive" aria-label="IsActive" formControlName="isActive">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label for="Active">Active:</label>
+                    <br>
+                    <md-checkbox class="Marght" id="IsTravelRequest" formControlName="isActive" aria-label="IsActive" [(ngModel)]="userProfileModel.isActive">
+                    </md-checkbox>
+                    <!--<input type="checkbox" [(ngModel)]="userProfileModel.isActive" aria-label="IsActive" formControlName="isActive">-->
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="buttonholder">
+                    <button class="btn btn-primary" type="submit">Save</button>
+                    <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="">
-        <button class="btn btn-primary" type="submit">Save</button>
-        <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
-    </div>
-</form>
+    </form>
+</div>
+
+<div class="addbuttonHolder">
+    <button class="btn btn-primary" type="submit" (click)="showAddRegion(showAdd)">Add User</button>
+</div>

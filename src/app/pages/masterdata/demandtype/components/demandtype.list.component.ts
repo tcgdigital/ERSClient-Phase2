@@ -12,7 +12,8 @@ import { ResponseModel, DataExchangeService } from '../../../../shared';
 })
 export class DemandTypeListComponent implements OnInit {
     demandTypes: DemandTypeModel[] = [];
-    demandTypeModel: DemandTypeModel = new DemandTypeModel;
+    demandTypeModelToUpdate: DemandTypeModel = new DemandTypeModel;
+
 
     constructor(private demandTypeService: DemandTypeService,
         private dataExchange: DataExchangeService<DemandTypeModel>) { }
@@ -20,7 +21,28 @@ export class DemandTypeListComponent implements OnInit {
     getDemandTypes(): void {
         this.demandTypeService.GetAll()
             .subscribe((response: ResponseModel<DemandTypeModel>) => {
+                
                 this.demandTypes = response.Records;
+                this.demandTypes.forEach(x => {
+                    x["Active"] = (x.ActiveFlag == 'Active');
+                });
+            });
+    }
+
+
+
+    IsActive(event: any, editedDemandType : DemandTypeModel): void {
+        this.demandTypeModelToUpdate.deleteAttributes();
+        this.demandTypeModelToUpdate.DemandTypeId = editedDemandType.DemandTypeId;
+        this.demandTypeModelToUpdate.ActiveFlag = 'Active';
+        if (!event.checked) {
+            this.demandTypeModelToUpdate.ActiveFlag = 'InActive';
+        }
+        this.demandTypeService.Update(this.demandTypeModelToUpdate)
+            .subscribe((response: DemandTypeModel) => {
+                this.getDemandTypes();
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -43,4 +65,6 @@ export class DemandTypeListComponent implements OnInit {
         this.dataExchange.Unsubscribe("demandTypeModelUpdated");
         this.dataExchange.Unsubscribe("demandTypeModelSaved");
     }
+
+   
 }

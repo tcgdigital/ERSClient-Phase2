@@ -19,6 +19,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
     userProfiles: UserProfileModel[] = [];
     Action: string;
     numaricRegex = "/^[0-9]{10,10}$/";
+    showAdd : boolean;
 
     constructor(private userProfileService: UserProfileService,
         private dataExchange: DataExchangeService<UserProfileModel>,
@@ -26,6 +27,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.showAdd = false;
         this.initiateForm();
         this.dataExchange.Subscribe("UserProfileModelToBeModified", model => this.onUserProfileModified(model))
     }
@@ -34,10 +36,12 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
         this.userProfileModel = userProfileModel;
         this.userProfileModel.UserProfileId = userProfileModel.UserProfileId
         this.Action = "Edit";
+        this.showAdd = true;
     }
 
     cancel(): void {
         this.initiateForm();
+        this.showAdd = false;
     }
 
     onSubmit() {
@@ -87,5 +91,11 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
             Location: new FormControl('', Validators.required),
             isActive: new FormControl(0)
         })
+    }
+
+    showAddRegion(){
+        this.showAdd = true;
+        this.initiateForm();
+
     }
 }

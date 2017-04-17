@@ -31,7 +31,8 @@ export class AutocompleteComponent implements OnInit {
     }
 
     filter(): void {
-        if (this.query !== null) {
+        debugger;
+        if ( this.query != null && this.query != '') {
             this.filteredList = this.Items.filter(function (el: KeyValue) {
                 return el.Key.toLowerCase().indexOf(this.query.toLowerCase()) > -1;
             }.bind(this));
@@ -45,6 +46,7 @@ export class AutocompleteComponent implements OnInit {
         this.query = '';
         this.InvokeAutoCompleteReset.emit();
     }
+   
     showClose(): boolean {
         if (this.filteredList.length > 0 || this.query != '') {
             return true;
