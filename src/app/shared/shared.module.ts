@@ -24,7 +24,9 @@ import {
     TextAccordionComponent,
     TabControlComponent,
     ResponsiveTableComponent,
-    CustomDropdownComponent
+    CustomDropdownComponent,
+    MapWidgetComponent,
+    WeatherWidgetComponent
 } from './components';
 
 import {
@@ -48,7 +50,8 @@ import {
     ImageLoaderService,
     ThemePreloaderService,
     ThemeSpinnerService,
-    ThemeConfigProviderService
+    ThemeConfigProviderService,
+    LocationService
 } from './services';
 
 import {
@@ -70,7 +73,9 @@ const SHARED_COMPONENTS: any[] = [
     TextAccordionComponent,
     TabControlComponent,
     ResponsiveTableComponent,
-    CustomDropdownComponent
+    CustomDropdownComponent,
+    MapWidgetComponent,
+    WeatherWidgetComponent
 ];
 
 const SHARED_DIRECTIVES: any[] = [
@@ -90,6 +95,7 @@ const SHARED_SERVICES: any[] = [
     DataProcessingService,
     DataServiceFactory,
     DataExchangeService,
+    LocationService,
     ENV_PROVIDERS
 ];
 
@@ -130,19 +136,19 @@ const SHARED_PIPES: any[] = [
         ...SHARED_DIRECTIVES,
         ...SHARED_PIPES
     ],
-     providers: [
-         DataExchangeService
-     ]
+    providers: [
+        DataExchangeService
+    ]
 
 })
 export class SharedModule {
     static forRoot(): ModuleWithProviders {
-        let moduleProvider: ModuleWithProviders = <ModuleWithProviders>{
+        const moduleProvider: ModuleWithProviders = {
             ngModule: SharedModule,
             providers: [
                 ...SHARED_SERVICES
             ]
-        };
+        } as ModuleWithProviders;
         return moduleProvider;
     }
 }

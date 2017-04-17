@@ -59,3 +59,7 @@ export class FileData {
     file: File;
     field: string;
 }
+
+export class Location {
+    constructor(public latitude: number, public longitude: number) { }
+}

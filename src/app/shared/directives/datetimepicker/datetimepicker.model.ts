@@ -44,7 +44,7 @@ export class DateTimePickerOptions {
     hoursStep?: number;
     minutesStep?: number;
 
-    onSelect: (formattedDate: string, date: Date | Array<Date>, inst: Object) => void;
+    onSelect: (formattedDate: string, date: Date | Date[], inst: Object) => void;
     onShow: (inst: Object, animationCompleted: boolean) => void;
     onHide: (inst: Object, animationCompleted: boolean) => void;
     onChangeMonth: (month: number, year: number) => void;
@@ -54,7 +54,7 @@ export class DateTimePickerOptions {
 
     /**
      * Creates an instance of DateTimePickerOptions.
-     * 
+     *
      * @memberOf DateTimePickerOptions
      */
     constructor() {
@@ -71,7 +71,7 @@ export class DateTimePickerOptions {
 
 export class DateTimePickerSelectEventArgs {
     FormattedDate: string;
-    SelectedDate: Date | Array<Date>;
+    SelectedDate: Date | Date[];
 }
 
 export class DateTimePickerChangeMonthEventArgs {

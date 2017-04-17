@@ -12,15 +12,15 @@ import { DataExchangeService } from '../../services/data.exchange';
         '(document:click)': 'onDocunentClick($event)',
     },
     templateUrl: './autocomplete.view.html',
+    encapsulation: ViewEncapsulation.None,
     styleUrls: ['./autocomplete.style.scss']
 
 })
-export class AutocompleteComponent implements OnInit {
+export class AutocompleteComponent implements OnInit, OnDestroy {
     @Input('items') Items: Array<KeyValue> = [];
     @Output() notify: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
     @Output('InvokeAutoCompleteReset') InvokeAutoCompleteReset: EventEmitter<any> = new EventEmitter();
-    // public query = '';
-    // public filteredList;
+
     public elementRef;
     public filteredList: Array<KeyValue> = [];
     public query: string = '';
@@ -46,13 +46,14 @@ export class AutocompleteComponent implements OnInit {
         this.query = '';
         this.InvokeAutoCompleteReset.emit();
     }
-   
+
     showClose(): boolean {
-        if (this.filteredList.length > 0 || this.query != '') {
+        if (this.filteredList.length > 0 || this.query !== '') {
             return true;
         }
         return false;
     }
+
     select(item: KeyValue) {
         this.query = item.Key;
         this.filteredList = [];
@@ -61,8 +62,8 @@ export class AutocompleteComponent implements OnInit {
 
     // @HostListener('document:click', ['$event'])
     onDocunentClick(event) {
-        var clickedComponent = event.target;
-        var inside = false;
+        let clickedComponent = event.target;
+        let inside = false;
         do {
             if (clickedComponent === this.elementRef.nativeElement) {
                 inside = true;
@@ -75,10 +76,10 @@ export class AutocompleteComponent implements OnInit {
 
     }
     ngOnInit() {
-        this.dataExchange.Subscribe("clearAutoCompleteInput", model => this.query = model);
+        this.dataExchange.Subscribe('clearAutoCompleteInput', (model) => this.query = model);
     };
     ngOnDestroy() {
-        this.dataExchange.Unsubscribe("clearAutoCompleteInput");
+        this.dataExchange.Unsubscribe('clearAutoCompleteInput');
     };
 }
 

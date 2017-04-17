@@ -11,13 +11,16 @@ import { KeyValue } from '../../models';
     encapsulation: ViewEncapsulation.None
 })
 export class PageHeaderComponent {
+    @Input() userName: string;
+    @Input() lastLogin: Date;
     @Input() departments: KeyValue[];
     @Input() incidents: KeyValue[];
 
     @Output() toggleSideMenu: EventEmitter<any> = new EventEmitter<any>();
     @Output() contactClicked: EventEmitter<any> = new EventEmitter<any>();
     @Output() helpClicked: EventEmitter<any> = new EventEmitter<any>();
-    
+    @Output() logoutClicked: EventEmitter<any> = new EventEmitter<any>();
+
     @Output() departmentChange: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
     @Output() incidentChange: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
 
@@ -31,6 +34,10 @@ export class PageHeaderComponent {
 
     public onHelpClicked($event): void {
         this.helpClicked.emit($event);
+    }
+
+    public onLogoutClicked($event): void {
+        this.logoutClicked.emit($event);
     }
 
     public onDepartmentChange(selectedDepartment: KeyValue): void {
