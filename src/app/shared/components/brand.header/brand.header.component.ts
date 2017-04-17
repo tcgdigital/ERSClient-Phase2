@@ -1,6 +1,6 @@
 import {
     Component, ViewEncapsulation,
-    Output, EventEmitter
+    Output, EventEmitter, Input
 } from '@angular/core';
 import { GlobalStateService } from '../../services';
 
@@ -11,9 +11,13 @@ import { GlobalStateService } from '../../services';
     encapsulation: ViewEncapsulation.None
 })
 export class BrandHeaderComponent {
+    @Input() userName: string;
+    @Input() lastLogin: Date;
+
     @Output() hambargerClicked: EventEmitter<any> = new EventEmitter<any>();
     @Output() contactClicked: EventEmitter<any> = new EventEmitter<any>();
     @Output() helpClicked: EventEmitter<any> = new EventEmitter<any>();
+    @Output() logoutClicked: EventEmitter<any> = new EventEmitter<any>();
 
     public logoImage: string = 'assets/images/logo.png';
     public logoUrl: string = '#';
@@ -29,5 +33,9 @@ export class BrandHeaderComponent {
 
     public onHelpClicked($event): void {
         this.helpClicked.emit($event);
+    }
+
+    public onLogoutClicked($event): void{
+        this.logoutClicked.emit($event);
     }
 }
