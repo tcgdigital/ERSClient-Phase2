@@ -1,0 +1,35 @@
+@import '../../config/config';
+
+.col-no-left-padding{
+    padding-left: 0 !important;
+}
+.col-no-right-padding{
+    padding-right: 0 !important;
+}
+.row-no-padding > [class*="col-"] {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.entryHolder{
+    background: $entryholder-background ;
+    padding: 15px;
+    border: $entryholder-color solid 1px;
+    float: left;
+    margin: 15px 23px;
+}
+
+.addbuttonHolder{
+    padding: 22px;
+    float: right;
+}
+
+.formStyle{
+    width : 97%;
+}
+
+.buttonholder{
+        float: right;
+    vertical-align: middle;
+    padding-top: 27px;
+}

@@ -31,7 +31,8 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
     }
 
     filter(): void {
-        if (this.query !== null) {
+        debugger;
+        if ( this.query != null && this.query != '') {
             this.filteredList = this.Items.filter(function (el: KeyValue) {
                 return el.Key.toLowerCase().indexOf(this.query.toLowerCase()) > -1;
             }.bind(this));

@@ -1,1 +1,12 @@
-<router-outlet></router-outlet>
+<div class="row">
+    <div class="col-12 widget-layout-fix">
+        <div class="row tab-root-container no-gutters">
+            <div class="col-12">
+                <div tab-control [tabLinks]="tablinks" class="tab-control"></div>
+                <div class="tab-containet">
+                    <router-outlet></router-outlet>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

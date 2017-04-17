@@ -3,6 +3,7 @@ import { Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { DemandTypeModel } from './demandtype.model';
+import { IDemandTypeService } from './IDemandTypeService';
 import {
     ResponseModel, DataService,
     DataServiceFactory, DataProcessingService,
@@ -10,7 +11,7 @@ import {
 } from '../../../../shared';
 
 @Injectable()
-export class DemandTypeService extends ServiceBase<DemandTypeModel> {
+export class DemandTypeService extends ServiceBase<DemandTypeModel> implements IDemandTypeService {
     // private _dataService: DataService<DemandTypeModel>;
 
     constructor(private dataServiceFactory: DataServiceFactory) {

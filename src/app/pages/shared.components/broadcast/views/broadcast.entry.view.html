@@ -1,4 +1,4 @@
-<div *ngIf="showAdd"  (click)="showList1(); $event.stopPropagation();" class="formStyle">
+<div *ngIf="showAdd"  (click)="showList1(); $event.stopPropagation();" class="formStyle card-block entryHolder">
     <form [formGroup]="form">
         <input type="hidden" *ngIf="broadcast.BroadcastId != undefined" [(ngModel)]="broadcast.BroadcastId" formControlName="BroadcastId">
 

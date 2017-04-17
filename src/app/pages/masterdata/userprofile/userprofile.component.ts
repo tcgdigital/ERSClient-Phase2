@@ -4,7 +4,8 @@ import { UserProfileModel } from './components';
 @Component({
     selector: 'userprofile-main',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './views/userprofile.view.html'
+    templateUrl: './views/userprofile.view.html',
+    styleUrls:['./styles/userprofile.style.scss']
 })
 export class UserProfileComponent {
 
