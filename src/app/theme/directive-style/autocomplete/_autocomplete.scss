@@ -1,5 +1,4 @@
 @import '../../config/config';
-
 .multiselect-selector {
     background: $multiselect-background none repeat scroll 0 0;
     border: $multiselect-border solid 1px;
@@ -8,42 +7,59 @@
     padding: 7px 8px;
     width: 100%;
     font-size: 14px;
+    .inputStyle {
+        width: 90% !important;
+        display: -webkit-inline-box !important;
+        border: none !important;
+        font-size: 14px;
+        padding: 0px;
+        line-height: 1.25;
+        color: $multiselect-color;
+    }
+    .crossStyle {
+        font-size: 20px;
+        color: $cross-color;
+        float: right;
+    }
+    .expandStyle {
+        font-size: 20px;
+        color: $expand-color;
+        float: right;
+    }
 }
 
-.multiselect-list {
+ul.multiselect-list {
     background: $multiselect-background none repeat scroll 0 0;
-    border: $multiselect-border solid 1px;
+    border: $multiselect-border solid 2px;
     border-radius: 0 0 6px 6px;
     color: $multiselect-color;
-    padding: 5px 8px;
-    width: 96%;
+    width: 95.4%;
     font-size: 12px;
     height: 150px;
     position: absolute;
     z-index: 999;
     overflow-x: hidden;
     overflow-y: auto;
-    top: 90%;
+    li {
+        padding: 5px;
+        font-size: 13px;
+        cursor: default;
+    }
+    li:hover {
+        background-color: rgba(92, 196, 239, 0.2);
+    }
 }
 
-.inputStyle{
-    width: 90% !important;
-    display: -webkit-inline-box !important;
-    border: none !important;
-    font-size: 14px;
-    padding: 0px;
-    line-height: 1.25;
-    color: $multiselect-color;
+@media screen and (max-width: $resXS-E) {
+    ul.multiselect-list {width: 92%;}
 }
 
-.crossStyle{
-     font-size:20px;
-     color:$cross-color;
-      float: right;
+@media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {
+    ul.multiselect-list {width: 92%;}
 }
 
-.expandStyle{
-    font-size:20px;
-     color:$expand-color;
-      float: right;
-}
+@media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {}
+
+@media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {}
+
+@media screen and (min-width: $resXL-S) {}

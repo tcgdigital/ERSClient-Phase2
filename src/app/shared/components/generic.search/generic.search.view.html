@@ -1,4 +1,5 @@
 <div class="search-container">
+    <div class="search-title"><i class="fa fa-search" aria-hidden="true"></i> Search Criteria</div>
     <form (ngSubmit)="onSubmit()" [formGroup]="form">
         <div class="search-block form-group" *ngFor="let filterConfig of filterConfigs; let i = index; trackBy: Name">
             <label [attr.for]="filterConfig.Name">{{filterConfig.Description}}</label>

@@ -1,5 +1,5 @@
 import {
-    Component, Input, ElementRef,
+    Component, Input, ElementRef, ViewEncapsulation,
     Output, EventEmitter, OnInit, AfterContentInit
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
@@ -11,6 +11,7 @@ import { GenericSearchService } from './generic.search.service';
 @Component({
     selector: 'generic-search',
     templateUrl: './generic.search.view.html',
+    encapsulation: ViewEncapsulation.None,
     providers: [GenericSearchService],
     styleUrls: ['./generic.search.style.scss']
 })
