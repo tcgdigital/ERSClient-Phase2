@@ -15,7 +15,8 @@ import {
 @Component({
     selector: 'department-functionality',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './views/department.functionality.view.html'
+    templateUrl: './views/department.functionality.view.html',
+    styleUrls:['./styles/department.functionality.style.scss']
 })
 export class DepartmentFunctionalityComponent implements OnInit {
     departments: DepartmentModel[] = [];
@@ -95,6 +96,9 @@ export class DepartmentFunctionalityComponent implements OnInit {
                     }
                 }
             });
+    }
+    invokeReset(): void {
+        this.pagesForDepartment = [];
     }
 
     ngOnInit(): any {

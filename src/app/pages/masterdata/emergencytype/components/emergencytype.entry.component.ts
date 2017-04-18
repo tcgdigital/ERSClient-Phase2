@@ -23,6 +23,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
     date: Date = new Date();
     emergencyTypes: EmergencyTypeModel[] = [];
     Action: string;
+    showAdd : boolean;
 
     emergencyCategory: Object = GlobalConstants.EmergencyCategories;
 
@@ -33,10 +34,12 @@ export class EmergencyTypeEntryComponent implements OnInit {
         this.emergencyTypeModel = model;
         this.emergencyTypeModel.EmergencyTypeId = model.EmergencyTypeId;
         this.Action = "Edit";
+        this.showAdd = true;
     }
 
     ngOnInit(): void {
         this.initiateForm();
+        this.showAdd = false;
         this.emergencyTypeModel = new EmergencyTypeModel();
         this.emergencyTypeModel.EmergencyCategory = "FlightRelated";
         this.dataExchange.Subscribe("OnEmergencyTypeUpdate", model => this.onEmergencyTypeUpdate(model))
@@ -75,6 +78,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
         this.emergencyTypeModel = new EmergencyTypeModel();
         this.Action = "Save";
         this.initiateForm();
+        this.showAdd = false;
         this.emergencyTypeModel.EmergencyCategory = "FlightRelated";
     }
 
@@ -86,4 +90,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
             ActiveFlag: new FormControl("Active")
         });
     }
+     showAddRegion(ShowAdd: Boolean): void {
+        this.showAdd = true;
+     }
 }

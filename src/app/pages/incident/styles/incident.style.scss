@@ -1,14 +1,17 @@
-.col-no-left-padding{
+.col-no-left-padding {
     padding-left: 0 !important;
 }
-.col-no-right-padding{
+
+.col-no-right-padding {
     padding-right: 0 !important;
 }
-.row-no-padding > [class*="col-"] {
+
+.row-no-padding>[class*="col-"] {
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
-.labelStyle{
+
+.labelStyle {
     border: none;
     text-decoration: underline;
     cursor: pointer;
@@ -16,4 +19,7 @@
 
 .textarea {
         height: 121px;
+}
+.sebm-google-map-container {
+    height: 300px;
 }

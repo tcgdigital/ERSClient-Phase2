@@ -13,7 +13,7 @@ import { ChecklistModel } from './checklist.model';
 import { DepartmentModel, DepartmentService } from '../../department';
 import { EmergencyTypeModel, EmergencyTypeService } from '../../emergencytype';
 import { ChecklistService } from './checklist.service';
-import { ResponseModel, DataExchangeService, BaseModel } from '../../../../shared';
+import { ResponseModel, DataExchangeService, BaseModel , UtilityService ,GlobalStateService } from '../../../../shared';
 
 @Component({
     selector: 'checklist-entry',
@@ -31,21 +31,22 @@ export class ChecklistEntryComponent implements OnInit {
     activeEmergencyTypes: EmergencyTypeModel[] = [];
     showAdd: Boolean = true;
     buttonValue: String = "";
+    currentDepartmentId : number;
 
     constructor(formBuilder: FormBuilder,
         private departmentService: DepartmentService,
         private checkListService: ChecklistService,
         private emergencyTypeService: EmergencyTypeService,
-        private dataExchange: DataExchangeService<ChecklistModel>) {
+        private dataExchange: DataExchangeService<ChecklistModel> , private globalState: GlobalStateService) {
         this.showAdd = false;
         this.buttonValue = "Add Checklist";
         this.checkListModel = new ChecklistModel();
         this.checkListModelEdit = new ChecklistModel();
     }
 
-    mergeResponses(): void {
+    mergeResponses(departmentId): void {
         let allChecklists: Observable<ResponseModel<ChecklistModel>>
-            = this.checkListService.GetAll();
+            = this.checkListService.GetAllByDepartment(departmentId);
         // let activeChecklists: Observable<ResponseModel<ChecklistModel>>
         //     = this.checkListService.GetAllActiveCheckLists();
         let activeDepartments: Observable<ResponseModel<DepartmentModel>>
@@ -76,55 +77,62 @@ export class ChecklistEntryComponent implements OnInit {
             );
     }
 
-    getAllActiveCheckLists(): void {
-        this.checkListService.GetAllActiveCheckLists()
-            .subscribe((response: ResponseModel<ChecklistModel>) => {
-                for (var x of response.Records) {
-                    x.Active = (x.ActiveFlag == 'Active');
-                }
-                this.activeCheckLists = response.Records;
-                this.checkListModel.ParentCheckListId = this.activeCheckLists[0].CheckListId;
-            });
-    }
+    // getAllActiveCheckLists(): void {
+    //     this.checkListService.GetAllActiveCheckLists()
+    //         .subscribe((response: ResponseModel<ChecklistModel>) => {
+    //             for (var x of response.Records) {
+    //                 x.Active = (x.ActiveFlag == 'Active');
+    //             }
+    //             this.activeCheckLists = response.Records;
+    //             this.checkListModel.ParentCheckListId = this.activeCheckLists[0].CheckListId;
+    //         });
+    // }
 
-    getAllCheckLists(): void {
-        this.checkListService.GetAll()
-            .subscribe((response: ResponseModel<ChecklistModel>) => {
-                for (var x of response.Records) {
-                    x.Active = (x.ActiveFlag == 'Active');
-                }
-                this.activeCheckLists = response.Records;
+    // getAllCheckLists(): void {
+    //     this.checkListService.GetAllByDepartment(departmentId);
+    //         .subscribe((response: ResponseModel<ChecklistModel>) => {
+    //             for (var x of response.Records) {
+    //                 x.Active = (x.ActiveFlag == 'Active');
+    //             }
+    //             this.activeCheckLists = response.Records;
 
-            });
-    }
+    //         });
+    // }
 
-    getAllActiveDepartments(): void {
-        this.departmentService.GetAll()
-            .subscribe((response: ResponseModel<DepartmentModel>) => {
-                this.activeDepartments = response.Records;
-                this.checkListModel.DepartmentId = this.activeDepartments[0].DepartmentId;
-            });
-    }
+    // getAllActiveDepartments(): void {
+    //     this.departmentService.GetAll()
+    //         .subscribe((response: ResponseModel<DepartmentModel>) => {
+    //             this.activeDepartments = response.Records;
+    //             this.checkListModel.DepartmentId = this.activeDepartments[0].DepartmentId;
+    //         });
+    // }
 
-    getAllActiveEmergencyTypes(): void {
-        this.emergencyTypeService.GetAll()
-            .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
-                for (var x of response.Records) {
-                    x.Active = (x.ActiveFlag == 'Active');
-                }
-                this.activeEmergencyTypes = response.Records;
-                this.checkListModel.EmergencyTypeId = this.activeEmergencyTypes[0].EmergencyTypeId;
-            });
-    }
+    // getAllActiveEmergencyTypes(): void {
+    //     this.emergencyTypeService.GetAll()
+    //         .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
+    //             for (var x of response.Records) {
+    //                 x.Active = (x.ActiveFlag == 'Active');
+    //             }
+    //             this.activeEmergencyTypes = response.Records;
+    //             this.checkListModel.EmergencyTypeId = this.activeEmergencyTypes[0].EmergencyTypeId;
+    //         });
+    // }
 
     ngOnInit(): void {
-        this.mergeResponses();
+         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.mergeResponses(this.currentDepartmentId);
         // this.getAllActiveDepartments();
         // this.getAllActiveCheckLists();
         // this.getAllActiveEmergencyTypes();
         //this.form = this.resetCheckListForm();
         // this.initiateCheckListModel();
         // this.dataExchange.Subscribe("checklistModelEdited", model => this.onCheckListEditSuccess(model));
+      this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
+    }
+    
+    private departmentChangeHandler(departmentId): void {
+        this.currentDepartmentId = departmentId;
+        this.mergeResponses(this.currentDepartmentId);
     }
 
     ngOnDestroy(): void {
@@ -205,6 +213,7 @@ export class ChecklistEntryComponent implements OnInit {
 
     cancel(): void {
         this.resetCheckListForm();
+         this.showAdd = false;
     }
 
     onCheckListEditSuccess(data: ChecklistModel): void {

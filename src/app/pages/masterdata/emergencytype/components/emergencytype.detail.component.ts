@@ -31,6 +31,9 @@ export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
         this.emergencyTypeService.GetAll()
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                 this.emergencyTypes = response.Records;
+                 this.emergencyTypes.forEach(x => {
+                    x["Active"] = (x.ActiveFlag == 'Active');
+                });
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });

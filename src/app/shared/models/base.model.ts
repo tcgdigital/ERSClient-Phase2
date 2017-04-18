@@ -10,6 +10,13 @@ export abstract class BaseModel {
         this.ActiveFlag = 'Active';
         this.CreatedBy = 1;
         this.CreatedOn = new Date();
+
+    }
+
+    public deleteAttributes() {
+        delete this.ActiveFlag; 
+        delete this.CreatedBy;
+        delete this.CreatedOn;
     }
 }
 
@@ -55,4 +62,8 @@ export class InvolvedPartyType {
 export class FileData {
     file: File;
     field: string;
+}
+
+export class Location {
+    constructor(public latitude: number, public longitude: number) { }
 }

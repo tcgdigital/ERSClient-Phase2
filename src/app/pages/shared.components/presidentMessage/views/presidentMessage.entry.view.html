@@ -1,4 +1,4 @@
-<div *ngIf="showAdd" class="formStyle">
+<div *ngIf="showAdd" class="formStyle card-block entryHolder">
 <form [formGroup]="form">
     <div class="panel panel-default panel-minimal">
         <div class="panel-body InnerHolder">
@@ -6,7 +6,7 @@
                 formControlName="PresidentsMessageId">
             <div class="AllSearchHolder">
                 <div class="row">
-                <div class="col-sm-6 col-lg-4 col-md-6">
+                <div class="col-sm-6 col-lg-5 col-md-6">
                     <div class="form-group">
                         <label for="Message">President's Message:<span class="red">*</span></label><span class="MaxChartr">Max 500 chars</span>
                         <textarea class="form-control" id="Message" formControlName="Message" maxlength="500" [readOnly]="PresidentsMessage.IsPublished"
@@ -20,14 +20,15 @@
                             placeholder="Enter Remarks" [(ngModel)]="PresidentsMessage.Remarks" required autofocus></textarea>
                     </div>
                 </div>
-                </div>
-                <div class="col-sm-6 col-lg-4 col-md-6">
-                    <div class="fromtop1">
+                  <div class="col-sm-6 col-lg-12 col-md-6">
+                    <div class="buttonholder">
                         <button class="btn btn-primary" type="submit" (click)="publish()" [disabled]="PresidentsMessage.IsPublished">Publish</button>
                         <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
                         <button class="btn btn-primary" type="submit" (click)="save()" [disabled]="PresidentsMessage.IsPublished">Save</button>
                     </div>
                 </div>
+                </div>
+              
             </div>
         </div>
     </div>

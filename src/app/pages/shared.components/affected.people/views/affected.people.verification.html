@@ -1,6 +1,4 @@
 <button class="btn btn-primary" type="button" (click)="saveVerifiedAffectedPeople()">Verify</button>
-
-
 <responsive-table>
     <table responsive-table-body>
         <thead>
@@ -31,46 +29,3 @@
         </tbody>
     </table>
 </responsive-table>
-
-
-<!--<div class="row" *ngFor="let affectedperson of affectedPeopleForVerification">
-        <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-            <ul class="list-group">
-                <li class="list-group-item"><strong><i>Verify:</i></strong></li>
-                <md-checkbox class="Marght" id="IsVerified" [(ngModel)]="affectedperson.IsVerified" aria-label="Add">
-                </md-checkbox>
-            </ul>
-        </div>
-        <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-            <ul class="list-group">
-                <li class="list-group-item"><strong><i>Reference Number:</i></strong></li>
-                <li class="list-group-item" style="border-top: none">{{affectedperson.TicketNumber}}</li>
-            </ul>
-        </div>
-        <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-            <ul class="list-group">
-                <li class="list-group-item"><strong><i>PDA Name.</i></strong></li>
-                <li class="list-group-item" style="border-top: none">{{affectedperson.CrewName}}</li>
-            </ul>
-        </div>
-        <div class="col-md-5 col-lg-5 hidden-sm-down col-no-left-padding col-no-right-padding">
-            <ul class="list-group">
-                <li class="list-group-item"><strong><i>PDA Contact: </i></strong></li>
-                <li class="list-group-item" style="border-top: none">{{affectedperson.ContactNumber}}</li>
-            </ul>
-        </div>
-        <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-            <ul class="list-group">
-                <li class="list-group-item"><strong><i>PNR:</i></strong></li>
-                <li class="list-group-item" style="border-top: none">{{affectedperson.Pnr}}</li>
-
-            </ul>
-        </div>
-        <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-            <ul class="list-group">
-                <li class="list-group-item"><strong><i>Passenger Type:</i></strong></li>
-                <li class="list-group-item" style="border-top: none">{{affectedperson.PaxType}}</li>
-            </ul>
-        </div>
-    </div>
-</div>-->

@@ -12,6 +12,12 @@
                     </span>
                 </li>
             </ng-container>
+            <li class="cd-item-front" *ngIf="(accordionItems | async)?.length==0">
+                <span>
+                    <i class="fa fa-ban fa-3x" aria-hidden="true"></i>
+                    No Data Available
+                </span>
+            </li>
         </ul>
         <nav>
             <ul class="cd-item-navigation">

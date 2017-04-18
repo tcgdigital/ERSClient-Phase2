@@ -3,20 +3,20 @@ import { Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { ChecklistModel } from './checklist.model';
+import { IChecklistService } from './IChecklistService';
 import {
     IServiceInretface,
     ResponseModel,
     DataService,
     DataServiceFactory,
-    DataProcessingService
+    DataProcessingService ,ServiceBase
 } from '../../../../shared';
 import { DepartmentService, DepartmentModel } from '../../department';
 import { EmergencyTypeModel, EmergencyTypeService } from '../../emergencytype';
 import { PeopleOnBoardWidgetService } from '../../../widgets';
 
 @Injectable()
-export class ChecklistService implements IServiceInretface<ChecklistModel> {
-    private _dataService: DataService<ChecklistModel>;
+export class ChecklistService extends ServiceBase<ChecklistModel> implements IChecklistService  {
 
     /**
      * Creates an instance of ChecklistService.
@@ -29,13 +29,15 @@ export class ChecklistService implements IServiceInretface<ChecklistModel> {
     constructor(private dataServiceFactory: DataServiceFactory,
         private departmentService: DepartmentService,
         private emergencyTypeService: EmergencyTypeService) {
-        let option: DataProcessingService = new DataProcessingService();
-        this._dataService = this.dataServiceFactory
-            .CreateServiceWithOptions<ChecklistModel>('CheckLists', option);
+       // let option: DataProcessingService = new DataProcessingService();
+      //  this._dataService = this.dataServiceFactory
+       //     .CreateServiceWithOptions<ChecklistModel>('CheckLists', option);
+        super(dataServiceFactory, 'CheckLists');
     }
 
-    GetAll(): Observable<ResponseModel<ChecklistModel>> {
+    GetAllByDepartment(departmentId): Observable<ResponseModel<ChecklistModel>> {
         return this._dataService.Query()
+            .Filter(`DepartmentId eq ${departmentId}`)
             .Expand('ParentCheckList($select=CheckListId,CheckListCode)',
             'TargetDepartment($select=DepartmentId,DepartmentName)',
             'EmergencyType($select=EmergencyTypeId,EmergencyTypeName)')
@@ -43,10 +45,22 @@ export class ChecklistService implements IServiceInretface<ChecklistModel> {
             .Execute();
     }
 
-    Get(id: string | number): Observable<ChecklistModel> {
-        return this._dataService.Get(id.toString()).Execute();
+    GetAllParents(departmentId) : Observable<ResponseModel<ChecklistModel>> {
+                return this._dataService.Query()
+            .Filter(`DepartmentId eq ${departmentId} and ParentCheckListId ne null`)
+            .Expand('ParentCheckList($select=CheckListId,CheckListCode)')
+            .Execute();
     }
-
+    
+    GetQuery(query: string): Observable<ResponseModel<ChecklistModel>> {
+        return this._dataService.Query()
+            .Expand('ParentCheckList($select=CheckListId,CheckListCode)',
+            'TargetDepartment($select=DepartmentId,DepartmentName)',
+            'EmergencyType($select=EmergencyTypeId,EmergencyTypeName)')
+            .Filter(query).Execute();
+    }
+    
+    
     Create(entity: ChecklistModel): Observable<ChecklistModel> {
         let checkList: ChecklistModel;
         return this._dataService.Post(entity)
@@ -76,10 +90,7 @@ export class ChecklistService implements IServiceInretface<ChecklistModel> {
             });
     }
 
-    CreateBulk(entities: ChecklistModel[]): Observable<ChecklistModel[]> {
-        return Observable.of(entities);
-    }
-
+    
     Update(entity: ChecklistModel): Observable<ChecklistModel> {
         let key: string = entity.CheckListId.toString()
         let checkList: ChecklistModel;
@@ -87,8 +98,7 @@ export class ChecklistService implements IServiceInretface<ChecklistModel> {
             .Execute();
     }
 
-    Delete(entity: ChecklistModel): void {
-    }
+    
 
     /**
      * Get all active check lists

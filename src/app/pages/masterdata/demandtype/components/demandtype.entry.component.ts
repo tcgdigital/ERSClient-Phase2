@@ -18,6 +18,8 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
     departments: DepartmentModel[] = [];
     date: Date = new Date();
     Action: string;
+    showAdd: boolean;
+    demandTypeModelToEdit: DemandTypeModel = new DemandTypeModel();
     // @Output() demandTypeSaveEvent: EventEmitter<DemandTypeModel> = new EventEmitter(true);
 
     constructor(private demandTypeService: DemandTypeService,
@@ -38,7 +40,8 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         this.getAllDepartments();
         this.demandTypeModel = model;
         this.demandTypeModel.DepartmentId = model.DepartmentId;
-        this.Action = "Edit"
+        this.Action = "Edit";
+        this.showAdd = true;
         delete this.demandTypeModel.ApproverDepartment;
         this.form = new FormGroup({
             DemandTypeId: new FormControl(model.DepartmentId),
@@ -51,6 +54,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
     cancel(): void {
         this.demandTypeModel = new DemandTypeModel();
         this.Action = "Save";
+        this.showAdd = false;
         this.demandTypeModel.ActiveFlag = 'Active';
         this.demandTypeModel.CreatedBy = 1;
         this.demandTypeModel.CreatedOn = this.date;
@@ -66,6 +70,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
 
     ngOnInit(): any {
         this.getAllDepartments();
+        this.showAdd = false;
         this.form = new FormGroup({
             DemandTypeId: new FormControl(0),
             DemandTypeName: new FormControl('', [Validators.required, Validators.maxLength(50)]),
@@ -93,7 +98,8 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
                 });
         }
         else {
-            this.demandTypeService.Update(this.demandTypeModel)
+            this.formControlDirtyCheck();
+            this.demandTypeService.Update(this.demandTypeModelToEdit)
                 .subscribe((response: DemandTypeModel) => {
                     this.dataExchange.Publish("demandTypeModelUpdated", response);
                 }, (error: any) => {
@@ -102,7 +108,44 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         }
     }
 
+
+    formControlDirtyCheck(): void {
+        this.demandTypeModelToEdit = new DemandTypeModel();
+        delete this.demandTypeModelToEdit.ActiveFlag;
+        delete this.demandTypeModelToEdit.CreatedBy;
+        delete this.demandTypeModelToEdit.CreatedOn;
+
+
+        this.demandTypeModelToEdit.DemandTypeId = this.form.controls['DemandTypeId'].value;
+
+        if (this.form.controls['DemandTypeName'].touched) {
+            this.demandTypeModelToEdit.DemandTypeName = this.form.controls['Priority'].value;
+        }
+        if (this.form.controls['IsAutoApproved'].touched) {
+            this.demandTypeModelToEdit.IsAutoApproved = this.form.controls['DemandDesc'].value;
+        }
+        if (this.form.controls['ApproverDept'].touched) {
+            this.demandTypeModelToEdit.ApproverDepartment = this.form.controls['RequestedBy'].value;
+        }
+    }
+
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe("OnDemandUpdate");
+    }
+
+    showAddRegion(ShowAdd: Boolean): void {
+        this.showAdd = true;
+        this.form = new FormGroup({
+            DemandTypeId: new FormControl(0),
+            DemandTypeName: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+            IsAutoApproved: new FormControl(false),
+            ApproverDept: new FormControl(this.demandTypeModel.DepartmentId, [Validators.required])
+        });
+        this.demandTypeModel.ActiveFlag = 'Active';
+        this.demandTypeModel.CreatedBy = 1;
+        this.demandTypeModel.CreatedOn = this.date;
+        this.demandTypeModel.DemandTypeId = 0;
+        this.Action = "Save";
+        // this.buttonValue = "Show Add Checklist";
     }
 }

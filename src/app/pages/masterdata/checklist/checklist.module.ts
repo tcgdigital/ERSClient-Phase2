@@ -12,7 +12,7 @@ import { ChecklistEntryComponent,
 } from './components';
 import { DepartmentService } from '../department';
 import { EmergencyTypeService } from '../emergencytype';
-import { DataExchangeService } from '../../../shared';
+import { DataExchangeService , SharedModule } from '../../../shared';
 
 @NgModule({
     imports: [
@@ -21,7 +21,8 @@ import { DataExchangeService } from '../../../shared';
         HttpModule,
         ReactiveFormsModule,
         MdCheckboxModule,
-        ChecklistRouting
+        ChecklistRouting,
+        SharedModule
     ],
     declarations: [
         ChecklistEntryComponent,

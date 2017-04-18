@@ -29,6 +29,7 @@ import 'lodash';
 import 'air-datepicker';
 import 'moment';
 import '../node_modules/air-datepicker/dist/js/i18n/datepicker.en';
+import '../node_modules/sweet-dropdown/dist/min/jquery.sweet-dropdown.min';
 
 if ('production' === ENV) {
     // Production

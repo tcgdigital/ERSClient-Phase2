@@ -1,0 +1,29 @@
+@import '../../config/config';
+
+.halfBoxStyle{
+        width: 49.5%;
+    padding-left: 14px;
+}
+.entryHolder{
+    background: $entryholder-background;
+    padding: 15px;
+    border: $entryholder-color solid 1px;
+    float: left;
+    margin: 15px 23px;
+}
+
+.formStyle{
+    width : 97%;
+}
+
+.buttonholder{
+        float: right;
+    vertical-align: middle;
+    padding-top: 27px;
+}
+
+
+.addbuttonHolder{
+    padding: 22px;
+    float: right;
+}
