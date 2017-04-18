@@ -6,6 +6,7 @@ import { MdCheckboxModule } from '@angular2-material/checkbox';
 import { ModalModule, ModalDirective } from 'ng2-bootstrap';
 import { IncidentRouting } from './incident.routing';
 import { IncidentComponent } from './incident.component';
+import { EmergencyLocationService } from "../masterdata/emergencylocation";
 import { IncidentEntryComponent, IncidentViewComponent, IncidentService } from './components';
 import { DepartmentService, EmergencyTypeService } from '../masterdata';
 import { SharedModule, DataExchangeService } from '../../shared';
@@ -33,6 +34,7 @@ import { FlightModule, InvolvePartyModule } from '../shared.components';
         IncidentService,
         DepartmentService,
         EmergencyTypeService,
+        EmergencyLocationService,
         DataExchangeService
     ]
 })

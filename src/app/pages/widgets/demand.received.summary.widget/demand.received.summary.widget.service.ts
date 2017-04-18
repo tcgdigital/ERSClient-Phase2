@@ -68,6 +68,8 @@ export class DemandReceivedSummaryWidgetService {
                             return item.IsCompleted === true;
                         }).length;
                     });
+            }, (error)=>{
+                debugger;
             });
 
         return this.demandReceivedSummary;

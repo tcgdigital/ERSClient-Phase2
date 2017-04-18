@@ -23,4 +23,4 @@ import { DataExchangeService } from '../../../shared';
         DataExchangeService
     ]
 })
-export class FlightEmergencyLocationModule { }
+export class EmergencyLocationModule { }
