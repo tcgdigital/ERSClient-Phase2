@@ -2,39 +2,40 @@
     <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
         <input type="hidden" formControlName="DemandTypeId" name="DemandTypeId" />
         <div class="row">
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <div class="form-group">
-                <label for="DemandTypeName">Request Type:<span class="red">*</span></label>
-                <input id="DemandTypeName" type="text" class="form-control" formControlName="DemandTypeName" placeholder="Enter RequestType Name" required autofocus
-                />
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label for="DemandTypeName">Request Type:<span class="red">*</span></label>
+                    <input id="DemandTypeName" type="text" class="form-control" formControlName="DemandTypeName" placeholder="Enter RequestType Name"
+                        required autofocus />
+                </div>
             </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12">
-             <div class="form-group">
-            <label for="IsAutoApproved">Is Auto Approved:</label>
-            <br>
-            <md-checkbox class="Marght" id="IsAutoApproved" formControlName="IsAutoApproved" aria-label="Add">
-            </md-checkbox>
-             </div>
-        </div>
-       <div class="col-lg-3 col-md-6 col-sm-12">
-            <div class="form-group">
-                <div [hidden]="demandTypeModel.IsAutoApproved">
-                    <label for="ApproverDept">Approver Department:<span class="red">*</span></label>
-                    <select id="selectApprover" [(ngModel)]="demandTypeModel.DepartmentId" formControlName="ApproverDept" class="form-control">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                    <!--<label for="IsAutoApproved">Is Auto Approved:</label>
+                    <br>-->
+                    <md-checkbox class="Marght" id="IsAutoApproved" formControlName="IsAutoApproved" aria-label="Add">
+                        Is Auto Approved:
+                    </md-checkbox>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                    <div [hidden]="demandTypeModel.IsAutoApproved">
+                        <label for="ApproverDept">Approver Department:<span class="red">*</span></label>
+                        <select id="selectApprover" [(ngModel)]="demandTypeModel.DepartmentId" formControlName="ApproverDept" class="form-control">
                         <option *ngFor="let department of departments" [value]="department.DepartmentId" >
                         {{department.DepartmentName}}
                         </option>
                     </select>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12">
-            <div class="buttonholder">
-                <button class="btn btn-primary" type="submit">{{Action}}</button>
-                <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="buttonholder">
+                    <button class="btn btn-primary" type="submit">{{Action}}</button>
+                    <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
+                </div>
             </div>
-        </div>
         </div>
     </form>
 </div>

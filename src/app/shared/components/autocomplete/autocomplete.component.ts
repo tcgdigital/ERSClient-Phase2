@@ -8,9 +8,9 @@ import { DataExchangeService } from '../../services/data.exchange';
 
 @Component({
     selector: 'autocomplete',
-    host: {
-        '(document:click)': 'onDocunentClick($event)',
-    },
+    // host: {
+    //     '(document:click)': 'onDocunentClick($event)',
+    // },
     templateUrl: './autocomplete.view.html',
     encapsulation: ViewEncapsulation.None,
     styleUrls: ['./autocomplete.style.scss']
@@ -18,6 +18,8 @@ import { DataExchangeService } from '../../services/data.exchange';
 })
 export class AutocompleteComponent implements OnInit, OnDestroy {
     @Input('items') Items: Array<KeyValue> = [];
+    @Input() placeholder: string = "Please select";
+
     @Output() notify: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
     @Output('InvokeAutoCompleteReset') InvokeAutoCompleteReset: EventEmitter<any> = new EventEmitter();
 
@@ -31,7 +33,6 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
     }
 
     filter(): void {
-        debugger;
         if ( this.query != null && this.query != '') {
             this.filteredList = this.Items.filter(function (el: KeyValue) {
                 return el.Key.toLowerCase().indexOf(this.query.toLowerCase()) > -1;
@@ -60,7 +61,7 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
         this.notify.emit(item);
     }
 
-    // @HostListener('document:click', ['$event'])
+    @HostListener('document:click', ['$event'])
     onDocunentClick(event) {
         let clickedComponent = event.target;
         let inside = false;
@@ -73,11 +74,12 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
         if (!inside) {
             this.filteredList = [];
         }
-
     }
+
     ngOnInit() {
         this.dataExchange.Subscribe('clearAutoCompleteInput', (model) => this.query = model);
     };
+
     ngOnDestroy() {
         this.dataExchange.Unsubscribe('clearAutoCompleteInput');
     };
