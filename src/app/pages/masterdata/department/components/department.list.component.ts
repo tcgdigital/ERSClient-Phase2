@@ -6,7 +6,7 @@ import { UserProfileService } from '../../userprofile';
 import {
     ResponseModel, SearchConfigModel,
     SearchTextBox, SearchDropdown,
-    NameValue
+    NameValue, DataExchangeService
 } from '../../../../shared';
 
 @Component({
@@ -18,14 +18,19 @@ import {
 export class DepartmentListComponent implements OnInit {
     departments: DepartmentModel[] = [];
     searchConfigs: SearchConfigModel<any>[] = [];
+    departmentIds: number[] = [];
 
-    constructor(private departmentService: DepartmentService,
+    constructor(private departmentService: DepartmentService, private dataExchange: DataExchangeService<DepartmentModel>,
         private userProfileService: UserProfileService) {
     }
 
     getDepertments(): void {
         this.departmentService.GetAll()
             .subscribe((response: ResponseModel<DepartmentModel>) => {
+                response.Records.forEach(x => {
+                    x["Active"] = (x.ActiveFlag == 'Active');
+                    this.departmentIds.push(x.DepartmentId);
+                });
                 this.departments = response.Records;
             }, ((error: any) => {
                 console.log(`Error: ${error}`);
@@ -35,6 +40,23 @@ export class DepartmentListComponent implements OnInit {
     ngOnInit(): any {
         this.getDepertments();
         this.initiateSearchConfigurations();
+        this.dataExchange.Subscribe("departmentSavedOrEdited", model => this.onDepartmentEditorSaveSuccess(model));
+    }
+
+    onDepartmentEditorSaveSuccess(model?: DepartmentModel): void {
+        if (model && this.departmentIds.find(x => { return x == model.DepartmentId; }) == null) {
+            this.departments.unshift(model)
+        }
+        else {
+            this.getDepertments();
+        }
+        this.initiateSearchConfigurations();
+    }
+
+
+
+    editdepartment(editedDepartment): void {
+        this.dataExchange.Publish("departmentModelEdited", editedDepartment);
     }
 
     invokeSearch(query: string): void {
@@ -55,7 +77,7 @@ export class DepartmentListComponent implements OnInit {
     private initiateSearchConfigurations(): void {
         let status: NameValue<string>[] = [
             new NameValue<string>('Active', 'Active'),
-            new NameValue<string>('In-Active', 'In-Active'),
+            new NameValue<string>('InActive', 'InActive'),
         ]
         this.searchConfigs = [
             new SearchTextBox({
@@ -73,18 +95,26 @@ export class DepartmentListComponent implements OnInit {
                 Description: 'Parent Department',
                 PlaceHolder: 'Select Parent Department',
                 Value: '',
-                ListData: this.departmentService.GetAll()
+                ListData: this.departmentService.GetParentDepartments()
                     .map(x => x.Records)
-                    .map(x => x.map(y => new NameValue<number>(y.DepartmentName, y.DepartmentId)))
+                    .map(x => {
+                        let parentDepartments: NameValue<number>[] = [];
+                        x.forEach(y => {
+                            if (parentDepartments.find(z => { return z.Value === y.ParentDepartment.DepartmentId }) == null) {
+                                parentDepartments.push(new NameValue<number>(y.ParentDepartment.DepartmentName, y.ParentDepartmentId));
+                            }
+                        })
+                        return parentDepartments;
+                    })
             }),
             new SearchDropdown({
                 Name: 'DepartmentSpoc',
                 Description: 'Department SPOC',
                 PlaceHolder: 'Select Department SPOC',
                 Value: '',
-                ListData: this.userProfileService.GetAll()
+                ListData: this.userProfileService.GetAllActiveWithContact()
                     .map(x => x.Records)
-                    .map(x => x.map(y => new NameValue<number>(`${y.Name} (${y.MainContact})`, y.UserProfileId)))
+                    .map(x => x.map(y => new NameValue<number>(y.Name, y.UserProfileId)))
             }),
             new SearchDropdown({
                 Name: 'ActiveFlag',

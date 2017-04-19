@@ -12,4 +12,8 @@ export class DepartmentModel extends BaseModel {
 
     public ParentDepartment?: DepartmentModel;
     public UserProfile?: UserModel;
+
+    constructor() {
+        super();
+    }
 }

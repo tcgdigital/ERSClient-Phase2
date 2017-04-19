@@ -29,4 +29,15 @@ export class EmergencyTypeService extends ServiceBase<EmergencyTypeModel> {
                 return emergencyTypes;
             });
     }
+
+      GetQuery(query: string): Observable<ResponseModel<EmergencyTypeModel>> {
+        return this._dataService.Query()
+            .Filter(query).Execute() .map((emergencyTypes: ResponseModel<EmergencyTypeModel>) => {
+                this._emergencyTypes = emergencyTypes;
+                this._emergencyTypes.Records.forEach(element => {
+                    element.Active = (element.ActiveFlag == 'Active')
+                });
+                return emergencyTypes;
+            });
+    }
 }
