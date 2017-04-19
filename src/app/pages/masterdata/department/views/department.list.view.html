@@ -25,7 +25,7 @@
                 <td data-title="Department Spoc">{{department.UserProfile.Name}}</td>
                 <td data-title="Contact Number">{{department.ContactNo}}</td>
                 <td data-title="Active">
-                    <md-checkbox class="Marght" id="IsActive" name="IsActive" [ngModel]="department.Active" (change)="IsActive($event,checklist)"
+                    <md-checkbox class="Marght" id="IsActive" name="IsActive" [ngModel]="department.Active" (change)="IsActive($event,department)"
                         aria-label="ActiveFlag">
                     </md-checkbox>
                 </td>

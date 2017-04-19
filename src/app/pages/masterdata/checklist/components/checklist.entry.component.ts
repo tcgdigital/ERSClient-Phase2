@@ -157,7 +157,7 @@ export class ChecklistEntryComponent implements OnInit {
                     .subscribe((response: ChecklistModel) => {
                         this.initiateCheckListModel();
                         this.dataExchange.Publish("checkListListReload", response);
-                        this.showAddRegion(true);
+                         this.showAdd = false;
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                     });
@@ -171,23 +171,14 @@ export class ChecklistEntryComponent implements OnInit {
     }
 
     onCheckListEditSuccess(data: ChecklistModel): void {
-        this.showAddRegion(false);
+        this.showAdd = true;
         this.initiateCheckListModel();
         this.checkListModel = data;
         this.form = this.resetCheckListForm(this.checkListModel);
     }
 
-    showAddRegion(ShowAdd: Boolean): void {
-        if (ShowAdd) {
-            this.showAdd = false;
-            this.buttonValue = "Show Add Checklist";
-        }
-        else {
-            this.showAdd = true;
-            this.buttonValue = "Hide Add Checklist";
-            this.form = this.resetCheckListForm();
-        }
-        console.log("Add Checklist Region is Show " + ShowAdd);
+    showAddRegion(): void {
+        this.showAdd = true;
     }
 
     private resetCheckListForm(checkList?: ChecklistModel): FormGroup {

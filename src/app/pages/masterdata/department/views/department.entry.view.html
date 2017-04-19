@@ -4,21 +4,21 @@
         />
 
         <div class="row">
-            <div class="col-lg-6 cl-sm-6">
+            <div class="col-lg-4 cl-md-6 col-sm-12">
                 <div class="form-group">
                     <label for="DepartmentCode">Department Code:<span class="red">*</span></label>
                     <input id="DepartmentCode" class="form-control" type="text" name="DepartmentCode" formControlName="DepartmentName" placeholder="Enter Department Code"
                     />
                 </div>
             </div>
-            <div class="col-lg-6 cl-sm-6">
+            <div class="col-lg-4 cl-md-6 col-sm-12">
                 <div class="form-group">
                     <label for="DepartmentName">Department Name:<span class="red">*</span></label>
                     <input id="DepartmentName" class="form-control" type="text" name="DepartmentName" formControlName="Description" placeholder="Enter Department Name"
                     />
                 </div>
             </div>
-            <div class="form-group col-lg-6">
+            <div class="form-group col-lg-4 cl-md-6 col-sm-12">
                 <label for="ContactNumber">Contact Number:<span class="red">*</span></label>
                 <input id="ContactNumber" class="form-control" type="number" name="ContactNumber" formControlName="ContactNo" placeholder="Enter Contact Number"
                 />
@@ -26,7 +26,7 @@
         </div>
         <div class="row">
 
-            <div class="form-group col-lg-6">
+            <div class="form-group col-lg-4 cl-md-6 col-sm-12">
                 <label for="DepartmentSpoc">Department Spoc:<span class="red">*</span></label>
                 <select id="DepartmentSpoc" formControlName="DepartmentSpoc" name="DepartmentSpoc" class="form-control">
                     <option *ngFor="let user of users" [value]="user.UserProfileId" >
@@ -34,7 +34,7 @@
                     </option>
                 </select>
             </div>
-            <div class="col-lg-6 cl-sm-6">
+            <div class="col-lg-4 cl-md-6 col-sm-12">
                 <div class="form-group">
                     <label for="ParentDepartmentCode">Parent Department:<span class="red">*</span></label>
                     <select id="ParentDepartmentCode" formControlName="ParentDepartmentId" name="ParentDepartmentCode" class="form-control">
@@ -44,7 +44,7 @@
                 </select>
                 </div>
             </div>
-            <div class="col-lg-3">
+            <div class="col-lg-4 cl-md-6 col-sm-12">
                 <div class="buttonholder">
                     <button class="btn btn-primary" [disabled]="!form.valid" type="submit">Save</button>
                     <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>

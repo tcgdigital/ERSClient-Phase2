@@ -115,5 +115,12 @@ export class DepartmentEntryComponent implements OnInit {
 
     showAddRegion(): void {
         this.showAdd = true;
+        this.departmentModel = new DepartmentModel();
+        this.departmentModel.DepartmentId = 0;
+        this.form = this.setDepartmentForm();
+    }
+
+    cancel() : void {
+        this.showAdd = false;   
     }
 }

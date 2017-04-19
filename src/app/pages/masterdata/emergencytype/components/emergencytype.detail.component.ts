@@ -16,6 +16,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
     emergencyTypes: EmergencyTypeModel[] = [];
     searchConfigs: SearchConfigModel<any>[] = [];
+    emergencyTypePatch : EmergencyTypeModel = null;
 
     /**
      * Creates an instance of EmergencyTypeDetailComponent.
@@ -70,6 +71,22 @@ export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
         //this.dataExchange.Unsubscribe('OnEmergencyTypeUpdate');
         this.dataExchange.Unsubscribe('EmergencyTypeModelSaved');
         this.dataExchange.Unsubscribe('EmergencyTypeModelUpdated');
+    }
+
+     IsActive(event: any, editedEmergencyType: EmergencyTypeModel): void {
+        this.emergencyTypePatch = new EmergencyTypeModel();
+        this.emergencyTypePatch.EmergencyTypeId = editedEmergencyType.EmergencyTypeId;
+        this.emergencyTypePatch.deleteAttributes();
+        this.emergencyTypePatch.ActiveFlag = 'Active';
+        if (!event.checked) {
+            this.emergencyTypePatch.ActiveFlag = 'InActive';
+        }
+        this.emergencyTypeService.Update(this.emergencyTypePatch)
+            .subscribe((response: EmergencyTypeModel) => {
+                this.getEmergencyTypes();
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
     }
 
 
