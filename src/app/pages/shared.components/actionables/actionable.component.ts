@@ -1,43 +1,11 @@
-import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
-import { ActionableModel } from '../../shared.components';
-import { DataExchangeService } from '../../../shared';
+import { Component, ViewEncapsulation } from '@angular/core';
 
 @Component({
 
-    selector: 'actionable-main',   
+    selector: 'actionable-main',
     encapsulation: ViewEncapsulation.None,
     templateUrl: './views/actionable.html',
-    styleUrls:['./styles/actionable.style.scss']
+    styleUrls: ['./styles/actionable.style.scss']
 })
-export class ActionableComponent implements OnInit, OnDestroy {
-    showActive: boolean = null;
-    showClose: boolean = null;
-    IsOpenActionable:boolean = null;
-    actionable: ActionableModel;
-    constructor(private dataExchange: DataExchangeService<boolean>) {
-
-
-    }
-    ngOnInit(): any {
-        // this.IsOpenActionable=true;
-        // this.showActive = true;
-        // this.showClose = false;
-    }
-    ngOnDestroy(): void {
-
-    }
-
-    // OpenActionable(event: any): void {
-    //     if (event.checked) {
-    //         this.showActive = true;
-    //         this.showClose = false;
-    //         this.dataExchange.Publish("OpenActionablePageInitiate", true);
-    //     }
-    //     else {
-    //         this.showActive = false;
-    //         this.showClose = true;
-    //         this.dataExchange.Publish("CloseActionablePageInitiate", true);
-    //     }
-    // }
-
+export class ActionableComponent {
 }
