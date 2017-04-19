@@ -1,10 +1,14 @@
 /**General declaration */
 const path = require('path');
 const webpackMerge = require('webpack-merge');
+const webpackMergeDll = webpackMerge.strategy({
+    plugins: 'replace'
+});
 const helpers = require('./config.helper');
 const webpackCommenConfig = require('./webpack.common.config');
 
 /**Webpack plugin objects */
+const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 const DefinePlugin = require('webpack/lib/DefinePlugin');
 const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
 const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
@@ -15,16 +19,22 @@ const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 3000;
 const HRM = helpers.hasProcessFlag('hot');
-const METADATA = webpackMerge(webpackCommenConfig({ env: ENV }).METADATA, {
+const METADATA = webpackMerge(webpackCommenConfig({
+    env: ENV
+}).METADATA, {
     env: ENV,
     host: HOST,
     port: PORT,
     hrm: HRM
 });
 
+const DllBundlesPlugin = require('webpack-dll-bundles-plugin').DllBundlesPlugin;
+
 /**Webpack configurations */
 module.exports = function (options) {
-    return webpackMerge(webpackCommenConfig({ env: ENV }), {
+    return webpackMerge(webpackCommenConfig({
+        env: ENV
+    }), {
         /** Developer tool to enhance debugging
          * eval - Each module is executed with eval and //@ sourceURL.
          * source-map - A SourceMap is emitted. See also output.sourceMapFilename.
@@ -40,12 +50,12 @@ module.exports = function (options) {
         devtool: 'source-map', // 'cheap-module-source-map',
 
         /* Options affecting the output of the compilation.
-        * See: http://webpack.github.io/docs/configuration.html#output
-        */
+         * See: http://webpack.github.io/docs/configuration.html#output
+         */
         output: {
             /* The output directory as absolute path (required).
-            * See: http://webpack.github.io/docs/configuration.html#output-path
-            */
+             * See: http://webpack.github.io/docs/configuration.html#output-path
+             */
             path: helpers.root('dist'),
 
             /** Specifies the name of each output file on disk.
@@ -120,6 +130,57 @@ module.exports = function (options) {
                     'HMR': METADATA.HMR,
                 }
             }),
+
+            new DllBundlesPlugin({
+                bundles: {
+                    polyfills: [
+                        'core-js',
+                        {
+                            name: 'zone.js',
+                            path: 'zone.js/dist/zone.js'
+                        },
+                        {
+                            name: 'zone.js',
+                            path: 'zone.js/dist/long-stack-trace-zone.js'
+                        },
+                        'ts-helpers',
+                    ],
+                    vendor: [
+                        '@angular/platform-browser',
+                        '@angular/platform-browser-dynamic',
+                        '@angular/core',
+                        '@angular/common',
+                        '@angular/forms',
+                        '@angular/http',
+                        '@angular/router',
+                        '@angularclass/hmr',
+                        'rxjs',
+                    ]
+                },
+                dllDir: helpers.root('dll'),
+                webpackConfig: webpackMergeDll(webpackCommenConfig({
+                    env: ENV
+                }), {
+                    devtool: 'source-map', //cheap-module-source-map',
+                    plugins: []
+                })
+            }),
+
+            /**
+             * Plugin: AddAssetHtmlPlugin
+             * Description: Adds the given JS or CSS file to the files
+             * Webpack knows about, and put it into the list of assets
+             * html-webpack-plugin injects into the generated html.
+             *
+             * See: https://github.com/SimenB/add-asset-html-webpack-plugin
+             */
+            new AddAssetHtmlPlugin([{
+                    filepath: helpers.root(`dll/${DllBundlesPlugin.resolveFile('polyfills')}`)
+                },
+                {
+                    filepath: helpers.root(`dll/${DllBundlesPlugin.resolveFile('vendor')}`)
+                }
+            ]),
 
             new WriteFilePlugin(),
 

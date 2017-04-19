@@ -12,28 +12,28 @@ const demandRoutes: Routes = [
         children: [
             {
                 path: '',
+                // component: AssignedDemandComponent
+                redirectTo: 'assigned', 
+                pathMatch: 'full'
+            },
+            {
+                path: 'assigned',
                 component: AssignedDemandComponent
             },
             {
-                path: 'assignedDemand',
-                component: AssignedDemandComponent
-            },
-            {
-                path: 'myDemands',
+                path: 'own',
                 component: MyDemandComponent,
             },
             {
-                path: 'approvalDemands',
+                path: 'approval',
                 component: ApprovedDemandComponent
             },
             {
-                path: 'completedDemands',
+                path: 'completed',
                 component: CompletedDemandComponent
             }
         ]
     }
-
-
 ];
 
 export const DemandeRouting: ModuleWithProviders

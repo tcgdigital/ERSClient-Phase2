@@ -8,9 +8,11 @@ import { KeyValue } from '../../models/base.model';
     encapsulation: ViewEncapsulation.None
 })
 export class CommandHeaderComponent implements OnInit {
-
     @Input() departments: KeyValue[];
     @Input() incidents: KeyValue[];
+    @Input() currentDepartmentId: number = 0;
+    @Input() currentIncidentId: number = 0;
+
     @Output() departmentChange: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
     @Output() incidentChange: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
 
@@ -21,13 +23,6 @@ export class CommandHeaderComponent implements OnInit {
 
     ngOnInit() { }
 
-// onChangeIncident(value){
-//       this.globalState.NotifyDataChanged('incidentChange', value);
-//     }
-
-//     onChangeDepartment(value){
-//       this.globalState.NotifyDataChanged('departmentChange', value);
-//     }
     public onDepartmentChange(selectedDepartment: KeyValue): void {
         this.departmentChange.emit(selectedDepartment);
     }

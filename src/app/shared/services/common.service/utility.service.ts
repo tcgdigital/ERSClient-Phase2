@@ -61,6 +61,7 @@ export class UtilityService {
         for (let key in data) {
             if (data.hasOwnProperty(key) && typeof key !== 'function') {
                 sessionStorage.setItem(key, <string>data[key]);
+                // console.log(sessionStorage.getItem(key));
             }
         }
     }
