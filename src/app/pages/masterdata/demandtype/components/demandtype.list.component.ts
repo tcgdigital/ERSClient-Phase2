@@ -114,7 +114,6 @@ export class DemandTypeListComponent implements OnInit {
     }
     invokeSearch(query: string): void {
         if (query !== '') {
-            debugger;
             if (query.indexOf('IsAutoApproved') >= 0) {
                 if (query.indexOf("'true'") >= 0)
                     query = query.replace("'true'", "true");

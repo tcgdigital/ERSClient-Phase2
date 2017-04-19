@@ -212,7 +212,6 @@ export class UtilityService {
 
             if (paramNames.length > 0) {
                 paramNames.forEach((x: string) => {
-                    debugger;
                     if (fromGroup.controls[x].touched) {
                         entity[x] = fromGroup.controls[x].value;
                     }

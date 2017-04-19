@@ -80,7 +80,6 @@ export class DepartmentEntryComponent implements OnInit {
 
 
     onSubmit(values: DepartmentModel): void {
-        debugger;
         if (values.DepartmentId == 0) {//ADD REGION
 
             UtilityService.setModelFromFormGroup<DepartmentModel>(this.departmentModel, this.form,
