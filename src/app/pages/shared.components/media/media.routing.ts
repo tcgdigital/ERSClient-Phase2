@@ -11,15 +11,17 @@ const mediaRoutes: Routes = [
         children:[
              {
                 path: '',
+                // component: MediaQueryListComponent
+                redirectTo: 'query', 
+                pathMatch: 'full'
+            },
+            {
+                path: 'query',
                 component: MediaQueryListComponent
             },
             {
                 path: 'release',
                 component: MediaReleaseComponent
-            },
-            {
-                path: 'query',
-                component: MediaQueryListComponent
             }
         ]
     }

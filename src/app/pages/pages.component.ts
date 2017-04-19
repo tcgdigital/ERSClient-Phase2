@@ -22,6 +22,8 @@ export class PagesComponent implements OnInit {
     sideMenuState: boolean = false;
     departments: KeyValue[] = [];
     incidents: KeyValue[] = [];
+    currentDepartmentId: number = 0;
+    currentIncidentId: number = 0;
     userName: string;
     lastLogin: Date;
     private sub: any;
@@ -56,13 +58,6 @@ export class PagesComponent implements OnInit {
         this.userName = 'Sandip Ghosh';
         this.lastLogin = new Date();
     }
-
-    // private loggedInhandler(storageData: StorageData): void {
-    //     storageData.DepartmentId = this.departments[0].Value;
-    //     storageData.IncidentId = this.incidents[0].Value;
-    //     this.globalState.NotifyDataChanged('stoargeDataInitialization', storageData);
-
-    // }
 
     public toggleSideMenu($event): void {
         this.sideMenuState = !this.sideMenuState;
@@ -100,8 +95,11 @@ export class PagesComponent implements OnInit {
                 return 0;
             })).subscribe((x: DepartmentModel[]) => {
                 this.departments = x.map((y: DepartmentModel) => new KeyValue(y.DepartmentName, y.DepartmentId));
-                console.log(this.departments);
-                UtilityService.SetToSession({ 'CurrentDepartmentId': this.departments[0].Value });
+                if (this.departments.length > 0) {
+                    this.currentDepartmentId = this.departments[0].Value
+                    console.log(this.currentDepartmentId);
+                    UtilityService.SetToSession({ 'CurrentDepartmentId': this.currentDepartmentId });
+                }
             });
     }
 
@@ -113,8 +111,11 @@ export class PagesComponent implements OnInit {
                 return dateA > dateB ? 1 : -1;
             })).subscribe((x: IncidentModel[]) => {
                 this.incidents = x.map((y: IncidentModel) => new KeyValue(y.EmergencyName, y.IncidentId));
-                console.log(this.incidents);
-                UtilityService.SetToSession({ 'CurrentIncidentId': this.incidents[0].Value });
+                if (this.departments.length > 0) {
+                    this.currentIncidentId = this.incidents[0].Value;
+                    console.log(this.currentIncidentId);
+                    UtilityService.SetToSession({ 'CurrentIncidentId': this.currentIncidentId });
+                }
             });
     }
 }
