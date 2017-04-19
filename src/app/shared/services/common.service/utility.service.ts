@@ -155,8 +155,6 @@ export class UtilityService {
                 let prop = /\.(.*?)\;/gi.exec(x);
                 return prop[1];
             });
-
-        console.log(func[UtilityService.CACHE_PROPERTY]);
         return func[UtilityService.CACHE_PROPERTY];
     }
 
@@ -200,6 +198,23 @@ export class UtilityService {
             if (paramNames.length > 0) {
                 paramNames.forEach((x: string) => {
                     entity[x] = fromGroup.controls[x].value;
+                })
+            }
+        }
+    }
+
+    public static formDirtyCheck<T extends BaseModel>(entity: T, fromGroup: FormGroup, ...params: ((entity: T) => any)[]): void {
+        let paramNames: string[] = [];
+        if (params.length > 0) {
+            params.forEach((x: Function) => {
+                paramNames.push(UtilityService.getReturnType(x)[0]);
+            });
+
+            if (paramNames.length > 0) {
+                paramNames.forEach((x: string) => {
+                    if (fromGroup.controls[x].touched) {
+                        entity[x] = fromGroup.controls[x].value;
+                    }
                 })
             }
         }

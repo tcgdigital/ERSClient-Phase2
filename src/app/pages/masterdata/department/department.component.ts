@@ -5,7 +5,8 @@ import { DepartmentService } from './components/department.service';
     selector: 'dept-main',
     encapsulation: ViewEncapsulation.None,
     providers: [DepartmentService],
-    templateUrl: './views/department.view.html'
+    templateUrl: './views/department.view.html',
+    styleUrls:['./styles/department.style.scss']
 })
 export class DepartmentComponent implements OnInit {
     public data: any;

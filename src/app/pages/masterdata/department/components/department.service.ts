@@ -107,4 +107,12 @@ export class DepartmentService
             .Select('DepartmentId,DepartmentName')
             .Execute();
     }
+
+    GetParentDepartments() : Observable<ResponseModel<DepartmentModel>>{
+          return this._dataService.Query()
+            .Filter(`ParentDepartmentId ne null`)
+            .Expand('ParentDepartment')
+            .OrderBy("CreatedOn desc")
+            .Execute();
+    }
 }
