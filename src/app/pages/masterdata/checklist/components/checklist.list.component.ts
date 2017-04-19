@@ -128,7 +128,7 @@ export class ChecklistListComponent implements OnInit {
     private initiateSearchConfigurations(): void {
         let status: NameValue<string>[] = [
             new NameValue<string>('Active', 'Active'),
-            new NameValue<string>('In-Active', 'In-Active'),
+            new NameValue<string>('InActive', 'InActive'),
         ]
         this.searchConfigs = [
             new SearchTextBox({
