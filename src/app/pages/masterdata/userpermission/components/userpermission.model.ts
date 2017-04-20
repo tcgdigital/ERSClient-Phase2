@@ -10,7 +10,7 @@ export class UserPermissionModel extends BaseModel {
     public IsHod: boolean;
 
 
-    public UserProfile: UserProfileModel;
+    public User: UserProfileModel;
     public Department: DepartmentModel;
 
     constructor(){

@@ -1,6 +1,9 @@
 import { Component, ViewEncapsulation, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
-
+import { Router } from '@angular/router';
+import {
+    FormGroup, FormControl, FormBuilder, Validators,
+    ReactiveFormsModule
+} from '@angular/forms';
 import { IncidentModel } from './incident.model';
 import { EmergencyTypeModel, EmergencyTypeService } from '../../masterdata';
 import { DateTimePickerSelectEventArgs } from '../../../shared/directives/datetimepicker';
@@ -14,7 +17,8 @@ import {
     KeyVal,
     IncidentStatus,
     InvolvedPartyType,
-    UtilityService
+    UtilityService,
+    LocationService, Location
 } from '../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { FlightModel, InvolvePartyModel } from '../../shared.components';
@@ -27,8 +31,15 @@ import { IncidentDataExchangeModel } from './incidentDataExchange.model';
     templateUrl: '../views/incident.entry.html'
 })
 export class IncidentEntryComponent implements OnInit, OnDestroy {
-    @Input() DepartmentId: any;
     @ViewChild('childModalViewIncident') public childModalViewIncident: ModalDirective;
+    @ViewChild('childModalViewWeatherLocation') public childModalViewWeatherLocation: ModalDirective;
+    incident: IncidentModel;
+    lat: number = 51.678418;
+    lng: number = 7.809007;
+    zoom: number = 8;
+
+    currentDepartmentId: number;
+    location: Location;
     datePickerOption: any = {
         timepicker: true,
         format12h: true,
@@ -68,20 +79,41 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
      * @memberOf IncidentEntryComponent
      */
     constructor(formBuilder: FormBuilder,
+        private router: Router,
         private incidentService: IncidentService,
         private emergencyTypeService: EmergencyTypeService,
         private emergencyLocationService: EmergencyLocationService,
         private dataExchange: DataExchangeService<IncidentDataExchangeModel>,
-        private dataExchangeDecision: DataExchangeService<Boolean>) {
-        //this.showIncidentView = false;
+        private dataExchangeDecision: DataExchangeService<Boolean>,
+        private locationService: LocationService) {
         this.severities = UtilityService.GetKeyValues(Severity);
         this.incidentStatuses = UtilityService.GetKeyValues(IncidentStatus);
-
         this.affectedStations = [];
-
         this.EmergencyDate = new Date();
         this.ArrivalDate = new Date();
         this.DepartureDate = new Date();
+    }
+
+    ngOnInit(): any {
+        this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.isFlightRelated = false;
+        this.disableIsDrill = false;
+        this.isOffSet = false;
+        this.initiateIncidentModel();
+        this.getAllActiveEmergencyTypes();
+        this.resetIncidentForm();
+        this.resetIncidentViewForm();
+        this.dataExchangeDecision.Subscribe('incidentViewPreCheck', model => this.onIncidentViewPreCheck(model));
+        this.emergencyLocationService.GetAllActiveEmergencyLocations()
+            .subscribe((result: ResponseModel<EmergencyLocationModel>) => {
+                result.Records.forEach((item: EmergencyLocationModel) => {
+                    let emergencyLocationModel: EmergencyLocationModel = new EmergencyLocationModel();
+                    emergencyLocationModel.IATA = item.IATA;
+                    emergencyLocationModel.AirportName = item.AirportName;
+                    this.affectedStations.push(emergencyLocationModel);
+                });
+
+            });
     }
 
     initiateIncidentModel(): void {
@@ -128,35 +160,20 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         event.stopPropagation();
     }
 
-
-    ngOnInit(): any {
-        this.isFlightRelated = false;
-        this.disableIsDrill = false;
-        this.isOffSet = false;
-        this.initiateIncidentModel();
-        this.getAllActiveEmergencyTypes();
-        this.resetIncidentForm();
-        this.resetIncidentViewForm();
-        this.dataExchangeDecision.Subscribe('incidentViewPreCheck', model => this.onIncidentViewPreCheck(model));
-        this.emergencyLocationService.GetAllActiveEmergencyLocations()
-            .subscribe((result: ResponseModel<EmergencyLocationModel>) => {
-                debugger;
-                result.Records.forEach((item: EmergencyLocationModel) => {
-                    let emergencyLocationModel: EmergencyLocationModel = new EmergencyLocationModel();
-                    emergencyLocationModel.IATA = item.IATA;
-                    emergencyLocationModel.AirportName = item.AirportName;
-                    this.affectedStations.push(emergencyLocationModel);
-                });
-
-            });
-    }
-
     ngOnDestroy() {
 
     }
 
+    ShowWeatherLocation(): void {
+        this.childModalViewWeatherLocation.show();
+    }
+
+    hideViewWeatherLocation(): void {
+        this.childModalViewWeatherLocation.hide();
+    }
+
     onIncidentViewPreCheck(isInsertShow: Boolean): void {
-        //this.showIncidentView = true;
+
     }
 
     resetIncidentForm(): void {
@@ -164,16 +181,14 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.form = new FormGroup({
             IncidentId: new FormControl(0),
             IsDrill: new FormControl(false),
-            EmergencyTypeId: new FormControl('0'),
-            AffectedStationId: new FormControl('0'),
+            EmergencyTypeId: new FormControl('', [Validators.required, Validators.minLength(1)]),
+            AffectedStationId: new FormControl('', [Validators.required, Validators.minLength(1)]),
             OffsiteDetails: new FormControl(''),
-            EmergencyName: new FormControl(''),
-            AlertMessage: new FormControl(''),
-            Description: new FormControl(''),
+            EmergencyName: new FormControl('', [Validators.required, Validators.minLength(5)]),
+            AlertMessage: new FormControl('', [Validators.required, Validators.minLength(5)]),
+            Description: new FormControl('', [Validators.required, Validators.minLength(10)]),
             EmergencyDate: new FormControl(''),
-            Severity: new FormControl('0'),
-            //EmergencyLocation: new FormControl(''),
-            //Remarks: new FormControl(''),
+            Severity: new FormControl('', [Validators.required, Validators.minLength(1)]),
             FlightNumber: new FormControl(''),
             Origin: new FormControl(''),
             Destination: new FormControl(''),
@@ -184,8 +199,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(values: Object): void {
-        debugger;
         if (this.form.controls['EmergencyTypeId'].value !== '0' && this.form.controls['AffectedStationId'].value !== '0' && this.form.controls['Severity'].value !== '0') {
+
             this.createIncidentModel();
             if (this.isFlightRelated) {
                 this.createInvolvePartyModel(this.isFlightRelated);
@@ -209,27 +224,27 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     onPOPUPSubmit(values: Object): void {
-        debugger;
         console.log('Incident Created.');
         console.log(this.incidentDataExchangeModel);
-        // this.incidentService.CreateIncident(this.incidentDataExchangeModel.IncidentModel,
-        //     this.incidentDataExchangeModel.IsFlightRelated,
-        //     this.incidentDataExchangeModel.InvolvedPartyModel, this.incidentDataExchangeModel.FLightModel)
-        //     .subscribe((response: IncidentModel) => {
-        //         debugger;
-
-        //         console.log('VV');
-        //         console.log(response);
-        //         console.log("Success");
-        //     }, (error: any) => {
-        //         console.log("Error");
-        //     });
-
+        if (this.incidentDataExchangeModel.IncidentModel.EmergencyLocation == 'Offset') {
+            this.incidentDataExchangeModel.IncidentModel.EmergencyLocation = this.incidentDataExchangeModel.IncidentModel.OffSetLocation;
+            delete this.incidentDataExchangeModel.IncidentModel.OffSetLocation;
+        }
+        this.incidentService.CreateIncident(this.incidentDataExchangeModel.IncidentModel,
+            this.incidentDataExchangeModel.IsFlightRelated,
+            this.incidentDataExchangeModel.InvolvedPartyModel, this.incidentDataExchangeModel.FLightModel)
+            .subscribe((response: IncidentModel) => {
+                console.log('VV');
+                console.log(response);
+                console.log("Success");
+                this.router.navigate(['pages/dashboard']);
+            }, (error: any) => {
+                console.log("Error");
+            });
     }
 
 
     cancel(): void {
-        debugger;
         this.resetIncidentForm();
     }
 
@@ -245,7 +260,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.dataExchange.Publish('incidentCreatedPreCheck', this.incidentDataExchangeModel);
     }
 
-
     resetIncidentViewForm(): void {
         this.formPopup = new FormGroup({
             IncidentId: new FormControl(0),
@@ -258,8 +272,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             DescriptionPopup: new FormControl(''),
             EmergencyDatePopup: new FormControl(''),
             SeverityPopup: new FormControl('0'),
-            //EmergencyLocation: new FormControl(''),
-            //Remarks: new FormControl(''),
             FlightNumberPopup: new FormControl(''),
             OriginPopup: new FormControl(''),
             DestinationPopup: new FormControl(''),
@@ -270,9 +282,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     loadDataIncidentViewPopup() {
-        debugger;
         let offsetVal: string = '';
-
         this.disableIsDrill = true;
         this.isOffSetPopup = false;
         if (this.incidentDataExchangeModel.IncidentModel.EmergencyLocation == 'Offset') {
@@ -293,7 +303,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         });
         this.isFlightRelatedPopup = false;
         if (this.incidentDataExchangeModel.FLightModel != null) {
-            debugger;
             this.formPopup = new FormGroup({
                 IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
                 IsDrillPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.IsDrill),
@@ -365,7 +374,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         }
         this.incidentModel.IsSubmitted = true;
         this.incidentModel.IsSaved = true;
-        this.incidentModel.DepartmentId = Number(this.DepartmentId);
+        this.incidentModel.DepartmentId = Number(this.currentDepartmentId);
         this.incidentModel.ClosedBy = null;
         this.incidentModel.ClosedOn = null;
         this.incidentModel.ReOpenBy = null;
