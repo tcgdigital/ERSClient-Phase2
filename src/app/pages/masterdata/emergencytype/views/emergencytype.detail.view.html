@@ -1,3 +1,6 @@
+<generic-search [filterConfigs] = "searchConfigs" 
+        (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();"></generic-search>
+
 <responsive-table>
     <table responsive-table-body>
         <thead>
@@ -13,8 +16,8 @@
                 <td colspan="6">No records found.</td>
             </tr>
             <tr *ngFor="let emergencyType of emergencyTypes">
-                <td data-title="DemandType">{{emergencyType.EmergencyTypeName}}</td>
-                <td data-title="Auto Approved">{{emergencyType.EmergencyCategory}}</td>
+                <td data-title="Emergency Type Name">{{emergencyType.EmergencyTypeName}}</td>
+                <td data-title="Emergency Category">{{emergencyType.EmergencyCategory}}</td>
                 <td data-title="Active">
                     <md-checkbox class="Marght" id="IsActive" name="IsActive" [ngModel]="emergencyType.Active"  aria-label="ActiveFlag">
                     </md-checkbox>

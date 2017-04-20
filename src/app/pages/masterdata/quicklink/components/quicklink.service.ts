@@ -30,4 +30,14 @@ export class QuickLinkService extends ServiceBase<QuickLinkModel> {
                 return checkLists;
             });
     }
+
+     GetQuery(query: string): Observable<ResponseModel<QuickLinkModel>> {
+       let checkLists: ResponseModel<QuickLinkModel>;
+        return this._dataService.Query().OrderBy("CreatedOn desc")
+            .Filter(query) .Execute().map((data: ResponseModel<QuickLinkModel>) => {
+                checkLists = data;
+                checkLists.Records.forEach(x => x.Active = (x.ActiveFlag == 'Active'));
+                return checkLists;
+            });
+    }
 }

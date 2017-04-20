@@ -9,6 +9,8 @@
 <section command-header class="command-menu" 
     [departments]="departments" 
     [incidents]="incidents"
+    [currentDepartmentId]="currentDepartmentId"
+    [currentIncidentId]="currentIncidentId"
     (departmentChange)="onDepartmentChange($event)"
     (incidentChange)="onIncidentChange($event)">
 </section>

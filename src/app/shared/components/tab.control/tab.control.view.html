@@ -1,6 +1,6 @@
 <div class="tab-link" (mouseenter)="onContainerMouseEnter($event)" (mouseleave)="onContainerMouseLeave($event)">
     <ul class="tab-column">
-        <ng-container *ngFor="let tabLink of tabLinks; let i = index;">
+        <ng-container *ngFor="let tabLink of allowedTabLinks; let i = index;">
             <li [ngClass]="(tabLink.selected)? 'tab-item selected': 'tab-item'" (click)="onTabItemClick($event, i)" (mouseenter)="onTabLinkMouseEnter($event, i)"
                 (mouseleave)="onTabLinkMouseLeave($event, i)">
                 <a [routerLink]="tabLink.url" (click)="onTabLinkClick($event, i)">
