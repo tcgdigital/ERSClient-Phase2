@@ -85,7 +85,6 @@ export class UserPermissionService
             
             // .flatMap((data: NotifyPeopleModel[])=> this.GetSubDepartments(departmentId))
             // .map((childDepartments: ResponseModel<DepartmentModel>) => {
-            //     debugger;
             //     console.log(childDepartments);
             //     childDepartments.Records.forEach((item: DepartmentModel, index: number) => {
             //         if (index == 0) {
@@ -99,7 +98,6 @@ export class UserPermissionService
             // })
             // .flatMap((data: ResponseModel<NotifyPeopleModel>) => this.GetUserPermissionFromDepartments(allChildDepartmentIdsProjection))
             // .map((userPermissions: ResponseModel<UserPermissionModel>) => {
-            //     debugger;
             //     console.log(userPermissions);
             //     let notifyModel: NotifyPeopleModel = new NotifyPeopleModel();
             //     count = count + 1;
@@ -130,7 +128,6 @@ export class UserPermissionService
     
 
     public GetUserPermissionFromDepartments(allChildDepartmentIdsProjection: string): Observable<ResponseModel<UserPermissionModel>> {
-        debugger;
         return this._dataService.Query()
             .Expand('Department($select=DepartmentId,DepartmentName),User($select=Email,UserProfileId,UserId)')
             .Filter(`${allChildDepartmentIdsProjection}`)

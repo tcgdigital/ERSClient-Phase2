@@ -18,7 +18,6 @@ export class NotifyPeopleService extends ServiceBase<NotifyPeopleModel> {
     }
 
     public GetDepartmentSubDepartmentUser(departmentId: number): NotifyPeopleModel[] {
-        debugger;
         let count: number = 1;
         let arrayDepartmentIds: number[] = [];
         arrayDepartmentIds.push(departmentId);

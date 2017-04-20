@@ -69,7 +69,6 @@ export class DemandReceivedSummaryWidgetService {
                         }).length;
                     });
             }, (error)=>{
-                debugger;
             });
 
         return this.demandReceivedSummary;
