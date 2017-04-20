@@ -1,0 +1,20 @@
+<div class="row widget-container no-gutters">
+    <div class="col-12">
+        <div class="row no-gutters">
+            <div class="col-12 widget-title">
+                <span>Incident Summary</span>
+            </div>
+        </div>
+        <div class="row no-gutters">
+            <div class="col-4 widget-block">
+                <strong>Incident: </strong> {{currentIncidentName.Key}}
+            </div>
+            <div class="col-4 widget-block">
+                <strong>Department: </strong> {{currentDepartmentName.Key}}
+            </div>
+            <div class="col-4 widget-block">
+                <a href="javascript:void(0);" (click)="onViewIncidentClick()">View Incident</a>
+            </div>
+        </div>
+    </div>
+</div>
