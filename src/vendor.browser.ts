@@ -21,6 +21,7 @@ import 'rxjs/add/operator/mergeMap';
 
 // Web dependencies
 import 'jquery';
+import 'signalr';
 // import 'jquery-slimscroll';
 import 'selectize';
 import 'bootstrap';

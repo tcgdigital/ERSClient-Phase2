@@ -1,6 +1,6 @@
 import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
+import { AuthGuardService } from '../shared/services';
 import { PagesComponent } from './pages.component';
 
 const pageRoutes: Routes = [
@@ -15,6 +15,7 @@ const pageRoutes: Routes = [
     {
         path: 'pages',
         component: PagesComponent,
+        canActivateChild: [AuthGuardService],
         children: [
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
             { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' },
