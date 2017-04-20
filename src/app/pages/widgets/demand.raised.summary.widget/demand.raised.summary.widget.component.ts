@@ -60,7 +60,6 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         this.demandRaisedSummaryWidgetService.GetAllDemandByTargetDepartment(this.incidentId, this.departmentId, (x: AllDemandRaisedSummaryModel[]) => {
             this.allDemandRaisedSummaryModelList = x;
             this.setRagStatus();
-            debugger;
             this.allDemandRaisedSummaryModel = Observable.of(this.allDemandRaisedSummaryModelList);
             this.childModalAllDemandRaisedSummary.show();
         });
@@ -105,7 +104,6 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
     }
 
     public openViewAllDemandRaisedSummary(): void {
-        debugger;
         this.showAllDeptSubCompleted = false;
         this.showAllDeptSubPending = false;
         this.demandRaisedSummaryWidgetService.GetAllDepartmentDemandByIncident(this.incidentId, (item: DemandRaisedModel[]) => {
@@ -122,9 +120,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
     }
 
     public openViewAllSubDeptDemandRaisedSummary(): void {
-        debugger;
         this.demandRaisedSummaryWidgetService.GetSubDepartmentDemandByRaisedDepartment(this.incidentId, this.departmentId, (item: DemandRaisedModel[]) => {
-            debugger;
             this.allDemandRaisedList = Observable.of([]);
             this.allDemandRaisedList = Observable.of(item);
             this.childModalViewAllSubDeptDemandRaisedSummary.show();
@@ -140,10 +136,8 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
 
 
     public showAllDeptSubCompletedFunc(demandModelList: DemandModel[]): void {
-        debugger;
         this.allDeptDemandRaisedSummaries = [];
         demandModelList.forEach((item: DemandModel) => {
-            debugger;
             if (item.IsClosed == true) {
                 let allDeptDemandRaisedSummary: AllDeptDemandRaisedSummary = new AllDeptDemandRaisedSummary();
                 allDeptDemandRaisedSummary.description = item.DemandDesc;
@@ -187,7 +181,6 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
     public showAllDeptSubPendingFunc(demandModelList: DemandModel[]): void {
         this.allDeptDemandRaisedSummaries = [];
         demandModelList.forEach((item: DemandModel) => {
-            debugger;
             if (item.IsClosed == false) {
                 let allDeptDemandRaisedSummary: AllDeptDemandRaisedSummary = new AllDeptDemandRaisedSummary();
                 allDeptDemandRaisedSummary.description = item.DemandDesc;
@@ -232,11 +225,8 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
 
 
     public showSubDeptSubCompletedFunc(demandModelList: DemandModel[]): void {
-        debugger;
-        debugger;
         this.subDeptDemandRaisedSummaries = [];
         demandModelList.forEach((item: DemandModel) => {
-            debugger;
             if (item.IsClosed == true) {
                 let subDeptDemandRaisedSummary: SubDeptDemandRaisedSummary = new SubDeptDemandRaisedSummary();
                 subDeptDemandRaisedSummary.description = item.DemandDesc;
@@ -272,19 +262,14 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
     }
 
     public hideSubDeptSubCompleted(): void {
-        debugger;
         this.showSubDeptSubCompleted = false;
         this.showSubDeptSubPending = false;
 
     }
 
     public showSubDeptSubPendingFunc(demandModelList: DemandModel[]): void {
-        debugger;
-        debugger;
-        debugger;
         this.subDeptDemandRaisedSummaries = [];
         demandModelList.forEach((item: DemandModel) => {
-            debugger;
             if (item.IsClosed == false) {
                 let subDeptDemandRaisedSummary: SubDeptDemandRaisedSummary = new SubDeptDemandRaisedSummary();
                 subDeptDemandRaisedSummary.description = item.DemandDesc;
@@ -321,7 +306,6 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
     }
 
     public hideSubDeptSubPending(): void {
-        debugger;
         this.showSubDeptSubCompleted = false;
         this.showSubDeptSubPending = false;
 

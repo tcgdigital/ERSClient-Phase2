@@ -132,7 +132,6 @@ export class DemandRaisedSummaryWidgetService {
                     }
                 });
                 uniqueDepartments.forEach((itemDepartment: DepartmentModel) => {
-                    debugger;
                     let demandRaisedModel: DemandRaisedModel = new DemandRaisedModel();
                     let demandModels = result.Records.filter((item: DemandModel) => {
                         return item.TargetDepartmentId == itemDepartment.DepartmentId;
@@ -173,7 +172,6 @@ export class DemandRaisedSummaryWidgetService {
                 });
             })
             .subscribe((x) => {
-                debugger;
                 if (this.subDepartments.length == 0) {
                     callback(this.demandRaisedModelList);
                 }
