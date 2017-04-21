@@ -45,6 +45,14 @@ export class EmergencyTypeDepartmentService extends ServiceBase<EmergencyDepartm
             .Execute();
     }
 
+    GetFilterByEmergencyTypeDepartmentId(emergencyTypeId: number): Observable<ResponseModel<EmergencyDepartmentModel>> {
+        return this._dataService.Query()
+            .Expand(`Department`)
+            .Select('Department/DepartmentId')
+            .Filter(`EmergencyTypeId eq ${emergencyTypeId}`)
+            .Execute();
+    }
+
     /**
      * Create bulk EmergencyDepartmentModels
      * 

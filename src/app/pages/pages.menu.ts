@@ -38,6 +38,17 @@ export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
                         expanded: false,
                     }
                 }
+            },
+            {
+                path: 'emergencyclosure',
+                data: {
+                    menu: {
+                        title: 'Close Emergency',
+                        icon: 'fa fa-bell fa-lg',
+                        selected: false,
+                        expanded: false,
+                    }
+                }
             }
         ]
     }

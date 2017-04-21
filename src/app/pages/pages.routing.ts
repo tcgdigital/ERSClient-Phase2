@@ -20,7 +20,8 @@ const pageRoutes: Routes = [
             { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' },
             { path: 'masterdata', loadChildren: './masterdata/masterdata.module#MasterDateModule' },
             { path: 'incident', loadChildren: './incident/incident.module#IncidentModule' },
-            { path: 'masterdataupload', loadChildren: './masterdata.upload/masterdata.upload.module#MasterDataUploadModule' }
+            { path: 'masterdataupload', loadChildren: './masterdata.upload/masterdata.upload.module#MasterDataUploadModule' },
+            { path: 'emergencyclosure', loadChildren: './emergency.closure/emergency.closure.module#EmergencyClosureModule' }
         ]
     }
 ];
