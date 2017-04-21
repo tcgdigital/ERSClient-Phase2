@@ -1,7 +1,11 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { QuickLinkModel } from './quicklink.model';
 import { QuickLinkService } from './quicklink.service';
-import { ResponseModel, DataExchangeService } from '../../../../shared';
+import { Observable } from 'rxjs/Rx';
+
+import { ResponseModel, DataExchangeService , SearchConfigModel,
+    SearchTextBox, SearchDropdown,
+    NameValue} from '../../../../shared';
 
 @Component({
     selector: 'quicklink-list',
@@ -14,6 +18,7 @@ export class QuickLinkListComponent implements OnInit, OnDestroy {
     quicklinks: QuickLinkModel[] = [];
     quickLinkModelPatch: QuickLinkModel = null;
     date: Date = new Date();
+    searchConfigs: SearchConfigModel<any>[] = [];
 
     constructor(private quicklinkService: QuickLinkService,
         private dataExchange: DataExchangeService<QuickLinkModel>) { }
@@ -38,6 +43,7 @@ export class QuickLinkListComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.getQuickLinks();
+        this.initiateSearchConfigurations();
         this.dataExchange.Subscribe("quickLinkModelSaved",
             model => this.onQuickLinkSaveSuccess(model));
     }
@@ -63,5 +69,38 @@ export class QuickLinkListComponent implements OnInit, OnDestroy {
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
+    }
+
+     private initiateSearchConfigurations(): void {
+        let status: NameValue<string>[] = [
+            new NameValue<string>('Active', 'Active'),
+            new NameValue<string>('InActive', 'InActive'),
+        ]
+        this.searchConfigs = [
+            new SearchTextBox({
+                Name: 'QuickLinkName',
+                Description: 'QuickLink Name',
+                Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'QuickLinkURL',
+                Description: 'QuickLink URL',
+                Value: ''
+            })
+        ];        
+    }
+      invokeSearch(query: string): void {
+        if (query !== '') {
+            this.quicklinkService.GetQuery(query)
+                .subscribe((response: ResponseModel<QuickLinkModel>) => {
+                  this.quicklinks = response.Records;
+                }, ((error: any) => {
+                    console.log(`Error: ${error}`);
+                }));
+        }
+    }
+
+    invokeReset(): void {
+        this.getQuickLinks();
     }
 }

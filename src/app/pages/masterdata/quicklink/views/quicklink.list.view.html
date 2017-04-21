@@ -1,39 +1,28 @@
-<div>
-    <h3>Quick Link listing data</h3>
-    <div class="row" *ngFor="let quicklink of quicklinks">
-        <div class="col-sm-12 col-xs-12 hidden-md-up">
-            <div class="card card-outline-primary mb-3">
-                <div class="card-block">
-                    <div class="media">
-                        <div class="media-left" style="padding-right: 10px">
-                            <i class="fa fa-4x fa-address-book-o"></i>
-                        </div>
-                        <div class="media-body">
-                            <h4 class="media-heading">{{quicklink.QuickLinkName}} <small><i>
-                                &nbsp; {{ quicklink.QuickLinkURL }}</i></small>
-                                <md-checkbox class="Marght" id="IsActive" name="IsActive" [(ngModel)]="quicklink.ActiveFlag" aria-label="ActiveFlag">
-                                </md-checkbox>
-                                <a (click)="editQuickLink(quicklink)">EDIT</a>
+<generic-search [filterConfigs] = "searchConfigs" 
+        (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();"></generic-search>
 
-                            </h4>
-                        </div>
-                    </div>
+<responsive-table>
+    <table responsive-table-body>
+        <thead>
+            <tr>
+                <th>Quick Link Name</th>
+                <th>Quick Link URL</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr [hidden]="quicklinks.length != 0">
+                <td colspan="6">No records found.</td>
+            </tr>
+            <tr *ngFor="let quicklink of quicklinks">
+                <td data-title="Quick Link Name">{{quicklink.QuickLinkName}}</td>
+                <td data-title="Quick Link URL">{{ quicklink.QuickLinkURL }}</td>
+                <td data-title="Edit">
+                    <i class="fa fa-edit fa-lg" (click)="editQuickLink(quicklink)"></i>
+                </td>
+            </tr>
 
-                </div>
-            </div>
-        </div>
-        <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-            <ul class="list-group">
-                <li class="list-group-item"><strong><i>QuickLink:</i></strong></li>
-                <li class="list-group-item" style="border-top: none">{{quicklink.QuickLinkName}}</li>
-                <li class="list-group-item" style="border-top: none">{{quicklink.QuickLinkURL}}</li>
-                <li class="list-group-item" style="border-top: none">
-                    <md-checkbox class="Marght" id="IsActive" name="IsActive" [ngModel]="quicklink.Active" (change)="IsActive($event,quicklink)"
-                        aria-label="ActiveFlag">
-                        </md-checkbox>
-                </li>
-                <li class="list-group-item" style="border-top: none"><a (click)="editQuickLink(quicklink)">EDIT</a></li>
-            </ul>
-        </div>
-    </div>
-</div>
+        </tbody>
+    </table>
+</responsive-table>
+

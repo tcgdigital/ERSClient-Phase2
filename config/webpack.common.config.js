@@ -26,6 +26,7 @@ const HOT = helpers.hasProcessFlag('hot');
 const AOT = helpers.hasNpmFlag('aot');
 const METADATA = {
     title: 'Emergency Response System (PAL)',
+    description: 'Emergency Response System (PAL)',
     baseUrl: '/',
     isDevServer: helpers.isWebpackDevserver()
 }
@@ -55,8 +56,8 @@ module.exports = function (options) {
              * See: http://webpack.github.io/docs/configuration.html#resolve-extensions
              * Default: [".webpack.js", ".web.js", ".js"]
              */
-            extensions: ['.ts', '.js', '.json'],
-            // extensions: ['.ts', '.js', '.css', '.scss', '.json'],
+            // extensions: ['.ts', '.js', '.json'],
+            extensions: ['.ts', '.js', '.css', '.scss', '.json'],
             /**An array of directory names to be resolved to the current directory as well as its ancestors, 
              * and searched for modules. This functions similarly to how node finds “node_modules” directories. 
              * For example, if the value is ["mydir"], webpack will look in “./mydir”, “../mydir”, “../../mydir”, etc.
@@ -135,14 +136,14 @@ module.exports = function (options) {
                  * to string and sass loader support for *.scss files (from Angular components)
                  * Returns compiled css content as string
                  */
-                {
-                    test: /\.scss$/,
-                    use: ['to-string-loader', 'css-loader', 'sass-loader']
-                },
                 // {
                 //     test: /\.scss$/,
-                //     use: ['raw-loader', 'sass-loader']
+                //     use: ['to-string-loader', 'css-loader', 'sass-loader']
                 // },
+                {
+                    test: /\.scss$/,
+                    use: ['raw-loader', 'sass-loader']
+                },
                 {
                     test: /initial\.scss$/,
                     use: ExtractTextWebpackPlugin.extract({
@@ -150,23 +151,7 @@ module.exports = function (options) {
                         use: 'css-loader!sass-loader?sourceMap'
                     })
                 },
-                /**Raw loader support for *.html
-                 * Returns file content as string
-                 * See: https://github.com/webpack/raw-loader
-                 */
-                {
-                    test: /\.html$/,
-                    use: 'raw-loader',
-                    exclude: [helpers.root('src/index.html')]
-                },
-                /**
-                 * Bootstrap 4 loader
-                 */
-                {
-                    test: /bootstrap\/dist\/js\/umd\//,
-                    use: 'imports-loader?jQuery=jquery'
-                },
-                /**
+                 /**
                  * Font loaders, required for font-awesome-sass-loader and bootstrap-loader
                  */
                 {
@@ -181,6 +166,22 @@ module.exports = function (options) {
                 //     test: /\.(eot|woff|woff2|ttf)$/,
                 //     loader: 'url-loader?limit=30000&name=[name]-[hash].[ext]'
                 // },
+                /**
+                 * Bootstrap 4 loader
+                 */
+                {
+                    test: /bootstrap\/dist\/js\/umd\//,
+                    use: 'imports-loader?jQuery=jquery'
+                },
+                /**Raw loader support for *.html
+                 * Returns file content as string
+                 * See: https://github.com/webpack/raw-loader
+                 */
+                {
+                    test: /\.html$/,
+                    use: 'raw-loader',
+                    exclude: [helpers.root('src/index.html')]
+                },
                 {
                     test: /\.(jpg|png|gif)$/,
                     use: 'file-loader'
@@ -195,6 +196,7 @@ module.exports = function (options) {
          */
         plugins: [
             new WebpackDashboard(),
+            
             new ExtractTextWebpackPlugin({
                 filename: 'initial.css',
                 allChunks: true
@@ -240,7 +242,8 @@ module.exports = function (options) {
              */
             new ContextReplacementPlugin(
                 // The (\\|\/) piece accounts for path separators in *nix and Windows
-                /angular(\\|\/)core(\\|\/)src(\\|\/)linker/,
+                // /angular(\\|\/)core(\\|\/)src(\\|\/)linker/,
+                /angular(\\|\/)core(\\|\/)@angular/,
                 helpers.root('src') // location of your src
             ),
 
@@ -252,10 +255,13 @@ module.exports = function (options) {
              * See: https://www.npmjs.com/package/copy-webpack-plugin
              */
             new CopyWebpackPlugin([{
-                    from: 'src/assets',
-                    to: 'assets'
+                    from: 'src/assets/fonts',
+                    to: 'assets/fonts'
+                },
+                {
+                    from: 'src/assets/images',
+                    to: 'assets/images'
                 }
-                // { from: 'src/meta' }
             ]),
 
             /** Plugin: HtmlWebpackPlugin

@@ -2,9 +2,15 @@ import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 
 import { ChecklistModel } from './checklist.model';
 import { ChecklistService } from './checklist.service';
-import { ResponseModel, DataExchangeService } from '../../../../shared';
+import { Observable } from 'rxjs/Rx';
+import {
+    ResponseModel, DataExchangeService, UtilityService, GlobalStateService
+    , SearchConfigModel,
+    SearchTextBox, SearchDropdown,
+    NameValue
+} from '../../../../shared';
 import { DepartmentModel, DepartmentService } from '../../department';
-import { EmergencyTypeModel } from '../../emergencytype';
+import { EmergencyTypeModel, EmergencyTypeService } from '../../emergencytype';
 
 @Component({
     selector: 'checklist-list',
@@ -19,9 +25,13 @@ export class ChecklistListComponent implements OnInit {
     activeEmergencyTypes: EmergencyTypeModel[] = [];
     checkListModelPatch: ChecklistModel = null;
     date: Date = new Date();
+    currentDepartmentId: number;
+    searchConfigs: SearchConfigModel<any>[] = [];
+    parentChecklistListForSearch: NameValue<number>[] = [];
+    emergencyTypesForSearch: NameValue<number>[] = [];
 
-    constructor(private checkListService: ChecklistService,
-        private dataExchange: DataExchangeService<ChecklistModel>) { }
+    constructor(private checkListService: ChecklistService, private emergencytypeService: EmergencyTypeService,
+        private dataExchange: DataExchangeService<ChecklistModel>, private globalState: GlobalStateService) { }
 
     initiateCheckListModelPatch(): void {
         this.checkListModelPatch = new ChecklistModel();
@@ -30,14 +40,31 @@ export class ChecklistListComponent implements OnInit {
         this.checkListModelPatch.CreatedOn = this.date;
     }
 
-    getCheckLists(): void {
-        this.checkListService.GetAll()
+    findIfParent(item: ChecklistModel): any {
+        return item.ParentCheckListId != null;
+    };
+
+
+    getCheckLists(departmentId): void {
+        this.checkListService.GetAllByDepartment(departmentId)
             .subscribe((response: ResponseModel<ChecklistModel>) => {
                 response.Records.forEach(x => {
                     x.Active = (x.ActiveFlag == 'Active');
                 });
                 this.checkLists = response.Records;
+                this.parentChecklistListForSearch = this.checkLists.filter(this.findIfParent)
+                    .map(x => new NameValue<number>(x.ParentCheckList.CheckListCode, x.ParentCheckListId));
+                 this.initiateSearchConfigurations();
+
             });
+    }
+
+    getEmergencyTypes(): void {
+        this.emergencytypeService.GetAll()
+            .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
+                this.emergencyTypesForSearch = response.Records.map(x => new NameValue<number>(x.EmergencyTypeName, x.EmergencyTypeId));
+            });
+             this.initiateSearchConfigurations();
     }
 
     getAllActiveCheckLists(): void {
@@ -52,13 +79,22 @@ export class ChecklistListComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.getAllActiveCheckLists();
-        this.getCheckLists();
+        //this.getAllActiveCheckLists();
+        this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.getCheckLists(this.currentDepartmentId);
         this.dataExchange.Subscribe("checkListModelSaved",
             model => this.onCheckListModelSavedSuccess(model));
         this.dataExchange.Subscribe("checkListListReload",
             model => this.onCheckListModelReloadSuccess(model));
+        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
+        this.initiateSearchConfigurations();
     }
+
+    private departmentChangeHandler(departmentId): void {
+        this.currentDepartmentId = departmentId;
+        this.getCheckLists(this.currentDepartmentId);
+    }
+
 
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe("checkListModelSaved");
@@ -70,7 +106,7 @@ export class ChecklistListComponent implements OnInit {
     }
 
     onCheckListModelReloadSuccess(editedChecklistModel: ChecklistModel): void {
-        this.getCheckLists();
+        this.getCheckLists(this.currentDepartmentId);
     }
 
     IsActive(event: any, editedCheckList: ChecklistModel): void {
@@ -82,9 +118,82 @@ export class ChecklistListComponent implements OnInit {
         }
         this.checkListService.Update(this.checkListModelPatch)
             .subscribe((response: ChecklistModel) => {
-                this.getCheckLists();
+                this.getCheckLists(this.currentDepartmentId);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
+    }
+
+
+    private initiateSearchConfigurations(): void {
+        let status: NameValue<string>[] = [
+            new NameValue<string>('Active', 'Active'),
+            new NameValue<string>('InActive', 'InActive'),
+        ]
+        this.searchConfigs = [
+            new SearchTextBox({
+                Name: 'ChecklistCode',
+                Description: 'Checklist Code',
+                Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'ChecklistDetails',
+                Description: 'Checklist Details',
+                Value: ''
+            }),
+            new SearchDropdown({
+                Name: 'ParentCheckListId',
+                Description: 'Parent Checklist',
+                PlaceHolder: 'Select Parent Checklist',
+                Value: '',
+                ListData: this.checkListService.GetAllParents(this.currentDepartmentId)
+                    .map(x => x.Records)
+                    .map(x => x.map(y => new NameValue<number>(y.ParentCheckList.CheckListCode, y.ParentCheckListId)))
+            }),
+            new SearchDropdown({
+                Name: 'EmergencyTypeId',
+                Description: 'Emergency Type',
+                PlaceHolder: 'Select Emergency Type',
+                Value: '',
+                ListData: this.emergencytypeService.GetAll()
+                    .map(x => x.Records)
+                    .map(x => x.map(y => new NameValue<number>(y.EmergencyTypeName, y.EmergencyTypeId)))
+            }),
+            new SearchTextBox({
+                Name: 'URL',
+                Description: 'URL',
+                Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'Duration',
+                Description: 'Duration',
+                Value: ''
+            }),
+            new SearchDropdown({
+                Name: 'ActiveFlag',
+                Description: 'Status',
+                PlaceHolder: 'Select Status',
+                Value: '',
+                ListData: Observable.of(status)
+            })
+        ];        
+    }
+      invokeSearch(query: string): void {
+        if (query !== '') {
+            query = `${query} and DepartmentId eq ${this.currentDepartmentId}`;
+            this.checkListService.GetQuery(query)
+                .subscribe((response: ResponseModel<ChecklistModel>) => {
+                   response.Records.forEach(x => {
+                    x.Active = (x.ActiveFlag == 'Active');
+                });
+                this.checkLists = response.Records;
+                }, ((error: any) => {
+                    console.log(`Error: ${error}`);
+                }));
+        }
+    }
+
+    invokeReset(): void {
+        this.getCheckLists(this.currentDepartmentId);
     }
 }

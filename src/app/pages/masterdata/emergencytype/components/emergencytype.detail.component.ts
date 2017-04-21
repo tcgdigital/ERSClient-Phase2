@@ -1,7 +1,11 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { EmergencyTypeModel } from './emergencytype.model';
 import { EmergencyTypeService } from './emergencytype.service';
-import { ResponseModel, DataExchangeService } from '../../../../shared';
+import { Observable } from 'rxjs/Rx';
+
+import { ResponseModel, DataExchangeService, SearchConfigModel,
+    SearchTextBox, SearchDropdown,
+    NameValue } from '../../../../shared';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
@@ -11,6 +15,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 })
 export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
     emergencyTypes: EmergencyTypeModel[] = [];
+    searchConfigs: SearchConfigModel<any>[] = [];
 
     /**
      * Creates an instance of EmergencyTypeDetailComponent.
@@ -31,6 +36,9 @@ export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
         this.emergencyTypeService.GetAll()
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                 this.emergencyTypes = response.Records;
+                 this.emergencyTypes.forEach(x => {
+                    x["Active"] = (x.ActiveFlag == 'Active');
+                });
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -48,6 +56,7 @@ export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.getEmergencyTypes();
+        this.initiateSearchConfigurations();
         this.dataExchange.Subscribe('EmergencyTypeModelSaved', model => this.onSuccess(model));
         this.dataExchange.Subscribe('EmergencyTypeModelUpdated', model => this.onSuccess(model))
     }
@@ -61,5 +70,54 @@ export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
         //this.dataExchange.Unsubscribe('OnEmergencyTypeUpdate');
         this.dataExchange.Unsubscribe('EmergencyTypeModelSaved');
         this.dataExchange.Unsubscribe('EmergencyTypeModelUpdated');
+    }
+
+
+     private initiateSearchConfigurations(): void {
+        let status: NameValue<string>[] = [
+            new NameValue<string>('Active', 'Active'),
+            new NameValue<string>('InActive', 'InActive'),
+        ]
+
+        let emergencyCategories: NameValue<string>[] = [
+            new NameValue<string>('Flight Related', 'FlightRelated'),
+            new NameValue<string>('NonFlight Related', 'NonFlightRelated'),
+        ]
+
+        this.searchConfigs = [
+            new SearchTextBox({
+                Name: 'EmergencyTypeName',
+                Description: 'Emergency Type',
+                Value: ''
+            }),
+             new SearchDropdown({
+                Name: 'EmergencyCategory',
+                Description: 'Emergency Category',
+                PlaceHolder: 'Select Status',
+                Value: '',
+                ListData: Observable.of(emergencyCategories)
+            }),
+            new SearchDropdown({
+                Name: 'ActiveFlag',
+                Description: 'Status',
+                PlaceHolder: 'Select Status',
+                Value: '',
+                ListData: Observable.of(status)
+            })
+        ];        
+    }
+      invokeSearch(query: string): void {
+        if (query !== '') {
+            this.emergencyTypeService.GetQuery(query)
+                .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
+                  this.emergencyTypes = response.Records;
+                }, ((error: any) => {
+                    console.log(`Error: ${error}`);
+                }));
+        }
+    }
+
+    invokeReset(): void {
+        this.getEmergencyTypes();
     }
 }

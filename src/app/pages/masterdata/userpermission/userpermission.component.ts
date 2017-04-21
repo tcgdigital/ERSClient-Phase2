@@ -9,7 +9,8 @@ import { ResponseModel, DataExchangeService, AutocompleteComponent, KeyValue } f
 @Component({
     selector: 'user-permission-main',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './views/userpermission.view.html'
+    templateUrl: './views/userpermission.view.html',
+    styleUrls:['./styles/userpermission.style.scss']
 })
 export class UserPermissionComponent {
     userProfileItems: UserProfileModel[] = [];

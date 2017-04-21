@@ -9,7 +9,8 @@ import { ResponseModel, DataExchangeService, AutocompleteComponent, KeyValue } f
 @Component({
     selector: 'emergency-department-main',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './views/emergency-department.view.html'
+    templateUrl: './views/emergency-department.view.html',
+    styleUrls:['./styles/emergency.department.style.scss']
 })
 export class EmergencyDepartmentComponent {
     emergencyTypeItems: EmergencyTypeModel[] = [];

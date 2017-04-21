@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-
+import {  } from "../../masterdata/emergencylocation";
 import { IncidentModel } from './incident.model';
 import { IIncidentService } from './IIncidentService';
 import {

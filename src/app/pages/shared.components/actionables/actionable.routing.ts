@@ -11,14 +11,16 @@ const actionaleRoutes: Routes = [
         children: [
             {
                 path: '',
+                // component: ActionableActiveComponent
+                redirectTo: 'open', 
+                pathMatch: 'full'
+            },
+            {
+                path: 'open',
                 component: ActionableActiveComponent
             },
             {
-                path: 'openActionable',
-                component: ActionableActiveComponent
-            },
-            {
-                path: 'closeActionable',
+                path: 'close',
                 component: ActionableClosedComponent,
             }
         ]

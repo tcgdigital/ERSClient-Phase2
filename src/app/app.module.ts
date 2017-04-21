@@ -1,4 +1,5 @@
 import { NgModule, ApplicationRef, ComponentRef } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -9,6 +10,7 @@ import {
 } from '@angularclass/hmr';
 import { Ng2BootstrapModule, ModalModule } from 'ng2-bootstrap';
 import { ToastrModule } from 'ngx-toastr';
+import { AgmCoreModule } from '@agm/core';
 
 import { routing } from './app.routing';
 import { SharedModule } from './shared';
@@ -40,10 +42,14 @@ type StoreType = {
         RouterModule,
         FormsModule,
         ReactiveFormsModule,
+        BrowserAnimationsModule,
         Ng2BootstrapModule.forRoot(),
         ModalModule.forRoot(),
         SharedModule.forRoot(),
         ToastrModule.forRoot(),
+        AgmCoreModule.forRoot({
+            apiKey: 'AIzaSyA7flhwfs8nIwqnisopkJAu77ettcUPAYM'
+        }),
         PagesModule,
         routing
     ],

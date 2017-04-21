@@ -1,11 +1,16 @@
 <header brand-header class="row branding" 
+    [userName]="userName"
+    [lastLogin]="lastLogin"
     (hambargerClicked)="onToggleSideMenu($event)"
     (contactClicked)="onContactClicked($event)"
-    (helpClicked)="onHelpClicked($event)">
+    (helpClicked)="onHelpClicked($event)"
+    (logoutClicked)="onLogoutClicked($event)">
 </header>
 <section command-header class="command-menu" 
     [departments]="departments" 
     [incidents]="incidents"
+    [currentDepartmentId]="currentDepartmentId"
+    [currentIncidentId]="currentIncidentId"
     (departmentChange)="onDepartmentChange($event)"
     (incidentChange)="onIncidentChange($event)">
 </section>

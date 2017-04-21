@@ -1,29 +1,35 @@
-<div *ngIf="showAdd">
+<div *ngIf="showAdd" class="formStyle card-block entryHolder">
     <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
         <input id="QuickLinkId" class="form-control" type="hidden" name="QuickLinkId" formControlName="QuickLinkId" [(ngModel)]="quickLinkModel.QuickLinkId"
         />
-        <div class="col-sm-3">
-            <div class="form-control">
-                <label for="QuickLinkName">Quick Link Name:<span class="red">*</span></label>
-                <input id="QuickLinkName" class="form-control" type="text" name="QuickLinkName" formControlName="QuickLinkName" placeholder="Enter QuickLink Name"
-                />
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label for="QuickLinkName">Quick Link Name:<span class="red">*</span></label>
+                    <input id="QuickLinkName" class="form-control" type="text" name="QuickLinkName" formControlName="QuickLinkName" placeholder="Enter QuickLink Name"
+                    />
+                </div>
             </div>
-        </div>
-        <div class="col-sm-3">
-            <div class="form-control">
-                <label for="QuickLinkURL">QUick Link URL:<span class="red">*</span></label>
-                <input id="QuickLinkURL" class="form-control" type="text" name="QuickLinkURL" formControlName="QuickLinkURL" placeholder="Enter QuickLink URL"
-                />
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label for="QuickLinkURL">QUick Link URL:<span class="red">*</span></label>
+                    <input id="QuickLinkURL" class="form-control" type="text" name="QuickLinkURL" formControlName="QuickLinkURL" placeholder="Enter QuickLink URL"
+                    />
+                </div>
             </div>
-        </div>
 
-        <div class="col-sm-3">
-            <div class="fromtop1">
-                <button class="btn btn-primary" [disabled]="!form.valid" type="submit">Save</button>
-                <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="buttonholder">
+                    <button class="btn btn-primary" [disabled]="!form.valid" type="submit">Save</button>
+                    <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
+                </div>
             </div>
         </div>
 
     </form>
 </div>
-<input type="label" class="labelStyle" [ngModel]="buttonValue" (click)="showAddRegion(showAdd)">
+
+<div class="addbuttonHolder">
+    <button class="btn btn-primary" type="submit" (click)="showAddRegion(showAdd)">{{buttonValue}}</button>
+</div>
+<!--<input type="label" class="labelStyle" [ngModel]="buttonValue" (click)="showAddRegion(showAdd)">-->

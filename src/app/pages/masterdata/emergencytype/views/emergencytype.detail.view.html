@@ -1,24 +1,33 @@
-<div class="row ui-section">
-    <div class="col-md-12"> 
-        <div class="panel-body WidthHun">
-            <table class="table footable default">
-                <thead>
-                    <tr>
-                        <th>Emergency Type Name</th>
-                        <th>Emergency Category</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let emergencyType of emergencyTypes">
-                        <td>{{emergencyType.EmergencyTypeName}}</td>
-                        <td>{{emergencyType.EmergencyCategory}}</td>
-                        <td> <input type="checkbox" [checked]="emergencyType.ActiveFlag==='Active'" name="Status" /> </td>
-                        <td><button class="btn btn-warning" type="button"  (click)="UpdateEmergencyType(emergencyType)">Edit</button></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+<generic-search [filterConfigs] = "searchConfigs" 
+        (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();"></generic-search>
+
+<responsive-table>
+    <table responsive-table-body>
+        <thead>
+            <tr>
+                <th>Emergency Type Name</th>
+                <th>Emergency Category</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr [hidden]="emergencyTypes.length != 0">
+                <td colspan="6">No records found.</td>
+            </tr>
+            <tr *ngFor="let emergencyType of emergencyTypes">
+                <td data-title="Emergency Type Name">{{emergencyType.EmergencyTypeName}}</td>
+                <td data-title="Emergency Category">{{emergencyType.EmergencyCategory}}</td>
+                <td data-title="Active">
+                    <md-checkbox class="Marght" id="IsActive" name="IsActive" [ngModel]="emergencyType.Active"  aria-label="ActiveFlag">
+                    </md-checkbox>
+                </td>
+                <td data-title="Action">
+                    <i class="fa fa-edit fa-lg" (click)="UpdateEmergencyType(emergencyType)"></i>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</responsive-table>
+

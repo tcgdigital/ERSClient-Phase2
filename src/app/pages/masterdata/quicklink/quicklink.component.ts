@@ -5,7 +5,8 @@ import { QuickLinkModel } from './components/quicklink.model';
     
     selector: 'quick-link-main',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './views/quicklink.view.html'
+    templateUrl: './views/quicklink.view.html',
+    styleUrls:['./styles/quicklink.style.scss']
 })
 export class QuickLinkComponent {
     public quickLink: QuickLinkModel;

@@ -1,50 +1,36 @@
-<div>
-    <h3>DemandTypes listing data</h3>
-    <div class="row" *ngFor="let demandType of demandTypes">
-        <div class="col-sm-12 col-xs-12 hidden-md-up">
-            <div class="card card-outline-primary mb-3">
-                <div class="card-block">
-                    <div class="media">
-                        <div class="media-left" style="padding-right: 10px">
-                            <i class="fa fa-4x fa-address-book-o"></i>
-                        </div>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><strong><i>DemandType.: </i></strong>&nbsp; {{ demandType.DemandTypeName }}</li>
-                        <li class="list-group-item"><strong><i>AutoApproved: </i></strong>&nbsp; {{ demandType.IsAutoApproved }}</li>
-                        <li class="list-group-item" *ngIf="(demandType.ApproverDepartment | json) !== 'null'">
-                            <strong><i>Approver Department.: </i></strong> &nbsp; {{demandType.ApproverDepartment?.DepartmentName
-                            }}
-                        </li>
-                        <li class="list-group-item"><strong><i>IsActive: </i></strong>&nbsp; {{ demandType.ActiveFlag }}</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-            <ul class="list-group">
-                <li class="list-group-item"><strong><i>DemandType:</i></strong></li>
-                <li class="list-group-item" style="border-top: none">{{demandType.DemandTypeName}}</li>
-            </ul>
-        </div>
-        <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-            <ul class="list-group">
-                <li class="list-group-item"><strong><i>AutoApproved.</i></strong></li>
-                <li class="list-group-item" style="border-top: none">{{demandType.IsAutoApproved }}</li>
-            </ul>
-        </div>
-        <div class="col-md-5 col-lg-5 hidden-sm-down col-no-left-padding col-no-right-padding">
-            <ul class="list-group">
-                <li class="list-group-item"><strong><i>Approver Department: </i></strong>&nbsp; {{demandType.ApproverDepartment?.DepartmentName}}</li>
-                <li class="list-group-item"><strong><i>IsActive: </i></strong>&nbsp; {{demandType.ActiveFlag }}</li>
-            </ul>
-        </div>
-        <div class="col-md-2 col-lg-2 hidden-sm-down col-no-left-padding col-no-right-padding">
-            <ul class="list-group">
-                <li class="list-group-item"><strong><i>Action:</i></strong></li>
-                <li><button (click)="edit(demandType)" class="fa fa-edit"></button></li>
-            </ul>
-        </div>
+<generic-search [filterConfigs] = "searchConfigs" 
+        (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();"></generic-search>
 
-    </div>
-</div>
+
+<responsive-table>
+    <table responsive-table-body>
+        <thead>
+            <tr>
+                <th>DemandType</th>
+                <th>Auto Approved</th>
+                <th>Approver Department</th>
+                <th>IsActive</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr [hidden]="demandTypes.length != 0">
+                <td colspan="6">No records found.</td>
+            </tr>
+            <tr *ngFor="let demandType of demandTypes">
+                <td data-title="DemandType">{{demandType.DemandTypeName}}</td>
+                <td data-title="Auto Approved">{{demandType.IsAutoApproved}}</td>
+                <td data-title="Approver Department">{{(demandType.ApproverDepartment==null) ? "" : demandType.ApproverDepartment.DepartmentName}}</td>
+                <td data-title="Active">
+                    <md-checkbox class="Marght" id="IsActive" name="IsActive" [ngModel]="demandType.Active" (change)="IsActive($event,demandType)"
+                        aria-label="ActiveFlag">
+                    </md-checkbox>
+                </td>
+                <td data-title="Action">
+                    <i class="fa fa-edit fa-lg" (click)="edit(demandType)"></i>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</responsive-table>

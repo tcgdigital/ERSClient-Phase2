@@ -8,7 +8,7 @@ import { DemandTypeRouting } from './demandtype.routing';
 import { DemandTypeComponent } from './demandtype.component';
 import { DemandTypeEntryComponent, DemandTypeListComponent, DemandTypeService } from './components';
 import { DepartmentService } from '../department';
-import { DataExchangeService } from '../../../shared';
+import { DataExchangeService , SharedModule} from '../../../shared';
 
 @NgModule({
     imports: [
@@ -17,7 +17,8 @@ import { DataExchangeService } from '../../../shared';
         FormsModule,
         HttpModule,
         MdCheckboxModule,
-        DemandTypeRouting
+        DemandTypeRouting,
+        SharedModule
     ],
     declarations: [
         DemandTypeEntryComponent,

@@ -3,14 +3,16 @@ import { Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { DemandTypeModel } from './demandtype.model';
+import { IDemandTypeService } from './IDemandTypeService';
+import { DepartmentModel } from '../../department';
 import {
     ResponseModel, DataService,
     DataServiceFactory, DataProcessingService,
-    IServiceInretface, ServiceBase
+    IServiceInretface, ServiceBase, NameValue
 } from '../../../../shared';
 
 @Injectable()
-export class DemandTypeService extends ServiceBase<DemandTypeModel> {
+export class DemandTypeService extends ServiceBase<DemandTypeModel> implements IDemandTypeService {
     // private _dataService: DataService<DemandTypeModel>;
 
     constructor(private dataServiceFactory: DataServiceFactory) {
@@ -22,7 +24,29 @@ export class DemandTypeService extends ServiceBase<DemandTypeModel> {
 
     GetAll(): Observable<ResponseModel<DemandTypeModel>> {
         return this._dataService.Query()
-            .Expand('ApproverDepartment($select=DepartmentName)')
+            .Expand('ApproverDepartment($select=DepartmentName , DepartmentId)')
+            .Execute();
+    }
+
+    GetAllApproverDepartment(): Observable<NameValue<number>[]> {
+
+        return this.GetAll()
+            .map(x => x.Records)
+            .map(x => {
+                let approverDepartments: NameValue<number>[] = [];
+                x.forEach(y => {
+                    if (y.ApproverDepartment && approverDepartments.find(z => { return z.Value === y.ApproverDepartment.DepartmentId }) == null) {
+                        approverDepartments.push(new NameValue<number>(y.ApproverDepartment.DepartmentName, y.ApproverDepartment.DepartmentId));
+                    }
+                })
+                return approverDepartments;
+            })
+    }
+
+    GetQuery(query: string): Observable<ResponseModel<DemandTypeModel>> {
+        return this._dataService.Query()
+            .Filter(query)
+            .Expand('ApproverDepartment($select=DepartmentName , DepartmentId)')
             .Execute();
     }
 

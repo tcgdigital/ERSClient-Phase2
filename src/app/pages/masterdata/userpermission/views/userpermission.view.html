@@ -1,27 +1,43 @@
-<div>
-
-<h3>Users</h3>
-    <autocomplete [items]="items" (notify)='onNotify($event)' (InvokeAutoCompleteReset)="invokeReset();"></autocomplete>
-    <br/>
-    <button class="btn btn-primary" type="button" (click)="save()">Save</button>
-    <table style="width:100%;">
-        <tr>
-            <td style="width:35%;"><strong><i>Department Name:</i></strong>
-            </td>
-            <td style="width:30%;"><strong><i>Member Of</i></strong>
-            </td>
-            <td style="width:30%;"><strong><i>Is HOD</i></strong>
-            </td>
-        </tr>
-        <tr *ngFor="let departmentToView of departmentsToView">
-            <td>{{departmentToView.DepartmentName}}</td>
-            <td>
-                <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="departmentToView.IsMemberOf" aria-label="Add"></md-checkbox>
-            </td>
-            <td>
-                <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="departmentToView.IsHod" aria-label="Add"></md-checkbox>
-            </td>
-        </tr>
-    </table>
-    <button class="btn btn-primary" type="button" (click)="save()">Save</button>
+<div class="card-block">
+    <div class="row">
+        <div class="form-group col-lg-6 col-sm-12 col-md-12">
+            <label for="Passengers">Users:<span class="red">*</span></label>
+            <autocomplete [items]="items" (notify)='onNotify($event)' (InvokeAutoCompleteReset)="invokeReset();"></autocomplete>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 buttonholder">
+            <button class="btn btn-primary" type="button" (click)="save()">Save</button>
+        </div>
+    </div>
+    <responsive-table>
+        <table responsive-table-body>
+            <thead>
+                <tr>
+                    <th>Department Code</th>
+                    <th>Member Of</th>
+                    <th>Is HOD</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr [hidden]="departmentsToView.length != 0">
+                    <td colspan="6">No records found.</td>
+                </tr>
+                <tr *ngFor="let departmentToView of departmentsToView">
+                    <td data-title="Department Code">{{departmentToView.DepartmentName}}</td>
+                    <td data-title="Member Of">
+                        <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="departmentToView.IsMemberOf" aria-label="Add"></md-checkbox>
+                    </td>
+                    <td data-title="Is HOD">
+                        <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="departmentToView.IsHod" aria-label="Add"></md-checkbox>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </responsive-table>
+    <div class="row">
+        <div class="col-12 buttonholder">
+            <button class="btn btn-primary" type="button" (click)="save()">Save</button>
+        </div>
+    </div>
 </div>

@@ -4,6 +4,8 @@ import { IServiceInretface, ResponseModel, BaseModel } from '../../../../shared'
 
 export interface IDepartmentService extends IServiceInretface<DepartmentModel> {
     GetQuery(query: string): Observable<ResponseModel<DepartmentModel>>;
-    
-    BatchOperation(): Observable<ResponseModel<BaseModel>>
+
+    BatchOperation(): Observable<ResponseModel<BaseModel>>;
+
+    GetParentDepartments(): Observable<ResponseModel<DepartmentModel>>;
 }

@@ -10,6 +10,13 @@ export abstract class BaseModel {
         this.ActiveFlag = 'Active';
         this.CreatedBy = 1;
         this.CreatedOn = new Date();
+
+    }
+
+    public deleteAttributes() {
+        delete this.ActiveFlag; 
+        delete this.CreatedBy;
+        delete this.CreatedOn;
     }
 }
 
@@ -32,6 +39,10 @@ export class NameValue<T>{
     constructor(public Name: string, public Value: T) { }
 }
 
+export class KeyVal {
+    constructor(public Key: string, public Value: string) { }
+}
+
 export class IncidentStatus {
     static Open: number = 1;
     static Close: number = 0;
@@ -51,4 +62,8 @@ export class InvolvedPartyType {
 export class FileData {
     file: File;
     field: string;
+}
+
+export class Location {
+    constructor(public latitude: number, public longitude: number) { }
 }

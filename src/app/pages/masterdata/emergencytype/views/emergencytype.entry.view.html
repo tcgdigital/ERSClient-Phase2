@@ -1,40 +1,47 @@
-<div>
+<div *ngIf="showAdd" class="formStyle card-block entryHolder">
     <form (ngSubmit)="onSubmit()" #demandTypeForm="ngForm" [formGroup]="form">
-     <input type="hidden" *ngIf="emergencyTypeModel.EmergencyTypeId != undefined" [(ngModel)]="emergencyTypeModel.EmergencyTypeId" formControlName="EmergencyTypeId"/>
-            <div class="col-sm-3" >
-                <div class="form-control">
+        <input type="hidden" *ngIf="emergencyTypeModel.EmergencyTypeId != undefined" [(ngModel)]="emergencyTypeModel.EmergencyTypeId"
+            formControlName="EmergencyTypeId" />
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
                     <label for="EmergencyTypeName">Emergency Type Name:<span class="red">*</span></label>
-                    <input id="txtEmergencyTypeName" type="text" formControlName="EmergencyTypeName" 
-                            placeholder="Enter Emergency Type Name" [(ngModel)]="emergencyTypeModel.EmergencyTypeName" required autofocus />
-                    </div>
-            </div>                           
-            <div class="col-sm-3" >
-                <div class="form-control">
+                    <input id="txtEmergencyTypeName" type="text" formControlName="EmergencyTypeName" class="form-control" placeholder="Enter Emergency Type Name"
+                        [(ngModel)]="emergencyTypeModel.EmergencyTypeName" required autofocus />
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
                     <label for="EmergencyTypeCategory">Emergency Type Category:<span class="red">*</span></label>
-                                       
-                    <select id="selectEmergencyCategory"  class="form-control" [(ngModel)]="emergencyTypeModel.EmergencyCategory" formControlName="EmergencyCategory">
+
+                    <select id="selectEmergencyCategory" class="form-control" [(ngModel)]="emergencyTypeModel.EmergencyCategory" formControlName="EmergencyCategory">
                         <option *ngFor="let category of emergencyCategory" [value]="category.value">
                                 {{category.value}}
                         </option>
-                   </select>                     
+                   </select>
                 </div>
-            </div>  
+            </div>
 
-            <div class="col-sm-3" >
-                <div class="form-control">
-                    <label for="Status">Status:<span class="red">*</span></label>                                    
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label for="Status">Status:<span class="red">*</span></label>
                     <select class="form-control" id="selectStatus" [(ngModel)]="emergencyTypeModel.ActiveFlag" formControlName="ActiveFlag">                                           
                         <option value="Active">Active </option>
                         <option Value="InActive">InActive </option>> 
                     </select>
-                    </div>
-            </div>  
-            
-            <div class="col-sm-3">
-                <div class="fromtop1">
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="buttonholder">
                     <button class="btn btn-primary" type="submit">Save</button>
                     <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
                 </div>
-            </div>                        
+            </div>
+        </div>
     </form>
+</div>
+
+<div class="addbuttonHolder">
+    <button class="btn btn-primary" type="submit" (click)="showAddRegion()">Add Emergency Type</button>
 </div>

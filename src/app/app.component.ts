@@ -45,7 +45,7 @@ export class AppComponent implements OnInit {
         ThemePreloaderService.Load()
             .then((values) => {
                 console.log(values);
-                // this._spinner.Hide();
+                this.spinner.Hide();
             }).catch((error) => {
                 console.log(error);
             });
