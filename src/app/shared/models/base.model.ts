@@ -39,6 +39,10 @@ export class NameValue<T>{
     constructor(public Name: string, public Value: T) { }
 }
 
+export class KeyVal {
+    constructor(public Key: string, public Value: string) { }
+}
+
 export class IncidentStatus {
     static Open: number = 1;
     static Close: number = 0;
