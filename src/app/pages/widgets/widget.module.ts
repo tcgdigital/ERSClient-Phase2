@@ -19,6 +19,7 @@ import {
     MediaReleaseWidgetComponent,
     PeopleOnBoardWidgetComponent,
     PresidentMessageWidgetComponent,
+    IncidentHeaderWidgetComponent
 } from './index';
 
 import {
@@ -43,6 +44,7 @@ const WIDGET_COMPONENTS: any[] = [
     MediaReleaseWidgetComponent,
     PeopleOnBoardWidgetComponent,
     PresidentMessageWidgetComponent,
+    IncidentHeaderWidgetComponent
 ];
 
 const WIDGET_SERVICE: any[] = [

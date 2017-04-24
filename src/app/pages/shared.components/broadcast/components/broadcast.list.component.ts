@@ -1,7 +1,10 @@
 import { Component, OnInit, ViewEncapsulation, Input, OnDestroy } from '@angular/core';
 import { BroadCastModel } from './broadcast.model';
 import { BroadcastService } from './broadcast.service';
-import { ResponseModel, DataExchangeService, GlobalStateService } from '../../../../shared';
+import {
+    ResponseModel, DataExchangeService,
+    GlobalStateService, KeyValue
+} from '../../../../shared';
 
 @Component({
     selector: 'broadcast-list',
@@ -15,21 +18,21 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
     broadcastMessages: BroadCastModel[] = [];
     publishedBroadcastsLatest: BroadCastModel[] = [];
     publishedBroadcastsAll: BroadCastModel[] = [];
-    currentIncidentId : number;
-    currentDepartmentId : number;
+    currentIncidentId: number;
+    currentDepartmentId: number;
 
     constructor(private broadCastService: BroadcastService,
         private dataExchange: DataExchangeService<BroadCastModel>, private globalState: GlobalStateService) { }
 
-    getBroadCasts(departmentId ,incidentId): void {
-        this.broadCastService.Query(departmentId ,incidentId )
+    getBroadCasts(departmentId, incidentId): void {
+        this.broadCastService.Query(departmentId, incidentId)
             .subscribe((response: ResponseModel<BroadCastModel>) => {
                 this.broadcastMessages = response.Records;
             });
     }
 
     onBroadcastSuccess(broadcast: BroadCastModel): void {
-        this.getBroadCasts(this.currentDepartmentId , this.currentIncidentId);
+        this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
     }
 
     UpdateBroadcast(broadcastModelUpdate: BroadCastModel): void {
@@ -37,43 +40,25 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
         this.dataExchange.Publish("OnBroadcastUpdate", broadcastModelToSend);
     }
 
-    // getLatestPublishedBroadcasts(): void {
-    //     this.broadCastService.GetLatest(+this.initiatedDepartmentId, +this.currentIncidentId)
-    //         .subscribe((response: ResponseModel<BroadCastModel>) => {
-    //             this.publishedBroadcastsLatest = response.Records;
-    //         });
-    // }
-
-    // getAllPublishedBroadcasts(): void {
-    //     this.broadCastService.GetPublished(+this.currentIncidentId)
-    //         .subscribe((response: ResponseModel<BroadCastModel>) => {
-    //             this.publishedBroadcastsAll = response.Records;
-    //             this.publishedBroadcastsAll.forEach(item => item.InitiateDepartmentName = "Command Center"); // This will be changed in future
-    //         });
-    // }
-
     ngOnInit(): void {
-
         this.currentIncidentId = +this.incidentId;
         this.currentDepartmentId = +this.initiatedDepartmentId;
-        this.getBroadCasts(this.currentDepartmentId , this.currentIncidentId);
-        // this.getLatestPublishedBroadcasts();
-        // this.getAllPublishedBroadcasts();
+        this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
 
         this.dataExchange.Subscribe("BroadcastModelUpdated", model => this.onBroadcastSuccess(model));
         this.dataExchange.Subscribe("BroadcastModelSaved", model => this.onBroadcastSuccess(model));
-        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
-    private incidentChangeHandler(incidentId): void {
-        this.currentIncidentId = incidentId;
-        this.getBroadCasts(this.currentDepartmentId , this.currentIncidentId);
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.currentIncidentId = incident.Value;
+        this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
     }
 
-    private departmentChangeHandler(departmentId): void {
-        this.currentDepartmentId = departmentId;
-        this.getBroadCasts(this.currentDepartmentId , this.currentIncidentId);
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
+        this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
     }
 
     ngOnDestroy(): void {

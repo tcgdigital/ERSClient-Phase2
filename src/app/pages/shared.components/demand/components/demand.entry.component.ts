@@ -1,5 +1,11 @@
-import { Component, ViewEncapsulation, Output, EventEmitter, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, AbstractControl, Validators } from '@angular/forms';
+import {
+    Component, ViewEncapsulation, Output,
+    EventEmitter, OnInit, OnDestroy, ViewChild
+} from '@angular/core';
+import {
+    FormGroup, FormControl, FormBuilder,
+    AbstractControl, Validators
+} from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { DemandService } from './demand.service';
@@ -12,14 +18,12 @@ import { PageService, PageModel } from '../../../masterdata/department.functiona
 import {
     AffectedObjectsService, AffectedObjectsToView, AffectedPeopleService,
     AffectedPeopleToView, InvolvePartyModel, CommunicationLogModel
-
 } from '../../../shared.components';
 import { InvolvePartyService } from '../../involveparties';
-
 import { CallerService, CallerModel } from '../../caller';
-
 import {
-    ResponseModel, DataExchangeService, GlobalConstants, KeyValue, AutocompleteComponent,
+    ResponseModel, DataExchangeService,
+    GlobalConstants, KeyValue, AutocompleteComponent,
     UtilityService, GlobalStateService
 } from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
@@ -60,14 +64,34 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     demandModelEdit: DemandModel;
     credentialName: string;
     caller: CallerModel;
-    // @Output() demandTypeSaveEvent: EventEmitter<DemandTypeModel> = new EventEmitter(true);
 
-    constructor(private demandService: DemandService, private demandTypeService: DemandTypeService,
-        private departmentService: DepartmentService, private pageService: PageService,
-        private demandTrailService: DemandTrailService, private callerService: CallerService,
+    /**
+     * Creates an instance of DemandEntryComponent.
+     * @param {DemandService} demandService 
+     * @param {DemandTypeService} demandTypeService 
+     * @param {DepartmentService} departmentService 
+     * @param {PageService} pageService 
+     * @param {DemandTrailService} demandTrailService 
+     * @param {CallerService} callerService 
+     * @param {InvolvePartyService} involvedPartyService 
+     * @param {AffectedObjectsService} affectedObjectsService 
+     * @param {AffectedPeopleService} affectedPeopleService 
+     * @param {GlobalStateService} globalState 
+     * @param {DataExchangeService<number>} dataExchange 
+     * 
+     * @memberOf DemandEntryComponent
+     */
+    constructor(private demandService: DemandService,
+        private demandTypeService: DemandTypeService,
+        private departmentService: DepartmentService,
+        private pageService: PageService,
+        private demandTrailService: DemandTrailService,
+        private callerService: CallerService,
         private involvedPartyService: InvolvePartyService,
-        private affectedObjectsService: AffectedObjectsService, private affectedPeopleService: AffectedPeopleService,
-        private globalState: GlobalStateService, private dataExchange: DataExchangeService<number>) {
+        private affectedObjectsService: AffectedObjectsService,
+        private affectedPeopleService: AffectedPeopleService,
+        private globalState: GlobalStateService,
+        private dataExchange: DataExchangeService<number>) {
         this.showAdd = false;
         this.buttonValue = "Create Demand";
         this.createdBy = 2;
@@ -83,7 +107,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                     ? this.demandTypes[0].DemandTypeId
                     : this.demandModel.DemandTypeId;
             });
-
     };
 
     getPageSpecifiedDepartments(): void {
@@ -188,12 +211,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         if ((!editedFields && flag) || (!flag && editedFields)) {
             demandTrails.push(demandTrail);
         }
-
-
-
         return demandTrails;
     };
-
 
     getPassengersCrews(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
@@ -227,8 +246,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     };
 
     ChangeAffectedObjects(): void {
-        //  this.demandModel.AffectedObjectId = message.Value;
-
         if (this.demandModel.AffectedObjectId != 0) {
             this.form.controls["AffectedPersonId"].reset({ value: 0, disabled: true });
             this.demandModel.PDATicketNumber = this.affectedObjects.find(x => x.AffectedObjectId == this.demandModel.AffectedObjectId).TicketNumber;
@@ -312,19 +329,20 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.demandModel.RequestedBy = this.credentialName;
         this.demandModel.Caller.CallerName = this.credentialName;
         this.Action = "Save";
+
         this.dataExchange.Subscribe("OnDemandUpdate", model => this.setModelForUpdate(model));
-        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     };
 
-    private incidentChangeHandler(incidentId): void {
-        this.currentIncidentId = incidentId;
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.currentIncidentId = incident.Value;
         this.getPassengersCrews(this.currentIncidentId);
         this.getCargo(this.currentIncidentId);
     };
 
-    private departmentChangeHandler(departmentId): void {
-        this.currentDepartmentId = departmentId;
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
         this.getDepartmentNameAndParentDepartment(this.currentDepartmentId);
     };
 
@@ -439,7 +457,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             if (this.demandTypes.find(x => x.DemandTypeId == this.demandModel.DemandTypeId).IsAutoApproved) {
                 this.demandModel.IsApproved = true;
                 this.demandModel.ApproverDepartmentId = null;
-
             }
             else {
                 this.demandModel.IsApproved = false;
