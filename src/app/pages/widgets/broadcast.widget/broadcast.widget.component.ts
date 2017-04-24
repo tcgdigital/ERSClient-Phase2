@@ -1,6 +1,13 @@
-import { Component, OnInit, Input, ViewEncapsulation, ViewChild } from '@angular/core';
+import {
+    Component, OnInit, Input, OnDestroy,
+    ViewEncapsulation, ViewChild
+} from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { DataServiceFactory, DataExchangeService, TextAccordionModel, GlobalStateService } from '../../../shared'
+
+import {
+    DataServiceFactory, DataExchangeService,
+    TextAccordionModel, GlobalStateService, KeyValue
+} from '../../../shared'
 import { BroadcastWidgetModel } from './broadcast.widget.model'
 import { BroadcastWidgetService } from './broadcast.widget.service'
 import { ModalDirective } from 'ng2-bootstrap/modal';
@@ -11,7 +18,7 @@ import { ModalDirective } from 'ng2-bootstrap/modal';
     styleUrls: ['./broadcast.widget.style.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class BroadcastWidgetComponent implements OnInit {
+export class BroadcastWidgetComponent implements OnInit, OnDestroy {
     @Input('initiatedDepartmentId') departmentId: number;
     @Input('currentIncidentId') incidentId: number;
     @ViewChild('childModal') public childModal: ModalDirective;
@@ -26,32 +33,34 @@ export class BroadcastWidgetComponent implements OnInit {
      * Creates an instance of BroadcastWidgetComponent.
      * @param {BroadcastWidgetService} broadcastWidgetService 
      * @param {DataExchangeService<BroadcastWidgetModel>} dataExchange 
+     * @param {GlobalStateService} globalState 
      * 
      * @memberOf BroadcastWidgetComponent
      */
     constructor(private broadcastWidgetService: BroadcastWidgetService,
-        private dataExchange: DataExchangeService<BroadcastWidgetModel>, private globalState: GlobalStateService) { }
+        private dataExchange: DataExchangeService<BroadcastWidgetModel>,
+        private globalState: GlobalStateService) { }
 
     public ngOnInit(): void {
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.departmentId;
         this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
         this.getAllPublishedBroadcasts();
-        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
+
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     };
 
-    private incidentChangeHandler(incidentId): void {
-        this.currentIncidentId = incidentId;
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.currentIncidentId = incident.Value;
         this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
         this.getAllPublishedBroadcasts();
     };
 
-    private departmentChangeHandler(departmentId): void {
-        this.currentDepartmentId = departmentId;
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
         this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
     };
-
 
     public getLatestBroadcasts(departmentId, incidentId): void {
         let data: BroadcastWidgetModel[] = [];

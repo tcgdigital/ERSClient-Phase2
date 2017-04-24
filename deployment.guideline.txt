@@ -1,0 +1,23 @@
+1. Downloaded URL Rewriter module from https://www.microsoft.com/en-au/download/details.aspx?id=7435
+2. Added following to my web.config
+
+<configuration>
+  <system.webServer>
+    <rewrite>
+      <rules>
+        <rule name="AngularJS" stopProcessing="true">
+          <match url=".*" />
+          <conditions logicalGrouping="MatchAll">
+            <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+            <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
+          </conditions>
+          <action type="Rewrite" url="/" />
+        </rule>
+      </rules>
+    </rewrite>
+  </system.webServer>
+</configuration>
+
+3. Setting up base tag in index.html. It should be immediately after <head> tag
+
+<base href="/"/>

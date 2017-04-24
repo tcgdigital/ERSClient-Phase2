@@ -3,8 +3,10 @@ import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { InvolvePartyModel } from '../../../shared.components';
 import { AffectedObjectModel, AffectedObjectsToView } from './affected.objects.model';
 import { AffectedObjectsService } from './affected.objects.service';
-import { ResponseModel, DataExchangeService, GlobalStateService } from '../../../../shared';
-import { UtilityService } from '../../../../shared/services';
+import {
+    ResponseModel, DataExchangeService,
+    GlobalStateService, UtilityService, KeyValue
+} from '../../../../shared';
 
 
 @Component({
@@ -14,7 +16,7 @@ import { UtilityService } from '../../../../shared/services';
 })
 export class AffectedObjectsVerificationComponent implements OnInit {
     constructor(private affectedObjectsService: AffectedObjectsService, private globalState: GlobalStateService) { }
-    affectedObjectsForVerification: AffectedObjectsToView[] =[];
+    affectedObjectsForVerification: AffectedObjectsToView[] = [];
     verifiedAffectedObjects: AffectedObjectModel[];
     date: Date = new Date();
     currentIncident: number;
@@ -40,14 +42,16 @@ export class AffectedObjectsVerificationComponent implements OnInit {
                 console.log(`Error: ${error}`);
             });
     };
-    incidentChangeHandler(incidentId) {
-        this.currentIncident = incidentId;
-        this.getAffectedObjects(incidentId);
+
+    incidentChangeHandler(incident: KeyValue) {
+        this.currentIncident = incident.Value;
+        this.getAffectedObjects(this.currentIncident);
     }
+
     ngOnInit(): any {
         this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
         this.getAffectedObjects(this.currentIncident);
-        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
     }
     ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChange');

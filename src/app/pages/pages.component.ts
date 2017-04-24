@@ -79,12 +79,12 @@ export class PagesComponent implements OnInit {
 
     public onDepartmentChange(selectedDepartment: KeyValue): void {
         UtilityService.SetToSession({ 'CurrentDepartmentId': selectedDepartment.Value });
-        this.globalState.NotifyDataChanged('departmentChange', selectedDepartment.Value);
+        this.globalState.NotifyDataChanged('departmentChange', selectedDepartment);
     }
 
     public onIncidentChange(selectedIncident: KeyValue): void {
         UtilityService.SetToSession({ 'CurrentIncidentId': selectedIncident.Value });
-        this.globalState.NotifyDataChanged('incidentChange', selectedIncident.Value);
+        this.globalState.NotifyDataChanged('incidentChange', selectedIncident);
     }
 
     private getDepartments(): void {

@@ -1,12 +1,14 @@
-import { Component, OnInit, ViewEncapsulation, Input, ViewChild } from '@angular/core';
+import {
+    Component, OnInit, ViewEncapsulation,
+    Input, ViewChild, OnDestroy
+} from '@angular/core';
 import { CheckListSummeryModel, DeptCheckListModel, SubDeptCheckListModel } from './checklist.summary.widget.model';
 import { ChecklistSummaryWidgetService } from './checklist.summary.widget.service';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { Observable } from 'rxjs/Rx';
 import { ActionableModel } from '../../shared.components/actionables/components/actionable.model';
-import { ResponseModel } from '../../../shared';
+import { ResponseModel, GlobalStateService, KeyValue } from '../../../shared';
 import { DepartmentModel } from '../../masterdata/department/components/department.model';
-import { GlobalStateService } from '../../../shared';
 
 @Component({
     selector: 'checklist-summary-widget',
@@ -14,7 +16,7 @@ import { GlobalStateService } from '../../../shared';
     styleUrls: ['./checklist.summary.widget.style.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class ChecklistSummaryWidgetComponent implements OnInit {
+export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
     @Input('initiatedDepartmentId') departmentId: number;
     @Input('currentIncidentId') incidentId: number;
 
@@ -47,8 +49,10 @@ export class ChecklistSummaryWidgetComponent implements OnInit {
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.departmentId;
         this.getActionableCount(this.currentIncidentId, this.currentDepartmentId);
-        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
+
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+
         this.showAllDeptSubChecklistCompleted = false;
         this.showAllDeptSubChecklistPending = false;
     }
@@ -62,8 +66,6 @@ export class ChecklistSummaryWidgetComponent implements OnInit {
                 console.log(`Error: ${error}`);
             });
     }
-
-
 
     public ViewAllChecklist(callback?: Function): void {
         let deptCheckListsLocal: DeptCheckListModel[] = [];
@@ -360,13 +362,13 @@ export class ChecklistSummaryWidgetComponent implements OnInit {
     }
 
 
-    private incidentChangeHandler(incidentId): void {
-        this.currentIncidentId = incidentId;
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.currentIncidentId = incident.Value;
         this.getActionableCount(this.currentIncidentId, this.currentDepartmentId);
     };
 
-    private departmentChangeHandler(departmentId): void {
-        this.currentDepartmentId = departmentId;
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
         this.getActionableCount(this.currentIncidentId, this.currentDepartmentId);
     };
 

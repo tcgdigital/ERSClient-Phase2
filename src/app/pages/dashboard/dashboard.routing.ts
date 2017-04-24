@@ -1,11 +1,13 @@
 import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
+import { AuthGuardService } from '../../shared/services';
 
 const dashboardRoutes: Routes = [
     {
         path: '',
         component: DashboardComponent,
+        canActivateChild: [AuthGuardService],
         children: [
             { path: 'people', loadChildren: '../shared.components/affected.people/affected.people.module#AffectedPeopleModule' },
             { path: 'cargo', loadChildren: '../shared.components/affected.objects/affected.objects.module#AffectedObjectsModule' },

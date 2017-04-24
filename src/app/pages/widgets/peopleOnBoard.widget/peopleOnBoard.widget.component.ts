@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Input, ViewChild, OnDestroy } from '@angular/core';
 import { PeopleOnBoardWidgetService } from './peopleOnBoard.widget.service';
 import { PeopleOnBoardModel } from './peopleOnBoard.widget.model';
 import { ModalDirective } from 'ng2-bootstrap/modal';
@@ -13,18 +13,19 @@ import {
     DataService,
     DataServiceFactory,
     DataProcessingService,
-    ServiceBase, UtilityService
+    ServiceBase, UtilityService,
+    GlobalStateService, KeyValue
 } from '../../../shared';
-import { GlobalStateService } from '../../../shared';
 
 @Component({
     selector: 'peopleOnBoard-widget',
     templateUrl: './peopleOnBoard.widget.view.html',
     encapsulation: ViewEncapsulation.None
 })
-export class PeopleOnBoardWidgetComponent implements OnInit {
+export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
     @Input('initiatedDepartmentId') departmentId: number;
     @Input('currentIncidentId') incidentId: number;
+
     @ViewChild('childModalPassengers') public childModalPassengers: ModalDirective;
     @ViewChild('childModalCrews') public childModalCrews: ModalDirective;
     @ViewChild('childModalEnquiredPassengers') public childModalEnquiredPassengers: ModalDirective;
@@ -39,14 +40,13 @@ export class PeopleOnBoardWidgetComponent implements OnInit {
     currentDepartmentId: number;
     currentIncidentId: number;
 
-
     /**
      * Creates an instance of PeopleOnBoardWidgetComponent.
      * @param {PeopleOnBoardWidgetService} peopleOnBoardWidgetService 
+     * @param {GlobalStateService} globalState 
      * 
      * @memberOf PeopleOnBoardWidgetComponent
      */
-
     constructor(private peopleOnBoardWidgetService: PeopleOnBoardWidgetService,
         private globalState: GlobalStateService) { }
 
@@ -65,18 +65,18 @@ export class PeopleOnBoardWidgetComponent implements OnInit {
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.departmentId;
         this.getPeopleOnboardCounts(this.currentIncidentId);
-        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
-
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
     };
 
-    private incidentChangeHandler(incidentId): void {
-        this.currentIncidentId = incidentId;
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.currentIncidentId = incident.Value;
         this.getPeopleOnboardCounts(this.currentIncidentId);
     };
 
     public openAllPassengersDetails(): void {
         let involvedParties: InvolvePartyModel[] = [];
         let passengerListLocal: PassengerModel[] = [];
+
         this.peopleOnBoardWidgetService.GetAllPassengersByIncident(this.incidentId)
             .subscribe((result: ResponseModel<InvolvePartyModel>) => {
                 let affectedPeoples: AffectedPeopleModel[];
@@ -87,7 +87,6 @@ export class PeopleOnBoardWidgetComponent implements OnInit {
                 this.passengerList = Observable.of(passengerListLocal);
                 this.childModalPassengers.show();
             });
-
     }
 
     public hideAllPassengers(): void {

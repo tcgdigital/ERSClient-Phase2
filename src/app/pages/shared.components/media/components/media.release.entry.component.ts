@@ -10,7 +10,7 @@ import {
 import { MediaService } from './media.service';
 import { MediaModel } from './media.model';
 import {
-    ResponseModel, UtilityService,
+    ResponseModel, UtilityService, KeyValue,
     DataExchangeService, GlobalConstants, GlobalStateService
 } from '../../../../shared';
 
@@ -27,11 +27,10 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     public form: FormGroup;
     media: MediaModel = new MediaModel();
     date: Date = new Date();
-    // medias: MediaModel[] = [];
     Action: string;
     currentIncidentId: number;
     currentDepartmentId: number;
-    showAdd : boolean;
+    showAdd: boolean;
 
     /**
      * Creates an instance of MediaQueryEntryComponent.
@@ -42,25 +41,27 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
      * @memberOf MediaQueryEntryComponent
      */
     constructor(private mediaQueryService: MediaService,
-        private dataExchange: DataExchangeService<MediaModel>, private globalState: GlobalStateService,
-        private builder: FormBuilder) { 
-            this.showAdd =false;
-        }
+        private dataExchange: DataExchangeService<MediaModel>,
+        private globalState: GlobalStateService,
+        private builder: FormBuilder) {
+        this.showAdd = false;
+    }
 
     ngOnInit(): void {
         this.currentIncidentId = +this.currentIncidentId;
         this.currentDepartmentId = +this.initiatedDepartmentId;
         this.formInit();
+
         this.dataExchange.Subscribe("OnMediaReleaseUpdate", model => this.onMediaReleaseUpdate(model));
-        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
-    private incidentChangeHandler(incidentId): void {
-        this.currentIncidentId = incidentId;
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.currentIncidentId = incident.Value;
     }
 
-    private departmentChangeHandler(departmentId): void {
-        this.currentDepartmentId = departmentId;
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
     }
 
     ngOnDestroy(): void {
@@ -72,15 +73,12 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     onMediaReleaseUpdate(mediaModel: MediaModel): void {
         this.media = mediaModel;
         this.media.MediaqueryId = mediaModel.MediaqueryId;
-       // this.media.IncidentId = +this.currentIncidentId;
-        //this.media.InitiateDepartmentId = +this.initiatedDepartmentId;
         this.media.IsUpdated = true;
         this.Action = "Edit";
-        this.showAdd =true;
+        this.showAdd = true;
     }
 
     save(): void {
-
         if (this.form.valid) {
             this.media.IsPublished = false;
             this.Action = "Save";
@@ -101,13 +99,15 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     private CreateOrUpdateMediaQuery(): void {
         UtilityService.setModelFromFormGroup<MediaModel>
             (this.media, this.form, x => x.Message, x => x.Remarks);
+
         this.media.IncidentId = this.currentIncidentId;
-        this.media.InitiateDepartmentId = this.currentDepartmentId ;
+        this.media.InitiateDepartmentId = this.currentDepartmentId;
+
         if (this.media.MediaqueryId == 0) {
             this.mediaQueryService.Create(this.media)
                 .subscribe((response: MediaModel) => {
                     this.dataExchange.Publish("MediaModelSaved", response);
-                    this.showAdd =false;
+                    this.showAdd = false;
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
                 });
@@ -116,7 +116,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
             this.mediaQueryService.Update(this.media)
                 .subscribe((response: MediaModel) => {
                     this.dataExchange.Publish("MediaModelUpdated", response);
-                    this.showAdd =false;
+                    this.showAdd = false;
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
                 });
@@ -125,7 +125,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
 
     cancel(): void {
         this.formInit();
-        this.showAdd =false
+        this.showAdd = false
     }
 
     private formInit(): void {
@@ -139,8 +139,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
         this.Action = "Save";
     }
 
-     showAddRegion(ShowAdd: Boolean): void {
+    showAddRegion(ShowAdd: Boolean): void {
         this.showAdd = true;
     };
-
 }
