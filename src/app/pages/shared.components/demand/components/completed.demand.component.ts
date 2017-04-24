@@ -155,9 +155,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         this.communicationLog = new CommunicationLogModel();
         this.communicationLog.InteractionDetailsId = 0;
         this.communicationLog.Queries = demand.DemandDesc;
-        this.communicationLog.Answers = 'Closed by ' + this.currentDepartmentName + ", "
-            + demand.DemandTypeName + " request for " + demand.TargetDepartmentName
-            + ". Request Details : " + demand.DemandDesc + ". ";
+        this.communicationLog.Answers = `Closed by ${this.currentDepartmentName}, ${demand.DemandTypeName} request for ${demand.TargetDepartmentName}. Request Details : ${demand.DemandDesc}.`;
         this.communicationLog.RequesterName = demand.RequestedBy;
         this.communicationLog.RequesterDepartment = demand.TargetDepartmentName;
         this.communicationLog.RequesterType = "Request";
@@ -188,7 +186,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
                     item.IsClosed = x.IsClosed;
                     item.ClosedBy = this.createdBy;
                     item.ClosedOn = new Date;
-                    item.DemandStatusDescription = 'Closed by ' + this.currentDepartmentName;
+                    item.DemandStatusDescription = `Closed by ${this.currentDepartmentName}`;
                     item.CommunicationLogs = this.SetCommunicationLog(x);
                     x.DemandStatusDescription = item.DemandStatusDescription;
                     item.DemandTrails = this.createDemandTrailModel(x, true);
@@ -198,7 +196,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
                     item.IsCompleted = false;
                     item.RejectedBy = this.createdBy;
                     item.RejectedDate = new Date;
-                    item.DemandStatusDescription = 'Approved and pending with ' + x.TargetDepartmentName;
+                    item.DemandStatusDescription = `Approved and pending with ${x.TargetDepartmentName}`;
                     x.DemandStatusDescription = item.DemandStatusDescription;
                     item.DemandTrails = this.createDemandTrailModel(x, false);
                 }
@@ -217,7 +215,6 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
                     });
             };
         }
-
     };
 
 
