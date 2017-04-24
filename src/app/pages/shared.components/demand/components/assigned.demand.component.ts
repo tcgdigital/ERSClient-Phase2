@@ -17,8 +17,6 @@ import {
 } from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 
-
-
 @Component({
     selector: 'assigned-demand',
     encapsulation: ViewEncapsulation.None,
@@ -69,11 +67,9 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
 
     setRagStatus(): void {
         Observable.interval(1000).subscribe(_ => {
-            // alert("interval");
             if (this.demands && this.demands.length > 0) {
                 this.demands.forEach(x => {
                     if (x.ClosedOn == null) {
-                        //alert("ifff");
                         let ScheduleTime: number = (Number(x.ScheduleTime) * 60000);
                         let CreatedOn: number = new Date(x.CreatedOn).getTime();
                         let CurrentTime: number = new Date().getTime();
@@ -114,7 +110,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
                 this.demandRemarks = response.Records;
                 this.childModalRemarks.show();
             }, (error: any) => {
-                console.log("error:  " + error);
+                console.log(`Error: ${error}`);
             });
     };
 
@@ -128,15 +124,14 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
                 this.departments = response.Records;
                 this.getCurrentDepartmentName(this.currentDepartmentId);
             }, (error: any) => {
-                console.log("error:  " + error);
+                console.log(`Error: ${error}`);
             });
     }
-
 
     createDemandTrailModel(demand: DemandModelToView, flag, OriginalDemand?: DemandModel): DemandTrailModel[] {
         this.demandTrails = [];
         this.demandTrail = new DemandTrailModel();
-        let description = flag ? 'Completed by ' + this.currentDepartmentName : demand.DemandDesc;
+        let description = flag ? `Completed by ${this.currentDepartmentName}` : demand.DemandDesc;
         this.demandTrail.Answers = "";
         this.demandTrail.DemandId = demand.DemandId;
         this.demandTrail.ScheduleTime = demand.ScheduleTime;
@@ -145,8 +140,8 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.demandTrail.RequiredLocation = demand.RequiredLocation;
         this.demandTrail.RequesterDepartmentName = demand.RequesterDepartmentName;
         this.demandTrail.TargetDepartmentName = this.currentDepartmentName;
-        this.demandTrail.ApproverDepartmentName = this.departments.find(x => { return x.DepartmentId == demand.ApproverDeptId; }) ?
-            this.departments.find(x => { return x.DepartmentId == demand.ApproverDeptId; }).DepartmentName : null;
+        this.demandTrail.ApproverDepartmentName = this.departments.some((x: DepartmentModel) => x.DepartmentId == demand.ApproverDeptId) ?
+            this.departments.find((x: DepartmentModel) => x.DepartmentId == demand.ApproverDeptId).DepartmentName : null;
         this.demandTrail.DemandDesc = demand.DemandDesc;
         this.demandTrail.IsCompleted = true;
         this.demandTrail.ScheduledClose = new Date();
@@ -157,8 +152,8 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.demandTrail.ActiveFlag = "Active";
         this.demandTrail.CreatedOn = demand.CreatedOn
 
-        var date = new Date();
-        var answer = '<div><p>Request ' + this.demandTrail.DemandStatusDescription + '   <strong>Date :</strong>  ' + date.toLocaleString() + '  </p><div>';
+        let date = new Date();
+        let answer = `<div><p>Request ${this.demandTrail.DemandStatusDescription} <strong>Date :</strong>  ${date.toLocaleString()} </p><div>`;
         if (!flag && (OriginalDemand != null)) {
             this.demandTrail.IncidentId = OriginalDemand.IncidentId;
             this.demandTrail.DemandTypeId = OriginalDemand.DemandTypeId;
@@ -171,12 +166,13 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
             this.demandTrail.ScheduledClose = null;
             this.demandTrail.IsRejected = false;
             this.demandTrail.RejectedDate = null;
-            answer = '<div><p> Request Edited By ' + this.currentDepartmentName + '  <strong>Date :</strong>  ' + date + '  </p><div>';
+            answer = `<div><p> Request Edited By ${this.currentDepartmentName}  <strong>Date :</strong> ${date}  </p><div>`;
+
             if (OriginalDemand.ScheduleTime) {
-                var minutesInt = parseInt(OriginalDemand.ScheduleTime);
-                var d = new Date(OriginalDemand.CreatedOn);
+                let minutesInt = parseInt(OriginalDemand.ScheduleTime);
+                let d = new Date(OriginalDemand.CreatedOn);
                 d.setMinutes(d.getMinutes() + minutesInt);
-                var editedDate = new Date(d);
+                let editedDate = new Date(d);
                 answer = answer + '<strong>Expected Resolution Time</strong> : ' + editedDate + '  ';
             }
         }
@@ -184,8 +180,6 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.demandTrail.Answers = answer;
         this.demandTrails.push(this.demandTrail);
         return this.demandTrails;
-
-
     };
 
     openDemandRemarks(demand) {
@@ -211,7 +205,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
                 this.getDemandRemarks(demand.DemandId);
                 this.Remarks = "";
             }, (error: any) => {
-                console.log("error:  " + error);
+                console.log(`Error: ${error}`);
                 alert("Error occured during saving the remark");
             });
     };
@@ -228,7 +222,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
                 item.DemandId = x.DemandId;
                 item.ScheduledClose = new Date(),
                     item.ClosedByDepartmentId = this.currentDepartmentId;
-                item.DemandStatusDescription = 'Completed by ' + this.currentDepartmentName,
+                item.DemandStatusDescription = `Completed by ${this.currentDepartmentName}`,
                     item.IsCompleted = x.IsCompleted,
                     item.IsRejected = false;
                 item.RejectedDate = null;

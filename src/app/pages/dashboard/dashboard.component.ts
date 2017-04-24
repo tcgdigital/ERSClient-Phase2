@@ -1,6 +1,6 @@
 import {
     Component, ViewEncapsulation,
-    OnInit, SimpleChange
+    OnInit, SimpleChange, OnDestroy
 } from '@angular/core';
 import { TAB_LINKS } from './dashboard.tablink';
 import { IncidentService } from '../incident';
@@ -14,7 +14,7 @@ import { ITabLinkInterface, GlobalStateService, UtilityService, KeyValue } from 
     encapsulation: ViewEncapsulation.None,
 
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
     public incidentDate: Date;
     public tablinks: ITabLinkInterface[];
 
@@ -46,6 +46,11 @@ export class DashboardComponent implements OnInit {
 
     public onViewIncidentClick($event): void {
 
+    }
+
+    public ngOnDestroy(): void {
+        this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('departmentChange');
     }
 
     private getIncident(incidentId: number): void {

@@ -55,7 +55,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         private demandRemarkLogsService: DemandRemarkLogService,
         private globalState: GlobalStateService,
         private departmentService: DepartmentService) {
-        this.createdByName = "Anwesha Ray";
+        this.createdByName = 'Anwesha Ray';
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
     };
@@ -113,7 +113,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
                 this.demandRemarks = response.Records;
                 this.childModalRemarks.show();
             }, (error: any) => {
-                console.log("error:  " + error);
+                console.log(`Error: ${error}`);
             });
     };
 
@@ -121,11 +121,11 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.demandForRemarks = demand;
         this.getDemandRemarks(demand.DemandId);
     };
-    createDemandTrailModel(demand: DemandModelToView, flag, originalDemand?: DemandModel): DemandTrailModel[] {
 
+    createDemandTrailModel(demand: DemandModelToView, flag, originalDemand?: DemandModel): DemandTrailModel[] {
         this.demandTrails = [];
         this.demandTrail = new DemandTrailModel();
-        this.demandTrail.Answers = "";
+        this.demandTrail.Answers = '';
         this.demandTrail.DemandId = demand.DemandId;
         this.demandTrail.IncidentId = this.currentIncidentId;
         this.demandTrail.ScheduleTime = demand.ScheduleTime;
@@ -152,7 +152,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.demandTrail.CreatedOn = demand.CreatedOn
 
         let date = new Date();
-        let answer = '<div><p>' + demand.DemandStatusDescription + '   <strong>Date :</strong>  ' + date.toLocaleString() + '  </p><div>';
+        let answer = `<div><p> ${demand.DemandStatusDescription}   <strong>Date :</strong>  ${date.toLocaleString()}  </p><div>`;
         if (originalDemand != undefined) {
             this.demandTrail.DemandTypeId = originalDemand.DemandTypeId;
             this.demandTrail.DemandCode = originalDemand.DemandCode;
@@ -164,13 +164,13 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
             this.demandTrail.DemandStatusDescription = originalDemand.DemandStatusDescription;
             this.demandTrail.RequiredLocation = originalDemand.RequiredLocation;
             this.demandTrail.RequesterType = originalDemand.RequesterType;
-            answer = '<div><p> Request Edited By ' + this.demandTrail.RequesterDepartmentName + '  <strong>Date :</strong>  ' + date + '  </p><div>';
+            answer = `<div><p> Request Edited By ${this.demandTrail.RequesterDepartmentName} <strong>Date :</strong> ${date} </p><div>`;
             if (originalDemand.ScheduleTime) {
                 var minutesInt = parseInt(originalDemand.ScheduleTime);
                 var d = new Date(originalDemand.CreatedOn);
                 d.setMinutes(d.getMinutes() + minutesInt);
                 var editedDate = new Date(d);
-                answer = answer + '<strong>Expected Resolution Time</strong> : ' + editedDate + '  ';
+                answer = answer + `<strong>Expected Resolution Time</strong> : ${editedDate}`;
             }
         }
         this.demandTrail.Answers = answer;
@@ -195,7 +195,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
                 this.getDemandRemarks(demand.DemandId);
                 this.Remarks = "";
             }, (error: any) => {
-                console.log("error:  " + error);
+                console.log(`Error: ${error}`);
                 alert("Error occured during saving the remark");
             });
     };
@@ -209,12 +209,10 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.communicationLog = new CommunicationLogModel();
         this.communicationLog.InteractionDetailsId = 0;
         this.communicationLog.Queries = demand.DemandDesc;
-        this.communicationLog.Answers = demand.DemandStatusDescription + ", "
-            + demand.DemandTypeName + " request for " + demand.TargetDepartmentName
-            + ". Request Details : " + demand.DemandDesc + ". ";
+        this.communicationLog.Answers = `${demand.DemandStatusDescription}, ${demand.DemandTypeName} request for ${demand.TargetDepartmentName}. Request Details : ${demand.DemandDesc}.`;
         this.communicationLog.RequesterName = demand.RequestedBy;
         this.communicationLog.RequesterDepartment = demand.TargetDepartmentName;
-        this.communicationLog.RequesterType = "Request";
+        this.communicationLog.RequesterType = 'Request';
         this.communicationLog.DemandId = demand.DemandId;
         this.communicationLog.InteractionDetailsType = GlobalConstants.InteractionDetailsTypeDemand;
         if (demand.AffectedPersonId != null) {
@@ -244,8 +242,8 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
                 x.IsApproved ? item.ApprovedDt = new Date() : item.RejectedDate = new Date;
                 x.IsApproved ? item.ApprovedBy = this.createdBy : item.RejectedBy = this.createdBy;
                 item.ApproverDepartmentId = x.IsApproved ? this.currentDepartmentId : item.ApproverDepartmentId;
-                item.DemandStatusDescription = item.IsApproved ? 'Approved and pending with ' + x.TargetDepartmentName :
-                    'On Hold by ' + this.currentDepartmentName;
+                item.DemandStatusDescription = item.IsApproved ? `Approved and pending with ${x.TargetDepartmentName}` :
+                    `On Hold by ${this.currentDepartmentName}`;
                 item.CommunicationLogs = this.SetCommunicationLog(x);
                 item.DemandTrails = x.IsApproved ? this.createDemandTrailModel(x, true) : this.createDemandTrailModel(x, false);
                 return item;
