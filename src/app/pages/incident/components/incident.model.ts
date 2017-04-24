@@ -16,6 +16,7 @@ export class IncidentModel extends BaseModel {
     public EmergencyDate: Date;
     public Severity: string;
     public EmergencyLocation: string;
+    public OffSetLocation: string;
     public IsSubmitted: boolean;
     public IsSaved: boolean;
     public Remarks: string;

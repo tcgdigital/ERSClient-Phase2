@@ -71,10 +71,8 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit {
 
 
     public showAllDeptSubCompletedFunc(demandModelList: DemandModel[]): void {
-        debugger;
         this.allDeptDemandReceivedSummaries = [];
         demandModelList.forEach((item: DemandModel) => {
-            debugger;
             if (item.IsClosed == true) {
                 let allDeptDemandReceivedSummary: AllDeptDemandReceivedSummary = new AllDeptDemandReceivedSummary();
                 allDeptDemandReceivedSummary.description = item.DemandDesc;
@@ -116,10 +114,8 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit {
     }
 
     public showAllDeptSubPendingFunc(demandModelList: DemandModel[]): void {
-        debugger;
         this.allDeptDemandReceivedSummaries = [];
         demandModelList.forEach((item: DemandModel) => {
-            debugger;
             if (item.IsClosed == false) {
                 let allDeptDemandReceivedSummary: AllDeptDemandReceivedSummary = new AllDeptDemandReceivedSummary();
                 allDeptDemandReceivedSummary.description = item.DemandDesc;
@@ -164,11 +160,8 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit {
 
 
     public showSubDeptSubCompletedFunc(demandModelList: DemandModel[]): void {
-        debugger;
-        debugger;
         this.subDeptDemandReceivedSummaries = [];
         demandModelList.forEach((item: DemandModel) => {
-            debugger;
             if (item.IsClosed == true) {
                 let subDeptDemandReceivedSummary: SubDeptDemandReceivedSummary = new SubDeptDemandReceivedSummary();
                 subDeptDemandReceivedSummary.description = item.DemandDesc;
@@ -204,19 +197,14 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit {
     }
 
     public hideSubDeptSubCompleted(): void {
-        debugger;
         this.showSubDeptSubCompleted = false;
         this.showSubDeptSubPending = false;
 
     }
 
     public showSubDeptSubPendingFunc(demandModelList: DemandModel[]): void {
-        debugger;
-        debugger;
-        debugger;
         this.subDeptDemandReceivedSummaries = [];
         demandModelList.forEach((item: DemandModel) => {
-            debugger;
             if (item.IsClosed == false) {
                 let subDeptDemandReceivedSummary: SubDeptDemandReceivedSummary = new SubDeptDemandReceivedSummary();
                 subDeptDemandReceivedSummary.description = item.DemandDesc;
@@ -253,7 +241,6 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit {
     }
 
     public hideSubDeptSubPending(): void {
-        debugger;
         this.showSubDeptSubCompleted = false;
         this.showSubDeptSubPending = false;
 

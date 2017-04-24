@@ -58,6 +58,7 @@ declare module 'modern-lru' {
 interface JQuery {
     slimScroll;
     datepicker;
+    tree;
 }
 // Extra variables that live on Global that will be replaced by webpack DefinePlugin
 declare var ENV: string;

@@ -12,7 +12,9 @@ const affectedPeopleRoutes: Routes = [
         children: [
             {
                 path: '',
-                component: AffectedPeopleListComponent
+                // component: AffectedPeopleListComponent
+                redirectTo: 'detail', 
+                pathMatch: 'full'
             },
             {
                 path: 'detail',

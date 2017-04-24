@@ -6,8 +6,12 @@ import { PagesComponent } from './pages.component';
 const pageRoutes: Routes = [
     {
         path: 'login',
-        loadChildren: './login/login.module#LoginModule'
+        loadChildren: 'app/pages/login/login.module#LoginModule'
     },
+    // {
+    //     path: 'incident',
+    //     loadChildren: 'app/pages/incident/incident.module#IncidentModule'
+    // },
     {
         path: 'pages',
         component: PagesComponent,
@@ -16,7 +20,8 @@ const pageRoutes: Routes = [
             { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' },
             { path: 'masterdata', loadChildren: './masterdata/masterdata.module#MasterDateModule' },
             { path: 'incident', loadChildren: './incident/incident.module#IncidentModule' },
-            { path: 'masterdataupload', loadChildren: './masterdata.upload/masterdata.upload.module#MasterDataUploadModule' }
+            { path: 'masterdataupload', loadChildren: './masterdata.upload/masterdata.upload.module#MasterDataUploadModule' },
+            { path: 'notifypeople', loadChildren: './notifypeople/notifypeople.module#NotifyPeopleModule' },
         ]
     }
 ];

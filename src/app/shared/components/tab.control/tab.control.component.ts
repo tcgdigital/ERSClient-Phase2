@@ -3,6 +3,8 @@ import {
     ViewEncapsulation, AfterViewInit,
     ElementRef
 } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { Subscription } from 'rxjs/Rx'
 import { ITabLinkInterface } from './tab.control.interface';
 
 @Component({
@@ -15,6 +17,8 @@ import { ITabLinkInterface } from './tab.control.interface';
 export class TabControlComponent implements OnInit, AfterViewInit {
     @Input() tabLinks: ITabLinkInterface[];
 
+    protected allowedTabLinks: ITabLinkInterface[];
+    protected _onRouteChange: Subscription;
 
     private $rootContainer: JQuery;
     private $rootItems: JQuery;
@@ -24,12 +28,20 @@ export class TabControlComponent implements OnInit, AfterViewInit {
     /**
      * Creates an instance of TabControlComponent.
      * @param {ElementRef} elementRef 
+     * @param {Router} router 
      * 
      * @memberOf TabControlComponent
      */
-    constructor(private elementRef: ElementRef) { }
+    constructor(private elementRef: ElementRef, private router: Router) {
+    }
 
     public ngOnInit(): void {
+        this.allowedTabLinks = this.tabLinks
+        this._onRouteChange = this.router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                this.selectSpecificTabs(event.url)
+            }
+        });
     }
 
     public ngAfterViewInit(): void {
@@ -70,8 +82,6 @@ export class TabControlComponent implements OnInit, AfterViewInit {
 
     public onTabItemClick($event, index: number): void {
         let $self: JQuery = jQuery($event.currentTarget);
-
-        // this.moveSliderOnFocus($event, index);
         this.resetSelection();
         this.setSelection($self, $event.pageX, $event.pageY)
         this.$slider.hide();
@@ -80,11 +90,14 @@ export class TabControlComponent implements OnInit, AfterViewInit {
     public onTabLinkMouseEnter($event, index: number): void {
         let $self: JQuery = jQuery($event.currentTarget);
         this.moveSliderOnFocus($self, index);
+        // if ($self.hasClass('active'))
+        //     this.$slider.hide();
     }
 
     public onTabLinkMouseLeave($event, index: number): void {
         let $self: JQuery = jQuery($event.currentTarget);
         this.moveSliderOnFocus($self, index);
+        // this.$slider.hide();
     }
 
     public gotoPrevious($event): void {
@@ -184,7 +197,14 @@ export class TabControlComponent implements OnInit, AfterViewInit {
         let whatTab: number = tabIndex;
         let howFar: number = $tabItem.width() * whatTab;
 
-        this.$slider.show();
+        // if (!$tabItem.hasClass('active'))
+        //     this.$slider.show();
         this.$slider.css({ left: `${howFar}px` });
+    }
+
+    private selectSpecificTabs(tabUrl: string): void {
+        this.allowedTabLinks.forEach((tab: ITabLinkInterface) => {
+            tab.selected = (tabUrl.indexOf(tab.url) != -1);
+        });
     }
 }

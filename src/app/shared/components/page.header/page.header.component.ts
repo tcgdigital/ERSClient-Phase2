@@ -1,6 +1,6 @@
 import {
-    Component, ViewEncapsulation,
-    Output, Input, EventEmitter
+    Component, ViewEncapsulation, SimpleChange,
+    Output, Input, EventEmitter, AfterContentInit, OnChanges
 } from '@angular/core';
 import { GlobalStateService } from '../../services';
 import { KeyValue } from '../../models';
@@ -10,11 +10,13 @@ import { KeyValue } from '../../models';
     templateUrl: './page.header.view.html',
     encapsulation: ViewEncapsulation.None
 })
-export class PageHeaderComponent {
+export class PageHeaderComponent implements AfterContentInit {
     @Input() userName: string;
     @Input() lastLogin: Date;
     @Input() departments: KeyValue[];
     @Input() incidents: KeyValue[];
+    @Input() currentDepartmentId: number = 0;
+    @Input() currentIncidentId: number = 0;
 
     @Output() toggleSideMenu: EventEmitter<any> = new EventEmitter<any>();
     @Output() contactClicked: EventEmitter<any> = new EventEmitter<any>();
@@ -23,6 +25,11 @@ export class PageHeaderComponent {
 
     @Output() departmentChange: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
     @Output() incidentChange: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
+
+    public ngAfterContentInit(): void {
+        // console.log(`page header currentDepartmentId: ${this.currentDepartmentId}`);
+        // console.log(`page header currentIncidentId: ${this.currentIncidentId}`);
+    }
 
     public onToggleSideMenu($event): void {
         this.toggleSideMenu.emit($event);
