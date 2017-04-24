@@ -1,13 +1,14 @@
 import { Component, ViewEncapsulation, OnInit, ViewChild } from '@angular/core';
 
-import { InvolvePartyModel , CommunicationLogModel } from '../../../shared.components';
+import { InvolvePartyModel, CommunicationLogModel } from '../../../shared.components';
 import { InvolvePartyService } from '../../involveparties';
 import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';
 import { AffectedPeopleService } from './affected.people.service';
-import { ResponseModel, DataExchangeService, GlobalConstants, GlobalStateService } from '../../../../shared';
-import { UtilityService } from '../../../../shared/services';
+import {
+    ResponseModel, DataExchangeService, GlobalConstants,
+    GlobalStateService, UtilityService, KeyValue
+} from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
-
 
 @Component({
     selector: 'affectedpeople-list',
@@ -18,8 +19,6 @@ export class AffectedPeopleListComponent implements OnInit {
     @ViewChild('childModal') public childModal: ModalDirective;
     @ViewChild('childModalForTrail') public childModalForTrail: ModalDirective;
 
-
-
     affectedPeople: AffectedPeopleToView[] = [];
     currentIncident: number;
     affectedPersonToUpdate: AffectedPeopleModel = new AffectedPeopleModel();
@@ -28,8 +27,8 @@ export class AffectedPeopleListComponent implements OnInit {
     medicalStatus: any[] = GlobalConstants.MedicalStatus;
     pdaNameForTrail: string = "";
     pdaReferenceNumberForTrail: string = "";
-    communications : CommunicationLogModel[] =[];
-    ticketNumber : string = "";
+    communications: CommunicationLogModel[] = [];
+    ticketNumber: string = "";
 
 
     /**
@@ -56,8 +55,6 @@ export class AffectedPeopleListComponent implements OnInit {
      * @memberOf AffectedPeopleListComponent
      */
     openAffectedPersonDetail(affectedPerson: AffectedPeopleToView): void {
-        //  affectedPerson["showDiv"] = !affectedPerson["showDiv"];
-
         this.affectedPersonModelForStatus = affectedPerson;
         this.affectedPersonModelForStatus["MedicalStatusToshow"] = this.medicalStatus.find(x => { return x.value == affectedPerson.MedicalStatus; }).value;
         this.childModal.show();
@@ -80,13 +77,13 @@ export class AffectedPeopleListComponent implements OnInit {
             }, (error: any) => {
                 alert(error);
             });
-
     }
+
     cancelUpdate(affectedModifiedForm: AffectedPeopleToView): void {
         this.childModal.hide();
         this.affectedPersonModelForStatus = new AffectedPeopleToView();
 
-    };
+    }
 
     getAffectedPeople(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
@@ -101,23 +98,23 @@ export class AffectedPeopleListComponent implements OnInit {
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
-    };
-    incidentChangeHandler(incidentId) {
-        this.currentIncident = incidentId;
-        this.getAffectedPeople(incidentId);
+    }
+
+    incidentChangeHandler(incident: KeyValue) {
+        this.currentIncident = incident.Value;
+        this.getAffectedPeople(this.currentIncident);
     }
 
     ngOnInit(): any {
         this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
         this.IsDestroyed = false;
         this.getAffectedPeople(this.currentIncident);
-        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
     }
 
     ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChange');
     }
-
 
     openChatTrails(affectedPersonId: number): void {
         this.affectedPeopleService.GetCommunicationByPDA(affectedPersonId)
@@ -129,13 +126,13 @@ export class AffectedPeopleListComponent implements OnInit {
                 this.ticketNumber = responseModel.TicketNumber;
                 this.communications = responseModel.CommunicationLogs;
                 this.childModalForTrail.show();
-        
-       }, (error: any) => {
+
+            }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
     }
 
-    cancelTrailModal(){
+    cancelTrailModal() {
         this.childModalForTrail.hide();
     }
 }

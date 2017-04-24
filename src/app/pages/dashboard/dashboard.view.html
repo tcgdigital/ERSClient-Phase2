@@ -1,3 +1,6 @@
+<div class="row">
+    <incident-header-widget [currentIncident]="currentIncident" [currentDepartment]="currentDepartment"  (viewIncidentHandler)="onViewIncidentClick($event)" class="col-12 widget-layout-fix"></incident-header-widget>
+</div>
 <!-- KPI Section Starts-->
 <div class="row">
     <clock-widget [initiationDateTime]="incidentDate" class="col-12 col-md-4 col-lg-4 col-xl-2 clock-layout widget-layout-fix">

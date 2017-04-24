@@ -3,7 +3,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 
 import {
-    ResponseModel, DataExchangeService, AutocompleteComponent, KeyValue,
+    ResponseModel, DataExchangeService,
+    AutocompleteComponent, KeyValue,
     GlobalConstants, UtilityService, GlobalStateService
 } from '../../../shared';
 import { EnquiryModel, EnquiryService } from './components';
@@ -22,15 +23,32 @@ import { InvolvePartyService } from '../involveparties';
     selector: 'call-centre-main',
     encapsulation: ViewEncapsulation.None,
     templateUrl: './views/call.centre.view.html',
-      styleUrls: ['./styles/call.center.style.scss']
+    styleUrls: ['./styles/call.center.style.scss']
 })
 
 export class EnquiryComponent implements OnInit {
-    constructor(private affectedPeopleService: AffectedPeopleService, private affectedObjectsService: AffectedObjectsService,
-        private departmentService: DepartmentService, private enquiryService: EnquiryService,
+    /**
+     * Creates an instance of EnquiryComponent.
+     * @param {AffectedPeopleService} affectedPeopleService 
+     * @param {AffectedObjectsService} affectedObjectsService 
+     * @param {DepartmentService} departmentService 
+     * @param {EnquiryService} enquiryService 
+     * @param {InvolvePartyService} involvedPartyService 
+     * @param {DemandService} demandService 
+     * @param {DataExchangeService<string>} dataExchange 
+     * @param {GlobalStateService} globalState 
+     * 
+     * @memberOf EnquiryComponent
+     */
+    constructor(private affectedPeopleService: AffectedPeopleService,
+        private affectedObjectsService: AffectedObjectsService,
+        private departmentService: DepartmentService,
+        private enquiryService: EnquiryService,
         private involvedPartyService: InvolvePartyService,
-        private demandService: DemandService, private dataExchange: DataExchangeService<string>,
+        private demandService: DemandService,
+        private dataExchange: DataExchangeService<string>,
         private globalState: GlobalStateService) { };
+
     public form: FormGroup;
     enquiryTypes: Object = GlobalConstants.EnquiryType;
     enquiryType: number;
@@ -46,14 +64,13 @@ export class EnquiryComponent implements OnInit {
     demand: DemandModel;
     demands: Array<DemandModel> = new Array<DemandModel>();
     affectedObjects: AffectedObjectsToView[];
-    currentDepartmentId: number ;
+    currentDepartmentId: number;
     currentDepartmentName: string = 'Command Centre';
     currentIncident: number;
     departments: DepartmentModel[];
     selctedEnquiredPerson: AffectedPeopleToView;
     selctedEnquiredObject: AffectedObjectsToView;
     userName: string = 'Soumit Nag';
-
 
     onNotifyPassenger(message: KeyValue): void {
         this.enquiry.AffectedPersonId = message.Value;
@@ -138,7 +155,6 @@ export class EnquiryComponent implements OnInit {
             + this.caller.CallerName + ' Contact Number:' + this.caller.ContactNumber;
         this.communicationLog.RequesterName = 'UserName';
         this.communicationLog.RequesterDepartment = this.currentDepartmentName;
-        // this.communicationLog.InteractionDetailsId = interactionType;
         this.communicationLog.RequesterType = requestertype;
         this.communicationLogs.push(this.communicationLog);
         return this.communicationLogs;
@@ -265,25 +281,27 @@ export class EnquiryComponent implements OnInit {
             IsCallBack: new FormControl(false),
             IsTravelRequest: new FormControl(false)
         });
+
         this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.getPassengersCrews(this.currentIncident);
         this.getCargo(this.currentIncident);
         this.getDepartments();
         this.enquiry.EnquiryType = this.enquiryTypes[0].value;
-        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     };
 
-    private incidentChangeHandler(incidentId): void {
-        this.currentIncident = incidentId;
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.currentIncident = incident.Value;
         this.getPassengersCrews(this.currentIncident);
         this.getCargo(this.currentIncident);
     }
 
-    private departmentChangeHandler(departmentId): void {
-        this.currentDepartmentId = departmentId;
-        this.currentDepartmentName = this.departments.find(x => { return x.DepartmentId == departmentId; }).DepartmentName;
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
+        this.currentDepartmentName = this.departments
+            .find(x => x.DepartmentId == this.currentDepartmentId).DepartmentName;
     }
 
     ngOnDestroy(): void {

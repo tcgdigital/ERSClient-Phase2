@@ -1,6 +1,6 @@
 import {
     Component, ViewEncapsulation,
-    Input, OnInit, OnDestroy,ViewChild
+    Input, OnInit, OnDestroy, ViewChild
 } from '@angular/core';
 import {
     FormGroup, FormControl, FormBuilder,
@@ -10,7 +10,7 @@ import { Observable } from 'rxjs/Rx';
 import { ActionableModel } from './actionable.model';
 import { ActionableService } from './actionable.service';
 import {
-    ResponseModel, DataExchangeService,
+    ResponseModel, DataExchangeService, KeyValue,
     UtilityService, GlobalConstants, GlobalStateService
 } from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
@@ -29,8 +29,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     public form: FormGroup;
     private currentDepartmentId: number = null;
     private currentIncident: number = null;
-    actionableModelToUpdate : ActionableModel;
-
+    actionableModelToUpdate: ActionableModel;
 
     constructor(formBuilder: FormBuilder, private actionableService: ActionableService,
         private dataExchange: DataExchangeService<boolean>, private globalState: GlobalStateService) {
@@ -40,25 +39,26 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     ngOnInit(): any {
         this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+
         this.getAllCloseActionable(this.currentIncident, this.currentDepartmentId);
         this.form = this.resetActionableForm();
         this.actionableModelToUpdate = new ActionableModel();
         this.dataExchange.Subscribe("CloseActionablePageInitiate", model => this.onCloseActionablePageInitiate(model));
-        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
+
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
 
-    private incidentChangeHandler(incidentId): void {
-        this.currentIncident = incidentId;
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.currentIncident = incident.Value;
         this.getAllCloseActionable(this.currentIncident, this.currentDepartmentId);
     }
 
-    private departmentChangeHandler(departmentId): void {
-        this.currentDepartmentId = departmentId;
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
         this.getAllCloseActionable(this.currentIncident, this.currentDepartmentId);
     }
-
 
     private resetActionableForm(actionable?: ActionableModel): FormGroup {
         return new FormGroup({
@@ -68,7 +68,6 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     }
 
     onCloseActionablePageInitiate(isClosed: boolean): void {
-
         this.getAllCloseActionable(this.currentIncident, this.currentDepartmentId);
     }
 
@@ -102,7 +101,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
             Comments: new FormControl(editedActionableModel.Comments),
             URL: new FormControl(editedActionableModel.URL)
         });
-       this.actionableModelToUpdate = editedActionableModel;
+        this.actionableModelToUpdate = editedActionableModel;
         this.childModal.show();
     }
 
@@ -131,6 +130,6 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     }
 
     cancelUpdateCommentAndURL(): void {
-         this.childModal.hide();
+        this.childModal.hide();
     }
 }

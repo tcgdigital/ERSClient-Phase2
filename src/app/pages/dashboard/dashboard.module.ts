@@ -8,6 +8,8 @@ import { SharedModule } from '../../shared/shared.module';
 import { DashboardRouting } from './dashboard.routing';
 import { DashboardComponent } from './dashboard.component';
 import { WidgetModule } from '../widgets';
+import { IncidentService } from '../incident';
+import { DepartmentService } from '../masterdata/department';
 
 
 @NgModule({
@@ -21,6 +23,10 @@ import { WidgetModule } from '../widgets';
     ],
     declarations: [
         DashboardComponent
+    ],
+    providers: [
+        IncidentService,
+        DepartmentService
     ]
 })
 export class DashboardModule { }

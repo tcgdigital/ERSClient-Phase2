@@ -4,7 +4,10 @@ import {
 } from '@angular/core';
 import { MediaModel } from './media.model';
 import { MediaService } from './media.service';
-import { ResponseModel, DataExchangeService ,GlobalStateService} from '../../../../shared';
+import {
+    ResponseModel, DataExchangeService,
+    GlobalStateService, KeyValue
+} from '../../../../shared';
 
 @Component({
     selector: 'mediaRelease-list',
@@ -16,23 +19,32 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
     @Input() incidentId: string;
 
     mediaReleases: MediaModel[] = [];
-    currentIncidentId : number;
-    currentDepartmentId : number;
+    currentIncidentId: number;
+    currentDepartmentId: number;
 
+    /**
+     * Creates an instance of MediaReleaseListComponent.
+     * @param {MediaService} mediaService 
+     * @param {DataExchangeService<MediaModel>} dataExchange 
+     * @param {GlobalStateService} globalState 
+     * 
+     * @memberOf MediaReleaseListComponent
+     */
     constructor(private mediaService: MediaService,
-        private dataExchange: DataExchangeService<MediaModel>, private globalState: GlobalStateService) { }
+        private dataExchange: DataExchangeService<MediaModel>,
+        private globalState: GlobalStateService) { }
 
-    getMediaReleases(departmentId , incidentId): void {
+    getMediaReleases(departmentId, incidentId): void {
         this.mediaService.Query(departmentId, incidentId)
-            .subscribe((response: ResponseModel<MediaModel>) => {                
-                this.mediaReleases = response.Records;               
-            }, (error: any)=>{
+            .subscribe((response: ResponseModel<MediaModel>) => {
+                this.mediaReleases = response.Records;
+            }, (error: any) => {
                 console.log(`Error: ${error}`);
-            });       
+            });
     }
 
     onMediaSuccess(mediaQuery: MediaModel): void {
-        this.getMediaReleases(this.currentDepartmentId ,this.currentIncidentId);
+        this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
     }
 
     UpdateMediaRelease(mediaQueryModelUpdate: MediaModel): void {
@@ -43,21 +55,22 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.currentIncidentId = +this.incidentId;
         this.currentDepartmentId = +this.initiatedDepartmentId;
-        this.getMediaReleases(this.currentDepartmentId ,this.currentIncidentId);       
+        this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
+
         this.dataExchange.Subscribe("MediaModelSaved", model => this.onMediaSuccess(model));
         this.dataExchange.Subscribe("MediaModelUpdated", model => this.onMediaSuccess(model));
-        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
-     private incidentChangeHandler(incidentId): void {
-        this.currentIncidentId = incidentId;
-        this.getMediaReleases(this.currentDepartmentId ,this.currentIncidentId);
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.currentIncidentId = incident.Value;
+        this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
     }
 
-    private departmentChangeHandler(departmentId): void {
-        this.currentDepartmentId = departmentId;
-        this.getMediaReleases(this.currentDepartmentId ,this.currentIncidentId);
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
+        this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
     }
 
     ngOnDestroy(): void {

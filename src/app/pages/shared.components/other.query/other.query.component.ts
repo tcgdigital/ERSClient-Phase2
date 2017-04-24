@@ -1,18 +1,29 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
 
 import { EnquiryService, EnquiryModel, QueryModel } from '../call.centre/components';
-import { ResponseModel,GlobalConstants,GlobalStateService ,UtilityService } from '../../../shared';
+import {
+    ResponseModel, GlobalConstants, KeyValue,
+    GlobalStateService, UtilityService
+} from '../../../shared';
 
 @Component({
     selector: 'other-query',
     encapsulation: ViewEncapsulation.None,
     templateUrl: './views/other.query.view.html'
 })
-export class OtherQueryComponent implements OnInit {
-    otherqueries: QueryModel[] =[];
+export class OtherQueryComponent implements OnInit, OnDestroy {
+    otherqueries: QueryModel[] = [];
     currentincidentId: number;
-    
-    constructor(private enquiryService: EnquiryService, private globalState: GlobalStateService) {       
+
+    /**
+     * Creates an instance of OtherQueryComponent.
+     * @param {EnquiryService} enquiryService 
+     * @param {GlobalStateService} globalState 
+     * 
+     * @memberOf OtherQueryComponent
+     */
+    constructor(private enquiryService: EnquiryService,
+        private globalState: GlobalStateService) {
     };
 
     getOtherQueries(incidentId): void {
@@ -27,16 +38,15 @@ export class OtherQueryComponent implements OnInit {
     ngOnInit(): any {
         this.currentincidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.getOtherQueries(this.currentincidentId);
-        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
-
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
     }
 
-     private incidentChangeHandler(incidentId): void {
-        this.currentincidentId = incidentId;
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.currentincidentId = incident.Value;
         this.getOtherQueries(this.currentincidentId);
     }
 
-   ngOnDestroy(): void {
+    ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChange');
         this.globalState.Unsubscribe('departmentChange');
     }
