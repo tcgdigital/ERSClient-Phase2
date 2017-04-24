@@ -7,4 +7,5 @@ export * from './demand.raised.summary.widget';
 export * from './mediaRelease.widget';
 export * from './peopleOnBoard.widget';
 export * from './presidentMessage.widget';
+export * from './incident.header.widget';
 export * from './widget.module';

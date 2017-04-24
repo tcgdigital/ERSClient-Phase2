@@ -13,7 +13,7 @@ import { ActionableService } from './actionable.service';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department/components';
 import {
     ResponseModel, DataExchangeService,
-    UtilityService, GlobalConstants,
+    UtilityService, GlobalConstants, KeyValue,
     FileUploadService, GlobalStateService, SharedModule
 } from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
@@ -58,25 +58,18 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         this.filesToUpload = [];
     }
 
-    /**
-     * 
-     * 
-     * @returns {*} 
-     * 
-     * @memberOf ActionableActiveComponent
-     */
-    ngOnInit(): any {
-
+    public ngOnInit(): any {
         this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+
         this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
         this.form = this.resetActionableForm();
         this.actionableModelToUpdate = new ActionableModel();
         this.dataExchange.Subscribe("OpenActionablePageInitiate", model => this.onOpenActionablePageInitiate(model));
-        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
-    }
 
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+    }
 
     private hasChildChecklist(checkListId): boolean {
         if (this.parentChecklistIds.length != 0)
@@ -85,7 +78,6 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
             return false;
 
     }
-
 
     openChildActionable(actionable: ActionableModel): void {
         actionable["expanded"] = !actionable["expanded"];
@@ -108,14 +100,14 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
             });
     }
 
-    private incidentChangeHandler(incidentId): void {
-        this.currentIncident = incidentId;
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.currentIncident = incident.Value;
         this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
         this.form = this.resetActionableForm();
     }
 
-    private departmentChangeHandler(departmentId): void {
-        this.currentDepartmentId = departmentId;
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
         this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
         this.form = this.resetActionableForm();
     }

@@ -61,22 +61,26 @@ export class UtilityService {
         for (let key in data) {
             if (data.hasOwnProperty(key) && typeof key !== 'function') {
                 sessionStorage.setItem(key, <string>data[key]);
-                // console.log(sessionStorage.getItem(key));
             }
         }
     }
 
     public static GetFromSession(key: string): string {
-        if (this.isSessionKeyExists(key)) {
+        if (this.IsSessionKeyExists(key)) {
             return sessionStorage.getItem(key);
         }
         return '';
     }
 
     public static RemoveFromSession(key: string): void {
-        if (this.isSessionKeyExists(key)) {
+        if (this.IsSessionKeyExists(key)) {
             sessionStorage.removeItem(key);
         }
+    }
+
+    public static IsSessionKeyExists(key: string): boolean {
+        let keys: string[] = this.listAllSessionItems();
+        return (keys.some((x: string) => x === key))
     }
 
     public static shade(color, weight) {
@@ -264,17 +268,12 @@ export class UtilityService {
             .substring(1);
     }
 
-    private static listAllSessionItems() {
+    private static listAllSessionItems(): string[] {
         let keys: string[] = new Array<string>();
         for (let i = 0; i <= sessionStorage.length - 1; i++) {
             keys.push(sessionStorage.key(i));
         }
         return keys;
-    }
-
-    private static isSessionKeyExists(key: string): boolean {
-        let keys: string[] = this.listAllSessionItems();
-        return (keys.some((x: string) => x === key))
     }
 }
 

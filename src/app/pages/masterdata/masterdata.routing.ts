@@ -1,12 +1,13 @@
 import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
+import { AuthGuardService } from '../../shared/services';
 import { MasterDateComponent } from './masterdata.component';
 
 const pageRoutes: Routes = [
     {
         path: '',
         component: MasterDateComponent,
+        canActivateChild: [AuthGuardService],
         children: [
             { path: 'department', loadChildren: './department/department.module#DepartmentModule' },
             { path: 'checklist', loadChildren: './checklist/checklist.module#ChecklistModule' },

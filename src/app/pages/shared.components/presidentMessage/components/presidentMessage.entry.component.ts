@@ -11,7 +11,7 @@ import {
 import { PresidentMessageService } from './presidentMessage.service';
 import { PresidentMessageModel } from './presidentMessage.model';
 import {
-    ResponseModel, DataExchangeService,
+    ResponseModel, DataExchangeService, KeyValue,
     GlobalConstants, UtilityService, GlobalStateService
 } from '../../../../shared';
 
@@ -37,12 +37,14 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
      * Creates an instance of PresidentMessageEntryComponent.
      * @param {PresidentMessageService} presidentMessageService 
      * @param {DataExchangeService<PresidentMessageModel>} dataExchange 
+     * @param {GlobalStateService} globalState 
      * @param {FormBuilder} builder 
      * 
      * @memberOf PresidentMessageEntryComponent
      */
     constructor(private presidentMessageService: PresidentMessageService,
-        private dataExchange: DataExchangeService<PresidentMessageModel>, private globalState: GlobalStateService,
+        private dataExchange: DataExchangeService<PresidentMessageModel>, 
+        private globalState: GlobalStateService,
         private builder: FormBuilder) {
         this.showAdd = false;
 
@@ -53,8 +55,8 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
         this.currentIncidentId = +this.incidentId;
         this.currentDepartmentId = +this.initiatedDepartmentId;
         this.dataExchange.Subscribe("OnPresidentMessageUpdate", model => this.onPresidentMessageUpdate(model));
-        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
     ngOnDestroy(): void {
@@ -63,14 +65,13 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
         this.globalState.Unsubscribe('departmentChange');
     }
 
-    private incidentChangeHandler(incidentId): void {
-        this.currentIncidentId = incidentId;
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.currentIncidentId = incident.Value;
     }
 
-    private departmentChangeHandler(departmentId): void {
-        this.currentDepartmentId = departmentId;
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
     }
-
 
     onPresidentMessageUpdate(presedientMessageModel: PresidentMessageModel): void {
         this.PresidentsMessage = presedientMessageModel;
@@ -101,9 +102,11 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
     private CreateOrUpdatePresidentMessage(): void {
         UtilityService.setModelFromFormGroup<PresidentMessageModel>
             (this.PresidentsMessage, this.form, x => x.Message, x => x.Remarks);
+
         if (this.PresidentsMessage.PresidentsMessageId == 0) {
             this.PresidentsMessage.IncidentId = this.currentIncidentId;
             this.PresidentsMessage.InitiateDepartmentId = this.currentDepartmentId;
+
             this.presidentMessageService.Create(this.PresidentsMessage)
                 .subscribe((response: PresidentMessageModel) => {
                     this.dataExchange.Publish("PresidentMessageModelSaved", response);
@@ -136,13 +139,10 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
         });
 
         this.PresidentsMessage = new PresidentMessageModel()
-        // this.PresidentsMessage.IncidentId = +this.currentIncidentId;
-        // this.PresidentsMessage.InitiateDepartmentId = +this.initiatedDepartmentId;
         this.Action = "Save";
     };
 
     showAddRegion(ShowAdd: Boolean): void {
         this.showAdd = true;
     };
-
 }

@@ -1,20 +1,23 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
 
 import { EnquiryService, EnquiryModel, QueryModel } from '../../call.centre/components';
-import { ResponseModel,GlobalConstants, GlobalStateService, UtilityService } from '../../../../shared';
+import {
+    ResponseModel, GlobalConstants, KeyValue,
+    GlobalStateService, UtilityService
+} from '../../../../shared';
 
 @Component({
     selector: 'media-query',
     encapsulation: ViewEncapsulation.None,
     templateUrl: '../views/media.query.list.view.html'
 })
-export class MediaQueryListComponent implements OnInit {
-    mediaQueries: QueryModel[] =[];
+export class MediaQueryListComponent implements OnInit, OnDestroy {
+    mediaQueries: QueryModel[] = [];
     currentincidentId: number;
-    constructor(private enquiryService: EnquiryService,  private globalState: GlobalStateService) {        
+    constructor(private enquiryService: EnquiryService, private globalState: GlobalStateService) {
     };
 
-    getMediaQueries(incidentId): void {        
+    getMediaQueries(incidentId): void {
         this.enquiryService.getMediaQueryByIncident(incidentId)
             .subscribe((response: ResponseModel<EnquiryModel>) => {
                 this.mediaQueries = this.enquiryService.MapQuery(response.Records);
@@ -26,12 +29,11 @@ export class MediaQueryListComponent implements OnInit {
     ngOnInit(): any {
         this.currentincidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.getMediaQueries(this.currentincidentId);
-        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
-
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
     }
 
-     private incidentChangeHandler(incidentId): void {
-        this.currentincidentId = incidentId;
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.currentincidentId = incident.Value;
         this.getMediaQueries(this.currentincidentId);
     }
 
@@ -39,5 +41,4 @@ export class MediaQueryListComponent implements OnInit {
         this.globalState.Unsubscribe('incidentChange');
         this.globalState.Unsubscribe('departmentChange');
     }
-
 }

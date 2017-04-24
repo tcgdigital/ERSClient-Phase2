@@ -1,17 +1,29 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
 
 import { EnquiryService, EnquiryModel, QueryModel } from '../call.centre/components';
-import { ResponseModel, GlobalConstants, GlobalStateService ,UtilityService } from '../../../shared';
+import {
+    ResponseModel, GlobalConstants,
+    GlobalStateService, UtilityService, KeyValue
+} from '../../../shared';
 
 @Component({
     selector: 'crew-query',
     encapsulation: ViewEncapsulation.None,
     templateUrl: './views/crew.query.view.html'
 })
-export class CrewQueryComponent implements OnInit {
+export class CrewQueryComponent implements OnInit, OnDestroy {
     crewqueries: QueryModel[] = [];
     currentincidentId: number;
-    constructor(private enquiryService: EnquiryService, private globalState: GlobalStateService) {
+
+    /**
+     * Creates an instance of CrewQueryComponent.
+     * @param {EnquiryService} enquiryService 
+     * @param {GlobalStateService} globalState 
+     * 
+     * @memberOf CrewQueryComponent
+     */
+    constructor(private enquiryService: EnquiryService,
+        private globalState: GlobalStateService) {
     };
 
     getOtherQueries(incidentId): void {
@@ -26,12 +38,11 @@ export class CrewQueryComponent implements OnInit {
     ngOnInit(): any {
         this.currentincidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.getOtherQueries(this.currentincidentId);
-        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
-
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
     }
 
-    private incidentChangeHandler(incidentId): void {
-        this.currentincidentId = incidentId;
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.currentincidentId = incident.Value;
         this.getOtherQueries(this.currentincidentId);
     }
 
@@ -39,6 +50,4 @@ export class CrewQueryComponent implements OnInit {
         this.globalState.Unsubscribe('incidentChange');
         this.globalState.Unsubscribe('departmentChange');
     }
-
-
 }

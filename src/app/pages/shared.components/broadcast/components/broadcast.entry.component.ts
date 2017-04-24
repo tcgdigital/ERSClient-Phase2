@@ -15,7 +15,7 @@ import {
 import { BroadcastService } from './broadcast.service';
 import { DepartmentModel, DepartmentService } from '../../../masterdata/department';
 import {
-    ResponseModel, DataExchangeService,
+    ResponseModel, DataExchangeService, KeyValue,
     GlobalConstants, UtilityService, GlobalStateService
 } from '../../../../shared';
 
@@ -39,11 +39,9 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     currentIncidentId: number;
     currentDepartmentId: number;
     buttonValue: String = "";
-    showAdd : boolean;
+    showAdd: boolean;
     listSelected: boolean;
-    selectedcount : number;
-
-
+    selectedcount: number;
 
     /**
      * Creates an instance of BroadcastEntryComponent.
@@ -61,7 +59,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         this.deptBrodCastModels = [];
         this.buttonValue = "Add New Broadcast Message";
         this.showAdd = false;
-        this.listSelected =false;
+        this.listSelected = false;
         this.selectedcount = 0;
     }
 
@@ -76,17 +74,18 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         this.broadcast.DepartmentBroadcasts = [];
         this.Action = 'Save';
         this.initiateForm();
+
         this.dataExchange.Subscribe('OnBroadcastUpdate', model => this.onBroadcastUpdate(model));
-        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
-    private incidentChangeHandler(incidentId): void {
-        this.currentIncidentId = incidentId;
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.currentIncidentId = incident.Value;
     }
 
-    private departmentChangeHandler(departmentId): void {
-        this.currentDepartmentId = departmentId;
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
         this.getBroadcastDepartmentMappings(this.currentDepartmentId);
     }
 
@@ -134,14 +133,14 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
             if (IsAllSelected) {
                 this.deptBroadcast = new DepartmentBroadcastModel();
                 this.deptBroadcast.DepartmentId = element.TargetDepartmentId;
-                this.broadcast.DepartmentBroadcasts.push(this.deptBroadcast);                
+                this.broadcast.DepartmentBroadcasts.push(this.deptBroadcast);
             }
             else {
                 this.broadcast.DepartmentBroadcasts = [];
-                 this.selectedcount =0;
+                this.selectedcount = 0;
             }
         });
-         this.selectedcount = this.broadcast.DepartmentBroadcasts.length;
+        this.selectedcount = this.broadcast.DepartmentBroadcasts.length;
     }
 
     selectDepartment(event, department: BroadCastDepartmentModel): void {
@@ -150,25 +149,15 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
                 item.IsSelected = event.target.checked;
             }
         });
-        this.selectedcount = this.BroadCastDepartmentMappings.filter(x=>{return x.IsSelected == true;}).length;
+        this.selectedcount = this.BroadCastDepartmentMappings.filter(x => { return x.IsSelected == true; }).length;
     }
 
     save(isSubmitted: boolean): void {
-
         this.broadcast.IsSubmitted = isSubmitted;
         if (isSubmitted) {
             this.broadcast.SubmittedOn = new Date();
         }
         this.broadcast.DepartmentBroadcasts = []
-        // this.BroadCastDepartmentMappings.filter(x => x.IsSelected)
-        //     .map(x => {
-        //         let deptBroadcast = new DepartmentBroadcastModel();
-        //         if (this.broadcast.BroadcastId !== 0) {
-        //             deptBroadcast.BroadcastId = this.broadcast.BroadcastId;
-        //         }
-        //         deptBroadcast.DepartmentId = x.TargetDepartmentId;
-        //         return deptBroadcast;
-        //     });
 
         this.BroadCastDepartmentMappings.forEach(item => {
             if (item.IsSelected) {
@@ -221,7 +210,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
             item.IsSelected = this.broadcast.DepartmentBroadcasts
                 .some(x => x.DepartmentId === item.TargetDepartmentId);
         });
-        this.selectedcount = this.BroadCastDepartmentMappings.filter(x=> {return x.IsSelected == true;}).length;
+        this.selectedcount = this.BroadCastDepartmentMappings.filter(x => { return x.IsSelected == true; }).length;
     }
 
     cancel(): void {
@@ -231,20 +220,19 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         this.broadcast.Priority = this.priorities.find(x => x.value == '1').caption;
     }
 
-
     showAddRegion(ShowAdd: Boolean): void {
-                   this.showAdd = true;
-            this.listSelected = false;
+        this.showAdd = true;
+        this.listSelected = false;
     };
 
-   showList = function (e) {
-            if (this.listSelected)
-                this.listSelected = false;
-            else
-                this.listSelected = true;
-        };
+    showList = function (e) {
+        if (this.listSelected)
+            this.listSelected = false;
+        else
+            this.listSelected = true;
+    };
 
     showList1 = function (e) {
-            this.listSelected = false;
-        };
+        this.listSelected = false;
+    };
 }
