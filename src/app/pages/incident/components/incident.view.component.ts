@@ -170,4 +170,5 @@ export class IncidentViewComponent implements OnInit, OnDestroy {
         this.showView = false;
         this.dataExchangeDecision.Publish("incidentViewPreCheck", true);
     }
+    
 }

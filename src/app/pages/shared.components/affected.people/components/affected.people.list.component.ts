@@ -119,7 +119,6 @@ export class AffectedPeopleListComponent implements OnInit {
     openChatTrails(affectedPersonId: number): void {
         this.affectedPeopleService.GetCommunicationByPDA(affectedPersonId)
             .subscribe((response: ResponseModel<AffectedPeopleModel>) => {
-                debugger;
                 let responseModel: AffectedPeopleModel = response.Records[0];
                 this.pdaNameForTrail = responseModel.Passenger != null ? responseModel.Passenger.PassengerName.toUpperCase() : '';
                 this.pdaNameForTrail = this.pdaNameForTrail ? this.pdaNameForTrail : responseModel.Crew != null ? responseModel.Crew.CrewName.toUpperCase() : '';
