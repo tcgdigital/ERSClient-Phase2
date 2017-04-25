@@ -55,7 +55,18 @@ export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
                 data: {
                     menu: {
                         title: 'Notify People',
-                        icon: 'fa fa-bell fa-lg',
+                        icon: 'fa fa-bullhorn fa-lg',
+                        selected: false,
+                        expanded: false,
+                    }
+                }
+            },
+            {
+                path: 'archivedashboard',
+                data: {
+                    menu: {
+                        title: 'Archive Dashboard',
+                        icon: 'fa fa-archive fa-lg',
                         selected: false,
                         expanded: false,
                     }

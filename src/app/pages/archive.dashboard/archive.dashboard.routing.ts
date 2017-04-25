@@ -1,12 +1,12 @@
 import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { DashboardComponent } from './dashboard.component';
+import { ArchiveDashboardComponent } from './archive.dashboard.component';
 import { AuthGuardService } from '../../shared/services';
 
-const dashboardRoutes: Routes = [
+const archiveDashboardRoutes: Routes = [
     {
         path: '',
-        component: DashboardComponent,
+        component: ArchiveDashboardComponent,
         canActivateChild: [AuthGuardService],
         children: [
             { path: 'people', loadChildren: '../shared.components/affected.people/affected.people.module#AffectedPeopleModule' },
@@ -23,5 +23,5 @@ const dashboardRoutes: Routes = [
     }
 ];
 
-export const DashboardRouting: ModuleWithProviders
-    = RouterModule.forChild(dashboardRoutes);
+export const ArchiveDashboardRouting: ModuleWithProviders
+    = RouterModule.forChild(archiveDashboardRoutes);

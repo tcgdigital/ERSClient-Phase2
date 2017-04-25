@@ -1,4 +1,7 @@
-import { Component, ViewEncapsulation, OnInit , ViewChild } from '@angular/core';
+import {
+    Component, ViewEncapsulation,
+    OnInit, ViewChild, OnDestroy
+} from '@angular/core';
 
 import { InvolvePartyModel } from '../../involveparties';
 import { DemandModel, DemandModelToView, DemandRemarkLogModel } from './demand.model';
@@ -7,7 +10,10 @@ import { CommunicationLogModel } from '../../communicationlogs';
 import { DemandRemarkLogService } from './demand.remarklogs.service';
 import { DemandTrailService } from './demandtrail.service';
 import { DemandTrailModel } from './demand.trail.model';
-import { ResponseModel, DataExchangeService, GlobalConstants, GlobalStateService, UtilityService } from '../../../../shared';
+import {
+    ResponseModel, DataExchangeService, KeyValue,
+    GlobalConstants, GlobalStateService, UtilityService
+} from '../../../../shared';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 
@@ -18,9 +24,8 @@ import { ModalDirective } from 'ng2-bootstrap/modal';
     encapsulation: ViewEncapsulation.None,
     templateUrl: '../views/completed.demand.view.html'
 })
-export class CompletedDemandComponent implements OnInit {
+export class CompletedDemandComponent implements OnInit, OnDestroy {
     @ViewChild('childModalRemarks') public childModalRemarks: ModalDirective;
-
 
     completedDemands: DemandModelToView[] = [];
     currentDepartmentId: number;
@@ -37,13 +42,23 @@ export class CompletedDemandComponent implements OnInit {
     demandTrails: DemandTrailModel[];
     demandForRemarks: DemandModelToView;
 
-    constructor(private demandService: DemandService, private demandRemarkLogsService: DemandRemarkLogService,
-        private globalState: GlobalStateService, private departmentService: DepartmentService) {
+    /**
+     * Creates an instance of CompletedDemandComponent.
+     * @param {DemandService} demandService 
+     * @param {DemandRemarkLogService} demandRemarkLogsService 
+     * @param {GlobalStateService} globalState 
+     * @param {DepartmentService} departmentService 
+     * 
+     * @memberOf CompletedDemandComponent
+     */
+    constructor(private demandService: DemandService,
+        private demandRemarkLogsService: DemandRemarkLogService,
+        private globalState: GlobalStateService,
+        private departmentService: DepartmentService) {
         this.createdByName = "Anwesha Ray";
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
     }
-
 
     getCompletedDemands(deptId, incidentId): void {
         this.demandService.GetCompletedDemands(deptId, incidentId)
@@ -58,7 +73,7 @@ export class CompletedDemandComponent implements OnInit {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
                 this.demandRemarks = response.Records;
-                 this.childModalRemarks.show();
+                this.childModalRemarks.show();
             }, (error: any) => {
                 console.log("error:  " + error);
             });
@@ -77,10 +92,8 @@ export class CompletedDemandComponent implements OnInit {
         this.demandTrail.Priority = demand.Priority;
         this.demandTrail.RequesterName = demand.RequestedBy;
         this.demandTrail.RequesterDepartmentName = demand.RequesterDepartmentName;
-        //  this.demandTrail.RequesterParentDepartmentName= demand.RequesterParentDepartmentName;
         this.demandTrail.TargetDepartmentName = demand.TargetDepartmentName;
         this.demandTrail.ApproverDepartmentName = demand.ApproverDepartmentName;
-        //   this.demandTrail.RequesterType= demand.RequesterType;
         this.demandTrail.DemandDesc = demand.DemandDesc;
         this.demandTrail.IsApproved = demand.IsApproved;
         this.demandTrail.IsCompleted = demand.IsCompleted;
@@ -142,9 +155,7 @@ export class CompletedDemandComponent implements OnInit {
         this.communicationLog = new CommunicationLogModel();
         this.communicationLog.InteractionDetailsId = 0;
         this.communicationLog.Queries = demand.DemandDesc;
-        this.communicationLog.Answers = 'Closed by ' + this.currentDepartmentName + ", "
-            + demand.DemandTypeName + " request for " + demand.TargetDepartmentName
-            + ". Request Details : " + demand.DemandDesc + ". ";
+        this.communicationLog.Answers = `Closed by ${this.currentDepartmentName}, ${demand.DemandTypeName} request for ${demand.TargetDepartmentName}. Request Details : ${demand.DemandDesc}.`;
         this.communicationLog.RequesterName = demand.RequestedBy;
         this.communicationLog.RequesterDepartment = demand.TargetDepartmentName;
         this.communicationLog.RequesterType = "Request";
@@ -175,7 +186,7 @@ export class CompletedDemandComponent implements OnInit {
                     item.IsClosed = x.IsClosed;
                     item.ClosedBy = this.createdBy;
                     item.ClosedOn = new Date;
-                    item.DemandStatusDescription = 'Closed by ' + this.currentDepartmentName;
+                    item.DemandStatusDescription = `Closed by ${this.currentDepartmentName}`;
                     item.CommunicationLogs = this.SetCommunicationLog(x);
                     x.DemandStatusDescription = item.DemandStatusDescription;
                     item.DemandTrails = this.createDemandTrailModel(x, true);
@@ -185,7 +196,7 @@ export class CompletedDemandComponent implements OnInit {
                     item.IsCompleted = false;
                     item.RejectedBy = this.createdBy;
                     item.RejectedDate = new Date;
-                    item.DemandStatusDescription = 'Approved and pending with ' + x.TargetDepartmentName;
+                    item.DemandStatusDescription = `Approved and pending with ${x.TargetDepartmentName}`;
                     x.DemandStatusDescription = item.DemandStatusDescription;
                     item.DemandTrails = this.createDemandTrailModel(x, false);
                 }
@@ -204,28 +215,28 @@ export class CompletedDemandComponent implements OnInit {
                     });
             };
         }
-
     };
 
 
     ngOnInit() {
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+
         this.currentDepartmentName = "Command Center";
         this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
         this.getCurrentDepartmentName(this.currentDepartmentId);
-        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
 
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     };
 
-    private incidentChangeHandler(incidentId): void {
-        this.currentIncidentId = incidentId;
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.currentIncidentId = incident.Value;
         this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
     };
 
-    private departmentChangeHandler(departmentId): void {
-        this.currentDepartmentId = departmentId;
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
         this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
         this.getCurrentDepartmentName(this.currentDepartmentId);
     };
@@ -243,5 +254,4 @@ export class CompletedDemandComponent implements OnInit {
         this.globalState.Unsubscribe('incidentChange');
         this.globalState.Unsubscribe('departmentChange');
     }
-
 }

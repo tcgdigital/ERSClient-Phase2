@@ -42,6 +42,7 @@ import {
 } from './validators';
 
 import {
+    AuthGuardService,
     SideMenuService,
     GlobalStateService,
     DataExchangeService,
@@ -86,6 +87,7 @@ const SHARED_DIRECTIVES: any[] = [
 ];
 
 const SHARED_SERVICES: any[] = [
+    AuthGuardService,
     SideMenuService,
     ImageLoaderService,
     ThemePreloaderService,

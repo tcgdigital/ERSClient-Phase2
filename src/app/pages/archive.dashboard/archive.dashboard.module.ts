@@ -5,12 +5,11 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { SharedModule } from '../../shared/shared.module';
 
-import { DashboardRouting } from './dashboard.routing';
-import { DashboardComponent } from './dashboard.component';
+import { ArchiveDashboardRouting } from './archive.dashboard.routing';
+import { ArchiveDashboardComponent } from './archive.dashboard.component';
 import { WidgetModule } from '../widgets';
 import { IncidentService } from '../incident';
 import { DepartmentService } from '../masterdata/department';
-
 
 @NgModule({
     imports: [
@@ -19,14 +18,14 @@ import { DepartmentService } from '../masterdata/department';
         HttpModule,
         SharedModule,
         WidgetModule,
-        DashboardRouting
+        ArchiveDashboardRouting
     ],
     declarations: [
-        DashboardComponent
+        ArchiveDashboardComponent
     ],
     providers: [
         IncidentService,
         DepartmentService
     ]
 })
-export class DashboardModule { }
+export class ArchiveDashboardModule { }

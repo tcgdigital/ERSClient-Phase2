@@ -3,10 +3,11 @@ import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { InvolvePartyModel } from '../../../shared.components';
 import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';
 import { AffectedPeopleService } from './affected.people.service';
-import { ResponseModel, DataExchangeService, GlobalStateService } from '../../../../shared';
+import {
+    ResponseModel, DataExchangeService,
+    GlobalStateService, UtilityService, KeyValue
+} from '../../../../shared';
 import { InvolvePartyService } from '../../involveparties';
-import { UtilityService } from '../../../../shared/services';
-
 
 @Component({
     selector: 'affectedpeople-verify',
@@ -16,11 +17,11 @@ import { UtilityService } from '../../../../shared/services';
 export class AffectedPeopleVerificationComponent implements OnInit {
     constructor(private affectedPeopleService: AffectedPeopleService,
         private involvedPartyService: InvolvePartyService, private globalState: GlobalStateService) { }
+
     affectedPeopleForVerification: AffectedPeopleToView[] = [];
     verifiedAffectedPeople: AffectedPeopleModel[];
     date: Date = new Date();
-    currentIncident: number ;
-
+    currentIncident: number;
 
     getAffectedPeople(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
@@ -30,7 +31,6 @@ export class AffectedPeopleVerificationComponent implements OnInit {
                 console.log(`Error: ${error}`);
             });
     }
-
 
     saveVerifiedAffectedPeople(): void {
         let datenow = this.date;
@@ -46,18 +46,18 @@ export class AffectedPeopleVerificationComponent implements OnInit {
     };
 
 
-    incidentChangeHandler(incidentId) {
-        this.currentIncident = incidentId;
-        this.getAffectedPeople(incidentId);
+    incidentChangeHandler(incident: KeyValue) {
+        this.currentIncident = incident.Value;
+        this.getAffectedPeople(this.currentIncident);
     }
 
     ngOnInit(): any {
         this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
         this.getAffectedPeople(this.currentIncident);
-        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
-    }
-      ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
     }
 
+    ngOnDestroy(): void {
+        this.globalState.Unsubscribe('incidentChange');
+    }
 }

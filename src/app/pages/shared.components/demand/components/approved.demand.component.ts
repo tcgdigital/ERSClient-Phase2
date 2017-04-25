@@ -1,5 +1,9 @@
-import { Component, ViewEncapsulation, OnInit, AfterContentInit ,ViewChild } from '@angular/core';
+import {
+    Component, ViewEncapsulation, OnDestroy,
+    OnInit, AfterContentInit, ViewChild
+} from '@angular/core';
 import { Observable } from 'rxjs/Rx';
+
 import { InvolvePartyModel } from '../../involveparties';
 import { DemandModel, DemandModelToView, DemandRemarkLogModel } from './demand.model';
 import { CommunicationLogModel } from '../../communicationlogs';
@@ -7,21 +11,23 @@ import { DemandService } from './demand.service';
 import { DemandTrailService } from './demandtrail.service';
 import { DemandTrailModel } from './demand.trail.model';
 import { DemandRemarkLogService } from './demand.remarklogs.service';
-import { ResponseModel, DataExchangeService, GlobalConstants, GlobalStateService ,UtilityService } from '../../../../shared';
+import {
+    ResponseModel, DataExchangeService,
+    GlobalConstants, GlobalStateService,
+    UtilityService, KeyValue
+} from '../../../../shared';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
 import { ModalDirective } from 'ng2-bootstrap/modal';
-
 
 @Component({
     selector: 'approved-demand',
     encapsulation: ViewEncapsulation.None,
     templateUrl: '../views/approved.demand.view.html'
 })
-export class ApprovedDemandComponent implements OnInit, AfterContentInit {
-        @ViewChild('childModalRemarks') public childModalRemarks: ModalDirective;
+export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentInit {
+    @ViewChild('childModalRemarks') public childModalRemarks: ModalDirective;
 
-
-    demandsForApproval: DemandModelToView[] =[];
+    demandsForApproval: DemandModelToView[] = [];
     currentDepartmentId: number;
     currentDepartmentName: string;
     currentIncidentId: number;
@@ -33,15 +39,26 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
     RemarkToCreate: DemandRemarkLogModel;
     createdByName: string;
     demandTrails: DemandTrailModel[];
-    demandForRemarks : DemandModelToView ;
+    demandForRemarks: DemandModelToView;
     demandTrail: DemandTrailModel;
-    constructor(private demandService: DemandService, private demandRemarkLogsService: DemandRemarkLogService,
-        private globalState: GlobalStateService, private departmentService: DepartmentService) {
-        this.createdByName = "Anwesha Ray";
+
+    /**
+     * Creates an instance of ApprovedDemandComponent.
+     * @param {DemandService} demandService 
+     * @param {DemandRemarkLogService} demandRemarkLogsService 
+     * @param {GlobalStateService} globalState 
+     * @param {DepartmentService} departmentService 
+     * 
+     * @memberOf ApprovedDemandComponent
+     */
+    constructor(private demandService: DemandService,
+        private demandRemarkLogsService: DemandRemarkLogService,
+        private globalState: GlobalStateService,
+        private departmentService: DepartmentService) {
+        this.createdByName = 'Anwesha Ray';
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
     };
-
 
     getDemandsForApproval(deptId, incidentId): void {
         this.demandService.GetByApproverDepartment(deptId, incidentId)
@@ -96,19 +113,19 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
                 this.demandRemarks = response.Records;
                 this.childModalRemarks.show();
             }, (error: any) => {
-                console.log("error:  " + error);
+                console.log(`Error: ${error}`);
             });
     };
 
-    openDemandRemarks(demand : DemandModelToView): void {
+    openDemandRemarks(demand: DemandModelToView): void {
         this.demandForRemarks = demand;
         this.getDemandRemarks(demand.DemandId);
     };
-    createDemandTrailModel(demand: DemandModelToView, flag, originalDemand?: DemandModel): DemandTrailModel[] {
 
+    createDemandTrailModel(demand: DemandModelToView, flag, originalDemand?: DemandModel): DemandTrailModel[] {
         this.demandTrails = [];
         this.demandTrail = new DemandTrailModel();
-        this.demandTrail.Answers = "";
+        this.demandTrail.Answers = '';
         this.demandTrail.DemandId = demand.DemandId;
         this.demandTrail.IncidentId = this.currentIncidentId;
         this.demandTrail.ScheduleTime = demand.ScheduleTime;
@@ -116,7 +133,6 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
         this.demandTrail.Priority = demand.Priority;
         this.demandTrail.RequesterName = demand.RequestedBy;
         this.demandTrail.RequesterDepartmentName = demand.RequesterDepartmentName;
-        //this.demandTrail.RequesterParentDepartmentName = demand.RequesterParentDepartmentName ;
         this.demandTrail.TargetDepartmentName = demand.TargetDepartmentName;
         this.demandTrail.ApproverDepartmentName = flag ? this.currentDepartmentName : null;
         this.demandTrail.DemandDesc = demand.DemandDesc;
@@ -136,7 +152,7 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
         this.demandTrail.CreatedOn = demand.CreatedOn
 
         let date = new Date();
-        let answer = '<div><p>' + demand.DemandStatusDescription + '   <strong>Date :</strong>  ' + date.toLocaleString() + '  </p><div>';
+        let answer = `<div><p> ${demand.DemandStatusDescription}   <strong>Date :</strong>  ${date.toLocaleString()}  </p><div>`;
         if (originalDemand != undefined) {
             this.demandTrail.DemandTypeId = originalDemand.DemandTypeId;
             this.demandTrail.DemandCode = originalDemand.DemandCode;
@@ -148,13 +164,13 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
             this.demandTrail.DemandStatusDescription = originalDemand.DemandStatusDescription;
             this.demandTrail.RequiredLocation = originalDemand.RequiredLocation;
             this.demandTrail.RequesterType = originalDemand.RequesterType;
-            answer = '<div><p> Request Edited By ' + this.demandTrail.RequesterDepartmentName + '  <strong>Date :</strong>  ' + date + '  </p><div>';
+            answer = `<div><p> Request Edited By ${this.demandTrail.RequesterDepartmentName} <strong>Date :</strong> ${date} </p><div>`;
             if (originalDemand.ScheduleTime) {
                 var minutesInt = parseInt(originalDemand.ScheduleTime);
                 var d = new Date(originalDemand.CreatedOn);
                 d.setMinutes(d.getMinutes() + minutesInt);
                 var editedDate = new Date(d);
-                answer = answer + '<strong>Expected Resolution Time</strong> : ' + editedDate + '  ';
+                answer = answer + `<strong>Expected Resolution Time</strong> : ${editedDate}`;
             }
         }
         this.demandTrail.Answers = answer;
@@ -163,12 +179,11 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
     };
 
     cancelRemarkUpdate(): void {
-       this.childModalRemarks.hide();
+        this.childModalRemarks.hide();
     };
 
     saveRemark(remarks): void {
-
-        let demand : DemandModelToView = this.demandForRemarks;
+        let demand: DemandModelToView = this.demandForRemarks;
         this.RemarkToCreate = new DemandRemarkLogModel();
         this.RemarkToCreate.Remark = remarks;
         this.RemarkToCreate.DemandId = demand.DemandId;
@@ -180,14 +195,13 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
                 this.getDemandRemarks(demand.DemandId);
                 this.Remarks = "";
             }, (error: any) => {
-                console.log("error:  " + error);
+                console.log(`Error: ${error}`);
                 alert("Error occured during saving the remark");
             });
     };
 
     isApprovedOrRejected(item: DemandModelToView): any {
         return (item.IsApproved == true || item.IsRejected == true);
-
     };
 
     SetCommunicationLog(demand: DemandModelToView): CommunicationLogModel[] {
@@ -195,12 +209,10 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
         this.communicationLog = new CommunicationLogModel();
         this.communicationLog.InteractionDetailsId = 0;
         this.communicationLog.Queries = demand.DemandDesc;
-        this.communicationLog.Answers = demand.DemandStatusDescription + ", "
-            + demand.DemandTypeName + " request for " + demand.TargetDepartmentName
-            + ". Request Details : " + demand.DemandDesc + ". ";
+        this.communicationLog.Answers = `${demand.DemandStatusDescription}, ${demand.DemandTypeName} request for ${demand.TargetDepartmentName}. Request Details : ${demand.DemandDesc}.`;
         this.communicationLog.RequesterName = demand.RequestedBy;
         this.communicationLog.RequesterDepartment = demand.TargetDepartmentName;
-        this.communicationLog.RequesterType = "Request";
+        this.communicationLog.RequesterType = 'Request';
         this.communicationLog.DemandId = demand.DemandId;
         this.communicationLog.InteractionDetailsType = GlobalConstants.InteractionDetailsTypeDemand;
         if (demand.AffectedPersonId != null) {
@@ -230,8 +242,8 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
                 x.IsApproved ? item.ApprovedDt = new Date() : item.RejectedDate = new Date;
                 x.IsApproved ? item.ApprovedBy = this.createdBy : item.RejectedBy = this.createdBy;
                 item.ApproverDepartmentId = x.IsApproved ? this.currentDepartmentId : item.ApproverDepartmentId;
-                item.DemandStatusDescription = item.IsApproved ? 'Approved and pending with ' + x.TargetDepartmentName :
-                    'On Hold by ' + this.currentDepartmentName;
+                item.DemandStatusDescription = item.IsApproved ? `Approved and pending with ${x.TargetDepartmentName}` :
+                    `On Hold by ${this.currentDepartmentName}`;
                 item.CommunicationLogs = this.SetCommunicationLog(x);
                 item.DemandTrails = x.IsApproved ? this.createDemandTrailModel(x, true) : this.createDemandTrailModel(x, false);
                 return item;
@@ -252,22 +264,23 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
     };
 
     ngOnInit(): any {
-
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+
         this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
         this.getCurrentDepartmentName(this.currentDepartmentId);
-        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
+
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     };
 
-    private incidentChangeHandler(incidentId): void {
-        this.currentIncidentId = incidentId;
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.currentIncidentId = incident.Value;
         this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
     };
 
-    private departmentChangeHandler(departmentId): void {
-        this.currentDepartmentId = departmentId;
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
         this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
         this.getCurrentDepartmentName(this.currentDepartmentId);
     };
@@ -289,6 +302,4 @@ export class ApprovedDemandComponent implements OnInit, AfterContentInit {
         this.globalState.Unsubscribe('incidentChange');
         this.globalState.Unsubscribe('departmentChange');
     }
-
-
 }
