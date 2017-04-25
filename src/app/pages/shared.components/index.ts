@@ -17,3 +17,5 @@ export * from './nextofkins';
 export * from './interestedparties';
 export * from './demand';
 export * from './caller';
+
+export * from './common.service';
