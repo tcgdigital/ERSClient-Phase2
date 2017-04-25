@@ -18,6 +18,7 @@ import {
     GlobalConstants,
     UtilityService
 } from '../../../shared';
+import { UserdepartmentNotificationMapperModel, UserdepartmentNotificationMapperService } from "../../shared.components/userdepartmentnotificationmapper";
 import { UserPermissionService } from '../../masterdata/userpermission/components/userpermission.service';
 import { TemplateModel, TemplateService } from "../../masterdata/template";
 import { IncidentModel, IncidentService } from "../../incident";
@@ -36,32 +37,41 @@ export class NotifyPeopleService extends ServiceBase<NotifyPeopleModel> {
     public currentDepartment: DepartmentModel;
     public notificationContactsWithTemplate: NotificationContactsWithTemplateModel;
     public notificationContactsWithTemplates: NotificationContactsWithTemplateModel[];
-
+    public userDepartmentNotificationMappers: UserdepartmentNotificationMapperModel[];
     constructor(private dataServiceFactory: DataServiceFactory,
         private userPermissionService: UserPermissionService,
         private templateService: TemplateService,
         private incidentService: IncidentService,
         private departmentService: DepartmentService,
-        private appendedTemplateService: AppendedTemplateService) {
+        private appendedTemplateService: AppendedTemplateService,
+        private userdepartmentNotificationMapperService: UserdepartmentNotificationMapperService) {
         super(dataServiceFactory, 'NotifyDepartmentUsers');
         this.arrayMatrix = [];
         this.departmentArray = [];
         this.departmentIdProjection = '';
         this.notificationContactsWithTemplates = [];
-        
-
-        
+        this.userDepartmentNotificationMappers = [];
     }
 
-    public GetAllDepartmentMatrix(departmentId: number, callback?: ((_: NotifyPeopleModel[]) => void)): void {
+    public GetUserDepartmentNotificationMapperByIncident(incidentId: number, callback?: ((_: UserdepartmentNotificationMapperModel[]) => void)): void {
+        this.userdepartmentNotificationMapperService.GetUserDepartmentNotificationMapperFromIncident(incidentId)
+            .subscribe((response: ResponseModel<UserdepartmentNotificationMapperModel>) => {
+                response.Records.forEach((item: UserdepartmentNotificationMapperModel) => {
+                    this.userDepartmentNotificationMappers.push(item);
+                });
+                if (callback) {
+                    callback(this.userDepartmentNotificationMappers);
+                }
+            });
+    }
+
+    public GetAllDepartmentMatrix(departmentId: number, incidentId: number, callback?: ((_: NotifyPeopleModel[]) => void)): void {
         this.userPermissionService.GetAllDepartmentMatrix()
             .subscribe((departments: ResponseModel<DepartmentModel>) => {
-                //debugger;
                 this.departmentIdProjection = '';
                 this.arrayMatrix = [];
                 this.departmentArray = [];
                 this.FillDepartmentMatrix(departments, departmentId);
-                //debugger;
                 this.arrayMatrix.forEach((item: number, index: number) => {
                     this.departmentArray.push(item[0]);
                     if (index == 0) {
@@ -71,7 +81,7 @@ export class NotifyPeopleService extends ServiceBase<NotifyPeopleModel> {
                         this.departmentIdProjection = this.departmentIdProjection + ` or DepartmentId eq ${item[0]}`;
                     }
                 });
-                this.GetDepartmentUser(this.departmentIdProjection, (item: NotifyPeopleModel[]) => {
+                this.GetDepartmentUser(this.departmentIdProjection, incidentId, (item: NotifyPeopleModel[]) => {
                     if (callback) {
                         callback(item);
                     }
@@ -81,7 +91,6 @@ export class NotifyPeopleService extends ServiceBase<NotifyPeopleModel> {
     }
 
     public FillDepartmentMatrix(allDepartments: ResponseModel<DepartmentModel>, initialparentDepartmentId: number): void {
-        //debugger;
         let AllSubDepartmentModels: DepartmentModel[] = allDepartments.Records.filter((item: DepartmentModel) => {
             return item.ParentDepartmentId == initialparentDepartmentId;
         });
@@ -100,8 +109,7 @@ export class NotifyPeopleService extends ServiceBase<NotifyPeopleModel> {
 
     }
 
-    public GetDepartmentUser(departmentIdProjection: string, callback?: ((_: NotifyPeopleModel[]) => void)): void {
-        //debugger;
+    public GetDepartmentUser(departmentIdProjection: string, incidentId: number, callback?: ((_: NotifyPeopleModel[]) => void)): void {
         this.allDepartmentUserPermission = [];
         let count: number = 1;
         this.userPermissionService.GetAllDepartmentsFromDepartmentIdProjection(departmentIdProjection)
@@ -110,41 +118,55 @@ export class NotifyPeopleService extends ServiceBase<NotifyPeopleModel> {
             })
             .flatMap((result) => this.userPermissionService.GetAllDepartmentUsersFromDepartmentIdProjection(departmentIdProjection))
             .subscribe((userPermissions: ResponseModel<UserPermissionModel>) => {
-                //debugger;
-                console.log(this.allDepartments);
-                console.log(userPermissions);
-                count = 1;
-                this.departmentArray.forEach((itemDepartmentId: number, index: number) => {
+                this.GetUserDepartmentNotificationMapperByIncident(incidentId, (resultUserdepartmentNotificationMapper: UserdepartmentNotificationMapperModel[]) => {
+                    console.log(this.allDepartments);
+                    console.log(userPermissions);
+                    count = 1;
+                    this.departmentArray.forEach((itemDepartmentId: number, index: number) => {
 
-                    let userPermissionsLocal: UserPermissionModel[] = userPermissions.Records.filter((item: UserPermissionModel) => {
-                        return item.DepartmentId == itemDepartmentId;
+                        let userPermissionsLocal: UserPermissionModel[] = userPermissions.Records.filter((item: UserPermissionModel) => {
+                            return item.DepartmentId == itemDepartmentId;
+                        });
+                        let notifyModel: NotifyPeopleModel = new NotifyPeopleModel();
+                        notifyModel.id = count;
+                        let departmentLocal = this.allDepartments.Records.filter((item: DepartmentModel) => {
+                            return item.DepartmentId == itemDepartmentId;
+                        });
+                        notifyModel.text = departmentLocal[0].DepartmentName;
+                        notifyModel.population = '';
+                        notifyModel.checked = false;
+                        notifyModel.DepartmentId = departmentLocal[0].DepartmentId;
+                        notifyModel.children = [];
+                        userPermissionsLocal.forEach((eachUserPermission: UserPermissionModel, index: number) => {
+                            
+                            let notifyModelInner: NotifyPeopleModel = new NotifyPeopleModel();
+                            count = count + 1;
+                            notifyModelInner.id = count;
+                            notifyModelInner.text = eachUserPermission.User.Email;
+                            notifyModelInner.population = '';
+                            notifyModelInner.checked = false;
+                            let filterItems = resultUserdepartmentNotificationMapper.filter((itemFind:UserdepartmentNotificationMapperModel)=>{
+                                return (itemFind.UserId==eachUserPermission.User.UserProfileId && itemFind.DepartmentId==departmentLocal[0].DepartmentId);
+                            });
+                            if(filterItems.length>0){
+                                notifyModelInner.checked = true;
+                            }
+                            notifyModelInner.User = eachUserPermission.User;
+                            notifyModelInner.DepartmentId = departmentLocal[0].DepartmentId;
+                            notifyModelInner.children = [];
+                            notifyModel.children.push(notifyModelInner);
+                        });
+                        this.allDepartmentUserPermission.push(notifyModel);
+                        count++;
                     });
-                    let notifyModel: NotifyPeopleModel = new NotifyPeopleModel();
-                    notifyModel.id = count;
-                    let departmentLocal = this.allDepartments.Records.filter((item: DepartmentModel) => {
-                        return item.DepartmentId == itemDepartmentId;
-                    });
-                    notifyModel.text = departmentLocal[0].DepartmentName;
-                    notifyModel.population = '';
-                    notifyModel.checked = false;
-                    notifyModel.children = [];
-                    userPermissionsLocal.forEach((eachUserPermission: UserPermissionModel, index: number) => {
-                        let notifyModelInner: NotifyPeopleModel = new NotifyPeopleModel();
-                        count = count + 1;
-                        notifyModelInner.id = count;
-                        notifyModelInner.text = eachUserPermission.User.Email;
-                        notifyModelInner.population = '';
-                        notifyModelInner.checked = false;
-                        notifyModelInner.User = eachUserPermission.User;
-                        notifyModel.children.push(notifyModelInner);
-                    });
-                    this.allDepartmentUserPermission.push(notifyModel);
-                    count++;
+
+                    if (callback) {
+                        callback(this.allDepartmentUserPermission);
+                    }
+
+
                 });
 
-                if (callback) {
-                    callback(this.allDepartmentUserPermission);
-                }
 
             });
     }
@@ -154,13 +176,14 @@ export class NotifyPeopleService extends ServiceBase<NotifyPeopleModel> {
             if (item.id == id) {
                 if (item.text.indexOf('@') > -1) {
                     this.notifyPeopleModel = item;
-                    //debugger;
                     this.notifyPeopleModels.push(this.notifyPeopleModel);
                 }
             }
             else {
-                if (item.children.length > 0) {
-                    this.FindIdRecursively(item.children, id);
+                if (item.children !== undefined) {
+                    if (item.children.length > 0) {
+                        this.FindIdRecursively(item.children, id);
+                    }
                 }
             }
         });
@@ -172,11 +195,9 @@ export class NotifyPeopleService extends ServiceBase<NotifyPeopleModel> {
         this.notifyPeopleModels = [];
         checkedIds.forEach((itemId: number) => {
             this.FindIdRecursively(this.allDepartmentUserPermission, itemId);
-            //debugger;
             console.log(this.notifyPeopleModels);
             //this.notifyPeopleModels.push(this.notifyPeopleModel);
         });
-        //debugger;
 
         let emergencySituations: any[] = GlobalConstants.EmergencySituationEnum;
 
@@ -194,7 +215,6 @@ export class NotifyPeopleService extends ServiceBase<NotifyPeopleModel> {
             })
             .flatMap((x) => this.templateService.GetByEmergencySituationId(emergencySituation[0].EmergencySituationId))
             .subscribe((result: ResponseModel<TemplateModel>) => {
-                //debugger;
                 let templateMediaTypes: any[] = GlobalConstants.TemplateMediaType;
 
                 let templateMediaType = templateMediaTypes.filter((item: any) => {
@@ -225,21 +245,18 @@ export class NotifyPeopleService extends ServiceBase<NotifyPeopleModel> {
 
     }
 
-    public CreateAppendedTemplate(appendedTemplate: AppendedTemplateModel, incidentId: number, departmentId: number): void {
-        debugger;
+    public CreateAppendedTemplate(appendedTemplate: AppendedTemplateModel, incidentId: number, departmentId: number, callback?: ((_: boolean) => void)): void {
         delete appendedTemplate.Active;
         this.appendedTemplateService.CreateAppendedTemplate(appendedTemplate)
             .subscribe((appendedTemplate: AppendedTemplateModel) => {
-                debugger;
                 console.log(this.notifyPeopleModels);
                 this.notificationContactsWithTemplates = [];
                 this.notifyPeopleModels.forEach((item: NotifyPeopleModel, index: number) => {
-                    debugger;
                     let notificationContactsWithTemplate: NotificationContactsWithTemplateModel = new NotificationContactsWithTemplateModel();
                     notificationContactsWithTemplate.UserId = item.User.UserProfileId;
                     notificationContactsWithTemplate.IsActive = true;
                     notificationContactsWithTemplate.IncidentId = incidentId;
-                    notificationContactsWithTemplate.DepartmentId = departmentId;
+                    notificationContactsWithTemplate.DepartmentId = item.DepartmentId;
                     notificationContactsWithTemplate.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
                     notificationContactsWithTemplate.UserName = item.User.Name;
                     notificationContactsWithTemplate.SituationId = appendedTemplate.EmergencySituationId;
@@ -249,13 +266,19 @@ export class NotifyPeopleService extends ServiceBase<NotifyPeopleModel> {
                     notificationContactsWithTemplate.EmailId = item.User.Email;
                     notificationContactsWithTemplate.Message = appendedTemplate.Description;
                     this.notificationContactsWithTemplates.push(notificationContactsWithTemplate);
-                    this.CreateBulkInsert(incidentId, this.notificationContactsWithTemplates)
-                        .subscribe((response: NotificationContactsWithTemplateModel[]) => {
-                            debugger;
-                        }, (error: any) => {
-                            console.log(`Error: ${error}`);
-                        });
+
                 });
+                this.CreateBulkInsert(incidentId, this.notificationContactsWithTemplates)
+                    .subscribe((response: NotificationContactsWithTemplateModel[]) => {
+                        if (callback) {
+                            callback(true);
+                        }
+                    }, (error: any) => {
+                        if (callback) {
+                            callback(false);
+                        }
+                        console.log(`Error: ${error}`);
+                    });
             })
     }
 

@@ -44,7 +44,19 @@ export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
                 data: {
                     menu: {
                         title: 'Notify People',
-                        icon: 'fa fa-bell fa-lg',
+                        icon: 'fa fa-bullhorn fa-lg',
+                        selected: false,
+                        expanded: false,
+                    }
+                }
+            }
+            ,
+            {
+                path: 'departmentclosure',
+                data: {
+                    menu: {
+                        title: 'Department Wise Closure',
+                        icon: 'fa fa-id-badge fa-lg',
                         selected: false,
                         expanded: false,
                     }

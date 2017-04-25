@@ -8,6 +8,7 @@ export class NotifyPeopleModel extends BaseModel {
     public checked: boolean;
     public children: NotifyPeopleModel[];
     public User: UserProfileModel;
+    public DepartmentId: number;
 
     constructor() {
         super();
@@ -17,6 +18,7 @@ export class NotifyPeopleModel extends BaseModel {
         this.checked = false;
         this.children = [];
         this.User = new UserProfileModel();
+        this.DepartmentId = 0;
     }
 }
 
@@ -47,10 +49,10 @@ export class NotificationContactsWithTemplateModel extends BaseModel {
         this.SituationId = 0;
         this.IncidentId = 0;
         this.AttachmentSingle = '';
-        this.ContactNumber ='';
-        this.AlternetContactNumber ='';
-        this.EmailId ='';
-        this.Message ='';
+        this.ContactNumber = '';
+        this.AlternetContactNumber = '';
+        this.EmailId = '';
+        this.Message = '';
 
     }
 }

@@ -2,6 +2,7 @@ import { Component, ViewEncapsulation, OnInit, ElementRef, ViewChild } from '@an
 
 import { DepartmentModel } from '../masterdata/department/components/department.model';
 import { UserProfileModel } from '../masterdata/userprofile/components/userprofile.model';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { NotifyPeopleService } from './components/notifypeople.service';
 import { NotifyPeopleModel } from './components/notifypeople.model';
 import { TemplateModel } from "../masterdata/template/components";
@@ -41,6 +42,8 @@ export class NotifyPeopleComponent implements OnInit {
     public tree: any;
     public form: FormGroup;
     constructor(formBuilder: FormBuilder,
+        private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig,
         private notifyPeopleService: NotifyPeopleService,
         private elementRef: ElementRef,
         private globalState: GlobalStateService) { };
@@ -49,47 +52,45 @@ export class NotifyPeopleComponent implements OnInit {
         //debugger;
         this.resetAdditionalForm();
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
         this.appendedTemplate = new AppendedTemplateModel();
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
-        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
-        this.PopulateNotifyDepartmentUsers(this.currentDepartmentId);
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.PopulateNotifyDepartmentUsers(this.currentDepartmentId,this.currentIncidentId);
     }
     private resetAdditionalForm(): void {
         this.form = new FormGroup({
             AdditionalData: new FormControl('')
         });
     }
-    private departmentChangeHandler(departmentId): void {
+    private departmentChangeHandler(department: KeyValue): void {
         //debugger;
-        this.currentDepartmentId = +departmentId;
-        this.PopulateNotifyDepartmentUsers(this.currentDepartmentId);
+        this.currentDepartmentId = department.Value;
+        this.PopulateNotifyDepartmentUsers(this.currentDepartmentId,this.currentIncidentId);
     }
 
-    private incidentChangeHandler(incidentId): void {
+    private incidentChangeHandler(incident: KeyValue): void {
         //debugger;
-        this.currentIncidentId = +incidentId;
+        this.currentIncidentId = incident.Value;
         //this.PopulateNotifyDepartmentUsers(this.currentDepartmentId);
     }
 
-    public PopulateNotifyDepartmentUsers(departmentId: number): void {
-        this.notifyPeopleService.GetAllDepartmentMatrix(departmentId, (result: NotifyPeopleModel[]) => {
+    public PopulateNotifyDepartmentUsers(departmentId: number,incidentId:number): void {
+        this.notifyPeopleService.GetAllDepartmentMatrix(1,incidentId, (result: NotifyPeopleModel[]) => {
             debugger;
             this.allDepartmentUserPermission = result;
             this.allDepartmentUserPermissionString = JSON.stringify(this.allDepartmentUserPermission);
             this.$tree = jQuery(this.elementRef.nativeElement).find('#tree');
             debugger;
-            //this.$tree.des
-            let tree = this.$tree.tree({
+            this.tree = this.$tree.tree({
                 primaryKey: 'id',
                 uiLibrary: 'bootstrap',
                 iconsLibrary: 'fontawesome',
                 dataSource: jQuery.parseJSON(this.allDepartmentUserPermissionString),//this.allDepartmentUserPermissionString,
-                checkboxes: true,
-                autoLoad: false
+                checkboxes: true
             })
             debugger;
-            tree.reload();
+
         });
     }
 
@@ -106,8 +107,8 @@ export class NotifyPeopleComponent implements OnInit {
             this.appendedTemplate.Description = item.Description;
             this.appendedTemplate.Subject = item.Subject;
             this.appendedTemplate.ActiveFlag = 'Active';
-            this.appendedTemplate.CreatedBy=+UtilityService.GetFromSession('CurrentUserId');
-            this.appendedTemplate.CreatedOn=new Date();
+            this.appendedTemplate.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
+            this.appendedTemplate.CreatedOn = new Date();
             debugger;
             this.childModalNoificationMessage.show();
         });
@@ -120,8 +121,17 @@ export class NotifyPeopleComponent implements OnInit {
     public saveNotificationMessage(): void {
         debugger;
         let additionalData: string = this.form.controls['AdditionalData'].value;
-        this.appendedTemplate.Description = this.appendedTemplate.Description+' '+additionalData;
+        this.appendedTemplate.Description = this.appendedTemplate.Description + ' ' + additionalData;
         this.notifyPeopleService.CreateAppendedTemplate(this.appendedTemplate,
-        this.currentIncidentId,this.currentDepartmentId);
+            this.currentIncidentId, this.currentDepartmentId, (item: boolean) => {
+                if (item) {
+                    this.toastrService.info('The respective user has been notified.', 'Notify User', this.toastrConfig);
+                    console.log('Notify User Clicked');
+                }
+                else{
+                    this.toastrService.info('Some Error Occured.', 'Notify User', this.toastrConfig);
+                    console.log('Notify User Clicked error');
+                }
+            });
     }
 }
