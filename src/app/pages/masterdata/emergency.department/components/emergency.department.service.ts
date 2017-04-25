@@ -47,8 +47,8 @@ export class EmergencyTypeDepartmentService extends ServiceBase<EmergencyDepartm
 
     GetFilterByEmergencyTypeDepartmentId(emergencyTypeId: number): Observable<ResponseModel<EmergencyDepartmentModel>> {
         return this._dataService.Query()
-            .Expand(`Department`)
-            .Select('Department/DepartmentId')
+            .Select('Department, EmergencyTypeDepartmentId')
+            .Expand('Department($select=DepartmentId, DepartmentName)')
             .Filter(`EmergencyTypeId eq ${emergencyTypeId}`)
             .Execute();
     }

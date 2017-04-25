@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
 
@@ -10,22 +10,59 @@ import { DepartmentService } from '../masterdata/department/components/departmen
 import { DepartmentModel } from '../masterdata/department';
 import { EmergencyTypeDepartmentService } from '../masterdata/emergency.department/components/emergency.department.service';
 import { EmergencyDepartmentModel } from '../masterdata/emergency.department';
-import { UtilityService, ResponseModel } from '../../shared';
+import { NotifyPeopleService } from '../notifypeople/components/notifypeople.service';
+import { ActionableService } from '../shared.components/actionables/components/actionable.service';
+import { DemandService } from '../shared.components/demand/components/demand.service';
+import { NotifyPeopleModel, UserDepartmentNotificationMapper, NotificationContactsWithTemplateModel } from '../notifypeople';
+import { ActionableModel, DemandModel } from '../shared.components';
+import { UtilityService, ResponseModel, BaseModel, GlobalStateService } from '../../shared';
+import { ModalDirective } from 'ng2-bootstrap/modal';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
+import { ReportPath } from './components/emergency.closure.model';
+import { EmergencyClosureService } from './components/emergency.closure.service';
+import { UserPermissionService } from '../masterdata/userpermission/components/userpermission.service';
+import { UserPermissionModel } from '../masterdata/userpermission';
+import { AuthenticationService } from '../login/components/authentication.service';
+import { Router } from '@angular/router';
+
+
+
 
 @Component({
     selector: 'emergency-closure',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './views/emergency.closure.view.html'
+    templateUrl: './views/emergency.closure.view.html',
+    styleUrls: ['./styles/emergency.closure.style.scss']
 
 })
 export class EmergencyClosureComponent implements OnInit {
+    @ViewChild('childModal') public childModal: ModalDirective;
+
     currentIncident: number;
     currentDepartmentId: number;
-    incident: IncidentModel = null;
+    incident: IncidentModel = new IncidentModel();
+    departmnetsToNotify: DepartmentModel[] = [];
+    departmentClosures: DepartmentClosureModel[] = [];
+    closuresToShow: DepartmentClosureModel[] = [];
+    actionable: ActionableModel[] = [];
+    demands: DemandModel[] = [];
+    initialNotificationSend: number[] = [];
+    notificationSeperatelySend: number[] = [];
+    report: string = "";
+    remarks: string = "";
+    credential: any;
+
+
+
 
 
     constructor(private departmentClosureService: DepartmentClosureService, private incidentService: IncidentService,
-    private departmentService : DepartmentService, private emergencyTypeDepartmentService : EmergencyTypeDepartmentService) {
+        private departmentService: DepartmentService, private emergencyTypeDepartmentService: EmergencyTypeDepartmentService,
+        private notifyService: NotifyPeopleService, private actionableService: ActionableService,
+        private demandService: DemandService, private globalState: GlobalStateService, private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig, private emergencyClosureService: EmergencyClosureService,
+        private userPermissionService: UserPermissionService, private authService: AuthenticationService, private router: Router) {
+        this.incident.deleteAttributes();
 
     }
 
@@ -33,11 +70,27 @@ export class EmergencyClosureComponent implements OnInit {
 
         this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.GetIncident(this.currentIncident);
+        this.globalState.Subscribe('incidentChange', (model) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
+        this.credential = UtilityService.getCredentialDetails();
 
     }
 
-    ngOnDestroy(): void {
+    incidentChangeHandler(model): void {
+        this.currentIncident = model;
+        this.closuresToShow = [];
+        this.GetIncident(this.currentIncident);
 
+    }
+
+
+    private departmentChangeHandler(departmentId): void {
+        this.currentDepartmentId = departmentId;
+    }
+    ngOnDestroy(): void {
+        this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('departmentChange');
     }
 
     GetIncident(incidentId: number): void {
@@ -47,38 +100,238 @@ export class EmergencyClosureComponent implements OnInit {
                 this.getAllDepartmentsToNotify();
             });
 
-        
+
 
     }
 
 
-    getAllDepartmentsToNotify() : void {
+    getAllDepartmentsToNotify(): void {
         let allActiveDepartments: Observable<ResponseModel<DepartmentModel>>
-            = this.departmentService.GetDepartmentIds();
+            = this.departmentService.GetDepartmentNameIds();
         let emergencyDepartments: Observable<ResponseModel<EmergencyDepartmentModel>>
             = this.emergencyTypeDepartmentService.GetFilterByEmergencyTypeDepartmentId(this.incident.EmergencyTypeId);
-        // let notifyDeptUsers: Observable<ResponseModel<EmergencyDepartmentModel>>
-        //     = this.emergencyTypeService.GetAll();
+        let notifyDeptUsers: Observable<ResponseModel<UserDepartmentNotificationMapper>>
+            = this.notifyService.GetAllByIncident(this.currentIncident);
+        let departmentClosures: Observable<ResponseModel<DepartmentClosureModel>>
+            = this.departmentClosureService.GetAllByIncident(this.currentIncident);
+        Observable.merge(allActiveDepartments, emergencyDepartments, notifyDeptUsers, departmentClosures)
+            .subscribe(
+            (response: ResponseModel<BaseModel>) => {
 
-        // Observable.merge(allChecklists, activeDepartments, activeEmergencyTypes)
-        //     .subscribe(
-        //     (response: ResponseModel<BaseModel>) => {
-        //         if (response.Records.length > 0 && Object.keys(response.Records[0]).some(x => x === 'CheckListId')) {
-        //             this.activeCheckLists = <ChecklistModel[]>response.Records;
-        //             this.checkListModel.ParentCheckListId = this.activeCheckLists[0].CheckListId;
-        //         } else if (response.Records.length > 0 && Object.keys(response.Records[0]).some(x => x === 'DepartmentId')) {
-        //             this.activeDepartments = <DepartmentModel[]>response.Records;
-        //             this.checkListModel.DepartmentId = this.activeDepartments[0].DepartmentId;
-        //         } else if (response.Records.length > 0 && Object.keys(response.Records[0]).some(x => x === 'EmergencyTypeId')) {
-        //             this.activeEmergencyTypes = <EmergencyTypeModel[]>response.Records;
-        //             this.checkListModel.EmergencyTypeId = this.activeEmergencyTypes[0].EmergencyTypeId;
-        //         }
-        //     },
-        //     (error) => { console.log(error); },
-        //     () => {
-               // this.form = this.resetCheckListForm();
-               // this.initiateCheckListModel();
-               // this.dataExchange.Subscribe("checklistModelEdited", model => this.onCheckListEditSuccess(model));
-          //  }
+                if (response.Records.length > 0 && Object.keys(response.Records[0]).some(x => x === 'Department') && Object.keys(response.Records[0]).some(x => x !== 'DepartmentClosureId')) {
+                    response.Records.forEach(x => {
+                        this.departmnetsToNotify.push(<DepartmentModel>x["Department"]);
+                    });
+                    if (Object.keys(response.Records[0]).some(x => x === 'EmergencyTypeDepartmentId')) {
+                        response.Records.forEach(x => {
+                            let y = <EmergencyDepartmentModel>x;
+                            this.initialNotificationSend.push(y.Department.DepartmentId);
+                        });
+                    }
+                    if (Object.keys(response.Records[0]).some(x => x === 'UserDepartmentNotificationMapperId')) {
+                        response.Records.forEach(x => {
+                            let y = <UserDepartmentNotificationMapper>x;
+                            this.notificationSeperatelySend.push(y.Department.DepartmentId);
+                        });
+                    }
+                } else if (response.Records.length > 0 && Object.keys(response.Records[0]).some(x => x === 'DepartmentId') && Object.keys(response.Records[0]).some(x => x !== 'DepartmentClosureId')) {
+                    response.Records.forEach(x => {
+                        this.departmnetsToNotify.push(<DepartmentModel>x);
+                    });
+                }
+                else if (response.Records.length > 0 && Object.keys(response.Records[0]).some(x => x === 'DepartmentClosureId')) {
+                    this.departmentClosures = <DepartmentClosureModel[]>response.Records;
+                }
+
+            },
+            (error) => { console.log(error); },
+            () => {
+                let unique: DepartmentModel[] = [];
+
+                this.departmnetsToNotify.forEach(x => {
+                    if (unique.find(y => y.DepartmentId == x.DepartmentId) == null) {
+                        unique.push(x);
+                    }
+                });
+                let departmentIds: number[] = unique.map(x => {
+                    return x.DepartmentId;
+                });
+
+                this.actionableService.BatchGet(this.currentIncident, departmentIds)
+                    .subscribe((response: any) => {
+                        if (response.Records.length > 0) {
+                            response.Records.forEach(x => {
+                                if (x.length > 0) {
+                                    x.forEach(y => {
+                                        this.actionable.push(y);
+                                    });
+                                }
+                            });
+                        }
+                        this.demands = [];
+                        this.demandService.BatchGet(this.currentIncident, departmentIds)
+                            .subscribe((response: any) => {
+                                if (response.Records.length > 0) {
+                                    // this.demands.concat(response.Records);
+                                    response.Records.forEach(x => {
+                                        if (x.length > 0) {
+                                            x.forEach(y => {
+                                                this.demands.push(y);
+                                            });
+
+                                        }
+                                    });
+                                }
+                                if (unique.length > 0) {
+
+                                    unique.forEach(x => {
+                                        let item: DepartmentClosureModel = new DepartmentClosureModel();
+                                        let closureItem = this.departmentClosures.find(y => {
+                                            return y.DepartmentId === x.DepartmentId;
+                                        });
+                                        if (closureItem) {
+                                            closureItem.Checklistnumber = this.actionable.filter(z => {
+                                                return z.DepartmentId == x.DepartmentId;
+                                            }).length;
+                                            closureItem.ChecklistClosednumber = this.actionable.filter(z => {
+                                                return z.DepartmentId == x.DepartmentId && z.ClosedBy != null;
+                                            }).length;
+                                            closureItem.demandnumber = this.demands.filter(z => {
+                                                return z.RequesterDepartmentId == x.DepartmentId;
+                                            }).length;
+                                            closureItem.demandClosednumber = this.demands.filter(z => {
+                                                return z.RequesterDepartmentId == x.DepartmentId && z.ClosedBy != null;
+                                            }).length;
+                                            closureItem.Department = x;
+                                            this.closuresToShow.push(closureItem);
+                                        }
+                                        else {
+                                            item.Checklistnumber = this.actionable.filter(z => {
+                                                return z.DepartmentId == x.DepartmentId;
+                                            }).length;
+                                            item.ChecklistClosednumber = this.actionable.filter(z => {
+                                                return z.DepartmentId == x.DepartmentId && z.ClosedBy != null;
+                                            }).length;
+                                            item.demandnumber = this.demands.filter(z => {
+                                                return z.RequesterDepartmentId == x.DepartmentId;
+                                            }).length;
+                                            item.demandClosednumber = this.demands.filter(z => {
+                                                return z.RequesterDepartmentId == x.DepartmentId && z.ClosedBy != null;
+                                            }).length;
+                                            item.DepartmentId = x.DepartmentId;
+                                            item.IncidentId = this.currentIncident;
+                                            item.Department = x;
+                                            this.closuresToShow.push(item);
+                                        }
+
+                                    });
+                                }
+                                if (this.closuresToShow.length > 0) {
+                                    this.closuresToShow.forEach(x => {
+                                        x.InitialNotify = false;
+                                        x.SeperateNotify = false;
+                                        if (this.initialNotificationSend.filter(z => { return x.DepartmentId == z; }).length > 0) {
+                                            x.InitialNotify = true;
+                                        }
+                                        let ttSeperate = this.notificationSeperatelySend.filter(z => {
+                                            return x.DepartmentId == z;
+                                        });
+                                        if (ttSeperate.length > 0) {
+                                            x.SeperateNotify = true;
+                                        }
+                                    });
+                                }
+                            });
+                    })
+            });
+    }
+
+    openCurrentDepartmentClosureReadonlyDetail(incidentId, departmentId): void {
+        this.departmentClosureService.getAllbyIncidentandDepartment(incidentId, departmentId)
+            .subscribe((response: ResponseModel<DepartmentClosureModel>) => {
+                if (response.Records.length > 0) {
+                    this.report = response.Records[0].ClosureReport;
+                    this.remarks = response.Records[0].ClosureRemark;
+
+                }
+                this.childModal.show();
+            });
+    }
+
+    cancel(): void {
+        this.childModal.hide();
+    }
+
+    saveIncidentClosure(): void {
+        if (this.incident.ClosureNote == null || this.incident.ClosureNote.toString().trim() == "") {
+            this.toastrService.info('Closure Note is mandatory.', 'Error', this.toastrConfig);
+        }
+        else {
+            this.incident.IsSaved = true;
+            this.incident.SavedBy = this.credential.UserId;
+            this.incident.SavedOn = new Date();
+            this.incidentService.Update(this.incident, this.incident.IncidentId)
+                .subscribe(() => {
+                    this.toastrService.info('Closure Report Saved Successfully.', 'Success', this.toastrConfig);
+                }, (error) => {
+                    this.toastrService.info('Some error occured.', 'Error', this.toastrConfig);
+                });
+        }
+
+    }
+
+    submitIncidentClosure(): void {
+        if (this.incident.ClosureNote == null || this.incident.ClosureNote.toString().trim() == "") {
+            this.toastrService.info('Closure Note is mandatory.', 'Error', this.toastrConfig);
+        }
+        else {
+            this.incident.IsSubmitted = true;
+            this.incident.SubmittedBy = this.credential.UserId;
+            this.incident.SubmittedOn = new Date();
+            this.incident.ClosedBy = this.credential.UserId;
+            this.incident.ClosedOn = new Date();
+            this.incident.ActiveFlag = 'InActive';
+            this.incidentService.Update(this.incident, this.incident.IncidentId)
+                .subscribe(() => {
+                    this.toastrService.info('Closure Report Saved Successfully.', 'Success', this.toastrConfig);
+                    // },(error)=>{
+                    //     this.toastrService.info('Some error occured.', 'Error', this.toastrConfig);
+
+                    this.emergencyClosureService.GetEmergencyClosureDocumentPDFPath(this.incident.IncidentId)
+                        .subscribe((reportPath: ReportPath) => {
+
+                            this.userPermissionService.GetAllActiveHODUsersOfAllDepartments()
+                                .subscribe((response: ResponseModel<UserPermissionModel>) => {
+                                    let UserDepartmentNotificationMappers: NotificationContactsWithTemplateModel[] = [];
+                                    UserDepartmentNotificationMappers = response.Records.map(x => {
+                                        let y: NotificationContactsWithTemplateModel = new NotificationContactsWithTemplateModel();
+                                        y.UserId = x.UserId;
+                                        y.IsActive = true;
+                                        y.IncidentId = this.currentIncident;
+                                        y.DepartmentId = x.DepartmentId;
+                                        y.CreatedBy = x.CreatedBy;
+                                        y.UserName = x.User.Name;
+                                        y.SituationId = 'EmergencyClosureToDepartmentHOD';
+                                        y.ContactNumber = '';
+                                        y.AlternetContactNumber = '';
+                                        y.AttachmentSingle = reportPath.path;
+                                        y.EmailId = x.User.Email;
+                                        return y;
+                                    });
+                                    this.emergencyClosureService.sendNotificationToDepartmentHOD(UserDepartmentNotificationMappers)
+                                        .subscribe(() => {
+                                            this.toastrService.info('Notification has been sent to the users.', 'Success', this.toastrConfig);
+                                            this.authService.Logout();
+                                            this.router.navigate(['login']);
+
+
+                                        });
+                                });
+                        }, (error: any) => {
+                            console.log(error);
+                        });
+                });
+
+        }
     }
 }

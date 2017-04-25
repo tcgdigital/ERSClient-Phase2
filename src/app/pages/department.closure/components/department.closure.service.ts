@@ -20,10 +20,17 @@ export class DepartmentClosureService extends ServiceBase<DepartmentClosureModel
     }
 
 
-    GetAllByIncident(incidentId : number) : Observable<ResponseModel<DepartmentClosureModel>>{
-         return this._dataService.Query()
-            .Expand('Department')
-            .Filter("IncidentId eq ${incidentId}")
+    GetAllByIncident(incidentId: number): Observable<ResponseModel<DepartmentClosureModel>> {
+        return this._dataService.Query()
+            .Expand("Department")
+            .Filter(`IncidentId eq ${incidentId}`)
+            .Execute();
+    }
+
+    getAllbyIncidentandDepartment(incidentId, departmentId): Observable<ResponseModel<DepartmentClosureModel>> {
+        return this._dataService.Query()
+            .Select('ClosureReport,ClosureRemark')
+            .Filter(`IncidentId eq ${incidentId}  and DepartmentId eq ${departmentId}`)
             .Execute();
     }
 }

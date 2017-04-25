@@ -16,4 +16,6 @@ export interface IActionableService extends IServiceInretface<ActionableModel> {
     GetOpenActionableCount(incidentId: number, departmentId: number): Observable<number>;
 
     GetCloseActionableCount(incidentId: number, departmentId: number): Observable<number>;
+
+    BatchGet(incidentId: number, departmentIds: number[]): Observable<ResponseModel<ActionableModel>>;
 }

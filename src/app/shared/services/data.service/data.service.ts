@@ -51,7 +51,7 @@ export class DataService<T extends BaseModel>{
      * @memberOf DataService
      */
     public Get(key: string): GetOperation<T> {
-        return new GetOperation<T>(this.dataProcessingService, this.httpService, this.typeName, key);
+        return new GetOperation<T>(this.dataProcessingService, this.httpService, this.typeName, key, this.actionSuffix);
     }
 
 
