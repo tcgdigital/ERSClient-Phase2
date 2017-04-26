@@ -2,6 +2,8 @@ import {
     Component, ViewEncapsulation,
     OnInit, ViewChild, OnDestroy
 } from '@angular/core';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
 
 import { InvolvePartyModel } from '../../involveparties';
 import { DemandModel, DemandModelToView, DemandRemarkLogModel } from './demand.model';

@@ -1,4 +1,6 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
 
 import { InvolvePartyModel } from '../../../shared.components';
 import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';

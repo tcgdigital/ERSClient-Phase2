@@ -6,6 +6,8 @@ import {
     ReactiveFormsModule, FormGroup, FormControl,
     FormBuilder, AbstractControl, Validators
 } from '@angular/forms';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
 
 import { MediaService } from './media.service';
 import { MediaModel } from './media.model';
