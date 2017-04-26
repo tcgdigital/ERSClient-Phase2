@@ -18,7 +18,7 @@ import {
 })
 export class DemandTypeListComponent implements OnInit {
     demandTypes: DemandTypeModel[] = [];
-    demandTypeModelToUpdate: DemandTypeModel = new DemandTypeModel;
+    demandTypeModelToUpdate: DemandTypeModel = new DemandTypeModel();
     searchConfigs: SearchConfigModel<any>[] = [];
 
 
@@ -77,11 +77,11 @@ export class DemandTypeListComponent implements OnInit {
     private initiateSearchConfigurations(): void {
         let status: NameValue<string>[] = [
             new NameValue<string>('Active', 'Active'),
-            new NameValue<string>('InActive', 'InActive'),
+            new NameValue<string>('InActive', 'InActive')
         ]
         let autoApproved: NameValue<boolean>[] = [
             new NameValue<boolean>('Yes', true),
-            new NameValue<boolean>('No', false),
+            new NameValue<boolean>('No', false)
         ]
         this.searchConfigs = [
             new SearchTextBox({

@@ -8,12 +8,14 @@ import {
     ReactiveFormsModule
 } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
 
 import { ChecklistModel } from './checklist.model';
 import { DepartmentModel, DepartmentService } from '../../department';
 import { EmergencyTypeModel, EmergencyTypeService } from '../../emergencytype';
 import { ChecklistService } from './checklist.service';
-import { ResponseModel, DataExchangeService, BaseModel, UtilityService, GlobalStateService } from '../../../../shared';
+import { ResponseModel, DataExchangeService, BaseModel, UtilityService, GlobalStateService, KeyValue } from '../../../../shared';
 
 @Component({
     selector: 'checklist-entry',
@@ -37,7 +39,8 @@ export class ChecklistEntryComponent implements OnInit {
         private departmentService: DepartmentService,
         private checkListService: ChecklistService,
         private emergencyTypeService: EmergencyTypeService,
-        private dataExchange: DataExchangeService<ChecklistModel>, private globalState: GlobalStateService) {
+        private dataExchange: DataExchangeService<ChecklistModel>, private globalState: GlobalStateService,
+        private toastrService: ToastrService, private toastrConfig: ToastrConfig) {
         this.showAdd = false;
         this.buttonValue = "Add Checklist";
         this.checkListModel = new ChecklistModel();
@@ -81,16 +84,17 @@ export class ChecklistEntryComponent implements OnInit {
     ngOnInit(): void {
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.mergeResponses(this.currentDepartmentId);
-        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
-    private departmentChangeHandler(departmentId): void {
-        this.currentDepartmentId = departmentId;
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
         this.mergeResponses(this.currentDepartmentId);
     }
 
     ngOnDestroy(): void {
-        //this.dataExchange.Unsubscribe("checklistModelEdited");
+        this.dataExchange.Unsubscribe("departmentChange");
+        this.dataExchange.Unsubscribe("checklistModelEdited");
     }
 
     initiateCheckListModel(): void {
@@ -143,6 +147,7 @@ export class ChecklistEntryComponent implements OnInit {
             delete this.checkListModel['Active'];
             this.checkListService.Create(this.checkListModel)
                 .subscribe((response: ChecklistModel) => {
+                    this.toastrService.success('Checklist Created Successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("checkListModelSaved", response);
                     this.resetCheckListForm();
                     this.initiateCheckListModel();
@@ -155,9 +160,10 @@ export class ChecklistEntryComponent implements OnInit {
                 this.formControlDirtyCheck();
                 this.checkListService.Update(this.checkListModelEdit)
                     .subscribe((response: ChecklistModel) => {
+                        this.toastrService.success('Checklist Edited Successfully.', 'Success', this.toastrConfig);
                         this.initiateCheckListModel();
                         this.dataExchange.Publish("checkListListReload", response);
-                        this.showAddRegion(true);
+                        this.showAdd = false;
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                     });
@@ -171,23 +177,14 @@ export class ChecklistEntryComponent implements OnInit {
     }
 
     onCheckListEditSuccess(data: ChecklistModel): void {
-        this.showAddRegion(false);
+        this.showAdd = true;
         this.initiateCheckListModel();
         this.checkListModel = data;
         this.form = this.resetCheckListForm(this.checkListModel);
     }
 
-    showAddRegion(ShowAdd: Boolean): void {
-        if (ShowAdd) {
-            this.showAdd = false;
-            this.buttonValue = "Show Add Checklist";
-        }
-        else {
-            this.showAdd = true;
-            this.buttonValue = "Hide Add Checklist";
-            this.form = this.resetCheckListForm();
-        }
-        console.log("Add Checklist Region is Show " + ShowAdd);
+    showAddRegion(): void {
+        this.showAdd = true;
     }
 
     private resetCheckListForm(checkList?: ChecklistModel): FormGroup {

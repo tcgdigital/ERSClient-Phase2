@@ -33,13 +33,6 @@ export class ChecklistListComponent implements OnInit {
     constructor(private checkListService: ChecklistService, private emergencytypeService: EmergencyTypeService,
         private dataExchange: DataExchangeService<ChecklistModel>, private globalState: GlobalStateService) { }
 
-    initiateCheckListModelPatch(): void {
-        this.checkListModelPatch = new ChecklistModel();
-        this.checkListModelPatch.ActiveFlag = 'Active';
-        this.checkListModelPatch.CreatedBy = 1;
-        this.checkListModelPatch.CreatedOn = this.date;
-    }
-
     findIfParent(item: ChecklistModel): any {
         return item.ParentCheckListId != null;
     };
@@ -110,8 +103,9 @@ export class ChecklistListComponent implements OnInit {
     }
 
     IsActive(event: any, editedCheckList: ChecklistModel): void {
-        this.initiateCheckListModelPatch();
+        this.checkListModelPatch = new ChecklistModel(false);
         this.checkListModelPatch.CheckListId = editedCheckList.CheckListId;
+        this.checkListModelPatch.deleteAttributes();
         this.checkListModelPatch.ActiveFlag = 'Active';
         if (!event.checked) {
             this.checkListModelPatch.ActiveFlag = 'InActive';

@@ -9,6 +9,5 @@ export class EmergencyTypeModel extends BaseModel {
 
     constructor(){
         super();
-        this.EmergencyTypeId = 0;
     }
 }

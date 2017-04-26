@@ -20,8 +20,10 @@ export class ChecklistModel extends BaseModel {
     public ParentCheckList?: ChecklistModel;
     public EmergencyType: EmergencyTypeModel;
 
-    constructor() {
+    constructor( flag ? : boolean) {
         super();
+        if(flag)
+        {
         this.CheckListId = 0;
         this.CheckListCode = '';
         this.CheckListDetails = '';
@@ -32,5 +34,6 @@ export class ChecklistModel extends BaseModel {
         this.EmergencyTypeId = 0;
         this.Sequence = 0;
         this.Active = false;
+        }
     }
 }
