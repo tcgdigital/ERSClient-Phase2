@@ -17,6 +17,7 @@ import { Observable } from 'rxjs/Rx';
 export class UserProfileListComponent implements OnInit, OnDestroy {
     userProfiles: UserProfileModel[] = [];
     searchConfigs: SearchConfigModel<any>[] = [];
+    userProfilePatch : UserProfileModel = null;
 
     constructor(private userProfileService: UserProfileService,
         private dataExchange: DataExchangeService<UserProfileModel>) { }
@@ -49,8 +50,30 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
         this.dataExchange.Unsubscribe('UserProfileModelModified');
     }
 
+    IsActive(event: any, editedUderProfile: UserProfileModel): void {
+        this.userProfilePatch = new UserProfileModel();
+        this.userProfilePatch.deleteAttributes();
+        this.userProfilePatch.UserProfileId = editedUderProfile.UserProfileId;
+        this.userProfilePatch.isActive = true;
+        if (!event.checked) {
+            this.userProfilePatch.isActive = false;
+        }
+        this.userProfileService.Update(this.userProfilePatch)
+            .subscribe((response: UserProfileModel) => {
+                this.getUserProfiles();
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
+    }
+
     invokeSearch(query: string): void {
         if (query !== '') {
+            if (query.indexOf('isActive') >= 0) {
+                if (query.indexOf("'true'") >= 0)
+                    query = query.replace("'true'", "true");
+                if (query.indexOf("'false'") >= 0)
+                    query = query.replace("'false'", "false");
+            }
             this.userProfileService.GetQuery(query)
                 .subscribe((response: ResponseModel<UserProfileModel>) => {
                     this.userProfiles = response.Records;
@@ -65,9 +88,9 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
     }
 
     private initiateSearchConfigurations(): void {
-        let status: NameValue<string>[] = [
-            new NameValue<string>('Active', 'Active'),
-            new NameValue<string>('InActive', 'InActive'),
+        let status: NameValue<boolean>[] = [
+             new NameValue<boolean>('Active', true),
+            new NameValue<boolean>('In Active', false)
         ]
         this.searchConfigs = [
             new SearchTextBox({
@@ -101,7 +124,7 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
                 Value: ''
             }),
             new SearchDropdown({
-                Name: 'ActiveFlag',
+                Name: 'isActive',
                 Description: 'Status',
                 PlaceHolder: 'Select Status',
                 Value: '',

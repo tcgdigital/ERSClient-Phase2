@@ -186,4 +186,29 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
             .Filter(`IncidentId eq ${incidentId} and DepartmentId eq ${departmentId} and CompletionStatus eq 'Close'`)
             .Execute();
     }
+
+
+    public BatchGet(incidentId: number, departmentIds: number[]): Observable<ResponseModel<ActionableModel>> {
+        let requests: Array<RequestModel<BaseModel>> = [];
+        let filterString: string = "";
+        departmentIds.forEach((item, index) => {
+            if (departmentIds.length > 1) {
+                if (index == 0) {
+                    filterString = `(DepartmentId eq ${item})`;
+                }
+                else {
+                    filterString = filterString +
+                        ` or (DepartmentId eq ${item})`;
+                }
+            }
+            else {
+                filterString = `filterString eq ${item}`;
+            }
+        });
+        // departmentIds.forEach(x => {
+        requests.push(new RequestModel<BaseModel>(`/odata/Actionables?$filter=IncidentId eq ${incidentId} and (${filterString})`, WEB_METHOD.GET));
+        //  });
+        return this._batchDataService.BatchPost<BaseModel>(requests)
+            .Execute();
+    }
 }

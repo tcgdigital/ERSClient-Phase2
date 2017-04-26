@@ -10,6 +10,7 @@ import { EmergencyTypeDepartmentService } from './components';
 import { EmergencyTypeService } from '../emergencytype';
 import { DepartmentService } from '../department';
 import { DataExchangeService, SharedModule } from '../../../shared';
+import { ModalModule} from 'ng2-bootstrap/modal';
 
 @NgModule({
     imports: [
@@ -18,7 +19,8 @@ import { DataExchangeService, SharedModule } from '../../../shared';
         HttpModule,
         MdCheckboxModule,
         SharedModule,
-        EmergencyDepartmentypeRouting
+        EmergencyDepartmentypeRouting,
+        ModalModule
     ],
     declarations: [
         EmergencyDepartmentComponent

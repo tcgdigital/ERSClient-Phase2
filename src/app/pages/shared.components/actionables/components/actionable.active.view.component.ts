@@ -7,6 +7,8 @@ import {
     AbstractControl, Validators, ReactiveFormsModule
 } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
 
 import { ActionableModel } from './actionable.model';
 import { ActionableService } from './actionable.service';

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { UserPermissionModel } from "../../masterdata/userpermission/components/userpermission.model";
-import { NotifyPeopleModel } from "./notifypeople.model";
+import { NotifyPeopleModel, UserDepartmentNotificationMapper } from "./notifypeople.model";
+import { INotifyPeopleService } from './INotifyPeopleService';
 import {
     ResponseModel, DataService,
     DataServiceFactory, DataProcessingService, ServiceBase
@@ -10,11 +11,12 @@ import { UserPermissionService } from '../../masterdata/userpermission/component
 import { DepartmentModel } from '../../masterdata/department';
 
 @Injectable()
-export class NotifyPeopleService extends ServiceBase<NotifyPeopleModel> {
+export class NotifyPeopleService extends ServiceBase<UserDepartmentNotificationMapper> implements INotifyPeopleService {
     public allDepartmentUserPermission: NotifyPeopleModel[] = [];
+    private _bulkDataService: DataService<NotifyPeopleModel>;
     constructor(private dataServiceFactory: DataServiceFactory,
         private userPermissionService: UserPermissionService) {
-        super(dataServiceFactory, 'UserDepartmentNotificationMappers');
+        super(dataServiceFactory, 'NotifyDepartmentUsers');
     }
 
     public GetDepartmentSubDepartmentUser(departmentId: number): NotifyPeopleModel[] {
@@ -23,9 +25,15 @@ export class NotifyPeopleService extends ServiceBase<NotifyPeopleModel> {
         arrayDepartmentIds.push(departmentId);
         this.medthod(arrayDepartmentIds, count);
         return this.allDepartmentUserPermission;
+    }
 
 
-
+    public GetAllByIncident(incidentId: number): Observable<ResponseModel<UserDepartmentNotificationMapper>> {
+        return this._dataService.Query()
+            .Select('Department, UserDepartmentNotificationMapperId')
+            .Expand('Department($select=DepartmentId, DepartmentName)')
+            .Filter(`IncidentId eq ${incidentId}`)
+            .Execute();
     }
 
     public CreateNotifyUserMatrix(departmentId: number, departmentName: string, count: number): number {

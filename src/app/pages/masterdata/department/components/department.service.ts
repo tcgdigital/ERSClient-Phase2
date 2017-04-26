@@ -105,8 +105,17 @@ export class DepartmentService
     GetDepartmentNameIds(): Observable<ResponseModel<DepartmentModel>> {
         return this._dataService.Query()
             .Select('DepartmentId,DepartmentName')
+            .Filter(`ActiveFlag eq 'Active'`)
             .Execute();
     }
+
+     GetDepartmentIds(): Observable<ResponseModel<DepartmentModel>> {
+        return this._dataService.Query()
+            .Select('DepartmentId')
+            .Filter(`ActiveFlag eq 'Active'`)
+            .Execute();
+    }
+
 
     GetParentDepartments() : Observable<ResponseModel<DepartmentModel>>{
           return this._dataService.Query()

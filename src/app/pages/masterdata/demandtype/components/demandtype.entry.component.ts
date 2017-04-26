@@ -1,6 +1,8 @@
 import { Component, ViewEncapsulation, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, AbstractControl, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
 
 import { DemandTypeService } from './demandtype.service';
 import { DepartmentModel, DepartmentService } from '../../department';

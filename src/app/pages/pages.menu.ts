@@ -51,6 +51,17 @@ export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
                 }
             },
             {
+                path: 'emergencyclosure',
+                data: {
+                    menu: {
+                        title: 'Close Emergency',
+                         icon: 'fa fa-times fa-lg',
+                        selected: false,
+                        expanded: false,
+                         }
+                }
+            },
+                {
                 path: 'notifypeople',
                 data: {
                     menu: {
@@ -71,6 +82,7 @@ export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
                         expanded: false,
                     }
                 }
+                
             }
         ]
     }

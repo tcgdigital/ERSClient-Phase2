@@ -171,7 +171,6 @@ export class BatchPostOperation<T extends RequestModel<BaseModel>> extends DataO
         private httpService: Http,
         private entities: Array<RequestModel<BaseModel>>) {
         super(dataProcessingService, httpService, entities);
-
         this.uniqueId = UtilityService.UUID();
         this.dataProcessingService.EndPoint = GlobalConstants.BATCH;
         this.RequestHeaders = new Headers({

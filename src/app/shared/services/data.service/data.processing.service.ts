@@ -39,7 +39,7 @@ export class DataProcessingService {
         if (this.EndPoint === GlobalConstants.TOKEN || this.EndPoint === GlobalConstants.BATCH)
             uri = `${this.BaseUri}`;
         else {
-            if (entityKey !== '') {
+            if (entityKey !== ''  && actionSuffix === '') {
                 if (/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(entityKey))
                     uri = `${this.BaseUri}/${typeName}('${entityKey}')`;
                 else if (!/^[0-9]*$/.test(entityKey))
