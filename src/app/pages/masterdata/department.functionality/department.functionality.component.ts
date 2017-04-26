@@ -1,4 +1,6 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
 
 import { DepartmentService, DepartmentModel } from '../department';
 import { PageService, PagePermissionService } from './components';

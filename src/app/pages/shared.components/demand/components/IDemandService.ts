@@ -31,5 +31,5 @@ export interface IDemandService extends ServiceBase<DemandModel> {
 
     GetDemandByRequesterDepartment(incidentId: number, departmentId: number): Observable<ResponseModel<DemandModel>>;
 
-    BatchGet(incidentId: number, departmentIds: number[]): Observable<ResponseModel<DemandModel>>;
+    BatchGet(incidentId: number, departmentIds: number[]): Observable<ResponseModel<DemandModel>>
 }

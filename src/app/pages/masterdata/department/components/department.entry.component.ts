@@ -8,6 +8,8 @@ import {
     ReactiveFormsModule
 } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
 
 import { DepartmentService } from './department.service';
 import { DepartmentModel } from './department.model';

@@ -7,6 +7,8 @@ import {
     Validators,
     ReactiveFormsModule
 } from '@angular/forms';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
 
 import { QuickLinkModel } from './quicklink.model';
 import { QuickLinkService } from './quicklink.service';
