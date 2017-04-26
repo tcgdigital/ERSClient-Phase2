@@ -206,7 +206,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
             }
         });
         // departmentIds.forEach(x => {
-        requests.push(new RequestModel<BaseModel>(`/odata/Actionables?$filter=IncidentId eq ${incidentId} and ${filterString}`, WEB_METHOD.GET));
+        requests.push(new RequestModel<BaseModel>(`/odata/Actionables?$filter=IncidentId eq ${incidentId} and (${filterString})`, WEB_METHOD.GET));
         //  });
         return this._batchDataService.BatchPost<BaseModel>(requests)
             .Execute();
