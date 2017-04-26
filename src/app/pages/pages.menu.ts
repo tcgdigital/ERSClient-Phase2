@@ -29,6 +29,17 @@ export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
                 }
             },
             {
+                path: 'masterdataupload',
+                data: {
+                    menu: {
+                        title: 'Upload',
+                        icon: 'fa fa-cloud-upload fa-lg',
+                        selected: false,
+                        expanded: false,
+                    }
+                }
+            },
+            {
                 path: 'incident',
                 data: {
                     menu: {
