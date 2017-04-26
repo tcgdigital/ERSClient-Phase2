@@ -32,7 +32,8 @@ export class DepartmentFunctionalityComponent implements OnInit {
 
     constructor(private pageService: PageService,
         private pagePermissionService: PagePermissionService,
-        private departmentService: DepartmentService) { };
+        private departmentService: DepartmentService, private toastrService: ToastrService,
+		private toastrConfig: ToastrConfig) { };
 
     getDepartments(): void {
         this.departmentService.GetAll()
@@ -77,6 +78,7 @@ export class DepartmentFunctionalityComponent implements OnInit {
         });
         this.pagePermissionService.CreateBulk(this.pagePermissionModelToSave)
             .subscribe((response: PagePermissionModel[]) => {
+                this.toastrService.success('Department Funtionality saved Successfully.', 'Success', this.toastrConfig);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });

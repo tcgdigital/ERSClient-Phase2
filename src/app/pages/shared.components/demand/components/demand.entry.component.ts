@@ -93,7 +93,9 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         private affectedObjectsService: AffectedObjectsService,
         private affectedPeopleService: AffectedPeopleService,
         private globalState: GlobalStateService,
-        private dataExchange: DataExchangeService<number>) {
+        private dataExchange: DataExchangeService<number>,
+        private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig) {
         this.showAdd = false;
         this.buttonValue = "Create Demand";
         this.createdBy = 2;
@@ -479,7 +481,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             this.demandModel.DemandTrails = this.createDemandTrailModel(this.demandModel, this.demandModel, true);
             this.demandService.Create(this.demandModel)
                 .subscribe((response: DemandModel) => {
-                    alert("Demand successfully created");
+                    this.toastrService.success('Demand successfully created.', 'Success', this.toastrConfig);
+                     this.dataExchange.Publish("DemandAddedUpdated", response.DemandId);
                     this.initializeForm();
                     this.demandModel = new DemandModel();
                     this.showAdd = false;
@@ -494,7 +497,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.formControlDirtyCheck();
                 this.demandService.Update(this.demandModelEdit)
                     .subscribe((response: DemandModel) => {
-                        alert("Demand successfully updated");
+                        this.toastrService.success('Demand successfully updated.', 'Success', this.toastrConfig);
+                        this.dataExchange.Publish("DemandAddedUpdated", response.DemandId);
                         let demandTrail = this.createDemandTrailModel(this.demandModel, this.demandModelEdit, false)[0];
                         demandTrail.DemandId = this.demandModel.DemandId;
                         this.demandTrailService.Create(demandTrail)

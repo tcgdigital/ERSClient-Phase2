@@ -57,7 +57,8 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     constructor(private broadcastDepartmentMappingService: BroadcastDepartmentService,
         private broadcastService: BroadcastService,
         private dataExchange: DataExchangeService<BroadCastModel>, private departmentService: DepartmentService,
-        private builder: FormBuilder, private globalState: GlobalStateService) {
+        private builder: FormBuilder, private globalState: GlobalStateService, private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig) {
         this.deptBrodCastModels = [];
         this.buttonValue = "Add New Broadcast Message";
         this.showAdd = false;
@@ -185,6 +186,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         if (this.broadcast.BroadcastId == 0) {
             this.broadcastService.Create(this.broadcast)
                 .subscribe((response: BroadCastModel) => {
+                    this.toastrService.success('Broadcast saved successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish('BroadcastModelSaved', response);
                     this.showAdd = false;
                 }, (error: any) => {
@@ -194,6 +196,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         else {
             this.broadcastService.Create(this.broadcast)
                 .subscribe((response: BroadCastModel) => {
+                     this.toastrService.success('Broadcast edited successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish('BroadcastModelUpdated', response);
                     this.showAdd = false;
                 }, (error: any) => {

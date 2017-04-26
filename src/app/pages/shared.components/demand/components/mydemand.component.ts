@@ -58,7 +58,9 @@ export class MyDemandComponent implements OnInit, OnDestroy {
         private demandRemarkLogsService: DemandRemarkLogService,
         private dataExchange: DataExchangeService<number>,
         private demandTrailService: DemandTrailService,
-        private globalState: GlobalStateService) {
+        private globalState: GlobalStateService,
+        private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig) {
         this.demandForRemarks = new DemandModelToView();
     }
 
@@ -165,7 +167,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
         this.RemarkToCreate.CreatedByName = this.createdByName;
         this.demandRemarkLogsService.Create(this.RemarkToCreate)
             .subscribe((response: DemandRemarkLogModel) => {
-                alert("Remark saved successfully");
+                this.toastrService.success('Remark saved successfully.', 'Success', this.toastrConfig);
                 this.getDemandRemarks(demand.DemandId);
                 this.Remarks = "";
             }, (error: any) => {
@@ -191,6 +193,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
         this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
         this.Remarks = "";
 
+        this.globalState.Subscribe('DemandAddedUpdated', (model: KeyValue) => this.demandUpdated(model));
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     };
@@ -205,6 +208,9 @@ export class MyDemandComponent implements OnInit, OnDestroy {
         this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
     };
 
+    private demandUpdated(model): void {
+        this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
+    }
     ngAfterContentInit(): any {
         this.setRagStatus();
     };
@@ -212,6 +218,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChange');
         this.globalState.Unsubscribe('departmentChange');
+        this.globalState.Unsubscribe('DemandAddedUpdated');
     }
 
 }

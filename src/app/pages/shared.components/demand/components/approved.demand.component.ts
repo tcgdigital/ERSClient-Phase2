@@ -56,7 +56,9 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     constructor(private demandService: DemandService,
         private demandRemarkLogsService: DemandRemarkLogService,
         private globalState: GlobalStateService,
-        private departmentService: DepartmentService) {
+        private departmentService: DepartmentService,
+        private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig) {
         this.createdByName = 'Anwesha Ray';
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
@@ -257,6 +259,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
             else {
                 this.demandService.UpdateBulkForApproval(demandCompletion)
                     .subscribe((response: DemandModel[]) => {
+                        this.toastrService.success('Demand status successfully updated.', 'Success', this.toastrConfig);
                         this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
                     }, (error: any) => {
                         console.log(`Error: ${error}`);

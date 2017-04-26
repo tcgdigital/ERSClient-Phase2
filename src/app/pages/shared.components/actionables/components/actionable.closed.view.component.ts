@@ -35,7 +35,9 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     actionableModelToUpdate: ActionableModel;
 
     constructor(formBuilder: FormBuilder, private actionableService: ActionableService,
-        private dataExchange: DataExchangeService<boolean>, private globalState: GlobalStateService) {
+        private dataExchange: DataExchangeService<boolean>, private globalState: GlobalStateService,
+        private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig) {
 
     }
 
@@ -112,6 +114,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
         let filterActionableUpdate = closedActionablesUpdate.filter((item: ActionableModel) => {
             return (item.Done == true);
         });
+        if (filterActionableUpdate.length > 0) {
         this.batchUpdate(filterActionableUpdate.map(x => {
             return {
                 ActionId: x.ActionId,
@@ -121,11 +124,16 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
                 ReopenedOn: new Date()
             };
         }));
+        }
+        else{
+             this.toastrService.error("Please select at least one checklist", 'Error', this.toastrConfig);
+        }
     }
 
     batchUpdate(data: any[]) {
         this.actionableService.BatchOperation(data)
             .subscribe(x => {
+                 this.toastrService.success('Actionables updated successfully.', 'Success', this.toastrConfig);
                 this.getAllCloseActionable(this.currentIncident, this.currentDepartmentId);
             }, (error: any) => {
                 console.log(`Error: ${error}`);

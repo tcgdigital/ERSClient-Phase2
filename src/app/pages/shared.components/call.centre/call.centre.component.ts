@@ -49,7 +49,9 @@ export class EnquiryComponent implements OnInit {
         private involvedPartyService: InvolvePartyService,
         private demandService: DemandService,
         private dataExchange: DataExchangeService<string>,
-        private globalState: GlobalStateService) { };
+        private globalState: GlobalStateService,
+        private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig) { };
 
     public form: FormGroup;
     enquiryTypes: Object = GlobalConstants.EnquiryType;
@@ -241,7 +243,7 @@ export class EnquiryComponent implements OnInit {
 
         this.enquiryService.Create(this.enquiry)
             .subscribe((response: EnquiryModel) => {
-                alert('Enquiry Saved successfully');
+                this.toastrService.success('Enquiry Saved successfully.', 'Success', this.toastrConfig);
                 this.form = new FormGroup({
                     EnquiryId: new FormControl(0),
                     EnquiryType: new FormControl('', [Validators.required, Validators.maxLength(50)]),

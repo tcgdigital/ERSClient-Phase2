@@ -52,7 +52,9 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     constructor(private demandService: DemandService,
         private departmentService: DepartmentService,
         private demandRemarkLogsService: DemandRemarkLogService,
-        private globalState: GlobalStateService) {
+        private globalState: GlobalStateService,
+        private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig) {
         this.createdByName = "Anwesha Ray";
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
@@ -203,7 +205,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.RemarkToCreate.CreatedByName = this.createdByName;
         this.demandRemarkLogsService.Create(this.RemarkToCreate)
             .subscribe((response: DemandRemarkLogModel) => {
-                alert("Remark saved successfully");
+                this.toastrService.success('Remark saved successfully.', 'Success', this.toastrConfig);
                 this.getDemandRemarks(demand.DemandId);
                 this.Remarks = "";
             }, (error: any) => {
@@ -240,6 +242,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
             else {
                 this.demandService.UpdateBulkForCompletion(demandCompletion)
                     .subscribe((response: DemandModel[]) => {
+                        this.toastrService.success('Demand status updated successfully.', 'Success', this.toastrConfig);
                         this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
                     }, (error: any) => {
                         console.log(`Error: ${error}`);

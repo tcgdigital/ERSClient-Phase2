@@ -18,7 +18,8 @@ import { InvolvePartyService } from '../../involveparties';
 })
 export class AffectedPeopleVerificationComponent implements OnInit {
     constructor(private affectedPeopleService: AffectedPeopleService,
-        private involvedPartyService: InvolvePartyService, private globalState: GlobalStateService) { }
+        private involvedPartyService: InvolvePartyService, private globalState: GlobalStateService, private toastrService: ToastrService,
+		private toastrConfig: ToastrConfig) { }
 
     affectedPeopleForVerification: AffectedPeopleToView[] = [];
     verifiedAffectedPeople: AffectedPeopleModel[];
@@ -39,7 +40,7 @@ export class AffectedPeopleVerificationComponent implements OnInit {
         this.verifiedAffectedPeople = this.affectedPeopleService.MapAffectedPeople(this.affectedPeopleForVerification);
         this.affectedPeopleService.CreateBulk(this.verifiedAffectedPeople)
             .subscribe((response: AffectedPeopleModel[]) => {
-                alert("Selected People directly affected are verified");
+                this.toastrService.success('Selected People directly affected are verified.', 'Success', this.toastrConfig);
                 this.getAffectedPeople(this.currentIncident);
 
             }, (error: any) => {

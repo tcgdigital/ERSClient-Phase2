@@ -56,7 +56,9 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
     constructor(private demandService: DemandService,
         private demandRemarkLogsService: DemandRemarkLogService,
         private globalState: GlobalStateService,
-        private departmentService: DepartmentService) {
+        private departmentService: DepartmentService,
+        private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig) {
         this.createdByName = "Anwesha Ray";
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
@@ -138,7 +140,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         this.RemarkToCreate.CreatedByName = this.createdByName;
         this.demandRemarkLogsService.Create(this.RemarkToCreate)
             .subscribe((response: DemandRemarkLogModel) => {
-                alert("Remark saved successfully");
+                this.toastrService.success('Remark saved successfully.', 'Success', this.toastrConfig);
                 this.getDemandRemarks(demand.DemandId);
                 this.Remarks = "";
             }, (error: any) => {
@@ -210,7 +212,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
             else {
                 this.demandService.UpdateBulkForClosure(demandCompletion)
                     .subscribe((response: DemandModel[]) => {
-                        alert("Demand updated successfully");
+                        this.toastrService.success('Demand updated successfully.', 'Success', this.toastrConfig);
                         this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
