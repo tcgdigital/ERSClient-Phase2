@@ -12,7 +12,7 @@ export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
                         icon: 'fa fa-home fa-lg',
                         selected: true,
                         expanded: false,
-                        order: 0
+                        order: 1
                     }
                 }
             },
@@ -24,7 +24,7 @@ export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
                         icon: 'fa fa-database fa-lg',
                         selected: false,
                         expanded: false,
-                        order: 0
+                        order: 2
                     }
                 }
             },
@@ -47,6 +47,7 @@ export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
                         icon: 'fa fa-bell fa-lg',
                         selected: false,
                         expanded: false,
+                        order: 3
                     }
                 }
             },
@@ -69,17 +70,32 @@ export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
                         icon: 'fa fa-paper-plane fa-lg',
                         selected: false,
                         expanded: false,
+                        order: 4
+                    }
+                }
+
+            },
+            {
+                path: 'departmentclosure',
+                data: {
+                    menu: {
+                        title: 'Department Wise Closure',
+                        icon: 'fa fa-id-badge fa-lg',
+                        selected: false,
+                        expanded: false,
+                        order: 5
                     }
                 }
             },
             {
-                path: 'archivedashboard',
+                path: 'archivelist',
                 data: {
                     menu: {
-                        title: 'Archive Dashboard',
+                        title: 'Archive List Dashboard',
                         icon: 'fa fa-archive fa-lg',
                         selected: false,
                         expanded: false,
+                        order: 6
                     }
                 }
 

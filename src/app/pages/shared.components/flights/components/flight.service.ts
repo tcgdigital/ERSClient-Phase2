@@ -69,4 +69,10 @@ export class FlightService {
         return this._dataService.Get(id.toString())
             .Execute();
     }
+
+    GetFlightByInvolvedPartyId(involvedPartyId: number): Observable<ResponseModel<FlightModel>> {
+        return this._dataService.Query()
+        .Filter(`InvolvedPartyId eq ${involvedPartyId}`)
+        .Execute();
+    }
 }

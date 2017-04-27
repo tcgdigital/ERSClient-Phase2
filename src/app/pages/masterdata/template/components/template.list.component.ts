@@ -105,8 +105,7 @@ export class TemplateListComponent implements OnInit, OnDestroy {
                 PlaceHolder: 'Select Template Media',
                 Value: '',
                 ListData: GlobalConstants.TemplateMediaType
-                    .map(x => x.Records)
-                    .map(x => x.map(y => new NameValue<number>(y.value, y.key)))
+                    .map(x => new NameValue<number>(x.value, x.key))
             }),
             new SearchDropdown({
                 Name: 'DepartmentSpoc',
