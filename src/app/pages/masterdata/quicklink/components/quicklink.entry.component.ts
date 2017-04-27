@@ -12,7 +12,7 @@ import { ToastrService, ToastrConfig } from 'ngx-toastr';
 
 import { QuickLinkModel } from './quicklink.model';
 import { QuickLinkService } from './quicklink.service';
-import { ResponseModel, DataExchangeService } from '../../../../shared';
+import { ResponseModel, DataExchangeService,AuthModel, UtilityService } from '../../../../shared';
 
 @Component({
     selector: 'quicklink-entry',
@@ -28,6 +28,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
     quickLinks: QuickLinkModel[] = [];
     showAdd: Boolean = true;
     buttonValue: String = "";
+    credential: AuthModel;
 
     constructor(formBuilder: FormBuilder, private quickLinkService: QuickLinkService,
         private dataExchange: DataExchangeService<QuickLinkModel>, private toastrService: ToastrService,
@@ -37,6 +38,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.credential = UtilityService.getCredentialDetails();
         this.form = new FormGroup({
             QuickLinkId: new FormControl(0),
             QuickLinkName: new FormControl('', [Validators.required, Validators.minLength(5)]),
@@ -54,7 +56,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
     initiateQuickLinkModel(): void {
         this.quickLinkModel = new QuickLinkModel();
         this.quickLinkModel.ActiveFlag = 'Active';
-        this.quickLinkModel.CreatedBy = 1;
+        this.quickLinkModel.CreatedBy = +this.credential.UserId;
         this.quickLinkModel.CreatedOn = this.date;
     }
 

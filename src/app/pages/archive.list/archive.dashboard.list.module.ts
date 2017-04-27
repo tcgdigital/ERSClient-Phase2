@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { HttpModule } from '@angular/http';
 import { SharedModule } from '../../shared/shared.module';
 import { ArchiveListService } from "./archive.dashboard.list.service";
@@ -29,7 +30,8 @@ import { ModalModule, ModalDirective } from 'ng2-bootstrap';
     ],
     providers: [
         IncidentService,
-        ArchiveListService
+        ArchiveListService,
+        ToastrService
     ]
 })
 export class ArchiveDashboardListModule { }

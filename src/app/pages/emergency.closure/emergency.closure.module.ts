@@ -15,8 +15,11 @@ import { NotifyPeopleService } from '../notifypeople/components/notifypeople.ser
 import { UserPermissionService } from '../masterdata/userpermission/components/userpermission.service';
 import { TemplateService } from '../masterdata/template/components';
 import { ActionableService } from '../shared.components/actionables/components/actionable.service';
+import {  UserdepartmentNotificationMapperService } from "../shared.components/userdepartmentnotificationmapper";
+
 import { DemandService } from '../shared.components/demand/components/demand.service';
 import { DepartmentAccessOwnerService } from '../shared.components/departmentaccessowner';
+import { AppendedTemplateService } from '../masterdata/appendedtemplate/components';
 import { MdCheckboxModule } from '@angular2-material/checkbox';
 import { ModalModule} from 'ng2-bootstrap/modal';
 import { EmergencyClosureService } from './components/emergency.closure.service';
@@ -51,7 +54,9 @@ import { AuthenticationService } from '../login/components/authentication.servic
         DepartmentAccessOwnerService,
         EmergencyClosureService,
         AuthenticationService,
-        TemplateService
+        TemplateService,
+        AppendedTemplateService,
+        UserdepartmentNotificationMapperService
     ]
 })
 export class EmergencyClosureModule { }

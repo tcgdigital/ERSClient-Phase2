@@ -1,17 +1,23 @@
-<div>
-    <generic-search [filterConfigs] = "searchConfigs" 
-        (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();"></generic-search>
-    
-    <table>
-        <tr>
-            <td><strong><i>Media</i></strong></td>
-            <td><strong><i>Situation</i></strong></td>
-            <td><strong><i>Description</i></strong></td>
-        </tr>
-        <tr *ngFor="let template of templates">
-            <td>{{template.TemplateMediaId}}</td>
-            <td>{{template.EmergencySituation.EmergencySituationName}}</td>
-            <td>{{template.Description}}</td>
+<div class="card-block">
+<generic-search [filterConfigs]="searchConfigs" (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();"></generic-search>
+
+<responsive-table>
+    <table responsive-table-body>
+        <thead>
+            <tr>
+            <th>Media</th>
+            <th>Situation</th>
+            <th>Description</th>
+           </tr>
+        </thead>
+         <tr [hidden]="templates.length != 0">
+                <td colspan="6">No records found.</td>
             </tr>
+        <tr *ngFor="let template of templates">
+            <td data-title="Media">{{template.TemplateMediaId}}</td>
+            <td data-title="Situation">{{template.EmergencySituation.EmergencySituationName}}</td>
+            <td data-title="Description">{{template.Description}}</td>
+        </tr>
     </table>
+</responsive-table>
 </div>

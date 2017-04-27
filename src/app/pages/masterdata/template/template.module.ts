@@ -7,7 +7,8 @@ import { MdCheckboxModule } from '@angular2-material/checkbox';
 import { TemplateRouting } from './template.routing';
 import { TemplateComponent } from './template.component';
 import { TemplateListComponent, TemplateService } from './components';
-import { DataExchangeService } from '../../../shared';
+import { EmergencySituationService } from '../emergency.situation/components';
+import { DataExchangeService,SharedModule } from '../../../shared';
 
 @NgModule({
     imports: [
@@ -17,7 +18,8 @@ import { DataExchangeService } from '../../../shared';
         ReactiveFormsModule,
         FormsModule,
         TemplateRouting,
-        MdCheckboxModule
+        MdCheckboxModule,
+        SharedModule
     ],
     declarations: [
         TemplateListComponent,
@@ -25,7 +27,8 @@ import { DataExchangeService } from '../../../shared';
     ],
     providers: [
         TemplateService,
-        DataExchangeService
+        DataExchangeService,
+        EmergencySituationService
     ]
 })
 export class TemplateModule { }
