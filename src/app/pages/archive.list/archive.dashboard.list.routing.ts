@@ -1,12 +1,12 @@
 import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ArchiveDashboardComponent } from './archive.dashboard.component';
+import { ArchiveDashboardListComponent } from './archive.dashboard.list.component';
 import { AuthGuardService } from '../../shared/services';
 
 const archiveDashboardRoutes: Routes = [
     {
         path: '',
-        component: ArchiveDashboardComponent,
+        component: ArchiveDashboardListComponent,
         // canActivate: [AuthGuardService],
         canActivateChild: [AuthGuardService],
         children: [
@@ -24,7 +24,7 @@ const archiveDashboardRoutes: Routes = [
     },
     {
         path: 'archivelist',
-        component: ArchiveDashboardComponent,
+        component: ArchiveDashboardListComponent,
         // canActivate: [AuthGuardService]
     }
 ];

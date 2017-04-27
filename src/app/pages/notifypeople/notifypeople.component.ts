@@ -33,6 +33,7 @@ export class NotifyPeopleComponent implements OnInit {
     userProfileItems: UserProfileModel[] = [];
     departments: DepartmentModel[] = [];
     notificationModel: NotifyPeopleModel[] = [];
+    treeExpanded: boolean;
     private $document: JQuery;
     private $tree: JQuery;
     public allDepartmentUserPermission: NotifyPeopleModel[] = [];
@@ -50,13 +51,14 @@ export class NotifyPeopleComponent implements OnInit {
 
     ngOnInit(): any {
         //debugger;
+        this.treeExpanded = false;
         this.resetAdditionalForm();
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
         this.appendedTemplate = new AppendedTemplateModel();
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.PopulateNotifyDepartmentUsers(this.currentDepartmentId,this.currentIncidentId);
+        this.PopulateNotifyDepartmentUsers(this.currentDepartmentId, this.currentIncidentId);
     }
     private resetAdditionalForm(): void {
         this.form = new FormGroup({
@@ -66,22 +68,35 @@ export class NotifyPeopleComponent implements OnInit {
     private departmentChangeHandler(department: KeyValue): void {
         //debugger;
         this.currentDepartmentId = department.Value;
-        this.PopulateNotifyDepartmentUsers(this.currentDepartmentId,this.currentIncidentId);
+        this.PopulateNotifyDepartmentUsers(this.currentDepartmentId, this.currentIncidentId);
     }
 
     private incidentChangeHandler(incident: KeyValue): void {
-        //debugger;
         this.currentIncidentId = incident.Value;
-        //this.PopulateNotifyDepartmentUsers(this.currentDepartmentId);
+    }
+    public ExpandCollapseAll(): void {
+        if (this.tree != undefined) {
+            this.treeExpanded = !this.treeExpanded;
+            if (this.treeExpanded) {
+                this.tree.expandAll();
+            }
+            else {
+                this.tree.collapseAll();
+            }
+        }
     }
 
-    public PopulateNotifyDepartmentUsers(departmentId: number,incidentId:number): void {
-        this.notifyPeopleService.GetAllDepartmentMatrix(1,incidentId, (result: NotifyPeopleModel[]) => {
+
+    public PopulateNotifyDepartmentUsers(departmentId: number, incidentId: number): void {
+        this.notifyPeopleService.GetAllDepartmentMatrix(departmentId, incidentId, (result: NotifyPeopleModel[]) => {
             debugger;
             this.allDepartmentUserPermission = result;
             this.allDepartmentUserPermissionString = JSON.stringify(this.allDepartmentUserPermission);
             this.$tree = jQuery(this.elementRef.nativeElement).find('#tree');
             debugger;
+            if (this.tree != undefined) {
+                this.tree.destroy();
+            }
             this.tree = this.$tree.tree({
                 primaryKey: 'id',
                 uiLibrary: 'bootstrap',
@@ -125,11 +140,11 @@ export class NotifyPeopleComponent implements OnInit {
         this.notifyPeopleService.CreateAppendedTemplate(this.appendedTemplate,
             this.currentIncidentId, this.currentDepartmentId, (item: boolean) => {
                 if (item) {
-                    this.toastrService.info('The respective user has been notified.', 'Notify User', this.toastrConfig);
+                    this.toastrService.success('The respective user has been notified.', 'Notify User', this.toastrConfig);
                     console.log('Notify User Clicked');
                 }
-                else{
-                    this.toastrService.info('Some Error Occured.', 'Notify User', this.toastrConfig);
+                else {
+                    this.toastrService.error('Some Error Occured.', 'Notify User', this.toastrConfig);
                     console.log('Notify User Clicked error');
                 }
             });

@@ -31,7 +31,7 @@ export class IncidentModel extends BaseModel {
     public SavedBy?: number;
     public SavedOn?: Date;
     public DepartmentId: number;
-
+    public isReopen:boolean;
     public EmergencyType: EmergencyTypeModel;
     public Department: DepartmentModel;
 

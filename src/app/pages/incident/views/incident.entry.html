@@ -96,13 +96,13 @@
                                 <div class="form-group col-lg-2 col-sm-12 col-md-6">
                                     <label for="Scheduleddeparture(UTC)">Scheduled departure:<span class="red">*</span></label>
                                     <input id="Scheduleddeparture" class="form-control" type="text" name="Scheduleddeparture" formControlName="Scheduleddeparture"
-                                        placeholder="Scheduled Departure" datetime-picker (selectHandler)="dateTimeSet($event,'Scheduleddeparture');"
+                                        placeholder="Scheduled Departure" datetime-picker [options]="datepickerOption" (selectHandler)="dateTimeSet($event,'Scheduleddeparture');"
                                     />
                                 </div>
                                 <div class="form-group col-lg-2 col-sm-12 col-md-6">
                                     <label for="Scheduledarrival(UTC)">Scheduled arrival:<span class="red">*</span></label>
                                     <input id="Scheduledarrival" class="form-control" type="text" name="Scheduledarrival" formControlName="Scheduledarrival"
-                                        placeholder="Scheduled Arrival" datetime-picker (selectHandler)="dateTimeSet($event,'Scheduledarrival');"
+                                        placeholder="Scheduled Arrival" datetime-picker [options]="datepickerOption" (selectHandler)="dateTimeSet($event,'Scheduledarrival');"
                                     />
                                 </div>
                                 <div class="form-group col-lg-2 col-sm-12 col-md-6">
