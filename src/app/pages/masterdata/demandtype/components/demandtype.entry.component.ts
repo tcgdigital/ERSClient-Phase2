@@ -7,7 +7,7 @@ import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { DemandTypeService } from './demandtype.service';
 import { DepartmentModel, DepartmentService } from '../../department';
 import { DemandTypeModel } from './demandtype.model';
-import { ResponseModel, DataExchangeService } from '../../../../shared';
+import { ResponseModel, DataExchangeService ,AuthModel} from '../../../../shared';
 
 @Component({
     selector: 'demandtype-entry',
@@ -22,6 +22,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
     Action: string;
     showAdd: boolean;
     demandTypeModelToEdit: DemandTypeModel = new DemandTypeModel();
+    credential: AuthModel;
     // @Output() demandTypeSaveEvent: EventEmitter<DemandTypeModel> = new EventEmitter(true);
 
     constructor(private demandTypeService: DemandTypeService,

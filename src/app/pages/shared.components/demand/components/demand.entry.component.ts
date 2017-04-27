@@ -287,6 +287,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
 
     setModelForUpdate(id) {
+        debugger;
         this.demandService.GetByDemandId(id)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demandModel = response.Records[0];
@@ -454,6 +455,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(): void {
+        debugger;
         if (this.demandModel.DemandId == 0) {
             UtilityService.setModelFromFormGroup<DemandModel>(this.demandModel, this.form, x => x.DemandId, x => x.DemandTypeId, x => x.Priority,
                 x => x.DemandDesc, x => x.RequesterType, x => x.PDATicketNumber, x => x.TargetDepartmentId,
@@ -502,7 +504,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.demandService.Update(this.demandModelEdit)
                     .subscribe((response: DemandModel) => {
                         this.toastrService.success('Demand successfully updated.', 'Success', this.toastrConfig);
-                        this.dataExchange.Publish("DemandAddedUpdated", response.DemandId);
+                        this.dataExchange.Publish("DemandAddedUpdated",  this.demandModelEdit.DemandId);
                         let demandTrail = this.createDemandTrailModel(this.demandModel, this.demandModelEdit, false)[0];
                         demandTrail.DemandId = this.demandModel.DemandId;
                         this.demandTrailService.Create(demandTrail)
