@@ -10,7 +10,7 @@ import {
 
 @Injectable()
 export class ArchiveListService extends ServiceBase<IncidentModel> implements IArchiveListService {
-
+    private _bulkDataService: DataService<IncidentModel>;
     constructor(private dataServiceFactory: DataServiceFactory) {
         super(dataServiceFactory, 'Incidents');
 
@@ -18,9 +18,18 @@ export class ArchiveListService extends ServiceBase<IncidentModel> implements IA
 
     public GetAllClosedIncidents(): Observable<ResponseModel<IncidentModel>> {
         return this._dataService.Query()
-        .Expand('EmergencyType')
-        .Filter(`ClosedOn ne null`)
-        .Execute();
+            .Expand('EmergencyType')
+            .Filter(`ClosedOn ne null`)
+            .Execute();
     }
+
+    public CreateBulkInsertClosedIncident(entities: IncidentModel[]): Observable<IncidentModel[]> {
+        let option: DataProcessingService = new DataProcessingService();
+        this._bulkDataService = this.dataServiceFactory
+            .CreateServiceWithOptionsAndActionSuffix<IncidentModel>
+            ('IncidentBatch', `ReopenEmergencyStandDownBatch`, option);
+        return this._bulkDataService.BulkPost(entities).Execute();
+    }
+
 
 }
