@@ -287,7 +287,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
 
     setModelForUpdate(id) {
-        debugger;
         this.demandService.GetByDemandId(id)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demandModel = response.Records[0];
@@ -455,7 +454,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(): void {
-        debugger;
         if (this.demandModel.DemandId == 0) {
             UtilityService.setModelFromFormGroup<DemandModel>(this.demandModel, this.form, x => x.DemandId, x => x.DemandTypeId, x => x.Priority,
                 x => x.DemandDesc, x => x.RequesterType, x => x.PDATicketNumber, x => x.TargetDepartmentId,
