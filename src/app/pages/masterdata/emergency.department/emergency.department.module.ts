@@ -6,6 +6,7 @@ import { MdCheckboxModule } from '@angular2-material/checkbox';
 
 import { EmergencyDepartmentypeRouting } from './emergency.department.routing';
 import { EmergencyDepartmentComponent } from './emergency.department.component';
+
 import { EmergencyTypeDepartmentService } from './components';
 import { EmergencyTypeService } from '../emergencytype';
 import { DepartmentService } from '../department';
@@ -30,6 +31,7 @@ import { ModalModule} from 'ng2-bootstrap/modal';
         DepartmentService,
         DataExchangeService,
         EmergencyTypeDepartmentService
+        
     ]
 })
 export class EmergencyDepartmentModule { }
