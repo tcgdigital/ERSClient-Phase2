@@ -10,7 +10,7 @@ import {
 } from './components/department.functionality.model';
 import {
     DataExchangeService, ResponseModel,
-    AutocompleteComponent, KeyValue
+    AutocompleteComponent, KeyValue, AuthModel, UtilityService
 } from '../../../shared';
 
 
@@ -18,7 +18,7 @@ import {
     selector: 'department-functionality',
     encapsulation: ViewEncapsulation.None,
     templateUrl: './views/department.functionality.view.html',
-    styleUrls:['./styles/department.functionality.style.scss']
+    styleUrls: ['./styles/department.functionality.style.scss']
 })
 export class DepartmentFunctionalityComponent implements OnInit {
     departments: DepartmentModel[] = [];
@@ -28,12 +28,13 @@ export class DepartmentFunctionalityComponent implements OnInit {
     pagesForDepartment: PagesForDepartmentModel[] = [];
     items: Array<KeyValue> = [];
     date: Date = new Date();
-    pagePermissionModelToSave : PagePermissionModel[]=[];
+    pagePermissionModelToSave: PagePermissionModel[] = [];
+    credential: AuthModel;
 
     constructor(private pageService: PageService,
         private pagePermissionService: PagePermissionService,
         private departmentService: DepartmentService, private toastrService: ToastrService,
-		private toastrConfig: ToastrConfig) { };
+        private toastrConfig: ToastrConfig) { };
 
     getDepartments(): void {
         this.departmentService.GetAll()
@@ -54,24 +55,25 @@ export class DepartmentFunctionalityComponent implements OnInit {
     }
 
     canViewd(item: PagesForDepartmentModel) {
-        return (item.AllowView == true || item.OnlyForHod== true);
+        return (item.AllowView == true || item.OnlyForHod == true);
     };
 
-      save(): void {
+    save(): void {
         let model = this.pagesForDepartment.filter(this.canViewd);
         let selectedDepartment = this.selectedDepartment;
-        let dateNow= this.date;
-        this.pagePermissionModelToSave = model.map(function ( data) {
+        let dateNow = this.date;
+        let userId = +this.credential.UserId;
+        this.pagePermissionModelToSave = model.map(function (data) {
             {
                 let item = new PagePermissionModel();
                 item.PermissionId = 0;
                 item.DepartmentId = selectedDepartment;
                 //item.EmergencyTypeId=this.selectedEmergencyType;
                 item.PageId = data.PageId;
-                item.CanView= data.AllowView;
-                item.OnlyHOD= data.OnlyForHod;
-                 item.ActiveFlag = 'Active';
-                item.CreatedBy = 1;
+                item.CanView = data.AllowView;
+                item.OnlyHOD = data.OnlyForHod;
+                item.ActiveFlag = 'Active';
+                item.CreatedBy = userId;
                 item.CreatedOn = dateNow;
                 return item;
             }
@@ -107,6 +109,7 @@ export class DepartmentFunctionalityComponent implements OnInit {
 
     ngOnInit(): any {
         this.getDepartments();
+        this.credential = UtilityService.getCredentialDetails();
         this.pageService.GetAll()
             .subscribe((response: ResponseModel<PageModel>) => {
                 this.pages = response.Records;
