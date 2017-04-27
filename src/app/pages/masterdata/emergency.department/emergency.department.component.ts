@@ -71,6 +71,7 @@ export class EmergencyDepartmentComponent {
         let model = this.departmentsForEmergency.filter(this.istrue);
         let selectedEmergencyType = this.selectedEmergencyType;
         let datenow=this.date;
+        let userId = +this.credential.UserId;
         this.emergencyDepartmentModelToSave = model.map(function (data) {
             {
                 let item = new EmergencyDepartmentModel();
@@ -78,7 +79,7 @@ export class EmergencyDepartmentComponent {
                 item.EmergencyTypeId = selectedEmergencyType;
                 item.DepartmentId = data.DepartmentId;
                 item.ActiveFlag = 'Active';
-                item.CreatedBy = 1;
+                item.CreatedBy = userId;
                 item.CreatedOn = datenow;
                 return item;
             }
@@ -93,6 +94,7 @@ export class EmergencyDepartmentComponent {
 
     ngOnInit(): any {
         this.getEmergencyTypes();
+        this.credential = UtilityService.getCredentialDetails();
         this.departmentService.GetAll()
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
