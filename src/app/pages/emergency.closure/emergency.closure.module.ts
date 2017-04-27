@@ -13,6 +13,7 @@ import { DepartmentService } from '../masterdata/department/components/departmen
 import { EmergencyTypeDepartmentService } from '../masterdata/emergency.department/components/emergency.department.service';
 import { NotifyPeopleService } from '../notifypeople/components/notifypeople.service';
 import { UserPermissionService } from '../masterdata/userpermission/components/userpermission.service';
+import { TemplateService } from '../masterdata/template/components';
 import { ActionableService } from '../shared.components/actionables/components/actionable.service';
 import { DemandService } from '../shared.components/demand/components/demand.service';
 import { DepartmentAccessOwnerService } from '../shared.components/departmentaccessowner';
@@ -49,7 +50,8 @@ import { AuthenticationService } from '../login/components/authentication.servic
         DemandService,
         DepartmentAccessOwnerService,
         EmergencyClosureService,
-        AuthenticationService
+        AuthenticationService,
+        TemplateService
     ]
 })
 export class EmergencyClosureModule { }
