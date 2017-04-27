@@ -14,7 +14,7 @@ import { PresidentMessageService } from './presidentMessage.service';
 import { PresidentMessageModel } from './presidentMessage.model';
 import {
     ResponseModel, DataExchangeService, KeyValue,
-    GlobalConstants, UtilityService, GlobalStateService
+    GlobalConstants, UtilityService, GlobalStateService, AuthModel
 } from '../../../../shared';
 
 @Component({
@@ -34,6 +34,7 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
     currentIncidentId: number;
     currentDepartmentId: number;
     showAdd: boolean;
+    credential: AuthModel;
 
     /**
      * Creates an instance of PresidentMessageEntryComponent.
@@ -58,6 +59,7 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
         this.InitiateForm();
         this.currentIncidentId = +this.incidentId;
         this.currentDepartmentId = +this.initiatedDepartmentId;
+        this.credential = UtilityService.getCredentialDetails();
         this.dataExchange.Subscribe("OnPresidentMessageUpdate", model => this.onPresidentMessageUpdate(model));
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
@@ -108,6 +110,7 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
             (this.PresidentsMessage, this.form, x => x.Message, x => x.Remarks);
 
         if (this.PresidentsMessage.PresidentsMessageId == 0) {
+            this.PresidentsMessage.CreatedBy = +this.credential.UserId;
             this.PresidentsMessage.IncidentId = this.currentIncidentId;
             this.PresidentsMessage.InitiateDepartmentId = this.currentDepartmentId;
 

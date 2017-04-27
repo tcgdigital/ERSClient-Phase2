@@ -33,6 +33,7 @@ import { ArchiveListService } from "./archive.dashboard.list.service";
 
 export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     @ViewChild('childModalViewClosedIncident') public childModalViewClosedIncident: ModalDirective;
+
     public closedCrisises: IncidentModel[];
     activeEmergencyTypes: EmergencyTypeModel[] = [];
     affectedStations: EmergencyLocationModel[] = [];
@@ -60,7 +61,6 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
         this.closedCrisises = [];
         this.affectedStations = [];
         this.severities = UtilityService.GetKeyValues(Severity);
-
     }
 
     public ngOnInit(): void {
@@ -72,6 +72,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
         this.isOffSetPopup = false;
         this.resetIncidentViewForm();
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+
         this.emergencyLocationService.GetAllActiveEmergencyLocations()
             .subscribe((result: ResponseModel<EmergencyLocationModel>) => {
                 result.Records.forEach((item: EmergencyLocationModel) => {
@@ -80,12 +81,13 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
                     emergencyLocationModel.AirportName = item.AirportName;
                     this.affectedStations.push(emergencyLocationModel);
                 });
-
             });
+        
         this.archiveListService.GetAllClosedIncidents()
             .subscribe((closedIncident: ResponseModel<IncidentModel>) => {
                 closedIncident.Records.forEach((itemIncident: IncidentModel) => {
-                    if (itemIncident.ReOpenBy != null && itemIncident.ReOpenOn != null && itemIncident.ReClosedBy == null && itemIncident.ReClosedOn == null) {
+                    if (itemIncident.ReOpenBy != null && itemIncident.ReOpenOn != null 
+                        && itemIncident.ReClosedBy == null && itemIncident.ReClosedOn == null) {
                         itemIncident.isReopen = true;
                     }
                     else {
@@ -93,9 +95,9 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
                     }
                     this.closedCrisises.push(itemIncident);
                 });
-
             });
     }
+
 
     public IsReopenCheckedChange(event: any, closedCrisis: IncidentModel): void {
         closedCrisis.isReopen = event.currentTarget.checked;
@@ -104,6 +106,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     private incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
     }
+
 
     public resetIncidentViewForm(): void {
         this.formPopup = new FormGroup({
@@ -159,8 +162,8 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
             DescriptionPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Description),
             EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD-MM-YYYY h:mm a')),
             SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity)
-
         });
+        
         this.isFlightRelatedPopup = false;
         if (this.incidentDataExchangeModel.FLightModel != null) {
             this.formPopup = new FormGroup({
@@ -183,14 +186,13 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
             });
             this.isFlightRelatedPopup = true;
         }
-
         this.childModalViewClosedIncident.show();
     }
 
     public hideClosedIncidentView(): void {
         this.childModalViewClosedIncident.hide();
     }
-
+    
     public ngOnDestroy(): void { }
 
     public viewClosedCrisis(incidentId: number): void {
@@ -220,8 +222,6 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
         let objectLiteralAll: string = JSON.stringify(closedCrisisList);
         let deepCopyIncidentAll: IncidentModel[] = JSON.parse(objectLiteralAll);
         // Make them as isReopen false.
-
-
         let totalReopendCrisisAll: IncidentModel[] = deepCopyIncidentAll.map((item: IncidentModel) => {
             item.ReOpenBy = null;
             item.ReOpenOn = null;
@@ -259,9 +259,5 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
             }, (error) => {
                 this.toastrService.error('Some Error Occured.', 'Archieve Crisis', this.toastrConfig);
             });
-
-
-
-
     }
 }
