@@ -109,7 +109,7 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
                 this.departmentClosureModel.ActiveFlag = 'Active';
                 this.FillFormControls(this.departmentClosureModel);
             })
-            .flatMap(_ => this.departmentClosureService.GetAllByIncident(incidentId, this.currentDepartmentId))
+            .flatMap(_ => this.departmentClosureService.GetAllByIncidentDepartment(incidentId, this.currentDepartmentId))
             .subscribe((resultDepartmentClosureModel: ResponseModel<DepartmentClosureModel>) => {
                 if (resultDepartmentClosureModel.Count > 0) {
                     if(resultDepartmentClosureModel.Records[0].IsSubmitted){
@@ -124,7 +124,7 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
     }
 
     public onSave(): void {
-        this.departmentClosureService.GetAllByIncident(this.currentIncidentId, this.currentDepartmentId)
+        this.departmentClosureService.GetAllByIncidentDepartment(this.currentIncidentId, this.currentDepartmentId)
             .subscribe((result: ResponseModel<DepartmentClosureModel>) => {
                 if (result.Count == 0) {
                     this.departmentClosureModelSave = new DepartmentClosureModel();
@@ -177,7 +177,7 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
                 return false;
             }
             else {
-                this.departmentClosureService.GetAllByIncident(this.currentIncidentId, this.currentDepartmentId)
+                this.departmentClosureService.GetAllByIncidentDepartment(this.currentIncidentId, this.currentDepartmentId)
                     .subscribe((result: ResponseModel<DepartmentClosureModel>) => {
                         if (result.Count == 0) {
                             this.departmentClosureModelSubmit = new DepartmentClosureModel();
