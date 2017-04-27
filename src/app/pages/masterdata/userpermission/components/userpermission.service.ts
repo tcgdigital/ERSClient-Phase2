@@ -132,6 +132,14 @@ export class UserPermissionService
             .Expand('Department($select=DepartmentId,DepartmentName),User($select=Email,UserProfileId,UserId)')
             .Filter(`${allChildDepartmentIdsProjection}`)
             .OrderBy("CreatedOn desc")
-            .Execute()
+            .Execute();
+    }
+
+
+    public GetAllActiveHODUsersOfAllDepartments() : Observable<ResponseModel<UserPermissionModel>>{
+            return this._dataService.Query()
+            .Expand('User')
+            .Filter(`IsHod eq true and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
+            .Execute();
     }
 }

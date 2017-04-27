@@ -3,6 +3,8 @@ import { Observable } from 'rxjs/Rx';
 
 import { BaseModel, WEB_METHOD } from '../../../models';
 import { DataProcessingService, DataOperation } from '../index';
+import { GlobalConstants } from '../../../constants';
+
 
 /**
  * Data operation specific for GET request
@@ -19,6 +21,11 @@ export class GetOperation<T extends BaseModel> extends DataOperation<BaseModel> 
         private key: string,
         private actionSuffix?: string) {
         super(dataProcessingService, httpService, typeName, key);
+        if (actionSuffix) {
+            this.ActionSuffix = actionSuffix;
+            this.dataProcessingService.EndPoint = GlobalConstants.API;
+        }
+
     }
 
     /**

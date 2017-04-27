@@ -3,6 +3,8 @@ import {
     Output, EventEmitter, OnInit
 } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
 
 import { EmergencyTypeService } from './emergencytype.service';
 import { EmergencyTypeModel } from './emergencytype.model';
@@ -23,7 +25,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
     date: Date = new Date();
     emergencyTypes: EmergencyTypeModel[] = [];
     Action: string;
-    showAdd : boolean;
+    showAdd: boolean;
 
     emergencyCategory: Object = GlobalConstants.EmergencyCategories;
 
@@ -41,6 +43,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
         this.initiateForm();
         this.showAdd = false;
         this.emergencyTypeModel = new EmergencyTypeModel();
+
         this.emergencyTypeModel.EmergencyCategory = "FlightRelated";
         this.dataExchange.Subscribe("OnEmergencyTypeUpdate", model => this.onEmergencyTypeUpdate(model))
     }
@@ -83,6 +86,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
     }
 
     private initiateForm(): void {
+        this.emergencyTypeModel.EmergencyTypeId = 0;
         this.form = new FormGroup({
             EmergencyTypeId: new FormControl(0),
             EmergencyTypeName: new FormControl('', [Validators.required, Validators.maxLength(50)]),
@@ -90,7 +94,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
             ActiveFlag: new FormControl("Active")
         });
     }
-     showAddRegion(ShowAdd: Boolean): void {
+    showAddRegion(ShowAdd: Boolean): void {
         this.showAdd = true;
-     }
+    }
 }

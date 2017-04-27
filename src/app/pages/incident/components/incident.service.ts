@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import {  } from "../../masterdata/emergencylocation";
+import { } from "../../masterdata/emergencylocation";
 import { IncidentModel } from './incident.model';
 import { IIncidentService } from './IIncidentService';
 import {
@@ -23,8 +23,9 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
         private emergencyTypeService: EmergencyTypeService) {
         super(dataServiceFactory, 'Incidents');
         let option = new DataProcessingService();
-        this._involvePartyDataService= dataServiceFactory
+        this._involvePartyDataService = dataServiceFactory
             .CreateServiceWithOptions<InvolvePartyModel>('InvolvedParties', option);
+
     }
 
     GetAll(): Observable<ResponseModel<IncidentModel>> {
@@ -94,4 +95,6 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
                 return involvedParty;
             });
     }
+
+    
 }

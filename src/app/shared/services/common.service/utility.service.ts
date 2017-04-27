@@ -1,6 +1,8 @@
 import { URLSearchParams } from '@angular/http';
 import { FormGroup } from '@angular/forms'
 import { KeyValue, BaseModel } from '../../models';
+import * as jwtDecode from 'jwt-decode';
+import { GlobalConstants } from '../../constants';
 
 export class UtilityService {
     private static STRIP_COMMENTS: RegExp = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
@@ -20,6 +22,11 @@ export class UtilityService {
     }
     public static pluck<T, K extends keyof T>(o: T, names: K[]): T[K][] {
         return names.map(n => o[n]);
+    }
+   
+    public static getCredentialDetails() : any  {
+        let access_token = this.GetFromSession(GlobalConstants.ACCESS_TOKEN)
+                return  jwtDecode(access_token);
     }
 
     /**

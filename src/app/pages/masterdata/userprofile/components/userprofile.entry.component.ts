@@ -1,6 +1,8 @@
 import { Component, ViewEncapsulation, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormControl, FormBuilder, AbstractControl, Validators } from '@angular/forms';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
 import { UserProfileService } from './userprofile.service';
 import { UserProfileModel } from './userprofile.model';
 
