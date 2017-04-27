@@ -51,7 +51,9 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
 
     constructor(formBuilder: FormBuilder,
         private fileUploadService: FileUploadService,
-        private dataExchange: DataExchangeService<boolean>,
+        private dataExchange: DataExchangeService<boolean>, 
+        private toastrService: ToastrService,
+		private toastrConfig: ToastrConfig,
         private globalState: GlobalStateService) {
         this.filesToUpload = [];
     }
@@ -71,6 +73,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
         let param = "IncidentId=" + this.IncidentId + "&CreatedBy=" + this.CreatedBy;
         this.fileUploadService.uploadFiles<string>(baseUrl + "./api/MasterDataUploadBatch?" + param, this.filesToUpload)
             .subscribe((result: any) => {
+<<<<<<< HEAD
                 console.log("success");
                 alert("Uploaded Data is processed successfully." + '\n' + "To check any invalid records, please refer \"View Invalid Records\" link for the current timestamp.");
             }, (error) => {
@@ -79,6 +82,16 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
     }
 
     getFileDetails(e: any, type: string): void {
+=======
+                    console.log("success");     
+                     this.toastrService.success("Uploaded Data is processed successfully." + '\n' + "To check any invalid records, please refer \"View Invalid Records\" link for the current timestamp.", 'Success', this.toastrConfig);               
+                },(error) => {
+                    console.log(`Error: ${error}`);
+                });
+    }        
+
+    getFileDetails(e: any, type: string): void{
+>>>>>>> master
         this.filesToUpload = [];
 
         for (var i = 0; i < e.target.files.length; i++) {

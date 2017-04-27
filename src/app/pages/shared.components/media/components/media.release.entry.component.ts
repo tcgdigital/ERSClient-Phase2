@@ -6,12 +6,14 @@ import {
     ReactiveFormsModule, FormGroup, FormControl,
     FormBuilder, AbstractControl, Validators
 } from '@angular/forms';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
 
 import { MediaService } from './media.service';
 import { MediaModel } from './media.model';
 import {
     ResponseModel, UtilityService, KeyValue,
-    DataExchangeService, GlobalConstants, GlobalStateService
+    DataExchangeService, GlobalConstants, GlobalStateService, AuthModel
 } from '../../../../shared';
 
 
@@ -31,6 +33,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     currentIncidentId: number;
     currentDepartmentId: number;
     showAdd: boolean;
+    credential: AuthModel;
 
     /**
      * Creates an instance of MediaQueryEntryComponent.
@@ -43,7 +46,9 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     constructor(private mediaQueryService: MediaService,
         private dataExchange: DataExchangeService<MediaModel>,
         private globalState: GlobalStateService,
-        private builder: FormBuilder) {
+        private builder: FormBuilder,
+        private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig) {
         this.showAdd = false;
     }
 
@@ -51,7 +56,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
         this.currentIncidentId = +this.currentIncidentId;
         this.currentDepartmentId = +this.initiatedDepartmentId;
         this.formInit();
-
+        this.credential = UtilityService.getCredentialDetails();
         this.dataExchange.Subscribe("OnMediaReleaseUpdate", model => this.onMediaReleaseUpdate(model));
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
@@ -104,8 +109,10 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
         this.media.InitiateDepartmentId = this.currentDepartmentId;
 
         if (this.media.MediaqueryId == 0) {
+            this.media.CreatedBy = +this.credential.UserId;
             this.mediaQueryService.Create(this.media)
                 .subscribe((response: MediaModel) => {
+                    this.toastrService.success('Media release Saved successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("MediaModelSaved", response);
                     this.showAdd = false;
                 }, (error: any) => {
@@ -115,6 +122,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
         else {
             this.mediaQueryService.Update(this.media)
                 .subscribe((response: MediaModel) => {
+                    this.toastrService.success('Media release edited successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("MediaModelUpdated", response);
                     this.showAdd = false;
                 }, (error: any) => {

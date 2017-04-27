@@ -28,7 +28,8 @@ export class DepartmentEntryComponent implements OnInit {
     showAdd: boolean;
     departmentModel: DepartmentModel;
     constructor(private departmentService: DepartmentService, private userService: UserProfileService,
-        private dataExchange: DataExchangeService<DepartmentModel>) { }
+        private dataExchange: DataExchangeService<DepartmentModel>, private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig) { }
 
 
     mergeResponses(): void {
@@ -46,7 +47,7 @@ export class DepartmentEntryComponent implements OnInit {
                         x["caption"] = x.Name + " (" + x.MainContact + ")";
                     });
                 } else if (response.Records.length > 0 && Object.keys(response.Records[0]).some(x => x === 'DepartmentId')) {
-                    this.parentDepartments  = <DepartmentModel[]>response.Records;                            
+                    this.parentDepartments = <DepartmentModel[]>response.Records;
                 }
             },
             (error) => { console.log(error); },
@@ -85,10 +86,11 @@ export class DepartmentEntryComponent implements OnInit {
         if (values.DepartmentId == 0) {//ADD REGION
 
             UtilityService.setModelFromFormGroup<DepartmentModel>(this.departmentModel, this.form,
-             x => x.DepartmentId, x => x.DepartmentName, x => x.Description, x => x.ContactNo, x => x.DepartmentSpoc ,x => x.ParentDepartmentId);
-           this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString();
+                x => x.DepartmentId, x => x.DepartmentName, x => x.Description, x => x.ContactNo, x => x.DepartmentSpoc, x => x.ParentDepartmentId);
+            this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString();
             this.departmentService.Create(this.departmentModel)
                 .subscribe((response: DepartmentModel) => {
+                    this.toastrService.success('Department Saved Successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("departmentSavedOrEdited", response);
                     this.setDepartmentForm();
                     this.showAdd = false;
@@ -100,11 +102,12 @@ export class DepartmentEntryComponent implements OnInit {
             if (this.form.dirty) {
                 this.departmentModel = new DepartmentModel();
                 this.departmentModel.DepartmentId = values.DepartmentId;
-                  UtilityService.formDirtyCheck<DepartmentModel>(this.departmentModel, this.form,
-                   x => x.DepartmentName, x => x.Description, x => x.ContactNo, x => x.DepartmentSpoc ,x => x.ParentDepartmentId);
-                  this.departmentModel.deleteAttributes();
+                UtilityService.formDirtyCheck<DepartmentModel>(this.departmentModel, this.form,
+                    x => x.DepartmentName, x => x.Description, x => x.ContactNo, x => x.DepartmentSpoc, x => x.ParentDepartmentId);
+                this.departmentModel.deleteAttributes();
                 this.departmentService.Update(this.departmentModel)
                     .subscribe((response: DepartmentModel) => {
+                         this.toastrService.success('Department Edited Successfully.', 'Success', this.toastrConfig);
                         this.setDepartmentForm();
                         this.dataExchange.Publish("departmentSavedOrEdited", response);
                         this.showAdd = false;
@@ -122,7 +125,12 @@ export class DepartmentEntryComponent implements OnInit {
         this.form = this.setDepartmentForm();
     }
 
+<<<<<<< HEAD
     cancel() : void {
         this.showAdd = false;   
+=======
+    cancel(): void {
+        this.showAdd = false;
+>>>>>>> master
     }
 }

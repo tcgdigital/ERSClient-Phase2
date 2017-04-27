@@ -3,6 +3,8 @@ import {
     OnInit, AfterContentInit, ViewChild
 } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
 
 import { InvolvePartyModel } from '../../involveparties';
 import { DemandModel, DemandModelToView, DemandRemarkLogModel } from './demand.model';
@@ -13,7 +15,7 @@ import { DemandRemarkLogService } from './demand.remarklogs.service';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
 import {
     ResponseModel, DataExchangeService, KeyValue,
-    GlobalConstants, GlobalStateService, UtilityService
+    GlobalConstants, GlobalStateService, UtilityService,AuthModel
 } from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 
@@ -37,6 +39,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     demandTrails: DemandTrailModel[];
     departments: DepartmentModel[];
     demandForRemarks: DemandModelToView;
+    credential: AuthModel;
 
     /**
      * Creates an instance of AssignedDemandComponent.
@@ -50,8 +53,10 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     constructor(private demandService: DemandService,
         private departmentService: DepartmentService,
         private demandRemarkLogsService: DemandRemarkLogService,
-        private globalState: GlobalStateService) {
-        this.createdByName = "Anwesha Ray";
+        private globalState: GlobalStateService,
+        private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig) {
+     //   this.createdByName = "Anwesha Ray";
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
     }
@@ -201,7 +206,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.RemarkToCreate.CreatedByName = this.createdByName;
         this.demandRemarkLogsService.Create(this.RemarkToCreate)
             .subscribe((response: DemandRemarkLogModel) => {
-                alert("Remark saved successfully");
+                this.toastrService.success('Remark saved successfully.', 'Success', this.toastrConfig);
                 this.getDemandRemarks(demand.DemandId);
                 this.Remarks = "";
             }, (error: any) => {
@@ -238,6 +243,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
             else {
                 this.demandService.UpdateBulkForCompletion(demandCompletion)
                     .subscribe((response: DemandModel[]) => {
+                        this.toastrService.success('Demand status updated successfully.', 'Success', this.toastrConfig);
                         this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
@@ -249,6 +255,8 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     ngOnInit(): any {
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.credential = UtilityService.getCredentialDetails();
+        this.createdByName = this.credential.UserName;
 
         this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
         this.getAllDepartments();
@@ -265,7 +273,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     private departmentChangeHandler(department: KeyValue): void {
         this.currentDepartmentId = department.Value;
         this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
-        this.getCurrentDepartmentName(this.currentDepartmentId);
+        this.currentDepartmentName = department.Key;
     };
 
     ngOnDestroy(): void {

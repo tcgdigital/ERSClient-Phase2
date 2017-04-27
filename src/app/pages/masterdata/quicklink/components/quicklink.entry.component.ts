@@ -30,7 +30,8 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
     buttonValue: String = "";
 
     constructor(formBuilder: FormBuilder, private quickLinkService: QuickLinkService,
-        private dataExchange: DataExchangeService<QuickLinkModel>) {
+        private dataExchange: DataExchangeService<QuickLinkModel>, private toastrService: ToastrService,
+		private toastrConfig: ToastrConfig) {
         this.showAdd = false;
         this.buttonValue = "Add QuickLink";
     }
@@ -63,6 +64,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
             this.quickLinkModel.QuickLinkURL = this.form.controls['QuickLinkURL'].value;
             this.quickLinkService.Create(this.quickLinkModel)
                 .subscribe((response: QuickLinkModel) => {
+                    this.toastrService.success('Quick link saved Successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("quickLinkModelSaved", response);
                      this.showAdd = false;
                     this.initiateQuickLinkModel();
@@ -75,6 +77,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
                 this.formControlDirtyCheck();
                 this.quickLinkService.Update(this.quickLinkModelEdit)
                     .subscribe((response: QuickLinkModel) => {
+                        this.toastrService.success('Quick link edited Successfully.', 'Success', this.toastrConfig);
                         this.initiateQuickLinkModel();
                         this.form = new FormGroup({
                             QuickLinkId: new FormControl(this.quickLinkModel.QuickLinkId),

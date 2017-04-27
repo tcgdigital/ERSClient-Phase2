@@ -25,7 +25,8 @@ export class EmergencyDepartmentComponent {
     private items: Array<KeyValue> = [];
 
     constructor(private emergencyDepartmentService: EmergencyTypeDepartmentService, private emergencyTypeService: EmergencyTypeService,
-        private departmentService: DepartmentService) { };
+        private departmentService: DepartmentService, private toastrService: ToastrService,
+		private toastrConfig: ToastrConfig) { };
 
     getEmergencyTypes(): void {
         this.emergencyTypeService.GetAll()
@@ -83,6 +84,7 @@ export class EmergencyDepartmentComponent {
         });
         this.emergencyDepartmentService.CreateBulk(this.emergencyDepartmentModelToSave)
             .subscribe((response: EmergencyDepartmentModel[]) => {
+                this.toastrService.success('Emergency wise department saved Successfully.', 'Success', this.toastrConfig);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
