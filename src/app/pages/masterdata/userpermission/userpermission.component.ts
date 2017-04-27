@@ -26,7 +26,8 @@ export class UserPermissionComponent {
 
     constructor(private userPermissionService: UserPermissionService,
         private userProfileService: UserProfileService,
-        private departmentService: DepartmentService) { };
+        private departmentService: DepartmentService, private toastrService: ToastrService,
+		private toastrConfig: ToastrConfig) { };
 
     getUserProfiles(): void {
         this.userProfileService.GetAll()
@@ -102,6 +103,7 @@ export class UserPermissionComponent {
         });
         this.userPermissionService.CreateBulk(this.userPermissionModelToSave)
             .subscribe((response: UserPermissionModel[]) => {
+                this.toastrService.success('User permissions saved Successfully.', 'Success', this.toastrConfig);
                 console.log("Success");
             }, (error: any) => {
                 console.log(`Error: ${error}`);

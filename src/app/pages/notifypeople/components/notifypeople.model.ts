@@ -33,7 +33,7 @@ export class NotificationContactsWithTemplateModel extends BaseModel {
     public DepartmentId: number;
     public CreatedBy: number;
     public UserName: string;
-    public SituationId: number;
+    public SituationId: string;
     public AttachmentSingle: string;
     public ContactNumber: string;
     public AlternetContactNumber: string;
@@ -50,7 +50,7 @@ export class NotificationContactsWithTemplateModel extends BaseModel {
         this.DepartmentId = 0;
         this.CreatedBy = 0;
         this.UserName = '';
-        this.SituationId = 0;
+        this.SituationId = '';
         this.IncidentId = 0;
         this.AttachmentSingle = '';
         this.ContactNumber = '';

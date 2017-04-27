@@ -1,4 +1,8 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
+
+
 
 import { InvolvePartyModel } from '../../../shared.components';
 import { AffectedObjectModel, AffectedObjectsToView } from './affected.objects.model';
@@ -15,7 +19,8 @@ import {
     templateUrl: '../views/affected.objects.verification.html'
 })
 export class AffectedObjectsVerificationComponent implements OnInit {
-    constructor(private affectedObjectsService: AffectedObjectsService, private globalState: GlobalStateService) { }
+    constructor(private affectedObjectsService: AffectedObjectsService, private globalState: GlobalStateService,
+        private toastrService: ToastrService, private toastrConfig: ToastrConfig) { }
     affectedObjectsForVerification: AffectedObjectsToView[] = [];
     verifiedAffectedObjects: AffectedObjectModel[];
     date: Date = new Date();
@@ -36,7 +41,7 @@ export class AffectedObjectsVerificationComponent implements OnInit {
         this.verifiedAffectedObjects = this.affectedObjectsService.MapAffectedPeopleToSave(this.affectedObjectsForVerification);
         this.affectedObjectsService.CreateBulkObjects(this.verifiedAffectedObjects)
             .subscribe((response: AffectedObjectModel[]) => {
-                alert("Selected Objects are verified");
+                this.toastrService.success('Selected Objects are verified.', 'Success', this.toastrConfig);
                 this.getAffectedObjects(this.currentIncident);
             }, (error: any) => {
                 console.log(`Error: ${error}`);

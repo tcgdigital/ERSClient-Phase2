@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation, OnInit, ElementRef, ViewChild } from '@angular/core';
 
+
 import { DepartmentModel } from '../masterdata/department/components/department.model';
 import { UserProfileModel } from '../masterdata/userprofile/components/userprofile.model';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
@@ -48,6 +49,7 @@ export class NotifyPeopleComponent implements OnInit {
         private notifyPeopleService: NotifyPeopleService,
         private elementRef: ElementRef,
         private globalState: GlobalStateService) { };
+
 
     ngOnInit(): any {
         //debugger;

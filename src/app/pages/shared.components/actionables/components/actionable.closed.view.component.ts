@@ -7,11 +7,14 @@ import {
     AbstractControl, Validators, ReactiveFormsModule
 } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
+
 import { ActionableModel } from './actionable.model';
 import { ActionableService } from './actionable.service';
 import {
     ResponseModel, DataExchangeService, KeyValue,
-    UtilityService, GlobalConstants, GlobalStateService
+    UtilityService, GlobalConstants, GlobalStateService,AuthModel
 } from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 
@@ -30,15 +33,19 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     private currentDepartmentId: number = null;
     private currentIncident: number = null;
     actionableModelToUpdate: ActionableModel;
+    credential: AuthModel;
 
     constructor(formBuilder: FormBuilder, private actionableService: ActionableService,
-        private dataExchange: DataExchangeService<boolean>, private globalState: GlobalStateService) {
+        private dataExchange: DataExchangeService<boolean>, private globalState: GlobalStateService,
+        private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig) {
 
     }
 
     ngOnInit(): any {
         this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.credential = UtilityService.getCredentialDetails();
 
         this.getAllCloseActionable(this.currentIncident, this.currentDepartmentId);
         this.form = this.resetActionableForm();
@@ -109,20 +116,26 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
         let filterActionableUpdate = closedActionablesUpdate.filter((item: ActionableModel) => {
             return (item.Done == true);
         });
+        if (filterActionableUpdate.length > 0) {
         this.batchUpdate(filterActionableUpdate.map(x => {
             return {
                 ActionId: x.ActionId,
                 ActualClose: new Date(),
                 CompletionStatus: "Open",
-                ReopenedBy: 1,
+                ReopenedBy: this.credential.UserId,
                 ReopenedOn: new Date()
             };
         }));
+        }
+        else{
+             this.toastrService.error("Please select at least one checklist", 'Error', this.toastrConfig);
+        }
     }
 
     batchUpdate(data: any[]) {
         this.actionableService.BatchOperation(data)
             .subscribe(x => {
+                 this.toastrService.success('Actionables updated successfully.', 'Success', this.toastrConfig);
                 this.getAllCloseActionable(this.currentIncident, this.currentDepartmentId);
             }, (error: any) => {
                 console.log(`Error: ${error}`);

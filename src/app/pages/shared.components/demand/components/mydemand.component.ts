@@ -3,6 +3,8 @@ import {
     AfterContentInit, ViewChild, OnDestroy
 } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
 
 
 import { InvolvePartyModel } from '../../involveparties';
@@ -15,7 +17,7 @@ import { DemandTrailModel } from './demand.trail.model';
 
 import {
     ResponseModel, DataExchangeService, KeyValue,
-    GlobalConstants, GlobalStateService, UtilityService
+    GlobalConstants, GlobalStateService, UtilityService,AuthModel
 } from '../../../../shared';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
 import { ModalDirective } from 'ng2-bootstrap/modal';
@@ -32,7 +34,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     mydemands: DemandModelToView[] = [];
     currentDepartmentId: number;
     currentIncidentId: number;
-    createdByName: string = "Anwesha Ray";
+    createdByName: string;
     createdBy: number;
     demandRemarks: DemandRemarkLogModel[] = [];
     Remarks: string;
@@ -41,6 +43,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     demandForRemarks: DemandModelToView;
     demandTypeName: string = "";
     requesterDepartmentName: string = "";
+    credential: AuthModel;
 
     /**
      * Creates an instance of MyDemandComponent.
@@ -56,7 +59,9 @@ export class MyDemandComponent implements OnInit, OnDestroy {
         private demandRemarkLogsService: DemandRemarkLogService,
         private dataExchange: DataExchangeService<number>,
         private demandTrailService: DemandTrailService,
-        private globalState: GlobalStateService) {
+        private globalState: GlobalStateService,
+        private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig) {
         this.demandForRemarks = new DemandModelToView();
     }
 
@@ -163,7 +168,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
         this.RemarkToCreate.CreatedByName = this.createdByName;
         this.demandRemarkLogsService.Create(this.RemarkToCreate)
             .subscribe((response: DemandRemarkLogModel) => {
-                alert("Remark saved successfully");
+                this.toastrService.success('Remark saved successfully.', 'Success', this.toastrConfig);
                 this.getDemandRemarks(demand.DemandId);
                 this.Remarks = "";
             }, (error: any) => {
@@ -185,10 +190,13 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-
+        this.credential = UtilityService.getCredentialDetails();
+        this.createdBy = +this.credential.UserId;
+        this.createdByName = this.credential.UserName;
         this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
         this.Remarks = "";
 
+        this.globalState.Subscribe('DemandAddedUpdated', (model: KeyValue) => this.demandUpdated(model));
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     };
@@ -203,6 +211,9 @@ export class MyDemandComponent implements OnInit, OnDestroy {
         this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
     };
 
+    private demandUpdated(model): void {
+        this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
+    }
     ngAfterContentInit(): any {
         this.setRagStatus();
     };
@@ -210,6 +221,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChange');
         this.globalState.Unsubscribe('departmentChange');
+        this.globalState.Unsubscribe('DemandAddedUpdated');
     }
 
 }

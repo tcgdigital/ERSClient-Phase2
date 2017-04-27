@@ -25,7 +25,8 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
 
     constructor(private userProfileService: UserProfileService,
         private dataExchange: DataExchangeService<UserProfileModel>,
-        private builder: FormBuilder) {
+        private builder: FormBuilder, private toastrService: ToastrService,
+		private toastrConfig: ToastrConfig) {
     }
 
     ngOnInit(): void {
@@ -59,6 +60,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
 
             this.userProfileService.Create(this.userProfileModel)
                 .subscribe((response: UserProfileModel) => {
+                    this.toastrService.success('User profile created Successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("UserProfileModelCreated", response);
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
@@ -68,6 +70,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
         else {
             this.userProfileService.Update(this.userProfileModel)
                 .subscribe((response: UserProfileModel) => {
+                    this.toastrService.success('User profile edited Successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("UserProfileModelModified", response);
                 }, (error: any) => {
                     console.log(`Error: ${error}`);

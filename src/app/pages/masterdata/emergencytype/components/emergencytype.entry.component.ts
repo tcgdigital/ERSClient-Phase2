@@ -30,7 +30,8 @@ export class EmergencyTypeEntryComponent implements OnInit {
     emergencyCategory: Object = GlobalConstants.EmergencyCategories;
 
     constructor(private emergencyTypeService: EmergencyTypeService,
-        private dataExchange: DataExchangeService<EmergencyTypeModel>) { }
+        private dataExchange: DataExchangeService<EmergencyTypeModel>, private toastrService: ToastrService,
+		private toastrConfig: ToastrConfig) { }
 
     onEmergencyTypeUpdate(model: EmergencyTypeModel): void {
         this.emergencyTypeModel = model;
@@ -60,6 +61,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
         if (this.emergencyTypeModel.EmergencyTypeId == 0) {
             this.emergencyTypeService.Create(this.emergencyTypeModel)
                 .subscribe((response: EmergencyTypeModel) => {
+                    this.toastrService.success('Emergency Type saved Successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("EmergencyTypeModelSaved", response);
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
@@ -70,6 +72,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
             delete this.emergencyTypeModelWithoutActive.Active;
             this.emergencyTypeService.Update(this.emergencyTypeModelWithoutActive)
                 .subscribe((response: EmergencyTypeModel) => {
+                    this.toastrService.success('Emergency Type edited Successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("EmergencyTypeModelUpdated", response);
                 }, (error: any) => {
                     console.log(`Error: ${error}`);

@@ -26,7 +26,7 @@ import { TemplateModel, TemplateService } from "../../masterdata/template";
 import { IncidentModel, IncidentService } from "../../incident";
 import { DepartmentModel, DepartmentService } from "../../masterdata/department";
 @Injectable()
-export class NotifyPeopleService extends ServiceBase<NotifyPeopleModel> {
+export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationMapperModel>  implements INotifyPeopleService{
     private _bulkDataService: DataService<NotificationContactsWithTemplateModel>;
     public allDepartmentUserPermission: NotifyPeopleModel[] = [];
     public arrayMatrix: any[];
@@ -67,13 +67,7 @@ export class NotifyPeopleService extends ServiceBase<NotifyPeopleModel> {
             });
     }
 
-    // public GetDepartmentSubDepartmentUser(departmentId: number): NotifyPeopleModel[] {
-    //     let count: number = 1;
-    //     let arrayDepartmentIds: number[] = [];
-    //     arrayDepartmentIds.push(departmentId);
-    //     this.medthod(arrayDepartmentIds, count);
-    //     return this.allDepartmentUserPermission;
-    // }
+    
 
     public GetAllDepartmentMatrix(departmentId: number, incidentId: number, callback?: ((_: NotifyPeopleModel[]) => void)): void {
         this.userPermissionService.GetAllDepartmentMatrix()
@@ -276,7 +270,8 @@ export class NotifyPeopleService extends ServiceBase<NotifyPeopleModel> {
                     notificationContactsWithTemplate.DepartmentId = item.DepartmentId;
                     notificationContactsWithTemplate.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
                     notificationContactsWithTemplate.UserName = item.User.Name;
-                    notificationContactsWithTemplate.SituationId = appendedTemplate.EmergencySituationId;
+                    notificationContactsWithTemplate.SituationId = GlobalConstants.EmergencySituationEnum
+                        .find(x=>x.EmergencySituationId === appendedTemplate.EmergencySituationId).enumtype;
                     notificationContactsWithTemplate.AttachmentSingle = '';
                     notificationContactsWithTemplate.ContactNumber = item.User.MainContact;
                     notificationContactsWithTemplate.AlternetContactNumber = item.User.AlternateContact;
