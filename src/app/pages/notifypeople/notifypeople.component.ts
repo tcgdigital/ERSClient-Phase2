@@ -52,7 +52,6 @@ export class NotifyPeopleComponent implements OnInit {
 
 
     ngOnInit(): any {
-        //debugger;
         this.treeExpanded = false;
         this.resetAdditionalForm();
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
@@ -68,7 +67,6 @@ export class NotifyPeopleComponent implements OnInit {
         });
     }
     private departmentChangeHandler(department: KeyValue): void {
-        //debugger;
         this.currentDepartmentId = department.Value;
         this.PopulateNotifyDepartmentUsers(this.currentDepartmentId, this.currentIncidentId);
     }
@@ -91,11 +89,9 @@ export class NotifyPeopleComponent implements OnInit {
 
     public PopulateNotifyDepartmentUsers(departmentId: number, incidentId: number): void {
         this.notifyPeopleService.GetAllDepartmentMatrix(departmentId, incidentId, (result: NotifyPeopleModel[]) => {
-            debugger;
             this.allDepartmentUserPermission = result;
             this.allDepartmentUserPermissionString = JSON.stringify(this.allDepartmentUserPermission);
             this.$tree = jQuery(this.elementRef.nativeElement).find('#tree');
-            debugger;
             if (this.tree != undefined) {
                 this.tree.destroy();
             }
@@ -106,17 +102,14 @@ export class NotifyPeopleComponent implements OnInit {
                 dataSource: jQuery.parseJSON(this.allDepartmentUserPermissionString),//this.allDepartmentUserPermissionString,
                 checkboxes: true
             })
-            debugger;
 
         });
     }
 
     public notify(): void {
-        debugger;
         let checkedIds: number[] = this.tree.getCheckedNodes();
 
         this.notifyPeopleService.NotifyPeopleCall(checkedIds, this.currentDepartmentId, this.currentIncidentId, (item: TemplateModel) => {
-            debugger;
             this.appendedTemplate.AppendedTemplateId = 0;
             this.appendedTemplate.TemplateId = item.TemplateId;
             this.appendedTemplate.EmergencySituationId = item.EmergencySituationId;
@@ -126,7 +119,6 @@ export class NotifyPeopleComponent implements OnInit {
             this.appendedTemplate.ActiveFlag = 'Active';
             this.appendedTemplate.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
             this.appendedTemplate.CreatedOn = new Date();
-            debugger;
             this.childModalNoificationMessage.show();
         });
     }
@@ -136,7 +128,6 @@ export class NotifyPeopleComponent implements OnInit {
     }
 
     public saveNotificationMessage(): void {
-        debugger;
         let additionalData: string = this.form.controls['AdditionalData'].value;
         this.appendedTemplate.Description = this.appendedTemplate.Description + ' ' + additionalData;
         this.notifyPeopleService.CreateAppendedTemplate(this.appendedTemplate,

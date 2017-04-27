@@ -76,7 +76,6 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
             });
         this.archiveListService.GetAllClosedIncidents()
             .subscribe((closedIncident: ResponseModel<IncidentModel>) => {
-                debugger;
                 closedIncident.Records.forEach((itemIncident: IncidentModel) => {
                     if (itemIncident.ReOpenBy != null && itemIncident.ReOpenOn != null && itemIncident.ReClosedBy == null && itemIncident.ReClosedOn == null) {
                         itemIncident.isReopen = true;
@@ -190,7 +189,6 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     public ngOnDestroy(): void { }
 
     public viewClosedCrisis(incidentId: number): void {
-        debugger;
         this.incidentDataExchangeModel = new IncidentDataExchangeModel();
         this.incidentService.GetIncidentById(incidentId)
             .map((incidentModel: IncidentModel) => {
@@ -208,7 +206,6 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
                 this.incidentDataExchangeModel.FLightModel = flights.Records[0];
             })
             .subscribe(_ => {
-                debugger;
                 this.loadDataIncidentViewPopup();
             })
     }
