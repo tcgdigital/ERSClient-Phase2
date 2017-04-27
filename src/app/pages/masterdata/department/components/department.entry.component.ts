@@ -14,7 +14,7 @@ import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { DepartmentService } from './department.service';
 import { DepartmentModel } from './department.model';
 import { UserProfileService, UserProfileModel } from '../../userprofile';
-import { ResponseModel, UtilityService, DataExchangeService, BaseModel } from '../../../../shared';
+import { ResponseModel, UtilityService, DataExchangeService, BaseModel, AuthModel } from '../../../../shared';
 
 @Component({
     selector: 'dept-entry',
@@ -27,6 +27,7 @@ export class DepartmentEntryComponent implements OnInit {
     parentDepartments: DepartmentModel[] = [];
     showAdd: boolean;
     departmentModel: DepartmentModel;
+    credential: AuthModel;
     constructor(private departmentService: DepartmentService, private userService: UserProfileService,
         private dataExchange: DataExchangeService<DepartmentModel>, private toastrService: ToastrService,
         private toastrConfig: ToastrConfig) { }
@@ -60,8 +61,11 @@ export class DepartmentEntryComponent implements OnInit {
     ngOnInit(): void {
         this.mergeResponses();
         this.departmentModel = new DepartmentModel();
+        this.credential = UtilityService.getCredentialDetails();
+        this.departmentModel.CreatedBy = +this.credential.UserId;
         this.departmentModel.DepartmentId = 0;
         this.showAdd = false;
+        
     }
 
     private onDepartmentEdit(model: DepartmentModel): void {
@@ -84,10 +88,11 @@ export class DepartmentEntryComponent implements OnInit {
 
     onSubmit(values: DepartmentModel): void {
         if (values.DepartmentId == 0) {//ADD REGION
-
+         
             UtilityService.setModelFromFormGroup<DepartmentModel>(this.departmentModel, this.form,
                 x => x.DepartmentId, x => x.DepartmentName, x => x.Description, x => x.ContactNo, x => x.DepartmentSpoc, x => x.ParentDepartmentId);
             this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString();
+            this.departmentModel.CreatedBy = +this.credential.UserId;
             this.departmentService.Create(this.departmentModel)
                 .subscribe((response: DepartmentModel) => {
                     this.toastrService.success('Department Saved Successfully.', 'Success', this.toastrConfig);
@@ -121,6 +126,7 @@ export class DepartmentEntryComponent implements OnInit {
     showAddRegion(): void {
         this.showAdd = true;
         this.departmentModel = new DepartmentModel();
+        this.departmentModel.CreatedBy = +this.credential.UserId;
         this.departmentModel.DepartmentId = 0;
         this.form = this.setDepartmentForm();
     }

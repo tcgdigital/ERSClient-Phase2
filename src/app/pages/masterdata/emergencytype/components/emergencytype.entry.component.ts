@@ -10,7 +10,7 @@ import { EmergencyTypeService } from './emergencytype.service';
 import { EmergencyTypeModel } from './emergencytype.model';
 import {
     ResponseModel, DataExchangeService, GlobalConstants,
-    BaseModel, UtilityService
+    BaseModel, UtilityService, AuthModel
 } from '../../../../shared';
 
 @Component({
@@ -26,12 +26,13 @@ export class EmergencyTypeEntryComponent implements OnInit {
     emergencyTypes: EmergencyTypeModel[] = [];
     Action: string;
     showAdd: boolean;
+    credential: AuthModel;
 
     emergencyCategory: Object = GlobalConstants.EmergencyCategories;
 
     constructor(private emergencyTypeService: EmergencyTypeService,
         private dataExchange: DataExchangeService<EmergencyTypeModel>, private toastrService: ToastrService,
-		private toastrConfig: ToastrConfig) { }
+        private toastrConfig: ToastrConfig) { }
 
     onEmergencyTypeUpdate(model: EmergencyTypeModel): void {
         this.emergencyTypeModel = model;
@@ -44,7 +45,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
         this.initiateForm();
         this.showAdd = false;
         this.emergencyTypeModel = new EmergencyTypeModel();
-
+        this.credential = UtilityService.getCredentialDetails();
         this.emergencyTypeModel.EmergencyCategory = "FlightRelated";
         this.dataExchange.Subscribe("OnEmergencyTypeUpdate", model => this.onEmergencyTypeUpdate(model))
     }
@@ -59,6 +60,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
         this.emergencyTypeModel.ActiveFlag = this.form.controls["ActiveFlag"].value;
 
         if (this.emergencyTypeModel.EmergencyTypeId == 0) {
+            this.emergencyTypeModel.CreatedBy = +this.credential.UserId;
             this.emergencyTypeService.Create(this.emergencyTypeModel)
                 .subscribe((response: EmergencyTypeModel) => {
                     this.toastrService.success('Emergency Type saved Successfully.', 'Success', this.toastrConfig);

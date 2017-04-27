@@ -6,7 +6,7 @@ import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { UserProfileService } from './userprofile.service';
 import { UserProfileModel } from './userprofile.model';
 
-import { ResponseModel, DataExchangeService, GlobalConstants, EmailValidator, UtilityService } from '../../../../shared';
+import { ResponseModel, DataExchangeService, GlobalConstants, EmailValidator, UtilityService, AuthModel } from '../../../../shared';
 
 @Component({
     selector: 'userprofile-entry',
@@ -21,17 +21,19 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
     userProfiles: UserProfileModel[] = [];
     Action: string;
     numaricRegex = "/^[0-9]{10,10}$/";
-    showAdd : boolean;
+    showAdd: boolean;
+    credential: AuthModel;
 
     constructor(private userProfileService: UserProfileService,
         private dataExchange: DataExchangeService<UserProfileModel>,
         private builder: FormBuilder, private toastrService: ToastrService,
-		private toastrConfig: ToastrConfig) {
+        private toastrConfig: ToastrConfig) {
     }
 
     ngOnInit(): void {
         this.showAdd = false;
         this.initiateForm();
+        this.credential = UtilityService.getCredentialDetails();
         this.dataExchange.Subscribe("UserProfileModelToBeModified", model => this.onUserProfileModified(model))
     }
 
@@ -49,6 +51,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
 
     onSubmit() {
         if (this.userProfileModel.UserProfileId == 0) {
+            this.userProfileModel.CreatedBy = +this.credential.UserId;
             UtilityService.setModelFromFormGroup<UserProfileModel>(this.userProfileModel, this.form,
                 x => x.UserProfileId, x => x.Email, x => x.UserId, x => x.Name,
                 x => x.MainContact, x => x.AlternateContact, x => x.Location);
@@ -98,7 +101,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
         })
     }
 
-    showAddRegion(){
+    showAddRegion() {
         this.showAdd = true;
         this.initiateForm();
 

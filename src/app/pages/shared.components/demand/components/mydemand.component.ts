@@ -17,7 +17,7 @@ import { DemandTrailModel } from './demand.trail.model';
 
 import {
     ResponseModel, DataExchangeService, KeyValue,
-    GlobalConstants, GlobalStateService, UtilityService,AuthModel
+    GlobalConstants, GlobalStateService, UtilityService, AuthModel
 } from '../../../../shared';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
 import { ModalDirective } from 'ng2-bootstrap/modal';
@@ -196,7 +196,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
         this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
         this.Remarks = "";
 
-        this.globalState.Subscribe('DemandAddedUpdated', (model: KeyValue) => this.demandUpdated(model));
+        this.dataExchange.Subscribe("DemandAddedUpdated", model => this.demandUpdated(model));
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     };
@@ -212,6 +212,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     };
 
     private demandUpdated(model): void {
+        debugger;
         this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
     }
     ngAfterContentInit(): any {

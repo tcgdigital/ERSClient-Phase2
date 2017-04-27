@@ -7,7 +7,7 @@ import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { DemandTypeService } from './demandtype.service';
 import { DepartmentModel, DepartmentService } from '../../department';
 import { DemandTypeModel } from './demandtype.model';
-import { ResponseModel, DataExchangeService } from '../../../../shared';
+import { ResponseModel, DataExchangeService ,AuthModel,UtilityService} from '../../../../shared';
 
 @Component({
     selector: 'demandtype-entry',
@@ -22,6 +22,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
     Action: string;
     showAdd: boolean;
     demandTypeModelToEdit: DemandTypeModel = new DemandTypeModel();
+    credential: AuthModel;
     // @Output() demandTypeSaveEvent: EventEmitter<DemandTypeModel> = new EventEmitter(true);
 
     constructor(private demandTypeService: DemandTypeService,
@@ -59,7 +60,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         this.Action = "Save";
         this.showAdd = false;
         this.demandTypeModel.ActiveFlag = 'Active';
-        this.demandTypeModel.CreatedBy = 1;
+        this.demandTypeModel.CreatedBy = +this.credential.UserId;
         this.demandTypeModel.CreatedOn = this.date;
         this.demandTypeModel.DemandTypeId = 0;
         this.demandTypeModel.DepartmentId = this.departments[0].DepartmentId;
@@ -80,8 +81,9 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
             IsAutoApproved: new FormControl(false),
             ApproverDept: new FormControl(this.demandTypeModel.DepartmentId, [Validators.required])
         });
+        this.credential = UtilityService.getCredentialDetails();
         this.demandTypeModel.ActiveFlag = 'Active';
-        this.demandTypeModel.CreatedBy = 1;
+        this.demandTypeModel.CreatedBy = +this.credential.UserId;
         this.demandTypeModel.CreatedOn = this.date;
         this.demandTypeModel.DemandTypeId = 0;
         this.Action = "Save";
@@ -116,10 +118,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
 
     formControlDirtyCheck(): void {
         this.demandTypeModelToEdit = new DemandTypeModel();
-        delete this.demandTypeModelToEdit.ActiveFlag;
-        delete this.demandTypeModelToEdit.CreatedBy;
-        delete this.demandTypeModelToEdit.CreatedOn;
-
+        this.demandTypeModelToEdit.deleteAttributes();
 
         this.demandTypeModelToEdit.DemandTypeId = this.form.controls['DemandTypeId'].value;
 
@@ -147,7 +146,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
             ApproverDept: new FormControl(this.demandTypeModel.DepartmentId, [Validators.required])
         });
         this.demandTypeModel.ActiveFlag = 'Active';
-        this.demandTypeModel.CreatedBy = 1;
+        this.demandTypeModel.CreatedBy = +this.credential.UserId;
         this.demandTypeModel.CreatedOn = this.date;
         this.demandTypeModel.DemandTypeId = 0;
         this.Action = "Save";

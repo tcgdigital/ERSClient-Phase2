@@ -6,7 +6,7 @@ import { DepartmentService, DepartmentModel } from '../department';
 import { EmergencyTypeService, EmergencyTypeModel } from '../emergencytype';
 import { EmergencyTypeDepartmentService } from './components/emergency.department.service';
 import { EmergencyDepartmentModel, DepartmesForEmergency } from './components/emergency.department.model';
-import { ResponseModel, DataExchangeService, AutocompleteComponent, KeyValue } from '../../../shared';
+import { ResponseModel, DataExchangeService, AutocompleteComponent, KeyValue,AuthModel, UtilityService } from '../../../shared';
 
 @Component({
     selector: 'emergency-department-main',
@@ -23,6 +23,7 @@ export class EmergencyDepartmentComponent {
     selectedEmergencyType: number;
     date: Date = new Date();
     private items: Array<KeyValue> = [];
+    credential: AuthModel;
 
     constructor(private emergencyDepartmentService: EmergencyTypeDepartmentService, private emergencyTypeService: EmergencyTypeService,
         private departmentService: DepartmentService, private toastrService: ToastrService,
@@ -70,6 +71,7 @@ export class EmergencyDepartmentComponent {
         let model = this.departmentsForEmergency.filter(this.istrue);
         let selectedEmergencyType = this.selectedEmergencyType;
         let datenow=this.date;
+        let userId = +this.credential.UserId;
         this.emergencyDepartmentModelToSave = model.map(function (data) {
             {
                 let item = new EmergencyDepartmentModel();
@@ -77,7 +79,7 @@ export class EmergencyDepartmentComponent {
                 item.EmergencyTypeId = selectedEmergencyType;
                 item.DepartmentId = data.DepartmentId;
                 item.ActiveFlag = 'Active';
-                item.CreatedBy = 1;
+                item.CreatedBy = userId;
                 item.CreatedOn = datenow;
                 return item;
             }
@@ -87,11 +89,12 @@ export class EmergencyDepartmentComponent {
                 this.toastrService.success('Emergency wise department saved Successfully.', 'Success', this.toastrConfig);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
-            });
+            }); 
     };
 
     ngOnInit(): any {
         this.getEmergencyTypes();
+        this.credential = UtilityService.getCredentialDetails();
         this.departmentService.GetAll()
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;

@@ -15,7 +15,7 @@ import { ChecklistModel } from './checklist.model';
 import { DepartmentModel, DepartmentService } from '../../department';
 import { EmergencyTypeModel, EmergencyTypeService } from '../../emergencytype';
 import { ChecklistService } from './checklist.service';
-import { ResponseModel, DataExchangeService, BaseModel, UtilityService, GlobalStateService, KeyValue } from '../../../../shared';
+import { ResponseModel, DataExchangeService, BaseModel, UtilityService, GlobalStateService, KeyValue,AuthModel } from '../../../../shared';
 
 @Component({
     selector: 'checklist-entry',
@@ -34,6 +34,7 @@ export class ChecklistEntryComponent implements OnInit {
     showAdd: Boolean = true;
     buttonValue: String = "";
     currentDepartmentId: number;
+    credential: AuthModel;
 
     constructor(formBuilder: FormBuilder,
         private departmentService: DepartmentService,
@@ -84,6 +85,7 @@ export class ChecklistEntryComponent implements OnInit {
     ngOnInit(): void {
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.mergeResponses(this.currentDepartmentId);
+        this.credential = UtilityService.getCredentialDetails();
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
@@ -100,7 +102,7 @@ export class ChecklistEntryComponent implements OnInit {
     initiateCheckListModel(): void {
         this.checkListModel = new ChecklistModel();
         this.checkListModel.ActiveFlag = 'Active';
-        this.checkListModel.CreatedBy = 1;
+        this.checkListModel.CreatedBy = +this.credential.UserId;
         this.checkListModel.CreatedOn = this.date;
     }
 

@@ -41,4 +41,10 @@ export class TemplateService
             .Expand('EmergencySituation')
             .Filter(query).Execute();
     }
+
+    GetByEmergencySituationId(emergencySituationId:number):Observable<ResponseModel<TemplateModel>>{
+        return this._dataService.Query()
+        .Filter(`EmergencySituationId eq ${emergencySituationId}`)
+        .Execute();
+    }
 }
