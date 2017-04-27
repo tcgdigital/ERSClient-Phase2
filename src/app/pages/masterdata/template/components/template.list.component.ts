@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { TemplateModel } from './template.model';
 import { TemplateService } from './template.service';
+import { Observable } from 'rxjs/Rx';
 import { EmergencySituationService } from '../../emergency.situation';
 import {
     ResponseModel, DataExchangeService,
@@ -48,6 +49,7 @@ export class TemplateListComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.getTemplates();
+        this.initiateSearchConfigurations();
         //this.dataExchange.Subscribe("quickLinkModelSaved", 
         //model => this.onTemplateSaveSuccess(model));
     }
@@ -76,7 +78,7 @@ export class TemplateListComponent implements OnInit, OnDestroy {
     }
     invokeSearch(query: string): void {
         if (query !== '') {
-            this.templateService.GetQuery(query)
+            this.templateService.GetQuery(query.replace(/(\'\|)/ig, ''))
                 .subscribe((response: ResponseModel<TemplateModel>) => {
                     this.templates = response.Records;
                 }, ((error: any) => {
@@ -94,23 +96,21 @@ export class TemplateListComponent implements OnInit, OnDestroy {
         return "";
     }
     private initiateSearchConfigurations(): void {
-        let status: NameValue<string>[] = [
-            new NameValue<string>('Active', 'Active'),
-            new NameValue<string>('In-Active', 'In-Active'),
-        ]
+        let mediatype: NameValue<string>[] = GlobalConstants.TemplateMediaType
+            .map(x => new NameValue<string>(x.value, `|CMS.DataModel.Enum.TemplateMediaType'${x.value}'|`));
+
         this.searchConfigs = [
             new SearchDropdown({
                 Name: 'TemplateMediaId',
                 Description: 'Template Media',
                 PlaceHolder: 'Select Template Media',
                 Value: '',
-                ListData: GlobalConstants.TemplateMediaType
-                    .map(x => new NameValue<number>(x.value, x.key))
+                ListData: Observable.of(mediatype)
             }),
             new SearchDropdown({
-                Name: 'DepartmentSpoc',
-                Description: 'Department SPOC',
-                PlaceHolder: 'Select Department SPOC',
+                Name: 'EmergencySituationId',
+                Description: 'Situation',
+                PlaceHolder: 'Select Situation',
                 Value: '',
                 ListData: this.emergencySituationService.GetAll()
                     .map(x => x.Records)
