@@ -1,47 +1,29 @@
-<div [hidden] = "IsVisible">
-    <div class="modalcross">
-        <i class="fa fa-times" aria-hidden="true" (click)="cancel()"></i>
-    </div>
-    <div class="modal-header">
-        <h4>View Passenger</h4>
-    </div>
-    <div class="modal-body">
-        <form name="viewPaxForm">
-            <div class="panel-body WidthHun" *ngIf="passengers.length > 0">
-                <table class="table footable default">
-                    <thead>
-                        <tr>
-                            <th>Passenge Name</th>
-                            <th>PNR</th>
-                            <th>Seat Number</th>
-                            <th>Baggage Count</th>
-                            <th>Destination</th>
-                            <th>Contact Number</th>
-                            <th>PAX Type</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let affected of passengers">
-                            <td>{{affected.PassengerName}}</td>
-                            <td>{{affected.Pnr}}</td>
-                            <td>{{affected.Seatno}}</td>
-                            <td>{{affected.BaggageCount}}</td>
-                            <td>{{affected.Destination}}</td>
-                            <td>{{affected.ContactNumber}}</td>
-                            <td>{{affected.PassengerType}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="panel-body WidthHun" *ngIf="passengers.length<=0">
-                <table class="table footable default">
-                    <tr>
-                        <td>
-                            No Records Found
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </form>
-    </div>
-</div>
+<responsive-table>
+    <table responsive-table-body>
+        <thead>
+            <tr>
+                <th>Passenge Name</th>
+                <th>PNR</th>
+                <th>Seat Number</th>
+                <th>Baggage Count</th>
+                <th>Destination</th>
+                <th>Contact Number</th>
+                <th>PAX Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngIf="passengers.length<=0">
+                <td data-title="Records" colspan="7">No records to show.</td>
+            </tr>
+            <tr *ngFor="let affected of passengers">
+                <td data-title="Passenge Name">{{affected.PassengerName}}</td>
+                <td data-title="PNR">{{affected.Pnr}}</td>
+                <td data-title="Seat Number">{{affected.Seatno}}</td>
+                <td data-title="Baggage Count">{{affected.BaggageCount}}</td>
+                <td data-title="Destination">{{affected.Destination}}</td>
+                <td data-title="Contact Number">{{affected.ContactNumber}}</td>
+                <td data-title="PAX Type">{{affected.PassengerType}}</td>
+            </tr>
+        </tbody>
+    </table>
+</responsive-table>
