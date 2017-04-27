@@ -3,6 +3,7 @@ import { FormGroup } from '@angular/forms'
 import { KeyValue, BaseModel } from '../../models';
 import * as jwtDecode from 'jwt-decode';
 import { GlobalConstants } from '../../constants';
+import {AuthModel } from '../../models';
 
 export class UtilityService {
     private static STRIP_COMMENTS: RegExp = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
@@ -24,7 +25,7 @@ export class UtilityService {
         return names.map(n => o[n]);
     }
    
-    public static getCredentialDetails() : any  {
+    public static getCredentialDetails() : AuthModel  {
         let access_token = this.GetFromSession(GlobalConstants.ACCESS_TOKEN)
                 return  jwtDecode(access_token);
     }

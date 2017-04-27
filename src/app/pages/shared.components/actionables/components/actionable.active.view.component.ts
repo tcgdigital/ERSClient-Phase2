@@ -16,7 +16,7 @@ import { DepartmentService, DepartmentModel } from '../../../masterdata/departme
 import {
     ResponseModel, DataExchangeService,
     UtilityService, GlobalConstants, KeyValue,
-    FileUploadService, GlobalStateService, SharedModule
+    FileUploadService, GlobalStateService, SharedModule,AuthModel
 } from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 
@@ -40,6 +40,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     actionableModelToUpdate: ActionableModel = null;
     actionableWithParents: ActionableModel[] = [];
     parentChecklistIds: number[] = [];
+    credential: AuthModel;
 
     public form: FormGroup;
 
@@ -65,6 +66,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     public ngOnInit(): any {
         this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.credential = UtilityService.getCredentialDetails();
 
         this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
         this.form = this.resetActionableForm();
@@ -283,7 +285,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                 return {
                     ActionId: x.ActionId,
                     ActualClose: new Date(),
-                    ClosedBy: 1,
+                    ClosedBy: this.credential.UserId,
                     CompletionStatus: "Close",
                     ClosedOn: new Date()
                 };

@@ -14,7 +14,7 @@ import { ActionableModel } from './actionable.model';
 import { ActionableService } from './actionable.service';
 import {
     ResponseModel, DataExchangeService, KeyValue,
-    UtilityService, GlobalConstants, GlobalStateService
+    UtilityService, GlobalConstants, GlobalStateService,AuthModel
 } from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 
@@ -33,6 +33,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     private currentDepartmentId: number = null;
     private currentIncident: number = null;
     actionableModelToUpdate: ActionableModel;
+    credential: AuthModel;
 
     constructor(formBuilder: FormBuilder, private actionableService: ActionableService,
         private dataExchange: DataExchangeService<boolean>, private globalState: GlobalStateService,
@@ -44,6 +45,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     ngOnInit(): any {
         this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.credential = UtilityService.getCredentialDetails();
 
         this.getAllCloseActionable(this.currentIncident, this.currentDepartmentId);
         this.form = this.resetActionableForm();
@@ -120,7 +122,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
                 ActionId: x.ActionId,
                 ActualClose: new Date(),
                 CompletionStatus: "Open",
-                ReopenedBy: 1,
+                ReopenedBy: this.credential.UserId,
                 ReopenedOn: new Date()
             };
         }));

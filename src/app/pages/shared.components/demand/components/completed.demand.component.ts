@@ -12,11 +12,12 @@ import { CommunicationLogModel } from '../../communicationlogs';
 import { DemandRemarkLogService } from './demand.remarklogs.service';
 import { DemandTrailService } from './demandtrail.service';
 import { DemandTrailModel } from './demand.trail.model';
+import { DepartmentService } from '../../../masterdata/department/components';
 import {
     ResponseModel, DataExchangeService, KeyValue,
-    GlobalConstants, GlobalStateService, UtilityService
+    GlobalConstants, GlobalStateService, UtilityService, AuthModel
 } from '../../../../shared';
-import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
+import { DepartmentModel } from '../../../masterdata/department';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 
 
@@ -33,7 +34,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
     currentDepartmentId: number;
     currentDepartmentName: string;
     currentIncidentId: number;
-    createdBy: number = 2;
+    createdBy: number;
     communicationLogs: CommunicationLogModel[];
     communicationLog: CommunicationLogModel;
     demandRemarks: DemandRemarkLogModel[];
@@ -43,6 +44,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
     demandTrail: DemandTrailModel;
     demandTrails: DemandTrailModel[];
     demandForRemarks: DemandModelToView;
+    credential: AuthModel;
 
     /**
      * Creates an instance of CompletedDemandComponent.
@@ -225,14 +227,22 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-
-        this.currentDepartmentName = "Command Center";
+        this.credential = UtilityService.getCredentialDetails();
+        this.createdBy = +this.credential.UserName;
+        this.getDepartmentName(this.currentDepartmentId);
         this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
         this.getCurrentDepartmentName(this.currentDepartmentId);
 
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     };
+
+    private getDepartmentName(deptId): void {
+        this.departmentService.Get(deptId)
+            .subscribe((department: DepartmentModel) => {
+                this.currentDepartmentName = department.DepartmentName;
+            });
+    }
 
     private incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
@@ -241,6 +251,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
 
     private departmentChangeHandler(department: KeyValue): void {
         this.currentDepartmentId = department.Value;
+        this.currentDepartmentName = department.Key;
         this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
         this.getCurrentDepartmentName(this.currentDepartmentId);
     };

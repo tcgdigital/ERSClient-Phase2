@@ -17,7 +17,7 @@ import { DemandTrailModel } from './demand.trail.model';
 
 import {
     ResponseModel, DataExchangeService, KeyValue,
-    GlobalConstants, GlobalStateService, UtilityService
+    GlobalConstants, GlobalStateService, UtilityService,AuthModel
 } from '../../../../shared';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
 import { ModalDirective } from 'ng2-bootstrap/modal';
@@ -34,7 +34,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     mydemands: DemandModelToView[] = [];
     currentDepartmentId: number;
     currentIncidentId: number;
-    createdByName: string = "Anwesha Ray";
+    createdByName: string;
     createdBy: number;
     demandRemarks: DemandRemarkLogModel[] = [];
     Remarks: string;
@@ -43,6 +43,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     demandForRemarks: DemandModelToView;
     demandTypeName: string = "";
     requesterDepartmentName: string = "";
+    credential: AuthModel;
 
     /**
      * Creates an instance of MyDemandComponent.
@@ -189,7 +190,9 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-
+        this.credential = UtilityService.getCredentialDetails();
+        this.createdBy = +this.credential.UserId;
+        this.createdByName = this.credential.UserName;
         this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
         this.Remarks = "";
 

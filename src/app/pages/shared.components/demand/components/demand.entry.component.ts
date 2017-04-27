@@ -26,7 +26,7 @@ import { CallerService, CallerModel } from '../../caller';
 import {
     ResponseModel, DataExchangeService,
     GlobalConstants, KeyValue, AutocompleteComponent,
-    UtilityService, GlobalStateService
+    UtilityService, GlobalStateService, AuthModel
 } from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 
@@ -66,6 +66,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     demandModelEdit: DemandModel;
     credentialName: string;
     caller: CallerModel;
+    credential: AuthModel;
 
     /**
      * Creates an instance of DemandEntryComponent.
@@ -98,9 +99,9 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         private toastrConfig: ToastrConfig) {
         this.showAdd = false;
         this.buttonValue = "Create Demand";
-        this.createdBy = 2;
+        // this.createdBy = 2;
         this.departments = [];
-        this.credentialName = "Anwesha Ray";
+        // this.credentialName = "Anwesha Ray";
     }
 
     getDemandType(): void {
@@ -313,6 +314,9 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     ngOnInit(): any {
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.credential = UtilityService.getCredentialDetails();
+        this.createdBy = +this.credential.UserId;
+        this.credentialName = this.credential.UserName;
         this.getDemandType();
         this.getPageSpecifiedDepartments();
         this.getAllDepartments();
@@ -482,7 +486,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             this.demandService.Create(this.demandModel)
                 .subscribe((response: DemandModel) => {
                     this.toastrService.success('Demand successfully created.', 'Success', this.toastrConfig);
-                     this.dataExchange.Publish("DemandAddedUpdated", response.DemandId);
+                    this.dataExchange.Publish("DemandAddedUpdated", response.DemandId);
                     this.initializeForm();
                     this.demandModel = new DemandModel();
                     this.showAdd = false;

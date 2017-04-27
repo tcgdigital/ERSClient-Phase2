@@ -15,7 +15,7 @@ import { DemandRemarkLogService } from './demand.remarklogs.service';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
 import {
     ResponseModel, DataExchangeService, KeyValue,
-    GlobalConstants, GlobalStateService, UtilityService
+    GlobalConstants, GlobalStateService, UtilityService,AuthModel
 } from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 
@@ -39,6 +39,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     demandTrails: DemandTrailModel[];
     departments: DepartmentModel[];
     demandForRemarks: DemandModelToView;
+    credential: AuthModel;
 
     /**
      * Creates an instance of AssignedDemandComponent.
@@ -55,7 +56,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         private globalState: GlobalStateService,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig) {
-        this.createdByName = "Anwesha Ray";
+     //   this.createdByName = "Anwesha Ray";
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
     }
@@ -254,6 +255,8 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     ngOnInit(): any {
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.credential = UtilityService.getCredentialDetails();
+        this.createdByName = this.credential.UserName;
 
         this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
         this.getAllDepartments();
@@ -270,7 +273,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     private departmentChangeHandler(department: KeyValue): void {
         this.currentDepartmentId = department.Value;
         this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
-        this.getCurrentDepartmentName(this.currentDepartmentId);
+        this.currentDepartmentName = department.Key;
     };
 
     ngOnDestroy(): void {

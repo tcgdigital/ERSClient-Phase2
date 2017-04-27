@@ -18,7 +18,7 @@ import { BroadcastService } from './broadcast.service';
 import { DepartmentModel, DepartmentService } from '../../../masterdata/department';
 import {
     ResponseModel, DataExchangeService, KeyValue,
-    GlobalConstants, UtilityService, GlobalStateService
+    GlobalConstants, UtilityService, GlobalStateService, AuthModel
 } from '../../../../shared';
 
 @Component({
@@ -44,6 +44,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     showAdd: boolean;
     listSelected: boolean;
     selectedcount: number;
+    credential: AuthModel;
 
     /**
      * Creates an instance of BroadcastEntryComponent.
@@ -71,6 +72,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         this.currentIncidentId = +this.incidentId;
         this.currentDepartmentId = +this.initiatedDepartmentId;
         this.getBroadcastDepartmentMappings(this.currentDepartmentId);
+        this.credential = UtilityService.getCredentialDetails();
 
         this.broadcast.IsSubmitted = false;
         this.broadcast.Priority = this.priorities.find(x => x.value == '1').caption;
@@ -184,6 +186,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         this.broadcast.IncidentId = this.currentIncidentId;
         this.broadcast.InitiateDepartmentId = this.currentDepartmentId;
         if (this.broadcast.BroadcastId == 0) {
+            this.broadcast.CreatedBy = +this.credential.UserId;
             this.broadcastService.Create(this.broadcast)
                 .subscribe((response: BroadCastModel) => {
                     this.toastrService.success('Broadcast saved successfully.', 'Success', this.toastrConfig);
@@ -196,7 +199,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         else {
             this.broadcastService.Create(this.broadcast)
                 .subscribe((response: BroadCastModel) => {
-                     this.toastrService.success('Broadcast edited successfully.', 'Success', this.toastrConfig);
+                    this.toastrService.success('Broadcast edited successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish('BroadcastModelUpdated', response);
                     this.showAdd = false;
                 }, (error: any) => {
