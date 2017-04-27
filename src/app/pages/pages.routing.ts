@@ -19,10 +19,12 @@ const pageRoutes: Routes = [
         children: [
             { path: '', redirectTo: 'pages/dashboard/people/detail', pathMatch: 'full' },
             { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' },
-            { path: 'archivedashboard', loadChildren: './archive.dashboard/archive.dashboard.module#ArchiveDashboardModule' },
+            { path: 'archivelist', loadChildren: './archive.list/archive.dashboard.list.module#ArchiveDashboardListModule' },
             { path: 'masterdata', loadChildren: './masterdata/masterdata.module#MasterDateModule' },
             { path: 'incident', loadChildren: './incident/incident.module#IncidentModule' },
             { path: 'masterdataupload', loadChildren: './masterdata.upload/masterdata.upload.module#MasterDataUploadModule' },
+            { path: 'notifypeople', loadChildren: './notifypeople/notifypeople.module#NotifyPeopleModule' },
+            { path: 'departmentclosure', loadChildren: './departmentclosure/department.closure.module#DepartmentClosureModule' },
             { path: 'emergencyclosure', loadChildren: './emergency.closure/emergency.closure.module#EmergencyClosureModule' },
             { path: 'notifypeople', loadChildren: './notifypeople/notifypeople.module#NotifyPeopleModule' }
         ]

@@ -151,7 +151,7 @@ module.exports = function (options) {
                         use: 'css-loader!sass-loader?sourceMap'
                     })
                 },
-                 /**
+                /**
                  * Font loaders, required for font-awesome-sass-loader and bootstrap-loader
                  */
                 {
@@ -196,7 +196,7 @@ module.exports = function (options) {
          */
         plugins: [
             new WebpackDashboard(),
-            
+
             new ExtractTextWebpackPlugin({
                 filename: 'initial.css',
                 allChunks: true
@@ -255,14 +255,14 @@ module.exports = function (options) {
              * See: https://www.npmjs.com/package/copy-webpack-plugin
              */
             new CopyWebpackPlugin([{
-                    from: 'src/assets/fonts',
-                    to: 'assets/fonts'
-                },
-                {
-                    from: 'src/assets/images',
-                    to: 'assets/images'
-                }
-            ]),
+                from: 'src/assets/fonts',
+                to: 'assets/fonts'
+            }, {
+                from: 'src/assets/images',
+                to: 'assets/images'
+            }, {
+                from: 'web.config'
+            }]),
 
             /** Plugin: HtmlWebpackPlugin
              * Description: Simplifies creation of HTML files to serve your webpack bundles.

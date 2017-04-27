@@ -69,6 +69,12 @@ public affectedPeoples: ResponseModel<AffectedPeopleModel>;
         return this._incidentDataService.Get(id.toString()).Execute();
     }
 
+    GetByIncidentId(id: string | number): Observable<ResponseModel<InvolvePartyModel>> {
+        return this._dataService.Query()
+        .Filter(`IncidentId eq ${id}`)
+        .Execute();
+    }
+
      GetAllPassengers(): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
             .Expand('Affecteds($expand=AffectedPeople($expand=Passenger))')

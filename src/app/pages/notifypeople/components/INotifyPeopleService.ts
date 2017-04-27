@@ -4,8 +4,6 @@ import { NotifyPeopleModel ,UserDepartmentNotificationMapper} from './notifypeop
 
 export interface INotifyPeopleService extends IServiceInretface<UserDepartmentNotificationMapper> {
 
-    GetDepartmentSubDepartmentUser(departmentId: number): NotifyPeopleModel[];
-
     GetAllByIncident(incidentId: number): Observable<ResponseModel<UserDepartmentNotificationMapper>>;
 
 }

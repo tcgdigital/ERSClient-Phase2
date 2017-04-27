@@ -187,6 +187,13 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
             .Execute();
     }
 
+    public GetPendingOpenActionableForIncidentAndDepartment(incidentId:number,departmentId:number):Observable<ResponseModel<ActionableModel>>{
+        return this._dataService.Query()
+        .Filter(`IncidentId eq ${incidentId} and DepartmentId eq ${departmentId} and ClosedOn eq null and ReopenedOn eq null or ReopenedOn ne null`)
+        .Execute();
+    }
+
+    
 
     public BatchGet(incidentId: number, departmentIds: number[]): Observable<ResponseModel<ActionableModel>> {
         let requests: Array<RequestModel<BaseModel>> = [];

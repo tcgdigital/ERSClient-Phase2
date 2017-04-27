@@ -64,7 +64,7 @@ export class PagesComponent implements OnInit {
     }
 
     public onContactClicked($event): void {
-        this.toastrService.info('Contacts command has been clicked', 'Contact', this.toastrConfig);
+        this.toastrService.success('Contacts command has been clicked', 'Contact', this.toastrConfig);
         console.log('Contacts Clicked');
     }
 
