@@ -17,17 +17,14 @@ export class DepartmentClosureService extends ServiceBase<DepartmentClosureModel
     private _departmentClosureService: DataService<DepartmentClosureModel>;
     public IsDepartmentClosureSubmit: boolean;
     private _dataServiceForDemand: DataService<DemandModel>;
+    
     constructor(private dataServiceFactory: DataServiceFactory,
         private incidentService: IncidentService,
-        private actionableService: ActionableService
-
-    ) {
+        private actionableService: ActionableService) {
         super(dataServiceFactory, 'DepartmentClosures');
         let option: DataProcessingService = new DataProcessingService();
-
         this._dataServiceForDemand = this.dataServiceFactory.CreateServiceWithOptions<DemandModel>('Demands', option);
         this.IsDepartmentClosureSubmit = false;
-
     }
 
     public GetIncidentFromIncidentId(incidentId: number): Observable<IncidentModel> {
@@ -44,19 +41,16 @@ export class DepartmentClosureService extends ServiceBase<DepartmentClosureModel
     public getAllbyIncidentandDepartment(incidentId, departmentId): Observable<ResponseModel<DepartmentClosureModel>> {
         return this._dataService.Query()
             .Select('ClosureReport,ClosureRemark')
-            .Filter(`IncidentId eq ${incidentId}  and DepartmentId eq ${departmentId}`)
-            .Execute();
+            .Filter(`IncidentId eq ${incidentId}  and DepartmentId eq ${departmentId}`).Execute();
     }
 
     public CreateDepartmentClosure(departmentClosure: DepartmentClosureModel): Observable<DepartmentClosureModel> {
-        return this._dataService.Post(departmentClosure)
-            .Execute();
+        return this._dataService.Post(departmentClosure).Execute();
     }
 
     public UpdateDepartmentClosure(entity: DepartmentClosureModel): Observable<DepartmentClosureModel> {
         let key: string = entity.DepartmentClosureId.toString()
-        return this._dataService.Patch(entity, key)
-            .Execute();
+        return this._dataService.Patch(entity, key).Execute();
     }
 
     public CheckPendingCheckListOrDemandForIncidentAndDepartment(incidentId: number, departmentId: number, callback?: ((_: boolean) => void)): void {
