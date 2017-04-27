@@ -32,6 +32,7 @@ import { ArchiveListService } from "./archive.dashboard.list.service";
 
 export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     @ViewChild('childModalViewClosedIncident') public childModalViewClosedIncident: ModalDirective;
+
     public closedCrisises: IncidentModel[];
     activeEmergencyTypes: EmergencyTypeModel[] = [];
     affectedStations: EmergencyLocationModel[] = [];
@@ -43,6 +44,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     isFlightRelated: boolean = false;
     isFlightRelatedPopup: boolean = false;
     incidentDataExchangeModel: IncidentDataExchangeModel = null;
+     
     constructor(formBuilder: FormBuilder,
         private archiveListService: ArchiveListService,
         private emergencyTypeService: EmergencyTypeService,
@@ -54,7 +56,6 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
         this.closedCrisises = [];
         this.affectedStations = [];
         this.severities = UtilityService.GetKeyValues(Severity);
-        
     }
 
     public ngOnInit(): void {
@@ -64,6 +65,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
         this.disableIsDrillPopup = true;
         this.isOffSetPopup = false;
         this.resetIncidentViewForm();
+        
         this.emergencyLocationService.GetAllActiveEmergencyLocations()
             .subscribe((result: ResponseModel<EmergencyLocationModel>) => {
                 result.Records.forEach((item: EmergencyLocationModel) => {
@@ -72,12 +74,13 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
                     emergencyLocationModel.AirportName = item.AirportName;
                     this.affectedStations.push(emergencyLocationModel);
                 });
-
             });
+        
         this.archiveListService.GetAllClosedIncidents()
             .subscribe((closedIncident: ResponseModel<IncidentModel>) => {
                 closedIncident.Records.forEach((itemIncident: IncidentModel) => {
-                    if (itemIncident.ReOpenBy != null && itemIncident.ReOpenOn != null && itemIncident.ReClosedBy == null && itemIncident.ReClosedOn == null) {
+                    if (itemIncident.ReOpenBy != null && itemIncident.ReOpenOn != null 
+                        && itemIncident.ReClosedBy == null && itemIncident.ReClosedOn == null) {
                         itemIncident.isReopen = true;
                     }
                     else {
@@ -85,20 +88,8 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
                     }
                     this.closedCrisises.push(itemIncident);
                 });
-
             });
     }
-
-    // public fillIncidentDataExchangeModelData(incidentModel: IncidentModel,
-    //     involvedPartyModel?: InvolvePartyModel, flightModel?: FlightModel): void {
-    //     this.incidentDataExchangeModel = new IncidentDataExchangeModel();
-    //     this.incidentDataExchangeModel.IncidentModel = incidentModel;
-    //     this.incidentDataExchangeModel.InvolvedPartyModel = involvedPartyModel;
-    //     this.incidentDataExchangeModel.FLightModel = flightModel;
-    //     this.incidentDataExchangeModel.IsFlightRelated = this.isFlightRelated;
-    //     console.log('Going to the View page.........................');
-
-    // }
 
     public resetIncidentViewForm(): void {
         this.formPopup = new FormGroup({
@@ -154,8 +145,8 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
             DescriptionPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Description),
             EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD-MM-YYYY h:mm a')),
             SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity)
-
         });
+        
         this.isFlightRelatedPopup = false;
         if (this.incidentDataExchangeModel.FLightModel != null) {
             this.formPopup = new FormGroup({
@@ -178,14 +169,13 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
             });
             this.isFlightRelatedPopup = true;
         }
-
         this.childModalViewClosedIncident.show();
     }
 
     public hideClosedIncidentView():void{
         this.childModalViewClosedIncident.hide();
     }
-
+    
     public ngOnDestroy(): void { }
 
     public viewClosedCrisis(incidentId: number): void {
