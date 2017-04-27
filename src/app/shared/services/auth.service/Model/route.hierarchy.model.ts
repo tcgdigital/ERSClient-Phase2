@@ -324,23 +324,49 @@ export const ROUTING_HIERARCHY: IRouteHierarchy[] = <IRouteHierarchy[]> [
             }
         ]
     },{
+        id: 'UploadExcel',
+        title: 'Upload Data',
+        icon: 'fa fa-cloud-upload fa-lg',
+        url: '/pages/masterdataupload',
+        selected: true,
+        hidden: false,
+        order: 3,
+        level: 1        
+    },{
         id: 'IniciateCrisis',
         title: 'Emergency Initiation',
         icon: 'fa fa-bell fa-lg',
         url: '/pages/incident',
         selected: true,
         hidden: false,
-        order: 3,
+        order: 4,
+        level: 1
+    },{
+        id: 'CloseOrTerminateEmergency',
+        title: 'Close Emergency',
+        icon: 'fa fa-bell-slash fa-lg',
+        url: '/pages/notifypeople',
+        selected: true,
+        hidden: false,
+        order: 5,
         level: 1
     },{
         id: 'IniciateNotifyDepartment',
         title: 'Notify Team',
         icon: 'fa fa-bullhorn fa-lg',
-        url: '/pages/notifypeople',
+        url: '/pages/emergencyclosure',
         selected: true,
         hidden: false,
-        order: 3,
+        order: 6,
+        level: 1
+    },{
+        id: 'ShowNotificationAcknowledgement',
+        title: 'Notify Team',
+        icon: 'fa fa-tachometer fa-lg',
+        url: '/pages/emergencyclosure',
+        selected: true,
+        hidden: false,
+        order: 6,
         level: 1
     }
-
 ];
