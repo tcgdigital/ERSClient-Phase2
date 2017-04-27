@@ -15,7 +15,7 @@ import { ActionableService } from '../shared.components/actionables/components/a
 import { DemandService } from '../shared.components/demand/components/demand.service';
 import { NotifyPeopleModel, UserDepartmentNotificationMapper, NotificationContactsWithTemplateModel } from '../notifypeople';
 import { ActionableModel, DemandModel } from '../shared.components';
-import { UtilityService, ResponseModel, BaseModel, GlobalStateService, KeyValue } from '../../shared';
+import { UtilityService, ResponseModel, BaseModel, GlobalStateService, KeyValue,AuthModel } from '../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { ReportPath } from './components/emergency.closure.model';
@@ -50,7 +50,7 @@ export class EmergencyClosureComponent implements OnInit {
 	notificationSeperatelySend: number[] = [];
 	report: string = "";
 	remarks: string = "";
-	credential: any;
+	credential: AuthModel;
 	public reportPath: ReportPath;
 	public UserDepartmentNotificationMappers: NotificationContactsWithTemplateModel[];
 
@@ -227,7 +227,7 @@ export class EmergencyClosureComponent implements OnInit {
 		}
 		else {
 			this.incident.IsSaved = true;
-			this.incident.SavedBy = this.credential.UserId;
+			this.incident.SavedBy = +this.credential.UserId;
 			this.incident.SavedOn = new Date();
 			this.incidentService.Update(this.incident, this.incident.IncidentId)
 				.subscribe(() => {
@@ -245,9 +245,9 @@ export class EmergencyClosureComponent implements OnInit {
 		}
 		else {
 			this.incident.IsSubmitted = true;
-			this.incident.SubmittedBy = this.credential.UserId;
+			this.incident.SubmittedBy = +this.credential.UserId;
 			this.incident.SubmittedOn = new Date();
-			this.incident.ClosedBy = this.credential.UserId;
+			this.incident.ClosedBy = +this.credential.UserId;
 			this.incident.ClosedOn = new Date();
 			this.incident.ActiveFlag = 'InActive';
 			this.incidentService.Update(this.incident, this.incident.IncidentId)

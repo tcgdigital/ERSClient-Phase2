@@ -7,6 +7,8 @@ import {
     FormGroup, FormControl,
     FormBuilder, AbstractControl, Validators
 } from '@angular/forms';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
 
 import { PresidentMessageService } from './presidentMessage.service';
 import { PresidentMessageModel } from './presidentMessage.model';
@@ -43,9 +45,11 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
      * @memberOf PresidentMessageEntryComponent
      */
     constructor(private presidentMessageService: PresidentMessageService,
-        private dataExchange: DataExchangeService<PresidentMessageModel>, 
+        private dataExchange: DataExchangeService<PresidentMessageModel>,
         private globalState: GlobalStateService,
-        private builder: FormBuilder) {
+        private builder: FormBuilder,
+        private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig) {
         this.showAdd = false;
 
     }
@@ -109,6 +113,7 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
 
             this.presidentMessageService.Create(this.PresidentsMessage)
                 .subscribe((response: PresidentMessageModel) => {
+                    this.toastrService.success('President message Saved successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("PresidentMessageModelSaved", response);
                     this.showAdd = false;
                 }, (error: any) => {
@@ -118,6 +123,7 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
         else {
             this.presidentMessageService.Update(this.PresidentsMessage)
                 .subscribe((response: PresidentMessageModel) => {
+                    this.toastrService.success('President message edited successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("PresidentMessageModelUpdated", response);
                     this.showAdd = false;
                 }, (error: any) => {

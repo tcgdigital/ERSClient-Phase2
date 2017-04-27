@@ -1,4 +1,6 @@
 import { Component, ViewEncapsulation, OnInit, ElementRef } from '@angular/core';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
 
 import { DepartmentModel } from '../masterdata/department/components/department.model';
 import { UserProfileModel } from '../masterdata/userprofile/components/userprofile.model';
@@ -19,7 +21,8 @@ export class NotifyPeopleComponent implements OnInit {
     private $document: JQuery;
     private $tree: JQuery;
 
-    constructor(private notifyPeopleService: NotifyPeopleService, private elementRef: ElementRef) { };
+    constructor(private notifyPeopleService: NotifyPeopleService, private elementRef: ElementRef, private toastrService: ToastrService,
+		private toastrConfig: ToastrConfig) { };
 
     ngOnInit(): any {
         this.notifucationModel = this.notifyPeopleService.GetDepartmentSubDepartmentUser(1);

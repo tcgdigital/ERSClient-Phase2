@@ -26,7 +26,8 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
 
     constructor(private demandTypeService: DemandTypeService,
         private departmentService: DepartmentService,
-        private dataExchange: DataExchangeService<DemandTypeModel>) { }
+        private dataExchange: DataExchangeService<DemandTypeModel>, private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig) { }
 
     getAllDepartments(): void {
         this.departmentService.GetAll()
@@ -94,6 +95,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
             this.demandTypeModel.DepartmentId = this.form.controls['ApproverDept'].value;
             this.demandTypeService.Create(this.demandTypeModel)
                 .subscribe((response: DemandTypeModel) => {
+                    this.toastrService.success('Demand Saved Successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("demandTypeModelSaved", response);
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
@@ -103,6 +105,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
             this.formControlDirtyCheck();
             this.demandTypeService.Update(this.demandTypeModelToEdit)
                 .subscribe((response: DemandTypeModel) => {
+                    this.toastrService.success('Demand Edited Successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("demandTypeModelUpdated", response);
                 }, (error: any) => {
                     console.log(`Error: ${error}`);

@@ -1,11 +1,13 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
 
 
 import {
     ResponseModel, DataExchangeService,
     AutocompleteComponent, KeyValue,
-    GlobalConstants, UtilityService, GlobalStateService
+    GlobalConstants, UtilityService, GlobalStateService, AuthModel
 } from '../../../shared';
 import { EnquiryModel, EnquiryService } from './components';
 import {
@@ -47,7 +49,9 @@ export class EnquiryComponent implements OnInit {
         private involvedPartyService: InvolvePartyService,
         private demandService: DemandService,
         private dataExchange: DataExchangeService<string>,
-        private globalState: GlobalStateService) { };
+        private globalState: GlobalStateService,
+        private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig) { };
 
     public form: FormGroup;
     enquiryTypes: Object = GlobalConstants.EnquiryType;
@@ -70,7 +74,8 @@ export class EnquiryComponent implements OnInit {
     departments: DepartmentModel[];
     selctedEnquiredPerson: AffectedPeopleToView;
     selctedEnquiredObject: AffectedObjectsToView;
-    userName: string = 'Soumit Nag';
+    //userName: string = 'Soumit Nag';
+    credential: AuthModel;
 
     onNotifyPassenger(message: KeyValue): void {
         this.enquiry.AffectedPersonId = message.Value;
@@ -144,6 +149,7 @@ export class EnquiryComponent implements OnInit {
     setCallerModel(): CallerModel {
         UtilityService.setModelFromFormGroup<CallerModel>(this.caller, this.form,
             x => x.AlternateContactNumber, x => x.CallerName, x => x.ContactNumber, x => x.Relationship);
+        this.caller.CreatedBy = +this.credential.UserId;
         return this.caller;
     };
 
@@ -153,9 +159,10 @@ export class EnquiryComponent implements OnInit {
         this.communicationLog.InteractionDetailsType = interactionType;
         this.communicationLog.Answers = this.form.controls['Queries'].value + ' Caller:'
             + this.caller.CallerName + ' Contact Number:' + this.caller.ContactNumber;
-        this.communicationLog.RequesterName = 'UserName';
+        this.communicationLog.RequesterName = this.credential.UserName;
         this.communicationLog.RequesterDepartment = this.currentDepartmentName;
         this.communicationLog.RequesterType = requestertype;
+        this.communicationLog.CreatedBy = +this.credential.UserId;
         this.communicationLogs.push(this.communicationLog);
         return this.communicationLogs;
     };
@@ -203,7 +210,8 @@ export class EnquiryComponent implements OnInit {
             this.demand.PDATicketNumber = (this.selctedEnquiredPerson !== null) ? this.selctedEnquiredPerson.TicketNumber
                 : (this.selctedEnquiredObject != null ? this.selctedEnquiredObject.TicketNumber : null);
             this.demand.Priority = GlobalConstants.Priority.find(x => x.value === '1').caption;
-            this.demand.RequestedBy = this.userName;
+            this.demand.RequestedBy = this.credential.UserName;
+            this.demand.CreatedBy = +this.credential.UserId;
             this.demand.RequiredLocation = GlobalConstants.RequiredLocation;
             this.demand.ScheduleTime = scheduleTime.toString();
             this.demand.RequesterType = GlobalConstants.RequesterTypeDemand;
@@ -220,6 +228,7 @@ export class EnquiryComponent implements OnInit {
             x => x.EnquiryType, x => x.IsAdminRequest, x => x.IsCallBack, x => x.IsTravelRequest, x => x.Queries);
         this.enquiry.IncidentId = this.currentIncident;
         this.enquiry.Remarks = '';
+        this.enquiry.CreatedBy = +this.credential.UserId;
         this.enquiry.Caller = this.setCallerModel();
         this.enquiry.CommunicationLogs = this.SetCommunicationLog(GlobalConstants.RequesterTypeEnquiry, GlobalConstants.InteractionDetailsTypeEnquiry);
         this.enquiry.CommunicationLogs[0].Queries = this.enquiry.Queries;
@@ -239,7 +248,7 @@ export class EnquiryComponent implements OnInit {
 
         this.enquiryService.Create(this.enquiry)
             .subscribe((response: EnquiryModel) => {
-                alert('Enquiry Saved successfully');
+                this.toastrService.success('Enquiry Saved successfully.', 'Success', this.toastrConfig);
                 this.form = new FormGroup({
                     EnquiryId: new FormControl(0),
                     EnquiryType: new FormControl('', [Validators.required, Validators.maxLength(50)]),
@@ -284,6 +293,7 @@ export class EnquiryComponent implements OnInit {
 
         this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.credential = UtilityService.getCredentialDetails();
         this.getPassengersCrews(this.currentIncident);
         this.getCargo(this.currentIncident);
         this.getDepartments();

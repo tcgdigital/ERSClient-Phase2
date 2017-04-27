@@ -37,10 +37,12 @@ export class PeopleOnBoardWidgetService implements OnInit {
             .map((dataTotalAffectedPassenger: ResponseModel<InvolvePartyModel>) => {
                 let passengerListLocal: PassengerModel[] = [];
                 let affectedPeoples: AffectedPeopleModel[];
-                affectedPeoples = dataTotalAffectedPassenger.Records[0].Affecteds[0].AffectedPeople;
-                affectedPeoples.forEach((item: AffectedPeopleModel) => {
-                    passengerListLocal.push(UtilityService.pluck(item, ['Passenger'])[0]);
-                });
+                if (dataTotalAffectedPassenger.Records[0].Affecteds[0]) {
+                    affectedPeoples = dataTotalAffectedPassenger.Records[0].Affecteds[0].AffectedPeople;
+                    affectedPeoples.forEach((item: AffectedPeopleModel) => {
+                        passengerListLocal.push(UtilityService.pluck(item, ['Passenger'])[0]);
+                    });
+                }
                 this.peopleOnBoard.totalAffectedPassengerCount = isNaN(passengerListLocal.length) ? 0 : passengerListLocal.length;
                 return this.peopleOnBoard;
             })
@@ -48,10 +50,12 @@ export class PeopleOnBoardWidgetService implements OnInit {
             .map((dataTotalAffectedCrew: ResponseModel<InvolvePartyModel>) => {
                 let crewListLocal: CrewModel[] = [];
                 let affectedPeoples: AffectedPeopleModel[];
+                if (dataTotalAffectedCrew.Records[0].Affecteds[0]) {
                 affectedPeoples = dataTotalAffectedCrew.Records[0].Affecteds[0].AffectedPeople;
                 affectedPeoples.forEach((item: AffectedPeopleModel) => {
                     crewListLocal.push(UtilityService.pluck(item, ['Crew'])[0]);
                 });
+                }
                 this.peopleOnBoard.totalAffectedCrewCount = isNaN(crewListLocal.length) ? 0 : crewListLocal.length;
                 return this.peopleOnBoard;
             })
@@ -65,16 +69,19 @@ export class PeopleOnBoardWidgetService implements OnInit {
                 let AffectedPersonIds: number[] = [];
                 let AffectedPeoples: ResponseModel<EnquiryModel>;
                 let affectedPeoples: AffectedPeopleModel[];
+                let affectedPeoplesList: AffectedPeopleModel[] = [];
                 this.enquiries.Records.forEach((itemEnquiry: EnquiryModel) => {
                     AffectedPersonIds.push(itemEnquiry.AffectedPersonId);
                 });
+                 if (dataInvolvePartyModels.Records[0].Affecteds[0]) {
                 affectedPeoples = dataInvolvePartyModels.Records[0].Affecteds[0].AffectedPeople;
-                let affectedPeoplesList: AffectedPeopleModel[] = [];
+                
                 affectedPeoplesList = affectedPeoples.filter((itemAffectedPeople: AffectedPeopleModel) => {
                     return AffectedPersonIds.some((someItem) => {
                         return (someItem == itemAffectedPeople.AffectedPersonId);
                     });
                 });
+                 }
                 let enquiredPassengers: PassengerModel[] = [];
                 affectedPeoplesList.forEach((people: AffectedPeopleModel) => {
                     enquiredPassengers.push(people.Passenger);
@@ -92,17 +99,19 @@ export class PeopleOnBoardWidgetService implements OnInit {
                 let AffectedPeoples: ResponseModel<EnquiryModel>;
                 let affectedPeoples: AffectedPeopleModel[];
                 let AffectedPersonIds: number[] = [];
+                let affectedPeoplesList: AffectedPeopleModel[] = [];
                 this.enquiries.Records.forEach((itemEnquiry: EnquiryModel) => {
                     AffectedPersonIds.push(itemEnquiry.AffectedPersonId);
                 });
+                 if (dataInvolvePartyModels.Records[0].Affecteds[0]) {
                 affectedPeoples = dataInvolvePartyModels.Records[0].Affecteds[0].AffectedPeople;
-                let affectedPeoplesList: AffectedPeopleModel[] = [];
                 affectedPeoplesList = affectedPeoples.filter((itemAffectedPeople: AffectedPeopleModel) => {
                     return AffectedPersonIds.some((someItem) => {
                         return (someItem == itemAffectedPeople.AffectedPersonId &&
                             itemAffectedPeople.Crew != null);
                     });
                 });
+                 }
                 let enquiredCrews: CrewModel[] = [];
                 affectedPeoplesList.forEach((people: AffectedPeopleModel) => {
                     enquiredCrews.push(people.Crew);

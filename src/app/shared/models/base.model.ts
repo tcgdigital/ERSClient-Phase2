@@ -67,3 +67,14 @@ export class FileData {
 export class Location {
     constructor(public latitude: number, public longitude: number) { }
 }
+
+export class AuthModel {
+    public UserName: string;
+    public UserId: string;
+    public ClientId: string;
+    public RequestedFrom: string;
+    public aud: string;
+    public exp: number;
+    public iss: string;
+    public nbf: number;
+}

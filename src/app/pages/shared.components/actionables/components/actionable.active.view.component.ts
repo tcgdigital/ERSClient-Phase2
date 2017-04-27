@@ -16,7 +16,7 @@ import { DepartmentService, DepartmentModel } from '../../../masterdata/departme
 import {
     ResponseModel, DataExchangeService,
     UtilityService, GlobalConstants, KeyValue,
-    FileUploadService, GlobalStateService, SharedModule
+    FileUploadService, GlobalStateService, SharedModule,AuthModel
 } from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 
@@ -40,6 +40,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     actionableModelToUpdate: ActionableModel = null;
     actionableWithParents: ActionableModel[] = [];
     parentChecklistIds: number[] = [];
+    credential: AuthModel;
 
     public form: FormGroup;
 
@@ -56,13 +57,16 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
      */
     constructor(formBuilder: FormBuilder, private actionableService: ActionableService,
         private fileUploadService: FileUploadService, private departmentService: DepartmentService,
-        private dataExchange: DataExchangeService<boolean>, private globalState: GlobalStateService) {
+        private dataExchange: DataExchangeService<boolean>, private globalState: GlobalStateService,
+        private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig) {
         this.filesToUpload = [];
     }
 
     public ngOnInit(): any {
         this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.credential = UtilityService.getCredentialDetails();
 
         this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
         this.form = this.resetActionableForm();
@@ -87,13 +91,13 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
             .subscribe((responseActionable: ResponseModel<ActionableModel>) => {
                 this.departmentService.GetDepartmentNameIds()
                     .subscribe((response: ResponseModel<DepartmentModel>) => {
-                        let childActionables : ActionableModel[] = [];
+                        let childActionables: ActionableModel[] = [];
                         childActionables = responseActionable.Records;
-                        childActionables.forEach(x=>{
-                            x["DepartmentName"] = response.Records.find(y=>{return y.DepartmentId == x.DepartmentId;}).DepartmentName;
+                        childActionables.forEach(x => {
+                            x["DepartmentName"] = response.Records.find(y => { return y.DepartmentId == x.DepartmentId; }).DepartmentName;
                         });
                         actionable["actionableChilds"] = childActionables;
-                        
+
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                     });
@@ -254,6 +258,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
 
         this.actionableService.Update(this.editActionableModel)
             .subscribe((response: ActionableModel) => {
+                this.toastrService.success('Actionable comments updated successfully.', 'Success', this.toastrConfig);
                 editedActionableModel.show = false;
                 this.tempActionable = this.activeActionables
                     .find((item: ActionableModel) => item.ActionId == editedActionableModel.ActionId);
@@ -267,27 +272,36 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     activeActionableClick(activeActionablesUpdate: ActionableModel[]): void {
+
         let filterActionableUpdate = activeActionablesUpdate
             .filter((item: ActionableModel) => item.Done == true);
-        filterActionableUpdate.forEach(x => {
-            delete x["expanded"];
-            delete x["actionableChilds"];
+        if (filterActionableUpdate.length > 0) {
+            filterActionableUpdate.forEach(x => {
+                delete x["expanded"];
+                delete x["actionableChilds"];
 
-        });
-        this.batchUpdate(filterActionableUpdate.map(x => {
-            return {
-                ActionId: x.ActionId,
-                ActualClose: new Date(),
-                ClosedBy: 1,
-                CompletionStatus: "Close",
-                ClosedOn: new Date()
-            };
-        }));
+            });
+            this.batchUpdate(filterActionableUpdate.map(x => {
+                return {
+                    ActionId: x.ActionId,
+                    ActualClose: new Date(),
+                    ClosedBy: this.credential.UserId,
+                    CompletionStatus: "Close",
+                    ClosedOn: new Date()
+                };
+            }));
+        }
+        else
+        { 
+            this.toastrService.error("Please select at least one checklist", 'Error', this.toastrConfig);
+        }
     }
+
 
     private batchUpdate(data: any[]) {
         this.actionableService.BatchOperation(data)
             .subscribe(x => {
+                this.toastrService.success('Actionables updated successfully.', 'Success', this.toastrConfig);
                 this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
             }, (error: any) => {
                 console.log(`Error: ${error}`);

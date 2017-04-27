@@ -3,6 +3,8 @@ import {
     OnInit, AfterContentInit, ViewChild
 } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
 
 import { InvolvePartyModel } from '../../involveparties';
 import { DemandModel, DemandModelToView, DemandRemarkLogModel } from './demand.model';
@@ -14,7 +16,7 @@ import { DemandRemarkLogService } from './demand.remarklogs.service';
 import {
     ResponseModel, DataExchangeService,
     GlobalConstants, GlobalStateService,
-    UtilityService, KeyValue
+    UtilityService, KeyValue,AuthModel
 } from '../../../../shared';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
 import { ModalDirective } from 'ng2-bootstrap/modal';
@@ -31,7 +33,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     currentDepartmentId: number;
     currentDepartmentName: string;
     currentIncidentId: number;
-    createdBy: number = 2;
+    createdBy: number;
     communicationLogs: CommunicationLogModel[];
     communicationLog: CommunicationLogModel;
     demandRemarks: DemandRemarkLogModel[];
@@ -41,6 +43,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     demandTrails: DemandTrailModel[];
     demandForRemarks: DemandModelToView;
     demandTrail: DemandTrailModel;
+    credential: AuthModel;
 
     /**
      * Creates an instance of ApprovedDemandComponent.
@@ -54,7 +57,9 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     constructor(private demandService: DemandService,
         private demandRemarkLogsService: DemandRemarkLogService,
         private globalState: GlobalStateService,
-        private departmentService: DepartmentService) {
+        private departmentService: DepartmentService,
+        private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig) {
         this.createdByName = 'Anwesha Ray';
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
@@ -190,6 +195,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.RemarkToCreate.RequesterDepartmentName = demand.RequesterDepartmentName;
         this.RemarkToCreate.TargetDepartmentName = demand.TargetDepartmentName;
         this.RemarkToCreate.CreatedByName = this.createdByName;
+        this.RemarkToCreate.CreatedBy = +this.credential.UserId;
         this.demandRemarkLogsService.Create(this.RemarkToCreate)
             .subscribe((response: DemandRemarkLogModel) => {
                 this.getDemandRemarks(demand.DemandId);
@@ -214,6 +220,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.communicationLog.RequesterDepartment = demand.TargetDepartmentName;
         this.communicationLog.RequesterType = 'Request';
         this.communicationLog.DemandId = demand.DemandId;
+        this.communicationLog.CreatedBy = +this.credential.UserId;
         this.communicationLog.InteractionDetailsType = GlobalConstants.InteractionDetailsTypeDemand;
         if (demand.AffectedPersonId != null) {
             this.communicationLog.AffectedPersonId = demand.AffectedPersonId;
@@ -255,6 +262,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
             else {
                 this.demandService.UpdateBulkForApproval(demandCompletion)
                     .subscribe((response: DemandModel[]) => {
+                        this.toastrService.success('Demand status successfully updated.', 'Success', this.toastrConfig);
                         this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
@@ -266,10 +274,10 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     ngOnInit(): any {
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-
+        this.credential = UtilityService.getCredentialDetails();
+        this.createdBy = +this.credential.UserId;
         this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
         this.getCurrentDepartmentName(this.currentDepartmentId);
-
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     };
@@ -282,7 +290,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     private departmentChangeHandler(department: KeyValue): void {
         this.currentDepartmentId = department.Value;
         this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
-        this.getCurrentDepartmentName(this.currentDepartmentId);
+         this.currentDepartmentName = department.Key;
     };
 
     getCurrentDepartmentName(departmentId): void {
