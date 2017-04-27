@@ -29,6 +29,17 @@ export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
                 }
             },
             {
+                path: 'masterdataupload',
+                data: {
+                    menu: {
+                        title: 'Upload',
+                        icon: 'fa fa-cloud-upload fa-lg',
+                        selected: false,
+                        expanded: false,
+                    }
+                }
+            },
+            {
                 path: 'incident',
                 data: {
                     menu: {
@@ -41,11 +52,22 @@ export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
                 }
             },
             {
+                path: 'emergencyclosure',
+                data: {
+                    menu: {
+                        title: 'Close Emergency',
+                        icon: 'fa fa-bell-slash fa-lg',
+                        selected: false,
+                        expanded: false,
+                    }
+                }
+            },
+            {
                 path: 'notifypeople',
                 data: {
                     menu: {
                         title: 'Notify People',
-                        icon: 'fa fa-bullhorn fa-lg',
+                        icon: 'fa fa-paper-plane fa-lg',
                         selected: false,
                         expanded: false,
                         order: 4
@@ -76,6 +98,7 @@ export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
                         order: 6
                     }
                 }
+
             }
         ]
     }

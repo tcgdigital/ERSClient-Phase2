@@ -7,6 +7,8 @@ import {
     Validators,
     ReactiveFormsModule
 } from '@angular/forms';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
 
 import { QuickLinkModel } from './quicklink.model';
 import { QuickLinkService } from './quicklink.service';
@@ -62,6 +64,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
             this.quickLinkService.Create(this.quickLinkModel)
                 .subscribe((response: QuickLinkModel) => {
                     this.dataExchange.Publish("quickLinkModelSaved", response);
+                     this.showAdd = false;
                     this.initiateQuickLinkModel();
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
@@ -80,7 +83,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
                             QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL, 
                                 [Validators.required, Validators.minLength(12)])
                         });
-                        this.showAddRegion(true);
+                        this.showAdd = false;
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                     });
@@ -90,6 +93,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
 
     cancel(): void {
         this.initiateQuickLinkModel();
+        this.showAdd = false;
         this.form = new FormGroup({
             QuickLinkId: new FormControl(0),
             QuickLinkName: new FormControl(this.quickLinkModel.QuickLinkName, 
@@ -115,7 +119,8 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
     }
 
     onQuickLinkEditSuccess(data: QuickLinkModel): void {
-        this.showAddRegion(false);
+        this.showAddRegion();
+        this.showAdd = true;
         this.initiateQuickLinkModel();
         this.quickLinkModel = data;
 
@@ -128,15 +133,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
         });
     }
 
-    showAddRegion(ShowAdd: Boolean): void {
-        if (ShowAdd) {
-            this.showAdd = false;
-            this.buttonValue = "Show Add QuickLink";
-        }
-        else {
-            this.showAdd = true;
-            this.buttonValue = "Hide Add QuickLink";
-        }
-        console.log("Add Quick Region is Show " + ShowAdd);
+    showAddRegion(): void {
+        this.showAdd = true;
     }
 }

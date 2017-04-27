@@ -25,6 +25,8 @@ const pageRoutes: Routes = [
             { path: 'masterdataupload', loadChildren: './masterdata.upload/masterdata.upload.module#MasterDataUploadModule' },
             { path: 'notifypeople', loadChildren: './notifypeople/notifypeople.module#NotifyPeopleModule' },
             { path: 'departmentclosure', loadChildren: './departmentclosure/department.closure.module#DepartmentClosureModule' },
+            { path: 'emergencyclosure', loadChildren: './emergency.closure/emergency.closure.module#EmergencyClosureModule' },
+            { path: 'notifypeople', loadChildren: './notifypeople/notifypeople.module#NotifyPeopleModule' }
         ]
     }
 ];

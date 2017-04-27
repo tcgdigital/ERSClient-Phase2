@@ -239,6 +239,14 @@
     }
 }
 
+.nodatafound{ 
+    width:50%; 
+    margin:0 auto;    
+    text-align: center;
+    i{
+       width: 100%;
+    }
+}
 @media screen and (max-width: $resXS-E) {}
 
 @media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {}

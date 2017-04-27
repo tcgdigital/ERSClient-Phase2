@@ -19,6 +19,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
     private _bulkDataService: DataService<DemandModel>;
     private _bulkDataServiceForCompletion: DataService<DemandModel>;
     private _bulkDataServiceForApproval: DataService<DemandModel>;
+     private _batchDataService: DataService<DemandModel>;
     public departmentAccessOwnerModels: DepartmentAccessOwnerModel[];
     /**
      * Creates an instance of DemandService.
@@ -42,6 +43,8 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
         this._bulkDataServiceForCompletion = this.dataServiceFactory
             .CreateServiceWithOptionsAndActionSuffix<DemandModel>
             ('DemandClosureBatch', '', option);
+         this._batchDataService = this.dataServiceFactory
+            .CreateServiceWithOptions<DemandModel>('', option);
     }
 
     public GetAll(): Observable<ResponseModel<DemandModel>> {
@@ -197,6 +200,28 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
 
     }
 
-    
+     public BatchGet(incidentId: number, departmentIds: number[]): Observable<ResponseModel<DemandModel>> {
+        let requests: Array<RequestModel<BaseModel>> = [];
+         let filterString: string = "";
+        departmentIds.forEach((item, index) => {
+            if (departmentIds.length > 1) {
+                if (index == 0) {
+                    filterString = `(RequesterDepartmentId eq ${item})`;
+                }
+                else {
+                    filterString = filterString +
+                        ` or (RequesterDepartmentId eq ${item})`;
+                }
+            }
+            else {
+                filterString = `RequesterDepartmentId eq ${item}`;
+            }
+        });
+        //departmentIds.forEach(x => {
+                requests.push(new RequestModel<BaseModel>(`/odata/Demands?$filter=IncidentId eq ${incidentId} and (${filterString})`, WEB_METHOD.GET));
+       // });
+        return this._batchDataService.BatchPost<BaseModel>(requests)
+            .Execute();
+    }
 
 }

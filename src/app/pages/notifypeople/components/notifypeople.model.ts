@@ -1,6 +1,10 @@
 import { NgModule } from '@angular/core';
 import { BaseModel, KeyValue } from '../../../shared';
-import { UserProfileModel } from "../../masterdata/userprofile";
+
+import { UserProfileModel } from '../../masterdata/userprofile';
+import { DepartmentModel } from '../../masterdata/department';
+import { IncidentModel } from '../../incident';
+
 export class NotifyPeopleModel extends BaseModel {
     public id: number;
     public text: string;
@@ -55,6 +59,21 @@ export class NotificationContactsWithTemplateModel extends BaseModel {
         this.Message = '';
 
     }
+}
+
+
+export class UserDepartmentNotificationMapper extends BaseModel {
+    public UserDepartmentNotificationMapperId: number;
+    public UserId: number;
+    public DepartmentId: number;
+    public NotificationId: number;
+    public IncidentId: number;
+    public SendOn: Date;
+
+    public UserProfile?: UserProfileModel;
+    public Department?: DepartmentModel;
+    //   public  Notification Notification : ;
+    public Incident?: IncidentModel;
 }
 
 

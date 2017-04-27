@@ -3,12 +3,14 @@ import { Observable } from 'rxjs/Rx';
 import { UserPermissionModel } from "../../masterdata/userpermission/components/userpermission.model";
 import {
     NotifyPeopleModel,
-    NotificationContactsWithTemplateModel
+    NotificationContactsWithTemplateModel,UserDepartmentNotificationMapper
 } from "./notifypeople.model";
 import {
     AppendedTemplateModel,
     AppendedTemplateService
 } from "../../masterdata/appendedtemplate";
+
+import { INotifyPeopleService } from './INotifyPeopleService';
 import {
     ResponseModel, DataService,
     DataServiceFactory,
@@ -65,6 +67,14 @@ export class NotifyPeopleService extends ServiceBase<NotifyPeopleModel> {
             });
     }
 
+    // public GetDepartmentSubDepartmentUser(departmentId: number): NotifyPeopleModel[] {
+    //     let count: number = 1;
+    //     let arrayDepartmentIds: number[] = [];
+    //     arrayDepartmentIds.push(departmentId);
+    //     this.medthod(arrayDepartmentIds, count);
+    //     return this.allDepartmentUserPermission;
+    // }
+
     public GetAllDepartmentMatrix(departmentId: number, incidentId: number, callback?: ((_: NotifyPeopleModel[]) => void)): void {
         this.userPermissionService.GetAllDepartmentMatrix()
             .subscribe((departments: ResponseModel<DepartmentModel>) => {
@@ -106,7 +116,14 @@ export class NotifyPeopleService extends ServiceBase<NotifyPeopleModel> {
         for (let i: number = 1; i < array.length; i++) {
             this.FillDepartmentMatrix(allDepartments, array[i]);
         }
+    }
 
+    public GetAllByIncident(incidentId: number): Observable<ResponseModel<UserDepartmentNotificationMapper>> {
+        return this._dataService.Query()
+            .Select('Department, UserDepartmentNotificationMapperId')
+            .Expand('Department($select=DepartmentId, DepartmentName)')
+            .Filter(`IncidentId eq ${incidentId}`)
+            .Execute();
     }
 
     public GetDepartmentUser(departmentIdProjection: string, incidentId: number, callback?: ((_: NotifyPeopleModel[]) => void)): void {

@@ -10,4 +10,5 @@ export interface IDepartmentService extends IServiceInretface<DepartmentModel> {
     GetParentDepartments(): Observable<ResponseModel<DepartmentModel>>;
 
     GetAllDepartmentsFromDepartmentIdProjection(departmentIdProjection: string): Observable<ResponseModel<DepartmentModel>>;
+    GetDepartmentIds(): Observable<ResponseModel<DepartmentModel>>;
 }

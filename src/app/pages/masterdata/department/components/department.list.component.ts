@@ -19,6 +19,7 @@ export class DepartmentListComponent implements OnInit {
     departments: DepartmentModel[] = [];
     searchConfigs: SearchConfigModel<any>[] = [];
     departmentIds: number[] = [];
+    departmentModelPatch: DepartmentModel = null;
 
     constructor(private departmentService: DepartmentService, private dataExchange: DataExchangeService<DepartmentModel>,
         private userProfileService: UserProfileService) {
@@ -59,10 +60,30 @@ export class DepartmentListComponent implements OnInit {
         this.dataExchange.Publish("departmentModelEdited", editedDepartment);
     }
 
+    IsActive(event: any, editeddepartment: DepartmentModel): void {
+        this.departmentModelPatch = new DepartmentModel();
+        this.departmentModelPatch.DepartmentId = editeddepartment.DepartmentId;
+        this.departmentModelPatch.deleteAttributes();
+        this.departmentModelPatch.ActiveFlag = 'Active';
+        if (!event.checked) {
+            this.departmentModelPatch.ActiveFlag = 'InActive';
+        }
+        this.departmentService.Update(this.departmentModelPatch)
+            .subscribe((response: DepartmentModel) => {
+                this.getDepertments();
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
+    }
+
     invokeSearch(query: string): void {
         if (query !== '') {
             this.departmentService.GetQuery(query)
                 .subscribe((response: ResponseModel<DepartmentModel>) => {
+                    response.Records.forEach(x => {
+                        x["Active"] = (x.ActiveFlag == 'Active');
+                        this.departmentIds.push(x.DepartmentId);
+                    });
                     this.departments = response.Records;
                 }, ((error: any) => {
                     console.log(`Error: ${error}`);

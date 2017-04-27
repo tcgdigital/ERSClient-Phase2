@@ -3,28 +3,37 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
+import { ModalModule } from 'ng2-bootstrap';
+
 import { MasterDataUploadRouting } from './masterdata.upload.routing';
 import { MasterDataUploadComponent } from './masterdata.upload.component';
 
-import { 
-            MasterDataUploadForValidService, 
-            MasterDataUploadForInvalidService,
-            MasterDataUploadListComponent 
-        }   from './components'
-import { ValidPassengersListComponent, ValidCargoListComponent, ValidCrewListComponent } from './components/valid'
-import { InvalidCrewListComponent, InvalidPassengersListComponent, InvalidCargoListComponent } from './components/invalid'
-import { DataExchangeService, FileUploadService } from '../../shared';
-
+import {
+    MasterDataUploadForValidService,
+    MasterDataUploadForInvalidService,
+    MasterDataUploadListComponent
+} from './components'
+import {
+    ValidPassengersListComponent, ValidCargoListComponent,
+    ValidCrewListComponent
+} from './components/valid'
+import {
+    InvalidCrewListComponent, InvalidPassengersListComponent,
+    InvalidCargoListComponent
+} from './components/invalid'
+import { DataExchangeService, FileUploadService, SharedModule } from '../../shared';
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
         HttpModule,
+        SharedModule,
         ReactiveFormsModule,
+        ModalModule.forRoot(),
         MasterDataUploadRouting
     ],
-    declarations: [        
+    declarations: [
         MasterDataUploadComponent,
         MasterDataUploadListComponent,
         ValidPassengersListComponent,
@@ -34,11 +43,10 @@ import { DataExchangeService, FileUploadService } from '../../shared';
         InvalidPassengersListComponent,
         InvalidCargoListComponent
     ],
-
     providers: [
         DataExchangeService,
         FileUploadService,
-        MasterDataUploadForValidService, 
+        MasterDataUploadForValidService,
         MasterDataUploadForInvalidService
     ]
 })
