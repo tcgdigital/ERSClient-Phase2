@@ -112,7 +112,7 @@ export class DepartmentEntryComponent implements OnInit {
                 this.departmentModel.deleteAttributes();
                 this.departmentService.Update(this.departmentModel)
                     .subscribe((response: DepartmentModel) => {
-                         this.toastrService.success('Department Edited Successfully.', 'Success', this.toastrConfig);
+                        this.toastrService.success('Department Edited Successfully.', 'Success', this.toastrConfig);
                         this.setDepartmentForm();
                         this.dataExchange.Publish("departmentSavedOrEdited", response);
                         this.showAdd = false;

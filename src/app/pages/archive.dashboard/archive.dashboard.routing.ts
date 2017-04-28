@@ -7,7 +7,7 @@ const archiveDashboardRoutes: Routes = [
     {
         path: '',
         component: ArchiveDashboardComponent,
-        // canActivate: [AuthGuardService],
+        canActivate: [AuthGuardService],
         canActivateChild: [AuthGuardService],
         children: [
             { path: 'people', loadChildren: '../shared.components/affected.people/affected.people.module#AffectedPeopleModule' },
@@ -21,11 +21,6 @@ const archiveDashboardRoutes: Routes = [
             { path: 'otherQuery', loadChildren: '../shared.components/other.query/other.query.module#OtherQueryModule' },
             { path: 'crewQuery', loadChildren: '../shared.components/crew.query/crew.query.module#CrewQueryModule' }
         ]
-    },
-    {
-        path: 'archivelist',
-        component: ArchiveDashboardComponent,
-        // canActivate: [AuthGuardService]
     }
 ];
 

@@ -27,7 +27,7 @@ export class UtilityService {
    
     public static getCredentialDetails() : AuthModel  {
         let access_token = this.GetFromSession(GlobalConstants.ACCESS_TOKEN)
-                return  jwtDecode(access_token);
+            return  jwtDecode(access_token);
     }
 
     /**
