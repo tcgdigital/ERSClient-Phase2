@@ -3,6 +3,8 @@ import {
     Input, Output, EventEmitter, ElementRef, SimpleChange,
     AfterContentInit, HostListener
 } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { Subscription } from 'rxjs/Rx';
 import { KeyValue } from '../../models/base.model';
 
 @Component({
@@ -11,7 +13,7 @@ import { KeyValue } from '../../models/base.model';
     templateUrl: './dropdown.view.html',
     styleUrls: ['./dropdown.style.scss']
 })
-export class CustomDropdownComponent implements AfterContentInit, OnChanges {
+export class CustomDropdownComponent implements AfterContentInit, OnChanges,OnInit {
     @Input() dataItems: KeyValue[];
     @Input() initialValue: number = 0;
     @Input() placeholder: string;
@@ -21,7 +23,9 @@ export class CustomDropdownComponent implements AfterContentInit, OnChanges {
     private $placeholder: JQuery;
     private $options: JQuery;
     private value: KeyValue;
-    private index: number = -1
+    private index: number = -1;
+    protected _onRouteChange: Subscription;
+    private showdropdown: boolean = false;
 
     /**
      * Creates an instance of CustomDropdownComponent.
@@ -29,7 +33,23 @@ export class CustomDropdownComponent implements AfterContentInit, OnChanges {
      * 
      * @memberOf CustomDropdownComponent
      */
-    constructor(private elementRef: ElementRef) { }
+    constructor(private elementRef: ElementRef,private _router: Router) { }
+    
+    ngOnInit() {
+        //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+        //Add 'implements OnInit' to the class.
+         this._onRouteChange = this._router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                if((event.url.indexOf("archivedashboard")>-1) && (this.placeholder.indexOf("Incident")>-1))
+                {
+                        this.showdropdown = true;
+                }
+                else{
+                    this.showdropdown = false;
+                }
+            }
+        });
+    }
 
     public ngAfterContentInit(): void {
         this.$selfElement = jQuery(this.elementRef.nativeElement);
@@ -44,6 +64,7 @@ export class CustomDropdownComponent implements AfterContentInit, OnChanges {
     }
 
     public onItemClick($event: JQueryEventObject, dataItem: KeyValue): void {
+        debugger;
         let $self = jQuery($event.currentTarget);
         this.value = dataItem;
         this.index = $self.index();

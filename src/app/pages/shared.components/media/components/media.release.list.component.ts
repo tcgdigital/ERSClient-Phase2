@@ -2,11 +2,13 @@ import {
     Component, OnInit, ViewEncapsulation,
     Input, OnDestroy
 } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import {Subscription } from 'rxjs/Rx';
 import { MediaModel } from './media.model';
 import { MediaService } from './media.service';
 import {
     ResponseModel, DataExchangeService,
-    GlobalStateService, KeyValue
+    GlobalStateService, KeyValue,UtilityService
 } from '../../../../shared';
 
 @Component({
@@ -21,6 +23,8 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
     mediaReleases: MediaModel[] = [];
     currentIncidentId: number;
     currentDepartmentId: number;
+    isArchive: boolean = false;
+    protected _onRouteChange: Subscription;
 
     /**
      * Creates an instance of MediaReleaseListComponent.
@@ -32,7 +36,7 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
      */
     constructor(private mediaService: MediaService,
         private dataExchange: DataExchangeService<MediaModel>,
-        private globalState: GlobalStateService) { }
+        private globalState: GlobalStateService, private _router: Router) { }
 
     getMediaReleases(departmentId, incidentId): void {
         this.mediaService.Query(departmentId, incidentId)
@@ -44,6 +48,7 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
     }
 
     onMediaSuccess(mediaQuery: MediaModel): void {
+        debugger;
         this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
     }
 
@@ -55,7 +60,21 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.currentIncidentId = +this.incidentId;
         this.currentDepartmentId = +this.initiatedDepartmentId;
-        this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
+        this._onRouteChange = this._router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                if (event.url.indexOf("archivedashboard") > -1) {
+                    this.isArchive = true;
+                    this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
+                    this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
+                }
+                else {
+                    this.isArchive = false;
+                    this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+                   this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
+                }
+            }
+        });
+        
 
         this.dataExchange.Subscribe("MediaModelSaved", model => this.onMediaSuccess(model));
         this.dataExchange.Subscribe("MediaModelUpdated", model => this.onMediaSuccess(model));

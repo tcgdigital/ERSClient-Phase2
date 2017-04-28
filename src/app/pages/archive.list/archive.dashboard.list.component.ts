@@ -13,6 +13,7 @@ import {
     ReactiveFormsModule
 } from '@angular/forms';
 import { ModalDirective } from 'ng2-bootstrap/modal';
+import { Router } from '@angular/router';
 import {
     ITabLinkInterface, GlobalStateService, UtilityService, KeyValue, ResponseModel, Severity,
     KeyVal,
@@ -57,7 +58,8 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
         private incidentService: IncidentService,
         private involvePartyService: InvolvePartyService,
         private flightService: FlightService,
-        private globalState: GlobalStateService) {
+        private globalState: GlobalStateService,
+        private router: Router) {
         this.closedCrisises = [];
         this.affectedStations = [];
         this.severities = UtilityService.GetKeyValues(Severity);
@@ -82,11 +84,11 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
                     this.affectedStations.push(emergencyLocationModel);
                 });
             });
-        
+
         this.archiveListService.GetAllClosedIncidents()
             .subscribe((closedIncident: ResponseModel<IncidentModel>) => {
                 closedIncident.Records.forEach((itemIncident: IncidentModel) => {
-                    if (itemIncident.ReOpenBy != null && itemIncident.ReOpenOn != null 
+                    if (itemIncident.ReOpenBy != null && itemIncident.ReOpenOn != null
                         && itemIncident.ReClosedBy == null && itemIncident.ReClosedOn == null) {
                         itemIncident.isReopen = true;
                     }
@@ -163,7 +165,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
             EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD-MM-YYYY h:mm a')),
             SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity)
         });
-        
+
         this.isFlightRelatedPopup = false;
         if (this.incidentDataExchangeModel.FLightModel != null) {
             this.formPopup = new FormGroup({
@@ -192,7 +194,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     public hideClosedIncidentView(): void {
         this.childModalViewClosedIncident.hide();
     }
-    
+
     public ngOnDestroy(): void { }
 
     public viewClosedCrisis(incidentId: number): void {
@@ -259,5 +261,10 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
             }, (error) => {
                 this.toastrService.error('Some Error Occured.', 'Archieve Crisis', this.toastrConfig);
             });
+    }
+
+    private onArchivedIncidentClick(incidentId: number): void {
+        UtilityService.SetToSession({ 'ArchieveIncidentId': incidentId });
+        this.router.navigate(['pages/archivedashboard']);
     }
 }

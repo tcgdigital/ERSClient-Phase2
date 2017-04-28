@@ -8,6 +8,8 @@ import {
 } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
+import { Router, NavigationEnd } from '@angular/router';
+import { Subscription } from 'rxjs/Rx';
 
 
 import { DemandService } from './demand.service';
@@ -47,8 +49,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     priorities: any[] = GlobalConstants.Priority;
     requesterTypes: any[] = GlobalConstants.RequesterType;
     filtereddepartments: DepartmentModel[] = [];
-    affectedPeople: AffectedPeopleToView[];
-    affectedObjects: AffectedObjectsToView[];
+    affectedPeople: AffectedPeopleToView[]=[];
+    affectedObjects: AffectedObjectsToView[]=[];
     pdas: Array<KeyValue> = [];
     awbs: Array<KeyValue> = [];
     currentIncidentId: number;
@@ -67,6 +69,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     credentialName: string;
     caller: CallerModel;
     credential: AuthModel;
+    protected _onRouteChange: Subscription;
+    isArchive: boolean = false;
 
     /**
      * Creates an instance of DemandEntryComponent.
@@ -96,7 +100,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         private globalState: GlobalStateService,
         private dataExchange: DataExchangeService<number>,
         private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig) {
+        private toastrConfig: ToastrConfig, private _router: Router) {
         this.showAdd = false;
         this.buttonValue = "Create Demand";
         // this.createdBy = 2;
@@ -287,7 +291,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
 
     setModelForUpdate(id) {
-        debugger;
         this.demandService.GetByDemandId(id)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demandModel = response.Records[0];
@@ -315,18 +318,34 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     ngOnInit(): any {
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this._onRouteChange = this._router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                if (event.url.indexOf("archivedashboard") > -1) {
+                    this.isArchive = true;
+                    this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
+                    this.demandModel.IncidentId = this.currentIncidentId;
+                   // this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
+                }
+                else {
+                    this.isArchive = false;
+                    this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+                    this.demandModel.IncidentId = this.currentIncidentId;
+                    this.getPassengersCrews(this.currentIncidentId);
+                    this.getCargo(this.currentIncidentId);
+                }
+            }
+        });
         this.credential = UtilityService.getCredentialDetails();
         this.createdBy = +this.credential.UserId;
         this.credentialName = this.credential.UserName;
         this.getDemandType();
         this.getPageSpecifiedDepartments();
         this.getAllDepartments();
-        this.getPassengersCrews(this.currentIncidentId);
-        this.getCargo(this.currentIncidentId);
+
         this.initializeForm();
         this.getDepartmentNameAndParentDepartment(this.currentDepartmentId);
         this.demandModel.DemandId = 0;
-        this.demandModel.IncidentId = this.currentIncidentId;
+        
         this.demandModel.RequesterDepartmentId = this.currentDepartmentId;
         this.demandModel.AffectedObjectId = 0;
         this.demandModel.AffectedPersonId = 0;
@@ -455,7 +474,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(): void {
-        debugger;
         if (this.demandModel.DemandId == 0) {
             UtilityService.setModelFromFormGroup<DemandModel>(this.demandModel, this.form, x => x.DemandId, x => x.DemandTypeId, x => x.Priority,
                 x => x.DemandDesc, x => x.RequesterType, x => x.PDATicketNumber, x => x.TargetDepartmentId,
@@ -504,7 +522,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.demandService.Update(this.demandModelEdit)
                     .subscribe((response: DemandModel) => {
                         this.toastrService.success('Demand successfully updated.', 'Success', this.toastrConfig);
-                        this.dataExchange.Publish("DemandAddedUpdated",  this.demandModelEdit.DemandId);
+                        this.dataExchange.Publish("DemandAddedUpdated", this.demandModelEdit.DemandId);
                         let demandTrail = this.createDemandTrailModel(this.demandModel, this.demandModelEdit, false)[0];
                         demandTrail.DemandId = this.demandModel.DemandId;
                         this.demandTrailService.Create(demandTrail)

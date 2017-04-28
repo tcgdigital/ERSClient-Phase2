@@ -1,5 +1,7 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
+import { Router, NavigationEnd } from '@angular/router';
+import { Subscription } from 'rxjs/Rx';
 
 
 import { InvolvePartyModel } from '../../../shared.components';
@@ -19,12 +21,14 @@ import { InvolvePartyService } from '../../involveparties';
 export class AffectedPeopleVerificationComponent implements OnInit {
     constructor(private affectedPeopleService: AffectedPeopleService,
         private involvedPartyService: InvolvePartyService, private globalState: GlobalStateService, private toastrService: ToastrService,
-		private toastrConfig: ToastrConfig) { }
+        private toastrConfig: ToastrConfig, private _router: Router) { }
 
     affectedPeopleForVerification: AffectedPeopleToView[] = [];
     verifiedAffectedPeople: AffectedPeopleModel[];
     date: Date = new Date();
     currentIncident: number;
+    protected _onRouteChange: Subscription;
+    isArchive: boolean = false;
 
     getAffectedPeople(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
@@ -55,8 +59,20 @@ export class AffectedPeopleVerificationComponent implements OnInit {
     }
 
     ngOnInit(): any {
-        this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
-        this.getAffectedPeople(this.currentIncident);
+        this._onRouteChange = this._router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                if (event.url.indexOf("archivedashboard") > -1) {
+                    this.isArchive = true;
+                    this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
+                    this.getAffectedPeople(this.currentIncident);
+                }
+                else {
+                    this.isArchive = false;
+                    this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
+                    this.getAffectedPeople(this.currentIncident);
+                }
+            }
+        });
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
     }
 

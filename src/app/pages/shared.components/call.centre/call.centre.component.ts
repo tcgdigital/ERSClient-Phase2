@@ -1,7 +1,8 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-
+import { Router, NavigationEnd } from '@angular/router';
+import { Subscription } from 'rxjs/Rx';
 
 
 import {
@@ -76,6 +77,7 @@ export class EnquiryComponent implements OnInit {
     selctedEnquiredObject: AffectedObjectsToView;
     //userName: string = 'Soumit Nag';
     credential: AuthModel;
+    protected _onRouteChange: Subscription;
 
     onNotifyPassenger(message: KeyValue): void {
         this.enquiry.AffectedPersonId = message.Value;

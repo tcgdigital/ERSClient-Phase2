@@ -27,7 +27,8 @@ const pageRoutes: Routes = [
             { path: 'notifypeople', loadChildren: './notifypeople/notifypeople.module#NotifyPeopleModule' },
             { path: 'departmentclosure', loadChildren: './department.closure/department.closure.module#DepartmentClosureModule' },
             { path: 'emergencyclosure', loadChildren: './emergency.closure/emergency.closure.module#EmergencyClosureModule' },
-            { path: 'notifypeople', loadChildren: './notifypeople/notifypeople.module#NotifyPeopleModule' }
+            { path: 'notifypeople', loadChildren: './notifypeople/notifypeople.module#NotifyPeopleModule' },
+            { path: 'archivedashboard', loadChildren: './archive.dashboard/archive.dashboard.module#ArchiveDashboardModule' }
         ]
     }
 ];

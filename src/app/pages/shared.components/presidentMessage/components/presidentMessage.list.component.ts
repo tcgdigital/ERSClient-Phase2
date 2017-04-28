@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewEncapsulation, Input, OnDestroy } from '@angular/core';
 import { PresidentMessageModel } from './presidentMessage.model';
 import { PresidentMessageService } from './presidentMessage.service';
-import { ResponseModel, DataExchangeService, GlobalStateService, KeyValue } from '../../../../shared';
+import { ResponseModel, DataExchangeService, GlobalStateService, KeyValue,UtilityService } from '../../../../shared';
+import { Router, NavigationEnd } from '@angular/router';
+import {Subscription } from 'rxjs/Rx';
 
 @Component({
     selector: 'presidentMessage-detail',
@@ -15,6 +17,8 @@ export class PresidentMessageListComponent implements OnInit, OnDestroy {
     PresidentsMessages: PresidentMessageModel[] = [];
     currentIncidentId: number;
     currentDepartmentId: number;
+      isArchive: boolean = false;
+    protected _onRouteChange: Subscription;
 
     /**
      * Creates an instance of PresidentMessageListComponent.
@@ -26,7 +30,7 @@ export class PresidentMessageListComponent implements OnInit, OnDestroy {
      */
     constructor(private presidentMessageService: PresidentMessageService,
         private dataExchange: DataExchangeService<PresidentMessageModel>,
-        private globalState: GlobalStateService) { }
+        private globalState: GlobalStateService,private _router: Router) { }
 
     getPresidentMessages(departmentId, incidentId): void {
         this.presidentMessageService.Query(departmentId, incidentId)
@@ -49,7 +53,20 @@ export class PresidentMessageListComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this.currentIncidentId = +this.incidentId;
         this.currentDepartmentId = +this.initiatedDepartmentId;
-        this.getPresidentMessages(this.currentDepartmentId, this.currentIncidentId);
+        this._onRouteChange = this._router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                if (event.url.indexOf("archivedashboard") > -1) {
+                    this.isArchive = true;
+                    this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
+                    this.getPresidentMessages(this.currentDepartmentId, this.currentIncidentId);
+                }
+                else {
+                    this.isArchive = false;
+                    this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+                    this.getPresidentMessages(this.currentDepartmentId, this.currentIncidentId);
+                }
+            }
+        });
 
         this.dataExchange.Subscribe("PresidentMessageModelSaved", model => this.onPresidentMessageSuccess(model));
         this.dataExchange.Subscribe("PresidentMessageModelUpdated", model => this.onPresidentMessageSuccess(model));

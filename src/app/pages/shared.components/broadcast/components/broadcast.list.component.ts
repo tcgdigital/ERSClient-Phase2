@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewEncapsulation, Input, OnDestroy } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { Subscription } from 'rxjs/Rx';
 import { BroadCastModel } from './broadcast.model';
 import { BroadcastService } from './broadcast.service';
 import {
     ResponseModel, DataExchangeService,
-    GlobalStateService, KeyValue
+    GlobalStateService, KeyValue, UtilityService
 } from '../../../../shared';
 
 @Component({
@@ -20,11 +22,14 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
     publishedBroadcastsAll: BroadCastModel[] = [];
     currentIncidentId: number;
     currentDepartmentId: number;
+    protected _onRouteChange: Subscription;
+    isArchive: boolean = false;
 
     constructor(private broadCastService: BroadcastService,
-        private dataExchange: DataExchangeService<BroadCastModel>, private globalState: GlobalStateService) { }
+        private dataExchange: DataExchangeService<BroadCastModel>, private globalState: GlobalStateService, private _router: Router) { }
 
     getBroadCasts(departmentId, incidentId): void {
+        debugger;
         this.broadCastService.Query(departmentId, incidentId)
             .subscribe((response: ResponseModel<BroadCastModel>) => {
                 this.broadcastMessages = response.Records;
@@ -41,10 +46,23 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.currentIncidentId = +this.incidentId;
         this.currentDepartmentId = +this.initiatedDepartmentId;
-        this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
-
+        this._onRouteChange = this._router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                if (event.url.indexOf("archivedashboard") > -1) {
+                    this.isArchive = true;
+                    this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
+                    this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
+                }
+                else {
+                    this.isArchive = false;
+                    this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+                    this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
+                }
+            }
+        });
+       // this.currentIncidentId = +this.incidentId;
+       //  this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
         this.dataExchange.Subscribe("BroadcastModelUpdated", model => this.onBroadcastSuccess(model));
         this.dataExchange.Subscribe("BroadcastModelSaved", model => this.onBroadcastSuccess(model));
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));

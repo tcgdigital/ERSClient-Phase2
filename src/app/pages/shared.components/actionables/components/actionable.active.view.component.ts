@@ -6,8 +6,9 @@ import {
     FormGroup, FormControl, FormBuilder,
     AbstractControl, Validators, ReactiveFormsModule
 } from '@angular/forms';
-import { Observable } from 'rxjs/Rx';
+import { Observable,Subscription } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
+import { Router, NavigationEnd } from '@angular/router';
 
 
 import { ActionableModel } from './actionable.model';
@@ -41,6 +42,8 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     actionableWithParents: ActionableModel[] = [];
     parentChecklistIds: number[] = [];
     credential: AuthModel;
+    protected _onRouteChange: Subscription;
+    isArchive : boolean = false;
 
     public form: FormGroup;
 
@@ -59,16 +62,27 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         private fileUploadService: FileUploadService, private departmentService: DepartmentService,
         private dataExchange: DataExchangeService<boolean>, private globalState: GlobalStateService,
         private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig) {
+        private toastrConfig: ToastrConfig, private _router: Router) {
         this.filesToUpload = [];
     }
 
     public ngOnInit(): any {
-        this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
-        this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+       this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this._onRouteChange = this._router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                if (event.url.indexOf("archivedashboard") > -1) {
+                    this.isArchive = true;
+                    this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
+                     this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
+                }
+                else {
+                    this.isArchive = false;
+                     this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
+                     this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
+                }
+            }
+        });
         this.credential = UtilityService.getCredentialDetails();
-
-        this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
         this.form = this.resetActionableForm();
         this.actionableModelToUpdate = new ActionableModel();
         this.dataExchange.Subscribe("OpenActionablePageInitiate", model => this.onOpenActionablePageInitiate(model));
@@ -113,6 +127,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     private departmentChangeHandler(department: KeyValue): void {
+        debugger;
         this.currentDepartmentId = department.Value;
         this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
         this.form = this.resetActionableForm();

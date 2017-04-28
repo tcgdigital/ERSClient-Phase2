@@ -1,5 +1,5 @@
 <div class="card card-without-top-border noBorder">
-    <demand-entry></demand-entry>
+   <div *ngIf="!isArchive"> <demand-entry></demand-entry></div>
     <div class="card-block">
         <responsive-table>
             <table responsive-table-body>
@@ -33,7 +33,7 @@
                         <td data-title="Demand Status">{{demand.DemandStatusDescription}}&nbsp;</td>
                         <td data-title="Remarks"><i class="fa fa-list-alt" (click)="openDemandRemarks(demand)"></i></td>
                         <td data-title="RAG"><span [ngClass]="demand.RagStatus"></span></td>
-                        <td data-title="Edit"><i class="fa fa-edit" (click)="open(demand.DemandId)"></i></td>
+                        <td data-title="Edit"><i class="fa fa-edit" (click)="open(demand.DemandId)"  *ngIf="!isArchive"></i></td>
                     </tr>
                 </tbody>
             </table>
@@ -59,7 +59,7 @@
                             </div>
                             <div class="col-lg-4 col-md-6 col-sm-12 form-group">
                                 <div class="buttonholderRemark">
-                                    <button class="btn btn-primary" type="button" (click)="saveRemark(Remarks)">Save</button>
+                                    <button class="btn btn-primary" type="button" (click)="saveRemark(Remarks)" *ngIf="!isArchive">Save</button>
                                     <button class="btn btn-primary" type="button" (click)="cancelRemarkUpdate()">Cancel</button>
                                 </div>
                             </div>

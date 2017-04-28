@@ -29,7 +29,6 @@ export class GenericSearchComponent implements OnInit, AfterContentInit {
         private searchService: GenericSearchService) { }
 
     ngAfterContentInit(): void {
-        debugger;
         this.form = this.searchService.toFormGroup(this.filterConfigs);
     }
 

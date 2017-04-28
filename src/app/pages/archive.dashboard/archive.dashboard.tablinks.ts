@@ -26,14 +26,6 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         hidden: false,
         order: 3
     }, {
-        id: 'CallCenters',
-        title: 'Call Centers',
-        icon: 'fa fa-drupal fa-2x',
-        url: '/pages/archivedashboard/callCentre',
-        selected: false,
-        hidden: false,
-        order: 4
-    }, {
         id: 'BroadcastMessages',
         title: 'Broadcast Messages',
         icon: 'fa fa-envira fa-2x',

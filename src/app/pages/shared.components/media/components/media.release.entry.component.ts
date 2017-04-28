@@ -9,6 +9,7 @@ import {
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 
 
+
 import { MediaService } from './media.service';
 import { MediaModel } from './media.model';
 import {
@@ -34,6 +35,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     currentDepartmentId: number;
     showAdd: boolean;
     credential: AuthModel;
+    
 
     /**
      * Creates an instance of MediaQueryEntryComponent.
@@ -55,6 +57,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.currentIncidentId = +this.currentIncidentId;
         this.currentDepartmentId = +this.initiatedDepartmentId;
+        
         this.formInit();
         this.credential = UtilityService.getCredentialDetails();
         this.dataExchange.Subscribe("OnMediaReleaseUpdate", model => this.onMediaReleaseUpdate(model));
@@ -114,6 +117,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
                 .subscribe((response: MediaModel) => {
                     this.toastrService.success('Media release Saved successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("MediaModelSaved", response);
+                    this.formInit();
                     this.showAdd = false;
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
@@ -124,6 +128,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
                 .subscribe((response: MediaModel) => {
                     this.toastrService.success('Media release edited successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("MediaModelUpdated", response);
+                    this.formInit();
                     this.showAdd = false;
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
