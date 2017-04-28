@@ -29,7 +29,6 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
         private dataExchange: DataExchangeService<BroadCastModel>, private globalState: GlobalStateService, private _router: Router) { }
 
     getBroadCasts(departmentId, incidentId): void {
-        debugger;
         this.broadCastService.Query(departmentId, incidentId)
             .subscribe((response: ResponseModel<BroadCastModel>) => {
                 this.broadcastMessages = response.Records;

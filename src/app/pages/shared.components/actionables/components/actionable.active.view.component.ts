@@ -127,7 +127,6 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     private departmentChangeHandler(department: KeyValue): void {
-        debugger;
         this.currentDepartmentId = department.Value;
         this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
         this.form = this.resetActionableForm();

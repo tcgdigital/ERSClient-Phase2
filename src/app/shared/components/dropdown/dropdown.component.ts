@@ -64,7 +64,6 @@ export class CustomDropdownComponent implements AfterContentInit, OnChanges,OnIn
     }
 
     public onItemClick($event: JQueryEventObject, dataItem: KeyValue): void {
-        debugger;
         let $self = jQuery($event.currentTarget);
         this.value = dataItem;
         this.index = $self.index();
