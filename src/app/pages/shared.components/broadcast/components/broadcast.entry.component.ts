@@ -2,6 +2,8 @@ import {
     Component, ViewEncapsulation, OnDestroy,
     Output, EventEmitter, OnInit, Input
 } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { Subscription } from 'rxjs/Rx';
 import {
     FormGroup, FormControl, FormBuilder,
     AbstractControl, Validators
@@ -45,6 +47,10 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     listSelected: boolean;
     selectedcount: number;
     credential: AuthModel;
+    protected _onRouteChange: Subscription;
+    isArchive : boolean = false;
+   
+
 
     /**
      * Creates an instance of BroadcastEntryComponent.
@@ -59,7 +65,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         private broadcastService: BroadcastService,
         private dataExchange: DataExchangeService<BroadCastModel>, private departmentService: DepartmentService,
         private builder: FormBuilder, private globalState: GlobalStateService, private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig) {
+        private toastrConfig: ToastrConfig,private _router: Router) {
         this.deptBrodCastModels = [];
         this.buttonValue = "Add New Broadcast Message";
         this.showAdd = false;
@@ -71,6 +77,20 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
 
         this.currentIncidentId = +this.incidentId;
         this.currentDepartmentId = +this.initiatedDepartmentId;
+        this._onRouteChange = this._router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                if (event.url.indexOf("archivedashboard") > -1) {
+                    this.isArchive = true;
+                    //this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
+                   // this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
+                }
+                else {
+                    this.isArchive = false;
+                   // this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+                  //  this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
+                }
+            }
+        });
         this.getBroadcastDepartmentMappings(this.currentDepartmentId);
         this.credential = UtilityService.getCredentialDetails();
 

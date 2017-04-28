@@ -132,7 +132,7 @@
                                                                 <!--<input id="RequiredLocation" type="text" formControlName="RequiredLocation" style="width: 89%;" />-->
                                                         </div>
                                                          <div class="col-lg-6 col-md-6 col-sm-4">
-                                                        <button class="btn btn-primary" type="submit">{{Action}}</button>
+                                                        <button class="btn btn-primary" type="submit" *ngIf="!isArchive">{{Action}}</button>
                                                         <button class="btn btn-primary" type="submit" (click)="cancelModal()">Cancel</button>
                                                          </div>
                                                         </div>

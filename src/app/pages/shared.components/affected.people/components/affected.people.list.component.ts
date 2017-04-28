@@ -1,4 +1,6 @@
 import { Component, ViewEncapsulation, OnInit, ViewChild } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { Subscription } from 'rxjs/Rx';
 
 import { InvolvePartyModel, CommunicationLogModel } from '../../../shared.components';
 import { InvolvePartyService } from '../../involveparties';
@@ -29,6 +31,8 @@ export class AffectedPeopleListComponent implements OnInit {
     pdaReferenceNumberForTrail: string = "";
     communications: CommunicationLogModel[] = [];
     ticketNumber: string = "";
+    protected _onRouteChange: Subscription;
+    isArchive : boolean = false;
 
 
     /**
@@ -43,7 +47,7 @@ export class AffectedPeopleListComponent implements OnInit {
      */
     constructor(private affectedPeopleService: AffectedPeopleService,
         private involvedPartyService: InvolvePartyService, private dataExchange: DataExchangeService<number>,
-        private globalState: GlobalStateService) { }
+        private globalState: GlobalStateService, private _router: Router) { }
 
     //   medicalStatusForm: string = "";
 
@@ -106,9 +110,22 @@ export class AffectedPeopleListComponent implements OnInit {
     }
 
     ngOnInit(): any {
-        this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
+         this._onRouteChange = this._router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                if (event.url.indexOf("archivedashboard") > -1) {
+                    this.isArchive = true;
+                    this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
+                     this.getAffectedPeople(this.currentIncident);
+                }
+                else {
+                    this.isArchive = false;
+                    this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
+                     this.getAffectedPeople(this.currentIncident);
+                }
+            }
+        });
+        
         this.IsDestroyed = false;
-        this.getAffectedPeople(this.currentIncident);
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
     }
 

@@ -1,6 +1,6 @@
 <div class="card card-without-top-border card-block">
     
-           <broadcast-entry [initiatedDepartmentId]="initiatedDepartment" [incidentId]="incidentId"></broadcast-entry>
+         <div  *ngIf="!isArchive">  <broadcast-entry [initiatedDepartmentId]="initiatedDepartment" [incidentId]="incidentId"></broadcast-entry></div>
     <div class="card-block">
         <broadcast-list [initiatedDepartmentId]="initiatedDepartment" [incidentId]="incidentId"></broadcast-list>
     </div>

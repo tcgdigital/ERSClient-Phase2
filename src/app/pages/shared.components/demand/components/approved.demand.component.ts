@@ -2,8 +2,9 @@ import {
     Component, ViewEncapsulation, OnDestroy,
     OnInit, AfterContentInit, ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable,Subscription } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
+import { Router, NavigationEnd } from '@angular/router';
 
 
 import { InvolvePartyModel } from '../../involveparties';
@@ -44,6 +45,9 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     demandForRemarks: DemandModelToView;
     demandTrail: DemandTrailModel;
     credential: AuthModel;
+    protected _onRouteChange: Subscription;
+    isArchive : boolean = false;
+
 
     /**
      * Creates an instance of ApprovedDemandComponent.
@@ -59,7 +63,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         private globalState: GlobalStateService,
         private departmentService: DepartmentService,
         private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig) {
+        private toastrConfig: ToastrConfig, private _router: Router) {
         this.createdByName = 'Anwesha Ray';
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
@@ -272,11 +276,25 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     };
 
     ngOnInit(): any {
-        this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+         this._onRouteChange = this._router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                if (event.url.indexOf("archivedashboard") > -1) {
+                    this.isArchive = true;
+                    this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
+                      this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
+                }
+                else {
+                    this.isArchive = false;
+                     this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+                      this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
+                }
+            }
+        });
         this.credential = UtilityService.getCredentialDetails();
         this.createdBy = +this.credential.UserId;
-        this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
+       
         this.getCurrentDepartmentName(this.currentDepartmentId);
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
@@ -288,6 +306,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     };
 
     private departmentChangeHandler(department: KeyValue): void {
+         debugger;
         this.currentDepartmentId = department.Value;
         this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
          this.currentDepartmentName = department.Key;

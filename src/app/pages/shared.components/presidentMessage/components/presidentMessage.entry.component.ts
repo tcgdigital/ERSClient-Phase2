@@ -118,6 +118,7 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
                 .subscribe((response: PresidentMessageModel) => {
                     this.toastrService.success('President message Saved successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("PresidentMessageModelSaved", response);
+                    this.InitiateForm();
                     this.showAdd = false;
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
@@ -128,6 +129,7 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
                 .subscribe((response: PresidentMessageModel) => {
                     this.toastrService.success('President message edited successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("PresidentMessageModelUpdated", response);
+                    this.InitiateForm();
                     this.showAdd = false;
                 }, (error: any) => {
                     console.log(`Error: ${error}`);

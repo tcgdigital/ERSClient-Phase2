@@ -2,8 +2,9 @@ import {
     Component, ViewEncapsulation, OnDestroy,
     OnInit, AfterContentInit, ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subscription } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
+import { Router, NavigationEnd } from '@angular/router';
 
 
 import { InvolvePartyModel } from '../../involveparties';
@@ -15,7 +16,7 @@ import { DemandRemarkLogService } from './demand.remarklogs.service';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
 import {
     ResponseModel, DataExchangeService, KeyValue,
-    GlobalConstants, GlobalStateService, UtilityService,AuthModel
+    GlobalConstants, GlobalStateService, UtilityService, AuthModel
 } from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 
@@ -40,6 +41,9 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     departments: DepartmentModel[];
     demandForRemarks: DemandModelToView;
     credential: AuthModel;
+    protected _onRouteChange: Subscription;
+    isArchive : boolean = false;
+
 
     /**
      * Creates an instance of AssignedDemandComponent.
@@ -55,8 +59,8 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         private demandRemarkLogsService: DemandRemarkLogService,
         private globalState: GlobalStateService,
         private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig) {
-     //   this.createdByName = "Anwesha Ray";
+        private toastrConfig: ToastrConfig, private _router: Router) {
+        //   this.createdByName = "Anwesha Ray";
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
     }
@@ -253,12 +257,26 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     };
 
     ngOnInit(): any {
-        this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+       
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this._onRouteChange = this._router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                if (event.url.indexOf("archivedashboard") > -1) {
+                    this.isArchive = true;
+                    this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
+                     this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
+                }
+                else {
+                    this.isArchive = false;
+                     this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+                     this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
+                }
+            }
+        });
         this.credential = UtilityService.getCredentialDetails();
         this.createdByName = this.credential.UserName;
 
-        this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
+        
         this.getAllDepartments();
 
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
@@ -271,6 +289,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     };
 
     private departmentChangeHandler(department: KeyValue): void {
+         debugger;
         this.currentDepartmentId = department.Value;
         this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
         this.currentDepartmentName = department.Key;

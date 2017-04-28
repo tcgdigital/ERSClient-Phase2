@@ -3,6 +3,8 @@ import {
     OnInit, ViewChild, OnDestroy
 } from '@angular/core';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
+import { Router, NavigationEnd } from '@angular/router';
+import {Subscription } from 'rxjs/Rx';
 
 
 import { InvolvePartyModel } from '../../involveparties';
@@ -45,6 +47,8 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
     demandTrails: DemandTrailModel[];
     demandForRemarks: DemandModelToView;
     credential: AuthModel;
+    protected _onRouteChange: Subscription;
+    isArchive : boolean = false;
 
     /**
      * Creates an instance of CompletedDemandComponent.
@@ -60,7 +64,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         private globalState: GlobalStateService,
         private departmentService: DepartmentService,
         private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig) {
+        private toastrConfig: ToastrConfig, private _router: Router) {
         this.createdByName = "Anwesha Ray";
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
@@ -225,12 +229,26 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
 
 
     ngOnInit() {
-        this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this._onRouteChange = this._router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                if (event.url.indexOf("archivedashboard") > -1) {
+                    this.isArchive = true;
+                    this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
+                     this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
+                }
+                else {
+                    this.isArchive = false;
+                     this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+                     this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
+                }
+            }
+        });
         this.credential = UtilityService.getCredentialDetails();
         this.createdBy = +this.credential.UserName;
         this.getDepartmentName(this.currentDepartmentId);
-        this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
+        
         this.getCurrentDepartmentName(this.currentDepartmentId);
 
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
@@ -250,6 +268,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
     };
 
     private departmentChangeHandler(department: KeyValue): void {
+         debugger;
         this.currentDepartmentId = department.Value;
         this.currentDepartmentName = department.Key;
         this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);

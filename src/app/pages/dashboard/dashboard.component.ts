@@ -30,7 +30,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     constructor(private globalState: GlobalStateService,
         private departmentService: DepartmentService,
         private incidentService: IncidentService) {
-        this.incidentDate = new Date('apr,10,2017,00:00:00');
+        this.incidentDate = new Date();
     }
 
     public ngOnInit(): void {
@@ -57,6 +57,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.incidentService.Get(incidentId)
             .subscribe((data) => {
                 this.currentIncident = new KeyValue(data.Description, data.IncidentId);
+                  this.incidentDate = new Date(data.EmergencyDate);
             });
     }
 
@@ -64,12 +65,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.departmentService.Get(departmentId)
             .subscribe((data) => {
                 this.currentDepartment = new KeyValue(data.Description, data.DepartmentId);
+              
             });
     }
 
     private incidentChangeHandler(incident: KeyValue): void {
         this.currentIncident = incident;
         this.currentIncidentId = incident.Value;
+        this.getIncident(incident.Value);
     }
 
     private departmentChangeHandler(department: KeyValue): void {
