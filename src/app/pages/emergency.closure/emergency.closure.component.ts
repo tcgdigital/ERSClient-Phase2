@@ -252,10 +252,7 @@ export class EmergencyClosureComponent implements OnInit {
 			this.incident.ActiveFlag = 'InActive';
 			this.incidentService.Update(this.incident, this.incident.IncidentId)
 				.subscribe((resultIncident: IncidentModel) => {
-					this.toastrService.success('Closure Report Saved Successfully.', 'Success', this.toastrConfig);
-					// },(error)=>{
-					//     this.toastrService.info('Some error occured.', 'Error', this.toastrConfig);
-
+					this.toastrService.success('Closure Report Saved Successfully.', 'Success', this.toastrConfig);					
 					this.emergencyClosureService.GetEmergencyClosureDocumentPDFPath(resultIncident.IncidentId)
 						.map((reportPath: ReportPath) => {
 							this.reportPath = new ReportPath();
@@ -286,13 +283,7 @@ export class EmergencyClosureComponent implements OnInit {
 							this.toastrService.success('Notification has been sent to the users.', 'Success', this.toastrConfig);
 							this.authService.Logout();
 							this.router.navigate(['login']);
-
-
 						});
-
-
-
-
 				}, (error: any) => {
 					console.log(error);
 				});

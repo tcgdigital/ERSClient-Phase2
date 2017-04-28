@@ -19,8 +19,7 @@ export class MasterDataUploadForInvalidService {
    
     private _dataServiceInvalidPassenger: DataService<IncidentModel>;
     private _dataServiceInvalidCargo: DataService<IncidentModel>;
-    private _dataServiceInvalidCrew: DataService<IncidentModel>;
-
+    private _dataServiceInvalidCrew: DataService<IncidentModel>;   
     /**
      * Creates an instance of MasterDataUploadForInvalidService.
      * @param {DataServiceFactory} dataServiceFactory 
@@ -48,7 +47,7 @@ export class MasterDataUploadForInvalidService {
      * 
      * @memberOf MasterDataUploadForInvalidService
      */
-    GetAllInvalidPassengersByIncident(incidentId: number): Observable<InvalidPassengerModel[]>{
+    GetAllInvalidPassengersByIncident(incidentId: number): Observable<InvalidPassengerModel[]>{       
         return this._dataServiceInvalidPassenger.Query()
         .Expand(`InvolvedParties($expand=Flights($expand=InvalidPassengerRecords))`)
         .Filter(`IncidentId eq ${incidentId}`)
