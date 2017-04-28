@@ -1,35 +1,51 @@
 @import '../../config/config';
-
-.report_widget-container{ 
-    height:59px; 
-    background: #fff; 
-    border:#999 solid 1px; box-shadow: 0px 3px 8px #b7b5b5;
-        .reportbox {
-            float: left;
-            font-size: 14px;
-            padding: 12px 10px;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-                i{ font-size: 34px;
-
-                }
-                a {
-                text-decoration: underline;
-                color: #333;
-                font-size: 11px;
-                font-weight: normal
-                }
-                
+.report_widget-container {
+    height: 70px;
+    background: #fff;
+    border: #999 solid 1px;
+    @include box-shadow(0px, 3px, 8px, 0, $header-shadow);
+    .reportbox {
+        padding: 15px 0px;
+        width: 100%;
+        text-align: center;
+        i {
+            font-size: 34px;
+        }
+        a {
+            text-decoration: underline;
+            color: #333;
+            font-size: 11px;
+            font-weight: normal;
+            padding-left: 5px;
+        }
     }
 }
-.widget-right-margin{padding-right: 15 !important; padding-top: 15px !important;}
-.reportform{ margin:5px 0;
 
-        input { width:100%; font-size: 12px;
+.widget-right-margin {
+    padding-right: 15 !important;
+    padding-top: 15px !important;
+}
 
-                }
-        select { width:100%; padding: 2px;
+.reportform {
+    margin: 5px 0;
+    input {
+        width: 100%;
+        font-size: 12px;
+    }
+    select {
+        width: 100%;
+        padding: 2px;
+    }
+}
 
-                }
-                }
+@media screen and (max-width: $resXS-E) {}
+@media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {}
+@media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {}
+@media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {
+    .reportbox {
+        a{
+            padding: 0;
+        }
+    }
+}
+@media screen and (min-width: $resXL-S) {}

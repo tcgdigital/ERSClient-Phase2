@@ -305,8 +305,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                 };
             }));
         }
-        else
-        { 
+        else{ 
             this.toastrService.error("Please select at least one checklist", 'Error', this.toastrConfig);
         }
     }

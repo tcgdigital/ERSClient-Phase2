@@ -18,6 +18,11 @@ export interface IPriority {
     caption: string;
     text: string;
 }
+export interface IUploadDocuments {
+    value: string;
+    caption: string;
+    text: string;
+}
 export interface IMedicalStatus {
     key: number;
     value: string;
@@ -99,6 +104,20 @@ export class GlobalConstants {
             text: "Priority Low"
         }
     ];
+
+    public static UploadDocuments: IUploadDocuments[] = [
+        {
+            value: '1',
+            caption: 'ViewLessonsLearnt',
+            text: 'Lessons Learnt'
+        },
+        {
+            value: '2',
+            caption: 'ViewAuditReport',
+            text: 'Audit Report'
+        }
+    ];
+
 
     public static EmergencySituationEnum: IEmergencySituationEnum[] = [
         {

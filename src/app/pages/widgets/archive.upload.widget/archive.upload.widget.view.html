@@ -1,0 +1,56 @@
+<div class="row report_widget-container no-gutters">
+    <div class="col-12">
+        <div class="row no-gutters">
+            <div class="col-12 widget-title">
+                <span>upload</span>
+            </div>
+        </div>
+        <div class="row no-gutters">
+            <div class="col widget-block reportform">
+                <form [formGroup]="form">
+                    <div class="col-sm-4">
+                        <select id="selectApprover" class="form-control" formControlName="uploadDocumentControl" name="uploadDocumentControl">
+                            <option value="0">Select Document Type</option>
+                            <option *ngFor="let uploadDocument of uploadDocuments" [value]="uploadDocument.value" >
+                                {{uploadDocument.text}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <input #myFileInput type="file" (change)="fileChangeEvent($event)" placeholder="Upload file..." />
+                    </div>
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-primary" (click)="upload()">Upload</button>
+                        <button type="button" class="btn btn-primary" (click)="clearFileUpload($event)">Clear</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<!--<form [formGroup]="form">
+    <div class="row">
+        <div class="form-group col-lg-4 col-sm-12 col-md-6">
+            <select id="selectApprover" class="form-control" formControlName="uploadDocumentControl" name="uploadDocumentControl">
+                                    <option value="0" >Select Document Type</option>
+                                    <option *ngFor="let uploadDocument of uploadDocuments" [value]="uploadDocument.value" >
+                                        {{uploadDocument.text}}
+                                    </option>
+                            </select>
+        </div>
+        <div class="form-group col-lg-8 col-sm-12 col-md-6">
+            <a class="glyphicon glyphicon-download-alt" target="_self" *ngIf="filepathWithLinks!=null" href="{{filepathWithLinks}}" download="{{fileName}}">Download</a>
+            <div class="buttonholder offset-5">
+                <input #myFileInput type="file" (change)="fileChangeEvent($event)" placeholder="Upload file..." />
+                <button type="button" class="btn btn-primary" (click)="upload()">Upload</button>
+                <button type="button" class="btn btn-primary" (click)="clearFileUpload($event)">Clear</button>
+            </div>
+        </div>
+    </div>
+</form>-->
