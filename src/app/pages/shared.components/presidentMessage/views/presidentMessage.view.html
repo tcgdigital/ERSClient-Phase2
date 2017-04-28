@@ -1,5 +1,5 @@
 <div class="card card-without-top-border card-block">
-        <presidentMessage-entry [initiatedDepartmentId]="initiatedDepartment" [incidentId]="incidentId"></presidentMessage-entry>
+       <div *ngIf="!isArchive"> <presidentMessage-entry [initiatedDepartmentId]="initiatedDepartment" [incidentId]="incidentId"></presidentMessage-entry></div>
     <div class="card-block">
         <presidentMessage-detail [initiatedDepartmentId]="initiatedDepartment" [incidentId]="incidentId"></presidentMessage-detail>
     </div>

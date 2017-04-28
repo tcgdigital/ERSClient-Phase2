@@ -4,7 +4,8 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-
+import { Router, NavigationEnd } from '@angular/router';
+import { Subscription } from 'rxjs/Rx';
 
 
 import { InvolvePartyModel } from '../../involveparties';
@@ -44,6 +45,8 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     demandTypeName: string = "";
     requesterDepartmentName: string = "";
     credential: AuthModel;
+    protected _onRouteChange: Subscription;
+    isArchive: boolean = false;
 
     /**
      * Creates an instance of MyDemandComponent.
@@ -61,7 +64,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
         private demandTrailService: DemandTrailService,
         private globalState: GlobalStateService,
         private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig) {
+        private toastrConfig: ToastrConfig, private _router: Router) {
         this.demandForRemarks = new DemandModelToView();
     }
 
@@ -188,14 +191,28 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this._onRouteChange = this._router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                if (event.url.indexOf("archivedashboard") > -1) {
+                    this.isArchive = true;
+                    this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
+                    this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
+                }
+                else {
+                    this.isArchive = false;
+                    this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+                    this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
+                }
+            }
+        });
         this.credential = UtilityService.getCredentialDetails();
         this.createdBy = +this.credential.UserId;
         this.createdByName = this.credential.UserName;
-        this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
-        this.Remarks = "";
 
+        this.Remarks = "";
+       
         this.dataExchange.Subscribe("DemandAddedUpdated", model => this.demandUpdated(model));
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));

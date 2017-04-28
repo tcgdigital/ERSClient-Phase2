@@ -1,4 +1,7 @@
 import { Component, ViewEncapsulation, OnInit, ViewChild } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { Subscription } from 'rxjs/Rx';
+
 
 import { InvolvePartyModel, CommunicationLogModel } from '../../../shared.components';
 import { AffectedObjectsToView, AffectedObjectModel } from './affected.objects.model';
@@ -17,12 +20,15 @@ import { ModalDirective } from 'ng2-bootstrap/modal';
 export class AffectedObjectsListComponent implements OnInit {
     @ViewChild('childModal') public childModal: ModalDirective;
 
-    constructor(private affectedObjectService: AffectedObjectsService, private globalState: GlobalStateService) { }
+    constructor(private affectedObjectService: AffectedObjectsService, private globalState: GlobalStateService, private _router: Router) { }
     affectedObjects: AffectedObjectsToView[] = [];
     currentIncident: number;
     communications: CommunicationLogModel[] = [];
     AWBNumber: string = "";
     ticketNumber: string = "";
+    isArchive: boolean = false;
+    protected _onRouteChange: Subscription;
+
 
     getAffectedObjects(incidentId): void {
         this.affectedObjectService.GetFilterByIncidentId(incidentId)
@@ -39,8 +45,21 @@ export class AffectedObjectsListComponent implements OnInit {
     }
 
     ngOnInit(): any {
-        this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
-        this.getAffectedObjects(this.currentIncident);
+        this._onRouteChange = this._router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                if (event.url.indexOf("archivedashboard") > -1) {
+                    this.isArchive = true;
+                    this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
+                    this.getAffectedObjects(this.currentIncident);
+                }
+                else {
+                    this.isArchive = false;
+                    this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
+                    this.getAffectedObjects(this.currentIncident);
+                }
+            }
+        });
+
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
     }
 

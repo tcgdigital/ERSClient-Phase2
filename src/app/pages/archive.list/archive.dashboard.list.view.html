@@ -23,7 +23,8 @@
                         <td colspan="10">No records found.</td>
                     </tr>
                     <tr *ngFor="let closedCrisis of closedCrisises">
-                        <td data-title="Emergency Name">{{closedCrisis.EmergencyName}}</td>
+                        <td data-title="Emergency Name"><a class="nav-link" href="javascript:void(0)" (click)="onArchivedIncidentClick(closedCrisis.IncidentId)"
+                                routerLinkActive="active">{{closedCrisis.EmergencyName}}</a></td>
                         <td data-title="Severity">{{closedCrisis.Severity}}</td>
                         <td data-title="Drill Indicator">{{closedCrisis.IsDrill}}</td>
                         <td data-title="Emergency Type Name">{{closedCrisis.EmergencyType.EmergencyTypeName}}</td>

@@ -56,6 +56,6 @@
 
 
 
-<div class="addbuttonHolder">
-<button class="btn btn-primary" type="submit" (click)="showAddRegion(showAdd)" [disabled]="broadcast.IsSubmitted">{{buttonValue}}</button>
+<div class="addbuttonHolder" *ngIf="!isArchive">
+<button class="btn btn-primary" type="submit" (click)="showAddRegion(showAdd)" [disabled]="broadcast.IsSubmitted && showAdd">{{buttonValue}}</button>
 </div>

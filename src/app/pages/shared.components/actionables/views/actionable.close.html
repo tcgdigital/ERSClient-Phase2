@@ -16,52 +16,24 @@
                 <td colspan="8">No records found.</td>
             </tr>
             <tr *ngFor="let actionable of closeActionables; let i = index;">
-                <td  data-title="Serial Number">{{i+1}}</td>
-                <td  data-title="Description">{{actionable.Description}}</td>
-                <td  data-title="Schedule Close Time">{{actionable.ScheduleClose | amDateFormat:'LL - HH:mm:ss'}}</td>
-                <td  data-title="Actual Close Time">{{actionable.ActualClose | amDateFormat:'LL - HH:mm:ss'}}</td>
-                <td  data-title="Reopen">
-                    <md-checkbox class="Marght" [disabled]="actionable.IsReopen" id="Reopen" name="Reopen" [ngModel]="actionable.Reopen" (change)="IsReopen($event,actionable)"
+                <td data-title="Serial Number">{{i+1}}</td>
+                <td data-title="Description">{{actionable.Description}}</td>
+                <td data-title="Schedule Close Time">{{actionable.ScheduleClose | amDateFormat:'LL - HH:mm:ss'}}</td>
+                <td data-title="Actual Close Time">{{actionable.ActualClose | amDateFormat:'LL - HH:mm:ss'}}</td>
+                <td data-title="Reopen">
+                    <md-checkbox class="Marght" [disabled]="actionable.IsReopen ||  !isArchive" id="Reopen" name="Reopen" [ngModel]="actionable.Reopen" (change)="IsReopen($event,actionable)"
                         aria-label="Reopen">
                     </md-checkbox>
                 </td>
-                <td  data-title="Download">
-                    <a class="glyphicon glyphicon-download-alt" target="_self" *ngIf="actionable.UploadLinks!=null" href="{{actionable.UploadLinks}}"
-                        download="{{actionable.FileName}}">Download</a>
+                <td data-title="Download">
+                    <a class="fa fa-download" target="_self" *ngIf="actionable.UploadLinks!=null" href="{{actionable.UploadLinks}}" download="{{actionable.FileName}}">Download</a>
                 </td>
-                <td  data-title="View"><a (click)="openActionableDetail(actionable)">View</a></td>
-
+                <td data-title="View"><i class="fa fa-edit" (click)="openActionableDetail(actionable)">View</i></td>
             </tr>
-            <!--<tr [hidden]="!actionable.show">
-                        <form [formGroup]="form">
-                            <td colspan="6">
-                                <div>
-                                    <div class="Comments">
-                                        <div class="Comments">
-                                            <strong><i>Comments:</i></strong>
-                                            <input disabled type="text" [ngModel]="actionable.Comments" formControlName="Comments" value="{{actionable.Comments}}" placeholder="Comments"
-                                            />
-                                        </div>
-                                        <div>
-                                            <strong><i>URL:</i></strong>
-                                            <input disabled type="text" [ngModel]="actionable.URL" formControlName="URL" value="{{actionable.URL}}" placeholder="URL"
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <button disabled class="btn btn-primary" type="submit">Save</button>
-                                            <button class="btn btn-primary" type="button" (click)="cancelUpdateCommentAndURL(actionable)">Cancel</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-
-                        </form>
-                    </tr>-->
         </tbody>
     </table>
 </responsive-table>
-<button class="btn btn-primary" type="submit" (click)="closedActionableClick(closeActionables)">Save</button>
+<button class="btn btn-primary" type="submit" (click)="closedActionableClick(closeActionables)" *ngIf="!isArchive">Save</button>
 
 
 
@@ -83,22 +55,20 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <label><i>Comments:</i></label>
-                                <input type="text" [ngModel]="actionableModelToUpdate.Comments" formControlName="Comments" value="{{actionableModelToUpdate.Comments}}"
-                                    placeholder="Comments" />
+                                <input type="text" [ngModel]="actionableModelToUpdate.Comments" formControlName="Comments" value="{{actionableModelToUpdate.Comments}}" placeholder="Comments" />
                             </div>
                             <div class="col-sm-6">
                                 <label><i>URL:</i></label>
-                                <input disabled type="text" [ngModel]="actionableModelToUpdate.URL" formControlName="URL" value="{{actionableModelToUpdate.URL}}"
-                                    placeholder="URL" />
+                                <input disabled type="text" [ngModel]="actionableModelToUpdate.URL" formControlName="URL" value="{{actionableModelToUpdate.URL}}" placeholder="URL" />
                             </div>
                         </div>
-                        <div style="float: right">
-<button class="btn btn-primary" type="submit">Save</button>
-<button class="btn btn-primary" type="button" (click)="cancelUpdateCommentAndURL()">Cancel</button>
-</div>
-</form>
-</div>
-</div>
-</div>
-</div>
+                        <div style="float: right"  *ngIf="!isArchive">
+                                         <button class="btn btn-primary" type="submit">Save</button>
+                                         <button class="btn btn-primary" type="button" (click)="cancelUpdateCommentAndURL()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+           </div>
+        </div>
+    </div>
 </div>
