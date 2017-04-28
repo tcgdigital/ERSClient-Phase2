@@ -7,10 +7,12 @@ import {
     FormGroup, FormControl, FormBuilder, Validators,
     ReactiveFormsModule
 } from '@angular/forms';
-import {  } from "../";
+import { } from "../";
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
+import { ArchiveDocumentTypeService } from "../archive.report.widget/archive.doument.type.service";
+import { ArchiveDocumentTypeModel } from "../archive.upload.widget/archive.upload.widget.model";
 import {
-    DataServiceFactory, DataExchangeService, ResponseModel, FileUploadService,
+    DataServiceFactory, DataExchangeService, ResponseModel, FileUploadService, UtilityService,
     TextAccordionModel, GlobalStateService, KeyValue, GlobalConstants, IUploadDocuments
 } from '../../../shared'
 import { ModalDirective } from 'ng2-bootstrap/modal';
@@ -31,10 +33,14 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
     filepathWithLinks: string = null;
     fileName: string = null;
     uploadDocuments: IUploadDocuments[];
-
-    constructor(formBuilder: FormBuilder, private fileUploadService: FileUploadService, private globalState: GlobalStateService,
+    archiveDocumentType: ArchiveDocumentTypeModel;
+    constructor(private formBuilder: FormBuilder,
+        private UtilityService: UtilityService,
+        private fileUploadService: FileUploadService,
+        private globalState: GlobalStateService,
         private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig) { }
+        private toastrConfig: ToastrConfig,
+        private archiveDocumentTypeService: ArchiveDocumentTypeService) { }
 
     public ngOnInit(): void {
         this.uploadDocuments = GlobalConstants.UploadDocuments;
@@ -57,6 +63,9 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
             this.fileUploadService.uploadFiles<string>(baseUrl + "api/fileUpload/upload", this.filesToUpload)
                 .subscribe((result: string) => {
                     debugger;
+
+
+
                     this.filepathWithLinks = `${GlobalConstants.EXTERNAL_URL}UploadFiles/${result.replace(/^.*[\\\/]/, '')}`;
                     let extension = result.replace(/^.*[\\\/]/, '').split('.').pop();
                     if (dropdownselected == '1') {
@@ -65,7 +74,7 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
                     else if (dropdownselected == '2') {
                         this.fileName = 'View_Audit_Report' + `.${extension}`;
                     }
-                    this.OnDocumentUploaded();
+                    this.OnDocumentUploaded(dropdownselected);
 
                 }, (error) => {
                     console.log(`Error: ${error}`);
@@ -77,17 +86,72 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
         }
     }
 
-    public OnDocumentUploaded():void{
-// var archieveDocumentType = {
-//                 ArchieveDocumentTypeId: 0,
-//                 IncidentId: $scope.IncidentId,
-//                 DocumentType: $scope.UploadDoc.UploadDocument,
-//                 DocumentUploadPath: fullFilePath,
-//                 ActiveFlag: "Active",
-//                 CreatedBy: $scope.createdBy,
-//                 CreatedOn: new Date()
-//             }
+    public OnDocumentUploaded(dropdownselected: string): void {
+        // var archieveDocumentType = {
+        //                 ArchieveDocumentTypeId: 0,
+        //                 IncidentId: $scope.IncidentId,
+        //                 DocumentType: $scope.UploadDoc.UploadDocument,
+        //                 DocumentUploadPath: fullFilePath,
+        //                 ActiveFlag: "Active",
+        //                 CreatedBy: $scope.createdBy,
+        //                 CreatedOn: new Date()
+        //             }
+        this.archiveDocumentTypeService.GetByIncident(this.incidentId)
+            .subscribe((returnResult: ResponseModel<ArchiveDocumentTypeModel>) => {
+                if (returnResult.Records.length == 0) {
+                    this.archiveDocumentType = new ArchiveDocumentTypeModel();
+                    this.archiveDocumentType.ArchieveDocumentTypeId = 0;
+                    this.archiveDocumentType.IncidentId = this.incidentId;
+                    this.archiveDocumentType.DocumentType = dropdownselected;
+                    this.archiveDocumentType.DocumentUploadPath = this.filepathWithLinks;
+                    this.archiveDocumentType.ActiveFlag = 'Active';
+                    this.archiveDocumentType.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
+                    this.archiveDocumentType.CreatedOn = new Date();
 
+                    this.archiveDocumentTypeService.CreateArchiveDocumentType(this.archiveDocumentType)
+                        .subscribe((data: ArchiveDocumentTypeModel) => {
+                            this.toastrService.success('Document added succesfully.', 'Document Upload', this.toastrConfig);
+                            return false;
+                        });
+                }
+                else {
+                    let filteredArchiveDocumentType: ArchiveDocumentTypeModel[] = returnResult.Records.filter((item: ArchiveDocumentTypeModel) => {
+                        return item.DocumentType == dropdownselected;
+                    });
+                    if (filteredArchiveDocumentType.length > 0) {
+                        this.archiveDocumentType = new ArchiveDocumentTypeModel();
+                        this.archiveDocumentType.ArchieveDocumentTypeId = 0;
+                        this.archiveDocumentType.IncidentId = this.incidentId;
+                        this.archiveDocumentType.DocumentType = dropdownselected;
+                        this.archiveDocumentType.DocumentUploadPath = this.filepathWithLinks;
+                        this.archiveDocumentType.ActiveFlag = 'Active';
+                        this.archiveDocumentType.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
+                        this.archiveDocumentType.CreatedOn = new Date();
+
+                        this.archiveDocumentTypeService.CreateArchiveDocumentType(this.archiveDocumentType)
+                            .subscribe((data: ArchiveDocumentTypeModel) => {
+                                this.toastrService.success('Document added succesfully.', 'Document Upload', this.toastrConfig);
+                                return false;
+                            });
+                    }
+                    else {
+                        this.archiveDocumentType = new ArchiveDocumentTypeModel();
+                        this.archiveDocumentType.ArchieveDocumentTypeId = 0;
+                        this.archiveDocumentType.IncidentId = this.incidentId;
+                        this.archiveDocumentType.DocumentType = filteredArchiveDocumentType[0].DocumentType;
+                        this.archiveDocumentType.DocumentUploadPath = this.filepathWithLinks;
+                        this.archiveDocumentType.ActiveFlag = 'Active';
+                        this.archiveDocumentType.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
+                        this.archiveDocumentType.CreatedOn = new Date();
+
+                        this.archiveDocumentTypeService.UpdateArchiveDocumentType(this.archiveDocumentType)
+                            .subscribe((data: ArchiveDocumentTypeModel) => {
+                                this.toastrService.success('Document updated succesfully.', 'Document Upload', this.toastrConfig);
+                                return false;
+                            });
+                    }
+                }
+            });
 
     }
 
@@ -101,40 +165,6 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
         this.fileName = null;
     }
 
-    // public GetArchiveDocumentTypeData(incidentId: number, callback?: Function): void {
-    //     this.archiveDocumentTypeService.GetByIncident(incidentId)
-    //         .subscribe((result: ResponseModel<ArchiveDocumentTypeModel>) => {
-    //             this.otherReports=[];
-    //             result.Records.forEach((item: ArchiveDocumentTypeModel) => {
-    //                 let otherReport: OtherReportModel = new OtherReportModel();
-    //                 otherReport.FilePathWithName = "../../../UploadFiles/" + item.DocumentUploadPath.replace(/^.*[\\\/]/, '');
-    //                 otherReport.Extension = item.DocumentUploadPath.replace(/^.*[\\\/]/, '').split('.').pop();
-    //                 otherReport.DocumentType=item.DocumentType;
-    //                 if (item.DocumentType == '1') {
-    //                     otherReport.FileName = "View_Lessons_Learnt." + otherReport.Extension;
-    //                 }
-    //                 else if (item.DocumentType == '2') {
-    //                     otherReport.FileName = "View_Audit_Report." + otherReport.Extension;
-    //                 }
-    //                 this.otherReports.push(otherReport);
-    //             });
-    //             if (callback) {
-    //                 callback();
-    //             }
-    //         });
-    // }
-
-    // public GetDepartmentClosureData(incidentId: number, callback?: Function): void {
-    //     this.departmentClosureService.GetAllByIncident(incidentId)
-    //         .subscribe((result: ResponseModel<DepartmentClosureModel>) => {
-    //             this.otherReports=[];
-    //             this.departmentWiseClosureReports = result.Records;
-    //             if (callback) {
-    //                 callback();
-    //             }
-    //         });
-    // }
-
     private incidentChangeHandler(incident: KeyValue): void {
         this.incidentId = incident.Value;
     };
@@ -143,28 +173,8 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
         this.departmentId = department.Value;
     };
 
-    // private openModalDepartmentWiseCloseReport(): void {
-    //     this.GetDepartmentClosureData(this.incidentId, () => {
-    //         this.childModalDepartmentWiseCloseReport.show();
-    //     });
-    // };
-
-    // private hideModalDepartmentWiseCloseReport(): void {
-    //     this.childModalDepartmentWiseCloseReport.hide();
-    // };
-
-    // public openModalOtherReport(): void {
-    //     this.GetArchiveDocumentTypeData(this.incidentId, () => {
-    //         this.childModalOtherReport.show();
-    //     });
-    // };
-
-    // private hideModalOtherReport(): void {
-    //     this.childModalOtherReport.hide();
-    // };
-
     ngOnDestroy(): void {
-        // this.globalState.Unsubscribe('incidentChange');
-        // this.globalState.Unsubscribe('departmentChange');
+        this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('departmentChange');
     }
 }

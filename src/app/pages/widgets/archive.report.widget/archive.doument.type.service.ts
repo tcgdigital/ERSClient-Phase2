@@ -26,11 +26,22 @@ export class ArchiveDocumentTypeService {
             .CreateServiceWithOptions<ArchiveDocumentTypeModel>('ArchieveDocumentTypes', option);
     }
 
-    public GetByIncident(incidentId:number):Observable<ResponseModel<ArchiveDocumentTypeModel>>{
+    public GetByIncident(incidentId: number): Observable<ResponseModel<ArchiveDocumentTypeModel>> {
         return this._dataService.Query()
-        .Filter(`IncidentId eq ${incidentId}`)
-        .Execute();
+            .Filter(`IncidentId eq ${incidentId}`)
+            .Execute();
     }
 
-    
+    public CreateArchiveDocumentType(entity: ArchiveDocumentTypeModel): Observable<ArchiveDocumentTypeModel> {
+        return this._dataService.Post(entity)
+            .Execute();
+    }
+
+    public UpdateArchiveDocumentType(entity: ArchiveDocumentTypeModel): Observable<ArchiveDocumentTypeModel> {
+        let key: string = entity.ArchieveDocumentTypeId.toString()
+        return this._dataService.Patch(entity, key)
+            .Execute();
+    }
+
+
 }

@@ -10,6 +10,7 @@ import { DepartmentAccessOwnerService } from '../shared.components/departmentacc
 import { ModalModule, ModalDirective } from 'ng2-bootstrap';
 import { SharedModule,FileUploadService } from '../../shared';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UtilityService } from '../../shared';
 import {
     BroadcastWidgetComponent, 
     CasualtySummaryWidgetComponent,
@@ -75,7 +76,8 @@ const WIDGET_SERVICE: any[] = [
     ArchiveReportWidgetService,
     ArchiveDocumentTypeService,
     DepartmentClosureService,
-    FileUploadService
+    FileUploadService,
+    UtilityService
 ];
 
 @NgModule({
