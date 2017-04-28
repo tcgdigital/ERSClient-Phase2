@@ -21,7 +21,8 @@ export class MasterDataUploadForValidService {
    
     private _dataServiceAffectedPeople: DataService<InvolvePartyModel>;
     private _dataServiceAffectedObject: DataService<InvolvePartyModel>;
-
+    private _validPassengers: AffectedPeopleModel[] = [];
+    
     /**
      * Creates an instance of MasterDataUploadForValidService.
      * @param {DataServiceFactory} dataServiceFactory 
@@ -93,7 +94,7 @@ export class MasterDataUploadForValidService {
      * 
      * @memberOf MasterDataUploadForValidService
      */
-    GetAllCargoByIncidentId(incidentId: number):Observable<CargoModel[]>{
+    GetAllCargoByIncidentId(incidentId: number): Observable<CargoModel[]>{
         return this._dataServiceAffectedObject.Query()
         .Expand(`Flights($expand=Cargoes)`)
         .Filter(`IncidentId eq ${incidentId}`)
