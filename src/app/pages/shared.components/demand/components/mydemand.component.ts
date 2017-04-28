@@ -212,7 +212,6 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     };
 
     private demandUpdated(model): void {
-        debugger;
         this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
     }
     ngAfterContentInit(): any {

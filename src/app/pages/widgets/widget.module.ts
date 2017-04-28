@@ -8,7 +8,8 @@ import { ActionableService } from '../shared.components/actionables';
 import { DemandService } from '../shared.components/demand';
 import { DepartmentAccessOwnerService } from '../shared.components/departmentaccessowner';
 import { ModalModule, ModalDirective } from 'ng2-bootstrap';
-import { SharedModule } from '../../shared';
+import { SharedModule,FileUploadService } from '../../shared';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
     BroadcastWidgetComponent, 
     CasualtySummaryWidgetComponent,
@@ -19,7 +20,11 @@ import {
     MediaReleaseWidgetComponent,
     PeopleOnBoardWidgetComponent,
     PresidentMessageWidgetComponent,
-    IncidentHeaderWidgetComponent
+    IncidentHeaderWidgetComponent,
+    ArchiveReportWidgetComponent,
+    ArchiveUploadWidgetComponent
+    
+    
 } from './index';
 
 import {
@@ -31,7 +36,10 @@ import {
     DemandRaisedSummaryWidgetService,
     MediaReleaseWidgetService,
     PeopleOnBoardWidgetService,
-    PresidentMessageWidgetService
+    PresidentMessageWidgetService,
+    ArchiveReportWidgetService,
+    ArchiveDocumentTypeService,
+    DepartmentClosureService
 } from './index';
 
 const WIDGET_COMPONENTS: any[] = [
@@ -44,7 +52,9 @@ const WIDGET_COMPONENTS: any[] = [
     MediaReleaseWidgetComponent,
     PeopleOnBoardWidgetComponent,
     PresidentMessageWidgetComponent,
-    IncidentHeaderWidgetComponent
+    IncidentHeaderWidgetComponent,
+    ArchiveReportWidgetComponent,
+    ArchiveUploadWidgetComponent
 ];
 
 const WIDGET_SERVICE: any[] = [
@@ -61,7 +71,11 @@ const WIDGET_SERVICE: any[] = [
     EnquiryService,
     ActionableService,
     DemandService,
-    DepartmentAccessOwnerService
+    DepartmentAccessOwnerService,
+    ArchiveReportWidgetService,
+    ArchiveDocumentTypeService,
+    DepartmentClosureService,
+    FileUploadService
 ];
 
 @NgModule({
@@ -70,7 +84,9 @@ const WIDGET_SERVICE: any[] = [
         HttpModule,
         ModalModule.forRoot(),        
         SharedModule,
-        RouterModule
+        RouterModule,
+        FormsModule,
+        ReactiveFormsModule
     ],
     exports: [
         ...WIDGET_COMPONENTS

@@ -135,9 +135,9 @@
                         <div class="row">
                             <a class="glyphicon glyphicon-download-alt" target="_self" *ngIf="filepathWithLinks!=null" href="{{filepathWithLinks}}" download="{{fileName}}">Download</a>
                             <div class="buttonholder offset-5">
-                            <input #myFileInput type="file" (change)="fileChangeEvent($event)" placeholder="Upload file..." />
-                            <button type="button" class="btn btn-primary" (click)="upload(actionableModelToUpdate)">Upload</button>
-                            <button type="button" class="btn btn-primary" (click)="clearFileUpload($event)">Clear</button>
+                                <input #myFileInput type="file" (change)="fileChangeEvent($event)" placeholder="Upload file..." />
+                                <button type="button" class="btn btn-primary" (click)="upload(actionableModelToUpdate)">Upload</button>
+                                <button type="button" class="btn btn-primary" (click)="clearFileUpload($event)">Clear</button>
                             </div>
                         </div>
 

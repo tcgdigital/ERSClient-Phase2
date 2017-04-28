@@ -77,7 +77,6 @@ export class TemplateListComponent implements OnInit, OnDestroy {
             });
     }
     invokeSearch(query: string): void {
-        debugger;
         if (query !== '') {
             this.templateService.GetQuery(query.replace(/(\'\|)/ig, ''))
                 .subscribe((response: ResponseModel<TemplateModel>) => {
