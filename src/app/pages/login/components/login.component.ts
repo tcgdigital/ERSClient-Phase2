@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, AbstractControl, Validators } from '@angular/forms';
 import { AuthenticationService } from './authentication.service';
 import { UtilityService } from '../../../shared/services';
-import {  GlobalStateService } from '../../../shared';
+import { GlobalStateService,ResponseModel } from '../../../shared';
 import { AuthRequestModel, AuthResponseModel } from './auth.model';
-
+import { IncidentModel,IncidentService } from "../../incident";
 import * as jwtDecode from 'jwt-decode';
 
 @Component({
@@ -22,8 +22,8 @@ export class LoginComponent {
     public submitted: boolean;
 
     constructor(formBuilder: FormBuilder,
-        private authService: AuthenticationService, private globalState : GlobalStateService,
-        private router: Router) {
+        private authService: AuthenticationService, private globalState: GlobalStateService,
+        private router: Router,private incidentService:IncidentService) {
         this.form = formBuilder.group({
             userId: ['', Validators.compose([Validators.required, Validators.minLength(4)])],
             password: ['', Validators.compose([Validators.required, Validators.minLength(4)])]
@@ -34,16 +34,29 @@ export class LoginComponent {
     }
 
     Login(userid: string, password: string): void {
-        
+
         this.authService.Login(userid, password)
             .subscribe((data: AuthResponseModel) => {
                 console.log(jwtDecode(data.access_token));
                 var loginCredentialBasic = jwtDecode(data.access_token);
-                 UtilityService.SetToSession({ 'CurrentUserId': loginCredentialBasic.UserId });
-                this.router.navigate(['pages/dashboard']);
+                UtilityService.SetToSession({ 'CurrentUserId': loginCredentialBasic.UserId });
+                this.CheckClosedIncident();
+                
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
+    }
+
+    private CheckClosedIncident():void{
+        this.incidentService.GetOpenIncidents()
+        .subscribe((item:ResponseModel<IncidentModel>)=>{
+            if(item.Count>0){
+                this.router.navigate(['pages/dashboard']);
+            }
+            else{
+                this.router.navigate(['pages/landing']);
+            }
+        });
     }
 
     onSubmit(values: Object): void {
