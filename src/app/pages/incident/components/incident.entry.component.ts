@@ -52,8 +52,10 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         hourStep: 1,
         minuteStep: 1
     };
-    datepickerOption: DateTimePickerOptions=new DateTimePickerOptions();
+    datepickerOptionED: DateTimePickerOptions = new DateTimePickerOptions();
+    datepickerOptionFLT: DateTimePickerOptions = new DateTimePickerOptions();
     disableIsDrill: boolean;
+    disableIsDrillPopup: boolean;
     isFlightRelated: boolean = false;
     isFlightRelatedPopup: boolean = false;
     isOffSet: boolean = false;
@@ -97,15 +99,17 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.EmergencyDate = new Date();
         this.ArrivalDate = new Date();
         this.DepartureDate = new Date();
-        this.datepickerOption = new DateTimePickerOptions();
-        
+        this.datepickerOptionED = new DateTimePickerOptions();
+        this.datepickerOptionFLT = new DateTimePickerOptions();
     }
 
     ngOnInit(): any {
-        this.datepickerOption.position = 'top left';
+        this.datepickerOptionED.maxDate = new Date();
+        this.datepickerOptionFLT.position = 'top left';
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.isFlightRelated = false;
         this.disableIsDrill = true;
+        this.disableIsDrillPopup = true;
         this.isOffSet = false;
         this.initiateIncidentModel();
         this.getAllActiveEmergencyTypes();
@@ -305,7 +309,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             EmergencyNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyName),
             AlertMessagePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.AlertMessage),
             DescriptionPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Description),
-            EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD-MM-YYYY h:mm a')),
+            EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD/MM/YYYY h:mm a')),
             SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity)
 
         });
@@ -320,13 +324,13 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                 EmergencyNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyName),
                 AlertMessagePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.AlertMessage),
                 DescriptionPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Description),
-                EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD-MM-YYYY h:mm a')),
+                EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD/MM/YYYY h:mm a')),
                 SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity),
                 FlightNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightNo),
                 OriginPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.OriginCode),
                 DestinationPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.DestinationCode),
-                ScheduleddeparturePopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.DepartureDate).format('DD-MM-YYYY h:mm a')),
-                ScheduledarrivalPopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.ArrivalDate).format('DD-MM-YYYY h:mm a')),
+                ScheduleddeparturePopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.DepartureDate).format('DD/MM/YYYY h:mm a')),
+                ScheduledarrivalPopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.ArrivalDate).format('DD/MM/YYYY h:mm a')),
                 FlightTailNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightTaleNumber)
             });
             this.isFlightRelatedPopup = true;
@@ -402,7 +406,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.childModalViewIncident.hide();
     }
 
-    dateTimeSet(date: DateTimePickerSelectEventArgs, controlName: string): void {
+    public dateTimeSet(date: DateTimePickerSelectEventArgs, controlName: string): void {
         if (controlName == 'EmergencyDate') {
             this.EmergencyDate = new Date(date.SelectedDate.toString())
         }

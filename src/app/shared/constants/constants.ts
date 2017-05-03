@@ -185,7 +185,7 @@ export class GlobalConstants {
     public static MedicalStatus: IMedicalStatus[] = [
         {
             key: 1,
-            value: 'Injury',
+            value: 'Minorinjurycareneeded',
             caption: 'Minor Injury'
         },
         {
@@ -202,6 +202,11 @@ export class GlobalConstants {
             key: 4,
             value: 'Deceased',
             caption: 'Deceased'
+        },
+        {
+            key: 5,
+            value : 'Immediatecare',
+            caption : 'Immediatecare'
         }
     ];
 

@@ -11,7 +11,7 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         order: 1
     }, {
         id: 'AffectedObjects',
-        title: 'Affected Objects',
+        title: 'Affected Cargo',
         icon: 'fa fa-chrome fa-2x',
         url: '/pages/archivedashboard/cargo',
         selected: false,
@@ -19,7 +19,7 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         order: 2
     }, {
         id: 'Actionables',
-        title: 'Actionables',
+        title: 'Checklists',
         icon: 'fa fa-edge fa-2x',
         url: '/pages/archivedashboard/actionable',
         selected: false,

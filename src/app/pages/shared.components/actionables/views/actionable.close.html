@@ -15,21 +15,53 @@
             <tr [hidden]="closeActionables.length != 0">
                 <td colspan="8">No records found.</td>
             </tr>
-            <tr *ngFor="let actionable of closeActionables; let i = index;">
-                <td data-title="Serial Number">{{i+1}}</td>
-                <td data-title="Description">{{actionable.Description}}</td>
-                <td data-title="Schedule Close Time">{{actionable.ScheduleClose | amDateFormat:'LL - HH:mm:ss'}}</td>
-                <td data-title="Actual Close Time">{{actionable.ActualClose | amDateFormat:'LL - HH:mm:ss'}}</td>
-                <td data-title="Reopen">
-                    <md-checkbox class="Marght" [disabled]="actionable.IsReopen ||  !isArchive" id="Reopen" name="Reopen" [ngModel]="actionable.Reopen" (change)="IsReopen($event,actionable)"
-                        aria-label="Reopen">
-                    </md-checkbox>
-                </td>
-                <td data-title="Download">
-                    <a class="fa fa-download" target="_self" *ngIf="actionable.UploadLinks!=null" href="{{actionable.UploadLinks}}" download="{{actionable.FileName}}">Download</a>
-                </td>
-                <td data-title="View"><i class="fa fa-edit" (click)="openActionableDetail(actionable)">View</i></td>
-            </tr>
+            <template ngFor let-actionable [ngForOf]="closeActionables" let-i="index">
+                <tr>
+                    <td data-title="Serial Number">{{i+1}}</td>
+                    <td data-title="Description">
+                        <i class="fa fa-plus" aria-hidden="true" [hidden]="hasChildChecklist(actionable.ChklistId)==false || actionable.expanded == true"
+                            (click)="openChildActionable(actionable); $event.stopPropagation();"></i>
+                        <i class="fa fa-minus" aria-hidden="true" [hidden]="hasChildChecklist(actionable.ChklistId)==false || actionable.expanded == false "
+                            (click)="openChildActionable(actionable); $event.stopPropagation();"></i>                        {{actionable.Description}}
+                    </td>
+                    <td data-title="Schedule Close Time">{{actionable.ScheduleClose | amDateFormat:'LL - HH:mm:ss'}}</td>
+                    <td data-title="Actual Close Time">{{actionable.ActualClose | amDateFormat:'LL - HH:mm:ss'}}</td>
+                    <td data-title="Reopen">
+                        <md-checkbox class="Marght" [disabled]="hasChildChecklist(actionable.ChklistId) || isArchive" id="Reopen" name="Reopen" [ngModel]="actionable.Done"
+                            (change)="IsReopen($event,actionable)" aria-label="Reopen">
+                        </md-checkbox>
+                    </td>
+                    <td data-title="Download">
+                        <a class="fa fa-download" target="_self" *ngIf="actionable.UploadLinks!=null" href="{{actionable.UploadLinks}}" download="{{actionable.FileName}}">Download</a>
+                    </td>
+                    <td data-title="View"><i class="fa fa-edit" (click)="openActionableDetail(actionable)">View</i></td>
+                </tr>
+                <tr *ngIf="actionable.expanded">
+                    <td colspan="7">
+                        <responsive-table>
+                            <table responsive-table-body>
+                                <thead>
+                                    <th>Description</th>
+                                    <th>Scheduled End Time</th>
+                                    <th>Status</th>
+                                    <th>Department Name</th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let actionableChild of actionable.actionableChilds; let i = index;">
+                                        <td data-title="Description">{{actionableChild.Description}}</td>
+                                        <td data-title="Scheduled End Time">{{actionableChild.ScheduleClose | amDateFormat:'LL - HH:mm:ss'}}</td>
+                                        <td data-title="Status">
+                                            <p ng-if="actionableChild.ActualClose!=null">{{actionableChild.ActualClose | amDateFormat:'LL - HH:mm:ss'}}</p>
+                                            <p ng-if="actionableChild.ActualClose==null">"Work In progress"</p>
+                                        </td>
+                                        <td data-title="Department Name">{{actionableChild.DepartmentName}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </responsive-table>
+                    </td>
+                </tr>
+            </template>
         </tbody>
     </table>
 </responsive-table>
@@ -55,20 +87,22 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <label><i>Comments:</i></label>
-                                <input type="text" [ngModel]="actionableModelToUpdate.Comments" formControlName="Comments" value="{{actionableModelToUpdate.Comments}}" placeholder="Comments" />
+                                <input type="text" [ngModel]="actionableModelToUpdate.Comments" formControlName="Comments" value="{{actionableModelToUpdate.Comments}}"
+                                    placeholder="Comments" />
                             </div>
                             <div class="col-sm-6">
                                 <label><i>URL:</i></label>
-                                <input disabled type="text" [ngModel]="actionableModelToUpdate.URL" formControlName="URL" value="{{actionableModelToUpdate.URL}}" placeholder="URL" />
+                                <input disabled type="text" [ngModel]="actionableModelToUpdate.URL" formControlName="URL" value="{{actionableModelToUpdate.URL}}"
+                                    placeholder="URL" />
                             </div>
                         </div>
-                        <div style="float: right"  *ngIf="!isArchive">
-                                         <button class="btn btn-primary" type="submit">Save</button>
-                                         <button class="btn btn-primary" type="button" (click)="cancelUpdateCommentAndURL()">Cancel</button>
+                        <div style="float: right" *ngIf="!isArchive">
+                            <button class="btn btn-primary" type="submit">Save</button>
+                            <button class="btn btn-primary" type="button" (click)="cancelUpdateCommentAndURL()">Cancel</button>
                         </div>
                     </form>
                 </div>
-           </div>
+            </div>
         </div>
     </div>
 </div>

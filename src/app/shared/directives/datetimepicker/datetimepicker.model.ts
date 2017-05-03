@@ -57,10 +57,12 @@ export class DateTimePickerOptions {
      *
      * @memberOf DateTimePickerOptions
      */
-    constructor() {
+    constructor(maxDate?: Date) {
         this.language = 'en';
         this.dateFormat = 'dd/mm/yyyy';
-        this.minDate = new Date();
+        // if (maxDate != undefined) {
+        //     this.maxDate = maxDate;
+        // }
         this.todayButton = true;
         this.clearButton = true;
         this.autoClose = true;
@@ -73,6 +75,8 @@ export class DateTimePickerSelectEventArgs {
     FormattedDate: string;
     SelectedDate: Date | Date[];
 }
+
+
 
 export class DateTimePickerChangeMonthEventArgs {
     Month: number;

@@ -41,7 +41,7 @@
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="EmergencyDate">Date of Crisis:<span class="red">*</span>(UTC)</label>
                             <input id="EmergencyDate" class="form-control" type="text" name="EmergencyDate" formControlName="EmergencyDate" placeholder="Enter EmergencyDate"
-                                datetime-picker (selectHandler)="dateTimeSet($event,'EmergencyDate');" />
+                                datetime-picker [options]="datepickerOptionED" (selectHandler)="dateTimeSet($event,'EmergencyDate');" />
                         </div>
                         <div class="form-group col-lg-2 col-sm-12 col-md-6">
                             <label for="Severity">Severity:<span class="red">*</span></label>
@@ -96,13 +96,13 @@
                                 <div class="form-group col-lg-2 col-sm-12 col-md-6">
                                     <label for="Scheduleddeparture(UTC)">Scheduled departure:<span class="red">*</span></label>
                                     <input id="Scheduleddeparture" class="form-control" type="text" name="Scheduleddeparture" formControlName="Scheduleddeparture"
-                                        placeholder="Scheduled Departure" datetime-picker [options]="datepickerOption" (selectHandler)="dateTimeSet($event,'Scheduleddeparture');"
+                                        placeholder="Scheduled Departure" datetime-picker [options]="datepickerOptionFLT" (selectHandler)="dateTimeSet($event,'Scheduleddeparture');"
                                     />
                                 </div>
                                 <div class="form-group col-lg-2 col-sm-12 col-md-6">
                                     <label for="Scheduledarrival(UTC)">Scheduled arrival:<span class="red">*</span></label>
                                     <input id="Scheduledarrival" class="form-control" type="text" name="Scheduledarrival" formControlName="Scheduledarrival"
-                                        placeholder="Scheduled Arrival" datetime-picker [options]="datepickerOption" (selectHandler)="dateTimeSet($event,'Scheduledarrival');"
+                                        placeholder="Scheduled Arrival" datetime-picker [options]="datepickerOptionFLT" (selectHandler)="dateTimeSet($event,'Scheduledarrival');"
                                     />
                                 </div>
                                 <div class="form-group col-lg-2 col-sm-12 col-md-6">
@@ -151,7 +151,7 @@
 
 <div bsModal #childModalViewIncident="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg width-1035px">
         <form [formGroup]="formPopup" (ngSubmit)="onPOPUPSubmit(formPopup.value)">
             <div class="modal-content">
                 <div class="modal-header">

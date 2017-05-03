@@ -132,6 +132,13 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
             });
     }
 
+    public GetAllCloseByIncidentId(incidentId: number): Observable<ResponseModel<ActionableModel>> {
+        return this._dataService.Query()
+            .Filter(`CompletionStatus eq 'Close' and IncidentId eq ${incidentId} and ParentCheckListId ne null`)
+            .Select('ParentCheckListId')
+            .Execute();
+    }
+
     public Update(entity: ActionableModel): Observable<ActionableModel> {
         let key: string = entity.ActionId.toString();
         return this._dataService.Patch(entity, key).Execute();
@@ -189,7 +196,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
 
     public GetPendingOpenActionableForIncidentAndDepartment(incidentId:number,departmentId:number):Observable<ResponseModel<ActionableModel>>{
         return this._dataService.Query()
-        .Filter(`IncidentId eq ${incidentId} and DepartmentId eq ${departmentId} and ClosedOn eq null and ReopenedOn eq null or ReopenedOn ne null`)
+        .Filter(`IncidentId eq ${incidentId} and DepartmentId eq ${departmentId} and CompletionStatus eq 'Open'`)
         .Execute();
     }
 

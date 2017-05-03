@@ -6,10 +6,10 @@ import {
     FormGroup, FormControl, FormBuilder,
     AbstractControl, Validators, ReactiveFormsModule
 } from '@angular/forms';
-import { Observable,Subscription } from 'rxjs/Rx';
+import { Observable, Subscription } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router, NavigationEnd } from '@angular/router';
-
+import { DepartmentService, DepartmentModel } from '../../../masterdata/department/components';
 import { ActionableModel } from './actionable.model';
 import { ActionableService } from './actionable.service';
 import {
@@ -35,17 +35,18 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     actionableModelToUpdate: ActionableModel;
     credential: AuthModel;
     protected _onRouteChange: Subscription;
-    isArchive : boolean = false;
+    isArchive: boolean = false;
+    parentChecklistIds: number[] = [];
+    actionableWithParents: ActionableModel[] = [];
 
     constructor(formBuilder: FormBuilder, private actionableService: ActionableService,
         private dataExchange: DataExchangeService<boolean>, private globalState: GlobalStateService,
-        private toastrService: ToastrService,
+        private toastrService: ToastrService, private departmentService: DepartmentService,
         private toastrConfig: ToastrConfig, private _router: Router) {
 
     }
 
     ngOnInit(): any {
-        this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this._onRouteChange = this._router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
@@ -83,6 +84,14 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
         this.getAllCloseActionable(this.currentIncident, this.currentDepartmentId);
     }
 
+    private hasChildChecklist(checkListId): boolean {
+        if (this.parentChecklistIds.length != 0)
+            return this.parentChecklistIds.some(x => x == checkListId);
+        else
+            return false;
+
+    }
+
     private resetActionableForm(actionable?: ActionableModel): FormGroup {
         return new FormGroup({
             Comments: new FormControl(''),
@@ -107,13 +116,32 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
         }
         let tempActionable = this.closeActionables
             .find((item: ActionableModel) => item.ActionId == editedActionable.ActionId);
-        tempActionable[0].Reopen = editedActionable.Reopen;
+        tempActionable.Reopen = editedActionable.Done;
     }
 
     getAllCloseActionable(incidentId: number, departmentId: number): void {
         this.actionableService.GetAllCloseByIncidentIdandDepartmentId(incidentId, departmentId)
             .subscribe((response: ResponseModel<ActionableModel>) => {
                 this.closeActionables = response.Records;
+                this.closeActionables.forEach(x => {
+                    x["expanded"] = false;
+                    x["Done"] = false;
+                    x["actionableChilds"] = [];
+                });
+                this.getAllCloseActionableByIncident(this.currentIncident);
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
+    }
+
+    getAllCloseActionableByIncident(incidentId): void {
+        this.actionableService.GetAllCloseByIncidentId(incidentId)
+            .subscribe((response: ResponseModel<ActionableModel>) => {
+                this.actionableWithParents = response.Records;
+                this.parentChecklistIds = this.actionableWithParents.map(function (actionable) {
+                    let Id = actionable.ParentCheckListId;
+                    return Id;
+                })
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -128,11 +156,37 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
         this.childModal.show();
     }
 
+    openChildActionable(actionable: ActionableModel): void {
+        actionable["expanded"] = !actionable["expanded"];
+        this.actionableService.GetChildActionables(actionable.ChklistId, this.currentIncident)
+            .subscribe((responseActionable: ResponseModel<ActionableModel>) => {
+                this.departmentService.GetDepartmentNameIds()
+                    .subscribe((response: ResponseModel<DepartmentModel>) => {
+                        let childActionables: ActionableModel[] = [];
+                        childActionables = responseActionable.Records;
+                        childActionables.forEach(x => {
+                            x["DepartmentName"] = response.Records.find(y => { return y.DepartmentId == x.DepartmentId; }).DepartmentName;
+                        });
+                        actionable["actionableChilds"] = childActionables;
+
+                    }, (error: any) => {
+                        console.log(`Error: ${error}`);
+                    });
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
+    }
+
     closedActionableClick(closedActionablesUpdate: ActionableModel[]): void {
         let filterActionableUpdate = closedActionablesUpdate.filter((item: ActionableModel) => {
             return (item.Done == true);
         });
         if (filterActionableUpdate.length > 0) {
+            filterActionableUpdate.forEach(x => {
+                delete x["expanded"];
+                delete x["actionableChilds"];
+
+            });
             this.batchUpdate(filterActionableUpdate.map(x => {
                 return {
                     ActionId: x.ActionId,

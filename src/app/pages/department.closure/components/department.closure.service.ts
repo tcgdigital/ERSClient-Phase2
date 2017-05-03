@@ -74,9 +74,15 @@ export class DepartmentClosureService extends ServiceBase<DepartmentClosureModel
                 .Filter(`IncidentId eq ${incidentId} and TargetDepartmentId eq ${departmentId} and IsCompleted eq true`)
                 .Execute())
             .subscribe((demands: ResponseModel<DemandModel>) => {
-                this.IsDepartmentClosureSubmit = (demands.Count > 0);
-                if (callback) {
-                    callback(this.IsDepartmentClosureSubmit);
+                if (this.IsDepartmentClosureSubmit == false) {
+                    if (callback) {
+                        callback((demands.Count > 0));
+                    }
+                }
+                else {
+                    if (callback) {
+                        callback(true);
+                    }
                 }
             });
     }
