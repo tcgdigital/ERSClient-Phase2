@@ -35,8 +35,9 @@
                             <i class="fa fa-edit fa-lg" (click)="viewClosedCrisis(closedCrisis.IncidentId)"></i>
                         </td>
                         <td data-title="Active">
-                            <input type="checkbox" id="IsActive" name="IsActive" [ngModel]="closedCrisis.isReopen" (change)="IsReopenCheckedChange($event,closedCrisis)"
-                                aria-label="ActiveFlag" />
+                            <md-checkbox md-no-ink id="IsActive" [ngModel]="closedCrisis.isReopen" name="IsActive" (change)="IsReopenCheckedChange($event,closedCrisis)"
+                                aria-label="ActiveFlag">
+                            </md-checkbox>
                         </td>
                     </tr>
                 </tbody>
