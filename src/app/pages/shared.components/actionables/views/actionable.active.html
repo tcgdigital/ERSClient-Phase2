@@ -55,9 +55,9 @@
                                 <tbody>
                                     <tr *ngFor="let actionableChild of actionable.actionableChilds; let i = index;">
                                         <td data-title="Description">{{actionableChild.Description}}</td>
-                                        <td data-title="Scheduled End Time">{{actionableChild.ScheduleClose}}</td>
+                                        <td data-title="Scheduled End Time">{{actionableChild.ScheduleClose | amDateFormat:'LL - HH:mm:ss'}}</td>
                                         <td data-title="Status">
-                                            <p ng-if="actionableChild.ActualClose!=null">{{actionableChild.ActualClose}}</p>
+                                            <p ng-if="actionableChild.ActualClose!=null">{{actionableChild.ActualClose | amDateFormat:'LL - HH:mm:ss'}}</p>
                                             <p ng-if="actionableChild.ActualClose==null">"Work In progress"</p>
                                         </td>
                                         <td data-title="Department Name">{{actionableChild.DepartmentName}}</td>

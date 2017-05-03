@@ -289,7 +289,6 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     };
 
     private departmentChangeHandler(department: KeyValue): void {
-         debugger;
         this.currentDepartmentId = department.Value;
         this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
         this.currentDepartmentName = department.Key;

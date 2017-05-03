@@ -20,20 +20,20 @@
             <div class="row">
                 <div class="form-group col-lg-6 col-sm-12 col-md-6">
                     <label for="ClosureReport">Closure Reports:</label>
-                    <textarea rows="7" cols="130" id="ClosureReport" class="form-control" type="text" name="ClosureReport" formControlName="ClosureReport" placeholder="Enter Closure Report"
+                    <textarea [readonly]="isSubmited" rows="7" cols="130" id="ClosureReport" class="form-control" type="text" name="ClosureReport" formControlName="ClosureReport" placeholder="Enter Closure Report"
                          ></textarea>
                 </div>
                 <div class="form-group col-lg-6 col-sm-12 col-md-6">
                     <label for="ClosureRemarks">Closure Remarks: (Optional)</label>
-                    <textarea rows="7" cols="130" id="ClosureRemarks" class="form-control" type="text" name="ClosureRemarks" formControlName="ClosureRemarks" placeholder="Enter Closure Remarks"
+                    <textarea [readonly]="isSubmited" rows="7" cols="130" id="ClosureRemarks" class="form-control" type="text" name="ClosureRemarks" formControlName="ClosureRemarks" placeholder="Enter Closure Remarks"
                          ></textarea>
                 </div>
             </div>
 
         </div>
         <div class="card-header pull-right">
-            <button type="submit" class="pull-right btn btn-primary" [disabled]="!isSubmited" aria-label="Submit">Submit</button>
-            <button type="button" [disabled]="!isSubmited" class="pull-right btn btn-primary margin-right-15px" aria-label="Save" (click)="onSave()">Save</button>
+            <button type="submit" class="pull-right btn btn-primary" [disabled]="isSubmited" aria-label="Submit">Submit</button>
+            <button type="button" [disabled]="isSubmited" class="pull-right btn btn-primary margin-right-15px" aria-label="Save" (click)="onSave()">Save</button>
         </div>
     </form>
 </div>

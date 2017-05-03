@@ -52,7 +52,6 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
     };
 
     public upload() {
-        debugger;
         let dropdownselected: string = this.form.controls['uploadDocumentControl'].value;
         if (dropdownselected == '0') {
             this.toastrService.error('Please select document type and then upload.', 'Document Upload', this.toastrConfig);
@@ -62,10 +61,6 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
             let baseUrl = GlobalConstants.EXTERNAL_URL;
             this.fileUploadService.uploadFiles<string>(baseUrl + "api/fileUpload/upload", this.filesToUpload)
                 .subscribe((result: string) => {
-                    debugger;
-
-
-
                     this.filepathWithLinks = `${GlobalConstants.EXTERNAL_URL}UploadFiles/${result.replace(/^.*[\\\/]/, '')}`;
                     let extension = result.replace(/^.*[\\\/]/, '').split('.').pop();
                     if (dropdownselected == '1') {
