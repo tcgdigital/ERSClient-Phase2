@@ -66,8 +66,6 @@ export class DepartmentClosureService extends ServiceBase<DepartmentClosureModel
     }
 
     public CheckPendingCheckListOrDemandForIncidentAndDepartment(incidentId: number, departmentId: number, callback?: ((_: boolean) => void)): void {
-        console.log(incidentId);
-        console.log(departmentId);
         this.actionableService.GetPendingOpenActionableForIncidentAndDepartment(incidentId, departmentId)
             .map((actionables: ResponseModel<ActionableModel>) => {
                 this.IsDepartmentClosureSubmit = (actionables.Count > 0);
