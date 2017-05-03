@@ -268,7 +268,6 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
     };
 
     private departmentChangeHandler(department: KeyValue): void {
-         debugger;
         this.currentDepartmentId = department.Value;
         this.currentDepartmentName = department.Key;
         this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);

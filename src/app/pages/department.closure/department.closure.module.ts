@@ -34,7 +34,7 @@ import { SharedModule, DataExchangeService, LocationService, GlobalStateService 
         ActionableService,
         ToastrService,
         DataExchangeService,
-        GlobalStateService,
+        //GlobalStateService,
         LocationService
     ]
 })

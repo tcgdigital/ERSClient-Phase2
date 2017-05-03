@@ -306,7 +306,6 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     };
 
     private departmentChangeHandler(department: KeyValue): void {
-         debugger;
         this.currentDepartmentId = department.Value;
         this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
          this.currentDepartmentName = department.Key;

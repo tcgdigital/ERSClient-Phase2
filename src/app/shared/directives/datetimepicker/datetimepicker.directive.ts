@@ -34,7 +34,7 @@ export class DateTimePickerDirective implements AfterViewInit {
      *
      * @memberOf DateTimePickerDirective
      */
-    constructor(private elementRef: ElementRef, private renderer: Renderer) {
+    constructor(private elementRef: ElementRef, private renderer: Renderer ) {
     }
 
     public ngAfterViewInit(): void {
@@ -81,7 +81,7 @@ export class DateTimePickerDirective implements AfterViewInit {
             args.CellType = cellType;
             this.renderCellHandler.emit(args);
         };
-
+        
         let datePicker = $self.datepicker(options).data('datepicker');
 
         $self.closest('.input-group-addon').on('click', () => {

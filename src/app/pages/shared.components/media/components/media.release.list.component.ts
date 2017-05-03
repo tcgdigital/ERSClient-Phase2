@@ -48,7 +48,6 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
     }
 
     onMediaSuccess(mediaQuery: MediaModel): void {
-        debugger;
         this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
     }
 

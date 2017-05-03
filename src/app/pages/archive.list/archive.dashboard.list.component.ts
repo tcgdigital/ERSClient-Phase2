@@ -102,7 +102,8 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
 
 
     public IsReopenCheckedChange(event: any, closedCrisis: IncidentModel): void {
-        closedCrisis.isReopen = event.currentTarget.checked;
+        
+        closedCrisis.isReopen = event.checked;
     }
 
     private incidentChangeHandler(incident: KeyValue): void {

@@ -42,19 +42,23 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.departmentClosureModel = new DepartmentClosureModel();
-        this.FillFormControls(this.departmentClosureModel);
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
-        this.isSubmited=false;
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.InitialDataLoad();
+    }
+
+    public InitialDataLoad():void{
+        this.departmentClosureModel = new DepartmentClosureModel();
+        this.FillFormControls(this.departmentClosureModel);
+        this.isSubmited=false;
         this.initiateDepartmentClosureModel(this.currentIncidentId);
     }
 
     ngOnDestroy(): void {
-        this.globalState.Unsubscribe('departmentChange');
-        this.globalState.Unsubscribe('incidentChange');
+        // this.globalState.Unsubscribe('departmentChange');
+        // this.globalState.Unsubscribe('incidentChange');
     }
 
     private FillFormControls(departmentClosureModel: DepartmentClosureModel): void {
@@ -68,10 +72,14 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
 
     private departmentChangeHandler(department: KeyValue): void {
         this.currentDepartmentId = department.Value;
+        this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        this.InitialDataLoad();
     }
 
     private incidentChangeHandler(incident: KeyValue): void {
+        this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.currentIncidentId = incident.Value;
+        this.InitialDataLoad();
     }
 
     private initializeObject(departmentClosureModel: DepartmentClosureModel, incidentModel: IncidentModel): void {
@@ -172,7 +180,7 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
 
     public onSubmit(): void {
         this.departmentClosureService.CheckPendingCheckListOrDemandForIncidentAndDepartment(this.currentIncidentId, this.currentDepartmentId, (item: boolean) => {
-            if (!item) {
+            if (item) {
                 this.toastrService.warning('You can not submit the closure report since you have pending checklist or request.', 'Department Closure', this.toastrConfig);
                 return false;
             }
@@ -189,9 +197,9 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
                             this.departmentClosureModelSubmit.IsSaved = true;
                             this.departmentClosureModelSubmit.SavedBy = +UtilityService.GetFromSession('CurrentUserId');
                             this.departmentClosureModelSubmit.SavedOn = new Date();
-                            this.departmentClosureModelSubmit.IsSubmitted = false;
-                            this.departmentClosureModelSubmit.SubmittedBy = null;
-                            this.departmentClosureModelSubmit.SubmittedOn = null;
+                            this.departmentClosureModelSubmit.IsSubmitted = true;
+                            this.departmentClosureModelSubmit.SubmittedBy = +UtilityService.GetFromSession('CurrentUserId');
+                            this.departmentClosureModelSubmit.SubmittedOn = new Date();
                             this.departmentClosureModelSubmit.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
                             this.departmentClosureModelSubmit.CreatedOn = new Date();
                             this.departmentClosureService.CreateDepartmentClosure(this.departmentClosureModelSubmit)
@@ -210,6 +218,9 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
                             result.Records[0].IsSaved = true;
                             result.Records[0].SavedBy = +UtilityService.GetFromSession('CurrentUserId');
                             result.Records[0].SavedOn = new Date();
+                            result.Records[0].IsSubmitted = true;
+                            result.Records[0].SubmittedBy = +UtilityService.GetFromSession('CurrentUserId');
+                            result.Records[0].SubmittedOn = new Date();
                             result.Records[0].CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
                             result.Records[0].CreatedOn = new Date();
                             delete result.Records[0].Department;
