@@ -26,7 +26,6 @@ export class ArchiveDashboardComponent implements OnInit, OnDestroy {
         private departmentService: DepartmentService) { }
 
     public ngOnInit(): void {
-        debugger;
         // this.sub = this.router.params.subscribe(params => {
         // this.archievedIncidentId = +params['incidentId'];});
         this.archievedIncidentId = +UtilityService.GetFromSession('ArchieveIncidentId');
