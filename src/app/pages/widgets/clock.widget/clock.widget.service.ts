@@ -30,17 +30,14 @@ export class ClockWidgetService {
     private timePassed: number = 0;
     private counter: TimeCount = new TimeCount();
 
-    constructor() { }
-
-    initiateTimer(name: string, initialDate: Date): boolean {
-        if (name === undefined || initialDate === undefined || this.timer[name]) {
+    initiateTimer(sub_name: string, initialDate: Date): boolean {
+        if (sub_name === undefined || initialDate === undefined) {
             return false;
         }
-        // let past = moment(initialDate);
-        let o: Observable<TimeCount> = Observable.interval(1000)
-            .map(x => {
+        const o: Observable<TimeCount> = Observable.interval(1000)
+            .map((x: number) => {
                 this.timePassed = Math.floor((new Date().getTime() - initialDate.getTime()) / 1000);
-                
+
                 this.counter.Days = Math.floor(this.timePassed / this.days);
                 this.timePassed -= this.counter.Days * this.days;
 
@@ -51,22 +48,25 @@ export class ClockWidgetService {
                 this.timePassed -= this.counter.Minutes * this.minutes;
 
                 this.counter.Seconds = this.timePassed;
-                return this.counter
+                return this.counter;
             });
 
-        this.timer[name] = { name: name, observable: o };
+        this.timer[sub_name] = { name: sub_name, observable: o };
         return true;
     }
 
-    subscribe(name: string, callback: (any) => void): string {
-        if (!this.timer[name]) {
+    subscribe(sub_name: string, incidentId: string, callback: (value) => void): string {
+        if (!this.timer[sub_name]) {
             return '';
         }
-        let id = name + '-' + UtilityService.UUID();
+        const id = sub_name + '-' + incidentId;
+        Object.keys(this.subscription).forEach((x) => {
+            this.unsubscribe(x);
+        });
         this.subscription[id] = {
-            name: name,
-            subscription: this.timer[name].observable.subscribe(callback)
-        }
+            name: sub_name,
+            subscription: this.timer[sub_name].observable.subscribe(callback)
+        };
         return id;
     }
 

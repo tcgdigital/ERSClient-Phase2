@@ -14,6 +14,8 @@ import { ClockWidgetService } from './clock.widget.service';
 })
 export class ClockWidgetComponent implements OnInit, OnChanges, OnDestroy {
     @Input() initiationDateTime: Date;
+    @Input() currentIncidentId: number;
+
     days: number = 0;
     hours: number = 0;
     minutes: number = 0;
@@ -24,20 +26,22 @@ export class ClockWidgetComponent implements OnInit, OnChanges, OnDestroy {
 
     /**
      * Creates an instance of ClockWidgetComponent.
-     * @param {ClockWidgetService} clockWidgetService 
-     * 
+     * @param {ClockWidgetService} clockWidgetService
+     *
      * @memberOf ClockWidgetComponent
      */
     constructor(private clockWidgetService: ClockWidgetService) {
     }
 
     public ngOnInit() {
-        this.initiateTimer();
+        // this.initiateTimer();
     }
 
     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
-        if (changes['initiationDateTime'].currentValue !==
-            changes['initiationDateTime'].previousValue) {
+        if (changes['initiationDateTime'] !== undefined &&
+            (changes['initiationDateTime'].currentValue !==
+            changes['initiationDateTime'].previousValue) &&
+            changes['initiationDateTime'].previousValue !== undefined) {
             this.initiateTimer();
         }
     }
@@ -47,16 +51,17 @@ export class ClockWidgetComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private counterSubscription(): void {
-        this.subscriptionId = this.clockWidgetService.subscribe('counter', (x: TimeCount) => {
-            this.days = x.Days;
-            this.hours = x.Hours;
-            this.minutes = x.Minutes;
-            this.seconds = x.Seconds;
-        });
+        this.subscriptionId = this.clockWidgetService
+            .subscribe(`Counter`, this.currentIncidentId.toString(), (x: TimeCount) => {
+                this.days = x.Days;
+                this.hours = x.Hours;
+                this.minutes = x.Minutes;
+                this.seconds = x.Seconds;
+            });
     }
 
     private initiateTimer(): void {
-        if (this.clockWidgetService.initiateTimer('counter', this.initiationDateTime))
+        if (this.clockWidgetService.initiateTimer(`Counter`, this.initiationDateTime))
             this.counterSubscription();
     }
 }

@@ -5,7 +5,7 @@ import {
 import * as moment from 'moment/moment';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { EmergencyTypeModel, EmergencyTypeService } from '../masterdata';
-import { EmergencyLocationService, EmergencyLocationModel } from "../masterdata/emergencylocation";
+import { EmergencyLocationService, EmergencyLocationModel } from '../masterdata/emergencylocation';
 import { IncidentModel, IncidentService, IncidentDataExchangeModel } from '../incident';
 import { FlightModel, FlightService, InvolvePartyModel, InvolvePartyService } from '../shared.components';
 import {
@@ -24,14 +24,14 @@ import {
     Location,
     DateTimePickerOptions
 } from '../../shared';
-import { ArchiveListService } from "./archive.dashboard.list.service";
+import { ArchiveListService } from './archive.dashboard.list.service';
+
 @Component({
     selector: 'archive-dashboard-list',
     styleUrls: ['./archive.dashboard.list.style.scss'],
     templateUrl: './archive.dashboard.list.view.html',
     encapsulation: ViewEncapsulation.None,
 })
-
 export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     @ViewChild('childModalViewClosedIncident') public childModalViewClosedIncident: ModalDirective;
 
@@ -73,12 +73,12 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.isOffSetPopup = false;
         this.resetIncidentViewForm();
-        this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
 
         this.emergencyLocationService.GetAllActiveEmergencyLocations()
             .subscribe((result: ResponseModel<EmergencyLocationModel>) => {
                 result.Records.forEach((item: EmergencyLocationModel) => {
-                    let emergencyLocationModel: EmergencyLocationModel = new EmergencyLocationModel();
+                    const emergencyLocationModel: EmergencyLocationModel = new EmergencyLocationModel();
                     emergencyLocationModel.IATA = item.IATA;
                     emergencyLocationModel.AirportName = item.AirportName;
                     this.affectedStations.push(emergencyLocationModel);
@@ -100,16 +100,9 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
             });
     }
 
-
     public IsReopenCheckedChange(event: any, closedCrisis: IncidentModel): void {
-        
         closedCrisis.isReopen = event.checked;
     }
-
-    private incidentChangeHandler(incident: KeyValue): void {
-        this.currentIncidentId = incident.Value;
-    }
-
 
     public resetIncidentViewForm(): void {
         this.formPopup = new FormGroup({
@@ -148,10 +141,10 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     }
 
     public loadDataIncidentViewPopup(): void {
-        let offsetVal: string = '';
+        const offsetVal: string = '';
         this.disableIsDrillPopup = true;
         this.isOffSetPopup = false;
-        if (this.incidentDataExchangeModel.IncidentModel.EmergencyLocation == 'Offset') {
+        if (this.incidentDataExchangeModel.IncidentModel.EmergencyLocation === 'Offset') {
             this.isOffSetPopup = true;
         }
         this.formPopup = new FormGroup({
@@ -205,27 +198,27 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
                 this.incidentDataExchangeModel.IncidentModel = new IncidentModel();
                 this.incidentDataExchangeModel.IncidentModel = incidentModel;
             })
-            .flatMap(_ => this.involvePartyService.GetByIncidentId(this.incidentDataExchangeModel.IncidentModel.IncidentId))
+            .flatMap((_) => this.involvePartyService.GetByIncidentId(this.incidentDataExchangeModel.IncidentModel.IncidentId))
             .map((involveParties: ResponseModel<InvolvePartyModel>) => {
                 this.incidentDataExchangeModel.InvolvedPartyModel = new InvolvePartyModel();
                 this.incidentDataExchangeModel.InvolvedPartyModel = involveParties.Records[0];
             })
-            .flatMap(_ => this.flightService.GetFlightByInvolvedPartyId(this.incidentDataExchangeModel.InvolvedPartyModel.InvolvedPartyId))
+            .flatMap((_) => this.flightService.GetFlightByInvolvedPartyId(this.incidentDataExchangeModel.InvolvedPartyModel.InvolvedPartyId))
             .map((flights: ResponseModel<FlightModel>) => {
                 this.incidentDataExchangeModel.FLightModel = new FlightModel();
                 this.incidentDataExchangeModel.FLightModel = flights.Records[0];
             })
-            .subscribe(_ => {
+            .subscribe((_) => {
                 this.loadDataIncidentViewPopup();
-            })
+            });
     }
 
     public onSubmitClosedCrisis(closedCrisisList: IncidentModel[]): void {
         // We collect all closed crisis
-        let objectLiteralAll: string = JSON.stringify(closedCrisisList);
-        let deepCopyIncidentAll: IncidentModel[] = JSON.parse(objectLiteralAll);
+        const objectLiteralAll: string = JSON.stringify(closedCrisisList);
+        const deepCopyIncidentAll: IncidentModel[] = JSON.parse(objectLiteralAll);
         // Make them as isReopen false.
-        let totalReopendCrisisAll: IncidentModel[] = deepCopyIncidentAll.map((item: IncidentModel) => {
+        const totalReopendCrisisAll: IncidentModel[] = deepCopyIncidentAll.map((item: IncidentModel) => {
             item.ReOpenBy = null;
             item.ReOpenOn = null;
             item.EmergencyType = null;
@@ -238,14 +231,14 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
         this.archiveListService.CreateBulkInsertClosedIncident(totalReopendCrisisAll)
             .subscribe((result: IncidentModel[]) => {
                 // Search for the reopened crisis.
-                let reopenedCrisis = closedCrisisList.filter((item: IncidentModel) => {
-                    return item.isReopen == true;
+                const reopenedCrisis = closedCrisisList.filter((item: IncidentModel) => {
+                    return item.isReopen === true;
                 });
                 // Assign the Reopened Dates and Reopened by.
                 if (reopenedCrisis.length > 0) {
-                    let objectLiteral: string = JSON.stringify(reopenedCrisis);
-                    let deepCopyIncident: IncidentModel[] = JSON.parse(objectLiteral);
-                    let totalReopendCrisis: IncidentModel[] = deepCopyIncident.map((item: IncidentModel) => {
+                    const objectLiteral: string = JSON.stringify(reopenedCrisis);
+                    const deepCopyIncident: IncidentModel[] = JSON.parse(objectLiteral);
+                    const totalReopendCrisis: IncidentModel[] = deepCopyIncident.map((item: IncidentModel) => {
                         item.ReOpenBy = +UtilityService.GetFromSession('CurrentUserId');
                         item.ReOpenOn = new Date();
                         item.EmergencyType = null;
@@ -265,7 +258,11 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     }
 
     private onArchivedIncidentClick(incidentId: number): void {
-        UtilityService.SetToSession({ 'ArchieveIncidentId': incidentId });
+        UtilityService.SetToSession({ ArchieveIncidentId: incidentId });
         this.router.navigate(['pages/archivedashboard']);
+    }
+
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.currentIncidentId = incident.Value;
     }
 }
