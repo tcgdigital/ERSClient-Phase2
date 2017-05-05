@@ -275,8 +275,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     showAddRegion(ShowAdd: Boolean): void {
         this.showAdd = true;
         this.buttonValue = "Create Demand";
-        this.childModal.show();
-        this.initializeForm();
+        this.resetForm();
         this.demandModel.DemandId = 0;
         this.demandModel.RequesterDepartmentId = this.currentDepartmentId;
         this.demandModel.AffectedObjectId = 0;
@@ -290,6 +289,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.demandModel.Caller.CallerName = this.credentialName;
         this.Action = "Save";
         this.isReadonly = false;
+        this.childModal.show();
 
     };
 
@@ -350,12 +350,16 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 let createdOn = new Date(response.Records[0].CreatedOn);
                 let timediff = createdOn.getTime() + (+scheduleTime) * 60000;
                 let resolutiontime = new Date(timediff);
-                this.form.controls["ScheduleTime"].reset({ value: moment(resolutiontime).format('DD/MM/YYYY h:mm a'), disabled: false });
+                this.form.controls["ScheduleTime"].reset({ value: moment(resolutiontime).format('DD/MM/YYYY h:mm a'), disabled: true });
                 this.caller = this.demandModel.Caller || new CallerModel();
                 this.showAdd = true;
                 this.isReadonly = true;
                 this.childModal.show();
-                //this.datepickerOption.startDate = new Date(resolutiontime);
+                this.form.controls["PDATicketNumber"].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
+                this.form.controls["AffectedPersonId"].reset({ value: this.demandModel.AffectedPersonId, disabled: true });
+                this.form.controls["AffectedObjectId"].reset({ value: this.demandModel.AffectedObjectId, disabled: true });
+                this.form.controls["DemandTypeId"].reset({ value: this.demandModel.DemandTypeId, disabled: true });
+
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -363,6 +367,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     cancelModal(): void {
         this.childModal.hide();
+        this.resetForm();
     }
 
     ngOnInit(): any {
@@ -473,22 +478,38 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     initializeForm(): void {
         this.form = new FormGroup({
-            DemandId: new FormControl(0),
-            DemandTypeId: new FormControl(0),
-            Priority: new FormControl(0),
-            DemandDesc: new FormControl(),
+            DemandId: new FormControl({ value: 0, disabled: false }),
+            DemandTypeId: new FormControl({ value: 0, disabled: false }),
+            Priority: new FormControl({ value: 0, disabled: false }),
+            DemandDesc: new FormControl({ value: '', disabled: false }),
             RequestedBy: new FormControl({ value: this.credentialName, disabled: false }),
-            RequesterType: new FormControl(0),
+            RequesterType: new FormControl({ value: 0, disabled: false }),
             PDATicketNumber: new FormControl({ value: '', disabled: true }),
-            TargetDepartmentId: new FormControl(0),
-            ContactNumber: new FormControl(),
-            ScheduleTime: new FormControl(),
-            RequiredLocation: new FormControl(),
-            AffectedPersonId: new FormControl(0),
-            AffectedObjectId: new FormControl(0)
+            TargetDepartmentId: new FormControl({ value: 0, disabled: false }),
+            ContactNumber: new FormControl({ value: '', disabled: false }),
+            ScheduleTime: new FormControl({ value: '', disabled: false }),
+            RequiredLocation: new FormControl({ value: '', disabled: false }),
+            AffectedPersonId: new FormControl({ value: 0, disabled: false }),
+            AffectedObjectId: new FormControl({ value: 0, disabled: false })
         });
 
     };
+
+    resetForm(): void {
+        this.form.controls["DemandId"].reset({ value: 0, disabled: false });
+        this.form.controls["DemandTypeId"].reset({ value: 0, disabled: false });
+        this.form.controls["Priority"].reset({ value: 0, disabled: false });
+        this.form.controls["DemandDesc"].reset({ value:'', disabled: false });
+        this.form.controls["RequestedBy"].reset({ value: this.credentialName, disabled: false });
+        this.form.controls["RequesterType"].reset({ value: 0, disabled: false });
+        this.form.controls["PDATicketNumber"].reset({ value:'', disabled: true });
+        this.form.controls["TargetDepartmentId"].reset({ value: 0, disabled: false });
+        this.form.controls["ContactNumber"].reset({ value: '', disabled: false });
+        this.form.controls["ScheduleTime"].reset({ value: '', disabled: false });
+        this.form.controls["RequiredLocation"].reset({ value: '', disabled: false });
+        this.form.controls["AffectedPersonId"].reset({ value: 0, disabled: false });
+        this.form.controls["AffectedObjectId"].reset({ value: 0, disabled: false });
+    }
 
     formControlDirtyCheck(): void {
         this.demandModelEdit = new DemandModel();
