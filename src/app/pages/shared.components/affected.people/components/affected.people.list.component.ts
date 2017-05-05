@@ -82,6 +82,8 @@ export class AffectedPeopleListComponent implements OnInit {
                 this.toastrService.success('Adiitional Information updated.')
                 this.getAffectedPeople(this.currentIncident);
                 affectedModifiedForm["MedicalStatusToshow"] = affectedModifiedForm.MedicalStatus;
+                let num = UtilityService.UUID();
+                this.globalState.NotifyDataChanged('AffectedPersonStatusChanged',num);
                 this.childModal.hide();
             }, (error: any) => {
                 alert(error);
