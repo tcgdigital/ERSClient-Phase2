@@ -226,8 +226,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     private departmentChangeHandler(department: KeyValue): void {
+        debugger;
         this.currentDepartment = department;
         this.currentDepartmentId = department.Value;
-        //this.globalState.NotifyDataChanged('departmentChangefromDashboard', department);
+        this.globalState.NotifyDataChanged('departmentChangeFromDashboard', department);
     }
 }

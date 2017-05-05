@@ -66,13 +66,13 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
         this.credential = UtilityService.getCredentialDetails();
         this.dataExchange.Subscribe("OnPresidentMessageUpdate", model => this.onPresidentMessageUpdate(model));
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe("OnPresidentMessageUpdate");
         this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChange');
+        this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 
     private incidentChangeHandler(incident: KeyValue): void {

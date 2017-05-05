@@ -63,7 +63,7 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
         this.dataExchange.Subscribe("MediaModelSaved", model => this.onMediaSuccess(model));
         this.dataExchange.Subscribe("MediaModelUpdated", model => this.onMediaSuccess(model));
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
     private incidentChangeHandler(incident: KeyValue): void {
@@ -80,6 +80,6 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
         this.dataExchange.Unsubscribe('MediaModelSaved');
         this.dataExchange.Unsubscribe('MediaModelUpdated');
         this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChange');
+        this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 }

@@ -1,6 +1,8 @@
 import { Component, ViewEncapsulation, OnInit, ViewChild } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
 
 import { InvolvePartyModel, CommunicationLogModel } from '../../../shared.components';
 import { InvolvePartyService } from '../../involveparties';
@@ -47,7 +49,7 @@ export class AffectedPeopleListComponent implements OnInit {
      */
     constructor(private affectedPeopleService: AffectedPeopleService,
         private involvedPartyService: InvolvePartyService, private dataExchange: DataExchangeService<number>,
-        private globalState: GlobalStateService, private _router: Router) { }
+        private globalState: GlobalStateService, private _router: Router,private toastrService: ToastrService, private toastrConfig: ToastrConfig) { }
 
     //   medicalStatusForm: string = "";
 
@@ -77,9 +79,10 @@ export class AffectedPeopleListComponent implements OnInit {
         this.affectedPersonToUpdate.Remarks = affectedModifiedForm.Remarks;
         this.affectedPeopleService.Update(this.affectedPersonToUpdate)
             .subscribe((response: AffectedPeopleModel) => {
-                alert("Adiitional Information updated");
+                this.toastrService.success('Adiitional Information updated.')
                 this.getAffectedPeople(this.currentIncident);
                 affectedModifiedForm["MedicalStatusToshow"] = affectedModifiedForm.MedicalStatus;
+                this.childModal.hide();
             }, (error: any) => {
                 alert(error);
             });

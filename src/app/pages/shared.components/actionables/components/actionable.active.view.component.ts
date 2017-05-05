@@ -88,7 +88,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         this.dataExchange.Subscribe("OpenActionablePageInitiate", model => this.onOpenActionablePageInitiate(model));
 
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
     private hasChildChecklist(checkListId): boolean {
@@ -163,7 +163,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe("OpenActionablePageInitiate");
         this.globalState.Unsubscribe('incidentChange');
-        this.globalState.Unsubscribe('departmentChange');
+        this.globalState.Unsubscribe('departmentChangeFromDashboard');
     };
 
     ngAfterContentInit(): void {

@@ -107,7 +107,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
 
         this.dataExchange.Subscribe('OnBroadcastUpdate', model => this.onBroadcastUpdate(model));
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
     private incidentChangeHandler(incident: KeyValue): void {
@@ -143,7 +143,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe('OnBroadcastUpdate');
         this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChange');
+        this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 
     initiateForm(): void {

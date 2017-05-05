@@ -70,7 +70,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
         this.dataExchange.Subscribe("CloseActionablePageInitiate", model => this.onCloseActionablePageInitiate(model));
 
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
 
@@ -105,6 +105,8 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe("CloseActionablePageInitiate");
+         this.dataExchange.Unsubscribe("departmentChangeFromDashboard");
+        
     }
 
     IsReopen(event: any, editedActionable: ActionableModel): void {
