@@ -11,8 +11,8 @@ import {Subscription } from 'rxjs/Rx';
     templateUrl: '../views/presidentMessage.list.view.html'
 })
 export class PresidentMessageListComponent implements OnInit, OnDestroy {
-    @Input() initiatedDepartmentId: string;
-    @Input() incidentId: string;
+    @Input() initiatedDepartmentId: number;
+    @Input() incidentId: number;
 
     PresidentsMessages: PresidentMessageModel[] = [];
     currentIncidentId: number;
@@ -51,6 +51,8 @@ export class PresidentMessageListComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
+        this.incidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        this.initiatedDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.currentIncidentId = +this.incidentId;
         this.currentDepartmentId = +this.initiatedDepartmentId;
         this._onRouteChange = this._router.events.subscribe((event) => {
@@ -87,7 +89,7 @@ export class PresidentMessageListComponent implements OnInit, OnDestroy {
     public ngOnDestroy(): void {
         this.dataExchange.Unsubscribe('PresidentMessageModelSaved');
         this.dataExchange.Unsubscribe('PresidentMessageModelUpdated');
-        this.globalState.Unsubscribe('incidentChange');
-        this.globalState.Unsubscribe('departmentChange');
+        //this.globalState.Unsubscribe('incidentChange');
+        //this.globalState.Unsubscribe('departmentChange');
     }
 }

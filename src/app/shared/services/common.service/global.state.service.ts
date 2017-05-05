@@ -11,7 +11,7 @@ export class GlobalStateService {
         this._dataStream$.subscribe((data: Object) => this._onEvent(data));
     }
 
-    NotifyDataChanged(_event: string, value: any) {
+    NotifyDataChanged(_event: string, value: any) {       
         let current = this._data[_event];
         if (current !== value) {
             this._data[_event] = value;

@@ -19,13 +19,16 @@
                 </div>
                 <ul class="multiselect-list" [hidden]="!listSelected" (click)="$event.stopPropagation();">
                     <li>
+                        <!--<md-checkbox md-no-ink id="AllSelect" formControlName="SelectAllDepartment" [(ngModel)]="IsAllSelected" (change)="IsDrill($event)"
+                            aria-label="Select All">Select All<span class="red"></span>
+                        </md-checkbox>-->
                         <input type="checkbox" [(ngModel)]="IsAllSelected" formControlName="SelectAllDepartment" aria-label="Callback" (change)="selectAllDepartment(IsAllSelected)"
-                            [readOnly]="broadcast.IsSubmitted" />
+                            [disabled]="broadcast.IsSubmitted" />
                         <span>Select All</span>
                     </li>
                     <li *ngFor="let BroadCastDepartmentMappingModel of BroadCastDepartmentMappings">
                         <input type="checkbox" formControlName="BroadCastDepartmentMappings" aria-label="Callback" [checked]="BroadCastDepartmentMappingModel.IsSelected"
-                            (change)="selectDepartment($event,BroadCastDepartmentMappingModel)" [readOnly]="broadcast.IsSubmitted"
+                            (change)="selectDepartment($event,BroadCastDepartmentMappingModel)" [disabled]="broadcast.IsSubmitted"
                         />
                         <span>{{BroadCastDepartmentMappingModel.TargetDepartment.DepartmentName}}</span>
                     </li>

@@ -56,7 +56,7 @@ export class PagesComponent implements OnInit {
         this.getDepartments();
         this.getIncidents();
         this.userName = 'Sandip Ghosh';
-        this.lastLogin = new Date();
+        this.lastLogin = new Date();        
     }
 
     public toggleSideMenu($event): void {

@@ -29,8 +29,8 @@ import {
     templateUrl: '../views/broadcast.entry.view.html'
 })
 export class BroadcastEntryComponent implements OnInit, OnDestroy {
-    @Input() initiatedDepartmentId: string;
-    @Input() incidentId: string;
+    @Input() initiatedDepartmentId: number;
+    @Input() incidentId: number;
 
     public form: FormGroup;
     deptBrodCastModels: DepartmentBroadcastModel[] = null;
@@ -49,6 +49,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     credential: AuthModel;
     protected _onRouteChange: Subscription;
     isArchive : boolean = false;
+    IsAllSelected: boolean = false;
    
 
 
@@ -74,9 +75,10 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-
-        this.currentIncidentId = +this.incidentId;
-        this.currentDepartmentId = +this.initiatedDepartmentId;
+        this.initiatedDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.incidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        this.currentIncidentId = this.incidentId;       
+        this.currentDepartmentId = this.initiatedDepartmentId;
         this._onRouteChange = this._router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
                 if (event.url.indexOf("archivedashboard") > -1) {
@@ -137,8 +139,8 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe('OnBroadcastUpdate');
-        this.globalState.Unsubscribe('incidentChange');
-        this.globalState.Unsubscribe('departmentChange');
+        //this.globalState.Unsubscribe('incidentChange');
+        //this.globalState.Unsubscribe('departmentChange');
     }
 
     initiateForm(): void {
@@ -148,7 +150,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
             SelectAllDepartment: new FormControl(0),
             BroadCastDepartmentMappings: new FormControl(0),
             Priority: new FormControl(this.priorities.find(x => x.value == '1').caption)
-        });
+        });              
     };
 
     selectAllDepartment(IsAllSelected: boolean): void {
@@ -175,6 +177,12 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
             }
         });
         this.selectedcount = this.BroadCastDepartmentMappings.filter(x => { return x.IsSelected == true; }).length;
+        if(this.selectedcount === this.BroadCastDepartmentMappings.length){
+            this.IsAllSelected = true;
+        }
+        else{
+            this.IsAllSelected = false;
+        }
     }
 
     save(isSubmitted: boolean): void {
@@ -211,7 +219,11 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
                 .subscribe((response: BroadCastModel) => {
                     this.toastrService.success('Broadcast saved successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish('BroadcastModelSaved', response);
-                    this.showAdd = false;
+                    if(this.broadcast.IsSubmitted){
+                        this.globalState.NotifyDataChanged('BroadcastPublished', response);
+                    }
+                    this.cancel();
+                    this.IsAllSelected = false;               
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
                 });
@@ -221,7 +233,11 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
                 .subscribe((response: BroadCastModel) => {
                     this.toastrService.success('Broadcast edited successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish('BroadcastModelUpdated', response);
-                    this.showAdd = false;
+                    if(this.broadcast.IsSubmitted){
+                        this.globalState.NotifyDataChanged('BroadcastPublished', this.broadcast);
+                    }
+                    this.cancel();
+                    this.IsAllSelected = false;    
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
                 });
@@ -239,18 +255,31 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
                 .some(x => x.DepartmentId === item.TargetDepartmentId);
         });
         this.selectedcount = this.BroadCastDepartmentMappings.filter(x => { return x.IsSelected == true; }).length;
+        if(this.selectedcount === this.BroadCastDepartmentMappings.length){
+            this.IsAllSelected = true;
+        }
+        else{
+            this.IsAllSelected = false;
+        }       
+
     }
 
     cancel(): void {
         this.broadcast = new BroadCastModel();
+        this.broadcast.DepartmentBroadcasts = [];
         this.showAdd = false;
         this.initiateForm();
+        this.BroadCastDepartmentMappings.forEach(a=>{
+            a.IsSelected = false;           
+        });        
         this.broadcast.Priority = this.priorities.find(x => x.value == '1').caption;
     }
 
     showAddRegion(ShowAdd: Boolean): void {
         this.showAdd = true;
         this.listSelected = false;
+        this.IsAllSelected = false;
+        this.selectedcount = 0;        
     };
 
     showList = function (e) {

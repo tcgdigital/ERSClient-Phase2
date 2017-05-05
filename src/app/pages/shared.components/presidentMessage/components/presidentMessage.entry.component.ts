@@ -23,8 +23,8 @@ import {
     templateUrl: '../views/presidentMessage.entry.view.html'
 })
 export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
-    @Input() initiatedDepartmentId: string;
-    @Input() incidentId: string;
+    @Input() initiatedDepartmentId: number;
+    @Input() incidentId: number;
 
     public form: FormGroup;
     PresidentsMessage: PresidentMessageModel;
@@ -57,8 +57,10 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.InitiateForm();
-        this.currentIncidentId = +this.incidentId;
-        this.currentDepartmentId = +this.initiatedDepartmentId;
+        this.incidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        this.initiatedDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.currentIncidentId = this.incidentId;
+        this.currentDepartmentId = this.initiatedDepartmentId;
         this.credential = UtilityService.getCredentialDetails();
         this.dataExchange.Subscribe("OnPresidentMessageUpdate", model => this.onPresidentMessageUpdate(model));
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
@@ -67,8 +69,8 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe("OnPresidentMessageUpdate");
-        this.globalState.Unsubscribe('incidentChange');
-        this.globalState.Unsubscribe('departmentChange');
+        //this.globalState.Unsubscribe('incidentChange');
+        //this.globalState.Unsubscribe('departmentChange');
     }
 
     private incidentChangeHandler(incident: KeyValue): void {
@@ -80,6 +82,7 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
     }
 
     onPresidentMessageUpdate(presedientMessageModel: PresidentMessageModel): void {
+        this.PresidentsMessage = new PresidentMessageModel();
         this.PresidentsMessage = presedientMessageModel;
         this.PresidentsMessage.PresidentsMessageId = presedientMessageModel.PresidentsMessageId;
         this.PresidentsMessage.IsUpdated = true;
@@ -98,9 +101,10 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
     publish(): void {
         if (this.form.valid) {
             this.PresidentsMessage.IsPublished = true;
-            this.PresidentsMessage.PublishedBy = 1;
+            this.PresidentsMessage.PublishedBy = +this.credential.UserId;;
+            this.date = new Date();
             this.PresidentsMessage.PublishedOn = this.date;
-            this.Action = "Publish";
+            //this.Action = "Publish";
             this.CreateOrUpdatePresidentMessage();
         }
     }
@@ -118,6 +122,10 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
                 .subscribe((response: PresidentMessageModel) => {
                     this.toastrService.success('President message Saved successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("PresidentMessageModelSaved", response);
+                    if(this.PresidentsMessage.IsPublished)
+                    {
+                        this.globalState.NotifyDataChanged('PresidentMessagePublished', response);
+                    }
                     this.InitiateForm();
                     this.showAdd = false;
                 }, (error: any) => {
@@ -125,10 +133,17 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
                 });
         }
         else {
+            this.PresidentsMessage.UpdatedBy = +this.credential.UserId;
             this.presidentMessageService.Update(this.PresidentsMessage)
                 .subscribe((response: PresidentMessageModel) => {
                     this.toastrService.success('President message edited successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("PresidentMessageModelUpdated", response);
+                    
+                    if(this.PresidentsMessage.IsPublished)
+                    {
+                        this.globalState.NotifyDataChanged('PresidentMessagePublished', this.PresidentsMessage);
+                        
+                    }
                     this.InitiateForm();
                     this.showAdd = false;
                 }, (error: any) => {
