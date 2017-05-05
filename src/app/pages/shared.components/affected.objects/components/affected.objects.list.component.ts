@@ -60,7 +60,7 @@ export class AffectedObjectsListComponent implements OnInit {
             }
         });
 
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));       
     }
 
     ngOnDestroy(): void {

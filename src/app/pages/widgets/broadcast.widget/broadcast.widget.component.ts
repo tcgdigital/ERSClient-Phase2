@@ -8,8 +8,9 @@ import {
     DataServiceFactory, DataExchangeService,
     TextAccordionModel, GlobalStateService, KeyValue
 } from '../../../shared'
-import { BroadcastWidgetModel } from './broadcast.widget.model'
-import { BroadcastWidgetService } from './broadcast.widget.service'
+import { BroadcastWidgetModel } from './broadcast.widget.model';
+import { BroadCastModel } from '../../shared.components';
+import { BroadcastWidgetService } from './broadcast.widget.service';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 
 @Component({
@@ -24,6 +25,7 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
     @ViewChild('childModal') public childModal: ModalDirective;
 
     LatestBroadcasts: Observable<TextAccordionModel[]>;
+    //LatestBroadcasts: Observable<BroadcastWidgetModel[]>;
     AllPublishedBroadcasts: Observable<BroadcastWidgetModel[]>;
     isHidden: boolean = true;
     currentIncidentId: number;
@@ -49,6 +51,7 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
 
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe('BroadcastPublished', model => this.onBroadcastPublish(model));
     };
 
     private incidentChangeHandler(incident: KeyValue): void {
@@ -57,9 +60,16 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
         this.getAllPublishedBroadcasts();
     };
 
+    private onBroadcastPublish(broadcast: BroadCastModel): void{
+        if(broadcast.IsSubmitted){
+            this.getLatestBroadcasts(this.currentDepartmentId,this.currentIncidentId);
+        }
+    }
+
     private departmentChangeHandler(department: KeyValue): void {
         this.currentDepartmentId = department.Value;
         this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
+        this.getAllPublishedBroadcasts();
     };
 
     public getLatestBroadcasts(departmentId, incidentId): void {
@@ -73,7 +83,9 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
                 console.log(`Error: ${error}`);
             }, () => {
                 this.LatestBroadcasts = Observable.of(data
-                    .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn)));
+                    .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn)));                
+                    console.log(this.LatestBroadcasts);
+                    console.log(departmentId);
             });
     }
 
@@ -107,5 +119,6 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChange');
         this.globalState.Unsubscribe('departmentChange');
+        this.globalState.Unsubscribe('BroadcastPublished');
     }
 }

@@ -329,7 +329,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
 
     ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChangefromDashboard');
-               this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        this.globalState.Unsubscribe('departmentChangeFromDashboard');
 
     }
 }

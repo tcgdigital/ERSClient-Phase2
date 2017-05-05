@@ -56,8 +56,6 @@ export class PagesComponent implements OnInit {
         this.sideMenuService.updateMenuByRoutes(<Routes>PAGES_MENU);
         this.getDepartments();
         this.getIncidents();
-        
-
         this.userName = localStorage.getItem('CurrentLoggedInUserName');
         this.lastLogin = new Date(localStorage.getItem('LastLoginTime'));
         //this.globalState.Subscribe('incidentCreate', (model: number) => this.incidentCreateHandler(model));
@@ -72,6 +70,7 @@ export class PagesComponent implements OnInit {
 
     private incidentCreateHandler(incident: number) {
         this.getIncidents();
+
     }
 
     public toggleSideMenu($event): void {

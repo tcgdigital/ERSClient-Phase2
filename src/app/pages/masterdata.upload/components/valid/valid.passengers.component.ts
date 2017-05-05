@@ -1,5 +1,5 @@
 import {
-    Component, ViewEncapsulation, Input,
+    Component, ViewEncapsulation, Input, OnChanges, SimpleChange,
     OnInit, OnDestroy, AfterContentInit, ViewChild
 } from '@angular/core';
 import {
@@ -9,7 +9,7 @@ import {
 import { Observable } from 'rxjs/Rx';
 import {
     ResponseModel, DataExchangeService,
-    UtilityService, GlobalConstants
+    UtilityService, GlobalConstants, KeyValue, GlobalStateService
 } from '../../../../shared';
 
 import { MasterDataUploadForValidService } from '../masterdata.upload.valid.records.service'
@@ -24,14 +24,16 @@ import { InvolvePartyModel, AffectedPeopleModel, PassengerModel } from '../../..
 export class ValidPassengersListComponent implements OnInit, OnDestroy{
         
     passengers: PassengerModel[] = []
-    @Input() IncidentId: string;
+    @Input() IncidentId: number;
     @Input() IsVisible: boolean;
 
     constructor(private _validRecordService: MasterDataUploadForValidService,
-                private dataExchange: DataExchangeService<PassengerModel>){}
+                private dataExchange: DataExchangeService<PassengerModel>,
+                private globalState: GlobalStateService){}
 
-    ngOnInit(): void{       
-        this.dataExchange.Subscribe("OpenPassengers", model=>this.OpenPassengers(model))
+    ngOnInit(): void{    
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));        
+        this.dataExchange.Subscribe("OpenPassengers", model=>this.OpenPassengers(model));
     }
 
     OpenPassengers(passenger: PassengerModel): void{
@@ -39,10 +41,12 @@ export class ValidPassengersListComponent implements OnInit, OnDestroy{
         this.getValidPassengerRecords();
     }
 
+    
+
     getValidPassengerRecords(): void{
-        this._validRecordService.GetAllPassengerByIncidentId(+this.IncidentId)
+        this._validRecordService.GetAllPassengerByIncidentId(this.IncidentId)
         .flatMap(x=>x)
-        .subscribe(a=>{
+        .subscribe(a=>{            
             this.passengers.push(a.Passenger);              
         }), 
         (error: any) => {
@@ -56,7 +60,12 @@ export class ValidPassengersListComponent implements OnInit, OnDestroy{
 
     ngOnDestroy(): void{
         this.dataExchange.Unsubscribe("OpenPassengers");
+        this.globalState.Unsubscribe("incidentChange");
     }
+
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.IncidentId = incident.Value;        
+    };    
 }
 
 

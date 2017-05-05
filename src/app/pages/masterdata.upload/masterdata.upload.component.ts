@@ -26,6 +26,7 @@ export class MasterDataUploadComponent{
     @Input() IncidentId: number;
     
     public ngOnInit(): void {
+        this.IncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }

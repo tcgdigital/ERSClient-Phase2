@@ -1,4 +1,4 @@
-<form>
+<form [formGroup]="form">
     <div class="card">
         <div class="card-header">
             <strong>Master Data Upload</strong>
@@ -21,7 +21,7 @@
                                 <tr>
                                     <td data-title="File Name">PDA Manifest</td>
                                     <td data-title="Select File">
-                                        <input type="file" id="file" name="file" (change)="getFileDetails($event,'Passenger')" />
+                                        <input type="file" #inputFilePax id="file" formControlName="filePax" (change)="getFileDetails($event,'Passenger')" />
                                     </td>
                                     <td data-title="Download Templates">
                                         <a target="_self" href="passengerTemplatePath" download="Passengers.xlsx">
@@ -42,7 +42,7 @@
                                 <tr>
                                     <td data-title="File Name">Crew Manifest</td>
                                     <td data-title="Select File">
-                                        <input type="file" id="file" name="file" (change)="getFileDetails($event,'Crew')" />
+                                        <input type="file" #inputFileCrew id="file" formControlName="fileCrew" (change)="getFileDetails($event,'Crew')" />
                                     </td>
                                     <td data-title="Download Templates">
                                         <a target="_self" href="crewTemplatePath" download="Crews.xlsx">
@@ -63,7 +63,7 @@
                                 <tr>
                                     <td data-title="File Name">Cargo Manifest</td>
                                     <td data-title="Select File">
-                                        <input type="file" id="file" name="file" (change)="getFileDetails($event,'Cargo')" />
+                                        <input type="file" #inputFileCargo id="file" formControlName="fileCargo" (change)="getFileDetails($event,'Cargo')" />
                                     </td>
                                     <td data-title="Download Templates">
                                         <a target="_self" href="cargoTemplatePath" download="Cargo.xlsx">
@@ -86,7 +86,7 @@
                     </responsive-table>
                 </div>
                 <div class="col-12">
-                    <button class="btn btn-primary" type="submit" (click)="uploadFiles()">Upload</button>
+                    <button class="btn btn-primary" type="submit" (click)="uploadFiles()" [disabled] = "disableUploadButton">Upload</button>
                     <button class="btn btn-warning" type="button">Back To DashBoard</button>
                 </div>
                 <div class="col-12">

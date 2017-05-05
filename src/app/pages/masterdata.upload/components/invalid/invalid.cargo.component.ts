@@ -1,5 +1,5 @@
 import {
-    Component, ViewEncapsulation, Input,
+    Component, ViewEncapsulation, Input, OnChanges, SimpleChange,
     OnInit, OnDestroy, AfterContentInit, ViewChild
 } from '@angular/core';
 import {
@@ -8,8 +8,8 @@ import {
 } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
 import {
-    ResponseModel, DataExchangeService,
-    UtilityService, GlobalConstants
+    ResponseModel, DataExchangeService, 
+    UtilityService, GlobalConstants, KeyValue, GlobalStateService
 } from '../../../../shared';
 
 import { MasterDataUploadForInvalidService } from '../masterdata.upload.invalid.records.service'
@@ -21,17 +21,31 @@ import { InvalidCargoModel } from '../../../shared.components/'
     templateUrl: '../../views/invalid/invalid.cargo.view.html'
 })
 
-export class InvalidCargoListComponent implements OnInit{
+export class InvalidCargoListComponent implements OnInit, OnDestroy{
         
     invalidCargoes: InvalidCargoModel[] = []
-    @Input() IncidentId: string;
+    @Input() IncidentId: number;
     @Input() IsVisible: boolean;
 
     constructor(private _invalidRecordService: MasterDataUploadForInvalidService,
-                private dataExchange: DataExchangeService<InvalidCargoModel>){}
+                private dataExchange: DataExchangeService<InvalidCargoModel>,
+                private globalState: GlobalStateService){}
 
-    ngOnInit(): void{       
-        this.dataExchange.Subscribe("OpenInvalidCargoes", model => this.OpenInvalidCargoes(model))
+    ngOnInit(): void{  
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));     
+        this.dataExchange.Subscribe("OpenInvalidCargoes", model => this.OpenInvalidCargoes(model));        
+    }
+    
+    // public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
+    //     if (changes['IncidentId'].currentValue !==
+    //         changes['IncidentId'].previousValue) {
+    //             this.dataExchange.Subscribe("OpenInvalidCargoes", model => this.OpenInvalidCargoes(model));
+    //         }
+    // }
+
+    ngOnDestroy(): void {
+        this.dataExchange.Unsubscribe("OpenInvalidCargoes");
+        this.globalState.Unsubscribe("incidentChange");
     }
 
     OpenInvalidCargoes(invalidCargo: InvalidCargoModel){
@@ -53,6 +67,10 @@ export class InvalidCargoListComponent implements OnInit{
     cancel(): void {
         this.IsVisible = !this.IsVisible;
     }
+
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.IncidentId = incident.Value;        
+    }; 
 }
 
 
