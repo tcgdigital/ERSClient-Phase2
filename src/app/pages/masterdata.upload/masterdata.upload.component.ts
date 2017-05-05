@@ -38,9 +38,9 @@ export class MasterDataUploadComponent{
 
      private incidentChangeHandler(incident: KeyValue): void {
         this.IncidentId = incident.Value;
-    };
+    }
 
     private departmentChangeHandler(department: KeyValue): void {
         this.DepartmentId = department.Value;
-    };
+    }
 }

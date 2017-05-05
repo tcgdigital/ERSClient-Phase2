@@ -62,7 +62,9 @@
                             </tr>
                         </thead>
                         <tbody>
-
+                            <tr *ngIf="!(passengerList | async)?.length>0">
+                                <td data-title="Records" colspan="7">No passenger to show.</td>
+                            </tr>
                             <tr *ngFor="let passenger of passengerList | async">
                                 <td data-title="Passenge Name">{{passenger.PassengerName}}</td>
                                 <td data-title="PNR">{{passenger.Pnr}}</td>
@@ -109,6 +111,9 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <tr *ngIf="!(affectedEnquiredPeoples | async)?.length>0">
+                                <td data-title="Records" colspan="7">No passenger to show.</td>
+                            </tr>
                             <tr *ngFor="let passenger of affectedEnquiredPeoples | async">
                                 <td data-title="Passenge Name">{{passenger.PassengerName}}</td>
                                 <td data-title="PNR">{{passenger.Pnr}}</td>
@@ -160,7 +165,9 @@
                             </tr>
                         </thead>
                         <tbody>
-
+                            <tr *ngIf="!(crewList | async)?.length>0">
+                                <td data-title="Records" colspan="11">No crew to show.</td>
+                            </tr>
                             <tr *ngFor="let crew of crewList | async">
                                 <td data-title="Employee Number">{{crew.EmployeeNumber}}</td>
                                 <td data-title="Employee Name">{{crew.CrewName | uppercase}}</td>
@@ -216,7 +223,9 @@
                             </tr>
                         </thead>
                         <tbody>
-
+                            <tr *ngIf="!(affectedEnquiredCrews | async)?.length>0">
+                                <td data-title="Records" colspan="11">No crew to show.</td>
+                            </tr>
                             <tr *ngFor="let crew of affectedEnquiredCrews | async">
                                 <td data-title="Employee Number">{{crew.EmployeeNumber}}</td>
                                 <td data-title="Employee Name">{{crew.CrewName | uppercase}}</td>

@@ -24,7 +24,7 @@
                                         <input type="file" #inputFilePax id="file" formControlName="filePax" (change)="getFileDetails($event,'Passenger')" />
                                     </td>
                                     <td data-title="Download Templates">
-                                        <a target="_self" href="passengerTemplatePath" download="Passengers.xlsx">
+                                        <a target="_self" href="{{passengerTemplatePath}}" download="Passengers.xlsx">
                                             <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;PDA Template
                                         </a>
                                     </td>
@@ -45,7 +45,7 @@
                                         <input type="file" #inputFileCrew id="file" formControlName="fileCrew" (change)="getFileDetails($event,'Crew')" />
                                     </td>
                                     <td data-title="Download Templates">
-                                        <a target="_self" href="crewTemplatePath" download="Crews.xlsx">
+                                        <a target="_self" href="{{crewTemplatePath}}" download="Crews.xlsx">
                                             <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Crew Template
                                         </a>
                                     </td>
@@ -66,7 +66,7 @@
                                         <input type="file" #inputFileCargo id="file" formControlName="fileCargo" (change)="getFileDetails($event,'Cargo')" />
                                     </td>
                                     <td data-title="Download Templates">
-                                        <a target="_self" href="cargoTemplatePath" download="Cargo.xlsx">
+                                        <a target="_self" href="{{cargoTemplatePath}}" download="Cargo.xlsx">
                                             <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Cargo Template
                                         </a>
                                     </td>
