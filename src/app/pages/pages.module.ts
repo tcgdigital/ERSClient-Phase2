@@ -2,7 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
-
+import {
+    GlobalStateService
+} from '../shared';
 import { PagesComponent } from './pages.component';
 import { SharedModule } from '../shared/shared.module';
 import { PagesRouting } from './pages.routing';
@@ -19,7 +21,10 @@ import { IncidentModule } from './incident';
         ToastrModule,
         PagesRouting
     ],
-    declarations: [PagesComponent]
+    declarations: [PagesComponent],
+    providers: [
+        GlobalStateService
+    ]
 })
 export class PagesModule {
 }

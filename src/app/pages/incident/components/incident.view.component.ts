@@ -1,25 +1,34 @@
+import { Component, ViewEncapsulation, Input, OnInit, OnDestroy, ViewChild, Injector } from '@angular/core';
+import { Router } from '@angular/router';
 import {
-    Component, ViewEncapsulation,
-    OnInit, OnDestroy,Input, Output, EventEmitter
-} from '@angular/core';
-import {
-    FormGroup, FormControl, FormBuilder,
-    AbstractControl, Validators, ReactiveFormsModule
+    FormGroup, FormControl, FormBuilder, Validators,
+    ReactiveFormsModule
 } from '@angular/forms';
-// import { IncidentModel } from './incident.model';
-// import { EmergencyTypeModel, EmergencyTypeService } from '../../masterdata';
-// import { IncidentService } from './incident.service';
-// import {
-//     ResponseModel,
-//     DataExchangeService,
-//     Severity,
-//     KeyValue,
-//     IncidentStatus,
-//     InvolvedPartyType
-// } from '../../../shared';
-// import { UtilityService } from '../../../shared';
-// import { FlightModel, InvolvePartyModel } from '../../shared.components';
-// import { IncidentDataExchangeModel } from './incidentDataExchange.model';
+import * as moment from 'moment/moment';
+import { IncidentModel } from './incident.model';
+import { EmergencyTypeModel, EmergencyTypeService } from '../../masterdata';
+import { DateTimePickerSelectEventArgs } from '../../../shared/directives/datetimepicker';
+import { EmergencyLocationService, EmergencyLocationModel } from "../../masterdata/emergencylocation";
+import { IncidentService } from './incident.service';
+
+import {
+    ResponseModel,
+    GlobalStateService,
+    //DataExchangeService,
+    Severity,
+    KeyValue,
+    KeyVal,
+    IncidentStatus,
+    InvolvedPartyType,
+    UtilityService,
+    LocationService,
+    Location,
+    DateTimePickerOptions
+} from '../../../shared';
+import { ModalDirective } from 'ng2-bootstrap/modal';
+import { FlightModel, InvolvePartyModel } from '../../shared.components';
+import { IncidentDataExchangeModel } from './incidentDataExchange.model';
+
 
 @Component({
     selector: 'incident-view',
@@ -27,161 +36,155 @@ import {
     templateUrl: '../views/incident.view.html'
 })
 
-export class IncidentViewComponent{
-    @Input() formData: FormControl;
-    @Output() saveHandler: EventEmitter<any> = new EventEmitter<any>();
-    @Output() closeHandler: EventEmitter<any> = new EventEmitter<any>();
+export class IncidentViewComponent {
+    @Input() IncidentId: number;
+    @ViewChild('childModalViewIncident') public childModalViewIncident: ModalDirective;
 
-    protected onSaveClick($event): void{
-        this.saveHandler.emit();
+    currentDepartmentId: number;
+    datepickerOptionED: DateTimePickerOptions = new DateTimePickerOptions();
+    datepickerOptionFLT: DateTimePickerOptions = new DateTimePickerOptions();
+    disableIsDrill: boolean;
+    disableIsDrillPopup: boolean;
+    isFlightRelated: boolean = false;
+    isFlightRelatedPopup: boolean = false;
+    isOffSet: boolean = false;
+    isOffSetPopup: boolean = false;
+    buttonValue: String = '';
+    incidentModel: IncidentModel = null;
+    involvePartyModel: InvolvePartyModel = null;
+    incidentDataExchangeModel: IncidentDataExchangeModel = null;
+    flightModel: FlightModel = null;
+    date: Date = new Date();
+    activeEmergencyTypes: EmergencyTypeModel[] = [];
+    severities: KeyValue[] = [];
+    incidentStatuses: KeyValue[] = [];
+    affectedStations: EmergencyLocationModel[] = [];
+    public form: FormGroup;
+    public formPopup: FormGroup;
+    public EmergencyDate: Date;
+    public ArrivalDate: Date;
+    public DepartureDate: Date;
+    public globalStateProxy: GlobalStateService;
+    public IsDrillPopup: boolean;
+    constructor(formBuilder: FormBuilder,
+        private router: Router,
+        private incidentService: IncidentService,
+        private emergencyLocationService: EmergencyLocationService,
+        private emergencyTypeService: EmergencyTypeService) {
+
+        this.severities = UtilityService.GetKeyValues(Severity);
+        this.incidentStatuses = UtilityService.GetKeyValues(IncidentStatus);
+        this.affectedStations = [];
+        this.EmergencyDate = new Date();
+        this.ArrivalDate = new Date();
+        this.DepartureDate = new Date();
+        this.datepickerOptionED = new DateTimePickerOptions();
+        this.datepickerOptionFLT = new DateTimePickerOptions();
+
     }
 
-    protected onCloseClisk($event): void{
-        this.closeHandler.emit();
+    ngOnInit(): void {
+        this.datepickerOptionED.maxDate = new Date();
+        this.datepickerOptionFLT.position = 'top left';
+        this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.isFlightRelated = false;
+        this.disableIsDrill = true;
+        this.disableIsDrillPopup = true;
+        this.IsDrillPopup=false;
+        this.isOffSet = false;
+        this.getAllActiveEmergencyTypes();
+        this.resetIncidentViewForm();
+        //this.dataExchangeDecision.Subscribe('incidentViewPreCheck', model => this.onIncidentViewPreCheck(model));
+        this.emergencyLocationService.GetAllActiveEmergencyLocations()
+            .subscribe((result: ResponseModel<EmergencyLocationModel>) => {
+                result.Records.forEach((item: EmergencyLocationModel) => {
+                    let emergencyLocationModel: EmergencyLocationModel = new EmergencyLocationModel();
+                    emergencyLocationModel.IATA = item.IATA;
+                    emergencyLocationModel.AirportName = item.AirportName;
+                    this.affectedStations.push(emergencyLocationModel);
+                });
+
+            });
+
     }
 
-    //} implements OnInit, OnDestroy {
-    // showView: boolean = null;
-    // disable: boolean = null;
-    // public form: FormGroup;
-    // severities: KeyValue[] = [];
-    // date: Date = new Date();
-    // isFlightRelated: boolean = false;
-    // incidentModel: IncidentModel = null;
-    // activeEmergencyTypes: EmergencyTypeModel[] = [];
-    // incidentDataExchangeModel: IncidentDataExchangeModel = null;
+    loadDataIncidentViewPopup() {
+        let offsetVal: string = '';
+        this.disableIsDrill = true;
+        this.isOffSetPopup = false;
+        if (this.incidentDataExchangeModel.IncidentModel.EmergencyLocation == 'Offset') {
+            this.isOffSetPopup = true;
+        }
+        this.formPopup = new FormGroup({
+            IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
+            EmergencyTypeIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyTypeId),
+            AffectedStationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyLocation),
+            OffsiteDetailsPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OffSetLocation),
+            EmergencyNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyName),
+            AlertMessagePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.AlertMessage),
+            DescriptionPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Description),
+            EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD/MM/YYYY h:mm a')),
+            SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity)
 
-    // constructor(formBuilder: FormBuilder,
-    //     private incidentService: IncidentService,
-    //     private emergencyTypeService: EmergencyTypeService,
-    //     private dataExchange: DataExchangeService<IncidentDataExchangeModel>,
-    //     private dataExchangeDecision: DataExchangeService<Boolean>) {
-    //     this.showView = false;
-    //     this.isFlightRelated = false;
-    //     this.severities = UtilityService.GetKeyValues(Severity);
-    //     this.incidentDataExchangeModel = new IncidentDataExchangeModel();
-    // }
-    // ngOnInit(): any {
-    //     console.log('Hello ');
-    //     this.getAllActiveEmergencyTypes();
-    //     this.initiateIncidentModel();
-    //     this.form = new FormGroup({
-    //         IncidentId: new FormControl(0),
-    //         IsDrill: new FormControl(true),
-    //         EmergencyTypeId: new FormControl(1),
-    //         EmergencyName: new FormControl(''),
-    //         AlertMessage: new FormControl(''),
-    //         Description: new FormControl(''),
-    //         ClosureNote: new FormControl(''),
-    //         EmergencyDate: new FormControl(''),
-    //         Severity: new FormControl(''),
-    //         EmergencyLocation: new FormControl(''),
-    //         Remarks: new FormControl(''),
+        });
+        this.IsDrillPopup=this.incidentDataExchangeModel.IncidentModel.IsDrill;
+        this.isFlightRelatedPopup = false;
+        if (this.incidentDataExchangeModel.FLightModel != null) {
+            this.formPopup = new FormGroup({
+                IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
+                EmergencyTypeIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyTypeId),
+                AffectedStationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyLocation),
+                OffsiteDetailsPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OffSetLocation),
+                EmergencyNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyName),
+                AlertMessagePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.AlertMessage),
+                DescriptionPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Description),
+                EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD/MM/YYYY h:mm a')),
+                SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity),
+                FlightNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightNo),
+                OriginPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.OriginCode),
+                DestinationPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.DestinationCode),
+                ScheduleddeparturePopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.DepartureDate).format('DD/MM/YYYY h:mm a')),
+                ScheduledarrivalPopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.ArrivalDate).format('DD/MM/YYYY h:mm a')),
+                FlightTailNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightTaleNumber)
+            });
+            this.IsDrillPopup=this.incidentDataExchangeModel.IncidentModel.IsDrill;
+            this.isFlightRelatedPopup = true;
+        }
+    }
 
-    //         FlightNumber: new FormControl(''),
-    //         Origin: new FormControl(''),
-    //         Destination: new FormControl(''),
-    //         Scheduleddeparture: new FormControl(''),
-    //         Scheduledarrival: new FormControl(''),
-    //         FlightTailNumber: new FormControl('')
-    //     });
-    //     this.disable = true;
-    //     this.dataExchange.Subscribe("incidentCreatedPreCheck", model => this.onIncidentCreatedPreCheck(model));
-    // }
+    hideIncidentView(): void {
+        this.childModalViewIncident.hide();
+    }
 
-    // ngOnDestroy(): void {
-    //     this.dataExchange.Unsubscribe("incidentCreatedPreCheck");
-    // }
+    getAllActiveEmergencyTypes(): void {
+        this.emergencyTypeService.GetAll()
+            .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
+                this.activeEmergencyTypes = response.Records;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
+    }
 
-    // initiateIncidentModel(): void {
-    //     this.incidentModel = new IncidentModel();
-    //     this.incidentModel.IncidentId = 0;
-    //     this.incidentModel.IsDrill = false;
-    //     this.incidentModel.EmergencyTypeId = 0;
-    //     this.incidentModel.IncidentStatus = UtilityService.GetKeyValues(IncidentStatus)[0].Key;
-    //     this.incidentModel.EmergencyName = '';
-    //     this.incidentModel.AlertMessage = '';
-    //     this.incidentModel.Description = '';
-    //     this.incidentModel.ClosureNote = '';
-    //     this.incidentModel.EmergencyDate = this.date;
-    //     this.incidentModel.Severity = UtilityService.GetKeyValues(Severity)[0].Key;
-    //     this.incidentModel.EmergencyLocation = '';
-    //     this.incidentModel.IsSubmitted = false;
-    //     this.incidentModel.IsSaved = false;
-    //     this.incidentModel.Remarks = '';
-    //     this.incidentModel.DepartmentId = 0;
+    resetIncidentViewForm(): void {
+        this.formPopup = new FormGroup({
+            IncidentId: new FormControl(0),
+            IsDrill:new FormControl(false),
+            EmergencyTypeIdPopup: new FormControl('0'),
+            AffectedStationIdPopup: new FormControl('0'),
+            OffsiteDetailsPopup: new FormControl(''),
+            EmergencyNamePopup: new FormControl(''),
+            AlertMessagePopup: new FormControl(''),
+            DescriptionPopup: new FormControl(''),
+            EmergencyDatePopup: new FormControl(''),
+            SeverityPopup: new FormControl('0'),
+            FlightNumberPopup: new FormControl(''),
+            OriginPopup: new FormControl(''),
+            DestinationPopup: new FormControl(''),
+            ScheduleddeparturePopup: new FormControl(''),
+            ScheduledarrivalPopup: new FormControl(''),
+            FlightTailNumberPopup: new FormControl('')
+        });
+        this.IsDrillPopup=false;
+    }
 
-    //     this.incidentModel.ActiveFlag = 'Active';
-    //     this.incidentModel.CreatedBy = 1;
-    //     this.incidentModel.CreatedOn = this.date;
-    // }
-
-    // getAllActiveEmergencyTypes(): void {
-    //     this.emergencyTypeService.GetAll()
-    //         .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
-    //             console.log(response);
-    //             response.Records.forEach(x => {
-    //                 x.Active = (x.ActiveFlag == 'Active');
-    //             });
-    //             this.activeEmergencyTypes = response.Records;
-    //             console.log(this.activeEmergencyTypes);
-
-    //         });
-    // }
-
-    // onIncidentCreatedPreCheck(incidentDataExchangeModel: IncidentDataExchangeModel): void {
-    //     console.log('Incident create..');
-    //     console.log(incidentDataExchangeModel);
-    //     console.log('Command has been given and we are now closing the insert region and opening the view region.');
-    //     this.showView = true;
-    //     this.incidentDataExchangeModel = incidentDataExchangeModel;
-    //     this.incidentModel = incidentDataExchangeModel.IncidentModel;
-    //     this.form = new FormGroup({
-    //         IncidentId: new FormControl(0),
-    //         IsDrill: new FormControl(incidentDataExchangeModel.IncidentModel.IsDrill),
-    //         EmergencyTypeId: new FormControl(incidentDataExchangeModel.IncidentModel.EmergencyTypeId),
-    //         EmergencyName: new FormControl(incidentDataExchangeModel.IncidentModel.EmergencyName),
-    //         AlertMessage: new FormControl(incidentDataExchangeModel.IncidentModel.AlertMessage),
-    //         Description: new FormControl(incidentDataExchangeModel.IncidentModel.Description),
-    //         ClosureNote: new FormControl(incidentDataExchangeModel.IncidentModel.ClosureNote),
-    //         EmergencyDate: new FormControl(incidentDataExchangeModel.IncidentModel.EmergencyDate),
-    //         Severity: new FormControl(incidentDataExchangeModel.IncidentModel.Severity),
-    //         EmergencyLocation: new FormControl(incidentDataExchangeModel.IncidentModel.EmergencyLocation),
-    //         Remarks: new FormControl(incidentDataExchangeModel.IncidentModel.Remarks),
-
-    //         FlightNumber: new FormControl(incidentDataExchangeModel.FLightModel.FlightNo),
-    //         Origin: new FormControl(incidentDataExchangeModel.FLightModel.OriginCode),
-    //         Destination: new FormControl(incidentDataExchangeModel.FLightModel.DestinationCode),
-    //         Scheduleddeparture: new FormControl(incidentDataExchangeModel.FLightModel.DepartureDate),
-    //         Scheduledarrival: new FormControl(incidentDataExchangeModel.FLightModel.ArrivalDate),
-    //         FlightTailNumber: new FormControl(incidentDataExchangeModel.FLightModel.FlightTaleNumber)
-    //     });
-    //     this.isFlightRelated = false;
-    //     if (incidentDataExchangeModel.IsFlightRelated) {
-    //         this.isFlightRelated = true;
-    //     }
-
-
-    // }
-
-    // onSubmit(values: Object): void {
-    //     console.log('Incident Created.');
-    //     console.log(this.incidentDataExchangeModel);
-    //     this.incidentService.CreateIncident(this.incidentDataExchangeModel.IncidentModel,
-    //         this.incidentDataExchangeModel.IsFlightRelated,
-    //         this.incidentDataExchangeModel.InvolvedPartyModel, this.incidentDataExchangeModel.FLightModel)
-    //         .subscribe((response: IncidentModel) => {
-    //             console.log('VV');
-    //             console.log(response);
-    //             console.log("Success");
-    //         }, (error: any) => {
-    //             console.log("Error");
-    //         });
-
-    // }
-    // cancel(): void {
-    //     this.showView = false;
-    //     this.dataExchangeDecision.Publish("incidentViewPreCheck", true);
-    // }
-    
 }

@@ -47,6 +47,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     isFlightRelatedPopup: boolean = false;
     incidentDataExchangeModel: IncidentDataExchangeModel = null;
     currentIncidentId: number;
+    public IsDrillPopup: boolean;
 
     constructor(formBuilder: FormBuilder,
         private toastrService: ToastrService,
@@ -114,7 +115,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     public resetIncidentViewForm(): void {
         this.formPopup = new FormGroup({
             IncidentId: new FormControl(0),
-            IsDrillPopup: new FormControl(false),
+            //IsDrillPopup: new FormControl(false),
             EmergencyTypeIdPopup: new FormControl('0'),
             AffectedStationIdPopup: new FormControl('0'),
             OffsiteDetailsPopup: new FormControl(''),
@@ -130,6 +131,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
             ScheduledarrivalPopup: new FormControl(''),
             FlightTailNumberPopup: new FormControl('')
         });
+        this.IsDrillPopup = false;
     }
 
     public initiateIncidentModel(): void {
@@ -156,7 +158,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
         }
         this.formPopup = new FormGroup({
             IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
-            IsDrillPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.IsDrill),
+            //IsDrillPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.IsDrill),
             EmergencyTypeIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyTypeId),
             AffectedStationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyLocation),
             OffsiteDetailsPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OffSetLocation),
@@ -166,12 +168,12 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
             EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD-MM-YYYY h:mm a')),
             SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity)
         });
-
+        this.IsDrillPopup = this.incidentDataExchangeModel.IncidentModel.IsDrill;
         this.isFlightRelatedPopup = false;
         if (this.incidentDataExchangeModel.FLightModel != null) {
             this.formPopup = new FormGroup({
                 IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
-                IsDrillPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.IsDrill),
+                //IsDrillPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.IsDrill),
                 EmergencyTypeIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyTypeId),
                 AffectedStationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyLocation),
                 OffsiteDetailsPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OffSetLocation),
@@ -187,6 +189,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
                 ScheduledarrivalPopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.ArrivalDate).format('DD-MM-YYYY h:mm a')),
                 FlightTailNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightTaleNumber)
             });
+            this.IsDrillPopup = this.incidentDataExchangeModel.IncidentModel.IsDrill;
             this.isFlightRelatedPopup = true;
         }
         this.childModalViewClosedIncident.show();
@@ -201,23 +204,28 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     public viewClosedCrisis(incidentId: number): void {
         this.incidentDataExchangeModel = new IncidentDataExchangeModel();
         this.incidentService.GetIncidentById(incidentId)
-            .map((incidentModel: IncidentModel) => {
+            .subscribe((incidentModel: IncidentModel) => {
                 this.incidentDataExchangeModel.IncidentModel = new IncidentModel();
                 this.incidentDataExchangeModel.IncidentModel = incidentModel;
+                this.involvePartyService.GetByIncidentId(this.incidentDataExchangeModel.IncidentModel.IncidentId)
+                    .subscribe((involveParties: ResponseModel<InvolvePartyModel>) => {
+                        if (involveParties.Count > 0) {
+                            this.incidentDataExchangeModel.InvolvedPartyModel = new InvolvePartyModel();
+                            this.incidentDataExchangeModel.InvolvedPartyModel = involveParties.Records[0];
+                            this.flightService.GetFlightByInvolvedPartyId(this.incidentDataExchangeModel.InvolvedPartyModel.InvolvedPartyId)
+                                .subscribe((flights: ResponseModel<FlightModel>) => {
+                                    this.incidentDataExchangeModel.FLightModel = new FlightModel();
+                                    this.incidentDataExchangeModel.FLightModel = flights.Records[0];
+                                    this.loadDataIncidentViewPopup();
+                                })
+                        }
+                        else{
+                            this.loadDataIncidentViewPopup();
+                        }
+
+                    });
             })
-            .flatMap(_ => this.involvePartyService.GetByIncidentId(this.incidentDataExchangeModel.IncidentModel.IncidentId))
-            .map((involveParties: ResponseModel<InvolvePartyModel>) => {
-                this.incidentDataExchangeModel.InvolvedPartyModel = new InvolvePartyModel();
-                this.incidentDataExchangeModel.InvolvedPartyModel = involveParties.Records[0];
-            })
-            .flatMap(_ => this.flightService.GetFlightByInvolvedPartyId(this.incidentDataExchangeModel.InvolvedPartyModel.InvolvedPartyId))
-            .map((flights: ResponseModel<FlightModel>) => {
-                this.incidentDataExchangeModel.FLightModel = new FlightModel();
-                this.incidentDataExchangeModel.FLightModel = flights.Records[0];
-            })
-            .subscribe(_ => {
-                this.loadDataIncidentViewPopup();
-            })
+        
     }
 
     public onSubmitClosedCrisis(closedCrisisList: IncidentModel[]): void {

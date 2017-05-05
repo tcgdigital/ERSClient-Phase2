@@ -23,7 +23,10 @@
             <i class="fa fa-phone" (click)="onContactClicked($event)"></i>
         </div>
         <div class="col-4">
-            <i class="fa fa-question" (click)="onHelpClicked($event)"></i>
+            <a target="_self" href="{{HelpFileFath}}" download="{{FileName}}">
+                <i class="fa fa-question-circle fa-2x" ></i>
+            </a>
+            
         </div>
     </div>
 </div>

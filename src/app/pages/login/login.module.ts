@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IncidentService } from "../incident";
 import { LoginRoutings } from './login.routing';
 import { LoginComponent } from './components';
+import { UserProfileService } from "../shared.components";
 
 @NgModule({
     imports: [
@@ -16,7 +17,8 @@ import { LoginComponent } from './components';
         LoginComponent
     ],
     providers: [
-        IncidentService
+        IncidentService,
+        UserProfileService
     ]
 })
 export class LoginModule {

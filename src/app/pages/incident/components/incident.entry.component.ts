@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ViewEncapsulation, Input, OnInit, OnDestroy, ViewChild, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import {
     FormGroup, FormControl, FormBuilder, Validators,
@@ -13,7 +13,8 @@ import { IncidentService } from './incident.service';
 
 import {
     ResponseModel,
-    DataExchangeService,
+    GlobalStateService,
+    //DataExchangeService,
     Severity,
     KeyValue,
     KeyVal,
@@ -75,7 +76,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     public EmergencyDate: Date;
     public ArrivalDate: Date;
     public DepartureDate: Date;
-
+    public globalStateProxy: GlobalStateService;
+    public IsDrillPopup:boolean;
     /**
      * Creates an instance of IncidentEntryComponent.
      * @param {FormBuilder} formBuilder 
@@ -89,9 +91,12 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         private router: Router,
         private incidentService: IncidentService,
         private emergencyTypeService: EmergencyTypeService,
+        private injector: Injector,
+        //private globalState: GlobalStateService,
+        //private sharedService:SharedService,
         private emergencyLocationService: EmergencyLocationService,
-        private dataExchange: DataExchangeService<IncidentDataExchangeModel>,
-        private dataExchangeDecision: DataExchangeService<Boolean>,
+        //private dataExchange: DataExchangeService<IncidentDataExchangeModel>,
+        //private dataExchangeDecision: DataExchangeService<Boolean>,
         private locationService: LocationService) {
         this.severities = UtilityService.GetKeyValues(Severity);
         this.incidentStatuses = UtilityService.GetKeyValues(IncidentStatus);
@@ -101,21 +106,25 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.DepartureDate = new Date();
         this.datepickerOptionED = new DateTimePickerOptions();
         this.datepickerOptionFLT = new DateTimePickerOptions();
+        // This proxy is created for not create the GlobalStateService in constructor level and reuse the 
+        // GlobalStateService.
+        this.globalStateProxy = injector.get(GlobalStateService);
     }
 
-    ngOnInit(): any {
+    ngOnInit(): void {
         this.datepickerOptionED.maxDate = new Date();
         this.datepickerOptionFLT.position = 'top left';
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.isFlightRelated = false;
         this.disableIsDrill = true;
         this.disableIsDrillPopup = true;
+        this.IsDrillPopup=false;
         this.isOffSet = false;
         this.initiateIncidentModel();
         this.getAllActiveEmergencyTypes();
         this.resetIncidentForm();
         this.resetIncidentViewForm();
-        this.dataExchangeDecision.Subscribe('incidentViewPreCheck', model => this.onIncidentViewPreCheck(model));
+        //this.dataExchangeDecision.Subscribe('incidentViewPreCheck', model => this.onIncidentViewPreCheck(model));
         this.emergencyLocationService.GetAllActiveEmergencyLocations()
             .subscribe((result: ResponseModel<EmergencyLocationModel>) => {
                 result.Records.forEach((item: EmergencyLocationModel) => {
@@ -126,6 +135,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                 });
 
             });
+
     }
 
     initiateIncidentModel(): void {
@@ -164,7 +174,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         }
     }
 
-    IsDrill(event: any): void {
+    public IsDrill(event: any): void {
         console.log(event.checked);
     }
 
@@ -246,9 +256,10 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             this.incidentDataExchangeModel.IsFlightRelated,
             this.incidentDataExchangeModel.InvolvedPartyModel, this.incidentDataExchangeModel.FLightModel)
             .subscribe((response: IncidentModel) => {
-                console.log('VV');
                 console.log(response);
                 console.log("Success");
+                this.globalStateProxy.NotifyDataChanged('incidentCreate', response.IncidentId);
+                //this.globalState.NotifyDataChanged('incidentCreate', response.IncidentId);
                 this.router.navigate(['pages/dashboard']);
             }, (error: any) => {
                 console.log("Error");
@@ -268,14 +279,14 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.incidentDataExchangeModel.FLightModel = flightModel;
         this.incidentDataExchangeModel.IsFlightRelated = this.isFlightRelated;
         console.log('Going to the View page.........................');
-        this.dataExchangeDecision.Publish('instructionToCloseInsertOpenViewCommand', true);
-        this.dataExchange.Publish('incidentCreatedPreCheck', this.incidentDataExchangeModel);
+        //this.dataExchangeDecision.Publish('instructionToCloseInsertOpenViewCommand', true);
+        //this.dataExchange.Publish('incidentCreatedPreCheck', this.incidentDataExchangeModel);
     }
 
     resetIncidentViewForm(): void {
         this.formPopup = new FormGroup({
             IncidentId: new FormControl(0),
-            IsDrillPopup: new FormControl(false),
+            IsDrill:new FormControl(false),
             EmergencyTypeIdPopup: new FormControl('0'),
             AffectedStationIdPopup: new FormControl('0'),
             OffsiteDetailsPopup: new FormControl(''),
@@ -291,6 +302,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             ScheduledarrivalPopup: new FormControl(''),
             FlightTailNumberPopup: new FormControl('')
         });
+        this.IsDrillPopup=false;
     }
 
     loadDataIncidentViewPopup() {
@@ -302,7 +314,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         }
         this.formPopup = new FormGroup({
             IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
-            IsDrillPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.IsDrill),
             EmergencyTypeIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyTypeId),
             AffectedStationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyLocation),
             OffsiteDetailsPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OffSetLocation),
@@ -313,11 +324,11 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity)
 
         });
+        this.IsDrillPopup=this.incidentDataExchangeModel.IncidentModel.IsDrill;
         this.isFlightRelatedPopup = false;
         if (this.incidentDataExchangeModel.FLightModel != null) {
             this.formPopup = new FormGroup({
                 IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
-                IsDrillPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.IsDrill),
                 EmergencyTypeIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyTypeId),
                 AffectedStationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyLocation),
                 OffsiteDetailsPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OffSetLocation),
@@ -333,6 +344,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                 ScheduledarrivalPopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.ArrivalDate).format('DD/MM/YYYY h:mm a')),
                 FlightTailNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightTaleNumber)
             });
+            this.IsDrillPopup=this.incidentDataExchangeModel.IncidentModel.IsDrill;
             this.isFlightRelatedPopup = true;
         }
     }

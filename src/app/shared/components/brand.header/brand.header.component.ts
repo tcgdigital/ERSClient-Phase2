@@ -1,8 +1,10 @@
 import {
     Component, ViewEncapsulation,
-    Output, EventEmitter, Input
+    Output, EventEmitter, Input, OnInit
 } from '@angular/core';
 import { GlobalStateService } from '../../services';
+import { Router } from '@angular/router';
+import { AuthenticationService } from "../../../pages/login/components/authentication.service";
 
 @Component({
     selector: '[brand-header]',
@@ -10,7 +12,7 @@ import { GlobalStateService } from '../../services';
     styleUrls: ['./brand.header.style.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class BrandHeaderComponent {
+export class BrandHeaderComponent implements OnInit {
     @Input() userName: string;
     @Input() lastLogin: Date;
 
@@ -18,6 +20,17 @@ export class BrandHeaderComponent {
     @Output() contactClicked: EventEmitter<any> = new EventEmitter<any>();
     @Output() helpClicked: EventEmitter<any> = new EventEmitter<any>();
     @Output() logoutClicked: EventEmitter<any> = new EventEmitter<any>();
+    public HelpFileFath:string;
+    public FileName:string;
+    constructor(private router: Router, private authenticationService: AuthenticationService) {
+    }
+
+    ngOnInit(): void {
+        let DocumentFilePath = "ERS Guide.pptx";
+        this.HelpFileFath = "../../../app/document/" + DocumentFilePath.replace(/^.*[\\\/]/, '');
+        let Extension = DocumentFilePath.replace(/^.*[\\\/]/, '').split('.').pop();
+        this.FileName = "HelpFile." + Extension;
+    }
 
     public logoImage: string = 'assets/images/logo.png';
     public logoUrl: string = '#';
@@ -35,7 +48,10 @@ export class BrandHeaderComponent {
         this.helpClicked.emit($event);
     }
 
-    public onLogoutClicked($event): void{
+    public onLogoutClicked($event): void {
         this.logoutClicked.emit($event);
+        this.authenticationService.Logout();
+        this.router.navigate(['login']);
+        //sessionStorage.clear();
     }
 }
