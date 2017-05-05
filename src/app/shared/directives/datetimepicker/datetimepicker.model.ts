@@ -44,9 +44,9 @@ export class DateTimePickerOptions {
     hoursStep?: number;
     minutesStep?: number;
 
-    onSelect: (formattedDate: string, date: Date | Date[], inst: Object) => void;
-    onShow: (inst: Object, animationCompleted: boolean) => void;
-    onHide: (inst: Object, animationCompleted: boolean) => void;
+    onSelect: (formattedDate: string, date: Date | Date[], inst: object) => void;
+    onShow: (inst: object, animationCompleted: boolean) => void;
+    onHide: (inst: object, animationCompleted: boolean) => void;
     onChangeMonth: (month: number, year: number) => void;
     onChangeYear: (year: number) => void;
     onChangeView: (view: string) => void;

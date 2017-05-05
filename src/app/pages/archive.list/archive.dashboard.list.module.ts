@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { HttpModule } from '@angular/http';
 import { SharedModule } from '../../shared/shared.module';
-import { ArchiveListService } from "./archive.dashboard.list.service";
+import { ArchiveListService } from './archive.dashboard.list.service';
 import { ArchiveDashboardRouting } from './archive.dashboard.list.routing';
 import { ArchiveDashboardListComponent } from './archive.dashboard.list.component';
 import { WidgetModule } from '../widgets';

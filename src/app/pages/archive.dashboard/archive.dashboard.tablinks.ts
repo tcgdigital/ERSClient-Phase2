@@ -1,6 +1,6 @@
 import { ITabLinkInterface } from '../../shared';
 
-export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
+export const TAB_LINKS: ITabLinkInterface[] = [
     {
         id: 'AffectedPeople',
         title: 'Affected People',
@@ -74,4 +74,4 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         hidden: false,
         order: 10
     }
-];
+] as ITabLinkInterface[];

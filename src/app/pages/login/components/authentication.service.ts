@@ -18,14 +18,14 @@ export class AuthenticationService {
     private _isLoggedIn: boolean = false;
 
     constructor(private dataServiceFactory: DataServiceFactory) {
-        let option: DataProcessingService = new DataProcessingService();
+        const option: DataProcessingService = new DataProcessingService();
         option.EndPoint = GlobalConstants.TOKEN;
         this._dataService = this.dataServiceFactory.CreateServiceWithOptions('', option);
         this._isLoggedIn = !!UtilityService.GetFromSession(GlobalConstants.ACCESS_TOKEN);
     }
 
     Login(userid: string, passcode: string): Observable<AuthResponseModel> {
-        let params: AuthRequestModel = {
+        const params: AuthRequestModel = {
             username: userid,
             password: passcode,
             grant_type: 'password',

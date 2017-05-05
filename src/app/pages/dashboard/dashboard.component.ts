@@ -44,10 +44,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
-    public onViewIncidentClick($event): void {
-
-    }
-
     public ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChange');
         this.globalState.Unsubscribe('departmentChange');
@@ -57,7 +53,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.incidentService.Get(incidentId)
             .subscribe((data) => {
                 this.currentIncident = new KeyValue(data.Description, data.IncidentId);
-                  this.incidentDate = new Date(data.EmergencyDate);
+                this.incidentDate = new Date(data.EmergencyDate);
             });
     }
 
@@ -65,7 +61,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.departmentService.Get(departmentId)
             .subscribe((data) => {
                 this.currentDepartment = new KeyValue(data.Description, data.DepartmentId);
-              
             });
     }
 
