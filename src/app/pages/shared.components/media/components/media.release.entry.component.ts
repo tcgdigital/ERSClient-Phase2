@@ -35,7 +35,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     currentDepartmentId: number;
     showAdd: boolean;
     credential: AuthModel;
-    
+
 
     /**
      * Creates an instance of MediaQueryEntryComponent.
@@ -57,12 +57,12 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-        
+
         this.formInit();
         this.credential = UtilityService.getCredentialDetails();
         this.dataExchange.Subscribe("OnMediaReleaseUpdate", model => this.onMediaReleaseUpdate(model));
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
     }
     private incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
@@ -75,7 +75,8 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe("OnMediaReleaseUpdate");
         this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChange');
+        this.globalState.Unsubscribe('departmentChangeFromDashboard');
+
     }
 
     onMediaReleaseUpdate(mediaModel: MediaModel): void {

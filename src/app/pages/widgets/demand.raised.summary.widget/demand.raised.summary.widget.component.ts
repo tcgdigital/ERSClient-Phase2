@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Input, ViewChild, SimpleChange } from '@angular/core';
 import {
     DemandRaisedSummaryModel,
     AllDemandRaisedSummaryModel,
@@ -309,5 +309,18 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         this.showSubDeptSubCompleted = false;
         this.showSubDeptSubPending = false;
 
+    }
+
+     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
+        if(changes['incidentId'] !== undefined && (changes['incidentId'].currentValue !==
+            changes['incidentId'].previousValue) &&
+            changes['incidentId'].previousValue !== undefined){
+            this.demandRaisedSummary = this.demandRaisedSummaryWidgetService.GetDemandRaisedCount(this.incidentId, this.departmentId);
+        }
+        if(changes['departmentId'] !== undefined && (changes['departmentId'].currentValue !==
+            changes['departmentId'].previousValue) &&
+            changes['departmentId'].previousValue !== undefined){
+           this.demandRaisedSummary = this.demandRaisedSummaryWidgetService.GetDemandRaisedCount(this.incidentId, this.departmentId);
+        }
     }
 }
