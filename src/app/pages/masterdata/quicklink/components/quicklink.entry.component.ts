@@ -61,7 +61,9 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(values: Object): void {
+        
         if (this.quickLinkModel.QuickLinkId == 0) {//ADD REGION
+            delete this.quickLinkModel.Active;
             this.quickLinkModel.QuickLinkName = this.form.controls['QuickLinkName'].value;
             this.quickLinkModel.QuickLinkURL = this.form.controls['QuickLinkURL'].value;
             this.quickLinkService.Create(this.quickLinkModel)
@@ -77,6 +79,8 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
         else {//EDIT REGION
             if (this.form.dirty) {
                 this.formControlDirtyCheck();
+                delete this.quickLinkModelEdit.Active;
+                this.quickLinkModelEdit.deleteAttributes();
                 this.quickLinkService.Update(this.quickLinkModelEdit)
                     .subscribe((response: QuickLinkModel) => {
                         this.toastrService.success('Quick link edited Successfully.', 'Success', this.toastrConfig);
