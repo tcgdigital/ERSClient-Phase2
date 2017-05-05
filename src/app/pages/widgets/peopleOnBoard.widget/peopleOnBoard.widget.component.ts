@@ -80,12 +80,15 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
         this.peopleOnBoardWidgetService.GetAllPassengersByIncident(this.incidentId)
             .subscribe((result: ResponseModel<InvolvePartyModel>) => {
                 let affectedPeoples: AffectedPeopleModel[];
-                affectedPeoples = result.Records[0].Affecteds[0].AffectedPeople;
-                affectedPeoples.forEach((item: AffectedPeopleModel) => {
-                    passengerListLocal.push(UtilityService.pluck(item, ['Passenger'])[0]);
-                });
-                this.passengerList = Observable.of(passengerListLocal);
-                this.childModalPassengers.show();
+                if (result.Records[0].Affecteds.length > 0) {
+                    affectedPeoples = result.Records[0].Affecteds[0].AffectedPeople;
+                    affectedPeoples.forEach((item: AffectedPeopleModel) => {
+                        passengerListLocal.push(UtilityService.pluck(item, ['Passenger'])[0]);
+                    });
+                    this.passengerList = Observable.of(passengerListLocal);
+                    this.childModalPassengers.show();
+                }
+
             });
     }
 
@@ -108,19 +111,22 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
                 this.enquiries.Records.forEach((itemEnquiry: EnquiryModel) => {
                     AffectedPersonIds.push(itemEnquiry.AffectedPersonId);
                 });
-                affectedPeoples = dataInvolvePartyModels.Records[0].Affecteds[0].AffectedPeople;
-                let affectedPeoplesList: AffectedPeopleModel[] = [];
-                affectedPeoplesList = affectedPeoples.filter((itemAffectedPeople: AffectedPeopleModel) => {
-                    return AffectedPersonIds.some((someItem) => {
-                        return (someItem == itemAffectedPeople.AffectedPersonId);
+                if (dataInvolvePartyModels.Records[0].Affecteds.length > 0) {
+                    affectedPeoples = dataInvolvePartyModels.Records[0].Affecteds[0].AffectedPeople;
+                    let affectedPeoplesList: AffectedPeopleModel[] = [];
+                    affectedPeoplesList = affectedPeoples.filter((itemAffectedPeople: AffectedPeopleModel) => {
+                        return AffectedPersonIds.some((someItem) => {
+                            return (someItem == itemAffectedPeople.AffectedPersonId);
+                        });
                     });
-                });
-                let enquiredPassengers: PassengerModel[] = [];
-                affectedPeoplesList.forEach((people: AffectedPeopleModel) => {
-                    enquiredPassengers.push(people.Passenger);
-                });
-                this.affectedEnquiredPeoples = Observable.of(enquiredPassengers);
-                this.childModalEnquiredPassengers.show();
+                    let enquiredPassengers: PassengerModel[] = [];
+                    affectedPeoplesList.forEach((people: AffectedPeopleModel) => {
+                        enquiredPassengers.push(people.Passenger);
+                    });
+                    this.affectedEnquiredPeoples = Observable.of(enquiredPassengers);
+                    this.childModalEnquiredPassengers.show();
+                }
+
             });
     }
 
@@ -134,12 +140,15 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
         this.peopleOnBoardWidgetService.GetAllCrewsByIncident(this.incidentId)
             .subscribe((result: ResponseModel<InvolvePartyModel>) => {
                 let affectedPeoples: AffectedPeopleModel[];
-                affectedPeoples = result.Records[0].Affecteds[0].AffectedPeople;
-                affectedPeoples.forEach((item: AffectedPeopleModel) => {
-                    crewListLocal.push(UtilityService.pluck(item, ['Crew'])[0]);
-                });
-                this.crewList = Observable.of(crewListLocal);
-                this.childModalCrews.show();
+                if (result.Records[0].Affecteds.length > 0) {
+                    affectedPeoples = result.Records[0].Affecteds[0].AffectedPeople;
+                    affectedPeoples.forEach((item: AffectedPeopleModel) => {
+                        crewListLocal.push(UtilityService.pluck(item, ['Crew'])[0]);
+                    });
+                    this.crewList = Observable.of(crewListLocal);
+                    this.childModalCrews.show();
+                }
+
             });
     }
 
@@ -162,20 +171,23 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
                 this.enquiries.Records.forEach((itemEnquiry: EnquiryModel) => {
                     AffectedPersonIds.push(itemEnquiry.AffectedPersonId);
                 });
-                affectedPeoples = dataInvolvePartyModels.Records[0].Affecteds[0].AffectedPeople;
-                let affectedPeoplesList: AffectedPeopleModel[] = [];
-                affectedPeoplesList = affectedPeoples.filter((itemAffectedPeople: AffectedPeopleModel) => {
-                    return AffectedPersonIds.some((someItem) => {
-                        return (someItem == itemAffectedPeople.AffectedPersonId &&
-                            itemAffectedPeople.Crew != null);
+                if (dataInvolvePartyModels.Records[0].Affecteds.length > 0) {
+                    affectedPeoples = dataInvolvePartyModels.Records[0].Affecteds[0].AffectedPeople;
+                    let affectedPeoplesList: AffectedPeopleModel[] = [];
+                    affectedPeoplesList = affectedPeoples.filter((itemAffectedPeople: AffectedPeopleModel) => {
+                        return AffectedPersonIds.some((someItem) => {
+                            return (someItem == itemAffectedPeople.AffectedPersonId &&
+                                itemAffectedPeople.Crew != null);
+                        });
                     });
-                });
-                let enquiredCrews: CrewModel[] = [];
-                affectedPeoplesList.forEach((people: AffectedPeopleModel) => {
-                    enquiredCrews.push(people.Crew);
-                });
-                this.affectedEnquiredCrews = Observable.of(enquiredCrews);
-                this.childModalEnquiredCrew.show();
+                    let enquiredCrews: CrewModel[] = [];
+                    affectedPeoplesList.forEach((people: AffectedPeopleModel) => {
+                        enquiredCrews.push(people.Crew);
+                    });
+                    this.affectedEnquiredCrews = Observable.of(enquiredCrews);
+                    this.childModalEnquiredCrew.show();
+                }
+
             });
     }
 
