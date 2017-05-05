@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Rx';
 import { BroadCastDepartmentModel } from './broadcast.department.model';
 import { IBroadCastDepartmentService } from './IBroadcastDepartmentService';
 import {
-    ResponseModel, 
+    ResponseModel,
     DataServiceFactory,
     ServiceBase
 } from '../../../../shared';
@@ -17,8 +17,8 @@ export class BroadcastDepartmentService
 
     /**
      * Creates an instance of BroadcastDepartmentMappingService.
-     * @param {DataServiceFactory} dataServiceFactory 
-     * 
+     * @param {DataServiceFactory} dataServiceFactory
+     *
      * @memberOf BroadcastDepartmentMappingService
      */
     constructor(private dataServiceFactory: DataServiceFactory) {

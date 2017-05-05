@@ -9,29 +9,26 @@ import {
     ResponseModel,
     DataService,
     DataServiceFactory,
-    DataProcessingService ,ServiceBase
+    DataProcessingService, ServiceBase
 } from '../../../../shared';
 import { DepartmentService, DepartmentModel } from '../../department';
 import { EmergencyTypeModel, EmergencyTypeService } from '../../emergencytype';
 import { PeopleOnBoardWidgetService } from '../../../widgets';
 
 @Injectable()
-export class ChecklistService extends ServiceBase<ChecklistModel> implements IChecklistService  {
+export class ChecklistService extends ServiceBase<ChecklistModel> implements IChecklistService {
 
     /**
      * Creates an instance of ChecklistService.
-     * @param {DataServiceFactory} dataServiceFactory 
-     * @param {DepartmentService} departmentService 
-     * @param {EmergencyTypeService} emergencyTypeService 
-     * 
+     * @param {DataServiceFactory} dataServiceFactory
+     * @param {DepartmentService} departmentService
+     * @param {EmergencyTypeService} emergencyTypeService
+     *
      * @memberOf ChecklistService
      */
     constructor(private dataServiceFactory: DataServiceFactory,
         private departmentService: DepartmentService,
         private emergencyTypeService: EmergencyTypeService) {
-       // let option: DataProcessingService = new DataProcessingService();
-      //  this._dataService = this.dataServiceFactory
-       //     .CreateServiceWithOptions<ChecklistModel>('CheckLists', option);
         super(dataServiceFactory, 'CheckLists');
     }
 
@@ -41,17 +38,17 @@ export class ChecklistService extends ServiceBase<ChecklistModel> implements ICh
             .Expand('ParentCheckList($select=CheckListId,CheckListCode)',
             'TargetDepartment($select=DepartmentId,DepartmentName)',
             'EmergencyType($select=EmergencyTypeId,EmergencyTypeName)')
-            .OrderBy("CreatedOn desc")
+            .OrderBy('CreatedOn desc')
             .Execute();
     }
 
-    GetAllParents(departmentId) : Observable<ResponseModel<ChecklistModel>> {
-                return this._dataService.Query()
+    GetAllParents(departmentId): Observable<ResponseModel<ChecklistModel>> {
+        return this._dataService.Query()
             .Filter(`DepartmentId eq ${departmentId} and ParentCheckListId ne null`)
             .Expand('ParentCheckList($select=CheckListId,CheckListCode)')
             .Execute();
     }
-    
+
     GetQuery(query: string): Observable<ResponseModel<ChecklistModel>> {
         return this._dataService.Query()
             .Expand('ParentCheckList($select=CheckListId,CheckListCode)',
@@ -59,15 +56,15 @@ export class ChecklistService extends ServiceBase<ChecklistModel> implements ICh
             'EmergencyType($select=EmergencyTypeId,EmergencyTypeName)')
             .Filter(query).Execute();
     }
-    
-    
+
+
     Create(entity: ChecklistModel): Observable<ChecklistModel> {
         let checkList: ChecklistModel;
         return this._dataService.Post(entity)
             .Execute()
             .map((data: ChecklistModel) => {
                 checkList = data;
-                checkList.Active = (checkList.ActiveFlag == 'Active');
+                checkList.Active = (checkList.ActiveFlag === 'Active');
                 return data;
             })
             .flatMap((data: ChecklistModel) =>
@@ -90,28 +87,24 @@ export class ChecklistService extends ServiceBase<ChecklistModel> implements ICh
             });
     }
 
-    
     Update(entity: ChecklistModel): Observable<ChecklistModel> {
-        let key: string = entity.CheckListId.toString()
-        let checkList: ChecklistModel;
-        return this._dataService.Patch(entity, key)
-            .Execute();
+        const key: string = entity.CheckListId.toString();
+        // const checkList: ChecklistModel;
+        return this._dataService.Patch(entity, key).Execute();
     }
-
-    
 
     /**
      * Get all active check lists
-     * 
-     * @returns {Observable<ResponseModel<ChecklistModel>>} 
-     * 
+     *
+     * @returns {Observable<ResponseModel<ChecklistModel>>}
+     *
      * @memberOf ChecklistService
      */
     GetAllActiveCheckLists(): Observable<ResponseModel<ChecklistModel>> {
         return this._dataService.Query()
             .Select('CheckListId', 'CheckListCode')
-            .Filter("ActiveFlag eq 'Active'")
-            .OrderBy("CreatedOn desc")
+            .Filter(`ActiveFlag eq 'Active'`)
+            .OrderBy('CreatedOn desc')
             .Execute();
     }
 }

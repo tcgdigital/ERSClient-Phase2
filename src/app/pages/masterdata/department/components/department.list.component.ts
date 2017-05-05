@@ -17,7 +17,7 @@ import {
 })
 export class DepartmentListComponent implements OnInit {
     departments: DepartmentModel[] = [];
-    searchConfigs: SearchConfigModel<any>[] = [];
+    searchConfigs: Array<SearchConfigModel<any>> = Array<SearchConfigModel<any>>();
     departmentIds: number[] = [];
     departmentModelPatch: DepartmentModel = null;
 
@@ -28,8 +28,8 @@ export class DepartmentListComponent implements OnInit {
     getDepertments(): void {
         this.departmentService.GetAll()
             .subscribe((response: ResponseModel<DepartmentModel>) => {
-                response.Records.forEach(x => {
-                    x["Active"] = (x.ActiveFlag == 'Active');
+                response.Records.forEach((x) => {
+                    x['Active'] = (x.ActiveFlag === 'Active');
                     this.departmentIds.push(x.DepartmentId);
                 });
                 this.departments = response.Records;
@@ -41,12 +41,13 @@ export class DepartmentListComponent implements OnInit {
     ngOnInit(): any {
         this.getDepertments();
         this.initiateSearchConfigurations();
-        this.dataExchange.Subscribe("departmentSavedOrEdited", model => this.onDepartmentEditorSaveSuccess(model));
+        this.dataExchange.Subscribe('departmentSavedOrEdited',
+            (model) => this.onDepartmentEditorSaveSuccess(model));
     }
 
     onDepartmentEditorSaveSuccess(model?: DepartmentModel): void {
-        if (model && this.departmentIds.find(x => { return x == model.DepartmentId; }) == null) {
-            this.departments.unshift(model)
+        if (model && this.departmentIds.find((x) => x === model.DepartmentId) == null) {
+            this.departments.unshift(model);
         }
         else {
             this.getDepertments();
@@ -54,10 +55,8 @@ export class DepartmentListComponent implements OnInit {
         this.initiateSearchConfigurations();
     }
 
-
-
     editdepartment(editedDepartment): void {
-        this.dataExchange.Publish("departmentModelEdited", editedDepartment);
+        this.dataExchange.Publish('departmentModelEdited', editedDepartment);
     }
 
     IsActive(event: any, editeddepartment: DepartmentModel): void {
@@ -80,8 +79,8 @@ export class DepartmentListComponent implements OnInit {
         if (query !== '') {
             this.departmentService.GetQuery(query)
                 .subscribe((response: ResponseModel<DepartmentModel>) => {
-                    response.Records.forEach(x => {
-                        x["Active"] = (x.ActiveFlag == 'Active');
+                    response.Records.forEach((x) => {
+                        x['Active'] = (x.ActiveFlag === 'Active');
                         this.departmentIds.push(x.DepartmentId);
                     });
                     this.departments = response.Records;
@@ -96,10 +95,11 @@ export class DepartmentListComponent implements OnInit {
     }
 
     private initiateSearchConfigurations(): void {
-        let status: NameValue<string>[] = [
+        const status: Array<NameValue<string>> = [
             new NameValue<string>('Active', 'Active'),
             new NameValue<string>('InActive', 'InActive'),
-        ]
+        ];
+
         this.searchConfigs = [
             new SearchTextBox({
                 Name: 'DepartmentName',
@@ -117,14 +117,13 @@ export class DepartmentListComponent implements OnInit {
                 PlaceHolder: 'Select Parent Department',
                 Value: '',
                 ListData: this.departmentService.GetParentDepartments()
-                    .map(x => x.Records)
-                    .map(x => {
-                        let parentDepartments: NameValue<number>[] = [];
-                        x.forEach(y => {
-                            if (parentDepartments.find(z => { return z.Value === y.ParentDepartment.DepartmentId }) == null) {
+                    .map((x) => x.Records).map((x) => {
+                        const parentDepartments: Array<NameValue<number>> = Array<NameValue<number>>();
+                        x.forEach((y) => {
+                            if (parentDepartments.find((z) => z.Value === y.ParentDepartment.DepartmentId) == null) {
                                 parentDepartments.push(new NameValue<number>(y.ParentDepartment.DepartmentName, y.ParentDepartmentId));
                             }
-                        })
+                        });
                         return parentDepartments;
                     })
             }),
@@ -134,8 +133,8 @@ export class DepartmentListComponent implements OnInit {
                 PlaceHolder: 'Select Department SPOC',
                 Value: '',
                 ListData: this.userProfileService.GetAllActiveWithContact()
-                    .map(x => x.Records)
-                    .map(x => x.map(y => new NameValue<number>(y.Name, y.UserProfileId)))
+                    .map((x) => x.Records)
+                    .map((x) => x.map((y) => new NameValue<number>(y.Name, y.UserProfileId)))
             }),
             new SearchDropdown({
                 Name: 'ActiveFlag',

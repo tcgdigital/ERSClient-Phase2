@@ -1,13 +1,21 @@
-import { Component, ViewEncapsulation, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, AbstractControl, Validators } from '@angular/forms';
+import {
+    Component, ViewEncapsulation,
+    Output, EventEmitter, OnInit, OnDestroy
+} from '@angular/core';
+import {
+    FormGroup, FormControl, FormBuilder,
+    AbstractControl, Validators
+} from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-
 
 import { DemandTypeService } from './demandtype.service';
 import { DepartmentModel, DepartmentService } from '../../department';
 import { DemandTypeModel } from './demandtype.model';
-import { ResponseModel, DataExchangeService ,AuthModel,UtilityService} from '../../../../shared';
+import {
+    ResponseModel, DataExchangeService,
+    AuthModel, UtilityService
+} from '../../../../shared';
 
 @Component({
     selector: 'demandtype-entry',
@@ -23,7 +31,6 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
     showAdd: boolean;
     demandTypeModelToEdit: DemandTypeModel = new DemandTypeModel();
     credential: AuthModel;
-    // @Output() demandTypeSaveEvent: EventEmitter<DemandTypeModel> = new EventEmitter(true);
 
     constructor(private demandTypeService: DemandTypeService,
         private departmentService: DepartmentService,
@@ -34,7 +41,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         this.departmentService.GetAll()
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
-                this.demandTypeModel.DepartmentId = (this.demandTypeModel.DemandTypeId == 0)
+                this.demandTypeModel.DepartmentId = (this.demandTypeModel.DemandTypeId === 0)
                     ? this.departments[0].DepartmentId
                     : this.demandTypeModel.DepartmentId;
             });
@@ -44,7 +51,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         this.getAllDepartments();
         this.demandTypeModel = model;
         this.demandTypeModel.DepartmentId = model.DepartmentId;
-        this.Action = "Edit";
+        this.Action = 'Edit';
         this.showAdd = true;
         delete this.demandTypeModel.ApproverDepartment;
         this.form = new FormGroup({
@@ -57,7 +64,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
 
     cancel(): void {
         this.demandTypeModel = new DemandTypeModel();
-        this.Action = "Save";
+        this.Action = 'Save';
         this.showAdd = false;
         this.demandTypeModel.ActiveFlag = 'Active';
         this.demandTypeModel.CreatedBy = +this.credential.UserId;
@@ -86,19 +93,19 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         this.demandTypeModel.CreatedBy = +this.credential.UserId;
         this.demandTypeModel.CreatedOn = this.date;
         this.demandTypeModel.DemandTypeId = 0;
-        this.Action = "Save";
-        this.dataExchange.Subscribe("OnDemandUpdate", model => this.onDemandTypeUpdate(model));
+        this.Action = 'Save';
+        this.dataExchange.Subscribe('OnDemandUpdate', (model) => this.onDemandTypeUpdate(model));
     }
 
     onSubmit() {
-        if (this.demandTypeModel.DemandTypeId == 0) {
+        if (this.demandTypeModel.DemandTypeId === 0) {
             this.demandTypeModel.DemandTypeName = this.form.controls['DemandTypeName'].value;
             this.demandTypeModel.IsAutoApproved = this.form.controls['IsAutoApproved'].value;
             this.demandTypeModel.DepartmentId = this.form.controls['ApproverDept'].value;
             this.demandTypeService.Create(this.demandTypeModel)
                 .subscribe((response: DemandTypeModel) => {
                     this.toastrService.success('Demand Saved Successfully.', 'Success', this.toastrConfig);
-                    this.dataExchange.Publish("demandTypeModelSaved", response);
+                    this.dataExchange.Publish('demandTypeModelSaved', response);
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
                 });
@@ -108,13 +115,12 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
             this.demandTypeService.Update(this.demandTypeModelToEdit)
                 .subscribe((response: DemandTypeModel) => {
                     this.toastrService.success('Demand Edited Successfully.', 'Success', this.toastrConfig);
-                    this.dataExchange.Publish("demandTypeModelUpdated", response);
+                    this.dataExchange.Publish('demandTypeModelUpdated', response);
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
                 });
         }
     }
-
 
     formControlDirtyCheck(): void {
         this.demandTypeModelToEdit = new DemandTypeModel();
@@ -134,10 +140,10 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe("OnDemandUpdate");
+        this.dataExchange.Unsubscribe('OnDemandUpdate');
     }
 
-    showAddRegion(ShowAdd: Boolean): void {
+    showAddRegion(ShowAdd: boolean): void {
         this.showAdd = true;
         this.form = new FormGroup({
             DemandTypeId: new FormControl(0),
@@ -149,7 +155,6 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         this.demandTypeModel.CreatedBy = +this.credential.UserId;
         this.demandTypeModel.CreatedOn = this.date;
         this.demandTypeModel.DemandTypeId = 0;
-        this.Action = "Save";
-        // this.buttonValue = "Show Add Checklist";
+        this.Action = 'Save';
     }
 }
