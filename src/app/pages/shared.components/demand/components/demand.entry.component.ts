@@ -312,7 +312,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.demandService.GetByDemandId(id)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demandModel = response.Records[0];
-               
+
                 this.setModelFormGroup(response.Records[0], false, x => x.DemandId, x => x.DemandTypeId, x => x.Priority, x => x.DemandDesc
                     , x => x.RequestedBy, x => x.RequesterType, x => x.PDATicketNumber, x => x.TargetDepartmentId, x => x.ContactNumber
                     , x => x.RequiredLocation);
@@ -321,7 +321,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 let timediff = createdOn.getTime() + (+scheduleTime) * 60000;
 
                 let resolutiontime = new Date(timediff);
-              //  this.datepickerOption.startDate = new Date(resolutiontime);
+                //  this.datepickerOption.startDate = new Date(resolutiontime);
                 this.form.controls["ScheduleTime"].reset({ value: moment(resolutiontime).format('DD/MM/YYYY h:mm a'), disabled: false });
                 this.caller = this.demandModel.Caller || new CallerModel();
                 this.showAdd = true;
@@ -366,7 +366,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): any {
-        
+
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this._onRouteChange = this._router.events.subscribe((event) => {
@@ -389,9 +389,9 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.credential = UtilityService.getCredentialDetails();
         this.createdBy = +this.credential.UserId;
         this.credentialName = this.credential.UserName;
-         this.datepickerOption.position = 'top left';
-         this.datepickerOption.minDate = new Date();
-       // this.datepickerOption.classes = 'datepicker';
+        this.datepickerOption.position = 'top left';
+        this.datepickerOption.minDate = new Date();
+        // this.datepickerOption.classes = 'datepicker';
         this.getDemandType();
         this.getPageSpecifiedDepartments();
         this.getAllDepartments();
@@ -501,7 +501,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         delete this.caller.CreatedBy;
         delete this.caller.CreatedOn;
         this.demandModelEdit.DemandId = this.form.controls['DemandId'].value;
-
         if (this.form.controls['Priority'].touched) {
             this.demandModelEdit.Priority = this.form.controls['Priority'].value;
         }
@@ -524,9 +523,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         if (this.form.controls['RequiredLocation'].touched) {
             this.demandModelEdit.RequiredLocation = this.form.controls['RequiredLocation'].value;
         }
-        if (this.form.controls['ScheduleTime'].touched) {
-            this.demandModelEdit.ScheduleTime = this.form.controls['ScheduleTime'].value;
-        }
+
     }
 
     onSubmit(): void {
@@ -576,36 +573,46 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 });
         }
         else {
-            if (this.form.dirty) {
-                this.formControlDirtyCheck();
-                this.demandService.Update(this.demandModelEdit)
-                    .subscribe((response: DemandModel) => {
-                        this.toastrService.success('Demand successfully updated.', 'Success', this.toastrConfig);
-                        this.dataExchange.Publish("DemandAddedUpdated", this.demandModelEdit.DemandId);
-                        let demandTrail = this.createDemandTrailModel(this.demandModel, this.demandModelEdit, false)[0];
-                        demandTrail.DemandId = this.demandModel.DemandId;
-                        this.demandTrailService.Create(demandTrail)
-                            .subscribe((response: DemandTrailModel) => { },
-                            (error: any) => {
-                                console.log("Error in demandTrail");
+            this.formControlDirtyCheck();
+            this.demandService.GetByDemandId(this.demandModelEdit.DemandId)
+                .subscribe((response: ResponseModel<DemandModel>) => {
+                    let createdOnDate = new Date(response.Records[0].CreatedOn);
+                    let time = createdOnDate.getTime();
+                    let timeDiffSec = this.resolutionTime.getTime() - time;
+                    let scheduletime = (timeDiffSec / 60000).toString();
+                    this.demandModelEdit.ScheduleTime = scheduletime;
+                    if (this.form.dirty || this.demandModelEdit.ScheduleTime != response.Records[0].ScheduleTime) {
+                        this.demandService.Update(this.demandModelEdit)
+                            .subscribe((response: DemandModel) => {
+                                this.toastrService.success('Demand successfully updated.', 'Success', this.toastrConfig);
+                                this.dataExchange.Publish("DemandAddedUpdated", this.demandModelEdit.DemandId);
+                                let demandTrail = this.createDemandTrailModel(this.demandModel, this.demandModelEdit, false)[0];
+                                demandTrail.DemandId = this.demandModel.DemandId;
+                                this.demandTrailService.Create(demandTrail)
+                                    .subscribe((response: DemandTrailModel) => { },
+                                    (error: any) => {
+                                        console.log("Error in demandTrail");
+                                    });
+                                if (this.caller.CallerId != 0) {
+                                    this.callerService.Update(this.caller)
+                                        .subscribe((response: CallerModel) => { },
+                                        (error: any) => {
+                                            console.log("Error in demandTrail");
+                                        });
+                                }
+                                this.initializeForm();
+                                this.demandModel = new DemandModel();
+                                this.showAdd = false;
+                                this.buttonValue = "Create Demand";
+                                this.childModal.hide();
+                            }, (error: any) => {
+                                console.log("Error");
                             });
-                        if (this.caller.CallerId != 0) {
-                            this.callerService.Update(this.caller)
-                                .subscribe((response: CallerModel) => { },
-                                (error: any) => {
-                                    console.log("Error in demandTrail");
-                                });
-                        }
-                        this.initializeForm();
-                        this.demandModel = new DemandModel();
-                        this.showAdd = false;
-                        this.buttonValue = "Create Demand";
-                        this.childModal.hide();
-                    }, (error: any) => {
-                        console.log("Error");
-                    });
-            }
+                    }
+                });
+
         }
+
     };
 
     public dateTimeSet(date: DateTimePickerSelectEventArgs, controlName: string): void {
