@@ -51,7 +51,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
         this.getActionableCount(this.currentIncidentId, this.currentDepartmentId);
 
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
 
         this.showAllDeptSubChecklistCompleted = false;
         this.showAllDeptSubChecklistPending = false;
@@ -374,6 +374,6 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChange');
-        this.globalState.Unsubscribe('departmentChange');
+        this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 }

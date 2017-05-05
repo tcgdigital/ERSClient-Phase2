@@ -65,7 +65,7 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
         this.dataExchange.Subscribe("BroadcastModelUpdated", model => this.onBroadcastSuccess(model));
         this.dataExchange.Subscribe("BroadcastModelSaved", model => this.onBroadcastSuccess(model));
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
     private incidentChangeHandler(incident: KeyValue): void {
@@ -82,6 +82,6 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
         this.dataExchange.Unsubscribe("BroadcastModelSaved");
         this.dataExchange.Unsubscribe("BroadcastModelUpdated");
         this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChange');
+        this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 }
