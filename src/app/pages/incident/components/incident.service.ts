@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { } from "../../masterdata/emergencylocation";
 import { IncidentModel } from './incident.model';
 import { IIncidentService } from './IIncidentService';
 import {
@@ -14,18 +13,25 @@ import {
 
 @Injectable()
 export class IncidentService extends ServiceBase<IncidentModel> implements IIncidentService {
-
     private _involvePartyDataService: DataService<InvolvePartyModel>;
 
+    /**
+     * Creates an instance of IncidentService.
+     * @param {DataServiceFactory} dataServiceFactory
+     * @param {DepartmentService} departmentService
+     * @param {FlightService} flightService
+     * @param {EmergencyTypeService} emergencyTypeService
+     *
+     * @memberof IncidentService
+     */
     constructor(private dataServiceFactory: DataServiceFactory,
         private departmentService: DepartmentService,
         private flightService: FlightService,
         private emergencyTypeService: EmergencyTypeService) {
         super(dataServiceFactory, 'Incidents');
-        let option = new DataProcessingService();
+        const option: DataProcessingService = new DataProcessingService();
         this._involvePartyDataService = dataServiceFactory
             .CreateServiceWithOptions<InvolvePartyModel>('InvolvedParties', option);
-
     }
 
     GetAll(): Observable<ResponseModel<IncidentModel>> {
@@ -36,6 +42,7 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
             .OrderBy('CreatedOn desc')
             .Execute();
     }
+
     GetAllActiveIncidents(): Observable<ResponseModel<IncidentModel>> {
         return this._dataService.Query()
             .Filter("ActiveFlag eq 'Active'")
@@ -101,6 +108,4 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
                 return involvedParty;
             });
     }
-
-    
 }

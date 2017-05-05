@@ -197,7 +197,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.childModalViewIncident.hide();
     }
 
-
     public ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChange');
         this.globalState.Unsubscribe('departmentChange');

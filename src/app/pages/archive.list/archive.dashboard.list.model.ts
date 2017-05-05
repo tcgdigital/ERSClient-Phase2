@@ -4,11 +4,9 @@ import { IncidentModel } from '../incident/components/incident.model';
 
 export class ArchiveDashboardListModel extends BaseModel {
     public IncidentModel: IncidentModel;
-    
 
     constructor() {
         super();
         this.IncidentModel = new IncidentModel();
     }
 }
-

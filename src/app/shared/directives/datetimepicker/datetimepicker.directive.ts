@@ -34,16 +34,16 @@ export class DateTimePickerDirective implements AfterViewInit {
      *
      * @memberOf DateTimePickerDirective
      */
-    constructor(private elementRef: ElementRef, private renderer: Renderer ) {
+    constructor(private elementRef: ElementRef, private renderer: Renderer) {
     }
 
     public ngAfterViewInit(): void {
-        let $self: JQuery = jQuery(this.elementRef.nativeElement);
+        const $self: JQuery = jQuery(this.elementRef.nativeElement);
         this.addPickerIcon($self);
-        let options: DateTimePickerOptions = Object.assign(new DateTimePickerOptions(), this.options);
+        const options: DateTimePickerOptions = Object.assign(new DateTimePickerOptions(), this.options);
 
-        options.onSelect = (formattedDate: string, date: Date | Date[], inst: Object) => {
-            let args: DateTimePickerSelectEventArgs = new DateTimePickerSelectEventArgs();
+        options.onSelect = (formattedDate: string, date: Date | Date[], inst: object) => {
+            const args: DateTimePickerSelectEventArgs = new DateTimePickerSelectEventArgs();
             args.FormattedDate = formattedDate;
             args.SelectedDate = date;
 
@@ -52,16 +52,16 @@ export class DateTimePickerDirective implements AfterViewInit {
             this.selectHandler.emit(args);
         };
 
-        options.onShow = (inst: Object, animationCompleted: boolean) => {
+        options.onShow = (inst: object, animationCompleted: boolean) => {
             this.showHandler.emit(animationCompleted);
         };
 
-        options.onHide = (inst: Object, animationCompleted: boolean) => {
+        options.onHide = (inst: object, animationCompleted: boolean) => {
             this.hideHandler.emit(animationCompleted);
         };
 
         options.onChangeMonth = (month: number, year: number) => {
-            let args: DateTimePickerChangeMonthEventArgs = new DateTimePickerChangeMonthEventArgs();
+            const args: DateTimePickerChangeMonthEventArgs = new DateTimePickerChangeMonthEventArgs();
             args.Month = month;
             args.Year = year;
             this.changeMonthHandler.emit(args);
@@ -76,15 +76,14 @@ export class DateTimePickerDirective implements AfterViewInit {
         };
 
         options.onRenderCell = (date: Date, cellType: string) => {
-            let args: DateTimePickerRenderCellEventArgs = new DateTimePickerRenderCellEventArgs();
+            const args: DateTimePickerRenderCellEventArgs = new DateTimePickerRenderCellEventArgs();
             args.CellDate = date;
             args.CellType = cellType;
             this.renderCellHandler.emit(args);
         };
-        
-        let datePicker = $self.datepicker(options).data('datepicker');
+        const datePicker = $self.datepicker(options).data('datepicker');
 
-        $self.closest('.input-group-addon').on('click', () => {
+        $self.siblings('.input-group-addon').on('click', () => {
             if (datePicker) {
                 datePicker.show();
             }
@@ -93,7 +92,7 @@ export class DateTimePickerDirective implements AfterViewInit {
 
     private addPickerIcon($element: JQuery): void {
         $element.wrap('<div class="input-group date"></div>');
-        let $root: JQuery = $element.closest('.input-group');
+        const $root: JQuery = $element.closest('.input-group');
         $root.append(`<span class="input-group-addon">
                         <i class="fa fa-calendar" aria-hidden="true"></i>
                     </span>`);

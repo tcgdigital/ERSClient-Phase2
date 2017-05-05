@@ -5,7 +5,6 @@ import { IServiceInretface, ResponseModel } from '../../../shared';
 
 
 export interface IIncidentService extends IServiceInretface<IncidentModel> {
-
     CreateInvolveParty(entity: InvolvePartyModel): Observable<InvolvePartyModel>;
 
     GetOpenIncidents(): Observable<ResponseModel<IncidentModel>>;

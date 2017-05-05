@@ -31,6 +31,7 @@ export class LoginComponent {
         private globalState: GlobalStateService,
         private router: Router,
         private incidentService: IncidentService) {
+
         this.form = formBuilder.group({
             userId: ['', Validators.compose([Validators.required, Validators.minLength(4)])],
             password: ['', Validators.compose([Validators.required, Validators.minLength(4)])]
@@ -45,12 +46,10 @@ export class LoginComponent {
         this.authService.Login(userid, password)
             .subscribe((data: AuthResponseModel) => {
                 console.log(jwtDecode(data.access_token));
-                var loginCredentialBasic = jwtDecode(data.access_token);
+                const loginCredentialBasic = jwtDecode(data.access_token);
                 localStorage.setItem('LastLoginTime', (new Date()).toString());
                 UtilityService.SetToSession({ 'CurrentUserId': loginCredentialBasic.UserId });
                 this.GetUserInfoFromUserProfileByUserProfileId(loginCredentialBasic.UserId);
-
-
             }, (error: any) => {
                 console.log(`Error: ${error}`);
                 if (error.error == 'invalid_grant') {
@@ -81,7 +80,7 @@ export class LoginComponent {
             });
     }
 
-    onSubmit(values: Object): void {
+    onSubmit(values: object): void {
         this.submitted = true;
         if (!this.form.valid) {
             console.log('Invalid Information');

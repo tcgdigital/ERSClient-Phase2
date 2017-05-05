@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { CalendarDay, CalendarMonth, CalendarWeekend } from './calendar.model';
 
 export class CalendarService {
-    daysInMonth: Array<number> = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    days: Array<CalendarDay>;
+    daysInMonth: number[] = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    days: CalendarDay[];
     year: number;
     month: number;
     date: number;
@@ -16,13 +16,13 @@ export class CalendarService {
      * 
      * @memberOf CalendarService
      */
-    constructor(date: Date = new Date) {
+    constructor(date: Date = new Date()) {
         this.year = date.getFullYear();
         this.month = date.getMonth();
         this.date = date.getDate();
         this.hour = date.getHours();
         this.minute = date.getMinutes();
-        this.updateCalendar()
+        this.updateCalendar();
     }
 
     next() {
@@ -38,7 +38,7 @@ export class CalendarService {
     updateCalendar() {
         this.days = [];
         let daysInMonth = this.getDaysInMonth(this.month);
-        let date = new Date;
+        let date = new Date();
         let firstDayOfMonth = ((new Date(Date.parse(`${this.year}/${this.month + 1}/1`))).getDay() || 7) - 1; // making 0 == monday
         let weekend = new CalendarWeekend(firstDayOfMonth);
 
@@ -59,13 +59,13 @@ export class CalendarService {
             selectedDate = daysInMonth;
         }
         this.days[selectedDate].selected = true;
-        if (date.getMonth() == this.month) {
+        if (date.getMonth() === this.month) {
             // set the current date if it's the current month
             this.days[firstDayOfMonth + date.getDate() - 1].current = true;
         }
 
         let daysSoFar = firstDayOfMonth + daysInMonth;
-        for (let date = 1; date <= (daysSoFar > 35 ? 42 : 35) - daysSoFar; date++) {
+        for (let date: number = 1; date <= (daysSoFar > 35 ? 42 : 35) - daysSoFar; date++) {
             this.days.push(new CalendarDay(date, weekend.progress(), true));
         }
     }
