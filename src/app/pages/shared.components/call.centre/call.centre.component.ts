@@ -300,7 +300,7 @@ export class EnquiryComponent implements OnInit {
         this.getCargo(this.currentIncident);
         this.getDepartments();
         this.enquiry.EnquiryType = this.enquiryTypes[0].value;
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     };
 
@@ -317,7 +317,7 @@ export class EnquiryComponent implements OnInit {
     }
 
     ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('incidentChangefromDashboard');
         this.globalState.Unsubscribe('departmentChange');
     }
 }

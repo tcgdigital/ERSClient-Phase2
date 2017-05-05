@@ -28,9 +28,12 @@ import { CallerService, CallerModel } from '../../caller';
 import {
     ResponseModel, DataExchangeService,
     GlobalConstants, KeyValue, AutocompleteComponent,
-    UtilityService, GlobalStateService, AuthModel
+    UtilityService, GlobalStateService, AuthModel, DateTimePickerOptions
 } from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
+import * as moment from 'moment/moment';
+import { DateTimePickerSelectEventArgs } from '../../../../shared/directives/datetimepicker';
+
 
 
 @Component({
@@ -42,6 +45,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     @ViewChild('childModal') public childModal: ModalDirective;
 
     public form: FormGroup;
+    datepickerOption: DateTimePickerOptions = new DateTimePickerOptions();
     demandModel: DemandModel = new DemandModel();
     demandTypes: DemandTypeModel[];
     date: Date = new Date();
@@ -49,8 +53,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     priorities: any[] = GlobalConstants.Priority;
     requesterTypes: any[] = GlobalConstants.RequesterType;
     filtereddepartments: DepartmentModel[] = [];
-    affectedPeople: AffectedPeopleToView[]=[];
-    affectedObjects: AffectedObjectsToView[]=[];
+    affectedPeople: AffectedPeopleToView[] = [];
+    affectedObjects: AffectedObjectsToView[] = [];
     pdas: Array<KeyValue> = [];
     awbs: Array<KeyValue> = [];
     currentIncidentId: number;
@@ -69,9 +73,10 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     credentialName: string;
     caller: CallerModel;
     credential: AuthModel;
+    isReadonly: boolean = false;
     protected _onRouteChange: Subscription;
     isArchive: boolean = false;
-
+    resolutionTime: Date;
     /**
      * Creates an instance of DemandEntryComponent.
      * @param {DemandService} demandService 
@@ -271,10 +276,25 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.showAdd = true;
         this.buttonValue = "Create Demand";
         this.childModal.show();
+        debugger;
+        this.initializeForm();
+        this.demandModel.DemandId = 0;
+        this.demandModel.RequesterDepartmentId = this.currentDepartmentId;
+        this.demandModel.AffectedObjectId = 0;
+        this.demandModel.AffectedPersonId = 0;
+        this.demandModel.DemandTypeId = 0;
+        this.demandModel.Priority = "0";
+        this.demandModel.RequesterType = "0";
+        this.demandModel.TargetDepartmentId = 0;
+        this.demandModel.Caller = new CallerModel();
+        this.demandModel.RequestedBy = this.credentialName;
+        this.demandModel.Caller.CallerName = this.credentialName;
+        this.Action = "Save";
+        this.isReadonly = false;
 
     };
 
-    setModelFormGroup(model: DemandModel, ...params: ((entity: DemandModel) => any)[]): void {
+    setModelFormGroup(model: DemandModel, isDisable: boolean, ...params: ((entity: DemandModel) => any)[]): void {
         let paramNames: string[] = [];
         if (params.length > 0) {
             params.forEach((x: Function) => {
@@ -283,23 +303,31 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
             if (paramNames.length > 0) {
                 paramNames.forEach((x: string) => {
-                    this.form.controls[x].reset({ value: model[x], disabled: false });
+                    this.form.controls[x].reset({ value: model[x], disabled: isDisable });
                 })
             }
         }
     };
 
-
     setModelForUpdate(id) {
         this.demandService.GetByDemandId(id)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demandModel = response.Records[0];
-                this.setModelFormGroup(response.Records[0], x => x.DemandId, x => x.DemandTypeId, x => x.Priority, x => x.DemandDesc
+               
+                this.setModelFormGroup(response.Records[0], false, x => x.DemandId, x => x.DemandTypeId, x => x.Priority, x => x.DemandDesc
                     , x => x.RequestedBy, x => x.RequesterType, x => x.PDATicketNumber, x => x.TargetDepartmentId, x => x.ContactNumber
-                    , x => x.ScheduleTime, x => x.RequiredLocation);
+                    , x => x.RequiredLocation);
+                let scheduleTime = response.Records[0].ScheduleTime;
+                let createdOn = new Date(response.Records[0].CreatedOn);
+                let timediff = createdOn.getTime() + (+scheduleTime) * 60000;
+
+                let resolutiontime = new Date(timediff);
+              //  this.datepickerOption.startDate = new Date(resolutiontime);
+                this.form.controls["ScheduleTime"].reset({ value: moment(resolutiontime).format('DD/MM/YYYY h:mm a'), disabled: false });
                 this.caller = this.demandModel.Caller || new CallerModel();
                 this.showAdd = true;
                 this.buttonValue = "Create Demand";
+                this.isReadonly = false;
                 this.childModal.show();
                 this.form.controls["PDATicketNumber"].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
                 this.form.controls["AffectedPersonId"].reset({ value: this.demandModel.AffectedPersonId, disabled: true });
@@ -311,11 +339,35 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             });
     };
 
+
+    showDemandDetails(id) {
+        this.demandService.GetByDemandId(id)
+            .subscribe((response: ResponseModel<DemandModel>) => {
+                this.demandModel = response.Records[0];
+                this.setModelFormGroup(response.Records[0], true, x => x.DemandId, x => x.DemandTypeId, x => x.Priority, x => x.DemandDesc
+                    , x => x.RequestedBy, x => x.RequesterType, x => x.PDATicketNumber, x => x.TargetDepartmentId, x => x.ContactNumber
+                    , x => x.RequiredLocation);
+                let scheduleTime = response.Records[0].ScheduleTime;
+                let createdOn = new Date(response.Records[0].CreatedOn);
+                let timediff = createdOn.getTime() + (+scheduleTime) * 60000;
+                let resolutiontime = new Date(timediff);
+                this.form.controls["ScheduleTime"].reset({ value: moment(resolutiontime).format('DD/MM/YYYY h:mm a'), disabled: false });
+                this.caller = this.demandModel.Caller || new CallerModel();
+                this.showAdd = true;
+                this.isReadonly = true;
+                this.childModal.show();
+                //this.datepickerOption.startDate = new Date(resolutiontime);
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
+    }
+
     cancelModal(): void {
         this.childModal.hide();
     }
 
     ngOnInit(): any {
+        
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this._onRouteChange = this._router.events.subscribe((event) => {
@@ -324,7 +376,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                     this.isArchive = true;
                     this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
                     this.demandModel.IncidentId = this.currentIncidentId;
-                   // this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
+                    // this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
                 }
                 else {
                     this.isArchive = false;
@@ -338,6 +390,9 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.credential = UtilityService.getCredentialDetails();
         this.createdBy = +this.credential.UserId;
         this.credentialName = this.credential.UserName;
+         this.datepickerOption.position = 'top left';
+         this.datepickerOption.minDate = new Date();
+       // this.datepickerOption.classes = 'datepicker';
         this.getDemandType();
         this.getPageSpecifiedDepartments();
         this.getAllDepartments();
@@ -345,7 +400,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.initializeForm();
         this.getDepartmentNameAndParentDepartment(this.currentDepartmentId);
         this.demandModel.DemandId = 0;
-        
+
         this.demandModel.RequesterDepartmentId = this.currentDepartmentId;
         this.demandModel.AffectedObjectId = 0;
         this.demandModel.AffectedPersonId = 0;
@@ -357,9 +412,11 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.demandModel.RequestedBy = this.credentialName;
         this.demandModel.Caller.CallerName = this.credentialName;
         this.Action = "Save";
+        this.isReadonly = false;
 
         this.dataExchange.Subscribe("OnDemandUpdate", model => this.setModelForUpdate(model));
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.dataExchange.Subscribe("OnDemandDetailClick", model => this.showDemandDetails(model));
+        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     };
 
@@ -477,7 +534,11 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         if (this.demandModel.DemandId == 0) {
             UtilityService.setModelFromFormGroup<DemandModel>(this.demandModel, this.form, x => x.DemandId, x => x.DemandTypeId, x => x.Priority,
                 x => x.DemandDesc, x => x.RequesterType, x => x.PDATicketNumber, x => x.TargetDepartmentId,
-                x => x.ContactNumber, x => x.RequiredLocation, x => x.ScheduleTime, x => x.ContactNumber);
+                x => x.ContactNumber, x => x.RequiredLocation, x => x.ContactNumber);
+            debugger;
+            let currentDate = new Date().getTime();
+            let timeDiffSec = this.resolutionTime.getTime() - currentDate;
+            this.demandModel.ScheduleTime = (timeDiffSec / 60000).toString();
             this.demandModel.Caller.CallerName = this.form.controls["RequestedBy"].value;
             this.demandModel.Caller.ContactNumber = this.form.controls["ContactNumber"].value;
             this.demandModel.IncidentId = this.currentIncidentId;
@@ -549,9 +610,14 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         }
     };
 
+    public dateTimeSet(date: DateTimePickerSelectEventArgs, controlName: string): void {
+        this.resolutionTime = new Date(date.SelectedDate.toString());
+
+    }
+
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe("OnDemandUpdate");
-        this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('incidentChangefromDashboard');
         this.globalState.Unsubscribe('departmentChange');
     };
 }

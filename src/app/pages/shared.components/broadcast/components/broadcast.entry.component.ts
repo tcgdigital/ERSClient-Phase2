@@ -101,7 +101,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         this.initiateForm();
 
         this.dataExchange.Subscribe('OnBroadcastUpdate', model => this.onBroadcastUpdate(model));
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
@@ -137,14 +137,14 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe('OnBroadcastUpdate');
-        this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('incidentChangefromDashboard');
         this.globalState.Unsubscribe('departmentChange');
     }
 
     initiateForm(): void {
         this.form = new FormGroup({
             BroadcastId: new FormControl(0),
-            Message: new FormControl('', [Validators.required, Validators.maxLength(1000)]),
+            Message: new FormControl('', [Validators.required, Validators.maxLength(5)]),
             SelectAllDepartment: new FormControl(0),
             BroadCastDepartmentMappings: new FormControl(0),
             Priority: new FormControl(this.priorities.find(x => x.value == '1').caption)
