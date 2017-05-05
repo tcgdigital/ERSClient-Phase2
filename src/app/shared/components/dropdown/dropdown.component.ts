@@ -36,11 +36,12 @@ export class CustomDropdownComponent implements AfterContentInit, OnChanges, OnI
     constructor(private elementRef: ElementRef, private _router: Router) { }
 
     ngOnInit() {
-        // Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-        // Add 'implements OnInit' to the class.
+        //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+        //Add 'implements OnInit' to the class.
         this._onRouteChange = this._router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
-                if ((event.url.indexOf('archivedashboard') > -1) && (this.placeholder.indexOf('Incident') > -1)) {
+                if (((event.url.indexOf("archivedashboard") > -1) && (this.placeholder.indexOf("Incident") > -1)) || ((event.url.indexOf("landing") > -1) && (this.placeholder.indexOf("Incident") > -1))) {
+
                     this.showdropdown = true;
                 }
                 else {

@@ -5,7 +5,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Ng2BootstrapModule } from 'ng2-bootstrap';
 import { NgSelectizeModule } from 'ng-selectize';
-
+import { AuthenticationService } from "../pages/login/components/authentication.service";
 import {
     PaddingFormatterPipe
 } from './pipes';
@@ -99,6 +99,7 @@ const SHARED_SERVICES: any[] = [
     DataServiceFactory,
     DataExchangeService,
     LocationService,
+    AuthenticationService,
     ENV_PROVIDERS
 ];
 

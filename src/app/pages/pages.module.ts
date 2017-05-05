@@ -2,9 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
+import {
+    GlobalStateService
+} from '../shared';
 import { ModalModule} from 'ng2-bootstrap/modal';
-
-
 import { PagesComponent } from './pages.component';
 import { SharedModule } from '../shared/shared.module';
 import { PagesRouting } from './pages.routing';
@@ -26,7 +27,11 @@ import { ContactInfoComponent } from './shared.components/contact.info';
         
         
     ],
-    declarations: [PagesComponent, ContactInfoComponent]
+    declarations: [PagesComponent, ContactInfoComponent],
+    providers: [
+        GlobalStateService
+    ]
+
 })
 export class PagesModule {
 }

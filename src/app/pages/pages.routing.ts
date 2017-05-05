@@ -19,6 +19,7 @@ const pageRoutes: Routes = [
         children: [
             { path: '', redirectTo: 'pages/dashboard/people/detail', pathMatch: 'full' },
             { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' },
+            { path: 'landing', loadChildren: './landing/landing.module#LandingModule' },
             { path: 'archivelist', loadChildren: './archive.list/archive.dashboard.list.module#ArchiveDashboardListModule' },
             { path: 'archivedashboard', loadChildren: './archive.dashboard/archive.dashboard.module#ArchiveDashboardModule' },
             { path: 'masterdata', loadChildren: './masterdata/masterdata.module#MasterDateModule' },

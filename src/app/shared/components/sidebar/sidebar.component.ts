@@ -18,7 +18,7 @@ export class SidebarComponent implements OnInit, OnChanges, OnDestroy {
     public menuItems: any[];
     protected _menuItemsSub: Subscription;
     protected _onRouteChange: Subscription;
-
+    public showsidemenu: boolean = false;
     constructor(private _router: Router,
         private _service: SideMenuService,
         private _state: GlobalStateService,
@@ -28,12 +28,19 @@ export class SidebarComponent implements OnInit, OnChanges, OnDestroy {
     public ngOnInit() {
         this._onRouteChange = this._router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
-                if (this.menuItems) {
-                    this.selectMenuAndNotify();
-                } else {
-                    // on page load we have to wait as event is fired before menu elements are prepared
-                    setTimeout(() => this.selectMenuAndNotify());
+                if (event.url.indexOf("landing") > -1) {
+                    this.showsidemenu = true;
+                    if (this.menuItems) {
+                        this.selectMenuAndNotify();
+                    } else {
+                        // on page load we have to wait as event is fired before menu elements are prepared
+                        setTimeout(() => this.selectMenuAndNotify());
+                    }
                 }
+                else {
+                    this.showsidemenu = false;
+                }
+
             }
         });
         this._menuItemsSub = this._service.menuItems.subscribe(this.updateMenu.bind(this));

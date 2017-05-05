@@ -7,15 +7,15 @@
             <table responsive-table-body>
                 <thead>
                     <tr>
-                        <th><label for="EmergencyName">Emergency Name</label></th>
-                        <th><label for="Severity">Severity</label></th>
-                        <th><label for="Drill">Drill Indicator</label></th>
-                        <th><label for="Type">Type</label></th>
-                        <th><label for="Location">Location</label></th>
-                        <th><label for="InitiationDate">Initiation Date</label></th>
-                        <th><label for="ClosedDate">Closed Date</label></th>
-                        <th><label for="ViewDetails">View Details</label></th>
-                        <th><label for="ReopenEmergency">Reopen Emergency</label></th>
+                        <th>Emergency Name</th>
+                        <th>Severity</th>
+                        <th>Drill Indicator</th>
+                        <th>Type</th>
+                        <th>Location</th>
+                        <th>Initiation Date</th>
+                        <th>Closed Date</th>
+                        <th>View Details</th>
+                        <th>Reopen Emergency</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -23,8 +23,11 @@
                         <td colspan="10">No records found.</td>
                     </tr>
                     <tr *ngFor="let closedCrisis of closedCrisises">
-                        <td data-title="Emergency Name"><a class="nav-link" href="javascript:void(0)" (click)="onArchivedIncidentClick(closedCrisis.IncidentId)"
-                                routerLinkActive="active">{{closedCrisis.EmergencyName}}</a></td>
+                        <td data-title="Emergency Name">
+                            <a class="nav-link" href="javascript:void(0)" (click)="onArchivedIncidentClick(closedCrisis.IncidentId)">
+                                {{closedCrisis.EmergencyName}}
+                            </a>
+                        </td>
                         <td data-title="Severity">{{closedCrisis.Severity}}</td>
                         <td data-title="Drill Indicator">{{closedCrisis.IsDrill}}</td>
                         <td data-title="Emergency Type Name">{{closedCrisis.EmergencyType.EmergencyTypeName}}</td>
@@ -46,9 +49,7 @@
         <div class="pull-right margin-top-21px">
             <button type="submit" class="pull-right btn btn-primary" (click)="onSubmitClosedCrisis(closedCrisises)" aria-label="Submit">Submit</button>
         </div>
-        <br>
     </div>
-
 </div>
 
 <div bsModal #childModalViewClosedIncident="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
@@ -58,12 +59,9 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <strong>Incident View</strong>
-                    <div>
-                        <!--<input id="IncidentId" type="hidden" name="IncidentId" [(ngModel)]="incidentModel.IncidentId" />-->
-                        <md-checkbox md-no-ink id="IsDrillPopup" [disabled]="disableIsDrillPopup" name="IsDrillPopup" formControlName="IsDrillPopup"
-                            aria-label="Drill">IsDrill:<span class="red">*</span>
-                        </md-checkbox>
-                    </div>
+                    <div *ngIf="IsDrillPopup" class="dilld pull-left">DRILL</div>
+                    <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideClosedIncidentView()"></i>
+                    
                 </div>
                 <div class="modal-body card">
                     <div class="card-block">
@@ -126,49 +124,45 @@
                                     placeholder="Enter Description"></textarea>
                             </div>
                         </div>
-
-                        <div class="card" *ngIf="isFlightRelatedPopup">
-                            <div class="card-header ">
-                                <strong>Flight Information:</strong>
-                            </div>
-                            <div class="card-block form-control">
-                                <div class="row">
-                                    <div class="form-group col-lg-2 col-sm-12 col-md-6">
-                                        <label for="FlightNumber">Flight Number:<span class="red">*</span></label>
-                                        <input id="FlightNumberPopup" disabled formControlName="FlightNumberPopup" class="form-control" type="text" name="FlightNumberPopup"
-                                            placeholder="FlightNumber" />
-                                    </div>
-                                    <div class="form-group col-lg-2 col-sm-12 col-md-6">
-                                        <label for="Origin">Origin:<span class="red">*</span></label>
-                                        <input id="Origin" disabled formControlName="OriginPopup" class="form-control" type="text" name="OriginPopup" placeholder="Origin"
-                                        />
-                                    </div>
-                                    <div class="form-group col-lg-2 col-sm-12 col-md-6">
-                                        <label for="Destination">Destination:<span class="red">*</span></label>
-                                        <input id="DestinationPopup" disabled formControlName="DestinationPopup" class="form-control" type="text" name="DestinationPopup"
-                                            placeholder="Destination" />
-                                    </div>
-                                    <div class="form-group col-lg-2 col-sm-12 col-md-6">
-                                        <label for="Scheduleddeparture(UTC)">Scheduled departure:<span class="red">*</span></label>
-                                        <input id="ScheduleddeparturePopup" disabled formControlName="ScheduleddeparturePopup" class="form-control" type="text" name="ScheduleddeparturePopup"
-                                            placeholder="Scheduled Departure" />
-                                    </div>
-                                    <div class="form-group col-lg-2 col-sm-12 col-md-6">
-                                        <label for="Scheduledarrival(UTC)">Scheduled arrival:<span class="red">*</span></label>
-                                        <input id="Scheduledarrival" disabled formControlName="ScheduledarrivalPopup" class="form-control" type="text" name="ScheduledarrivalPopup"
-                                            placeholder="Scheduled Arrival" />
-                                    </div>
-                                    <div class="form-group col-lg-2 col-sm-12 col-md-6">
-                                        <label for="FlightTailNumber">FlightTailNumber:<span class="red">*</span></label>
-                                        <input id="FlightTailNumber" disabled formControlName="FlightTailNumberPopup" class="form-control" type="text" name="FlightTailNumberPopup"
-                                            placeholder="Flight Tail Number" />
+                        <div class="row">
+                            <div class="card" *ngIf="isFlightRelatedPopup">
+                                <div class="card-header ">
+                                    <strong>Flight Information:</strong>
+                                </div>
+                                <div class="card-block">
+                                    <div class="row">
+                                        <div class="form-group col-lg-2 col-sm-12 col-md-6">
+                                            <label for="FlightNumber">Flight Number:<span class="red">*</span></label>
+                                            <input id="FlightNumberPopup" disabled formControlName="FlightNumberPopup" class="form-control" type="text" name="FlightNumberPopup"
+                                                placeholder="FlightNumber" />
+                                        </div>
+                                        <div class="form-group col-lg-2 col-sm-12 col-md-6">
+                                            <label for="Origin">Origin:<span class="red">*</span></label>
+                                            <input id="Origin" disabled formControlName="OriginPopup" class="form-control" type="text" name="OriginPopup" placeholder="Origin"
+                                            />
+                                        </div>
+                                        <div class="form-group col-lg-2 col-sm-12 col-md-6">
+                                            <label for="Destination">Destination:<span class="red">*</span></label>
+                                            <input id="DestinationPopup" disabled formControlName="DestinationPopup" class="form-control" type="text" name="DestinationPopup"
+                                                placeholder="Destination" />
+                                        </div>
+                                        <div class="form-group col-lg-2 col-sm-12 col-md-6">
+                                            <label for="Scheduleddeparture(UTC)">Scheduled departure:<span class="red">*</span></label>
+                                            <input id="ScheduleddeparturePopup" disabled formControlName="ScheduleddeparturePopup" class="form-control" type="text" name="ScheduleddeparturePopup"
+                                                placeholder="Scheduled Departure" />
+                                        </div>
+                                        <div class="form-group col-lg-2 col-sm-12 col-md-6">
+                                            <label for="Scheduledarrival(UTC)">Scheduled arrival:<span class="red">*</span></label>
+                                            <input id="Scheduledarrival" disabled formControlName="ScheduledarrivalPopup" class="form-control" type="text" name="ScheduledarrivalPopup"
+                                                placeholder="Scheduled Arrival" />
+                                        </div>
+                                        <div class="form-group col-lg-2 col-sm-12 col-md-6">
+                                            <label for="FlightTailNumber">FlightTailNumber:<span class="red">*</span></label>
+                                            <input id="FlightTailNumber" disabled formControlName="FlightTailNumberPopup" class="form-control" type="text" name="FlightTailNumberPopup"
+                                                placeholder="Flight Tail Number" />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="fromtop1">
-                                <button class="btn btn-warning" type="button" (click)="hideClosedIncidentView()">Cancel</button>
                             </div>
                         </div>
                     </div>
