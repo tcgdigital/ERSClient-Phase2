@@ -276,7 +276,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.showAdd = true;
         this.buttonValue = "Create Demand";
         this.childModal.show();
-        debugger;
         this.initializeForm();
         this.demandModel.DemandId = 0;
         this.demandModel.RequesterDepartmentId = this.currentDepartmentId;
@@ -535,7 +534,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             UtilityService.setModelFromFormGroup<DemandModel>(this.demandModel, this.form, x => x.DemandId, x => x.DemandTypeId, x => x.Priority,
                 x => x.DemandDesc, x => x.RequesterType, x => x.PDATicketNumber, x => x.TargetDepartmentId,
                 x => x.ContactNumber, x => x.RequiredLocation, x => x.ContactNumber);
-            debugger;
             let currentDate = new Date().getTime();
             let timeDiffSec = this.resolutionTime.getTime() - currentDate;
             this.demandModel.ScheduleTime = (timeDiffSec / 60000).toString();
