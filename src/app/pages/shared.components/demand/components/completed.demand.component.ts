@@ -256,7 +256,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         this.getCurrentDepartmentName(this.currentDepartmentId);
 
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
     };
 
     private getDepartmentName(deptId): void {
@@ -289,6 +289,6 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChange');
+        this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 }

@@ -225,7 +225,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
 
         this.dataExchange.Subscribe("DemandAddedUpdated", model => this.demandUpdated(model));
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
     };
 
     private incidentChangeHandler(incident: KeyValue): void {
@@ -247,7 +247,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChange');
+        this.globalState.Unsubscribe('departmentChangeFromDashboard');
         this.globalState.Unsubscribe('DemandAddedUpdated');
     }
 
