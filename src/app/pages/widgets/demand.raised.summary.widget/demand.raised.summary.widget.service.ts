@@ -52,11 +52,11 @@ export class DemandRaisedSummaryWidgetService {
         let demandsByTargetDeptartment: DemandModel[];
         let departmentIdProjection: string = '';
         let departmentIds: number[] = [];
-        departmentIdProjection = `(TargetDepartmentId eq ${departmentId})`;
-        this.demandService.GetDemandByTargetDepartments(incidentId, departmentIdProjection)
+        departmentIdProjection = `(RequesterDepartmentId eq ${departmentId})`;
+        this.demandService.GetDemandByRequesterDepartments(incidentId, departmentIdProjection)
             .subscribe((result) => {
                 this.dataTemp = result.Records.filter((filter) => {
-                    return filter.TargetDepartmentId == departmentId;
+                    return filter.RequesterDepartmentId == departmentId;
                 });
                 this.allocatedDemandDetail = new AllDemandRaisedSummaryModel();
                 this.allocatedDemandDetails = [];

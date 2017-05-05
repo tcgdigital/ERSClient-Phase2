@@ -261,7 +261,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
             });
 
             if (demandCompletion.length == 0) {
-                alert("Please select at least one request");
+               this.toastrService.error("Please select at least one request");
             }
             else {
                 this.demandService.UpdateBulkForApproval(demandCompletion)
@@ -272,6 +272,9 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
                         console.log(`Error: ${error}`);
                     });
             };
+        }
+        else{
+            this.toastrService.error("There is no request to be approved");
         }
     };
 
