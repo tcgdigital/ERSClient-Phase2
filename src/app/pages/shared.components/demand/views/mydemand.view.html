@@ -15,7 +15,7 @@
                         <th>Demand Status</th>
                         <th>Remarks</th>
                         <th>RAG</th>
-                        <th>Edit</th>
+                        <th *ngIf="!isArchive">Edit</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -33,7 +33,7 @@
                         <td data-title="Demand Status">{{demand.DemandStatusDescription}}&nbsp;</td>
                         <td data-title="Remarks"><i class="fa fa-list-alt" (click)="openDemandRemarks(demand)"></i></td>
                         <td data-title="RAG"><span [ngClass]="demand.RagStatus"></span></td>
-                        <td data-title="Edit"><i class="fa fa-edit" (click)="open(demand.DemandId)"  *ngIf="!isArchive"></i></td>
+                        <td data-title="Edit" *ngIf="!isArchive"><i class="fa fa-edit" (click)="open(demand.DemandId)" ></i></td>
                     </tr>
                 </tbody>
             </table>
@@ -52,7 +52,7 @@
                    </button>
                     </div>
                     <div class="modal-body">
-                        <div class="row holderRemark">
+                        <div class="row holderRemark" *ngIf="!isArchive">
                             <div class="col-lg-8 col-sm-12 col-md-6 form-group">
                                 <label>Remarks</label>
                                 <input [(ngModel)]="Remarks" class="form-control" type="text" />

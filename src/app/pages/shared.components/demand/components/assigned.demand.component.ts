@@ -242,7 +242,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
             });
 
             if (demandCompletion.length == 0) {
-                alert("Please select at least one request");
+                this.toastrService.error("Please select at least one request");
             }
             else {
                 this.demandService.UpdateBulkForCompletion(demandCompletion)
@@ -253,6 +253,9 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
                         console.log(`Error: ${error}`);
                     });
             };
+        }
+        else{
+            this.toastrService.error("There is no request assigned.");
         }
     };
 
