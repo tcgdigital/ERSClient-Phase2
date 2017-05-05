@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ViewChild, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { PresidentMessageWidgetModel } from './presidentMessage.widget.model';
+import { PresidentMessageModel } from '../../shared.components';
 import { PresidentMessageWidgetService } from './presidentMessage.widget.service'
 import { DataServiceFactory, DataExchangeService, GlobalStateService, KeyValue } from '../../../shared'
 import { ModalDirective } from 'ng2-bootstrap/modal';
@@ -32,6 +33,13 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
         this.getLatestPresidentsMessages(this.currentIncidentId);
         this.getAllPresidentsMessages();
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('PresidentMessagePublished', model => this.onPresidentMessagePublish(model));
+    }
+
+    private onPresidentMessagePublish(presidentMessage: PresidentMessageModel): void {
+        if(presidentMessage.IsPublished){           
+            this.getLatestPresidentsMessages(this.currentIncidentId);
+        }
     }
 
     private incidentChangeHandler(incident: KeyValue): void {
@@ -42,6 +50,7 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('PresidentMessagePublished');
     }
 
     getLatestPresidentsMessages(incidentId): void {

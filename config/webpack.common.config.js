@@ -262,7 +262,10 @@ module.exports = function (options) {
                 to: 'assets/images'
             }, {
                 from: 'web.config'
-            }]),
+            }, {
+                from: 'src/assets/static-content',
+                to: 'assets/static-content'
+            },]),
 
             /** Plugin: HtmlWebpackPlugin
              * Description: Simplifies creation of HTML files to serve your webpack bundles.

@@ -1,5 +1,5 @@
 import {
-        Component, ViewEncapsulation, Input,
+        Component, ViewEncapsulation, Input, OnChanges, SimpleChange,
         OnInit, OnDestroy, AfterContentInit, ViewChild
        } from '@angular/core';
 import {
@@ -9,7 +9,7 @@ import {
 import { Observable } from 'rxjs/Rx';
 import {
         ResponseModel, DataExchangeService,
-        UtilityService, GlobalConstants
+        UtilityService, GlobalConstants, GlobalStateService, KeyValue
        } from '../../../../shared';
 
 import { MasterDataUploadForInvalidService } from '../masterdata.upload.invalid.records.service'
@@ -21,18 +21,27 @@ import { InvalidCrewModel } from '../../../shared.components/'
     templateUrl: '../../views/invalid/invalid.crew.view.html'
 })
 
-export class InvalidCrewListComponent implements OnInit{
+export class InvalidCrewListComponent implements OnInit, OnDestroy{
         
     invalidCrews: InvalidCrewModel[] = []
-    @Input() IncidentId: string;
+    @Input() IncidentId: number;
     @Input() IsVisible: boolean;
 
-    constructor(private _invalidRecordService: MasterDataUploadForInvalidService
-                ,private dataExchange: DataExchangeService<InvalidCrewModel>){       
+    constructor(private _invalidRecordService: MasterDataUploadForInvalidService,
+                private dataExchange: DataExchangeService<InvalidCrewModel>,
+                private globalState: GlobalStateService){       
     }
 
-    ngOnInit(): void{        
-        this.dataExchange.Subscribe("OpenInvalidCrews", model => this.openInvalidCrews(model))
+    ngOnInit(): void{ 
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));       
+        this.dataExchange.Subscribe("OpenInvalidCrews", model => this.openInvalidCrews(model));
+    }
+
+    
+
+    ngOnDestroy(): void{
+        this.dataExchange.Unsubscribe("OpenInvalidCrews");
+        this.globalState.Unsubscribe("incidentChange");
     }
 
     openInvalidCrews(invalidCrew: InvalidCrewModel): void{
@@ -54,4 +63,9 @@ export class InvalidCrewListComponent implements OnInit{
     cancel(): void {
         this.IsVisible = !this.IsVisible;
     }
+
+     private incidentChangeHandler(incident: KeyValue): void {
+        this.IncidentId = incident.Value;
+        
+    }; 
 }

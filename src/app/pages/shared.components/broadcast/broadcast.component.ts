@@ -25,7 +25,7 @@ export class BroadcastComponent {
         this.evtBroadcast = evt;
     }
     ngOnInit(): any {
-        // this.incidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        this.incidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.initiatedDepartment = +UtilityService.GetFromSession("CurrentDepartmentId");
         this._onRouteChange = this._router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {

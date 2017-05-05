@@ -8,7 +8,7 @@ export class FileUploadService {
     private progressObservable: Observable<number>;
     private progressObserver: Observer<number>;
     private progress: number;
-
+ 
     /**
      * Creates an instance of FileUploadService.
      *
@@ -18,7 +18,8 @@ export class FileUploadService {
         this.progressObservable = new Observable((observer: Observer<number>) => {
             this.progressObserver = observer;
         });
-    }
+   }
+ 
 
     /**
      * Get file upload progress observable;
@@ -30,7 +31,7 @@ export class FileUploadService {
     public getProgressObservable(): Observable<number> {
         return this.progressObservable;
     }
-
+ 
     /**
      * File uploading service request
      *
@@ -61,33 +62,32 @@ export class FileUploadService {
                         formData.append('uploads[]', file, file.name);
                     }
                 }
-
+ 
                 xhr.onreadystatechange = () => {
                     if (xhr.readyState === 4) {
                         if (xhr.status === 200) {
-                            resolve((xhr.response !== null && xhr.response !== undefined) ? JSON.parse(xhr.response) as T : new Object() as T);
+                            resolve((xhr.response!=="") ? JSON.parse(xhr.response) as T : new Object() as T);
+
                         } else {
                             reject(xhr.response);
                         }
                     }
                 };
-
                 xhr.upload.onprogress = (event: ProgressEvent) => {
                     this.progress = Math.round(event.loaded / event.total * 100);
                 };
-
+ 
                 xhr.upload.ontimeout = (event: ProgressEvent) => {
                     this.progressObserver.error('Upload timed out');
                 };
-
                 xhr.open('POST', url, true);
                 xhr.send(formData);
             });
-
+ 
             return Observable.fromPromise(fileUploadPromise);
         }
     }
-
+ 
     /**
      * Set interval for frequency with which Observable inside Promise will share data with subscribers.
      *
