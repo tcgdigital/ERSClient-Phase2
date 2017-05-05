@@ -6,6 +6,8 @@ import { Observable } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
+import * as moment from 'moment/moment';
+
 
 
 import { InvolvePartyModel } from '../../involveparties';
@@ -73,8 +75,12 @@ export class MyDemandComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.mydemands = this.demandService.DemandMapper(response.Records);
                 this.mydemands.forEach(x =>
-                    function () {
-                        x["showRemarks"] = false;
+                    {
+                        let scheduleTime = x.ScheduleTime;
+                        let createdOn = new Date(x.CreatedOn);
+                        let timediff = createdOn.getTime() + (+scheduleTime) * 60000;
+                        let resolutiontime = new Date(timediff);
+                        x.ScheduleTime = moment(resolutiontime).format('DD/MM/YYYY h:mm a');
                         x["showRemarks"] = false;
                     });
             }, (error: any) => {
@@ -186,8 +192,8 @@ export class MyDemandComponent implements OnInit, OnDestroy {
         this.getDemandTrails(demand.DemandId);
     };
 
-    openDemandDetails(demandId: number) : void{
-            this.dataExchange.Publish("OnDemandDetailClick", demandId);
+    openDemandDetails(demandId: number): void {
+        this.dataExchange.Publish("OnDemandDetailClick", demandId);
     }
 
     canceltrail(demand) {
@@ -216,7 +222,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
         this.createdByName = this.credential.UserName;
 
         this.Remarks = "";
-       
+
         this.dataExchange.Subscribe("DemandAddedUpdated", model => this.demandUpdated(model));
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
