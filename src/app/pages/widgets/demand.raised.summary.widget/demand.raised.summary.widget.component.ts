@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewEncapsulation, Input, ViewChild, SimpleChange } from '@angular/core';
+
 import {
     DemandRaisedSummaryModel,
     AllDemandRaisedSummaryModel,
@@ -45,6 +46,20 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         this.demandRaisedSummary = this.demandRaisedSummaryWidgetService.GetDemandRaisedCount(this.incidentId, this.departmentId);
 
     }
+
+    public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
+        if (changes['incidentId'] !== undefined && (changes['incidentId'].currentValue !==
+            changes['incidentId'].previousValue) &&
+            changes['incidentId'].previousValue !== undefined) {
+            this.demandRaisedSummary = this.demandRaisedSummaryWidgetService.GetDemandRaisedCount(this.incidentId, this.departmentId);
+        }
+        if (changes['departmentId'] !== undefined && (changes['departmentId'].currentValue !==
+            changes['departmentId'].previousValue) &&
+            changes['departmentId'].previousValue !== undefined) {
+            this.demandRaisedSummary = this.demandRaisedSummaryWidgetService.GetDemandRaisedCount(this.incidentId, this.departmentId);
+        }
+    }
+
 
     public openAllocatedActionableDetails(): void {
         this.getOpenAllocatedDemandDetails(this.incidentId, this.departmentId, () => {
@@ -311,16 +326,4 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
 
     }
 
-     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
-        if(changes['incidentId'] !== undefined && (changes['incidentId'].currentValue !==
-            changes['incidentId'].previousValue) &&
-            changes['incidentId'].previousValue !== undefined){
-            this.demandRaisedSummary = this.demandRaisedSummaryWidgetService.GetDemandRaisedCount(this.incidentId, this.departmentId);
-        }
-        if(changes['departmentId'] !== undefined && (changes['departmentId'].currentValue !==
-            changes['departmentId'].previousValue) &&
-            changes['departmentId'].previousValue !== undefined){
-           this.demandRaisedSummary = this.demandRaisedSummaryWidgetService.GetDemandRaisedCount(this.incidentId, this.departmentId);
-        }
-    }
 }
