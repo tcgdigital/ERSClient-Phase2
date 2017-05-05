@@ -10,6 +10,7 @@
                                 <label for="Message">Media Releases:<span class="red">*</span></label><span class="MaxChartr">Max 500 chars</span>
                                 <textarea class="form-control" id="Message" formControlName="Message" maxlength="500" [readOnly]="media.IsPublished" placeholder="Enter Media Release Message"
                                     [(ngModel)]="media.Message" required autofocus></textarea>
+                                <span [hidden]="hideMessageError">Please Input Message</span>
                             </div>
                         </div>
                         <div class="col-sm-6 col-lg-4 col-md-6">
@@ -17,6 +18,7 @@
                                 <label for="Remarks">Remarks:</label><span class="MaxChartr">Max 500 chars</span>
                                 <textarea class="form-control" id="Remarks" formControlName="Remarks" maxlength="500" [readOnly]="media.IsPublished" placeholder="Enter Remarks"
                                     [(ngModel)]="media.Remarks" required autofocus></textarea>
+                                <span [hidden]="hideRemarksError">Please Input Remarks</span>
                             </div>
                         </div>
 
@@ -35,5 +37,6 @@
 </div>
 
         <div class="addbuttonHolder">
-            <button class="btn btn-primary" type="submit" (click)="showAddRegion(showAdd)" [disabled]="media.IsPublished && showAdd">Add New Media Release</button>
+            <button class="btn btn-primary" type="submit" (click)="showAddRegion(showAdd)" >Add New Media Release</button>
+            <!--[disabled]="media.IsPublished": Disable feature will be required in Archieve dashboard-->
         </div>

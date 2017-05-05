@@ -9,7 +9,6 @@ import {
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 
 
-
 import { MediaService } from './media.service';
 import { MediaModel } from './media.model';
 import {
@@ -24,8 +23,8 @@ import {
     templateUrl: '../views/media.release.entry.view.html'
 })
 export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
-    @Input() initiatedDepartmentId: string;
-    @Input() incidentId: string;
+    @Input() initiatedDepartmentId: number;
+    @Input() incidentId: number;
 
     public form: FormGroup;
     media: MediaModel = new MediaModel();
@@ -35,7 +34,8 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     currentDepartmentId: number;
     showAdd: boolean;
     credential: AuthModel;
-
+    hideMessageError: boolean = true;
+    hideRemarksError: boolean = true;
 
     /**
      * Creates an instance of MediaQueryEntryComponent.
@@ -55,9 +55,10 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
-        this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-
+        this.incidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        this.initiatedDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.currentIncidentId = this.incidentId;
+        this.currentDepartmentId = this.initiatedDepartmentId;
         this.formInit();
         this.credential = UtilityService.getCredentialDetails();
         this.dataExchange.Subscribe("OnMediaReleaseUpdate", model => this.onMediaReleaseUpdate(model));
@@ -80,6 +81,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     }
 
     onMediaReleaseUpdate(mediaModel: MediaModel): void {
+        this.media = new MediaModel();
         this.media = mediaModel;
         this.media.MediaqueryId = mediaModel.MediaqueryId;
         this.media.IsUpdated = true;
@@ -88,21 +90,47 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     }
 
     save(): void {
-        if (this.form.valid) {
+        if(this.media.Message == "" || this.media.Message == null || this.media.Message == undefined)
+        {
+            this.hideMessageError = false;
+        } 
+        else if(this.media.Remarks == "" || this.media.Remarks == null || this.media.Remarks == undefined)
+        {
+            this.hideMessageError = true;
+            this.hideRemarksError = false;
+        } 
+        else
+        {   
+            this.hideMessageError = true;
+            this.hideRemarksError = true;    
             this.media.IsPublished = false;
             this.Action = "Save";
             this.CreateOrUpdateMediaQuery();
         }
+        
     }
 
     publish(): void {
-        if (this.form.valid) {
+        if(this.media.Message == "" || this.media.Message == null || this.media.Message == undefined)
+        {
+            this.hideMessageError = false;
+        } 
+        else if(this.media.Remarks == "" || this.media.Remarks == null || this.media.Remarks == undefined)
+        {
+            this.hideMessageError = true;
+            this.hideRemarksError = false;
+        } 
+        else
+        {
+            this.hideMessageError = true;
+            this.hideRemarksError = true;
             this.media.IsPublished = true;
-            this.media.PublishedBy = 1;
+            this.media.PublishedBy = +this.credential.UserId;;
+            this.date = new Date();
             this.media.PublishedOn = this.date;
-            this.Action = "Publish";
-            this.CreateOrUpdateMediaQuery();
-        }
+            //this.Action = "Publish";
+            this.CreateOrUpdateMediaQuery();      
+        }            
     }
 
     private CreateOrUpdateMediaQuery(): void {
@@ -113,24 +141,35 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
         this.media.InitiateDepartmentId = this.currentDepartmentId;
 
         if (this.media.MediaqueryId == 0) {
+            
             this.media.CreatedBy = +this.credential.UserId;
             this.mediaQueryService.Create(this.media)
                 .subscribe((response: MediaModel) => {
                     this.toastrService.success('Media release Saved successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("MediaModelSaved", response);
-                    this.formInit();
+                    if(this.media.IsPublished)
+                    {                        
+                        this.globalState.NotifyDataChanged('MediaReleasePublished', response);
+                    }
                     this.showAdd = false;
+                    this.formInit();
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
                 });
         }
-        else {
+        else {            
+            this.media.UpdatedBy = +this.credential.UserId;
             this.mediaQueryService.Update(this.media)
                 .subscribe((response: MediaModel) => {
                     this.toastrService.success('Media release edited successfully.', 'Success', this.toastrConfig);
-                    this.dataExchange.Publish("MediaModelUpdated", response);
+                    this.dataExchange.Publish("MediaModelUpdated", response);                                                
+                    if(this.media.IsPublished)
+                    {                        
+                        this.globalState.NotifyDataChanged('MediaReleasePublished', this.media);
+                    
+                    }  
+                    this.showAdd = false; 
                     this.formInit();
-                    this.showAdd = false;
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
                 });
@@ -139,7 +178,9 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
 
     cancel(): void {
         this.formInit();
-        this.showAdd = false
+        this.showAdd = false;
+        this.hideMessageError = true;
+        this.hideRemarksError = true; 
     }
 
     private formInit(): void {

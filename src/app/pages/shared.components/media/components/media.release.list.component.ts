@@ -2,13 +2,11 @@ import {
     Component, OnInit, ViewEncapsulation,
     Input, OnDestroy
 } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
-import {Subscription } from 'rxjs/Rx';
 import { MediaModel } from './media.model';
 import { MediaService } from './media.service';
 import {
     ResponseModel, DataExchangeService,
-    GlobalStateService, KeyValue,UtilityService
+    GlobalStateService, KeyValue, UtilityService
 } from '../../../../shared';
 
 @Component({
@@ -17,14 +15,12 @@ import {
     templateUrl: '../views/media.release.list.view.html'
 })
 export class MediaReleaseListComponent implements OnInit, OnDestroy {
-    @Input() initiatedDepartmentId: string;
-    @Input() incidentId: string;
+    @Input() initiatedDepartmentId: number;
+    @Input() incidentId: number;
 
     mediaReleases: MediaModel[] = [];
     currentIncidentId: number;
     currentDepartmentId: number;
-    isArchive: boolean = false;
-    protected _onRouteChange: Subscription;
 
     /**
      * Creates an instance of MediaReleaseListComponent.
@@ -36,12 +32,13 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
      */
     constructor(private mediaService: MediaService,
         private dataExchange: DataExchangeService<MediaModel>,
-        private globalState: GlobalStateService, private _router: Router) { }
+        private globalState: GlobalStateService) { }
 
     getMediaReleases(departmentId, incidentId): void {
         this.mediaService.Query(departmentId, incidentId)
             .subscribe((response: ResponseModel<MediaModel>) => {
                 this.mediaReleases = response.Records;
+                console.log(this.mediaReleases);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -57,23 +54,11 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.currentIncidentId = +this.incidentId;
-        this.currentDepartmentId = +this.initiatedDepartmentId;
-        this._onRouteChange = this._router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                if (event.url.indexOf("archivedashboard") > -1) {
-                    this.isArchive = true;
-                    this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
-                    this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
-                }
-                else {
-                    this.isArchive = false;
-                    this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
-                   this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
-                }
-            }
-        });
-        
+        this.incidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        this.initiatedDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.currentIncidentId = this.incidentId;
+        this.currentDepartmentId = this.initiatedDepartmentId;
+        this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
 
         this.dataExchange.Subscribe("MediaModelSaved", model => this.onMediaSuccess(model));
         this.dataExchange.Subscribe("MediaModelUpdated", model => this.onMediaSuccess(model));
