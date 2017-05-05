@@ -125,8 +125,12 @@ export abstract class DataOperation<T> {
     protected HandleResponse(entity: Observable<Response>): Observable<T> {
         return entity.map(this.DataProcessingService.ExtractQueryResult)
             .catch((error: any) => {
-                this.DataProcessingService.HandleError(error);
-                return Observable.throw(error.json().error || 'Server error');
+                if (this.DataProcessingService.ExceptionHandler !== undefined)
+                    return this.DataProcessingService.ExceptionHandler(error);
+                else {
+                    this.DataProcessingService.HandleError(error);
+                    return Observable.throw(error.json().error || 'Server error');
+                }
             });
     }
 
@@ -156,7 +160,7 @@ export abstract class DataOperation<T> {
      * 
      * @memberOf DataOperation
      */
-    protected HandleBatchResponses<TOut extends BaseModel>(entity: Observable<Response>): Observable<ResponseModel<TOut>>{
+    protected HandleBatchResponses<TOut extends BaseModel>(entity: Observable<Response>): Observable<ResponseModel<TOut>> {
         return entity.map(this.DataProcessingService.ExtractBatchQueryResults)
             .catch((error: any) => {
                 this.DataProcessingService.HandleError(error);

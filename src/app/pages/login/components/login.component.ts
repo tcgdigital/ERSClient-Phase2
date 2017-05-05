@@ -3,9 +3,11 @@ import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, AbstractControl, Validators } from '@angular/forms';
 import { AuthenticationService } from './authentication.service';
 import { UtilityService } from '../../../shared/services';
-import { GlobalStateService } from '../../../shared';
+import { GlobalStateService, ResponseModel } from '../../../shared';
 import { AuthRequestModel, AuthResponseModel } from './auth.model';
-
+import { IncidentModel, IncidentService } from "../../incident";
+import { UserProfileService, UserProfileModel } from "../../shared.components";
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import * as jwtDecode from 'jwt-decode';
 
 @Component({
@@ -22,8 +24,14 @@ export class LoginComponent {
     public submitted: boolean;
 
     constructor(formBuilder: FormBuilder,
-        private authService: AuthenticationService, private globalState: GlobalStateService,
-        private router: Router) {
+        private userProfileService: UserProfileService,
+        private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig,
+        private authService: AuthenticationService,
+        private globalState: GlobalStateService,
+        private router: Router,
+        private incidentService: IncidentService) {
+
         this.form = formBuilder.group({
             userId: ['', Validators.compose([Validators.required, Validators.minLength(4)])],
             password: ['', Validators.compose([Validators.required, Validators.minLength(4)])]
@@ -39,10 +47,36 @@ export class LoginComponent {
             .subscribe((data: AuthResponseModel) => {
                 console.log(jwtDecode(data.access_token));
                 const loginCredentialBasic = jwtDecode(data.access_token);
-                UtilityService.SetToSession({ CurrentUserId: loginCredentialBasic.UserId });
-                this.router.navigate(['pages/dashboard']);
+                localStorage.setItem('LastLoginTime', (new Date()).toString());
+                UtilityService.SetToSession({ 'CurrentUserId': loginCredentialBasic.UserId });
+                this.GetUserInfoFromUserProfileByUserProfileId(loginCredentialBasic.UserId);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
+                if (error.error == 'invalid_grant') {
+                    this.toastrService.error(error.error_description, 'Invalid Grant', this.toastrConfig);
+                }
+
+                console.log('Notify User Clicked error');
+            });
+    }
+
+    private CheckClosedIncident(): void {
+        this.incidentService.GetOpenIncidents()
+            .subscribe((item: ResponseModel<IncidentModel>) => {
+                if (item.Count > 0) {
+                    this.router.navigate(['pages/dashboard']);
+                }
+                else {
+                    this.router.navigate(['pages/landing']);
+                }
+            });
+    }
+
+    private GetUserInfoFromUserProfileByUserProfileId(id: number): void {
+        this.userProfileService.Get(id)
+            .subscribe((item: UserProfileModel) => {
+                localStorage.setItem('CurrentLoggedInUserName', item.Name);
+                this.CheckClosedIncident();
             });
     }
 

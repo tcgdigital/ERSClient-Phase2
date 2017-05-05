@@ -15,7 +15,6 @@ export class GlobalStateService {
         let current = this._data[_event];
         if (current !== value) {
             this._data[_event] = value;
-
             this._data.next({
                 event: _event,
                 data: this._data[_event]
@@ -26,7 +25,7 @@ export class GlobalStateService {
     Subscribe(event: string, callback: Function) {
         let subscribers = this._subscriptions.get(event) || [];
         subscribers.push(callback);
-
+        
         this._subscriptions.set(event, subscribers);
     }
 

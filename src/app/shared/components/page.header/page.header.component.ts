@@ -4,6 +4,8 @@ import {
 } from '@angular/core';
 import { GlobalStateService } from '../../services';
 import { KeyValue } from '../../models';
+import { Router } from '@angular/router';
+import { AuthenticationService } from "../../../pages/login/components/authentication.service";
 
 @Component({
     selector: '[page-header]',
@@ -26,6 +28,9 @@ export class PageHeaderComponent implements AfterContentInit {
     @Output() departmentChange: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
     @Output() incidentChange: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
 
+    constructor(private router: Router, private authenticationService: AuthenticationService) {
+    }
+
     public ngAfterContentInit(): void {
         // console.log(`page header currentDepartmentId: ${this.currentDepartmentId}`);
         // console.log(`page header currentIncidentId: ${this.currentIncidentId}`);
@@ -45,6 +50,9 @@ export class PageHeaderComponent implements AfterContentInit {
 
     public onLogoutClicked($event): void {
         this.logoutClicked.emit($event);
+        this.authenticationService.Logout();
+        this.router.navigate(['login']);
+        //sessionStorage.clear();
     }
 
     public onDepartmentChange(selectedDepartment: KeyValue): void {

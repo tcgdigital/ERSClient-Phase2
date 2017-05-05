@@ -28,7 +28,7 @@ export class PagesComponent implements OnInit {
     lastLogin: Date;
     private sub: any;
     userId: number;
-
+    
     /**
      * Creates an instance of PagesComponent.
      * @param {SideMenuService} sideMenuService
@@ -44,6 +44,7 @@ export class PagesComponent implements OnInit {
         private incidentService: IncidentService,
         private departmentService: DepartmentService,
         private globalState: GlobalStateService,
+        //private sharedService:SharedService,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig) {
         toastrConfig.closeButton = true;
@@ -55,8 +56,22 @@ export class PagesComponent implements OnInit {
         this.sideMenuService.updateMenuByRoutes(<Routes>PAGES_MENU);
         this.getDepartments();
         this.getIncidents();
-        this.userName = 'Sandip Ghosh';
-        this.lastLogin = new Date();
+        
+
+        this.userName = localStorage.getItem('CurrentLoggedInUserName');
+        this.lastLogin = new Date(localStorage.getItem('LastLoginTime'));
+        //this.globalState.Subscribe('incidentCreate', (model: number) => this.incidentCreateHandler(model));
+        this.globalState.Subscribe('incidentCreate', (model: number) => this.incidentCreateHandler(model));
+    }
+
+
+
+    ngOnDestroy(): void {
+        //  this.globalState.Unsubscribe('incidentCreate');
+    }
+
+    private incidentCreateHandler(incident: number) {
+        this.getIncidents();
     }
 
     public toggleSideMenu($event): void {

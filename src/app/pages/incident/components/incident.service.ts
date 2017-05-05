@@ -50,6 +50,12 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
             .Execute();
     }
 
+    GetOpenIncidents(): Observable<ResponseModel<IncidentModel>> {
+        return this._dataService.Query()
+            .Filter("ClosedBy eq null and ClosedOn eq null and IncidentId ne 0")
+            .Execute();
+    }
+
     Get(id: string | number): Observable<IncidentModel> {
         return this._dataService.Get(id.toString()).Execute();
     }
