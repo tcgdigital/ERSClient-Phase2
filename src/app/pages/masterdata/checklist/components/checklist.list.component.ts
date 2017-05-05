@@ -7,7 +7,7 @@ import {
     ResponseModel, DataExchangeService, UtilityService, GlobalStateService
     , SearchConfigModel,
     SearchTextBox, SearchDropdown,
-    NameValue
+    NameValue, KeyValue
 } from '../../../../shared';
 import { DepartmentModel, DepartmentService } from '../../department';
 import { EmergencyTypeModel, EmergencyTypeService } from '../../emergencytype';
@@ -83,8 +83,8 @@ export class ChecklistListComponent implements OnInit {
         this.initiateSearchConfigurations();
     }
 
-    private departmentChangeHandler(departmentId): void {
-        this.currentDepartmentId = departmentId;
+    private departmentChangeHandler(department : KeyValue): void {
+        this.currentDepartmentId = department.Value;
         this.getCheckLists(this.currentDepartmentId);
     }
 

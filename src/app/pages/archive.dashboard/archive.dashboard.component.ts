@@ -21,6 +21,7 @@ export class ArchiveDashboardComponent implements OnInit {
     currentDepartmentId: number;
     currentIncident: KeyValue;
     currentDepartment: KeyValue;
+    public incidentDate: Date;
     private sub: any;
 
     /**
@@ -32,7 +33,9 @@ export class ArchiveDashboardComponent implements OnInit {
      * @memberof ArchiveDashboardComponent
      */
     constructor(private router: ActivatedRoute, private incidentService: IncidentService,
-        private departmentService: DepartmentService) { }
+        private departmentService: DepartmentService) { 
+            this.incidentDate = new Date();
+        }
 
     /**
      * ngOnInit
@@ -58,6 +61,7 @@ export class ArchiveDashboardComponent implements OnInit {
         this.incidentService.Get(this.archievedIncidentId)
             .map((record: IncidentModel) => {
                 this.currentIncident = new KeyValue(record.Description, record.IncidentId);
+                 this.incidentDate = new Date(record.EmergencyDate);
             })
             .flatMap((_) => this.departmentService.Get(this.currentDepartmentId))
             .subscribe((data: DepartmentModel) => {

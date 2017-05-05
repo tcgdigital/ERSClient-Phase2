@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
 import { UserProfileModel } from './userProfile.model';
-import { ServiceBase, DataServiceFactory ,ResponseModel } from '../../../../shared';
+import { ServiceBase, DataServiceFactory, ResponseModel } from '../../../../shared';
 import { IUserProfileService } from './IUserProfileService';
 
 @Injectable()
-export class UserProfileService  extends ServiceBase<UserProfileModel>
-    implements IUserProfileService{
+export class UserProfileService extends ServiceBase<UserProfileModel>
+    implements IUserProfileService {
 
     /**
     * Creates an instance of UserProfileService.
@@ -24,9 +24,17 @@ export class UserProfileService  extends ServiceBase<UserProfileModel>
             .Filter(query).Execute();
     }
 
-    GetAllActiveWithContact(): Observable<ResponseModel<UserProfileModel>> {
+
+       GetAllActiveWithContact(): Observable<ResponseModel<UserProfileModel>> {
         return this._dataService.Query()
             .Filter(`MainContact ne null and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
+            .Execute();
+    }
+
+    GetForDirectory(): Observable<ResponseModel<UserProfileModel>> {
+        return this._dataService.Query()
+            .Select('UserProfileId,UserId,Name,MainContact,AlternateContact')
+            .Filter('isActive eq true')
             .Execute();
     }
 }

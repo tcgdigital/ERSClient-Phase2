@@ -1,0 +1,35 @@
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Telephone Directory</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="cancelModal()">
+                  <span aria-hidden="true">&times;</span>
+                   </button>
+            </div>
+            <div class="modal-body">
+
+                <generic-search [filterConfigs]="searchConfigs" (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();">
+                </generic-search>
+                <responsive-table>
+                    <table responsive-table-body>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Contact Number</th>
+                                <th>Alternate Contact Number</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let user of userprofiles">
+                                <td data-title="Name">{{user.Name}}</td>
+                                <td data-title="Contact Number">{{user.MainContact}}</td>
+                                <td data-title="Alternate Contact Number">{{user.AlternateContact}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </responsive-table>
+            </div>
+        </div>
+    </div>
+</div>

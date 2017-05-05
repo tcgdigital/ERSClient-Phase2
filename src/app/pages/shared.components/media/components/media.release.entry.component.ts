@@ -55,13 +55,13 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.currentIncidentId = +this.currentIncidentId;
-        this.currentDepartmentId = +this.initiatedDepartmentId;
+        this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         
         this.formInit();
         this.credential = UtilityService.getCredentialDetails();
         this.dataExchange.Subscribe("OnMediaReleaseUpdate", model => this.onMediaReleaseUpdate(model));
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
     private incidentChangeHandler(incident: KeyValue): void {
@@ -74,7 +74,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe("OnMediaReleaseUpdate");
-        this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('incidentChangefromDashboard');
         this.globalState.Unsubscribe('departmentChange');
     }
 

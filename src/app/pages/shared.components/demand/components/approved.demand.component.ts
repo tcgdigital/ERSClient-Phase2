@@ -296,7 +296,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.createdBy = +this.credential.UserId;
        
         this.getCurrentDepartmentName(this.currentDepartmentId);
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     };
 
@@ -325,7 +325,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     };
 
     ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('incidentChangefromDashboard');
         this.globalState.Unsubscribe('departmentChange');
     }
 }

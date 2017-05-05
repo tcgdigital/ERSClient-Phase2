@@ -17,7 +17,7 @@
             </tr>
             <tr *ngFor="let affectedperson of affectedPeopleForVerification">
                 <td data-title="Verify">
-                    <md-checkbox class="Marght" id="IsVerified" [(ngModel)]="affectedperson.IsVerified" aria-label="Add">
+                    <md-checkbox class="Marght" id="IsVerified" [(ngModel)]="affectedperson.IsVerified" aria-label="Add" [disabled]="isArchive">
                     </md-checkbox>
                 </td>
                 <td data-title="Reference Number">{{affectedperson.TicketNumber}}&nbsp;</td>

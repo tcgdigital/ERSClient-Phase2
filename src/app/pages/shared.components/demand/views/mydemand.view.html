@@ -24,7 +24,7 @@
                     </tr>
                     <tr *ngFor="let demand of mydemands">
                         <td data-title="Demand Type">{{demand.DemandTypeName}}&nbsp;</td>
-                        <td data-title="Demand Description">{{demand.DemandDesc}}&nbsp;<i class="fa fa-info-circle" (click)="openTrail(demand)"></i> </td>
+                        <td data-title="Demand Description"><i (click)="openDemandDetails(demand.DemandId)">{{demand.DemandDesc}}</i>&nbsp;<i class="fa fa-info-circle" (click)="openTrail(demand)"></i> </td>
                         <td data-title="Requester Department">{{demand.RequesterDepartmentName}}&nbsp;</td>
                         <td data-title="Priority">{{demand.Priority}}&nbsp;</td>
                         <td data-title="Schedule Time Close">{{demand.ScheduleTime}}&nbsp;</td>
