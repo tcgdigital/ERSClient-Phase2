@@ -60,7 +60,9 @@ export class AffectedPeopleListComponent implements OnInit {
      */
     openAffectedPersonDetail(affectedPerson: AffectedPeopleToView): void {
         this.affectedPersonModelForStatus = affectedPerson;
+        if(affectedPerson.MedicalStatus != "NA"){
         this.affectedPersonModelForStatus["MedicalStatusToshow"] = this.medicalStatus.find(x => { return x.value == affectedPerson.MedicalStatus; }).value;
+        }
         this.childModal.show();
     }
 
@@ -126,11 +128,11 @@ export class AffectedPeopleListComponent implements OnInit {
         });
         
         this.IsDestroyed = false;
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
     }
 
     ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('incidentChangefromDashboard');
     }
 
     openChatTrails(affectedPersonId: number): void {

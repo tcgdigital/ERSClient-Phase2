@@ -119,22 +119,28 @@
 
                                                                 <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                                                         <label for="ExpectedResolutionTime">Expected Resolution Time:<span class="red">*</span></label>
-                                                                        <input id="ExpectedResolutionTime" type="text" formControlName="ScheduleTime"  class="form-control" placeholder="Enter Requested By" required autofocus
-                                                                        />
+                                                                        <div *ngIf="!isReadonly"> <input id="EmergencyDate" class="form-control" type="text"
+                                                                                        formControlName="ScheduleTime" placeholder="Enter Resolution Time"
+                                                                                        datetime-picker [options]="datepickerOption"
+                                                                                        (selectHandler)="dateTimeSet($event,'EmergencyDate');"
+                                                                                />
+                                                                        </div>
+                                                                        <input id="ExpectedResolutionTime" type="text" formControlName="ScheduleTime" class="form-control" placeholder="Enter Resolution Time"
+                                                                                *ngIf="isReadonly" />
                                                                         <!--<input id="ExpectedResolutionTime" type="text" formControlName="ScheduleTime" style="width: 89%;" />-->
                                                                 </div>
                                                         </div>
                                                         <div class="row">
-                                                        <div class="form-group col-lg-6 col-md-6 col-sm-4">
-                                                                <label for="RequiredLocation">Required Location:<span class="red">*</span></label>
-                                                                <input id="RequiredLocation" type="text" formControlName="RequiredLocation"  class="form-control" placeholder="Enter Requested By" required autofocus
-                                                                />
-                                                                <!--<input id="RequiredLocation" type="text" formControlName="RequiredLocation" style="width: 89%;" />-->
-                                                        </div>
-                                                         <div class="col-lg-6 col-md-6 col-sm-4">
-                                                        <button class="btn btn-primary" type="submit" *ngIf="!isArchive">{{Action}}</button>
-                                                        <button class="btn btn-primary" type="submit" (click)="cancelModal()">Cancel</button>
-                                                         </div>
+                                                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                                                        <label for="RequiredLocation">Required Location:<span class="red">*</span></label>
+                                                                        <input id="RequiredLocation" type="text" formControlName="RequiredLocation" class="form-control" placeholder="Enter Requested By"
+                                                                                required autofocus />
+                                                                        <!--<input id="RequiredLocation" type="text" formControlName="RequiredLocation" style="width: 89%;" />-->
+                                                                </div>
+                                                                <div class="col-lg-6 col-md-6 col-sm-4">
+                                                                        <button class="btn btn-primary" type="submit" *ngIf="!isArchive">{{Action}}</button>
+                                                                        <button class="btn btn-primary" (click)="cancelModal()">Cancel</button>
+                                                                </div>
                                                         </div>
                                                 </form>
 

@@ -1,3 +1,15 @@
 @import '../../theme/component-styles/dashboard/dashboard';
 @import '../../theme/directive-style/widget/summary-widget';
 @import '../../theme/directive-style/widget/message-widget';
+
+.dilld{
+    background: #febc5b;
+    border-radius: 15px;
+    color: #333;
+    font-size: 11px;
+    width: 8%;
+    text-align: center;
+    padding: 3px 0;
+    position: relative;
+    left: -410px;
+}

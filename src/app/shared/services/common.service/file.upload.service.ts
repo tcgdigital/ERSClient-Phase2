@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Observer } from 'rxjs/Rx';
 import { UtilityService } from '../common.service';
 import { FileData } from '../../models/base.model';
- 
+
 @Injectable()
 export class FileUploadService {
     private progressObservable: Observable<number>;
@@ -20,6 +20,7 @@ export class FileUploadService {
         });
    }
  
+
     /**
      * Get file upload progress observable;
      *
@@ -47,7 +48,7 @@ export class FileUploadService {
             const fileUploadPromise: Promise<T> = new Promise((resolve, reject) => {
                 const formData: FormData = new FormData();
                 const xhr: XMLHttpRequest = new XMLHttpRequest();
- 
+
                 if (files[0] instanceof FileData) {
                     for (const file of files) {
                         const fileData: FileData = file as FileData;
@@ -66,12 +67,12 @@ export class FileUploadService {
                     if (xhr.readyState === 4) {
                         if (xhr.status === 200) {
                             resolve((xhr.response!=="") ? JSON.parse(xhr.response) as T : new Object() as T);
+
                         } else {
                             reject(xhr.response);
                         }
                     }
                 };
- 
                 xhr.upload.onprogress = (event: ProgressEvent) => {
                     this.progress = Math.round(event.loaded / event.total * 100);
                 };
@@ -79,7 +80,6 @@ export class FileUploadService {
                 xhr.upload.ontimeout = (event: ProgressEvent) => {
                     this.progressObserver.error('Upload timed out');
                 };
- 
                 xhr.open('POST', url, true);
                 xhr.send(formData);
             });

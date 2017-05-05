@@ -83,9 +83,11 @@ export class PeopleOnBoardWidgetService implements OnInit {
                 });
                  }
                 let enquiredPassengers: PassengerModel[] = [];
+                if(affectedPeoplesList.length > 0){
                 affectedPeoplesList.forEach((people: AffectedPeopleModel) => {
                     enquiredPassengers.push(people.Passenger);
                 });
+                }
                 this.peopleOnBoard.enquiredAffectedPassengerCount = isNaN(enquiredPassengers.length) ? 0 : enquiredPassengers.length;
                 return this.peopleOnBoard;
             })

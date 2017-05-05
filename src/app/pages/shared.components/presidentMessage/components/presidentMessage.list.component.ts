@@ -72,7 +72,7 @@ export class PresidentMessageListComponent implements OnInit, OnDestroy {
 
         this.dataExchange.Subscribe("PresidentMessageModelSaved", model => this.onPresidentMessageSuccess(model));
         this.dataExchange.Subscribe("PresidentMessageModelUpdated", model => this.onPresidentMessageSuccess(model));
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
@@ -89,7 +89,7 @@ export class PresidentMessageListComponent implements OnInit, OnDestroy {
     public ngOnDestroy(): void {
         this.dataExchange.Unsubscribe('PresidentMessageModelSaved');
         this.dataExchange.Unsubscribe('PresidentMessageModelUpdated');
-        //this.globalState.Unsubscribe('incidentChange');
-        //this.globalState.Unsubscribe('departmentChange');
+        this.globalState.Unsubscribe('incidentChangefromDashboard');
+        this.globalState.Unsubscribe('departmentChange');
     }
 }

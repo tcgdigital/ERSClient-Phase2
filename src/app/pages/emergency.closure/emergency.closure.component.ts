@@ -253,7 +253,7 @@ export class EmergencyClosureComponent implements OnInit {
 			this.incidentService.Update(this.incident, this.incident.IncidentId)
 				.subscribe((resultIncident: IncidentModel) => {
 					this.toastrService.success('Closure Report Saved Successfully.', 'Success', this.toastrConfig);					
-					this.emergencyClosureService.GetEmergencyClosureDocumentPDFPath(resultIncident.IncidentId)
+					this.emergencyClosureService.GetEmergencyClosureDocumentPDFPath(this.incident.IncidentId)
 						.map((reportPath: ReportPath) => {
 							this.reportPath = new ReportPath();
 							this.reportPath = reportPath;

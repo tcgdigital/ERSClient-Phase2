@@ -8,37 +8,33 @@ import { DataExchangeService } from '../../services/data.exchange';
 
 @Component({
     selector: 'autocomplete',
-    // host: {
-    //     '(document:click)': 'onDocunentClick($event)',
-    // },
     templateUrl: './autocomplete.view.html',
     encapsulation: ViewEncapsulation.None,
     styleUrls: ['./autocomplete.style.scss']
-
 })
 export class AutocompleteComponent implements OnInit, OnDestroy {
-    @Input('items') Items: Array<KeyValue> = [];
-    @Input() placeholder: string = "Please select";
+    @Input('items') items: KeyValue[] = [];
+    @Input() placeholder: string = 'Please select';
 
     @Output() notify: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
     @Output('InvokeAutoCompleteReset') InvokeAutoCompleteReset: EventEmitter<any> = new EventEmitter();
 
     public elementRef;
-    public filteredList: Array<KeyValue> = [];
+    public filteredList: KeyValue[] = new Array<KeyValue>();
     public query: string = '';
 
     constructor(public myElement: ElementRef, private dataExchange: DataExchangeService<string>) {
         this.elementRef = myElement;
-        this.filteredList = this.Items;
+        this.filteredList = this.items;
     }
 
     filter(): void {
-        if ( this.query != null && this.query != '') {
-            this.filteredList = this.Items.filter(function (el: KeyValue) {
+        if (this.query != null && this.query !== '') {
+            this.filteredList = this.items.filter(function(el: KeyValue) {
                 return el.Key.toLowerCase().indexOf(this.query.toLowerCase()) > -1;
             }.bind(this));
         } else {
-            this.filteredList = this.Items;
+            this.filteredList = this.items;
         }
     }
 
@@ -78,10 +74,10 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.dataExchange.Subscribe('clearAutoCompleteInput', (model) => this.query = model);
-    };
+    }
 
     ngOnDestroy() {
         this.dataExchange.Unsubscribe('clearAutoCompleteInput');
-    };
+    }
 }
 

@@ -35,6 +35,8 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
     currentDepartmentId: number;
     showAdd: boolean;
     credential: AuthModel;
+    hideMessageError: boolean = true;
+    hideRemarksError: boolean = true;
 
     /**
      * Creates an instance of PresidentMessageEntryComponent.
@@ -63,14 +65,14 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
         this.currentDepartmentId = this.initiatedDepartmentId;
         this.credential = UtilityService.getCredentialDetails();
         this.dataExchange.Subscribe("OnPresidentMessageUpdate", model => this.onPresidentMessageUpdate(model));
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe("OnPresidentMessageUpdate");
-        //this.globalState.Unsubscribe('incidentChange');
-        //this.globalState.Unsubscribe('departmentChange');
+        this.globalState.Unsubscribe('incidentChangefromDashboard');
+        this.globalState.Unsubscribe('departmentChange');
     }
 
     private incidentChangeHandler(incident: KeyValue): void {
@@ -91,15 +93,40 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
     }
 
     save(): void {
-        if (this.form.valid) {
+        if(this.PresidentsMessage.Message == "" || this.PresidentsMessage.Message == null || this.PresidentsMessage.Message == undefined)
+        {
+            this.hideMessageError = false;
+        } 
+        else if(this.PresidentsMessage.Remarks == "" || this.PresidentsMessage.Remarks == null || this.PresidentsMessage.Remarks == undefined)
+        {
+            this.hideMessageError = true;
+            this.hideRemarksError = false;
+        } 
+        else
+        {
+            this.hideMessageError = true;
+            this.hideRemarksError = true;
             this.PresidentsMessage.IsPublished = false;
             this.Action = "Save";
             this.CreateOrUpdatePresidentMessage();
-        }
+        }        
+    
     }
 
     publish(): void {
-        if (this.form.valid) {
+
+        if(this.PresidentsMessage.Message == "" || this.PresidentsMessage.Message == null || this.PresidentsMessage.Message == undefined)
+        {
+            this.hideMessageError = false;
+        } 
+        else if(this.PresidentsMessage.Remarks == "" || this.PresidentsMessage.Remarks == null || this.PresidentsMessage.Remarks == undefined)
+        {
+            this.hideMessageError = true;
+            this.hideRemarksError = false;
+        } 
+       else {
+            this.hideMessageError = true;
+            this.hideRemarksError = true;
             this.PresidentsMessage.IsPublished = true;
             this.PresidentsMessage.PublishedBy = +this.credential.UserId;;
             this.date = new Date();
@@ -155,6 +182,8 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
     cancel(): void {
         this.InitiateForm();
         this.showAdd = false;
+        this.hideMessageError = true;
+        this.hideRemarksError = true; 
     };
 
     private InitiateForm(): void {

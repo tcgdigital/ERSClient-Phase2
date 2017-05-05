@@ -26,7 +26,7 @@ export interface IUploadDocuments {
 export interface IMedicalStatus {
     key: number;
     value: string;
-    caption: string
+    caption: string;
 }
 export interface IRequesterType {
     value: string;
@@ -34,74 +34,74 @@ export interface IRequesterType {
     caption: string;
 }
 export class GlobalConstants {
-    public static EXTERNAL_URL: string = 'http://localhost:5001/';
+    public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
     public static GRANT_TYPE: string = 'password';
     public static ODATA: string = 'odata';
     public static API: string = 'api';
     public static TOKEN: string = 'token';
-    public static BATCH: string = 'odata/$batch'
+    public static BATCH: string = 'odata/$batch';
     public static ACCESS_TOKEN: string = 'access_token';
 
     public static EmergencyCategories: IKeyValue[] = [
-        { value: "FlightRelated", key: 1 },
-        { value: "NonFlightRelated", key: 2 }
+        { value: 'FlightRelated', key: 1 },
+        { value: 'NonFlightRelated', key: 2 }
     ];
 
     public static ActiveFlag: IKeyValue[] = [
-        { value: "Active", key: 0 },
-        { value: "InActive", key: 1 }
+        { value: 'Active', key: 0 },
+        { value: 'InActive', key: 1 }
     ];
 
     public static TemplateMediaType: IKeyValue[] = [
-        { value: "Sms", key: 1 },
-        { value: "PushNotification", key: 2 },
-        { value: "Email", key: 3 },
-        { value: "Pdf", key: 4 }
+        { value: 'Sms', key: 1 },
+        { value: 'PushNotification', key: 2 },
+        { value: 'Email', key: 3 },
+        { value: 'Pdf', key: 4 }
     ];
 
     public static EnquiryType: IEnquiryType[] = [
         {
-            value: "1",
-            caption: "Passenger",
-            text: "Passenger related"
+            value: '1',
+            caption: 'Passenger',
+            text: 'Passenger related'
         },
         {
-            value: "2",
-            caption: "Cargo",
-            text: "Cargo related"
+            value: '2',
+            caption: 'Cargo',
+            text: 'Cargo related'
         },
         {
-            value: "3",
+            value: '3',
             caption: 'Media',
-            text: "Media related",
+            text: 'Media related',
         },
         {
-            value: "4",
+            value: '4',
             caption: 'Others',
-            text: "Others",
+            text: 'Others',
         },
         {
-            value: "5",
+            value: '5',
             caption: 'Crew',
-            text: "Crew",
+            text: 'Crew',
         }];
 
     public static Priority: IPriority[] = [
         {
-            value: "1",
-            caption: "High",
-            text: "Priority High"
+            value: '1',
+            caption: 'High',
+            text: 'Priority High'
         },
         {
-            value: "2",
+            value: '2',
             caption: 'Medium',
-            text: "Priority Medium",
+            text: 'Priority Medium',
         },
         {
-            value: "3",
-            caption: "Low",
-            text: "Priority Low"
+            value: '3',
+            caption: 'Low',
+            text: 'Priority Low'
         }
     ];
 
@@ -163,29 +163,29 @@ export class GlobalConstants {
         }
     ];
 
-    public static InvolvedPartyType: Object = [
-        { value: "Flight", key: 1 },
-        { value: "NonFlight", key: 2 }
+    public static InvolvedPartyType: object = [
+        { value: 'Flight', key: 1 },
+        { value: 'NonFlight', key: 2 }
     ];
 
     public static TargetDepartmentTravel: number = 3;
     public static TargetDepartmentAdmin: number = 4;
     public static TargetDepartmentCrew: number = 6;
     public static DemandTypeId: number = 1;
-    public static RequiredLocation: string = "Office";
+    public static RequiredLocation: string = 'Office';
     public static ScheduleTimeForCallback: number = 75;
     public static ScheduleTimeForTravel: number = 90;
     public static ScheduleTimeForAdmin: number = 60;
     public static ScheduleTimeForDemandForCrew: number = 70;
-    public static RequesterTypeDemand: string = "Demand";
-    public static RequesterTypeEnquiry: string = "Enquiry";
-    public static InteractionDetailsTypeDemand: string = "DemandType";
-    public static InteractionDetailsTypeEnquiry: string = "EnquiryType";
+    public static RequesterTypeDemand: string = 'Demand';
+    public static RequesterTypeEnquiry: string = 'Enquiry';
+    public static InteractionDetailsTypeDemand: string = 'DemandType';
+    public static InteractionDetailsTypeEnquiry: string = 'EnquiryType';
 
     public static MedicalStatus: IMedicalStatus[] = [
         {
             key: 1,
-            value: 'Injury',
+            value: 'Minorinjurycareneeded',
             caption: 'Minor Injury'
         },
         {
@@ -202,27 +202,32 @@ export class GlobalConstants {
             key: 4,
             value: 'Deceased',
             caption: 'Deceased'
+        },
+        {
+            key: 5,
+            value : 'Immediatecare',
+            caption : 'Immediatecare'
         }
     ];
 
     public static RequesterType: IRequesterType[] = [
         {
-            value: "1",
+            value: '1',
             enumtype: 'PDA',
             caption: 'PDA'
         },
         {
-            value: "2",
+            value: '2',
             enumtype: 'NOK',
             caption: 'NOK'
         },
         {
-            value: "3",
+            value: '3',
             enumtype: 'Staff',
             caption: 'Staff'
         },
         {
-            value: "4",
+            value: '4',
             enumtype: 'Others',
             caption: 'Others'
         }
@@ -230,7 +235,7 @@ export class GlobalConstants {
 }
 
 export enum DataModels {
-    DEPARTMENT = <any>'departments',
+    DEPARTMENT = 'departments' as any,
 }
 
 export const LayoutSizes = {
@@ -244,7 +249,7 @@ export const WEBREQUEST = {
     PUT: 'PUT',
     PATCH: 'PATCH',
     DELETE: 'DELETE'
-}
+};
 
 export const IMAGES_ROOT = 'assets/images/';
 

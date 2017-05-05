@@ -13,38 +13,38 @@ import { KeyValue } from '../../models/base.model';
     templateUrl: './dropdown.view.html',
     styleUrls: ['./dropdown.style.scss']
 })
-export class CustomDropdownComponent implements AfterContentInit, OnChanges,OnInit {
+export class CustomDropdownComponent implements AfterContentInit, OnChanges, OnInit {
     @Input() dataItems: KeyValue[];
     @Input() initialValue: number = 0;
     @Input() placeholder: string;
     @Output() onChange: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
 
+    protected _onRouteChange: Subscription;
     private $selfElement: JQuery;
     private $placeholder: JQuery;
     private $options: JQuery;
     private value: KeyValue;
     private index: number = -1;
-    protected _onRouteChange: Subscription;
     private showdropdown: boolean = false;
 
     /**
      * Creates an instance of CustomDropdownComponent.
-     * @param {ElementRef} elementRef 
-     * 
+     * @param {ElementRef} elementRef
+     *
      * @memberOf CustomDropdownComponent
      */
-    constructor(private elementRef: ElementRef,private _router: Router) { }
-    
+    constructor(private elementRef: ElementRef, private _router: Router) { }
+
     ngOnInit() {
         //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
         //Add 'implements OnInit' to the class.
-         this._onRouteChange = this._router.events.subscribe((event) => {
+        this._onRouteChange = this._router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
-                if((event.url.indexOf("archivedashboard")>-1) && (this.placeholder.indexOf("Incident")>-1))
-                {
-                        this.showdropdown = true;
+                if (((event.url.indexOf("archivedashboard") > -1) && (this.placeholder.indexOf("Incident") > -1)) || ((event.url.indexOf("landing") > -1) && (this.placeholder.indexOf("Incident") > -1))) {
+
+                    this.showdropdown = true;
                 }
-                else{
+                else {
                     this.showdropdown = false;
                 }
             }
@@ -58,13 +58,13 @@ export class CustomDropdownComponent implements AfterContentInit, OnChanges,OnIn
     }
 
     public onDropdownClick($event: JQueryEventObject): void {
-        let $self = jQuery($event.currentTarget);
+        const $self = jQuery($event.currentTarget);
         $self.toggleClass('active');
         return;
     }
 
     public onItemClick($event: JQueryEventObject, dataItem: KeyValue): void {
-        let $self = jQuery($event.currentTarget);
+        const $self = jQuery($event.currentTarget);
         this.value = dataItem;
         this.index = $self.index();
         this.$placeholder.text(`${this.placeholder}: ${this.value.Key.substring(0, 10)}`);
@@ -74,7 +74,7 @@ export class CustomDropdownComponent implements AfterContentInit, OnChanges,OnIn
     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
         if (this.initialValue > 0 && this.dataItems.length > 0
             && changes['initialValue'].currentValue !== changes['initialValue'].previousValue) {
-            let selected: KeyValue = this.dataItems.find(x => x.Value === this.initialValue);
+            const selected: KeyValue = this.dataItems.find((x) => x.Value === this.initialValue);
             this.$placeholder.text(`${this.placeholder}: ${selected.Key.substring(0, 10)}`);
         }
     }
@@ -85,7 +85,7 @@ export class CustomDropdownComponent implements AfterContentInit, OnChanges,OnIn
         let inside = false;
         do {
             if (this.elementRef.nativeElement.contains(clickedComponent) ||
-            this.elementRef.nativeElement === clickedComponent) {
+                this.elementRef.nativeElement === clickedComponent) {
                 inside = true;
             }
             clickedComponent = clickedComponent.parentNode;

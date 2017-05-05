@@ -279,7 +279,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         
         this.getAllDepartments();
 
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     };
 
@@ -295,7 +295,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     };
 
     ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('incidentChangefromDashboard');
         this.globalState.Unsubscribe('departmentChange');
     }
 

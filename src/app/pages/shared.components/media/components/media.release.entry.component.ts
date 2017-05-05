@@ -34,6 +34,8 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     currentDepartmentId: number;
     showAdd: boolean;
     credential: AuthModel;
+    hideMessageError: boolean = true;
+    hideRemarksError: boolean = true;
 
     /**
      * Creates an instance of MediaQueryEntryComponent.
@@ -60,7 +62,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
         this.formInit();
         this.credential = UtilityService.getCredentialDetails();
         this.dataExchange.Subscribe("OnMediaReleaseUpdate", model => this.onMediaReleaseUpdate(model));
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
     private incidentChangeHandler(incident: KeyValue): void {
@@ -73,8 +75,8 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe("OnMediaReleaseUpdate");
-        //this.globalState.Unsubscribe('incidentChange');
-        //this.globalState.Unsubscribe('departmentChange');
+        this.globalState.Unsubscribe('incidentChangefromDashboard');
+        this.globalState.Unsubscribe('departmentChange');
     }
 
     onMediaReleaseUpdate(mediaModel: MediaModel): void {
@@ -87,23 +89,47 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     }
 
     save(): void {
-        if (this.form.valid) {
+        if(this.media.Message == "" || this.media.Message == null || this.media.Message == undefined)
+        {
+            this.hideMessageError = false;
+        } 
+        else if(this.media.Remarks == "" || this.media.Remarks == null || this.media.Remarks == undefined)
+        {
+            this.hideMessageError = true;
+            this.hideRemarksError = false;
+        } 
+        else
+        {   
+            this.hideMessageError = true;
+            this.hideRemarksError = true;    
             this.media.IsPublished = false;
             this.Action = "Save";
             this.CreateOrUpdateMediaQuery();
         }
+        
     }
 
     publish(): void {
-        if (this.form.valid) {
+        if(this.media.Message == "" || this.media.Message == null || this.media.Message == undefined)
+        {
+            this.hideMessageError = false;
+        } 
+        else if(this.media.Remarks == "" || this.media.Remarks == null || this.media.Remarks == undefined)
+        {
+            this.hideMessageError = true;
+            this.hideRemarksError = false;
+        } 
+        else
+        {
+            this.hideMessageError = true;
+            this.hideRemarksError = true;
             this.media.IsPublished = true;
             this.media.PublishedBy = +this.credential.UserId;;
             this.date = new Date();
             this.media.PublishedOn = this.date;
             //this.Action = "Publish";
-            this.CreateOrUpdateMediaQuery();
-            
-        }
+            this.CreateOrUpdateMediaQuery();      
+        }            
     }
 
     private CreateOrUpdateMediaQuery(): void {
@@ -151,7 +177,9 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
 
     cancel(): void {
         this.formInit();
-        this.showAdd = false
+        this.showAdd = false;
+        this.hideMessageError = true;
+        this.hideRemarksError = true; 
     }
 
     private formInit(): void {

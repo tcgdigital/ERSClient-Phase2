@@ -50,6 +50,8 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     protected _onRouteChange: Subscription;
     isArchive : boolean = false;
     IsAllSelected: boolean = false;
+    hideMessageError: boolean = true;
+    hideDeptError: boolean = true;
    
 
 
@@ -75,10 +77,12 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        debugger;
         this.initiatedDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.incidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentIncidentId = this.incidentId;       
         this.currentDepartmentId = this.initiatedDepartmentId;
+        this.initiateForm();
         this._onRouteChange = this._router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
                 if (event.url.indexOf("archivedashboard") > -1) {
@@ -99,11 +103,10 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         this.broadcast.IsSubmitted = false;
         this.broadcast.Priority = this.priorities.find(x => x.value == '1').caption;
         this.broadcast.DepartmentBroadcasts = [];
-        this.Action = 'Save';
-        this.initiateForm();
+        this.Action = 'Save';       
 
         this.dataExchange.Subscribe('OnBroadcastUpdate', model => this.onBroadcastUpdate(model));
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
@@ -139,14 +142,14 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe('OnBroadcastUpdate');
-        //this.globalState.Unsubscribe('incidentChange');
-        //this.globalState.Unsubscribe('departmentChange');
+        this.globalState.Unsubscribe('incidentChangefromDashboard');
+        this.globalState.Unsubscribe('departmentChange');
     }
 
     initiateForm(): void {
         this.form = new FormGroup({
             BroadcastId: new FormControl(0),
-            Message: new FormControl('', [Validators.required, Validators.maxLength(1000)]),
+            Message: new FormControl('', [Validators.required, Validators.maxLength(5)]),
             SelectAllDepartment: new FormControl(0),
             BroadCastDepartmentMappings: new FormControl(0),
             Priority: new FormControl(this.priorities.find(x => x.value == '1').caption)
@@ -186,24 +189,36 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     }
 
     save(isSubmitted: boolean): void {
-        this.broadcast.IsSubmitted = isSubmitted;
-        if (isSubmitted) {
-            this.broadcast.SubmittedOn = new Date();
+        debugger;    
+
+        if(this.broadcast.Message == null || this.broadcast.Message == "" || this.broadcast.Message == undefined)
+        {
+            this.hideMessageError = false;
         }
-        this.broadcast.DepartmentBroadcasts = []
+        else if(this.selectedcount <= 0){
+            this.hideMessageError = true;
+            this.hideDeptError = false;
+        }
 
-        this.BroadCastDepartmentMappings.forEach(item => {
-            if (item.IsSelected) {
-                this.deptBroadcast = new DepartmentBroadcastModel();
-                if (this.broadcast.BroadcastId !== 0) {
-                    this.deptBroadcast.BroadcastId = this.broadcast.BroadcastId;
-                }
-                this.deptBroadcast.DepartmentId = item.TargetDepartmentId;
-                this.broadcast.DepartmentBroadcasts.push(this.deptBroadcast);
+        else {
+            this.hideMessageError = true;
+            this.hideDeptError = true;
+            this.broadcast.IsSubmitted = isSubmitted;
+            if (isSubmitted) {
+                this.broadcast.SubmittedOn = new Date();
             }
-        });
+            this.broadcast.DepartmentBroadcasts = []
 
-        if (this.form.valid) {
+            this.BroadCastDepartmentMappings.forEach(item => {
+                if (item.IsSelected) {
+                    this.deptBroadcast = new DepartmentBroadcastModel();
+                    if (this.broadcast.BroadcastId !== 0) {
+                        this.deptBroadcast.BroadcastId = this.broadcast.BroadcastId;
+                    }
+                    this.deptBroadcast.DepartmentId = item.TargetDepartmentId;
+                    this.broadcast.DepartmentBroadcasts.push(this.deptBroadcast);
+                }
+            });
             this.CreateOrUpdateBroadcast();
         }
     }
@@ -214,11 +229,13 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         this.broadcast.IncidentId = this.currentIncidentId;
         this.broadcast.InitiateDepartmentId = this.currentDepartmentId;
         if (this.broadcast.BroadcastId == 0) {
+            debugger;
             this.broadcast.CreatedBy = +this.credential.UserId;
             this.broadcastService.Create(this.broadcast)
                 .subscribe((response: BroadCastModel) => {
                     this.toastrService.success('Broadcast saved successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish('BroadcastModelSaved', response);
+                    debugger;
                     if(this.broadcast.IsSubmitted){
                         this.globalState.NotifyDataChanged('BroadcastPublished', response);
                     }
@@ -229,9 +246,11 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
                 });
         }
         else {
+            debugger;
             this.broadcastService.Create(this.broadcast)
                 .subscribe((response: BroadCastModel) => {
                     this.toastrService.success('Broadcast edited successfully.', 'Success', this.toastrConfig);
+                    debugger;
                     this.dataExchange.Publish('BroadcastModelUpdated', response);
                     if(this.broadcast.IsSubmitted){
                         this.globalState.NotifyDataChanged('BroadcastPublished', this.broadcast);
@@ -245,6 +264,8 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     }
 
     onBroadcastUpdate(broadcastModel: BroadCastModel): void {
+        this.hideMessageError = true;
+        this.hideDeptError = true;
         this.broadcast = broadcastModel;
         this.broadcast.IncidentId = this.currentIncidentId;
         this.broadcast.IsUpdated = true;
@@ -265,6 +286,8 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     }
 
     cancel(): void {
+        this.hideMessageError = true;
+        this.hideDeptError = true;
         this.broadcast = new BroadCastModel();
         this.broadcast.DepartmentBroadcasts = [];
         this.showAdd = false;

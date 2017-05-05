@@ -8,7 +8,7 @@ export class CalendarOptions {
 
     /**
      * Creates an instance of CalendarOptions.
-     * 
+     *
      * @memberOf CalendarOptions
      */
     constructor() {
@@ -22,19 +22,19 @@ export class CalendarOptions {
 }
 
 export class CalendarLanguage {
-    days: Array<string>;
-    daysMin: Array<string>;
-    months: Array<string>;
+    days: string[];
+    daysMin: string[];
+    months: string[];
 
     /**
      * Creates an instance of CalendarLanguage.
-     * @param {Array<string>} days 
-     * @param {Array<string>} daysMin 
-     * @param {Array<string>} months 
-     * 
+     * @param {Array<string>} days
+     * @param {Array<string>} daysMin
+     * @param {Array<string>} months
+     *
      * @memberOf CalendarLanguage
      */
-    constructor(days: Array<string>, daysMin: Array<string>, months: Array<string>) {
+    constructor(days: string[], daysMin: string[], months: string[]) {
         this.days = days;
         this.daysMin = daysMin;
         this.months = months;
@@ -47,9 +47,9 @@ export class CalendarMonth {
 
     /**
      * Creates an instance of CalendarMonth.
-     * @param {any} month 
-     * @param {any} year 
-     * 
+     * @param {any} month
+     * @param {any} year
+     *
      * @memberOf CalendarMonth
      */
     constructor(month, year) {
@@ -75,12 +75,12 @@ export class CalendarDay {
 
     /**
      * Creates an instance of CalendarDay.
-     * @param {number} date 
-     * @param {boolean} [weekend=false] 
-     * @param {boolean} [other=false] 
-     * @param {boolean} [current=false] 
-     * @param {boolean} [selected=false] 
-     * 
+     * @param {number} date
+     * @param {boolean} [weekend=false]
+     * @param {boolean} [other=false]
+     * @param {boolean} [current=false]
+     * @param {boolean} [selected=false]
+     *
      * @memberOf CalendarDay
      */
     constructor(date: number, weekend: boolean = false, other: boolean = false, current: boolean = false, selected: boolean = false) {
@@ -97,8 +97,8 @@ export class CalendarWeekend {
 
     /**
      * Creates an instance of CalendarWeekend.
-     * @param {number} [day=0] 
-     * 
+     * @param {number} [day=0]
+     *
      * @memberOf CalendarWeekend
      */
     constructor(day: number = 0) {
@@ -108,10 +108,10 @@ export class CalendarWeekend {
     progress(): boolean {
         let weekend = false;
 
-        if (this.day == 5 /* Saturday */) {
+        if (this.day === 5 /* Saturday */) {
             weekend = true;
             ++this.day;
-        } else if (this.day == 6 /* Sunday */) {
+        } else if (this.day === 6 /* Sunday */) {
             weekend = true;
             this.day = 0; // it's a new week!
         } else {
