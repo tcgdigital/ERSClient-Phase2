@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, Input, ViewChild } from '@angular/core';
+import { Component, OnInit,SimpleChange, ViewEncapsulation, Input, ViewChild } from '@angular/core';
 import {
     DemandReceivedSummaryModel,
     DemandReceivedModel,
@@ -35,6 +35,19 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit {
     public ngOnInit(): void {
         this.demandReceivedSummary = new DemandReceivedSummaryModel();
         this.demandReceivedSummary = this.demandReceivedSummaryWidgetService.GetDemandReceivedCount(this.incidentId, this.departmentId);
+    }
+
+    public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
+        if(changes['incidentId'] !== undefined && (changes['incidentId'].currentValue !==
+            changes['incidentId'].previousValue) &&
+            changes['incidentId'].previousValue !== undefined){
+        this.demandReceivedSummary = this.demandReceivedSummaryWidgetService.GetDemandReceivedCount(this.incidentId, this.departmentId);
+        }
+        if(changes['departmentId'] !== undefined && (changes['departmentId'].currentValue !==
+            changes['departmentId'].previousValue) &&
+            changes['departmentId'].previousValue !== undefined){
+        this.demandReceivedSummary = this.demandReceivedSummaryWidgetService.GetDemandReceivedCount(this.incidentId, this.departmentId);
+        }
     }
 
 
