@@ -38,11 +38,11 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
     @ViewChild('invalidPassengersModal') public invalidPassengersModal: ModalDirective;
     @ViewChild('invalidCargoModal') public invalidCargoModal: ModalDirective;
 
-    passengerTemplatePath: string = "/assets/static-content/Passengers.xlsx"
-    cargoTemplatePath: string = "/assets/static-content/Cargo.xlsx";
-    crewTemplatePath: string = "/assets/static-content/Crews.xlsx";
+    passengerTemplatePath: string = './assets/static-content/Passengers.xlsx';
+    cargoTemplatePath: string = './assets/static-content/Cargo.xlsx';
+    crewTemplatePath: string = './assets/static-content/Crews.xlsx';
 
-    filesToUpload: Array<FileData>;
+    filesToUpload: FileData[];
     objFileData: FileData;
     form: FormGroup;
     disableUploadButton: boolean;

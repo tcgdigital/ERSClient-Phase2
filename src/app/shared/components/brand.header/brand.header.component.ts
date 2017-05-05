@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { GlobalStateService } from '../../services';
 import { Router } from '@angular/router';
-import { AuthenticationService } from "../../../pages/login/components/authentication.service";
+import { AuthenticationService } from '../../../pages/login/components/authentication.service';
 
 @Component({
     selector: '[brand-header]',
@@ -20,20 +20,19 @@ export class BrandHeaderComponent implements OnInit {
     @Output() contactClicked: EventEmitter<any> = new EventEmitter<any>();
     @Output() helpClicked: EventEmitter<any> = new EventEmitter<any>();
     @Output() logoutClicked: EventEmitter<any> = new EventEmitter<any>();
-    public HelpFileFath:string;
-    public FileName:string;
+    public HelpFileFath: string;
+    public FileName: string;
+    public logoImage: string = 'assets/images/logo.png';
+    public logoUrl: string = '#';
     constructor(private router: Router, private authenticationService: AuthenticationService) {
     }
 
     ngOnInit(): void {
-        let DocumentFilePath = "ERS Guide.pptx";
-        this.HelpFileFath = "../../../app/document/" + DocumentFilePath.replace(/^.*[\\\/]/, '');
-        let Extension = DocumentFilePath.replace(/^.*[\\\/]/, '').split('.').pop();
-        this.FileName = "HelpFile." + Extension;
+        const DocumentFilePath = 'ERS Guide.pptx';
+        this.HelpFileFath = './assets/static-content/' + DocumentFilePath.replace(/^.*[\\\/]/, '');
+        const Extension = DocumentFilePath.replace(/^.*[\\\/]/, '').split('.').pop();
+        this.FileName = 'HelpFile.' + Extension;
     }
-
-    public logoImage: string = 'assets/images/logo.png';
-    public logoUrl: string = '#';
 
     public onHambargerClicked($event): void {
         console.log('brand header click');
@@ -52,6 +51,6 @@ export class BrandHeaderComponent implements OnInit {
         this.logoutClicked.emit($event);
         this.authenticationService.Logout();
         this.router.navigate(['login']);
-        //sessionStorage.clear();
+        // sessionStorage.clear();
     }
 }
