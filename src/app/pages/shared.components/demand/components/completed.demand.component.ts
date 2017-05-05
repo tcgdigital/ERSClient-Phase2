@@ -225,6 +225,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
                     });
             };
         }
+
         else{
             this.toastrService.error("There is no completed request.");
         }
