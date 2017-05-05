@@ -68,6 +68,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.currentIncident = incident;
         this.currentIncidentId = incident.Value;
         this.getIncident(incident.Value);
+        this.globalState.NotifyDataChanged('incidentChangefromDashboard', incident);
     }
 
     private departmentChangeHandler(department: KeyValue): void {

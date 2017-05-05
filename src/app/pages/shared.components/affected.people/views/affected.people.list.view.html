@@ -82,7 +82,7 @@
                         <input value="{{affectedPersonModelForStatus.Remarks}}" [(ngModel)]="affectedPersonModelForStatus.Remarks" class="form-control"
                             type="text" />
                     </div>
-                    <div class="col-lg-6 col-sm-12 col-md-6">
+                    <div class="col-lg-6 col-sm-12 col-md-6" *ngIf="!isArchive">
                         <div class="buttonholder">
                         <button class="btn btn-primary" type="button" (click)="saveUpdateAffectedPerson(affectedPersonModelForStatus)">Ok</button>
                         <button class="btn btn-primary" type="button" (click)="cancelUpdate(affectedPersonModelForStatus)">Cancel</button>

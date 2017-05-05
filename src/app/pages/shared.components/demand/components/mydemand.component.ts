@@ -186,6 +186,10 @@ export class MyDemandComponent implements OnInit, OnDestroy {
         this.getDemandTrails(demand.DemandId);
     };
 
+    openDemandDetails(demandId: number) : void{
+            this.dataExchange.Publish("OnDemandDetailClick", demandId);
+    }
+
     canceltrail(demand) {
         demand["showTrails"] = false;
     }
@@ -214,7 +218,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
         this.Remarks = "";
        
         this.dataExchange.Subscribe("DemandAddedUpdated", model => this.demandUpdated(model));
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     };
 
@@ -236,7 +240,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     };
 
     ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('incidentChangefromDashboard');
         this.globalState.Unsubscribe('departmentChange');
         this.globalState.Unsubscribe('DemandAddedUpdated');
     }

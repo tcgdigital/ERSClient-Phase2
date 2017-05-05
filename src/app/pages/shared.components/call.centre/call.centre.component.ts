@@ -99,11 +99,11 @@ export class EnquiryComponent implements OnInit {
     };
 
     iscrew(item: AffectedPeopleToView): any {
-        return item.IsCrew === true;
+        return item.IsCrew == true;
     };
 
     ispassenger(item: AffectedPeopleToView): any {
-        return item.IsCrew === false;
+        return item.IsCrew == false;
     };
 
     getPassengersCrews(currentIncident): void {
@@ -175,32 +175,32 @@ export class EnquiryComponent implements OnInit {
             let type = isCallback ? 'Call Back' : (isTravelRequest ? 'Travel' : (isAdmin ? 'Admin' : 'Crew'));
             let scheduleTime = isCallback ? GlobalConstants.ScheduleTimeForCallback : (isTravelRequest ? GlobalConstants.ScheduleTimeForTravel
                 : (isAdmin ? GlobalConstants.ScheduleTimeForAdmin : GlobalConstants.ScheduleTimeForDemandForCrew));
-            this.demand.AffectedPersonId = (this.enquiry.EnquiryType === 1 || this.enquiry.EnquiryType === 5) ?
+            this.demand.AffectedPersonId = (this.enquiry.EnquiryType == 1 || this.enquiry.EnquiryType == 5) ?
                 this.enquiry.AffectedPersonId : 0;
-            this.demand.AffectedObjectId = (this.enquiry.EnquiryType === 2) ?
+            this.demand.AffectedObjectId = (this.enquiry.EnquiryType == 2) ?
                 this.enquiry.AffectedObjectId : 0;
             this.selctedEnquiredPerson = (this.demand.AffectedPersonId !== 0) ?
-                this.affectedPeople.find(x => { return x.AffectedPersonId === this.demand.AffectedPersonId; }) : null;
+                this.affectedPeople.find(x => { return x.AffectedPersonId == this.demand.AffectedPersonId; }) : null;
             this.selctedEnquiredObject = (this.demand.AffectedObjectId !== 0) ?
-                this.affectedObjects.find(x => { return x.AffectedObjectId === this.demand.AffectedObjectId; }) : null;
-            let personName = (this.selctedEnquiredPerson !== null) ? (this.enquiry.EnquiryType === 1 ?
+                this.affectedObjects.find(x => { return x.AffectedObjectId == this.demand.AffectedObjectId; }) : null;
+            let personName = (this.selctedEnquiredPerson !== null) ? (this.enquiry.EnquiryType == 1 ?
                 this.selctedEnquiredPerson.PassengerName : this.selctedEnquiredPerson.CrewName) : '';
             this.demand = new DemandModel();
-            this.demand.AffectedPersonId = (this.enquiry.EnquiryType === 1 || this.enquiry.EnquiryType === 5) ?
+            this.demand.AffectedPersonId = (this.enquiry.EnquiryType == 1 || this.enquiry.EnquiryType == 5) ?
                 this.enquiry.AffectedPersonId : null;
-            this.demand.AffectedObjectId = (this.enquiry.EnquiryType === 2) ?
+            this.demand.AffectedObjectId = (this.enquiry.EnquiryType == 2) ?
                 this.enquiry.AffectedObjectId : null;
-            this.demand.AffectedId = (this.enquiry.EnquiryType === 1 || this.enquiry.EnquiryType === 5) ?
-                this.affectedPeople.find(x => { return x.AffectedPersonId === this.demand.AffectedPersonId; }).AffectedId :
-                ((this.enquiry.EnquiryType === 2) ? this.affectedObjects.find(x => { return x.AffectedObjectId === this.demand.AffectedObjectId; }).AffectedId : 0);
-            this.demand.AWB = (this.enquiry.EnquiryType === 2) ? this.affectedObjects.find(x => { return x.AffectedObjectId === this.demand.AffectedObjectId; }).AWB : null;
+            this.demand.AffectedId = (this.enquiry.EnquiryType == 1 || this.enquiry.EnquiryType == 5) ?
+                this.affectedPeople.find(x => { return x.AffectedPersonId == this.demand.AffectedPersonId; }).AffectedId :
+                ((this.enquiry.EnquiryType == 2) ? this.affectedObjects.find(x => { return x.AffectedObjectId == this.demand.AffectedObjectId; }).AffectedId : 0);
+            this.demand.AWB = (this.enquiry.EnquiryType == 2) ? this.affectedObjects.find(x => { return x.AffectedObjectId == this.demand.AffectedObjectId; }).AWB : null;
             this.demand.ContactNumber = this.caller.ContactNumber;
             this.demand.TargetDepartmentId = isCallback ? this.currentDepartmentId : (isTravelRequest ? GlobalConstants.TargetDepartmentTravel
                 : (isAdmin ? GlobalConstants.TargetDepartmentAdmin : GlobalConstants.TargetDepartmentCrew));
             this.demand.RequesterDepartmentId = this.currentDepartmentId;
-            this.demand.RequesterParentDepartmentId = this.departments.find(x => { return x.DepartmentId === this.currentDepartmentId; }).ParentDepartmentId;
+            this.demand.RequesterParentDepartmentId = this.departments.find(x => { return x.DepartmentId == this.currentDepartmentId; }).ParentDepartmentId;
             this.demand.DemandCode = 'DEM-' + UtilityService.UUID();
-            this.demand.DemandDesc = (this.enquiry.EnquiryType === 1 || this.enquiry.EnquiryType === 5) ?
+            this.demand.DemandDesc = (this.enquiry.EnquiryType == 1 || this.enquiry.EnquiryType == 5) ?
                 (type + ' Requested for ' + personName + ' (' + this.selctedEnquiredPerson.TicketNumber + ')') : (type + ' Requested for ' + this.selctedEnquiredObject.AWB + ' (' + this.selctedEnquiredObject.TicketNumber + ')');
             this.demand.DemandStatusDescription = 'New request by ' + this.currentDepartmentName;
             this.demand.DemandTypeId = GlobalConstants.DemandTypeId;
@@ -211,7 +211,7 @@ export class EnquiryComponent implements OnInit {
             this.demand.IsRejected = false;
             this.demand.PDATicketNumber = (this.selctedEnquiredPerson !== null) ? this.selctedEnquiredPerson.TicketNumber
                 : (this.selctedEnquiredObject != null ? this.selctedEnquiredObject.TicketNumber : null);
-            this.demand.Priority = GlobalConstants.Priority.find(x => x.value === '1').caption;
+            this.demand.Priority = GlobalConstants.Priority.find(x => x.value == '1').caption;
             this.demand.RequestedBy = this.credential.UserName;
             this.demand.CreatedBy = +this.credential.UserId;
             this.demand.RequiredLocation = GlobalConstants.RequiredLocation;
@@ -244,7 +244,7 @@ export class EnquiryComponent implements OnInit {
         if (this.enquiry.IsTravelRequest) {
             this.SetDemands(false, true, false, false);
         }
-        if (this.enquiry.EnquiryType === 5) {
+        if (this.enquiry.EnquiryType == 5) {
             this.SetDemands(false, false, false, true);
         }
 
@@ -300,7 +300,7 @@ export class EnquiryComponent implements OnInit {
         this.getCargo(this.currentIncident);
         this.getDepartments();
         this.enquiry.EnquiryType = this.enquiryTypes[0].value;
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     };
 
@@ -317,7 +317,7 @@ export class EnquiryComponent implements OnInit {
     }
 
     ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('incidentChangefromDashboard');
         this.globalState.Unsubscribe('departmentChange');
     }
 }

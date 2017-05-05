@@ -38,7 +38,7 @@ export class CrewQueryComponent implements OnInit, OnDestroy {
     ngOnInit(): any {
         this.currentincidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.getOtherQueries(this.currentincidentId);
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
     }
 
     private incidentChangeHandler(incident: KeyValue): void {
@@ -47,7 +47,7 @@ export class CrewQueryComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('incidentChangefromDashboard');
         this.globalState.Unsubscribe('departmentChange');
     }
 }
