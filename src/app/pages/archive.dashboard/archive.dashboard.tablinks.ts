@@ -4,7 +4,7 @@ export const TAB_LINKS: ITabLinkInterface[] = [
     {
         id: 'AffectedPeople',
         title: 'Affected People',
-        icon: 'fa fa-apple fa-2x',
+        // icon: 'fa fa-apple fa-2x',
         url: '/pages/archivedashboard/people',
         selected: true,
         hidden: false,
@@ -12,7 +12,7 @@ export const TAB_LINKS: ITabLinkInterface[] = [
     }, {
         id: 'AffectedObjects',
         title: 'Affected Cargo',
-        icon: 'fa fa-chrome fa-2x',
+        // icon: 'fa fa-chrome fa-2x',
         url: '/pages/archivedashboard/cargo',
         selected: false,
         hidden: false,
@@ -20,7 +20,7 @@ export const TAB_LINKS: ITabLinkInterface[] = [
     }, {
         id: 'Actionables',
         title: 'Checklists',
-        icon: 'fa fa-edge fa-2x',
+        // icon: 'fa fa-edge fa-2x',
         url: '/pages/archivedashboard/actionable',
         selected: false,
         hidden: false,
@@ -28,7 +28,7 @@ export const TAB_LINKS: ITabLinkInterface[] = [
     }, {
         id: 'BroadcastMessages',
         title: 'Broadcast Messages',
-        icon: 'fa fa-envira fa-2x',
+        // icon: 'fa fa-envira fa-2x',
         url: '/pages/archivedashboard/broadcast',
         selected: false,
         hidden: false,
@@ -36,7 +36,7 @@ export const TAB_LINKS: ITabLinkInterface[] = [
     }, {
         id: 'PresidentMessages',
         title: 'President Messages',
-        icon: 'fa fa-firefox fa-2x',
+        // icon: 'fa fa-firefox fa-2x',
         url: '/pages/archivedashboard/presidentMessage',
         selected: false,
         hidden: false,
@@ -44,7 +44,7 @@ export const TAB_LINKS: ITabLinkInterface[] = [
     }, {
         id: 'MediaManagement',
         title: 'Media Management',
-        icon: 'fa fa-medium fa-2x',
+        // icon: 'fa fa-medium fa-2x',
         url: '/pages/archivedashboard/media',
         selected: false,
         hidden: false,
@@ -52,7 +52,7 @@ export const TAB_LINKS: ITabLinkInterface[] = [
     }, {
         id: 'Demand',
         title: 'Demand',
-        icon: 'fa fa-linux fa-2x',
+        // icon: 'fa fa-linux fa-2x',
         url: '/pages/archivedashboard/demand',
         selected: false,
         hidden: false,
@@ -60,7 +60,7 @@ export const TAB_LINKS: ITabLinkInterface[] = [
     }, {
         id: 'OtherQuery',
         title: 'Other Query',
-        icon: 'fa fa-windows fa-2x',
+        // icon: 'fa fa-windows fa-2x',
         url: '/pages/archivedashboard/otherQuery',
         selected: false,
         hidden: false,
@@ -68,7 +68,7 @@ export const TAB_LINKS: ITabLinkInterface[] = [
     }, {
         id: 'CrewQuery',
         title: 'Crew Query',
-        icon: 'fa fa-twitter fa-2x',
+        // icon: 'fa fa-twitter fa-2x',
         url: '/pages/archivedashboard/crewQuery',
         selected: false,
         hidden: false,
