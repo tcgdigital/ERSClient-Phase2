@@ -213,7 +213,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
                 return item;
             });
             if (demandCompletion.length == 0) {
-                alert("Please select at least one request");
+                this.toastrService.error("Please select at least one request");
             }
             else {
                 this.demandService.UpdateBulkForClosure(demandCompletion)
@@ -224,6 +224,10 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
                         console.log(`Error: ${error}`);
                     });
             };
+        }
+
+        else{
+            this.toastrService.error("There is no completed request.");
         }
     };
 
