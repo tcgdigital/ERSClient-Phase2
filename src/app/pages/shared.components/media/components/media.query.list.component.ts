@@ -39,6 +39,5 @@ export class MediaQueryListComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChange');
     }
 }

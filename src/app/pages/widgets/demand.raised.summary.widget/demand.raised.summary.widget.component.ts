@@ -1,4 +1,5 @@
-import { Component, OnInit, SimpleChange, ViewEncapsulation, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Input, ViewChild, SimpleChange } from '@angular/core';
+
 import {
     DemandRaisedSummaryModel,
     AllDemandRaisedSummaryModel,
@@ -324,4 +325,5 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         this.showSubDeptSubPending = false;
 
     }
+
 }
