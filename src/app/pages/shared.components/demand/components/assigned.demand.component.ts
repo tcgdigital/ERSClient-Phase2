@@ -131,7 +131,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.departmentService.GetAll()
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
-                this.getCurrentDepartmentName(this.currentDepartmentId);
+               this.currentDepartmentName = this.getCurrentDepartmentName(this.currentDepartmentId);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -260,8 +260,8 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     };
 
     ngOnInit(): any {
-       
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        
         this._onRouteChange = this._router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
                 if (event.url.indexOf("archivedashboard") > -1) {
