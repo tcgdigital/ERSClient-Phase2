@@ -245,6 +245,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
             this.broadcastService.Create(this.broadcast)
                 .subscribe((response: BroadCastModel) => {
                     this.toastrService.success('Broadcast edited successfully.', 'Success', this.toastrConfig);
+                   
                     this.dataExchange.Publish('BroadcastModelUpdated', response);
                     if(this.broadcast.IsSubmitted){
                         this.globalState.NotifyDataChanged('BroadcastPublished', this.broadcast);
