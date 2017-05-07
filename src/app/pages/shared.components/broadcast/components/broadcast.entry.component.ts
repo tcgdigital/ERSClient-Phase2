@@ -77,7 +77,6 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        debugger;
         this.initiatedDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.incidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentIncidentId = this.incidentId;       
@@ -189,7 +188,6 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     }
 
     save(isSubmitted: boolean): void {
-        debugger;    
 
         if(this.broadcast.Message == null || this.broadcast.Message == "" || this.broadcast.Message == undefined)
         {
@@ -229,13 +227,11 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         this.broadcast.IncidentId = this.currentIncidentId;
         this.broadcast.InitiateDepartmentId = this.currentDepartmentId;
         if (this.broadcast.BroadcastId == 0) {
-            debugger;
             this.broadcast.CreatedBy = +this.credential.UserId;
             this.broadcastService.Create(this.broadcast)
                 .subscribe((response: BroadCastModel) => {
                     this.toastrService.success('Broadcast saved successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish('BroadcastModelSaved', response);
-                    debugger;
                     if(this.broadcast.IsSubmitted){
                         this.globalState.NotifyDataChanged('BroadcastPublished', response);
                     }
@@ -246,11 +242,9 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
                 });
         }
         else {
-            debugger;
             this.broadcastService.Create(this.broadcast)
                 .subscribe((response: BroadCastModel) => {
                     this.toastrService.success('Broadcast edited successfully.', 'Success', this.toastrConfig);
-                    debugger;
                     this.dataExchange.Publish('BroadcastModelUpdated', response);
                     if(this.broadcast.IsSubmitted){
                         this.globalState.NotifyDataChanged('BroadcastPublished', this.broadcast);
