@@ -176,11 +176,10 @@ export class DemandRaisedSummaryWidgetService {
                     callback(this.demandRaisedModelList);
                 }
                 else {
-
                     this.subDepartments.forEach((itemDepartment: DepartmentModel) => {
                         let demandRaisedModel: DemandRaisedModel = new DemandRaisedModel();
                         let demandModels = this.allDemands.filter((item: DemandModel) => {
-                            return item.TargetDepartmentId == itemDepartment.DepartmentId;
+                            return item.RequesterDepartmentId == itemDepartment.DepartmentId;
                         });
                         if (demandModels.length > 0) {
                             demandRaisedModel.demandModelList = demandModels;
