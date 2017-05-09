@@ -5,14 +5,16 @@
         <div class="row">
             <div class="col-lg-6 col-sm-12">
                 <div class="form-group">
-                    <label for="Message">Broadcast Message:<span class="red">*</span></label><span class="MaxChartr">Max 1000 chars</span>
+                    <label for="Message">Broadcast Message:<span class="required">*</span></label><span class="MaxChartr">Max 1000 chars</span>
                     <textarea class="form-control" id="Message" formControlName="Message" [readOnly]="broadcast.IsSubmitted" maxlength="1000"
                         placeholder="Enter Broadcast Message" [(ngModel)]="broadcast.Message" required autofocus></textarea>
-                    <span [hidden] = "hideMessageError">Please Input Message </span>
+                    <small *ngIf="!form.controls.Message.valid" class="text-danger">
+                            Required.
+                        </small>
                 </div>
             </div>
             <div class="col-sm-6 col-lg-3">
-                <label for="ParentCheckListId">Select Department: <span class="red">*</span></label>
+                <label for="ParentCheckListId">Select Department: <span class="required">*</span></label>
                 <div class="multiselect-container">
                     <div class="multiselect-selector" (click)="showList(); $event.stopPropagation();">
                         <i class="fa fa-caret-down fa-pull-right fa-fw" aria-hidden="true"></i> {{selectedcount>0? selectedcount
@@ -32,15 +34,22 @@
                         </li>
                     </ul>
                     <span [hidden]="hideDeptError">Please Select Department</span>
+                    <small *ngIf="selectedcount==0" class="text-danger">
+                        Required.
+                    </small>
                 </div>
             </div>
             <div class="col-sm-6 col-lg-3">
-                <label for="Priority">Priority<span class="red">*</span></label>
+                <label for="Priority">Priority<span class="required">*</span></label>
                 <select id="selectPriority" class="form-control" [(ngModel)]="broadcast.Priority" formControlName="Priority">
+            <option value=''>Select Priority</option>
             <option *ngFor="let priority of priorities" [value]="priority.caption">
                     {{priority.caption}}
             </option>
         </select>
+        <small *ngIf="!form.controls.Priority.valid" class="text-danger">
+            Required.
+        </small>
             </div>
         </div>
         <div><br/></div>
