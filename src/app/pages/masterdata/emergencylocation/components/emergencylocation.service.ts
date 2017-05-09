@@ -23,7 +23,7 @@ export class EmergencyLocationService extends ServiceBase<EmergencyLocationModel
         super(dataServiceFactory, 'EmergencyLocations')
     }
 
-    GetAll(): Observable<ResponseModel<EmergencyLocationModel>> {
+    GetAllActive(): Observable<ResponseModel<EmergencyLocationModel>> {
         return this._dataService.Query()
             .Filter("ActiveFlag eq 'Active'")
             .OrderBy("CreatedOn desc")
@@ -47,4 +47,5 @@ export class EmergencyLocationService extends ServiceBase<EmergencyLocationModel
                 return data;
             });
     }
+    
 }

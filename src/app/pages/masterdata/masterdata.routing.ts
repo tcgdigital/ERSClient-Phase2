@@ -18,7 +18,8 @@ const pageRoutes: Routes = [
             { path: 'template', loadChildren: './template/template.module#TemplateModule' },
             { path: 'userpermission', loadChildren: './userpermission/userpermission.module#UserPermissionModule' },
             { path: 'departmentfunctionality', loadChildren: './department.functionality/department.functionality.module#DepartmentFunctionalityModule' },
-            { path: 'userprofile', loadChildren: './userprofile/userprofile.module#UserProfileModule' }
+            { path: 'userprofile', loadChildren: './userprofile/userprofile.module#UserProfileModule' },
+            { path: 'affectedstation', loadChildren: './emergencylocation/emergencylocation.module#EmergencyLocationModule' }
         ]
     }
 ];
