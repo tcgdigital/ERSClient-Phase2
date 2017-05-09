@@ -10,10 +10,12 @@ import { DepartmentService, EmergencyTypeService } from '../../masterdata';
 import {
     FlightModel, FlightService, InvolvePartyModel
 } from '../../shared.components';
+import { AffectedModel } from "../../shared.components/affected/components/affected.model";
 
 @Injectable()
 export class IncidentService extends ServiceBase<IncidentModel> implements IIncidentService {
     private _involvePartyDataService: DataService<InvolvePartyModel>;
+    private _affectedDataService: DataService<AffectedModel>;
 
     /**
      * Creates an instance of IncidentService.
@@ -32,6 +34,9 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
         const option: DataProcessingService = new DataProcessingService();
         this._involvePartyDataService = dataServiceFactory
             .CreateServiceWithOptions<InvolvePartyModel>('InvolvedParties', option);
+
+        this._affectedDataService = dataServiceFactory
+            .CreateServiceWithOptions<AffectedModel>('Affecteds', option);
     }
 
     GetAll(): Observable<ResponseModel<IncidentModel>> {
@@ -61,7 +66,7 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
     }
 
     CreateIncident(incidentModel: IncidentModel, isFlightRelated: boolean, involvedParty?: InvolvePartyModel,
-        flight?: FlightModel): Observable<IncidentModel> {
+        flight?: FlightModel, affected?: AffectedModel): Observable<IncidentModel> {
         let incident: IncidentModel;
         if (isFlightRelated) {
             return this._dataService.Post(incidentModel)
@@ -74,10 +79,15 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
                 .flatMap((data: IncidentModel) => this.CreateInvolveParty(involvedParty))
                 .map((data: InvolvePartyModel) => {
                     flight.InvolvedPartyId = data.InvolvedPartyId;
+                    affected.InvolvedPartyId = data.InvolvedPartyId;
                     return incident;
                 })
                 .flatMap((data: IncidentModel) => this.flightService.CreateFlight(flight))
                 .map((data: FlightModel) => {
+                    return incident;
+                })
+                .flatMap((data: IncidentModel) => this.CreateAffected(affected))
+                .map((data: AffectedModel) => {
                     return incident;
                 });
         }
@@ -107,5 +117,17 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
                 involvedParty.Incident = data;
                 return involvedParty;
             });
+    }
+
+    CreateAffected(entity: AffectedModel): Observable<AffectedModel> {
+         let affected: AffectedModel;
+        return this._affectedDataService.Post(entity)
+            .Execute()
+            .map((data: AffectedModel) => {
+                affected = data;
+                affected.Active = (affected.ActiveFlag == 'Active');
+                return data;
+            });
+
     }
 }

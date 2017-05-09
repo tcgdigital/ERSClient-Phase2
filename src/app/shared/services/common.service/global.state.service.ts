@@ -11,8 +11,11 @@ export class GlobalStateService {
         this._dataStream$.subscribe((data: Object) => this._onEvent(data));
     }
 
-    NotifyDataChanged(_event: string, value: any) {       
+    NotifyDataChanged(_event: string, value: any) {
         let current = this._data[_event];
+        if (current == null) {
+            current = undefined;
+        }
         if (current !== value) {
             this._data[_event] = value;
             this._data.next({
@@ -25,7 +28,7 @@ export class GlobalStateService {
     Subscribe(event: string, callback: Function) {
         let subscribers = this._subscriptions.get(event) || [];
         subscribers.push(callback);
-        
+
         this._subscriptions.set(event, subscribers);
     }
 

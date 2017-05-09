@@ -93,38 +93,19 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
     }
 
     save(): void {
-        if(this.PresidentsMessage.Message == "" || this.PresidentsMessage.Message == null || this.PresidentsMessage.Message == undefined)
-        {
-            this.hideMessageError = false;
-        } 
-        else if(this.PresidentsMessage.Remarks == "" || this.PresidentsMessage.Remarks == null || this.PresidentsMessage.Remarks == undefined)
-        {
-            this.hideMessageError = true;
-            this.hideRemarksError = false;
-        } 
-        else
-        {
+        if (this.form.valid) {
             this.hideMessageError = true;
             this.hideRemarksError = true;
             this.PresidentsMessage.IsPublished = false;
             this.Action = "Save";
             this.CreateOrUpdatePresidentMessage();
-        }        
-    
+        }
+
     }
 
     publish(): void {
 
-        if(this.PresidentsMessage.Message == "" || this.PresidentsMessage.Message == null || this.PresidentsMessage.Message == undefined)
-        {
-            this.hideMessageError = false;
-        } 
-        else if(this.PresidentsMessage.Remarks == "" || this.PresidentsMessage.Remarks == null || this.PresidentsMessage.Remarks == undefined)
-        {
-            this.hideMessageError = true;
-            this.hideRemarksError = false;
-        } 
-       else {
+        if (this.form.valid) {
             this.hideMessageError = true;
             this.hideRemarksError = true;
             this.PresidentsMessage.IsPublished = true;
@@ -149,8 +130,7 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
                 .subscribe((response: PresidentMessageModel) => {
                     this.toastrService.success('President message Saved successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("PresidentMessageModelSaved", response);
-                    if(this.PresidentsMessage.IsPublished)
-                    {
+                    if (this.PresidentsMessage.IsPublished) {
                         this.globalState.NotifyDataChanged('PresidentMessagePublished', response);
                     }
                     this.InitiateForm();
@@ -165,11 +145,10 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
                 .subscribe((response: PresidentMessageModel) => {
                     this.toastrService.success('President message edited successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("PresidentMessageModelUpdated", response);
-                    
-                    if(this.PresidentsMessage.IsPublished)
-                    {
+
+                    if (this.PresidentsMessage.IsPublished) {
                         this.globalState.NotifyDataChanged('PresidentMessagePublished', this.PresidentsMessage);
-                        
+
                     }
                     this.InitiateForm();
                     this.showAdd = false;
@@ -183,14 +162,14 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
         this.InitiateForm();
         this.showAdd = false;
         this.hideMessageError = true;
-        this.hideRemarksError = true; 
+        this.hideRemarksError = true;
     };
 
     private InitiateForm(): void {
         this.form = new FormGroup({
             PresidentsMessageId: new FormControl(0),
-            Message: new FormControl('', [Validators.required, Validators.maxLength(500)]),
-            Remarks: new FormControl('', [Validators.required, Validators.maxLength(500)])
+            Message: new FormControl('', [Validators.required]),
+            Remarks: new FormControl('')
         });
 
         this.PresidentsMessage = new PresidentMessageModel()

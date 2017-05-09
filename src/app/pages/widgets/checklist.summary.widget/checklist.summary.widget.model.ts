@@ -4,11 +4,11 @@ import { ActionableModel } from '../../shared.components/actionables/components/
 import { DemandModel } from '../../shared.components/demand';
 
 export class CheckListSummeryModel {
-    public openActionableCount: number;
+    public assignActionableCount: number;
     public closeActionableCount: number;
 
     constructor() {
-        this.openActionableCount = 0;
+        this.assignActionableCount = 0;
         this.closeActionableCount = 0;
     }
 }
