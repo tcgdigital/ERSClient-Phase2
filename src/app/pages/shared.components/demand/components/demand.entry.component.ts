@@ -479,16 +479,16 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     initializeForm(): void {
         this.form = new FormGroup({
             DemandId: new FormControl({ value: 0, disabled: false }),
-            DemandTypeId: new FormControl({ value: 0, disabled: false }),
-            Priority: new FormControl({ value: 0, disabled: false }),
-            DemandDesc: new FormControl({ value: '', disabled: false }),
-            RequestedBy: new FormControl({ value: this.credentialName, disabled: false }),
-            RequesterType: new FormControl({ value: 0, disabled: false }),
+            DemandTypeId: new FormControl({ value: '', disabled: false },[Validators.required]),
+            Priority: new FormControl({ value: '', disabled: false },[Validators.required]),
+            DemandDesc: new FormControl({ value: '', disabled: false },[Validators.required]),
+            RequestedBy: new FormControl({ value: this.credentialName, disabled: false },[Validators.required]),
+            RequesterType: new FormControl({ value: '', disabled: false },[Validators.required]),
             PDATicketNumber: new FormControl({ value: '', disabled: true }),
-            TargetDepartmentId: new FormControl({ value: 0, disabled: false }),
-            ContactNumber: new FormControl({ value: '', disabled: false }),
+            TargetDepartmentId: new FormControl({ value: '', disabled: false },[Validators.required]),
+            ContactNumber: new FormControl({ value: '', disabled: false },[Validators.required]),
             ScheduleTime: new FormControl({ value: '', disabled: false }),
-            RequiredLocation: new FormControl({ value: '', disabled: false }),
+            RequiredLocation: new FormControl({ value: '', disabled: false },[Validators.required]),
             AffectedPersonId: new FormControl({ value: 0, disabled: false }),
             AffectedObjectId: new FormControl({ value: 0, disabled: false })
         });

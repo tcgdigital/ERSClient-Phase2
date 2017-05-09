@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Rx';
 import { PresidentMessageWidgetModel } from './presidentMessage.widget.model';
 import { PresidentMessageModel } from '../../shared.components';
 import { PresidentMessageWidgetService } from './presidentMessage.widget.service'
-import { DataServiceFactory, DataExchangeService, GlobalStateService, KeyValue } from '../../../shared'
+import { DataServiceFactory, DataExchangeService, GlobalStateService, KeyValue, UtilityService } from '../../../shared'
 import { ModalDirective } from 'ng2-bootstrap/modal';
 
 @Component({
@@ -28,6 +28,8 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
         private globalState: GlobalStateService) { }
 
     public ngOnInit(): void {
+        // this.incidentId= +UtilityService.GetFromSession("CurrentDepartmentId");
+	    // this.departmentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.departmentId;
         this.getLatestPresidentsMessages(this.currentIncidentId);

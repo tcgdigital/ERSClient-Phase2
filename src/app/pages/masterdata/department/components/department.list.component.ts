@@ -45,10 +45,7 @@ export class DepartmentListComponent implements OnInit {
     }
 
     onDepartmentEditorSaveSuccess(model?: DepartmentModel): void {
-        // if (model && this.departmentIds.find(x => { return x == model.DepartmentId; }) == null) {
-        //     this.departments.unshift(model)
-        // }
-            this.getDepertments();
+        this.getDepertments();
         this.initiateSearchConfigurations();
     }
 

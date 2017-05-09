@@ -5,7 +5,7 @@ import {
 import { Observable } from 'rxjs/Rx';
 
 import {
-    DataServiceFactory, DataExchangeService,
+    DataServiceFactory, DataExchangeService, UtilityService,
     TextAccordionModel, GlobalStateService, KeyValue
 } from '../../../shared'
 import { BroadcastWidgetModel } from './broadcast.widget.model';
@@ -44,6 +44,9 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
         private globalState: GlobalStateService) { }
 
     public ngOnInit(): void {
+        // this.incidentId= +UtilityService.GetFromSession("CurrentDepartmentId");
+	    // this.departmentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.departmentId;
         this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);

@@ -52,7 +52,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
 
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
-
+        this.globalState.Subscribe('checkListStatusChange', () => this.checkListStatusChangeHandler());
         this.showAllDeptSubChecklistCompleted = false;
         this.showAllDeptSubChecklistPending = false;
     }
@@ -174,11 +174,15 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
 
     public openViewSubDeptChecklist(): void {
         this.ViewSubDeptChecklist(() => {
+            this.showSubDeptSubChecklistPending = false;
+            this.showSubDeptSubChecklistCompleted = false;
             this.childModalViewSubDeptChecklist.show();
         });
     }
 
     public hideViewSubDeptChecklist(): void {
+        this.showSubDeptSubChecklistPending = false;
+        this.showSubDeptSubChecklistCompleted = false;
         this.childModalViewSubDeptChecklist.hide();
     }
 
@@ -372,8 +376,13 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
         this.getActionableCount(this.currentIncidentId, this.currentDepartmentId);
     };
 
+    private checkListStatusChangeHandler(): void {
+        this.getActionableCount(this.currentIncidentId, this.currentDepartmentId);
+    };
+
     ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChange');
         this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        this.globalState.Unsubscribe('checkListStatusChange');
     }
 }

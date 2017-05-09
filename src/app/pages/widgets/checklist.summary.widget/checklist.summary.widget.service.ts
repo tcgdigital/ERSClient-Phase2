@@ -33,9 +33,9 @@ export class ChecklistSummaryWidgetService {
     GetActionableCount(incidentId: number, departmentId: number): Observable<CheckListSummeryModel> {
         this.checkListSummery = new CheckListSummeryModel();
 
-        return this.actionableService.GetOpenActionableCount(incidentId, departmentId)
-            .map((dataOpenActionableCount: number) => {
-                this.checkListSummery.openActionableCount = isNaN(dataOpenActionableCount) ? 0 : dataOpenActionableCount;
+        return this.actionableService.GetAssignActionableCount(incidentId, departmentId)
+            .map((dataAssignActionableCount: number) => {
+                this.checkListSummery.assignActionableCount = isNaN(dataAssignActionableCount) ? 0 : dataAssignActionableCount;
                 return this.checkListSummery;
             })
             .flatMap((checkListSummery: CheckListSummeryModel) => this.actionableService.GetCloseActionableCount(incidentId, departmentId))

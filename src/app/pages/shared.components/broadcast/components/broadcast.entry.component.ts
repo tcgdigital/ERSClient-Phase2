@@ -48,11 +48,11 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     selectedcount: number;
     credential: AuthModel;
     protected _onRouteChange: Subscription;
-    isArchive : boolean = false;
+    isArchive: boolean = false;
     IsAllSelected: boolean = false;
     hideMessageError: boolean = true;
     hideDeptError: boolean = true;
-   
+
 
 
     /**
@@ -68,7 +68,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         private broadcastService: BroadcastService,
         private dataExchange: DataExchangeService<BroadCastModel>, private departmentService: DepartmentService,
         private builder: FormBuilder, private globalState: GlobalStateService, private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig,private _router: Router) {
+        private toastrConfig: ToastrConfig, private _router: Router) {
         this.deptBrodCastModels = [];
         this.buttonValue = "Add New Broadcast Message";
         this.showAdd = false;
@@ -79,7 +79,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.initiatedDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.incidentId = +UtilityService.GetFromSession("CurrentIncidentId");
-        this.currentIncidentId = this.incidentId;       
+        this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.initiatedDepartmentId;
         this.initiateForm();
         this._onRouteChange = this._router.events.subscribe((event) => {
@@ -87,12 +87,12 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
                 if (event.url.indexOf("archivedashboard") > -1) {
                     this.isArchive = true;
                     //this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
-                   // this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
+                    // this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
                 }
                 else {
                     this.isArchive = false;
-                   // this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
-                  //  this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
+                    // this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+                    //  this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
                 }
             }
         });
@@ -102,7 +102,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         this.broadcast.IsSubmitted = false;
         this.broadcast.Priority = this.priorities.find(x => x.value == '1').caption;
         this.broadcast.DepartmentBroadcasts = [];
-        this.Action = 'Save';       
+        this.Action = 'Save';
 
         this.dataExchange.Subscribe('OnBroadcastUpdate', model => this.onBroadcastUpdate(model));
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
@@ -148,11 +148,11 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     initiateForm(): void {
         this.form = new FormGroup({
             BroadcastId: new FormControl(0),
-            Message: new FormControl('', [Validators.required, Validators.maxLength(5)]),
+            Message: new FormControl('', [Validators.required]),
             SelectAllDepartment: new FormControl(0),
             BroadCastDepartmentMappings: new FormControl(0),
-            Priority: new FormControl(this.priorities.find(x => x.value == '1').caption)
-        });              
+            Priority: new FormControl('', [Validators.required])
+        });
     };
 
     selectAllDepartment(IsAllSelected: boolean): void {
@@ -179,80 +179,84 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
             }
         });
         this.selectedcount = this.BroadCastDepartmentMappings.filter(x => { return x.IsSelected == true; }).length;
-        if(this.selectedcount === this.BroadCastDepartmentMappings.length){
+        if (this.selectedcount === this.BroadCastDepartmentMappings.length) {
             this.IsAllSelected = true;
         }
-        else{
+        else {
             this.IsAllSelected = false;
         }
     }
 
     save(isSubmitted: boolean): void {
-        if(this.broadcast.Message == null || this.broadcast.Message == "" || this.broadcast.Message == undefined)
-        {
-            this.hideMessageError = false;
-        }
-        else if(this.selectedcount <= 0){
-            this.hideMessageError = true;
-            this.hideDeptError = false;
-        }
-
-        else {
-            this.hideMessageError = true;
-            this.hideDeptError = true;
-            this.broadcast.IsSubmitted = isSubmitted;
-            if (isSubmitted) {
-                this.broadcast.SubmittedOn = new Date();
+        if (this.form.valid) {
+            if (this.broadcast.Message == null || this.broadcast.Message == "" || this.broadcast.Message == undefined) {
+                this.hideMessageError = false;
             }
-            this.broadcast.DepartmentBroadcasts = []
+            else if (this.selectedcount <= 0) {
+                this.hideMessageError = true;
+                this.hideDeptError = false;
+            }
 
-            this.BroadCastDepartmentMappings.forEach(item => {
-                if (item.IsSelected) {
-                    this.deptBroadcast = new DepartmentBroadcastModel();
-                    if (this.broadcast.BroadcastId !== 0) {
-                        this.deptBroadcast.BroadcastId = this.broadcast.BroadcastId;
-                    }
-                    this.deptBroadcast.DepartmentId = item.TargetDepartmentId;
-                    this.broadcast.DepartmentBroadcasts.push(this.deptBroadcast);
+            else {
+                this.hideMessageError = true;
+                this.hideDeptError = true;
+                this.broadcast.IsSubmitted = isSubmitted;
+                if (isSubmitted) {
+                    this.broadcast.SubmittedOn = new Date();
                 }
-            });
-            this.CreateOrUpdateBroadcast();
+                this.broadcast.DepartmentBroadcasts = []
+
+                this.BroadCastDepartmentMappings.forEach(item => {
+                    if (item.IsSelected) {
+                        this.deptBroadcast = new DepartmentBroadcastModel();
+                        if (this.broadcast.BroadcastId !== 0) {
+                            this.deptBroadcast.BroadcastId = this.broadcast.BroadcastId;
+                        }
+                        this.deptBroadcast.DepartmentId = item.TargetDepartmentId;
+                        this.broadcast.DepartmentBroadcasts.push(this.deptBroadcast);
+                    }
+                });
+                this.CreateOrUpdateBroadcast();
+            }
         }
     }
 
     CreateOrUpdateBroadcast(): void {
-        UtilityService.setModelFromFormGroup<BroadCastModel>(this.broadcast, this.form,
-            x => x.BroadcastId, x => x.Message, x => x.Priority);
-        this.broadcast.IncidentId = this.currentIncidentId;
-        this.broadcast.InitiateDepartmentId = this.currentDepartmentId;
-        if (this.broadcast.BroadcastId == 0) {
-            this.broadcast.CreatedBy = +this.credential.UserId;
-            this.broadcastService.Create(this.broadcast)
-                .subscribe((response: BroadCastModel) => {
-                    this.toastrService.success('Broadcast saved successfully.', 'Success', this.toastrConfig);
-                    this.dataExchange.Publish('BroadcastModelSaved', response);
-                    if(this.broadcast.IsSubmitted){
-                        this.globalState.NotifyDataChanged('BroadcastPublished', response);
-                    }
-                    this.cancel();
-                    this.IsAllSelected = false;               
-                }, (error: any) => {
-                    console.log(`Error: ${error}`);
-                });
-        }
-        else {
-            this.broadcastService.Create(this.broadcast)
-                .subscribe((response: BroadCastModel) => {
-                    this.toastrService.success('Broadcast edited successfully.', 'Success', this.toastrConfig);
-                    this.dataExchange.Publish('BroadcastModelUpdated', response);
-                    if(this.broadcast.IsSubmitted){
-                        this.globalState.NotifyDataChanged('BroadcastPublished', this.broadcast);
-                    }
-                    this.cancel();
-                    this.IsAllSelected = false;    
-                }, (error: any) => {
-                    console.log(`Error: ${error}`);
-                });
+        if (this.form.valid) {
+            UtilityService.setModelFromFormGroup<BroadCastModel>(this.broadcast, this.form,
+                x => x.BroadcastId, x => x.Message, x => x.Priority);
+            this.broadcast.IncidentId = this.currentIncidentId;
+            this.broadcast.InitiateDepartmentId = this.currentDepartmentId;
+            if (this.broadcast.BroadcastId == 0) {
+                this.broadcast.CreatedBy = +this.credential.UserId;
+                this.broadcastService.Create(this.broadcast)
+                    .subscribe((response: BroadCastModel) => {
+                        this.toastrService.success('Broadcast saved successfully.', 'Success', this.toastrConfig);
+                        this.dataExchange.Publish('BroadcastModelSaved', response);
+                        if (this.broadcast.IsSubmitted) {
+                            this.globalState.NotifyDataChanged('BroadcastPublished', response);
+                        }
+                        this.cancel();
+                        this.IsAllSelected = false;
+                    }, (error: any) => {
+                        console.log(`Error: ${error}`);
+                    });
+            }
+            else {
+                this.broadcastService.Create(this.broadcast)
+                    .subscribe((response: BroadCastModel) => {
+                        this.toastrService.success('Broadcast edited successfully.', 'Success', this.toastrConfig);
+
+                        this.dataExchange.Publish('BroadcastModelUpdated', response);
+                        if (this.broadcast.IsSubmitted) {
+                            this.globalState.NotifyDataChanged('BroadcastPublished', this.broadcast);
+                        }
+                        this.cancel();
+                        this.IsAllSelected = false;
+                    }, (error: any) => {
+                        console.log(`Error: ${error}`);
+                    });
+            }
         }
     }
 
@@ -269,12 +273,12 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
                 .some(x => x.DepartmentId === item.TargetDepartmentId);
         });
         this.selectedcount = this.BroadCastDepartmentMappings.filter(x => { return x.IsSelected == true; }).length;
-        if(this.selectedcount === this.BroadCastDepartmentMappings.length){
+        if (this.selectedcount === this.BroadCastDepartmentMappings.length) {
             this.IsAllSelected = true;
         }
-        else{
+        else {
             this.IsAllSelected = false;
-        }       
+        }
 
     }
 
@@ -285,9 +289,9 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         this.broadcast.DepartmentBroadcasts = [];
         this.showAdd = false;
         this.initiateForm();
-        this.BroadCastDepartmentMappings.forEach(a=>{
-            a.IsSelected = false;           
-        });        
+        this.BroadCastDepartmentMappings.forEach(a => {
+            a.IsSelected = false;
+        });
         this.broadcast.Priority = this.priorities.find(x => x.value == '1').caption;
     }
 
@@ -295,7 +299,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         this.showAdd = true;
         this.listSelected = false;
         this.IsAllSelected = false;
-        this.selectedcount = 0;        
+        this.selectedcount = 0;
     };
 
     showList = function (e) {

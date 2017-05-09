@@ -4,9 +4,12 @@
         <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="form-group">
-                    <label for="DemandTypeName">Request Type:<span class="red">*</span></label>
+                    <label for="DemandTypeName">Request Type:<span class="required">*</span></label>
                     <input id="DemandTypeName" type="text" class="form-control" formControlName="DemandTypeName" placeholder="Enter RequestType Name"
-                        required autofocus />
+                        autofocus />
+                        <small *ngIf="!form.controls.DemandTypeName.valid" class="text-danger">
+                        Required.
+                        </small>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12">
@@ -20,14 +23,18 @@
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="form-group">
-                    <div [hidden]="demandTypeModel.IsAutoApproved">
-                        <label for="ApproverDept">Approver Department:<span class="red">*</span></label>
+                    <div *ngIf="showApproverDept">
+                        <label for="ApproverDept">Approver Department:<span class="required">*</span></label>
                         <select id="selectApprover" [(ngModel)]="demandTypeModel.DepartmentId" formControlName="ApproverDept" class="form-control">
-                        <option [value]="0">Select Department</option>
+
+                        <option value=''>Select Approver Department</option>
                         <option *ngFor="let department of departments" [value]="department.DepartmentId" >
                         {{department.DepartmentName}}
                         </option>
                     </select>
+                    <small *ngIf="!form.controls.ApproverDept.valid" class="text-danger">
+                        Required.
+                        </small>
                     </div>
                 </div>
             </div>

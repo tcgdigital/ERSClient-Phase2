@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { DataServiceFactory, DataExchangeService, GlobalStateService, KeyValue } from '../../../shared'
+import { DataServiceFactory, DataExchangeService, GlobalStateService, KeyValue, UtilityService } from '../../../shared'
 import { MediaReleaseWidgetModel } from './mediaRelease.widget.model'
 import { MediaModel } from '../../shared.components';
 import { MediaReleaseWidgetService } from './mediaRelease.widget.service'
@@ -33,6 +33,8 @@ export class MediaReleaseWidgetComponent implements OnInit {
         private dataExchange: DataExchangeService<MediaReleaseWidgetModel>, private globalState: GlobalStateService) { }
 
     public ngOnInit(): void {
+        // this.incidentId= +UtilityService.GetFromSession("CurrentDepartmentId");
+	    // this.departmentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.departmentId;
         this.getLatestMediaReleases(this.currentIncidentId);

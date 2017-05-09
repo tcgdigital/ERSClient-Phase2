@@ -1,6 +1,6 @@
 import {
     Component, ViewEncapsulation,
-    Input, OnInit, OnDestroy, ViewChild
+    Input, OnInit, OnDestroy, ViewChild, Injector
 } from '@angular/core';
 import {
     FormGroup, FormControl, FormBuilder,
@@ -38,12 +38,13 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     isArchive: boolean = false;
     parentChecklistIds: number[] = [];
     actionableWithParents: ActionableModel[] = [];
-
+    public globalStateProxy: GlobalStateService;
     constructor(formBuilder: FormBuilder, private actionableService: ActionableService,
         private dataExchange: DataExchangeService<boolean>, private globalState: GlobalStateService,
         private toastrService: ToastrService, private departmentService: DepartmentService,
-        private toastrConfig: ToastrConfig, private _router: Router) {
-
+        private toastrConfig: ToastrConfig, private _router: Router,
+        private injector: Injector) {
+        this.globalStateProxy = injector.get(GlobalStateService);
     }
 
     ngOnInit(): any {
@@ -105,8 +106,8 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe("CloseActionablePageInitiate");
-         this.dataExchange.Unsubscribe("departmentChangeFromDashboard");
-        
+        this.dataExchange.Unsubscribe("departmentChangeFromDashboard");
+
     }
 
     IsReopen(event: any, editedActionable: ActionableModel): void {
@@ -209,6 +210,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
             .subscribe(x => {
                 this.toastrService.success('Actionables updated successfully.', 'Success', this.toastrConfig);
                 this.getAllCloseActionable(this.currentIncident, this.currentDepartmentId);
+                this.globalStateProxy.NotifyDataChanged('checkListStatusChange', null);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });

@@ -1,47 +1,66 @@
 <div *ngIf="showAdd" class="formStyle card-block entryHolder">
     <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
-        <input id="CheckListId" class="form-control" type="hidden" name="CheckListId" formControlName="DepartmentId" [ngModel]= "this.departmentModel.DepartmentId"
+        <input id="CheckListId" class="form-control" type="hidden" name="CheckListId" formControlName="DepartmentId" [ngModel]="this.departmentModel.DepartmentId"
         />
 
         <div class="row">
             <div class="col-lg-4 cl-md-6 col-sm-12">
                 <div class="form-group">
-                    <label for="DepartmentCode">Department Code:<span class="red">*</span></label>
+                    <label for="DepartmentCode">Department Code:<span class="required">*</span></label>
                     <input id="DepartmentCode" class="form-control" type="text" name="DepartmentCode" formControlName="DepartmentName" placeholder="Enter Department Code"
                     />
+                    <small *ngIf="!form.controls.DepartmentName.valid" class="text-danger">
+                 Required.
+                </small>
                 </div>
+
             </div>
             <div class="col-lg-4 cl-md-6 col-sm-12">
                 <div class="form-group">
-                    <label for="DepartmentName">Department Name:<span class="red">*</span></label>
+                    <label for="DepartmentName">Department Name:<span class="required">*</span></label>
                     <input id="DepartmentName" class="form-control" type="text" name="DepartmentName" formControlName="Description" placeholder="Enter Department Name"
                     />
+                    <small *ngIf="!form.controls.Description.valid" class="text-danger">
+                 Required.
+                </small>
                 </div>
             </div>
             <div class="form-group col-lg-4 cl-md-6 col-sm-12">
-                <label for="ContactNumber">Contact Number:<span class="red">*</span></label>
+                <label for="ContactNumber">Contact Number:<span class="required">*</span></label>
                 <input id="ContactNumber" class="form-control" type="number" name="ContactNumber" formControlName="ContactNo" placeholder="Enter Contact Number"
                 />
+                <small *ngIf="!form.controls.ContactNo.valid" class="text-danger">
+                 Required.
+                </small>
             </div>
         </div>
         <div class="row">
 
             <div class="form-group col-lg-4 cl-md-6 col-sm-12">
-                <label for="DepartmentSpoc">Department Spoc:<span class="red">*</span></label>
+                <label for="DepartmentSpoc">Department Spoc:<span class="required">*</span></label>
                 <select id="DepartmentSpoc" formControlName="DepartmentSpoc" name="DepartmentSpoc" class="form-control">
+                    <option value=''>Select Department Spoc</option>
                     <option *ngFor="let user of users" [value]="user.UserProfileId" >
                         {{user.caption}}
                     </option>
+                    
                 </select>
+                <small *ngIf="!form.controls.DepartmentSpoc.valid" class="text-danger">
+                 Required.
+                </small>
             </div>
             <div class="col-lg-4 cl-md-6 col-sm-12">
                 <div class="form-group">
-                    <label for="ParentDepartmentCode">Parent Department:<span class="red">*</span></label>
+                    <label for="ParentDepartmentCode">Parent Department:<span class="required">*</span></label>
                     <select id="ParentDepartmentCode" formControlName="ParentDepartmentId" name="ParentDepartmentCode" class="form-control">
+                    <option value=''>Select Parent Department</option>
                     <option *ngFor="let dept of parentDepartments" [value]="dept.DepartmentId" >
                         {{dept.DepartmentName}}
                     </option>
                 </select>
+                <small *ngIf="!form.controls.ParentDepartmentId.valid" class="text-danger">
+                 Required.
+                </small>
                 </div>
             </div>
             <div class="col-lg-4 cl-md-6 col-sm-12">

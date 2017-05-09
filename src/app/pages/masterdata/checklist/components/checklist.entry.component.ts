@@ -154,6 +154,7 @@ export class ChecklistEntryComponent implements OnInit {
                 this.checkListModel.EmergencyTypeId = this.form.controls['EmergencyTypeId'].value;
                 this.checkListModel.Sequence = this.form.controls['Sequence'].value;
                 delete this.checkListModel['Active'];
+
                 //   this.checkListModel.CheckListCode = this.generateChecklistCode(this.checkListModel.ParentCheckListId);
                 let CheckList_Code = "";
                 let dep = this.currentDepartmentName
@@ -192,7 +193,9 @@ export class ChecklistEntryComponent implements OnInit {
                             console.log(`Error: ${error}`);
                         });
                 }
+
             }
+        
         }
     }
 
@@ -229,7 +232,6 @@ export class ChecklistEntryComponent implements OnInit {
     private resetCheckListForm(checkList?: ChecklistModel): FormGroup {
         return new FormGroup({
             CheckListId: new FormControl(checkList ? checkList.CheckListId : 0),
-            //    CheckListCode: new FormControl(checkList ? checkList.CheckListCode : '', [Validators.required]),
             CheckListDetails: new FormControl(checkList ? checkList.CheckListDetails : '', [Validators.required]),
             ParentCheckListId: new FormControl(checkList ? checkList.ParentCheckListId : '', [Validators.required]),
             Duration: new FormControl(checkList ? checkList.Duration : '', [Validators.required]),

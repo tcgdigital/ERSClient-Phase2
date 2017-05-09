@@ -1,12 +1,12 @@
 import {
     Component, ViewEncapsulation, Input,
-    OnInit, OnDestroy, AfterContentInit, ViewChild
+    OnInit, OnDestroy, AfterContentInit, ViewChild, Injector
 } from '@angular/core';
 import {
     FormGroup, FormControl, FormBuilder,
     AbstractControl, Validators, ReactiveFormsModule
 } from '@angular/forms';
-import { Observable,Subscription } from 'rxjs/Rx';
+import { Observable, Subscription } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router, NavigationEnd } from '@angular/router';
 
@@ -17,7 +17,7 @@ import { DepartmentService, DepartmentModel } from '../../../masterdata/departme
 import {
     ResponseModel, DataExchangeService,
     UtilityService, GlobalConstants, KeyValue,
-    FileUploadService, GlobalStateService, SharedModule,AuthModel
+    FileUploadService, GlobalStateService, SharedModule, AuthModel
 } from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 
@@ -43,8 +43,8 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     parentChecklistIds: number[] = [];
     credential: AuthModel;
     protected _onRouteChange: Subscription;
-    isArchive : boolean = false;
-
+    isArchive: boolean = false;
+    public globalStateProxyOpen: GlobalStateService;
     public form: FormGroup;
 
     private currentDepartmentId: number = null;
@@ -62,23 +62,25 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         private fileUploadService: FileUploadService, private departmentService: DepartmentService,
         private dataExchange: DataExchangeService<boolean>, private globalState: GlobalStateService,
         private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig, private _router: Router) {
+        private toastrConfig: ToastrConfig, private _router: Router,
+        private injector: Injector) {
         this.filesToUpload = [];
+        this.globalStateProxyOpen = injector.get(GlobalStateService);
     }
 
     public ngOnInit(): any {
-       this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this._onRouteChange = this._router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
                 if (event.url.indexOf("archivedashboard") > -1) {
                     this.isArchive = true;
                     this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
-                     this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
+                    this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
                 }
                 else {
                     this.isArchive = false;
-                     this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
-                     this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
+                    this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
+                    this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
                 }
             }
         });
@@ -305,7 +307,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                 };
             }));
         }
-        else{ 
+        else {
             this.toastrService.error("Please select at least one checklist", 'Error', this.toastrConfig);
         }
     }
@@ -316,6 +318,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
             .subscribe(x => {
                 this.toastrService.success('Actionables updated successfully.', 'Success', this.toastrConfig);
                 this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
+                this.globalStateProxyOpen.NotifyDataChanged('checkListStatusChange', null);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
