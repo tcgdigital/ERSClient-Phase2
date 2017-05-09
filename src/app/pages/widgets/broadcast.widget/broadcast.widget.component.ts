@@ -64,7 +64,6 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
     };
 
     private onBroadcastPublish(broadcast: BroadCastModel): void{
-        debugger;
         if(broadcast.IsSubmitted){
             this.getLatestBroadcasts(this.currentDepartmentId,this.currentIncidentId);
         }
