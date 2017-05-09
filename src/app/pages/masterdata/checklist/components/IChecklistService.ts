@@ -8,4 +8,6 @@ export interface IChecklistService extends IServiceInretface<ChecklistModel> {
    GetAllByDepartment(departmentId): Observable<ResponseModel<ChecklistModel>>;
 
     GetQuery(query: string): Observable<ResponseModel<ChecklistModel>>;
+
+     GetParentChecklistCode(parentchecklistId) : Observable<ResponseModel<ChecklistModel>>;
 }

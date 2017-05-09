@@ -110,7 +110,10 @@ export class DepartmentEntryComponent implements OnInit {
                 UtilityService.formDirtyCheck<DepartmentModel>(this.departmentModel, this.form,
                     x => x.DepartmentName, x => x.Description, x => x.ContactNo, x => x.DepartmentSpoc, x => x.ParentDepartmentId);
                 this.departmentModel.deleteAttributes();
-                this.departmentService.Update(this.departmentModel)
+                if(this.departmentModel.ContactNo){
+                    this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString();
+                }
+                this.departmentService.Update(this.departmentModel,this.departmentModel.DepartmentId)
                     .subscribe((response: DepartmentModel) => {
                         this.toastrService.success('Department Edited Successfully.', 'Success', this.toastrConfig);
                         this.setDepartmentForm();

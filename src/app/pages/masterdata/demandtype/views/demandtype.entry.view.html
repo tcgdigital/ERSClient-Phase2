@@ -13,7 +13,7 @@
                 <div class="form-group">
                     <!--<label for="IsAutoApproved">Is Auto Approved:</label>
                     <br>-->
-                    <md-checkbox class="Marght" id="IsAutoApproved" formControlName="IsAutoApproved" aria-label="Add">
+                    <md-checkbox class="Marght" id="IsAutoApproved" formControlName="IsAutoApproved" aria-label="Add" (change)="IsAutoApproved($event)">
                         Is Auto Approved:
                     </md-checkbox>
                 </div>
@@ -23,6 +23,7 @@
                     <div [hidden]="demandTypeModel.IsAutoApproved">
                         <label for="ApproverDept">Approver Department:<span class="red">*</span></label>
                         <select id="selectApprover" [(ngModel)]="demandTypeModel.DepartmentId" formControlName="ApproverDept" class="form-control">
+                        <option [value]="0">Select Department</option>
                         <option *ngFor="let department of departments" [value]="department.DepartmentId" >
                         {{department.DepartmentName}}
                         </option>

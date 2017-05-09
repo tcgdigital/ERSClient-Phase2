@@ -499,10 +499,10 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.form.controls["DemandId"].reset({ value: 0, disabled: false });
         this.form.controls["DemandTypeId"].reset({ value: 0, disabled: false });
         this.form.controls["Priority"].reset({ value: 0, disabled: false });
-        this.form.controls["DemandDesc"].reset({ value:'', disabled: false });
+        this.form.controls["DemandDesc"].reset({ value: '', disabled: false });
         this.form.controls["RequestedBy"].reset({ value: this.credentialName, disabled: false });
         this.form.controls["RequesterType"].reset({ value: 0, disabled: false });
-        this.form.controls["PDATicketNumber"].reset({ value:'', disabled: true });
+        this.form.controls["PDATicketNumber"].reset({ value: '', disabled: true });
         this.form.controls["TargetDepartmentId"].reset({ value: 0, disabled: false });
         this.form.controls["ContactNumber"].reset({ value: '', disabled: false });
         this.form.controls["ScheduleTime"].reset({ value: '', disabled: false });
@@ -595,46 +595,57 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         }
         else {
             this.formControlDirtyCheck();
-            this.demandService.GetByDemandId(this.demandModelEdit.DemandId)
-                .subscribe((response: ResponseModel<DemandModel>) => {
-                    let createdOnDate = new Date(response.Records[0].CreatedOn);
-                    let time = createdOnDate.getTime();
-                    let timeDiffSec = this.resolutionTime.getTime() - time;
-                    let scheduletime = (timeDiffSec / 60000).toString();
-                    this.demandModelEdit.ScheduleTime = scheduletime;
-                    if (this.form.dirty || this.demandModelEdit.ScheduleTime != response.Records[0].ScheduleTime) {
-                        this.demandService.Update(this.demandModelEdit)
-                            .subscribe((response: DemandModel) => {
-                                this.toastrService.success('Demand successfully updated.', 'Success', this.toastrConfig);
-                                this.dataExchange.Publish("DemandAddedUpdated", this.demandModelEdit.DemandId);
-                                let demandTrail = this.createDemandTrailModel(this.demandModel, this.demandModelEdit, false)[0];
-                                demandTrail.DemandId = this.demandModel.DemandId;
-                                this.demandTrailService.Create(demandTrail)
-                                    .subscribe((response: DemandTrailModel) => { },
-                                    (error: any) => {
-                                        console.log("Error in demandTrail");
-                                    });
-                                if (this.caller.CallerId != 0) {
-                                    this.callerService.Update(this.caller)
-                                        .subscribe((response: CallerModel) => { },
-                                        (error: any) => {
-                                            console.log("Error in demandTrail");
-                                        });
-                                }
-                                this.initializeForm();
-                                this.demandModel = new DemandModel();
-                                this.showAdd = false;
-                                this.buttonValue = "Create Demand";
-                                this.childModal.hide();
-                            }, (error: any) => {
-                                console.log("Error");
-                            });
-                    }
-                });
+            let resolutionTimeChanged = false;
+            if (this.resolutionTime) {
+                this.demandService.GetByDemandId(this.demandModelEdit.DemandId)
+                    .subscribe((response: ResponseModel<DemandModel>) => {
+                        let createdOnDate = new Date(response.Records[0].CreatedOn);
+                        let time = createdOnDate.getTime();
+                        let timeDiffSec = this.resolutionTime.getTime() - time;
+                        let scheduletime = (timeDiffSec / 60000).toString();
+                        this.demandModelEdit.ScheduleTime = scheduletime;
+                        resolutionTimeChanged = true;
+                        this.demandUpdate(resolutionTimeChanged);
+                    });
+            }
+           else{
+            this.demandUpdate(resolutionTimeChanged);
+           }
 
         }
 
     };
+
+    demandUpdate(resolutionTimeChanged): void {
+        if (this.form.dirty || resolutionTimeChanged) {
+            this.demandService.Update(this.demandModelEdit)
+                .subscribe((response: DemandModel) => {
+                    this.toastrService.success('Demand successfully updated.', 'Success', this.toastrConfig);
+                    this.dataExchange.Publish("DemandAddedUpdated", this.demandModelEdit.DemandId);
+                    let demandTrail = this.createDemandTrailModel(this.demandModel, this.demandModelEdit, false)[0];
+                    demandTrail.DemandId = this.demandModel.DemandId;
+                    this.demandTrailService.Create(demandTrail)
+                        .subscribe((response: DemandTrailModel) => { },
+                        (error: any) => {
+                            console.log("Error in demandTrail");
+                        });
+                    if (this.caller.CallerId != 0) {
+                        this.callerService.Update(this.caller)
+                            .subscribe((response: CallerModel) => { },
+                            (error: any) => {
+                                console.log("Error in demandTrail");
+                            });
+                    }
+                    this.initializeForm();
+                    this.demandModel = new DemandModel();
+                    this.showAdd = false;
+                    this.buttonValue = "Create Demand";
+                    this.childModal.hide();
+                }, (error: any) => {
+                    console.log("Error");
+                });
+        }
+    }
 
     public dateTimeSet(date: DateTimePickerSelectEventArgs, controlName: string): void {
         this.resolutionTime = new Date(date.SelectedDate.toString());

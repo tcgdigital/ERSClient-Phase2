@@ -63,7 +63,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         this.demandTypeModel.CreatedBy = +this.credential.UserId;
         this.demandTypeModel.CreatedOn = this.date;
         this.demandTypeModel.DemandTypeId = 0;
-        this.demandTypeModel.DepartmentId = this.departments[0].DepartmentId;
+        this.demandTypeModel.DepartmentId = 0;
         this.form = new FormGroup({
             DemandTypeId: new FormControl(0),
             DemandTypeName: new FormControl('', [Validators.required, Validators.maxLength(50)]),
@@ -79,7 +79,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
             DemandTypeId: new FormControl(0),
             DemandTypeName: new FormControl('', [Validators.required, Validators.maxLength(50)]),
             IsAutoApproved: new FormControl(false),
-            ApproverDept: new FormControl(this.demandTypeModel.DepartmentId, [Validators.required])
+            ApproverDept: new FormControl(0, [Validators.required])
         });
         this.credential = UtilityService.getCredentialDetails();
         this.demandTypeModel.ActiveFlag = 'Active';
@@ -94,7 +94,9 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         if (this.demandTypeModel.DemandTypeId == 0) {
             this.demandTypeModel.DemandTypeName = this.form.controls['DemandTypeName'].value;
             this.demandTypeModel.IsAutoApproved = this.form.controls['IsAutoApproved'].value;
+            if(!this.demandTypeModel.IsAutoApproved){
             this.demandTypeModel.DepartmentId = this.form.controls['ApproverDept'].value;
+            }
             this.demandTypeService.Create(this.demandTypeModel)
                 .subscribe((response: DemandTypeModel) => {
                     this.toastrService.success('Demand Saved Successfully.', 'Success', this.toastrConfig);
@@ -151,5 +153,9 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         this.demandTypeModel.DemandTypeId = 0;
         this.Action = "Save";
         // this.buttonValue = "Show Add Checklist";
+    }
+
+    IsAutoApproved(isAutoapproved) : void{
+           this.demandTypeModel.IsAutoApproved = isAutoapproved.checked;
     }
 }
