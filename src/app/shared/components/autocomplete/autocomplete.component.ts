@@ -5,6 +5,7 @@ import {
 } from '@angular/core';
 import { KeyValue } from '../../models';
 import { DataExchangeService } from '../../services/data.exchange';
+import { IAutocompleteActions } from './IAutocompleteActions';
 
 @Component({
     selector: 'autocomplete',
@@ -15,9 +16,11 @@ import { DataExchangeService } from '../../services/data.exchange';
 export class AutocompleteComponent implements OnInit, OnDestroy {
     @Input('items') items: KeyValue[] = [];
     @Input() placeholder: string = 'Please select';
+    @Input() actionLinks: IAutocompleteActions[];
 
     @Output() notify: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
     @Output('InvokeAutoCompleteReset') InvokeAutoCompleteReset: EventEmitter<any> = new EventEmitter();
+    @Output() actionClickHandler: EventEmitter<any> = new EventEmitter();
 
     public elementRef;
     public filteredList: KeyValue[] = new Array<KeyValue>();
@@ -30,7 +33,7 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 
     filter(): void {
         if (this.query != null && this.query !== '') {
-            this.filteredList = this.items.filter(function(el: KeyValue) {
+            this.filteredList = this.items.filter(function (el: KeyValue) {
                 return el.Key.toLowerCase().indexOf(this.query.toLowerCase()) > -1;
             }.bind(this));
         } else {
@@ -55,6 +58,11 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
         this.query = item.Key;
         this.filteredList = [];
         this.notify.emit(item);
+    }
+
+    action_clisk(event: Event, item: KeyValue, actionName: string): void {
+        event.stopPropagation();
+        this.actionClickHandler.emit({ selectedItem: item, selectedAction: actionName });
     }
 
     @HostListener('document:click', ['$event'])

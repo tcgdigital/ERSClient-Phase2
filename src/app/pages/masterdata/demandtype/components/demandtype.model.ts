@@ -6,7 +6,6 @@ export class DemandTypeModel extends BaseModel {
     public DemandTypeName: string;
     public IsAutoApproved: boolean;
     public DepartmentId?: number;
-
     public ApproverDepartment?: DepartmentModel;
 }
 
