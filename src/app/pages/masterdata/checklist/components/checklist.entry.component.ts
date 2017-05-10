@@ -10,12 +10,14 @@ import {
 import { Observable } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 
-
 import { ChecklistModel } from './checklist.model';
 import { DepartmentModel, DepartmentService } from '../../department';
 import { EmergencyTypeModel, EmergencyTypeService } from '../../emergencytype';
 import { ChecklistService } from './checklist.service';
-import { ResponseModel, DataExchangeService, BaseModel, UtilityService, GlobalStateService, KeyValue, AuthModel } from '../../../../shared';
+import { 
+    ResponseModel, DataExchangeService, BaseModel, 
+    UtilityService, GlobalStateService, KeyValue, AuthModel 
+} from '../../../../shared';
 
 @Component({
     selector: 'checklist-entry',
@@ -41,21 +43,23 @@ export class ChecklistEntryComponent implements OnInit {
         private departmentService: DepartmentService,
         private checkListService: ChecklistService,
         private emergencyTypeService: EmergencyTypeService,
-        private dataExchange: DataExchangeService<ChecklistModel>, private globalState: GlobalStateService,
-        private toastrService: ToastrService, private toastrConfig: ToastrConfig) {
-        this.showAdd = false;
-        this.buttonValue = "Add Checklist";
-        this.checkListModel = new ChecklistModel();
-        this.checkListModelEdit = new ChecklistModel();
+        private dataExchange: DataExchangeService<ChecklistModel>, 
+        private globalState: GlobalStateService,
+        private toastrService: ToastrService, 
+        private toastrConfig: ToastrConfig) {
+            this.showAdd = false;
+            this.buttonValue = "Add Checklist";
+            this.checkListModel = new ChecklistModel();
+            this.checkListModelEdit = new ChecklistModel();
     }
 
     mergeResponses(departmentId): void {
         let allChecklists: Observable<ResponseModel<ChecklistModel>>
             = this.checkListService.GetAllByDepartment(departmentId);
-        // let activeChecklists: Observable<ResponseModel<ChecklistModel>>
-        //     = this.checkListService.GetAllActiveCheckLists();
+
         let activeDepartments: Observable<ResponseModel<DepartmentModel>>
             = this.departmentService.GetAll();
+        
         let activeEmergencyTypes: Observable<ResponseModel<EmergencyTypeModel>>
             = this.emergencyTypeService.GetAll();
 
@@ -65,9 +69,11 @@ export class ChecklistEntryComponent implements OnInit {
                 if (response.Records.length > 0 && Object.keys(response.Records[0]).some(x => x === 'CheckListId')) {
                     this.activeCheckLists = <ChecklistModel[]>response.Records;
                     this.checkListModel.ParentCheckListId = this.activeCheckLists[0].CheckListId;
+                    
                 } else if (response.Records.length > 0 && Object.keys(response.Records[0]).some(x => x === 'DepartmentId')) {
                     this.activeDepartments = <DepartmentModel[]>response.Records;
                     this.checkListModel.DepartmentId = this.activeDepartments[0].DepartmentId;
+                    
                 } else if (response.Records.length > 0 && Object.keys(response.Records[0]).some(x => x === 'EmergencyTypeId')) {
                     this.activeEmergencyTypes = <EmergencyTypeModel[]>response.Records;
                     this.checkListModel.EmergencyTypeId = this.activeEmergencyTypes[0].EmergencyTypeId;
@@ -85,12 +91,10 @@ export class ChecklistEntryComponent implements OnInit {
             );
     }
 
-
     ngOnInit(): void {
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.mergeResponses(this.currentDepartmentId);
         this.credential = UtilityService.getCredentialDetails();
-        //this.form = this.resetCheckListForm();
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
@@ -117,9 +121,6 @@ export class ChecklistEntryComponent implements OnInit {
         this.checkListModelEdit = new ChecklistModel();
         this.checkListModelEdit.CheckListId = this.form.controls['CheckListId'].value;
 
-        // if (this.form.controls['CheckListCode'].touched) {
-        //     this.checkListModelEdit.CheckListCode = this.form.controls['CheckListCode'].value;
-        //  }
         if (this.form.controls['CheckListDetails'].touched) {
             this.checkListModelEdit.CheckListDetails = this.form.controls['CheckListDetails'].value;
         }
@@ -155,10 +156,10 @@ export class ChecklistEntryComponent implements OnInit {
                 this.checkListModel.Sequence = this.form.controls['Sequence'].value;
                 delete this.checkListModel['Active'];
 
-                //   this.checkListModel.CheckListCode = this.generateChecklistCode(this.checkListModel.ParentCheckListId);
                 let CheckList_Code = "";
                 let dep = this.currentDepartmentName
                 CheckList_Code = CheckList_Code + dep.trim();
+                
                 if (this.checkListModel.ParentCheckListId != null) {
                     this.checkListService.GetParentChecklistCode(this.checkListModel.ParentCheckListId)
                         .subscribe((response: ResponseModel<ChecklistModel>) => {
@@ -176,8 +177,6 @@ export class ChecklistEntryComponent implements OnInit {
                     this.checkListModel.CheckListCode = CheckList_Code;
                     this.createChecklist(this.checkListModel);
                 }
-
-
             }
             else {//EDIT REGION
                 if (this.form.dirty) {
@@ -193,9 +192,7 @@ export class ChecklistEntryComponent implements OnInit {
                             console.log(`Error: ${error}`);
                         });
                 }
-
-            }
-        
+            }        
         }
     }
 
@@ -241,5 +238,4 @@ export class ChecklistEntryComponent implements OnInit {
             Sequence: new FormControl(checkList ? checkList.Sequence : '', [Validators.required])
         });
     }
-
 }
