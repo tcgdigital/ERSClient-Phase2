@@ -56,14 +56,14 @@
                             <tr *ngFor="let demand of allDemandReceivedList | async">
                                 <td data-title="Target Department">{{demand.targetDepartmentName}}</td>
                                 <td data-title="Allocated">{{demand.assigned}}</td>
-                                <td data-title="Completed"><span (click)="showAllDeptSubCompletedFunc(demand.demandModelList)">{{demand.completed}}</span></td>
-                                <td data-title="Pending"><span  (click)="showAllDeptSubPendingFunc(demand.demandModelList)">{{demand.pending}}</span></td>
+                                <td data-title="Completed"><a href="{{baseLocationURl}}#showAllDeptSubCompleted" (click)="showAllDeptSubCompletedFunc(demand.demandModelList)">{{demand.completed}}</a></td>
+                                <td data-title="Pending"><a href="{{baseLocationURl}}#showAllDeptSubPending" (click)="showAllDeptSubPendingFunc(demand.demandModelList)">{{demand.pending}}</a></td>
                             </tr>
                         </tbody>
                     </table>
                 </responsive-table>
 
-                <div class="card" *ngIf="showAllDeptSubCompleted">
+                <div id="showAllDeptSubCompleted" class="card" *ngIf="showAllDeptSubCompleted">
                     <div class="card-header">
                         <strong>Completed Demand</strong>
                         <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideAllDeptSubCompleted()"></i>
@@ -95,7 +95,7 @@
                         </responsive-table>
                     </div>
                 </div>
-                <div class="card" *ngIf="showAllDeptSubPending">
+                <div id="showAllDeptSubPending" class="card" *ngIf="showAllDeptSubPending">
                     <div class="card-header">
                         <strong>Pending Demand</strong>
                         <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideAllDeptSubPending()"></i>
@@ -127,9 +127,6 @@
                         </responsive-table>
                     </div>
                 </div>
-                <!--<div class="pull-right">
-                    <button type="submit" class="pull-right btn btn-primary" aria-label="Close" (click)="hideViewAllDemandReceivedSummary()">Close</button>
-                </div>-->
             </div>
 
         </div>
@@ -163,14 +160,14 @@
                             <tr *ngFor="let demand of subDemandReceivedList | async">
                                 <td data-title="Target Department">{{demand.targetDepartmentName}}</td>
                                 <td data-title="Allocated">{{demand.assigned}}</td>
-                                <td data-title="Completed"><span (click)="showSubDeptSubCompletedFunc(demand.demandModelList)">{{demand.completed}}</span></td>
-                                <td data-title="Pending"><span (click)="showSubDeptSubPendingFunc(demand.demandModelList)">{{demand.pending}}</span></td>
+                                <td data-title="Completed"><a href="{{baseLocationURl}}#showSubDeptSubCompleted" (click)="showSubDeptSubCompletedFunc(demand.demandModelList)">{{demand.completed}}</a></td>
+                                <td data-title="Pending"><a href="{{baseLocationURl}}#showSubDeptSubPending" (click)="showSubDeptSubPendingFunc(demand.demandModelList)">{{demand.pending}}</a></td>
                             </tr>
                         </tbody>
                     </table>
                 </responsive-table>
 
-                <div class="card" *ngIf="showSubDeptSubCompleted">
+                <div id="showSubDeptSubCompleted" class="card" *ngIf="showSubDeptSubCompleted">
                     <div class="card-header">
                         <strong>Completed Demand</strong>
                         <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideSubDeptSubCompleted()"></i>
@@ -201,7 +198,7 @@
                         </responsive-table>
                     </div>
                 </div>
-                <div class="card" *ngIf="showSubDeptSubPending">
+                <div id="showSubDeptSubPending" class="card" *ngIf="showSubDeptSubPending">
                     <div class="card-header">
                         <strong>Pending Demand</strong>
                         <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideSubDeptSubPending()"></i>
@@ -233,9 +230,6 @@
                         </responsive-table>
                     </div>
                 </div>
-                <!--<div class="pull-right">
-                    <button type="submit" class="pull-right btn btn-primary" aria-label="Close" (click)="hideViewAllSubDeptDemandReceivedSummary()">Close</button>
-                </div>-->
             </div>
 
         </div>
