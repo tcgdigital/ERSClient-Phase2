@@ -261,7 +261,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
             });
 
             if (demandCompletion.length == 0) {
-                alert("Please select at least one request");
+               this.toastrService.error("Please select at least one request");
             }
             else {
                 this.demandService.UpdateBulkForApproval(demandCompletion)
@@ -272,6 +272,9 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
                         console.log(`Error: ${error}`);
                     });
             };
+        }
+        else{
+            this.toastrService.error("There is no request to be approved");
         }
     };
 
@@ -296,8 +299,8 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.createdBy = +this.credential.UserId;
        
         this.getCurrentDepartmentName(this.currentDepartmentId);
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
     };
 
     private incidentChangeHandler(incident: KeyValue): void {
@@ -325,7 +328,8 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     };
 
     ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChange');
-        this.globalState.Unsubscribe('departmentChange');
+        this.globalState.Unsubscribe('incidentChangefromDashboard');
+        this.globalState.Unsubscribe('departmentChangeFromDashboard');
+
     }
 }

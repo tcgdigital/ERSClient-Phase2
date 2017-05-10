@@ -51,34 +51,33 @@ export class EmergencyTypeEntryComponent implements OnInit {
     }
 
     onSubmit() {
-        // UtilityService.setModelFromFormGroup<EmergencyTypeModel>(this.emergencyTypeModel, this.form,
-        //     x => x.EmergencyTypeId, x => x.EmergencyTypeName, x => x.EmergencyCategory, x => x.ActiveFlag);
+        if (this.form.valid) {
+            this.emergencyTypeModel.EmergencyTypeId = this.form.controls["EmergencyTypeId"].value;
+            this.emergencyTypeModel.EmergencyTypeName = this.form.controls["EmergencyTypeName"].value;
+            this.emergencyTypeModel.EmergencyCategory = this.form.controls["EmergencyCategory"].value;
+            this.emergencyTypeModel.ActiveFlag = this.form.controls["ActiveFlag"].value;
 
-        this.emergencyTypeModel.EmergencyTypeId = this.form.controls["EmergencyTypeId"].value;
-        this.emergencyTypeModel.EmergencyTypeName = this.form.controls["EmergencyTypeName"].value;
-        this.emergencyTypeModel.EmergencyCategory = this.form.controls["EmergencyCategory"].value;
-        this.emergencyTypeModel.ActiveFlag = this.form.controls["ActiveFlag"].value;
-
-        if (this.emergencyTypeModel.EmergencyTypeId == 0) {
-            this.emergencyTypeModel.CreatedBy = +this.credential.UserId;
-            this.emergencyTypeService.Create(this.emergencyTypeModel)
-                .subscribe((response: EmergencyTypeModel) => {
-                    this.toastrService.success('Emergency Type saved Successfully.', 'Success', this.toastrConfig);
-                    this.dataExchange.Publish("EmergencyTypeModelSaved", response);
-                }, (error: any) => {
-                    console.log(`Error: ${error}`);
-                });
-        }
-        else {
-            this.emergencyTypeModelWithoutActive = this.emergencyTypeModel;
-            delete this.emergencyTypeModelWithoutActive.Active;
-            this.emergencyTypeService.Update(this.emergencyTypeModelWithoutActive)
-                .subscribe((response: EmergencyTypeModel) => {
-                    this.toastrService.success('Emergency Type edited Successfully.', 'Success', this.toastrConfig);
-                    this.dataExchange.Publish("EmergencyTypeModelUpdated", response);
-                }, (error: any) => {
-                    console.log(`Error: ${error}`);
-                });
+            if (this.emergencyTypeModel.EmergencyTypeId == 0) {
+                this.emergencyTypeModel.CreatedBy = +this.credential.UserId;
+                this.emergencyTypeService.Create(this.emergencyTypeModel)
+                    .subscribe((response: EmergencyTypeModel) => {
+                        this.toastrService.success('Emergency Type saved Successfully.', 'Success', this.toastrConfig);
+                        this.dataExchange.Publish("EmergencyTypeModelSaved", response);
+                    }, (error: any) => {
+                        console.log(`Error: ${error}`);
+                    });
+            }
+            else {
+                this.emergencyTypeModelWithoutActive = this.emergencyTypeModel;
+                delete this.emergencyTypeModelWithoutActive.Active;
+                this.emergencyTypeService.Update(this.emergencyTypeModelWithoutActive)
+                    .subscribe((response: EmergencyTypeModel) => {
+                        this.toastrService.success('Emergency Type edited Successfully.', 'Success', this.toastrConfig);
+                        this.dataExchange.Publish("EmergencyTypeModelUpdated", response);
+                    }, (error: any) => {
+                        console.log(`Error: ${error}`);
+                    });
+            }
         }
     }
 
@@ -94,9 +93,9 @@ export class EmergencyTypeEntryComponent implements OnInit {
         this.emergencyTypeModel.EmergencyTypeId = 0;
         this.form = new FormGroup({
             EmergencyTypeId: new FormControl(0),
-            EmergencyTypeName: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-            EmergencyCategory: new FormControl("FlightRelated"),
-            ActiveFlag: new FormControl("Active")
+            EmergencyTypeName: new FormControl('', [Validators.required]),
+            EmergencyCategory: new FormControl('', [Validators.required]),
+            ActiveFlag: new FormControl('', [Validators.required])
         });
     }
     showAddRegion(ShowAdd: Boolean): void {

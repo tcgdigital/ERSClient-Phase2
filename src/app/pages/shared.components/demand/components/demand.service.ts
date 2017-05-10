@@ -4,6 +4,8 @@ import { Observable } from 'rxjs/Rx';
 
 import { DemandModel, DemandModelToView } from './demand.model';
 import { IDemandService } from './IDemandService';
+import * as moment from 'moment/moment';
+
 import {
     ResponseModel, DataService,
     DataServiceFactory, DataProcessingService, ServiceBase,
@@ -19,7 +21,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
     private _bulkDataService: DataService<DemandModel>;
     private _bulkDataServiceForCompletion: DataService<DemandModel>;
     private _bulkDataServiceForApproval: DataService<DemandModel>;
-     private _batchDataService: DataService<DemandModel>;
+    private _batchDataService: DataService<DemandModel>;
     public departmentAccessOwnerModels: DepartmentAccessOwnerModel[];
     /**
      * Creates an instance of DemandService.
@@ -43,7 +45,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
         this._bulkDataServiceForCompletion = this.dataServiceFactory
             .CreateServiceWithOptionsAndActionSuffix<DemandModel>
             ('DemandClosureBatch', '', option);
-         this._batchDataService = this.dataServiceFactory
+        this._batchDataService = this.dataServiceFactory
             .CreateServiceWithOptions<DemandModel>('', option);
     }
 
@@ -95,7 +97,11 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
         let demandModelToView: DemandModelToView[];
         demandModelToView = entities.map(function (demand) {
             let item = new DemandModelToView;
-
+            let scheduleTime = demand.ScheduleTime;
+            let createdOn = new Date(demand.CreatedOn);
+            let timediff = createdOn.getTime() + (+scheduleTime) * 60000;
+            let resolutiontime = new Date(timediff);
+            item.ScheduleTime = moment(resolutiontime).format('DD/MM/YYYY h:mm a');
             item.DemandId = demand.DemandId;
             item.DemandTypeName = demand.DemandType.DemandTypeName;
             item.DemandDesc = demand.DemandDesc;
@@ -147,13 +153,13 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
         return this.departmentAccessOwnerService.GetDependentDepartmentAccessOwners(departmentId);
     }
 
-    
+
 
     public GetDemandByTargetDepartments(incidentId: number, departmentIdProjection: string): Observable<ResponseModel<DemandModel>> {
-        let demandprojection: string = `DemandId,TargetDepartmentId,IsCompleted,
+        let demandprojection: string = `DemandId,TargetDepartmentId,RequesterDepartmentId,IsCompleted,
         ClosedOn,ScheduleTime,CreatedOn,DemandDesc,IsClosed,DemandStatusDescription`;
         return this._dataService.Query()
-            .Expand('RequesterDepartment($select=DepartmentName)')
+            .Expand('TargetDepartment($select=DepartmentId,DepartmentName),RequesterDepartment($select=DepartmentId,DepartmentName)')
             .Filter(`IncidentId eq ${incidentId} and ActiveFlag eq 'Active' and ${departmentIdProjection}`)
             .Select(`${demandprojection}`)
             .Execute();
@@ -161,9 +167,10 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
     }
 
     public GetDemandByRequesterDepartments(incidentId: number, departmentIdProjection: string): Observable<ResponseModel<DemandModel>> {
-        let demandprojection: string = `DemandId,RequesterDepartmentId,IsClosed,ClosedOn,ScheduleTime,CreatedOn,DemandDesc`;
+        let demandprojection: string = `DemandId,TargetDepartmentId,RequesterDepartmentId,IsCompleted,
+        ClosedOn,ScheduleTime,CreatedOn,DemandDesc,IsClosed,DemandStatusDescription`;
         return this._dataService.Query()
-            .Expand('TargetDepartment($select=DepartmentId,DepartmentName)')
+            .Expand('TargetDepartment($select=DepartmentId,DepartmentName),RequesterDepartment($select=DepartmentId,DepartmentName)')
             .Filter(`IncidentId eq ${incidentId} and ActiveFlag eq 'Active' and ${departmentIdProjection}`)
             .Select(`${demandprojection}`)
             .Execute();
@@ -173,17 +180,17 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
     public GetDemandByIncident(incidentId: number): Observable<ResponseModel<DemandModel>> {
         let demandprojection: string = `DemandId,RequesterDepartmentId,TargetDepartmentId,IsClosed,ClosedOn,ScheduleTime,CreatedOn,DemandDesc`;
         return this._dataService.Query()
-             .Expand('TargetDepartment($select=DepartmentId,DepartmentName),RequesterDepartment($select=DepartmentId,DepartmentName)')
+            .Expand('TargetDepartment($select=DepartmentId,DepartmentName),RequesterDepartment($select=DepartmentId,DepartmentName)')
             .Filter(`IncidentId eq ${incidentId} and ActiveFlag eq 'Active'`)
             .Select(`${demandprojection}`)
             .Execute();
 
     }
 
-     public GetDemandByRequesterDepartment(incidentId: number, departmentId: number): Observable<ResponseModel<DemandModel>> {
+    public GetDemandByRequesterDepartment(incidentId: number, departmentId: number): Observable<ResponseModel<DemandModel>> {
         let demandprojection: string = `DemandId,RequesterDepartmentId,TargetDepartmentId,IsClosed,ClosedOn,ScheduleTime,CreatedOn,DemandDesc`;
         return this._dataService.Query()
-             .Expand('TargetDepartment($select=DepartmentId,DepartmentName),RequesterDepartment($select=DepartmentId,DepartmentName)')
+            .Expand('TargetDepartment($select=DepartmentId,DepartmentName),RequesterDepartment($select=DepartmentId,DepartmentName)')
             .Filter(`IncidentId eq ${incidentId} and ActiveFlag eq 'Active' and RequesterDepartmentId eq ${departmentId}`)
             .Select(`${demandprojection}`)
             .Execute();
@@ -193,16 +200,16 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
     public GetDemandByTargetDepartment(incidentId: number, departmentId: number): Observable<ResponseModel<DemandModel>> {
         let demandprojection: string = `DemandId,RequesterDepartmentId,TargetDepartmentId,IsClosed,ClosedOn,ScheduleTime,CreatedOn,DemandDesc`;
         return this._dataService.Query()
-             .Expand('TargetDepartment($select=DepartmentId,DepartmentName),RequesterDepartment($select=DepartmentId,DepartmentName)')
+            .Expand('TargetDepartment($select=DepartmentId,DepartmentName),RequesterDepartment($select=DepartmentId,DepartmentName)')
             .Filter(`IncidentId eq ${incidentId} and ActiveFlag eq 'Active' and TargetDepartmentId eq ${departmentId}`)
             .Select(`${demandprojection}`)
             .Execute();
 
     }
 
-     public BatchGet(incidentId: number, departmentIds: number[]): Observable<ResponseModel<DemandModel>> {
+    public BatchGet(incidentId: number, departmentIds: number[]): Observable<ResponseModel<DemandModel>> {
         let requests: Array<RequestModel<BaseModel>> = [];
-         let filterString: string = "";
+        let filterString: string = "";
         departmentIds.forEach((item, index) => {
             if (departmentIds.length > 1) {
                 if (index == 0) {
@@ -218,8 +225,8 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
             }
         });
         //departmentIds.forEach(x => {
-                requests.push(new RequestModel<BaseModel>(`/odata/Demands?$filter=IncidentId eq ${incidentId} and (${filterString})`, WEB_METHOD.GET));
-       // });
+        requests.push(new RequestModel<BaseModel>(`/odata/Demands?$filter=IncidentId eq ${incidentId} and (${filterString})`, WEB_METHOD.GET));
+        // });
         return this._batchDataService.BatchPost<BaseModel>(requests)
             .Execute();
     }

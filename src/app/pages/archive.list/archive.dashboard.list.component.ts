@@ -5,7 +5,7 @@ import {
 import * as moment from 'moment/moment';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { EmergencyTypeModel, EmergencyTypeService } from '../masterdata';
-import { EmergencyLocationService, EmergencyLocationModel } from "../masterdata/emergencylocation";
+import { EmergencyLocationService, EmergencyLocationModel } from '../masterdata/emergencylocation';
 import { IncidentModel, IncidentService, IncidentDataExchangeModel } from '../incident';
 import { FlightModel, FlightService, InvolvePartyModel, InvolvePartyService } from '../shared.components';
 import {
@@ -24,14 +24,14 @@ import {
     Location,
     DateTimePickerOptions
 } from '../../shared';
-import { ArchiveListService } from "./archive.dashboard.list.service";
+import { ArchiveListService } from './archive.dashboard.list.service';
+
 @Component({
     selector: 'archive-dashboard-list',
     styleUrls: ['./archive.dashboard.list.style.scss'],
     templateUrl: './archive.dashboard.list.view.html',
     encapsulation: ViewEncapsulation.None,
 })
-
 export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     @ViewChild('childModalViewClosedIncident') public childModalViewClosedIncident: ModalDirective;
 
@@ -47,6 +47,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     isFlightRelatedPopup: boolean = false;
     incidentDataExchangeModel: IncidentDataExchangeModel = null;
     currentIncidentId: number;
+    public IsDrillPopup: boolean;
 
     constructor(formBuilder: FormBuilder,
         private toastrService: ToastrService,
@@ -73,12 +74,12 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.isOffSetPopup = false;
         this.resetIncidentViewForm();
-        this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
 
         this.emergencyLocationService.GetAllActiveEmergencyLocations()
             .subscribe((result: ResponseModel<EmergencyLocationModel>) => {
                 result.Records.forEach((item: EmergencyLocationModel) => {
-                    let emergencyLocationModel: EmergencyLocationModel = new EmergencyLocationModel();
+                    const emergencyLocationModel: EmergencyLocationModel = new EmergencyLocationModel();
                     emergencyLocationModel.IATA = item.IATA;
                     emergencyLocationModel.AirportName = item.AirportName;
                     this.affectedStations.push(emergencyLocationModel);
@@ -100,21 +101,14 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
             });
     }
 
-
     public IsReopenCheckedChange(event: any, closedCrisis: IncidentModel): void {
-        
         closedCrisis.isReopen = event.checked;
     }
-
-    private incidentChangeHandler(incident: KeyValue): void {
-        this.currentIncidentId = incident.Value;
-    }
-
 
     public resetIncidentViewForm(): void {
         this.formPopup = new FormGroup({
             IncidentId: new FormControl(0),
-            IsDrillPopup: new FormControl(false),
+            //IsDrillPopup: new FormControl(false),
             EmergencyTypeIdPopup: new FormControl('0'),
             AffectedStationIdPopup: new FormControl('0'),
             OffsiteDetailsPopup: new FormControl(''),
@@ -130,6 +124,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
             ScheduledarrivalPopup: new FormControl(''),
             FlightTailNumberPopup: new FormControl('')
         });
+        this.IsDrillPopup = false;
     }
 
     public initiateIncidentModel(): void {
@@ -148,15 +143,15 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     }
 
     public loadDataIncidentViewPopup(): void {
-        let offsetVal: string = '';
+        const offsetVal: string = '';
         this.disableIsDrillPopup = true;
         this.isOffSetPopup = false;
-        if (this.incidentDataExchangeModel.IncidentModel.EmergencyLocation == 'Offset') {
+        if (this.incidentDataExchangeModel.IncidentModel.EmergencyLocation === 'Offset') {
             this.isOffSetPopup = true;
         }
         this.formPopup = new FormGroup({
             IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
-            IsDrillPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.IsDrill),
+            //IsDrillPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.IsDrill),
             EmergencyTypeIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyTypeId),
             AffectedStationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyLocation),
             OffsiteDetailsPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OffSetLocation),
@@ -166,12 +161,12 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
             EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD-MM-YYYY h:mm a')),
             SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity)
         });
-
+        this.IsDrillPopup = this.incidentDataExchangeModel.IncidentModel.IsDrill;
         this.isFlightRelatedPopup = false;
         if (this.incidentDataExchangeModel.FLightModel != null) {
             this.formPopup = new FormGroup({
                 IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
-                IsDrillPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.IsDrill),
+                //IsDrillPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.IsDrill),
                 EmergencyTypeIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyTypeId),
                 AffectedStationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyLocation),
                 OffsiteDetailsPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OffSetLocation),
@@ -187,6 +182,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
                 ScheduledarrivalPopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.ArrivalDate).format('DD-MM-YYYY h:mm a')),
                 FlightTailNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightTaleNumber)
             });
+            this.IsDrillPopup = this.incidentDataExchangeModel.IncidentModel.IsDrill;
             this.isFlightRelatedPopup = true;
         }
         this.childModalViewClosedIncident.show();
@@ -201,31 +197,35 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     public viewClosedCrisis(incidentId: number): void {
         this.incidentDataExchangeModel = new IncidentDataExchangeModel();
         this.incidentService.GetIncidentById(incidentId)
-            .map((incidentModel: IncidentModel) => {
+            .subscribe((incidentModel: IncidentModel) => {
                 this.incidentDataExchangeModel.IncidentModel = new IncidentModel();
                 this.incidentDataExchangeModel.IncidentModel = incidentModel;
-            })
-            .flatMap(_ => this.involvePartyService.GetByIncidentId(this.incidentDataExchangeModel.IncidentModel.IncidentId))
-            .map((involveParties: ResponseModel<InvolvePartyModel>) => {
-                this.incidentDataExchangeModel.InvolvedPartyModel = new InvolvePartyModel();
-                this.incidentDataExchangeModel.InvolvedPartyModel = involveParties.Records[0];
-            })
-            .flatMap(_ => this.flightService.GetFlightByInvolvedPartyId(this.incidentDataExchangeModel.InvolvedPartyModel.InvolvedPartyId))
-            .map((flights: ResponseModel<FlightModel>) => {
-                this.incidentDataExchangeModel.FLightModel = new FlightModel();
-                this.incidentDataExchangeModel.FLightModel = flights.Records[0];
-            })
-            .subscribe(_ => {
-                this.loadDataIncidentViewPopup();
+                this.involvePartyService.GetByIncidentId(this.incidentDataExchangeModel.IncidentModel.IncidentId)
+                    .subscribe((involveParties: ResponseModel<InvolvePartyModel>) => {
+                        if (involveParties.Count > 0) {
+                            this.incidentDataExchangeModel.InvolvedPartyModel = new InvolvePartyModel();
+                            this.incidentDataExchangeModel.InvolvedPartyModel = involveParties.Records[0];
+                            this.flightService.GetFlightByInvolvedPartyId(this.incidentDataExchangeModel.InvolvedPartyModel.InvolvedPartyId)
+                                .subscribe((flights: ResponseModel<FlightModel>) => {
+                                    this.incidentDataExchangeModel.FLightModel = new FlightModel();
+                                    this.incidentDataExchangeModel.FLightModel = flights.Records[0];
+                                    this.loadDataIncidentViewPopup();
+                                })
+                        }
+                        else{
+                            this.loadDataIncidentViewPopup();
+                        }
+
+                    });
             })
     }
 
     public onSubmitClosedCrisis(closedCrisisList: IncidentModel[]): void {
         // We collect all closed crisis
-        let objectLiteralAll: string = JSON.stringify(closedCrisisList);
-        let deepCopyIncidentAll: IncidentModel[] = JSON.parse(objectLiteralAll);
+        const objectLiteralAll: string = JSON.stringify(closedCrisisList);
+        const deepCopyIncidentAll: IncidentModel[] = JSON.parse(objectLiteralAll);
         // Make them as isReopen false.
-        let totalReopendCrisisAll: IncidentModel[] = deepCopyIncidentAll.map((item: IncidentModel) => {
+        const totalReopendCrisisAll: IncidentModel[] = deepCopyIncidentAll.map((item: IncidentModel) => {
             item.ReOpenBy = null;
             item.ReOpenOn = null;
             item.EmergencyType = null;
@@ -238,14 +238,14 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
         this.archiveListService.CreateBulkInsertClosedIncident(totalReopendCrisisAll)
             .subscribe((result: IncidentModel[]) => {
                 // Search for the reopened crisis.
-                let reopenedCrisis = closedCrisisList.filter((item: IncidentModel) => {
-                    return item.isReopen == true;
+                const reopenedCrisis = closedCrisisList.filter((item: IncidentModel) => {
+                    return item.isReopen === true;
                 });
                 // Assign the Reopened Dates and Reopened by.
                 if (reopenedCrisis.length > 0) {
-                    let objectLiteral: string = JSON.stringify(reopenedCrisis);
-                    let deepCopyIncident: IncidentModel[] = JSON.parse(objectLiteral);
-                    let totalReopendCrisis: IncidentModel[] = deepCopyIncident.map((item: IncidentModel) => {
+                    const objectLiteral: string = JSON.stringify(reopenedCrisis);
+                    const deepCopyIncident: IncidentModel[] = JSON.parse(objectLiteral);
+                    const totalReopendCrisis: IncidentModel[] = deepCopyIncident.map((item: IncidentModel) => {
                         item.ReOpenBy = +UtilityService.GetFromSession('CurrentUserId');
                         item.ReOpenOn = new Date();
                         item.EmergencyType = null;
@@ -265,7 +265,11 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     }
 
     private onArchivedIncidentClick(incidentId: number): void {
-        UtilityService.SetToSession({ 'ArchieveIncidentId': incidentId });
+        UtilityService.SetToSession({ ArchieveIncidentId: incidentId });
         this.router.navigate(['pages/archivedashboard']);
+    }
+
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.currentIncidentId = incident.Value;
     }
 }

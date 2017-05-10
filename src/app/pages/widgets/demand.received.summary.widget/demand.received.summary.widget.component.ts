@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewEncapsulation, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Input, ViewChild , SimpleChange} from '@angular/core';
+
 import {
     DemandReceivedSummaryModel,
     DemandReceivedModel,
@@ -35,6 +36,19 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit {
     public ngOnInit(): void {
         this.demandReceivedSummary = new DemandReceivedSummaryModel();
         this.demandReceivedSummary = this.demandReceivedSummaryWidgetService.GetDemandReceivedCount(this.incidentId, this.departmentId);
+    }
+
+    public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
+        if(changes['incidentId'] !== undefined && (changes['incidentId'].currentValue !==
+            changes['incidentId'].previousValue) &&
+            changes['incidentId'].previousValue !== undefined){
+        this.demandReceivedSummary = this.demandReceivedSummaryWidgetService.GetDemandReceivedCount(this.incidentId, this.departmentId);
+        }
+        if(changes['departmentId'] !== undefined && (changes['departmentId'].currentValue !==
+            changes['departmentId'].previousValue) &&
+            changes['departmentId'].previousValue !== undefined){
+        this.demandReceivedSummary = this.demandReceivedSummaryWidgetService.GetDemandReceivedCount(this.incidentId, this.departmentId);
+        }
     }
 
 
@@ -76,7 +90,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit {
             if (item.IsClosed == true) {
                 let allDeptDemandReceivedSummary: AllDeptDemandReceivedSummary = new AllDeptDemandReceivedSummary();
                 allDeptDemandReceivedSummary.description = item.DemandDesc;
-                allDeptDemandReceivedSummary.targetDepartmentName = item.TargetDepartment.DepartmentName;
+                allDeptDemandReceivedSummary.requesterDepartmentName = item.RequesterDepartment.DepartmentName;
                 let ScheduleTime: number = (Number(item.ScheduleTime) * 60000);
                 let CreatedOn: number = new Date(item.CreatedOn).getTime();
                 allDeptDemandReceivedSummary.scheduleCloseTime = new Date(CreatedOn + ScheduleTime);
@@ -119,7 +133,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit {
             if (item.IsClosed == false) {
                 let allDeptDemandReceivedSummary: AllDeptDemandReceivedSummary = new AllDeptDemandReceivedSummary();
                 allDeptDemandReceivedSummary.description = item.DemandDesc;
-                allDeptDemandReceivedSummary.targetDepartmentName = item.TargetDepartment.DepartmentName;
+                allDeptDemandReceivedSummary.requesterDepartmentName = item.RequesterDepartment.DepartmentName;
                 let ScheduleTime: number = (Number(item.ScheduleTime) * 60000);
                 let CreatedOn: number = new Date(item.CreatedOn).getTime();
                 allDeptDemandReceivedSummary.scheduleCloseTime = new Date(CreatedOn + ScheduleTime);
@@ -165,7 +179,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit {
             if (item.IsClosed == true) {
                 let subDeptDemandReceivedSummary: SubDeptDemandReceivedSummary = new SubDeptDemandReceivedSummary();
                 subDeptDemandReceivedSummary.description = item.DemandDesc;
-                subDeptDemandReceivedSummary.targetDepartmentName = item.TargetDepartment.DepartmentName;
+                subDeptDemandReceivedSummary.requesterDepartmentName = item.TargetDepartment.DepartmentName;
                 let ScheduleTime: number = (Number(item.ScheduleTime) * 60000);
                 let CreatedOn: number = new Date(item.CreatedOn).getTime();
                 subDeptDemandReceivedSummary.scheduleCloseTime = new Date(CreatedOn + ScheduleTime);
@@ -208,7 +222,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit {
             if (item.IsClosed == false) {
                 let subDeptDemandReceivedSummary: SubDeptDemandReceivedSummary = new SubDeptDemandReceivedSummary();
                 subDeptDemandReceivedSummary.description = item.DemandDesc;
-                subDeptDemandReceivedSummary.targetDepartmentName = item.TargetDepartment.DepartmentName;
+                subDeptDemandReceivedSummary.requesterDepartmentName = item.TargetDepartment.DepartmentName;
                 let ScheduleTime: number = (Number(item.ScheduleTime) * 60000);
                 let CreatedOn: number = new Date(item.CreatedOn).getTime();
                 subDeptDemandReceivedSummary.scheduleCloseTime = new Date(CreatedOn + ScheduleTime);
@@ -245,4 +259,6 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit {
         this.showSubDeptSubPending = false;
 
     }
+
+    
 }

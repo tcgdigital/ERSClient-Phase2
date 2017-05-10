@@ -60,11 +60,11 @@ export class AffectedObjectsListComponent implements OnInit {
             }
         });
 
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));       
     }
 
     ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('incidentChangefromDashboard');
     }
 
     openChatTrails(affectedObjectId): void {

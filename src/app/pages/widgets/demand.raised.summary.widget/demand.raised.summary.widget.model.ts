@@ -15,7 +15,7 @@ export class DemandRaisedSummaryModel {
 export class DemandRaisedModel {
     public demandModelList: DemandModel[];
     public departmentId: number;
-    public targetDepartmentName: string;
+    public requesterDepartmentName: string;
     public assigned: number;
     public completed: number;
     public pending: number;
@@ -23,7 +23,7 @@ export class DemandRaisedModel {
     constructor() {
         //this.actionableModelList = [];
         this.departmentId = 0;
-        this.targetDepartmentName = '';
+        this.requesterDepartmentName = '';
         this.assigned = 0;
         this.completed = 0;
         this.pending = 0;
@@ -49,14 +49,14 @@ export class AllDemandRaisedSummaryModel extends DemandModel {
 
 export class AllDeptDemandRaisedSummary extends  DemandModel {
     public description: string;
-    public requesterDepartmentName: string;
+    public targetDepartmentName: string;
     public scheduleCloseTime: Date;
     public RagStatus: string;
 }
 
 export class SubDeptDemandRaisedSummary extends  DemandModel {
     public description: string;
-    public requesterDepartmentName: string;
+    public targetDepartmentName: string;
     public scheduleCloseTime: Date;
     public RagStatus: string;
 }

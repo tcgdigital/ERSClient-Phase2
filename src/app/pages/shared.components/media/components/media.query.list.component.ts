@@ -29,7 +29,7 @@ export class MediaQueryListComponent implements OnInit, OnDestroy {
     ngOnInit(): any {
         this.currentincidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.getMediaQueries(this.currentincidentId);
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
     }
 
     private incidentChangeHandler(incident: KeyValue): void {
@@ -38,7 +38,6 @@ export class MediaQueryListComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChange');
-        this.globalState.Unsubscribe('departmentChange');
+        this.globalState.Unsubscribe('incidentChangefromDashboard');
     }
 }

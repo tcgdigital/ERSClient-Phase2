@@ -1,6 +1,7 @@
 1. Downloaded URL Rewriter module from https://www.microsoft.com/en-au/download/details.aspx?id=7435
 2. Added following to my web.config
 
+<?xml version="1.0" encoding="UTF-8"?>
 <configuration>
   <system.webServer>
     <rewrite>
@@ -15,6 +16,12 @@
         </rule>
       </rules>
     </rewrite>
+	<staticContent>
+		<remove fileExtension=".woff" />
+		<mimeMap fileExtension=".woff" mimeType="application/x-font-woff" />
+        <remove fileExtension=".woff2" />
+        <mimeMap fileExtension=".woff2" mimeType="application/font-woff2" />
+    </staticContent>
   </system.webServer>
 </configuration>
 

@@ -131,7 +131,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.departmentService.GetAll()
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
-                this.getCurrentDepartmentName(this.currentDepartmentId);
+               this.currentDepartmentName = this.getCurrentDepartmentName(this.currentDepartmentId);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -242,7 +242,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
             });
 
             if (demandCompletion.length == 0) {
-                alert("Please select at least one request");
+                this.toastrService.error("Please select at least one request");
             }
             else {
                 this.demandService.UpdateBulkForCompletion(demandCompletion)
@@ -254,11 +254,14 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
                     });
             };
         }
+        else{
+            this.toastrService.error("There is no request assigned.");
+        }
     };
 
     ngOnInit(): any {
-       
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        
         this._onRouteChange = this._router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
                 if (event.url.indexOf("archivedashboard") > -1) {
@@ -279,8 +282,8 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         
         this.getAllDepartments();
 
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
     };
 
     private incidentChangeHandler(incident: KeyValue): void {
@@ -295,8 +298,8 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     };
 
     ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChange');
-        this.globalState.Unsubscribe('departmentChange');
+        this.globalState.Unsubscribe('incidentChangefromDashboard');
+        this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 
     ngAfterContentInit(): any {

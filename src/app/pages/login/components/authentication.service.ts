@@ -18,14 +18,15 @@ export class AuthenticationService {
     private _isLoggedIn: boolean = false;
 
     constructor(private dataServiceFactory: DataServiceFactory) {
-        let option: DataProcessingService = new DataProcessingService();
+        const option: DataProcessingService = new DataProcessingService();
         option.EndPoint = GlobalConstants.TOKEN;
+        option.ExceptionHandler = this.LoginException;
         this._dataService = this.dataServiceFactory.CreateServiceWithOptions('', option);
         this._isLoggedIn = !!UtilityService.GetFromSession(GlobalConstants.ACCESS_TOKEN);
     }
 
     Login(userid: string, passcode: string): Observable<AuthResponseModel> {
-        let params: AuthRequestModel = {
+        const params: AuthRequestModel = {
             username: userid,
             password: passcode,
             grant_type: 'password',
@@ -33,19 +34,27 @@ export class AuthenticationService {
         };
         return this._dataService.SimplePost(params)
             .Execute()
-            .map((response: AuthResponseModel) => {
+            .map((response: any) => {
+                console.log(response);
                 UtilityService.SetToSession(response);
                 this._isLoggedIn = true;
                 return response;
+            }).catch((error: any) => {
+                return Observable.throw(error);
             });
     }
 
-    Logout() {
+    public Logout() {
         UtilityService.RemoveFromSession(GlobalConstants.ACCESS_TOKEN);
+        localStorage.clear();
         this._isLoggedIn = false;
     }
 
     isLoggedIn(): boolean {
         return this._isLoggedIn;
+    }
+
+    private LoginException(error: any): Observable<any> {
+        return Observable.throw(error.json() || 'Server error');
     }
 }

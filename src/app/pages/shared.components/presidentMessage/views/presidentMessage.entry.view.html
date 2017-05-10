@@ -8,9 +8,12 @@
                 <div class="row">
                 <div class="col-sm-6 col-lg-5 col-md-6">
                     <div class="form-group">
-                        <label for="Message">President's Message:<span class="red">*</span></label><span class="MaxChartr">Max 500 chars</span>
+                        <label for="Message">President's Message:<span class="required">*</span></label><span class="MaxChartr">Max 500 chars</span>
                         <textarea class="form-control" id="Message" formControlName="Message" maxlength="500" [readOnly]="PresidentsMessage.IsPublished"
-                            placeholder="Enter President's Message" [(ngModel)]="PresidentsMessage.Message" required autofocus></textarea>
+                            placeholder="Enter President's Message" [(ngModel)]="PresidentsMessage.Message" autofocus></textarea>
+                        <small *ngIf="!form.controls.Message.valid" class="text-danger">
+                            Required.
+                        </small>
                     </div>
                 </div>
                 <div class="col-sm-6 col-lg-4 col-md-6">
@@ -18,6 +21,7 @@
                         <label for="Remarks">Remarks:</label><span class="MaxChartr">Max 500 chars</span>
                         <textarea class="form-control" id="Remarks" formControlName="Remarks" maxlength="500" [readOnly]="PresidentsMessage.IsPublished"
                             placeholder="Enter Remarks" [(ngModel)]="PresidentsMessage.Remarks" required autofocus></textarea>
+                        <span [hidden]="hideRemarksError">Plese Input Remarks</span>
                     </div>
                 </div>
                   <div class="col-sm-6 col-lg-12 col-md-6">

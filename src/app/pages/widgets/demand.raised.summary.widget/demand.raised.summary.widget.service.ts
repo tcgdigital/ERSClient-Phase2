@@ -48,15 +48,15 @@ export class DemandRaisedSummaryWidgetService {
 
 
 
-    GetAllDemandByTargetDepartment(incidentId: number, departmentId: number, callback?: ((_: AllDemandRaisedSummaryModel[]) => void)): void {
+    GetAllDemandByRequesterDepartment(incidentId: number, departmentId: number, callback?: ((_: AllDemandRaisedSummaryModel[]) => void)): void {
         let demandsByTargetDeptartment: DemandModel[];
         let departmentIdProjection: string = '';
         let departmentIds: number[] = [];
-        departmentIdProjection = `(TargetDepartmentId eq ${departmentId})`;
-        this.demandService.GetDemandByTargetDepartments(incidentId, departmentIdProjection)
+        departmentIdProjection = `(RequesterDepartmentId eq ${departmentId})`;
+        this.demandService.GetDemandByRequesterDepartments(incidentId, departmentIdProjection)
             .subscribe((result) => {
                 this.dataTemp = result.Records.filter((filter) => {
-                    return filter.TargetDepartmentId == departmentId;
+                    return filter.RequesterDepartmentId == departmentId;
                 });
                 this.allocatedDemandDetail = new AllDemandRaisedSummaryModel();
                 this.allocatedDemandDetails = [];
@@ -126,20 +126,20 @@ export class DemandRaisedSummaryWidgetService {
         this.demandService.GetDemandByIncident(incidentId)
             .subscribe((result: ResponseModel<DemandModel>) => {
                 result.Records.forEach((itemDemand: DemandModel) => {
-                    let department = uniqueDepartments.find(x => x.DepartmentId == itemDemand.TargetDepartmentId);
+                    let department = uniqueDepartments.find(x => x.DepartmentId == itemDemand.RequesterDepartmentId);
                     if (department == null) {
-                        uniqueDepartments.push(itemDemand.TargetDepartment);
+                        uniqueDepartments.push(itemDemand.RequesterDepartment);
                     }
                 });
                 uniqueDepartments.forEach((itemDepartment: DepartmentModel) => {
                     let demandRaisedModel: DemandRaisedModel = new DemandRaisedModel();
                     let demandModels = result.Records.filter((item: DemandModel) => {
-                        return item.TargetDepartmentId == itemDepartment.DepartmentId;
+                        return item.RequesterDepartmentId == itemDepartment.DepartmentId;
                     });
                     if (demandModels.length > 0) {
                         demandRaisedModel.demandModelList = demandModels;
                         demandRaisedModel.departmentId = itemDepartment.DepartmentId;
-                        demandRaisedModel.targetDepartmentName = itemDepartment.DepartmentName;
+                        demandRaisedModel.requesterDepartmentName = itemDepartment.DepartmentName;
                         demandRaisedModel.assigned = demandModels.length;
                         let demandModelsCompletedLocal: DemandModel[] = demandModels.filter((item: DemandModel) => { return item.IsClosed == true; });
                         demandRaisedModel.completed = demandModelsCompletedLocal.length;
@@ -176,16 +176,15 @@ export class DemandRaisedSummaryWidgetService {
                     callback(this.demandRaisedModelList);
                 }
                 else {
-
                     this.subDepartments.forEach((itemDepartment: DepartmentModel) => {
                         let demandRaisedModel: DemandRaisedModel = new DemandRaisedModel();
                         let demandModels = this.allDemands.filter((item: DemandModel) => {
-                            return item.TargetDepartmentId == itemDepartment.DepartmentId;
+                            return item.RequesterDepartmentId == itemDepartment.DepartmentId;
                         });
                         if (demandModels.length > 0) {
                             demandRaisedModel.demandModelList = demandModels;
                             demandRaisedModel.departmentId = itemDepartment.DepartmentId;
-                            demandRaisedModel.targetDepartmentName = itemDepartment.DepartmentName;
+                            demandRaisedModel.requesterDepartmentName = itemDepartment.DepartmentName;
                             demandRaisedModel.assigned = demandModels.length;
                             let demandModelsCompletedLocal: DemandModel[] = demandModels.filter((item: DemandModel) => { return item.IsClosed == true; });
                             demandRaisedModel.completed = demandModelsCompletedLocal.length;

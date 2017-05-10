@@ -13,9 +13,11 @@ export class GlobalStateService {
 
     NotifyDataChanged(_event: string, value: any) {
         let current = this._data[_event];
+        if (current == null) {
+            current = undefined;
+        }
         if (current !== value) {
             this._data[_event] = value;
-
             this._data.next({
                 event: _event,
                 data: this._data[_event]

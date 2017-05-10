@@ -38,29 +38,8 @@ export class DemandReceivedSummaryWidgetService {
 
         let departmentIdProjection: string = '';
         let departmentIds: number[] = [];
-
-        this.demandService.GetDepartmentIdProjection(departmentId)
-            .subscribe((result) => {
-                this.departmentAccessOwnerModels = result.Records;
-                this.departmentAccessOwnerModels.forEach((item, index) => {
-                    departmentIds.push(item.DepartmentDependentId);
-                });
-                departmentIds.forEach((item, index) => {
-                    if (departmentIds.length > 1) {
-                        if (index == 0) {
-                            departmentIdProjection = `(TargetDepartmentId eq ${item})`;
-                        }
-                        else {
-                            departmentIdProjection = departmentIdProjection +
-                                ` or (TargetDepartmentId eq ${item})`;
-                        }
-                    }
-                    else {
-                        departmentIdProjection = `TargetDepartmentId eq ${item}`;
-                    }
-                });
-
-                this.demandService.GetDemandByTargetDepartments(incidentId, departmentIdProjection)
+        departmentIdProjection = `(TargetDepartmentId eq ${departmentId})`;
+        this.demandService.GetDemandByTargetDepartments(incidentId, departmentIdProjection)
                     .subscribe((result) => {
                         this.demandReceivedSummary.demandAllocatedCount = result.Count;
                         demandsByTargetDeptartment = result.Records;
@@ -68,43 +47,9 @@ export class DemandReceivedSummaryWidgetService {
                             return item.IsCompleted === true;
                         }).length;
                     });
-            }, (error)=>{
-            });
-
+        
         return this.demandReceivedSummary;
     }
-
-    // GetAllDepartmentDemandByTargetDepartment(incidentId: number, departmentId: number, callback?: ((_: DemandReceivedModel[]) => void)): void {
-    //     this.demandReceivedModelList = [];
-    //     let uniqueDepartments: DepartmentModel[] = [];
-    //     this.demandService.GetDemandByTargetDepartment(incidentId, departmentId)
-    //         .subscribe((result: ResponseModel<DemandModel>) => {
-    //             result.Records.forEach((itemDemand: DemandModel) => {
-    //                 let department = uniqueDepartments.find(x => x.DepartmentId == itemDemand.TargetDepartmentId);
-    //                 if (department == null) {
-    //                     uniqueDepartments.push(itemDemand.RequesterDepartment);
-    //                 }
-    //             });
-    //             uniqueDepartments.forEach((itemDepartment: DepartmentModel) => {
-    //                 let demandReceivedModel: DemandReceivedModel = new DemandReceivedModel();
-    //                 let demandModels = result.Records.filter((item: DemandModel) => {
-    //                     return item.RequesterDepartmentId == itemDepartment.DepartmentId;
-    //                 });
-    //                 if (demandModels.length > 0) {
-    //                     demandReceivedModel.demandModelList = demandModels;
-    //                     demandReceivedModel.departmentId = itemDepartment.DepartmentId;
-    //                     demandReceivedModel.requesterDepartmentName = itemDepartment.DepartmentName;
-    //                     demandReceivedModel.assigned = demandModels.length;
-    //                     let demandModelsCompletedLocal: DemandModel[] = demandModels.filter((item: DemandModel) => { return item.IsClosed == true; });
-    //                     demandReceivedModel.completed = demandModelsCompletedLocal.length;
-    //                     let demandModelsPendingLocal: DemandModel[] = demandModels.filter((item: DemandModel) => { return item.IsClosed == false; });
-    //                     demandReceivedModel.pending = demandModelsPendingLocal.length;
-    //                     this.demandReceivedModelList.push(demandReceivedModel);
-    //                 }
-    //             });
-    //             callback(this.demandReceivedModelList);
-    //         });
-    // }
 
     GetSubDepartmentDemandByRequesterDepartment(incidentId: number, departmentId: number, callback?: ((_: DemandReceivedModel[]) => void)): void {
         let uniqueDepartments: DepartmentModel[] = [];
@@ -138,7 +83,7 @@ export class DemandReceivedSummaryWidgetService {
                         if (demandModels.length > 0) {
                             demandReceivedModel.demandModelList = demandModels;
                             demandReceivedModel.departmentId = itemDepartment.DepartmentId;
-                            demandReceivedModel.requesterDepartmentName = itemDepartment.DepartmentName;
+                            demandReceivedModel.targetDepartmentName = itemDepartment.DepartmentName;
                             demandReceivedModel.assigned = demandModels.length;
                             let demandModelsCompletedLocal: DemandModel[] = demandModels.filter((item: DemandModel) => { return item.IsClosed == true; });
                             demandReceivedModel.completed = demandModelsCompletedLocal.length;
@@ -167,12 +112,12 @@ export class DemandReceivedSummaryWidgetService {
                 uniqueDepartments.forEach((itemDepartment: DepartmentModel) => {
                     let demandReceivedModel: DemandReceivedModel = new DemandReceivedModel();
                     let demandModels = result.Records.filter((item: DemandModel) => {
-                        return item.RequesterDepartmentId == itemDepartment.DepartmentId;
+                        return item.TargetDepartmentId == itemDepartment.DepartmentId;
                     });
                     if (demandModels.length > 0) {
                         demandReceivedModel.demandModelList = demandModels;
                         demandReceivedModel.departmentId = itemDepartment.DepartmentId;
-                        demandReceivedModel.requesterDepartmentName = itemDepartment.DepartmentName;
+                        demandReceivedModel.targetDepartmentName = itemDepartment.DepartmentName;
                         demandReceivedModel.assigned = demandModels.length;
                         let demandModelsCompletedLocal: DemandModel[] = demandModels.filter((item: DemandModel) => { return item.IsClosed == true; });
                         demandReceivedModel.completed = demandModelsCompletedLocal.length;
@@ -192,7 +137,7 @@ export class DemandReceivedSummaryWidgetService {
             if (item.IsClosed == true) {
                 let allDeptDemandReceivedSummary: AllDeptDemandReceivedSummary = new AllDeptDemandReceivedSummary();
                 allDeptDemandReceivedSummary.description = item.DemandDesc;
-                allDeptDemandReceivedSummary.targetDepartmentName = item.TargetDepartment.DepartmentName;
+                allDeptDemandReceivedSummary.requesterDepartmentName = item.TargetDepartment.DepartmentName;
                 let ScheduleTime: number = (Number(item.ScheduleTime) * 60000);
                 let CreatedOn: number = new Date(item.CreatedOn).getTime();
                 allDeptDemandReceivedSummary.scheduleCloseTime = new Date(CreatedOn + ScheduleTime);
@@ -235,7 +180,7 @@ export class DemandReceivedSummaryWidgetService {
             if (item.IsClosed == false) {
                 let allDeptDemandReceivedSummary: AllDeptDemandReceivedSummary = new AllDeptDemandReceivedSummary();
                 allDeptDemandReceivedSummary.description = item.DemandDesc;
-                allDeptDemandReceivedSummary.targetDepartmentName = item.TargetDepartment.DepartmentName;
+                allDeptDemandReceivedSummary.requesterDepartmentName = item.TargetDepartment.DepartmentName;
                 let ScheduleTime: number = (Number(item.ScheduleTime) * 60000);
                 let CreatedOn: number = new Date(item.CreatedOn).getTime();
                 allDeptDemandReceivedSummary.scheduleCloseTime = new Date(CreatedOn + ScheduleTime);

@@ -47,7 +47,6 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
             .Filter(`IncidentId eq ${incidentId} and ActiveFlag eq 'Active'`)
             .OrderBy("CreatedOn desc")
             .Execute();
-
     }
 
     public GetAllByIncidentandSubDepartment(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
@@ -61,7 +60,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
                         this.subDepartmentProjection = `DepartmentId eq ${itemDepartment.DepartmentId}`;
                     }
                     else {
-                        this.subDepartmentProjection = this.subDepartmentProjection + `or DepartmentId eq ${itemDepartment.DepartmentId}`;
+                        this.subDepartmentProjection = this.subDepartmentProjection + ` or DepartmentId eq ${itemDepartment.DepartmentId}`;
                     }
                 });
             })
@@ -72,11 +71,10 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
                 else {
                     return this._dataService.Query()
                         .Expand('CheckList($expand=TargetDepartment)')
-                        .Filter(`IncidentId eq ${incidentId} and ${this.subDepartmentProjection} and ActiveFlag eq 'Active'`)
+                        .Filter(`IncidentId eq ${incidentId} and (${this.subDepartmentProjection}) and ActiveFlag eq 'Active'`)
                         .OrderBy("CreatedOn desc")
                         .Execute()
                 }
-
             });
     }
 
@@ -91,11 +89,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
                 this._actionables.Records.forEach(element => {
                     element.Active = (element.ActiveFlag == 'Active');
                     element.Done = false;
-                    // element.IsDisabled = false;
                     element.show = false;
-                    // if (element.CheckList.ParentCheckListId != null) {
-                    //   element.IsDisabled = true;
-                    //}
                     element.RagColor = this.setRagColor(element.AssignedDt, element.ScheduleClose);
                 });
                 return actionables;
@@ -116,6 +110,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
             .Execute();
 
     }
+
     public GetAllCloseByIncidentIdandDepartmentId(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
             .Expand('CheckList($select=CheckListId,CheckListCode)')
@@ -181,12 +176,17 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
         return this._batchDataService.BatchPost<BaseModel>(requests).Execute();
     }
 
+    public GetAssignActionableCount(incidentId: number, departmentId: number): Observable<number> {
+        return this._dataService.Count()
+            .Filter(`IncidentId eq ${incidentId} and DepartmentId eq ${departmentId}`)
+            .Execute();
+    }
+
     public GetOpenActionableCount(incidentId: number, departmentId: number): Observable<number> {
         return this._dataService.Count()
             .Filter(`IncidentId eq ${incidentId} and DepartmentId eq ${departmentId} and CompletionStatus eq 'Open'`)
             .Execute();
     }
-
 
     public GetCloseActionableCount(incidentId: number, departmentId: number): Observable<number> {
         return this._dataService.Count()
@@ -199,8 +199,6 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
         .Filter(`IncidentId eq ${incidentId} and DepartmentId eq ${departmentId} and CompletionStatus eq 'Open'`)
         .Execute();
     }
-
-    
 
     public BatchGet(incidentId: number, departmentIds: number[]): Observable<ResponseModel<ActionableModel>> {
         let requests: Array<RequestModel<BaseModel>> = [];
@@ -219,9 +217,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
                 filterString = `filterString eq ${item}`;
             }
         });
-        // departmentIds.forEach(x => {
         requests.push(new RequestModel<BaseModel>(`/odata/Actionables?$filter=IncidentId eq ${incidentId} and (${filterString})`, WEB_METHOD.GET));
-        //  });
         return this._batchDataService.BatchPost<BaseModel>(requests)
             .Execute();
     }

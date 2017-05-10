@@ -65,7 +65,7 @@ export class DepartmentEntryComponent implements OnInit {
         this.departmentModel.CreatedBy = +this.credential.UserId;
         this.departmentModel.DepartmentId = 0;
         this.showAdd = false;
-        
+
     }
 
     private onDepartmentEdit(model: DepartmentModel): void {
@@ -77,48 +77,50 @@ export class DepartmentEntryComponent implements OnInit {
     private setDepartmentForm(department?: DepartmentModel): FormGroup {
         return new FormGroup({
             DepartmentId: new FormControl(department ? department.DepartmentId : 0),
-            DepartmentName: new FormControl(department ? department.DepartmentName : '', [Validators.required, Validators.minLength(1)]),
-            Description: new FormControl(department ? department.Description : '', [Validators.required, Validators.minLength(1)]),
-            ContactNo: new FormControl(department ? department.ContactNo : '', [Validators.required, Validators.minLength(1)]),
-            DepartmentSpoc: new FormControl(department ? department.DepartmentSpoc : this.users[0].UserProfileId, [Validators.required, Validators.minLength(1)]),
-            ParentDepartmentId: new FormControl((department && department.ParentDepartmentId) ? department.ParentDepartmentId : this.parentDepartments[0].DepartmentId, [Validators.required, Validators.minLength(1)]),
+            DepartmentName: new FormControl(department ? department.DepartmentName : '', [Validators.required]),
+            Description: new FormControl(department ? department.Description : '', [Validators.required]),
+            ContactNo: new FormControl(department ? department.ContactNo : '', [Validators.required]),
+            DepartmentSpoc: new FormControl(department ? department.DepartmentSpoc : '', [Validators.required]),
+            ParentDepartmentId: new FormControl((department && department.ParentDepartmentId) ? department.ParentDepartmentId : '', [Validators.required]),
         });
     }
 
 
     onSubmit(values: DepartmentModel): void {
-        if (values.DepartmentId == 0) {//ADD REGION
-         
-            UtilityService.setModelFromFormGroup<DepartmentModel>(this.departmentModel, this.form,
-                x => x.DepartmentId, x => x.DepartmentName, x => x.Description, x => x.ContactNo, x => x.DepartmentSpoc, x => x.ParentDepartmentId);
-            this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString();
-            this.departmentModel.CreatedBy = +this.credential.UserId;
-            this.departmentService.Create(this.departmentModel)
-                .subscribe((response: DepartmentModel) => {
-                    this.toastrService.success('Department Saved Successfully.', 'Success', this.toastrConfig);
-                    this.dataExchange.Publish("departmentSavedOrEdited", response);
-                    this.setDepartmentForm();
-                    this.showAdd = false;
-                }, (error: any) => {
-                    console.log(`Error: ${error}`);
-                });
-        }
-        else {//EDIT REGION
-            if (this.form.dirty) {
-                this.departmentModel = new DepartmentModel();
-                this.departmentModel.DepartmentId = values.DepartmentId;
-                UtilityService.formDirtyCheck<DepartmentModel>(this.departmentModel, this.form,
-                    x => x.DepartmentName, x => x.Description, x => x.ContactNo, x => x.DepartmentSpoc, x => x.ParentDepartmentId);
-                this.departmentModel.deleteAttributes();
-                this.departmentService.Update(this.departmentModel)
+        if (this.form.valid) {
+            if (values.DepartmentId == 0) {//ADD REGION
+
+                UtilityService.setModelFromFormGroup<DepartmentModel>(this.departmentModel, this.form,
+                    x => x.DepartmentId, x => x.DepartmentName, x => x.Description, x => x.ContactNo, x => x.DepartmentSpoc, x => x.ParentDepartmentId);
+                this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString();
+                this.departmentModel.CreatedBy = +this.credential.UserId;
+                this.departmentService.Create(this.departmentModel)
                     .subscribe((response: DepartmentModel) => {
-                        this.toastrService.success('Department Edited Successfully.', 'Success', this.toastrConfig);
-                        this.setDepartmentForm();
+                        this.toastrService.success('Department Saved Successfully.', 'Success', this.toastrConfig);
                         this.dataExchange.Publish("departmentSavedOrEdited", response);
+                        this.setDepartmentForm(response);
                         this.showAdd = false;
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                     });
+            }
+            else {//EDIT REGION
+                if (this.form.dirty) {
+                    this.departmentModel = new DepartmentModel();
+                    this.departmentModel.DepartmentId = values.DepartmentId;
+                    UtilityService.formDirtyCheck<DepartmentModel>(this.departmentModel, this.form,
+                        x => x.DepartmentName, x => x.Description, x => x.ContactNo, x => x.DepartmentSpoc, x => x.ParentDepartmentId);
+                    this.departmentModel.deleteAttributes();
+                    this.departmentService.Update(this.departmentModel)
+                        .subscribe((response: DepartmentModel) => {
+                            this.toastrService.success('Department Edited Successfully.', 'Success', this.toastrConfig);
+                            this.setDepartmentForm();
+                            this.dataExchange.Publish("departmentSavedOrEdited", response);
+                            this.showAdd = false;
+                        }, (error: any) => {
+                            console.log(`Error: ${error}`);
+                        });
+                }
             }
         }
     }

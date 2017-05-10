@@ -12,7 +12,7 @@ import { ToastrService, ToastrConfig } from 'ngx-toastr';
 
 import { QuickLinkModel } from './quicklink.model';
 import { QuickLinkService } from './quicklink.service';
-import { ResponseModel, DataExchangeService,AuthModel, UtilityService } from '../../../../shared';
+import { ResponseModel, DataExchangeService, AuthModel, UtilityService } from '../../../../shared';
 
 @Component({
     selector: 'quicklink-entry',
@@ -32,21 +32,24 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
 
     constructor(formBuilder: FormBuilder, private quickLinkService: QuickLinkService,
         private dataExchange: DataExchangeService<QuickLinkModel>, private toastrService: ToastrService,
-		private toastrConfig: ToastrConfig) {
+        private toastrConfig: ToastrConfig) {
         this.showAdd = false;
         this.buttonValue = "Add QuickLink";
     }
 
     ngOnInit(): void {
         this.credential = UtilityService.getCredentialDetails();
-        this.form = new FormGroup({
-            QuickLinkId: new FormControl(0),
-            QuickLinkName: new FormControl('', [Validators.required, Validators.minLength(5)]),
-            QuickLinkURL: new FormControl('', [Validators.required, Validators.minLength(12)])
-        });
-
+        this.initializeInputForm();
         this.initiateQuickLinkModel();
         this.dataExchange.Subscribe("quickLinkModelEdited", model => this.onQuickLinkEditSuccess(model));
+    }
+
+    initializeInputForm():void{
+        this.form = new FormGroup({
+            QuickLinkId: new FormControl(0),
+            QuickLinkName: new FormControl('', [Validators.required]),
+            QuickLinkURL: new FormControl('', [Validators.required])
+        });
     }
 
     ngOnDestroy(): void {
@@ -61,37 +64,44 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(values: Object): void {
-        if (this.quickLinkModel.QuickLinkId == 0) {//ADD REGION
-            this.quickLinkModel.QuickLinkName = this.form.controls['QuickLinkName'].value;
-            this.quickLinkModel.QuickLinkURL = this.form.controls['QuickLinkURL'].value;
-            this.quickLinkService.Create(this.quickLinkModel)
-                .subscribe((response: QuickLinkModel) => {
-                    this.toastrService.success('Quick link saved Successfully.', 'Success', this.toastrConfig);
-                    this.dataExchange.Publish("quickLinkModelSaved", response);
-                     this.showAdd = false;
-                    this.initiateQuickLinkModel();
-                }, (error: any) => {
-                    console.log(`Error: ${error}`);
-                });
-        }
-        else {//EDIT REGION
-            if (this.form.dirty) {
-                this.formControlDirtyCheck();
-                this.quickLinkService.Update(this.quickLinkModelEdit)
+        if (this.form.valid) {
+            if (this.quickLinkModel.QuickLinkId == 0) {//ADD REGION
+                delete this.quickLinkModel.Active;
+                this.quickLinkModel.QuickLinkName = this.form.controls['QuickLinkName'].value;
+                this.quickLinkModel.QuickLinkURL = this.form.controls['QuickLinkURL'].value;
+                this.quickLinkService.Create(this.quickLinkModel)
                     .subscribe((response: QuickLinkModel) => {
-                        this.toastrService.success('Quick link edited Successfully.', 'Success', this.toastrConfig);
-                        this.initiateQuickLinkModel();
-                        this.form = new FormGroup({
-                            QuickLinkId: new FormControl(this.quickLinkModel.QuickLinkId),
-                            QuickLinkName: new FormControl(this.quickLinkModel.QuickLinkName, 
-                                [Validators.required, Validators.minLength(5)]),
-                            QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL, 
-                                [Validators.required, Validators.minLength(12)])
-                        });
+                        this.initializeInputForm();
+                        this.toastrService.success('Quick link saved Successfully.', 'Success', this.toastrConfig);
+                        this.dataExchange.Publish("quickLinkModelSaved", response);
                         this.showAdd = false;
+                        this.initiateQuickLinkModel();
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                     });
+            }
+            else {//EDIT REGION
+                if (this.form.dirty) {
+                    this.formControlDirtyCheck();
+                    delete this.quickLinkModelEdit.Active;
+                    this.quickLinkModelEdit.deleteAttributes();
+                    this.quickLinkService.Update(this.quickLinkModelEdit)
+                        .subscribe((response: QuickLinkModel) => {
+                            this.toastrService.success('Quick link edited Successfully.', 'Success', this.toastrConfig);
+                            this.initializeInputForm();
+                            this.initiateQuickLinkModel();
+                            this.form = new FormGroup({
+                                QuickLinkId: new FormControl(this.quickLinkModel.QuickLinkId),
+                                QuickLinkName: new FormControl(this.quickLinkModel.QuickLinkName,
+                                    [Validators.required, Validators.minLength(5)]),
+                                QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL,
+                                    [Validators.required, Validators.minLength(12)])
+                            });
+                            this.showAdd = false;
+                        }, (error: any) => {
+                            console.log(`Error: ${error}`);
+                        });
+                }
             }
         }
     }
@@ -101,9 +111,9 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
         this.showAdd = false;
         this.form = new FormGroup({
             QuickLinkId: new FormControl(0),
-            QuickLinkName: new FormControl(this.quickLinkModel.QuickLinkName, 
+            QuickLinkName: new FormControl(this.quickLinkModel.QuickLinkName,
                 [Validators.required, Validators.minLength(5)]),
-            QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL, 
+            QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL,
                 [Validators.required, Validators.minLength(12)])
         });
     }
@@ -131,9 +141,9 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
 
         this.form = new FormGroup({
             QuickLinkId: new FormControl(this.quickLinkModel.QuickLinkId),
-            QuickLinkName: new FormControl(this.quickLinkModel.QuickLinkName, 
+            QuickLinkName: new FormControl(this.quickLinkModel.QuickLinkName,
                 [Validators.required, Validators.minLength(5)]),
-            QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL, 
+            QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL,
                 [Validators.required, Validators.minLength(12)])
         });
     }

@@ -17,12 +17,9 @@ export class CalendarComponent implements OnInit {
     calendarLanguage: CalendarLanguage;
     calendarService: CalendarService;
 
-    constructor() { }
-
-    public initialize(options: CalendarOptions, initialDate: Date, dateChanging: Function): void {
+    public initialize(options: CalendarOptions, initialDate: Date, dateChanging: () => void): void {
         this.options = options;
         this.initialDate = initialDate;
-        
     }
 
     public ngOnInit(): void {

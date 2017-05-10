@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewEncapsulation, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Input, ViewChild, SimpleChange } from '@angular/core';
+
 import {
     DemandRaisedSummaryModel,
     AllDemandRaisedSummaryModel,
@@ -26,6 +27,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
     public allDemandRaisedSummaryModel: Observable<AllDemandRaisedSummaryModel[]>;
     public demandRaisedList: Observable<DemandRaisedSummaryModel[]>;
     public allDemandRaisedList: Observable<DemandRaisedModel[]>;
+    public allSubDeptDemandRaisedList: Observable<DemandRaisedModel[]>;
     public demandRaisedSummary: DemandRaisedSummaryModel;
     public allDemandRaisedSummaryModelList: AllDemandRaisedSummaryModel[];
     public showAllDeptSubCompleted: boolean;
@@ -46,6 +48,20 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
 
     }
 
+    public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
+        if (changes['incidentId'] !== undefined && (changes['incidentId'].currentValue !==
+            changes['incidentId'].previousValue) &&
+            changes['incidentId'].previousValue !== undefined) {
+            this.demandRaisedSummary = this.demandRaisedSummaryWidgetService.GetDemandRaisedCount(this.incidentId, this.departmentId);
+        }
+        if (changes['departmentId'] !== undefined && (changes['departmentId'].currentValue !==
+            changes['departmentId'].previousValue) &&
+            changes['departmentId'].previousValue !== undefined) {
+            this.demandRaisedSummary = this.demandRaisedSummaryWidgetService.GetDemandRaisedCount(this.incidentId, this.departmentId);
+        }
+    }
+
+
     public openAllocatedActionableDetails(): void {
         this.getOpenAllocatedDemandDetails(this.incidentId, this.departmentId, () => {
             this.childModalAllDemandRaisedSummary.show();
@@ -57,7 +73,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
     }
 
     public getOpenAllocatedDemandDetails(incidentId: number, departmentId: number, callback?: Function): void {
-        this.demandRaisedSummaryWidgetService.GetAllDemandByTargetDepartment(this.incidentId, this.departmentId, (x: AllDemandRaisedSummaryModel[]) => {
+        this.demandRaisedSummaryWidgetService.GetAllDemandByRequesterDepartment(this.incidentId, this.departmentId, (x: AllDemandRaisedSummaryModel[]) => {
             this.allDemandRaisedSummaryModelList = x;
             this.setRagStatus();
             this.allDemandRaisedSummaryModel = Observable.of(this.allDemandRaisedSummaryModelList);
@@ -121,8 +137,8 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
 
     public openViewAllSubDeptDemandRaisedSummary(): void {
         this.demandRaisedSummaryWidgetService.GetSubDepartmentDemandByRaisedDepartment(this.incidentId, this.departmentId, (item: DemandRaisedModel[]) => {
-            this.allDemandRaisedList = Observable.of([]);
-            this.allDemandRaisedList = Observable.of(item);
+            this.allSubDeptDemandRaisedList = Observable.of([]);
+            this.allSubDeptDemandRaisedList = Observable.of(item);
             this.childModalViewAllSubDeptDemandRaisedSummary.show();
         });
     }
@@ -141,7 +157,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
             if (item.IsClosed == true) {
                 let allDeptDemandRaisedSummary: AllDeptDemandRaisedSummary = new AllDeptDemandRaisedSummary();
                 allDeptDemandRaisedSummary.description = item.DemandDesc;
-                allDeptDemandRaisedSummary.requesterDepartmentName = item.RequesterDepartment.DepartmentName;
+                allDeptDemandRaisedSummary.targetDepartmentName = item.TargetDepartment.DepartmentName;
                 let ScheduleTime: number = (Number(item.ScheduleTime) * 60000);
                 let CreatedOn: number = new Date(item.CreatedOn).getTime();
                 allDeptDemandRaisedSummary.scheduleCloseTime = new Date(CreatedOn + ScheduleTime);
@@ -184,7 +200,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
             if (item.IsClosed == false) {
                 let allDeptDemandRaisedSummary: AllDeptDemandRaisedSummary = new AllDeptDemandRaisedSummary();
                 allDeptDemandRaisedSummary.description = item.DemandDesc;
-                allDeptDemandRaisedSummary.requesterDepartmentName = item.RequesterDepartment.DepartmentName;
+                allDeptDemandRaisedSummary.targetDepartmentName = item.TargetDepartment.DepartmentName;
                 let ScheduleTime: number = (Number(item.ScheduleTime) * 60000);
                 let CreatedOn: number = new Date(item.CreatedOn).getTime();
                 allDeptDemandRaisedSummary.scheduleCloseTime = new Date(CreatedOn + ScheduleTime);
@@ -230,7 +246,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
             if (item.IsClosed == true) {
                 let subDeptDemandRaisedSummary: SubDeptDemandRaisedSummary = new SubDeptDemandRaisedSummary();
                 subDeptDemandRaisedSummary.description = item.DemandDesc;
-                subDeptDemandRaisedSummary.requesterDepartmentName = item.RequesterDepartment.DepartmentName;
+                subDeptDemandRaisedSummary.targetDepartmentName = item.TargetDepartment.DepartmentName;
                 let ScheduleTime: number = (Number(item.ScheduleTime) * 60000);
                 let CreatedOn: number = new Date(item.CreatedOn).getTime();
                 subDeptDemandRaisedSummary.scheduleCloseTime = new Date(CreatedOn + ScheduleTime);
@@ -273,7 +289,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
             if (item.IsClosed == false) {
                 let subDeptDemandRaisedSummary: SubDeptDemandRaisedSummary = new SubDeptDemandRaisedSummary();
                 subDeptDemandRaisedSummary.description = item.DemandDesc;
-                subDeptDemandRaisedSummary.requesterDepartmentName = item.RequesterDepartment.DepartmentName;
+                subDeptDemandRaisedSummary.targetDepartmentName = item.TargetDepartment.DepartmentName;
                 let ScheduleTime: number = (Number(item.ScheduleTime) * 60000);
                 let CreatedOn: number = new Date(item.CreatedOn).getTime();
                 subDeptDemandRaisedSummary.scheduleCloseTime = new Date(CreatedOn + ScheduleTime);
@@ -310,4 +326,5 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         this.showSubDeptSubPending = false;
 
     }
+
 }

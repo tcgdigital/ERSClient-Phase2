@@ -14,8 +14,8 @@ import {
     templateUrl: '../views/broadcast.list.view.html'
 })
 export class BroadcastListComponent implements OnInit, OnDestroy {
-    @Input() initiatedDepartmentId: string;
-    @Input() incidentId: string;
+    @Input() initiatedDepartmentId: number;
+    @Input() incidentId: number;
 
     broadcastMessages: BroadCastModel[] = [];
     publishedBroadcastsLatest: BroadCastModel[] = [];
@@ -32,6 +32,8 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
         this.broadCastService.Query(departmentId, incidentId)
             .subscribe((response: ResponseModel<BroadCastModel>) => {
                 this.broadcastMessages = response.Records;
+                console.log(response.Records);
+                console.log(this.broadcastMessages);
             });
     }
 
@@ -41,11 +43,14 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
 
     UpdateBroadcast(broadcastModelUpdate: BroadCastModel): void {
         let broadcastModelToSend = Object.assign({}, broadcastModelUpdate)
-        this.dataExchange.Publish("OnBroadcastUpdate", broadcastModelToSend);
+        this.dataExchange.Publish("OnBroadcastUpdate", broadcastModelToSend);        
     }
 
     ngOnInit(): void {
-        this.currentDepartmentId = +this.initiatedDepartmentId;
+        this.initiatedDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.incidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        this.currentDepartmentId = this.initiatedDepartmentId;
+        this.currentIncidentId = this.incidentId;
         this._onRouteChange = this._router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
                 if (event.url.indexOf("archivedashboard") > -1) {
@@ -64,8 +69,8 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
        //  this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
         this.dataExchange.Subscribe("BroadcastModelUpdated", model => this.onBroadcastSuccess(model));
         this.dataExchange.Subscribe("BroadcastModelSaved", model => this.onBroadcastSuccess(model));
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
     private incidentChangeHandler(incident: KeyValue): void {
@@ -81,7 +86,7 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe("BroadcastModelSaved");
         this.dataExchange.Unsubscribe("BroadcastModelUpdated");
-        this.globalState.Unsubscribe('incidentChange');
-        this.globalState.Unsubscribe('departmentChange');
+        this.globalState.Unsubscribe('incidentChangefromDashboard');
+        this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 }

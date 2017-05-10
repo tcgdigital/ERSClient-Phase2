@@ -40,4 +40,5 @@ export class PresidentMessageWidgetService {
             .Execute()
             .map(x => x.Records);
     }
+   
 }

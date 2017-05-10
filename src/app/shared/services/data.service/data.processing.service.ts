@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
 import { URLSearchParams, Headers, Response, RequestOptions } from '@angular/http';
 
 import { BaseModel, ResponseModel, WEB_METHOD, RequestModel } from '../../models';
@@ -10,6 +11,7 @@ import { UtilityService } from '../common.service';
 export class DataProcessingService {
     public Key: ODataKeyConfig = new ODataKeyConfig();
     public EndPoint: string = GlobalConstants.ODATA;
+    public ExceptionHandler: (error: any) => Observable<any>;
 
     /**
      * Get base URI
@@ -39,7 +41,7 @@ export class DataProcessingService {
         if (this.EndPoint === GlobalConstants.TOKEN || this.EndPoint === GlobalConstants.BATCH)
             uri = `${this.BaseUri}`;
         else {
-            if (entityKey !== ''  && actionSuffix === '') {
+            if (entityKey !== '' && actionSuffix === '') {
                 if (/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(entityKey))
                     uri = `${this.BaseUri}/${typeName}('${entityKey}')`;
                 else if (!/^[0-9]*$/.test(entityKey))

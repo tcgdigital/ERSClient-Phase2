@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { DataServiceFactory, DataExchangeService, GlobalStateService, KeyValue } from '../../../shared'
+import { DataServiceFactory, DataExchangeService, GlobalStateService, KeyValue, UtilityService } from '../../../shared'
 import { MediaReleaseWidgetModel } from './mediaRelease.widget.model'
+import { MediaModel } from '../../shared.components';
 import { MediaReleaseWidgetService } from './mediaRelease.widget.service'
 import { ModalDirective } from 'ng2-bootstrap/modal';
 
@@ -12,14 +13,14 @@ import { ModalDirective } from 'ng2-bootstrap/modal';
 })
 export class MediaReleaseWidgetComponent implements OnInit {
     @Input('initiatedDepartmentId') departmentId: number;
-    @Input('currentIncidentId') incidentId: number;
-    isHidden: boolean = true;
+    @Input('currentIncidentId') incidentId: number;    
     @ViewChild('childModalMediaRelease') public childModal: ModalDirective;
 
     mediaReleases: Observable<MediaReleaseWidgetModel[]>;
     AllMediaReleases: Observable<MediaReleaseWidgetModel[]>;
     currentDepartmentId: number;
     currentIncidentId: number;
+    currentMediaRelaseModel: MediaReleaseWidgetModel = new MediaReleaseWidgetModel(); 
 
     /**
      * Creates an instance of MediaReleaseWidgetComponent.
@@ -32,18 +33,27 @@ export class MediaReleaseWidgetComponent implements OnInit {
         private dataExchange: DataExchangeService<MediaReleaseWidgetModel>, private globalState: GlobalStateService) { }
 
     public ngOnInit(): void {
+        // this.incidentId= +UtilityService.GetFromSession("CurrentDepartmentId");
+	    // this.departmentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.departmentId;
         this.getLatestMediaReleases(this.currentIncidentId);
         this.getAllMediaReleases();
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('MediaReleasePublished', model => this.onMediaReleasePublish(model));        
     };
 
-    private incidentChangeHandler(incident: KeyValue): void {
-        this.currentIncidentId = incident.Value;
+    private incidentChangeHandler(incident: KeyValue): void {       
+        this.currentIncidentId = incident.Value;        
         this.getLatestMediaReleases(this.currentIncidentId);
         this.getAllMediaReleases();
     };
+
+    private onMediaReleasePublish(mediaRelease: MediaModel): void{
+        if(mediaRelease.IsPublished){             
+            this.getLatestMediaReleases(this.currentIncidentId);
+        }
+    }    
   
     public getLatestMediaReleases(incidentId): void {
         let data: MediaReleaseWidgetModel[] = [];
@@ -89,5 +99,7 @@ export class MediaReleaseWidgetComponent implements OnInit {
 
     ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChange');
+        this.globalState.Unsubscribe('MediaReleasePublished');
+        //this.globalState.Unsubscribe('MediaReleasePublishedByUpdate');
     }
 }

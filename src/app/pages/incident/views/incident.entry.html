@@ -8,105 +8,130 @@
                         <input id="IncidentId" type="hidden" name="IncidentId" formControlName="IncidentId" [(ngModel)]="incidentModel.IncidentId"
                         />
                         <md-checkbox md-no-ink id="IsDrill" name="IsDrill" formControlName="IsDrill" [ngModel]="incidentModel.IsDrill" (change)="IsDrill($event)"
-                            aria-label="Drill">IsDrill:<span class="red">*</span>
+                            aria-label="Drill">IsDrill
                         </md-checkbox>
                     </div>
                 </div>
                 <div class="card-block">
                     <div class="row">
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="EmergencyType">EmergencyType:<span class="red">*</span></label>
+                            <label for="EmergencyType">EmergencyType<span class="required">*</span></label>
                             <select id="EmergencyTypeId" class="form-control" formControlName="EmergencyTypeId" name="EmergencyTypeId" (change)="emergencyTypeChange($event.target.value,activeEmergencyTypes)">
-                                    <option value="" >Select Emergency Type</option>
+                                    <option value='' >Select Emergency Type</option>
                                     <option *ngFor="let emergencyType of activeEmergencyTypes" [value]="emergencyType.EmergencyTypeId" >
                                         {{emergencyType.EmergencyTypeName}}
                                     </option>
                             </select>
+                            <small *ngIf="!form.controls.EmergencyTypeId.valid" class="text-danger">
+                            Required.
+                            </small>
                         </div>
                         <div class="form-group col-lg-2 col-sm-12 col-md-6">
-                            <label for="AffectedStation">Affected Station:<span class="red">*</span></label>
+                            <label for="AffectedStation">Affected Station<span class="required">*</span></label>
                             <select id="AffectedStationId" class="form-control" formControlName="AffectedStationId" name="AffectedStationId" (change)="affectedStationChange($event.target.value,affectedStations)">
-                                    <option value="" >Select Affected Station</option>
+                                    <option value='' >Select Affected Station</option>
                                     <option value="Offset">Offset</option>
                                     <option *ngFor="let affectedStation of affectedStations" [value]="affectedStation.IATA" >
                                         {{affectedStation.AirportName}}
                                     </option>
                             </select>
+                            <small *ngIf="!form.controls.AffectedStationId.valid" class="text-danger">
+                            Required.
+                            </small>
                         </div>
                         <div *ngIf="isOffSet" class="form-group col-lg-2 col-sm-12 col-md-6">
-                            <label for="OffsiteDetails">Offsite Details:<span class="red">*</span></label>
+                            <label for="OffsiteDetails">Offsite Details<span class="required">*</span></label>
                             <input id="OffsiteDetails" class="form-control" type="text" name="OffsiteDetails" formControlName="OffsiteDetails" placeholder="Enter Offsite Details"
                             />
+                            <small *ngIf="!form.controls.OffsiteDetails.valid" class="text-danger">
+                            Required.
+                            </small>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="EmergencyDate">Date of Crisis:<span class="red">*</span>(UTC)</label>
-                            <input id="EmergencyDate" class="form-control" type="text" name="EmergencyDate" formControlName="EmergencyDate" placeholder="Enter EmergencyDate"
-                                datetime-picker [options]="datepickerOptionED" (selectHandler)="dateTimeSet($event,'EmergencyDate');" />
+                            <label for="EmergencyDate">Date of Crisis<span class="required">*</span>(UTC)</label>
+                            <input id="EmergencyDate" class="form-control" type="text" name="EmergencyDate" formControlName="EmergencyDate" placeholder="Enter Emergency Date"
+                                datetime-picker [options]="datepickerOptionED" (selectHandler)="dateTimeSet($event,'EmergencyDate');"
+                            />
+                            <small *ngIf="!form.controls.EmergencyDate.valid" class="text-danger">
+                            Required.
+                            </small>
                         </div>
                         <div class="form-group col-lg-2 col-sm-12 col-md-6">
-                            <label for="Severity">Severity:<span class="red">*</span></label>
+                            <label for="Severity">Severity<span class="required">*</span></label>
                             <select id="selectApprover" class="form-control" formControlName="Severity" name="Severity">
-                                    <option value="" >Select Severity</option>
+                                    <option value='' >Select Severity</option>
                                     <option *ngFor="let severity of severities" [value]="severity.Key" >
                                         {{severity.Key}}
                                     </option>
                             </select>
+                            <small *ngIf="!form.controls.Severity.valid" class="text-danger">
+                            Required.
+                            </small>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <div class="form-group">
-                                <label for="EmergencyName">Emergency Name:<span class="red">*</span></label>
+                                <label for="EmergencyName">Emergency Name<span class="required">*</span></label>
                                 <input id="EmergencyName" class="form-control" type="text" name="EmergencyName" formControlName="EmergencyName" placeholder="Enter Emergency Name"
                                 />
+                                <small *ngIf="!form.controls.EmergencyName.valid" class="text-danger">
+                                Required.
+                                </small>
                             </div>
                             <div class="form-group">
-                                <label for="AlertMessage">Dashboard Alert Message:<span class="red">*</span></label>
+                                <label for="AlertMessage">Dashboard Alert Message<span class="required">*</span></label>
                                 <input id="AlertMessage" class="form-control" type="text" name="AlertMessage" formControlName="AlertMessage" placeholder="Enter Alert Message"
                                 />
+                                <small *ngIf="!form.controls.AlertMessage.valid" class="text-danger">
+                                Required.
+                                </small>
                             </div>
                             <div class="form-group"><label class="labelStyle" (click)="ShowWeatherLocation()">Show Location</label></div>
                         </div>
                         <div class="form-group col-lg-9 col-sm-12 col-md-6">
-                            <label for="Description">Note:<span class="red">*</span></label>
+                            <label for="Description">Note<span class="required">*</span></label>
                             <textarea id="Description" class="form-control textarea" type="text" name="Description" formControlName="Description" placeholder="Enter Description"></textarea>
+                            <small *ngIf="!form.controls.Description.valid" class="text-danger">
+                            Required.
+                            </small>
                         </div>
                     </div>
 
                     <div class="card" *ngIf="isFlightRelated">
                         <div class="card-header ">
-                            <strong>Flight Information:</strong>
+                            <strong>Flight Information</strong>
                         </div>
                         <div class="card-block">
                             <div class="row">
                                 <div class="form-group col-lg-2 col-sm-12 col-md-6">
-                                    <label for="FlightNumber">Flight Number:<span class="red">*</span></label>
+                                    <label for="FlightNumber">Flight Number<span class="required">*</span></label>
                                     <input id="FlightNumber" class="form-control" type="text" name="FlightNumber" formControlName="FlightNumber" placeholder="FlightNumber"
                                     />
                                 </div>
                                 <div class="form-group col-lg-2 col-sm-12 col-md-6">
-                                    <label for="Origin">Origin:<span class="red">*</span></label>
+                                    <label for="Origin">Origin<span class="required">*</span></label>
                                     <input id="Origin" class="form-control" type="text" name="Origin" formControlName="Origin" placeholder="Origin" />
                                 </div>
                                 <div class="form-group col-lg-2 col-sm-12 col-md-6">
-                                    <label for="Destination">Destination:<span class="red">*</span></label>
+                                    <label for="Destination">Destination<span class="required">*</span></label>
                                     <input id="Destination" class="form-control" type="text" name="Destination" formControlName="Destination" placeholder="Destination"
                                     />
                                 </div>
                                 <div class="form-group col-lg-2 col-sm-12 col-md-6">
-                                    <label for="Scheduleddeparture(UTC)">Scheduled departure:<span class="red">*</span></label>
+                                    <label for="Scheduleddeparture(UTC)">Scheduled departure<span class="required">*</span></label>
                                     <input id="Scheduleddeparture" class="form-control" type="text" name="Scheduleddeparture" formControlName="Scheduleddeparture"
                                         placeholder="Scheduled Departure" datetime-picker [options]="datepickerOptionFLT" (selectHandler)="dateTimeSet($event,'Scheduleddeparture');"
                                     />
                                 </div>
                                 <div class="form-group col-lg-2 col-sm-12 col-md-6">
-                                    <label for="Scheduledarrival(UTC)">Scheduled arrival:<span class="red">*</span></label>
+                                    <label for="Scheduledarrival(UTC)">Scheduled arrival<span class="required">*</span></label>
                                     <input id="Scheduledarrival" class="form-control" type="text" name="Scheduledarrival" formControlName="Scheduledarrival"
                                         placeholder="Scheduled Arrival" datetime-picker [options]="datepickerOptionFLT" (selectHandler)="dateTimeSet($event,'Scheduledarrival');"
                                     />
                                 </div>
                                 <div class="form-group col-lg-2 col-sm-12 col-md-6">
-                                    <label for="FlightTailNumber">FlightTailNumber:<span class="red">*</span></label>
+                                    <label for="FlightTailNumber">FlightTailNumber<span class="required">*</span></label>
                                     <input id="FlightTailNumber" class="form-control" type="text" name="FlightTailNumber" formControlName="FlightTailNumber"
                                         placeholder="Flight Tail Number" />
                                 </div>
@@ -115,7 +140,7 @@
                     </div>
                     <div class="col-sm-3 ">
                         <div class="fromtop1 ">
-                            <button class="btn btn-primary" [disabled]="!form.valid" type="submit">Save</button>
+                            <button class="btn btn-primary" type="submit">Save</button>
                             <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
                         </div>
                     </div>
@@ -156,12 +181,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <strong>Incident View</strong>
-                    <div>
-                        <!--<input id="IncidentId" type="hidden" name="IncidentId" [(ngModel)]="incidentModel.IncidentId" />-->
-                        <md-checkbox md-no-ink id="IsDrillPopup" [disabled]="disableIsDrillPopup" name="IsDrillPopup" formControlName="IsDrillPopup" 
-                            aria-label="Drill">IsDrill:<span class="red">*</span>
-                        </md-checkbox>
-                    </div>
+                    <div *ngIf="IsDrillPopup" class="dilld pull-left">DRILL</div>
+                    <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideIncidentView()"></i>
                 </div>
                 <div class="modal-body card">
                     <div class="card-block">
@@ -187,15 +208,13 @@
                             </div>
                             <div *ngIf="isOffSetPopup" class="form-group col-lg-2 col-sm-12 col-md-6">
                                 <label for="OffsiteDetails">Offsite Details:<span class="red">*</span></label>
-                                <input id="OffsiteDetailsPopup" disabled formControlName="OffsiteDetailsPopup" class="form-control" type="text" 
-                                name="OffsiteDetailsPopup" placeholder="Enter Offsite Details"
-                                />
+                                <input id="OffsiteDetailsPopup" disabled formControlName="OffsiteDetailsPopup" class="form-control" type="text" name="OffsiteDetailsPopup"
+                                    placeholder="Enter Offsite Details" />
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
                                 <label for="EmergencyDate">Date of Crisis:<span class="red">*</span>(UTC)</label>
-                                <input id="EmergencyDatePopup" disabled formControlName="EmergencyDatePopup" 
-                                class="form-control" type="text" name="EmergencyDatePopup" placeholder="Enter EmergencyDate"
-                                      />
+                                <input id="EmergencyDatePopup" disabled formControlName="EmergencyDatePopup" class="form-control" type="text" name="EmergencyDatePopup"
+                                    placeholder="Enter EmergencyDate" />
                             </div>
                             <div class="form-group col-lg-2 col-sm-12 col-md-6">
                                 <label for="Severity">Severity:<span class="red">*</span></label>
@@ -211,21 +230,19 @@
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
                                 <div class="form-group">
                                     <label for="EmergencyName">Emergency Name:<span class="red">*</span></label>
-                                    <input id="EmergencyNamePopup" disabled formControlName="EmergencyNamePopup" 
-                                    class="form-control" type="text" name="EmergencyNamePopup" placeholder="Enter Emergency Name"
-                                    />
+                                    <input id="EmergencyNamePopup" disabled formControlName="EmergencyNamePopup" class="form-control" type="text" name="EmergencyNamePopup"
+                                        placeholder="Enter Emergency Name" />
                                 </div>
                                 <div class="form-group">
                                     <label for="AlertMessage">Dashboard Alert Message:<span class="red">*</span></label>
-                                    <input id="AlertMessagePopup" disabled formControlName="AlertMessagePopup"  
-                                    class="form-control" type="text" name="AlertMessagePopup" placeholder="Enter Alert Message"
-                                    />
+                                    <input id="AlertMessagePopup" disabled formControlName="AlertMessagePopup" class="form-control" type="text" name="AlertMessagePopup"
+                                        placeholder="Enter Alert Message" />
                                 </div>
                             </div>
                             <div class="form-group col-lg-9 col-sm-12 col-md-6">
                                 <label for="Description">Note:<span class="red">*</span></label>
-                                <textarea id="DescriptionPopup" disabled formControlName="DescriptionPopup" 
-                                class="form-control textarea" type="text" name="DescriptionPopup" placeholder="Enter Description"></textarea>
+                                <textarea id="DescriptionPopup" disabled formControlName="DescriptionPopup" class="form-control textarea" type="text" name="DescriptionPopup"
+                                    placeholder="Enter Description"></textarea>
                             </div>
                         </div>
 
@@ -237,36 +254,33 @@
                                 <div class="row">
                                     <div class="form-group col-lg-2 col-sm-12 col-md-6">
                                         <label for="FlightNumber">Flight Number:<span class="red">*</span></label>
-                                        <input id="FlightNumberPopup" disabled formControlName="FlightNumberPopup" 
-                                        class="form-control" type="text" name="FlightNumberPopup" placeholder="FlightNumber" />
+                                        <input id="FlightNumberPopup" disabled formControlName="FlightNumberPopup" class="form-control" type="text" name="FlightNumberPopup"
+                                            placeholder="FlightNumber" />
                                     </div>
                                     <div class="form-group col-lg-2 col-sm-12 col-md-6">
                                         <label for="Origin">Origin:<span class="red">*</span></label>
-                                        <input id="Origin" disabled formControlName="OriginPopup" 
-                                        class="form-control" type="text" name="OriginPopup" placeholder="Origin" />
+                                        <input id="Origin" disabled formControlName="OriginPopup" class="form-control" type="text" name="OriginPopup" placeholder="Origin"
+                                        />
                                     </div>
                                     <div class="form-group col-lg-2 col-sm-12 col-md-6">
                                         <label for="Destination">Destination:<span class="red">*</span></label>
-                                        <input id="DestinationPopup" disabled formControlName="DestinationPopup" 
-                                        class="form-control" type="text" name="DestinationPopup" placeholder="Destination" />
+                                        <input id="DestinationPopup" disabled formControlName="DestinationPopup" class="form-control" type="text" name="DestinationPopup"
+                                            placeholder="Destination" />
                                     </div>
                                     <div class="form-group col-lg-2 col-sm-12 col-md-6">
                                         <label for="Scheduleddeparture(UTC)">Scheduled departure:<span class="red">*</span></label>
-                                        <input id="ScheduleddeparturePopup" disabled formControlName="ScheduleddeparturePopup" 
-                                        class="form-control" type="text" name="ScheduleddeparturePopup" placeholder="Scheduled Departure"
-                                             />
+                                        <input id="ScheduleddeparturePopup" disabled formControlName="ScheduleddeparturePopup" class="form-control" type="text" name="ScheduleddeparturePopup"
+                                            placeholder="Scheduled Departure" />
                                     </div>
                                     <div class="form-group col-lg-2 col-sm-12 col-md-6">
                                         <label for="Scheduledarrival(UTC)">Scheduled arrival:<span class="red">*</span></label>
-                                        <input id="Scheduledarrival" disabled formControlName="ScheduledarrivalPopup" 
-                                        class="form-control" type="text" name="ScheduledarrivalPopup" placeholder="Scheduled Arrival"
-                                             />
+                                        <input id="Scheduledarrival" disabled formControlName="ScheduledarrivalPopup" class="form-control" type="text" name="ScheduledarrivalPopup"
+                                            placeholder="Scheduled Arrival" />
                                     </div>
                                     <div class="form-group col-lg-2 col-sm-12 col-md-6">
                                         <label for="FlightTailNumber">FlightTailNumber:<span class="red">*</span></label>
-                                        <input id="FlightTailNumber" disabled formControlName="FlightTailNumberPopup" 
-                                        class="form-control" type="text" name="FlightTailNumberPopup" placeholder="Flight Tail Number"
-                                        />
+                                        <input id="FlightTailNumber" disabled formControlName="FlightTailNumberPopup" class="form-control" type="text" name="FlightTailNumberPopup"
+                                            placeholder="Flight Tail Number" />
                                     </div>
                                 </div>
                             </div>
