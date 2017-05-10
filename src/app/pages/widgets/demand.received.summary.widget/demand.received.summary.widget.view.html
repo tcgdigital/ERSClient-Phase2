@@ -29,7 +29,7 @@
 
 
 <!--Depand Popup-->
-<div bsModal #childModalViewAllDemandReceivedSummary="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+<div  bsModal #childModalViewAllDemandReceivedSummary="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -37,7 +37,7 @@
                 <h4 class="modal-title pull-left"><strong>View All Received Demands</strong></h4>
                 <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideViewAllDemandReceivedSummary()"></i>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="overflow:auto;">
                 <responsive-table>
                     <table responsive-table-body>
 
@@ -57,7 +57,7 @@
                                 <td data-title="Target Department">{{demand.targetDepartmentName}}</td>
                                 <td data-title="Allocated">{{demand.assigned}}</td>
                                 <td data-title="Completed"><span (click)="showAllDeptSubCompletedFunc(demand.demandModelList)">{{demand.completed}}</span></td>
-                                <td data-title="Pending"><span (click)="showAllDeptSubPendingFunc(demand.demandModelList)">{{demand.pending}}</span></td>
+                                <td data-title="Pending"><span  (click)="showAllDeptSubPendingFunc(demand.demandModelList)">{{demand.pending}}</span></td>
                             </tr>
                         </tbody>
                     </table>

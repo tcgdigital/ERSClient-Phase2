@@ -1,7 +1,7 @@
 <div class="row">
-<div class="addbuttonHolder">
-<button class="btn btn-primary" type="button" (click)="submit()" *ngIf="!isArchive">Submit</button>
-</div>
+    <div class="addbuttonHolder">
+        <button class="btn btn-primary" type="button" (click)="submit()" *ngIf="!isArchive">Save</button>
+    </div>
 </div>
 
 <responsive-table>
@@ -56,45 +56,40 @@
             </div>
             <div class="modal-body">
                 <div class="row holderRemark" *ngIf="!isArchive">
-                   <div class="col-lg-8 col-sm-12 col-md-6 form-group">
+                    <div class="col-lg-8 col-sm-12 col-md-6 form-group">
                         <label>Remarks</label>
                         <input [(ngModel)]="Remarks" class="form-control" type="text" />
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-12 form-group">
                         <div class="buttonholderRemark">
                             <button class="btn btn-primary" type="button" (click)="saveRemark(Remarks)" *ngIf="!isArchive">Save</button>
-                            <button class="btn btn-primary" type="button" (click)="cancelRemarkUpdate()">Cancel</button>
                         </div>
                     </div>
                     <div class="card-block">
-                    <responsive-table>
-                        <table responsive-table-body>
-                            <thead>
-                                <th>Requester Department</th>
-                                <th>Remarks added by</th>
-                                <th>Remarks added on</th>
-                                <th>Remarks</th>
-                            </thead>
-                            <tbody>
-                                <tr [hidden]="demandRemarks.length != 0">
-                                    <td colspan="9">No Remark is added yet.</td>
-                                </tr>
-                                <tr *ngFor="let remark of demandRemarks">
-                                    <td data-title="Requester Department">{{remark.RequesterDepartmentName}}</td>
-                                    <td data-title="Remarks added by">{{remark.CreatedByName}}</td>
-                                    <td data-title="Remarks added on">{{remark.CreatedOn}}</td>
-                                    <td data-title="Remarks">{{remark.Remark}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </responsive-table>
+                        <responsive-table>
+                            <table responsive-table-body>
+                                <thead>
+                                    <th>Requester Department</th>
+                                    <th>Remarks added by</th>
+                                    <th>Remarks added on</th>
+                                    <th>Remarks</th>
+                                </thead>
+                                <tbody>
+                                    <tr [hidden]="demandRemarks.length != 0">
+                                        <td colspan="9">No Remark is added yet.</td>
+                                    </tr>
+                                    <tr *ngFor="let remark of demandRemarks">
+                                        <td data-title="Requester Department">{{remark.RequesterDepartmentName}}</td>
+                                        <td data-title="Remarks added by">{{remark.CreatedByName}}</td>
+                                        <td data-title="Remarks added on">{{remark.CreatedOn}}</td>
+                                        <td data-title="Remarks">{{remark.Remark}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </responsive-table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
-
-

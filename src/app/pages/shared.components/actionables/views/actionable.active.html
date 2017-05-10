@@ -99,7 +99,7 @@
                                     placeholder="URL" />
                             </div>
                         </div>
-                        <div class="row"  *ngIf="!isArchive">
+                        <div class="row" *ngIf="!isArchive">
                             <a class="glyphicon glyphicon-download-alt" target="_self" *ngIf="filepathWithLinks!=null" href="{{filepathWithLinks}}" download="{{fileName}}">Download</a>
                             <div class="buttonholder offset-5">
                                 <input #myFileInput type="file" (change)="fileChangeEvent($event)" placeholder="Upload file..." />
@@ -108,9 +108,8 @@
                             </div>
                         </div>
 
-                        <div class="row buttonholder"  *ngIf="!isArchive">
+                        <div class="row buttonholder" *ngIf="!isArchive">
                             <button class="btn btn-primary" type="submit">Save</button>&nbsp;
-                            <button class="btn btn-primary" type="button" (click)="cancelUpdateCommentAndURL(actionableModelToUpdate)">Cancel</button>
                         </div>
                     </form>
                 </div>
