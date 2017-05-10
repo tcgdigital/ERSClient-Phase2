@@ -1,7 +1,7 @@
 <div class="row">
-<div class="addbuttonHolder">
-<button class="btn btn-primary" type="button" (click)="submit()" *ngIf="!isArchive">Submit</button>
-</div>
+    <div class="addbuttonHolder">
+        <button class="btn btn-primary" type="button" (click)="submit()" *ngIf="!isArchive">Save</button>
+    </div>
 </div>
 
 <responsive-table>
@@ -56,14 +56,13 @@
             </div>
             <div class="modal-body">
                 <div class="row holderRemark" *ngIf="!isArchive">
-                   <div class="col-lg-8 col-sm-12 col-md-6 form-group">
+                    <div class="col-lg-8 col-sm-12 col-md-6 form-group">
                         <label>Remarks</label>
                         <input [(ngModel)]="Remarks" class="form-control" type="text" />
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-12 form-group">
                         <div class="buttonholderRemark">
                             <button class="btn btn-primary" type="button" (click)="saveRemark(Remarks)" *ngIf="!isArchive">Save</button>
-                            <button class="btn btn-primary" type="button" (click)="cancelRemarkUpdate()">Cancel</button>
                         </div>
                     </div>
                     <div class="card-block">
@@ -94,7 +93,3 @@
         </div>
     </div>
 </div>
-
-
-
-

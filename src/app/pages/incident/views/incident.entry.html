@@ -29,8 +29,8 @@
                         <div class="form-group col-lg-2 col-sm-12 col-md-6">
                             <label for="AffectedStation">Affected Station<span class="required">*</span></label>
                             <select id="AffectedStationId" class="form-control" formControlName="AffectedStationId" name="AffectedStationId" (change)="affectedStationChange($event.target.value,affectedStations)">
-                                    <option value='' >Select Affected Station</option>
-                                    <option value="Offset">Offset</option>
+                                    <option value=''>Select Affected Station</option>
+                                    <option value="Offsite">Offsite</option>
                                     <option *ngFor="let affectedStation of affectedStations" [value]="affectedStation.IATA" >
                                         {{affectedStation.AirportName}}
                                     </option>
