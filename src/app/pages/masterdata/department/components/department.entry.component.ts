@@ -87,40 +87,33 @@ export class DepartmentEntryComponent implements OnInit {
 
 
     onSubmit(values: DepartmentModel): void {
-        if (this.form.valid) {
-            if (values.DepartmentId == 0) {//ADD REGION
-
-                UtilityService.setModelFromFormGroup<DepartmentModel>(this.departmentModel, this.form,
-                    x => x.DepartmentId, x => x.DepartmentName, x => x.Description, x => x.ContactNo, x => x.DepartmentSpoc, x => x.ParentDepartmentId);
-                this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString();
-                this.departmentModel.CreatedBy = +this.credential.UserId;
-                this.departmentService.Create(this.departmentModel)
-                    .subscribe((response: DepartmentModel) => {
-                        this.toastrService.success('Department Saved Successfully.', 'Success', this.toastrConfig);
-                        this.dataExchange.Publish("departmentSavedOrEdited", response);
-                        this.setDepartmentForm(response);
-                        this.showAdd = false;
-                    }, (error: any) => {
-                        console.log(`Error: ${error}`);
-                    });
-            }
-            else {//EDIT REGION
-                if (this.form.dirty) {
-                    this.departmentModel = new DepartmentModel();
-                    this.departmentModel.DepartmentId = values.DepartmentId;
-                    UtilityService.formDirtyCheck<DepartmentModel>(this.departmentModel, this.form,
-                        x => x.DepartmentName, x => x.Description, x => x.ContactNo, x => x.DepartmentSpoc, x => x.ParentDepartmentId);
-                    this.departmentModel.deleteAttributes();
-                    this.departmentService.Update(this.departmentModel)
-                        .subscribe((response: DepartmentModel) => {
-                            this.toastrService.success('Department Edited Successfully.', 'Success', this.toastrConfig);
-                            this.setDepartmentForm();
-                            this.dataExchange.Publish("departmentSavedOrEdited", response);
-                            this.showAdd = false;
-                        }, (error: any) => {
-                            console.log(`Error: ${error}`);
-                        });
+        if (values.DepartmentId == 0) {//ADD REGION
+         
+            UtilityService.setModelFromFormGroup<DepartmentModel>(this.departmentModel, this.form,
+                x => x.DepartmentId, x => x.DepartmentName, x => x.Description, x => x.ContactNo, x => x.DepartmentSpoc, x => x.ParentDepartmentId);
+            this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString();
+            this.departmentModel.CreatedBy = +this.credential.UserId;
+            this.departmentService.Create(this.departmentModel)
+                .subscribe((response: DepartmentModel) => {
+                    this.toastrService.success('Department Saved Successfully.', 'Success', this.toastrConfig);
+                    this.dataExchange.Publish("departmentSavedOrEdited", response);
+                    this.setDepartmentForm();
+                    this.showAdd = false;
+                }, (error: any) => {
+                    console.log(`Error: ${error}`);
+                });
+        }
+        else {//EDIT REGION
+            if (this.form.dirty) {
+                this.departmentModel = new DepartmentModel();
+                this.departmentModel.DepartmentId = values.DepartmentId;
+                UtilityService.formDirtyCheck<DepartmentModel>(this.departmentModel, this.form,
+                    x => x.DepartmentName, x => x.Description, x => x.ContactNo, x => x.DepartmentSpoc, x => x.ParentDepartmentId);
+                this.departmentModel.deleteAttributes();
+                if(this.departmentModel.ContactNo){
+                    this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString();
                 }
+                this.departmentService.Update(this.departmentModel,this.departmentModel.DepartmentId)
             }
         }
     }

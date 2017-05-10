@@ -64,7 +64,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         this.demandTypeModel.CreatedBy = +this.credential.UserId;
         this.demandTypeModel.CreatedOn = this.date;
         this.demandTypeModel.DemandTypeId = 0;
-        this.demandTypeModel.DepartmentId = this.departments[0].DepartmentId;
+        this.demandTypeModel.DepartmentId = 0;
         this.form = new FormGroup({
             DemandTypeId: new FormControl(0),
             DemandTypeName: new FormControl('', [Validators.required, Validators.maxLength(50)]),
@@ -101,31 +101,29 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
     }
 
     onSubmit() {
-        if ((this.showApproverDept == false && this.form.controls['ApproverDept'].value == '' && this.form.controls['DemandTypeName'].value != '') ||
-            (this.showApproverDept == true && this.form.controls['ApproverDept'].value != '' && this.form.controls['DemandTypeName'].value != '')) {
-            if (this.demandTypeModel.DemandTypeId == 0) {
-                this.demandTypeModel.DemandTypeName = this.form.controls['DemandTypeName'].value;
-                this.demandTypeModel.IsAutoApproved = this.form.controls['IsAutoApproved'].value;
-                this.demandTypeModel.DepartmentId = this.form.controls['ApproverDept'].value == '' ? null : this.form.controls['ApproverDept'].value;
-                this.demandTypeService.Create(this.demandTypeModel)
-                    .subscribe((response: DemandTypeModel) => {
-                        this.resetDemandTypeForm();
-                        this.toastrService.success('Demand Saved Successfully.', 'Success', this.toastrConfig);
-                        this.dataExchange.Publish("demandTypeModelSaved", response);
-                    }, (error: any) => {
-                        console.log(`Error: ${error}`);
-                    });
+        if (this.demandTypeModel.DemandTypeId == 0) {
+            this.demandTypeModel.DemandTypeName = this.form.controls['DemandTypeName'].value;
+            this.demandTypeModel.IsAutoApproved = this.form.controls['IsAutoApproved'].value;
+            if(!this.demandTypeModel.IsAutoApproved){
+            this.demandTypeModel.DepartmentId = this.form.controls['ApproverDept'].value;
             }
-            else {
-                this.formControlDirtyCheck();
-                this.demandTypeService.Update(this.demandTypeModelToEdit)
-                    .subscribe((response: DemandTypeModel) => {
-                        this.toastrService.success('Demand Edited Successfully.', 'Success', this.toastrConfig);
-                        this.dataExchange.Publish("demandTypeModelUpdated", response);
-                    }, (error: any) => {
-                        console.log(`Error: ${error}`);
-                    });
-            }
+            this.demandTypeService.Create(this.demandTypeModel)
+                .subscribe((response: DemandTypeModel) => {
+                    this.toastrService.success('Demand Saved Successfully.', 'Success', this.toastrConfig);
+                    this.dataExchange.Publish("demandTypeModelSaved", response);
+                }, (error: any) => {
+                    console.log(`Error: ${error}`);
+                });
+        }
+        else {
+            this.formControlDirtyCheck();
+            this.demandTypeService.Update(this.demandTypeModelToEdit)
+                .subscribe((response: DemandTypeModel) => {
+                    this.toastrService.success('Demand Edited Successfully.', 'Success', this.toastrConfig);
+                    this.dataExchange.Publish("demandTypeModelUpdated", response);
+                }, (error: any) => {
+                    console.log(`Error: ${error}`);
+                });
         }
     }
 
@@ -166,4 +164,5 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         this.Action = "Save";
         // this.buttonValue = "Show Add Checklist";
     }
+
 }

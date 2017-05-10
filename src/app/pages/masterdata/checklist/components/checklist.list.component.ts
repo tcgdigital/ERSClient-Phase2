@@ -126,12 +126,12 @@ export class ChecklistListComponent implements OnInit {
         ]
         this.searchConfigs = [
             new SearchTextBox({
-                Name: 'ChecklistCode',
+                Name: 'CheckListCode',
                 Description: 'Checklist Code',
                 Value: ''
             }),
             new SearchTextBox({
-                Name: 'ChecklistDetails',
+                Name: 'CheckListDetails',
                 Description: 'Checklist Details',
                 Value: ''
             }),

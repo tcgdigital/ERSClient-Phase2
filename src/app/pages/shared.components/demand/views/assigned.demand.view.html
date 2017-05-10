@@ -29,7 +29,7 @@
                 <td data-title="PDA Name">{{demand.DemandDesc}}&nbsp;</td>
                 <td data-title="PDA Contact">{{demand.RequesterDepartmentName}}&nbsp;</td>
                 <td data-title="PNR">{{demand.Priority}}&nbsp;</td>
-                <td data-title="Passenger Type">{{demand.ScheduleTime}}&nbsp;</td>
+                <td data-title="Passenger Type">{{demand.ScheduleTimeToShow}}&nbsp;</td>
                 <td data-title="Medical Status">{{demand.ContactNumber}}&nbsp;</td>
                 <td data-title="Medical Status">{{demand.RequiredLocation}}&nbsp;</td>
                 <td><i class="fa fa-list-alt" (click)="openDemandRemarks(demand)"></i></td>
@@ -66,27 +66,27 @@
                         </div>
                     </div>
                     <div class="card-block">
-                        <responsive-table>
-                            <table responsive-table-body>
-                                <thead>
-                                    <th>Requester Department</th>
-                                    <th>Remarks added by</th>
-                                    <th>Remarks added on</th>
-                                    <th>Remarks</th>
-                                </thead>
-                                <tbody>
-                                    <tr [hidden]="demandRemarks.length != 0">
-                                        <td colspan="9">No Remark is added yet.</td>
-                                    </tr>
-                                    <tr *ngFor="let remark of demandRemarks">
-                                        <td data-title="Requester Department">{{remark.RequesterDepartmentName}}</td>
-                                        <td data-title="Remarks added by">{{remark.CreatedByName}}</td>
-                                        <td data-title="Remarks added on">{{remark.CreatedOn}}</td>
-                                        <td data-title="Remarks">{{remark.Remark}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </responsive-table>
+                    <responsive-table>
+                        <table responsive-table-body>
+                            <thead>
+                                <th>Requester Department</th>
+                                <th>Remarks added by</th>
+                                <th>Remarks added on</th>
+                                <th>Remarks</th>
+                            </thead>
+                            <tbody>
+                                <tr [hidden]="demandRemarks.length != 0">
+                                    <td colspan="9">No Remark is added yet.</td>
+                                </tr>
+                                <tr *ngFor="let remark of demandRemarks">
+                                    <td data-title="Requester Department">{{remark.RequesterDepartmentName}}</td>
+                                    <td data-title="Remarks added by">{{remark.CreatedByName}}</td>
+                                    <td data-title="Remarks added on">{{remark.CreatedOn | date:"dd-MMM-yy h:mma"}}</td>
+                                    <td data-title="Remarks">{{remark.Remark}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </responsive-table>
                     </div>
                 </div>
             </div>
