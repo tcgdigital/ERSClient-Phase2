@@ -39,15 +39,15 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit {
     }
 
     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
-        if(changes['incidentId'] !== undefined && (changes['incidentId'].currentValue !==
+        if (changes['incidentId'] !== undefined && (changes['incidentId'].currentValue !==
             changes['incidentId'].previousValue) &&
-            changes['incidentId'].previousValue !== undefined){
-        this.demandReceivedSummary = this.demandReceivedSummaryWidgetService.GetDemandReceivedCount(this.incidentId, this.departmentId);
+            changes['incidentId'].previousValue !== undefined) {
+            this.demandReceivedSummary = this.demandReceivedSummaryWidgetService.GetDemandReceivedCount(this.incidentId, this.departmentId);
         }
-        if(changes['departmentId'] !== undefined && (changes['departmentId'].currentValue !==
+        if (changes['departmentId'] !== undefined && (changes['departmentId'].currentValue !==
             changes['departmentId'].previousValue) &&
-            changes['departmentId'].previousValue !== undefined){
-        this.demandReceivedSummary = this.demandReceivedSummaryWidgetService.GetDemandReceivedCount(this.incidentId, this.departmentId);
+            changes['departmentId'].previousValue !== undefined) {
+            this.demandReceivedSummary = this.demandReceivedSummaryWidgetService.GetDemandReceivedCount(this.incidentId, this.departmentId);
         }
     }
 
@@ -260,5 +260,5 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit {
 
     }
 
-    
+
 }

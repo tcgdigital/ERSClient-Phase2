@@ -15,7 +15,9 @@
             <thead>
                 <tr>
                     <th>Department Name</th>
-                    <th>Select Department</th>
+                    <th>
+                        <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="allselect" (change)="slectAllDept($event)" aria-label="Add">Select Department</md-checkbox>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -25,7 +27,7 @@
                 <tr *ngFor="let departmentForEmergency of departmentsForEmergency">
                     <td data-title="Department Code">{{departmentForEmergency.DepartmentName}}</td>
                     <td data-title="Select Department">
-                        <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="departmentForEmergency.IsSelected" aria-label="Add"></md-checkbox>
+                        <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="departmentForEmergency.IsSelected" aria-label="Add" (change)="checkAllStatus($event)"></md-checkbox>
                     </td>
 
                 </tr>
