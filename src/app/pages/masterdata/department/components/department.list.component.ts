@@ -45,7 +45,6 @@ export class DepartmentListComponent implements OnInit {
     }
 
     onDepartmentEditorSaveSuccess(model?: DepartmentModel): void {
-
         this.getDepertments();
         this.initiateSearchConfigurations();
     }

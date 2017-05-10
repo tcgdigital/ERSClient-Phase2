@@ -114,4 +114,11 @@ export class ChecklistService extends ServiceBase<ChecklistModel> implements ICh
             .OrderBy("CreatedOn desc")
             .Execute();
     }
+
+    GetParentChecklistCode(parentchecklistId) : Observable<ResponseModel<ChecklistModel>>{
+         return this._dataService.Query()
+            .Select('CheckListCode')
+            .Filter(`CheckListId eq ${parentchecklistId}`)
+            .Execute();
+    }
 }

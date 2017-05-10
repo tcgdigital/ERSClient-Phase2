@@ -10,12 +10,14 @@ import {
 import { Observable } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 
-
 import { ChecklistModel } from './checklist.model';
 import { DepartmentModel, DepartmentService } from '../../department';
 import { EmergencyTypeModel, EmergencyTypeService } from '../../emergencytype';
 import { ChecklistService } from './checklist.service';
-import { ResponseModel, DataExchangeService, BaseModel, UtilityService, GlobalStateService, KeyValue, AuthModel } from '../../../../shared';
+import { 
+    ResponseModel, DataExchangeService, BaseModel, 
+    UtilityService, GlobalStateService, KeyValue, AuthModel 
+} from '../../../../shared';
 
 @Component({
     selector: 'checklist-entry',
@@ -34,27 +36,30 @@ export class ChecklistEntryComponent implements OnInit {
     showAdd: Boolean = true;
     buttonValue: String = "";
     currentDepartmentId: number;
+    currentDepartmentName: string;
     credential: AuthModel;
 
     constructor(formBuilder: FormBuilder,
         private departmentService: DepartmentService,
         private checkListService: ChecklistService,
         private emergencyTypeService: EmergencyTypeService,
-        private dataExchange: DataExchangeService<ChecklistModel>, private globalState: GlobalStateService,
-        private toastrService: ToastrService, private toastrConfig: ToastrConfig) {
-        this.showAdd = false;
-        this.buttonValue = "Add Checklist";
-        this.checkListModel = new ChecklistModel();
-        this.checkListModelEdit = new ChecklistModel();
+        private dataExchange: DataExchangeService<ChecklistModel>, 
+        private globalState: GlobalStateService,
+        private toastrService: ToastrService, 
+        private toastrConfig: ToastrConfig) {
+            this.showAdd = false;
+            this.buttonValue = "Add Checklist";
+            this.checkListModel = new ChecklistModel();
+            this.checkListModelEdit = new ChecklistModel();
     }
 
     mergeResponses(departmentId): void {
         let allChecklists: Observable<ResponseModel<ChecklistModel>>
             = this.checkListService.GetAllByDepartment(departmentId);
-        // let activeChecklists: Observable<ResponseModel<ChecklistModel>>
-        //     = this.checkListService.GetAllActiveCheckLists();
+
         let activeDepartments: Observable<ResponseModel<DepartmentModel>>
             = this.departmentService.GetAll();
+        
         let activeEmergencyTypes: Observable<ResponseModel<EmergencyTypeModel>>
             = this.emergencyTypeService.GetAll();
 
@@ -64,9 +69,11 @@ export class ChecklistEntryComponent implements OnInit {
                 if (response.Records.length > 0 && Object.keys(response.Records[0]).some(x => x === 'CheckListId')) {
                     this.activeCheckLists = <ChecklistModel[]>response.Records;
                     this.checkListModel.ParentCheckListId = this.activeCheckLists[0].CheckListId;
+                    
                 } else if (response.Records.length > 0 && Object.keys(response.Records[0]).some(x => x === 'DepartmentId')) {
                     this.activeDepartments = <DepartmentModel[]>response.Records;
                     this.checkListModel.DepartmentId = this.activeDepartments[0].DepartmentId;
+                    
                 } else if (response.Records.length > 0 && Object.keys(response.Records[0]).some(x => x === 'EmergencyTypeId')) {
                     this.activeEmergencyTypes = <EmergencyTypeModel[]>response.Records;
                     this.checkListModel.EmergencyTypeId = this.activeEmergencyTypes[0].EmergencyTypeId;
@@ -74,6 +81,9 @@ export class ChecklistEntryComponent implements OnInit {
             },
             (error) => { console.log(error); },
             () => {
+                this.currentDepartmentName = this.activeDepartments.find(x => {
+                    return x.DepartmentId == this.currentDepartmentId;
+                }).DepartmentName;
                 this.form = this.resetCheckListForm();
                 this.initiateCheckListModel();
                 this.dataExchange.Subscribe("checklistModelEdited", model => this.onCheckListEditSuccess(model));
@@ -81,17 +91,16 @@ export class ChecklistEntryComponent implements OnInit {
             );
     }
 
-
     ngOnInit(): void {
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.mergeResponses(this.currentDepartmentId);
         this.credential = UtilityService.getCredentialDetails();
-        //this.form = this.resetCheckListForm();
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
     private departmentChangeHandler(department: KeyValue): void {
         this.currentDepartmentId = department.Value;
+        this.currentDepartmentName = department.Key;
         this.mergeResponses(this.currentDepartmentId);
     }
 
@@ -105,15 +114,13 @@ export class ChecklistEntryComponent implements OnInit {
         this.checkListModel.ActiveFlag = 'Active';
         this.checkListModel.CreatedBy = +this.credential.UserId;
         this.checkListModel.CreatedOn = this.date;
+        this.checkListModel.CheckListId = 0;
     }
 
     formControlDirtyCheck() {
         this.checkListModelEdit = new ChecklistModel();
         this.checkListModelEdit.CheckListId = this.form.controls['CheckListId'].value;
 
-        if (this.form.controls['CheckListCode'].touched) {
-            this.checkListModelEdit.CheckListCode = this.form.controls['CheckListCode'].value;
-        }
         if (this.form.controls['CheckListDetails'].touched) {
             this.checkListModelEdit.CheckListDetails = this.form.controls['CheckListDetails'].value;
         }
@@ -140,7 +147,6 @@ export class ChecklistEntryComponent implements OnInit {
     onSubmit(values: Object): void {
         if (this.form.valid) {
             if (this.checkListModel.CheckListId == 0) {//ADD REGION
-                this.checkListModel.CheckListCode = this.form.controls['CheckListCode'].value;
                 this.checkListModel.CheckListDetails = this.form.controls['CheckListDetails'].value;
                 this.checkListModel.ParentCheckListId = this.form.controls['ParentCheckListId'].value;
                 this.checkListModel.Duration = this.form.controls['Duration'].value;
@@ -149,15 +155,28 @@ export class ChecklistEntryComponent implements OnInit {
                 this.checkListModel.EmergencyTypeId = this.form.controls['EmergencyTypeId'].value;
                 this.checkListModel.Sequence = this.form.controls['Sequence'].value;
                 delete this.checkListModel['Active'];
-                this.checkListService.Create(this.checkListModel)
-                    .subscribe((response: ChecklistModel) => {
-                        this.toastrService.success('Checklist Created Successfully.', 'Success', this.toastrConfig);
-                        this.dataExchange.Publish("checkListModelSaved", response);
-                        this.resetCheckListForm();
-                        this.initiateCheckListModel();
-                    }, (error: any) => {
-                        console.log(`Error: ${error}`);
-                    });
+
+                let CheckList_Code = "";
+                let dep = this.currentDepartmentName
+                CheckList_Code = CheckList_Code + dep.trim();
+                
+                if (this.checkListModel.ParentCheckListId != null) {
+                    this.checkListService.GetParentChecklistCode(this.checkListModel.ParentCheckListId)
+                        .subscribe((response: ResponseModel<ChecklistModel>) => {
+                            CheckList_Code = CheckList_Code + "_" + response.Records[0].CheckListCode;
+                            let d = new Date();
+                            let time = d.getTime();
+                            let timestring = time.toString();
+                            let n = timestring.substr(timestring.length - 5);
+                            CheckList_Code = CheckList_Code + "_" + n;
+                            this.checkListModel.CheckListCode = CheckList_Code;
+                            this.createChecklist(this.checkListModel);
+                        })
+                }
+                else {
+                    this.checkListModel.CheckListCode = CheckList_Code;
+                    this.createChecklist(this.checkListModel);
+                }
             }
             else {//EDIT REGION
                 if (this.form.dirty) {
@@ -166,19 +185,33 @@ export class ChecklistEntryComponent implements OnInit {
                         .subscribe((response: ChecklistModel) => {
                             this.toastrService.success('Checklist Edited Successfully.', 'Success', this.toastrConfig);
                             this.initiateCheckListModel();
+                            this.form = this.resetCheckListForm();
                             this.dataExchange.Publish("checkListListReload", response);
                             this.showAdd = false;
                         }, (error: any) => {
                             console.log(`Error: ${error}`);
                         });
                 }
-            }
+            }        
         }
     }
 
     cancel(): void {
         this.resetCheckListForm();
         this.showAdd = false;
+    }
+
+    createChecklist(checklistMode: ChecklistModel): void {
+        this.checkListService.Create(this.checkListModel)
+            .subscribe((response: ChecklistModel) => {
+                this.toastrService.success('Checklist Created Successfully.', 'Success', this.toastrConfig);
+                this.dataExchange.Publish("checkListModelSaved", response);
+                this.form = this.resetCheckListForm();
+                this.showAdd = false;
+                this.initiateCheckListModel();
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
     }
 
     onCheckListEditSuccess(data: ChecklistModel): void {
@@ -189,13 +222,13 @@ export class ChecklistEntryComponent implements OnInit {
     }
 
     showAddRegion(): void {
+        this.form = this.resetCheckListForm();
         this.showAdd = true;
     }
 
     private resetCheckListForm(checkList?: ChecklistModel): FormGroup {
         return new FormGroup({
             CheckListId: new FormControl(checkList ? checkList.CheckListId : 0),
-            CheckListCode: new FormControl(checkList ? checkList.CheckListCode : '', [Validators.required]),
             CheckListDetails: new FormControl(checkList ? checkList.CheckListDetails : '', [Validators.required]),
             ParentCheckListId: new FormControl(checkList ? checkList.ParentCheckListId : '', [Validators.required]),
             Duration: new FormControl(checkList ? checkList.Duration : '', [Validators.required]),

@@ -74,6 +74,7 @@ export class DemandModelToView extends BaseModel {
     public Priority: string;
     public RequiredLocation: string;
     public ScheduleTime: string;
+    public ScheduleTimeToShow : string;
     public EndTime: Date;
     public ElapseTime: number;
     public RagStatus: string;
