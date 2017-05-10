@@ -100,7 +100,7 @@ export class DepartmentEntryComponent implements OnInit {
                 });
         }
         else {
-            //EDIT REGION
+            // EDIT REGION
             if (this.form.dirty) {
                 this.departmentModel = new DepartmentModel();
                 this.departmentModel.DepartmentId = values.DepartmentId;
@@ -113,15 +113,10 @@ export class DepartmentEntryComponent implements OnInit {
                     (x) => x.ParentDepartmentId);
 
                 this.departmentModel.deleteAttributes();
-                this.departmentService.Update(this.departmentModel)
-                    .subscribe((response: DepartmentModel) => {
-                        this.toastrService.success('Department Edited Successfully.', 'Success', this.toastrConfig);
-                        this.setDepartmentForm();
-                        this.dataExchange.Publish('departmentSavedOrEdited', response);
-                        this.showAdd = false;
-                    }, (error: any) => {
-                        console.log(`Error: ${error}`);
-                    });
+                if (this.departmentModel.ContactNo) {
+                    this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString();
+                }
+                this.departmentService.Update(this.departmentModel, this.departmentModel.DepartmentId);
             }
         }
     }
@@ -138,20 +133,20 @@ export class DepartmentEntryComponent implements OnInit {
         this.showAdd = false;
     }
 
-    private setDepartmentForm(department?: DepartmentModel): FormGroup {
-        return new FormGroup({
-            DepartmentId: new FormControl(department ? department.DepartmentId : 0),
-            DepartmentName: new FormControl(department ? department.DepartmentName : '', [Validators.required, Validators.minLength(1)]),
-            Description: new FormControl(department ? department.Description : '', [Validators.required, Validators.minLength(1)]),
-            ContactNo: new FormControl(department ? department.ContactNo : '', [Validators.required, Validators.minLength(1)]),
-            DepartmentSpoc: new FormControl(department ? department.DepartmentSpoc : this.users[0].UserProfileId, [Validators.required, Validators.minLength(1)]),
-            ParentDepartmentId: new FormControl((department && department.ParentDepartmentId) ? department.ParentDepartmentId : this.parentDepartments[0].DepartmentId, [Validators.required, Validators.minLength(1)]),
-        });
-    }
-
     private onDepartmentEdit(model: DepartmentModel): void {
         this.form = this.setDepartmentForm(model);
         this.departmentModel = model;
         this.showAdd = true;
+    }
+
+    private setDepartmentForm(department?: DepartmentModel): FormGroup {
+        return new FormGroup({
+            DepartmentId: new FormControl(department ? department.DepartmentId : 0),
+            DepartmentName: new FormControl(department ? department.DepartmentName : '', [Validators.required]),
+            Description: new FormControl(department ? department.Description : '', [Validators.required]),
+            ContactNo: new FormControl(department ? department.ContactNo : '', [Validators.required]),
+            DepartmentSpoc: new FormControl(department ? department.DepartmentSpoc : '', [Validators.required]),
+            ParentDepartmentId: new FormControl((department && department.ParentDepartmentId) ? department.ParentDepartmentId : '', [Validators.required]),
+        });
     }
 }

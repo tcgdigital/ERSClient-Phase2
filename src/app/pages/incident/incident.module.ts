@@ -5,7 +5,7 @@ import { HttpModule } from '@angular/http';
 import { MdCheckboxModule } from '@angular2-material/checkbox';
 import { ModalModule, ModalDirective } from 'ng2-bootstrap';
 import { AgmCoreModule } from '@agm/core';
-
+import { ToastrService } from 'ngx-toastr';
 import { IncidentRouting } from './incident.routing';
 import { IncidentComponent } from './incident.component';
 import { EmergencyLocationService } from "../masterdata/emergencylocation";
@@ -13,7 +13,6 @@ import { IncidentEntryComponent, IncidentViewComponent, IncidentService } from '
 import { DepartmentService, EmergencyTypeService } from '../masterdata';
 import { SharedModule, DataExchangeService, LocationService } from '../../shared';
 import { FlightModule, InvolvePartyModule } from '../shared.components';
-
 @NgModule({
     imports: [
         CommonModule,
@@ -39,7 +38,8 @@ import { FlightModule, InvolvePartyModule } from '../shared.components';
         EmergencyTypeService,
         EmergencyLocationService,
         DataExchangeService,
-        LocationService
+        LocationService,
+        ToastrService
     ]
 })
 export class IncidentModule { }

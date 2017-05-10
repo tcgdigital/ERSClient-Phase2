@@ -1,5 +1,5 @@
 <div class="card">
-<mediaRelease-entry [initiatedDepartmentId]="initiatedDepartment" [incidentId]="incidentId"></mediaRelease-entry>
+<div *ngIf="!isArchive"><mediaRelease-entry [initiatedDepartmentId]="initiatedDepartment" [incidentId]="incidentId"></mediaRelease-entry></div>
 <div class="card-block">
     <mediaRelease-list [initiatedDepartmentId]="initiatedDepartment" [incidentId]="incidentId"></mediaRelease-list>
 </div>

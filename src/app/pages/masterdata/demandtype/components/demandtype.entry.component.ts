@@ -12,10 +12,7 @@ import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { DemandTypeService } from './demandtype.service';
 import { DepartmentModel, DepartmentService } from '../../department';
 import { DemandTypeModel } from './demandtype.model';
-import {
-    ResponseModel, DataExchangeService,
-    AuthModel, UtilityService
-} from '../../../../shared';
+import { ResponseModel, DataExchangeService, AuthModel, UtilityService } from '../../../../shared';
 
 @Component({
     selector: 'demandtype-entry',
@@ -31,6 +28,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
     showAdd: boolean;
     demandTypeModelToEdit: DemandTypeModel = new DemandTypeModel();
     credential: AuthModel;
+    public showApproverDept: boolean;
 
     constructor(private demandTypeService: DemandTypeService,
         private departmentService: DepartmentService,
@@ -70,7 +68,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         this.demandTypeModel.CreatedBy = +this.credential.UserId;
         this.demandTypeModel.CreatedOn = this.date;
         this.demandTypeModel.DemandTypeId = 0;
-        this.demandTypeModel.DepartmentId = this.departments[0].DepartmentId;
+        this.demandTypeModel.DepartmentId = 0;
         this.form = new FormGroup({
             DemandTypeId: new FormControl(0),
             DemandTypeName: new FormControl('', [Validators.required, Validators.maxLength(50)]),
@@ -79,15 +77,24 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnInit(): any {
-        this.getAllDepartments();
-        this.showAdd = false;
+    IsAutoApproved(value: any): void {
+        this.showApproverDept = !value.checked;
+    }
+
+    resetDemandTypeForm(): void {
         this.form = new FormGroup({
             DemandTypeId: new FormControl(0),
-            DemandTypeName: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+            DemandTypeName: new FormControl('', [Validators.required]),
             IsAutoApproved: new FormControl(false),
-            ApproverDept: new FormControl(this.demandTypeModel.DepartmentId, [Validators.required])
+            ApproverDept: new FormControl('', [Validators.required])
         });
+    }
+
+    ngOnInit(): any {
+        this.showApproverDept = true;
+        this.getAllDepartments();
+        this.showAdd = false;
+        this.resetDemandTypeForm();
         this.credential = UtilityService.getCredentialDetails();
         this.demandTypeModel.ActiveFlag = 'Active';
         this.demandTypeModel.CreatedBy = +this.credential.UserId;
@@ -101,7 +108,9 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         if (this.demandTypeModel.DemandTypeId === 0) {
             this.demandTypeModel.DemandTypeName = this.form.controls['DemandTypeName'].value;
             this.demandTypeModel.IsAutoApproved = this.form.controls['IsAutoApproved'].value;
-            this.demandTypeModel.DepartmentId = this.form.controls['ApproverDept'].value;
+            if (!this.demandTypeModel.IsAutoApproved) {
+                this.demandTypeModel.DepartmentId = this.form.controls['ApproverDept'].value;
+            }
             this.demandTypeService.Create(this.demandTypeModel)
                 .subscribe((response: DemandTypeModel) => {
                     this.toastrService.success('Demand Saved Successfully.', 'Success', this.toastrConfig);
@@ -157,4 +166,5 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         this.demandTypeModel.DemandTypeId = 0;
         this.Action = 'Save';
     }
+
 }
