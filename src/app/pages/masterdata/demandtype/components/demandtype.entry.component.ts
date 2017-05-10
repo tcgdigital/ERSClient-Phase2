@@ -124,31 +124,6 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
                 });
-        // if ((this.showApproverDept == false && this.form.controls['ApproverDept'].value == '' && this.form.controls['DemandTypeName'].value != '') ||
-        //     (this.showApproverDept == true && this.form.controls['ApproverDept'].value != '' && this.form.controls['DemandTypeName'].value != '')) {
-        //     if (this.demandTypeModel.DemandTypeId == 0) {
-        //         this.demandTypeModel.DemandTypeName = this.form.controls['DemandTypeName'].value;
-        //         this.demandTypeModel.IsAutoApproved = this.form.controls['IsAutoApproved'].value;
-        //         this.demandTypeModel.DepartmentId = this.form.controls['ApproverDept'].value == '' ? null : this.form.controls['ApproverDept'].value;
-        //         this.demandTypeService.Create(this.demandTypeModel)
-        //             .subscribe((response: DemandTypeModel) => {
-        //                 this.resetDemandTypeForm();
-        //                 this.toastrService.success('Demand Saved Successfully.', 'Success', this.toastrConfig);
-        //                 this.dataExchange.Publish("demandTypeModelSaved", response);
-        //             }, (error: any) => {
-        //                 console.log(`Error: ${error}`);
-        //             });
-        //     }
-        //     else {
-        //         this.formControlDirtyCheck();
-        //         this.demandTypeService.Update(this.demandTypeModelToEdit)
-        //             .subscribe((response: DemandTypeModel) => {
-        //                 this.toastrService.success('Demand Edited Successfully.', 'Success', this.toastrConfig);
-        //                 this.dataExchange.Publish("demandTypeModelUpdated", response);
-        //             }, (error: any) => {
-        //                 console.log(`Error: ${error}`);
-        //             });
-        //     }
         }
     }
 
