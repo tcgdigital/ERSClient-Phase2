@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, Input, ViewChild , SimpleChange} from '@angular/core';
+import { Component, OnInit,ElementRef, ViewEncapsulation, Input, ViewChild , SimpleChange} from '@angular/core';
 
 import {
     DemandReceivedSummaryModel,
@@ -30,8 +30,10 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit {
     public showAllDeptSubPending: boolean;
     public showSubDeptSubCompleted: boolean;
     public showSubDeptSubPending: boolean;
+    private $selfElement: JQuery;
+    private $placeholder: JQuery;
 
-    constructor(private demandReceivedSummaryWidgetService: DemandReceivedSummaryWidgetService) { }
+    constructor(private elementRef: ElementRef,private demandReceivedSummaryWidgetService: DemandReceivedSummaryWidgetService) { }
 
     public ngOnInit(): void {
         this.demandReceivedSummary = new DemandReceivedSummaryModel();
@@ -162,6 +164,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit {
         });
 
         this.showAllDeptSubPending = true;
+        
         this.showAllDeptSubCompleted = false;
     }
 
