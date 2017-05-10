@@ -6,9 +6,12 @@ import { MdCheckboxModule } from '@angular2-material/checkbox';
 
 import { DemandTypeRouting } from './demandtype.routing';
 import { DemandTypeComponent } from './demandtype.component';
-import { DemandTypeEntryComponent, DemandTypeListComponent, DemandTypeService } from './components';
+import {
+    DemandTypeEntryComponent,
+    DemandTypeListComponent, DemandTypeService
+} from './components';
 import { DepartmentService } from '../department';
-import { DataExchangeService , SharedModule} from '../../../shared';
+import { DataExchangeService, SharedModule } from '../../../shared';
 
 @NgModule({
     imports: [

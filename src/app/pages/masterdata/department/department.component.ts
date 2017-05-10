@@ -6,18 +6,12 @@ import { DepartmentService } from './components/department.service';
     encapsulation: ViewEncapsulation.None,
     providers: [DepartmentService],
     templateUrl: './views/department.view.html',
-    styleUrls:['./styles/department.style.scss']
+    styleUrls: ['./styles/department.style.scss']
 })
 export class DepartmentComponent implements OnInit {
     public data: any;
 
     constructor(private departmentService: DepartmentService) { }
 
-    ngOnInit() {
-        // this.departmentService.BatchOperation()
-        //     .subscribe((data) => {
-        //         this.data = data;
-        //         console.log(data);
-        //     });
-    }
+    ngOnInit() { }
 }
