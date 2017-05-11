@@ -30,6 +30,8 @@ export class DepartmentFunctionalityComponent implements OnInit {
     date: Date = new Date();
     pagePermissionModelToSave: PagePermissionModel[] = [];
     credential: AuthModel;
+    allSelectView : boolean;
+    allSelectOnlyHOD : boolean;
 
     constructor(private pageService: PageService,
         private pagePermissionService: PagePermissionService,
@@ -57,6 +59,16 @@ export class DepartmentFunctionalityComponent implements OnInit {
     canViewd(item: PagesForDepartmentModel) {
         return (item.AllowView == true || item.OnlyForHod == true);
     };
+
+    isValidView(item: PagesForDepartmentModel) {
+        return (item.AllowView == true );
+    };
+
+    isValidOnlyForHOD(item: PagesForDepartmentModel) {
+        return (item.OnlyForHod == true);
+    };
+
+    
 
     save(): void {
         let model = this.pagesForDepartment.filter(this.canViewd);
@@ -101,13 +113,63 @@ export class DepartmentFunctionalityComponent implements OnInit {
                         }
                     }
                 }
+                this.checkAllStatusView();
+                this.checkAllStatusOnlyHOD();
             });
+    }
+     selectAllDeptView(value: any) : void{
+        if(value.checked)
+        {
+            this.pagesForDepartment.forEach(x =>{
+                x.AllowView = true;
+            });
+        }
+        else{
+            this.pagesForDepartment.forEach(x =>{
+                x.AllowView = false;
+            });
+        }
+
+    }
+   selectAllDeptOnlyHOD(value: any) : void{
+        if(value.checked)
+        {
+            this.pagesForDepartment.forEach(x =>{
+                x.OnlyForHod = true;
+            });
+        }
+        else{
+            this.pagesForDepartment.forEach(x =>{
+                x.OnlyForHod = false;
+            });
+        }
+
+    } 
+    checkAllStatusView() : void{
+      if(this.pagesForDepartment.filter(this.isValidView).length == this.pagesForDepartment.length){
+          this.allSelectView=true;
+      }
+      else{
+          this.allSelectView=false;
+      }
+    }
+    checkAllStatusOnlyHOD() : void{
+      if(this.pagesForDepartment.filter(this.isValidOnlyForHOD).length == this.pagesForDepartment.length){
+          this.allSelectOnlyHOD=true;
+      }
+      else{
+          this.allSelectOnlyHOD=false;
+      }
     }
     invokeReset(): void {
         this.pagesForDepartment = [];
+        this.allSelectView = false;
+        this.allSelectOnlyHOD = false;
     }
 
     ngOnInit(): any {
+        this.allSelectView=false;
+        this.allSelectOnlyHOD=false;
         this.getDepartments();
         this.credential = UtilityService.getCredentialDetails();
         this.pageService.GetAll()

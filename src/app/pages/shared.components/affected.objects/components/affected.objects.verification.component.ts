@@ -27,17 +27,45 @@ export class AffectedObjectsVerificationComponent implements OnInit {
     currentIncident: number;
     isArchive: boolean = false;
     protected _onRouteChange: Subscription;
+    allSelectVerify: boolean;
 
     getAffectedObjects(incidentId): void {
         this.affectedObjectsService.GetFilterByIncidentId(incidentId)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
+                if(response.Records[0]){
                 this.affectedObjectsForVerification = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
-            }, (error: any) => {
+                }
+                this.isVerifiedStatusChange();
+        }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
     }
+   
+   selectAllVerify(value: any) : void{
+        if(value.checked)
+        {
+            this.affectedObjectsForVerification.forEach(x =>{
+                x.IsVerified = true;
+            });
+        }
+        else{
+            this.affectedObjectsForVerification.forEach(x =>{
+                x.IsVerified = false;
+            });
+        }
 
-
+    }
+isVerifiedStatusChange() : void{
+    if(this.affectedObjectsForVerification.length!=0  && this.affectedObjectsForVerification.filter(this.checkIfVerified).length == this.affectedObjectsForVerification.length){
+          this.allSelectVerify=true;
+      }
+      else{
+          this.allSelectVerify=false;
+      }
+}
+checkIfVerified(item : AffectedObjectsToView){
+        return (item.IsVerified == true );
+    };
     saveVerifiedObjects(): void {
         let datenow = this.date;
         this.verifiedAffectedObjects = this.affectedObjectsService.MapAffectedPeopleToSave(this.affectedObjectsForVerification);
@@ -56,7 +84,7 @@ export class AffectedObjectsVerificationComponent implements OnInit {
     }
 
     ngOnInit(): any {
-
+        this.allSelectVerify = false;
         this._onRouteChange = this._router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
                 if (event.url.indexOf("archivedashboard") > -1) {
