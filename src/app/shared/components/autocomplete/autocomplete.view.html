@@ -6,6 +6,12 @@
 </div>
 <ul class="multiselect-list" [hidden]="filteredList.length == 0">
     <li *ngFor="let item of filteredList" (click)="select(item)">
-        {{item.Key}}
+        <span>{{item.Key}}</span>
+
+        <ul class="multiselect-actionlist" [hidden]="actionLinks.length == 0">
+            <li *ngFor="let actionitem of actionLinks" (click)="action_clisk($event, item, actionitem.ActionName)">
+                <i class="{{actionitem.ActionIcon}}" aria-hidden="true"></i>
+            </li>
+        </ul>
     </li>
 </ul>

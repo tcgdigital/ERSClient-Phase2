@@ -26,6 +26,7 @@
                     <div *ngIf="showApproverDept">
                         <label for="ApproverDept">Approver Department:<span class="required">*</span></label>
                         <select id="selectApprover" [(ngModel)]="demandTypeModel.DepartmentId" formControlName="ApproverDept" class="form-control">
+
                         <option value=''>Select Approver Department</option>
                         <option *ngFor="let department of departments" [value]="department.DepartmentId" >
                         {{department.DepartmentName}}

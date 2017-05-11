@@ -10,7 +10,7 @@
                 <th>Medical Status</th>
                 <th>Verification Status</th>
                 <th>Interaction Details</th>
-                <th>Action</th>
+                <th>View</th>
             </tr>
         </thead>
         <tbody>
@@ -59,35 +59,34 @@
                         </div>
                         <div class="col-sm-6 form-group">
                             <label class="lebelHeaderStyle"><strong>Reference Number</strong></label>
-                             <br>
+                            <br>
                             <label class="form-control">{{affectedPersonModelForStatus.TicketNumber}}</label>
                         </div>
                     </div>
                     <div class="row">
-                    <div class="form-group col-lg-6 col-sm-12 col-md-6">
-                        <label for="DiscussionNote">Identification Details:</label>
-                        <input value="{{affectedPersonModelForStatus.Identification}}" type="text" class="form-control" />
-                    </div>
-                    
-                    <div class="form-group col-lg-6 col-sm-12 col-md-6">
-                        <label for="DiscussionNote">Status:</label>
-                        <select id="selectStatus" [(ngModel)]="affectedPersonModelForStatus.MedicalStatusToshow" class="form-control">
+                        <div class="form-group col-lg-6 col-sm-12 col-md-6">
+                            <label for="DiscussionNote">Identification Details:</label>
+                            <input value="{{affectedPersonModelForStatus.Identification}}" type="text" class="form-control" />
+                        </div>
+
+                        <div class="form-group col-lg-6 col-sm-12 col-md-6">
+                            <label for="DiscussionNote">Status:</label>
+                            <select id="selectStatus" [(ngModel)]="affectedPersonModelForStatus.MedicalStatusToshow" class="form-control">
                                   <option *ngFor="let status of medicalStatus" [value]="status.value" >{{status.caption}} </option>                      
                                </select>
-                    </div>
-                    </div>
-                    <div class="row">
-                    <div class="form-group col-lg-6 col-sm-12 col-md-6">
-                        <label for="DiscussionNote">Remarks:</label>
-                        <input value="{{affectedPersonModelForStatus.Remarks}}" [(ngModel)]="affectedPersonModelForStatus.Remarks" class="form-control"
-                            type="text" />
-                    </div>
-                    <div class="col-lg-6 col-sm-12 col-md-6" *ngIf="!isArchive">
-                        <div class="buttonholder">
-                        <button class="btn btn-primary" type="button" (click)="saveUpdateAffectedPerson(affectedPersonModelForStatus)">Ok</button>
-                        <button class="btn btn-primary" type="button" (click)="cancelUpdate(affectedPersonModelForStatus)">Cancel</button>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="form-group col-lg-6 col-sm-12 col-md-6">
+                            <label for="DiscussionNote">Remarks:</label>
+                            <input value="{{affectedPersonModelForStatus.Remarks}}" [(ngModel)]="affectedPersonModelForStatus.Remarks" class="form-control"
+                                type="text" />
+                        </div>
+                        <div class="col-lg-6 col-sm-12 col-md-6" *ngIf="!isArchive">
+                            <div class="buttonholder">
+                                <button class="btn btn-primary" type="button" (click)="saveUpdateAffectedPerson(affectedPersonModelForStatus)">Save</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -107,18 +106,18 @@
                    </button>
             </div>
             <div class="modal-body">
-                 <div class="row modalBodyHeaderStyle">
-                        <div class="col-sm-6 form-group">
-                            <label class="lebelHeaderStyle"><strong>PDA Name</strong></label>
-                            <br>
-                            <label class="form-control">{{pdaNameForTrail}}</label>
-                        </div>
-                        <div class="col-sm-6 form-group">
-                            <label class="lebelHeaderStyle"><strong>Reference Number</strong></label>
-                             <br>
-                            <label class="form-control">{{ticketNumber}}</label>
-                        </div>
+                <div class="row modalBodyHeaderStyle">
+                    <div class="col-sm-6 form-group">
+                        <label class="lebelHeaderStyle"><strong>PDA Name</strong></label>
+                        <br>
+                        <label class="form-control">{{pdaNameForTrail}}</label>
                     </div>
+                    <div class="col-sm-6 form-group">
+                        <label class="lebelHeaderStyle"><strong>Reference Number</strong></label>
+                        <br>
+                        <label class="form-control">{{ticketNumber}}</label>
+                    </div>
+                </div>
                 <!--<div class="col-sm-12">
                     <div class="col-sm-6 form-group">
                         <label>PDA Name</label>
@@ -136,7 +135,7 @@
                             <tr *ngFor="let comm of communications">
                                 <td data-title="comm"><strong>{{comm.RequesterType}}</strong> logged by
                                     <span [hidden]="comm.RequesterDepartment.length==0"><strong>{{comm.RequesterName}} (Dept: {{comm.RequesterDepartment}})</strong></span>
-                                    <span> on <strong>{{comm.CreatedOn | date:"dd-MMM-yy h:mma"}}&nbsp;:</strong></span> {{comm.Answers}}
+                                    <span> on <strong>{{comm.CreatedOn | date:"dd-MMM-yy h:mma"}}&nbsp;:</strong></span>                                    {{comm.Answers}}
                                 </td>
                             </tr>
                         </tbody>

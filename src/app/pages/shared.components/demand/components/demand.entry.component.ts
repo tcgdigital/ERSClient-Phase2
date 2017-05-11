@@ -77,6 +77,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     protected _onRouteChange: Subscription;
     isArchive: boolean = false;
     resolutionTime: Date;
+     
     /**
      * Creates an instance of DemandEntryComponent.
      * @param {DemandService} demandService 
@@ -108,9 +109,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         private toastrConfig: ToastrConfig, private _router: Router) {
         this.showAdd = false;
         this.buttonValue = "Create Demand";
-        // this.createdBy = 2;
         this.departments = [];
-        // this.credentialName = "Anwesha Ray";
     }
 
     getDemandType(): void {
@@ -160,13 +159,13 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         demandTrail.Priority = demand.Priority;
         demandTrail.RequiredLocation = demand.RequiredLocation;
         demandTrail.RequesterName = demand.RequestedBy;
-        demandTrail.RequesterDepartmentName = this.departments.find(x => { return x.DepartmentId == demand.RequesterDepartmentId; }) ?
-            this.departments.find(x => { return x.DepartmentId == demand.RequesterDepartmentId; }).DepartmentName : null;
-        demandTrail.RequesterParentDepartmentName = this.departments.find(x => { return x.DepartmentId == demand.RequesterParentDepartmentId; }) ?
-            this.departments.find(x => { return x.DepartmentId == demand.RequesterParentDepartmentId; }).DepartmentName : null;
-        demandTrail.TargetDepartmentName = this.departments.find(x => { return x.DepartmentId == demand.TargetDepartmentId; }).DepartmentName;
-        demandTrail.ApproverDepartmentName = this.departments.find(x => { return x.DepartmentId == demand.ApproverDepartmentId; }) ?
-            this.departments.find(x => { return x.DepartmentId == demand.ApproverDepartmentId; }).DepartmentName : null;
+        demandTrail.RequesterDepartmentName = this.departments.some(x => x.DepartmentId == demand.RequesterDepartmentId) ?
+            this.departments.find(x => x.DepartmentId == demand.RequesterDepartmentId).DepartmentName : null;
+        demandTrail.RequesterParentDepartmentName = this.departments.some(x => x.DepartmentId == demand.RequesterParentDepartmentId) ?
+            this.departments.find(x => x.DepartmentId == demand.RequesterParentDepartmentId).DepartmentName : null;
+        demandTrail.TargetDepartmentName = this.departments.find(x => x.DepartmentId == demand.TargetDepartmentId).DepartmentName;
+        demandTrail.ApproverDepartmentName = this.departments.some(x => x.DepartmentId == demand.ApproverDepartmentId) ?
+            this.departments.find(x => x.DepartmentId == demand.ApproverDepartmentId).DepartmentName : null;
         demandTrail.RequesterType = demand.RequesterType;
         demandTrail.DemandDesc = demand.DemandDesc;
         demandTrail.IsApproved = demand.IsApproved;
@@ -183,41 +182,42 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         demandTrail.CreatedBy = demand.CreatedBy ? demand.CreatedBy : this.createdBy;
         demandTrail.CreatedOn = demand.CreatedOn ? demand.CreatedOn : new Date();
 
-        var TargetDepartmentName = this.departments.find(x => { return x.DepartmentId == demandForAnswer.TargetDepartmentId; }) ?
-            this.departments.find(x => { return x.DepartmentId == demandForAnswer.TargetDepartmentId; }).DepartmentName : undefined;
+        var TargetDepartmentName = this.departments.some(x => x.DepartmentId == demandForAnswer.TargetDepartmentId) ?
+            this.departments.find(x => x.DepartmentId == demandForAnswer.TargetDepartmentId).DepartmentName : undefined;
         let date = new Date();
+        
         if (flag) {
-            answer = '<div><p>' + demand.DemandStatusDescription + '   <strong>Date :</strong>  ' + date.toLocaleString() + '  </p><div>';
+            answer = `<div><p> ${demand.DemandStatusDescription} <strong>Date :</strong>  ${date.toLocaleString()}  </p><div>`;
         }
         else {
-            answer = '<div><p> Request Edited By ' + demandTrail.RequesterDepartmentName + '  <strong>Date :</strong>  ' + date.toLocaleString() + '  </p><div>';
+            answer = `<div><p> Request Edited By ${demandTrail.RequesterDepartmentName} <strong>Date :</strong>  ${date.toLocaleString()}  </p><div>`;
         }
         if (!flag && (demandForAnswer != undefined)) {
 
             if (demandForAnswer.Priority) {
-                editedFields = editedFields + '<strong>Priority</strong> : ' + demandForAnswer.Priority + '  ';
+                editedFields = editedFields + `<strong>Priority</strong> : ${demandForAnswer.Priority} `;
             }
             if (demandForAnswer.DemandDesc) {
-                editedFields = editedFields + '<strong>Description</strong> : ' + demandForAnswer.DemandDesc + '  ';
+                editedFields = editedFields + `<strong>Description</strong> : ${demandForAnswer.DemandDesc} `;
             }
             if (demandForAnswer.RequesterType) {
-                editedFields = editedFields + '<strong>Requester Type</strong> : ' + demandForAnswer.RequesterType + '  ';
+                editedFields = editedFields + `<strong>Requester Type</strong> : ${demandForAnswer.RequesterType} `;
             }
             if (demandForAnswer.TargetDepartmentId) {
-                editedFields = editedFields + '<strong>Target Department</strong> : ' + TargetDepartmentName + '  ';
+                editedFields = editedFields + `<strong>Target Department</strong> : ${TargetDepartmentName} `;
             }
             if (demandForAnswer.ContactNumber) {
-                editedFields = editedFields + '<strong>Requester Contact Number</strong> : ' + demandForAnswer.ContactNumber + '  ';
+                editedFields = editedFields + `<strong>Requester Contact Number</strong> : ${demandForAnswer.ContactNumber} `;
             }
             if (demandForAnswer.ScheduleTime) {
                 let minutesInt = parseInt(demandForAnswer.ScheduleTime);
                 let d = new Date(demand.CreatedOn);
                 d.setMinutes(d.getMinutes() + minutesInt);
                 let editedDate = new Date(d);
-                editedFields = editedFields + '<strong>Expected Resolution Time</strong> : ' + editedDate + '  ';
+                editedFields = editedFields + `<strong>Expected Resolution Time</strong> : ${editedDate} `;
             }
             if (demandForAnswer.RequiredLocation) {
-                editedFields = editedFields + '<strong>Required At Location</strong> : ' + demandForAnswer.RequiredLocation + '  ';
+                editedFields = editedFields + `<strong>Required At Location</strong> : ${demandForAnswer.RequiredLocation} `;
             }
         }
         answer = answer + editedFields + '</p><div>';
@@ -247,10 +247,10 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     };
 
     ChangeAffectedPeople(): void {
-
         if (this.demandModel.AffectedPersonId != 0) {
             this.form.controls["AffectedObjectId"].reset({ value: 0, disabled: true });
-            this.demandModel.PDATicketNumber = this.affectedPeople.find(x => x.AffectedPersonId == this.demandModel.AffectedPersonId).TicketNumber;
+            this.demandModel.PDATicketNumber = this.affectedPeople
+                .find(x => x.AffectedPersonId == this.demandModel.AffectedPersonId).TicketNumber;
             this.form.controls["PDATicketNumber"].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
         }
         else {
@@ -262,9 +262,9 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     ChangeAffectedObjects(): void {
         if (this.demandModel.AffectedObjectId != 0) {
             this.form.controls["AffectedPersonId"].reset({ value: 0, disabled: true });
-            this.demandModel.PDATicketNumber = this.affectedObjects.find(x => x.AffectedObjectId == this.demandModel.AffectedObjectId).TicketNumber;
+            this.demandModel.PDATicketNumber = this.affectedObjects
+                .find(x => x.AffectedObjectId == this.demandModel.AffectedObjectId).TicketNumber;
             this.form.controls["PDATicketNumber"].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
-
         }
         else {
             this.form.controls["AffectedPersonId"].reset({ value: 0, disabled: false });
@@ -290,7 +290,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.Action = "Save";
         this.isReadonly = false;
         this.childModal.show();
-
     };
 
     setModelFormGroup(model: DemandModel, isDisable: boolean, ...params: ((entity: DemandModel) => any)[]): void {
@@ -313,21 +312,24 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demandModel = response.Records[0];
 
-                this.setModelFormGroup(response.Records[0], false, x => x.DemandId, x => x.DemandTypeId, x => x.Priority, x => x.DemandDesc
-                    , x => x.RequestedBy, x => x.RequesterType, x => x.PDATicketNumber, x => x.TargetDepartmentId, x => x.ContactNumber
-                    , x => x.RequiredLocation);
+                this.setModelFormGroup(response.Records[0], false, x => x.DemandId, x => x.DemandTypeId, 
+                    x => x.Priority, x => x.DemandDesc, x => x.RequestedBy, x => x.RequesterType, 
+                    x => x.PDATicketNumber, x => x.TargetDepartmentId, x => x.ContactNumber, x => x.RequiredLocation);
+            
                 let scheduleTime = response.Records[0].ScheduleTime;
                 let createdOn = new Date(response.Records[0].CreatedOn);
                 let timediff = createdOn.getTime() + (+scheduleTime) * 60000;
 
                 let resolutiontime = new Date(timediff);
-                //  this.datepickerOption.startDate = new Date(resolutiontime);
-                this.form.controls["ScheduleTime"].reset({ value: moment(resolutiontime).format('DD/MM/YYYY h:mm a'), disabled: false });
+                this.form.controls["ScheduleTime"]
+                    .reset({ value: moment(resolutiontime)
+                    .format('DD/MM/YYYY h:mm a'), disabled: false });
                 this.caller = this.demandModel.Caller || new CallerModel();
                 this.showAdd = true;
                 this.buttonValue = "Create Demand";
                 this.isReadonly = false;
                 this.childModal.show();
+            
                 this.form.controls["PDATicketNumber"].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
                 this.form.controls["AffectedPersonId"].reset({ value: this.demandModel.AffectedPersonId, disabled: true });
                 this.form.controls["AffectedObjectId"].reset({ value: this.demandModel.AffectedObjectId, disabled: true });
@@ -343,18 +345,22 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.demandService.GetByDemandId(id)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demandModel = response.Records[0];
-                this.setModelFormGroup(response.Records[0], true, x => x.DemandId, x => x.DemandTypeId, x => x.Priority, x => x.DemandDesc
-                    , x => x.RequestedBy, x => x.RequesterType, x => x.PDATicketNumber, x => x.TargetDepartmentId, x => x.ContactNumber
-                    , x => x.RequiredLocation);
+                this.setModelFormGroup(response.Records[0], true, x => x.DemandId, x => x.DemandTypeId, 
+                   x => x.Priority, x => x.DemandDesc, x => x.RequestedBy, x => x.RequesterType, 
+                   x => x.PDATicketNumber, x => x.TargetDepartmentId, x => x.ContactNumber, x => x.RequiredLocation);
+            
                 let scheduleTime = response.Records[0].ScheduleTime;
                 let createdOn = new Date(response.Records[0].CreatedOn);
                 let timediff = createdOn.getTime() + (+scheduleTime) * 60000;
                 let resolutiontime = new Date(timediff);
-                this.form.controls["ScheduleTime"].reset({ value: moment(resolutiontime).format('DD/MM/YYYY h:mm a'), disabled: true });
+                this.form.controls["ScheduleTime"]
+                    .reset({ value: moment(resolutiontime)
+                    .format('DD/MM/YYYY h:mm a'), disabled: true });
                 this.caller = this.demandModel.Caller || new CallerModel();
                 this.showAdd = true;
                 this.isReadonly = true;
                 this.childModal.show();
+            
                 this.form.controls["PDATicketNumber"].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
                 this.form.controls["AffectedPersonId"].reset({ value: this.demandModel.AffectedPersonId, disabled: true });
                 this.form.controls["AffectedObjectId"].reset({ value: this.demandModel.AffectedObjectId, disabled: true });
@@ -371,7 +377,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): any {
-
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this._onRouteChange = this._router.events.subscribe((event) => {
@@ -380,7 +385,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                     this.isArchive = true;
                     this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
                     this.demandModel.IncidentId = this.currentIncidentId;
-                    // this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
                 }
                 else {
                     this.isArchive = false;
@@ -396,7 +400,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.credentialName = this.credential.UserName;
         this.datepickerOption.position = 'top left';
         this.datepickerOption.minDate = new Date();
-        // this.datepickerOption.classes = 'datepicker';
         this.getDemandType();
         this.getPageSpecifiedDepartments();
         this.getAllDepartments();
@@ -455,11 +458,14 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             + this.demandTypes.find(x => x.DemandTypeId == demand.DemandTypeId).DemandTypeName + " request for " +
             this.departments.find(x => x.DepartmentId == demand.TargetDepartmentId).DepartmentName
             + ". Request Details : " + demand.DemandDesc + ". " + "created with status " + demand.ActiveFlag + ".";
+        
         this.communicationLog.RequesterName = demand.RequestedBy;
-        this.communicationLog.RequesterDepartment = this.departments.find(x => x.DepartmentId == demand.TargetDepartmentId).DepartmentName;
+        this.communicationLog.RequesterDepartment = this.departments
+            .find(x => x.DepartmentId == demand.TargetDepartmentId).DepartmentName;
         this.communicationLog.RequesterType = "Request";
         this.communicationLog.DemandId = demand.DemandId;
         this.communicationLog.InteractionDetailsType = GlobalConstants.InteractionDetailsTypeDemand;
+        
         if (demand.AffectedPersonId != null) {
             this.communicationLog.AffectedPersonId = demand.AffectedPersonId;
         }
@@ -492,17 +498,16 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             AffectedPersonId: new FormControl({ value: 0, disabled: false }),
             AffectedObjectId: new FormControl({ value: 0, disabled: false })
         });
-
     };
 
     resetForm(): void {
         this.form.controls["DemandId"].reset({ value: 0, disabled: false });
         this.form.controls["DemandTypeId"].reset({ value: 0, disabled: false });
         this.form.controls["Priority"].reset({ value: 0, disabled: false });
-        this.form.controls["DemandDesc"].reset({ value:'', disabled: false });
+        this.form.controls["DemandDesc"].reset({ value: '', disabled: false });
         this.form.controls["RequestedBy"].reset({ value: this.credentialName, disabled: false });
         this.form.controls["RequesterType"].reset({ value: 0, disabled: false });
-        this.form.controls["PDATicketNumber"].reset({ value:'', disabled: true });
+        this.form.controls["PDATicketNumber"].reset({ value: '', disabled: true });
         this.form.controls["TargetDepartmentId"].reset({ value: 0, disabled: false });
         this.form.controls["ContactNumber"].reset({ value: '', disabled: false });
         this.form.controls["ScheduleTime"].reset({ value: '', disabled: false });
@@ -516,11 +521,10 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         delete this.demandModelEdit.ActiveFlag;
         delete this.demandModelEdit.CreatedBy;
         delete this.demandModelEdit.CreatedOn;
-
-        // this.caller = new CallerModel();
         delete this.caller.ActiveFlag;
         delete this.caller.CreatedBy;
         delete this.caller.CreatedOn;
+        
         this.demandModelEdit.DemandId = this.form.controls['DemandId'].value;
         if (this.form.controls['Priority'].touched) {
             this.demandModelEdit.Priority = this.form.controls['Priority'].value;
@@ -544,14 +548,15 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         if (this.form.controls['RequiredLocation'].touched) {
             this.demandModelEdit.RequiredLocation = this.form.controls['RequiredLocation'].value;
         }
-
     }
 
     onSubmit(): void {
         if (this.demandModel.DemandId == 0) {
-            UtilityService.setModelFromFormGroup<DemandModel>(this.demandModel, this.form, x => x.DemandId, x => x.DemandTypeId, x => x.Priority,
-                x => x.DemandDesc, x => x.RequesterType, x => x.PDATicketNumber, x => x.TargetDepartmentId,
-                x => x.ContactNumber, x => x.RequiredLocation, x => x.ContactNumber);
+            UtilityService.setModelFromFormGroup<DemandModel>(this.demandModel, this.form, x => x.DemandId, 
+                x => x.DemandTypeId, x => x.Priority, x => x.DemandDesc, x => x.RequesterType, 
+                x => x.PDATicketNumber, x => x.TargetDepartmentId, x => x.ContactNumber, 
+                x => x.RequiredLocation, x => x.ContactNumber);
+            
             let currentDate = new Date().getTime();
             let timeDiffSec = this.resolutionTime.getTime() - currentDate;
             this.demandModel.ScheduleTime = (timeDiffSec / 60000).toString();
@@ -559,6 +564,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             this.demandModel.Caller.ContactNumber = this.form.controls["ContactNumber"].value;
             this.demandModel.IncidentId = this.currentIncidentId;
             this.demandModel.RequesterDepartmentId = this.currentDepartmentId;
+            
             if (this.demandTypes.find(x => x.DemandTypeId == this.demandModel.DemandTypeId).IsAutoApproved) {
                 this.demandModel.IsApproved = true;
                 this.demandModel.ApproverDepartmentId = null;
@@ -567,6 +573,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.demandModel.IsApproved = false;
                 this.demandModel.ApproverDepartmentId = this.demandTypes.find(x => x.DemandTypeId == this.demandModel.DemandTypeId).DepartmentId;
             }
+            
             this.demandModel.DemandStatusDescription = 'New Request by ' + this.currentDepartmentName;
             this.demandModel.DemandCode = "DEM-" + UtilityService.UUID();
             if (this.demandModel.AffectedObjectId == 0) {
@@ -575,11 +582,9 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             if (this.demandModel.AffectedPersonId == 0) {
                 delete this.demandModel.AffectedPersonId;
             }
-
-
             this.demandModel.CommunicationLogs = this.SetCommunicationLog(this.demandModel);
-
             this.demandModel.DemandTrails = this.createDemandTrailModel(this.demandModel, this.demandModel, true);
+            
             this.demandService.Create(this.demandModel)
                 .subscribe((response: DemandModel) => {
                     this.toastrService.success('Demand successfully created.', 'Success', this.toastrConfig);
@@ -595,50 +600,59 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         }
         else {
             this.formControlDirtyCheck();
-            this.demandService.GetByDemandId(this.demandModelEdit.DemandId)
-                .subscribe((response: ResponseModel<DemandModel>) => {
-                    let createdOnDate = new Date(response.Records[0].CreatedOn);
-                    let time = createdOnDate.getTime();
-                    let timeDiffSec = this.resolutionTime.getTime() - time;
-                    let scheduletime = (timeDiffSec / 60000).toString();
-                    this.demandModelEdit.ScheduleTime = scheduletime;
-                    if (this.form.dirty || this.demandModelEdit.ScheduleTime != response.Records[0].ScheduleTime) {
-                        this.demandService.Update(this.demandModelEdit)
-                            .subscribe((response: DemandModel) => {
-                                this.toastrService.success('Demand successfully updated.', 'Success', this.toastrConfig);
-                                this.dataExchange.Publish("DemandAddedUpdated", this.demandModelEdit.DemandId);
-                                let demandTrail = this.createDemandTrailModel(this.demandModel, this.demandModelEdit, false)[0];
-                                demandTrail.DemandId = this.demandModel.DemandId;
-                                this.demandTrailService.Create(demandTrail)
-                                    .subscribe((response: DemandTrailModel) => { },
-                                    (error: any) => {
-                                        console.log("Error in demandTrail");
-                                    });
-                                if (this.caller.CallerId != 0) {
-                                    this.callerService.Update(this.caller)
-                                        .subscribe((response: CallerModel) => { },
-                                        (error: any) => {
-                                            console.log("Error in demandTrail");
-                                        });
-                                }
-                                this.initializeForm();
-                                this.demandModel = new DemandModel();
-                                this.showAdd = false;
-                                this.buttonValue = "Create Demand";
-                                this.childModal.hide();
-                            }, (error: any) => {
-                                console.log("Error");
+            let resolutionTimeChanged = false;
+            if (this.resolutionTime) {
+                this.demandService.GetByDemandId(this.demandModelEdit.DemandId)
+                    .subscribe((response: ResponseModel<DemandModel>) => {
+                        let createdOnDate = new Date(response.Records[0].CreatedOn);
+                        let time = createdOnDate.getTime();
+                        let timeDiffSec = this.resolutionTime.getTime() - time;
+                        let scheduletime = (timeDiffSec / 60000).toString();
+                        this.demandModelEdit.ScheduleTime = scheduletime;
+                        resolutionTimeChanged = true;
+                        this.demandUpdate(resolutionTimeChanged);
+                    });
+            }
+           else{
+            this.demandUpdate(resolutionTimeChanged);
+           }
+        }
+    };
+
+    demandUpdate(resolutionTimeChanged): void {
+        if (this.form.dirty || resolutionTimeChanged) {
+            this.demandService.Update(this.demandModelEdit)
+                .subscribe((response: DemandModel) => {
+                    this.toastrService.success('Demand successfully updated.', 'Success', this.toastrConfig);
+                    this.dataExchange.Publish("DemandAddedUpdated", this.demandModelEdit.DemandId);
+                    let demandTrail = this.createDemandTrailModel(this.demandModel, this.demandModelEdit, false)[0];
+                    demandTrail.DemandId = this.demandModel.DemandId;
+                
+                    this.demandTrailService.Create(demandTrail)
+                        .subscribe((response: DemandTrailModel) => { },
+                        (error: any) => {
+                            console.log("Error in demandTrail");
+                        });
+                    if (this.caller.CallerId != 0) {
+                        this.callerService.Update(this.caller)
+                            .subscribe((response: CallerModel) => { },
+                            (error: any) => {
+                                console.log("Error in demandTrail");
                             });
                     }
+                    this.initializeForm();
+                    this.demandModel = new DemandModel();
+                    this.showAdd = false;
+                    this.buttonValue = "Create Demand";
+                    this.childModal.hide();
+                }, (error: any) => {
+                    console.log("Error");
                 });
-
         }
-
-    };
+    }
 
     public dateTimeSet(date: DateTimePickerSelectEventArgs, controlName: string): void {
         this.resolutionTime = new Date(date.SelectedDate.toString());
-
     }
 
     ngOnDestroy(): void {

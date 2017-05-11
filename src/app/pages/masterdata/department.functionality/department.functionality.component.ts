@@ -26,7 +26,7 @@ export class DepartmentFunctionalityComponent implements OnInit {
     selectedDepartment: number;
     pagesForDepartmentConstant: PagesForDepartmentModel[] = [];
     pagesForDepartment: PagesForDepartmentModel[] = [];
-    items: Array<KeyValue> = [];
+    items: KeyValue[] = [];
     date: Date = new Date();
     pagePermissionModelToSave: PagePermissionModel[] = [];
     credential: AuthModel;
@@ -36,20 +36,20 @@ export class DepartmentFunctionalityComponent implements OnInit {
     constructor(private pageService: PageService,
         private pagePermissionService: PagePermissionService,
         private departmentService: DepartmentService, private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig) { };
+        private toastrConfig: ToastrConfig) { }
 
     getDepartments(): void {
         this.departmentService.GetAll()
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
-                for (let department of this.departments) {
+                for (const department of this.departments) {
                     this.items.push(new KeyValue(department.DepartmentName, department.DepartmentId));
                 }
             });
     }
 
     SetAllSelectedToFalse(pagesForDepartmentModel: PagesForDepartmentModel[]): any {
-        for (let item of pagesForDepartmentModel) {
+        for (const item of pagesForDepartmentModel) {
             item.AllowView = false;
             item.OnlyForHod = false;
         }
@@ -57,8 +57,8 @@ export class DepartmentFunctionalityComponent implements OnInit {
     }
 
     canViewd(item: PagesForDepartmentModel) {
-        return (item.AllowView == true || item.OnlyForHod == true);
-    };
+        return (item.AllowView === true || item.OnlyForHod === true);
+    }
 
     isValidView(item: PagesForDepartmentModel) {
         return (item.AllowView == true );
@@ -71,16 +71,15 @@ export class DepartmentFunctionalityComponent implements OnInit {
     
 
     save(): void {
-        let model = this.pagesForDepartment.filter(this.canViewd);
-        let selectedDepartment = this.selectedDepartment;
-        let dateNow = this.date;
-        let userId = +this.credential.UserId;
-        this.pagePermissionModelToSave = model.map(function (data) {
+        const model = this.pagesForDepartment.filter(this.canViewd);
+        const selectedDepartment = this.selectedDepartment;
+        const dateNow = this.date;
+        const userId = +this.credential.UserId;
+        this.pagePermissionModelToSave = model.map((data) => {
             {
-                let item = new PagePermissionModel();
+                const item = new PagePermissionModel();
                 item.PermissionId = 0;
                 item.DepartmentId = selectedDepartment;
-                //item.EmergencyTypeId=this.selectedEmergencyType;
                 item.PageId = data.PageId;
                 item.CanView = data.AllowView;
                 item.OnlyHOD = data.OnlyForHod;
@@ -90,23 +89,24 @@ export class DepartmentFunctionalityComponent implements OnInit {
                 return item;
             }
         });
+
         this.pagePermissionService.CreateBulk(this.pagePermissionModelToSave)
             .subscribe((response: PagePermissionModel[]) => {
                 this.toastrService.success('Department Funtionality saved Successfully.', 'Success', this.toastrConfig);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
-    };
+    }
 
     onNotify(message: KeyValue): void {
         this.selectedDepartment = message.Value;
         this.pagePermissionService.GetFilter(message.Value.toString())
             .subscribe((response: ResponseModel<PagePermissionModel>) => {
                 this.pagesForDepartment = this.SetAllSelectedToFalse(this.pagesForDepartmentConstant);
-                for (let item2 of this.pagesForDepartment) {
-                    if (response.Count != 0) {
-                        for (let model of response.Records) {
-                            if (item2.PageId == model.PageId) {
+                for (const item2 of this.pagesForDepartment) {
+                    if (response.Count !== 0) {
+                        for (const model of response.Records) {
+                            if (item2.PageId === model.PageId) {
                                 item2.AllowView = true;
                                 item2.OnlyForHod = model.OnlyHOD;
                             }
@@ -161,6 +161,7 @@ export class DepartmentFunctionalityComponent implements OnInit {
           this.allSelectOnlyHOD=false;
       }
     }
+
     invokeReset(): void {
         this.pagesForDepartment = [];
         this.allSelectView = false;
@@ -175,8 +176,8 @@ export class DepartmentFunctionalityComponent implements OnInit {
         this.pageService.GetAll()
             .subscribe((response: ResponseModel<PageModel>) => {
                 this.pages = response.Records;
-                for (let page of this.pages) {
-                    let item1 = new PagesForDepartmentModel();
+                for (const page of this.pages) {
+                    const item1 = new PagesForDepartmentModel();
                     item1.PageId = page.PageId;
                     item1.PageName = page.PageName;
                     item1.AllowView = false;

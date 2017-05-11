@@ -5,7 +5,7 @@ import { PageModel } from './department.functionality.model';
 import {
     ResponseModel,
     DataService,
-    DataServiceFactory, 
+    DataServiceFactory,
     DataProcessingService,
     IServiceInretface
 } from '../../../../shared';
@@ -15,7 +15,7 @@ export class PageService implements IServiceInretface<PageModel>{
     private _dataServiceForPage: DataService<PageModel>;
 
     constructor(private dataServiceFactory: DataServiceFactory) {
-        let option: DataProcessingService = new DataProcessingService();
+        const option: DataProcessingService = new DataProcessingService();
         this._dataServiceForPage = this.dataServiceFactory
             .CreateServiceWithOptions<PageModel>('Pages', option);
     }
@@ -31,7 +31,7 @@ export class PageService implements IServiceInretface<PageModel>{
     }
 
     Get(id: string | number): Observable<PageModel> {
-        let entity: PageModel;
+        const entity: PageModel = new PageModel();
         return Observable.of(entity);
     }
 
@@ -47,21 +47,12 @@ export class PageService implements IServiceInretface<PageModel>{
         return Observable.of(entity);
     }
 
-    Delete(entity: PageModel): void {
-    }
+    Delete(entity: PageModel): void { }
 
-    // GetAllPages(): Observable<ResponseModel<PageModel>> {
-    //     return this._dataServiceForPage.Query().Execute();
-    // }
-
-    // GetAllPagePermissionsForDepartment(departmentId): Observable<ResponseModel<PagePermissionModel>> {
-    //     return this._dataServiceForPagePermission.Query().Filter('DepartmentId eq ' + departmentId)
-    //         .Execute();
-    // }
-    GetDepartmentsByPageCode(pageCode : string): Observable<ResponseModel<PageModel>> {
-           return this._dataServiceForPage.Query()
-           .Filter(`PageCode eq '${pageCode}'`)
+    GetDepartmentsByPageCode(pageCode: string): Observable<ResponseModel<PageModel>> {
+        return this._dataServiceForPage.Query()
+            .Filter(`PageCode eq '${pageCode}'`)
             .Expand('PagePermissions ($expand = Department)')
-           .Execute();
+            .Execute();
     }
 }

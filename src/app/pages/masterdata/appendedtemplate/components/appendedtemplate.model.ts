@@ -23,6 +23,5 @@ export class AppendedTemplateModel extends BaseModel {
         this.Description = '';
         this.Subject = '';
         this.Active = true;
-
     }
 }
