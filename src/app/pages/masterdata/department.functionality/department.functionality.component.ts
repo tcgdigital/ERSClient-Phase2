@@ -118,48 +118,25 @@ export class DepartmentFunctionalityComponent implements OnInit {
             });
     }
      selectAllDeptView(value: any) : void{
-        if(value.checked)
-        {
-            this.pagesForDepartment.forEach(x =>{
-                x.AllowView = true;
-            });
-        }
-        else{
-            this.pagesForDepartment.forEach(x =>{
-                x.AllowView = false;
-            });
-        }
-
-    }
+          this.pagesForDepartment.forEach(x =>{
+                x.AllowView = value.checked;
+          });
+         }
    selectAllDeptOnlyHOD(value: any) : void{
-        if(value.checked)
-        {
-            this.pagesForDepartment.forEach(x =>{
-                x.OnlyForHod = true;
+         this.pagesForDepartment.forEach(x =>{
+                x.OnlyForHod = value.checked;
             });
-        }
-        else{
-            this.pagesForDepartment.forEach(x =>{
-                x.OnlyForHod = false;
-            });
-        }
-
+        
     } 
     checkAllStatusView() : void{
-      if(this.pagesForDepartment.filter(this.isValidView).length == this.pagesForDepartment.length){
-          this.allSelectView=true;
-      }
-      else{
-          this.allSelectView=false;
-      }
+          this.allSelectView = this.pagesForDepartment.length != 0 && this.pagesForDepartment.filter(x=>{
+              return x.AllowView == true;
+          }).length == this.pagesForDepartment.length;
     }
     checkAllStatusOnlyHOD() : void{
-      if(this.pagesForDepartment.filter(this.isValidOnlyForHOD).length == this.pagesForDepartment.length){
-          this.allSelectOnlyHOD=true;
-      }
-      else{
-          this.allSelectOnlyHOD=false;
-      }
+          this.allSelectView = this.pagesForDepartment.length != 0 && this.pagesForDepartment.filter(x=>{
+              return x.OnlyForHod == true;
+          }).length == this.pagesForDepartment.length;
     }
 
     invokeReset(): void {

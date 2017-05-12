@@ -42,30 +42,17 @@ export class AffectedObjectsVerificationComponent implements OnInit {
     }
    
    selectAllVerify(value: any) : void{
-        if(value.checked)
-        {
             this.affectedObjectsForVerification.forEach(x =>{
-                x.IsVerified = true;
+                x.IsVerified = value.checked;
             });
-        }
-        else{
-            this.affectedObjectsForVerification.forEach(x =>{
-                x.IsVerified = false;
-            });
-        }
-
     }
 isVerifiedStatusChange() : void{
-    if(this.affectedObjectsForVerification.length!=0  && this.affectedObjectsForVerification.filter(this.checkIfVerified).length == this.affectedObjectsForVerification.length){
-          this.allSelectVerify=true;
-      }
-      else{
-          this.allSelectVerify=false;
+    if(this.affectedObjectsForVerification.length!=0 ){
+          this.allSelectVerify= this.affectedObjectsForVerification.filter(x=>{
+              return x.IsVerified == true;
+          }).length == this.affectedObjectsForVerification.length;
       }
 }
-checkIfVerified(item : AffectedObjectsToView){
-        return (item.IsVerified == true );
-    };
     saveVerifiedObjects(): void {
         let datenow = this.date;
         this.verifiedAffectedObjects = this.affectedObjectsService.MapAffectedPeopleToSave(this.affectedObjectsForVerification);
