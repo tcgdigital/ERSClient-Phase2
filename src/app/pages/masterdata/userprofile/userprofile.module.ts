@@ -7,7 +7,10 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { UserProfileRouting } from './userprofile.routing';
 import { UserProfileComponent } from './userprofile.component';
-import { UserProfileEntryComponent, UserProfileListComponent, UserProfileService } from './components';
+import {
+    UserProfileEntryComponent, UserProfileListComponent,
+    UserProfileService, UserAuthService
+} from './components';
 
 import { DataExchangeService, SharedModule } from '../../../shared';
 
@@ -29,6 +32,7 @@ import { DataExchangeService, SharedModule } from '../../../shared';
     ],
     providers: [
         UserProfileService,
+        UserAuthService,
         DataExchangeService
     ]
 })
