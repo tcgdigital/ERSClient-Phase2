@@ -1,6 +1,12 @@
-import { Component, OnInit, ViewEncapsulation, AfterViewInit, ElementRef, Output, EventEmitter } from '@angular/core';
+import {
+    Component, OnInit, ViewEncapsulation,
+    AfterViewInit, ElementRef, Output, EventEmitter
+} from '@angular/core';
 import { ChangePasswordModel } from './components/change.password.model';
-import { FormGroup, FormControl, Validators, FormBuilder, ValidationErrors, AbstractControl } from '@angular/forms';
+import {
+    FormGroup, FormControl, Validators,
+    FormBuilder, ValidationErrors, AbstractControl
+} from '@angular/forms';
 import { CompareFieldValidator } from '../../../shared/validators/custom.form.validation';
 import { GlobalConstants } from '../../../shared/constants/constants';
 import { ChangePasswordService } from './components/change.password.service';
