@@ -34,7 +34,7 @@ export interface IRequesterType {
     caption: string;
 }
 export class GlobalConstants {
-    public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
+    public static EXTERNAL_URL: string = 'http://localhost:5001/';
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
     public static GRANT_TYPE: string = 'password';
     public static ODATA: string = 'odata';
@@ -42,6 +42,8 @@ export class GlobalConstants {
     public static TOKEN: string = 'token';
     public static BATCH: string = 'odata/$batch';
     public static ACCESS_TOKEN: string = 'access_token';
+    public static AD_AUTH_ENABLED: boolean = false;
+    public static PASSWORD_PATTERN: string = '((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})';
 
     public static EmergencyCategories: IKeyValue[] = [
         { value: 'FlightRelated', key: 1 },
