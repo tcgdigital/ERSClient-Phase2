@@ -1,16 +1,7 @@
-<div page-header 
-    [userName]="userName"
-    [lastLogin]="lastLogin"
-    [departments]="departments"
-    [incidents]="incidents"
-    [currentDepartmentId]="currentDepartmentId"
-    [currentIncidentId]="currentIncidentId"
-    (toggleSideMenu)="toggleSideMenu($event)"
-    (departmentChange)="onDepartmentChange($event)"
-    (incidentChange)="onIncidentChange($event)"
-    (contactClicked)="onContactClicked($event)" 
-    (helpClicked)="onHelpClicked($event)"
-    (logoutClicked)="onLogoutClicked($event)">
+<div page-header [userName]="userName" [lastLogin]="lastLogin" [departments]="departments" [incidents]="incidents" [currentDepartmentId]="currentDepartmentId"
+    [currentIncidentId]="currentIncidentId" (toggleSideMenu)="toggleSideMenu($event)" (departmentChange)="onDepartmentChange($event)"
+    (incidentChange)="onIncidentChange($event)" (contactClicked)="onContactClicked($event)" (helpClicked)="onHelpClicked($event)"
+    (logoutClicked)="onLogoutClicked($event)" (changePasswordClicked)="onChangePasswordClicked($event)">
 </div>
 <side-bar [dockingState]="sideMenuState"></side-bar>
 <section class="body-container">
@@ -19,3 +10,19 @@
 <footer page-footer></footer>
 
 <contactinfo></contactinfo>
+
+<div bsModal #changePasswordModel="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Change Password</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="closeChangePasswordModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <change-password (closeHandler)="onCancelChangePasswordClick($event)" (successMessageInvoker)="onChangePasswordSuccess($event)"></change-password>
+            </div>
+        </div>
+    </div>
+</div>
