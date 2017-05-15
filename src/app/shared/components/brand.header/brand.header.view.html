@@ -15,7 +15,8 @@
                     <li class="disable-hover"><a href="#"><i class="fa fa-user-circle-o fa-lg"></i>&nbsp; Hi! {{userName}}</a></li>
                     <li class="disable-hover"><a href="#">Last Login: {{lastLogin| date:'medium'}}</a></li>
                     <li class="divider"></li>
-                    <li><a href="javascript:void(0);" (click)="onLogoutClicked($event)"><i class="fa fa-sign-out  fa-lg"></i>&nbsp; Logout</a></li>
+                    <li *ngIf="enabledPassword"><a href="javascript:void(0);" (click)="onChangePasswordClicked($event)"><i class="fa fa-pencil-square-o fa-lg"></i>&nbsp; Change Password</a></li>
+                    <li><a href="javascript:void(0);" (click)="onLogoutClicked($event)"><i class="fa fa-sign-out fa-lg"></i>&nbsp; Logout</a></li>
                 </ul>
             </div>
         </div>
@@ -24,11 +25,8 @@
         </div>
         <div class="col-4">
             <a target="_self" href="{{HelpFileFath}}" download="{{FileName}}">
-                <i class="fa fa-question-circle fa-2x" ></i>
+                <i class="fa fa-question-circle fa-2x"></i>
             </a>
-            
         </div>
     </div>
 </div>
-
-

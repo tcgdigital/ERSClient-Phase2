@@ -1,5 +1,5 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
-import { Routes } from '@angular/router';
+import { Component, ViewEncapsulation, OnInit, ViewChild } from '@angular/core';
+import { Routes, Router } from '@angular/router';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 
 import {
@@ -10,6 +10,8 @@ import { DepartmentService, DepartmentModel } from './masterdata';
 import { IncidentService, IncidentModel } from './incident';
 import { PAGES_MENU } from './pages.menu';
 import { UtilityService } from '../shared/services';
+import { ModalDirective } from 'ng2-bootstrap/modal';
+import { AuthenticationService } from './login/components/authentication.service';
 
 
 @Component({
@@ -19,6 +21,8 @@ import { UtilityService } from '../shared/services';
     providers: []
 })
 export class PagesComponent implements OnInit {
+    @ViewChild('changePasswordModel') public changePasswordModel: ModalDirective;
+
     sideMenuState: boolean = false;
     departments: KeyValue[] = [];
     incidents: KeyValue[] = [];
@@ -26,9 +30,9 @@ export class PagesComponent implements OnInit {
     currentIncidentId: number = 0;
     userName: string;
     lastLogin: Date;
-    private sub: any;
     userId: number;
-    
+    private sub: any;
+
     /**
      * Creates an instance of PagesComponent.
      * @param {SideMenuService} sideMenuService
@@ -37,14 +41,15 @@ export class PagesComponent implements OnInit {
      * @param {GlobalStateService} globalState
      * @param {ToastrService} toastrService
      * @param {ToastrConfig} toastrConfig
-     * 
+     *
      * @memberOf PagesComponent
      */
-    constructor(private sideMenuService: SideMenuService,
+    constructor(private router: Router,
+        private sideMenuService: SideMenuService,
         private incidentService: IncidentService,
         private departmentService: DepartmentService,
+        private authenticationService: AuthenticationService,
         private globalState: GlobalStateService,
-        //private sharedService:SharedService,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig) {
         toastrConfig.closeButton = true;
@@ -53,24 +58,16 @@ export class PagesComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.sideMenuService.updateMenuByRoutes(<Routes>PAGES_MENU);
+        this.sideMenuService.updateMenuByRoutes(PAGES_MENU as Routes);
         this.getDepartments();
         this.getIncidents();
         this.userName = localStorage.getItem('CurrentLoggedInUserName');
         this.lastLogin = new Date(localStorage.getItem('LastLoginTime'));
-        //this.globalState.Subscribe('incidentCreate', (model: number) => this.incidentCreateHandler(model));
         this.globalState.Subscribe('incidentCreate', (model: number) => this.incidentCreateHandler(model));
     }
 
-
-
     ngOnDestroy(): void {
         //  this.globalState.Unsubscribe('incidentCreate');
-    }
-
-    private incidentCreateHandler(incident: number) {
-        this.getIncidents();
-
     }
 
     public toggleSideMenu($event): void {
@@ -78,7 +75,7 @@ export class PagesComponent implements OnInit {
     }
 
     public onContactClicked($event): void {
-        this.globalState.NotifyDataChanged('contactClicked', "");
+        this.globalState.NotifyDataChanged('contactClicked', '');
     }
 
     public onHelpClicked($event): void {
@@ -87,16 +84,35 @@ export class PagesComponent implements OnInit {
     }
 
     public onLogoutClicked($event): void {
-        console.log('Logout Clicked');
+        this.authenticationService.Logout();
+        this.router.navigate(['login']);
+    }
+
+    public onChangePasswordClicked($event): void {
+        this.changePasswordModel.show();
+    }
+
+    public closeChangePasswordModal(): void {
+        this.changePasswordModel.hide();
+    }
+
+    public onCancelChangePasswordClick($event): void {
+        this.changePasswordModel.hide();
+    }
+
+    public onChangePasswordSuccess($event): void {
+        this.toastrService.success($event, 'Password Changed', this.toastrConfig);
+        this.authenticationService.Logout();
+        this.router.navigate(['login']);
     }
 
     public onDepartmentChange(selectedDepartment: KeyValue): void {
-        UtilityService.SetToSession({ 'CurrentDepartmentId': selectedDepartment.Value });
+        UtilityService.SetToSession({ CurrentDepartmentId: selectedDepartment.Value });
         this.globalState.NotifyDataChanged('departmentChange', selectedDepartment);
     }
 
     public onIncidentChange(selectedIncident: KeyValue): void {
-        UtilityService.SetToSession({ 'CurrentIncidentId': selectedIncident.Value });
+        UtilityService.SetToSession({ CurrentIncidentId: selectedIncident.Value });
         this.globalState.NotifyDataChanged('incidentChange', selectedIncident);
     }
 
@@ -109,9 +125,9 @@ export class PagesComponent implements OnInit {
             })).subscribe((x: DepartmentModel[]) => {
                 this.departments = x.map((y: DepartmentModel) => new KeyValue(y.DepartmentName, y.DepartmentId));
                 if (this.departments.length > 0) {
-                    this.currentDepartmentId = this.departments[0].Value
+                    this.currentDepartmentId = this.departments[0].Value;
                     console.log(this.currentDepartmentId);
-                    UtilityService.SetToSession({ 'CurrentDepartmentId': this.currentDepartmentId });
+                    UtilityService.SetToSession({ CurrentDepartmentId: this.currentDepartmentId });
                 }
             });
     }
@@ -119,16 +135,20 @@ export class PagesComponent implements OnInit {
     private getIncidents(): void {
         this.incidentService.GetAllActiveIncidents()
             .map((x: ResponseModel<IncidentModel>) => x.Records.sort((a, b) => {
-                let dateA = new Date(a.SubmittedOn).getTime();
-                let dateB = new Date(b.SubmittedOn).getTime();
+                const dateA = new Date(a.SubmittedOn).getTime();
+                const dateB = new Date(b.SubmittedOn).getTime();
                 return dateA > dateB ? 1 : -1;
             })).subscribe((x: IncidentModel[]) => {
                 this.incidents = x.map((y: IncidentModel) => new KeyValue(y.EmergencyName, y.IncidentId));
                 if (this.departments.length > 0) {
                     this.currentIncidentId = this.incidents[0].Value;
                     console.log(this.currentIncidentId);
-                    UtilityService.SetToSession({ 'CurrentIncidentId': this.currentIncidentId });
+                    UtilityService.SetToSession({ CurrentIncidentId: this.currentIncidentId });
                 }
             });
+    }
+
+    private incidentCreateHandler(incident: number) {
+        this.getIncidents();
     }
 }

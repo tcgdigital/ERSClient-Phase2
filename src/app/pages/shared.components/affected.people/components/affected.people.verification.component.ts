@@ -29,12 +29,14 @@ export class AffectedPeopleVerificationComponent implements OnInit {
     currentIncident: number;
     protected _onRouteChange: Subscription;
     isArchive: boolean = false;
+    allSelectVerify: boolean;
 
     getAffectedPeople(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeopleForVerification = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
-            }, (error: any) => {
+                this.isVerfiedChange();
+         }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
     }
@@ -51,7 +53,20 @@ export class AffectedPeopleVerificationComponent implements OnInit {
                 alert(error);
             });
     };
+ selectAllVerify(value: any) : void{
+       this.affectedPeopleForVerification.forEach((x:AffectedPeopleToView) =>{
+                x.IsVerified = value.checked;
+       });
+  }
+    isValidView(item: AffectedPeopleToView) {
+        return (item.IsVerified == true );
+    };
 
+    isVerfiedChange():void{
+        this.allSelectVerify = this.affectedPeopleForVerification.length != 0 && this.affectedPeopleForVerification.filter(x=>{
+              return x.IsVerified == true;
+          }).length == this.affectedPeopleForVerification.length;
+    }
 
     incidentChangeHandler(incident: KeyValue) {
         this.currentIncident = incident.Value;
@@ -59,6 +74,7 @@ export class AffectedPeopleVerificationComponent implements OnInit {
     }
 
     ngOnInit(): any {
+        this.allSelectVerify = false;
         this._onRouteChange = this._router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
                 if (event.url.indexOf("archivedashboard") > -1) {

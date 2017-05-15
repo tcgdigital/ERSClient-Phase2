@@ -14,16 +14,16 @@ import { IAutocompleteActions } from './IAutocompleteActions';
     styleUrls: ['./autocomplete.style.scss']
 })
 export class AutocompleteComponent implements OnInit, OnDestroy {
-    @Input('items') items: KeyValue[] = [];
+    @Input('items') items: Array<KeyValue> = [];
     @Input() placeholder: string = 'Please select';
-    @Input() actionLinks: IAutocompleteActions[];
+    @Input() actionLinks: IAutocompleteActions[]=[];
 
     @Output() notify: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
     @Output('InvokeAutoCompleteReset') InvokeAutoCompleteReset: EventEmitter<any> = new EventEmitter();
     @Output() actionClickHandler: EventEmitter<any> = new EventEmitter();
 
     public elementRef;
-    public filteredList: KeyValue[] = new Array<KeyValue>();
+    public filteredList: Array<KeyValue> = [];
     public query: string = '';
 
     constructor(public myElement: ElementRef, private dataExchange: DataExchangeService<string>) {
@@ -32,10 +32,10 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
     }
 
     filter(): void {
-        if (this.query != null && this.query !== '') {
+        if (this.query != null && this.query != '') {
             this.filteredList = this.items.filter(function (el: KeyValue) {
                 return el.Key.toLowerCase().indexOf(this.query.toLowerCase()) > -1;
-            }.bind(this));
+            }.bind(this)) || [];
         } else {
             this.filteredList = this.items;
         }
@@ -48,7 +48,7 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
     }
 
     showClose(): boolean {
-        if (this.filteredList.length > 0 || this.query !== '') {
+        if (this.filteredList.length > 0 || this.query != '') {
             return true;
         }
         return false;

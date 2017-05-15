@@ -5,7 +5,7 @@ import { UserProfileModel } from './components';
     selector: 'userprofile-main',
     encapsulation: ViewEncapsulation.None,
     templateUrl: './views/userprofile.view.html',
-    styleUrls:['./styles/userprofile.style.scss']
+    styleUrls: ['./styles/userprofile.style.scss']
 })
 export class UserProfileComponent {
 
