@@ -48,13 +48,13 @@ export class DataServiceFactory {
 
     /**
      * Create an instance of a DataService with options and avtion suffix
-     * 
-     * @template T 
-     * @param {string} typeName 
-     * @param {string} actionSuffix 
-     * @param {DataProcessingService} dataProcessingService 
-     * @returns {DataService<T>} 
-     * 
+     *
+     * @template T
+     * @param {string} typeName
+     * @param {string} actionSuffix
+     * @param {DataProcessingService} dataProcessingService
+     * @returns {DataService<T>}
+     *
      * @memberOf DataServiceFactory
      */
     public CreateServiceWithOptionsAndActionSuffix<T extends BaseModel>
@@ -64,12 +64,12 @@ export class DataServiceFactory {
 
     /**
      * Create an instance of a DataService with options and exception handler delegate
-     * 
-     * @template T 
-     * @param {DataProcessingService} dataProcessingService 
-     * @param {(err: any) => any} [handleError] 
-     * @returns {DataService<T>} 
-     * 
+     *
+     * @template T
+     * @param {DataProcessingService} dataProcessingService
+     * @param {(err: any) => any} [handleError]
+     * @returns {DataService<T>}
+     *
      * @memberOf DataServiceFactory
      */
     public CreateServiceWithOptionsAndErrorHandler<T extends BaseModel>

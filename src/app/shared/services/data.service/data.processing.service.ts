@@ -12,10 +12,15 @@ export class DataProcessingService {
     public Key: ODataKeyConfig = new ODataKeyConfig();
     public EndPoint: string = GlobalConstants.ODATA;
     public ExceptionHandler: (error: any) => Observable<any>;
+    public SkipAuthentication: boolean = false;
+    public RequestHeader: {} = {
+        'Content-Type': 'application/json; charset=utf-8; odata.metadata=none',
+        'Accept': 'application/json; charset=utf-8; odata.metadata=none'
+    };
 
     /**
      * Get base URI
-     * 
+     *
      * @readonly
      * @private
      * @type {string}
@@ -70,7 +75,7 @@ export class DataProcessingService {
      * @memberOf DataOperation
      */
     public HandleError(error: any, caught: any = {}): void {
-        let message: string = /api$/gi.test(this.BaseUri) ? 'API Error' : 'OData Error';
+        const message: string = /api$/gi.test(this.BaseUri) ? 'API Error' : 'OData Error';
         console.warn(message, error, caught);
     }
 
@@ -84,23 +89,22 @@ export class DataProcessingService {
      * @memberOf DataProcessingService
      */
     public SetRequestOptions(requestType: WEB_METHOD, headers: Headers, params?: URLSearchParams): RequestOptions {
-
-        let _headers: Headers = new Headers({
+        const _headers: Headers = new Headers({
             'Content-Type': 'application/json; charset=utf-8; odata.metadata=none',
             'Accept': 'application/json; charset=utf-8; odata.metadata=none'
         });
 
-        let token: string = UtilityService.GetFromSession('access_token');
-        if (token !== '' && requestType !== WEB_METHOD.SIMPLEPOST) {
+        const token: string = UtilityService.GetFromSession('access_token');
+        if (token !== '' && requestType !== WEB_METHOD.SIMPLEPOST && !this.SkipAuthentication) {
             if (headers)
                 headers.set('Authorization', `Bearer ${token}`);
             else
-                headers = new Headers({ 'Authorization': `Bearer ${token}` });
+                headers = new Headers({ Authorization: `Bearer ${token}` });
         }
 
-        let finalHeaders = Object.assign<Headers, Headers>(_headers, headers);
+        const finalHeaders = Object.assign<Headers, Headers>(_headers, headers);
 
-        let requestOptions: RequestOptions = new RequestOptions({
+        const requestOptions: RequestOptions = new RequestOptions({
             headers: finalHeaders
         });
 
@@ -111,18 +115,18 @@ export class DataProcessingService {
 
     /**
      * Extract record count from OData or API responses
-     * 
-     * @param {Response} response 
-     * @returns {number} 
-     * 
+     *
+     * @param {Response} response
+     * @returns {number}
+     *
      * @memberOf DataProcessingService
      */
     public ExtractCount(response: Response): number {
         if (response.status < 200 || response.status >= 300) {
             throw new Error(`Bad response status: ${response.status}`);
         }
-        let responseData = JSON.parse(response.text());
-        let responseBody: number = +responseData['@odata.count'];
+        const responseData = JSON.parse(response.text());
+        const responseBody: number = +responseData['@odata.count'];
 
         return responseBody;
     }
@@ -142,8 +146,8 @@ export class DataProcessingService {
             throw new Error(`Bad response status: ${response.status}`);
         }
 
-        let responseBody = response.json();
-        let entity: T | any = responseBody;
+        const responseBody = response.json();
+        const entity: T | any = responseBody;
         return entity || null;
     }
 
@@ -161,8 +165,8 @@ export class DataProcessingService {
             throw new Error(`Bad response status: ${response.status}`);
         }
 
-        let responseBody = response.json();
-        let entities: T | any[] = (responseBody.value) ?
+        const responseBody = response.json();
+        const entities: T | any[] = (responseBody.value) ?
             <T | any[]>responseBody.values : <T | any[]>responseBody;
         return entities;
     }
@@ -177,18 +181,18 @@ export class DataProcessingService {
      * @memberOf DataOperation
      */
     public ExtractQueryResultsWithCount<T extends BaseModel>(response: Response): ResponseModel<T> {
-        let responseModel: ResponseModel<T> = new ResponseModel<T>();
+        const responseModel: ResponseModel<T> = new ResponseModel<T>();
 
         if (response.status < 200 || response.status >= 300) {
             throw new Error(`Bad response status: ${response.status}`);
         }
 
-        let responseBody = response.json();
-        let entities: T[] = (responseBody.value) ? <T[]>responseBody.value : <T[]>responseBody;
+        const responseBody = response.json();
+        const entities: T[] = (responseBody.value) ? responseBody.value as T[] : responseBody as T[];
         responseModel.Records = entities;
 
         try {
-            let count: number = parseInt(responseBody['@odata.count'], 10) || entities.length;
+            const count: number = parseInt(responseBody['@odata.count'], 10) || entities.length;
             responseModel.Count = count;
         } catch (error) {
             console.warn('Cannot determine response entities count. Falling back to collection length...');
@@ -210,31 +214,31 @@ export class DataProcessingService {
         if (response.status < 200 || response.status >= 300) {
             throw new Error(`Bad response status: ${response.status}`);
         }
-        let responseModel: ResponseModel<T> = new ResponseModel<T>();
-        let dataItems: T[] = [];
-        let responseBody: string = response.text();
-        let pattern: RegExp = new RegExp('--batchresponse_(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}', 'gi');
+        const responseModel: ResponseModel<T> = new ResponseModel<T>();
+        const dataItems: T[] = [];
+        const responseBody: string = response.text();
+        const pattern: RegExp = new RegExp('--batchresponse_(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}', 'gi');
 
-        let statusCodes: string[] = responseBody.match(/HTTP\/1\.1.*/gim);
+        const statusCodes: string[] = responseBody.match(/HTTP\/1\.1.*/gim);
         if (statusCodes.length > 0) {
             responseModel.StatusCodes = statusCodes;
         }
 
-        let responseItems: string[] = responseBody
+        const responseItems: string[] = responseBody
             .split(pattern).filter((value: string, index: number) => {
                 return value !== undefined && value !== '' && value !== '--';
             });
 
         if (responseItems && responseItems.length > 0) {
             responseItems.forEach((value: string, index: number) => {
-                let jsonStartingPosition = value.indexOf('[');
-                let jsonEndingPosition = value.lastIndexOf(']');
+                const jsonStartingPosition = value.indexOf('[');
+                const jsonEndingPosition = value.lastIndexOf(']');
 
                 if (jsonStartingPosition > 0 && jsonEndingPosition > 0) {
-                    let responseJson = value.substr(jsonStartingPosition,
+                    const responseJson = value.substr(jsonStartingPosition,
                         (jsonEndingPosition - jsonStartingPosition) + 1);
 
-                    let item = JSON.parse(responseJson);
+                    const item = JSON.parse(responseJson);
                     dataItems.push(item);
                 }
             });
@@ -245,11 +249,11 @@ export class DataProcessingService {
 
     /**
      * Generating body payload for batch operation
-     * 
+     *
      * @template T
      * @param {T[]} requests
      * @returns {string}
-     * 
+     *
      * @memberOf DataProcessingService
      */
     public GenerateBachBodyPayload<T extends RequestModel<BaseModel>>(requests: T[], uniqueId: string): string {
@@ -284,20 +288,20 @@ export class DataProcessingService {
 
     /**
      * Generating request payload block for (POST, PUT, PATCH) operation
-     * 
+     *
      * @private
      * @template T
      * @param {string[]} batchCommand
      * @param {T} request
      * @param {number} batchIndex
      * @param {string} uniqueId
-     * 
+     *
      * @memberOf DataProcessingService
      */
-    private BatchChangeRequest<T extends RequestModel<BaseModel>>
-        (batchCommand: string[], request: T, batchIndex: number, uniqueId: string) {
+    private BatchChangeRequest<T extends RequestModel<BaseModel>>(batchCommand: string[],
+        request: T, batchIndex: number, uniqueId: string) {
 
-        let payload: string = JSON.stringify(request.Entity);
+        const payload: string = JSON.stringify(request.Entity);
         batchCommand.push('--changeset_' + uniqueId);
         batchCommand.push('Content-Type: application/http');
         batchCommand.push('Content-Transfer-Encoding: binary');
@@ -306,7 +310,7 @@ export class DataProcessingService {
         batchCommand.push(request.Method.toString() + ' ' + request.Url + ' HTTP/1.1');
         batchCommand.push('Content-Type: application/json; charset=utf-8');
         batchCommand.push('accept: application/json; charset=utf-8; odata.metadata=none');
-        batchCommand.push('Authorization: Bearer ' + UtilityService.GetFromSession('access_token'))
+        batchCommand.push('Authorization: Bearer ' + UtilityService.GetFromSession('access_token'));
         batchCommand.push('Content-Length: ' + payload.length.toString());
         batchCommand.push('');
         batchCommand.push(payload);
@@ -315,18 +319,18 @@ export class DataProcessingService {
 
     /**
      * Generating request payload block for (GET) operation
-     * 
+     *
      * @private
      * @template T
      * @param {string[]} batchCommand
      * @param {T} request
      * @param {number} batchIndex
      * @param {string} uniqueId
-     * 
+     *
      * @memberOf DataProcessingService
      */
-    private BatchQueryRequest<T extends RequestModel<BaseModel>>
-        (batchCommand: string[], request: T, batchIndex: number, uniqueId: string) {
+    private BatchQueryRequest<T extends RequestModel<BaseModel>>(batchCommand: string[],
+        request: T, batchIndex: number, uniqueId: string) {
         batchCommand.push('--batch_' + uniqueId);
         batchCommand.push('Content-Type: application/http');
         batchCommand.push('Content-Transfer-Encoding: binary');
