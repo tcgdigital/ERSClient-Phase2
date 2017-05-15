@@ -24,6 +24,7 @@ export class EmergencyDepartmentComponent {
     date: Date = new Date();
     private items: Array<KeyValue> = [];
     credential: AuthModel;
+    allselect : boolean= false;
 
     constructor(private emergencyDepartmentService: EmergencyTypeDepartmentService, private emergencyTypeService: EmergencyTypeService,
         private departmentService: DepartmentService, private toastrService: ToastrService,
@@ -60,12 +61,29 @@ export class EmergencyDepartmentComponent {
                         }
                     }
                 }
+                this.checkAllStatus();
             });
     };
 
     istrue(item: DepartmesForEmergency) {
         return item.IsSelected == true;
     };
+
+    slectAllDept(value: any) : void{
+       this.departmentsForEmergency.forEach(x =>{
+                x.IsSelected = value.checked;
+            });
+        }
+
+    checkAllStatus() : void{
+       this.allselect = ((this.departmentsForEmergency.length != 0) && (this.departmentsForEmergency.filter(x=>{
+              return x.IsSelected == true;
+          }).length == this.departmentsForEmergency.length));
+    }
+    invokeReset(): void{
+        this.departmentsForEmergency = [];
+        this.allselect = false;
+  }
 
     save(): void {
         let model = this.departmentsForEmergency.filter(this.istrue);

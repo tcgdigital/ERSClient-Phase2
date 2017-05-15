@@ -23,6 +23,8 @@ export class UserPermissionComponent {
     selectedUser: number;
     date: Date = new Date();
     private items: Array<KeyValue> = [];
+    allSelectMember : boolean;
+    allSelectHOD    : boolean;
 
     constructor(private userPermissionService: UserPermissionService,
         private userProfileService: UserProfileService,
@@ -50,6 +52,8 @@ export class UserPermissionComponent {
 
     invokeReset(): void {
         this.departmentsToView = [];
+        this.allSelectMember = false;
+        this.allSelectHOD = false;
     }
 
     onNotify(message: KeyValue): void {
@@ -71,8 +75,11 @@ export class UserPermissionComponent {
                             }
                     }
                 });
+                this.checkAllStatusHod();
+                this.checkAllStatusMember();
             }, (error: any) => {
                 console.log(`Error: ${error}`);
+                
             });
     };
 
@@ -83,7 +90,26 @@ export class UserPermissionComponent {
     isMemberOf(item: DepartmentsToView) {
         return item.IsMemberOf == true;
     }
-
+    selectAllMember(value: any) : void{
+           this.departmentsToView.forEach(x =>{
+                x.IsMemberOf = value.checked;
+            });       
+    }
+    selectAllHOD(value: any) : void{
+           this.departmentsToView.forEach(x =>{
+                x.IsHod = value.checked;
+            });
+    }
+checkAllStatusHod() : void{
+      this.allSelectHOD = this.departmentsToView.length != 0 && this.departmentsToView.filter(x=>{
+         return x.IsHod == true;
+     }).length == this.departmentsToView.length;
+}
+checkAllStatusMember() : void{
+      this.allSelectMember = this.departmentsToView.length != 0 && this.departmentsToView.filter(x=>{
+         return x.IsMemberOf == true;
+     }).length == this.departmentsToView.length;
+    }
     save(): void {
         let model = this.departmentsToView.filter(this.isMemberOf);
         let selectedUser = this.selectedUser;
@@ -111,6 +137,8 @@ export class UserPermissionComponent {
     }
 
     ngOnInit(): any {
+        this.allSelectMember=false;
+        this.allSelectHOD=false;
         this.getUserProfiles();
         this.departmentService.GetAll()
             .subscribe((response: ResponseModel<DepartmentModel>) => {
