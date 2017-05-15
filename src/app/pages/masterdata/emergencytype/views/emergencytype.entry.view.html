@@ -7,7 +7,7 @@
                 <div class="form-group">
                     <label for="EmergencyTypeName">Emergency Type Name:<span class="required">*</span></label>
                     <input id="txtEmergencyTypeName" type="text" formControlName="EmergencyTypeName" class="form-control" placeholder="Enter Emergency Type Name"
-                        [(ngModel)]="emergencyTypeModel.EmergencyTypeName" required autofocus />
+                         autofocus />
                     <small *ngIf="!form.controls.EmergencyTypeName.valid" class="text-danger">
                     Required.
                     </small>
@@ -17,7 +17,7 @@
                 <div class="form-group">
                     <label for="EmergencyTypeCategory">Emergency Type Category:<span class="required">*</span></label>
 
-                    <select id="selectEmergencyCategory" class="form-control" [(ngModel)]="emergencyTypeModel.EmergencyCategory" formControlName="EmergencyCategory">
+                    <select id="selectEmergencyCategory" class="form-control"  formControlName="EmergencyCategory">
                         <option value=''>Select Emergency Type Category</option>
                         <option *ngFor="let category of emergencyCategory" [value]="category.value">
                                 {{category.value}}
@@ -32,7 +32,7 @@
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="form-group">
                     <label for="Status">Status:<span class="required">*</span></label>
-                    <select class="form-control" id="selectStatus" [(ngModel)]="emergencyTypeModel.ActiveFlag" formControlName="ActiveFlag">                                           
+                    <select class="form-control" id="selectStatus"  formControlName="ActiveFlag">                                           
                         <option value=''>Select Status</option>
                         <option value="Active">Active </option>
                         <option Value="InActive">InActive </option>> 

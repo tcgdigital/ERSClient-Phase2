@@ -75,6 +75,27 @@ export class DepartmentEntryComponent implements OnInit {
     }
 
     onSubmit(values: DepartmentModel): void {
+        if (this.form.controls['DepartmentName'].value == '') {
+            this.toastrService.error('Please provide department code.', 'Error', this.toastrConfig);
+            return null;
+        }
+        if (this.form.controls['Description'].value == '') {
+            this.toastrService.error('Please provide department name.', 'Error', this.toastrConfig);
+            return null;
+        }
+        if (this.form.controls['ContactNo'].value == '') {
+            this.toastrService.error('Please provide contact number.', 'Error', this.toastrConfig);
+            return null;
+        }
+        if (this.form.controls['DepartmentSpoc'].value == '') {
+            this.toastrService.error('Please provide department spoc.', 'Error', this.toastrConfig);
+            return null;
+        }
+        if (this.form.controls['ParentDepartmentId'].value == '') {
+            this.toastrService.error('Please provide parent department.', 'Error', this.toastrConfig);
+            return null;
+        }
+
         if (values.DepartmentId === 0) {
             // ADD REGION
 
@@ -101,23 +122,23 @@ export class DepartmentEntryComponent implements OnInit {
         }
         else {
             // EDIT REGION
-            if (this.form.dirty) {
-                this.departmentModel = new DepartmentModel();
-                this.departmentModel.DepartmentId = values.DepartmentId;
 
-                UtilityService.formDirtyCheck<DepartmentModel>(this.departmentModel, this.form,
-                    (x) => x.DepartmentName,
-                    (x) => x.Description,
-                    (x) => x.ContactNo,
-                    (x) => x.DepartmentSpoc,
-                    (x) => x.ParentDepartmentId);
+            this.departmentModel = new DepartmentModel();
+            this.departmentModel.DepartmentId = values.DepartmentId;
 
-                this.departmentModel.deleteAttributes();
-                if (this.departmentModel.ContactNo) {
-                    this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString();
-                }
-                this.departmentService.Update(this.departmentModel, this.departmentModel.DepartmentId);
+            UtilityService.formDirtyCheck<DepartmentModel>(this.departmentModel, this.form,
+                (x) => x.DepartmentName,
+                (x) => x.Description,
+                (x) => x.ContactNo,
+                (x) => x.DepartmentSpoc,
+                (x) => x.ParentDepartmentId);
+
+            this.departmentModel.deleteAttributes();
+            if (this.departmentModel.ContactNo) {
+                this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString();
             }
+            this.departmentService.Update(this.departmentModel, this.departmentModel.DepartmentId);
+
         }
     }
 

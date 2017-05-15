@@ -38,6 +38,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
     }
 
     onUserProfileModified(userProfileModel: UserProfileModel): void {
+        debugger;
         this.userProfileModel = userProfileModel;
         this.userProfileModel.UserProfileId = userProfileModel.UserProfileId
         this.Action = "Edit";
@@ -50,36 +51,63 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
     }
 
     onSubmit() {
-        if (this.form.valid) {
-            if (this.userProfileModel.UserProfileId == 0) {
-                this.userProfileModel.CreatedBy = +this.credential.UserId;
-                UtilityService.setModelFromFormGroup<UserProfileModel>(this.userProfileModel, this.form,
-                    x => x.UserProfileId, x => x.Email, x => x.UserId, x => x.Name,
-                    x => x.MainContact, x => x.AlternateContact, x => x.Location);
-
-                if (this.form.controls["isActive"].value == 0)
-                    this.userProfileModel.ActiveFlag = "Active";
-                else
-                    this.userProfileModel.ActiveFlag = "InActive";
-
-                this.userProfileService.Create(this.userProfileModel)
-                    .subscribe((response: UserProfileModel) => {
-                        this.toastrService.success('User profile created Successfully.', 'Success', this.toastrConfig);
-                        this.dataExchange.Publish("UserProfileModelCreated", response);
-                    }, (error: any) => {
-                        console.log(`Error: ${error}`);
-                    });
-            }
-            else {
-                this.userProfileService.Update(this.userProfileModel)
-                    .subscribe((response: UserProfileModel) => {
-                        this.toastrService.success('User profile edited Successfully.', 'Success', this.toastrConfig);
-                        this.dataExchange.Publish("UserProfileModelModified", response);
-                    }, (error: any) => {
-                        console.log(`Error: ${error}`);
-                    });
-            }
+        debugger;
+        if (this.form.controls['Email'].value == '') {
+            this.toastrService.error('Please provide email.', 'Error', this.toastrConfig);
+            return null;
         }
+        if (this.form.controls['UserId'].value == '') {
+            this.toastrService.error('Please provide user id.', 'Error', this.toastrConfig);
+            return null;
+        }
+        if (this.form.controls['Name'].value == '') {
+            this.toastrService.error('Please provide name.', 'Error', this.toastrConfig);
+            return null;
+        }
+        if (this.form.controls['MainContact'].value == '') {
+            this.toastrService.error('Please provide main contact.', 'Error', this.toastrConfig);
+            return null;
+        }
+        if (this.form.controls['Location'].value == '') {
+            this.toastrService.error('Please provide location.', 'Error', this.toastrConfig);
+            return null;
+        }
+
+        this.userProfileModel.Email = this.form.controls["Email"].value;
+        this.userProfileModel.UserId = this.form.controls["UserId"].value;
+        this.userProfileModel.Name = this.form.controls["Name"].value;
+        this.userProfileModel.Location = this.form.controls["Location"].value;
+        this.userProfileModel.isActive = this.form.controls["isActive"].value;
+
+        if (this.userProfileModel.UserProfileId == 0) {
+            this.userProfileModel.CreatedBy = +this.credential.UserId;
+            UtilityService.setModelFromFormGroup<UserProfileModel>(this.userProfileModel, this.form,
+                x => x.UserProfileId, x => x.Email, x => x.UserId, x => x.Name,
+                x => x.MainContact, x => x.AlternateContact, x => x.Location);
+
+            if (this.form.controls["isActive"].value == 0)
+                this.userProfileModel.ActiveFlag = "Active";
+            else
+                this.userProfileModel.ActiveFlag = "InActive";
+
+            this.userProfileService.Create(this.userProfileModel)
+                .subscribe((response: UserProfileModel) => {
+                    this.toastrService.success('User profile created Successfully.', 'Success', this.toastrConfig);
+                    this.dataExchange.Publish("UserProfileModelCreated", response);
+                }, (error: any) => {
+                    console.log(`Error: ${error}`);
+                });
+        }
+        else {
+            this.userProfileService.Update(this.userProfileModel)
+                .subscribe((response: UserProfileModel) => {
+                    this.toastrService.success('User profile edited Successfully.', 'Success', this.toastrConfig);
+                    this.dataExchange.Publish("UserProfileModelModified", response);
+                }, (error: any) => {
+                    console.log(`Error: ${error}`);
+                });
+        }
+
     }
 
     ngOnDestroy(): void {
