@@ -34,7 +34,7 @@ export interface IRequesterType {
     caption: string;
 }
 export class GlobalConstants {
-    public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
+    public static EXTERNAL_URL: string = 'http://localhost:5001/';
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
     public static GRANT_TYPE: string = 'password';
     public static ODATA: string = 'odata';
@@ -87,6 +87,54 @@ export class GlobalConstants {
             text: 'Crew',
         }];
 
+     public static ExternalInputEnquiryType: IEnquiryType[] = [
+        {
+            value: '1',
+            caption: 'Passenger',
+            text: 'Passenger enquiry'
+        },
+        {
+            value: '2',
+            caption: 'Cargo',
+            text: 'Cargo enquiry'
+        },
+        {
+            value: '3',
+            caption: 'Crew',
+            text: 'Crew enquiry',
+        },
+        {
+            value: '4',
+            caption: 'Media',
+            text: 'Media enquiry',
+        },
+        {
+            value: '5',
+            caption: 'FutureTravel',
+            text: 'Future Travel enquiry',
+        },
+        {
+            value: '6',
+            caption: 'GeneralUpdate',
+            text: 'General Update enquiry',
+        },
+        {
+            value: '7',
+            caption: 'Other',
+            text: 'Other enquiry',
+        },
+        {
+            value: '8',
+            caption: 'SituationalUpdates',
+            text: 'Situational Updates enquiry',
+        },
+        {
+            value: '9',
+            caption: 'CustomerDissatisfaction',
+            text: 'Customer Dissatisfaction',
+        }];
+
+  
     public static Priority: IPriority[] = [
         {
             value: '1',

@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router, NavigationEnd } from '@angular/router';
@@ -10,7 +10,8 @@ import {
     AutocompleteComponent, KeyValue,
     GlobalConstants, UtilityService, GlobalStateService, AuthModel
 } from '../../../shared';
-import { EnquiryModel, EnquiryService } from './components';
+import { EnquiryModel,EnquiryService} from './components';
+
 import {
     CommunicationLogModel, InvolvePartyModel,
     AffectedPeopleService, AffectedPeopleToView,
@@ -20,18 +21,30 @@ import { DemandService } from '../demand';
 import { CallerModel } from '../caller';
 import { DepartmentService, DepartmentModel } from '../../masterdata/department';
 import { InvolvePartyService } from '../involveparties';
+import { CallCenterOnlyPageService, ExternalInputModel } from "../../callcenteronlypage/component";
 
 
 @Component({
     selector: 'call-centre-main',
     encapsulation: ViewEncapsulation.None,
     templateUrl: './views/call.centre.view.html',
-    styleUrls: ['./styles/call.center.style.scss']
+    styleUrls: ['./styles/call.center.style.scss'],
+    providers : [
+        EnquiryService,
+        DataExchangeService,
+        AffectedPeopleService,
+        AffectedObjectsService,
+        DepartmentService,
+        DemandService,
+        InvolvePartyService,
+        CallCenterOnlyPageService]
 })
 
-export class EnquiryComponent implements OnInit {
+export class EnquiryEntryComponent implements OnInit {
+      @Input('callid') callid: number;
+
     /**
-     * Creates an instance of EnquiryComponent.
+     * Creates an instance of EnquiryEntryComponent.
      * @param {AffectedPeopleService} affectedPeopleService 
      * @param {AffectedObjectsService} affectedObjectsService 
      * @param {DepartmentService} departmentService 
@@ -41,7 +54,7 @@ export class EnquiryComponent implements OnInit {
      * @param {DataExchangeService<string>} dataExchange 
      * @param {GlobalStateService} globalState 
      * 
-     * @memberOf EnquiryComponent
+     * @memberOf EnquiryEntryComponent
      */
     constructor(private affectedPeopleService: AffectedPeopleService,
         private affectedObjectsService: AffectedObjectsService,
@@ -52,7 +65,8 @@ export class EnquiryComponent implements OnInit {
         private dataExchange: DataExchangeService<string>,
         private globalState: GlobalStateService,
         private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig) { };
+        private toastrConfig: ToastrConfig,
+        private callcenteronlypageservice : CallCenterOnlyPageService) { };
 
     public form: FormGroup;
     enquiryTypes: Object = GlobalConstants.EnquiryType;
@@ -78,6 +92,7 @@ export class EnquiryComponent implements OnInit {
     //userName: string = 'Soumit Nag';
     credential: AuthModel;
     protected _onRouteChange: Subscription;
+    externalInput : ExternalInputModel = new ExternalInputModel();
 
     onNotifyPassenger(message: KeyValue): void {
         this.enquiry.AffectedPersonId = message.Value;
@@ -263,6 +278,14 @@ export class EnquiryComponent implements OnInit {
                     IsCallBack: new FormControl(false),
                     IsTravelRequest: new FormControl(false)
                 });
+                this.externalInput.deleteAttributes();
+                this.externalInput.IsCallRecieved = true;
+                this.externalInput.ExternalInputId = this.callid;
+                this.callcenteronlypageservice.Update(this.externalInput,this.callid)
+                .subscribe(()=>{
+                    this.globalState.NotifyDataChanged("CallRecieved",this.callid);
+                });
+
                 this.dataExchange.Publish('clearAutoCompleteInput', '');
                 if (this.demands.length !== 0)
                     this.demandService.CreateBulk(this.demands)
