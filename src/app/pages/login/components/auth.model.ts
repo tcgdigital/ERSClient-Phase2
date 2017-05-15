@@ -17,3 +17,9 @@ export class ForgotPasswordModel{
     NewPassword: string;
     ConfirmPassword: string;
 }
+
+export class ChangePasswordModel {
+    OldPassword: string;
+    NewPassword: string;
+    ConfirmPassword: string;
+}

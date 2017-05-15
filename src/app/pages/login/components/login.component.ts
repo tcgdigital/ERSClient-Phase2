@@ -46,16 +46,27 @@ export class LoginComponent {
         this.authService.Login(userid, password)
             .subscribe((data: AuthResponseModel) => {
                 console.log(jwtDecode(data.access_token));
-                const loginCredentialBasic = jwtDecode(data.access_token);
-                localStorage.setItem('LastLoginTime', (new Date()).toString());
-                UtilityService.SetToSession({ CurrentUserId: loginCredentialBasic.UserId });
-                this.GetUserInfoFromUserProfileByUserProfileId(loginCredentialBasic.UserId);
+                const loginCredentialBasic: any = jwtDecode(data.access_token);
+                if (loginCredentialBasic) {
+                    if (!Object.keys(loginCredentialBasic).some((x) => x === 'EmailConfirmed')) {
+                        localStorage.setItem('LastLoginTime', (new Date()).toString());
+                        UtilityService.SetToSession({ CurrentUserId: loginCredentialBasic.UserId });
+                        this.GetUserInfoFromUserProfileByUserProfileId(loginCredentialBasic.UserId);
+                    } else {
+                        this.toastrService.warning('Please change your default password', 'Sign In', this.toastrConfig);
+                        this.router.navigate(['login/change']);
+                    }
+                } else {
+                    this.toastrService.error('Unable to connect the server or an unspecified exception',
+                        'Sign In Exception', this.toastrConfig);
+                }
             }, (error: any) => {
                 console.log(`Error: ${error}`);
                 if (error.error === 'invalid_grant') {
-                    this.toastrService.error(error.error_description, 'Invalid Grant', this.toastrConfig);
-                }
-
+                    this.toastrService.error(error.error_description, 'Sign In Exception', this.toastrConfig);
+                } /*else if (error.error === 'invalid_grant_confirm_email') {
+                    this.router.navigate(['login/change']);
+                }*/
                 console.log('Notify User Clicked error');
             });
     }
