@@ -2,36 +2,46 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
-import {
-    GlobalStateService
-} from '../shared';
-import { ModalModule} from 'ng2-bootstrap/modal';
+import { ModalModule } from 'ng2-bootstrap/modal';
+import { HttpModule } from '@angular/http';
+
+import { GlobalStateService } from '../shared';
 import { PagesComponent } from './pages.component';
 import { SharedModule } from '../shared/shared.module';
 import { PagesRouting } from './pages.routing';
 import { MasterDateModule } from './masterdata';
 import { IncidentModule } from './incident';
+import {
+    ChangePasswordService,
+    ChangePasswordComponent
+} from './shared.components/change.password';
 import { ContactInfoComponent } from './shared.components/contact.info';
+import { AuthenticationService } from './login/components/authentication.service';
 
-// import { IncidentModule } from './incident';
 
 @NgModule({
     imports: [
         CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        HttpModule,
         SharedModule,
         IncidentModule,
         MasterDateModule,
         ToastrModule,
-        PagesRouting,
-        ModalModule
-        
-        
+        ModalModule,
+        PagesRouting
     ],
-    declarations: [PagesComponent, ContactInfoComponent],
+    declarations: [
+        PagesComponent,
+        ChangePasswordComponent,
+        ContactInfoComponent
+    ],
     providers: [
-        GlobalStateService
+        GlobalStateService,
+        AuthenticationService
+        // ChangePasswordService
     ]
-
 })
 export class PagesModule {
 }

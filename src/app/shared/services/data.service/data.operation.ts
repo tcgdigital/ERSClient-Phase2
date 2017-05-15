@@ -17,11 +17,11 @@ export abstract class DataOperation<T> {
 
     /**
      * Creates an instance of DataOperation.
-     * 
+     *
      * @param {DataProcessingService} dataProcessingService
      * @param {Http} httpService
      * @param {string} typeName
-     * 
+     *
      * @memberOf DataOperation
      */
     constructor(dataProcessingService: DataProcessingService,
@@ -30,11 +30,11 @@ export abstract class DataOperation<T> {
 
     /**
      * Creates an instance of DataOperation.
-     * 
+     *
      * @param {DataProcessingService} dataProcessingService
      * @param {Http} httpService
      * @param {(string | T[])} typeNameOrEntities
-     * 
+     *
      * @memberOf DataOperation
      */
     constructor(dataProcessingService: DataProcessingService,
@@ -43,12 +43,12 @@ export abstract class DataOperation<T> {
 
     /**
      * Creates an instance of DataOperation.
-     * 
+     *
      * @param {DataProcessingService} dataProcessingService
      * @param {Http} httpService
      * @param {(string | T[])} typeNameOrEntities
      * @param {string} [key]
-     * 
+     *
      * @memberOf DataOperation
      */
     constructor(dataProcessingService: DataProcessingService,
@@ -58,13 +58,13 @@ export abstract class DataOperation<T> {
 
     /**
      * Creates an instance of DataOperation.
-     * 
+     *
      * @param {DataProcessingService} dataProcessingService
      * @param {Http} httpService
      * @param {(string | T[])} typeNameOrEntities
      * @param {(string | T)} [keyOrEntity]
      * @param {string} [key]
-     * 
+     *
      * @memberOf DataOperation
      */
     constructor(dataProcessingService: DataProcessingService,
@@ -75,14 +75,14 @@ export abstract class DataOperation<T> {
 
     /**
      * Creates an instance of DataOperation.
-     * 
+     *
      * @param {DataProcessingService} dataProcessingService
      * @param {Http} httpService
      * @param {(string | T[])} typeNameOrEntities
      * @param {(string | T)} [keyOrEntity]
      * @param {string} [key]
      * @param {string} [actionSuffix]
-     * 
+     *
      * @memberOf DataOperation
      */
     constructor(dataProcessingService: DataProcessingService,
@@ -97,16 +97,16 @@ export abstract class DataOperation<T> {
         this.DataProcessingService = dataProcessingService;
 
         if (typeof typeNameOrEntities === 'string') {
-            this.TypeName = <string>typeNameOrEntities;
+            this.TypeName = typeNameOrEntities as string;
         } else {
-            this.Entities = <T[]>typeNameOrEntities;
+            this.Entities = typeNameOrEntities as T[];
         }
 
         if (keyOrEntity) {
             if (typeof keyOrEntity === 'string') {
-                this.Key = <string>keyOrEntity;
+                this.Key = keyOrEntity as string;
             } else {
-                this.Entity = <T>keyOrEntity;
+                this.Entity = keyOrEntity as T;
             }
         }
         if (actionSuffix) this.ActionSuffix = actionSuffix;
@@ -153,11 +153,11 @@ export abstract class DataOperation<T> {
 
     /**
      * Handle response for collection of entities for batch operation
-     * 
+     *
      * @protected
      * @param {Observable<Response>} entity
      * @returns {(Observable<T[] | any[]>)}
-     * 
+     *
      * @memberOf DataOperation
      */
     protected HandleBatchResponses<TOut extends BaseModel>(entity: Observable<Response>): Observable<ResponseModel<TOut>> {
@@ -187,11 +187,11 @@ export abstract class DataOperation<T> {
 
     /**
      *  Handle response for number of record count
-     * 
+     *
      * @protected
-     * @param {Observable<Response>} entity 
-     * @returns {Observable<number>} 
-     * 
+     * @param {Observable<Response>} entity
+     * @returns {Observable<number>}
+     *
      * @memberOf DataOperation
      */
     protected HandleResponseCount(entity: Observable<Response>): Observable<number> {

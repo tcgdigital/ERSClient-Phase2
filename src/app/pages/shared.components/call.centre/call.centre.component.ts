@@ -51,7 +51,7 @@ export class EnquiryComponent implements OnInit {
     selctedEnquiredPerson: AffectedPeopleToView;
     selctedEnquiredObject: AffectedObjectsToView;
     credential: AuthModel;
-    actionLinks: IAutocompleteActions[] = [/*{
+    actionLinks: IAutocompleteActions[] = [{
         ActionName: 'Test1',
         ActionDescription: 'Test Icon 1',
         ActionIcon: 'fa fa-comments-o fa-lg'
@@ -59,7 +59,7 @@ export class EnquiryComponent implements OnInit {
         ActionName: 'Test2',
         ActionDescription: 'Test Icon 1',
         ActionIcon: 'fa fa-coffee fa-lg'
-    }*/];
+    }];
 
     protected _onRouteChange: Subscription;
 

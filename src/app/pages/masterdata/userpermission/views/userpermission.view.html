@@ -10,13 +10,19 @@
             <button class="btn btn-primary" type="button" (click)="save()">Save</button>
         </div>
     </div>
+    <div class="hidden-lg-up">
+        <md-checkbox id="IsAutoApproved" [(ngModel)]="allSelectMember" (change)="selectAllMember($event)" aria-label="Add">Select Member Of</md-checkbox>
+    </div>
+    <div class="hidden-lg-up">
+       <md-checkbox id="IsAutoApproved" [(ngModel)]="allSelectHOD" (change)="selectAllHOD($event)" aria-label="Add">Select HOD</md-checkbox> 
+    </div>
     <responsive-table>
         <table responsive-table-body>
             <thead>
                 <tr>
                     <th>Department Code</th>
-                    <th>Member Of</th>
-                    <th>Is HOD</th>
+                    <th><md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="allSelectMember" (change)="selectAllMember($event)" aria-label="Add">Select Member Of</md-checkbox></th>
+                    <th><md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="allSelectHOD" (change)="selectAllHOD($event)" aria-label="Add">Select HOD</md-checkbox></th>
                 </tr>
             </thead>
             <tbody>
@@ -26,10 +32,10 @@
                 <tr *ngFor="let departmentToView of departmentsToView">
                     <td data-title="Department Code">{{departmentToView.DepartmentName}}</td>
                     <td data-title="Member Of">
-                        <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="departmentToView.IsMemberOf" aria-label="Add"></md-checkbox>
+                        <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="departmentToView.IsMemberOf" aria-label="Add" (change)="checkAllStatusMember($event)"></md-checkbox>
                     </td>
                     <td data-title="Is HOD">
-                        <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="departmentToView.IsHod" aria-label="Add"></md-checkbox>
+                        <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="departmentToView.IsHod" aria-label="Add" (change)="checkAllStatusHod($event)"></md-checkbox>
                     </td>
                 </tr>
             </tbody>
