@@ -134,7 +134,7 @@ export class DepartmentFunctionalityComponent implements OnInit {
           }).length == this.pagesForDepartment.length;
     }
     checkAllStatusOnlyHOD() : void{
-          this.allSelectView = this.pagesForDepartment.length != 0 && this.pagesForDepartment.filter(x=>{
+          this.allSelectOnlyHOD = this.pagesForDepartment.length != 0 && this.pagesForDepartment.filter(x=>{
               return x.OnlyForHod == true;
           }).length == this.pagesForDepartment.length;
     }

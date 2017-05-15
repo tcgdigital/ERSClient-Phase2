@@ -54,31 +54,18 @@ export class AffectedPeopleVerificationComponent implements OnInit {
             });
     };
  selectAllVerify(value: any) : void{
-        if(value.checked)
-        {
-            this.affectedPeopleForVerification.forEach((x:AffectedPeopleToView) =>{
-                x.IsVerified = true;
-            });
-        }
-        else{
-            this.affectedPeopleForVerification.forEach(x =>{
-                x.IsVerified = false;
-            });
-        }
-
-    }
-
+       this.affectedPeopleForVerification.forEach((x:AffectedPeopleToView) =>{
+                x.IsVerified = value.checked;
+       });
+  }
     isValidView(item: AffectedPeopleToView) {
         return (item.IsVerified == true );
     };
 
     isVerfiedChange():void{
-        if(this.affectedPeopleForVerification.length != 0 && this.affectedPeopleForVerification.filter(this.isValidView).length == this.affectedPeopleForVerification.length){
-          this.allSelectVerify=true;
-      }
-      else{
-          this.allSelectVerify=false;
-      }
+        this.allSelectVerify = this.affectedPeopleForVerification.length != 0 && this.affectedPeopleForVerification.filter(x=>{
+              return x.IsVerified == true;
+          }).length == this.affectedPeopleForVerification.length;
     }
 
     incidentChangeHandler(incident: KeyValue) {

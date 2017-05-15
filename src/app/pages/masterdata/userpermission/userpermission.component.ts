@@ -91,48 +91,24 @@ export class UserPermissionComponent {
         return item.IsMemberOf == true;
     }
     selectAllMember(value: any) : void{
-        if(value.checked)
-        {
-            this.departmentsToView.forEach(x =>{
-                x.IsMemberOf = true;
-            });
-        }
-        else{
-            this.departmentsToView.forEach(x =>{
-                x.IsMemberOf = false;
-            });
-        }
-
+           this.departmentsToView.forEach(x =>{
+                x.IsMemberOf = value.checked;
+            });       
     }
     selectAllHOD(value: any) : void{
-        if(value.checked)
-        {
-            this.departmentsToView.forEach(x =>{
-                x.IsHod = true;
+           this.departmentsToView.forEach(x =>{
+                x.IsHod = value.checked;
             });
-        }
-        else{
-            this.departmentsToView.forEach(x =>{
-                x.IsHod = false;
-            });
-        }
-
     }
 checkAllStatusHod() : void{
-      if(this.departmentsToView.filter(this.isHod).length == this.departmentsToView.length){
-          this.allSelectHOD=true;
-      }
-      else{
-          this.allSelectHOD=false;
-      }
-    }
+      this.allSelectHOD = this.departmentsToView.length != 0 && this.departmentsToView.filter(x=>{
+         return x.IsHod == true;
+     }).length == this.departmentsToView.length;
+}
 checkAllStatusMember() : void{
-      if(this.departmentsToView.filter(this.isMemberOf).length == this.departmentsToView.length){
-          this.allSelectMember=true;
-      }
-      else{
-          this.allSelectMember=false;
-      }
+      this.allSelectMember = this.departmentsToView.length != 0 && this.departmentsToView.filter(x=>{
+         return x.IsMemberOf == true;
+     }).length == this.departmentsToView.length;
     }
     save(): void {
         let model = this.departmentsToView.filter(this.isMemberOf);

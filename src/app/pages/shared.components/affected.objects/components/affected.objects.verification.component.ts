@@ -47,11 +47,9 @@ export class AffectedObjectsVerificationComponent implements OnInit {
             });
     }
 isVerifiedStatusChange() : void{
-    if(this.affectedObjectsForVerification.length!=0 ){
-          this.allSelectVerify= this.affectedObjectsForVerification.filter(x=>{
+          this.allSelectVerify= this.affectedObjectsForVerification.length!=0 && this.affectedObjectsForVerification.filter(x=>{
               return x.IsVerified == true;
           }).length == this.affectedObjectsForVerification.length;
-      }
 }
     saveVerifiedObjects(): void {
         let datenow = this.date;

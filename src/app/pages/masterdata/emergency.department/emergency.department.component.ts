@@ -70,27 +70,15 @@ export class EmergencyDepartmentComponent {
     };
 
     slectAllDept(value: any) : void{
-        if(value.checked)
-        {
-            this.departmentsForEmergency.forEach(x =>{
-                x.IsSelected = true;
+       this.departmentsForEmergency.forEach(x =>{
+                x.IsSelected = value.checked;
             });
         }
-        else{
-            this.departmentsForEmergency.forEach(x =>{
-                x.IsSelected = false;
-            });
-        }
-
-    }
 
     checkAllStatus() : void{
-      if(this.departmentsForEmergency.filter(this.istrue).length == this.departmentsForEmergency.length){
-          this.allselect=true;
-      }
-      else{
-          this.allselect=false;
-      }
+       this.allselect = ((this.departmentsForEmergency.length != 0) && (this.departmentsForEmergency.filter(x=>{
+              return x.IsSelected == true;
+          }).length == this.departmentsForEmergency.length));
     }
     invokeReset(): void{
         this.departmentsForEmergency = [];
