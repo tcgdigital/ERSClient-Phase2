@@ -26,10 +26,10 @@ export class QueryOperation<T extends BaseModel> extends DataOperation<T> {
 
     /**
      * Creates an instance of QueryOperation.
-     * @param {DataProcessingService} dataProcessingService 
-     * @param {Http} httpService 
-     * @param {string} typeName 
-     * 
+     * @param {DataProcessingService} dataProcessingService
+     * @param {Http} httpService
+     * @param {string} typeName
+     *
      * @memberOf QueryOperation
      */
     constructor(private dataProcessingService: DataProcessingService,
@@ -116,11 +116,11 @@ export class QueryOperation<T extends BaseModel> extends DataOperation<T> {
         // this._count = count;
         // return this;
 
-        let params: URLSearchParams = this.GetQueryParams();
-        let uri: string = this.DataProcessingService
+        const params: URLSearchParams = this.GetQueryParams();
+        const uri: string = this.DataProcessingService
             .GetUri(this.TypeName, this.Key, this.ActionSuffix);
-        
-        let requestOps = this.DataProcessingService
+
+        const requestOps = this.DataProcessingService
             .SetRequestOptions(WEB_METHOD.GET, this.RequestHeaders, params);
         return super.HandleResponseCount(this.HttpService.get(uri, requestOps));
     }
@@ -146,11 +146,11 @@ export class QueryOperation<T extends BaseModel> extends DataOperation<T> {
      * @memberOf QueryOperation
      */
     public Execute(): Observable<ResponseModel<T>> {
-        let params: URLSearchParams = this.GetQueryParams();
-        let uri: string = this.DataProcessingService
+        const params: URLSearchParams = this.GetQueryParams();
+        const uri: string = this.DataProcessingService
             .GetUri(this.TypeName, this.Key, this.ActionSuffix);
 
-        let requestOps = this.DataProcessingService
+        const requestOps = this.DataProcessingService
             .SetRequestOptions(WEB_METHOD.GET, this.RequestHeaders, params);
 
         return super.HandleResponsesWithCount(this.HttpService.get(uri, requestOps));
@@ -165,7 +165,7 @@ export class QueryOperation<T extends BaseModel> extends DataOperation<T> {
      * @memberOf QueryOperation
      */
     private GetQueryParams(externalFilter: string = ''): URLSearchParams {
-        let params = new URLSearchParams();
+        const params = new URLSearchParams();
 
         if (this._select && this._select.length > 0) params.set(this.DataProcessingService.Key.select, this._select);
         if (this._expand && this._expand.length > 0) params.set(this.DataProcessingService.Key.expand, this._expand);
