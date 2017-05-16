@@ -1,7 +1,10 @@
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
-import { BaseModel, WEB_METHOD, RequestModel, ResponseModel } from '../../../models';
+import {
+    BaseModel, WEB_METHOD,
+    RequestModel, ResponseModel
+} from '../../../models';
 import { UtilityService } from '../../../services';
 import { DataProcessingService, DataOperation } from '../index';
 import { GlobalConstants } from '../../../constants';
@@ -152,7 +155,6 @@ export class JsonPostOperation<T extends any> extends DataOperation<any> {
         return super.HandleResponse(this.HttpService.post(uri, body, requestOps));
     }
 }
-
 
 /**
  * Data operation specific for JSON based Bulk POST request
