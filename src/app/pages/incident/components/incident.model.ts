@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BaseModel, KeyValue } from '../../../shared';
 import { EmergencyTypeModel } from '../../masterdata/emergencytype';
 import { DepartmentModel } from '../../masterdata/department';
-import { InvolvePartyModel } from '../../shared.components';
+import { InvolvePartyModel, OrganizationModel } from '../../shared.components';
 
 export class IncidentModel extends BaseModel {
     public IncidentId: number;
@@ -20,6 +20,9 @@ export class IncidentModel extends BaseModel {
     public IsSubmitted: boolean;
     public IsSaved: boolean;
     public Remarks: string;
+    public AirportInCharge: string;
+    public OrganizationId: number;
+    public CrisisReporterIdentity: string;
     public ClosedBy?: number;
     public ClosedOn?: Date;
     public ReOpenBy?: number;
@@ -32,7 +35,9 @@ export class IncidentModel extends BaseModel {
     public SavedOn?: Date;
     public DepartmentId: number;
     public isReopen: boolean;
+
     public EmergencyType: EmergencyTypeModel;
+    public Organization: OrganizationModel;
     public Department: DepartmentModel;
 
     public InvolvedParties?: InvolvePartyModel[];
@@ -43,6 +48,7 @@ export class IncidentModel extends BaseModel {
         this.IncidentId = 0;
         this.IsDrill = false;
         this.EmergencyTypeId = 0;
+
         this.IncidentStatus = '';
         this.EmergencyName = '';
         this.AlertMessage = '';
@@ -54,6 +60,9 @@ export class IncidentModel extends BaseModel {
         this.IsSubmitted = false;
         this.IsSaved = false;
         this.Remarks = '';
+        this.AirportInCharge = '';
+        this.OrganizationId = 0;
+        this.CrisisReporterIdentity = '';
         this.ClosedBy = null;
         this.ClosedOn = null;
         this.ReOpenBy = null;

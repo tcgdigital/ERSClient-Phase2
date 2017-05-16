@@ -65,12 +65,6 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
     }
 
     onSubmit() {
-<<<<<<< HEAD
-        debugger;
-        if (this.form.controls['Email'].value == '') {
-            this.toastrService.error('Please provide email.', 'Error', this.toastrConfig);
-            return null;
-=======
         if (this.form.valid) {
             if (this.userProfileModel.UserProfileId === 0) {
                 this.userProfileModel.CreatedBy = +this.credential.UserId;
@@ -115,7 +109,6 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
                         console.log(`Error: ${error}`);
                     });
             }
->>>>>>> a741b17a4156b33668fc15db745485bdacd66f50
         }
         if (this.form.controls['UserId'].value == '') {
             this.toastrService.error('Please provide user id.', 'Error', this.toastrConfig);

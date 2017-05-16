@@ -43,7 +43,8 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
         return this._dataService.Query()
             .Expand('ParentCheckList($select=CheckListId,CheckListCode)',
             'TargetDepartment($select=DepartmentId,DepartmentName)',
-            'EmergencyType($select=EmergencyTypeId,EmergencyTypeName)')
+            'EmergencyType($select=EmergencyTypeId,EmergencyTypeName)',
+            'Organization($select=OrganizationId,OrganizationCode,OrganizationName)')
             .OrderBy('CreatedOn desc')
             .Execute();
     }
