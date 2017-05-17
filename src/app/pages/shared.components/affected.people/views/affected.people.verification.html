@@ -1,9 +1,10 @@
 <button class="btn btn-primary" type="button" (click)="saveVerifiedAffectedPeople()" *ngIf="!isArchive">Verify</button>
+<div class="hidden-lg-up" ><md-checkbox id="IsAutoApproved" [(ngModel)]="allSelectVerify" (change)="selectAllVerify($event)" aria-label="Add">Verify</md-checkbox></div>
 <responsive-table>
     <table responsive-table-body>
         <thead>
             <tr>
-                <th>Verify</th>
+                <th><md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="allSelectVerify" (change)="selectAllVerify($event)" aria-label="Add">Verify</md-checkbox></th>
                 <th>Reference Number</th>
                 <th>PDA Name</th>
                 <th>PDA Contact</th>
@@ -17,7 +18,7 @@
             </tr>
             <tr *ngFor="let affectedperson of affectedPeopleForVerification">
                 <td data-title="Verify">
-                    <md-checkbox class="Marght" id="IsVerified" [(ngModel)]="affectedperson.IsVerified" aria-label="Add" [disabled]="isArchive">
+                    <md-checkbox class="Marght" id="IsVerified" [(ngModel)]="affectedperson.IsVerified" aria-label="Add" (change)="isVerfiedChange()" [disabled]="isArchive">
                     </md-checkbox>
                 </td>
                 <td data-title="Reference Number">{{affectedperson.TicketNumber}}&nbsp;</td>

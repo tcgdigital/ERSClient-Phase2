@@ -14,7 +14,7 @@ export abstract class BaseModel {
     }
 
     public deleteAttributes() {
-        delete this.ActiveFlag; 
+        delete this.ActiveFlag;
         delete this.CreatedBy;
         delete this.CreatedOn;
     }
@@ -56,7 +56,7 @@ export class Severity {
 
 export class InvolvedPartyType {
     static Flight: number = 1;
-    static NonFlight: number = 2
+    static NonFlight: number = 2;
 }
 
 export class FileData {
@@ -77,4 +77,11 @@ export class AuthModel {
     public exp: number;
     public iss: string;
     public nbf: number;
+}
+
+export class AccountResponse {
+    public Code: number;
+    public Message: string;
+    public Data: any;
+    public Url: string;
 }

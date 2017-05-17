@@ -11,3 +11,15 @@ export class AuthResponseModel {
     token_type: string;
     expires_in: number;
 }
+
+export class ForgotPasswordModel{
+    EmailOrUserName: string;
+    NewPassword: string;
+    ConfirmPassword: string;
+}
+
+export class ChangePasswordModel {
+    OldPassword: string;
+    NewPassword: string;
+    ConfirmPassword: string;
+}

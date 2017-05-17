@@ -119,8 +119,10 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
             });
     }
 
-    CreateAffected(entity: AffectedModel): Observable<AffectedModel> {       
-         let affected: AffectedModel;
+
+    CreateAffected(entity: AffectedModel): Observable<AffectedModel> {
+        let affected: AffectedModel;
+        delete entity.Active;
         return this._affectedDataService.Post(entity)
             .Execute()
             .map((data: AffectedModel) => {
@@ -128,6 +130,5 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
                 affected.Active = (affected.ActiveFlag == 'Active');
                 return data;
             });
-
     }
 }

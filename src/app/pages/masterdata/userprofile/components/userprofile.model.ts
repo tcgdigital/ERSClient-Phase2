@@ -33,8 +33,20 @@ export class UserProfileModel extends BaseModel {
     public ResignedOn?: Date;
     public isActive: boolean;
 
-    constructor(){
+    constructor() {
         super();
         this.UserProfileId = 0;
     }
+}
+
+export class UserAuthenticationModel {
+    public UserName: string;
+    public Email: string;
+    public EmailConfirmed: boolean;
+    public PhoneNumber: string;
+    public Password: string;
+    public ConfirmPassword: string;
+    public LockoutEnabled: boolean;
+    public LockoutEndDateUtc?: Date;
+    public AccessFailedCount: number;
 }

@@ -18,8 +18,7 @@ export class PageModel extends BaseModel {
     public PageId: number;
     public PageName: string;
     public PageCode: string;
-
-    public PagePermissions ? : PagePermissionModel[];
+    public PagePermissions?: PagePermissionModel[];
 }
 
 export class PagesForDepartmentModel extends BaseModel {

@@ -6,13 +6,14 @@ import { MdCheckboxModule } from '@angular2-material/checkbox';
 
 import { ChecklistRouting } from './checklist.routing';
 import { ChecklistComponent } from './checklist.component';
-import { ChecklistEntryComponent, 
-    ChecklistListComponent, 
-    ChecklistService 
+import {
+    ChecklistEntryComponent,
+    ChecklistListComponent,
+    ChecklistService
 } from './components';
 import { DepartmentService } from '../department';
 import { EmergencyTypeService } from '../emergencytype';
-import { DataExchangeService , SharedModule } from '../../../shared';
+import { DataExchangeService, SharedModule } from '../../../shared';
 
 @NgModule({
     imports: [

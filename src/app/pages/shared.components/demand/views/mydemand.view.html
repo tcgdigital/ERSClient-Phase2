@@ -27,7 +27,7 @@
                         <td data-title="Demand Description"><i (click)="openDemandDetails(demand.DemandId)">{{demand.DemandDesc}}</i>&nbsp;<i class="fa fa-info-circle" (click)="openTrail(demand)"></i> </td>
                         <td data-title="Target Department">{{demand.TargetDepartmentName}}&nbsp;</td>
                         <td data-title="Priority">{{demand.Priority}}&nbsp;</td>
-                        <td data-title="Schedule Time Close">{{demand.ScheduleTime}}&nbsp;</td>
+                        <td data-title="Schedule Time Close">{{demand.ScheduleTimeToShow}}&nbsp;</td>
                         <td data-title="Requester Contact Number">{{demand.ContactNumber}}&nbsp;</td>
                         <td data-title="Required Location">{{demand.RequiredLocation}}&nbsp;</td>
                         <td data-title="Demand Status">{{demand.DemandStatusDescription}}&nbsp;</td>
@@ -80,7 +80,7 @@
                                         <tr *ngFor="let remark of demandRemarks">
                                             <td data-title="Requester Department">{{remark.RequesterDepartmentName}}</td>
                                             <td data-title="Remarks added by">{{remark.CreatedByName}}</td>
-                                            <td data-title="Remarks added on">{{remark.CreatedOn}}</td>
+                                            <td data-title="Remarks added on">{{remark.CreatedOn | date:"dd-MMM-yy h:mma"}}</td>
                                             <td data-title="Remarks">{{remark.Remark}}</td>
                                         </tr>
                                     </tbody>

@@ -1,9 +1,9 @@
 import { URLSearchParams } from '@angular/http';
-import { FormGroup } from '@angular/forms'
+import { FormGroup } from '@angular/forms';
 import { KeyValue, BaseModel } from '../../models';
 import * as jwtDecode from 'jwt-decode';
 import { GlobalConstants } from '../../constants';
-import {AuthModel } from '../../models';
+import { AuthModel } from '../../models';
 
 export class UtilityService {
     private static STRIP_COMMENTS: RegExp = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
@@ -15,19 +15,19 @@ export class UtilityService {
     public static IsEmptyArray = (obj: any[]): boolean => obj.length > 0 && obj[0] !== null;
 
     public static GetKeyValues(obj: any): KeyValue[] {
-        let keyValues: KeyValue[] = [];
-        Object.keys(obj).forEach(key => {
+        const keyValues: KeyValue[] = [];
+        Object.keys(obj).forEach((key) => {
             keyValues.push({ Key: key, Value: obj[key] });
         });
         return keyValues;
     }
-    public static pluck<T, K extends keyof T>(o: T, names: K[]): T[K][] {
-        return names.map(n => o[n]);
+    public static pluck<T, K extends keyof T>(o: T, names: K[]): Array<T[K]> {
+        return names.map((n) => o[n]);
     }
-   
-    public static getCredentialDetails() : AuthModel  {
-        let access_token = this.GetFromSession(GlobalConstants.ACCESS_TOKEN)
-            return  jwtDecode(access_token);
+
+    public static getCredentialDetails(): AuthModel {
+        const access_token = this.GetFromSession(GlobalConstants.ACCESS_TOKEN);
+        return jwtDecode(access_token);
     }
 
     /**

@@ -27,17 +27,30 @@ export class AffectedObjectsVerificationComponent implements OnInit {
     currentIncident: number;
     isArchive: boolean = false;
     protected _onRouteChange: Subscription;
+    allSelectVerify: boolean;
 
     getAffectedObjects(incidentId): void {
         this.affectedObjectsService.GetFilterByIncidentId(incidentId)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
+                if(response.Records[0]){
                 this.affectedObjectsForVerification = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
-            }, (error: any) => {
+                }
+                this.isVerifiedStatusChange();
+        }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
     }
-
-
+   
+   selectAllVerify(value: any) : void{
+            this.affectedObjectsForVerification.forEach(x =>{
+                x.IsVerified = value.checked;
+            });
+    }
+isVerifiedStatusChange() : void{
+          this.allSelectVerify= this.affectedObjectsForVerification.length!=0 && this.affectedObjectsForVerification.filter(x=>{
+              return x.IsVerified == true;
+          }).length == this.affectedObjectsForVerification.length;
+}
     saveVerifiedObjects(): void {
         let datenow = this.date;
         this.verifiedAffectedObjects = this.affectedObjectsService.MapAffectedPeopleToSave(this.affectedObjectsForVerification);
@@ -56,7 +69,7 @@ export class AffectedObjectsVerificationComponent implements OnInit {
     }
 
     ngOnInit(): any {
-
+        this.allSelectVerify = false;
         this._onRouteChange = this._router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
                 if (event.url.indexOf("archivedashboard") > -1) {

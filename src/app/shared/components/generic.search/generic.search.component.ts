@@ -24,6 +24,8 @@ export class GenericSearchComponent implements OnInit, AfterContentInit {
     controlType: any = SearchControlType;
     form: FormGroup;
     filterQuery: string = '';
+    expandSearch : boolean = false;
+    searchValue : string = "Expand Search";
 
     constructor(private elementRef: ElementRef,
         private searchService: GenericSearchService) { }
@@ -48,6 +50,18 @@ export class GenericSearchComponent implements OnInit, AfterContentInit {
         this.form.reset(defaultValue);
         this.invokeReset.emit();
     }
+    
+   expandSearchPanel(value) : void{
+       if(!value)
+       {
+           this.searchValue = "Hide Search Panel";
+       }
+       else{
+           this.searchValue = "Expand Search Panel";
+       }
+       this.expandSearch = !this.expandSearch;
+
+   }
 
     private generateFilterQuery(): string {
         let query: string = '';

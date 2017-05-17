@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Rx';
 import {
     DataServiceFactory, DataExchangeService, UtilityService,
     TextAccordionModel, GlobalStateService, KeyValue
-} from '../../../shared'
+} from '../../../shared';
 import { BroadcastWidgetModel } from './broadcast.widget.model';
 import { BroadCastModel } from '../../shared.components';
 import { BroadcastWidgetService } from './broadcast.widget.service';
@@ -25,7 +25,6 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
     @ViewChild('childModal') public childModal: ModalDirective;
 
     LatestBroadcasts: Observable<TextAccordionModel[]>;
-    //LatestBroadcasts: Observable<BroadcastWidgetModel[]>;
     AllPublishedBroadcasts: Observable<BroadcastWidgetModel[]>;
     isHidden: boolean = true;
     currentIncidentId: number;
@@ -33,10 +32,10 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
 
     /**
      * Creates an instance of BroadcastWidgetComponent.
-     * @param {BroadcastWidgetService} broadcastWidgetService 
-     * @param {DataExchangeService<BroadcastWidgetModel>} dataExchange 
-     * @param {GlobalStateService} globalState 
-     * 
+     * @param {BroadcastWidgetService} broadcastWidgetService
+     * @param {DataExchangeService<BroadcastWidgetModel>} dataExchange
+     * @param {GlobalStateService} globalState
+     *
      * @memberOf BroadcastWidgetComponent
      */
     constructor(private broadcastWidgetService: BroadcastWidgetService,
@@ -44,9 +43,6 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
         private globalState: GlobalStateService) { }
 
     public ngOnInit(): void {
-        // this.incidentId= +UtilityService.GetFromSession("CurrentDepartmentId");
-	    // this.departmentId = +UtilityService.GetFromSession("CurrentIncidentId");
-        
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.departmentId;
         this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
@@ -54,50 +50,32 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
 
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
-        this.globalState.Subscribe('BroadcastPublished', model => this.onBroadcastPublish(model));
-    };
-
-    private incidentChangeHandler(incident: KeyValue): void {
-        this.currentIncidentId = incident.Value;
-        this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
-        this.getAllPublishedBroadcasts();
-    };
-
-    private onBroadcastPublish(broadcast: BroadCastModel): void{
-        if(broadcast.IsSubmitted){
-            this.getLatestBroadcasts(this.currentDepartmentId,this.currentIncidentId);
-        }
+        this.globalState.Subscribe('BroadcastPublished', (model) => this.onBroadcastPublish(model));
     }
 
-    private departmentChangeHandler(department: KeyValue): void {
-        this.currentDepartmentId = department.Value;
-        this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
-        this.getAllPublishedBroadcasts();
-    };
-
     public getLatestBroadcasts(departmentId, incidentId): void {
-        let data: BroadcastWidgetModel[] = [];
+        const data: BroadcastWidgetModel[] = [];
         this.broadcastWidgetService
             .GetLatestBroadcastsByIncidentAndDepartment(departmentId, incidentId)
-            .flatMap(x => x).take(2)
-            .subscribe(x => {
+            .flatMap((x) => x).take(2)
+            .subscribe((x) => {
                 data.push(x);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             }, () => {
                 this.LatestBroadcasts = Observable.of(data
-                    .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn)));                
-                    console.log(this.LatestBroadcasts);
-                    console.log(departmentId);
+                    .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn)));
+                console.log(this.LatestBroadcasts);
+                console.log(departmentId);
             });
     }
 
     public getAllPublishedBroadcasts(callback?: Function): void {
-        let data: BroadcastWidgetModel[] = [];
+        const data: BroadcastWidgetModel[] = [];
         this.broadcastWidgetService
             .GetAllPublishedBroadcastsByIncident(this.currentIncidentId)
-            .flatMap(x => x)
-            .subscribe(x => {
+            .flatMap((x) => x)
+            .subscribe((x) => {
                 data.push(x);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
@@ -107,21 +85,39 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
                     callback();
                 }
             });
-    };
+    }
 
     public openBroadcastMessages(): void {
         this.getAllPublishedBroadcasts(() => {
             this.childModal.show();
         });
-    };
+    }
 
     public hideAllBroadcastMessages(): void {
         this.childModal.hide();
-    };
+    }
 
     ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChange');
         this.globalState.Unsubscribe('departmentChange');
         this.globalState.Unsubscribe('BroadcastPublished');
+    }
+
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.currentIncidentId = incident.Value;
+        this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
+        this.getAllPublishedBroadcasts();
+    }
+
+    private onBroadcastPublish(broadcast: BroadCastModel): void {
+        if (broadcast.IsSubmitted) {
+            this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
+        }
+    }
+
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
+        this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
+        this.getAllPublishedBroadcasts();
     }
 }

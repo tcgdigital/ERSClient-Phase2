@@ -5,7 +5,6 @@ import { BaseModel, WEB_METHOD } from '../../../models';
 import { DataProcessingService, DataOperation } from '../index';
 import { GlobalConstants } from '../../../constants';
 
-
 /**
  * Data operation specific for GET request
  *
@@ -25,7 +24,6 @@ export class GetOperation<T extends BaseModel> extends DataOperation<BaseModel> 
             this.ActionSuffix = actionSuffix;
             this.dataProcessingService.EndPoint = GlobalConstants.API;
         }
-
     }
 
     /**
@@ -36,9 +34,48 @@ export class GetOperation<T extends BaseModel> extends DataOperation<BaseModel> 
      * @memberOf GetOperation
      */
     public Execute(): Observable<T> {
-        let uri: string = this.DataProcessingService
+        const uri: string = this.DataProcessingService
             .GetUri(this.TypeName, this.Key, this.actionSuffix);
-        let requestOps = this.DataProcessingService
+        const requestOps = this.DataProcessingService
+            .SetRequestOptions(WEB_METHOD.GET, this.RequestHeaders);
+
+        return super.HandleResponse(this.HttpService.get(uri, requestOps));
+    }
+}
+
+/**
+ * Data operation specific for GET request for any data model
+ *
+ * @export
+ * @class GetOperation
+ * @extends {DataOperation<T>}
+ * @template T
+ */
+export class SimpleGetOperation<T extends any> extends DataOperation<any> {
+    constructor(private dataProcessingService: DataProcessingService,
+        private httpService: Http,
+        private typeName: string,
+        private actionSuffix?: string) {
+        super(dataProcessingService, httpService, typeName);
+
+        if (actionSuffix) {
+            this.ActionSuffix = actionSuffix;
+            this.dataProcessingService.EndPoint = GlobalConstants.API;
+        }
+    }
+
+    /**
+     * Execute GET request
+     *
+     * @returns {Observable<T>}
+     *
+     * @memberOf GetOperation
+     */
+    public Execute(): Observable<T> {
+        const uri: string = this.DataProcessingService
+            .GetUri(this.TypeName, this.Key, this.actionSuffix);
+
+        const requestOps = this.DataProcessingService
             .SetRequestOptions(WEB_METHOD.GET, this.RequestHeaders);
 
         return super.HandleResponse(this.HttpService.get(uri, requestOps));

@@ -1,10 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IncidentService } from "../incident";
+import { IncidentService } from '../incident';
 import { LoginRoutings } from './login.routing';
-import { LoginComponent } from './components';
-import { UserProfileService } from "../shared.components";
+import {
+    LoginComponent, ForgotPasswordComponent,
+    ChangePasswordComponent
+} from './components';
+import { UserProfileService } from '../shared.components';
+import { LoginRootComponent } from './login.root.component';
 
 @NgModule({
     imports: [
@@ -14,7 +18,10 @@ import { UserProfileService } from "../shared.components";
         LoginRoutings
     ],
     declarations: [
-        LoginComponent
+        LoginRootComponent,
+        LoginComponent,
+        ForgotPasswordComponent,
+        ChangePasswordComponent
     ],
     providers: [
         IncidentService,
