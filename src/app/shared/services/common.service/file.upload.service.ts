@@ -43,7 +43,7 @@ export class FileUploadService {
      * @memberOf FileUploadService
      */
     public uploadFiles<T>(url: string, files: FileData[] | File[], fieldName: string = ''): Observable<T> {
-        if (files.length > 0) {
+        if (files.length > 0) {            
             const fileUploadPromise: Promise<T> = new Promise((resolve, reject) => {
                 const formData: FormData = new FormData();
                 const xhr: XMLHttpRequest = new XMLHttpRequest();
@@ -87,6 +87,45 @@ export class FileUploadService {
             return Observable.fromPromise(fileUploadPromise);
         }
     }
+
+     public uploadFilesWithDate<T>(url: string, files: File[], date: string): Observable<T> {
+        if (files.length > 0) {            
+            const fileUploadPromise: Promise<T> = new Promise((resolve, reject) => {
+                const formData: FormData = new FormData();
+                const xhr: XMLHttpRequest = new XMLHttpRequest();
+                debugger;                
+                for (const f of files) {
+                    const file: File = f as File;
+                    formData.append(date, file, file.name);                    
+                }                
+ 
+                xhr.onreadystatechange = () => {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            debugger;
+                            resolve((xhr.response !== "") ? JSON.parse(xhr.response) as T : new Object() as T);
+                        } else {
+                            reject(xhr.response);
+                        }
+                    }
+                };
+ 
+                xhr.upload.onprogress = (event: ProgressEvent) => {
+                    this.progress = Math.round(event.loaded / event.total * 100);
+                };
+ 
+                xhr.upload.ontimeout = (event: ProgressEvent) => {
+                    this.progressObserver.error('Upload timed out');
+                };
+ 
+                xhr.open('POST', url, true);
+                xhr.send(formData);
+            });
+ 
+            return Observable.fromPromise(fileUploadPromise);
+        }
+    }
+ 
  
     /**
      * Set interval for frequency with which Observable inside Promise will share data with subscribers.

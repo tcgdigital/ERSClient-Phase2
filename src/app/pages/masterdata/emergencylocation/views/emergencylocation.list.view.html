@@ -1,0 +1,39 @@
+<generic-search [filterConfigs] = "searchConfigs" 
+        (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();"></generic-search>
+
+<responsive-table>
+    <table responsive-table-body>
+        <thead>
+            <tr>
+                <th>IATA Station Code</th>
+                <th>Airport Station Name</th>
+                <th>City</th>
+                <th>IsActive</th>                
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr [hidden]="emergencyLocations.length != 0">
+                <td colspan="6">No records found.</td>
+            </tr>
+            <tr *ngFor="let emergencyLocation of emergencyLocations">
+                <td data-title="IATA Station Code">{{emergencyLocation.IATA}}</td>
+                <td data-title="Airport Station Name">{{emergencyLocation.AirportName}}</td>
+                <td data-title="City">{{emergencyLocation.City}}</td>               
+                 <td data-title="IsActive">
+                    <md-checkbox class="Marght" id="IsActive" name="IsActive" [ngModel]="emergencyLocation.ActiveFlag === 'Active'" 
+                        aria-label="ActiveFlag" (change)="IsActive($event,emergencyLocation)">
+                    </md-checkbox>
+                </td>
+                <td data-title="Edit">
+                    <i class="fa fa-edit fa-lg" (click)="UpdateEmergencyLocation(emergencyLocation)"></i>
+                </td>
+                <td data-title="Delete">
+                    <i class="fa fa-trash-o fa-lg" aria-hidden="true" (click)="deleteStation(emergencyLocation)"></i>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</responsive-table>

@@ -119,7 +119,7 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
             });
     }
 
-    CreateAffected(entity: AffectedModel): Observable<AffectedModel> {
+    CreateAffected(entity: AffectedModel): Observable<AffectedModel> {       
          let affected: AffectedModel;
         return this._affectedDataService.Post(entity)
             .Execute()

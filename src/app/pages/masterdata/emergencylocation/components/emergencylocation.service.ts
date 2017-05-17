@@ -38,7 +38,7 @@ export class EmergencyLocationService extends ServiceBase<EmergencyLocationModel
             .Execute();
     }
 
-    Create(entity: EmergencyLocationModel): Observable<EmergencyLocationModel> {
+    CreateEmergencyLocation(entity: EmergencyLocationModel): Observable<EmergencyLocationModel> {
         let emergencyLocation: EmergencyLocationModel;
         return this._dataService.Post(entity).Execute()
             .map((data: EmergencyLocationModel) => {
@@ -46,6 +46,11 @@ export class EmergencyLocationService extends ServiceBase<EmergencyLocationModel
                 emergencyLocation.Active = (emergencyLocation.ActiveFlag == 'Active');
                 return data;
             });
+    }
+
+     GetQuery(query: string): Observable<ResponseModel<EmergencyLocationModel>> {
+        return this._dataService.Query()
+            .Filter(query).Execute();
     }
     
 }

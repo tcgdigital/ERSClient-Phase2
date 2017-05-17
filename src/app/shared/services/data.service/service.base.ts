@@ -44,8 +44,8 @@ export abstract class ServiceBase<T extends BaseModel> implements IServiceInretf
         return this._dataService.Patch(entity, key.toString()).Execute();
     }
 
-    public Delete(entity: T, key?: number): void {
+    public Delete(entity: T, key?: number): Observable<T> {
         key = (key) ? key : entity[Object.keys(entity)[0]].toString();
-        this._dataService.Delete(key.toString()).Execute();
+        return this._dataService.Delete(key.toString()).Execute();
     }
 }
