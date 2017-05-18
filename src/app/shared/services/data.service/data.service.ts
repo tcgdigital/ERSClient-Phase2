@@ -1,10 +1,11 @@
 import { Http } from '@angular/http';
-
+import { Observable } from 'rxjs/Rx';
 import { BaseModel, RequestModel } from '../../models';
 import { DataProcessingService } from './data.processing.service';
-import { Observable } from 'rxjs/Rx';
+
 import {
     GetOperation,
+    SimpleGetOperation,
     QueryOperation,
     PostOperation,
     SimplePostOperation,
@@ -53,6 +54,18 @@ export class DataService<T extends BaseModel>{
      */
     public Get(key: string): GetOperation<T> {
         return new GetOperation<T>(this.dataProcessingService, this.httpService, this.typeName, key, this.actionSuffix);
+    }
+
+    /**
+     * Get an instance of QueryOperation for API GET request
+     *
+     * @param {string} key
+     * @returns {GetOperation<T>}
+     *
+     * @memberOf DataService
+     */
+    public SimpleGet(): SimpleGetOperation<any> {
+        return new SimpleGetOperation<any>(this.dataProcessingService, this.httpService, this.typeName, this.actionSuffix);
     }
 
     /**
@@ -126,7 +139,8 @@ export class DataService<T extends BaseModel>{
      *
      * @memberOf DataService
      */
-    public BatchPost<TOut extends BaseModel>(entities: Array<RequestModel<TOut>>): BatchPostOperation<RequestModel<TOut>> {
+    public BatchPost<TOut extends BaseModel>(entities: Array<RequestModel<TOut>>):
+        BatchPostOperation<RequestModel<TOut>> {
         return new BatchPostOperation<RequestModel<TOut>>(this.dataProcessingService, this.httpService, entities);
     }
 
