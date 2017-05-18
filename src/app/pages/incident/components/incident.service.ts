@@ -113,6 +113,7 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
             });
     }
 
+
     CreateAffected(entity: AffectedModel): Observable<AffectedModel> {
         let affected: AffectedModel;
         delete entity.Active;
