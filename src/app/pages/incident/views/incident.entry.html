@@ -27,7 +27,7 @@
                             </small>-->
                         </div>
                         <div class="form-group col-lg-2 col-sm-12 col-md-6">
-                            <label for="AffectedStation">Affected Station<span class="required">*</span></label>
+                            <label for="AffectedStation">Responsible Station<span class="required">*</span></label>
                             <select id="AffectedStationId" class="form-control" formControlName="AffectedStationId" name="AffectedStationId" (change)="affectedStationChange($event.target.value,affectedStations)">
                                     <option value=''>Select Affected Station</option>
                                     <option value="Offsite">Offsite</option>
@@ -79,14 +79,12 @@
                                 Required.
                                 </small>-->
                             </div>
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label for="AlertMessage">Dashboard Alert Message<span class="required">*</span></label>
                                 <input id="AlertMessage" class="form-control" type="text" name="AlertMessage" formControlName="AlertMessage" placeholder="Enter Alert Message"
                                 />
-                                <!--<small *ngIf="!form.controls.AlertMessage.valid" class="text-danger">
-                                Required.
-                                </small>-->
-                            </div>
+                               
+                            </div>-->
                             <div class="form-group"><label class="labelStyle" (click)="ShowWeatherLocation()">Show Location</label></div>
                         </div>
                         <div class="form-group col-lg-9 col-sm-12 col-md-6">
@@ -100,14 +98,88 @@
                     <div class="row">
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <div class="form-group">
-                                <label for="AirportInCharge">Airport In Charge<span class="required">*</span></label>
-                                <input id="AirportInCharge" class="form-control" type="text" name="AirportInCharge" formControlName="AirportInCharge" placeholder="Enter Airport In Charge Name"
+                                <label for="WhatHappend">What Happend</label>
+                                <input id="WhatHappend" class="form-control" type="text" name="WhatHappend" formControlName="WhatHappend" placeholder="What Happend"
                                 />
                                 <!--<small *ngIf="!form.controls.AirportInCharge.valid" class="text-danger">
                                 Required.
                                 </small>-->
                             </div>
                         </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="WhereHappend">Where Happend</label>
+                                <input id="WhereHappend" class="form-control" type="text" name="WhereHappend" formControlName="WhereHappend" placeholder="Where Happend"
+                                />
+                                <!--<small *ngIf="!form.controls.AirportInCharge.valid" class="text-danger">
+                                Required.
+                                </small>-->
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="OtherConfirmationInformation">Other Confirmation Information</label>
+                                <input id="OtherConfirmationInformation" class="form-control" type="text" name="OtherConfirmationInformation" formControlName="OtherConfirmationInformation"
+                                    placeholder="Other Confirmation Information" />
+                                <!--<small *ngIf="!form.controls.AirportInCharge.valid" class="text-danger">
+                                Required.
+                                </small>-->
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="SourceInformation">Source Information</label>
+                                <input id="SourceInformation" class="form-control" type="text" name="SourceInformation" formControlName="SourceInformation"
+                                    placeholder="Source Information" />
+                                <!--<small *ngIf="!form.controls.AirportInCharge.valid" class="text-danger">
+                                Required.
+                                </small>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="ReportedByName">ReportedBy Name</label>
+                                <input id="ReportedByName" class="form-control" type="text" name="ReportedByName" formControlName="ReportedByName" placeholder="ReportedBy Name"
+                                />
+                                <!--<small *ngIf="!form.controls.AirportInCharge.valid" class="text-danger">
+                                Required.
+                                </small>-->
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="ReportedByAddress">ReportedBy Address</label>
+                                <input id="ReportedByAddress" class="form-control" type="text" name="ReportedByAddress" formControlName="ReportedByAddress"
+                                    placeholder="ReportedBy Address" />
+                                <!--<small *ngIf="!form.controls.AirportInCharge.valid" class="text-danger">
+                                Required.
+                                </small>-->
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="ContactOfWitness">Contact Of Witness</label>
+                                <input id="ContactOfWitness" class="form-control" type="text" name="ContactOfWitness" formControlName="ContactOfWitness"
+                                    placeholder="Contact Of Witness" />
+                                <!--<small *ngIf="!form.controls.AirportInCharge.valid" class="text-danger">
+                                Required.
+                                </small>-->
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="SenderOfCrisisInformation">Sender Of Crisis Information</label>
+                                <input id="SenderOfCrisisInformation" class="form-control" type="text" name="SenderOfCrisisInformation" formControlName="SenderOfCrisisInformation"
+                                    placeholder="Sender Of Crisis Information" />
+                                <!--<small *ngIf="!form.controls.AirportInCharge.valid" class="text-danger">
+                                Required.
+                                </small>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <div class="form-group">
                                 <label for="OrganizationId">Organization<span class="required">*</span></label>
@@ -123,17 +195,17 @@
                             </div>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <div class="form-group">
-                                <label for="CrisisReporterIdentity">Crisis Reporter Identity<span class="required">*</span></label>
-                                <input id="CrisisReporterIdentity" class="form-control" type="text" name="CrisisReporterIdentity" formControlName="CrisisReporterIdentity"
-                                    placeholder="Enter Crisis Reporter Identity" />
-                                <!--<small *ngIf="!form.controls.CrisisReporterIdentity.valid" class="text-danger">
-                                Required.
-                                </small>-->
+                            <div class="form-group" *ngIf="isBorrowed">
+                                <label for="IncidentsToPickForReplication">Incidents To Pick For Replication</label>
+                                <select id="BorrowedIncident" [(ngModel)]="incidentModel.BorrowedIncident" class="form-control" formControlName="BorrowedIncident" name="BorrowedIncident" (change)="incidentsToPickForReplicationChange($event.target.value,incidentsToPickForReplication)">
+                                    <option value=0>Select Incident To Pick</option>
+                                    <option *ngFor="let incidentToPickForReplication of incidentsToPickForReplication" [value]="incidentToPickForReplication.IncidentId" >
+                                        {{incidentToPickForReplication.EmergencyName}}
+                                    </option>
+                            </select>
                             </div>
                         </div>
                     </div>
-
                     <div class="card" *ngIf="isFlightRelated">
                         <div class="card-header ">
                             <strong>Flight Information</strong>
@@ -188,16 +260,19 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-3 ">
-                            <div class="fromtop1 ">
-                                <button class="btn btn-primary" type="submit">Save</button>
-                                <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
-                            </div>
+
+                    </div>
+                    <div class="col-sm-3 ">
+                        <div class="fromtop1 ">
+                            <button class="btn btn-primary" type="submit">Save</button>
+                            <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
                         </div>
                     </div>
+
                 </div>
             </div>
         </form>
+        <br/><br/>
     </div>
 </div>
 <div bsModal #childModalViewWeatherLocation="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
@@ -284,11 +359,11 @@
                                     <input id="EmergencyNamePopup" disabled formControlName="EmergencyNamePopup" class="form-control" type="text" name="EmergencyNamePopup"
                                         placeholder="Enter Emergency Name" />
                                 </div>
-                                <div class="form-group">
+                                <!--<div class="form-group">
                                     <label for="AlertMessage">Dashboard Alert Message:<span class="red">*</span></label>
                                     <input id="AlertMessagePopup" disabled formControlName="AlertMessagePopup" class="form-control" type="text" name="AlertMessagePopup"
                                         placeholder="Enter Alert Message" />
-                                </div>
+                                </div>-->
                             </div>
                             <div class="form-group col-lg-9 col-sm-12 col-md-6">
                                 <label for="Description">Note:<span class="red">*</span></label>
@@ -299,39 +374,114 @@
                         <div class="row">
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
                                 <div class="form-group">
-                                    <label for="AirportInChargePopup">Airport In Charge<span class="required">*</span></label>
-                                    <input id="AirportInChargePopup" class="form-control" type="text" name="AirportInChargePopup" formControlName="AirportInChargePopup"
-                                        placeholder="Enter Airport In Charge Name" />
-                                    <!--<small *ngIf="!form.controls.AirportInChargePopup.valid" class="text-danger">
+                                    <label for="WhatHappend">What Happend</label>
+                                    <input id="WhatHappendPopup" class="form-control" type="text" name="WhatHappendPopup" formControlName="WhatHappendPopup"
+                                       disabled placeholder="What Happend" />
+                                    <!--<small *ngIf="!form.controls.AirportInCharge.valid" class="text-danger">
                                 Required.
                                 </small>-->
                                 </div>
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
                                 <div class="form-group">
-                                    <label for="OrganizationIdPopup">Organization<span class="required">*</span></label>
-                                    <select id="OrganizationIdPopup" class="form-control" formControlName="OrganizationIdPopup" name="OrganizationIdPopup">
-                                    <option value=''>Select Organization</option>
-                                    <option *ngFor="let organization of activeOrganizations" [value]="organization.OrganizationId" >
-                                        {{organization.OrganizationCode}}
-                                    </option>
-                            </select>
-                                    <!--<small *ngIf="!form.controls.OrganizationIdPopup.valid" class="text-danger">
-                            Required.
-                            </small>-->
+                                    <label for="WhereHappend">Where Happend</label>
+                                    <input id="WhereHappendPopup" class="form-control" type="text" name="WhereHappendPopup" formControlName="WhereHappendPopup"
+                                       disabled placeholder="Where Happend" />
+                                    <!--<small *ngIf="!form.controls.AirportInCharge.valid" class="text-danger">
+                                Required.
+                                </small>-->
                                 </div>
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
                                 <div class="form-group">
-                                    <label for="CrisisReporterIdentityPopup">Crisis Reporter Identity<span class="required">*</span></label>
-                                    <input id="CrisisReporterIdentityPopup" class="form-control" type="text" name="CrisisReporterIdentityPopup" formControlName="CrisisReporterIdentityPopup"
-                                        placeholder="Enter Crisis Reporter Identity" />
-                                    <!--<small *ngIf="!form.controls.CrisisReporterIdentityPopup.valid" class="text-danger">
+                                    <label for="OtherConfirmationInformation">Other Confirmation Information</label>
+                                    <input id="OtherConfirmationInformationPopup" class="form-control" type="text" name="OtherConfirmationInformationPopup" formControlName="OtherConfirmationInformationPopup"
+                                       disabled placeholder="Other Confirmation Information" />
+                                    <!--<small *ngIf="!form.controls.AirportInCharge.valid" class="text-danger">
+                                Required.
+                                </small>-->
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="SourceInformation">Source Information</label>
+                                    <input id="SourceInformationPopup" class="form-control" type="text" name="SourceInformationPopup" formControlName="SourceInformationPopup"
+                                       disabled placeholder="Source Information" />
+                                    <!--<small *ngIf="!form.controls.AirportInCharge.valid" class="text-danger">
                                 Required.
                                 </small>-->
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            
+                            <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="ReportedByName">ReportedBy Name</label>
+                                    <input id="ReportedByNamePopup" class="form-control" type="text" name="ReportedByNamePopup" formControlName="ReportedByNamePopup"
+                                      disabled  placeholder="ReportedBy Name" />
+                                    <!--<small *ngIf="!form.controls.AirportInCharge.valid" class="text-danger">
+                                Required.
+                                </small>-->
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="ReportedByAddress">ReportedBy Address</label>
+                                    <input id="ReportedByAddressPopup" class="form-control" type="text" name="ReportedByAddressPopup" formControlName="ReportedByAddressPopup"
+                                      disabled  placeholder="ReportedBy Address" />
+                                    <!--<small *ngIf="!form.controls.AirportInCharge.valid" class="text-danger">
+                                Required.
+                                </small>-->
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="ContactOfWitness">Contact Of Witness</label>
+                                    <input id="ContactOfWitnessPopup" class="form-control" type="text" name="ContactOfWitnessPopup" formControlName="ContactOfWitnessPopup"
+                                      disabled  placeholder="Contact Of Witness" />
+                                    <!--<small *ngIf="!form.controls.AirportInCharge.valid" class="text-danger">
+                                Required.
+                                </small>-->
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="SenderOfCrisisInformation">Sender Of Crisis Information</label>
+                                    <input id="SenderOfCrisisInformationPopup" class="form-control" type="text" name="SenderOfCrisisInformationPopup" formControlName="SenderOfCrisisInformationPopup"
+                                      disabled  placeholder="Sender Of Crisis Information" />
+                                    <!--<small *ngIf="!form.controls.AirportInCharge.valid" class="text-danger">
+                                Required.
+                                </small>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="OrganizationId">Organization<span class="required">*</span></label>
+                                    <select id="OrganizationIdPopup" disabled class="form-control" formControlName="OrganizationIdPopup" name="OrganizationIdPopup">
+                                    <option value=''>Select Organization</option>
+                                    <option *ngFor="let organization of activeOrganizations" [value]="organization.OrganizationId" >
+                                        {{organization.OrganizationCode}}
+                                    </option>
+                            </select>
+
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="IncidentsToPickForReplication">Incidents To Pick For Replication (Last {{lastCount}} Incidents)</label>
+                                    <select id="BorrowedIncidentPopup" disabled class="form-control" formControlName="BorrowedIncidentPopup" name="BorrowedIncidentPopup">
+                                    <option value=''>Select Incident To Pick</option>
+                                    <option *ngFor="let incidentToPickForReplication of incidentsToPickForReplication" [value]="incidentToPickForReplication.IncidentId" >
+                                        {{incidentToPickForReplication.EmergencyName}}
+                                    </option>
+                            </select>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="card" *ngIf="isFlightRelatedPopup">
                             <div class="card-header ">
                                 <strong>Flight Information:</strong>
@@ -373,7 +523,7 @@
                                     </div>
                                     <div class="form-group col-lg-3 col-sm-12 col-md-6">
                                         <label for="AircraftTypeId">Aircraft Type<span class="required">*</span></label>
-                                        <select id="AircraftTypeIdPopup" class="form-control" formControlName="AircraftTypeIdPopup" name="AircraftTypeId" (change)="aircraftTypeChange($event.target.value,activeEmergencyTypes)">
+                                        <select id="AircraftTypeIdPopup" disabled class="form-control" formControlName="AircraftTypeIdPopup" name="AircraftTypeId" (change)="aircraftTypeChange($event.target.value,activeEmergencyTypes)">
                                     <option value=''>Select Aircraft Type</option>
                                     <option *ngFor="let activeAircraftType of activeAircraftTypes" [value]="activeAircraftType.AircraftTypeId" >
                                         {{activeAircraftType.AircraftTypeCode}}
@@ -390,7 +540,7 @@
                             <div class="fromtop1">
                                 <button class="btn btn-primary" [disabled]="!formPopup.valid " type="submit">Save</button>
                                 <button class="btn btn-warning" type="button" (click)="hideIncidentView()">Cancel</button>
-                            </div>
+                            </div><br/><br/><br/>
                         </div>
                     </div>
                 </div>

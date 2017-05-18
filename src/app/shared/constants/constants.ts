@@ -44,7 +44,7 @@ export class GlobalConstants {
     public static ACCESS_TOKEN: string = 'access_token';
     public static AD_AUTH_ENABLED: boolean = false;
     public static PASSWORD_PATTERN: string = '((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})';
-
+    public static LAST_INCIDENT_PICK_COUNT: string = '5';
     public static EmergencyCategories: IKeyValue[] = [
         { value: 'FlightRelated', key: 1 },
         { value: 'NonFlightRelated', key: 2 }
@@ -207,8 +207,8 @@ export class GlobalConstants {
         },
         {
             key: 5,
-            value : 'Immediatecare',
-            caption : 'Immediatecare'
+            value: 'Immediatecare',
+            caption: 'Immediatecare'
         }
     ];
 

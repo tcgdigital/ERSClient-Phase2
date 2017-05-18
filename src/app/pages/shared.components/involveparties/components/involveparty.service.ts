@@ -114,4 +114,6 @@ public affectedPeoples: ResponseModel<AffectedPeopleModel>;
             .Execute();
     }
 
+    
+
 }

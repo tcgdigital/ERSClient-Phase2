@@ -52,7 +52,6 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
     }
 
     onUserProfileModified(userProfileModel: UserProfileModel): void {
-        debugger;
         this.userProfileModel = userProfileModel;
         this.userProfileModel.UserProfileId = userProfileModel.UserProfileId;
         this.Action = 'Edit';

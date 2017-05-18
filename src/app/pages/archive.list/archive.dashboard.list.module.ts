@@ -12,6 +12,12 @@ import { WidgetModule } from '../widgets';
 import { IncidentService } from '../incident';
 import { MdCheckboxModule } from '@angular2-material/checkbox';
 import { ModalModule, ModalDirective } from 'ng2-bootstrap';
+import {
+    FlightService,
+    InvolvePartyService,
+    OrganizationService,
+    AircraftTypeService
+} from '../shared.components';
 
 @NgModule({
     imports: [
@@ -31,7 +37,11 @@ import { ModalModule, ModalDirective } from 'ng2-bootstrap';
     providers: [
         IncidentService,
         ArchiveListService,
-        ToastrService
+        ToastrService,
+        FlightService,
+        InvolvePartyService,
+        OrganizationService,
+        AircraftTypeService
     ]
 })
 export class ArchiveDashboardListModule { }
