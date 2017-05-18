@@ -1,0 +1,64 @@
+<div *ngIf="showAdd" class="formStyle card-block entryHolder">
+    <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+        <input type="hidden" *ngIf="emergencyLocation.EmergencyLocationId != undefined" [(ngModel)]="emergencyLocation.EmergencyLocationId" formControlName="EmergencyLocationId">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="form-group">
+                    <label for="IATA">IATA<span class="required">*</span></label>
+                    <input class="form-control" id="txtIATA" type="text" formControlName="IATA" ngControl="IATA" placeholder="Enter IATA"
+                        [(ngModel)]="emergencyLocation.IATA" autofocus />
+                        <small *ngIf="!form.controls.IATA.valid" class="text-danger">
+                        Required.
+                        </small>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="form-group">
+                    <label for="Station">Airport Station Name<span class="required">*</span></label>
+                    <input class="form-control" id="txtAirportName" type="text" formControlName="AirportName" placeholder="Enter Airport Name" [(ngModel)]="emergencyLocation.AirportName" />
+                        <small *ngIf="!form.controls.AirportName.valid" class="text-danger">
+                        Required.
+                        </small>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="form-group">
+                    <label for="City">City:<span class="required">*</span></label>
+                    <input class="form-control" id="txtCity" type="text" formControlName="City" placeholder="Enter City" [(ngModel)]="emergencyLocation.City" />
+                        <small *ngIf="!form.controls.City.valid" class="text-danger">
+                        Required.
+                        </small>
+                </div>
+            </div>            
+        </div>
+        <div class="row">                     
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                    <md-checkbox class="Marght" id="IsActive" formControlName="isActive" aria-label="IsActive" [(ngModel)]="emergencyLocation.Active">
+                        Active
+                    </md-checkbox>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="buttonholder">
+                    <button class="btn btn-primary" type="submit">Save</button>
+                    <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <input type="file" #inputFileStations id="fileuploadStations" formControlName="fileStation" (change)="getFileDetails($event)" />
+                <button class="btn btn-primary" type="button" [disabled]="isDisabledUpload" (click)= "Upload()">Upload</button>  
+                <a target="_self" href="{{airportStationTemplatePath}}" download="AirportStation.xlsx">
+                    <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i> &nbsp; Airport Station Template
+                </a>                 
+            </div>
+        </div>        
+    </form>
+</div>
+
+<div class="addbuttonHolder">
+    <button class="btn btn-primary" type="submit" (click)="showAddRegion(showAdd)">Add Affected Station</button>
+</div>

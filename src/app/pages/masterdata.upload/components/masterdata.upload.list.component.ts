@@ -58,8 +58,8 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        this.DepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-	    this.IncidentId = +UtilityService.GetFromSession("CurrentIncidentId");       
+        //this.DepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+	    //this.IncidentId = +UtilityService.GetFromSession("CurrentIncidentId");       
         this.disableUploadButton = true;          
         this.initiateForm();
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
