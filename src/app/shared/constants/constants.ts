@@ -47,6 +47,7 @@ export class GlobalConstants {
     public static LAST_INCIDENT_PICK_COUNT: string = '5';
 
     public static INTERCEPTOR_PERFORM: boolean = true;
+    public static PRESERVE_DATA_FROM_CONVERSION = ['EmergencyDate'];
 
     public static EmergencyCategories: IKeyValue[] = [
         { value: 'FlightRelated', key: 1 },

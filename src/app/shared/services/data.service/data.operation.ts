@@ -124,7 +124,7 @@ export abstract class DataOperation<T> {
         httpInterceptorService.request().addInterceptor((request, method) => {
             debugger;
             if (GlobalConstants.INTERCEPTOR_PERFORM) {
-                request = LocalizationService.PreserveDateFromConversion(['EmergencyDate'],
+                request = LocalizationService.PreserveDateFromConversion(GlobalConstants.PRESERVE_DATA_FROM_CONVERSION,
                     request, LocalizationService.transformRequest);
 
                 LocalizationService.transformRequest(request);
