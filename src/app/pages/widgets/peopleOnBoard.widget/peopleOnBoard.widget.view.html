@@ -35,12 +35,12 @@
                     <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
                     <span class="marker" (click)="openEnquiredCrewsDetails()">{{peopleOnBoard.enquiredAffectedCrewCount | padding: '0': 2}}</span>
                 </span>
-                <span class="widget-text">enquired crew</span>
+                <span class="widget-text">Enquired crew</span>
             </div>
             <div class="col widget-block">
                 <span class="widget-number">
                     <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
-                    <span class="marker" (click)="openAllCargoDetails()">{{peopleOnBoard.enquiredAffectedCrewCount | padding: '0': 2}}</span>
+                    <span class="marker" (click)="openAllCargoDetails()">{{peopleOnBoard.totalAffectedCargoCount | padding: '0': 2}}</span>
                 </span>
                 <span class="widget-text">Total Cargo</span>
             </div>
@@ -116,8 +116,8 @@
                     </div>
                 </div>
                 <div class = "row"> </div>
-                <generic-search [filterConfigs] = "searchConfigs" 
-                (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();"></generic-search>
+                <generic-search [filterConfigs] = "searchConfigsPax" 
+                (InvokeSearch)="invokeSearchPassenger($event);" (InvokeReset)="invokeResetPassenger();"></generic-search>
 
                 <responsive-table>
                     <table responsive-table-body>
@@ -162,6 +162,7 @@
     </div>
 </div>
 
+<!--All Cargos Popup-->
 <div bsModal #childModalCargos="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -172,15 +173,15 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <!--<div class="col-lg-2">
+                    <div class="col-lg-2">
                         <strong>
                             Total Cargos:                             
                         </strong>
-                        <span class="marker">{{peopleOnBoard.totalCargoOnBoardCount | padding: '0': 2}}</span>
-                    </div>-->
+                        <span class="marker">{{peopleOnBoard.totalAffectedCargoCount | padding: '0': 2}}</span>
+                    </div>
                     <!--<div class="col-lg-10">
                         <strong>
-                            Enquired Passengers:                             
+                            Enquired Cargos:                             
                         </strong>
                         <span class="marker">{{peopleOnBoard.enquiredAffectedCrewCount | padding: '0': 2}}</span>
                     </div>-->
@@ -199,10 +200,11 @@
                 </div>
                 
                 <div class = "row"> </div>
-                <!--<generic-search [filterConfigs] = "searchConfigs" 
-                (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();"></generic-search>-->
 
-                <!--<responsive-table>
+                <generic-search [filterConfigs] = "searchConfigsCargo" 
+                (InvokeSearch)="invokeSearchCargo($event);" (InvokeReset)="invokeResetCargo();"></generic-search>
+
+                <responsive-table>
                     <table responsive-table-body>
                         <thead>
                             <tr>
@@ -221,10 +223,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngIf="!cargoList.length>0">
+                            <tr *ngIf="!(cargoList | async)?.length>0">
                                 <td data-title="Records" colspan="7">No cargo to show.</td>
                             </tr>
-                            <tr *ngFor="let cargo of cargoList">
+                            <tr *ngFor="let cargo of cargoList | async">
                                 <td data-title="AWB Number">{{cargo.AWB}}</td>
                                 <td data-title="POL">{{cargo.POL}}</td>
                                 <td data-title="POU">{{cargo.POU}}</td>
@@ -240,18 +242,16 @@
                             </tr>
                         </tbody>
                     </table>
-                </responsive-table>-->
+                </responsive-table>
                 <!--<div class="pull-right">
                     <button type="submit" class="pull-right btn btn-primary" aria-label="Close" (click)="hideAllPassengers()">Close</button>
                 </div>-->
             </div>
-
         </div>
-
     </div>
 </div>
 
-<!--All Passengers Details Popup-->
+<!--All Passengers Details KPI Popup-->
 <div bsModal #childModalPassengersDetailKPI="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg">
