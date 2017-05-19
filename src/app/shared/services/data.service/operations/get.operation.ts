@@ -1,4 +1,5 @@
 import { Http } from '@angular/http';
+import { HttpInterceptorService } from '../../../interceptor';
 import { Observable } from 'rxjs/Rx';
 
 import { BaseModel, WEB_METHOD } from '../../../models';
@@ -16,15 +17,21 @@ import { GlobalConstants } from '../../../constants';
 export class GetOperation<T extends BaseModel> extends DataOperation<BaseModel> {
     constructor(private dataProcessingService: DataProcessingService,
         private httpService: Http,
+        private httpInterceptorService: HttpInterceptorService,
         private typeName: string,
         private key: string,
         private actionSuffix?: string) {
-        super(dataProcessingService, httpService, typeName, key);
+        super(dataProcessingService, httpService,httpInterceptorService, typeName, key);
         if (actionSuffix) {
             this.ActionSuffix = actionSuffix;
             this.dataProcessingService.EndPoint = GlobalConstants.API;
         }
+
+        
+
     }
+
+
 
     /**
      * Execute GET request
@@ -54,9 +61,10 @@ export class GetOperation<T extends BaseModel> extends DataOperation<BaseModel> 
 export class SimpleGetOperation<T extends any> extends DataOperation<any> {
     constructor(private dataProcessingService: DataProcessingService,
         private httpService: Http,
+        private httpInterceptorService: HttpInterceptorService,
         private typeName: string,
         private actionSuffix?: string) {
-        super(dataProcessingService, httpService, typeName);
+        super(dataProcessingService, httpService,httpInterceptorService, typeName);
 
         if (actionSuffix) {
             this.ActionSuffix = actionSuffix;

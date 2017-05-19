@@ -45,6 +45,9 @@ export class GlobalConstants {
     public static AD_AUTH_ENABLED: boolean = false;
     public static PASSWORD_PATTERN: string = '((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})';
     public static LAST_INCIDENT_PICK_COUNT: string = '5';
+
+    public static INTERCEPTOR_PERFORM: boolean = true;
+
     public static EmergencyCategories: IKeyValue[] = [
         { value: 'FlightRelated', key: 1 },
         { value: 'NonFlightRelated', key: 2 }

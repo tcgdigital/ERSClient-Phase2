@@ -1,9 +1,10 @@
 import { Http, Response, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
-
+import { HttpInterceptorService } from '../../interceptor';
 import { BaseModel, ResponseModel } from '../../models';
 import { DataProcessingService } from './data.processing.service';
-
+import { LocalizationService } from "../../services/common.service";
+import { GlobalConstants } from "../../../shared";
 export abstract class DataOperation<T> {
 
     protected DataProcessingService: DataProcessingService;
@@ -26,6 +27,7 @@ export abstract class DataOperation<T> {
      */
     constructor(dataProcessingService: DataProcessingService,
         httpService: Http,
+        httpInterceptorService: HttpInterceptorService,
         typeName: string);
 
     /**
@@ -39,7 +41,9 @@ export abstract class DataOperation<T> {
      */
     constructor(dataProcessingService: DataProcessingService,
         httpService: Http,
-        typeNameOrEntities: string | T[]);
+        httpInterceptorService: HttpInterceptorService,
+        typeNameOrEntities: string | T[],
+        localizationService: LocalizationService);
 
     /**
      * Creates an instance of DataOperation.
@@ -53,6 +57,7 @@ export abstract class DataOperation<T> {
      */
     constructor(dataProcessingService: DataProcessingService,
         httpService: Http,
+        httpInterceptorService: HttpInterceptorService,
         typeNameOrEntities: string | T[],
         key?: string);
 
@@ -69,6 +74,7 @@ export abstract class DataOperation<T> {
      */
     constructor(dataProcessingService: DataProcessingService,
         httpService: Http,
+        httpInterceptorService: HttpInterceptorService,
         typeNameOrEntities: string | T[],
         keyOrEntity?: string | T,
         key?: string);
@@ -87,6 +93,7 @@ export abstract class DataOperation<T> {
      */
     constructor(dataProcessingService: DataProcessingService,
         httpService: Http,
+        httpInterceptorService: HttpInterceptorService,
         typeNameOrEntities: string | T[],
         keyOrEntity?: string | T,
         key?: string,
@@ -111,7 +118,34 @@ export abstract class DataOperation<T> {
         }
         if (actionSuffix) this.ActionSuffix = actionSuffix;
         if (key) this.Key = key;
+
+
+        // Request Interceptor -- This call will happend prior to each and every http request call.
+        httpInterceptorService.request().addInterceptor((request, method) => {
+            debugger;
+            if (GlobalConstants.INTERCEPTOR_PERFORM) {
+                request = LocalizationService.PreserveDateFromConversion(['EmergencyDate'],
+                    request, LocalizationService.transformRequest);
+
+                LocalizationService.transformRequest(request);
+            }
+
+            return request;
+        });
+
+        // Response Interceptor -- This call will happend prior to each and every http response call.
+        httpInterceptorService.response().addInterceptor((response, method) => {
+            debugger;
+            if(GlobalConstants.INTERCEPTOR_PERFORM){
+                LocalizationService.transformResponse(response);
+            }
+            
+            return response.do(r => { });
+        });
     }
+
+
+
 
     /**
      * Handle response for single entity
@@ -201,6 +235,8 @@ export abstract class DataOperation<T> {
                 return Observable.throw(error.json().error || 'Server error');
             });
     }
+
+
 
     /**
      * Definition of abstruct execute functon

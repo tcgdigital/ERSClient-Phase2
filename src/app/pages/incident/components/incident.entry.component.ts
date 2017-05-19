@@ -286,19 +286,22 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     incidentsToPickForReplicationChange(incidentId: string, incidentsToPickForReplication: IncidentModel[]): void {
-        if (incidentId != '0') {
-            this.ResetFlightFields();
+        if (this.isFlightRelated) {
+            if (incidentId != '0') {
+                this.ResetFlightFields();
 
-            const incidentToPickForReplication: IncidentModel = incidentsToPickForReplication
-                .find((x: IncidentModel) => x.IncidentId === +incidentId);
-            this.incidentService.GetFlightInfoFromIncident(+incidentId)
-                .subscribe((itemFlight: FlightModel) => {
-                    this.FillFlightFields(itemFlight);
-                });
+                const incidentToPickForReplication: IncidentModel = incidentsToPickForReplication
+                    .find((x: IncidentModel) => x.IncidentId === +incidentId);
+                this.incidentService.GetFlightInfoFromIncident(+incidentId)
+                    .subscribe((itemFlight: FlightModel) => {
+                        this.FillFlightFields(itemFlight);
+                    });
+            }
+            else {
+                this.ResetFlightFields();
+            }
         }
-        else {
-            this.ResetFlightFields();
-        }
+
 
 
     }

@@ -1,6 +1,6 @@
 import { URLSearchParams, Http } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
-
+import { HttpInterceptorService } from '../../../interceptor';
 import { BaseModel, WEB_METHOD, ResponseModel } from '../../../models';
 import { UtilityService } from '../../../services';
 import { DataProcessingService, DataOperation } from '../index';
@@ -34,8 +34,9 @@ export class QueryOperation<T extends BaseModel> extends DataOperation<T> {
      */
     constructor(private dataProcessingService: DataProcessingService,
         private httpService: Http,
+        private httpInterceptor: HttpInterceptorService,
         private typeName: string) {
-        super(dataProcessingService, httpService, typeName);
+        super(dataProcessingService, httpService,httpInterceptor, typeName);
         this.dataProcessingService.EndPoint = GlobalConstants.ODATA;
     }
 
