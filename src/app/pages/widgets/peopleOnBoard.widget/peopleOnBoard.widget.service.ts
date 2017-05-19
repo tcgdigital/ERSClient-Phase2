@@ -13,8 +13,9 @@ import {
     DataService,
     DataServiceFactory,
     DataProcessingService,
-    ServiceBase, UtilityService
+    ServiceBase, UtilityService, KeyValue
 } from '../../../shared';
+import * as _ from 'underscore';
 
 @Injectable()
 export class PeopleOnBoardWidgetService implements OnInit {
@@ -32,6 +33,9 @@ export class PeopleOnBoardWidgetService implements OnInit {
     }
 
     GetPeopleOnBoardDataCount(incidentId: number): Observable<PeopleOnBoardModel> {
+        let genderWiseCount: number = 0;
+        let nationalityWiseCount: number = 0;
+        let paxTypeWiseCount: number = 0;
         this.peopleOnBoard = new PeopleOnBoardModel();
         return this.GetAllPassengerCount(incidentId)
             .map((dataTotalAffectedPassenger: ResponseModel<InvolvePartyModel>) => {
@@ -42,8 +46,20 @@ export class PeopleOnBoardWidgetService implements OnInit {
                     affectedPeoples.forEach((item: AffectedPeopleModel) => {
                         passengerListLocal.push(UtilityService.pluck(item, ['Passenger'])[0]);
                     });
-                }
-                this.peopleOnBoard.totalAffectedPassengerCount = isNaN(passengerListLocal.length) ? 0 : passengerListLocal.length;
+                } 
+                this.peopleOnBoard.totalAffectedPassengerCount = isNaN(passengerListLocal.length) ? 0 : passengerListLocal.length;              
+
+                let genKPIData = _.countBy(passengerListLocal,"PassengerGender");
+                let natiionalityKPIData = _.countBy(passengerListLocal,"PassengerNationality");
+                let paxTypeKPIData = _.countBy(passengerListLocal, "PassengerType");
+
+                this.peopleOnBoard.totalGenderTypeCount = Object.keys(genKPIData)
+                    .map(x=> { return {Key: x, Value: genKPIData[x]}; });                
+                this.peopleOnBoard.totalNationalityTypeCount = Object.keys(natiionalityKPIData)
+                    .map(x=> { return {Key: x, Value: natiionalityKPIData[x]}; });                
+                this.peopleOnBoard.totalPaxTypeCount = Object.keys(paxTypeKPIData)
+                    .map(x=> { return {Key: x, Value: paxTypeKPIData[x]}; });
+                
                 return this.peopleOnBoard;
             })
             .flatMap((peopleOnBoard: PeopleOnBoardModel) => this.GetAllCrewsByIncident(incidentId))
@@ -123,7 +139,7 @@ export class PeopleOnBoardWidgetService implements OnInit {
             });
 
 
-    }
+    }    
 
     GetAllPassengersByIncident(incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
         return this.involvedPartyService.GetAllPassengersByIncident(incidentId);
@@ -131,6 +147,10 @@ export class PeopleOnBoardWidgetService implements OnInit {
 
     GetAllCrewsByIncident(incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
         return this.involvedPartyService.GetAllCrewsByIncident(incidentId);
+    }
+
+    GetAllCargosByIncident(incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
+        return this.involvedPartyService.GetAllCargosByIncident(incidentId);
     }
 
     GetEnquiredAffectedPeople(incidentId: number): Observable<ResponseModel<EnquiryModel>> {
@@ -154,5 +174,9 @@ export class PeopleOnBoardWidgetService implements OnInit {
     GetAllPassengerCount(incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
         return this.GetAllPassengersByIncident(incidentId);
     }
+
+    GetQueryForPassenger(query: string, incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
+        return this.involvedPartyService.GetQueryForPassenger(query, incidentId);            
+    }    
 
 }
