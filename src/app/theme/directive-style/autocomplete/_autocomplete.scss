@@ -34,7 +34,7 @@ ul.multiselect-list {
     color: $multiselect-color;
     width: 95%;
     font-size: 12px;
-    height: 150px;
+    max-height: 150px;
     position: absolute;
     z-index: 999;
     overflow-x: hidden;

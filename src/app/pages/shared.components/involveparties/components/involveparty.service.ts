@@ -92,7 +92,7 @@ public affectedPeoples: ResponseModel<AffectedPeopleModel>;
         let involvePartyProjection: string = 'InvolvedPartyType,InvolvedPartyDesc';
         let affectedProjection: string = 'Severity';
         let affectedPeopleProjection: string = 'AffectedPersonId,TicketNumber,IsStaff,IsCrew,IsVerified,Identification';
-        let passengerPrjection: string = 'PassengerId,FlightNumber,PassengerName,PassengerGender,BaggageCount,Destination,PassengerDob,Pnr,PassengerType,DepartureDateTime,ArrivalDateTime,ContactNumber,Seatno';
+        let passengerPrjection: string = 'PassengerId,FlightNumber,PassengerName,PassengerGender,BaggageCount,Destination,PassengerDob,Pnr,PassengerType,PassengerNationality,DepartureDateTime,ArrivalDateTime,ContactNumber,Seatno';
         return this._dataService.Query()
             .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=PassengerId ne null;$select=${affectedPeopleProjection};$expand=Passenger($select=${passengerPrjection}),NextOfKins))`)
             .Filter(`IncidentId eq ${incidentId}`)
@@ -114,6 +114,22 @@ public affectedPeoples: ResponseModel<AffectedPeopleModel>;
             .Execute();
     }
 
-    
+    public GetQueryForPassenger(query: string, incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
+       let involvePartyProjection: string = 'InvolvedPartyType,InvolvedPartyDesc';
+        let affectedProjection: string = 'Severity';
+        let affectedPeopleProjection: string = 'AffectedPersonId,TicketNumber,IsStaff,IsCrew,IsVerified,Identification';
+        let passengerPrjection: string = 'PassengerId,FlightNumber,PassengerName,PassengerGender,BaggageCount,Destination,PassengerDob,Pnr,PassengerType,PassengerNationality,DepartureDateTime,ArrivalDateTime,ContactNumber,Seatno';
+        return this._dataService.Query()
+            .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=PassengerId ne null and ${query};$select=${affectedPeopleProjection};$expand=Passenger($select=${passengerPrjection}),NextOfKins))`)
+            .Filter(`IncidentId eq ${incidentId}`)                            
+            .Select(`${involvePartyProjection}`)
+            .Execute();
+    }
 
+    public GetAllCargosByIncident(incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
+        return this._dataService.Query()
+        .Expand(`Flights($expand=Cargoes)`)
+        .Filter(`IncidentId eq ${incidentId}`)
+        .Execute();
+    }
 }

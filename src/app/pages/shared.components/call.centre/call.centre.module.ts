@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MdCheckboxModule } from '@angular2-material/checkbox';
 
-import { EnquiryComponent } from './call.centre.component';
+import { EnquiryEntryComponent } from './call.centre.entry.component';
 import { CallCentreRouting } from './call.centre.routing';
 import { EnquiryService} from './components';
 import { AffectedPeopleService } from '../affected.people';
@@ -25,10 +25,10 @@ import { InvolvePartyService } from '../involveparties';
         CallCentreRouting
     ],
     declarations: [
-       EnquiryComponent
+    //   EnquiryEntryComponent
     ],
     exports:[
-        EnquiryComponent
+    //    EnquiryEntryComponent
     ],
     providers: [
         EnquiryService,
