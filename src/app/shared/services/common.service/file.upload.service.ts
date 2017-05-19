@@ -93,7 +93,6 @@ export class FileUploadService {
             const fileUploadPromise: Promise<T> = new Promise((resolve, reject) => {
                 const formData: FormData = new FormData();
                 const xhr: XMLHttpRequest = new XMLHttpRequest();
-                debugger;                
                 for (const f of files) {
                     const file: File = f as File;
                     formData.append(date, file, file.name);                    
@@ -102,7 +101,6 @@ export class FileUploadService {
                 xhr.onreadystatechange = () => {
                     if (xhr.readyState === 4) {
                         if (xhr.status === 200) {
-                            debugger;
                             resolve((xhr.response !== "") ? JSON.parse(xhr.response) as T : new Object() as T);
                         } else {
                             reject(xhr.response);
