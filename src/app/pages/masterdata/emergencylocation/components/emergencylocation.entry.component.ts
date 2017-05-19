@@ -70,7 +70,6 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
     Upload(): void{
         if(this.filesToUpload.length)
         {
-            debugger;
             let baseUrl = GlobalConstants.EXTERNAL_URL;
             let param = this.credential.UserId;
             this.date = new Date();
@@ -107,7 +106,6 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
 
                 this.emergencyLocationService.Create(this.emergencyLocation)
                     .subscribe((response: EmergencyLocationModel) => {
-                        debugger;                        
                         this.toastrService.success('Emergency Location is created Successfully.', 'Success', this.toastrConfig);
                         this.dataExchange.Publish("EmergencyLocationModelEntry", response);
                         this.initiateForm();
