@@ -18,8 +18,8 @@ const archiveDashboardRoutes: Routes = [
             { path: 'presidentMessage', loadChildren: '../shared.components/presidentMessage/presidentMessage.module#PrecidentMessageModule' },
             { path: 'media', loadChildren: '../shared.components/media/media.module#MediaModule' },
             { path: 'demand', loadChildren: '../shared.components/demand/demand.module#DemandModule' },
-            { path: 'otherQuery', loadChildren: '../shared.components/other.query/other.query.module#OtherQueryModule' },
-            { path: 'crewQuery', loadChildren: '../shared.components/crew.query/crew.query.module#CrewQueryModule' }
+          //  { path: 'otherQuery', loadChildren: '../shared.components/other.query/other.query.module#OtherQueryModule' },
+          //  { path: 'crewQuery', loadChildren: '../shared.components/crew.query/crew.query.module#CrewQueryModule' }
         ]
     }
 ];

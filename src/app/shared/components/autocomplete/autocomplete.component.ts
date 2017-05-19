@@ -35,10 +35,13 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
         if (this.query != null && this.query != '') {
             this.filteredList = this.items.filter(function (el: KeyValue) {
                 return el.Key.toLowerCase().indexOf(this.query.toLowerCase()) > -1;
-            }.bind(this)) || [];
+            }.bind(this));
         } else {
             this.filteredList = this.items;
         }
+        if(this.filteredList.length == 0){
+                this.filteredList.push(new KeyValue("No Value found",0));
+            }
     }
 
     clear(): void {
