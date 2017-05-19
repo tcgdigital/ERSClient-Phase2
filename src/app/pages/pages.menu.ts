@@ -99,6 +99,19 @@ export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
                     }
                 }
 
+            },
+            {
+                path: 'callcenteronlypage',
+                data: {
+                    menu: {
+                        title: 'Call center only page',
+                        icon: 'fa fa-phone fa-lg',
+                        selected: false,
+                        expanded: false,
+                        order: 6
+                    }
+                }
+
             }
         ]
     }

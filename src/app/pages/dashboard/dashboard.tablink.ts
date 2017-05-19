@@ -26,14 +26,14 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         hidden: false,
         order: 3
     }, {
-        id: 'CallCenters',
-        title: 'Call Centers',
-        // icon: 'fa fa-drupal fa-2x',
-        url: '/pages/dashboard/callCentre',
-        selected: false,
-        hidden: false,
-        order: 4
-    }, {
+    //     id: 'CallCenters',
+    //     title: 'Call Centers',
+    //     // icon: 'fa fa-drupal fa-2x',
+    //     url: '/pages/dashboard/callCentre',
+    //     selected: false,
+    //     hidden: false,
+    //     order: 4
+    // }, {
         id: 'BroadcastMessages',
         title: 'Broadcast Messages',
         // icon: 'fa fa-envira fa-2x',
@@ -65,21 +65,94 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         selected: false,
         hidden: false,
         order: 8
-    }, {
-        id: 'OtherQuery',
-        title: 'Other Query',
-        // icon: 'fa fa-windows fa-2x',
-        url: '/pages/dashboard/otherQuery',
+    // }, {
+    //     id: 'OtherQuery',
+    //     title: 'Other Query',
+    //     // icon: 'fa fa-windows fa-2x',
+    //     url: '/pages/dashboard/otherQuery',
+    //     selected: false,
+    //     hidden: false,
+    //     order: 9
+    // }, {
+    //     id: 'CrewQuery',
+    //     title: 'Crew Query',
+    //     // icon: 'fa fa-twitter fa-2x',
+    //     url: '/pages/dashboard/crewQuery',
+    //     selected: false,
+    //     hidden: false,
+    //     order: 10
+   }, {
+        id: 'PassengerQuery',
+        title: 'Passenger Query',
+        // icon: 'fa fa-twitter fa-2x',
+        url: '/pages/dashboard/passengerquery',
         selected: false,
         hidden: false,
         order: 9
-    }, {
-        id: 'CrewQuery',
-        title: 'Crew Query',
-        // icon: 'fa fa-twitter fa-2x',
-        url: '/pages/dashboard/crewQuery',
-        selected: false,
-        hidden: false,
-        order: 10
     }
+    // , {
+    //     id: 'CargoQuery',
+    //     title: 'Cargo Query',
+    //     // icon: 'fa fa-twitter fa-2x',
+    //     url: '/pages/dashboard/cargoquery',
+    //     selected: false,
+    //     hidden: false,
+    //     order: 10
+    // }, {
+    //     id: 'CrewQuery',
+    //     title: 'Crew Query',
+    //     // icon: 'fa fa-twitter fa-2x',
+    //     url: '/pages/dashboard/crewquery',
+    //     selected: false,
+    //     hidden: false,
+    //     order: 11
+    // }, {
+    //     id: 'MediaQuery',
+    //     title: 'Media Query',
+    //     // icon: 'fa fa-twitter fa-2x',
+    //     url: '/pages/dashboard/mediaquery',
+    //     selected: false,
+    //     hidden: false,
+    //     order: 12
+    // }, {
+    //     id: 'FutureTravelQuery',
+    //     title: 'Future Travel Query',
+    //     // icon: 'fa fa-twitter fa-2x',
+    //     url: '/pages/dashboard/futuretravelquery',
+    //     selected: false,
+    //     hidden: false,
+    //     order: 13
+    // }, {
+    //     id: 'GeneralUpdateQuery',
+    //     title: 'General Update Query',
+    //     // icon: 'fa fa-twitter fa-2x',
+    //     url: '/pages/dashboard/generalupdatequery',
+    //     selected: false,
+    //     hidden: false,
+    //     order: 14
+    // }, {
+    //     id: 'OtherQuery',
+    //     title: 'Other Query',
+    //     // icon: 'fa fa-twitter fa-2x',
+    //     url: '/pages/dashboard/otherquery',
+    //     selected: false,
+    //     hidden: false,
+    //     order: 15
+    // }, {
+    //     id: 'SituationalUpdatesQuery',
+    //     title: 'Situational Updates Query',
+    //     // icon: 'fa fa-twitter fa-2x',
+    //     url: '/pages/dashboard/situationalupdatesquery',
+    //     selected: false,
+    //     hidden: false,
+    //     order: 16
+    //  }, {
+    //     id: 'CustomerDissatisfactionQuery',
+    //     title: 'Customer Dissatisfaction Query',
+    //     // icon: 'fa fa-twitter fa-2x',
+    //     url: '/pages/dashboard/customerdissatisfactionquery',
+    //     selected: false,
+    //     hidden: false,
+    //     order: 17
+    // }
 ];
