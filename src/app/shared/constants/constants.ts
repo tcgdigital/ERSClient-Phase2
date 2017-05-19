@@ -42,6 +42,8 @@ export class GlobalConstants {
     public static TOKEN: string = 'token';
     public static BATCH: string = 'odata/$batch';
     public static ACCESS_TOKEN: string = 'access_token';
+    public static AD_AUTH_ENABLED: boolean = false;
+    public static PASSWORD_PATTERN: string = '((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})';
 
     public static EmergencyCategories: IKeyValue[] = [
         { value: 'FlightRelated', key: 1 },

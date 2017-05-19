@@ -23,6 +23,7 @@ export class PassangerQueryAssignedCallsListComponent implements OnInit {
     currentIncidentId: number;
     protected _onRouteChange: Subscription;
     callId : number;
+    callcenterload : boolean = false;
     constructor(private callcenteronlypageservice: CallCenterOnlyPageService, private _router: Router,
      private globalState: GlobalStateService) {
 
@@ -55,6 +56,7 @@ export class PassangerQueryAssignedCallsListComponent implements OnInit {
     }
 
     getAllPassengerQueryCalls(incidentId): void {
+        this.childModalcallcenter.hide();
         this.callcenteronlypageservice.GetPassengerQueryCallsByIncident(incidentId)
             .subscribe((response : ResponseModel<ExternalInputModel>)=>{
                 this.allAssignedCalls = response.Records;
@@ -63,6 +65,7 @@ export class PassangerQueryAssignedCallsListComponent implements OnInit {
 
     openCallcenter(externalInputId) : void{
         this.callId = externalInputId;
+        this.callcenterload = true;
         this.childModalcallcenter.show();
     }
 

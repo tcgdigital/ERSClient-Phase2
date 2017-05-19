@@ -71,8 +71,6 @@ export class CallCenterOnlyPageComponent implements OnInit {
 
     save(): void {
         this.externnalInputModelToSave.Caller = new CallerModel();
-
-        debugger;
         this.externnalInputModelToSave.IsCallRecieved = false;
         UtilityService.setModelFromFormGroup<CallerModel>(this.externnalInputModelToSave.Caller, this.form,
             x => x.CallerName, x => x.ContactNumber, x => x.AlternateContactNumber, x => x.Relationship);

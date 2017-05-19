@@ -12,7 +12,7 @@ export class BroadCastDepartmentModel extends BaseModel {
 
     /**
      * Creates an instance of BroadCastDepartmentMappingModel.
-     * 
+     *
      * @memberOf BroadCastDepartmentMappingModel
      */
     constructor(){

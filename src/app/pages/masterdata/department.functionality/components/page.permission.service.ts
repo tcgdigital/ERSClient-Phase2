@@ -19,7 +19,7 @@ export class PagePermissionService extends ServiceBase<PagePermissionModel>
 
     constructor(private dataServiceFactory: DataServiceFactory) {
         super(dataServiceFactory, 'PagePermissions');
-        let option: DataProcessingService = new DataProcessingService();
+        const option: DataProcessingService = new DataProcessingService();
 
         this._bulkDataService = this.dataServiceFactory
             .CreateServiceWithOptions<PagePermissionModel>('PermissionBatch/BatchPostAsync', option);

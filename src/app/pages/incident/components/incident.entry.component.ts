@@ -273,7 +273,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
 
             }
 
-            this.fillIncidentDataExchangeModelData(this.incidentModel, this.involvePartyModel, this.flightModel);
+            this.fillIncidentDataExchangeModelData(this.incidentModel, this.involvePartyModel, this.flightModel,this.affectedModel);
         }
         else {
             if (this.form.controls['EmergencyTypeId'].value === '0') {
@@ -346,11 +346,12 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     fillIncidentDataExchangeModelData(incidentModel: IncidentModel,
-        involvedPartyModel?: InvolvePartyModel, flightModel?: FlightModel): void {
+        involvedPartyModel?: InvolvePartyModel, flightModel?: FlightModel, affectedModel?:AffectedModel): void {
         this.incidentDataExchangeModel = new IncidentDataExchangeModel();
         this.incidentDataExchangeModel.IncidentModel = incidentModel;
         this.incidentDataExchangeModel.InvolvedPartyModel = involvedPartyModel;
         this.incidentDataExchangeModel.FLightModel = flightModel;
+        this.incidentDataExchangeModel.AffectedModel = affectedModel;
         this.incidentDataExchangeModel.IsFlightRelated = this.isFlightRelated;
         console.log('Going to the View page.........................');
         //this.dataExchangeDecision.Publish('instructionToCloseInsertOpenViewCommand', true);

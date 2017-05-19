@@ -8,6 +8,7 @@ import {
     QueryOperation,
     PostOperation,
     SimplePostOperation,
+    JsonPostOperation,
     BulkPostOperation,
     BatchPostOperation,
     PutOperation,
@@ -32,10 +33,10 @@ export class DataService<T extends BaseModel>{
 
     /**
      * Get an instance of QueryOperation for OData query request
-     * 
-     * @param {string} [query] 
-     * @returns {QueryOperation<T>} 
-     * 
+     *
+     * @param {string} [query]
+     * @returns {QueryOperation<T>}
+     *
      * @memberOf DataService
      */
     public Query(): QueryOperation<T> {
@@ -54,20 +55,19 @@ export class DataService<T extends BaseModel>{
         return new GetOperation<T>(this.dataProcessingService, this.httpService, this.typeName, key, this.actionSuffix);
     }
 
-
     /**
      * Get an instance of CountOperation for OData GET Count request
-     * 
-     * @returns {CountOperation<T>} 
-     * 
+     *
+     * @returns {CountOperation<T>}
+     *
      * @memberOf DataService
      */
-    public Count(): CountOperation<T>{
+    public Count(): CountOperation<T> {
         return new CountOperation<T>(this.dataProcessingService, this.httpService, this.typeName);
     }
 
     /**
-     * Get an instance of QueryOperation for URLEncoded POST request
+     * Get an instance of PostOperation for URLEncoded POST request
      *
      * @param {*} entity
      * @param {string} key
@@ -77,6 +77,19 @@ export class DataService<T extends BaseModel>{
      */
     public SimplePost(entity: any): SimplePostOperation<any> {
         return new SimplePostOperation<T>(this.dataProcessingService, this.httpService, this.typeName, entity);
+    }
+
+    /**
+     * Get an instance of PostOperation for JSON based POST request
+     *
+     * @param {*} entity
+     * @returns {JsonPostOperation<any>}
+     *
+     * @memberof DataService
+     */
+    public JsonPost(entity: any): JsonPostOperation<any> {
+        return new JsonPostOperation<T>(this.dataProcessingService,
+            this.httpService, this.typeName, entity, this.actionSuffix);
     }
 
     /**
@@ -155,8 +168,6 @@ export class DataService<T extends BaseModel>{
         return new DeleteOperation<T>(this.dataProcessingService, this.httpService, this.typeName, key);
     }
 
-    
-    
     /**
      * Get an instance of QueryOperation for custom function request
      *

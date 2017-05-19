@@ -82,15 +82,7 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
     }
 
     public OnDocumentUploaded(dropdownselected: string): void {
-        // var archieveDocumentType = {
-        //                 ArchieveDocumentTypeId: 0,
-        //                 IncidentId: $scope.IncidentId,
-        //                 DocumentType: $scope.UploadDoc.UploadDocument,
-        //                 DocumentUploadPath: fullFilePath,
-        //                 ActiveFlag: "Active",
-        //                 CreatedBy: $scope.createdBy,
-        //                 CreatedOn: new Date()
-        //             }
+
         this.archiveDocumentTypeService.GetByIncident(this.incidentId)
             .subscribe((returnResult: ResponseModel<ArchiveDocumentTypeModel>) => {
                 if (returnResult.Records.length == 0) {
@@ -106,6 +98,10 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
                     this.archiveDocumentTypeService.CreateArchiveDocumentType(this.archiveDocumentType)
                         .subscribe((data: ArchiveDocumentTypeModel) => {
                             this.toastrService.success('Document added succesfully.', 'Document Upload', this.toastrConfig);
+                            this.myInputVariable.nativeElement.value = "";
+                            this.filepathWithLinks = null;
+                            this.fileName = null;
+                            this.filesToUpload = null;
                             return false;
                         });
                 }
@@ -114,6 +110,26 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
                         return item.DocumentType == dropdownselected;
                     });
                     if (filteredArchiveDocumentType.length > 0) {
+                        this.archiveDocumentType = new ArchiveDocumentTypeModel();
+                        this.archiveDocumentType.ArchieveDocumentTypeId = filteredArchiveDocumentType[0].ArchieveDocumentTypeId;
+                        this.archiveDocumentType.IncidentId = this.incidentId;
+                        this.archiveDocumentType.DocumentType = dropdownselected;
+                        this.archiveDocumentType.DocumentUploadPath = this.filepathWithLinks;
+                        this.archiveDocumentType.ActiveFlag = 'Active';
+                        this.archiveDocumentType.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
+                        this.archiveDocumentType.CreatedOn = new Date();
+
+                        this.archiveDocumentTypeService.UpdateArchiveDocumentType(this.archiveDocumentType)
+                            .subscribe((data: ArchiveDocumentTypeModel) => {
+                                this.toastrService.success('Document updated succesfully.', 'Document Upload', this.toastrConfig);
+                                this.myInputVariable.nativeElement.value = "";
+                                this.filepathWithLinks = null;
+                                this.fileName = null;
+                                this.filesToUpload = null;
+                                return false;
+                            });
+                    }
+                    else {
                         this.archiveDocumentType = new ArchiveDocumentTypeModel();
                         this.archiveDocumentType.ArchieveDocumentTypeId = 0;
                         this.archiveDocumentType.IncidentId = this.incidentId;
@@ -126,22 +142,10 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
                         this.archiveDocumentTypeService.CreateArchiveDocumentType(this.archiveDocumentType)
                             .subscribe((data: ArchiveDocumentTypeModel) => {
                                 this.toastrService.success('Document added succesfully.', 'Document Upload', this.toastrConfig);
-                                return false;
-                            });
-                    }
-                    else {
-                        this.archiveDocumentType = new ArchiveDocumentTypeModel();
-                        this.archiveDocumentType.ArchieveDocumentTypeId = 0;
-                        this.archiveDocumentType.IncidentId = this.incidentId;
-                        this.archiveDocumentType.DocumentType = filteredArchiveDocumentType[0].DocumentType;
-                        this.archiveDocumentType.DocumentUploadPath = this.filepathWithLinks;
-                        this.archiveDocumentType.ActiveFlag = 'Active';
-                        this.archiveDocumentType.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
-                        this.archiveDocumentType.CreatedOn = new Date();
-
-                        this.archiveDocumentTypeService.UpdateArchiveDocumentType(this.archiveDocumentType)
-                            .subscribe((data: ArchiveDocumentTypeModel) => {
-                                this.toastrService.success('Document updated succesfully.', 'Document Upload', this.toastrConfig);
+                                this.myInputVariable.nativeElement.value = "";
+                                this.filepathWithLinks = null;
+                                this.fileName = null;
+                                this.filesToUpload = null;
                                 return false;
                             });
                     }

@@ -16,8 +16,8 @@ export class AppendedTemplateService
 
     /**
      * Creates an instance of TemplateService.
-     * @param {DataServiceFactory} dataServiceFactory 
-     * 
+     * @param {DataServiceFactory} dataServiceFactory
+     *
      * @memberOf TemplateService
      */
     constructor(private dataServiceFactory: DataServiceFactory) {
@@ -27,31 +27,26 @@ export class AppendedTemplateService
     GetAll(): Observable<ResponseModel<AppendedTemplateModel>> {
         let templates: ResponseModel<AppendedTemplateModel>;
         return this._dataService.Query()
-            .Expand("EmergencySituation")
-            .OrderBy("CreatedOn desc")
+            .Expand('EmergencySituation')
+            .OrderBy('CreatedOn desc')
             .Execute().map((data: ResponseModel<AppendedTemplateModel>) => {
                 templates = data;
-                templates.Records.forEach(x => x.Active = (x.ActiveFlag == 'Active'));
+                templates.Records.forEach((x) => x.Active = (x.ActiveFlag === 'Active'));
                 return templates;
             });
     }
 
     GetQuery(query: string): Observable<ResponseModel<AppendedTemplateModel>> {
         return this._dataService.Query()
-            .Expand('EmergencySituation')
-            .Filter(query).Execute();
+            .Expand('EmergencySituation').Filter(query).Execute();
     }
 
-    GetByEmergencySituationId(emergencySituationId:number):Observable<ResponseModel<AppendedTemplateModel>>{
+    GetByEmergencySituationId(emergencySituationId: number): Observable<ResponseModel<AppendedTemplateModel>> {
         return this._dataService.Query()
-        .Filter(`EmergencySituationId eq ${emergencySituationId}`)
-        .Execute();
+            .Filter(`EmergencySituationId eq ${emergencySituationId}`).Execute();
     }
-
 
     CreateAppendedTemplate(appendedTemplateModel: AppendedTemplateModel): Observable<AppendedTemplateModel> {
-        return this._dataService.Post(appendedTemplateModel)
-            .Execute();
-            
+        return this._dataService.Post(appendedTemplateModel).Execute();
     }
 }

@@ -1,13 +1,11 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
-
 import { DemandTypeModel } from './demandtype.model';
 import { DemandTypeService } from './demandtype.service';
 import {
     ResponseModel, DataExchangeService, SearchConfigModel,
-    SearchTextBox, SearchDropdown,
-    NameValue
+    SearchTextBox, SearchDropdown, NameValue
 } from '../../../../shared';
 
 @Component({
@@ -19,8 +17,7 @@ import {
 export class DemandTypeListComponent implements OnInit {
     demandTypes: DemandTypeModel[] = [];
     demandTypeModelToUpdate: DemandTypeModel = new DemandTypeModel();
-    searchConfigs: SearchConfigModel<any>[] = [];
-
+    searchConfigs: Array<SearchConfigModel<any>> = new Array<SearchConfigModel<any>>();
 
     constructor(private demandTypeService: DemandTypeService,
         private dataExchange: DataExchangeService<DemandTypeModel>) { }
@@ -30,13 +27,11 @@ export class DemandTypeListComponent implements OnInit {
             .subscribe((response: ResponseModel<DemandTypeModel>) => {
 
                 this.demandTypes = response.Records;
-                this.demandTypes.forEach(x => {
-                    x["Active"] = (x.ActiveFlag == 'Active');
+                this.demandTypes.forEach((x) => {
+                    x['Active'] = (x.ActiveFlag === 'Active');
                 });
             });
     }
-
-
 
     IsActive(event: any, editedDemandType: DemandTypeModel): void {
         this.demandTypeModelToUpdate.deleteAttributes();
@@ -58,31 +53,57 @@ export class DemandTypeListComponent implements OnInit {
     }
 
     edit(demandTypeModelToUpdate: DemandTypeModel): void {
-        let demandTypeModelToSend = Object.assign({}, demandTypeModelToUpdate);
-        this.dataExchange.Publish("OnDemandUpdate", demandTypeModelToSend);
+        const demandTypeModelToSend = Object.assign({}, demandTypeModelToUpdate);
+        this.dataExchange.Publish('OnDemandUpdate', demandTypeModelToSend);
     }
 
     ngOnInit(): any {
         this.getDemandTypes();
         this.initiateSearchConfigurations();
-        this.dataExchange.Subscribe("demandTypeModelSaved", model => this.onDemandSuccess(model));
-        this.dataExchange.Subscribe("demandTypeModelUpdated", model => this.onDemandSuccess(model));
+        this.dataExchange.Subscribe('demandTypeModelSaved', (model) => this.onDemandSuccess(model));
+        this.dataExchange.Subscribe('demandTypeModelUpdated', (model) => this.onDemandSuccess(model));
     }
 
     ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe("demandTypeModelUpdated");
-        this.dataExchange.Unsubscribe("demandTypeModelSaved");
+        this.dataExchange.Unsubscribe('demandTypeModelUpdated');
+        this.dataExchange.Unsubscribe('demandTypeModelSaved');
+    }
+
+    invokeSearch(query: string): void {
+        if (query !== '') {
+            if (query.indexOf('IsAutoApproved') >= 0) {
+                if (query.indexOf("'true'") >= 0)
+                    query = query.replace("'true'", 'true');
+                if (query.indexOf("'false'") >= 0)
+                    query = query.replace("'false'", 'false');
+            }
+            this.demandTypeService.GetQuery(query)
+                .subscribe((response: ResponseModel<DemandTypeModel>) => {
+                    this.demandTypes = response.Records;
+                    this.demandTypes.forEach((x) => {
+                        x['Active'] = (x.ActiveFlag === 'Active');
+                    });
+                }, ((error: any) => {
+                    console.log(`Error: ${error}`);
+                }));
+        }
+    }
+
+    invokeReset(): void {
+        this.getDemandTypes();
     }
 
     private initiateSearchConfigurations(): void {
-        let status: NameValue<string>[] = [
+        const status: Array<NameValue<string>> = [
             new NameValue<string>('Active', 'Active'),
             new NameValue<string>('InActive', 'InActive')
-        ]
-        let autoApproved: NameValue<boolean>[] = [
+        ] as Array<NameValue<string>>;
+
+        const autoApproved: Array<NameValue<boolean>> = [
             new NameValue<boolean>('Yes', true),
             new NameValue<boolean>('No', false)
-        ]
+        ] as Array<NameValue<boolean>>;
+
         this.searchConfigs = [
             new SearchTextBox({
                 Name: 'DemandTypeName',
@@ -101,7 +122,7 @@ export class DemandTypeListComponent implements OnInit {
                 Description: 'Approver Department',
                 PlaceHolder: 'Select Approver Department',
                 Value: '',
-                ListData: this.demandTypeService.GetAllApproverDepartment().map(x => x)
+                ListData: this.demandTypeService.GetAllApproverDepartment().map((x) => x)
             }),
             new SearchDropdown({
                 Name: 'ActiveFlag',
@@ -112,29 +133,4 @@ export class DemandTypeListComponent implements OnInit {
             })
         ];
     }
-    invokeSearch(query: string): void {
-        if (query !== '') {
-            if (query.indexOf('IsAutoApproved') >= 0) {
-                if (query.indexOf("'true'") >= 0)
-                    query = query.replace("'true'", "true");
-                if (query.indexOf("'false'") >= 0)
-                    query = query.replace("'false'", "false");
-            }
-            this.demandTypeService.GetQuery(query)
-                .subscribe((response: ResponseModel<DemandTypeModel>) => {
-                    this.demandTypes = response.Records;
-                    this.demandTypes.forEach(x => {
-                        x["Active"] = (x.ActiveFlag == 'Active');
-                    });
-                }, ((error: any) => {
-                    console.log(`Error: ${error}`);
-                }));
-        }
-    }
-
-    invokeReset(): void {
-        this.getDemandTypes();
-    }
-
-
 }

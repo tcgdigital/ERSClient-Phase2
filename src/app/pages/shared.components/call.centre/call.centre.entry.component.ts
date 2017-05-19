@@ -2,7 +2,7 @@ import { Component, ViewEncapsulation, OnInit, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router, NavigationEnd } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { Subscription, Observable } from 'rxjs/Rx';
 
 
 import {
@@ -10,7 +10,7 @@ import {
     AutocompleteComponent, KeyValue,
     GlobalConstants, UtilityService, GlobalStateService, AuthModel
 } from '../../../shared';
-import { EnquiryModel,EnquiryService} from './components';
+import { EnquiryModel, EnquiryService } from './components';
 
 import {
     CommunicationLogModel, InvolvePartyModel,
@@ -21,15 +21,16 @@ import { DemandService } from '../demand';
 import { CallerModel } from '../caller';
 import { DepartmentService, DepartmentModel } from '../../masterdata/department';
 import { InvolvePartyService } from '../involveparties';
-import { CallCenterOnlyPageService, ExternalInputModel } from "../../callcenteronlypage/component";
+import { CallCenterOnlyPageService, ExternalInputModel, PDAEnquiryModel, CargoEnquiryModel, MediaAndOtherQueryModel } from "../../callcenteronlypage/component";
 
+import { IAutocompleteActions } from '../../../shared/components/autocomplete/IAutocompleteActions';
 
 @Component({
     selector: 'call-centre-main',
     encapsulation: ViewEncapsulation.None,
     templateUrl: './views/call.centre.view.html',
     styleUrls: ['./styles/call.center.style.scss'],
-    providers : [
+    providers: [
         EnquiryService,
         DataExchangeService,
         AffectedPeopleService,
@@ -41,7 +42,10 @@ import { CallCenterOnlyPageService, ExternalInputModel } from "../../callcentero
 })
 
 export class EnquiryEntryComponent implements OnInit {
-      @Input('callid') callid: number;
+    @Input('callid') callid: number;
+    @Input('enquiryType') enquiryType: number;
+
+
 
     /**
      * Creates an instance of EnquiryEntryComponent.
@@ -66,22 +70,26 @@ export class EnquiryEntryComponent implements OnInit {
         private globalState: GlobalStateService,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig,
-        private callcenteronlypageservice : CallCenterOnlyPageService) { };
+        private callcenteronlypageservice: CallCenterOnlyPageService) { };
+
 
     public form: FormGroup;
-    enquiryTypes: Object = GlobalConstants.EnquiryType;
-    enquiryType: number;
+    enquiryTypes: any[] = GlobalConstants.ExternalInputEnquiryType;
+    pdaenquery: PDAEnquiryModel = new PDAEnquiryModel();
+    cargoquery: CargoEnquiryModel = new CargoEnquiryModel();
+    otherquery: MediaAndOtherQueryModel = new MediaAndOtherQueryModel();
+    //enquiryType: number;
     enquiry: EnquiryModel = new EnquiryModel();
     caller: CallerModel = new CallerModel();
-    passengers: Array<KeyValue>;
-    awbs: Array<KeyValue>;
-    crews: Array<KeyValue>;
+    passengers: KeyValue[];
+    awbs: KeyValue[];
+    crews: KeyValue[];
     affectedPeople: AffectedPeopleToView[];
-    communicationLogs: Array<CommunicationLogModel>;
+    communicationLogs: CommunicationLogModel[];
     communicationLog: CommunicationLogModel = new CommunicationLogModel();
     date: Date = new Date();
     demand: DemandModel;
-    demands: Array<DemandModel> = new Array<DemandModel>();
+    demands: DemandModel[] = new Array<DemandModel>();
     affectedObjects: AffectedObjectsToView[];
     currentDepartmentId: number;
     currentDepartmentName: string = 'Command Centre';
@@ -89,37 +97,52 @@ export class EnquiryEntryComponent implements OnInit {
     departments: DepartmentModel[];
     selctedEnquiredPerson: AffectedPeopleToView;
     selctedEnquiredObject: AffectedObjectsToView;
-    //userName: string = 'Soumit Nag';
     credential: AuthModel;
+    isCallrecieved : boolean = false;
+    actionLinks: IAutocompleteActions[] = [{
+        ActionName: 'Test1',
+        ActionDescription: 'Test Icon 1',
+        ActionIcon: 'fa fa-comments-o fa-lg'
+    }, {
+        ActionName: 'Test2',
+        ActionDescription: 'Test Icon 1',
+        ActionIcon: 'fa fa-coffee fa-lg'
+    }];
+
     protected _onRouteChange: Subscription;
-    externalInput : ExternalInputModel = new ExternalInputModel();
+    externalInput: ExternalInputModel = new ExternalInputModel();
+
+
 
     onNotifyPassenger(message: KeyValue): void {
         this.enquiry.AffectedPersonId = message.Value;
         this.enquiry.AffectedObjectId = 0;
         this.communicationLog.AffectedPersonId = message.Value;
         delete this.communicationLog.AffectedObjectId;
-    };
+        delete this.enquiry.AffectedObjectId;
+    }
+
     onNotifyCrew(message: KeyValue): void {
         this.enquiry.AffectedPersonId = message.Value;
         this.enquiry.AffectedObjectId = 0;
         this.communicationLog.AffectedPersonId = message.Value;
         delete this.communicationLog.AffectedObjectId;
-    };
+    }
+
     onNotifyCargo(message: KeyValue): void {
         this.enquiry.AffectedObjectId = message.Value;
         this.enquiry.AffectedPersonId = 0;
         this.communicationLog.AffectedObjectId = message.Value;
         delete this.communicationLog.AffectedPersonId;
-    };
+    }
 
     iscrew(item: AffectedPeopleToView): any {
-        return item.IsCrew == true;
-    };
+        return item.IsCrew === true;
+    }
 
     ispassenger(item: AffectedPeopleToView): any {
-        return item.IsCrew == false;
-    };
+        return item.IsCrew === false;
+    }
 
     getPassengersCrews(currentIncident): void {
         this.passengers = [];
@@ -127,32 +150,31 @@ export class EnquiryEntryComponent implements OnInit {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
-                let passengerModels = this.affectedPeople.filter(this.ispassenger);
-                let crewModels = this.affectedPeople.filter(this.iscrew);
-                for (let affectedPerson of passengerModels) {
+                const passengerModels = this.affectedPeople.filter(this.ispassenger);
+                const crewModels = this.affectedPeople.filter(this.iscrew);
+                for (const affectedPerson of passengerModels) {
                     this.passengers.push(new KeyValue((affectedPerson.PassengerName || affectedPerson.CrewName), affectedPerson.AffectedPersonId));
                 }
-                for (let affectedPerson of crewModels) {
+                for (const affectedPerson of crewModels) {
                     this.crews.push(new KeyValue((affectedPerson.PassengerName || affectedPerson.CrewName), affectedPerson.AffectedPersonId));
                 }
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
-    };
+    }
 
     getCargo(currentIncident): void {
         this.awbs = [];
         this.affectedObjectsService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedObjects = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
-                for (let affectedObject of this.affectedObjects) {
+                for (const affectedObject of this.affectedObjects) {
                     this.awbs.push(new KeyValue(affectedObject.AWB, affectedObject.AffectedObjectId));
                 }
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
-
-    };
+    }
 
     getDepartments(): void {
         this.departmentService.GetAll()
@@ -161,14 +183,44 @@ export class EnquiryEntryComponent implements OnInit {
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
-    };
+    }
 
-    setCallerModel(): CallerModel {
-        UtilityService.setModelFromFormGroup<CallerModel>(this.caller, this.form,
-            x => x.AlternateContactNumber, x => x.CallerName, x => x.ContactNumber, x => x.Relationship);
-        this.caller.CreatedBy = +this.credential.UserId;
-        return this.caller;
-    };
+    getExternalInput(enquirytype): void {
+        let queryDetailService: Observable<ExternalInputModel[]>
+        if (enquirytype == 1 || enquirytype == 3)
+            queryDetailService = this.callcenteronlypageservice.GetPassengerQueryByIncident(this.currentIncident, this.callid).map(x => x.Records);
+        else if (enquirytype == 2)
+            queryDetailService = this.callcenteronlypageservice.GetCargoQueryByIncident(this.currentIncident, this.callid).map(x => x.Records);
+        else if (enquirytype >= 4)
+            queryDetailService = this.callcenteronlypageservice.GetOtherQueryByIncident(this.currentIncident, this.callid).map(x => x.Records);
+
+        queryDetailService.subscribe((response: ExternalInputModel[]) => {
+            if (response[0].PDAEnquiry != null) {
+                this.pdaenquery = response[0].PDAEnquiry;
+                this.form.controls["Queries"].reset({ value: this.pdaenquery.Query, disabled: false });
+            }
+            if (response[0].CargoEnquiry != null) {
+                this.cargoquery = response[0].CargoEnquiry;
+                this.form.controls["Queries"].reset({ value: this.cargoquery.Query, disabled: false });
+            }
+            if (response[0].MediaAndOtherQuery != null) {
+                this.otherquery = response[0].MediaAndOtherQuery;
+                this.form.controls["Queries"].reset({ value: this.otherquery.Query, disabled: false });
+            }
+            this.enquiry.CallerId = response[0].Caller.CallerId;
+            this.caller = response[0].Caller;
+            this.isCallrecieved = response[0].IsCallRecieved;
+        });
+
+    }
+
+    // setCallerModel(): CallerModel {
+    //     UtilityService.setModelFromFormGroup<CallerModel>(this.caller, this.form,
+    //         (x) => x.AlternateContactNumber, (x) => x.CallerName,
+    //         (x) => x.ContactNumber, (x) => x.Relationship);
+    //     this.caller.CreatedBy = +this.credential.UserId;
+    //     return this.caller;
+    // }
 
     SetCommunicationLog(requestertype, interactionType): CommunicationLogModel[] {
         this.communicationLogs = new Array<CommunicationLogModel>();
@@ -182,40 +234,41 @@ export class EnquiryEntryComponent implements OnInit {
         this.communicationLog.CreatedBy = +this.credential.UserId;
         this.communicationLogs.push(this.communicationLog);
         return this.communicationLogs;
-    };
+    }
 
     SetDemands(isCallback, isTravelRequest, isAdmin, isCrew): void {
         if (isCallback || isCrew || isTravelRequest || isAdmin) {
             this.demand = new DemandModel();
-            let type = isCallback ? 'Call Back' : (isTravelRequest ? 'Travel' : (isAdmin ? 'Admin' : 'Crew'));
-            let scheduleTime = isCallback ? GlobalConstants.ScheduleTimeForCallback : (isTravelRequest ? GlobalConstants.ScheduleTimeForTravel
+            const type = isCallback ? 'Call Back' : (isTravelRequest ? 'Travel' : (isAdmin ? 'Admin' : 'Crew'));
+            const scheduleTime = isCallback ? GlobalConstants.ScheduleTimeForCallback : (isTravelRequest ? GlobalConstants.ScheduleTimeForTravel
                 : (isAdmin ? GlobalConstants.ScheduleTimeForAdmin : GlobalConstants.ScheduleTimeForDemandForCrew));
-            this.demand.AffectedPersonId = (this.enquiry.EnquiryType == 1 || this.enquiry.EnquiryType == 5) ?
+            this.demand.AffectedPersonId = (this.enquiryType == 1 || this.enquiryType == 3) ?
                 this.enquiry.AffectedPersonId : 0;
-            this.demand.AffectedObjectId = (this.enquiry.EnquiryType == 2) ?
+            this.demand.AffectedObjectId = (this.enquiryType == 2) ?
                 this.enquiry.AffectedObjectId : 0;
             this.selctedEnquiredPerson = (this.demand.AffectedPersonId !== 0) ?
-                this.affectedPeople.find(x => { return x.AffectedPersonId == this.demand.AffectedPersonId; }) : null;
+                this.affectedPeople.find((x) => x.AffectedPersonId === this.demand.AffectedPersonId) : null;
             this.selctedEnquiredObject = (this.demand.AffectedObjectId !== 0) ?
-                this.affectedObjects.find(x => { return x.AffectedObjectId == this.demand.AffectedObjectId; }) : null;
-            let personName = (this.selctedEnquiredPerson !== null) ? (this.enquiry.EnquiryType == 1 ?
+                this.affectedObjects.find((x) => x.AffectedObjectId === this.demand.AffectedObjectId) : null;
+            const personName = (this.selctedEnquiredPerson !== null) ? (this.enquiryType == 1 ?
                 this.selctedEnquiredPerson.PassengerName : this.selctedEnquiredPerson.CrewName) : '';
             this.demand = new DemandModel();
-            this.demand.AffectedPersonId = (this.enquiry.EnquiryType == 1 || this.enquiry.EnquiryType == 5) ?
+            this.demand.AffectedPersonId = (this.enquiryType == 1 || this.enquiryType == 3) ?
                 this.enquiry.AffectedPersonId : null;
-            this.demand.AffectedObjectId = (this.enquiry.EnquiryType == 2) ?
+            this.demand.AffectedObjectId = (this.enquiryType == 2) ?
                 this.enquiry.AffectedObjectId : null;
-            this.demand.AffectedId = (this.enquiry.EnquiryType == 1 || this.enquiry.EnquiryType == 5) ?
-                this.affectedPeople.find(x => { return x.AffectedPersonId == this.demand.AffectedPersonId; }).AffectedId :
-                ((this.enquiry.EnquiryType == 2) ? this.affectedObjects.find(x => { return x.AffectedObjectId == this.demand.AffectedObjectId; }).AffectedId : 0);
-            this.demand.AWB = (this.enquiry.EnquiryType == 2) ? this.affectedObjects.find(x => { return x.AffectedObjectId == this.demand.AffectedObjectId; }).AWB : null;
+            this.demand.AffectedId = (this.enquiryType == 1 || this.enquiryType == 3) ?
+                this.affectedPeople.find((x) => x.AffectedPersonId === this.demand.AffectedPersonId).AffectedId :
+                ((this.enquiryType == 2) ? this.affectedObjects.find((x) => x.AffectedObjectId === this.demand.AffectedObjectId).AffectedId : 0);
+            this.demand.AWB = (this.enquiryType == 2) ?
+                this.affectedObjects.find((x) => x.AffectedObjectId === this.demand.AffectedObjectId).AWB : null;
             this.demand.ContactNumber = this.caller.ContactNumber;
             this.demand.TargetDepartmentId = isCallback ? this.currentDepartmentId : (isTravelRequest ? GlobalConstants.TargetDepartmentTravel
                 : (isAdmin ? GlobalConstants.TargetDepartmentAdmin : GlobalConstants.TargetDepartmentCrew));
             this.demand.RequesterDepartmentId = this.currentDepartmentId;
-            this.demand.RequesterParentDepartmentId = this.departments.find(x => { return x.DepartmentId == this.currentDepartmentId; }).ParentDepartmentId;
+            this.demand.RequesterParentDepartmentId = this.departments.find((x) => x.DepartmentId === this.currentDepartmentId).ParentDepartmentId;
             this.demand.DemandCode = 'DEM-' + UtilityService.UUID();
-            this.demand.DemandDesc = (this.enquiry.EnquiryType == 1 || this.enquiry.EnquiryType == 5) ?
+            this.demand.DemandDesc = (this.enquiryType == 1 || this.enquiryType == 3) ?
                 (type + ' Requested for ' + personName + ' (' + this.selctedEnquiredPerson.TicketNumber + ')') : (type + ' Requested for ' + this.selctedEnquiredObject.AWB + ' (' + this.selctedEnquiredObject.TicketNumber + ')');
             this.demand.DemandStatusDescription = 'New request by ' + this.currentDepartmentName;
             this.demand.DemandTypeId = GlobalConstants.DemandTypeId;
@@ -226,30 +279,28 @@ export class EnquiryEntryComponent implements OnInit {
             this.demand.IsRejected = false;
             this.demand.PDATicketNumber = (this.selctedEnquiredPerson !== null) ? this.selctedEnquiredPerson.TicketNumber
                 : (this.selctedEnquiredObject != null ? this.selctedEnquiredObject.TicketNumber : null);
-            this.demand.Priority = GlobalConstants.Priority.find(x => x.value == '1').caption;
+            this.demand.Priority = GlobalConstants.Priority.find((x) => x.value === '1').caption;
             this.demand.RequestedBy = this.credential.UserName;
             this.demand.CreatedBy = +this.credential.UserId;
             this.demand.RequiredLocation = GlobalConstants.RequiredLocation;
             this.demand.ScheduleTime = scheduleTime.toString();
             this.demand.RequesterType = GlobalConstants.RequesterTypeDemand;
-            this.demand.CommunicationLogs = this.SetCommunicationLog(GlobalConstants.RequesterTypeDemand, GlobalConstants.InteractionDetailsTypeDemand)
-
-
+            this.demand.CommunicationLogs = this.SetCommunicationLog(GlobalConstants.RequesterTypeDemand, GlobalConstants.InteractionDetailsTypeDemand);
             this.demands.push(this.demand);
         }
-
-    };
+    }
 
     saveEnquiryDemandCaller(): void {
         UtilityService.setModelFromFormGroup<EnquiryModel>(this.enquiry, this.form,
-            x => x.EnquiryType, x => x.IsAdminRequest, x => x.IsCallBack, x => x.IsTravelRequest, x => x.Queries);
+            (x) => x.IsAdminRequest, (x) => x.IsCallBack, (x) => x.IsTravelRequest, (x) => x.Queries);
         this.enquiry.IncidentId = this.currentIncident;
         this.enquiry.Remarks = '';
         this.enquiry.CreatedBy = +this.credential.UserId;
-        this.enquiry.Caller = this.setCallerModel();
+     //   this.enquiry.Caller = this.setCallerModel();
         this.enquiry.CommunicationLogs = this.SetCommunicationLog(GlobalConstants.RequesterTypeEnquiry, GlobalConstants.InteractionDetailsTypeEnquiry);
         this.enquiry.CommunicationLogs[0].Queries = this.enquiry.Queries;
         this.demands = new Array<DemandModel>();
+
         if (this.enquiry.IsCallBack) {
             this.SetDemands(true, false, false, false);
         }
@@ -259,7 +310,7 @@ export class EnquiryEntryComponent implements OnInit {
         if (this.enquiry.IsTravelRequest) {
             this.SetDemands(false, true, false, false);
         }
-        if (this.enquiry.EnquiryType == 5) {
+        if (this.enquiryType === 3) {
             this.SetDemands(false, false, false, true);
         }
 
@@ -268,10 +319,10 @@ export class EnquiryEntryComponent implements OnInit {
                 this.toastrService.success('Enquiry Saved successfully.', 'Success', this.toastrConfig);
                 this.form = new FormGroup({
                     EnquiryId: new FormControl(0),
-                    EnquiryType: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-                    CallerName: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-                    ContactNumber: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-                    AlternateContactNumber: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+                    //  EnquiryType: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+                    // CallerName: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+                    //  ContactNumber: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+                    //  AlternateContactNumber: new FormControl('', [Validators.required, Validators.maxLength(50)]),
                     Queries: new FormControl('', [Validators.required, Validators.maxLength(50)]),
                     Relationship: new FormControl('', [Validators.required, Validators.maxLength(50)]),
                     IsAdminRequest: new FormControl(false),
@@ -281,15 +332,15 @@ export class EnquiryEntryComponent implements OnInit {
                 this.externalInput.deleteAttributes();
                 this.externalInput.IsCallRecieved = true;
                 this.externalInput.ExternalInputId = this.callid;
-                this.callcenteronlypageservice.Update(this.externalInput,this.callid)
-                .subscribe(()=>{
-                    this.globalState.NotifyDataChanged("CallRecieved",this.callid);
-                });
+                this.callcenteronlypageservice.Update(this.externalInput, this.callid)
+                    .subscribe(() => {
+                        this.globalState.NotifyDataChanged("CallRecieved", this.callid);
+                    });
 
                 this.dataExchange.Publish('clearAutoCompleteInput', '');
                 if (this.demands.length !== 0)
                     this.demandService.CreateBulk(this.demands)
-                        .subscribe((response: DemandModel[]) => {
+                        .subscribe(() => {
                             this.demands = [];
                             this.communicationLogs = [];
                         }, (error: any) => {
@@ -300,15 +351,11 @@ export class EnquiryEntryComponent implements OnInit {
                 console.log(`Error: ${error}`);
             });
 
-    };
+    }
 
     ngOnInit(): any {
         this.form = new FormGroup({
             EnquiryId: new FormControl(0),
-            EnquiryType: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-            CallerName: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-            ContactNumber: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-            AlternateContactNumber: new FormControl('', [Validators.required, Validators.maxLength(50)]),
             Queries: new FormControl('', [Validators.required, Validators.maxLength(50)]),
             Relationship: new FormControl('', [Validators.required, Validators.maxLength(50)]),
             IsAdminRequest: new FormControl(false),
@@ -316,31 +363,22 @@ export class EnquiryEntryComponent implements OnInit {
             IsTravelRequest: new FormControl(false)
         });
 
-        this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
-        this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.currentIncident = +UtilityService.GetFromSession('CurrentIncidentId');
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.credential = UtilityService.getCredentialDetails();
-        this.getPassengersCrews(this.currentIncident);
-        this.getCargo(this.currentIncident);
+        if (this.enquiryType == 1 || this.enquiryType == 3) {
+            this.getPassengersCrews(this.currentIncident);
+        }
+        if (this.enquiryType == 2) {
+            this.getCargo(this.currentIncident);
+        }
         this.getDepartments();
-        this.enquiry.EnquiryType = this.enquiryTypes[0].value;
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
-    };
-
-    private incidentChangeHandler(incident: KeyValue): void {
-        this.currentIncident = incident.Value;
-        this.getPassengersCrews(this.currentIncident);
-        this.getCargo(this.currentIncident);
+        this.getExternalInput(this.enquiryType);
+        this.enquiry.EnquiryType =  this.enquiryTypes.find(x=> x.value == this.enquiryType).caption;
+        this.enquiry.ExternalInputId = this.callid;
     }
 
-    private departmentChangeHandler(department: KeyValue): void {
-        this.currentDepartmentId = department.Value;
-        this.currentDepartmentName = this.departments
-            .find(x => x.DepartmentId == this.currentDepartmentId).DepartmentName;
-    }
-
-    ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChangeFromDashboard');
+    onActionClick(eventArgs: any) {
+        console.log(eventArgs);
     }
 }

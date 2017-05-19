@@ -53,7 +53,7 @@ export class ArchiveReportWidgetComponent implements OnInit, OnDestroy {
                 this.otherReports=[];
                 result.Records.forEach((item: ArchiveDocumentTypeModel) => {
                     let otherReport: OtherReportModel = new OtherReportModel();
-                    otherReport.FilePathWithName = "../../../UploadFiles/" + item.DocumentUploadPath.replace(/^.*[\\\/]/, '');
+                    otherReport.FilePathWithName = `${GlobalConstants.EXTERNAL_URL}UploadFiles/` + item.DocumentUploadPath.replace(/^.*[\\\/]/, '');
                     otherReport.Extension = item.DocumentUploadPath.replace(/^.*[\\\/]/, '').split('.').pop();
                     otherReport.DocumentType=item.DocumentType;
                     if (item.DocumentType == '1') {

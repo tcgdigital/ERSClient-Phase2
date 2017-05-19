@@ -25,17 +25,14 @@ export class DepartmentService
 
     /**
      * Creates an instance of DepartmentService.
-     * @param {DataServiceFactory} dataServiceFactory 
-     * 
+     * @param {DataServiceFactory} dataServiceFactory
+     *
      * @memberOf DepartmentService
      */
     constructor(private dataServiceFactory: DataServiceFactory) {
-        // let option: DataProcessingService = new DataProcessingService();
-        // this._dataService = this.dataServiceFactory
-        //     .CreateServiceWithOptions<DepartmentModel>('Departments', option);
         super(dataServiceFactory, 'Departments');
 
-        let option: DataProcessingService = new DataProcessingService();
+        const option: DataProcessingService = new DataProcessingService();
         option.EndPoint = GlobalConstants.BATCH;
         this._batchDataService = this.dataServiceFactory
             .CreateServiceWithOptions<DepartmentModel>('', option);
@@ -43,9 +40,9 @@ export class DepartmentService
 
     /**
      * Get all active departments
-     * 
-     * @returns {Observable<ResponseModel<DepartmentModel>>} 
-     * 
+     *
+     * @returns {Observable<ResponseModel<DepartmentModel>>}
+     *
      * @memberOf DepartmentService
      */
     GetAll(): Observable<ResponseModel<DepartmentModel>> {
@@ -57,10 +54,10 @@ export class DepartmentService
 
     /**
      * Get Departments by filter criteria
-     * 
-     * @param {string} query 
-     * @returns {Observable<ResponseModel<DepartmentModel>>} 
-     * 
+     *
+     * @param {string} query
+     * @returns {Observable<ResponseModel<DepartmentModel>>}
+     *
      * @memberOf DepartmentService
      */
     GetQuery(query: string): Observable<ResponseModel<DepartmentModel>> {
@@ -72,13 +69,13 @@ export class DepartmentService
 
     /**
      * Initiate Batch operation
-     * 
-     * @returns {Observable<ResponseModel<BaseModel>>} 
-     * 
+     *
+     * @returns {Observable<ResponseModel<BaseModel>>}
+     *
      * @memberOf DepartmentService
      */
     BatchOperation(): Observable<ResponseModel<BaseModel>> {
-        let requests: Array<RequestModel<BaseModel>> = [];
+        const requests: Array<RequestModel<BaseModel>> = new Array<RequestModel<BaseModel>>();
         requests.push(new RequestModel<BaseModel>('/odata/Departments', WEB_METHOD.GET));
         requests.push(new RequestModel<BaseModel>('/odata/EmergencyTypes', WEB_METHOD.GET));
 
@@ -90,7 +87,7 @@ export class DepartmentService
         return this._dataService.Query()
             .Select('DepartmentId', 'DepartmentName', 'Description', 'ParentDepartmentId')
             .Filter(`ActiveFlag eq 'Active'`)
-            .OrderBy("CreatedOn desc")
+            .OrderBy('CreatedOn desc')
             .Execute();
     }
 
@@ -106,7 +103,7 @@ export class DepartmentService
         return this._dataService.Query()
             .Select('DepartmentId', 'DepartmentName', 'Description', 'ParentDepartmentId')
             .Filter(`ActiveFlag eq 'Active' and ParentDepartmentId eq ${departmentId}`)
-            .OrderBy("CreatedOn desc")
+            .OrderBy('CreatedOn desc')
             .Execute();
     }
 
@@ -115,10 +112,10 @@ export class DepartmentService
             .Select('DepartmentId', 'DepartmentName', 'Description', 'ParentDepartmentId')
             .Expand('ParentDepartment($select=DepartmentId,DepartmentName)')
             .Filter(`ActiveFlag eq 'Active'`)
-            .OrderBy("CreatedOn desc")
+            .OrderBy('CreatedOn desc')
             .Execute();
     }
-    
+
     GetDepartmentNameIds(): Observable<ResponseModel<DepartmentModel>> {
         return this._dataService.Query()
             .Select('DepartmentId,DepartmentName')
@@ -126,7 +123,7 @@ export class DepartmentService
             .Execute();
     }
 
-     GetDepartmentIds(): Observable<ResponseModel<DepartmentModel>> {
+    GetDepartmentIds(): Observable<ResponseModel<DepartmentModel>> {
         return this._dataService.Query()
             .Select('DepartmentId')
             .Filter(`ActiveFlag eq 'Active'`)
@@ -134,11 +131,11 @@ export class DepartmentService
     }
 
 
-    GetParentDepartments() : Observable<ResponseModel<DepartmentModel>>{
-          return this._dataService.Query()
+    GetParentDepartments(): Observable<ResponseModel<DepartmentModel>> {
+        return this._dataService.Query()
             .Filter(`ParentDepartmentId ne null`)
             .Expand('ParentDepartment')
-            .OrderBy("CreatedOn desc")
+            .OrderBy('CreatedOn desc')
             .Execute();
     }
 }

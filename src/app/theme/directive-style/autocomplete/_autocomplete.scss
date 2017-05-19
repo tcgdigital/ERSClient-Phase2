@@ -34,7 +34,7 @@ ul.multiselect-list {
     color: $multiselect-color;
     width: 95%;
     font-size: 12px;
-    height: 150px;
+    max-height: 150px;
     position: absolute;
     z-index: 999;
     overflow-x: hidden;
@@ -45,6 +45,19 @@ ul.multiselect-list {
         font-size: 12px;
         cursor: default;
         text-transform: uppercase;
+        ul.multiselect-actionlist {
+            // display: inline;
+            padding: 0;
+            margin: 0;
+            list-style-type: none;
+            float: right;
+            li {
+                padding: 6px 6px;
+                margin: 0;
+                display: inline;
+                cursor: pointer;
+            }
+        }
     }
     li:hover {
         background-color: rgba(92, 196, 239, 0.2);

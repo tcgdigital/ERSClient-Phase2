@@ -5,6 +5,7 @@ import {
 } from '@angular/core';
 import { KeyValue } from '../../models';
 import { DataExchangeService } from '../../services/data.exchange';
+import { IAutocompleteActions } from './IAutocompleteActions';
 
 @Component({
     selector: 'autocomplete',
@@ -13,14 +14,16 @@ import { DataExchangeService } from '../../services/data.exchange';
     styleUrls: ['./autocomplete.style.scss']
 })
 export class AutocompleteComponent implements OnInit, OnDestroy {
-    @Input('items') items: KeyValue[] = [];
+    @Input('items') items: Array<KeyValue> = [];
     @Input() placeholder: string = 'Please select';
+    @Input() actionLinks: IAutocompleteActions[]=[];
 
     @Output() notify: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
     @Output('InvokeAutoCompleteReset') InvokeAutoCompleteReset: EventEmitter<any> = new EventEmitter();
+    @Output() actionClickHandler: EventEmitter<any> = new EventEmitter();
 
     public elementRef;
-    public filteredList: KeyValue[] = new Array<KeyValue>();
+    public filteredList: Array<KeyValue> = [];
     public query: string = '';
 
     constructor(public myElement: ElementRef, private dataExchange: DataExchangeService<string>) {
@@ -29,16 +32,16 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
     }
 
     filter(): void {
-        if (this.query != null && this.query !== '') {
-            this.filteredList = this.items.filter(function(el: KeyValue) {
+        if (this.query != null && this.query != '') {
+            this.filteredList = this.items.filter(function (el: KeyValue) {
                 return el.Key.toLowerCase().indexOf(this.query.toLowerCase()) > -1;
             }.bind(this));
-            if(this.filteredList.length>0){
-                this.filteredList.push(new KeyValue("No Value found",0));
-            }
         } else {
             this.filteredList = this.items;
         }
+        if(this.filteredList.length == 0){
+                this.filteredList.push(new KeyValue("No Value found",0));
+            }
     }
 
     clear(): void {
@@ -48,7 +51,7 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
     }
 
     showClose(): boolean {
-        if (this.filteredList.length > 0 || this.query !== '') {
+        if (this.filteredList.length > 0 || this.query != '') {
             return true;
         }
         return false;
@@ -58,6 +61,11 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
         this.query = item.Key;
         this.filteredList = [];
         this.notify.emit(item);
+    }
+
+    action_clisk(event: Event, item: KeyValue, actionName: string): void {
+        event.stopPropagation();
+        this.actionClickHandler.emit({ selectedItem: item, selectedAction: actionName });
     }
 
     @HostListener('document:click', ['$event'])

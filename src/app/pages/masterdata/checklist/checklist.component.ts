@@ -5,7 +5,7 @@ import { ChecklistModel } from './components';
     selector: 'check-list',
     encapsulation: ViewEncapsulation.None,
     templateUrl: './views/checklist.view.html',
-    styleUrls:['./styles/checklist.style.scss']
+    styleUrls: ['./styles/checklist.style.scss']
 })
 export class ChecklistComponent {
     checkList: ChecklistModel;

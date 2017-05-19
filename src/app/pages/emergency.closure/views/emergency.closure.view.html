@@ -1,18 +1,22 @@
-<div class="card-block">
-    <h1>Emergency Closure</h1>
-    <div class="row">
-        <div class="col-sm-12 col-lg-4 col-md-6">
-            <div class="form-group">
-                <label for="Remarks">Emergency Name:</label>
-                <textarea class="form-control" id="Remarks" [readOnly]="true" placeholder="Emergency Name" [(ngModel)]="incident.EmergencyName"
-                     autofocus></textarea>
+<div class="card">
+    <div class="card-header">
+        Emergency Closure
+    </div>
+    <div class="card-block">
+        <div class="row">
+            <div class="col-sm-12 col-lg-4 col-md-6">
+                <div class="form-group">
+                    <label for="Remarks">Emergency Name:</label>
+                    <textarea class="form-control" id="Remarks" [readOnly]="true" placeholder="Emergency Name" [(ngModel)]="incident.EmergencyName"
+                        autofocus></textarea>
+                </div>
             </div>
-        </div>
-        <div class="col-sm-12 col-lg-4 col-md-6">
-            <div class="form-group">
-                <label for="Remarks">Emergency Initiation Notes:</label>
-                <textarea class="form-control" id="Remarks" [readOnly]="true" placeholder="Emergency Initiation Notes" [(ngModel)]="incident.Description"
-                    autofocus></textarea>
+            <div class="col-sm-12 col-lg-4 col-md-6">
+                <div class="form-group">
+                    <label for="Remarks">Emergency Initiation Notes:</label>
+                    <textarea class="form-control" id="Remarks" [readOnly]="true" placeholder="Emergency Initiation Notes" [(ngModel)]="incident.Description"
+                        autofocus></textarea>
+                </div>
             </div>
         </div>
         <div class="col-sm-12 col-lg-4 col-md-8">
@@ -21,87 +25,86 @@
                 <textarea class="form-control" id="Remarks" placeholder="Emergency Closure Notes" [(ngModel)]="incident.ClosureNote" autofocus></textarea>
             </div>
         </div>
-        
-    </div>
 
-    <div class="row">
-        <div class="col-12">
-        <div class="buttonholder">
-            <button class="btn btn-primary" type="button" (click)="saveIncidentClosure()" [disabled]="incident.IsSubmitted == true">Save</button>
-            <button class="btn btn-warning" type="button" (click)="submitIncidentClosure()" [disabled]="incident.IsSubmitted == true">Submit</button>
+        <div class="row">
+            <div class="col-12">
+                <div class="buttonholder">
+                    <button class="btn btn-primary" type="button" (click)="saveIncidentClosure()" [disabled]="incident.IsSubmitted == true">Save</button>
+                    <button class="btn btn-warning" type="button" (click)="submitIncidentClosure()" [disabled]="incident.IsSubmitted == true">Submit</button>
+                </div>
+            </div>
         </div>
-        </div>
-    </div>
-    <br>
+        <br>
 
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <responsive-table>
-                <table responsive-table-body>
-                    <thead>
-                        <tr>
-                            <th>Department Name</th>
-                            <th>Check List Completed</th>
-                            <th>Request Completed</th>
-                            <th>Closure Report Submitted</th>
-                            <th>System Notified</th>
-                            <th>Notified by SPOC</th>
-                            <th>View</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!--<tr [hidden]="affectedObjects.length != 0">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <responsive-table>
+                    <table responsive-table-body>
+                        <thead>
+                            <tr>
+                                <th>Department Name</th>
+                                <th>Check List Completed</th>
+                                <th>Request Completed</th>
+                                <th>Closure Report Submitted</th>
+                                <th>System Notified</th>
+                                <th>Notified by SPOC</th>
+                                <th>View</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!--<tr [hidden]="affectedObjects.length != 0">
                 <td colspan="8">No Cargo is available.</td>
             </tr>-->
-                        <tr *ngFor="let crisis of closuresToShow">
-                            <td data-title="Department Name">{{crisis.Department.DepartmentName}}&nbsp;</td>
-                            <td data-title="Check List Completed" [hidden]="crisis.Checklistnumber !== 0">No Checklist(s) were found for this department&nbsp;</td>
-                            <td data-title="Check List Completed" [hidden]="crisis.Checklistnumber===0">{{crisis.ChecklistClosednumber}} Out Of {{crisis.Checklistnumber}} Completed&nbsp;</td>
-                            <td data-title="Request Completed" [hidden]="crisis.demandnumber!==0">No Request(s) were found for this department&nbsp;</td>
-                            <td data-title="Request Completed" [hidden]="crisis.demandnumber===0">{{crisis.demandClosednumber}} Out Of {{crisis.demandnumber}} Closed&nbsp;</td>
-                            <td data-title="Closure Report Submitted" [hidden]="crisis.IsSubmitted==false">{{crisis.SubmittedOn}}&nbsp;</td>
-                            <td data-title="Closure Report Submitted" [hidden]="crisis.IsSubmitted==true"> <i class="fa fa-question fa-2x fontAmber" aria-hidden="true" title="Closure report not submitted by this department"></i></td>
-                            <td data-title="System Notified"> <i class="fa fa-check fa-2x fontGreen" aria-hidden="true" [hidden]="crisis.InitialNotify == false"></i>&nbsp;</td>
-                            <td data-title="Notified by SPOC"> <i class="fa fa-check fa-2x fontGreen" aria-hidden="true" [hidden]="crisis.SeperateNotify == false"></i>&nbsp;</td>
-                            <td data-title="View">
-                                <i class="fa fa-edit" aria-hidden="true" (click)="openCurrentDepartmentClosureReadonlyDetail(crisis.IncidentId,crisis.DepartmentId)"></i>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </responsive-table>
-        </div>
-    </div>
-
-    
-</div>
-    <div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title pull-left">Department Wise Closure Details</h4>
-                    <button type="button" class="close pull-right" aria-label="Close" (click)="cancel()">
-                  <span aria-hidden="true">&times;</span>
-                   </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-12 col-lg-6 col-md-12">
-                            <div class="form-group">
-                                <label for="Message">Closure Report:</label>
-                                <textarea class="form-control" id="Report" [readOnly]="true" placeholder="Closure Report" [(ngModel)]="report" required autofocus></textarea>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-lg-6 col-md-12">
-                            <div class="form-group">
-                                <label for="Remarks">Closure Remark:</label>
-                                <textarea class="form-control" id="Remarks" [readOnly]="true" placeholder="Closure Remark" [(ngModel)]="remarks" required
-                                    autofocus></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                            <tr *ngFor="let crisis of closuresToShow">
+                                <td data-title="Department Name">{{crisis.Department.DepartmentName}}&nbsp;</td>
+                                <td data-title="Check List Completed" [hidden]="crisis.Checklistnumber !== 0">No Checklist(s) were found for this department&nbsp;</td>
+                                <td data-title="Check List Completed" [hidden]="crisis.Checklistnumber===0">{{crisis.ChecklistClosednumber}} Out Of {{crisis.Checklistnumber}} Completed&nbsp;</td>
+                                <td data-title="Request Completed" [hidden]="crisis.demandnumber!==0">No Request(s) were found for this department&nbsp;</td>
+                                <td data-title="Request Completed" [hidden]="crisis.demandnumber===0">{{crisis.demandClosednumber}} Out Of {{crisis.demandnumber}} Closed&nbsp;</td>
+                                <td data-title="Closure Report Submitted" [hidden]="crisis.IsSubmitted==false">{{crisis.SubmittedOn}}&nbsp;</td>
+                                <td data-title="Closure Report Submitted" [hidden]="crisis.IsSubmitted==true"> <i class="fa fa-question fa-2x fontAmber" aria-hidden="true" title="Closure report not submitted by this department"></i></td>
+                                <td data-title="System Notified"> <i class="fa fa-check fa-2x fontGreen" aria-hidden="true" [hidden]="crisis.InitialNotify == false"></i>&nbsp;</td>
+                                <td data-title="Notified by SPOC"> <i class="fa fa-check fa-2x fontGreen" aria-hidden="true" [hidden]="crisis.SeperateNotify == false"></i>&nbsp;</td>
+                                <td data-title="View">
+                                    <i class="fa fa-edit" aria-hidden="true" (click)="openCurrentDepartmentClosureReadonlyDetail(crisis.IncidentId,crisis.DepartmentId)"></i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </responsive-table>
             </div>
         </div>
     </div>
+
+
+</div>
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Department Wise Closure Details</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="cancel()">
+                  <span aria-hidden="true">&times;</span>
+                   </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-lg-6 col-md-12">
+                        <div class="form-group">
+                            <label for="Message">Closure Report:</label>
+                            <textarea class="form-control" id="Report" [readOnly]="true" placeholder="Closure Report" [(ngModel)]="report" required autofocus></textarea>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-lg-6 col-md-12">
+                        <div class="form-group">
+                            <label for="Remarks">Closure Remark:</label>
+                            <textarea class="form-control" id="Remarks" [readOnly]="true" placeholder="Closure Remark" [(ngModel)]="remarks" required
+                                autofocus></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
