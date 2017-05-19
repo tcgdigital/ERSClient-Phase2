@@ -81,5 +81,14 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         selected: false,
         hidden: false,
         order: 10
+    }, {
+        
+        id: 'emergencylocation',
+        title: 'Affected Station',
+        // icon: 'fa fa-twitter fa-2x',
+        url: '/pages/masterdata/affectedstation',
+        selected: false,
+        hidden: false,
+        order: 11   
     }
 ];

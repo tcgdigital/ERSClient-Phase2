@@ -10,6 +10,7 @@ export * from './quicklink';
 export * from './template';
 export * from './userpermission';
 export * from './userprofile';
+export * from './emergencylocation';
 
 export * from './masterdata.component';
 export * from './masterdata.module';

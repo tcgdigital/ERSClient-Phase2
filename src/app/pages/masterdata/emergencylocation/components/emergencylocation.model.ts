@@ -7,7 +7,7 @@ export class EmergencyLocationModel extends BaseModel {
     public City: string;
     public IATA: string;
     public AirportName: string;
-    public Active: boolean;
+    public Active?: boolean;
 
     constructor() {
         super();

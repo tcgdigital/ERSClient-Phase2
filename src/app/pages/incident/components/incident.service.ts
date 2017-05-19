@@ -50,7 +50,7 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
 
     GetAllActiveIncidents(): Observable<ResponseModel<IncidentModel>> {
         return this._dataService.Query()
-            .Filter("ActiveFlag eq 'Active'")
+            .Filter("ActiveFlag eq 'Active' and ClosedOn eq null and IncidentId ne 0")
             .OrderBy('CreatedOn desc')
             .Execute();
     }
@@ -119,6 +119,7 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
             });
     }
 
+
     CreateAffected(entity: AffectedModel): Observable<AffectedModel> {
         let affected: AffectedModel;
         delete entity.Active;
@@ -129,6 +130,5 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
                 affected.Active = (affected.ActiveFlag == 'Active');
                 return data;
             });
-
     }
 }

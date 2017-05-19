@@ -6,13 +6,13 @@ import { DepartmentService, DepartmentModel } from '../department';
 import { EmergencyTypeService, EmergencyTypeModel } from '../emergencytype';
 import { EmergencyTypeDepartmentService } from './components/emergency.department.service';
 import { EmergencyDepartmentModel, DepartmesForEmergency } from './components/emergency.department.model';
-import { ResponseModel, DataExchangeService, AutocompleteComponent, KeyValue,AuthModel, UtilityService } from '../../../shared';
+import { ResponseModel, DataExchangeService, AutocompleteComponent, KeyValue, AuthModel, UtilityService } from '../../../shared';
 
 @Component({
     selector: 'emergency-department-main',
     encapsulation: ViewEncapsulation.None,
     templateUrl: './views/emergency-department.view.html',
-    styleUrls:['./styles/emergency.department.style.scss']
+    styleUrls: ['./styles/emergency.department.style.scss']
 })
 export class EmergencyDepartmentComponent {
     emergencyTypeItems: EmergencyTypeModel[] = [];
@@ -24,11 +24,11 @@ export class EmergencyDepartmentComponent {
     date: Date = new Date();
     private items: Array<KeyValue> = [];
     credential: AuthModel;
-    allselect : boolean= false;
+    allselect: boolean = false;
 
     constructor(private emergencyDepartmentService: EmergencyTypeDepartmentService, private emergencyTypeService: EmergencyTypeService,
         private departmentService: DepartmentService, private toastrService: ToastrService,
-		private toastrConfig: ToastrConfig) { };
+        private toastrConfig: ToastrConfig) { };
 
     getEmergencyTypes(): void {
         this.emergencyTypeService.GetAll()
@@ -69,26 +69,26 @@ export class EmergencyDepartmentComponent {
         return item.IsSelected == true;
     };
 
-    slectAllDept(value: any) : void{
-       this.departmentsForEmergency.forEach(x =>{
-                x.IsSelected = value.checked;
-            });
-        }
-
-    checkAllStatus() : void{
-       this.allselect = ((this.departmentsForEmergency.length != 0) && (this.departmentsForEmergency.filter(x=>{
-              return x.IsSelected == true;
-          }).length == this.departmentsForEmergency.length));
+    slectAllDept(value: any): void {
+        this.departmentsForEmergency.forEach(x => {
+            x.IsSelected = value.checked;
+        });
     }
-    invokeReset(): void{
+
+    checkAllStatus(): void {
+        this.allselect = ((this.departmentsForEmergency.length != 0) && (this.departmentsForEmergency.filter(x => {
+            return x.IsSelected == true;
+        }).length == this.departmentsForEmergency.length));
+    }
+    invokeReset(): void {
         this.departmentsForEmergency = [];
         this.allselect = false;
-  }
+    }
 
     save(): void {
         let model = this.departmentsForEmergency.filter(this.istrue);
         let selectedEmergencyType = this.selectedEmergencyType;
-        let datenow=this.date;
+        let datenow = this.date;
         let userId = +this.credential.UserId;
         this.emergencyDepartmentModelToSave = model.map(function (data) {
             {
@@ -107,7 +107,7 @@ export class EmergencyDepartmentComponent {
                 this.toastrService.success('Emergency wise department saved Successfully.', 'Success', this.toastrConfig);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
-            }); 
+            });
     };
 
     ngOnInit(): any {

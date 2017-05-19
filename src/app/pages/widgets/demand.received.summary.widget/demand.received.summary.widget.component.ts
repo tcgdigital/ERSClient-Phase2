@@ -55,6 +55,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
     }
 
     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
+<<<<<<< HEAD
         if (changes['incidentId'] !== undefined
             && (changes['incidentId'].currentValue !== changes['incidentId'].previousValue)
             && changes['incidentId'].previousValue !== undefined) {
@@ -66,6 +67,17 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
             && changes['departmentId'].previousValue !== undefined) {
             this.demandReceivedSummary = this.demandReceivedSummaryWidgetService
                 .GetDemandReceivedCount(this.incidentId, this.departmentId);
+=======
+        if (changes['incidentId'] !== undefined && (changes['incidentId'].currentValue !==
+            changes['incidentId'].previousValue) &&
+            changes['incidentId'].previousValue !== undefined) {
+            this.demandReceivedSummary = this.demandReceivedSummaryWidgetService.GetDemandReceivedCount(this.incidentId, this.departmentId);
+        }
+        if (changes['departmentId'] !== undefined && (changes['departmentId'].currentValue !==
+            changes['departmentId'].previousValue) &&
+            changes['departmentId'].previousValue !== undefined) {
+            this.demandReceivedSummary = this.demandReceivedSummaryWidgetService.GetDemandReceivedCount(this.incidentId, this.departmentId);
+>>>>>>> master
         }
     }
 
@@ -285,6 +297,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
         this.showSubDeptSubPending = false;
     }
 
+<<<<<<< HEAD
     private setDemandReceivedGraphData(): void {
         Highcharts.chart('demand-received-graph-container', {
             chart: {
@@ -343,4 +356,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
             }]
         });
     }
+=======
+
+>>>>>>> master
 }

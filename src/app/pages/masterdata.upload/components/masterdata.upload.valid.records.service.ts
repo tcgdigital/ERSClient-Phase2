@@ -52,7 +52,7 @@ export class MasterDataUploadForValidService {
         let affectedProjection = 'Severity';
         let affectedPeopleProjection = 'AffectedPersonId,TicketNumber,IsStaff,IsCrew,IsVerified,Identification';
         let passengerPrjection = 
-        'PassengerId,FlightNumber,PassengerName,PassengerGender,BaggageCount,Destination,PassengerDob,Pnr,PassengerType,DepartureDateTime,ArrivalDateTime,ContactNumber,Seatno';
+        'PassengerId,FlightNumber,PassengerName,PassengerGender,PassengerNationality,BaggageCount,Pnr,PassengerType,ContactNumber,Seatno,IdentificationDocType,IdentificationDocNumber,PassengerType,IsVip,Origin,Destination,InboundFlightNumber,OutBoundFlightNumber,EmployeeId';
 
         return this._dataServiceAffectedPeople.Query()
             .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=PassengerId ne null;$select=${affectedPeopleProjection};$expand=Passenger($select=${passengerPrjection})))`)

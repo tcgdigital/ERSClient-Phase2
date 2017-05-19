@@ -23,7 +23,7 @@ export class EmergencyLocationService extends ServiceBase<EmergencyLocationModel
         super(dataServiceFactory, 'EmergencyLocations')
     }
 
-    GetAll(): Observable<ResponseModel<EmergencyLocationModel>> {
+    GetAllActive(): Observable<ResponseModel<EmergencyLocationModel>> {
         return this._dataService.Query()
             .Filter("ActiveFlag eq 'Active'")
             .OrderBy("CreatedOn desc")
@@ -38,7 +38,7 @@ export class EmergencyLocationService extends ServiceBase<EmergencyLocationModel
             .Execute();
     }
 
-    Create(entity: EmergencyLocationModel): Observable<EmergencyLocationModel> {
+    CreateEmergencyLocation(entity: EmergencyLocationModel): Observable<EmergencyLocationModel> {
         let emergencyLocation: EmergencyLocationModel;
         return this._dataService.Post(entity).Execute()
             .map((data: EmergencyLocationModel) => {
@@ -47,4 +47,10 @@ export class EmergencyLocationService extends ServiceBase<EmergencyLocationModel
                 return data;
             });
     }
+
+     GetQuery(query: string): Observable<ResponseModel<EmergencyLocationModel>> {
+        return this._dataService.Query()
+            .Filter(query).Execute();
+    }
+    
 }
