@@ -2,13 +2,25 @@
     <table responsive-table-body>
         <thead>
             <tr>
-                <th>Passenge Name</th>
+                <th>Flight Number</th>
+                <th>Passenge Name</th>                
                 <th>PNR</th>
                 <th>Seat Number</th>
-                <th>Baggage Count</th>
+                <th>Gender</th>
+                <th>Nationality</th>
+                <th>Identity Document Type</th>
+                <th>Identity Document Number</th>
+                <th>Passenger Type</th>
+                <th>VIP Passenger</th>
+                <th>Origin</th>
                 <th>Destination</th>
                 <th>Contact Number</th>
-                <th>PAX Type</th>
+                <th>Baggage Count</th>
+                <th>Baggage Weight(in KG)</th>
+                <th>Inbound Flight Number</th>
+                <th>Outbound Flight Number</th>
+                <th>Employee Id</th>
+                
             </tr>
         </thead>
         <tbody>
@@ -16,13 +28,24 @@
                 <td data-title="Records" colspan="7">No records to show.</td>
             </tr>
             <tr *ngFor="let affected of passengers">
+                <td data-title="Flight Number">{{affected.FlightNumber}}</td>
                 <td data-title="Passenge Name">{{affected.PassengerName}}</td>
                 <td data-title="PNR">{{affected.Pnr}}</td>
                 <td data-title="Seat Number">{{affected.Seatno}}</td>
-                <td data-title="Baggage Count">{{affected.BaggageCount}}</td>
+                <td data-title="Gender">{{affected.PassengerGender}}</td>
+                <td data-title="Nationality">{{affected.PassengerNationality}}</td>
+                <td data-title="Identity Document Type">{{affected.IdentificationDocType}}</td>
+                <td data-title="Identity Document Number">{{affected.IdentificationDocNumber}}</td>
+                <td data-title="Passenger Type">{{affected.PassengerType}}</td>
+                <td data-title="VIP Passenger">{{affected.IsVip ? "Yes" : "No" }}</td>
+                <td data-title="Origin">{{affected.Origin}}</td>
                 <td data-title="Destination">{{affected.Destination}}</td>
                 <td data-title="Contact Number">{{affected.ContactNumber}}</td>
-                <td data-title="PAX Type">{{affected.PassengerType}}</td>
+                <td data-title="Baggage Count">{{affected.BaggageCount}}</td>                       
+                <td data-title="Baggage Weight(in KG)">{{affected.BaggageWeight}}</td>
+                <td data-title="Inbound Flight Number">{{affected.InboundFlightNumber}}</td>
+                <td data-title="Outbound Flight Number">{{affected.OutBoundFlightNumber}}</td>
+                <td data-title="Employee Id">{{affected.EmployeeId}}</td>
             </tr>
         </tbody>
     </table>
