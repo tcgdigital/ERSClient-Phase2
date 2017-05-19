@@ -64,8 +64,8 @@ export class DataService<T extends BaseModel>{
      *
      * @memberOf DataService
      */
-    public SimpleGet(): SimpleGetOperation<any> {
-        return new SimpleGetOperation<any>(this.dataProcessingService, this.httpService, this.typeName, this.actionSuffix);
+    public SimpleGet(param: string = ''): SimpleGetOperation<any> {
+        return new SimpleGetOperation<any>(this.dataProcessingService, this.httpService, this.typeName, (param !== '') ? (this.actionSuffix + param) : this.actionSuffix);
     }
 
     /**
