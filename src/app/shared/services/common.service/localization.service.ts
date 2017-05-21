@@ -37,6 +37,7 @@ export class LocalizationService {
         else {
             return request;
         }
+        //return request;
     }
 
     /**
@@ -62,6 +63,8 @@ export class LocalizationService {
         else {
             return response;
         }
+
+        //return response;
     }
 
 
@@ -78,6 +81,9 @@ export class LocalizationService {
                         transformedData[z] = preserved[z];
                     });
                     return transformedData;
+                }
+                else{
+                    return handeler(data);
                 }
             } else {
                 return handeler(data);

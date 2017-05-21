@@ -122,7 +122,7 @@ export abstract class DataOperation<T> {
 
         // Request Interceptor -- This call will happend prior to each and every http request call.
         httpInterceptorService.request().addInterceptor((request, method) => {
-            debugger;
+            //debugger;
             if (GlobalConstants.INTERCEPTOR_PERFORM) {
                 request = LocalizationService.PreserveDateFromConversion(GlobalConstants.PRESERVE_DATA_FROM_CONVERSION,
                     request, LocalizationService.transformRequest);
@@ -135,7 +135,7 @@ export abstract class DataOperation<T> {
 
         // Response Interceptor -- This call will happend prior to each and every http response call.
         httpInterceptorService.response().addInterceptor((response, method) => {
-            debugger;
+            //debugger;
             if(GlobalConstants.INTERCEPTOR_PERFORM){
                 LocalizationService.transformResponse(response);
             }
