@@ -132,5 +132,4 @@ public affectedPeoples: ResponseModel<AffectedPeopleModel>;
         .Filter(`IncidentId eq ${incidentId}`)
         .Execute();
     }
-
 }

@@ -30,8 +30,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit {
     public showAllDeptSubPending: boolean;
     public showSubDeptSubCompleted: boolean;
     public showSubDeptSubPending: boolean;
-    private $selfElement: JQuery;
-    private $placeholder: JQuery;
+    public baseLocationURl:string=window.location.pathname;
 
     constructor(private elementRef: ElementRef,private demandReceivedSummaryWidgetService: DemandReceivedSummaryWidgetService) { }
 

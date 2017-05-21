@@ -36,6 +36,8 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
     public showSubDeptSubPending: boolean;
     public allDeptDemandRaisedSummaries: AllDeptDemandRaisedSummary[];
     public subDeptDemandRaisedSummaries: AllDeptDemandRaisedSummary[];
+    public baseLocationURl:string=window.location.pathname;
+    
     constructor(private demandRaisedSummaryWidgetService: DemandRaisedSummaryWidgetService) { }
 
     public ngOnInit(): void {

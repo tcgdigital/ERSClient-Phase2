@@ -22,6 +22,7 @@ export class CasualtySummaryWidgetComponent implements OnInit {
         this.casualtySummery = new CasualtySummeryModel();
         this.casualtySummaryWidgetService.GetCasualtyCount(incidentId)
             .subscribe(casualtySummeryObservable => {
+                debugger;
                 this.casualtySummery = casualtySummeryObservable;
             }, (error: any) => {
                 console.log(`Error: ${error}`);
@@ -29,6 +30,7 @@ export class CasualtySummaryWidgetComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        debugger;
         this.getCausaltyStatusSummery(this.incidentId);
         this.globalState.Subscribe('AffectedPersonStatusChanged', model => this.affectedPeopleStatusChanged());
     }
