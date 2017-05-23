@@ -21,13 +21,13 @@ export class GetOperation<T extends BaseModel> extends DataOperation<BaseModel> 
         private typeName: string,
         private key: string,
         private actionSuffix?: string) {
-        super(dataProcessingService, httpService,httpInterceptorService, typeName, key);
+        super(dataProcessingService, httpService, httpInterceptorService, typeName, key);
         if (actionSuffix) {
             this.ActionSuffix = actionSuffix;
             this.dataProcessingService.EndPoint = GlobalConstants.API;
         }
 
-        
+
 
     }
 
@@ -64,7 +64,7 @@ export class SimpleGetOperation<T extends any> extends DataOperation<any> {
         private httpInterceptorService: HttpInterceptorService,
         private typeName: string,
         private actionSuffix?: string) {
-        super(dataProcessingService, httpService,httpInterceptorService, typeName);
+        super(dataProcessingService, httpService, httpInterceptorService, typeName);
 
         if (actionSuffix) {
             this.ActionSuffix = actionSuffix;
