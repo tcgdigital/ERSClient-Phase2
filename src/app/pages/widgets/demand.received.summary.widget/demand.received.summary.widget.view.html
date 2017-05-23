@@ -36,7 +36,7 @@
                 <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideViewAllDemandReceivedSummary()"></i>
             </div>
             <div class="modal-body" style="overflow:auto;">
-                <div class="row">
+                <<<<<<< HEAD <div class="row">
                     <div class="col-12">
                         <div class="row">
                             <div [ngClass]="((allDemandReceivedList | async)?.length>0)?'col-md-12 col-lg-6':'col-12'">
@@ -148,10 +148,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <div bsModal #childModalViewAllSubDeptDemandReceivedSummary="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
@@ -191,7 +191,7 @@
                     </table>
                 </responsive-table>
 
-                <div class="card" *ngIf="showSubDeptSubCompleted">
+                <div id="showSubDeptSubCompleted" class="card" *ngIf="showSubDeptSubCompleted">
                     <div class="card-header">
                         <strong>Completed Demand</strong>
                         <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideSubDeptSubCompleted()"></i>
@@ -224,7 +224,7 @@
                         </responsive-table>
                     </div>
                 </div>
-                <div class="card" *ngIf="showSubDeptSubPending">
+                <div id="showSubDeptSubPending" class="card" *ngIf="showSubDeptSubPending">
                     <div class="card-header">
                         <strong>Pending Demand</strong>
                         <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideSubDeptSubPending()"></i>

@@ -57,7 +57,6 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
     }
 
     invokeSearch(query: string): void {
-        debugger;
         if (query !== '') {
             if (query.indexOf('isActive') >= 0) {
                 if (query.indexOf("'true'") >= 0)
@@ -75,7 +74,6 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
     }
 
     IsActive(event: any, editedEmergencyLocation: EmergencyLocationModel): void {
-        debugger;
         delete editedEmergencyLocation.Active;
         this.emergencyLocationPatch = new EmergencyLocationModel();
         //this.emergencyLocationPatch.deleteAttributes();
@@ -95,7 +93,6 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
     }
 
     deleteStation(emergencyLocation: EmergencyLocationModel): void{
-        debugger;
         delete emergencyLocation.Active;
         if(confirm("Are you want to delete station: " + emergencyLocation.IATA + "?"))
         {
@@ -121,7 +118,7 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
     private initiateSearchConfigurations(): void {
         let status: NameValue<string>[] = [
             new NameValue<string>('Active', "Active"),
-            new NameValue<string>('In Active', "InActive")
+            new NameValue<string>('InActive', "InActive")
         ]
         this.searchConfigs = [
             new SearchTextBox({

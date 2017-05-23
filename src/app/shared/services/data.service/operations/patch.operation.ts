@@ -1,6 +1,6 @@
 import { Http, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
-
+import { HttpInterceptorService } from '../../../interceptor';
 import { BaseModel, WEB_METHOD } from '../../../models';
 import { DataProcessingService, DataOperation } from '../index';
 
@@ -15,10 +15,11 @@ import { DataProcessingService, DataOperation } from '../index';
 export class PatchOperation<T extends BaseModel | any> extends DataOperation<BaseModel | any> {
     constructor(private dataProcessingService: DataProcessingService,
         private httpService: Http,
+        private httpInterceptor: HttpInterceptorService,
         private typeName: string,
         private entity: T,
         private key: string) {
-        super(dataProcessingService, httpService, typeName, entity);
+        super(dataProcessingService, httpService,httpInterceptor, typeName, entity);
         this.Key = key;
         this.RequestHeaders = new Headers({
             'Content-Type': 'application/json; charset=utf-8; odata.metadata=none',

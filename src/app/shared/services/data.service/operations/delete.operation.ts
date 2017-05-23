@@ -1,7 +1,7 @@
 
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
-
+import { HttpInterceptorService } from '../../../interceptor';
 import { BaseModel, WEB_METHOD } from '../../../models';
 import { DataProcessingService, DataOperation } from '../index';
 
@@ -16,9 +16,10 @@ import { DataProcessingService, DataOperation } from '../index';
 export class DeleteOperation<T extends BaseModel> extends DataOperation<BaseModel> {
     constructor(private dataProcessingService: DataProcessingService,
         private httpService: Http,
+        private httpInterceptor: HttpInterceptorService,
         private typeName: string,
         private key: string) {
-        super(dataProcessingService, httpService, typeName, key);
+        super(dataProcessingService, httpService,httpInterceptor, typeName, key);
     }
 
     /**
