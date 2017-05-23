@@ -140,31 +140,26 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
 
     public GetCasualtyStatus(incidentId: number): Observable<CasualtySummeryModel> {
         this._casualtySummery = new CasualtySummeryModel();
-        debugger;
         return this.GetDeceasedPeopleCount(incidentId)
             .map((dataDeceasedPeopleCount: number) => {
-                debugger;
                 //this._casualtySummery.deceasedCasualtyCount = dataDeceasedPeopleCount;
                 this._casualtySummery.deceasedCasualtyCount = 0;
                 return this._casualtySummery;
             })
             .flatMap(() => this.GetReunitedPeopleCount(incidentId))
             .map((dataReunitedPeopleCount: number) => {
-                debugger;
                 //this._casualtySummery.reunitedCasualtyCount = dataReunitedPeopleCount;
                 this._casualtySummery.reunitedCasualtyCount = 0;
                 return this._casualtySummery;
             })
             .flatMap(() => this.GetMinorInjuryPeopleCount(incidentId))
             .map((dataMinorInjuryPeople: number) => {
-                debugger;
                 //this._casualtySummery.minorCasualtyCount = dataMinorInjuryPeople;
                 this._casualtySummery.minorCasualtyCount = 0;
                 return this._casualtySummery;
             })
             .flatMap(() => this.GetCriticalPeopleCount(incidentId))
             .map((dataCriticalPeopleCount: number) => {
-                debugger;
                 //this._casualtySummery.criticalCasualtyCount = dataCriticalPeopleCount;
                 this._casualtySummery.criticalCasualtyCount = 0;
                 return this._casualtySummery;

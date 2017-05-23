@@ -49,7 +49,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     lat: number = 51.678418;
     lng: number = 7.809007;
     zoom: number = 8;
-
+    public submitted: boolean = false;
+    public submittedFlight: boolean = false;
     currentDepartmentId: number;
     location: Location;
     datePickerOption: any = {
@@ -83,6 +84,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     incidentStatuses: KeyValue[] = [];
     affectedStations: EmergencyLocationModel[] = [];
     public form: FormGroup;
+    public formFlight: FormGroup;
     public formPopup: FormGroup;
     public EmergencyDate: Date;
     public EmergencyDateCompare: Date;
@@ -127,6 +129,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.submitted = false;
+        this.submittedFlight = false;
         this.isBorrowed = false;
         this.datepickerOptionED.maxDate = new Date();
         this.datepickerOptionFLT.position = 'top left';
@@ -151,6 +155,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.getAllActiveAircraftTypes();
         //this.getIncidentsToPickForReplication();
         this.resetIncidentForm();
+        this.resetFlightForm();
         this.resetIncidentViewForm();
 
         this.emergencyLocationService.GetAllActiveEmergencyLocations()
@@ -255,7 +260,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     emergencyTypeChange(emergencyTypeId: string, emergencyTypes: EmergencyTypeModel[]): void {
         const emergencyType: EmergencyTypeModel = emergencyTypes
             .find((x: EmergencyTypeModel) => x.EmergencyTypeId === +emergencyTypeId);
-
+            debugger;
+            this.submittedFlight=false;
         if (emergencyType !== undefined && emergencyType.EmergencyCategory === 'FlightRelated') {
             this.isFlightRelated = true;
         }
@@ -287,6 +293,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
 
     incidentsToPickForReplicationChange(incidentId: string, incidentsToPickForReplication: IncidentModel[]): void {
         if (this.isFlightRelated) {
+            this.submittedFlight=false;
             if (incidentId != '0') {
                 this.ResetFlightFields();
 
@@ -307,23 +314,23 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     public ResetFlightFields(): void {
-        this.form.controls["FlightNumber"].reset({ value: '', disabled: false });
-        this.form.controls["Origin"].reset({ value: '', disabled: false });
-        this.form.controls["Destination"].reset({ value: '', disabled: false });
-        this.form.controls["Scheduleddeparture"].reset({ value: '', disabled: false });
-        this.form.controls["Scheduledarrival"].reset({ value: '', disabled: false });
-        this.form.controls["FlightTailNumber"].reset({ value: '', disabled: false });
-        this.form.controls["AircraftTypeId"].reset({ value: '', disabled: false });
+        this.formFlight.controls["FlightNumber"].reset({ value: '', disabled: false });
+        this.formFlight.controls["Origin"].reset({ value: '', disabled: false });
+        this.formFlight.controls["Destination"].reset({ value: '', disabled: false });
+        this.formFlight.controls["Scheduleddeparture"].reset({ value: '', disabled: false });
+        this.formFlight.controls["Scheduledarrival"].reset({ value: '', disabled: false });
+        this.formFlight.controls["FlightTailNumber"].reset({ value: '', disabled: false });
+        this.formFlight.controls["AircraftTypeId"].reset({ value: '', disabled: false });
     }
 
     public FillFlightFields(itemFlight: FlightModel): void {
-        this.form.controls["FlightNumber"].reset({ value: itemFlight.FlightNo, disabled: true });
-        this.form.controls["Origin"].reset({ value: itemFlight.OriginCode, disabled: true });
-        this.form.controls["Destination"].reset({ value: itemFlight.DestinationCode, disabled: true });
-        this.form.controls["Scheduleddeparture"].reset({ value: moment(itemFlight.DepartureDate).format('DD/MM/YYYY h:mm A'), disabled: true });
-        this.form.controls["Scheduledarrival"].reset({ value: moment(itemFlight.ArrivalDate).format('DD/MM/YYYY h:mm A'), disabled: true });
-        this.form.controls["FlightTailNumber"].reset({ value: itemFlight.FlightTaleNumber, disabled: true });
-        this.form.controls["AircraftTypeId"].reset({ value: itemFlight.AircraftTypeId, disabled: true });
+        this.formFlight.controls["FlightNumber"].reset({ value: itemFlight.FlightNo, disabled: true });
+        this.formFlight.controls["Origin"].reset({ value: itemFlight.OriginCode, disabled: true });
+        this.formFlight.controls["Destination"].reset({ value: itemFlight.DestinationCode, disabled: true });
+        this.formFlight.controls["Scheduleddeparture"].reset({ value: moment(itemFlight.DepartureDate).format('DD/MM/YYYY h:mm A'), disabled: true });
+        this.formFlight.controls["Scheduledarrival"].reset({ value: moment(itemFlight.ArrivalDate).format('DD/MM/YYYY h:mm A'), disabled: true });
+        this.formFlight.controls["FlightTailNumber"].reset({ value: itemFlight.FlightTaleNumber, disabled: true });
+        this.formFlight.controls["AircraftTypeId"].reset({ value: itemFlight.AircraftTypeId, disabled: true });
 
     }
 
@@ -362,7 +369,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             OtherConfirmationInformation: new FormControl(''),
 
             Description: new FormControl('', [Validators.required]),
-            EmergencyDate: new FormControl(''),
+            EmergencyDate: new FormControl('', [Validators.required]),
             Severity: new FormControl('', [Validators.required]),
             OrganizationId: new FormControl(''),
 
@@ -374,101 +381,76 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             SenderOfCrisisInformation: new FormControl(''),
             BorrowedIncident: new FormControl(0),
             //AirportInCharge: new FormControl('', [Validators.required]),
-            CrisisReporterIdentity: new FormControl('', [Validators.required]),
-            IncidentsToPickForReplication: new FormControl(''),
-            FlightNumber: new FormControl(''),
-            Origin: new FormControl(''),
-            Destination: new FormControl(''),
-            Scheduleddeparture: new FormControl(''),
-            Scheduledarrival: new FormControl(''),
-            FlightTailNumber: new FormControl(''),
-            AircraftTypeId: new FormControl('')
+            //CrisisReporterIdentity: new FormControl('', [Validators.required]),
+            IncidentsToPickForReplication: new FormControl('')
+
         });
     }
 
-    onSubmit(values: object): boolean {
-        if (this.form.controls['EmergencyTypeId'].value !== '0'
-            && this.EmergencyDate.getTime() !== this.EmergencyDateCompare.getTime()
-            && this.form.controls['AffectedStationId'].value !== '0'
-            && this.form.controls['Severity'].value !== '0'
-            && this.form.controls['EmergencyName'].value !== ''
-            && this.form.controls['Description'].value !== '') {
-            this.createIncidentModel();
-            if (this.isFlightRelated) {
-                if (this.form.controls['FlightNumber'].value === '') {
-                    this.toastrService.error('Flight Number is mandatory.', 'Initiate Emergency', this.toastrConfig);
-                    console.log('Please select Flight Number');
-                    return false;
-                }
-                if (this.form.controls['Origin'].value === '') {
-                    this.toastrService.error('Origin is mandatory.', 'Initiate Emergency', this.toastrConfig);
-                    console.log('Please select Origin');
-                    return false;
-                }
-                if (this.form.controls['Destination'].value === '') {
-                    this.toastrService.error('Destination is mandatory.', 'Initiate Emergency', this.toastrConfig);
-                    console.log('Please select Destination');
-                    return false;
-                }
-                if (this.DepartureDate.getTime() == this.DepartureDateCompare.getTime()) {
-                    this.toastrService.error('Scheduled departure is mandatory.', 'Initiate Emergency', this.toastrConfig);
-                    console.log('Please select Scheduled departure');
-                    return false;
-                }
-                if (this.ArrivalDate.getTime() == this.ArrivalDateCompare.getTime()) {
-                    this.toastrService.error('Scheduled arrival is mandatory.', 'Initiate Emergency', this.toastrConfig);
-                    console.log('Please select Scheduled arrival');
-                    return false;
-                }
-                if (this.form.controls['FlightTailNumber'].value === '') {
-                    this.toastrService.error('Flight Tail Number is mandatory.', 'Initiate Emergency', this.toastrConfig);
-                    console.log('Please select Flight Tail Number');
-                    return false;
-                }
-                this.createInvolvePartyModel(this.isFlightRelated);
-                this.createFlightModel();
-                this.createAffectedModel();
-
-            }
-
-            this.fillIncidentDataExchangeModelData(this.incidentModel, this.involvePartyModel, this.flightModel, this.affectedModel);
-        }
-        else {
-            if (this.form.controls['EmergencyTypeId'].value === '0') {
-                this.toastrService.error('Emergency Type is mandatory.', 'Initiate Emergency', this.toastrConfig);
-                console.log('Please select Emergency type');
-                return false;
-            }
-            if (this.form.controls['AffectedStationId'].value === '0') {
-                this.toastrService.error('Affected Station is mandatory.', 'Initiate Emergency', this.toastrConfig);
-                console.log('Please select Affected Station');
-                return false;
-            }
-            if (this.EmergencyDate.getTime() == this.EmergencyDateCompare.getTime()) {
-                this.toastrService.error('Emergency Date is mandatory.', 'Initiate Emergency', this.toastrConfig);
-                console.log('Please select Emergency Date');
-                return false;
-            }
-            if (this.form.controls['Severity'].value === '0') {
-                this.toastrService.error('Severity is mandatory.', 'Initiate Emergency', this.toastrConfig);
-                console.log('Please select Severity');
-                return false;
-            }
-            if (this.form.controls['EmergencyName'].value === '') {
-                this.toastrService.error('Emergency Name is mandatory.', 'Initiate Emergency', this.toastrConfig);
-                console.log('Please provide Emergency Name');
-                return false;
-            }
-            if (this.form.controls['Description'].value === '') {
-                this.toastrService.error('Note is mandatory.', 'Initiate Emergency', this.toastrConfig);
-                console.log('Please provide Note');
-                return false;
-            }
+    resetFlightForm(): void {
+        this.formFlight = new FormGroup({
+            FlightNumber: new FormControl('', [Validators.required]),
+            Origin: new FormControl('', [Validators.required]),
+            Destination: new FormControl('', [Validators.required]),
+            Scheduleddeparture: new FormControl('', [Validators.required]),
+            Scheduledarrival: new FormControl('', [Validators.required]),
+            FlightTailNumber: new FormControl(''),
+            AircraftTypeId: new FormControl('', [Validators.required])
+        });
+    }
+    cancel(): void {
+        this.submitted = false;
+        this.resetIncidentForm();
+        if (this.isFlightRelated) {
+            this.submittedFlight = false;
+            //this.resetFlightForm();
+            this.ResetFlightFields();
         }
 
+    }
+    onSubmit(): void {
+        debugger;
+        this.submitted = true;
+        this.submittedFlight = true;
+        if (this.form.valid && this.isFlightRelated == false) {
+            this.submitted = false;
+            this.submittedFlight = false;
+            this.proceed();
+        }
+        else if (this.formFlight.valid && this.isFlightRelated) {
+
+            if (this.formFlight.controls['FlightNumber'].disabled &&
+                this.formFlight.controls['Origin'].disabled &&
+                this.formFlight.controls['Destination'].disabled &&
+                this.formFlight.controls['Scheduleddeparture'].disabled &&
+                this.formFlight.controls['Scheduledarrival'].disabled &&
+                this.formFlight.controls['FlightTailNumber'].disabled &&
+                this.formFlight.controls['AircraftTypeId'].disabled) {
+                this.submitted = false;
+                this.submittedFlight = false;
+                this.proceed();
+            }
+            else if (this.formFlight.valid) {
+                this.submitted = false;
+                this.submittedFlight = false;
+                this.proceed();
+            }
+        }
+    }
+
+    proceed() {
+        this.createIncidentModel();
+        this.createInvolvepartyAndFlight();
+        this.fillIncidentDataExchangeModelData(this.incidentModel, this.involvePartyModel,
+            this.flightModel, this.affectedModel);
         this.childModalViewIncident.show();
         this.loadDataIncidentViewPopup();
+    }
 
+    createInvolvepartyAndFlight() {
+        this.createInvolvePartyModel(this.isFlightRelated);
+        this.createFlightModel();
+        this.createAffectedModel();
     }
 
     onPOPUPSubmit(values: object): void {
@@ -493,9 +475,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             });
     }
 
-    cancel(): void {
-        this.resetIncidentForm();
-    }
+
 
     fillIncidentDataExchangeModelData(incidentModel: IncidentModel,
         involvedPartyModel?: InvolvePartyModel, flightModel?: FlightModel, affectedModel?: AffectedModel): void {
@@ -538,7 +518,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             BorrowedIncidentPopup: new FormControl(''),
 
             //AirportInChargePopup: new FormControl(''),
-            CrisisReporterIdentityPopup: new FormControl(''),
+            //CrisisReporterIdentityPopup: new FormControl(''),
             IncidentsToPickForReplication: new FormControl(''),
             FlightNumberPopup: new FormControl(''),
             OriginPopup: new FormControl(''),
@@ -661,13 +641,13 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.flightModel = new FlightModel();
         this.flightModel.FlightId = 0;
         this.flightModel.InvolvedPartyId = 0;
-        this.flightModel.FlightNo = this.form.controls['FlightNumber'].value;
-        this.flightModel.OriginCode = this.form.controls['Origin'].value;
-        this.flightModel.DestinationCode = this.form.controls['Destination'].value;
+        this.flightModel.FlightNo = this.formFlight.controls['FlightNumber'].value;
+        this.flightModel.OriginCode = this.formFlight.controls['Origin'].value;
+        this.flightModel.DestinationCode = this.formFlight.controls['Destination'].value;
         this.flightModel.DepartureDate = this.DepartureDate;
         this.flightModel.ArrivalDate = this.ArrivalDate;
-        this.flightModel.FlightTaleNumber = this.form.controls['FlightTailNumber'].value;
-        this.flightModel.AircraftTypeId = this.form.controls['AircraftTypeId'].value;
+        this.flightModel.FlightTaleNumber = this.formFlight.controls['FlightTailNumber'].value;
+        this.flightModel.AircraftTypeId = this.formFlight.controls['AircraftTypeId'].value;
         this.flightModel.LoadAndTrimInfo = null;
         this.flightModel.ActiveFlag = 'Active';
         this.flightModel.CreatedBy = 1;
