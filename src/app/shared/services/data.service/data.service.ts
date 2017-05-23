@@ -28,7 +28,7 @@ import {
 export class DataService<T extends BaseModel>{
     constructor(private typeName: string,
         private httpService: Http,
-        private httpInterceptorService:HttpInterceptorService,
+        private httpInterceptorService: HttpInterceptorService,
         private dataProcessingService: DataProcessingService,
         private actionSuffix?: string) {
     }
@@ -42,7 +42,7 @@ export class DataService<T extends BaseModel>{
      * @memberOf DataService
      */
     public Query(): QueryOperation<T> {
-        return new QueryOperation<T>(this.dataProcessingService, this.httpService,this.httpInterceptorService, this.typeName);
+        return new QueryOperation<T>(this.dataProcessingService, this.httpService, this.httpInterceptorService, this.typeName);
     }
 
     /**
@@ -55,7 +55,7 @@ export class DataService<T extends BaseModel>{
      */
     public Get(key: string): GetOperation<T> {
         return new GetOperation<T>(this.dataProcessingService, this.httpService,
-        this.httpInterceptorService, this.typeName, key, this.actionSuffix);
+            this.httpInterceptorService, this.typeName, key, this.actionSuffix);
     }
 
     /**
@@ -66,8 +66,8 @@ export class DataService<T extends BaseModel>{
      *
      * @memberOf DataService
      */
-    public SimpleGet(): SimpleGetOperation<any> {
-        return new SimpleGetOperation<any>(this.dataProcessingService, this.httpService,this.httpInterceptorService, this.typeName, this.actionSuffix);
+    public SimpleGet(param: string = ''): SimpleGetOperation<any> {
+        return new SimpleGetOperation<any>(this.dataProcessingService, this.httpService, this.httpInterceptorService, this.typeName, (param !== '') ? (this.actionSuffix + param) : this.actionSuffix);
     }
 
     /**
@@ -78,7 +78,7 @@ export class DataService<T extends BaseModel>{
      * @memberOf DataService
      */
     public Count(): CountOperation<T> {
-        return new CountOperation<T>(this.dataProcessingService, this.httpService,this.httpInterceptorService, this.typeName);
+        return new CountOperation<T>(this.dataProcessingService, this.httpService, this.httpInterceptorService, this.typeName);
     }
 
     /**
@@ -91,7 +91,7 @@ export class DataService<T extends BaseModel>{
      * @memberOf DataService
      */
     public SimplePost(entity: any): SimplePostOperation<any> {
-        return new SimplePostOperation<T>(this.dataProcessingService, this.httpService,this.httpInterceptorService, this.typeName, entity);
+        return new SimplePostOperation<T>(this.dataProcessingService, this.httpService, this.httpInterceptorService, this.typeName, entity);
     }
 
     /**
@@ -104,7 +104,7 @@ export class DataService<T extends BaseModel>{
      */
     public JsonPost(entity: any): JsonPostOperation<any> {
         return new JsonPostOperation<T>(this.dataProcessingService,
-            this.httpService,this.httpInterceptorService, this.typeName, entity, this.actionSuffix);
+            this.httpService, this.httpInterceptorService, this.typeName, entity, this.actionSuffix);
     }
 
     /**
@@ -117,7 +117,7 @@ export class DataService<T extends BaseModel>{
      * @memberOf DataService
      */
     public Post(entity: T): PostOperation<T> {
-        return new PostOperation<T>(this.dataProcessingService, this.httpService,this.httpInterceptorService, this.typeName, entity);
+        return new PostOperation<T>(this.dataProcessingService, this.httpService, this.httpInterceptorService, this.typeName, entity);
     }
 
     /**
@@ -130,7 +130,7 @@ export class DataService<T extends BaseModel>{
      */
     public BulkPost(entities: T[]): BulkPostOperation<T> {
         return new BulkPostOperation<T>(this.dataProcessingService,
-            this.httpService,this.httpInterceptorService, this.typeName, entities, this.actionSuffix);
+            this.httpService, this.httpInterceptorService, this.typeName, entities, this.actionSuffix);
     }
 
     /**
@@ -143,7 +143,7 @@ export class DataService<T extends BaseModel>{
      */
     public BatchPost<TOut extends BaseModel>(entities: Array<RequestModel<TOut>>):
         BatchPostOperation<RequestModel<TOut>> {
-        return new BatchPostOperation<RequestModel<TOut>>(this.dataProcessingService, this.httpService,this.httpInterceptorService, entities);
+        return new BatchPostOperation<RequestModel<TOut>>(this.dataProcessingService, this.httpService, this.httpInterceptorService, entities);
     }
 
     /**
@@ -156,7 +156,7 @@ export class DataService<T extends BaseModel>{
      * @memberOf DataService
      */
     public Patch(entity: any, key: string): PatchOperation<T> {
-        return new PatchOperation<T>(this.dataProcessingService, this.httpService,this.httpInterceptorService, this.typeName, entity, key);
+        return new PatchOperation<T>(this.dataProcessingService, this.httpService, this.httpInterceptorService, this.typeName, entity, key);
     }
 
     /**
@@ -169,7 +169,7 @@ export class DataService<T extends BaseModel>{
      * @memberOf DataService
      */
     public Put(entity: T, key: string): PutOperation<T> {
-        return new PutOperation<T>(this.dataProcessingService, this.httpService,this.httpInterceptorService, this.typeName, entity, key);
+        return new PutOperation<T>(this.dataProcessingService, this.httpService, this.httpInterceptorService, this.typeName, entity, key);
     }
 
     /**
@@ -181,7 +181,7 @@ export class DataService<T extends BaseModel>{
      * @memberOf DataService
      */
     public Delete(key: string): DeleteOperation<T> {
-        return new DeleteOperation<T>(this.dataProcessingService, this.httpService,this.httpInterceptorService, this.typeName, key);
+        return new DeleteOperation<T>(this.dataProcessingService, this.httpService, this.httpInterceptorService, this.typeName, key);
     }
 
     /**
@@ -194,7 +194,7 @@ export class DataService<T extends BaseModel>{
      * @memberOf DataService
      */
     public CustomFunction(key: string, actionName: string): GetOperation<any> {
-        return new GetOperation<T>(this.dataProcessingService, this.httpService,this.httpInterceptorService, this.typeName, key, actionName);
+        return new GetOperation<T>(this.dataProcessingService, this.httpService, this.httpInterceptorService, this.typeName, key, actionName);
     }
 }
 
