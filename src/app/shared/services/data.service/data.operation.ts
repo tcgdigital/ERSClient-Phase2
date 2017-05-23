@@ -122,25 +122,26 @@ export abstract class DataOperation<T> {
 
         // Request Interceptor -- This call will happend prior to each and every http request call.
         httpInterceptorService.request().addInterceptor((request, method) => {
-            //debugger;
             if (GlobalConstants.INTERCEPTOR_PERFORM) {
                 request = LocalizationService.PreserveDateFromConversion(GlobalConstants.PRESERVE_DATA_FROM_CONVERSION,
-                    request, LocalizationService.transformRequest);
+                    request, LocalizationService.transformRequestBody);
 
-                LocalizationService.transformRequest(request);
+                // LocalizationService.transformRequest(request);
             }
 
             return request;
         });
 
         // Response Interceptor -- This call will happend prior to each and every http response call.
-        httpInterceptorService.response().addInterceptor((response, method) => {
-            //debugger;
-            if(GlobalConstants.INTERCEPTOR_PERFORM){
-                LocalizationService.transformResponse(response);
+        httpInterceptorService.response().addInterceptor((response: any, method: string, context: any) => {
+            if (response !== undefined) {
+                if (GlobalConstants.INTERCEPTOR_PERFORM) {
+                    response = LocalizationService.PreserveDateFromConversion([],
+                        response, LocalizationService.transformResponseBody);
+                }
+
+                return response;
             }
-            
-            return response.do(r => { });
         });
     }
 

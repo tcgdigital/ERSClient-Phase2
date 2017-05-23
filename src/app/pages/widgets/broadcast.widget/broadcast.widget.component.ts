@@ -25,7 +25,7 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
     @ViewChild('childModal') public childModal: ModalDirective;
 
     LatestBroadcasts: Observable<TextAccordionModel[]>;
-    AllPublishedBroadcasts: Observable<BroadcastWidgetModel[]>;
+    AllPublishedBroadcasts: BroadcastWidgetModel[];
     isHidden: boolean = true;
     currentIncidentId: number;
     currentDepartmentId: number;
@@ -43,7 +43,6 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
         private globalState: GlobalStateService) { }
 
     public ngOnInit(): void {
-        debugger;
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.departmentId;
         this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
@@ -81,9 +80,7 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             }, () => {
-                debugger;
-                this.AllPublishedBroadcasts = Observable.of(data);
-                debugger;
+                this.AllPublishedBroadcasts = data;
                 if (callback) {
                     callback();
                 }
