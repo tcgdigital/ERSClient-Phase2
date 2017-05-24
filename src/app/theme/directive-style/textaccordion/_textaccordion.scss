@@ -28,7 +28,8 @@
             width: 100%;
             display: block;
             height: 120px;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
             font-size: 12px;
             text-align: justify;
             padding: 20px 13px 5px;

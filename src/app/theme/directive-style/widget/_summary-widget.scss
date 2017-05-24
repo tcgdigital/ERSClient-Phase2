@@ -5,6 +5,8 @@
     height: 92px;
 }
 
+incident-header-widget .widget-container{height: auto;}
+
 .widget-title {
     text-transform: uppercase;
     font-family: $font-family-widget;
