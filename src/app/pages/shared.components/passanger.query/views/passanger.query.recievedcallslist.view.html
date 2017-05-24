@@ -34,10 +34,13 @@
                 <h4 class="modal-title pull-left">Call center</h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="cancelCallcenter()">
                   <span aria-hidden="true">&times;</span>
-                   </button>
+                </button>
             </div>
             <div class="modal-body">
-             <div *ngIf="callcenterload"> <call-centre-main [callid]="callId" [enquiryType]="1"></call-centre-main></div>
+                <div *ngIf="callcenterload">
+                    <call-centre-main [callid]="callId" [enquiryType]="1"></call-centre-main>
+                    <!--<call-centre-main></call-centre-main>-->
+                </div>
             </div>
         </div>
     </div>

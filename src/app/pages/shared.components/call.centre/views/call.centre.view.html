@@ -74,11 +74,6 @@
                     <input id="KINContactNumber" class="form-control" type="text" name="KINContactNumber" [(ngModel)]="pdaenquery.KINContactNumber"
                         readonly/>
                 </div>
-                <!--<div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="Query">Query<span class="required">*</span></label>
-                    <input id="Query" class="form-control" type="text" name="Query" [(ngModel)]="pdaenquery.Query" placeholder="Enter Query"
-                    />
-                </div>-->
             </div>
         </div>
 
@@ -86,41 +81,45 @@
             <div class="row">
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
                     <label for="ShippersName">Shipper's Name<span class="required">*</span></label>
-                    <input id="ShippersName" class="form-control" type="text" name="ShippersName" placeholder="Enter Shippers Name" />
+                    <input id="ShippersName" class="form-control" type="text" name="ShippersName" [(ngModel)]="cargoquery.ShippersName" readonly
+                        placeholder="Enter Shippers Name" />
                 </div>
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
                     <label for="ShippersAddress">Shipper's Address<span class="required">*</span></label>
-                    <input id="ShippersAddress" class="form-control" type="text" name="ShippersAddress" placeholder="Enter Shippers Address"
-                    />
+                    <input id="ShippersAddress" class="form-control" type="text" name="ShippersAddress" [(ngModel)]="cargoquery.ShippersAddress"
+                        readonly placeholder="Enter Shippers Address" />
                 </div>
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
                     <label for="ShippersContactNumber">Shipper's Contact Number<span class="required">*</span></label>
-                    <input id="ShippersContactNumber" class="form-control" type="text" name="ShippersContactNumber" placeholder="Enter Shippers Contact Number"
-                    />
+                    <input id="ShippersContactNumber" class="form-control" type="text" name="ShippersContactNumber" [(ngModel)]="cargoquery.ShippersContactNumber"
+                        readonly placeholder="Enter Shippers Contact Number" />
                 </div>
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
                     <label for="ConsigneesName">Consignee's Name<span class="required">*</span></label>
-                    <input id="ConsigneesName" class="form-control" type="text" name="ConsigneesName" placeholder="Enter Consignees Name" />
+                    <input id="ConsigneesName" class="form-control" type="text" name="ConsigneesName" [(ngModel)]="cargoquery.ConsigneesName"
+                        readonly placeholder="Enter Consignees Name" />
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
                     <label for="ConsigneesAddress">Consignee's Address<span class="required">*</span></label>
-                    <input id="ConsigneesAddress" class="form-control" type="text" name="ConsigneesAddress" placeholder="Enter Consignees Address"
-                    />
+                    <input id="ConsigneesAddress" class="form-control" type="text" name="ConsigneesAddress" [(ngModel)]="cargoquery.ConsigneesAddress"
+                        readonly placeholder="Enter Consignees Address" />
                 </div>
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
                     <label for="ConsigneesContactNumber">Consignee's Contac tNumber<span class="required">*</span></label>
-                    <input id="ConsigneesContactNumber" class="form-control" type="text" name="ConsigneesContactNumber" placeholder="Enter Consignee's Contact Number"
-                    />
+                    <input id="ConsigneesContactNumber" class="form-control" type="text" name="ConsigneesContactNumber" [(ngModel)]="cargoquery.ConsigneesContactNumber"
+                        readonly placeholder="Enter Consignee's Contact Number" />
                 </div>
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
                     <label for="EnquiryReason">Enquiry Reason<span class="required">*</span></label>
-                    <input id="EnquiryReason" class="form-control" type="text" name="EnquiryReason" placeholder="Enter Enquiry Reason" />
+                    <input id="EnquiryReason" class="form-control" type="text" name="EnquiryReason" [(ngModel)]="cargoquery.EnquiryReason" readonly
+                        placeholder="Enter Enquiry Reason" />
                 </div>
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
                     <label for="Query">Query<span class="required">*</span></label>
-                    <input id="Query" class="form-control" type="text" name="Query" placeholder="Enter Query" />
+                    <input id="Query" class="form-control" type="text" name="Query" [(ngModel)]="cargoquery.Query" readonly placeholder="Enter Query"
+                    />
                 </div>
             </div>
         </div>
@@ -129,11 +128,11 @@
             <div class="row">
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
                     <label for="source">Source<span class="required">*</span></label>
-                    <input id="source" class="form-control" type="text" name="source" placeholder="Enter Source" />
+                    <input id="source" class="form-control" type="text" name="source" [(ngModel)]="otherquery.source" readonly placeholder="Enter Source" />
                 </div>
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
                     <label for="Query">Query<span class="required">*</span></label>
-                    <input id="Query" class="form-control" type="text" name="Query" placeholder="Enter Query" />
+                    <input id="Query" class="form-control" type="text" name="Query" [(ngModel)]="otherquery.Query" readonly placeholder="Enter Query" />
                 </div>
             </div>
         </div>
@@ -148,17 +147,18 @@
                 </div>
                 <div class="form-group col-lg-6 col-sm-12 col-md-6" [hidden]="enquiryType!=1">
                     <label for="Passengers">PDA Name:<span class="red">*</span></label>
-                    <autocomplete [items]="passengers" (notify)="onNotifyPassenger($event)" [actionLinks]="actionLinks" (actionClickHandler)="onActionClick($event)">
+                    <autocomplete [items]="passengers" (notify)="onNotifyPassenger($event)" [actionLinks]="actionLinks" [initialvalue]="initialvalue"
+                        (actionClickHandler)="onActionClick($event)">
                     </autocomplete>
                 </div>
                 <div class="form-group col-lg-6 col-sm-12 col-md-6" [hidden]="enquiryType!=3">
                     <label for="Passengers">PDA Name:<span class="red">*</span></label>
-                    <autocomplete [items]="crews" (notify)='onNotifyCrew($event)'></autocomplete>
+                    <autocomplete [items]="crews" (notify)='onNotifyCrew($event)' [initialvalue]="initialvalue"></autocomplete>
 
                 </div>
                 <div class="form-group col-lg-6 col-sm-12 col-md-6" [hidden]="enquiryType!=2">
                     <label for="awb">AWB:<span class="red">*</span></label>
-                    <autocomplete [items]="awbs" (notify)='onNotifyCargo($event)'></autocomplete>
+                    <autocomplete [items]="awbs" (notify)='onNotifyCargo($event)' [initialvalue]="initialvalue"></autocomplete>
 
                 </div>
                 <div [hidden]="enquiryType!=1  && enquiryType!=2 && enquiryType!=3" class="col-lg-6 col-sm-12">

@@ -122,7 +122,7 @@ export class GlobalConstants {
         },
         {
             value: '7',
-            caption: 'Other',
+            caption: 'Others',
             text: 'Other enquiry',
         },
         {
