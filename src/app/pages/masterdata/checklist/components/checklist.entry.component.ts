@@ -139,56 +139,85 @@ export class ChecklistEntryComponent implements OnInit {
     }
 
     onSubmit(values: object): void {
-        if (this.form.valid) {
-            if (this.checkListModel.CheckListId === 0) {// ADD REGION
-                this.checkListModel.CheckListDetails = this.form.controls['CheckListDetails'].value;
-                this.checkListModel.ParentCheckListId = this.form.controls['ParentCheckListId'].value;
-                this.checkListModel.Duration = this.form.controls['Duration'].value;
-                this.checkListModel.DepartmentId = this.form.controls['DepartmentId'].value;
-                this.checkListModel.URL = this.form.controls['URL'].value;
-                this.checkListModel.EmergencyTypeId = this.form.controls['EmergencyTypeId'].value;
-                this.checkListModel.Sequence = this.form.controls['Sequence'].value;
-                delete this.checkListModel['Active'];
+        
+        if (this.form.controls['ParentCheckListId'].value == '') {
+            this.toastrService.error('Please provide parent checklist.', 'Error', this.toastrConfig);
+            return null;
+        }
+        if (this.form.controls['CheckListDetails'].value == '') {
+            this.toastrService.error('Please provide checklist details.', 'Error', this.toastrConfig);
+            return null;
+        }
+        if (this.form.controls['Duration'].value == '') {
+            this.toastrService.error('Please provide duration.', 'Error', this.toastrConfig);
+            return null;
+        }
+        if (this.form.controls['DepartmentId'].value == '') {
+            this.toastrService.error('Please provide department.', 'Error', this.toastrConfig);
+            return null;
+        }
+        if (this.form.controls['URL'].value == '') {
+            this.toastrService.error('Please provide URL.', 'Error', this.toastrConfig);
+            return null;
+        }
+        if (this.form.controls['EmergencyTypeId'].value == '') {
+            this.toastrService.error('Please provide emergency type.', 'Error', this.toastrConfig);
+            return null;
+        }
+        if (this.form.controls['Sequence'].value == '') {
+            this.toastrService.error('Please provide sequence.', 'Error', this.toastrConfig);
+            return null;
+        }
+        if (this.checkListModel.CheckListId === 0) {// ADD REGION
 
-                let CheckList_Code = '';
-                const dep = this.currentDepartmentName;
-                CheckList_Code = CheckList_Code + dep.trim();
+            this.checkListModel.CheckListDetails = this.form.controls['CheckListDetails'].value;
+            this.checkListModel.ParentCheckListId = this.form.controls['ParentCheckListId'].value;
+            this.checkListModel.Duration = this.form.controls['Duration'].value;
+            this.checkListModel.DepartmentId = this.form.controls['DepartmentId'].value;
+            this.checkListModel.URL = this.form.controls['URL'].value;
+            this.checkListModel.EmergencyTypeId = this.form.controls['EmergencyTypeId'].value;
+            this.checkListModel.Sequence = this.form.controls['Sequence'].value;
+            delete this.checkListModel['Active'];
 
-                if (this.checkListModel.ParentCheckListId != null) {
-                    this.checkListService.GetParentChecklistCode(this.checkListModel.ParentCheckListId)
-                        .subscribe((response: ResponseModel<ChecklistModel>) => {
-                            CheckList_Code = CheckList_Code + '_' + response.Records[0].CheckListCode;
-                            const d = new Date();
-                            const time = d.getTime();
-                            const timestring = time.toString();
-                            const n = timestring.substr(timestring.length - 5);
+            let CheckList_Code = '';
+            const dep = this.currentDepartmentName;
+            CheckList_Code = CheckList_Code + dep.trim();
 
-                            CheckList_Code = CheckList_Code + '_' + n;
-                            this.checkListModel.CheckListCode = CheckList_Code;
-                            this.createChecklist(this.checkListModel);
-                        });
-                }
-                else {
-                    this.checkListModel.CheckListCode = CheckList_Code;
-                    this.createChecklist(this.checkListModel);
-                }
+            if (this.checkListModel.ParentCheckListId != null) {
+                this.checkListService.GetParentChecklistCode(this.checkListModel.ParentCheckListId)
+                    .subscribe((response: ResponseModel<ChecklistModel>) => {
+                        CheckList_Code = CheckList_Code + '_' + response.Records[0].CheckListCode;
+                        const d = new Date();
+                        const time = d.getTime();
+                        const timestring = time.toString();
+                        const n = timestring.substr(timestring.length - 5);
+
+                        CheckList_Code = CheckList_Code + '_' + n;
+                        this.checkListModel.CheckListCode = CheckList_Code;
+                        this.createChecklist(this.checkListModel);
+                    });
             }
-            else {// EDIT REGION
-                if (this.form.dirty) {
-                    this.formControlDirtyCheck();
-                    this.checkListService.Update(this.checkListModelEdit)
-                        .subscribe((response: ChecklistModel) => {
-                            this.toastrService.success('Checklist Edited Successfully.', 'Success', this.toastrConfig);
-                            this.initiateCheckListModel();
-                            this.form = this.resetCheckListForm();
-                            this.dataExchange.Publish('checkListListReload', response);
-                            this.showAdd = false;
-                        }, (error: any) => {
-                            console.log(`Error: ${error}`);
-                        });
-                }
+            else {
+                this.checkListModel.CheckListCode = CheckList_Code;
+                this.createChecklist(this.checkListModel);
             }
         }
+        else {// EDIT REGION
+            if (this.form.dirty) {
+                this.formControlDirtyCheck();
+                this.checkListService.Update(this.checkListModelEdit)
+                    .subscribe((response: ChecklistModel) => {
+                        this.toastrService.success('Checklist Edited Successfully.', 'Success', this.toastrConfig);
+                        this.initiateCheckListModel();
+                        this.form = this.resetCheckListForm();
+                        this.dataExchange.Publish('checkListListReload', response);
+                        this.showAdd = false;
+                    }, (error: any) => {
+                        console.log(`Error: ${error}`);
+                    });
+            }
+        }
+
     }
 
     cancel(): void {

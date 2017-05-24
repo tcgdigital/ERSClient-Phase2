@@ -50,35 +50,46 @@ export class EmergencyTypeEntryComponent implements OnInit {
         this.dataExchange.Subscribe("OnEmergencyTypeUpdate", model => this.onEmergencyTypeUpdate(model))
     }
 
-    onSubmit() {
-        if (this.form.valid) {
-            this.emergencyTypeModel.EmergencyTypeId = this.form.controls["EmergencyTypeId"].value;
-            this.emergencyTypeModel.EmergencyTypeName = this.form.controls["EmergencyTypeName"].value;
-            this.emergencyTypeModel.EmergencyCategory = this.form.controls["EmergencyCategory"].value;
-            this.emergencyTypeModel.ActiveFlag = this.form.controls["ActiveFlag"].value;
-
-            if (this.emergencyTypeModel.EmergencyTypeId == 0) {
-                this.emergencyTypeModel.CreatedBy = +this.credential.UserId;
-                this.emergencyTypeService.Create(this.emergencyTypeModel)
-                    .subscribe((response: EmergencyTypeModel) => {
-                        this.toastrService.success('Emergency Type saved Successfully.', 'Success', this.toastrConfig);
-                        this.dataExchange.Publish("EmergencyTypeModelSaved", response);
-                    }, (error: any) => {
-                        console.log(`Error: ${error}`);
-                    });
-            }
-            else {
-                this.emergencyTypeModelWithoutActive = this.emergencyTypeModel;
-                delete this.emergencyTypeModelWithoutActive.Active;
-                this.emergencyTypeService.Update(this.emergencyTypeModelWithoutActive)
-                    .subscribe((response: EmergencyTypeModel) => {
-                        this.toastrService.success('Emergency Type edited Successfully.', 'Success', this.toastrConfig);
-                        this.dataExchange.Publish("EmergencyTypeModelUpdated", response);
-                    }, (error: any) => {
-                        console.log(`Error: ${error}`);
-                    });
-            }
+    onSubmit(): void {
+        if (this.form.controls['EmergencyTypeName'].value == '') {
+            this.toastrService.error('Please provide emergency type name.', 'Error', this.toastrConfig);
+            return null;
         }
+        if (this.form.controls['EmergencyCategory'].value == '') {
+            this.toastrService.error('Please provide emergency type category.', 'Error', this.toastrConfig);
+            return null;
+        }
+        if (this.form.controls['ActiveFlag'].value == '') {
+            this.toastrService.error('Please provide status.', 'Error', this.toastrConfig);
+            return null;
+        }
+        this.emergencyTypeModel.EmergencyTypeId = this.form.controls["EmergencyTypeId"].value;
+        this.emergencyTypeModel.EmergencyTypeName = this.form.controls["EmergencyTypeName"].value;
+        this.emergencyTypeModel.EmergencyCategory = this.form.controls["EmergencyCategory"].value;
+        this.emergencyTypeModel.ActiveFlag = this.form.controls["ActiveFlag"].value;
+
+        if (this.emergencyTypeModel.EmergencyTypeId == 0) {
+            this.emergencyTypeModel.CreatedBy = +this.credential.UserId;
+            this.emergencyTypeService.Create(this.emergencyTypeModel)
+                .subscribe((response: EmergencyTypeModel) => {
+                    this.toastrService.success('Emergency Type saved Successfully.', 'Success', this.toastrConfig);
+                    this.dataExchange.Publish("EmergencyTypeModelSaved", response);
+                }, (error: any) => {
+                    console.log(`Error: ${error}`);
+                });
+        }
+        else {
+            this.emergencyTypeModelWithoutActive = this.emergencyTypeModel;
+            delete this.emergencyTypeModelWithoutActive.Active;
+            this.emergencyTypeService.Update(this.emergencyTypeModelWithoutActive)
+                .subscribe((response: EmergencyTypeModel) => {
+                    this.toastrService.success('Emergency Type edited Successfully.', 'Success', this.toastrConfig);
+                    this.dataExchange.Publish("EmergencyTypeModelUpdated", response);
+                }, (error: any) => {
+                    console.log(`Error: ${error}`);
+                });
+        }
+
     }
 
     cancel(): void {
