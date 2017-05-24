@@ -46,6 +46,6 @@ export class DemandRemarkLogService implements IServiceInretface<DemandRemarkLog
             .Execute();
     };
 
-    Delete(entity: DemandRemarkLogModel):void {
+    Delete(key: number):void {
     };
 }

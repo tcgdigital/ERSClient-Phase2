@@ -1,0 +1,47 @@
+<div class="card-block">
+    <responsive-table>
+        <table responsive-table-body>
+            <thead>
+                <tr>
+                    <th>Caller Name</th>
+                    <th>Contact Number</th>
+                    <th>Relationship</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr [hidden]="allAssignedCalls.length != 0">
+                    <td colspan="8">No queries to show.</td>
+                </tr>
+                <tr *ngFor="let call of allAssignedCalls">
+                    <td data-title="Caller Name">{{call.Caller.CallerName}}&nbsp;</td>
+                    <td data-title="PDA Name">{{call.Caller.ContactNumber}}</td>
+                    <td data-title="PDA Age">{{call.Caller.Relationship}}&nbsp;</td>
+                    <td data-title="Action"><i class="fa fa-edit" (click)="openCallcenter(call.ExternalInputId)"></i>&nbsp;</td>
+                </tr>
+            </tbody>
+        </table>
+    </responsive-table>
+</div>
+
+
+
+<div bsModal #childModalcallcenter="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Call center</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="cancelCallcenter()">
+                  <span aria-hidden="true">&times;</span>
+                   </button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="callcenterload">
+                    <call-centre-main [callid]="callId" [enquiryType]="2"></call-centre-main>
+                    <!--<call-centre-main></call-centre-main>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

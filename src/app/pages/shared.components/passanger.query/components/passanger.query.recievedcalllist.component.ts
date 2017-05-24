@@ -46,7 +46,7 @@ export class PassangerQueryRecievedCallsListComponent implements OnInit {
         });
 
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('CallRecieved', (model: KeyValue) => this.getAllPassengerQueryCallsRecieved(this.currentIncidentId));
+        this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllPassengerQueryCallsRecieved(this.currentIncidentId));
 
     }
 
@@ -56,6 +56,8 @@ export class PassangerQueryRecievedCallsListComponent implements OnInit {
     }
 
     getAllPassengerQueryCallsRecieved(incidentId): void {
+        this.childModalcallcenter.hide();
+        this.callcenterload = false;
         this.callcenteronlypageservice.GetPassengerQueryCallsRecievedByIncident(incidentId)
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;
@@ -71,6 +73,7 @@ export class PassangerQueryRecievedCallsListComponent implements OnInit {
     }
 
     cancelCallcenter(): void {
+        this.callcenterload = false;
         this.childModalcallcenter.hide();
     }
 }
