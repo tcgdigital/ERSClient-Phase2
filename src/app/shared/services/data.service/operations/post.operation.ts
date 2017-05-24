@@ -1,6 +1,6 @@
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
-
+import { HttpInterceptorService } from '../../../interceptor';
 import {
     BaseModel, WEB_METHOD,
     RequestModel, ResponseModel
@@ -30,9 +30,10 @@ export class PostOperation<T extends BaseModel> extends DataOperation<BaseModel>
      */
     constructor(private dataProcessingService: DataProcessingService,
         private httpService: Http,
+        private httpInterceptor: HttpInterceptorService,
         private typeName: string,
         private entity: T) {
-        super(dataProcessingService, httpService, typeName, entity);
+        super(dataProcessingService, httpService,httpInterceptor, typeName, entity);
         this.ActionSuffix = '';
         this.RequestHeaders = new Headers({
             'Content-Type': 'application/json; charset=utf-8; odata.metadata=none',
@@ -80,9 +81,10 @@ export class SimplePostOperation<T extends any> extends DataOperation<any> {
      */
     constructor(private dataProcessingService: DataProcessingService,
         private httpService: Http,
+        private httpInterceptor: HttpInterceptorService,
         private typeName: string,
         private entity: any) {
-        super(dataProcessingService, httpService, typeName, entity);
+        super(dataProcessingService, httpService,httpInterceptor, typeName, entity);
         this.RequestHeaders = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
     }
 
@@ -126,10 +128,11 @@ export class JsonPostOperation<T extends any> extends DataOperation<any> {
      */
     constructor(private dataProcessingService: DataProcessingService,
         private httpService: Http,
+        private httpInterceptor: HttpInterceptorService,
         private typeName: string,
         private entities: T[],
         private actionSufix?: string) {
-        super(dataProcessingService, httpService, entities);
+        super(dataProcessingService, httpService,httpInterceptor, entities);
 
         this.TypeName = typeName;
         if (actionSufix) this.ActionSuffix = actionSufix;
@@ -167,10 +170,11 @@ export class JsonPostOperation<T extends any> extends DataOperation<any> {
 export class BulkPostOperation<T extends BaseModel> extends DataOperation<BaseModel>{
     constructor(private dataProcessingService: DataProcessingService,
         private httpService: Http,
+        private httpInterceptor: HttpInterceptorService,
         private typeName: string,
         private entities: T[],
         private actionSufix?: string) {
-        super(dataProcessingService, httpService, entities);
+        super(dataProcessingService, httpService,httpInterceptor, entities);
 
         this.TypeName = typeName;
         if (actionSufix)
@@ -224,8 +228,9 @@ export class BatchPostOperation<T extends RequestModel<BaseModel>> extends DataO
      */
     constructor(private dataProcessingService: DataProcessingService,
         private httpService: Http,
+        private httpInterceptor: HttpInterceptorService,
         private entities: Array<RequestModel<BaseModel>>) {
-        super(dataProcessingService, httpService, entities);
+        super(dataProcessingService, httpService,httpInterceptor, entities);
         this.uniqueId = UtilityService.UUID();
         this.dataProcessingService.EndPoint = GlobalConstants.BATCH;
         this.RequestHeaders = new Headers({

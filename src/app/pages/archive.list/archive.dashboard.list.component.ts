@@ -7,7 +7,16 @@ import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { EmergencyTypeModel, EmergencyTypeService } from '../masterdata';
 import { EmergencyLocationService, EmergencyLocationModel } from '../masterdata/emergencylocation';
 import { IncidentModel, IncidentService, IncidentDataExchangeModel } from '../incident';
-import { FlightModel, FlightService, InvolvePartyModel, InvolvePartyService } from '../shared.components';
+import {
+    FlightModel,
+    FlightService,
+    InvolvePartyModel,
+    InvolvePartyService,
+    OrganizationModel,
+    OrganizationService,
+    AircraftTypeModel,
+    AircraftTypeService
+} from '../shared.components';
 import {
     FormGroup, FormControl, FormBuilder, Validators,
     ReactiveFormsModule
@@ -48,6 +57,9 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     incidentDataExchangeModel: IncidentDataExchangeModel = null;
     currentIncidentId: number;
     public IsDrillPopup: boolean;
+    activeOrganizations: OrganizationModel[] = [];
+    activeAircraftTypes: AircraftTypeModel[] = [];
+    incidentsToPickForReplication: IncidentModel[] = [];
 
     constructor(formBuilder: FormBuilder,
         private toastrService: ToastrService,
@@ -60,6 +72,8 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
         private involvePartyService: InvolvePartyService,
         private flightService: FlightService,
         private globalState: GlobalStateService,
+        private organizationService: OrganizationService,
+        private aircraftTypeService: AircraftTypeService,
         private router: Router) {
         this.closedCrisises = [];
         this.affectedStations = [];
@@ -68,6 +82,9 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         this.getAllActiveEmergencyTypes();
+        this.getAllActiveOrganizations();
+        this.getAllActiveAircraftTypes();
+        this.getIncidentsToPickForReplication();
         this.initiateIncidentModel();
         this.isFlightRelated = false;
         this.disableIsDrillPopup = true;
@@ -142,6 +159,36 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
             });
     }
 
+    getAllActiveOrganizations(): void {
+        this.organizationService.GetAllActiveOrganizations()
+            .subscribe((response: ResponseModel<OrganizationModel>) => {
+                this.activeOrganizations = response.Records;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
+    }
+
+    getAllActiveAircraftTypes(): void {
+        this.aircraftTypeService.GetAllActiveAircraftTypes()
+            .subscribe((response: ResponseModel<AircraftTypeModel>) => {
+                this.activeAircraftTypes = response.Records;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
+    }
+
+    getIncidentsToPickForReplication(): void {
+        this.incidentService.GetLastConfiguredCountIncidents()
+            .subscribe((response: ResponseModel<IncidentModel>) => {
+                this.incidentsToPickForReplication = response.Records;
+                this.incidentsToPickForReplication.map((item: IncidentModel) => {
+                    if (item.ClosedOn != null) {
+                        item.EmergencyName = item.EmergencyName + ' (closed)';
+                    }
+                });
+            });
+    }
+
     public loadDataIncidentViewPopup(): void {
         const offsetVal: string = '';
         this.disableIsDrillPopup = true;
@@ -156,10 +203,28 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
             AffectedStationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyLocation),
             OffsiteDetailsPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OffSetLocation),
             EmergencyNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyName),
-            AlertMessagePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.AlertMessage),
+            //AlertMessagePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.AlertMessage),
+            WhatHappendPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.WhatHappend),
+            WhereHappendPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.WhereHappend),
+            OtherConfirmationInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OtherConfirmationInformation),
+
+
+
+
             DescriptionPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Description),
             EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD-MM-YYYY h:mm a')),
-            SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity)
+            SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity),
+
+            OrganizationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OrganizationId),
+
+
+            SourceInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.SourceInformation),
+            ReportedByNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ReportedByName),
+            ReportedByAddressPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ReportedByAddress),
+            ContactOfWitnessPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ContactOfWitness),
+            SenderOfCrisisInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.SenderOfCrisisInformation),
+
+
         });
         this.IsDrillPopup = this.incidentDataExchangeModel.IncidentModel.IsDrill;
         this.isFlightRelatedPopup = false;
@@ -171,16 +236,37 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
                 AffectedStationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyLocation),
                 OffsiteDetailsPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OffSetLocation),
                 EmergencyNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyName),
-                AlertMessagePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.AlertMessage),
+                //AlertMessagePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.AlertMessage),
+
+                WhatHappendPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.WhatHappend),
+                WhereHappendPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.WhereHappend),
+                OtherConfirmationInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OtherConfirmationInformation),
+
+
+
                 DescriptionPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Description),
                 EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD-MM-YYYY h:mm a')),
                 SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity),
+
+                OrganizationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OrganizationId),
+
+
+                SourceInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.SourceInformation),
+                ReportedByNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ReportedByName),
+                ReportedByAddressPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ReportedByAddress),
+                ContactOfWitnessPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ContactOfWitness),
+                SenderOfCrisisInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.SenderOfCrisisInformation),
+                BorrowedIncidentPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.BorrowedIncident),
+
+
+
                 FlightNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightNo),
                 OriginPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.OriginCode),
                 DestinationPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.DestinationCode),
                 ScheduleddeparturePopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.DepartureDate).format('DD-MM-YYYY h:mm a')),
                 ScheduledarrivalPopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.ArrivalDate).format('DD-MM-YYYY h:mm a')),
-                FlightTailNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightTaleNumber)
+                FlightTailNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightTaleNumber),
+                AircraftTypeIdPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.AircraftTypeId)
             });
             this.IsDrillPopup = this.incidentDataExchangeModel.IncidentModel.IsDrill;
             this.isFlightRelatedPopup = true;
@@ -212,7 +298,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
                                     this.loadDataIncidentViewPopup();
                                 })
                         }
-                        else{
+                        else {
                             this.loadDataIncidentViewPopup();
                         }
 

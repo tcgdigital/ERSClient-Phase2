@@ -1,13 +1,13 @@
 import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { EnquiryComponent } from './call.centre.component';
+import { EnquiryEntryComponent } from './call.centre.entry.component';
 
 
 const callCentreRoutes: Routes = [
     {
         path: '',
-        component: EnquiryComponent
+        component: EnquiryEntryComponent
     }
 ];
 

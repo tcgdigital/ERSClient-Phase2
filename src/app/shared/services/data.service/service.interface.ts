@@ -12,5 +12,5 @@ export interface IServiceInretface<T extends BaseModel> {
 
     Update(entity: T): Observable<T>;
 
-    Delete(entity: T): void;
+    Delete(key: number, entity ?: T): void;
 }

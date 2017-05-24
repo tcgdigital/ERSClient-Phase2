@@ -32,17 +32,5 @@ export class CommunicationLogModel extends BaseModel {
      */
     constructor() {
         super();
-
-        this.InteractionDetailsId = 0;
-        this.InteractionDetailsType = '';
-        this.Queries = '';
-        this.Answers = '';
-        this.AffectedPersonId = null;
-        this.AffectedObjectId = null;
-        this.EnquiryId = null;
-        this.DemandId = null;
-        this.RequesterName = '';
-        this.RequesterDepartment = '';
-        this.RequesterType = '';
     }
 }

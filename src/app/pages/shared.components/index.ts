@@ -18,5 +18,6 @@ export * from './interestedparties';
 export * from './demand';
 export * from './caller';
 export * from './userprofile';
-
+export * from './organization';
+export * from './aircrafttype';
 export * from './common.service';

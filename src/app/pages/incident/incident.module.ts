@@ -12,7 +12,7 @@ import { EmergencyLocationService } from "../masterdata/emergencylocation";
 import { IncidentEntryComponent, IncidentViewComponent, IncidentService } from './components';
 import { DepartmentService, EmergencyTypeService } from '../masterdata';
 import { SharedModule, DataExchangeService, LocationService } from '../../shared';
-import { FlightModule, InvolvePartyModule } from '../shared.components';
+import { FlightModule, InvolvePartyModule,OrganizationService,AircraftTypeService } from '../shared.components';
 @NgModule({
     imports: [
         CommonModule,
@@ -39,7 +39,9 @@ import { FlightModule, InvolvePartyModule } from '../shared.components';
         EmergencyLocationService,
         DataExchangeService,
         LocationService,
-        ToastrService
+        ToastrService,
+        OrganizationService,
+        AircraftTypeService
     ]
 })
 export class IncidentModule { }
