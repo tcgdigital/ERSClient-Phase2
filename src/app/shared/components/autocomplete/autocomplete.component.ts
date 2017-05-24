@@ -1,7 +1,7 @@
 import {
     Component, ViewEncapsulation,
     ElementRef, Input, Output,
-    EventEmitter, HostListener, OnDestroy, OnInit
+    EventEmitter, HostListener, OnDestroy, OnInit, SimpleChange
 } from '@angular/core';
 import { KeyValue } from '../../models';
 import { DataExchangeService } from '../../services/data.exchange';
@@ -15,8 +15,9 @@ import { IAutocompleteActions } from './IAutocompleteActions';
 })
 export class AutocompleteComponent implements OnInit, OnDestroy {
     @Input('items') items: Array<KeyValue> = [];
+    @Input('initialvalue') initialvalue: KeyValue = new KeyValue('', 0);
     @Input() placeholder: string = 'Please select';
-    @Input() actionLinks: IAutocompleteActions[]=[];
+    @Input() actionLinks: IAutocompleteActions[] = [];
 
     @Output() notify: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
     @Output('InvokeAutoCompleteReset') InvokeAutoCompleteReset: EventEmitter<any> = new EventEmitter();
@@ -39,9 +40,9 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
         } else {
             this.filteredList = this.items;
         }
-        if(this.filteredList.length == 0){
-                this.filteredList.push(new KeyValue("No Value found",0));
-            }
+        if (this.filteredList.length == 0) {
+            this.filteredList.push(new KeyValue("No Value found", 0));
+        }
     }
 
     clear(): void {
@@ -85,10 +86,23 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.dataExchange.Subscribe('clearAutoCompleteInput', (model) => this.query = model);
+        if (this.items.length > 0 && this.items.find(x => x.Value == this.initialvalue.Value) != null) {
+            this.query = this.initialvalue.Key;
+        }
     }
 
     ngOnDestroy() {
         this.dataExchange.Unsubscribe('clearAutoCompleteInput');
+    }
+
+
+    public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
+        if (changes['initialvalue'] !== undefined && (changes['initialvalue'].currentValue !==
+            changes['initialvalue'].previousValue)) {
+            if (this.items.length > 0 && this.items.find(x => x.Value == this.initialvalue.Value) != null) {
+                this.query = this.initialvalue.Key;
+            }
+        }
     }
 }
 

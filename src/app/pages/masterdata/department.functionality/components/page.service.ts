@@ -47,7 +47,7 @@ export class PageService implements IServiceInretface<PageModel>{
         return Observable.of(entity);
     }
 
-    Delete(entity: PageModel): void { }
+    Delete(key: number): void { }
 
     GetDepartmentsByPageCode(pageCode: string): Observable<ResponseModel<PageModel>> {
         return this._dataServiceForPage.Query()
