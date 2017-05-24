@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BaseModel, KeyValue } from '../../../shared';
 import { CallerModel } from "../../shared.components/caller";
 import { IncidentModel } from "../../incident/components";
+import { EnquiryModel } from "../../shared.components/call.centre";
 
 
 export class ExternalInputModel extends BaseModel {
@@ -20,6 +21,8 @@ export class ExternalInputModel extends BaseModel {
     public MediaAndOtherQuery?: MediaAndOtherQueryModel;
     public PDAEnquiry?: PDAEnquiryModel;
     public Incident?: IncidentModel;
+
+    public Enquiries ? : EnquiryModel[];
 }
 
 export class PDAEnquiryModel extends BaseModel {

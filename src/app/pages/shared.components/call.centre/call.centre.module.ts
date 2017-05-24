@@ -6,13 +6,15 @@ import { MdCheckboxModule } from '@angular2-material/checkbox';
 
 import { EnquiryEntryComponent } from './call.centre.entry.component';
 import { CallCentreRouting } from './call.centre.routing';
-import { EnquiryService} from './components';
+import { EnquiryService } from './components';
 import { AffectedPeopleService } from '../affected.people';
 import { AffectedObjectsService } from '../affected.objects';
 import { DepartmentService } from '../../masterdata/department';
 import { DemandService } from '../demand';
-import { DataExchangeService,SharedModule } from '../../../shared';
+import { DataExchangeService, SharedModule } from '../../../shared';
 import { InvolvePartyService } from '../involveparties';
+import { CommunicationLogService } from '../communicationlogs';
+
 
 @NgModule({
     imports: [
@@ -22,22 +24,23 @@ import { InvolvePartyService } from '../involveparties';
         HttpModule,
         SharedModule,
         MdCheckboxModule,
-        CallCentreRouting
+        // CallCentreRouting
     ],
     declarations: [
-    //   EnquiryEntryComponent
+        EnquiryEntryComponent
     ],
-    exports:[
-    //    EnquiryEntryComponent
-    ],
-    providers: [
-        EnquiryService,
-        DataExchangeService,
-        AffectedPeopleService,
-        AffectedObjectsService,
-        DepartmentService,
-        DemandService,
-        InvolvePartyService
+    exports: [
+        EnquiryEntryComponent
     ]
+    // providers: [
+    //    // EnquiryService,
+    //    // DataExchangeService,
+    //    // AffectedPeopleService,
+    //   //  AffectedObjectsService,
+    //   //  DepartmentService,
+    //   //  DemandService,
+    //   //  InvolvePartyService,
+    //   //  CommunicationLogService
+    // ]
 })
 export class CallCentreModule { }

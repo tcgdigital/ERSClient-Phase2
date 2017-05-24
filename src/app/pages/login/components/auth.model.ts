@@ -14,11 +14,15 @@ export class AuthResponseModel {
 
 export class ForgotPasswordModel{
     EmailOrUserName: string;
+    SecurityQuestion: string;
+    SecurityAnswer: string;
     NewPassword: string;
     ConfirmPassword: string;
 }
 
 export class ChangePasswordModel {
+    SecurityQuestion: string;
+    SecurityAnswer: string;
     OldPassword: string;
     NewPassword: string;
     ConfirmPassword: string;
