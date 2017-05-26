@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-
+import { HttpInterceptorService } from '../../interceptor';
 import { BaseModel } from '../../models';
 import { DataProcessingService } from './data.processing.service';
 import { DataService } from './data.service';
@@ -13,7 +13,9 @@ import { DataService } from './data.service';
  */
 @Injectable()
 export class DataServiceFactory {
-    constructor(private http: Http, private dataProcessingService: DataProcessingService) {
+    constructor(private http: Http,
+        private httpInterceptorService: HttpInterceptorService,
+        private dataProcessingService: DataProcessingService) {
     }
 
     /**
@@ -28,7 +30,7 @@ export class DataServiceFactory {
      */
     public CreateService<T extends BaseModel>
         (typeName: string, handleError?: (err: any) => any): DataService<T> {
-        return new DataService<T>(typeName, this.http, this.dataProcessingService);
+        return new DataService<T>(typeName, this.http,this.httpInterceptorService, this.dataProcessingService);
     }
 
     /**
@@ -43,7 +45,7 @@ export class DataServiceFactory {
      */
     public CreateServiceWithOptions<T extends BaseModel>
         (typeName: string, dataProcessingService: DataProcessingService): DataService<T> {
-        return new DataService<T>(typeName, this.http, dataProcessingService);
+        return new DataService<T>(typeName, this.http,this.httpInterceptorService, dataProcessingService);
     }
 
     /**
@@ -59,7 +61,7 @@ export class DataServiceFactory {
      */
     public CreateServiceWithOptionsAndActionSuffix<T extends BaseModel>
         (typeName: string, actionSuffix: string, dataProcessingService: DataProcessingService): DataService<T> {
-        return new DataService<T>(typeName, this.http, dataProcessingService, actionSuffix);
+        return new DataService<T>(typeName, this.http,this.httpInterceptorService, dataProcessingService, actionSuffix);
     }
 
     /**
@@ -74,6 +76,6 @@ export class DataServiceFactory {
      */
     public CreateServiceWithOptionsAndErrorHandler<T extends BaseModel>
         (dataProcessingService: DataProcessingService, handleError?: (err: any) => any): DataService<T> {
-        return new DataService<T>('', this.http, dataProcessingService);
+        return new DataService<T>('', this.http,this.httpInterceptorService, dataProcessingService);
     }
 }

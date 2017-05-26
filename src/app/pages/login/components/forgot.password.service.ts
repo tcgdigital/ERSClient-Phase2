@@ -9,6 +9,7 @@ import { ForgotPasswordModel } from './auth.model';
 @Injectable()
 export class ForgotPasswordService {
     private _dataService: DataService<any>;
+    private _dataGetService: DataService<any>;
 
     constructor(private dataServiceFactory: DataServiceFactory) {
         const option: DataProcessingService = new DataProcessingService();
@@ -18,6 +19,9 @@ export class ForgotPasswordService {
 
         this._dataService = this.dataServiceFactory
             .CreateServiceWithOptionsAndActionSuffix('Accounts', 'ForgotPassword', option);
+
+        this._dataGetService = this.dataServiceFactory
+            .CreateServiceWithOptionsAndActionSuffix('Accounts', 'GetSecurityQuestion', option);
     }
 
     AccountResponseExceptionHandler(error: Response): Observable<AccountResponse> {
@@ -31,6 +35,14 @@ export class ForgotPasswordService {
                 return response as AccountResponse;
             }).catch((error: any) => {
                 return Observable.of(error as AccountResponse);
+            });
+    }
+
+    GetEecurityQuestion(userNameOrEmail: string): Observable<string> {
+        return this._dataGetService.SimpleGet(`/?userNameOrEmail=${userNameOrEmail}`)
+            .Execute()
+            .map((response: string) => {
+                return response;
             });
     }
 }

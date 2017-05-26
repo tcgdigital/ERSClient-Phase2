@@ -106,16 +106,34 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
 
     onSubmit() {
         if (this.demandTypeModel.DemandTypeId === 0) {
+            if (this.form.controls['DemandTypeName'].value == '') {
+                    this.toastrService.error('Please provide demand type.', 'Error', this.toastrConfig);
+                    return false;
+                }
             this.demandTypeModel.DemandTypeName = this.form.controls['DemandTypeName'].value;
             this.demandTypeModel.IsAutoApproved = this.form.controls['IsAutoApproved'].value;
             if (!this.demandTypeModel.IsAutoApproved) {
-                this.demandTypeModel.DepartmentId = this.form.controls['ApproverDept'].value;
+                if (this.form.controls['ApproverDept'].value == '') {
+                    this.toastrService.error('Please provide approver department.', 'Error', this.toastrConfig);
+                    return false;
+                }
+                else {
+                    this.demandTypeModel.DepartmentId = this.form.controls['ApproverDept'].value;
+                }
+            }
+            else {
+                this.demandTypeModel.DepartmentId = null;
             }
             this.demandTypeService.Create(this.demandTypeModel)
                 .subscribe((response: DemandTypeModel) => {
                     this.toastrService.success('Demand Saved Successfully.', 'Success', this.toastrConfig);
+                    this.resetDemandTypeForm();
+                    this.showApproverDept = true;
+                    this.showAdd=false;
                     this.dataExchange.Publish('demandTypeModelSaved', response);
+
                 }, (error: any) => {
+                    this.toastrService.error(error.message, 'Error', this.toastrConfig);
                     console.log(`Error: ${error}`);
                 });
         }
@@ -124,11 +142,16 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
             this.demandTypeService.Update(this.demandTypeModelToEdit)
                 .subscribe((response: DemandTypeModel) => {
                     this.toastrService.success('Demand Edited Successfully.', 'Success', this.toastrConfig);
+                    this.resetDemandTypeForm();
+                    this.showApproverDept = true;
+                    this.showAdd=false;
                     this.dataExchange.Publish('demandTypeModelUpdated', response);
                 }, (error: any) => {
+                    this.toastrService.error(error.message, 'Error', this.toastrConfig);
                     console.log(`Error: ${error}`);
                 });
         }
+
     }
 
     formControlDirtyCheck(): void {

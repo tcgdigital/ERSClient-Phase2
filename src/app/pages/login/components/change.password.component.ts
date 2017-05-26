@@ -92,6 +92,8 @@ export class ChangePasswordComponent implements OnInit, AfterViewInit {
     private setChangePasswordForm(changePasswordModel?: ChangePasswordModel): FormGroup {
         this.compareValidator = this.compareValidator.bind(this);
         const formGroup: FormGroup = new FormGroup({
+            SecurityQuestion: new FormControl(changePasswordModel ? changePasswordModel.SecurityQuestion : '', [Validators.required]),
+            SecurityAnswer: new FormControl(changePasswordModel ? changePasswordModel.SecurityAnswer : '', [Validators.required]),
             OldPassword: new FormControl(changePasswordModel ? changePasswordModel.OldPassword : '', [Validators.required]),
             NewPassword: new FormControl(changePasswordModel ? changePasswordModel.NewPassword : '',
                 [Validators.required, Validators.minLength(8), Validators.maxLength(20), Validators.pattern(GlobalConstants.PASSWORD_PATTERN)]),

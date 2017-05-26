@@ -11,6 +11,12 @@ import { WidgetModule } from '../widgets';
 import { IncidentService } from '../incident';
 import { DepartmentService } from '../masterdata/department';
 import { MdCheckboxModule } from '@angular2-material/checkbox';
+import {
+    FlightService,
+    InvolvePartyService,
+    OrganizationService,
+    AircraftTypeService
+} from '../shared.components';
 
 @NgModule({
     imports: [
@@ -29,7 +35,11 @@ import { MdCheckboxModule } from '@angular2-material/checkbox';
     ],
     providers: [
         IncidentService,
-        DepartmentService
+        DepartmentService,
+        FlightService,
+        InvolvePartyService,
+        OrganizationService,
+        AircraftTypeService
     ]
 })
 export class DashboardModule { }

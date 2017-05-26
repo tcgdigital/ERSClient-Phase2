@@ -4,6 +4,7 @@ import { KeyValue, BaseModel } from '../../models';
 import * as jwtDecode from 'jwt-decode';
 import { GlobalConstants } from '../../constants';
 import { AuthModel } from '../../models';
+import * as moment from 'moment/moment';
 
 export class UtilityService {
     private static STRIP_COMMENTS: RegExp = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;

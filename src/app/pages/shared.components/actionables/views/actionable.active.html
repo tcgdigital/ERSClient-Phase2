@@ -5,7 +5,7 @@
                 <th>Serial Number </th>
                 <th>Description</th>
                 <th>Schedule Close Time </th>
-                <th>Done</th>
+                <th>Status</th>
                 <th>RAG</th>
                 <th>Download</th>
                 <th>Details</th>
@@ -25,7 +25,7 @@
                             (click)="openChildActionable(actionable); $event.stopPropagation();"></i>                        {{actionable.Description}}
                     </td>
                     <td data-title="Schedule Close Time">{{actionable.ScheduleClose | amDateFormat:'LL - HH:mm:ss'}}</td>
-                    <td data-title="Done">
+                    <td data-title="Status">
                         <md-checkbox class="Marght" [disabled]="hasChildChecklist(actionable.ChklistId) ||  isArchive" id="Done" name="Done" [ngModel]="actionable.Done"
                             (change)="IsDone($event,actionable)" aria-label="Done">
                         </md-checkbox>

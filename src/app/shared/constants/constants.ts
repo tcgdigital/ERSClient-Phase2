@@ -34,11 +34,7 @@ export interface IRequesterType {
     caption: string;
 }
 
-export interface IChecklistStatus {
-    key: number;
-    value: string;
-    caption: string;
-}
+
 
 export class GlobalConstants {
     public static EXTERNAL_URL: string = 'http://localhost:5001/';
@@ -51,6 +47,10 @@ export class GlobalConstants {
     public static ACCESS_TOKEN: string = 'access_token';
     public static AD_AUTH_ENABLED: boolean = false;
     public static PASSWORD_PATTERN: string = '((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})';
+public static LAST_INCIDENT_PICK_COUNT: string = '5';
+
+    public static INTERCEPTOR_PERFORM: boolean = true;
+    public static PRESERVE_DATA_FROM_CONVERSION = ['EmergencyDate'];
 
     public static EmergencyCategories: IKeyValue[] = [
         { value: 'FlightRelated', key: 1 },
@@ -129,7 +129,7 @@ export class GlobalConstants {
         },
         {
             value: '7',
-            caption: 'Other',
+            caption: 'Others',
             text: 'Other enquiry',
         },
         {
@@ -272,39 +272,7 @@ export class GlobalConstants {
         }
     ];
 
-    public static ChecklistStatus: IChecklistStatus[] = [
-        {
-            key: 1,
-            value: 'Notified',
-            caption: 'Notified'
-        },
-        {
-            key: 2,
-            value: 'Assigned',
-            caption: 'Assigned'
-        },
-        {
-            key: 3,
-            value: 'Delegated',
-            caption: 'Delegated'
-        },
-        {
-            key: 4,
-            value: 'Accepted',
-            caption: 'Accepted'
-        },
-        {
-            key: 5,
-            value: 'Refferedto',
-            caption: 'Reffered To'
-        },
-        {
-            key: 6,
-            value: 'Closed',
-            caption: 'Closed'
-        },
-    ];
-
+    
     public static RequesterType: IRequesterType[] = [
         {
             value: '1',
