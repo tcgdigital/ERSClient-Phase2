@@ -14,7 +14,7 @@
                     <td colspan="8">No queries to show.</td>
                 </tr>
                 <tr *ngFor="let call of allAssignedCalls">
-                    <td data-title="Caller Name">{{call.Caller.CallerName}}&nbsp;</td>
+                    <td data-title="Caller Name">{{call.Caller.FirstName + "  "+ call.Caller.LastName}}&nbsp;</td>
                     <td data-title="PDA Name">{{call.Caller.ContactNumber}}</td>
                     <td data-title="PDA Age">{{call.Caller.Relationship}}&nbsp;</td>
                     <td data-title="Action"><i class="fa fa-edit" (click)="openCallcenter(call.ExternalInputId)"></i>&nbsp;</td>
@@ -38,7 +38,7 @@
             </div>
             <div class="modal-body">
                 <div *ngIf="callcenterload">
-                    <call-centre-main [callid]="callId" [enquiryType]="7"></call-centre-main>
+                    <call-centre-main [callid]="callId" [enquiryType]="5"></call-centre-main>
                     <!--<call-centre-main></call-centre-main>-->
                 </div>
             </div>

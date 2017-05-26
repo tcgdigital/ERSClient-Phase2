@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
 import { InvolvePartyModel, AffectedModel } from '../../../shared.components';
+import { EnquiryModel } from '../../call.centre';
+import { NextOfKinModel } from '../../nextofkins';
 import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';
 import { IAffectedPeopleService } from './IAffectedPeopleService';
 import { CasualtySummeryModel } from '../../../widgets/casualty.summary.widget/casualty.summary.widget.model';
@@ -19,6 +21,8 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     private _dataServiceAffectedPeople: DataService<AffectedPeopleModel>;
     private _bulkDataService: DataService<AffectedPeopleModel>;
     private _casualtySummery: CasualtySummeryModel;
+    private _enquiryService: DataService<EnquiryModel>;
+    private _nokService: DataService<NextOfKinModel>;
 
     public affectedPeoples: ResponseModel<AffectedPeopleModel>;
     /**
@@ -33,6 +37,12 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
 
         this._bulkDataService = this.dataServiceFactory
             .CreateServiceWithOptions<AffectedPeopleModel>('AffectedPersonBatch', option);
+
+        this._enquiryService = dataServiceFactory
+            .CreateServiceWithOptions<EnquiryModel>('Enquiries', option);
+        this._nokService = this.dataServiceFactory
+            .CreateServiceWithOptionsAndActionSuffix<NextOfKinModel>
+            ('NextOfKinBatch', '', option);
 
     }
 
@@ -49,8 +59,8 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
                 affectedPeopleForView = affectedPeople.map(function (dataItem) {
                     let item = new AffectedPeopleToView();
                     item.AffectedId = dataItem.AffectedId;
-                    item.AffectedPersonId = dataItem.AffectedPersonId,
-                        item.PassengerName = dataItem.Passenger != null ? dataItem.Passenger.PassengerName : '';
+                    item.AffectedPersonId = dataItem.AffectedPersonId;
+                    item.PassengerName = dataItem.Passenger != null ? dataItem.Passenger.PassengerName : '';
                     item.Pnr = dataItem.Passenger != null ? (dataItem.Passenger.Pnr == null ? 'NA' : dataItem.Passenger.Pnr) : 'NA';
                     item.CrewName = dataItem.Crew != null ? dataItem.Crew.CrewName : '';
                     item.CrewNameWithCategory = dataItem.Crew != null ? dataItem.Crew.CrewName + '(' + dataItem.Crew.AsgCat + ')' : '';
@@ -167,7 +177,18 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     public GetCommunicationByPDA(id: number): Observable<ResponseModel<AffectedPeopleModel>> {
         return this._dataService.Query()
             .Filter(`AffectedPersonId eq ${id}`)
-            .Expand('Passenger , Crew, CommunicationLogs')
+            .Expand("Passenger , Crew, CommunicationLogs($filter=ActiveFlag eq 'Active')")
             .Execute();
+    }
+
+
+    public GetCallerListForAffectedPerson(affectedPersonId: number): Observable<ResponseModel<EnquiryModel>> {
+        return this._enquiryService.Query()
+            .Filter(`AffectedPersonId eq ${affectedPersonId}`)
+            .Expand(`Caller`)
+            .Execute();
+    }
+    public CreateNoks(noks: NextOfKinModel[]): Observable<NextOfKinModel[]> {
+        return this._nokService.BulkPost(noks).Execute();
     }
 }
