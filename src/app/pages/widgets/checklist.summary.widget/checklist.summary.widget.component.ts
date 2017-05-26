@@ -9,6 +9,7 @@ import { Observable } from 'rxjs/Rx';
 import { ActionableModel } from '../../shared.components/actionables/components/actionable.model';
 import { ResponseModel, GlobalStateService, KeyValue } from '../../../shared';
 import { DepartmentModel } from '../../masterdata/department/components/department.model';
+import * as Highcharts from 'highcharts';
 
 @Component({
     selector: 'checklist-summary-widget',
@@ -38,8 +39,8 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
 
     /**
      * Creates an instance of ChecklistSummaryWidgetComponent.
-     * @param {ChecklistSummaryWidgetService} checklistSummaryWidgetService 
-     * 
+     * @param {ChecklistSummaryWidgetService} checklistSummaryWidgetService
+     *
      * @memberOf ChecklistSummaryWidgetComponent
      */
     constructor(private checklistSummaryWidgetService: ChecklistSummaryWidgetService,
@@ -55,22 +56,24 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
         this.globalState.Subscribe('checkListStatusChange', () => this.checkListStatusChangeHandler());
         this.showAllDeptSubChecklistCompleted = false;
         this.showAllDeptSubChecklistPending = false;
+
+        this.setChecklistGraphData();
     }
 
     getActionableCount(incidentId, departmentId): void {
         this.checkListSummery = new CheckListSummeryModel();
         this.checklistSummaryWidgetService.GetActionableCount(incidentId, departmentId)
-            .subscribe(checkListSummeryObservable => {
+            .subscribe((checkListSummeryObservable) => {
                 this.checkListSummery = checkListSummeryObservable;
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
     }
 
-    public ViewAllChecklist(callback?: Function): void {
-        let deptCheckListsLocal: DeptCheckListModel[] = [];
-        let data: ActionableModel[] = [];
-        let uniqueDepartments: DepartmentModel[] = [];
+    public ViewAllChecklist(callback?: () => void): void {
+        const deptCheckListsLocal: DeptCheckListModel[] = [];
+        const data: ActionableModel[] = [];
+        const uniqueDepartments: DepartmentModel[] = [];
         this.checklistSummaryWidgetService.GetAllDepartmentChecklists(this.incidentId)
             .subscribe((result: ResponseModel<ActionableModel>) => {
                 result.Records.forEach((record) => {
@@ -80,16 +83,16 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             }, () => {
-                //Getting unique departments from the acctionable>checklist>target department.
+                // Getting unique departments from the acctionable>checklist>target department.
                 data.forEach((itemActionable: ActionableModel) => {
-                    let department = uniqueDepartments.find(x => x.DepartmentId == itemActionable.CheckList.DepartmentId);
+                    const department = uniqueDepartments.find((x) => x.DepartmentId === itemActionable.CheckList.DepartmentId);
                     if (department == null) {
                         uniqueDepartments.push(itemActionable.CheckList.TargetDepartment);
                     }
                 });
                 uniqueDepartments.forEach((itemDepartment: DepartmentModel) => {
-                    let actionableListOfSameDepartment = data.filter((itemActionable: ActionableModel) => {
-                        return itemActionable.CheckList.DepartmentId == itemDepartment.DepartmentId;
+                    const actionableListOfSameDepartment = data.filter((itemActionable: ActionableModel) => {
+                        return itemActionable.CheckList.DepartmentId === itemDepartment.DepartmentId;
                     });
 
                     let depCM: DeptCheckListModel;
@@ -99,11 +102,11 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
                     depCM.departmentName = itemDepartment.DepartmentName;
                     depCM.assigned = actionableListOfSameDepartment.length;
                     depCM.pending = actionableListOfSameDepartment.filter((item: ActionableModel) => {
-                        return item.CompletionStatus == "Open";
+                        return item.CompletionStatus === 'Open';
                     }).length;
 
                     depCM.completed = actionableListOfSameDepartment.filter((item: ActionableModel) => {
-                        return item.CompletionStatus == "Close";
+                        return item.CompletionStatus === 'Close';
                     }).length;
                     deptCheckListsLocal.push(depCM);
                 });
@@ -114,10 +117,10 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
             });
     }
 
-    public ViewSubDeptChecklist(callback?: Function): void {
-        let deptCheckListsLocal: DeptCheckListModel[] = [];
-        let data: ActionableModel[] = [];
-        let uniqueDepartments: DepartmentModel[] = [];
+    public ViewSubDeptChecklist(callback?: () => void): void {
+        const deptCheckListsLocal: DeptCheckListModel[] = [];
+        const data: ActionableModel[] = [];
+        const uniqueDepartments: DepartmentModel[] = [];
         this.checklistSummaryWidgetService.GetAllSubDepartmentChecklists(this.incidentId, this.departmentId)
             .subscribe((result: ResponseModel<ActionableModel>) => {
                 result.Records.forEach((record) => {
@@ -127,16 +130,16 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             }, () => {
-                //Getting unique departments from the acctionable>checklist>target department.
+                // Getting unique departments from the acctionable>checklist>target department.
                 data.forEach((itemActionable: ActionableModel) => {
-                    let department = uniqueDepartments.find(x => x.DepartmentId == itemActionable.CheckList.DepartmentId);
+                    const department = uniqueDepartments.find((x) => x.DepartmentId === itemActionable.CheckList.DepartmentId);
                     if (department == null) {
                         uniqueDepartments.push(itemActionable.CheckList.TargetDepartment);
                     }
                 });
                 uniqueDepartments.forEach((itemDepartment: DepartmentModel) => {
-                    let actionableListOfSameDepartment = data.filter((itemActionable: ActionableModel) => {
-                        return itemActionable.CheckList.DepartmentId == itemDepartment.DepartmentId;
+                    const actionableListOfSameDepartment = data.filter((itemActionable: ActionableModel) => {
+                        return itemActionable.CheckList.DepartmentId === itemDepartment.DepartmentId;
                     });
                     let depCM: DeptCheckListModel;
                     depCM = new DeptCheckListModel();
@@ -145,11 +148,11 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
                     depCM.departmentName = itemDepartment.DepartmentName;
                     depCM.assigned = actionableListOfSameDepartment.length;
                     depCM.pending = actionableListOfSameDepartment.filter((item: ActionableModel) => {
-                        return item.CompletionStatus == "Open";
+                        return item.CompletionStatus === 'Open';
                     }).length;
 
                     depCM.completed = actionableListOfSameDepartment.filter((item: ActionableModel) => {
-                        return item.CompletionStatus == "Close";
+                        return item.CompletionStatus === 'Close';
                     }).length;
                     deptCheckListsLocal.push(depCM);
                 });
@@ -189,13 +192,13 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
     public showAllDeptSubTableCompleted(deptCheckListModel: DeptCheckListModel): void {
         this.showAllDeptSubChecklistCompleted = false;
         this.showAllDeptSubChecklistPending = false;
-        let subdeptChecklists: SubDeptCheckListModel[] = [];
-        let completionStatusActionables = deptCheckListModel.actionableModelList.filter((item: ActionableModel) => {
-            return item.CompletionStatus == 'Close'
+        const subdeptChecklists: SubDeptCheckListModel[] = [];
+        const completionStatusActionables = deptCheckListModel.actionableModelList.filter((item: ActionableModel) => {
+            return item.CompletionStatus === 'Close';
         });
 
         completionStatusActionables.forEach((item: ActionableModel) => {
-            let subdeptChecklist: SubDeptCheckListModel = new SubDeptCheckListModel();
+            const subdeptChecklist: SubDeptCheckListModel = new SubDeptCheckListModel();
             subdeptChecklist.checkListDesc = item.CheckListDetails;
             subdeptChecklist.scheduleCloseTime = item.ScheduleClose;
             subdeptChecklist.RAG = this.setAllDeptRagStatusForCompleted(item);
@@ -209,9 +212,9 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
     public showAllDeptSubTablePending(deptCheckListModel: DeptCheckListModel): void {
         this.showAllDeptSubChecklistCompleted = false;
         this.showAllDeptSubChecklistPending = false;
-        let subdeptChecklists: SubDeptCheckListModel[] = [];
-        let completionStatusActionables = deptCheckListModel.actionableModelList.filter((item: ActionableModel) => {
-            return item.CompletionStatus == 'Open'
+        const subdeptChecklists: SubDeptCheckListModel[] = [];
+        const completionStatusActionables = deptCheckListModel.actionableModelList.filter((item: ActionableModel) => {
+            return item.CompletionStatus === 'Open';
         });
         this.setAllDeptRagStatusForPending(completionStatusActionables);
         this.showAllDeptSubChecklistPending = true;
@@ -228,11 +231,11 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
     }
 
     public setAllDeptRagStatusForCompleted(itemActionable: ActionableModel): string {
-        let CreatedOn: number = new Date(itemActionable.AssignedDt).getTime();
-        let ScheduleTime: number = (Number(itemActionable.Duration) * 60000);
-        let CurrentTime: number = new Date(itemActionable.ClosedOn).getTime();
-        let TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-        let percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
+        const CreatedOn: number = new Date(itemActionable.AssignedDt).getTime();
+        const ScheduleTime: number = (Number(itemActionable.Duration) * 60000);
+        const CurrentTime: number = new Date(itemActionable.ClosedOn).getTime();
+        const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
+        const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
         if (percentage < 50) {
             return 'statusGreen';
         } else if (percentage >= 100) {
@@ -244,10 +247,10 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
     }
 
     public setAllDeptRagStatusForPending(Actionables: ActionableModel[]): void {
-        let subdeptChecklists: SubDeptCheckListModel[] = [];
+        const subdeptChecklists: SubDeptCheckListModel[] = [];
         this.subDeptPendingCheckLists = [];
         Actionables.forEach((itemActionable: ActionableModel) => {
-            let subdeptChecklist: SubDeptCheckListModel = new SubDeptCheckListModel();
+            const subdeptChecklist: SubDeptCheckListModel = new SubDeptCheckListModel();
             subdeptChecklist.checkListDesc = itemActionable.CheckListDetails;
             subdeptChecklist.scheduleCloseTime = itemActionable.ScheduleClose;
             subdeptChecklist.AssignedDt = itemActionable.AssignedDt;
@@ -255,14 +258,14 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
             subdeptChecklists.push(subdeptChecklist);
         });
         this.subDeptPendingCheckLists = subdeptChecklists;
-        Observable.interval(1000).subscribe(_ => {
+        Observable.interval(1000).subscribe((_) => {
 
             this.subDeptPendingCheckLists.forEach((itemSubDeptCheckListModel: SubDeptCheckListModel) => {
-                let CreatedOn: number = new Date(itemSubDeptCheckListModel.AssignedDt).getTime();
-                let ScheduleTime: number = (Number(itemSubDeptCheckListModel.Duration) * 60000);
-                let CurrentTime: number = new Date().getTime();
-                let TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-                let percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
+                const CreatedOn: number = new Date(itemSubDeptCheckListModel.AssignedDt).getTime();
+                const ScheduleTime: number = (Number(itemSubDeptCheckListModel.Duration) * 60000);
+                const CurrentTime: number = new Date().getTime();
+                const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
+                const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
                 if (percentage < 50) {
                     itemSubDeptCheckListModel.RAG = 'statusGreen';
                 } else if (percentage >= 100) {
@@ -278,13 +281,13 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
     public showSubDeptSubTableCompleted(deptCheckListModel: DeptCheckListModel): void {
         this.showSubDeptSubChecklistCompleted = false;
         this.showSubDeptSubChecklistPending = false;
-        let subdeptChecklists: SubDeptCheckListModel[] = [];
-        let completionStatusActionables = deptCheckListModel.actionableModelList.filter((item: ActionableModel) => {
-            return item.CompletionStatus == 'Close'
+        const subdeptChecklists: SubDeptCheckListModel[] = [];
+        const completionStatusActionables = deptCheckListModel.actionableModelList.filter((item: ActionableModel) => {
+            return item.CompletionStatus === 'Close';
         });
 
         completionStatusActionables.forEach((item: ActionableModel) => {
-            let subdeptChecklist: SubDeptCheckListModel = new SubDeptCheckListModel();
+            const subdeptChecklist: SubDeptCheckListModel = new SubDeptCheckListModel();
             subdeptChecklist.checkListDesc = item.CheckListDetails;
             subdeptChecklist.scheduleCloseTime = item.ScheduleClose;
             subdeptChecklist.RAG = this.setSubDeptRagStatusForCompleted(item);
@@ -298,9 +301,9 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
     public showSubDeptSubTablePending(deptCheckListModel: DeptCheckListModel): void {
         this.showSubDeptSubChecklistCompleted = false;
         this.showSubDeptSubChecklistPending = false;
-        let subdeptChecklists: SubDeptCheckListModel[] = [];
-        let completionStatusActionables = deptCheckListModel.actionableModelList.filter((item: ActionableModel) => {
-            return item.CompletionStatus == 'Open'
+        const subdeptChecklists: SubDeptCheckListModel[] = [];
+        const completionStatusActionables = deptCheckListModel.actionableModelList.filter((item: ActionableModel) => {
+            return item.CompletionStatus === 'Open';
         });
         this.setSubDeptRagStatusForPending(completionStatusActionables);
         this.showSubDeptSubChecklistPending = true;
@@ -317,11 +320,11 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
     }
 
     public setSubDeptRagStatusForCompleted(itemActionable: ActionableModel): string {
-        let CreatedOn: number = new Date(itemActionable.AssignedDt).getTime();
-        let ScheduleTime: number = (Number(itemActionable.Duration) * 60000);
-        let CurrentTime: number = new Date(itemActionable.ClosedOn).getTime();
-        let TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-        let percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
+        const CreatedOn: number = new Date(itemActionable.AssignedDt).getTime();
+        const ScheduleTime: number = (Number(itemActionable.Duration) * 60000);
+        const CurrentTime: number = new Date(itemActionable.ClosedOn).getTime();
+        const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
+        const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
         if (percentage < 50) {
             return 'statusGreen';
         } else if (percentage >= 100) {
@@ -336,7 +339,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
         this.subDeptPendingCheckLists = [];
         let subdeptChecklists: SubDeptCheckListModel[] = [];
         Actionables.forEach((itemActionable: ActionableModel) => {
-            let subdeptChecklist: SubDeptCheckListModel = new SubDeptCheckListModel();
+            const subdeptChecklist: SubDeptCheckListModel = new SubDeptCheckListModel();
             subdeptChecklist.checkListDesc = itemActionable.CheckListDetails;
             subdeptChecklist.scheduleCloseTime = itemActionable.ScheduleClose;
             subdeptChecklist.AssignedDt = itemActionable.AssignedDt;
@@ -344,15 +347,15 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
             subdeptChecklists.push(subdeptChecklist);
         });
         this.subDeptPendingCheckLists = subdeptChecklists;
-        Observable.interval(1000).subscribe(_ => {
-            let subdeptChecklists: SubDeptCheckListModel[] = [];
+        Observable.interval(1000).subscribe((_) => {
+            subdeptChecklists = [];
             this.subDeptPendingCheckLists.forEach((itemSubDeptCheckListModel: SubDeptCheckListModel) => {
 
-                let CreatedOn: number = new Date(itemSubDeptCheckListModel.AssignedDt).getTime();
-                let ScheduleTime: number = (Number(itemSubDeptCheckListModel.Duration) * 60000);
-                let CurrentTime: number = new Date().getTime();
-                let TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-                let percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
+                const CreatedOn: number = new Date(itemSubDeptCheckListModel.AssignedDt).getTime();
+                const ScheduleTime: number = (Number(itemSubDeptCheckListModel.Duration) * 60000);
+                const CurrentTime: number = new Date().getTime();
+                const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
+                const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
                 if (percentage < 50) {
                     itemSubDeptCheckListModel.RAG = 'statusGreen';
                 } else if (percentage >= 100) {
@@ -365,24 +368,83 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
         });
     }
 
-
-    private incidentChangeHandler(incident: KeyValue): void {
-        this.currentIncidentId = incident.Value;
-        this.getActionableCount(this.currentIncidentId, this.currentDepartmentId);
-    };
-
-    private departmentChangeHandler(department: KeyValue): void {
-        this.currentDepartmentId = department.Value;
-        this.getActionableCount(this.currentIncidentId, this.currentDepartmentId);
-    };
-
-    private checkListStatusChangeHandler(): void {
-        this.getActionableCount(this.currentIncidentId, this.currentDepartmentId);
-    };
-
     ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChange');
         this.globalState.Unsubscribe('departmentChangeFromDashboard');
         this.globalState.Unsubscribe('checkListStatusChange');
+    }
+
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.currentIncidentId = incident.Value;
+        this.getActionableCount(this.currentIncidentId, this.currentDepartmentId);
+    }
+
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
+        this.getActionableCount(this.currentIncidentId, this.currentDepartmentId);
+    }
+
+    private checkListStatusChangeHandler(): void {
+        this.getActionableCount(this.currentIncidentId, this.currentDepartmentId);
+    }
+
+    private setChecklistGraphData(): void {
+        Highcharts.chart('checklist-graph-container', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Monthly Average Rainfall'
+            },
+            subtitle: {
+                text: 'Source: WorldClimate.com'
+            },
+            xAxis: {
+                categories: [
+                    'Jan',
+                    'Feb',
+                    'Mar',
+                    'Apr',
+                    'May',
+                    'Jun',
+                    'Jul',
+                    'Aug',
+                    'Sep',
+                    'Oct',
+                    'Nov',
+                    'Dec'
+                ],
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Rainfall (mm)'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [{
+                name: 'Tokyo',
+                data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+
+            }, {
+                name: 'New York',
+                data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
+
+            }]
+        });
     }
 }

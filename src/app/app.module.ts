@@ -16,7 +16,6 @@ import { routing } from './app.routing';
 import { SharedModule } from './shared';
 import { PagesModule } from './pages/pages.module';
 
-
 // Platform and Environment providers/directives/pipes
 import { AppStateService } from './app.state.service';
 // import { GlobalStateService } from './shared/services/global.state.service';
