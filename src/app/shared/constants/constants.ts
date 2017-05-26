@@ -33,6 +33,13 @@ export interface IRequesterType {
     enumtype: string;
     caption: string;
 }
+
+export interface IChecklistStatus {
+    key: number;
+    value: string;
+    caption: string;
+}
+
 export class GlobalConstants {
     public static EXTERNAL_URL: string = 'http://localhost:5001/';
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
@@ -257,7 +264,45 @@ export class GlobalConstants {
             key: 5,
             value : 'Immediatecare',
             caption : 'Immediatecare'
+        },
+        {
+            key: 6,
+            value : 'UnidentifiedPDA',
+            caption : 'Unidentified PDA'
         }
+    ];
+
+    public static ChecklistStatus: IChecklistStatus[] = [
+        {
+            key: 1,
+            value: 'Notified',
+            caption: 'Notified'
+        },
+        {
+            key: 2,
+            value: 'Assigned',
+            caption: 'Assigned'
+        },
+        {
+            key: 3,
+            value: 'Delegated',
+            caption: 'Delegated'
+        },
+        {
+            key: 4,
+            value: 'Accepted',
+            caption: 'Accepted'
+        },
+        {
+            key: 5,
+            value: 'Refferedto',
+            caption: 'Reffered To'
+        },
+        {
+            key: 6,
+            value: 'Closed',
+            caption: 'Closed'
+        },
     ];
 
     public static RequesterType: IRequesterType[] = [
