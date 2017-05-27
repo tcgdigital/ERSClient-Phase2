@@ -14,6 +14,7 @@ import {
 import { DepartmentService } from '../department';
 import { EmergencyTypeService } from '../emergencytype';
 import { DataExchangeService, SharedModule } from '../../../shared';
+import { OrganizationService } from "../../shared.components";
 
 @NgModule({
     imports: [
@@ -34,6 +35,7 @@ import { DataExchangeService, SharedModule } from '../../../shared';
         ChecklistService,
         DepartmentService,
         EmergencyTypeService,
+        OrganizationService,
         DataExchangeService
     ]
 })

@@ -33,8 +33,11 @@ export interface IRequesterType {
     enumtype: string;
     caption: string;
 }
-
-
+export interface IActionableStatus {
+    key: number;
+    value: string;
+    caption: string;
+}
 
 export class GlobalConstants {
     public static EXTERNAL_URL: string = 'http://localhost:5001/';
@@ -47,9 +50,9 @@ export class GlobalConstants {
     public static ACCESS_TOKEN: string = 'access_token';
     public static AD_AUTH_ENABLED: boolean = false;
     public static PASSWORD_PATTERN: string = '((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})';
-public static LAST_INCIDENT_PICK_COUNT: string = '5';
+    public static LAST_INCIDENT_PICK_COUNT: string = '5';
 
-    public static INTERCEPTOR_PERFORM: boolean = true;
+    public static INTERCEPTOR_PERFORM: boolean = false;
     public static PRESERVE_DATA_FROM_CONVERSION = ['EmergencyDate'];
 
     public static EmergencyCategories: IKeyValue[] = [
@@ -270,6 +273,39 @@ public static LAST_INCIDENT_PICK_COUNT: string = '5';
             value : 'UnidentifiedPDA',
             caption : 'Unidentified PDA'
         }
+    ];
+
+    public static ActionableStatus: IActionableStatus[] = [
+        {
+            key: 1,
+            value: 'Notified',
+            caption: 'Notified'
+        },
+        {
+            key: 2,
+            value: 'Assigned',
+            caption: 'Assigned'
+        },
+        {
+            key: 3,
+            value: 'Delegated',
+            caption: 'Delegated'
+        },
+        {
+            key: 4,
+            value: 'Accepted',
+            caption: 'Accepted'
+        },
+        {
+            key: 5,
+            value: 'Refferedto',
+            caption: 'Reffered To'
+        },
+        {
+            key: 6,
+            value: 'Closed',
+            caption: 'Closed'
+        },
     ];
 
     
