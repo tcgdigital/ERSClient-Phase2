@@ -1,1 +1,6 @@
 @import '../../../theme/component-styles/incident/incident';
+
+.is-disabled {
+    opacity: .7;
+    pointer-events: none;
+}

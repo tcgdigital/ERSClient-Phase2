@@ -12,8 +12,10 @@ import {
     AffectedPeopleVerificationComponent
 } from './components';
 import { InvolvePartyService } from '../involveparties';
+//import { EnquiryService } from '../call.centre';
 import { SharedModule, DataExchangeService } from '../../../shared';
 import { ModalModule} from 'ng2-bootstrap/modal';
+
 
 
 @NgModule({
@@ -36,6 +38,7 @@ import { ModalModule} from 'ng2-bootstrap/modal';
         AffectedPeopleService,
         DataExchangeService,
         InvolvePartyService
+      //  EnquiryService
     ]
 })
 export class AffectedPeopleModule { }

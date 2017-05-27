@@ -39,7 +39,8 @@ export class CallCenterOnlyPageComponent implements OnInit {
     initializeForm(): FormGroup {
         return new FormGroup({
             EnquiryType: new FormControl(0),
-            CallerName: new FormControl('', [Validators.required]),
+            CallerFirstName: new FormControl('', [Validators.required]),
+            CallerLastName: new FormControl('', [Validators.required]),
             ContactNumber: new FormControl('', [Validators.required]),
             AlternateContactNumber: new FormControl('', [Validators.required]),
             Relationship: new FormControl('', [Validators.required]),
@@ -73,7 +74,10 @@ export class CallCenterOnlyPageComponent implements OnInit {
         this.externnalInputModelToSave.Caller = new CallerModel();
         this.externnalInputModelToSave.IsCallRecieved = false;
         UtilityService.setModelFromFormGroup<CallerModel>(this.externnalInputModelToSave.Caller, this.form,
-            x => x.CallerName, x => x.ContactNumber, x => x.AlternateContactNumber, x => x.Relationship);
+            x => x.ContactNumber, x => x.AlternateContactNumber, x => x.Relationship);
+            this.externnalInputModelToSave.Caller.FirstName= this.form.controls["CallerFirstName"].value;
+            this.externnalInputModelToSave.Caller.LastName= this.form.controls["CallerLastName"].value;
+            this.externnalInputModelToSave.Caller.IsNok = false;
             this.externnalInputModelToSave.EnquiryType = this.enquirytypes.find(x=> x.value == this.enquiryType).caption;
             this.externnalInputModelToSave.IncidentId = this.currentIncident;
         if (this.enquiryType == 1 || this.enquiryType == 3) {
