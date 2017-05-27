@@ -3,76 +3,68 @@
         <div [hidden]="enquiryType!=1 && enquiryType!=3">
             <div class="row">
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="LastName">PDA Last Name<span class="required">*</span></label>
-                    <input id="LastName" class="form-control" type="text" name="LastName" [(ngModel)]="pdaenquery.LastName" readonly placeholder="Enter Last Name"
-                    />
+                    <label for="LastName">PDA Last Name </label>
+                    <label class="form-control grey-input">{{pdaenquery.LastName}}</label>
                 </div>
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="FirstName">PDA First Name<span class="required">*</span></label>
-                    <input id="FirstName" class="form-control" type="text" name="FirstName" [(ngModel)]="pdaenquery.FirstName" readonly placeholder="Enter First Name"
-                    />
+                    <label for="FirstName">PDA First Name </label>
+                    <label class="form-control grey-input">{{pdaenquery.FirstName}}</label>
                 </div>
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="Age">Age<span class="required">*</span></label>
-                    <input id="Age" class="form-control" type="text" name="Age" [(ngModel)]="pdaenquery.Age" readonly placeholder="Enter Age"
-                    />
+                    <label for="Age">Age </label>
+                    <label class="form-control grey-input">{{pdaenquery.Age}}</label>
                 </div>
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="KINRelationShip">KIN Relationship<span class="required">*</span></label>
-                    <input id="KINRelationShip" class="form-control" type="text" name="KINRelationShip" [(ngModel)]="pdaenquery.KINRelationShip"
-                        readonly/>
+                    <label for="KINRelationShip">KIN Relationship </label>
+                    <label class="form-control grey-input">{{pdaenquery.KINRelationShip}}</label>
                 </div>
             </div>
 
             <div class="row">
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="Nationality">Nationality<span class="required">*</span></label>
-                    <input id="Nationality" class="form-control" type="text" name="Nationality" [(ngModel)]="pdaenquery.Nationality" readonly
-                        placeholder="Enter Nationality" />
+                    <label for="Nationality">Nationality </label>
+                    <label class="form-control grey-input">{{pdaenquery.Nationality}}</label>
                 </div>
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="PermanentAddress">Permanent Address<span class="required">*</span></label>
-                    <input id="PermanentAddress" class="form-control" type="text" name="PermanentAddress" [(ngModel)]="pdaenquery.PermanentAddress"
-                        readonly/>
+                    <label for="PermanentAddress">Permanent Address </label>
+                    <label class="form-control grey-input">{{pdaenquery.PermanentAddress}}</label>
                 </div>
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="FlightNumber">Flight Number<span class="required">*</span></label>
-                    <input id="FlightNumber" class="form-control" type="text" name="FlightNumber" [(ngModel)]="pdaenquery.FlightNumber" readonly/>
+                    <label for="FlightNumber">Flight Number </label>
+                    <label class="form-control grey-input">{{pdaenquery.FlightNumber}}</label>
                 </div>
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="DepartedFrom">Departed From<span class="required">*</span></label>
-                    <input id="DepartedFrom" class="form-control" type="text" name="DepartedFrom" [(ngModel)]="pdaenquery.DepartedFrom" readonly/>
+                    <label for="DepartedFrom">Departed From </label>
+                    <label class="form-control grey-input">{{pdaenquery.DepartedFrom}}</label>
                 </div>
             </div>
 
             <div class="row">
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="TravellingTo">Travelling To<span class="required">*</span></label>
-                    <input id="TravellingTo" class="form-control" type="text" name="TravellingTo" [(ngModel)]="pdaenquery.TravellingTo" readonly/>
+                    <label for="TravellingTo">Travelling To </label>
+                    <label class="form-control grey-input">{{pdaenquery.TravellingTo}}</label>
                 </div>
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="TravellingWith">Travelling With<span class="required">*</span></label>
-                    <input id="TravellingWith" class="form-control" type="text" name="TravellingWith" [(ngModel)]="pdaenquery.TravellingWith"
-                        readonly/>
+                    <label for="TravellingWith">Travelling With </label>
+                    <label class="form-control grey-input">{{pdaenquery.TravellingWith}}</label>
                 </div>
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="EnquiryReason">Enquiry Reason<span class="required">*</span></label>
-                    <input id="EnquiryReason" class="form-control" type="text" name="EnquiryReason" [(ngModel)]="pdaenquery.EnquiryReason" readonly/>
+                    <label for="EnquiryReason">Enquiry Reason </label>
+                    <label class="form-control grey-input">{{pdaenquery.EnquiryReason}}</label>
                 </div>
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="KINFirstName">KIN First Name<span class="required">*</span></label>
-                    <input id="KINFirstName" class="form-control" type="text" name="KINFirstName" [(ngModel)]="pdaenquery.KINFirstName" readonly/>
+                    <label for="KINFirstName">KIN First Name </label>
+                    <label class="form-control grey-input">{{pdaenquery.KINFirstName}}</label>
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="KINLastName">KIN Last Name<span class="required">*</span></label>
-                    <input id="KINLastName" class="form-control" type="text" name="KINLastName" [(ngModel)]="pdaenquery.KINLastName" readonly/>
+                    <label for="KINLastName">KIN Last Name </label>
+                    <label class="form-control grey-input">{{pdaenquery.KINLastName}}</label>
                 </div>
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="KINContactNumber">KIN Contact Number<span class="required">*</span></label>
-                    <input id="KINContactNumber" class="form-control" type="text" name="KINContactNumber" [(ngModel)]="pdaenquery.KINContactNumber"
-                        readonly/>
+                    <label for="KINContactNumber">KIN Contact Number </label>
+                    <label class="form-control grey-input">{{pdaenquery.KINContactNumber}}</label>
                 </div>
             </div>
         </div>
@@ -80,46 +72,38 @@
         <div [hidden]=" enquiryType!=2">
             <div class="row">
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="ShippersName">Shipper's Name<span class="required">*</span></label>
-                    <input id="ShippersName" class="form-control" type="text" name="ShippersName" [(ngModel)]="cargoquery.ShippersName" readonly
-                        placeholder="Enter Shippers Name" />
+                    <label for="ShippersName">Shipper's Name </label>
+                    <label class="form-control grey-input">{{cargoquery.ShippersName}}</label>
                 </div>
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="ShippersAddress">Shipper's Address<span class="required">*</span></label>
-                    <input id="ShippersAddress" class="form-control" type="text" name="ShippersAddress" [(ngModel)]="cargoquery.ShippersAddress"
-                        readonly placeholder="Enter Shippers Address" />
+                    <label for="ShippersAddress">Shipper's Address </label>
+                    <label class="form-control grey-input">{{cargoquery.ShippersAddress}}</label>
                 </div>
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="ShippersContactNumber">Shipper's Contact Number<span class="required">*</span></label>
-                    <input id="ShippersContactNumber" class="form-control" type="text" name="ShippersContactNumber" [(ngModel)]="cargoquery.ShippersContactNumber"
-                        readonly placeholder="Enter Shippers Contact Number" />
+                    <label for="ShippersContactNumber">Shipper's Contact Number </label>
+                    <label class="form-control grey-input">{{cargoquery.ShippersContactNumber}}</label>
                 </div>
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="ConsigneesName">Consignee's Name<span class="required">*</span></label>
-                    <input id="ConsigneesName" class="form-control" type="text" name="ConsigneesName" [(ngModel)]="cargoquery.ConsigneesName"
-                        readonly placeholder="Enter Consignees Name" />
+                    <label for="ConsigneesName">Consignee's Name </label>
+                    <label class="form-control grey-input">{{cargoquery.ConsigneesName}}</label>
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="ConsigneesAddress">Consignee's Address<span class="required">*</span></label>
-                    <input id="ConsigneesAddress" class="form-control" type="text" name="ConsigneesAddress" [(ngModel)]="cargoquery.ConsigneesAddress"
-                        readonly placeholder="Enter Consignees Address" />
+                    <label for="ConsigneesAddress">Consignee's Address </label>
+                    <label class="form-control grey-input">{{cargoquery.ConsigneesAddress}}</label>
                 </div>
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="ConsigneesContactNumber">Consignee's Contac tNumber<span class="required">*</span></label>
-                    <input id="ConsigneesContactNumber" class="form-control" type="text" name="ConsigneesContactNumber" [(ngModel)]="cargoquery.ConsigneesContactNumber"
-                        readonly placeholder="Enter Consignee's Contact Number" />
+                    <label for="ConsigneesContactNumber">Consignee's Contac tNumber </label>
+                    <label class="form-control grey-input">{{cargoquery.ConsigneesContactNumber}}</label>
                 </div>
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="EnquiryReason">Enquiry Reason<span class="required">*</span></label>
-                    <input id="EnquiryReason" class="form-control" type="text" name="EnquiryReason" [(ngModel)]="cargoquery.EnquiryReason" readonly
-                        placeholder="Enter Enquiry Reason" />
+                    <label for="EnquiryReason">Enquiry Reason </label>
+                    <label class="form-control grey-input">{{cargoquery.EnquiryReason}}</label>
                 </div>
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="Query">Query<span class="required">*</span></label>
-                    <input id="Query" class="form-control" type="text" name="Query" [(ngModel)]="cargoquery.Query" readonly placeholder="Enter Query"
-                    />
+                    <label for="Query">Query </label>
+                    <label class="form-control grey-input">{{cargoquery.Query}}</label>
                 </div>
             </div>
         </div>
@@ -127,12 +111,12 @@
         <div [hidden]="enquiryType<4">
             <div class="row">
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="source">Source<span class="required">*</span></label>
-                    <input id="source" class="form-control" type="text" name="source" [(ngModel)]="otherquery.source" readonly placeholder="Enter Source" />
+                    <label for="source">Source </label>
+                    <label class="form-control grey-input">{{otherquery.source}}</label>
                 </div>
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                    <label for="Query">Query<span class="required">*</span></label>
-                    <input id="Query" class="form-control" type="text" name="Query" [(ngModel)]="otherquery.Query" readonly placeholder="Enter Query" />
+                    <label for="Query">Query </label>
+                    <label class="form-control grey-input">{{otherquery.Query}}</label>
                 </div>
             </div>
         </div>
@@ -144,6 +128,8 @@
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
                     <label for="Query">Query<span class="required">*</span></label>
                     <input id="Query" class="form-control" type="text" name="Query" formControlName="Queries" placeholder="Enter Query" />
+                    <small [hidden]="form.controls.Queries.valid || (form.controls.Queries.pristine && !submitted)"
+                        class="text-danger">Required</small>
                 </div>
                 <div class="form-group col-lg-6 col-sm-12 col-md-6" [hidden]="enquiryType!=1">
                     <label for="Passengers">PDA Name:<span class="red">*</span></label>
