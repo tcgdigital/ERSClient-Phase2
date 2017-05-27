@@ -23,8 +23,7 @@ import { CommunicationLogService } from '../communicationlogs';
         FormsModule,
         HttpModule,
         SharedModule,
-        MdCheckboxModule,
-        // CallCentreRouting
+        MdCheckboxModule
     ],
     declarations: [
         EnquiryEntryComponent
@@ -32,15 +31,6 @@ import { CommunicationLogService } from '../communicationlogs';
     exports: [
         EnquiryEntryComponent
     ]
-    // providers: [
-    //    // EnquiryService,
-    //    // DataExchangeService,
-    //    // AffectedPeopleService,
-    //   //  AffectedObjectsService,
-    //   //  DepartmentService,
-    //   //  DemandService,
-    //   //  InvolvePartyService,
-    //   //  CommunicationLogService
-    // ]
+ 
 })
 export class CallCentreModule { }

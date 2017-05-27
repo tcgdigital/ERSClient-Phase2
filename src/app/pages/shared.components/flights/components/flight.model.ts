@@ -18,7 +18,7 @@ export class FlightModel extends BaseModel {
     public OriginCode: string;
     public DestinationCode: string;
     public DepartureDate: Date;
-    public ArrivalDate?: Date;
+    public ArrivalDate: Date;
     public LoadAndTrimInfo?: string;
     public AircraftTypeId: number;
 
@@ -41,7 +41,7 @@ export class FlightModel extends BaseModel {
         this.OriginCode = '';
         this.DestinationCode = '';
         this.DepartureDate = new Date();
-        this.ArrivalDate = null;
+        this.ArrivalDate = new Date();
         this.LoadAndTrimInfo = null;
     }
 }

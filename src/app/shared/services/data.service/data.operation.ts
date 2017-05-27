@@ -15,6 +15,7 @@ export abstract class DataOperation<T> {
     protected ActionSuffix: string = '';
     protected Entity: T;
     protected Entities: T[];
+    protected Uri: string;
 
     /**
      * Creates an instance of DataOperation.
@@ -118,30 +119,32 @@ export abstract class DataOperation<T> {
         }
         if (actionSuffix) this.ActionSuffix = actionSuffix;
         if (key) this.Key = key;
+        this.Uri = this.DataProcessingService.GetUri(this.TypeName, this.Key, this.ActionSuffix);
 
 
         // Request Interceptor -- This call will happend prior to each and every http request call.
-        httpInterceptorService.request().addInterceptor((request, method) => {
-            if (GlobalConstants.INTERCEPTOR_PERFORM) {
-                request = LocalizationService.PreserveDateFromConversion(GlobalConstants.PRESERVE_DATA_FROM_CONVERSION,
-                    request, LocalizationService.transformRequestBody);
+        httpInterceptorService.request(`${this.Uri}`).addInterceptor((request, method) => {
+            // if (GlobalConstants.INTERCEPTOR_PERFORM) {
+            //     request = LocalizationService.PreserveDateFromConversion(GlobalConstants.PRESERVE_DATA_FROM_CONVERSION,
+            //         request, LocalizationService.transformRequestBody);
 
-                // LocalizationService.transformRequest(request);
-            }
+            // }
+
+            // httpInterceptorService.request().removeInterceptor((a,b)=>{return a;});
 
             return request;
         });
 
         // Response Interceptor -- This call will happend prior to each and every http response call.
-        httpInterceptorService.response().addInterceptor((response: any, method: string, context: any) => {
-            if (response !== undefined) {
-                if (GlobalConstants.INTERCEPTOR_PERFORM) {
-                    response = LocalizationService.PreserveDateFromConversion([],
-                        response, LocalizationService.transformResponseBody);
-                }
+        httpInterceptorService.response(`${this.Uri}`).addInterceptor((response: any, method: string, context: any) => {
+            // if (response !== undefined) {
+            //     if (GlobalConstants.INTERCEPTOR_PERFORM) {
+            //         response = LocalizationService.PreserveDateFromConversion([],
+            //             response, LocalizationService.transformResponseBody);
+            //     }
 
-                return response;
-            }
+                    return response.share();
+            // }
         });
     }
 
