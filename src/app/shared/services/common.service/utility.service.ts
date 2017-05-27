@@ -5,12 +5,26 @@ import * as jwtDecode from 'jwt-decode';
 import { GlobalConstants } from '../../constants';
 import { AuthModel } from '../../models';
 import * as moment from 'moment/moment';
+import { RAGScaleModel } from "../../../pages/shared.components";
+import { Observable } from 'rxjs/Rx';
+import {
+
+    DemandRaisedModel,
+    AllDeptDemandRaisedSummary,
+    SubDeptDemandRaisedSummary
+} from '../../../pages/widgets/demand.raised.summary.widget';
+import {
+
+    DemandReceivedModel,
+    AllDeptDemandReceivedSummary,
+    SubDeptDemandReceivedSummary
+} from '../../../pages/widgets/demand.received.summary.widget';
 
 export class UtilityService {
     private static STRIP_COMMENTS: RegExp = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
     private static ARGUMENT_NAMES: RegExp = /([^\s,]+)/g;
     private static CACHE_PROPERTY: string = '__paramNames';
-
+    public static RAGScaleData: RAGScaleModel[] = [];
     public static IsEmptyObject = (obj: {}): boolean => Object.keys(obj).length === 0 && obj.constructor === Object;
 
     public static IsEmptyArray = (obj: any[]): boolean => obj.length > 0 && obj[0] !== null;
@@ -261,6 +275,41 @@ export class UtilityService {
         );
 
         return dateObject;
+    }
+
+    public static SetRAGStatus<T extends any>(dataModels: T[], appliedModule: string): void {
+        let RAGScale: RAGScaleModel[] = UtilityService.RAGScaleData.filter((item: RAGScaleModel) => {
+            return item.AppliedModule === appliedModule;
+        }).sort((a: any, b: any) => {
+            if (a.StartingPoint < b.StartingPoint) return -1;
+            if (a.StartingPoint > b.StartingPoint) return 1;
+            return 0;
+        });
+
+        Observable.interval(1000).subscribe((_) => {
+            dataModels.forEach((entity: any) => {
+
+                let scheduleClose: number;
+                let actualClose: number;
+
+                if (entity.constructor.name === 'AllDeptDemandRaisedSummary' ||
+                    entity.constructor.name === 'AllDeptDemandReceivedSummary') {
+                    scheduleClose = (Number(entity.ScheduleTime) * 60000);
+                    actualClose = new Date(entity.CreatedOn).getTime();
+                }
+
+                const currentTime: number = new Date().getTime();
+                const timeDiffofCurrentMinus: number = (currentTime - actualClose);
+                const percentage: number = (((timeDiffofCurrentMinus) * 100) / (scheduleClose));
+
+                let selectedRag: RAGScaleModel = RAGScale.find((x: RAGScaleModel) => x.StartingPoint <= percentage
+                    && ((x.EndingPoint == undefined || x.EndingPoint == null) ? percentage : x.EndingPoint) >= percentage);
+
+                if (selectedRag) {
+                    entity[Object.keys(entity).find(x => x.startsWith('Rag'))] = selectedRag.StyleCode;
+                }
+            });
+        });
     }
 
     private static pad4(num: number): string {
