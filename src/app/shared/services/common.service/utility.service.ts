@@ -288,7 +288,6 @@ export class UtilityService {
 
         Observable.interval(1000).subscribe((_) => {
             dataModels.forEach((entity: any) => {
-
                 let scheduleClose: number;
                 let actualClose: number;
 
@@ -309,6 +308,32 @@ export class UtilityService {
                     entity[Object.keys(entity).find(x => x.startsWith('Rag'))] = selectedRag.StyleCode;
                 }
             });
+        });
+    }
+
+    public static SetRAGStatusGrid<T extends any>(dataModels: T[], appliedModule: string): void {
+        
+        let RAGScale: RAGScaleModel[] = UtilityService.RAGScaleData.filter((item: RAGScaleModel) => {
+            return item.AppliedModule === appliedModule;
+        }).sort((a: any, b: any) => {
+            if (a.StartingPoint < b.StartingPoint) return -1;
+            if (a.StartingPoint > b.StartingPoint) return 1;
+            return 0;
+        });
+        dataModels.forEach((entity: any) => {
+            
+            const ScheduleTime: number = (Number(entity.ScheduleTime) * 60000);
+            const CreatedOn: number = new Date(entity.CreatedOn).getTime();
+            const CurrentTime: number = new Date().getTime();
+            const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
+            const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
+
+            let selectedRag: RAGScaleModel = RAGScale.find((x: RAGScaleModel) => x.StartingPoint <= percentage
+                && ((x.EndingPoint == undefined || x.EndingPoint == null) ? percentage : x.EndingPoint) >= percentage);
+
+            if (selectedRag) {
+                entity[Object.keys(entity).find(x => x.startsWith('Rag'))] = selectedRag.StyleCode;
+            }
         });
     }
 

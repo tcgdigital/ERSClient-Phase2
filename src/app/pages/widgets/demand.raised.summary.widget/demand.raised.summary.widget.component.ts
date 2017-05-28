@@ -100,39 +100,8 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
     // TODO: Need to refactor
     setRagStatus(): void {
         Observable.interval(1000).subscribe((_) => {
-            this.allDemandRaisedSummaryModelList.forEach((demand) => {
-                if (demand.ClosedOn === undefined || demand.ClosedOn == null) {
-                    const ScheduleTime: number = (Number(demand.ScheduleTime) * 60000);
-                    const CreatedOn: number = new Date(demand.CreatedOn).getTime();
-                    const CurrentTime: number = new Date().getTime();
-                    const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-                    const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
-
-                    if (percentage < 50) {
-                        demand.RagStatus = 'statusGreen';
-                    } else if (percentage >= 100) {
-                        demand.RagStatus = 'statusRed';
-                    }
-                    else {
-                        demand.RagStatus = 'statusAmber';
-                    }
-                }
-                else {
-                    const ScheduleTime: number = (Number(demand.ScheduleTime) * 60000);
-                    const CreatedOn: number = new Date(demand.CreatedOn).getTime();
-                    const CurrentTime: number = new Date().getTime();
-                    const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-                    const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
-                    if (percentage < 50) {
-                        demand.RagStatus = 'statusGreen';
-                    } else if (percentage >= 100) {
-                        demand.RagStatus = 'statusRed';
-                    }
-                    else {
-                        demand.RagStatus = 'statusAmber';
-                    }
-                }
-            });
+            UtilityService.SetRAGStatusGrid(this.allDemandRaisedSummaryModelList, 'Demand');
+        
             this.allDemandRaisedSummaryModel = Observable.of(this.allDemandRaisedSummaryModelList);
         });
     }
@@ -190,26 +159,6 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         });
 
         UtilityService.SetRAGStatus(this.allDeptDemandRaisedSummaries, 'Demand');
-        //this.SetRAGIndicatorForDemandRaisedSummaries(this.allDeptDemandRaisedSummaries);
-
-        // Observable.interval(1000).subscribe((_) => {
-        //     this.allDeptDemandRaisedSummaries.forEach((dept: AllDeptDemandRaisedSummary) => {
-        //         const ScheduleTime: number = (Number(dept.ScheduleTime) * 60000);
-        //         const CreatedOn: number = new Date(dept.CreatedOn).getTime();
-        //         const CurrentTime: number = new Date().getTime();
-        //         const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-        //         const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
-
-        //         if (percentage < 50) {
-        //             dept.RagStatus = 'statusGreen';
-        //         } else if (percentage >= 100) {
-        //             dept.RagStatus = 'statusRed';
-        //         }
-        //         else {
-        //             dept.RagStatus = 'statusAmber';
-        //         }
-        //     });
-        // });
         this.showAllDeptSubCompleted = true;
         this.showAllDeptSubPending = false;
     }
@@ -237,26 +186,6 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         });
 
         UtilityService.SetRAGStatus(this.allDeptDemandRaisedSummaries, 'Demand');
-        //this.SetRAGIndicatorForDemandRaisedSummaries(this.allDeptDemandRaisedSummaries);
-
-        // Observable.interval(1000).subscribe((_) => {
-        //     this.allDeptDemandRaisedSummaries.forEach((dept: AllDeptDemandRaisedSummary) => {
-        //         const ScheduleTime: number = (Number(dept.ScheduleTime) * 60000);
-        //         const CreatedOn: number = new Date(dept.CreatedOn).getTime();
-        //         const CurrentTime: number = new Date().getTime();
-        //         const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-        //         const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
-
-        //         if (percentage < 50) {
-        //             dept.RagStatus = 'statusGreen';
-        //         } else if (percentage >= 100) {
-        //             dept.RagStatus = 'statusRed';
-        //         }
-        //         else {
-        //             dept.RagStatus = 'statusAmber';
-        //         }
-        //     });
-        // });
 
         this.showAllDeptSubPending = true;
         this.showAllDeptSubCompleted = false;
@@ -285,26 +214,6 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         });
 
         UtilityService.SetRAGStatus(this.subDeptDemandRaisedSummaries, 'Demand');
-        //this.SetRAGIndicatorForDemandRaisedSummaries(this.subDeptDemandRaisedSummaries);
-
-        // Observable.interval(1000).subscribe((_) => {
-        //     this.subDeptDemandRaisedSummaries.forEach((dept: AllDeptDemandRaisedSummary) => {
-        //         const ScheduleTime: number = (Number(dept.ScheduleTime) * 60000);
-        //         const CreatedOn: number = new Date(dept.CreatedOn).getTime();
-        //         const CurrentTime: number = new Date().getTime();
-        //         const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-        //         const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
-
-        //         if (percentage < 50) {
-        //             dept.RagStatus = 'statusGreen';
-        //         } else if (percentage >= 100) {
-        //             dept.RagStatus = 'statusRed';
-        //         }
-        //         else {
-        //             dept.RagStatus = 'statusAmber';
-        //         }
-        //     });
-        // });
         this.showSubDeptSubCompleted = true;
         this.showSubDeptSubPending = false;
     }
@@ -327,26 +236,6 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         });
 
         UtilityService.SetRAGStatus(this.subDeptDemandRaisedSummaries, 'Demand');
-        //this.SetRAGIndicatorForDemandRaisedSummaries(this.subDeptDemandRaisedSummaries);
-
-        // Observable.interval(1000).subscribe((_) => {
-        //     this.subDeptDemandRaisedSummaries.forEach((dept: AllDeptDemandRaisedSummary) => {
-        //         const ScheduleTime: number = (Number(dept.ScheduleTime) * 60000);
-        //         const CreatedOn: number = new Date(dept.CreatedOn).getTime();
-        //         const CurrentTime: number = new Date().getTime();
-        //         const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-        //         const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
-
-        //         if (percentage < 50) {
-        //             dept.RagStatus = 'statusGreen';
-        //         } else if (percentage >= 100) {
-        //             dept.RagStatus = 'statusRed';
-        //         }
-        //         else {
-        //             dept.RagStatus = 'statusAmber';
-        //         }
-        //     });
-        // });
         this.showSubDeptSubCompleted = false;
         this.showSubDeptSubPending = true;
     }
@@ -426,24 +315,4 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         });
     }
 
-    // private SetRAGIndicatorForDemandRaisedSummaries(arrayList: any[]): void {
-    //     Observable.interval(1000).subscribe((_) => {
-    //         arrayList.forEach((dept: AllDeptDemandRaisedSummary) => {
-    //             const ScheduleTime: number = (Number(dept.ScheduleTime) * 60000);
-    //             const CreatedOn: number = new Date(dept.CreatedOn).getTime();
-    //             const CurrentTime: number = new Date().getTime();
-    //             const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-    //             const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
-
-    //             if (percentage < 50) {
-    //                 dept.RagStatus = 'statusGreen';
-    //             } else if (percentage >= 100) {
-    //                 dept.RagStatus = 'statusRed';
-    //             }
-    //             else {
-    //                 dept.RagStatus = 'statusAmber';
-    //             }
-    //         });
-    //     });
-    // }
 }

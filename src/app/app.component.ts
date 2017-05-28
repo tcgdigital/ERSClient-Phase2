@@ -1,12 +1,15 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Routes } from '@angular/router';
+import { RAGScaleService,RAGScaleModel } from "./pages/shared.components/ragscale";
+import { ResponseModel } from "./shared";
 
 import {
     GlobalStateService,
     ImageLoaderService,
     ThemeSpinnerService,
     ThemePreloaderService,
-    SideMenuService
+    SideMenuService,
+    UtilityService
 } from './shared/services';
 import { MENU } from './app.memu';
 import { LayoutPaths } from './shared/constants';
@@ -17,6 +20,9 @@ import { LayoutPaths } from './shared/constants';
 @Component({
     selector: 'app',
     encapsulation: ViewEncapsulation.None,
+    providers:[
+        RAGScaleService
+    ],
     templateUrl: './app.view.html',
     styleUrls:['./app.style.scss']
 })
@@ -27,6 +33,7 @@ export class AppComponent implements OnInit {
         private imageLoader: ImageLoaderService,
         private spinner: ThemeSpinnerService,
         private menuService: SideMenuService,
+        private ragScaleService:RAGScaleService
     ) {
         this.menuService.updateMenuByRoutes(<Routes>MENU);
         this.LoadImages();
@@ -38,6 +45,7 @@ export class AppComponent implements OnInit {
 
     public ngOnInit(): void {
         console.log('Initial App State');
+        this.getRAGScaleData();
     }
 
     public ngAfterViewInit(): void {
@@ -55,5 +63,12 @@ export class AppComponent implements OnInit {
         // register some loaders
         ThemePreloaderService.RegisterLoader(this.imageLoader
             .Load(LayoutPaths.images.root + 'sky-bg.jpg'));
+    }
+
+    private getRAGScaleData() {
+        this.ragScaleService.GetAllActive()
+        .subscribe((item:ResponseModel<RAGScaleModel>)=>{
+            UtilityService.RAGScaleData=item.Records;
+        });
     }
 }
