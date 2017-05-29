@@ -117,7 +117,6 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         this.showAllDeptSubPending = false;
         this.demandRaisedSummaryWidgetService.GetAllDepartmentDemandByIncident
             (this.incidentId, (item: DemandRaisedModel[]) => {
-                debugger;
                 this.allDemandRaisedList = Observable.of(item);
                 this.childModalViewAllDemandRaisedSummary.show();
                 this.graphDataFormationForDemandRaisedSummeryWidget(item);
@@ -148,7 +147,6 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
 
     // TODO: Need to refactor
     public showAllDeptSubCompletedFunc(demandModelList: DemandModel[]): void {
-        debugger;
         this.allDeptDemandRaisedSummaries = [];
         demandModelList.forEach((item: DemandModel) => {
             if (item.IsClosed === true) {
