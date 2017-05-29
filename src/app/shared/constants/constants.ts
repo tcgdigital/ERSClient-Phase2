@@ -45,7 +45,7 @@ export class GlobalConstants {
     public static AD_AUTH_ENABLED: boolean = false;
     public static PASSWORD_PATTERN: string = '((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})';
     public static LAST_INCIDENT_PICK_COUNT: string = '5';
-
+    public static ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION: number = 12;
     public static INTERCEPTOR_PERFORM: boolean = true;
     public static PRESERVE_DATA_FROM_CONVERSION = ['EmergencyDate'];
 
@@ -93,7 +93,7 @@ export class GlobalConstants {
             text: 'Crew',
         }];
 
-     public static ExternalInputEnquiryType: IEnquiryType[] = [
+    public static ExternalInputEnquiryType: IEnquiryType[] = [
         {
             value: '1',
             caption: 'Passenger',
@@ -140,7 +140,7 @@ export class GlobalConstants {
             text: 'Customer Dissatisfaction',
         }];
 
-  
+
     public static Priority: IPriority[] = [
         {
             value: '1',
