@@ -286,7 +286,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.demandModel.TargetDepartmentId = 0;
         this.demandModel.Caller = new CallerModel();
         this.demandModel.RequestedBy = this.credentialName;
-        this.demandModel.Caller.CallerName = this.credentialName;
+        this.demandModel.Caller.FirstName = this.credentialName;
+        this.demandModel.Caller.LastName ="";
         this.Action = "Save";
         this.isReadonly = false;
         this.childModal.show();
@@ -417,7 +418,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.demandModel.TargetDepartmentId = 0;
         this.demandModel.Caller = new CallerModel();
         this.demandModel.RequestedBy = this.credentialName;
-        this.demandModel.Caller.CallerName = this.credentialName;
+        this.demandModel.Caller.FirstName = this.credentialName;
+        this.demandModel.Caller.LastName = "";
         this.Action = "Save";
         this.isReadonly = false;
 
@@ -533,13 +535,13 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             this.demandModelEdit.DemandDesc = this.form.controls['DemandDesc'].value;
         }
         if (this.form.controls['RequestedBy'].touched) {
-            this.caller.CallerName = this.form.controls['RequestedBy'].value;
+            this.caller.FirstName = this.form.controls['RequestedBy'].value;
         }
         if (this.form.controls['RequesterType'].touched) {
             this.demandModelEdit.RequesterType = this.form.controls['RequesterType'].value;
         }
         if (this.form.controls['TargetDepartmentId'].touched) {
-            this.demandModelEdit.TargetDepartmentId = this.form.controls['TargetDepartmentId'].value;
+            this.demandModelEdit.TargetDepartmentId = +this.form.controls['TargetDepartmentId'].value;
         }
         if (this.form.controls['ContactNumber'].touched) {
             this.demandModelEdit.ContactNumber = this.form.controls['ContactNumber'].value;
@@ -560,7 +562,10 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             let currentDate = new Date().getTime();
             let timeDiffSec = this.resolutionTime.getTime() - currentDate;
             this.demandModel.ScheduleTime = (timeDiffSec / 60000).toString();
-            this.demandModel.Caller.CallerName = this.form.controls["RequestedBy"].value;
+            this.demandModel.DemandTypeId = +this.demandModel.DemandTypeId;
+            this.demandModel.TargetDepartmentId = +this.demandModel.TargetDepartmentId;
+            this.demandModel.Caller.FirstName = this.form.controls["RequestedBy"].value;
+            this.demandModel.Caller.LastName = "";
             this.demandModel.Caller.ContactNumber = this.form.controls["ContactNumber"].value;
             this.demandModel.IncidentId = this.currentIncidentId;
             this.demandModel.RequesterDepartmentId = this.currentDepartmentId;

@@ -1,6 +1,6 @@
 <div *ngIf="showAdd" class="formStyle card-block entryHolder">
     <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
-        <input id="CheckListId" class="form-control" type="hidden" name="CheckListId" formControlName="DepartmentId" [ngModel]="this.departmentModel.DepartmentId"
+        <input id="DepartmentId" class="form-control" type="hidden" name="CheckListId" formControlName="DepartmentId" [ngModel]="this.departmentModel.DepartmentId"
         />
 
         <div class="row">

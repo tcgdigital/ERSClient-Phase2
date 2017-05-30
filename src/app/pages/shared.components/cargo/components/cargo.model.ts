@@ -12,6 +12,18 @@ export class CargoModel extends BaseModel {
 	public mftpcs?: number;
 	public mftwgt?: number;
 
+	public ShipperName : string;
+	public ShipperAddress : string;
+	public ShipperContactNo : string;
+	public ConsigneeName : string;
+	public ConsigneeAddress : string;
+	public ConsigneeContactNo : string;
+	public Origin : string;
+	public Destination : string;
+	public CargoType : string;
+	public AdvisoryToConsignee : string;
+	public AWBDocPath : string;
+
 	public Flight: FlightModel;
 
 	public AffectedObjects?: AffectedObjectModel[];

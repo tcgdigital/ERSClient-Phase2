@@ -44,6 +44,10 @@ export class GlobalConstants {
     public static ACCESS_TOKEN: string = 'access_token';
     public static AD_AUTH_ENABLED: boolean = false;
     public static PASSWORD_PATTERN: string = '((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})';
+    public static LAST_INCIDENT_PICK_COUNT: string = '5';
+
+    public static INTERCEPTOR_PERFORM: boolean = true;
+    public static PRESERVE_DATA_FROM_CONVERSION = ['EmergencyDate'];
 
     public static LicenseValidationCode: IKeyValue[] = [
         { key: 101, value: 'License is valid' },
@@ -98,6 +102,54 @@ export class GlobalConstants {
             text: 'Crew',
         }];
 
+     public static ExternalInputEnquiryType: IEnquiryType[] = [
+        {
+            value: '1',
+            caption: 'Passenger',
+            text: 'Passenger enquiry'
+        },
+        {
+            value: '2',
+            caption: 'Cargo',
+            text: 'Cargo enquiry'
+        },
+        {
+            value: '3',
+            caption: 'Crew',
+            text: 'Crew enquiry',
+        },
+        {
+            value: '4',
+            caption: 'Media',
+            text: 'Media enquiry',
+        },
+        {
+            value: '5',
+            caption: 'FutureTravel',
+            text: 'Future Travel enquiry',
+        },
+        {
+            value: '6',
+            caption: 'GeneralUpdate',
+            text: 'General Update enquiry',
+        },
+        {
+            value: '7',
+            caption: 'Others',
+            text: 'Other enquiry',
+        },
+        {
+            value: '8',
+            caption: 'SituationalUpdates',
+            text: 'Situational Updates enquiry',
+        },
+        {
+            value: '9',
+            caption: 'CustomerDissatisfaction',
+            text: 'Customer Dissatisfaction',
+        }];
+
+  
     public static Priority: IPriority[] = [
         {
             value: '1',

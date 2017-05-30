@@ -1,6 +1,8 @@
 import { BaseModel } from '../../../../shared';
 import { DepartmentModel } from '../../../masterdata/department';
 import { IncidentModel } from '../../../incident';
+import { ExternalInputModel } from '../../../callcenteronlypage/component';
+
 import {
     CallerModel,
     CommunicationLogModel,
@@ -17,8 +19,6 @@ export class EnquiryModel extends BaseModel {
     public AffectedObjectId?: number;
     public CallerId?: number;
     public NextOfKinId?: number;
-    public MediaId?: number;
-    public InterestedPartyId?: number;
     public EnquiryType: number;
     public IsCallBack?: boolean;
     public IsTravelRequest?: boolean;
@@ -26,12 +26,12 @@ export class EnquiryModel extends BaseModel {
     public Queries: string;
     public Remarks: string;
     public IncidentId: number;
+    public ExternalInputId : number;
 
     public Caller?: CallerModel;
     public NextOfKin?: NextOfKinModel;
-    public InterestedParty?: InterestedpartyModel;
-    public Media?: MediaModel;
     public Incident: IncidentModel;
+    public ExternalInput : ExternalInputModel;
 
     public AffectedPeople?: AffectedPeopleModel[];
     public AffectedObjects?: AffectedObjectModel[];
@@ -45,8 +45,6 @@ export class EnquiryModel extends BaseModel {
         this.AffectedObjectId = null;
         this.CallerId = null;
         this.NextOfKinId = null;
-        this.MediaId = null;
-        this.InterestedPartyId = null;
         this.EnquiryType = 0;
         this.IsCallBack = null;
         this.IsTravelRequest = null;

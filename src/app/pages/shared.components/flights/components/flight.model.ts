@@ -7,7 +7,7 @@ import {
     CargoModel,
     InvalidPassengerModel,
     InvalidCargoModel,
-    InvalidCrewModel
+    InvalidCrewModel, AircraftTypeModel
 } from '../../../shared.components';
 
 export class FlightModel extends BaseModel {
@@ -18,10 +18,12 @@ export class FlightModel extends BaseModel {
     public OriginCode: string;
     public DestinationCode: string;
     public DepartureDate: Date;
-    public ArrivalDate?: Date;
+    public ArrivalDate: Date;
     public LoadAndTrimInfo?: string;
+    public AircraftTypeId: number;
 
     public InvolvedParty: InvolvePartyModel;
+    public AircraftType: AircraftTypeModel;
 
     public Crewes?: CrewModel[];
     public Passengers?: PassengerModel[];
@@ -29,7 +31,7 @@ export class FlightModel extends BaseModel {
     public InvalidPassengerRecords?: InvalidPassengerModel[];
     public InvalidCargoes?: InvalidCargoModel[];
     public InvalidCrewRecords?: InvalidCrewModel[];
-    
+
     constructor() {
         super();
         this.FlightId = 0;
@@ -39,7 +41,7 @@ export class FlightModel extends BaseModel {
         this.OriginCode = '';
         this.DestinationCode = '';
         this.DepartureDate = new Date();
-        this.ArrivalDate = null;
+        this.ArrivalDate = new Date();
         this.LoadAndTrimInfo = null;
     }
 }

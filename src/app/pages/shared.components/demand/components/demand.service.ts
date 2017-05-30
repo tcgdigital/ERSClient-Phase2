@@ -22,6 +22,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
     private _bulkDataServiceForCompletion: DataService<DemandModel>;
     private _bulkDataServiceForApproval: DataService<DemandModel>;
     private _batchDataService: DataService<DemandModel>;
+    private _bulkDataServiceForClosure: DataService<DemandModel>;
     public departmentAccessOwnerModels: DepartmentAccessOwnerModel[];
     /**
      * Creates an instance of DemandService.
@@ -42,7 +43,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
         this._bulkDataServiceForApproval = this.dataServiceFactory
             .CreateServiceWithOptionsAndActionSuffix<DemandModel>
             ('DemandApproveBatch', '', option);
-        this._bulkDataServiceForCompletion = this.dataServiceFactory
+        this._bulkDataServiceForClosure = this.dataServiceFactory
             .CreateServiceWithOptionsAndActionSuffix<DemandModel>
             ('DemandClosureBatch', '', option);
         this._batchDataService = this.dataServiceFactory
@@ -144,8 +145,17 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
     };
 
     public UpdateBulkForClosure(entities: DemandModel[]): Observable<DemandModel[]> {
-        return this._bulkDataServiceForCompletion.BulkPost(entities).Execute();
+        return this._bulkDataServiceForClosure.BulkPost(entities).Execute();
     };
+
+    public UpdateBulkToDeactivateFromCallId(callId: number): Observable<DemandModel[]> {
+        let option = new DataProcessingService();
+        let bulkDataServiceToDeactivate = this.dataServiceFactory
+            .CreateServiceWithOptionsAndActionSuffix<DemandModel>
+            ('DemandBatch', `BatchDeactivate/${callId}`, option);
+        return bulkDataServiceToDeactivate.JsonPost(callId).Execute();
+    };
+
 
     public GetDepartmentIdProjection(departmentId: number): Observable<ResponseModel<DepartmentAccessOwnerModel>> {
         let departmentIdProjection: string = '';
@@ -225,7 +235,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
             }
         });
         //departmentIds.forEach(x => {
-        requests.push(new RequestModel<BaseModel>(`/odata/Demands?$filter=IncidentId eq ${incidentId} and (${filterString})`, WEB_METHOD.GET));
+        requests.push(new RequestModel<BaseModel>(`/odata/Demands?$filter=IncidentId eq ${incidentId} and (${filterString}) and ActiveFlag eq 'Active'`, WEB_METHOD.GET));
         // });
         return this._batchDataService.BatchPost<BaseModel>(requests)
             .Execute();

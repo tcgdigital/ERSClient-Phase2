@@ -4,3 +4,4 @@ export * from './sidemenu.service';
 export * from './file.upload.service';
 export * from './location.service';
 export * from './licensing.service';
+export * from './localization.service';

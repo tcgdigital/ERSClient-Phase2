@@ -4,10 +4,16 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MdCheckboxModule } from '@angular2-material/checkbox';
 
-import { OtherQueryComponent } from './other.query.component';
 import { OtherQueryRouting } from './other.query.routing';
-import { EnquiryService} from '../call.centre';
-import { DataExchangeService,SharedModule } from '../../../shared';
+import { OtherQueryComponent } from './other.query.components';
+import { OtherQueryAssignedCallsListComponent, OtherQueryRecievedCallsListComponent } from './components';
+import { EnquiryService, CallCentreModule } from '../call.centre';
+import { CommunicationLogService } from '../communicationlogs';
+
+import { CallCenterOnlyPageService } from '../../callcenteronlypage/component';
+import { DataExchangeService, SharedModule } from '../../../shared';
+import { ModalModule } from 'ng2-bootstrap/modal';
+
 
 @NgModule({
     imports: [
@@ -17,14 +23,20 @@ import { DataExchangeService,SharedModule } from '../../../shared';
         HttpModule,
         SharedModule,
         MdCheckboxModule,
+        ModalModule,
+        CallCentreModule,
         OtherQueryRouting
     ],
     declarations: [
-       OtherQueryComponent
+        OtherQueryComponent,
+        OtherQueryAssignedCallsListComponent,
+        OtherQueryRecievedCallsListComponent
     ],
     providers: [
         EnquiryService,
-        DataExchangeService
+        DataExchangeService,
+        CallCenterOnlyPageService,
+        CommunicationLogService
     ]
 })
 export class OtherQueryModule { }

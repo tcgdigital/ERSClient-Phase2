@@ -25,14 +25,13 @@
                 <div class="form-group">
                     <div *ngIf="showApproverDept">
                         <label for="ApproverDept">Approver Department:<span class="required">*</span></label>
-                        <select id="selectApprover" [(ngModel)]="demandTypeModel.DepartmentId" formControlName="ApproverDept" class="form-control">
-
+                        <select id="selectApprover" formControlName="ApproverDept" class="form-control">
                         <option value=''>Select Approver Department</option>
                         <option *ngFor="let department of departments" [value]="department.DepartmentId" >
                         {{department.DepartmentName}}
                         </option>
                     </select>
-                    <small *ngIf="!form.controls.ApproverDept.valid" class="text-danger">
+                    <small *ngIf="!form.controls.ApproverDept.valid && showApproverDept" class="text-danger">
                         Required.
                         </small>
                     </div>

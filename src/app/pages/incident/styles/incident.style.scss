@@ -1,42 +1,6 @@
-.col-no-left-padding {
-    padding-left: 0 !important;
-}
+@import '../../../theme/component-styles/incident/incident';
 
-.col-no-right-padding {
-    padding-right: 0 !important;
-}
-
-.row-no-padding>[class*="col-"] {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-}
-
-.labelStyle {
-    border: none;
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-.textarea {
-    height: 121px;
-}
-
-.sebm-google-map-container {
-    height: 527px;
-}
-
-.width-1035px {
-    width: 1035px;
-}
-
-.dilld{
-    background: #febc5b;
-    border-radius: 15px;
-    color: #333;
-    font-size: 11px;
-    width: 8%;
-    text-align: center;
-    padding: 3px 0;
-    position: relative;
-    left: -410px;
+.is-disabled {
+    opacity: .7;
+    pointer-events: none;
 }

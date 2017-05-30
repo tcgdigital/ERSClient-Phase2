@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BaseModel, KeyValue } from '../../../shared';
 import { EmergencyTypeModel } from '../../masterdata/emergencytype';
 import { DepartmentModel } from '../../masterdata/department';
-import { InvolvePartyModel } from '../../shared.components';
+import { InvolvePartyModel, OrganizationModel } from '../../shared.components';
 
 export class IncidentModel extends BaseModel {
     public IncidentId: number;
@@ -10,16 +10,34 @@ export class IncidentModel extends BaseModel {
     public EmergencyTypeId: number;
     public IncidentStatus: string;
     public EmergencyName: string;
-    public AlertMessage: string;
+    //public AlertMessage: string;
     public Description: string;
     public ClosureNote: string;
     public EmergencyDate: Date;
     public Severity: string;
     public EmergencyLocation: string;
     public OffSetLocation: string;
+
+    public WhatHappend: string;
+    public WhereHappend: string;
+    public OtherConfirmationInformation: string;
+
+
     public IsSubmitted: boolean;
     public IsSaved: boolean;
     public Remarks: string;
+    //public AirportInCharge: string;
+    public OrganizationId: number;
+    //public CrisisReporterIdentity: string;
+
+    public SourceInformation: string;
+    public ReportedByName: string;
+    public ReportedByAddress: string;
+    public ContactOfWitness: string;
+    public SenderOfCrisisInformation: string;
+    public BorrowedIncident: number;
+
+
     public ClosedBy?: number;
     public ClosedOn?: Date;
     public ReOpenBy?: number;
@@ -32,7 +50,9 @@ export class IncidentModel extends BaseModel {
     public SavedOn?: Date;
     public DepartmentId: number;
     public isReopen: boolean;
+
     public EmergencyType: EmergencyTypeModel;
+    public Organization: OrganizationModel;
     public Department: DepartmentModel;
 
     public InvolvedParties?: InvolvePartyModel[];
@@ -43,17 +63,34 @@ export class IncidentModel extends BaseModel {
         this.IncidentId = 0;
         this.IsDrill = false;
         this.EmergencyTypeId = 0;
+
         this.IncidentStatus = '';
         this.EmergencyName = '';
-        this.AlertMessage = '';
+        //this.AlertMessage = '';
         this.Description = '';
         this.ClosureNote = '';
         this.EmergencyDate = new Date();
         this.Severity = '';
         this.EmergencyLocation = '';
+
+        this.WhatHappend = '';
+        this.WhereHappend = '';
+        this.OtherConfirmationInformation = '';
+
         this.IsSubmitted = false;
         this.IsSaved = false;
         this.Remarks = '';
+        //this.AirportInCharge = '';
+        this.OrganizationId = 0;
+        //this.CrisisReporterIdentity = '';
+
+        this.SourceInformation = '';
+        this.ReportedByName = '';
+        this.ReportedByAddress = '';
+        this.ContactOfWitness = '';
+        this.SenderOfCrisisInformation = '';
+        this.BorrowedIncident = 0;
+
         this.ClosedBy = null;
         this.ClosedOn = null;
         this.ReOpenBy = null;

@@ -5,7 +5,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Ng2BootstrapModule } from 'ng2-bootstrap';
 import { NgSelectizeModule } from 'ng-selectize';
-
+import { HTTP_INTERCEPTOR_PROVIDER,HTTP_INTERCEPTOR_NO_OVERRIDE_PROVIDER } from './interceptor';
 import {
     PaddingFormatterPipe
 } from './pipes';
@@ -100,7 +100,9 @@ const SHARED_SERVICES: any[] = [
     DataExchangeService,
     LocationService,
     LicensingService,
-    ENV_PROVIDERS
+    ENV_PROVIDERS,
+    HTTP_INTERCEPTOR_PROVIDER,
+    HTTP_INTERCEPTOR_NO_OVERRIDE_PROVIDER
 ];
 
 const SHARED_VALIDATORS: any[] = [
@@ -134,6 +136,7 @@ const SHARED_PIPES: any[] = [
         HttpModule,
         NgSelectizeModule,
         Ng2BootstrapModule.forRoot()
+        
     ],
     exports: [
         ...SHARED_COMPONENTS,

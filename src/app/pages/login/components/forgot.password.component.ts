@@ -18,6 +18,7 @@ export class ForgotPasswordComponent implements OnInit, AfterViewInit {
     public forgotPasswordForm: FormGroup;
     public submitted: boolean = false;
     public errorMessage: string = '';
+    public SecurityQuestion: string = '';
 
     constructor(private formBuilder: FormBuilder,
         private elementRef: ElementRef,
@@ -28,6 +29,15 @@ export class ForgotPasswordComponent implements OnInit, AfterViewInit {
 
     public ngOnInit(): void {
         this.forgotPasswordForm = this.setForgotPasswordForm();
+    }
+
+    public onBlurMethod(value): void {
+        this.forgotPasswordService.GetEecurityQuestion(value)
+            .subscribe((x) => {
+                this.SecurityQuestion = x;
+                this.forgotPasswordForm.controls['SecurityQuestion']
+                    .setValue(this.SecurityQuestion);
+            });
     }
 
     public ngAfterViewInit(): void {
@@ -85,6 +95,8 @@ export class ForgotPasswordComponent implements OnInit, AfterViewInit {
     private setForgotPasswordForm(forgotPasswordModel?: ForgotPasswordModel): FormGroup {
         this.compareValidator = this.compareValidator.bind(this);
         const formGroup: FormGroup = new FormGroup({
+            SecurityQuestion: new FormControl(forgotPasswordModel ? forgotPasswordModel.SecurityQuestion : '', [Validators.required]),
+            SecurityAnswer: new FormControl(forgotPasswordModel ? forgotPasswordModel.SecurityAnswer : '', [Validators.required]),
             EmailOrUserName: new FormControl(forgotPasswordModel ? forgotPasswordModel.EmailOrUserName : '', [Validators.required]),
             NewPassword: new FormControl(forgotPasswordModel ? forgotPasswordModel.NewPassword : '',
                 [Validators.required, Validators.minLength(8), Validators.maxLength(20), Validators.pattern(GlobalConstants.PASSWORD_PATTERN)]),

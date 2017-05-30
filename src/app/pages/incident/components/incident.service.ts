@@ -43,14 +43,15 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
         return this._dataService.Query()
             .Expand('ParentCheckList($select=CheckListId,CheckListCode)',
             'TargetDepartment($select=DepartmentId,DepartmentName)',
-            'EmergencyType($select=EmergencyTypeId,EmergencyTypeName)')
+            'EmergencyType($select=EmergencyTypeId,EmergencyTypeName)',
+            'Organization($select=OrganizationId,OrganizationCode,OrganizationName)')
             .OrderBy('CreatedOn desc')
             .Execute();
     }
 
     GetAllActiveIncidents(): Observable<ResponseModel<IncidentModel>> {
         return this._dataService.Query()
-            .Filter("ActiveFlag eq 'Active'")
+            .Filter("ActiveFlag eq 'Active' and ClosedOn eq null and IncidentId ne 0")
             .OrderBy('CreatedOn desc')
             .Execute();
     }
@@ -69,26 +70,19 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
         flight?: FlightModel, affected?: AffectedModel): Observable<IncidentModel> {
         let incident: IncidentModel;
         if (isFlightRelated) {
+            involvedParty.Affecteds = [];
+            delete affected.Active;
+            involvedParty.Affecteds.push(affected);
+            involvedParty.Flights = [];
+            involvedParty.Flights.push(flight);
+            incidentModel.InvolvedParties = [];
+            incidentModel.InvolvedParties.push(involvedParty);
             return this._dataService.Post(incidentModel)
                 .Execute()
                 .map((data: IncidentModel) => {
                     incident = data;
                     involvedParty.IncidentId = incident.IncidentId;
                     return data;
-                })
-                .flatMap((data: IncidentModel) => this.CreateInvolveParty(involvedParty))
-                .map((data: InvolvePartyModel) => {
-                    flight.InvolvedPartyId = data.InvolvedPartyId;
-                    affected.InvolvedPartyId = data.InvolvedPartyId;
-                    return incident;
-                })
-                .flatMap((data: IncidentModel) => this.flightService.CreateFlight(flight))
-                .map((data: FlightModel) => {
-                    return incident;
-                })
-                .flatMap((data: IncidentModel) => this.CreateAffected(affected))
-                .map((data: AffectedModel) => {
-                    return incident;
                 });
         }
         else {
@@ -119,6 +113,7 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
             });
     }
 
+
     CreateAffected(entity: AffectedModel): Observable<AffectedModel> {
         let affected: AffectedModel;
         delete entity.Active;
@@ -129,6 +124,29 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
                 affected.Active = (affected.ActiveFlag == 'Active');
                 return data;
             });
+    }
 
+    GetLastConfiguredCountIncidents(): Observable<ResponseModel<IncidentModel>> {
+        return this._dataService.Query()
+            .Filter('IncidentId ne 0')
+            .OrderBy('IncidentId asc')
+            .Expand('InvolvedParties')
+            .Execute();
+    }
+
+    GetFlightInfoFromIncident(incidentId: number): Observable<FlightModel> {
+        return this._dataService.Query()
+            .Filter(`IncidentId eq ${incidentId}`)
+            .Expand('InvolvedParties($expand=Flights)')
+            .Execute()
+            .map((item: ResponseModel<IncidentModel>) => {
+                if (item.Count > 0) {
+                    if (item.Records[0].InvolvedParties.length > 0) {
+                        if(item.Records[0].InvolvedParties[0].Flights.length>0){
+                            return item.Records[0].InvolvedParties[0].Flights[0];
+                        }
+                    }
+                }
+            });
     }
 }

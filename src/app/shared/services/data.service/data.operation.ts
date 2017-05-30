@@ -1,9 +1,10 @@
 import { Http, Response, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
-
+import { HttpInterceptorService } from '../../interceptor';
 import { BaseModel, ResponseModel } from '../../models';
 import { DataProcessingService } from './data.processing.service';
-
+import { LocalizationService } from "../../services/common.service";
+import { GlobalConstants } from "../../../shared";
 export abstract class DataOperation<T> {
 
     protected DataProcessingService: DataProcessingService;
@@ -14,6 +15,7 @@ export abstract class DataOperation<T> {
     protected ActionSuffix: string = '';
     protected Entity: T;
     protected Entities: T[];
+    protected Uri: string;
 
     /**
      * Creates an instance of DataOperation.
@@ -26,6 +28,7 @@ export abstract class DataOperation<T> {
      */
     constructor(dataProcessingService: DataProcessingService,
         httpService: Http,
+        httpInterceptorService: HttpInterceptorService,
         typeName: string);
 
     /**
@@ -39,7 +42,9 @@ export abstract class DataOperation<T> {
      */
     constructor(dataProcessingService: DataProcessingService,
         httpService: Http,
-        typeNameOrEntities: string | T[]);
+        httpInterceptorService: HttpInterceptorService,
+        typeNameOrEntities: string | T[],
+        localizationService: LocalizationService);
 
     /**
      * Creates an instance of DataOperation.
@@ -53,6 +58,7 @@ export abstract class DataOperation<T> {
      */
     constructor(dataProcessingService: DataProcessingService,
         httpService: Http,
+        httpInterceptorService: HttpInterceptorService,
         typeNameOrEntities: string | T[],
         key?: string);
 
@@ -69,6 +75,7 @@ export abstract class DataOperation<T> {
      */
     constructor(dataProcessingService: DataProcessingService,
         httpService: Http,
+        httpInterceptorService: HttpInterceptorService,
         typeNameOrEntities: string | T[],
         keyOrEntity?: string | T,
         key?: string);
@@ -87,6 +94,7 @@ export abstract class DataOperation<T> {
      */
     constructor(dataProcessingService: DataProcessingService,
         httpService: Http,
+        httpInterceptorService: HttpInterceptorService,
         typeNameOrEntities: string | T[],
         keyOrEntity?: string | T,
         key?: string,
@@ -111,7 +119,37 @@ export abstract class DataOperation<T> {
         }
         if (actionSuffix) this.ActionSuffix = actionSuffix;
         if (key) this.Key = key;
+        this.Uri = this.DataProcessingService.GetUri(this.TypeName, this.Key, this.ActionSuffix);
+
+
+        // Request Interceptor -- This call will happend prior to each and every http request call.
+        httpInterceptorService.request(`${this.Uri}`).addInterceptor((request, method) => {
+            // if (GlobalConstants.INTERCEPTOR_PERFORM) {
+            //     request = LocalizationService.PreserveDateFromConversion(GlobalConstants.PRESERVE_DATA_FROM_CONVERSION,
+            //         request, LocalizationService.transformRequestBody);
+
+            // }
+
+            // httpInterceptorService.request().removeInterceptor((a,b)=>{return a;});
+
+            return request;
+        });
+
+        // Response Interceptor -- This call will happend prior to each and every http response call.
+        httpInterceptorService.response(`${this.Uri}`).addInterceptor((response: any, method: string, context: any) => {
+            // if (response !== undefined) {
+            //     if (GlobalConstants.INTERCEPTOR_PERFORM) {
+            //         response = LocalizationService.PreserveDateFromConversion([],
+            //             response, LocalizationService.transformResponseBody);
+            //     }
+
+                    return response.share();
+            // }
+        });
     }
+
+
+
 
     /**
      * Handle response for single entity
@@ -201,6 +239,8 @@ export abstract class DataOperation<T> {
                 return Observable.throw(error.json().error || 'Server error');
             });
     }
+
+
 
     /**
      * Definition of abstruct execute functon

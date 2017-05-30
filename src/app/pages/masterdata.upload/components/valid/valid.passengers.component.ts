@@ -47,7 +47,8 @@ export class ValidPassengersListComponent implements OnInit, OnDestroy{
         this._validRecordService.GetAllPassengerByIncidentId(this.IncidentId)
         .flatMap(x=>x)
         .subscribe(a=>{            
-            this.passengers.push(a.Passenger);              
+            this.passengers.push(a.Passenger); 
+            console.log(this.passengers);             
         }), 
         (error: any) => {
             console.log(`Error: ${error}`);
