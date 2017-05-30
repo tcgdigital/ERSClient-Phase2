@@ -48,6 +48,10 @@ export class LoginComponent {
                 console.log(jwtDecode(data.access_token));
                 const loginCredentialBasic: any = jwtDecode(data.access_token);
                 if (loginCredentialBasic) {
+                    // This is to check that whether the user has department associated with him. From UserPermission table.
+                    //let errorSuccess: boolean = this.userProfileService.VerifyUserDepartmentMapping(+loginCredentialBasic.UserId.toString());
+
+
                     if (!Object.keys(loginCredentialBasic).some((x) => x === 'EmailConfirmed')) {
                         localStorage.setItem('LastLoginTime', (new Date()).toString());
                         UtilityService.SetToSession({ CurrentUserId: loginCredentialBasic.UserId });

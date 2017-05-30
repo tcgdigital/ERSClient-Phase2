@@ -52,6 +52,13 @@ export class AllDeptDemandRaisedSummary extends  DemandModel {
     public targetDepartmentName: string;
     public scheduleCloseTime: Date;
     public RagStatus: string;
+
+    constructor(){
+        super();
+        this.description = '';
+        this.targetDepartmentName = '';
+        this.RagStatus = '';
+    }
 }
 
 export class SubDeptDemandRaisedSummary extends  DemandModel {
@@ -59,4 +66,11 @@ export class SubDeptDemandRaisedSummary extends  DemandModel {
     public targetDepartmentName: string;
     public scheduleCloseTime: Date;
     public RagStatus: string;
+
+    constructor(){
+        super();
+        this.description = '';
+        this.targetDepartmentName = '';
+        this.RagStatus = '';
+    }
 }
