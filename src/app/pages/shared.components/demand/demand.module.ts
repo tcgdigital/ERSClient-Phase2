@@ -10,13 +10,14 @@ import {
     DemandService, ApprovedDemandComponent, AssignedDemandComponent,
     CompletedDemandComponent, MyDemandComponent, DemandEntryComponent, DemandRemarkLogService ,DemandTrailService
 } from './components';
-import {  AffectedPeopleService, AffectedObjectsService } from '../../shared.components';
+import { AffectedPeopleService, AffectedObjectsService } from '../../shared.components';
 import { CallerService } from '../caller';
 import { DemandTypeService } from '../../masterdata/demandtype';
 import { InvolvePartyService } from '../involveparties';
 import { DepartmentService } from '../../masterdata/department';
 import { PageService } from '../../masterdata/department.functionality';
 import { ModalModule} from 'ng2-bootstrap/modal';
+import { FileUploadService } from '../../../shared'
 
 
 
@@ -54,7 +55,8 @@ import { DataExchangeService, SharedModule } from '../../../shared';
         DemandRemarkLogService,
         CallerService,
         DemandTrailService,
-        InvolvePartyService
+        InvolvePartyService,
+        FileUploadService
         
     ]
 })

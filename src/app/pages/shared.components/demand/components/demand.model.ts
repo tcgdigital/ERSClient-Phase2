@@ -1,4 +1,5 @@
 import { BaseModel } from '../../../../shared';
+import {  FileStoreModel } from '../../../../shared/models/file.store.model';
 import { CommunicationLogModel } from '../../../shared.components';
 import { DemandTypeModel } from '../../../masterdata/demandtype';
 import { DepartmentModel } from '../../../masterdata/department';
@@ -57,6 +58,8 @@ export class DemandModel extends BaseModel {
     public DemandTrails?: DemandTrailModel[];
     public DemandRemarkLogs?: DemandRemarkLogModel[];
     public CommunicationLogs?: CommunicationLogModel[];
+
+    public FileStores?: FileStoreModel[];
 
     constructor() {
         super();
