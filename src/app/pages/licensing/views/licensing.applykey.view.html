@@ -1,0 +1,12 @@
+<div>
+<div>
+  <p>Apply Key Value</p>
+</div>
+<div>
+  <form [formGroup]="form" (ngSubmit)="verifyKey(form.value)">
+  <input id="key" class="key-submit" type="text" name="key" formControlName="key" placeholder="Enter Key" />
+  <br>
+  <input type="submit" class="btn" value="Submit">
+</form>
+</div>
+</div>

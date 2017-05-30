@@ -45,6 +45,15 @@ export class GlobalConstants {
     public static AD_AUTH_ENABLED: boolean = false;
     public static PASSWORD_PATTERN: string = '((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})';
 
+    public static LicenseValidationCode: IKeyValue[] = [
+        { key: 101, value: 'License is valid' },
+        { key: 102, value: 'License info file not found'},
+        { key: 103, value: 'License info file is invalid or corrupted'},
+        { key: 104, value: 'Current machine is not registered with the license'},
+        { key: 105, value: 'License key is invalid or not provided'},
+        { key: 106, value: 'License has expired'}
+    ]
+
     public static EmergencyCategories: IKeyValue[] = [
         { value: 'FlightRelated', key: 1 },
         { value: 'NonFlightRelated', key: 2 }
@@ -207,8 +216,8 @@ export class GlobalConstants {
         },
         {
             key: 5,
-            value : 'Immediatecare',
-            caption : 'Immediatecare'
+            value: 'Immediatecare',
+            caption: 'Immediatecare'
         }
     ];
 

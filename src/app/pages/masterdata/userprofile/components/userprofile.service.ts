@@ -37,4 +37,12 @@ export class UserProfileService extends ServiceBase<UserProfileModel>
             .Filter('isActive eq true')
             .Execute();
     }
+
+    GetDepartmentPages(userprofileId: number) : Observable<ResponseModel<UserProfileModel>>{
+        return this._dataService.Query()
+            .Select('UserProfileId')
+            .Expand('UserPermissions($select=DepartmentId,UserId;$expand=Department($select=DepartmentId;$expand=Permissions($select=DepartmentId,PageId)))')
+            .Filter(`UserId eq ${userprofileId}`)
+            .Execute();
+    }
 }
