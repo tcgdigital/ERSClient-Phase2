@@ -32,7 +32,6 @@ export class LicensingService {
         return this._licenseValidationService.SimpleGet()
             .Execute()
             .map((response: any) => {
-                debugger;
                 return response as LicenseVerificationResponse;
             });
     }

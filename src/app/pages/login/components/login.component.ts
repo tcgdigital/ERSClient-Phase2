@@ -121,13 +121,20 @@ export class LoginComponent implements OnInit {
                 let userprofile = item.Records;
                 let userpermissions =  _.flatten(_.pluck(userprofile, 'UserPermissions'));
                 let departments =  _.flatten(_.pluck(userpermissions, 'Department'));
-                let permissions =  _.flatten(_.pluck(userpermissions, 'Permissions'));
+                if(departments.length<=0)
+                {
+                      this.toastrService.warning('User Not Assigned to Any Department');
+                }
+                else{
+                       let permissions =  _.flatten(_.pluck(departments, 'Permissions'));
                 if(permissions.length >0){
                       this.CheckClosedIncident();
                 }
                 else {
-                     this.router.navigate(['pages/landing']);
+                        this.toastrService.warning("Departments assigned to this user don't have access to any pages");
                 }
+                }
+               
             })
     }
 

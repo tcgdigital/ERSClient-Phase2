@@ -42,7 +42,7 @@ export class UserProfileService extends ServiceBase<UserProfileModel>
         return this._dataService.Query()
             .Select('UserProfileId')
             .Expand('UserPermissions($select=DepartmentId,UserId;$expand=Department($select=DepartmentId;$expand=Permissions($select=DepartmentId,PageId)))')
-            .Filter(`UserId eq ${userprofileId}`)
+            .Filter(`UserProfileId eq ${userprofileId}`)
             .Execute();
     }
 }
