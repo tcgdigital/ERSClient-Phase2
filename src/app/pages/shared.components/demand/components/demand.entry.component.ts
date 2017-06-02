@@ -581,7 +581,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             debugger;
             let organizationId = 2 // To be changed by Dropdown when Demand table will change
             let moduleName = "Demand"
-            let param = this.currentIncidentId + "/" + organizationId + "/" + this.currentDepartmentId + "/" + moduleName;
+            let param = `${this.currentIncidentId}/${organizationId}/${this.currentDepartmentId}/${moduleName}`;
             this.date = new Date();
             this.fileUploadService.uploadFiles<string>(baseUrl + "./api/fileUpload/UploadFilesModuleWise/" + param, 
             this.filesToUpload, this.date.toString()).subscribe((result: string) => {
