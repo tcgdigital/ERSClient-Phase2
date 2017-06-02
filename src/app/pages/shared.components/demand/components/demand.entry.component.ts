@@ -561,7 +561,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             
             let currentDate = new Date().getTime();
             let timeDiffSec = this.resolutionTime.getTime() - currentDate;
-            this.demandModel.ScheduleTime = (timeDiffSec / 60000).toString();
+            let timediffMin=Math.floor(timeDiffSec/60000);
+            this.demandModel.ScheduleTime = timediffMin.toString();
             this.demandModel.DemandTypeId = +this.demandModel.DemandTypeId;
             this.demandModel.TargetDepartmentId = +this.demandModel.TargetDepartmentId;
             this.demandModel.Caller.FirstName = this.form.controls["RequestedBy"].value;
@@ -612,7 +613,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                         let createdOnDate = new Date(response.Records[0].CreatedOn);
                         let time = createdOnDate.getTime();
                         let timeDiffSec = this.resolutionTime.getTime() - time;
-                        let scheduletime = (timeDiffSec / 60000).toString();
+                         let timediffMin=Math.floor(timeDiffSec/60000);
+                        let scheduletime = timediffMin.toString();
                         this.demandModelEdit.ScheduleTime = scheduletime;
                         resolutionTimeChanged = true;
                         this.demandUpdate(resolutionTimeChanged);

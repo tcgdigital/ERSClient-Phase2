@@ -18,6 +18,11 @@ export interface IPriority {
     caption: string;
     text: string;
 }
+export interface ICompletionStatusType {
+    value: string;
+    caption: string;
+    text: string;
+}
 export interface IUploadDocuments {
     value: string;
     caption: string;
@@ -156,6 +161,39 @@ export class GlobalConstants {
             value: '3',
             caption: 'Low',
             text: 'Priority Low'
+        }
+    ];
+
+    public static CompletionStatusType: ICompletionStatusType[] = [
+        {
+            value: '1',
+            caption: 'Notified',
+            text: 'Notified'
+        },
+        {
+            value: '2',
+            caption: 'Assigned',
+            text: 'Assigned',
+        },
+        {
+            value: '3',
+            caption: 'Delegated',
+            text: 'Delegated'
+        },
+        {
+            value: '4',
+            caption: 'Accepted',
+            text: 'Accepted'
+        },
+        {
+            value: '5',
+            caption: 'ReferredTo',
+            text: 'Referred To'
+        },
+        {
+            value: '6',
+            caption: 'Closed',
+            text: 'Closed'
         }
     ];
 
