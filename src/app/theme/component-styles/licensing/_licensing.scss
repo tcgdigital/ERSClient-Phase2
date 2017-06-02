@@ -1,0 +1,28 @@
+@import '../../config/config';
+
+.container-fluid{
+    background: url(./assets/images/sky-bg.jpg) center center no-repeat;
+}
+.btn {
+     display: block;
+     z-index: 1;
+     position: relative;
+     box-sizing: border-box;
+     margin: 10px;
+}
+
+p{
+    text-align: left;
+    color: rgb(0, 0, 0);
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 40px; 
+}
+
+.key-submit{
+    text-align: left;
+    color: rgb(0, 0, 0);
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 25px;
+    width: 50%;
+}
+

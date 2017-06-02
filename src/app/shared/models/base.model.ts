@@ -85,3 +85,19 @@ export class AccountResponse {
     public Data: any;
     public Url: string;
 }
+
+export class LicenseVerificationResponse {
+    public Code: number;
+    public Description: string;
+}
+
+export class LicenseInformationModel{
+    public ClientCode: string;
+    public ClientName: string;
+    public MaxUsers: number;
+    public EndingMonth: number;
+    public EndingYear: number;
+    public MacAddress: string;
+    public Key: string;
+    public IsValid: boolean;
+}

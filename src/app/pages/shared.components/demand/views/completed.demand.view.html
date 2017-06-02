@@ -17,6 +17,7 @@
                 <th>Schedule Time Close</th>
                 <th>Required Location</th>
                 <th>Remarks</th>
+                <th>Download File</th>
                 <th>Accept</th>
                 <th>Reject</th>
             </tr>
@@ -35,6 +36,13 @@
                 <td data-title="Schedule Time Close">{{demand.ScheduleTimeToShow}}&nbsp;</td>
                 <td data-title="Required Location">{{demand.RequiredLocation}}&nbsp;</td>
                 <td data-title="Remarks"><i class="fa fa-list-alt" (click)="openDemandRemarks(demand)"></i></td>
+                <td data-title="Download File">
+                    <ul>
+                        <li *ngFor="let file of demand.FileStores">
+                            <a target="_self" href="{{file.FilePath}}" download="file.UploadedFileName">{{file.UploadedFileName}}</a>
+                        </li>
+                    </ul>
+                </td>
                 <td data-title="Accept">
                     <md-checkbox class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsClosed" [disabled]="demand.IsRejected" aria-label="Done">
                     </md-checkbox>
