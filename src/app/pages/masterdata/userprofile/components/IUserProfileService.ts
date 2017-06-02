@@ -8,4 +8,6 @@ export interface IUserProfileService extends IServiceInretface<UserProfileModel>
     GetAllActiveWithContact(): Observable<ResponseModel<UserProfileModel>>;
 
     GetForDirectory(): Observable<ResponseModel<UserProfileModel>>;
+
+    GetDepartmentPages(userprofileId : number) : Observable<ResponseModel<UserProfileModel>>;
 }
