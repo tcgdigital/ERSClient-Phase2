@@ -8,13 +8,14 @@ const pageRoutes: Routes = [
         path: 'login',
         loadChildren: 'app/pages/login/login.module#LoginModule'
     },
-    // {
-    //     path: 'incident',
-    //     loadChildren: 'app/pages/incident/incident.module#IncidentModule'
-    // },
+    {
+        path: 'licensing',
+        loadChildren: './licensing/licensing.module#LicensingModule'
+    },
     {
         path: 'pages',
         component: PagesComponent,
+        canActivate: [AuthGuardService],
         canActivateChild: [AuthGuardService],
         children: [
             { path: '', redirectTo: 'pages/dashboard/people/detail', pathMatch: 'full' },

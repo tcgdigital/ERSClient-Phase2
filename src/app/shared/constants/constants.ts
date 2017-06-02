@@ -49,6 +49,15 @@ export class GlobalConstants {
     public static INTERCEPTOR_PERFORM: boolean = true;
     public static PRESERVE_DATA_FROM_CONVERSION = ['EmergencyDate'];
 
+    public static LicenseValidationCode: IKeyValue[] = [
+        { key: 101, value: 'License is valid' },
+        { key: 102, value: 'License info file not found'},
+        { key: 103, value: 'License info file is invalid or corrupted'},
+        { key: 104, value: 'Current machine is not registered with the license'},
+        { key: 105, value: 'License key is invalid or not provided'},
+        { key: 106, value: 'License has expired'}
+    ]
+
     public static EmergencyCategories: IKeyValue[] = [
         { value: 'FlightRelated', key: 1 },
         { value: 'NonFlightRelated', key: 2 }

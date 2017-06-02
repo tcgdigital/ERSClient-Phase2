@@ -17,6 +17,7 @@ import {
 } from './shared.components/change.password';
 import { ContactInfoComponent } from './shared.components/contact.info';
 import { AuthenticationService } from './login/components/authentication.service';
+import { UserPermissionService } from "./masterdata/userpermission/components";
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import { AuthenticationService } from './login/components/authentication.service
     ],
     providers: [
         GlobalStateService,
-        AuthenticationService
+        AuthenticationService,
+        UserPermissionService
         // ChangePasswordService
     ]
 })

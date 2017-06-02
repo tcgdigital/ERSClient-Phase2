@@ -23,7 +23,7 @@ import 'rxjs/add/operator/mergeMap';
 import 'jquery';
 import 'signalr';
 import 'gijgo';
-// import 'jquery-slimscroll';
+import 'jquery-slimscroll';
 import 'selectize';
 import 'bootstrap';
 import 'font-awesome-sass-loader';

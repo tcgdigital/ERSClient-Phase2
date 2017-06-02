@@ -122,4 +122,11 @@ export class UserPermissionService
             .Filter(`IsHod eq true and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
             .Execute();
     }
+
+    GetAllDepartmentsAssignedToUser(userId : number): Observable<ResponseModel<UserPermissionModel>> {
+        return this._dataService.Query()
+            .Expand('Department($expand=ParentDepartment($select=DepartmentName),UserProfile($select=Name))')
+            .Filter(`UserId eq ${userId} and Department/ActiveFlag eq CMS.DataModel.Enum.ActiveFlag\'Active\'`)
+            .Execute();
+    }
 }
