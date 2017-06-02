@@ -33,6 +33,12 @@ export interface IRequesterType {
     enumtype: string;
     caption: string;
 }
+export interface IActionableStatus {
+    key: number;
+    value: string;
+    caption: string;
+}
+
 export class GlobalConstants {
     public static EXTERNAL_URL: string = 'http://localhost:5001/';
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
@@ -46,8 +52,17 @@ export class GlobalConstants {
     public static PASSWORD_PATTERN: string = '((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})';
     public static LAST_INCIDENT_PICK_COUNT: string = '5';
 
-    public static INTERCEPTOR_PERFORM: boolean = true;
+    public static INTERCEPTOR_PERFORM: boolean = false;
     public static PRESERVE_DATA_FROM_CONVERSION = ['EmergencyDate'];
+
+    public static LicenseValidationCode: IKeyValue[] = [
+        { key: 101, value: 'License is valid' },
+        { key: 102, value: 'License info file not found'},
+        { key: 103, value: 'License info file is invalid or corrupted'},
+        { key: 104, value: 'Current machine is not registered with the license'},
+        { key: 105, value: 'License key is invalid or not provided'},
+        { key: 106, value: 'License has expired'}
+    ]
 
     public static EmergencyCategories: IKeyValue[] = [
         { value: 'FlightRelated', key: 1 },
@@ -259,11 +274,50 @@ export class GlobalConstants {
         },
         {
             key: 5,
-            value: 'Immediatecare',
-            caption: 'Immediatecare'
+            value : 'Immediatecare',
+            caption : 'Immediatecare'
+        },
+        {
+            key: 6,
+            value : 'UnidentifiedPDA',
+            caption : 'Unidentified PDA'
         }
     ];
 
+    public static ActionableStatus: IActionableStatus[] = [
+        {
+            key: 1,
+            value: 'Notified',
+            caption: 'Notified'
+        },
+        {
+            key: 2,
+            value: 'Assigned',
+            caption: 'Assigned'
+        },
+        {
+            key: 3,
+            value: 'Delegated',
+            caption: 'Delegated'
+        },
+        {
+            key: 4,
+            value: 'Accepted',
+            caption: 'Accepted'
+        },
+        {
+            key: 5,
+            value: 'Refferedto',
+            caption: 'Reffered To'
+        },
+        {
+            key: 6,
+            value: 'Closed',
+            caption: 'Closed'
+        },
+    ];
+
+    
     public static RequesterType: IRequesterType[] = [
         {
             value: '1',

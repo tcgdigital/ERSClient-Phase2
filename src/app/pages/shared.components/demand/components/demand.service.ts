@@ -58,7 +58,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
     public GetForAssignedDept(targetDeptId: number, incidentId: number): Observable<ResponseModel<DemandModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq ${incidentId} and TargetDepartmentId eq ${targetDeptId}  and IsClosed eq false and IsApproved eq true and IsCompleted eq false`)
-            .Expand('RequesterDepartment($select=DepartmentName) , DemandType($select=DemandTypeName), RequesterParentDepartment($select=DepartmentName)')
+            .Expand('RequesterDepartment($select=DepartmentName) , DemandType($select=DemandTypeName), RequesterParentDepartment($select=DepartmentName), FileStores($select=UploadedFileName,FilePath)')
             .Execute();
     };
     GetByDemandId(id: string | number): Observable<ResponseModel<DemandModel>> {
@@ -71,7 +71,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
     public GetByRequesterDepartment(requesterDeptId: number, incidentId: number): Observable<ResponseModel<DemandModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq  ${incidentId} and RequesterDepartmentId eq ${requesterDeptId}`)
-            .Expand('TargetDepartment($select=DepartmentName) , DemandType($select=DemandTypeName) ,RequesterDepartment($select=DepartmentName)')
+            .Expand('TargetDepartment($select=DepartmentName) , DemandType($select=DemandTypeName) ,RequesterDepartment($select=DepartmentName), FileStores($select=UploadedFileName,FilePath)')
             .Execute();
     };
 
@@ -79,14 +79,14 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
         return this._dataService.Query()
             .Filter(`ApproverDepartmentId eq ${approverDeptId} and IncidentId eq ${incidentId} and
              IsClosed eq false and IsApproved eq false and IsRejected eq false and IsCompleted eq false`)
-            .Expand('TargetDepartment($select=DepartmentName), RequesterDepartment($select=DepartmentName) , DemandType($select=DemandTypeName), RequesterParentDepartment($select=DepartmentName)')
+            .Expand('TargetDepartment($select=DepartmentName), RequesterDepartment($select=DepartmentName) , DemandType($select=DemandTypeName), RequesterParentDepartment($select=DepartmentName), FileStores($select=UploadedFileName,FilePath)')
             .Execute();
     };
 
     public GetCompletedDemands(deptId: number, incidentId: number): Observable<ResponseModel<DemandModel>> {
         return this._dataService.Query()
             .Filter(`RequesterDepartmentId eq ${deptId} and IncidentId eq ${incidentId} and IsClosed eq false and IsCompleted eq true and IsApproved eq true`)
-            .Expand('TargetDepartment($select=DepartmentName), RequesterDepartment($select=DepartmentName) ,RequesterParentDepartment($select=DepartmentName), DemandType($select=DemandTypeName)')
+            .Expand('TargetDepartment($select=DepartmentName), RequesterDepartment($select=DepartmentName) ,RequesterParentDepartment($select=DepartmentName), DemandType($select=DemandTypeName), FileStores($select=UploadedFileName,FilePath)')
             .Execute();
     };
 
@@ -130,6 +130,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
             item.ApproverDeptId = demand.ApproverDepartmentId;
             item.CreatedBy = demand.CreatedBy;
             item.CreatedOn = demand.CreatedOn;
+            item.FileStores = demand.FileStores;
             return item;
 
         });

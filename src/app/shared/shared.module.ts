@@ -52,7 +52,9 @@ import {
     ThemePreloaderService,
     ThemeSpinnerService,
     ThemeConfigProviderService,
-    LocationService
+    LocationService,
+    FileStoreService,
+    LicensingService
 } from './services';
 
 import {
@@ -98,6 +100,8 @@ const SHARED_SERVICES: any[] = [
     DataServiceFactory,
     DataExchangeService,
     LocationService,
+    FileStoreService,
+    LicensingService,
     ENV_PROVIDERS,
     HTTP_INTERCEPTOR_PROVIDER,
     HTTP_INTERCEPTOR_NO_OVERRIDE_PROVIDER
