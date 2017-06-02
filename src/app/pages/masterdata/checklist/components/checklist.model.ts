@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { BaseModel } from '../../../../shared';
 import { DepartmentModel } from '../../department';
 import { EmergencyTypeModel } from '../../emergencytype';
-import { OrganizationModel } from "../../../shared.components";
+import { OrganizationModel } from "../../../shared.components/organization";
 
 export class ChecklistModel extends BaseModel {
     public CheckListId: number;

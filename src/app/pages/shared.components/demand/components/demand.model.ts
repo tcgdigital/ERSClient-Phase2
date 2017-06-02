@@ -97,6 +97,8 @@ export class DemandModelToView extends BaseModel {
     public ApproverDeptId : number;
     public ApproverDepartmentName : string;
     public RequesterParentDepartmentName : string;
+
+    public FileStores?: FileStoreModel[] = [];
 }
 
 export class DemandRemarkLogModel extends BaseModel {

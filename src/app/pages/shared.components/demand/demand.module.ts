@@ -18,6 +18,7 @@ import { DepartmentService } from '../../masterdata/department';
 import { PageService } from '../../masterdata/department.functionality';
 import { ModalModule} from 'ng2-bootstrap/modal';
 import { FileUploadService } from '../../../shared'
+import { FileStoreService } from '../../../shared/services/common.service'
 
 
 
@@ -56,7 +57,8 @@ import { DataExchangeService, SharedModule } from '../../../shared';
         CallerService,
         DemandTrailService,
         InvolvePartyService,
-        FileUploadService
+        FileUploadService,
+        FileStoreService
         
     ]
 })

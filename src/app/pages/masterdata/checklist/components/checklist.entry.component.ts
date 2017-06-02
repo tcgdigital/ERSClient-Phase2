@@ -10,7 +10,7 @@ import {
 import { Observable } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 
-import { ChecklistModel, CheckListStationModel } from './checklist.model';
+import { ChecklistModel} from './checklist.model';
 import { DepartmentModel, DepartmentService } from '../../department';
 import { EmergencyTypeModel, EmergencyTypeService } from '../../emergencytype';
 import { ChecklistService } from './checklist.service';
@@ -22,9 +22,9 @@ import {
 import {
     OrganizationModel,
     OrganizationService
-} from "../../../shared.components";
+} from "../../../shared.components/organization";
 
-import { EmergencyLocationModel, EmergencyLocationService } from '../../emergencylocation'
+//import { EmergencyLocationModel, EmergencyLocationService } from '../../emergencylocation'
 
 @Component({
     selector: 'checklist-entry',
@@ -47,7 +47,7 @@ export class ChecklistEntryComponent implements OnInit {
     currentDepartmentName: string;
     credential: AuthModel;
     activeOrganizations: OrganizationModel[] = [];
-    AllStations: EmergencyLocationModel[] = [];
+    //AllStations: EmergencyLocationModel[] = [];
 
     constructor(formBuilder: FormBuilder,
         private departmentService: DepartmentService,
@@ -57,8 +57,7 @@ export class ChecklistEntryComponent implements OnInit {
         private globalState: GlobalStateService,
         private organizationService: OrganizationService,
         private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig,
-        private emergencyLocationService: EmergencyLocationService) {
+        private toastrConfig: ToastrConfig) {
         this.showAdd = false;
         this.listSelected = false;
         this.buttonValue = 'Add Checklist';
@@ -107,8 +106,7 @@ export class ChecklistEntryComponent implements OnInit {
     ngOnInit(): void {
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.mergeResponses(this.currentDepartmentId);
-        this.getAllActiveOrganizations();
-        this.getAllEmergencyLocations();
+        this.getAllActiveOrganizations();       
         this.credential = UtilityService.getCredentialDetails();
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
@@ -125,12 +123,12 @@ export class ChecklistEntryComponent implements OnInit {
             this.listSelected = true;
     };
 
-    getAllEmergencyLocations(): void {
-        this.emergencyLocationService.GetAllActiveEmergencyLocations()
-        .subscribe((response: ResponseModel<EmergencyLocationModel>)=> {
-            this.AllStations = response.Records;
-        });
-    }
+    // getAllEmergencyLocations(): void {
+    //     this.emergencyLocationService.GetAllActiveEmergencyLocations()
+    //     .subscribe((response: ResponseModel<EmergencyLocationModel>)=> {
+    //         this.AllStations = response.Records;
+    //     });
+    // }
 
     initiateCheckListModel(): void {
         this.checkListModel = new ChecklistModel();
@@ -218,7 +216,6 @@ export class ChecklistEntryComponent implements OnInit {
             this.toastrService.error('Please Select Organization.', 'Error', this.toastrConfig);
             return null;
         }
-        debugger;
         
         if (this.checkListModel.CheckListId === 0) {// ADD REGION
 

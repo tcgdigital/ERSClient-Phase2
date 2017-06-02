@@ -34,6 +34,7 @@ import { ModalDirective } from 'ng2-bootstrap/modal';
 import * as moment from 'moment/moment';
 import { DateTimePickerSelectEventArgs } from '../../../../shared/directives/datetimepicker';
 import { FileStoreModel } from '../../../../shared/models/file.store.model';
+import { FileStoreService } from '../../../../shared/services/common.service'
 
 
 
@@ -44,6 +45,7 @@ import { FileStoreModel } from '../../../../shared/models/file.store.model';
 })
 export class DemandEntryComponent implements OnInit, OnDestroy {
     @ViewChild('childModal') public childModal: ModalDirective;
+    @ViewChild('inputFileDemand') inputFileDemand: any
 
     public form: FormGroup;
     datepickerOption: DateTimePickerOptions = new DateTimePickerOptions();
@@ -78,8 +80,9 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     protected _onRouteChange: Subscription;
     isArchive: boolean = false;
     resolutionTime: Date;
-    filesToUpload: File[];
+    filesToUpload: File[]=[];
     demandFilePath: string;
+    demandFileName: string;
      
     /**
      * Creates an instance of DemandEntryComponent.
@@ -110,6 +113,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         private dataExchange: DataExchangeService<number>,
         private fileUploadService: FileUploadService,
         private toastrService: ToastrService,
+        private fileStoreService: FileStoreService,
         private toastrConfig: ToastrConfig, private _router: Router) {
         this.showAdd = false;
         this.buttonValue = "Create Demand";
@@ -563,13 +567,18 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         if (this.form.controls['RequiredLocation'].touched) {
             this.demandModelEdit.RequiredLocation = this.form.controls['RequiredLocation'].value;
         }
+        if (this.form.controls['FileInputDemand'].touched) {
+            debugger;
+            this.demandFileName = this.inputFileDemand.nativeElement.value;           
+        }
     }
 
-    uploadFile(): void{
+    uploadFile(resolutionTimeChanged: boolean): void{
         if(this.filesToUpload.length)
         {
             let baseUrl = GlobalConstants.EXTERNAL_URL;
             //let param = this.credential.UserId;
+            debugger;
             let organizationId = 2 // To be changed by Dropdown when Demand table will change
             let moduleName = "Demand"
             let param = this.currentIncidentId + "/" + organizationId + "/" + this.currentDepartmentId + "/" + moduleName;
@@ -578,16 +587,56 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             this.filesToUpload, this.date.toString()).subscribe((result: string) => {
                 console.log(result);
                 debugger;
-                this.demandFilePath = result;
+                
+                this.demandFilePath = GlobalConstants.EXTERNAL_URL + result.substr(result.indexOf('UploadFiles'),result.length).replace(/\\/g,"/");
                 let fileStore: FileStoreModel = new FileStoreModel();
                 fileStore.FileStoreID = 0;
+                //delete fileStore.FileStoreID;
                 fileStore.IncidentId = this.currentIncidentId;
                 fileStore.DepartmentId = this.currentDepartmentId;
                 fileStore.OrganizationId = organizationId;
                 fileStore.FilePath = this.demandFilePath;
                 fileStore.UploadedFileName = this.filesToUpload[0].name;  
-                fileStore.DemandId = this.demandModel.DemandId;
-                this.demandModel.FileStores.push(fileStore);             
+                if(this.demandModel.DemandId == 0) {
+                    fileStore.DemandId = this.demandModel.DemandId;
+                }
+                else
+                {
+                    fileStore.DemandId = this.demandModelEdit.DemandId;
+                }
+                fileStore.ModuleName = moduleName;
+                fileStore.CreatedBy = +this.credential.UserId;
+                fileStore.CreatedOn = new Date();
+                fileStore.ActiveFlag = 'Active';                 
+
+                if(this.demandModel.DemandId == 0)
+                {
+                    this.demandModel.FileStores = [];
+                    this.demandModel.FileStores.push(fileStore);                  
+                    this.demandCreate();
+                }
+                else
+                {                    
+                    this.fileStoreService.Create(fileStore)
+                    .subscribe((response: FileStoreModel) =>{                        
+                        console.log(response);
+                        if(this.form.dirty)
+                        {
+                            this.demandUpdate(resolutionTimeChanged);
+                        }
+                        else
+                        {
+                            this.toastrService.success('Demand successfully updated.', 'Success', this.toastrConfig);
+                            this.dataExchange.Publish("DemandAddedUpdated", this.demandModelEdit.DemandId);
+                            this.initializeForm();
+                            this.demandModel = new DemandModel();
+                            this.showAdd = false;
+                            this.buttonValue = "Create Demand";
+                            this.childModal.hide();
+                            this.filesToUpload = [];
+                        }
+                    });                   
+                }            
             });
 
         }
@@ -600,16 +649,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 x => x.DemandTypeId, x => x.Priority, x => x.DemandDesc, x => x.RequesterType, 
                 x => x.PDATicketNumber, x => x.TargetDepartmentId, x => x.ContactNumber, 
                 x => x.RequiredLocation, x => x.ContactNumber);
-            debugger;
-            if(this.filesToUpload.length)
-            {
-               this.uploadFile();
-            }
-
-            else
-            {
-               // this.demandModel.FileStores = [];
-            }
+           
             
             let currentDate = new Date().getTime();
             let timeDiffSec = this.resolutionTime.getTime() - currentDate;
@@ -641,8 +681,57 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             }
             this.demandModel.CommunicationLogs = this.SetCommunicationLog(this.demandModel);
             this.demandModel.DemandTrails = this.createDemandTrailModel(this.demandModel, this.demandModel, true);            
-            
-            this.demandService.Create(this.demandModel)
+            let resolutionTimeChanged = false;
+            if(this.filesToUpload.length)
+            {
+               this.uploadFile(resolutionTimeChanged);
+            }
+
+            else
+            {
+               this.demandModel.FileStores = [];
+               this.demandCreate();
+            }            
+        }
+        else {
+            this.formControlDirtyCheck();
+            debugger;
+            let resolutionTimeChanged = false;
+            if (this.resolutionTime) {
+                this.demandService.GetByDemandId(this.demandModelEdit.DemandId)
+                    .subscribe((response: ResponseModel<DemandModel>) => {                        
+                        let createdOnDate = new Date(response.Records[0].CreatedOn);
+                        let time = createdOnDate.getTime();
+                        let timeDiffSec = this.resolutionTime.getTime() - time;
+                        let scheduletime = (timeDiffSec / 60000).toString();
+                        this.demandModelEdit.ScheduleTime = scheduletime;
+                        resolutionTimeChanged = true;
+                        if(this.filesToUpload.length)
+                        {
+                            this.uploadFile(resolutionTimeChanged);
+                        }
+                        else
+                        {
+                            this.demandUpdate(resolutionTimeChanged);
+                        }
+                            
+                    });
+            }
+           else{
+                if(this.filesToUpload.length)
+                {
+                    this.uploadFile(resolutionTimeChanged);
+                }
+                else
+                {
+                    this.demandUpdate(resolutionTimeChanged);
+                }
+           }
+        }
+    };
+
+    demandCreate(): void{
+        this.demandService.Create(this.demandModel)
                 .subscribe((response: DemandModel) => {
                     this.toastrService.success('Demand successfully created.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("DemandAddedUpdated", response.DemandId);
@@ -655,28 +744,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                     console.log(`Error: ${error}`);
                 });
         }
-        else {
-            this.formControlDirtyCheck();
-            let resolutionTimeChanged = false;
-            if (this.resolutionTime) {
-                this.demandService.GetByDemandId(this.demandModelEdit.DemandId)
-                    .subscribe((response: ResponseModel<DemandModel>) => {
-                        let createdOnDate = new Date(response.Records[0].CreatedOn);
-                        let time = createdOnDate.getTime();
-                        let timeDiffSec = this.resolutionTime.getTime() - time;
-                        let scheduletime = (timeDiffSec / 60000).toString();
-                        this.demandModelEdit.ScheduleTime = scheduletime;
-                        resolutionTimeChanged = true;
-                        this.demandUpdate(resolutionTimeChanged);
-                    });
-            }
-           else{
-            this.demandUpdate(resolutionTimeChanged);
-           }
-        }
-    };
 
-    demandUpdate(resolutionTimeChanged): void {
+    demandUpdate(resolutionTimeChanged): void {        
         if (this.form.dirty || resolutionTimeChanged) {
             this.demandService.Update(this.demandModelEdit)
                 .subscribe((response: DemandModel) => {
