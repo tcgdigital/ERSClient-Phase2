@@ -12,6 +12,7 @@
                 <th>Interaction Details</th>
                 <th>Caller list</th>
                 <th>View</th>
+                <th>Is NOK Informed</th>
             </tr>
         </thead>
         <tbody>
@@ -36,6 +37,11 @@
                 </td>
                 <td data-title="Action">
                     <i class="fa fa-edit fa-lg" (click)="openAffectedPersonDetail(affectedperson)"></i>
+                </td>
+                <td data-title="Active">
+                    <md-checkbox class="Marght" id="IsNokInformed" name="IsNokInformed" [ngModel]="affectedperson.IsNokInformed" (change)="IsNokInformed($event,affectedperson.AffectedPersonId)"
+                        aria-label="ActiveFlag">
+                    </md-checkbox>
                 </td>
             </tr>
         </tbody>

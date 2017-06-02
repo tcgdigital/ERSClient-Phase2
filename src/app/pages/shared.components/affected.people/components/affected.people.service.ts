@@ -75,6 +75,8 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
                     item.SeatNo = dataItem.Passenger != null ? dataItem.Passenger.Seatno : 'No Seat Number Available';
                     // item.CommunicationLogs: dataItem.CommunicationLogs,
                     item.PaxType = dataItem.Passenger != null ? dataItem.Passenger.PassengerType : dataItem.Crew != null ? 'Crew' : '';
+                    
+                    item.IsNokInformed = dataItem.IsNokInformed;
                     return item;
                 });
             }

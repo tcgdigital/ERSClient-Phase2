@@ -7,7 +7,7 @@ import {
     LoginComponent, ForgotPasswordComponent,
     ChangePasswordComponent
 } from './components';
-import { UserProfileService } from '../shared.components';
+import { UserProfileService } from '../masterdata/userprofile/components';
 import { LoginRootComponent } from './login.root.component';
 
 @NgModule({
