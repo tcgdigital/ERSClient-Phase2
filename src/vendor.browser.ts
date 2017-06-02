@@ -23,7 +23,6 @@ import 'rxjs/add/operator/mergeMap';
 import 'jquery';
 import 'signalr';
 import 'gijgo';
-import 'jquery.maskedinput';
 import 'jquery-slimscroll';
 import 'selectize';
 import 'bootstrap';
