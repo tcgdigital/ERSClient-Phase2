@@ -98,7 +98,9 @@ footer .row {
 section.body-container>.row {
     padding-right: 15px;
 }
-
+pages{padding: 0 15px;
+    float: left;
+    width: 100%;}
 
 @media screen and (max-width: $resXS-E) {
     .body-container {

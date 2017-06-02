@@ -1,8 +1,14 @@
 @import '../../config/config';
 
-.container-fluid{
-    background: url(./assets/images/sky-bg.jpg) center center no-repeat; background-size:cover;
+.container-fluid{ background: #efefef; padding:0;
+    
 }
+login-root{    background: url(./assets/images/sky-bg.jpg) center center no-repeat;
+    background-size: cover;
+    display: block;
+    float: left;
+    width: 100%;     position: fixed;
+    height: 100%;}
 .Absolute-Center {
     margin: auto;
     position: absolute;
