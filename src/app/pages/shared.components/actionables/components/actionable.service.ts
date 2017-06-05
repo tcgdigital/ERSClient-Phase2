@@ -7,7 +7,7 @@ import { IActionableService } from './IActionableService';
 import {
     ResponseModel, DataService, DataServiceFactory,
     DataProcessingService, IServiceInretface,
-    RequestModel, WEB_METHOD, GlobalConstants,
+    RequestModel, WEB_METHOD, GlobalConstants, ICompletionStatusType,
     ServiceBase, BaseModel
 } from '../../../../shared';
 
@@ -15,8 +15,10 @@ import {
 export class ActionableService extends ServiceBase<ActionableModel> implements IActionableService {
     private _batchDataService: DataService<ActionableModel>;
     private _actionables: ResponseModel<ActionableModel>;
+    private _allActionables: ResponseModel<ActionableModel>;
     public departmentIds: number[];
     public subDepartmentProjection: string;
+    public parentActionable: ActionableModel;
     /**
      * Creates an instance of ActionableService.
      * @param {DataServiceFactory} dataServiceFactory 
@@ -93,7 +95,81 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
                     element.RagColor = this.setRagColor(element.AssignedDt, element.ScheduleClose);
                 });
                 return actionables;
+            })
+            .flatMap((actionables: ResponseModel<ActionableModel>) => this.GetAllByIncident(incidentId))
+            .map((allActionables: ResponseModel<ActionableModel>) => {
+                this._allActionables = allActionables;
+                console.log(this._allActionables);
+                this._actionables.Records.forEach((element: ActionableModel) => {
+                    if (element.ParentCheckListId == null) {
+
+                        let allChildActionables: ActionableModel[] = this._allActionables.Records.filter((item: ActionableModel) => {
+                            return (item.ParentCheckListId == element.ChklistId);
+                        });
+                        if (allChildActionables.length > 0) {
+                            let globalStatus: ICompletionStatusType[] = [];
+                            allChildActionables.forEach((elm: ActionableModel) => {
+                                globalStatus.push(
+                                    GlobalConstants.CompletionStatusType.filter((itm: ICompletionStatusType) => {
+                                        return (itm.caption == elm.CompletionStatus);
+                                    })[0]);
+                            });
+                            console.log(globalStatus);
+                            let itm: number = Math.min.apply(Math, globalStatus.map(function (o: ICompletionStatusType) { return +(o.value); }))
+                            console.log(itm);
+                            let consolidatedMinimumCompletionStatus: string = GlobalConstants.CompletionStatusType.filter((item: ICompletionStatusType) => {
+                                return (item.value == itm.toString());
+                            })[0].caption;
+                            element.CompletionStatus = consolidatedMinimumCompletionStatus;
+                            console.log(element);
+                        }
+                        console.log(allChildActionables);
+                    }
+                });
+                return this._actionables;
             });
+    }
+
+    public SetParentActionableStatusByIncidentIdandDepartmentIdandActionable(incidentId: number,
+        departmentId: number, actionable: ActionableModel,
+        currentActionables: ActionableModel[]): void {
+        if (actionable.ParentCheckListId != null) {
+             this._dataService.Query()
+                .Filter(`IncidentId eq ${incidentId} and ChklistId eq ${actionable.ParentCheckListId} and ActiveFlag eq 'Active'`)
+                .Execute()
+                .map((actionableResult: ResponseModel<ActionableModel>) => {
+                    this.parentActionable = actionableResult.Records[0];
+                    return actionableResult;
+                })
+                .flatMap((actionableResult: ResponseModel<ActionableModel>) => this.GetChildActionables(this.parentActionable.ChklistId, incidentId))
+                .subscribe((childActionables: ResponseModel<ActionableModel>) => {
+                    if (childActionables.Count > 0) {
+                        let globalStatus: ICompletionStatusType[] = [];
+                        childActionables.Records.forEach((elm: ActionableModel) => {
+                            let findExistingChildActionable:ActionableModel[] = currentActionables.filter((item:ActionableModel)=>{
+                                return elm.ActionId==item.ActionId;
+                            });
+                            if(findExistingChildActionable.length>0){
+                                elm.CompletionStatus=findExistingChildActionable[0].CompletionStatus;
+                            }
+                            globalStatus.push(
+                                GlobalConstants.CompletionStatusType.filter((itm: ICompletionStatusType) => {
+                                    return (itm.caption == elm.CompletionStatus);
+                                })[0]);
+                        });
+                        console.log(globalStatus);
+                        let itm: number = Math.min.apply(Math, globalStatus.map(function (o: ICompletionStatusType) { return +(o.value); }))
+                        console.log(itm);
+                        let consolidatedMinimumCompletionStatus: string = GlobalConstants.CompletionStatusType.filter((item: ICompletionStatusType) => {
+                            return (item.value == itm.toString());
+                        })[0].caption;
+                        currentActionables.filter((item: ActionableModel) => {
+                            return (this.parentActionable.ActionId == item.ActionId);
+                        })[0].CompletionStatus = consolidatedMinimumCompletionStatus;
+                    }
+                })
+        }
+
     }
 
     public GetAllOpenByIncidentId(incidentId: number): Observable<ResponseModel<ActionableModel>> {
@@ -106,7 +182,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
     public GetChildActionables(checklistId, incidentId): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
             .Filter(`ParentCheckListId eq ${checklistId} and IncidentId eq ${incidentId}`)
-            .Select('ActionId,Description,ScheduleClose,ActualClose,ActionId,DepartmentId')
+            .Select('ActionId,Description,ScheduleClose,ActualClose,ActionId,DepartmentId,CompletionStatus')
             .Execute();
 
     }
@@ -193,10 +269,10 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
             .Execute();
     }
 
-    public GetPendingOpenActionableForIncidentAndDepartment(incidentId:number,departmentId:number):Observable<ResponseModel<ActionableModel>>{
+    public GetPendingOpenActionableForIncidentAndDepartment(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
-        .Filter(`IncidentId eq ${incidentId} and DepartmentId eq ${departmentId} and CompletionStatus ne 'Closed'`)
-        .Execute();
+            .Filter(`IncidentId eq ${incidentId} and DepartmentId eq ${departmentId} and CompletionStatus ne 'Closed'`)
+            .Execute();
     }
 
     public BatchGet(incidentId: number, departmentIds: number[]): Observable<ResponseModel<ActionableModel>> {

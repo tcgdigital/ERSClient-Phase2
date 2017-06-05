@@ -47,6 +47,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     public globalStateProxyOpen: GlobalStateService;
     public form: FormGroup;
     public completionStatusTypes: any[] = GlobalConstants.CompletionStatusType;
+
     private currentDepartmentId: number = null;
     private currentIncident: number = null;
 
@@ -178,6 +179,9 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
             return (item.ActionId == editedActionable.ActionId);
         });
         tempActionable[0].Done = editedActionable.Done;
+        this.actionableService.SetParentActionableStatusByIncidentIdandDepartmentIdandActionable(this.currentIncident,
+            this.currentDepartmentId, editedActionable, this.activeActionables);
+            
     }
 
     upload(actionableClicked: ActionableModel) {
@@ -211,6 +215,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                 this.activeActionables.forEach(x => {
                     x["expanded"] = false;
                     x["actionableChilds"] = [];
+
                 });
                 this.getAllActiveActionableByIncident(this.currentIncident);
             }, (error: any) => {

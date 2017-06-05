@@ -287,7 +287,6 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
     private openAllCargoDetails(): void {            
         const involvedParties: InvolvePartyModel[] = [];
         let cargoListLocal: CargoModel[] = [];
-        debugger;
         this.peopleOnBoardWidgetService.GetAllCargosByIncident(this.currentIncidentId)
         .subscribe((result: ResponseModel<InvolvePartyModel>) => {
             cargoListLocal = result.Records[0].Flights[0].Cargoes;                        
