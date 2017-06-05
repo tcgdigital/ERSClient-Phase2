@@ -297,7 +297,7 @@ export class EmergencyClosureComponent implements OnInit {
 			return z.DepartmentId == id;
 		}).length;
 		item.ChecklistClosednumber = this.actionable.filter(z => {
-			return z.DepartmentId == id && z.ClosedBy != null;
+			return z.DepartmentId == id && z.CompletionStatusChangedBy != null;
 		}).length;
 		item.demandnumber = this.demands.filter(z => {
 			return z.RequesterDepartmentId == id;

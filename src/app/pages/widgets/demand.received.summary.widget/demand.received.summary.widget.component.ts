@@ -3,12 +3,16 @@ import {
     ViewEncapsulation, Input, ViewChild, SimpleChange
 } from '@angular/core';
 import { UtilityService } from '../../../shared';
+import { WidgetUtilityService } from "../widget.utility";
 import {
     DemandReceivedSummaryModel,
     DemandReceivedModel,
     AllDeptDemandReceivedSummary,
     SubDeptDemandReceivedSummary
 } from './demand.received.summary.widget.model';
+import {
+    GraphObject
+} from '../demand.raised.summary.widget/demand.raised.summary.widget.model';
 import { DemandModel } from '../../shared.components/demand/components/demand.model';
 import { DemandReceivedSummaryWidgetService } from './demand.received.summary.widget.service';
 import { ModalDirective } from 'ng2-bootstrap/modal';
@@ -41,6 +45,8 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
     public showSubDeptSubPending: boolean;
     public baseLocationURl: string = window.location.pathname;
     public hasDemandReceivedList: boolean = false;
+    public arrGraphData: GraphObject[];
+    public showDemandReceivedGraph: boolean = false;
     private $selfElement: JQuery;
     private $placeholder: JQuery;
 
@@ -48,10 +54,11 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
         private demandReceivedSummaryWidgetService: DemandReceivedSummaryWidgetService) { }
 
     public ngOnInit(): void {
+        this.arrGraphData = [];
         this.demandReceivedSummary = new DemandReceivedSummaryModel();
         this.demandReceivedSummary = this.demandReceivedSummaryWidgetService
             .GetDemandReceivedCount(this.incidentId, this.departmentId);
-        this.setDemandReceivedGraphData();
+        //this.setDemandReceivedGraphData();
     }
 
     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
@@ -79,6 +86,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
             (this.incidentId, (item: DemandReceivedModel[]) => {
                 this.allDemandReceivedList = Observable.of(item);
                 this.childModalViewAllDemandReceivedSummary.show();
+                this.graphDataFormationForDemandReceivedSummeryWidget(item);
                 // this.hasDemandReceivedList = item.length > 0;
                 // this.setDemandReceivedGraphData();
             });
@@ -221,63 +229,31 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
         this.showSubDeptSubPending = false;
     }
 
-    private setDemandReceivedGraphData(): void {
-        Highcharts.chart('demand-received-graph-container', {
-            chart: {
-                type: 'column'
-            },
-            title: {
-                text: 'Monthly Average Rainfall'
-            },
-            subtitle: {
-                text: 'Source: WorldClimate.com'
-            },
-            xAxis: {
-                categories: [
-                    'Jan',
-                    'Feb',
-                    'Mar',
-                    'Apr',
-                    'May',
-                    'Jun',
-                    'Jul',
-                    'Aug',
-                    'Sep',
-                    'Oct',
-                    'Nov',
-                    'Dec'
-                ],
-                crosshair: true
-            },
-            yAxis: {
-                min: 0,
-                title: {
-                    text: 'Rainfall (mm)'
+    public graphDataFormationForDemandReceivedSummeryWidget(entity: DemandReceivedModel[]): void {
+        this.arrGraphData = [];
+        entity.map((item: DemandReceivedModel) => {
+            item.demandModelList.map((itemDemand: DemandModel) => {
+                let graphObject: GraphObject = new GraphObject();
+                graphObject.requesterDepartmentName = item.targetDepartmentName;
+                graphObject.requesterDepartmentId = item.departmentId;
+                graphObject.isAssigned = true;
+                if (itemDemand.ClosedOn != null) {
+                    graphObject.isClosed = true;
+                    graphObject.closedOn = new Date(itemDemand.ClosedOn);
                 }
-            },
-            tooltip: {
-                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
-                footerFormat: '</table>',
-                shared: true,
-                useHTML: true
-            },
-            plotOptions: {
-                column: {
-                    pointPadding: 0.2,
-                    borderWidth: 0
+                else {
+                    graphObject.isPending = true;
                 }
-            },
-            series: [{
-                name: 'Tokyo',
-                data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
-
-            }, {
-                name: 'New York',
-                data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
-            }]
+                graphObject.CreatedOn = new Date(itemDemand.CreatedOn);
+                this.arrGraphData.push(graphObject);
+            });
         });
+        this.GetDemandReceivedGraph(entity[0].departmentId);
+    }
+
+    public GetDemandReceivedGraph(targetDepartmentId: number) {
+        WidgetUtilityService.GetDemandGraph(targetDepartmentId,Highcharts,this.arrGraphData,'demand-received-graph-container');
+        this.showDemandReceivedGraph = true;
     }
 
 }

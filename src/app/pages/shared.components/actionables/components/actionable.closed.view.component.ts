@@ -39,6 +39,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     parentChecklistIds: number[] = [];
     actionableWithParents: ActionableModel[] = [];
     public globalStateProxy: GlobalStateService;
+    public completionStatusTypes: any[] = GlobalConstants.CompletionStatusType;
     constructor(formBuilder: FormBuilder, private actionableService: ActionableService,
         private dataExchange: DataExchangeService<boolean>, private globalState: GlobalStateService,
         private toastrService: ToastrService, private departmentService: DepartmentService,
@@ -111,15 +112,9 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     }
 
     IsReopen(event: any, editedActionable: ActionableModel): void {
-        if (!event.checked) {
-            editedActionable.Done = false;
-        }
-        else {
-            editedActionable.Done = true;
-        }
         let tempActionable = this.closeActionables
             .find((item: ActionableModel) => item.ActionId == editedActionable.ActionId);
-        tempActionable.Reopen = editedActionable.Done;
+        tempActionable.Done = true;
     }
 
     getAllCloseActionable(incidentId: number, departmentId: number): void {
@@ -193,10 +188,10 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
             this.batchUpdate(filterActionableUpdate.map(x => {
                 return {
                     ActionId: x.ActionId,
-                    ActualClose: new Date(),
-                    CompletionStatus: "Open",
-                    ReopenedBy: this.credential.UserId,
-                    ReopenedOn: new Date()
+                    ActualClose: (x.CompletionStatus == 'Closed') ? new Date() : null,
+                    CompletionStatus: x.CompletionStatus,
+                    CompletionStatusChangedBy: this.credential.UserId,
+                    CompletionStatusChangedOn: new Date()
                 };
             }));
         }

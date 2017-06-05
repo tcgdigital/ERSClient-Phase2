@@ -81,7 +81,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
     public GetAllOpenByIncidentIdandDepartmentId(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
             .Expand('CheckList($select=CheckListId,CheckListCode,ParentCheckListId)')
-            .Filter(`CompletionStatus eq 'Open' and IncidentId eq ${incidentId} and DepartmentId eq ${departmentId}`)
+            .Filter(`CompletionStatus ne 'Closed' and IncidentId eq ${incidentId} and DepartmentId eq ${departmentId}`)
             .OrderBy("CreatedOn desc")
             .Execute()
             .map((actionables: ResponseModel<ActionableModel>) => {
@@ -98,7 +98,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
 
     public GetAllOpenByIncidentId(incidentId: number): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
-            .Filter(`CompletionStatus eq 'Open' and IncidentId eq ${incidentId} and ParentCheckListId ne null`)
+            .Filter(`CompletionStatus ne 'Closed' and IncidentId eq ${incidentId} and ParentCheckListId ne null`)
             .Select('ParentCheckListId')
             .Execute();
     }
@@ -114,7 +114,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
     public GetAllCloseByIncidentIdandDepartmentId(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
             .Expand('CheckList($select=CheckListId,CheckListCode)')
-            .Filter(`CompletionStatus eq 'Close' and IncidentId eq ${incidentId} and DepartmentId eq ${departmentId}`)
+            .Filter(`CompletionStatus eq 'Closed' and IncidentId eq ${incidentId} and DepartmentId eq ${departmentId}`)
             .OrderBy("CreatedOn desc")
             .Execute()
             .map((actionables: ResponseModel<ActionableModel>) => {
@@ -129,7 +129,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
 
     public GetAllCloseByIncidentId(incidentId: number): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
-            .Filter(`CompletionStatus eq 'Close' and IncidentId eq ${incidentId} and ParentCheckListId ne null`)
+            .Filter(`CompletionStatus eq 'Closed' and IncidentId eq ${incidentId} and ParentCheckListId ne null`)
             .Select('ParentCheckListId')
             .Execute();
     }
@@ -139,10 +139,10 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
         return this._dataService.Patch(entity, key).Execute();
     }
 
-    public setRagColor(businessTimeStart?: Date, businessTimeEnd?: Date): string {
-        if (businessTimeStart != undefined && businessTimeEnd != undefined) {
-            let startTime: number = (new Date(businessTimeStart)).getTime();
-            let endTime: number = (new Date(businessTimeEnd)).getTime();
+    public setRagColor(assignDate?: Date, scheduleClose?: Date): string {
+        if (assignDate != undefined && scheduleClose != undefined) {
+            let startTime: number = (new Date(assignDate)).getTime();
+            let endTime: number = (new Date(scheduleClose)).getTime();
             let totalTimeDifferenceInMilliSeconds: number = null;
             let _Adiff: number = null;
             let _Cdiff1: number = null;
@@ -168,7 +168,6 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
 
     public BatchOperation(data: any[]): Observable<ResponseModel<BaseModel>> {
         let requests: Array<RequestModel<BaseModel>> = [];
-
         data.forEach(x => {
             requests.push(new RequestModel<any>
                 (`/odata/Actionables(${x.ActionId})`, WEB_METHOD.PATCH, x));
@@ -184,19 +183,19 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
 
     public GetOpenActionableCount(incidentId: number, departmentId: number): Observable<number> {
         return this._dataService.Count()
-            .Filter(`IncidentId eq ${incidentId} and DepartmentId eq ${departmentId} and CompletionStatus eq 'Open'`)
+            .Filter(`IncidentId eq ${incidentId} and DepartmentId eq ${departmentId} and CompletionStatus ne 'Closed'`)
             .Execute();
     }
 
     public GetCloseActionableCount(incidentId: number, departmentId: number): Observable<number> {
         return this._dataService.Count()
-            .Filter(`IncidentId eq ${incidentId} and DepartmentId eq ${departmentId} and CompletionStatus eq 'Close'`)
+            .Filter(`IncidentId eq ${incidentId} and DepartmentId eq ${departmentId} and CompletionStatus eq 'Closed'`)
             .Execute();
     }
 
     public GetPendingOpenActionableForIncidentAndDepartment(incidentId:number,departmentId:number):Observable<ResponseModel<ActionableModel>>{
         return this._dataService.Query()
-        .Filter(`IncidentId eq ${incidentId} and DepartmentId eq ${departmentId} and CompletionStatus eq 'Open'`)
+        .Filter(`IncidentId eq ${incidentId} and DepartmentId eq ${departmentId} and CompletionStatus ne 'Closed'`)
         .Execute();
     }
 
