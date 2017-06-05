@@ -55,7 +55,11 @@
                                                 <td data-title="Records" colspan="4">No demands to show.</td>
                                             </tr>
                                             <tr *ngFor="let demand of allDemandReceivedList | async">
-                                                <td data-title="Target Department">{{demand.targetDepartmentName}}</td>
+                                                <td data-title="Target Department">
+                                                    <a href="javascript:void(0);" (click)="GetDemandReceivedGraph(demand.departmentId)">
+                                                    {{demand.targetDepartmentName}}
+                                                    </a>
+                                                </td>
                                                 <td data-title="Allocated">{{demand.assigned}}</td>
                                                 <td data-title="Completed">
                                                     <a href="{{baseLocationURl}}#showSubDeptSubCompleted" (click)="showAllDeptSubCompletedFunc(demand.demandModelList)">
