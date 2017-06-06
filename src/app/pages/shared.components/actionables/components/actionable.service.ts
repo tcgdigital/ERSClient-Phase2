@@ -166,6 +166,10 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
                         currentActionables.filter((item: ActionableModel) => {
                             return (this.parentActionable.ActionId == item.ActionId);
                         })[0].CompletionStatus = consolidatedMinimumCompletionStatus;
+
+                        currentActionables.filter((item: ActionableModel) => {
+                            return (this.parentActionable.ActionId == item.ActionId);
+                        })[0].Done = actionable.Done;
                     }
                 })
         }
