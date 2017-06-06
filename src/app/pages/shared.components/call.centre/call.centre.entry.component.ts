@@ -119,6 +119,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     externalInput: ExternalInputModel = new ExternalInputModel();
     communicationlogtoupdateId: number;
     communicationlog: CommunicationLogModel = new CommunicationLogModel();
+    public submitted: boolean = false;
 
 
 
@@ -243,11 +244,15 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         this.communicationLog.InteractionDetailsId = 0;
         this.communicationLog.InteractionDetailsType = interactionType;
         this.communicationLog.Answers = this.form.controls['Queries'].value + ' Caller:'
-            + this.caller.CallerName + ' Contact Number:' + this.caller.ContactNumber;
+            + this.caller.FirstName+ "  "+this.caller.LastName + ' Contact Number:' + this.caller.ContactNumber;
         this.communicationLog.RequesterName = this.credential.UserName;
         this.communicationLog.RequesterDepartment = this.currentDepartmentName;
         this.communicationLog.RequesterType = requestertype;
         this.communicationLog.CreatedBy = +this.credential.UserId;
+        this.communicationLog.AffectedPersonId = (this.enquiryType == 1 || this.enquiryType == 3) ?
+            this.enquiry.AffectedPersonId : null;
+        this.communicationLog.AffectedObjectId = (this.enquiryType == 2) ?
+            this.enquiry.AffectedObjectId : null;
         this.communicationLogs.push(this.communicationLog);
         return this.communicationLogs;
     }
@@ -303,11 +308,15 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             this.demand.ScheduleTime = scheduleTime.toString();
             this.demand.RequesterType = GlobalConstants.RequesterTypeDemand;
             this.demand.CommunicationLogs = this.SetCommunicationLog(GlobalConstants.RequesterTypeDemand, GlobalConstants.InteractionDetailsTypeDemand);
+
             this.demands.push(this.demand);
         }
     }
 
     saveEnquiryDemandCaller(): void {
+        this.submitted = true;
+
+
         UtilityService.setModelFromFormGroup<EnquiryModel>(this.enquiry, this.form,
             (x) => x.IsAdminRequest, (x) => x.IsCallBack, (x) => x.IsTravelRequest, (x) => x.Queries);
 
@@ -324,18 +333,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             }
             this.enquiryService.Create(this.enquiry)
                 .subscribe((response: EnquiryModel) => {
-                    this.form = new FormGroup({
-                        EnquiryId: new FormControl(0),
-                        //  EnquiryType: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-                        // CallerName: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-                        //  ContactNumber: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-                        //  AlternateContactNumber: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-                        Queries: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-                        Relationship: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-                        IsAdminRequest: new FormControl(false),
-                        IsCallBack: new FormControl(false),
-                        IsTravelRequest: new FormControl(false)
-                    });
+                    this.form = this.formInitialization();
                     this.toastrService.success('Enquiry Saved successfully.', 'Success', this.toastrConfig);
                     this.externalInput.deleteAttributes();
                     this.externalInput.IsCallRecieved = true;
@@ -359,12 +357,12 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                 communicationlogToDeactivate.deleteAttributes();
                 communicationlogToDeactivate.InteractionDetailsId = this.communicationlogtoupdateId;
                 communicationlogToDeactivate.ActiveFlag = 'InActive';
-                if (this.enquiry.AffectedPersonId != 0) {
+                if (this.enquiry.AffectedPersonId && this.enquiry.AffectedPersonId != 0) {
                     this.enquiryToUpdate.AffectedPersonId = this.enquiry.AffectedPersonId;
                     communicationlogs[0].AffectedPersonId = this.enquiry.AffectedPersonId;
                     delete communicationlogs[0].AffectedObjectId;
                 }
-                if (this.enquiry.AffectedObjectId != 0) {
+                if (this.enquiry.AffectedObjectId && this.enquiry.AffectedObjectId != 0  ) {
                     this.enquiryToUpdate.AffectedObjectId = this.enquiry.AffectedObjectId;
                     communicationlogs[0].AffectedObjectId = this.enquiry.AffectedObjectId;
                     delete communicationlogs[0].AffectedPersonId;
@@ -373,24 +371,13 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                 communicationlogs[0].Queries = this.enquiryToUpdate.Queries;
                 communicationlogs[0].EnquiryId = this.enquiryToUpdate.EnquiryId;
                 this.enquiryService.Update(this.enquiryToUpdate, this.enquiryToUpdate.EnquiryId)
-                    .map(() => { })
                     .flatMap(() => this.communicationlogservice.Update(communicationlogToDeactivate, this.communicationlogtoupdateId))
-                    .map(() => { })
                     .flatMap(() => this.communicationlogservice.Create(communicationlogs[0]))
-                    .map(() => { })
                     .flatMap(() => this.demandService.UpdateBulkToDeactivateFromCallId(this.caller.CallerId))
-                    .map(() => { })
                     .subscribe(() => {
-                        this.form = new FormGroup({
-                            EnquiryId: new FormControl(0),
-                            Queries: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-                            Relationship: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-                            IsAdminRequest: new FormControl(false),
-                            IsCallBack: new FormControl(false),
-                            IsTravelRequest: new FormControl(false)
-                        });
+                        this.form = this.formInitialization();
                         this.toastrService.success('Enquiry updated successfully.', 'Success', this.toastrConfig);
-                         let num = UtilityService.UUID();
+                        let num = UtilityService.UUID();
                         this.globalState.NotifyDataChanged('CallRecieved', num);
                         this.createDemands();
 
@@ -399,20 +386,14 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             else {
                 this.enquiryService.Update(this.enquiryToUpdate, this.enquiryToUpdate.EnquiryId)
                     .subscribe(() => {
-                        this.form = new FormGroup({
-                            EnquiryId: new FormControl(0),
-                            Queries: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-                            Relationship: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-                            IsAdminRequest: new FormControl(false),
-                            IsCallBack: new FormControl(false),
-                            IsTravelRequest: new FormControl(false)
-                        });
+                        this.form = this.formInitialization();
                         this.toastrService.success('Enquiry updated successfully.', 'Success', this.toastrConfig);
                         let num = UtilityService.UUID();
                         this.globalState.NotifyDataChanged('CallRecieved', num);
                     });
             }
         }
+
 
     }
 
@@ -443,14 +424,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     }
 
     ngOnInit(): any {
-        this.form = new FormGroup({
-            EnquiryId: new FormControl(0),
-            Queries: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-            Relationship: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-            IsAdminRequest: new FormControl(false),
-            IsCallBack: new FormControl(false),
-            IsTravelRequest: new FormControl(false)
-        });
+        this.form = this.formInitialization();
 
         this.currentIncident = +UtilityService.GetFromSession('CurrentIncidentId');
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
@@ -472,5 +446,17 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
 
     onActionClick(eventArgs: any) {
         console.log(eventArgs);
+    }
+
+
+    formInitialization(): any {
+        return new FormGroup({
+            EnquiryId: new FormControl(0),
+            Queries: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+            Relationship: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+            IsAdminRequest: new FormControl(false),
+            IsCallBack: new FormControl(false),
+            IsTravelRequest: new FormControl(false)
+        });
     }
 }

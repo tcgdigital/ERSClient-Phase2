@@ -8,9 +8,11 @@ import {
     AllDemandRaisedSummaryModel,
     DemandRaisedModel,
     AllDeptDemandRaisedSummary,
-    SubDeptDemandRaisedSummary
+    SubDeptDemandRaisedSummary,
+    GraphObject
 } from './demand.raised.summary.widget.model';
-
+import { WidgetUtilityService } from "../widget.utility";
+import { UtilityService, GlobalConstants } from '../../../shared';
 import { DemandRaisedSummaryWidgetService } from './demand.raised.summary.widget.service';
 import { DemandModel } from '../../shared.components/demand/components/demand.model';
 import { ModalDirective } from 'ng2-bootstrap/modal';
@@ -49,10 +51,13 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
     public subDeptDemandRaisedSummaries: AllDeptDemandRaisedSummary[];
     public baseLocationURl: string = window.location.pathname;
     public showDemandRaisedGraph: boolean = false;
-
+    public arrGraphData: GraphObject[];
+    //public elapsedHourForGraph: number = GlobalConstants.ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION;
+    public graphCategories: string[] = [];
     constructor(private demandRaisedSummaryWidgetService: DemandRaisedSummaryWidgetService) { }
 
     public ngOnInit(): void {
+        this.arrGraphData = [];
         this.demandRaisedSummary = new DemandRaisedSummaryModel();
         this.showAllDeptSubCompleted = false;
         this.showAllDeptSubPending = false;
@@ -100,39 +105,8 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
     // TODO: Need to refactor
     setRagStatus(): void {
         Observable.interval(1000).subscribe((_) => {
-            this.allDemandRaisedSummaryModelList.forEach((demand) => {
-                if (demand.ClosedOn === undefined || demand.ClosedOn == null) {
-                    const ScheduleTime: number = (Number(demand.ScheduleTime) * 60000);
-                    const CreatedOn: number = new Date(demand.CreatedOn).getTime();
-                    const CurrentTime: number = new Date().getTime();
-                    const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-                    const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
+            UtilityService.SetRAGStatusGrid(this.allDemandRaisedSummaryModelList, 'Demand');
 
-                    if (percentage < 50) {
-                        demand.RagStatus = 'statusGreen';
-                    } else if (percentage >= 100) {
-                        demand.RagStatus = 'statusRed';
-                    }
-                    else {
-                        demand.RagStatus = 'statusAmber';
-                    }
-                }
-                else {
-                    const ScheduleTime: number = (Number(demand.ScheduleTime) * 60000);
-                    const CreatedOn: number = new Date(demand.CreatedOn).getTime();
-                    const CurrentTime: number = new Date().getTime();
-                    const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-                    const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
-                    if (percentage < 50) {
-                        demand.RagStatus = 'statusGreen';
-                    } else if (percentage >= 100) {
-                        demand.RagStatus = 'statusRed';
-                    }
-                    else {
-                        demand.RagStatus = 'statusAmber';
-                    }
-                }
-            });
             this.allDemandRaisedSummaryModel = Observable.of(this.allDemandRaisedSummaryModelList);
         });
     }
@@ -145,8 +119,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
             (this.incidentId, (item: DemandRaisedModel[]) => {
                 this.allDemandRaisedList = Observable.of(item);
                 this.childModalViewAllDemandRaisedSummary.show();
-                // this.hasDemandRaisedList = item.length > 0;
-                // this.setDemandRaisedGraphData();
+                this.graphDataFormationForDemandRaisedSummeryWidget(item);
             });
     }
 
@@ -188,24 +161,8 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
                 this.allDeptDemandRaisedSummaries.push(allDeptDemandRaisedSummary);
             }
         });
-        Observable.interval(1000).subscribe((_) => {
-            this.allDeptDemandRaisedSummaries.forEach((dept: AllDeptDemandRaisedSummary) => {
-                const ScheduleTime: number = (Number(dept.ScheduleTime) * 60000);
-                const CreatedOn: number = new Date(dept.CreatedOn).getTime();
-                const CurrentTime: number = new Date().getTime();
-                const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-                const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
 
-                if (percentage < 50) {
-                    dept.RagStatus = 'statusGreen';
-                } else if (percentage >= 100) {
-                    dept.RagStatus = 'statusRed';
-                }
-                else {
-                    dept.RagStatus = 'statusAmber';
-                }
-            });
-        });
+        UtilityService.SetRAGStatus(this.allDeptDemandRaisedSummaries, 'Demand');
         this.showAllDeptSubCompleted = true;
         this.showAllDeptSubPending = false;
     }
@@ -232,25 +189,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
             }
         });
 
-        Observable.interval(1000).subscribe((_) => {
-            this.allDeptDemandRaisedSummaries.forEach((dept: AllDeptDemandRaisedSummary) => {
-                const ScheduleTime: number = (Number(dept.ScheduleTime) * 60000);
-                const CreatedOn: number = new Date(dept.CreatedOn).getTime();
-                const CurrentTime: number = new Date().getTime();
-                const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-                const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
-
-                if (percentage < 50) {
-                    dept.RagStatus = 'statusGreen';
-                } else if (percentage >= 100) {
-                    dept.RagStatus = 'statusRed';
-                }
-                else {
-                    dept.RagStatus = 'statusAmber';
-                }
-            });
-        });
-
+        UtilityService.SetRAGStatus(this.allDeptDemandRaisedSummaries, 'Demand');
         this.showAllDeptSubPending = true;
         this.showAllDeptSubCompleted = false;
     }
@@ -276,24 +215,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
                 this.subDeptDemandRaisedSummaries.push(subDeptDemandRaisedSummary);
             }
         });
-        Observable.interval(1000).subscribe((_) => {
-            this.subDeptDemandRaisedSummaries.forEach((dept: AllDeptDemandRaisedSummary) => {
-                const ScheduleTime: number = (Number(dept.ScheduleTime) * 60000);
-                const CreatedOn: number = new Date(dept.CreatedOn).getTime();
-                const CurrentTime: number = new Date().getTime();
-                const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-                const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
-
-                if (percentage < 50) {
-                    dept.RagStatus = 'statusGreen';
-                } else if (percentage >= 100) {
-                    dept.RagStatus = 'statusRed';
-                }
-                else {
-                    dept.RagStatus = 'statusAmber';
-                }
-            });
-        });
+        UtilityService.SetRAGStatus(this.subDeptDemandRaisedSummaries, 'Demand');
         this.showSubDeptSubCompleted = true;
         this.showSubDeptSubPending = false;
     }
@@ -314,24 +236,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
                 this.subDeptDemandRaisedSummaries.push(subDeptDemandRaisedSummary);
             }
         });
-        Observable.interval(1000).subscribe((_) => {
-            this.subDeptDemandRaisedSummaries.forEach((dept: AllDeptDemandRaisedSummary) => {
-                const ScheduleTime: number = (Number(dept.ScheduleTime) * 60000);
-                const CreatedOn: number = new Date(dept.CreatedOn).getTime();
-                const CurrentTime: number = new Date().getTime();
-                const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-                const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
-
-                if (percentage < 50) {
-                    dept.RagStatus = 'statusGreen';
-                } else if (percentage >= 100) {
-                    dept.RagStatus = 'statusRed';
-                }
-                else {
-                    dept.RagStatus = 'statusAmber';
-                }
-            });
-        });
+        UtilityService.SetRAGStatus(this.subDeptDemandRaisedSummaries, 'Demand');
         this.showSubDeptSubCompleted = false;
         this.showSubDeptSubPending = true;
     }
@@ -348,66 +253,34 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         this.showSubDeptSubPending = false;
     }
 
-    public GetDemandRaisedGraph($event, requesterDepartmentId) {
-        console.log(requesterDepartmentId);
+    public graphDataFormationForDemandRaisedSummeryWidget(entity: DemandRaisedModel[]): void {
+        this.arrGraphData = [];
+        entity.map((item: DemandRaisedModel) => {
+            item.demandModelList.map((itemDemand: DemandModel) => {
+                let graphObject: GraphObject = new GraphObject();
+                graphObject.requesterDepartmentName = item.requesterDepartmentName;
+                graphObject.requesterDepartmentId = item.departmentId;
+                graphObject.isAssigned = true;
+                if (itemDemand.ClosedOn != null) {
+                    graphObject.isClosed = true;
+                    graphObject.closedOn = new Date(itemDemand.ClosedOn);
+                }
+                else {
+                    graphObject.isPending = true;
+                }
+                graphObject.CreatedOn = new Date(itemDemand.CreatedOn);
+                this.arrGraphData.push(graphObject);
+            });
+        });
+        this.GetDemandRaisedGraph(entity[0].departmentId);
     }
 
-    private setDemandRaisedGraphData(): void {
-        Highcharts.chart('demand-raised-graph-container', {
-            chart: {
-                type: 'column'
-            },
-            title: {
-                text: 'Monthly Average Rainfall'
-            },
-            subtitle: {
-                text: 'Source: WorldClimate.com'
-            },
-            xAxis: {
-                categories: [
-                    'Jan',
-                    'Feb',
-                    'Mar',
-                    'Apr',
-                    'May',
-                    'Jun',
-                    'Jul',
-                    'Aug',
-                    'Sep',
-                    'Oct',
-                    'Nov',
-                    'Dec'
-                ],
-                crosshair: true
-            },
-            yAxis: {
-                min: 0,
-                title: {
-                    text: 'Rainfall (mm)'
-                }
-            },
-            tooltip: {
-                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
-                footerFormat: '</table>',
-                shared: true,
-                useHTML: true
-            },
-            plotOptions: {
-                column: {
-                    pointPadding: 0.2,
-                    borderWidth: 0
-                }
-            },
-            series: [{
-                name: 'Tokyo',
-                data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+    public GetDemandRaisedGraph(requesterDepartmentId: number) {
+        WidgetUtilityService.GetDemandGraph(requesterDepartmentId,Highcharts,this.arrGraphData,'demand-raised-graph-container');
+        this.showDemandRaisedGraph = true;
+    }
 
-            }, {
-                name: 'New York',
-                data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
-            }]
-        });
+    private activator<T>(type: { new (): T; }): T {
+        return new type();
     }
 }

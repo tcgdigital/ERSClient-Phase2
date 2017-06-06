@@ -10,7 +10,9 @@
                 <th>Medical Status</th>
                 <th>Verification Status</th>
                 <th>Interaction Details</th>
+                <th>Caller list</th>
                 <th>View</th>
+                <th>Is NOK Informed</th>
             </tr>
         </thead>
         <tbody>
@@ -31,7 +33,15 @@
                 <td data-title="Interaction Details"><i class="fa fa-comments trailButtonStyle" (click)="openChatTrails(affectedperson.AffectedPersonId)"></i>
                 </td>
                 <td data-title="Action">
+                    <i class="fa fa-address-book fa-lg" (click)="openCallerList(affectedperson)"></i>
+                </td>
+                <td data-title="Action">
                     <i class="fa fa-edit fa-lg" (click)="openAffectedPersonDetail(affectedperson)"></i>
+                </td>
+                <td data-title="Active">
+                    <md-checkbox class="Marght" id="IsNokInformed" name="IsNokInformed" [ngModel]="affectedperson.IsNokInformed" (change)="IsNokInformed($event,affectedperson.AffectedPersonId)"
+                        aria-label="ActiveFlag">
+                    </md-checkbox>
                 </td>
             </tr>
         </tbody>
@@ -146,6 +156,61 @@
     </div>
 </div>
 
+<div bsModal #childModalForCallers="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Caller list</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="cancelCallersModal()">
+                  <span aria-hidden="true">&times;</span>
+                   </button>
+            </div>
+            <div class="modal-body">
+                 <div class="row modalBodyHeaderStyle">
+                        <div class="col-sm-6 form-group">
+                            <label class="lebelHeaderStyle"><strong>PDA Name</strong></label>
+                            <br>
+                            <label class="form-control">{{affectedPersonModel.CrewName || affectedPersonModel.PassengerName}}</label>
+                        </div>
+                        <div class="col-sm-6 form-group">
+                            <label class="lebelHeaderStyle"><strong>Reference Number</strong></label>
+                            <br>
+                            <label class="form-control">{{affectedPersonModel.TicketNumber}}</label>
+                        </div>
+                    </div>
+                <br>
+                <responsive-table>
+                    <table responsive-table-body>
+                        <thead>
+                            <tr>
+                                <th>Caller Name</th>
+                                <th>Select as nok</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr [hidden]="callers.length != 0">
+                                <td colspan="9">No Call has been made yet.</td>
+                            </tr>
+                            <tr *ngFor="let caller of callers">
+                                <td data-title="comm"><strong>{{caller.FirstName + "  "+ caller.LastName}}</strong>
+                                </td>
+                                <td data-title="Select NOK">
+                                    <md-checkbox [(ngModel)]="caller.IsNok" aria-label="Add"></md-checkbox>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </responsive-table>
+                <div class="col-lg-12 col-sm-12 col-md-6" *ngIf="!isArchive">
+                    <div class="buttonholder">
+                        <button class="btn btn-primary" type="button" (click)="saveNok(affectedPersonModel.AffectedPersonId)">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 

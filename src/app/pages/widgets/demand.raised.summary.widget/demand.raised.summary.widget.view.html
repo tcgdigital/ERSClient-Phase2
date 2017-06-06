@@ -97,7 +97,7 @@
                                             </tr>
                                             <tr *ngFor="let demand of allDemandRaisedList | async">
                                                 <td data-title="Target Department">
-                                                    <a href="javascript:void(0);" (click)="GetDemandRaisedGraph($event, demand.RequesterDepartmentId)">
+                                                    <a href="javascript:void(0);" (click)="GetDemandRaisedGraph(demand.departmentId)">
                                                         {{demand.requesterDepartmentName}}
                                                     </a>
                                                 </td>
@@ -117,7 +117,7 @@
                                     </table>
                                 </responsive-table>
                             </div>
-                            <div [hidden]="showDemandRaisedGraph" class="col-md-12 col-lg-6">
+                            <div class="col-md-12 col-lg-6">
                                 <div id="demand-raised-graph-container">
                                 </div>
                             </div>

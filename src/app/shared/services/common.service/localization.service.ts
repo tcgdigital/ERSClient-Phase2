@@ -4,16 +4,18 @@ import { Observable } from 'rxjs/Rx';
 export class LocalizationService {
 
     public static toLocal(date: Date): Date {
-        let convertedDate = date.setMinutes(-(new Date()).getTimezoneOffset());
-        return new Date(convertedDate); // Pleasde check
+        date = new Date(date.toLocaleString() + " UTC");
+        //date.setMinutes(-(new Date()).getTimezoneOffset());
+        return date; // Pleasde check
 
 
 
     }
 
     public static toUTC(date: Date): Date {
-        let convertedDate = date.setMinutes((new Date()).getTimezoneOffset());
-        return new Date(convertedDate); // Pleasde check
+        date = new Date(date.toISOString().split('.')[0]);
+        //date.setMinutes((new Date()).getTimezoneOffset());
+        return date; // Pleasde check
     }
 
     /**
@@ -42,11 +44,13 @@ export class LocalizationService {
         //return request;
     }
 
-    public static transformRequestBody(request: any): any {
-        if (request.text() !== null && request.text() !== undefined) {
-            request._body.replace(/(\d{4}\-\d\d\-\d\d([tT][\d:\.]*)?)([zZ]|([+\-])(\d{3}))?/mgi, (mached) => {
-                let existingDate = new Date(mached);
-                return moment(LocalizationService.toUTC(existingDate)).toJSON();
+    public static transformRequestBody(request: string): string {
+        if (request !== null && request !== undefined && request !== '') {
+            request.replace(/(\d{4}\-\d\d\-\d\d([tT][\d:\.]*)?)([zZ]|([+\-])(\d{3}))?/mgi, (mached) => {
+                let existingDate: Date = new Date(new Date(mached.split('.')[0]).toLocaleString() + " UTC");
+                let convertedDate: Date = LocalizationService.toUTC(existingDate);
+
+                return LocalizationService.toJSONDate(convertedDate);
             })
             return request;
         }
@@ -83,12 +87,13 @@ export class LocalizationService {
         //return response;
     }
 
-    public static transformResponseBody(response: any): any {
-        if (response.text() !== null && response.text() !== undefined) {
-            response._body = response.text()
+    public static transformResponseBody(response: string): string {
+        if (response !== null && response !== undefined && response !== '') {
+            response = response
                 .replace(/(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|[zZ]))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|[zZ]))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|[zZ]))/mgi, (mached) => {
-                    let existingDate = new Date(mached);
-                    return moment(LocalizationService.toLocal(existingDate)).toJSON();
+                    let existingDate: Date = new Date(new Date(mached.split('.')[0]).toLocaleString() + " UTC");
+                    let convertedDate: Date = LocalizationService.toLocal(existingDate);
+                    return LocalizationService.toJSONDate(convertedDate);
                 })
             return response;
         }
@@ -103,28 +108,30 @@ export class LocalizationService {
         if (data instanceof Observable) {
             return data.map((value) => {
                 if (value.text() !== null && value.text() !== undefined) {
-                    let preserved: {};
+                    let preserved: any = {};
                     if (restrictedFields.length > 0) {
                         let responseObject: {} = value.json();
                         if (Object.keys(responseObject).some((x) => restrictedFields.some((y) => y === x))) {
                             restrictedFields.forEach(z => {
                                 preserved[z] = responseObject[z];
                             });
-                            let transformedData: any = handeler(value);
-                            let transformedResponseBodyObj: any = transformedData.json();
 
+                            value._body = handeler(value.text());
+                            let transformedResponseBodyObj: any = value.json();
 
                             restrictedFields.forEach(z => {
                                 transformedResponseBodyObj[z] = preserved[z];
                             });
-                            transformedData._body = JSON.stringify(transformedResponseBodyObj);
-                            return transformedData;
+                            value._body = JSON.stringify(transformedResponseBodyObj);
+                            return value;
                         }
                         else {
-                            return handeler(value);
+                            value._body = handeler(value.text());
+                            return value;
                         }
                     } else {
-                        return handeler(value);
+                        value._body = handeler(value.text());
+                        return value;
                     }
                 } else {
                     return value;
@@ -133,18 +140,23 @@ export class LocalizationService {
 
         }
         else if (data instanceof Array) {
-            if (data.length > 0) {
-                
-                if (typeof data[1] === 'string' && /^[\[|\{](\s|.*|\w)*[\]|\}]$/gi.test(data[1])) {
-                    let preserved: {};
-                    let requestObject: {} = JSON.parse(data[1]);
+            if (data.length > 1) {
+                if (typeof data[0] === 'string') {
 
-                    if (Object.keys(requestObject).some((x) => restrictedFields.some((y) => y === x))) {
+                }
+                if (typeof data[1] === 'string' && /^[\[|\{](\s|.*|\w)*[\]|\}]$/gi.test(data[1])) {
+                    let preserved: any = {};
+                    let requestData: any = JSON.parse(data[1]);
+
+                    if (Object.keys(requestData).some((x) => restrictedFields.some((y) => y === x))) {
                         restrictedFields.forEach(z => {
-                            preserved[z] = requestObject[z];
+                            console.log(requestData[z]);
+                            let existingDate = new Date(new Date(requestData[z].split('.')[0]).toLocaleString() + " UTC");
+                            //moment(existingDate).format('YYYY-MM-DD');
+                            preserved[z] = this.toJSONDate(existingDate);
                         });
 
-                        let transformedData: any = handeler(requestObject);
+                        let transformedData: any = JSON.parse(handeler(data[1]));
 
                         restrictedFields.forEach(z => {
                             transformedData[z] = preserved[z];
@@ -153,8 +165,7 @@ export class LocalizationService {
                         data[1] = JSON.stringify(transformedData);
                         return data;
                     } else {
-                        let transformedData: any = handeler(requestObject);
-                        data[1] = JSON.stringify(transformedData);
+                        data[1] = handeler(data[1]);
                         return data;
                     }
                 }
@@ -165,4 +176,14 @@ export class LocalizationService {
         } else
             return data;
     }
+
+    private static toJSONDate(date: Date): string {
+        
+        return `${this.pad(date.getFullYear().toString(),'0',4)}-${this.pad((date.getMonth() + 1).toString(),'0',2)}-${this.pad(date.getDate().toString(),'0',2)}T${this.pad(date.getHours().toString(),'0',2)}:${this.pad(date.getMinutes().toString(),'0',2)}:${this.pad(date.getSeconds().toString(),'0',2)}.000Z`;
+    }
+
+    private static pad(str: any, char: string, max: number): string {
+        return str.toString().length < max ? this.pad(char + str, char, max) : str;
+    }
 }
+

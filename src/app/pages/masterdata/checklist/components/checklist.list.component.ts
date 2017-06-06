@@ -25,6 +25,7 @@ export class ChecklistListComponent implements OnInit {
     activeEmergencyTypes: EmergencyTypeModel[] = [];
     checkListModelPatch: ChecklistModel = null;
     date: Date = new Date();
+    StationList: string[]=[];
     currentDepartmentId: number;
     searchConfigs: Array<SearchConfigModel<any>> = new Array<SearchConfigModel<any>>();
     parentChecklistListForSearch: Array<NameValue<number>> = Array<NameValue<number>>();
@@ -44,6 +45,16 @@ export class ChecklistListComponent implements OnInit {
                     x.Active = (x.ActiveFlag === 'Active');
                 });
                 this.checkLists = response.Records;
+                this.checkLists.forEach(a=>{                    
+                    if(a.Stations != null && a.Stations!= "")
+                    {
+                        if(a.Stations.indexOf(',') > 0)    
+                            a.StationList = a.Stations.split(',');  
+                    } 
+                    else
+                        a.StationList = [];          
+                })
+                console.log(this.checkLists);
                 this.parentChecklistListForSearch = this.checkLists.filter(this.findIfParent)
                     .map((x) => new NameValue<number>(x.ParentCheckList.CheckListCode, x.ParentCheckListId));
                 this.initiateSearchConfigurations();
@@ -63,10 +74,19 @@ export class ChecklistListComponent implements OnInit {
         this.checkListService.GetAllActiveCheckLists()
             .subscribe((response: ResponseModel<ChecklistModel>) => {
                 this.activeCheckLists = response.Records;
+                this.checkLists.forEach(a=>{
+                     if(a.Stations != null && a.Stations!= "")
+                     {
+                         if( a.Stations.indexOf(',') > 0)
+                            a.StationList = a.Stations.split(',');
+                     }
+                     else
+                        a.StationList = [];
+                })
             });
     }
 
-    onCheckListModelSavedSuccess(data: ChecklistModel): void {
+    onCheckListModelSavedSuccess(data: ChecklistModel): void {       
         this.checkLists.unshift(data);
     }
 

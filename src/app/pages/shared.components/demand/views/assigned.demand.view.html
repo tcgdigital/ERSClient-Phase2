@@ -17,6 +17,7 @@
                 <th>Required Location</th>
                 <th>Remarks</th>
                 <th>RAG</th>
+                <th>Download File</th>
                 <th>Done</th>
             </tr>
         </thead>
@@ -34,6 +35,13 @@
                 <td data-title="Medical Status">{{demand.RequiredLocation}}&nbsp;</td>
                 <td><i class="fa fa-list-alt" (click)="openDemandRemarks(demand)"></i></td>
                 <td><span [ngClass]="demand.RagStatus"></span></td>
+                <td data-title="Download File">
+                    <ul>
+                        <li *ngFor="let file of demand.FileStores">
+                            <a target="_self" href="{{file.FilePath}}" download="file.UploadedFileName">{{file.UploadedFileName}}</a>
+                        </li>
+                    </ul>
+                </td>
                 <td>
                     <md-checkbox class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsCompleted" aria-label="Done">
                     </md-checkbox>

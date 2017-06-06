@@ -102,11 +102,11 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
                     depCM.departmentName = itemDepartment.DepartmentName;
                     depCM.assigned = actionableListOfSameDepartment.length;
                     depCM.pending = actionableListOfSameDepartment.filter((item: ActionableModel) => {
-                        return item.CompletionStatus === 'Open';
+                        return item.CompletionStatus != 'Closed';
                     }).length;
 
                     depCM.completed = actionableListOfSameDepartment.filter((item: ActionableModel) => {
-                        return item.CompletionStatus === 'Close';
+                        return item.CompletionStatus === 'Closed';
                     }).length;
                     deptCheckListsLocal.push(depCM);
                 });
@@ -148,11 +148,11 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
                     depCM.departmentName = itemDepartment.DepartmentName;
                     depCM.assigned = actionableListOfSameDepartment.length;
                     depCM.pending = actionableListOfSameDepartment.filter((item: ActionableModel) => {
-                        return item.CompletionStatus === 'Open';
+                        return item.CompletionStatus != 'Closed';
                     }).length;
 
                     depCM.completed = actionableListOfSameDepartment.filter((item: ActionableModel) => {
-                        return item.CompletionStatus === 'Close';
+                        return item.CompletionStatus === 'Closed';
                     }).length;
                     deptCheckListsLocal.push(depCM);
                 });
@@ -194,7 +194,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
         this.showAllDeptSubChecklistPending = false;
         const subdeptChecklists: SubDeptCheckListModel[] = [];
         const completionStatusActionables = deptCheckListModel.actionableModelList.filter((item: ActionableModel) => {
-            return item.CompletionStatus === 'Close';
+            return item.CompletionStatus === 'Closed';
         });
 
         completionStatusActionables.forEach((item: ActionableModel) => {
@@ -214,7 +214,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
         this.showAllDeptSubChecklistPending = false;
         const subdeptChecklists: SubDeptCheckListModel[] = [];
         const completionStatusActionables = deptCheckListModel.actionableModelList.filter((item: ActionableModel) => {
-            return item.CompletionStatus === 'Open';
+            return item.CompletionStatus != 'Closed';
         });
         this.setAllDeptRagStatusForPending(completionStatusActionables);
         this.showAllDeptSubChecklistPending = true;
@@ -233,7 +233,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
     public setAllDeptRagStatusForCompleted(itemActionable: ActionableModel): string {
         const CreatedOn: number = new Date(itemActionable.AssignedDt).getTime();
         const ScheduleTime: number = (Number(itemActionable.Duration) * 60000);
-        const CurrentTime: number = new Date(itemActionable.ClosedOn).getTime();
+        const CurrentTime: number = new Date(itemActionable.CompletionStatusChangedOn).getTime();
         const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
         const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
         if (percentage < 50) {
@@ -283,7 +283,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
         this.showSubDeptSubChecklistPending = false;
         const subdeptChecklists: SubDeptCheckListModel[] = [];
         const completionStatusActionables = deptCheckListModel.actionableModelList.filter((item: ActionableModel) => {
-            return item.CompletionStatus === 'Close';
+            return item.CompletionStatus === 'Closed';
         });
 
         completionStatusActionables.forEach((item: ActionableModel) => {
@@ -303,7 +303,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
         this.showSubDeptSubChecklistPending = false;
         const subdeptChecklists: SubDeptCheckListModel[] = [];
         const completionStatusActionables = deptCheckListModel.actionableModelList.filter((item: ActionableModel) => {
-            return item.CompletionStatus === 'Open';
+            return item.CompletionStatus != 'Closed';
         });
         this.setSubDeptRagStatusForPending(completionStatusActionables);
         this.showSubDeptSubChecklistPending = true;
@@ -322,7 +322,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
     public setSubDeptRagStatusForCompleted(itemActionable: ActionableModel): string {
         const CreatedOn: number = new Date(itemActionable.AssignedDt).getTime();
         const ScheduleTime: number = (Number(itemActionable.Duration) * 60000);
-        const CurrentTime: number = new Date(itemActionable.ClosedOn).getTime();
+        const CurrentTime: number = new Date(itemActionable.CompletionStatusChangedOn).getTime();
         const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
         const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
         if (percentage < 50) {

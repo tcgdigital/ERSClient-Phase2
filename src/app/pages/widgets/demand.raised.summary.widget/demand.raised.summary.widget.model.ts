@@ -35,7 +35,6 @@ export class AllDemandRaisedSummaryModel extends DemandModel {
     public requesterDepartment: string;
     public scheduleCloseTime: number;
     public RagStatus: string;
-    public status: string;
 
     constructor() {
         super();
@@ -43,20 +42,53 @@ export class AllDemandRaisedSummaryModel extends DemandModel {
         this.requesterDepartment = '';
         this.scheduleCloseTime = 0;
         this.RagStatus = '';
-        this.status = '';
     }
 }
 
-export class AllDeptDemandRaisedSummary extends  DemandModel {
+export class AllDeptDemandRaisedSummary extends DemandModel {
     public description: string;
     public targetDepartmentName: string;
     public scheduleCloseTime: Date;
     public RagStatus: string;
+
+    constructor() {
+        super();
+        this.description = '';
+        this.targetDepartmentName = '';
+        this.RagStatus = '';
+    }
 }
 
-export class SubDeptDemandRaisedSummary extends  DemandModel {
+export class SubDeptDemandRaisedSummary extends DemandModel {
     public description: string;
     public targetDepartmentName: string;
     public scheduleCloseTime: Date;
     public RagStatus: string;
+
+    constructor() {
+        super();
+        this.description = '';
+        this.targetDepartmentName = '';
+        this.RagStatus = '';
+    }
+}
+
+export class GraphObject {
+    public requesterDepartmentId:number;
+    public requesterDepartmentName: string;
+    public CreatedOn: Date;
+    public closedOn?: Date;
+    public isAssigned: boolean;
+    public isClosed: boolean;
+    public isPending: boolean;
+
+    constructor() {
+        this.requesterDepartmentId=0;
+        this.requesterDepartmentName = '';
+        this.CreatedOn = new Date();
+        this.closedOn = null;
+        this.isAssigned = false;
+        this.isClosed = false;
+        this.isPending = false;
+    }
 }

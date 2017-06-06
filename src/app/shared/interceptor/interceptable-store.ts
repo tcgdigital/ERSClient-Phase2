@@ -26,6 +26,7 @@ export class InterceptableStore<T extends AnyInterceptor> implements Interceptab
   }
 
   addInterceptor(interceptor: T): Interceptable<T> {
+    
     this.store.push(interceptor);
     return this;
   }

@@ -46,7 +46,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     isArchive: boolean = false;
     public globalStateProxyOpen: GlobalStateService;
     public form: FormGroup;
-
+    public completionStatusTypes: any[] = GlobalConstants.CompletionStatusType;
     private currentDepartmentId: number = null;
     private currentIncident: number = null;
 
@@ -173,12 +173,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     };
 
     IsDone(event: any, editedActionable: ActionableModel): void {
-        if (!event.checked) {
-            editedActionable.Done = false;
-        }
-        else {
-            editedActionable.Done = true;
-        }
+        editedActionable.Done = true;
         let tempActionable = this.activeActionables.filter(function (item: ActionableModel) {
             return (item.ActionId == editedActionable.ActionId);
         });
@@ -239,7 +234,8 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     private setRagIntervalHandler(): void {
         Observable.interval(10000).subscribe(_ => {
             this.activeActionables.forEach((item: ActionableModel) => {
-                item.RagColor = this.actionableService.setRagColor(item.AssignedDt, item.ScheduleClose);
+                //item.RagColor = this.actionableService.setRagColor(item.AssignedDt, item.ScheduleClose);
+                item.RagColor = UtilityService.SetRAGStatusGridActionable('Checklist', item.AssignedDt, item.ScheduleClose);
                 console.log(`Schedule run RAG ststus: ${item.RagColor}`);
             });
         }, (error: any) => {
@@ -288,22 +284,21 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     activeActionableClick(activeActionablesUpdate: ActionableModel[]): void {
-
         let filterActionableUpdate = activeActionablesUpdate
             .filter((item: ActionableModel) => item.Done == true);
         if (filterActionableUpdate.length > 0) {
             filterActionableUpdate.forEach(x => {
                 delete x["expanded"];
                 delete x["actionableChilds"];
-
+                delete x["Done"];
             });
             this.batchUpdate(filterActionableUpdate.map(x => {
                 return {
                     ActionId: x.ActionId,
-                    ActualClose: new Date(),
-                    ClosedBy: this.credential.UserId,
-                    CompletionStatus: "Close",
-                    ClosedOn: new Date()
+                    ActualClose: (x.CompletionStatus == 'Closed') ? new Date() : null,
+                    CompletionStatusChangedBy: this.credential.UserId,
+                    CompletionStatus: x.CompletionStatus,
+                    CompletionStatusChangedOn: new Date()
                 };
             }));
         }

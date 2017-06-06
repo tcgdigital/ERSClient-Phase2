@@ -5,14 +5,16 @@
     <table responsive-table-body>
         <thead>
             <tr>
-                <th>Code</th>
-                <th>Description</th>
-                <th>Parent Checklist</th>
+                <th>CheckList Code</th>
+                <th>CheckList Detail</th>
+                <th>Parent CheckList Code</th>
                 <th>Duration</th>
-                <th>Target Dept</th>
+                <th>Target Department Name</th>
                 <th>URL</th>
-                <th>Crisis Type</th>
-                <th>Seq#</th>
+                <th>Emergency Type Name</th>
+                <th>Sequence</th>
+                <th>Organization</th>
+                <th>Stations</th>
                 <th>Active</th>
                 <th>Edit</th>
             </tr>
@@ -24,12 +26,18 @@
             <tr *ngFor="let checklist of checkLists">
                 <td data-title="CheckList Code">{{checklist.CheckListCode}}</td>
                 <td data-title="CheckList Detail">{{checklist.CheckListDetails}}</td>
-                <td data-title="Parent CheckListCode">{{ (checklist.ParentCheckList == null) ?  "NULL" : checklist.ParentCheckList.CheckListCode }}</td>
+                <td data-title="Parent CheckList Code">{{ (checklist.ParentCheckList == null) ?  "NA" : checklist.ParentCheckList.CheckListCode }}</td>
                 <td data-title="Duration">{{checklist.Duration}}</td>
                 <td data-title="Target DepartmentName">{{checklist.TargetDepartment.DepartmentName}}</td>
                 <td data-title="URL">{{checklist.URL}}</td>
-                <td data-title="EmergencyTypeName">{{checklist.EmergencyType.EmergencyTypeName}}</td>
+                <td data-title="Emergency Typ eName">{{checklist.EmergencyType.EmergencyTypeName}}</td>
                 <td data-title="Sequence">{{checklist.Sequence}}</td>
+                <td data-title="Organization">{{checklist.Organization.OrganizationCode}}</td>
+                <td data-title="Stations">
+                    <ul *ngIf="checklist.StationList != undefind">
+                        <li *ngFor="let station of checklist.StationList">{{station}}</li>
+                    </ul>
+                </td>
                 <td data-title="Active">
                     <md-checkbox class="Marght" id="IsActive" name="IsActive" [ngModel]="checklist.Active" (change)="IsActive($event,checklist)"
                         aria-label="ActiveFlag">

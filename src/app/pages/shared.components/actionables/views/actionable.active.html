@@ -5,7 +5,7 @@
                 <th>Serial Number </th>
                 <th>Description</th>
                 <th>Schedule Close Time </th>
-                <th>Done</th>
+                <th>Completion Status</th>
                 <th>RAG</th>
                 <th>Download</th>
                 <th>Details</th>
@@ -25,10 +25,13 @@
                             (click)="openChildActionable(actionable); $event.stopPropagation();"></i>                        {{actionable.Description}}
                     </td>
                     <td data-title="Schedule Close Time">{{actionable.ScheduleClose | amDateFormat:'LL - HH:mm:ss'}}</td>
-                    <td data-title="Done">
-                        <md-checkbox class="Marght" [disabled]="hasChildChecklist(actionable.ChklistId) ||  isArchive" id="Done" name="Done" [ngModel]="actionable.Done"
-                            (change)="IsDone($event,actionable)" aria-label="Done">
-                        </md-checkbox>
+                    <td data-title="Completion Status">
+                        <select id="selectCompletionStatus" class="form-control" [(ngModel)]="actionable.CompletionStatus" (change)="IsDone($event,actionable)">
+                            <option value=''>Select Completion Status</option>
+                            <option *ngFor="let completionStatusType of completionStatusTypes" [value]="completionStatusType.caption">
+                                    {{completionStatusType.text}}
+                            </option>
+                        </select>
                     </td>
                     <td data-title="RAG">
                         <div [class]="actionable.RagColor"></div>
@@ -38,9 +41,7 @@
                             download="{{actionable.FileName}}">Download</a>
                     </td>
                     <td data-title="Details"><i class="fa fa-edit" (click)="openActionableDetail(actionable)"></i>
-
                     </td>
-
                 </tr>
                 <tr *ngIf="actionable.expanded">
                     <td colspan="7">

@@ -49,7 +49,7 @@ export class EnquiryService extends ServiceBase<EnquiryModel>
             let item = new QueryModel();
             item.EnquiryId = enquiry.EnquiryId;
             item.Queries = enquiry.Queries;
-            item.CallerName = enquiry.Caller.CallerName;
+            item.CallerName = enquiry.Caller.FirstName+"  "+enquiry.Caller.LastName;
             item.ContactNumber = enquiry.Caller.ContactNumber;
             item.AlternateContactNumber = enquiry.Caller.AlternateContactNumber;
             return item;
@@ -91,4 +91,7 @@ export class EnquiryService extends ServiceBase<EnquiryModel>
                 return enquiryModelList;
             });
     }
+
+    
+
 }

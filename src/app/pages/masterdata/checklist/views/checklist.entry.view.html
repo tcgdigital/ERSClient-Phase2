@@ -89,6 +89,53 @@
                 </div>
             </div>
             <div class="col-lg-3">
+                <!--<div class="buttonholder">
+                    <button class="btn btn-primary" type="submit">Save</button>
+                    <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
+                </div>-->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label for="OrganizationId">Organization<span class="required">*</span></label>
+                    <select id="OrganizationId" class="form-control" formControlName="OrganizationId" name="OrganizationId">
+                        <option value=''>Select Organization</option>
+                        <option *ngFor="let organization of activeOrganizations" [value]="organization.OrganizationId" >
+                            {{organization.OrganizationCode}}
+                        </option>
+                    </select>
+                    <small *ngIf="form.controls.OrganizationId.hasError('required')" [hidden]="form.controls.OrganizationId.valid || (form.controls.OrganizationId.pristine && !submitted)"
+                    class="text-danger">Required</small>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label for="Stations">Stations</label>
+                    <input id="Stations" class="form-control" type="text" name="Stations" formControlName="Stations" placeholder="Enter Stations in comma separated format" />
+                    <!--<div class="multiselect-container">
+                        <div class="multiselect-selector" (click)="showList(); $event.stopPropagation();">
+                            <i class="fa fa-caret-down fa-pull-right fa-fw" aria-hidden="true">
+                                {{selectedcount>0 ? selectedcount
+                                    + ' Station(s) selected' : 'Select Station'}}
+                            </i>
+                        </div>
+                        <ul class="multiselect-list" [hidden]="!listSelected" (click)="$event.stopPropagation();">                            
+                            <li *ngFor="let station of AllStations">
+                                <md-checkbox formControlName="StationList" aria-label="Callback" [checked]="IsSelected"
+                                    (change)="selectStation($event,station.IATA)"></md-checkbox>
+                                <span>{{station.IATA}}</span>                            
+                            </li>
+                        </ul>
+                        <span >Please Select </span>
+                        <small *ngIf="selectedcount==0" class="text-danger">
+                            Required.
+                        </small>
+                    </div>-->
+                   
+                </div>
+            </div>
+            <div class="col-lg-4">
                 <div class="buttonholder">
                     <button class="btn btn-primary" type="submit">Save</button>
                     <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
