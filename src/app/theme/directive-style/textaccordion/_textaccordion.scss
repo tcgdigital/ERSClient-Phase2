@@ -58,7 +58,7 @@
         &.cd-item-front {
             position: relative;
             z-index: 3;
-            @include box-shadow(0, 0, 6px, 2px, $header-shadow);
+            // @include box-shadow(0, 0, 6px, 2px, $header-shadow);
         }
         &.cd-item-middle {
             z-index: 2;
