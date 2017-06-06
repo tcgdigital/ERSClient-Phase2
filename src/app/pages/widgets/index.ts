@@ -11,3 +11,4 @@ export * from './incident.header.widget';
 export * from './archive.report.widget';
 export * from './archive.upload.widget';
 export * from './widget.module';
+export * from './widget.utility';

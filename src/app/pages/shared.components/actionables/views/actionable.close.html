@@ -6,7 +6,7 @@
                 <th> Description</th>
                 <th> Schedule Close Time</th>
                 <th> Actual Close Time</th>
-                <th> Reopen</th>
+                <th> Completion Status</th>
                 <th> Download</th>
                 <th> View</th>
             </tr>
@@ -26,10 +26,16 @@
                     </td>
                     <td data-title="Schedule Close Time">{{actionable.ScheduleClose | amDateFormat:'LL - HH:mm:ss'}}</td>
                     <td data-title="Actual Close Time">{{actionable.ActualClose | amDateFormat:'LL - HH:mm:ss'}}</td>
-                    <td data-title="Reopen">
-                        <md-checkbox class="Marght" [disabled]="hasChildChecklist(actionable.ChklistId) || isArchive" id="Reopen" name="Reopen" [ngModel]="actionable.Done"
+                    <td data-title="Completion Status">
+                        <select id="selectCompletionStatus" class="form-control" [(ngModel)]="actionable.CompletionStatus" (change)="IsReopen($event,actionable)">
+                            <option value=''>Select Completion Status</option>
+                            <option *ngFor="let completionStatusType of completionStatusTypes" [value]="completionStatusType.caption">
+                                    {{completionStatusType.text}}
+                            </option>
+                        </select>
+                        <!--<md-checkbox class="Marght" [disabled]="hasChildChecklist(actionable.ChklistId) || isArchive" id="Reopen" name="Reopen" [ngModel]="actionable.Done"
                             (change)="IsReopen($event,actionable)" aria-label="Reopen">
-                        </md-checkbox>
+                        </md-checkbox>-->
                     </td>
                     <td data-title="Download">
                         <a class="fa fa-download" target="_self" *ngIf="actionable.UploadLinks!=null" href="{{actionable.UploadLinks}}" download="{{actionable.FileName}}">Download</a>

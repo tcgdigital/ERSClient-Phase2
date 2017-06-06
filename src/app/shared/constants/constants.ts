@@ -18,6 +18,11 @@ export interface IPriority {
     caption: string;
     text: string;
 }
+export interface ICompletionStatusType {
+    value: string;
+    caption: string;
+    text: string;
+}
 export interface IUploadDocuments {
     value: string;
     caption: string;
@@ -51,6 +56,7 @@ export class GlobalConstants {
     public static AD_AUTH_ENABLED: boolean = false;
     public static PASSWORD_PATTERN: string = '((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})';
     public static LAST_INCIDENT_PICK_COUNT: string = '5';
+    public static ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION: number = 12;
 
     public static INTERCEPTOR_PERFORM: boolean = false;
     public static PRESERVE_DATA_FROM_CONVERSION = ['EmergencyDate'];
@@ -115,7 +121,7 @@ export class GlobalConstants {
             text: 'Crew',
         }];
 
-     public static ExternalInputEnquiryType: IEnquiryType[] = [
+    public static ExternalInputEnquiryType: IEnquiryType[] = [
         {
             value: '1',
             caption: 'Passenger',
@@ -162,7 +168,7 @@ export class GlobalConstants {
             text: 'Customer Dissatisfaction',
         }];
 
-  
+
     public static Priority: IPriority[] = [
         {
             value: '1',
@@ -178,6 +184,39 @@ export class GlobalConstants {
             value: '3',
             caption: 'Low',
             text: 'Priority Low'
+        }
+    ];
+
+    public static CompletionStatusType: ICompletionStatusType[] = [
+        {
+            value: '1',
+            caption: 'Notified',
+            text: 'Notified'
+        },
+        {
+            value: '2',
+            caption: 'Assigned',
+            text: 'Assigned',
+        },
+        {
+            value: '3',
+            caption: 'Delegated',
+            text: 'Delegated'
+        },
+        {
+            value: '4',
+            caption: 'Accepted',
+            text: 'Accepted'
+        },
+        {
+            value: '5',
+            caption: 'ReferredTo',
+            text: 'Referred To'
+        },
+        {
+            value: '6',
+            caption: 'Closed',
+            text: 'Closed'
         }
     ];
 

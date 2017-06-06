@@ -27,10 +27,12 @@ export class ActionableModel extends BaseModel {
     public FileName: string;
     public ActualClose?: Date;
     public IsClosed: boolean;
-    public ClosedBy?: number;
-    public ClosedOn?: Date;
-    public ReopenedBy?: number;
-    public ReopenedOn?: Date;
+    public CompletionStatusChangedBy?:number;
+    public CompletionStatusChangedOn?:Date;
+    // public ClosedBy?: number;
+    // public ClosedOn?: Date;
+    // public ReopenedBy?: number;
+    // public ReopenedOn?: Date;
     public Done: boolean;
     public Reopen: boolean;
     public IsDisabled: boolean;
