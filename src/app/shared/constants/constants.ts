@@ -69,6 +69,13 @@ export class GlobalConstants {
         { value: 'NonFlightRelated', key: 2 }
     ];
 
+    public static MediaReleaseStatuses: IKeyValue[] = [
+        { value: 'Saved', key: 1 },
+        { value: 'SentForApproval', key: 2 },
+        { value: 'Approved', key: 3 },
+        { value: 'Published', key: 4 }
+    ];
+
     public static ActiveFlag: IKeyValue[] = [
         { value: 'Active', key: 0 },
         { value: 'InActive', key: 1 }

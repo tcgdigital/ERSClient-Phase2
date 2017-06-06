@@ -2,7 +2,7 @@ import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { MediaComponent } from './media.component';
-import { MediaReleaseComponent, MediaQueryListComponent } from './components';
+import { MediaReleaseComponent, MediaQueryListComponent, MediaReleaseApprovalComponent } from './components';
 
 const mediaRoutes: Routes = [
     {
@@ -22,6 +22,10 @@ const mediaRoutes: Routes = [
             {
                 path: 'release',
                 component: MediaReleaseComponent
+            },
+            {
+                path: 'approvalpending',
+                component: MediaReleaseApprovalComponent
             }
         ]
     }

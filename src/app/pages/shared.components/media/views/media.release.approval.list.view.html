@@ -5,9 +5,7 @@
                 <th>Releases</th>
                 <th>Status</th>
                 <th>Created On</th>
-                <th>Sent For Approval On</th>
-                <th>Approved On</th>
-                <th>Published On</th>
+                <th>Sent For Approval On</th>                
                 <th>Edit</th>
             </tr>
         </thead>
@@ -17,11 +15,9 @@
             </tr>
             <tr *ngFor="let query of mediaReleases">
                 <td data-title="Releases">{{query.MediaReleaseType}}</td>
-                <td data-title="Status">{{query.MediaReleaseStatus=== 'SentForApproval' ? 'Sent For Approval': query.MediaReleaseStatus}}</td>
+                <td data-title="Status">{{query.MediaReleaseStatus === 'SentForApproval' ? 'Approval Pending': query.MediaReleaseStatus}}</td>
                 <td data-title="Created On">{{query.CreatedOn | date:' dd-MM-yyyy hh:mm a'}}</td>
-                <td data-title="Sent For Approval On">{{query.SentForApprovalOn | date:' dd-MM-yyyy hh:mm a'}}</td>
-                <td data-title="Approved On">{{query.ApprovedOn | date:' dd-MM-yyyy hh:mm a'}}</td>
-                <td data-title="Published On">{{query.PublishedOn | date:' dd-MM-yyyy hh:mm a'}}</td>
+                <td data-title="Sent For Approval On">{{query.SentForApprovalOn | date:' dd-MM-yyyy hh:mm a'}}</td>                
                 <td data-title="Edit">
                     <button class="btn btn-warning" type="button" (click)="UpdateMediaRelease(query)">Edit</button>
                 </td>
