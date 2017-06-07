@@ -112,6 +112,19 @@ export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
                     }
                 }
 
+            },
+            {
+                path: 'membertrack',
+                data: {
+                    menu: {
+                        title: 'Member Tracking',
+                        icon: 'fa fa-phone fa-lg',
+                        selected: false,
+                        expanded: false,
+                        order: 6
+                    }
+                }
+
             }
         ]
     }

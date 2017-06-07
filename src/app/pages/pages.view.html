@@ -1,7 +1,7 @@
 <div page-header [userName]="userName" [lastLogin]="lastLogin" [departments]="departments" [incidents]="incidents" [currentDepartmentId]="currentDepartmentId"
     [currentIncidentId]="currentIncidentId" (toggleSideMenu)="toggleSideMenu($event)" (departmentChange)="onDepartmentChange($event)"
     (incidentChange)="onIncidentChange($event)" (contactClicked)="onContactClicked($event)" (helpClicked)="onHelpClicked($event)"
-    (logoutClicked)="onLogoutClicked($event)" (changePasswordClicked)="onChangePasswordClicked($event)">
+    (logoutClicked)="onLogoutClicked($event)" (changePasswordClicked)="onChangePasswordClicked($event)" [isLanding]="isLanding">
 </div>
 <side-bar [dockingState]="sideMenuState"></side-bar>
 <section class="body-container">

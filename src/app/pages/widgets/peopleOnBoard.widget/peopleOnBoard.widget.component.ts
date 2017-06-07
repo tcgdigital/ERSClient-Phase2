@@ -22,7 +22,8 @@ import * as _ from 'underscore';
 @Component({
     selector: 'peopleOnBoard-widget',
     templateUrl: './peopleOnBoard.widget.view.html',
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+     styleUrls: ['./peopleOnBoard.widget.style.scss']
 })
 export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
     @Input('initiatedDepartmentId') initiatedDepartmentId: number;
