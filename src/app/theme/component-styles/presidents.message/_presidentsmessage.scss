@@ -1,9 +1,13 @@
+
 .entryHolder{
     background: #fff;
     padding: 15px;
     border: #ccc solid 1px;
     float: left;
     margin: 15px 23px;
+    @media screen and (max-width: $resMD-S){
+margin: 15px 1.5%;
+}
 }
 
 .addbuttonHolder{
