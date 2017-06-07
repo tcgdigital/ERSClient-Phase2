@@ -1,11 +1,12 @@
 import { BaseModel } from '../../../../shared';
 import { DepartmentModel } from '../../../masterdata';
-import { AffectedPeopleModel, EnquiryModel, CallerModel } from '../../../shared.components';
+import { AffectedPeopleModel, EnquiryModel, CallerModel,AffectedObjectModel } from '../../../shared.components';
 
 export class NextOfKinModel extends BaseModel {
     public NextOfKinId: number;
     public IncidentId?: number;
     public AffectedPersonId?: number;
+    public AffectedObjectId?: number;
     public NextOfKinName: string;
     public ContactNumber: string;
     public AlternateContactNumber: string;
@@ -15,6 +16,7 @@ export class NextOfKinModel extends BaseModel {
     public CallerId ?: number;
 
     public AffectedPerson?: AffectedPeopleModel;
+     public AffectedObjectModel?: AffectedObjectModel;
     public Caller?: CallerModel;
     public Enquiries?: EnquiryModel[];
 

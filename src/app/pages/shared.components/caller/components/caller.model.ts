@@ -25,7 +25,7 @@ export class CallerModel extends BaseModel {
      */
     constructor() {
         super();
-        this.CallerId = 0;
+      //  this.CallerId = 0;
     }
 
     //     
