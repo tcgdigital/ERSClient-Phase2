@@ -10,11 +10,11 @@ import {
 } from '../../../../shared';
 
 @Component({
-    selector: 'mediaRelease-list',
+    selector: 'mediaRelease-approval-list',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: '../views/media.release.list.view.html'
+    templateUrl: '../views/media.release.approval.list.view.html'   
 })
-export class MediaReleaseListComponent implements OnInit, OnDestroy {
+export class MediaReleaseApprovalListComponent implements OnInit, OnDestroy {
     @Input() initiatedDepartmentId: number;
     @Input() incidentId: number;
 
@@ -34,10 +34,10 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
         private dataExchange: DataExchangeService<MediaModel>,
         private globalState: GlobalStateService) { }
 
-    getMediaReleases(departmentId, incidentId): void {        
+    getMediaReleases(departmentId, incidentId): void {
         this.mediaService.Query(departmentId, incidentId)
             .subscribe((response: ResponseModel<MediaModel>) => {                
-                this.mediaReleases = response.Records;
+                this.mediaReleases = response.Records.filter(a=>a.MediaReleaseStatus === 'SentForApproval');
                 console.log(this.mediaReleases);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
@@ -61,6 +61,7 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
         this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
 
         this.dataExchange.Subscribe("MediaModelSaved", model => this.onMediaSuccess(model));
+        this.dataExchange.Subscribe("MediaModelSentForApproval", model => this.onMediaSuccess(model));
         this.dataExchange.Subscribe("MediaModelUpdated", model => this.onMediaSuccess(model));
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
@@ -79,6 +80,7 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe('MediaModelSaved');
         this.dataExchange.Unsubscribe('MediaModelUpdated');
+        this.dataExchange.Unsubscribe('MediaModelSentForApproval');
         this.globalState.Unsubscribe('incidentChangefromDashboard');
         this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }

@@ -45,6 +45,7 @@ export interface IActionableStatus {
 }
 
 export class GlobalConstants {
+    // public static EXTERNAL_URL: string = 'http://202.54.73.219:86/';
     public static EXTERNAL_URL: string = 'http://localhost:5001/';
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
     public static GRANT_TYPE: string = 'password';
@@ -73,6 +74,13 @@ export class GlobalConstants {
     public static EmergencyCategories: IKeyValue[] = [
         { value: 'FlightRelated', key: 1 },
         { value: 'NonFlightRelated', key: 2 }
+    ];
+
+    public static MediaReleaseStatuses: IKeyValue[] = [
+        { value: 'Saved', key: 1 },
+        { value: 'SentForApproval', key: 2 },
+        { value: 'Approved', key: 3 },
+        { value: 'Published', key: 4 }
     ];
 
     public static ActiveFlag: IKeyValue[] = [
