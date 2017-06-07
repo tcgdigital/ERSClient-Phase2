@@ -62,7 +62,6 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
                 affectedPeople = UtilityService.pluck(affected, ['AffectedPeople'])[0];
 
                 affectedPeopleForView = affectedPeople.map(function (dataItem) {
-                    debugger;
                     let item = new AffectedPeopleToView();
                     item.AffectedId = dataItem.AffectedId;
                     item.AffectedPersonId = dataItem.AffectedPersonId;

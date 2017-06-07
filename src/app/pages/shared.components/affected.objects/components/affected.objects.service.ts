@@ -107,7 +107,6 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
     }
 
     public UpdateStatus(entity: AffectedObjectModel, key?: number): Observable<AffectedObjectModel> {
-        debugger;
         return this._dataServiceForCargo.Patch(entity, key.toString()).Execute();
     }
 
