@@ -4,3 +4,6 @@ export * from './media.release.component';
 export * from './media.release.entry.component';
 export * from './media.release.list.component';
 export * from './media.query.list.component';
+export * from './media.release.approval.component'
+export * from './media.release.approval.list.component'
+export * from './media.release.approval.entry.component'

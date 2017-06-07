@@ -7,11 +7,13 @@ import { MediaRouting } from './media.routing';
 import { MediaComponent } from './media.component';
 import {
     MediaReleaseComponent, MediaReleaseEntryComponent,
-    MediaReleaseListComponent, MediaQueryListComponent, MediaService
+    MediaReleaseListComponent, MediaQueryListComponent, MediaService,
+    MediaReleaseApprovalComponent,MediaReleaseApprovalListComponent, MediaReleaseApprovalEntryComponent
 } from './components';
 import { BrowserModule } from '@angular/platform-browser';
 import { EnquiryService } from '../../shared.components';
 import { DataExchangeService , SharedModule } from '../../../shared';
+import { TemplateMediaService } from '../template.media/components';
 
 @NgModule({
     imports: [
@@ -27,12 +29,16 @@ import { DataExchangeService , SharedModule } from '../../../shared';
         MediaReleaseComponent,
         MediaReleaseEntryComponent,
         MediaReleaseListComponent,
-        MediaQueryListComponent
+        MediaQueryListComponent,
+        MediaReleaseApprovalComponent,
+        MediaReleaseApprovalListComponent,
+        MediaReleaseApprovalEntryComponent
     ],
     providers: [
         MediaService,
         DataExchangeService,
-        EnquiryService
+        EnquiryService,
+        TemplateMediaService
     ]
 })
 export class MediaModule { }
