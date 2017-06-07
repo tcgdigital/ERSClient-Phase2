@@ -1,4 +1,7 @@
 import { BaseModel } from '../../../../shared';
+import { NotificationModel } from "../../../shared.components/notification";
+import { DepartmentModel } from "../../department";
+import { UserPermissionModel } from "../../userpermission";
 
 export class UserProfileModel extends BaseModel {
     public UserProfileId: number;
@@ -32,6 +35,10 @@ export class UserProfileModel extends BaseModel {
     public DeviceOS: string;
     public ResignedOn?: Date;
     public isActive: boolean;
+
+    public UserPermissions?: UserPermissionModel[];
+    public Notifications?: NotificationModel[];
+    public Departments?: DepartmentModel[];
 
     constructor() {
         super();

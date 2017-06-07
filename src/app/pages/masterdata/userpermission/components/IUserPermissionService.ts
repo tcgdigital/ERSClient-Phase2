@@ -10,5 +10,7 @@ export interface IUserPermissionService extends IServiceInretface<UserPermission
 
     GetAllDepartmentUsers(departmentId: number): Observable<ResponseModel<UserPermissionModel>>;
 
-     GetAllActiveHODUsersOfAllDepartments() : Observable<ResponseModel<UserPermissionModel>>;
+    GetAllActiveHODUsersOfAllDepartments(): Observable<ResponseModel<UserPermissionModel>>;
+
+    GetAllDepartmentUsersWithUsers(departmentId: number): Observable<ResponseModel<UserPermissionModel>>;
 }

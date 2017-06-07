@@ -30,7 +30,8 @@ const pageRoutes: Routes = [
             { path: 'emergencyclosure', loadChildren: './emergency.closure/emergency.closure.module#EmergencyClosureModule' },
             { path: 'notifypeople', loadChildren: './notifypeople/notifypeople.module#NotifyPeopleModule' },
             { path: 'archivedashboard', loadChildren: './archive.dashboard/archive.dashboard.module#ArchiveDashboardModule' },
-            { path: 'callcenteronlypage', loadChildren: './callcenteronlypage/callcenteronlypage.module#CallCenterOnlyPageModule' }
+            { path: 'callcenteronlypage', loadChildren: './callcenteronlypage/callcenteronlypage.module#CallCenterOnlyPageModule' },
+            { path: 'membertrack', loadChildren: './member.track/member.track.module#MemberTrackModule' }
         ]
     }
 ];

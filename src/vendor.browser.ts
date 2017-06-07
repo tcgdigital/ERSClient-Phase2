@@ -26,6 +26,7 @@ import 'gijgo';
 // import 'jquery-slimscroll';
 import 'selectize';
 import 'bootstrap';
+import 'bootstrap-toggle';
 import 'font-awesome-sass-loader';
 import 'lodash';
 import 'air-datepicker';

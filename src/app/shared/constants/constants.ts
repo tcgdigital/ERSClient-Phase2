@@ -46,7 +46,7 @@ export class GlobalConstants {
     public static PASSWORD_PATTERN: string = '((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})';
     public static LAST_INCIDENT_PICK_COUNT: string = '5';
 
-    public static INTERCEPTOR_PERFORM: boolean = true;
+    public static INTERCEPTOR_PERFORM: boolean = false;
     public static PRESERVE_DATA_FROM_CONVERSION = ['EmergencyDate'];
 
     public static EmergencyCategories: IKeyValue[] = [
@@ -239,18 +239,18 @@ export class GlobalConstants {
     public static MedicalStatus: IMedicalStatus[] = [
         {
             key: 1,
-            value: 'Minorinjurycareneeded',
-            caption: 'Minor Injury'
+            value: 'Uninjured',
+            caption: 'Uninjured'
         },
         {
             key: 2,
-            value: 'Critical',
-            caption: 'Critical'
+            value: 'Injured',
+            caption: 'Injured'
         },
         {
             key: 3,
-            value: 'Reunited',
-            caption: 'Reunited'
+            value: 'Missing',
+            caption: 'Missing'
         },
         {
             key: 4,
@@ -259,8 +259,8 @@ export class GlobalConstants {
         },
         {
             key: 5,
-            value: 'Immediatecare',
-            caption: 'Immediatecare'
+            value: 'Others',
+            caption: 'Others'
         }
     ];
 
@@ -286,6 +286,25 @@ export class GlobalConstants {
             caption: 'Others'
         }
     ];
+
+    public static CargoStatus: IMedicalStatus[] = [
+        {
+            key: 1,
+            value: 'Missing',
+            caption: 'Missing'
+        },
+        {
+            key: 2,
+            value: 'Found',
+            caption: 'Found'
+        },
+        {
+            key: 3,
+            value: 'Others',
+            caption: 'Others'
+        }
+    ];
+
 }
 
 export enum DataModels {

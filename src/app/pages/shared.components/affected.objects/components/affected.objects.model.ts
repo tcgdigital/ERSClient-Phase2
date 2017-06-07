@@ -19,6 +19,7 @@ export class AffectedObjectModel extends BaseModel {
         public IsFoundFlag: boolean;
         public IdentificationDesc: string;
         public LostFoundStatus: string;
+        public Remarks : string;
 
         public Active: boolean;
 
@@ -31,18 +32,6 @@ export class AffectedObjectModel extends BaseModel {
 
         constructor() {
                 super();
-                this.AffectedObjectId = 0;
-                this.AffectedId = 0;
-                this.CargoId = null;
-                this.TicketNumber = '';
-                this.AWB = '';
-                this.ObjectDesc = '';
-                this.IsVerified = false;
-                this.IsLostFlag = false;
-                this.IsFoundFlag = false;
-                this.IdentificationDesc = '';
-                this.LostFoundStatus = '';
-                this.Active = false;
         }
 }
 
@@ -58,6 +47,15 @@ export class AffectedObjectsToView extends BaseModel {
         public mftwgt: number;
         public IsVerified: boolean;
         public Details: string;
+        public LostFoundStatus : string;
+        public ShipperName : string;
+	public ShipperAddress : string;
+	public ShipperContactNo : string;
+	public ConsigneeName : string;
+	public ConsigneeAddress : string;
+	public ConsigneeContactNo : string;
+        public Remarks : string;
+        public IdentificationDesc : string;
 
         //   public   CommunicationLogs: data.CommunicationLogs
 

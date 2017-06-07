@@ -65,7 +65,40 @@
                 <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideAllPassengers()"></i>
             </div>
             <div class="modal-body">
-                <div class="row">
+                <responsive-table>
+                    <table responsive-table-body>
+                    <tbody>
+                        <tr>
+                            <td><strong>Total Passengers:  </strong>    </td>
+                              <td class="marker">{{peopleOnBoard.totalAffectedPassengerCount | padding: '0': 2}}     </td>
+                               <td><strong>Enquired Passengers:       </strong>    </td>
+                              <td class="marker">{{peopleOnBoard.enquiredAffectedCrewCount | padding: '0': 2}}    </td>
+
+                               <td><strong> Gender Wise Passengers: </strong>    </td>
+                              <td class="marker"><span *ngFor="let gender of peopleOnBoard.totalGenderTypeCount">
+                             <strong>{{gender.Key}}</strong>:{{gender.Value}}
+                        </span>    </td>
+                        </tr>
+
+
+                        <tr>
+                            <td><strong> Nationality Wise Passengers:  </strong>    </td>
+                              <td class="marker fixed_td_width"><span *ngFor="let nationality of peopleOnBoard.totalNationalityTypeCount">
+                             <strong>{{nationality.Key}}</strong>:{{nationality.Value}}&nbsp; &nbsp;
+                        </span></td>
+                               <td colspan="2"><strong> Passenger Type Wise Passengers: </strong>    </td>
+                              <td class="marker"> <span *ngFor="let paxType of peopleOnBoard.totalPaxTypeCount">
+                             <strong>{{paxType.Key}}</strong>:{{paxType.Value}}&nbsp; &nbsp;
+                        </span></td>
+
+                              
+                        </tr>
+
+
+                    </tbody>
+                 </table>
+                </responsive-table>
+                <!--<div class="row">
                     <div class="col-lg-2">
                         <strong>
                             Total Passengers:                             
@@ -87,7 +120,7 @@
                     </div>
                     <div class="col-lg-10">
                         <span *ngFor="let gender of peopleOnBoard.totalGenderTypeCount">
-                             <strong>{{gender.Key}}</strong>:{{gender.Value}},
+                             <strong>{{gender.Key}}</strong>:{{gender.Value}}
                         </span>
                     </div>
                 </div>
@@ -115,7 +148,7 @@
                         </span>
                     </div>
                 </div>
-                <div class = "row"> </div>
+                <div class = "row"> </div>-->
                 <generic-search [filterConfigs] = "searchConfigs" 
                 (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();"></generic-search>
 

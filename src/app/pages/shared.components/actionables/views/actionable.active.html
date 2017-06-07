@@ -101,16 +101,17 @@
                         </div>
                         <div class="row" *ngIf="!isArchive">
                             <a class="glyphicon glyphicon-download-alt" target="_self" *ngIf="filepathWithLinks!=null" href="{{filepathWithLinks}}" download="{{fileName}}">Download</a>
-                            <div class="buttonholder offset-5">
+                            <div class="buttonholder col-sm-10">
                                 <input #myFileInput type="file" (change)="fileChangeEvent($event)" placeholder="Upload file..." />
                                 <button type="button" class="btn btn-primary" (click)="upload(actionableModelToUpdate)">Upload</button>
                                 <button type="button" class="btn btn-primary" (click)="clearFileUpload($event)">Clear</button>
                             </div>
+                            <div class="col-sm-2"><div class="row buttonholder" *ngIf="!isArchive">
+                            <button class="btn btn-primary" type="submit">Save</button>&nbsp;
+                        </div></div>
                         </div>
 
-                        <div class="row buttonholder" *ngIf="!isArchive">
-                            <button class="btn btn-primary" type="submit">Save</button>&nbsp;
-                        </div>
+                        
                     </form>
                 </div>
             </div>
