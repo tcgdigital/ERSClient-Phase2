@@ -129,4 +129,16 @@ export class UserPermissionService
             .Filter(`UserId eq ${userId} and Department/ActiveFlag eq CMS.DataModel.Enum.ActiveFlag\'Active\'`)
             .Execute();
     }
+    public GetAllDepartmentUsersWithUsers(departmentId: number): Observable<ResponseModel<UserPermissionModel>> {
+
+        let allChildDepartmentIdsProjection: string = '';
+        let count: number = 1;
+        return this._dataService.Query()
+            .Expand('User($expand=Notifications($filter=SituationId eq 1 or SituationId eq 2;$select=AckStatus;))')
+            .Filter(`DepartmentId eq ${departmentId}`)
+            .OrderBy('CreatedOn desc')
+            .Execute();
+
+    }
+
 }

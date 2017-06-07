@@ -1,4 +1,4 @@
-<div class="col-1 hambarger-menu">
+<div *ngIf="!isLanding" class="col-1 hambarger-menu">
     <i class="fa fa-bars" aria-hidden="true" (click)="onHambargerClicked($event)"></i>
 </div>
 <div class="col-8 col-md-2 col-lg-1 logo-align no-gutters">

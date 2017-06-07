@@ -77,6 +77,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     protected _onRouteChange: Subscription;
     isArchive: boolean = false;
     resolutionTime: Date;
+    submitted: boolean = false;
      
     /**
      * Creates an instance of DemandEntryComponent.
@@ -249,6 +250,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     ChangeAffectedPeople(): void {
         if (this.demandModel.AffectedPersonId != 0) {
             this.form.controls["AffectedObjectId"].reset({ value: 0, disabled: true });
+            this.demandModel.AffectedPersonId=this.form.controls["AffectedPersonId"].value;
             this.demandModel.PDATicketNumber = this.affectedPeople
                 .find(x => x.AffectedPersonId == this.demandModel.AffectedPersonId).TicketNumber;
             this.form.controls["PDATicketNumber"].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
@@ -262,6 +264,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     ChangeAffectedObjects(): void {
         if (this.demandModel.AffectedObjectId != 0) {
             this.form.controls["AffectedPersonId"].reset({ value: 0, disabled: true });
+            this.demandModel.AffectedObjectId=this.form.controls["AffectedObjectId"].value;
             this.demandModel.PDATicketNumber = this.affectedObjects
                 .find(x => x.AffectedObjectId == this.demandModel.AffectedObjectId).TicketNumber;
             this.form.controls["PDATicketNumber"].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
@@ -401,6 +404,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.credentialName = this.credential.UserName;
         this.datepickerOption.position = 'top left';
         this.datepickerOption.minDate = new Date();
+                        
         this.getDemandType();
         this.getPageSpecifiedDepartments();
         this.getAllDepartments();
@@ -504,13 +508,13 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     resetForm(): void {
         this.form.controls["DemandId"].reset({ value: 0, disabled: false });
-        this.form.controls["DemandTypeId"].reset({ value: 0, disabled: false });
-        this.form.controls["Priority"].reset({ value: 0, disabled: false });
+        this.form.controls["DemandTypeId"].reset({ value: '', disabled: false });
+        this.form.controls["Priority"].reset({ value: '', disabled: false });
         this.form.controls["DemandDesc"].reset({ value: '', disabled: false });
         this.form.controls["RequestedBy"].reset({ value: this.credentialName, disabled: false });
-        this.form.controls["RequesterType"].reset({ value: 0, disabled: false });
+        this.form.controls["RequesterType"].reset({ value: '', disabled: false });
         this.form.controls["PDATicketNumber"].reset({ value: '', disabled: true });
-        this.form.controls["TargetDepartmentId"].reset({ value: 0, disabled: false });
+        this.form.controls["TargetDepartmentId"].reset({ value: '', disabled: false });
         this.form.controls["ContactNumber"].reset({ value: '', disabled: false });
         this.form.controls["ScheduleTime"].reset({ value: '', disabled: false });
         this.form.controls["RequiredLocation"].reset({ value: '', disabled: false });
@@ -553,6 +557,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(): void {
+            this.submitted = true;
+        if(this.form.valid){
         if (this.demandModel.DemandId == 0) {
             UtilityService.setModelFromFormGroup<DemandModel>(this.demandModel, this.form, x => x.DemandId, 
                 x => x.DemandTypeId, x => x.Priority, x => x.DemandDesc, x => x.RequesterType, 
@@ -622,6 +628,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             this.demandUpdate(resolutionTimeChanged);
            }
         }
+            }
     };
 
     demandUpdate(resolutionTimeChanged): void {
