@@ -37,7 +37,8 @@ export class ChecklistService extends ServiceBase<ChecklistModel> implements ICh
             .Filter(`DepartmentId eq ${departmentId}`)
             .Expand('ParentCheckList($select=CheckListId,CheckListCode)',
             'TargetDepartment($select=DepartmentId,DepartmentName)',
-            'EmergencyType($select=EmergencyTypeId,EmergencyTypeName)')
+            'EmergencyType($select=EmergencyTypeId,EmergencyTypeName)',
+            'Organization')
             .OrderBy('CreatedOn desc')
             .Execute();
     }

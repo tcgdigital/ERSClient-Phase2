@@ -46,14 +46,15 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
     public passengerListByGender: PassengerModel[] = [];
     public passengerListByNationality: PassengerModel[] = [];
     public passengerListByPaxType: PassengerModel[] = [];
-    public searchConfigs: SearchConfigModel<any>[] = [];
+    public searchConfigsPax: SearchConfigModel<any>[] = [];
+    public searchConfigsCargo: SearchConfigModel<any>[] = [];
 
     public crewList: Observable<CrewModel[]>;
     public enquiries: ResponseModel<EnquiryModel>;
     public affectedEnquiredPeoples: Observable<PassengerModel[]>;
     public affectedEnquiredCrews: Observable<CrewModel[]>;
 
-    public cargoList:CargoModel[];
+    public cargoList:Observable<CargoModel[]>;
     currentDepartmentId: number;
     currentIncidentIdLocal: number;
 
@@ -81,9 +82,9 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this.currentIncidentId = this.currentIncidentId;
         this.currentDepartmentId = this.currentDepartmentId;
-        this.getPeopleOnboardCounts(this.currentIncidentId);
-        //this.GetAllCargoDetails(this.currentIncidentId);
-        this.initiateSearchConfigurations();
+        this.getPeopleOnboardCounts(this.currentIncidentId);        
+        this.initiateSearchConfigurationsPassenger();
+        this.initiateSearchConfigurationsCargo();
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
     }
 
@@ -116,12 +117,8 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
 
         this.peopleOnBoardWidgetService.GetAllCargosByIncident(incidentId)
         .subscribe((result: ResponseModel<InvolvePartyModel>)=>{
-            cargoListLocal = result.Records[0].Flights[0].Cargoes;
-            this.peopleOnBoard.totalCargoOnBoardCount = cargoListLocal.length;
-            let cargoTypeKPIData = _.countBy(cargoListLocal,"CargoType");            
-            this.peopleOnBoard.cargoOnBoardCountByType = Object.keys(cargoTypeKPIData)
-            .map(x=> { return {Key: x, Value: cargoTypeKPIData[x]}; });                
-            this.cargoList = cargoListLocal; 
+            cargoListLocal = result.Records[0].Flights[0].Cargoes;                        
+            this.cargoList = Observable.of(cargoListLocal); 
         })
                
     }
@@ -284,23 +281,29 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
 
     private incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
-        this.getPeopleOnboardCounts(this.currentIncidentId);
-        //this.GetAllCargoDetails(this.currentIncidentId);
+        this.getPeopleOnboardCounts(this.currentIncidentId);       
     }
 
-    private openAllCargoDetails(): void {
+    private openAllCargoDetails(): void {            
+        const involvedParties: InvolvePartyModel[] = [];
+        let cargoListLocal: CargoModel[] = [];
+        this.peopleOnBoardWidgetService.GetAllCargosByIncident(this.currentIncidentId)
+        .subscribe((result: ResponseModel<InvolvePartyModel>) => {
+            cargoListLocal = result.Records[0].Flights[0].Cargoes;                        
+            this.cargoList = Observable.of(cargoListLocal); 
+        })
         this.childModalCargos.show();
     }
     private hideAllCargoDetails(): void {
         this.childModalCargos.hide();
     }
 
-    private initiateSearchConfigurations(): void {
+    private initiateSearchConfigurationsPassenger(): void {
         let Gender: NameValue<string>[] = [
             new NameValue<string>('Male', "Male"),
             new NameValue<string>('Female', "Female")
         ]
-        this.searchConfigs = [
+        this.searchConfigsPax = [
             new SearchTextBox({
                 Name: 'Passenger/PassengerName',
                 Description: 'Passenger Name',
@@ -346,7 +349,62 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
         ];
     }
 
-    invokeSearch(query: string): void {         
+      private initiateSearchConfigurationsCargo(): void {       
+        this.searchConfigsCargo = [
+            new SearchTextBox({
+                Name: 'AWB',
+                Description: 'AWB Number',
+                Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'POL',
+                Description: 'POL',
+                Value: ''
+            }), 
+            new SearchTextBox({
+                Name: 'POU',
+                Description: 'POU',
+                Value: ''
+            }),   
+            new SearchTextBox({
+                Name: 'mftpcs',
+                Description: 'Cargo Pieces',
+                Value: ''
+            }),           
+            new SearchTextBox({
+                Name: 'mftwgt',
+                Description: 'Cargo Weight',
+                Value: ''
+            }), 
+            new SearchTextBox({
+                Name: 'CargoType',
+                Description: 'Cargo Type',
+                Value: ''
+            }), 
+            new SearchTextBox({
+                Name: 'Origin',
+                Description: 'Origin',
+                Value: ''
+            }), 
+            new SearchTextBox({
+                Name: 'Destination',
+                Description: 'Destination',
+                Value: ''
+            }),  
+            new SearchTextBox({
+                Name: 'ShipperName',
+                Description: 'Shipper Name',
+                Value: ''
+            }), 
+            new SearchTextBox({
+                Name: 'ShipperContactNo',
+                Description: 'Shipper Contact Number',
+                Value: ''
+            }),              
+        ];
+    }
+
+    invokeSearchPassenger(query: string): void {         
         const involvedParties: InvolvePartyModel[] = [];
         const passengerListLocal: PassengerModel[] = [];    
         this.peopleOnBoardWidgetService.GetQueryForPassenger(query, this.currentIncidentId)
@@ -364,7 +422,22 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
             }));                       
     }  
 
-    invokeReset(): void {   
+    invokeResetPassenger(): void {   
         this.openAllPassengersDetails();     
+    }  
+
+    invokeSearchCargo(query: string): void {               
+        let cargoListLocal: CargoModel[] = [];    
+        this.peopleOnBoardWidgetService.GetQueryForCargo(query, this.currentIncidentId)
+            .subscribe((result: ResponseModel<InvolvePartyModel>) => {
+                cargoListLocal = result.Records[0].Flights[0].Cargoes;                        
+                this.cargoList = Observable.of(cargoListLocal);                 
+            }, ((error: any) => {
+                console.log(`Error: ${error}`);
+            }));                       
+    }  
+
+    invokeResetCargo(): void {   
+        this.openAllCargoDetails();     
     }  
 }

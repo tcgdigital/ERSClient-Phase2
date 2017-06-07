@@ -10,9 +10,8 @@ export class PeopleOnBoardModel extends BaseModel {
     public totalGenderTypeCount: KeyValue[] = [];
     public totalNationalityTypeCount: KeyValue[] = [];
     public totalPaxTypeCount: KeyValue[] = [];
-    public totalCargoOnBoardCount: number;
+    public totalAffectedCargoCount: number;
     public cargoOnBoardCountByType: KeyValue[] = [];
-    
 
     
     constructor() {

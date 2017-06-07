@@ -312,7 +312,7 @@ export class UtilityService {
     }
 
     public static SetRAGStatusGrid<T extends any>(dataModels: T[], appliedModule: string): void {
-        
+
         let RAGScale: RAGScaleModel[] = UtilityService.RAGScaleData.filter((item: RAGScaleModel) => {
             return item.AppliedModule === appliedModule;
         }).sort((a: any, b: any) => {
@@ -321,7 +321,7 @@ export class UtilityService {
             return 0;
         });
         dataModels.forEach((entity: any) => {
-            
+
             const ScheduleTime: number = (Number(entity.ScheduleTime) * 60000);
             const CreatedOn: number = new Date(entity.CreatedOn).getTime();
             const CurrentTime: number = new Date().getTime();
@@ -335,6 +335,72 @@ export class UtilityService {
                 entity[Object.keys(entity).find(x => x.startsWith('Rag'))] = selectedRag.StyleCode;
             }
         });
+    }
+
+    public static GetRAGStatus(appliedModule: string, assignDate?: Date, scheduleClose?: Date): string {
+        //TODO:  RAG code should come from database.
+        let RAGScale: RAGScaleModel[] = UtilityService.RAGScaleData.filter((item: RAGScaleModel) => {
+            return item.AppliedModule === appliedModule;
+        }).sort((a: any, b: any) => {
+            if (a.StartingPoint < b.StartingPoint) return -1;
+            if (a.StartingPoint > b.StartingPoint) return 1;
+            return 0;
+        });
+
+        if (assignDate != undefined && scheduleClose != undefined) {
+            let startPoint: number = (new Date(assignDate)).getTime();
+            let closedPoint: number = (new Date(scheduleClose)).getTime();
+            let workPercentage: number = 0;
+            let datetimenow: Date = null;
+            datetimenow = new Date();
+            let currentPoint: number = datetimenow.getTime();
+            let workingSpan: number = closedPoint - startPoint;
+            if (workingSpan > 0) {
+                /// this span is the reference to the 100%.
+                let currentWorkingSpan: number = currentPoint - startPoint;
+                if (currentWorkingSpan < 0)
+                    workPercentage = 0;
+                else if (currentWorkingSpan > workingSpan)
+                    workPercentage = 101;
+                else
+                    workPercentage = (currentWorkingSpan * 100) / workingSpan;
+
+                let selectedRag: RAGScaleModel = RAGScale.find((x: RAGScaleModel) => x.StartingPoint <= workPercentage
+                    && ((x.EndingPoint == undefined || x.EndingPoint == null) ? workPercentage : x.EndingPoint) >= workPercentage);
+
+                    return selectedRag.StyleCode;
+               
+            }
+
+        }
+
+
+
+
+        // if (assignDate != undefined && scheduleClose != undefined) {
+        //     let startTime: number = (new Date(assignDate)).getTime();
+        //     let endTime: number = (new Date(scheduleClose)).getTime();
+        //     let totalTimeDifferenceInMilliSeconds: number = null;
+        //     let _Adiff: number = null;
+        //     let _Cdiff1: number = null;
+        //     totalTimeDifferenceInMilliSeconds = endTime - startTime;
+        //     _Adiff = ((totalTimeDifferenceInMilliSeconds / 1000) / 60);
+
+        //     let datetimenow: Date = null;
+        //     datetimenow = new Date();
+        //     datetimenow.getTime();
+
+        //     _Cdiff1 = ((datetimenow.getTime() - endTime) / 1000) / 60;
+        //     if (_Cdiff1 >= _Adiff) {
+        //         return "statusRed";
+        //     }
+        //     if (((_Adiff / 2) <= _Cdiff1) && _Cdiff1 < _Adiff) {
+        //         return "statusAmber";
+        //     }
+        //     else if (_Cdiff1 < _Adiff / 2) {
+        //         return "statusGreen";
+        //     }
+        // }
     }
 
     private static pad4(num: number): string {

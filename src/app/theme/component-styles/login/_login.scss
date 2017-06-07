@@ -1,8 +1,14 @@
 @import '../../config/config';
 
-.container-fluid{
-    background: url(./assets/images/sky-bg.jpg) center center no-repeat;
+.container-fluid{ background: #efefef; padding:0;
+    
 }
+login-root{    background: url(./assets/images/sky-bg.jpg) center center no-repeat;
+    background-size: cover;
+    display: block;
+    float: left;
+    width: 100%;     position: fixed;
+    height: 100%;}
 .Absolute-Center {
     margin: auto;
     position: absolute;
@@ -89,8 +95,8 @@ forgot-password .Absolute-Center.is-Responsive {
 }
 
 #logo-container {
-    width: 140px;
-    height: 140px;
+    width: 40px;
+    height: 40px;
     margin: 22px auto 15px;
     display: block;
     -moz-border-radius: 50%;
@@ -98,6 +104,51 @@ forgot-password .Absolute-Center.is-Responsive {
     border-radius: 50%; // margin: auto;
     background: url(./assets/images/avatar_2x.png) center center no-repeat;
 }
+.loginform{
+    .form-control{ border-radius: 30px; border:none; background: #aab5b5; opacity: 1; color: #000;
+
+    }
+    
+    .btn-block{border-radius: 30px;background: #6d6f73;  opacity: 1; color: #fff;}
+}
+.loginholder-container{ width:35%; margin-top:28%; float: left;
+    margin-left: 15%;
+@media screen and (max-width: $resLG-E){
+width:45%;     margin-top: 9%;
+
+}
+@media screen and (max-width: $resMD-E){
+width:65%;
+
+}
+@media screen and (max-width: $resSM-S){
+width:75%;  margin-left: 11%;
+
+}
+}
+.error_holder{position: absolute;
+    right: 10%;
+    top: 48%;
+    @media screen and (max-width: $resLG-E){
+right: 1%;
+    top: 45%;
+
+}
+    @media screen and (max-width: $resMD-E){
+    right: 40%;
+    top: 50%;
+
+}
+    @media screen and (max-width: $resSM-S){
+    right: 23%;
+    top: 0;
+
+}
+    
+    
+    
+    }
+    .error_white{ background: #fff; padding: 10px; margin: 2px 0;}
 
 @media screen and (max-width: $resXS-E) {}
 

@@ -10,7 +10,7 @@ import {
 import { Observable } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 
-import { ChecklistModel } from './checklist.model';
+import { ChecklistModel} from './checklist.model';
 import { DepartmentModel, DepartmentService } from '../../department';
 import { EmergencyTypeModel, EmergencyTypeService } from '../../emergencytype';
 import { ChecklistService } from './checklist.service';
@@ -18,6 +18,13 @@ import {
     ResponseModel, DataExchangeService, BaseModel,
     UtilityService, GlobalStateService, KeyValue, AuthModel
 } from '../../../../shared';
+
+import {
+    OrganizationModel,
+    OrganizationService
+} from "../../../shared.components/organization";
+
+//import { EmergencyLocationModel, EmergencyLocationService } from '../../emergencylocation'
 
 @Component({
     selector: 'checklist-entry',
@@ -34,10 +41,13 @@ export class ChecklistEntryComponent implements OnInit {
     activeDepartments: DepartmentModel[] = [];
     activeEmergencyTypes: EmergencyTypeModel[] = [];
     showAdd: boolean = true;
+    listSelected: boolean;
     buttonValue: string = '';
     currentDepartmentId: number;
     currentDepartmentName: string;
     credential: AuthModel;
+    activeOrganizations: OrganizationModel[] = [];
+    //AllStations: EmergencyLocationModel[] = [];
 
     constructor(formBuilder: FormBuilder,
         private departmentService: DepartmentService,
@@ -45,9 +55,11 @@ export class ChecklistEntryComponent implements OnInit {
         private emergencyTypeService: EmergencyTypeService,
         private dataExchange: DataExchangeService<ChecklistModel>,
         private globalState: GlobalStateService,
+        private organizationService: OrganizationService,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig) {
         this.showAdd = false;
+        this.listSelected = false;
         this.buttonValue = 'Add Checklist';
         this.checkListModel = new ChecklistModel();
         this.checkListModelEdit = new ChecklistModel();
@@ -94,6 +106,7 @@ export class ChecklistEntryComponent implements OnInit {
     ngOnInit(): void {
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.mergeResponses(this.currentDepartmentId);
+        this.getAllActiveOrganizations();       
         this.credential = UtilityService.getCredentialDetails();
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
@@ -102,6 +115,20 @@ export class ChecklistEntryComponent implements OnInit {
         this.dataExchange.Unsubscribe('departmentChange');
         this.dataExchange.Unsubscribe('checklistModelEdited');
     }
+
+    showList = function (e) {
+        if (this.listSelected)
+            this.listSelected = false;
+        else
+            this.listSelected = true;
+    };
+
+    // getAllEmergencyLocations(): void {
+    //     this.emergencyLocationService.GetAllActiveEmergencyLocations()
+    //     .subscribe((response: ResponseModel<EmergencyLocationModel>)=> {
+    //         this.AllStations = response.Records;
+    //     });
+    // }
 
     initiateCheckListModel(): void {
         this.checkListModel = new ChecklistModel();
@@ -136,10 +163,27 @@ export class ChecklistEntryComponent implements OnInit {
         if (this.form.controls['Sequence'].touched) {
             this.checkListModelEdit.Sequence = this.form.controls['Sequence'].value;
         }
+
+        if (this.form.controls['OrganizationId'].touched) {
+            this.checkListModelEdit.OrganizationId = this.form.controls['OrganizationId'].value;
+        }
+
+        if (this.form.controls['Stations'].touched) {
+            this.checkListModelEdit.Stations = this.form.controls['Stations'].value;
+        }
+    }
+
+    getAllActiveOrganizations(): void {
+        this.organizationService.GetAllActiveOrganizations()
+            .subscribe((response: ResponseModel<OrganizationModel>) => {
+                this.activeOrganizations = response.Records;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
     }
 
     onSubmit(values: object): void {
-        
+                
         if (this.form.controls['ParentCheckListId'].value == '') {
             this.toastrService.error('Please provide parent checklist.', 'Error', this.toastrConfig);
             return null;
@@ -168,6 +212,11 @@ export class ChecklistEntryComponent implements OnInit {
             this.toastrService.error('Please provide sequence.', 'Error', this.toastrConfig);
             return null;
         }
+        if (this.form.controls['OrganizationId'].value == '') {
+            this.toastrService.error('Please Select Organization.', 'Error', this.toastrConfig);
+            return null;
+        }
+        
         if (this.checkListModel.CheckListId === 0) {// ADD REGION
 
             this.checkListModel.CheckListDetails = this.form.controls['CheckListDetails'].value;
@@ -177,7 +226,12 @@ export class ChecklistEntryComponent implements OnInit {
             this.checkListModel.URL = this.form.controls['URL'].value;
             this.checkListModel.EmergencyTypeId = this.form.controls['EmergencyTypeId'].value;
             this.checkListModel.Sequence = this.form.controls['Sequence'].value;
+            this.checkListModel.OrganizationId = this.form.controls['OrganizationId'].value;
+            this.checkListModel.Stations = this.form.controls['Stations'].value;
+            if(this.activeOrganizations.length)
+                this.checkListModel.Organization = this.activeOrganizations.find(a=>a.OrganizationId == this.checkListModel.OrganizationId)
             delete this.checkListModel['Active'];
+            //delete this.checkListModel.StationList;
 
             let CheckList_Code = '';
             const dep = this.currentDepartmentName;
@@ -229,6 +283,7 @@ export class ChecklistEntryComponent implements OnInit {
         this.checkListService.Create(this.checkListModel)
             .subscribe((response: ChecklistModel) => {
                 this.toastrService.success('Checklist Created Successfully.', 'Success', this.toastrConfig);
+                response.Organization = this.checkListModel.Organization;
                 this.dataExchange.Publish('checkListModelSaved', response);
                 this.form = this.resetCheckListForm();
                 this.showAdd = false;
@@ -259,7 +314,9 @@ export class ChecklistEntryComponent implements OnInit {
             DepartmentId: new FormControl(checkList ? checkList.DepartmentId : '', [Validators.required]),
             URL: new FormControl(checkList ? checkList.URL : '', [Validators.required]),
             EmergencyTypeId: new FormControl(checkList ? checkList.EmergencyTypeId : '', [Validators.required]),
-            Sequence: new FormControl(checkList ? checkList.Sequence : '', [Validators.required])
+            Sequence: new FormControl(checkList ? checkList.Sequence : '', [Validators.required]),
+            OrganizationId: new FormControl(checkList ? checkList.OrganizationId: '', [Validators.required]),
+            Stations: new FormControl(checkList ? checkList.Stations : '')
         });
     }
 

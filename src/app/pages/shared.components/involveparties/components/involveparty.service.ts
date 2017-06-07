@@ -132,4 +132,12 @@ public affectedPeoples: ResponseModel<AffectedPeopleModel>;
         .Filter(`IncidentId eq ${incidentId}`)
         .Execute();
     }
+
+    public GetQueryCargosByIncident(query: string, incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
+        return this._dataService.Query()
+        .Expand(`Flights($expand=Cargoes($filter=${query}))`)    
+        .Filter(`IncidentId eq ${incidentId}`)
+        .Execute();
+    }
+
 }

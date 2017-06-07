@@ -36,14 +36,13 @@
     float: left;
     width: 85%;
     text-align: center;
-    text-transform: uppercase;
-    @include linear-gradient-bg(to bottom, $message-widget-button-s, $message-widget-button-e);
-    margin: 2px 9px;
-    border-radius: 8px;
-    height: 20px;
+    text-transform: uppercase;     
+    // @include linear-gradient-bg(to bottom, $message-widget-button-s, $message-widget-button-e);
+    margin: 20px 9px; padding: 3px 0px;
+    border-radius: 3px; background: #01a3a9;
     color: $message-widget-button-text;
     line-height: 18px;
-    @include box-shadow(0px, 1px, 6px, 1px, $header-shadow);
+    // @include box-shadow(0px, 1px, 6px, 1px, $header-shadow);
     &:hover,
     &:active {
         text-decoration: none;
