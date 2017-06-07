@@ -26,7 +26,8 @@
                     </td>
                     <td data-title="Schedule Close Time">{{actionable.ScheduleClose | amDateFormat:'LL - HH:mm:ss'}}</td>
                     <td data-title="Completion Status">
-                        <select id="selectCompletionStatus" [disabled]="hasChildChecklist(actionable.ChklistId)==true" class="form-control" [(ngModel)]="actionable.CompletionStatus"
+                        <span *ngIf="hasChildChecklist(actionable.ChklistId)==true">{{actionable.CompletionStatus}}</span>
+                        <select id="selectCompletionStatus" *ngIf="hasChildChecklist(actionable.ChklistId)==false" class="form-control" [(ngModel)]="actionable.CompletionStatus"
                             (change)="IsDone($event,actionable)">
                             <option value=''>Select Completion Status</option>
                             <option *ngFor="let completionStatusType of completionStatusTypes" [value]="completionStatusType.caption">

@@ -337,7 +337,7 @@ export class UtilityService {
         });
     }
 
-    public static SetRAGStatusGridActionable(appliedModule: string, assignDate?: Date, scheduleClose?: Date): string {
+    public static GetRAGStatus(appliedModule: string, assignDate?: Date, scheduleClose?: Date): string {
         //TODO:  RAG code should come from database.
         let RAGScale: RAGScaleModel[] = UtilityService.RAGScaleData.filter((item: RAGScaleModel) => {
             return item.AppliedModule === appliedModule;
