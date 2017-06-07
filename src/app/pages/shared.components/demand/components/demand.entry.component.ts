@@ -80,13 +80,10 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     protected _onRouteChange: Subscription;
     isArchive: boolean = false;
     resolutionTime: Date;
-<<<<<<< HEAD
     submitted: boolean = false;
-=======
     filesToUpload: File[]=[];
     demandFilePath: string;
     demandFileName: string;
->>>>>>> master
      
     /**
      * Creates an instance of DemandEntryComponent.
