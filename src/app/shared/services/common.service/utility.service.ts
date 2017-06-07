@@ -5,12 +5,26 @@ import * as jwtDecode from 'jwt-decode';
 import { GlobalConstants } from '../../constants';
 import { AuthModel } from '../../models';
 import * as moment from 'moment/moment';
+import { RAGScaleModel } from "../../../pages/shared.components";
+import { Observable } from 'rxjs/Rx';
+import {
+
+    DemandRaisedModel,
+    AllDeptDemandRaisedSummary,
+    SubDeptDemandRaisedSummary
+} from '../../../pages/widgets/demand.raised.summary.widget';
+import {
+
+    DemandReceivedModel,
+    AllDeptDemandReceivedSummary,
+    SubDeptDemandReceivedSummary
+} from '../../../pages/widgets/demand.received.summary.widget';
 
 export class UtilityService {
     private static STRIP_COMMENTS: RegExp = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
     private static ARGUMENT_NAMES: RegExp = /([^\s,]+)/g;
     private static CACHE_PROPERTY: string = '__paramNames';
-
+    public static RAGScaleData: RAGScaleModel[] = [];
     public static IsEmptyObject = (obj: {}): boolean => Object.keys(obj).length === 0 && obj.constructor === Object;
 
     public static IsEmptyArray = (obj: any[]): boolean => obj.length > 0 && obj[0] !== null;
@@ -261,6 +275,132 @@ export class UtilityService {
         );
 
         return dateObject;
+    }
+
+    public static SetRAGStatus<T extends any>(dataModels: T[], appliedModule: string): void {
+        let RAGScale: RAGScaleModel[] = UtilityService.RAGScaleData.filter((item: RAGScaleModel) => {
+            return item.AppliedModule === appliedModule;
+        }).sort((a: any, b: any) => {
+            if (a.StartingPoint < b.StartingPoint) return -1;
+            if (a.StartingPoint > b.StartingPoint) return 1;
+            return 0;
+        });
+
+        Observable.interval(1000).subscribe((_) => {
+            dataModels.forEach((entity: any) => {
+                let scheduleClose: number;
+                let actualClose: number;
+
+                if (entity.constructor.name === 'AllDeptDemandRaisedSummary' ||
+                    entity.constructor.name === 'AllDeptDemandReceivedSummary') {
+                    scheduleClose = (Number(entity.ScheduleTime) * 60000);
+                    actualClose = new Date(entity.CreatedOn).getTime();
+                }
+
+                const currentTime: number = new Date().getTime();
+                const timeDiffofCurrentMinus: number = (currentTime - actualClose);
+                const percentage: number = (((timeDiffofCurrentMinus) * 100) / (scheduleClose));
+
+                let selectedRag: RAGScaleModel = RAGScale.find((x: RAGScaleModel) => x.StartingPoint <= percentage
+                    && ((x.EndingPoint == undefined || x.EndingPoint == null) ? percentage : x.EndingPoint) >= percentage);
+
+                if (selectedRag) {
+                    entity[Object.keys(entity).find(x => x.startsWith('Rag'))] = selectedRag.StyleCode;
+                }
+            });
+        });
+    }
+
+    public static SetRAGStatusGrid<T extends any>(dataModels: T[], appliedModule: string): void {
+
+        let RAGScale: RAGScaleModel[] = UtilityService.RAGScaleData.filter((item: RAGScaleModel) => {
+            return item.AppliedModule === appliedModule;
+        }).sort((a: any, b: any) => {
+            if (a.StartingPoint < b.StartingPoint) return -1;
+            if (a.StartingPoint > b.StartingPoint) return 1;
+            return 0;
+        });
+        dataModels.forEach((entity: any) => {
+
+            const ScheduleTime: number = (Number(entity.ScheduleTime) * 60000);
+            const CreatedOn: number = new Date(entity.CreatedOn).getTime();
+            const CurrentTime: number = new Date().getTime();
+            const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
+            const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
+
+            let selectedRag: RAGScaleModel = RAGScale.find((x: RAGScaleModel) => x.StartingPoint <= percentage
+                && ((x.EndingPoint == undefined || x.EndingPoint == null) ? percentage : x.EndingPoint) >= percentage);
+
+            if (selectedRag) {
+                entity[Object.keys(entity).find(x => x.startsWith('Rag'))] = selectedRag.StyleCode;
+            }
+        });
+    }
+
+    public static GetRAGStatus(appliedModule: string, assignDate?: Date, scheduleClose?: Date): string {
+        //TODO:  RAG code should come from database.
+        let RAGScale: RAGScaleModel[] = UtilityService.RAGScaleData.filter((item: RAGScaleModel) => {
+            return item.AppliedModule === appliedModule;
+        }).sort((a: any, b: any) => {
+            if (a.StartingPoint < b.StartingPoint) return -1;
+            if (a.StartingPoint > b.StartingPoint) return 1;
+            return 0;
+        });
+
+        if (assignDate != undefined && scheduleClose != undefined) {
+            let startPoint: number = (new Date(assignDate)).getTime();
+            let closedPoint: number = (new Date(scheduleClose)).getTime();
+            let workPercentage: number = 0;
+            let datetimenow: Date = null;
+            datetimenow = new Date();
+            let currentPoint: number = datetimenow.getTime();
+            let workingSpan: number = closedPoint - startPoint;
+            if (workingSpan > 0) {
+                /// this span is the reference to the 100%.
+                let currentWorkingSpan: number = currentPoint - startPoint;
+                if (currentWorkingSpan < 0)
+                    workPercentage = 0;
+                else if (currentWorkingSpan > workingSpan)
+                    workPercentage = 101;
+                else
+                    workPercentage = (currentWorkingSpan * 100) / workingSpan;
+
+                let selectedRag: RAGScaleModel = RAGScale.find((x: RAGScaleModel) => x.StartingPoint <= workPercentage
+                    && ((x.EndingPoint == undefined || x.EndingPoint == null) ? workPercentage : x.EndingPoint) >= workPercentage);
+
+                    return selectedRag.StyleCode;
+               
+            }
+
+        }
+
+
+
+
+        // if (assignDate != undefined && scheduleClose != undefined) {
+        //     let startTime: number = (new Date(assignDate)).getTime();
+        //     let endTime: number = (new Date(scheduleClose)).getTime();
+        //     let totalTimeDifferenceInMilliSeconds: number = null;
+        //     let _Adiff: number = null;
+        //     let _Cdiff1: number = null;
+        //     totalTimeDifferenceInMilliSeconds = endTime - startTime;
+        //     _Adiff = ((totalTimeDifferenceInMilliSeconds / 1000) / 60);
+
+        //     let datetimenow: Date = null;
+        //     datetimenow = new Date();
+        //     datetimenow.getTime();
+
+        //     _Cdiff1 = ((datetimenow.getTime() - endTime) / 1000) / 60;
+        //     if (_Cdiff1 >= _Adiff) {
+        //         return "statusRed";
+        //     }
+        //     if (((_Adiff / 2) <= _Cdiff1) && _Cdiff1 < _Adiff) {
+        //         return "statusAmber";
+        //     }
+        //     else if (_Cdiff1 < _Adiff / 2) {
+        //         return "statusGreen";
+        //     }
+        // }
     }
 
     private static pad4(num: number): string {

@@ -32,7 +32,6 @@ export class ForgotPasswordComponent implements OnInit, AfterViewInit {
     }
 
     public onBlurMethod(value): void {
-        debugger;
         this.forgotPasswordService.GetEecurityQuestion(value)
             .subscribe((x) => {
                 this.SecurityQuestion = x;

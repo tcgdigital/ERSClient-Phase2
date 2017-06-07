@@ -5,8 +5,7 @@ import { InvolvePartyModel, InvolvePartyService } from '../../shared.components/
 import { AffectedModel } from '../../shared.components/affected';
 import { EnquiryModel, EnquiryService } from '../../shared.components/call.centre';
 import { PeopleOnBoardModel } from './peopleOnBoard.widget.model';
-import { PassengerModel } from '../../shared.components/passenger';
-import { CrewModel } from '../../shared.components/crew';
+import { PassengerModel, CrewModel, CargoModel } from '../../shared.components';
 import {
     IServiceInretface,
     ResponseModel,
@@ -73,6 +72,19 @@ export class PeopleOnBoardWidgetService implements OnInit {
                 });
                 }
                 this.peopleOnBoard.totalAffectedCrewCount = isNaN(crewListLocal.length) ? 0 : crewListLocal.length;
+                return this.peopleOnBoard;
+            })
+            .flatMap((peopleOnBoard: PeopleOnBoardModel) => this.GetAllCargosByIncident(incidentId))
+            .map((dataTotalAffectedCargo: ResponseModel<InvolvePartyModel>) => {
+                let cargoListLocal: CargoModel[] = [];                
+                
+                cargoListLocal = dataTotalAffectedCargo.Records[0].Flights[0].Cargoes;
+                
+
+                this.peopleOnBoard.totalAffectedCargoCount = isNaN(cargoListLocal.length) ? 0 : cargoListLocal.length;
+                let cargoTypeKPIData = _.countBy(cargoListLocal,"CargoType");            
+                this.peopleOnBoard.cargoOnBoardCountByType = Object.keys(cargoTypeKPIData)
+                    .map(x=> { return {Key: x, Value: cargoTypeKPIData[x]}; });                
                 return this.peopleOnBoard;
             })
             .flatMap((peopleOnBoard: PeopleOnBoardModel) => this.GetEnquiredAffectedPeople(incidentId))
@@ -177,6 +189,10 @@ export class PeopleOnBoardWidgetService implements OnInit {
 
     GetQueryForPassenger(query: string, incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
         return this.involvedPartyService.GetQueryForPassenger(query, incidentId);            
-    }    
+    } 
+
+     GetQueryForCargo(query: string, incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
+        return this.involvedPartyService.GetQueryCargosByIncident(query, incidentId);            
+    }  
 
 }

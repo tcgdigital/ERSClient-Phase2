@@ -104,6 +104,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
                     {
                         item.PassengerId = dataItem.PassengerId;
                     }
+                    item.IsNokInformed = dataItem.IsNokInformed;
                     return item;
                 });
             }

@@ -24,8 +24,7 @@ export class AffectedPeopleModel extends BaseModel {
 	public IsStaff: boolean;
 	public IsCrew: boolean;
 	public IsVerified: boolean;
-	
-
+	public IsNokInformed: boolean;
 
 	public Affected: AffectedModel;
 	public Passenger?: PassengerModel;
@@ -87,5 +86,6 @@ export class AffectedPeopleToView extends BaseModel {
 	public CoTravellerInformation: string;
 	public PassengerId?: number;
 	public CrewId?: number;
+	public IsNokInformed: boolean;
 }
 

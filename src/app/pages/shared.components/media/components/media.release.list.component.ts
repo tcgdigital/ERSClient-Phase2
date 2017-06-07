@@ -34,9 +34,9 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
         private dataExchange: DataExchangeService<MediaModel>,
         private globalState: GlobalStateService) { }
 
-    getMediaReleases(departmentId, incidentId): void {
+    getMediaReleases(departmentId, incidentId): void {        
         this.mediaService.Query(departmentId, incidentId)
-            .subscribe((response: ResponseModel<MediaModel>) => {
+            .subscribe((response: ResponseModel<MediaModel>) => {                
                 this.mediaReleases = response.Records;
                 console.log(this.mediaReleases);
             }, (error: any) => {

@@ -53,6 +53,21 @@
         border: 0;
     }
 }
+ .table {
+     
+    tbody>tr>td{
+        font-size:11px;
+        }
+   
+ }
+ @media screen and (max-width: $resLG-E){
+      .card-block{ 
+          padding:0.25em;
+          }
+   }
+
+
+
 
 .table-condensed> {
     thead>tr>th,

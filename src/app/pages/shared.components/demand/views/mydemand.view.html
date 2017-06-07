@@ -17,6 +17,7 @@
                         <th>Demand Status</th>
                         <th>Remarks</th>
                         <th>RAG</th>
+                        <th>Download File</th>
                         <th *ngIf="!isArchive">Edit</th>
                     </tr>
                 </thead>
@@ -36,7 +37,14 @@
                         <td data-title="Demand Status">{{demand.DemandStatusDescription}}&nbsp;</td>
                         <td data-title="Remarks"><i class="fa fa-list-alt" (click)="openDemandRemarks(demand)"></i></td>
                         <td data-title="RAG"><span [ngClass]="demand.RagStatus"></span></td>
-                        <td data-title="Edit" *ngIf="!isArchive"><i class="fa fa-edit" (click)="open(demand.DemandId)"></i></td>
+                        <td data-title="Download File">
+                            <ul>
+                                <li *ngFor="let file of demand.FileStores">
+                                    <a target="_self" href="{{file.FilePath}}" download="file.UploadedFileName">{{file.UploadedFileName}}</a>
+                                </li>
+                            </ul>
+                        </td>
+                        <td data-title="Edit" *ngIf="!isArchive"><i class="fa fa-edit" (click)="open(demand.DemandId)" ></i></td>
                     </tr>
                 </tbody>
             </table>

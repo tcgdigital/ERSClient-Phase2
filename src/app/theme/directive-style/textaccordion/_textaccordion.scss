@@ -28,7 +28,8 @@
             width: 100%;
             display: block;
             height: 120px;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
             font-size: 12px;
             text-align: justify;
             padding: 20px 13px 5px;
@@ -57,7 +58,7 @@
         &.cd-item-front {
             position: relative;
             z-index: 3;
-            @include box-shadow(0, 0, 6px, 2px, $header-shadow);
+            // @include box-shadow(0, 0, 6px, 2px, $header-shadow);
         }
         &.cd-item-middle {
             z-index: 2;

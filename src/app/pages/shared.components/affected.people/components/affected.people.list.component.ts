@@ -168,7 +168,19 @@ export class AffectedPeopleListComponent implements OnInit {
         this.IsDestroyed = false;
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
     }
+    IsNokInformed(event : any,id : number){
+        let affectedpersonToUpdate = new AffectedPeopleModel();
+        affectedpersonToUpdate.IsNokInformed = event.checked;
+        affectedpersonToUpdate.AffectedPersonId = id;
+        this.affectedPeopleService.Update(affectedpersonToUpdate,id)
+            .subscribe((response: AffectedPeopleModel) => {
+                this.toastrService.success('NOK is informed.')
+                this.getAffectedPeople(this.currentIncident);
+            }, (error: any) => {
+                alert(error);
+            });
 
+    }
     ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChangefromDashboard');
     }

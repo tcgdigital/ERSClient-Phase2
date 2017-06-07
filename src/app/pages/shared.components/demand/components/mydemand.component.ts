@@ -73,7 +73,9 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     getMyDemands(deptId, incidentId): void {
         this.demandService.GetByRequesterDepartment(deptId, incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
+                console.log(response);
                 this.mydemands = this.demandService.DemandMapper(response.Records);
+                console.log(this.mydemands);
                 this.mydemands.forEach(x =>
                     {
                         let scheduleTime = x.ScheduleTime;

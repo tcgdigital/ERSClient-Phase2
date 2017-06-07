@@ -1,8 +1,7 @@
 import { Component, ViewEncapsulation, Input, OnInit, OnDestroy, ViewChild, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-    FormGroup, FormControl, FormBuilder, Validators,
-    ReactiveFormsModule
+    FormGroup, FormControl, FormBuilder, Validators
 } from '@angular/forms';
 import * as moment from 'moment/moment';
 import { IncidentModel } from './incident.model';

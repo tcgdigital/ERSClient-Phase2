@@ -8,4 +8,9 @@
     background: $entryholder-background;
     float: left;
     margin: 15px 23px;
+@media screen and (max-width: $resMD-S){
+margin: 15px 1.5%;
+}
+
+
 }

@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, AbstractControl, Validators } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
@@ -9,7 +9,10 @@ import { UtilityService } from '../../../shared/services';
 import { GlobalStateService, ResponseModel } from '../../../shared';
 import { AuthRequestModel, AuthResponseModel } from './auth.model';
 import { IncidentModel, IncidentService } from '../../incident';
-import { UserProfileService, UserProfileModel } from '../../shared.components';
+import { UserProfileService, UserProfileModel } from '../../masterdata/userprofile/index';
+import { LicensingService } from '../../../shared/services/common.service';
+import { LicenseVerificationResponse, LicenseInformationModel } from '../../../shared/models';
+import * as _ from 'underscore';
 
 @Component({
     selector: 'login',
@@ -18,7 +21,7 @@ import { UserProfileService, UserProfileModel } from '../../shared.components';
     styleUrls: ['../styles/login.style.scss'],
     providers: [AuthenticationService]
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
     public form: FormGroup;
     public userId: AbstractControl;
     public password: AbstractControl;
@@ -31,7 +34,8 @@ export class LoginComponent {
         private authService: AuthenticationService,
         private globalState: GlobalStateService,
         private router: Router,
-        private incidentService: IncidentService) {
+        private incidentService: IncidentService,
+        private licensingService: LicensingService) {
 
         this.form = formBuilder.group({
             userId: ['', Validators.compose([Validators.required, Validators.minLength(4)])],
@@ -42,12 +46,33 @@ export class LoginComponent {
         this.password = this.form.controls['password'];
     }
 
+    ngOnInit(): any {
+        this.licensingService.VerifyLicense()
+            .subscribe((response: LicenseVerificationResponse) => {
+                if(response.Code == 105){
+                    this.router.navigate(['/licensing/applykey']);
+                }
+                else if(response.Code == 101){
+                }
+                 else{   
+                     this.router.navigate(['/licensing/invalidkey',response.Code]);
+                }
+            },(error)=>{
+                
+                  console.log(error);
+            });
+    }
+
     Login(userid: string, password: string): void {
         this.authService.Login(userid, password)
             .subscribe((data: AuthResponseModel) => {
                 console.log(jwtDecode(data.access_token));
                 const loginCredentialBasic: any = jwtDecode(data.access_token);
                 if (loginCredentialBasic) {
+                    // This is to check that whether the user has department associated with him. From UserPermission table.
+                    //let errorSuccess: boolean = this.userProfileService.VerifyUserDepartmentMapping(+loginCredentialBasic.UserId.toString());
+
+
                     if (!Object.keys(loginCredentialBasic).some((x) => x === 'EmailConfirmed')) {
                         localStorage.setItem('LastLoginTime', (new Date()).toString());
                         UtilityService.SetToSession({ CurrentUserId: loginCredentialBasic.UserId });
@@ -85,8 +110,32 @@ export class LoginComponent {
         this.userProfileService.Get(id)
             .subscribe((item: UserProfileModel) => {
                 localStorage.setItem('CurrentLoggedInUserName', item.Name);
-                this.CheckClosedIncident();
+               
+        this.CheckDepartmentPages(item.UserProfileId);
+               
             });
+    }
+    private CheckDepartmentPages(UserProfileId: number): void {
+        this.userProfileService.GetDepartmentPages(UserProfileId)
+            .subscribe((item: ResponseModel<UserProfileModel>) => {
+                let userprofile = item.Records;
+                let userpermissions =  _.flatten(_.pluck(userprofile, 'UserPermissions'));
+                let departments =  _.flatten(_.pluck(userpermissions, 'Department'));
+                if(departments.length<=0)
+                {
+                      this.toastrService.warning('User Not Assigned to Any Department');
+                }
+                else{
+                       let permissions =  _.flatten(_.pluck(departments, 'Permissions'));
+                if(permissions.length >0){
+                      this.CheckClosedIncident();
+                }
+                else {
+                        this.toastrService.warning("Departments assigned to this user don't have access to any pages");
+                }
+                }
+               
+            })
     }
 
     private CheckClosedIncident(): void {
