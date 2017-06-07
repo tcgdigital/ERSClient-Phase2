@@ -85,7 +85,6 @@ export class MediaReleaseApprovalEntryComponent implements OnInit, OnDestroy {
     }    
 
     onMediaReleaseUpdate(mediaModel: MediaModel): void {
-        debugger;
         this.media = new MediaModel();
         this.media = mediaModel;
         this.media.MediaqueryId = mediaModel.MediaqueryId;

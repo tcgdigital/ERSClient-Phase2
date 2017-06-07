@@ -140,4 +140,5 @@ export class UserPermissionService
             .Filter(`UserId eq ${userId} and Department/ActiveFlag eq CMS.DataModel.Enum.ActiveFlag\'Active\'`)
             .Execute();
     }
+   
 }

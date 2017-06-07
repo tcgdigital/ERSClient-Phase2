@@ -55,9 +55,6 @@ declare module 'modern-lru' {
   export = x;
 }
 */
-interface JQueryStatic {
-    mask;
-}
 
 interface JQuery {
     slimScroll;
