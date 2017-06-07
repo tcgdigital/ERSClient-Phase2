@@ -568,7 +568,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             this.demandModelEdit.RequiredLocation = this.form.controls['RequiredLocation'].value;
         }
         if (this.form.controls['FileInputDemand'].touched) {
-            debugger;
             this.demandFileName = this.inputFileDemand.nativeElement.value;           
         }
     }
@@ -578,7 +577,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         {
             let baseUrl = GlobalConstants.EXTERNAL_URL;
             //let param = this.credential.UserId;
-            debugger;
             let organizationId = 2 // To be changed by Dropdown when Demand table will change
             let moduleName = "Demand"
             let param = `${this.currentIncidentId}/${organizationId}/${this.currentDepartmentId}/${moduleName}`;
@@ -586,7 +584,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             this.fileUploadService.uploadFiles<string>(baseUrl + "./api/fileUpload/UploadFilesModuleWise/" + param, 
             this.filesToUpload, this.date.toString()).subscribe((result: string) => {
                 console.log(result);
-                debugger;
                 
                 this.demandFilePath = GlobalConstants.EXTERNAL_URL + result.substr(result.indexOf('UploadFiles'),result.length).replace(/\\/g,"/");
                 let fileStore: FileStoreModel = new FileStoreModel();
@@ -696,7 +693,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         }
         else {
             this.formControlDirtyCheck();
-            debugger;
             let resolutionTimeChanged = false;
             if (this.resolutionTime) {
                 this.demandService.GetByDemandId(this.demandModelEdit.DemandId)
