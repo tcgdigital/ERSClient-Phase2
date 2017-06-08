@@ -1,1 +1,11 @@
 @import '../../../theme/component-styles/checklist.summery.widget/checklist.summery.widget';
+.header-incident{ min-width: 10%; width:auto; float: left;}
+.view-inc{min-width: 10%; width:auto; float: left; margin-left:10px;}
+.header-drill{    background: #01a3a9;
+    color: #fff;
+    float: left;
+    padding: 0px 25px;
+    border-radius: 3px;
+}
+.dept-header{text-align: right;
+    padding-right: 20px !important;}
