@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Router, Routes } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import * as _ from 'lodash';
+import * as lod from 'lodash';
+import * as _ from 'underscore';
+import { routes } from '../../../app.routing';
 
 @Injectable()
 export class SideMenuService {
@@ -17,12 +19,12 @@ export class SideMenuService {
      * @param {Routes} routes Type compatible with app.menu.ts
      */
     public updateMenuByRoutes(routes: Routes) {
-        let convertedRoutes = this.convertRoutesToMenus(_.cloneDeep(routes));
+        const convertedRoutes = this.convertRoutesToMenus(lod.cloneDeep(routes));
         this.menuItems.next(convertedRoutes);
     }
 
     public convertRoutesToMenus(routes: Routes): any[] {
-        let items = this._convertArrayToItems(routes);
+        const items = this._convertArrayToItems(routes);
         return this._skipEmpty(items);
     }
 
@@ -31,44 +33,41 @@ export class SideMenuService {
     }
 
     public selectMenuItem(menuItems: any[]): any[] {
-        let items = [];
+        const items = [];
         menuItems.forEach((item) => {
             this._selectItem(item);
 
-            if (item.selected) {
+            if (item.selected)
                 this._currentMenuItem = item;
-            }
 
-            if (item.children && item.children.length > 0) {
+            if (item.children && item.children.length > 0)
                 item.children = this.selectMenuItem(item.children);
-            }
+
             items.push(item);
         });
         return items;
     }
 
     protected _skipEmpty(items: any[]): any[] {
-        let menu = [];
+        const menu = [];
         items.forEach((item) => {
             let menuItem;
             if (item.skip) {
                 if (item.children && item.children.length > 0) {
                     menuItem = item.children;
                 }
-            } else {
+            } else
                 menuItem = item;
-            }
 
-            if (menuItem) {
+            if (menuItem)
                 menu.push(menuItem);
-            }
         });
 
         return [].concat.apply([], menu);
     }
 
     protected _convertArrayToItems(routes: any[], parent?: any): any[] {
-        let items = [];
+        const items = [];
         routes.forEach((route) => {
             items.push(this._convertObjectToItem(route, parent));
         });
@@ -99,13 +98,12 @@ export class SideMenuService {
             item.children = this._convertArrayToItems(object.children, item);
         }
 
-        let prepared = this._prepareItem(item);
+        const prepared = this._prepareItem(item);
 
         // if current item is selected or expanded - then parent is expanded too
         if ((prepared.selected || prepared.expanded) && parent) {
             parent.expanded = true;
         }
-
         return prepared;
     }
 
@@ -115,12 +113,14 @@ export class SideMenuService {
             object.pathMatch = object.pathMatch || 'full';
             return this._selectItem(object);
         }
-
         return object;
     }
 
     protected _selectItem(object: any): any {
-        object.selected = this._router.isActive(this._router.createUrlTree(object.route.paths), object.pathMatch === 'full');
+        const currentRoute: string = this._router.url;
+        const selectedRoute: string = object.route.paths.join('/').replace('//', '/');
+        object.selected = currentRoute.startsWith(selectedRoute);
+        // object.selected = this._router.isActive(this._router.createUrlTree(object.route.paths), object.pathMatch === 'full');
         return object;
     }
 }

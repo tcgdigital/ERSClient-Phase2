@@ -65,7 +65,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
 
     cancel(): void {
         this.demandTypeModel = new DemandTypeModel();
-        this.Action = 'Save';
+        this.Action = 'Submit';
         this.showAdd = false;
         this.demandTypeModel.ActiveFlag = 'Active';
         this.demandTypeModel.CreatedBy = +this.credential.UserId;
@@ -103,7 +103,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         this.demandTypeModel.CreatedBy = +this.credential.UserId;
         this.demandTypeModel.CreatedOn = this.date;
         this.demandTypeModel.DemandTypeId = 0;
-        this.Action = 'Save';
+        this.Action = 'Submit';
         this.dataExchange.Subscribe('OnDemandUpdate', (model) => this.onDemandTypeUpdate(model));
     }
 
@@ -191,7 +191,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         this.demandTypeModel.CreatedBy = +this.credential.UserId;
         this.demandTypeModel.CreatedOn = this.date;
         this.demandTypeModel.DemandTypeId = 0;
-        this.Action = 'Save';
+        this.Action = 'Submit';
     }
 
 }

@@ -60,7 +60,6 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
     }
 
     ngAfterViewChecked() {
-        debugger;
         if (!this.isChecked && this.memberEngagementsToView.length > 0) {
             this.isChecked = true;
             this.GenerateToggle();
@@ -80,7 +79,6 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
                 off: 'Free'
             }, 'disable');
             $(element).change(function ($event) {
-                debugger;
                 self.datachanged($event);
             })
         });
@@ -94,7 +92,6 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
     // }
 
     public datachanged($event: Event): void {
-        debugger;
         let $element: JQuery = jQuery($event.currentTarget);
         var userId = $element.data('userid');
         let obj: MemberCurrentEngagementModelToView = this.memberEngagementsToView.find(x => x.UserId.toString() == userId);
@@ -159,7 +156,6 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
             memberCurrentEngagementToEdit.deleteAttributes();
             memberCurrentEngagementToEdit.MemberCurrentEngagementId = obj.MemberCurrentEngagementId;
             memberCurrentEngagementToEdit.IsBusy = false;
-            debugger;
             this.membertrackService.Update(memberCurrentEngagementToEdit, memberCurrentEngagementToEdit.MemberCurrentEngagementId)
                 .flatMap(() => this.membertrackService.UpdateMemberTrack(memberTrackModel, memberTrackModel.MemberEngagementTrackId))
                 .subscribe(() => {

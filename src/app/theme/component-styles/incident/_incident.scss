@@ -40,3 +40,13 @@
     position: relative;
     left: -410px;
 }
+
+.is-disabled {
+    opacity: .7;
+    pointer-events: none;
+}
+
+.pull-left {
+    position: relative;
+    left: -390px;
+}

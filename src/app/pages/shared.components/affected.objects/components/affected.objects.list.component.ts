@@ -103,7 +103,6 @@ export class AffectedObjectsListComponent implements OnInit {
     }
 
     updateStatus(statusId): void {
-        debugger;
         let affectedObjectStatus = new AffectedObjectModel();
         affectedObjectStatus.deleteAttributes();
         affectedObjectStatus.LostFoundStatus = this.allcargostatus.find(x => x.key == statusId).value;
@@ -120,7 +119,6 @@ export class AffectedObjectsListComponent implements OnInit {
         if (this.affectedObjectDetails.LostFoundStatus != "NA") {
             this.affectedObjectDetails["MedicalStatusToshow"] = this.allcargostatus.find(x => { return x.value == affectedObject.LostFoundStatus; }).value;
         }
-        debugger;
         this.affectedObjectService.GetCallerListForAffectedObject(affectedObject.AffectedObjectId)
             .subscribe((response: ResponseModel<EnquiryModel>) => {
                 this.callers = response.Records.map(x => {
@@ -145,5 +143,9 @@ export class AffectedObjectsListComponent implements OnInit {
             }, (error: any) => {
                 alert(error);
             });
+    }
+
+    cancelModal() {
+        this.childAffectedObjectDetailsModal.hide();
     }
 }

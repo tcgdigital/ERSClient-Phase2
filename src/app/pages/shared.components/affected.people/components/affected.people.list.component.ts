@@ -76,7 +76,6 @@ export class AffectedPeopleListComponent implements OnInit {
         if (affectedPerson.MedicalStatus != "NA") {
             this.affectedPersonModelForStatus["MedicalStatusToshow"] = this.medicalStatus.find(x => { return x.value == affectedPerson.MedicalStatus; }).value;
         }
-        debugger;
         this.affectedPeopleService.GetCallerListForAffectedPerson(affectedPerson.AffectedPersonId)
             .subscribe((response: ResponseModel<EnquiryModel>) => {
                 this.callers = response.Records.map(x => {
@@ -236,7 +235,6 @@ export class AffectedPeopleListComponent implements OnInit {
             let callertoupdate = new CallerModel();
             callertoupdate.IsNok = true;
             callertoupdate.deleteAttributes();
-            debugger;
             this.affectedPeopleService.CreateNok(nok)
                 .flatMap(() => this.callerservice.Update(callertoupdate, caller.CallerId))
                 .subscribe(() => {
