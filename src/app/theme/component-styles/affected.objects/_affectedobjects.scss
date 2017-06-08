@@ -17,3 +17,23 @@
 .lebelHeaderStyle{
     text-align: center;
 }
+
+.CallerClass{
+    padding: 2px;
+}
+
+
+.dropdown-menu{
+      padding: 0;
+        margin-top: 19px;
+        margin-left: 16px;
+        height: 100%;
+        border: none;
+        ul li>a:hover {
+            background-color: $sidemenu-active;
+        }
+        li.disable-hover>a:hover {
+            background-color: $default !important;
+            color: #000;
+        }
+}

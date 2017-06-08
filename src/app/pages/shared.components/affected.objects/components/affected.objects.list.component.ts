@@ -144,4 +144,8 @@ export class AffectedObjectsListComponent implements OnInit {
                 alert(error);
             });
     }
+
+    cancelModal() {
+        this.childAffectedObjectDetailsModal.hide();
+    }
 }
