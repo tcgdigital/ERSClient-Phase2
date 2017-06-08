@@ -17,7 +17,7 @@ import { AccountResponse } from '../../../../shared/models';
 
 import {
     ResponseModel, DataExchangeService,
-    GlobalConstants, EmailValidator, UtilityService, AuthModel
+    GlobalConstants, EmailValidator, UtilityService, AuthModel, NameValidator
 } from '../../../../shared';
 
 @Component({
@@ -180,7 +180,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
             UserProfileId: new FormControl(0),
             Email: new FormControl('', [Validators.required, EmailValidator.validate]),
             UserId: new FormControl('', Validators.required),
-            Name: new FormControl('', Validators.required),
+            Name: new FormControl('', [Validators.required, NameValidator.validate]),
             MainContact: new FormControl('', Validators.required),
             AlternateContact: new FormControl(''),
             Location: new FormControl('', Validators.required),

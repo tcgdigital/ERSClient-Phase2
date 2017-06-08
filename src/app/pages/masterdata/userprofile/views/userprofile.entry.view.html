@@ -29,7 +29,7 @@
                     <input class="form-control" id="txtName" type="text" formControlName="Name" placeholder="Enter Name" 
                         />
                         <small *ngIf="!form.controls.Name.valid" class="text-danger">
-                        Required.
+                        Required or Invalid.
                         </small>
                 </div>
             </div>
@@ -72,7 +72,7 @@
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="buttonholder">
-                    <button class="btn btn-primary" type="submit">Save</button>
+                    <button class="btn btn-primary" type="submit">Submit</button>
                     <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
                 </div>
             </div>

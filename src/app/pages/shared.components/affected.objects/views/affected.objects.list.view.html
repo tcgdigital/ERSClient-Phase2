@@ -108,7 +108,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title pull-left">Additional Information</h4>
-                <button type="button" class="close pull-right" aria-label="Close" (click)="cancelModal(actionableModelToUpdate)">
+                <button type="button" class="close pull-right" aria-label="Close" (click)="cancelModal()">
                   <span aria-hidden="true">&times;</span>
                    </button>
             </div>
@@ -127,32 +127,23 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="form-group col-lg-6 col-sm-12 col-md-6">
+                        <div class="form-group col-lg-4 col-sm-12 col-md-6">
                             <label for="DiscussionNote">Identification Details:</label>
                             <input value="{{affectedObjectDetails.IdentificationDesc}}" type="text" class="form-control" />
                         </div>
 
-                        <div class="form-group col-lg-6 col-sm-12 col-md-6">
+                        <div class="form-group col-lg-4 col-sm-12 col-md-6">
                             <label for="DiscussionNote">Status:</label>
                             <select id="selectStatus" [(ngModel)]="affectedObjectDetails.LostFoundStatus" class="form-control">
                                   <option *ngFor="let status of allcargostatus" [value]="status.caption" >{{status.caption}} </option>                      
                                </select>
                         </div>
-                        <div class="form-group col-lg-6 col-sm-12 col-md-6">
+                        <div class="form-group col-lg-4 col-sm-12 col-md-6">
                             <label for="DiscussionNote">Remarks:</label>
                             <input value="{{affectedObjectDetails.Remarks}}" type="text" class="form-control" />
                         </div>
                     </div>
                     <div class="row">
-                        <div class="form-group col-lg-6 col-sm-12 col-md-6">
-                            <label for="DiscussionNote">Shipper's Name:</label>
-                             <label class="form-control">{{affectedObjectDetails.ShipperName}}</label>
-                        </div>
-
-                        <div class="form-group col-lg-6 col-sm-12 col-md-6">
-                            <label for="DiscussionNote">Shipper's Address::</label>
-                             <label class="form-control">{{affectedObjectDetails.ShipperAddress}}</label>
-                        </div>
                         <div class="form-group col-lg-4 col-sm-12 col-md-6">
                             Callers:
                             <i class="fa fa-edit fa-md" data-dropdown="#drop1" (click)="openCallerList(affectedPersonModelForStatus)"></i>
@@ -188,16 +179,26 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-lg-6 col-sm-12 col-md-6">
-                            <label for="DiscussionNote">Consignee’s  Name:</label>
-                            <label class="form-control">{{affectedObjectDetails.ConsigneeName}}</label>
+                        <div class="form-group col-lg-4 col-sm-12 col-md-6">
+                            <label for="DiscussionNote">Shipper's Name:</label>
+                             <input value="{{affectedObjectDetails.ShipperName}}" readonly type="text" class="form-control" />
                         </div>
 
-                        <div class="form-group col-lg-6 col-sm-12 col-md-6">
+                        <div class="form-group col-lg-4 col-sm-12 col-md-6">
+                            <label for="DiscussionNote">Shipper's Address::</label>
+                             <input value="{{affectedObjectDetails.ShipperAddress}}" readonly type="text" class="form-control" />
+                        </div>
+                        
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-4 col-sm-12 col-md-6">
+                            <label for="DiscussionNote">Consignee’s  Name:</label>
+                            <input value="{{affectedObjectDetails.ConsigneeName}}" readonly type="text" class="form-control" />
+                        </div>
+
+                        <div class="form-group col-lg-4 col-sm-12 col-md-6">
                             <label for="DiscussionNote">Consignee’s Address::</label>
-                             <label class="form-control">{{affectedObjectDetails.ConsigneeAddress}}</label>
+                             <input value="{{affectedObjectDetails.ConsigneeAddress}}" readonly type="text" class="form-control" />
                         </div>
                     </div>
                     <div class="row">
