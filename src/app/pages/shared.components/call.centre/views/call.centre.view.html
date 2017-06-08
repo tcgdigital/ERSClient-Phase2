@@ -163,3 +163,45 @@
         <button class="btn btn-primary" type="button" (click)="saveEnquiryDemandCaller()">Save</button>
     </div>
 </div>
+
+
+<div bsModal #childModalForTrail="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Communication Trail</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="cancelTrailModal()">
+                  <span aria-hidden="true">&times;</span>
+                   </button>
+            </div>
+            <div class="modal-body">
+                <div class="row modalBodyHeaderStyle">
+                    <div class="col-sm-6 form-group">
+                        <label class="lebelHeaderStyle"><strong>PDA Name</strong></label>
+                        <br>
+                        <label class="form-control">{{pdaNameForTrail}}</label>
+                    </div>
+                    <div class="col-sm-6 form-group">
+                        <label class="lebelHeaderStyle"><strong>Reference Number</strong></label>
+                        <br>
+                        <label class="form-control">{{ticketNumber}}</label>
+                    </div>
+                </div>
+                <br>
+                <responsive-table>
+                    <table responsive-table-body>
+                        <tbody>
+                            <tr *ngFor="let comm of communications">
+                                <td data-title="comm"><strong>{{comm.RequesterType}}</strong> logged by
+                                    <span [hidden]="comm.RequesterDepartment.length==0"><strong>{{comm.RequesterName}} (Dept: {{comm.RequesterDepartment}})</strong></span>
+                                    <span> on <strong>{{comm.CreatedOn | date:"dd-MMM-yy h:mma"}}&nbsp;:</strong></span>                                    {{comm.Answers}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </responsive-table>
+            </div>
+        </div>
+    </div>
+</div>

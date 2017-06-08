@@ -21,7 +21,7 @@ const otherQueryRoutes: Routes = [
                 component: OtherQueryRecievedCallsListComponent
             },
             {
-                path: 'recievedCalls',
+                path: 'receivedCalls',
                 component: OtherQueryAssignedCallsListComponent
             }]
     }];
