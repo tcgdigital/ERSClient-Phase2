@@ -49,7 +49,7 @@ import { ModalDirective } from 'ng2-bootstrap/modal';
 export class EnquiryEntryComponent /*implements OnInit*/ {
     @Input('callid') callid: number;
     @Input('enquiryType') enquiryType: number;
-    @ViewChild('childModalForTrail') public childModalForTrail: ModalDirective;
+   // @ViewChild('childModalForTrail') public childModalForTrail: ModalDirective;
 
 
 
@@ -116,6 +116,8 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     pdaNameForTrail: string = "";
     ticketNumber: string = "";
     communications: CommunicationLogModel[] = [];
+    showCallcenterModal:boolean = false;
+    hideModal : boolean = true;
 
     protected _onRouteChange: Subscription;
     externalInput: ExternalInputModel = new ExternalInputModel();
@@ -456,7 +458,9 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                 this.pdaNameForTrail = this.pdaNameForTrail ? this.pdaNameForTrail : responseModel.Crew != null ? responseModel.Crew.CrewName.toUpperCase() : '';
                 this.ticketNumber = responseModel.TicketNumber;
                 this.communications = responseModel.CommunicationLogs;
-                this.childModalForTrail.show();
+                this.showCallcenterModal=true;
+               // this.childModalForTrail.show();
+                this.hideModal=false;
 
             }, (error: any) => {
                 console.log(`Error: ${error}`);
@@ -473,6 +477,12 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             IsCallBack: new FormControl(false),
             IsTravelRequest: new FormControl(false)
         });
+    }
+
+    cancelModal() {
+       // this.childModalForTrail.hide();
+        this.hideModal=true;
+        this.showCallcenterModal=false;
     }
 
 }
