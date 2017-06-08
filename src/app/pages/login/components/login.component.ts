@@ -49,17 +49,22 @@ export class LoginComponent implements OnInit {
     ngOnInit(): any {
         this.licensingService.VerifyLicense()
             .subscribe((response: LicenseVerificationResponse) => {
-                if(response.Code == 105){
+                if (response.Code == 105) {
                     this.router.navigate(['/licensing/applykey']);
                 }
-                else if(response.Code == 101){
+                else if (response.Code == 101) {
+                    this.licensingService.GetLicenseInfo()
+                    .subscribe((response: LicenseInformationModel) => {
+                        UtilityService.licenseInfo = response;
+                    })
+                   // UtilityService.licenseInfo=response.Description;
                 }
-                 else{   
-                     this.router.navigate(['/licensing/invalidkey',response.Code]);
+                else {
+                    this.router.navigate(['/licensing/invalidkey', response.Code]);
                 }
-            },(error)=>{
-                
-                  console.log(error);
+            }, (error) => {
+
+                console.log(error);
             });
     }
 
@@ -110,31 +115,30 @@ export class LoginComponent implements OnInit {
         this.userProfileService.Get(id)
             .subscribe((item: UserProfileModel) => {
                 localStorage.setItem('CurrentLoggedInUserName', item.Name);
-               
-        this.CheckDepartmentPages(item.UserProfileId);
-               
+
+                this.CheckDepartmentPages(item.UserProfileId);
+
             });
     }
     private CheckDepartmentPages(UserProfileId: number): void {
         this.userProfileService.GetDepartmentPages(UserProfileId)
             .subscribe((item: ResponseModel<UserProfileModel>) => {
                 let userprofile = item.Records;
-                let userpermissions =  _.flatten(_.pluck(userprofile, 'UserPermissions'));
-                let departments =  _.flatten(_.pluck(userpermissions, 'Department'));
-                if(departments.length<=0)
-                {
-                      this.toastrService.warning('User Not Assigned to Any Department');
-                }
-                else{
-                       let permissions =  _.flatten(_.pluck(departments, 'Permissions'));
-                if(permissions.length >0){
-                      this.CheckClosedIncident();
+                let userpermissions = _.flatten(_.pluck(userprofile, 'UserPermissions'));
+                let departments = _.flatten(_.pluck(userpermissions, 'Department'));
+                if (departments.length <= 0) {
+                    this.toastrService.warning('User Not Assigned to Any Department');
                 }
                 else {
+                    let permissions = _.flatten(_.pluck(departments, 'Permissions'));
+                    if (permissions.length > 0) {
+                        this.CheckClosedIncident();
+                    }
+                    else {
                         this.toastrService.warning("Departments assigned to this user don't have access to any pages");
+                    }
                 }
-                }
-               
+
             })
     }
 
