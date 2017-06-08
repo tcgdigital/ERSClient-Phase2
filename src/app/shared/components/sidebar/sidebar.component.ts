@@ -18,7 +18,8 @@ export class SidebarComponent implements OnInit, OnChanges, OnDestroy {
     public menuItems: any[];
     protected _menuItemsSub: Subscription;
     protected _onRouteChange: Subscription;
-    public showsidemenu: boolean = false;
+    public hideSideMenu: boolean = false;
+
     constructor(private _router: Router,
         private _service: SideMenuService,
         private _state: GlobalStateService,
@@ -28,19 +29,15 @@ export class SidebarComponent implements OnInit, OnChanges, OnDestroy {
     public ngOnInit() {
         this._onRouteChange = this._router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
-                if (event.url.indexOf("landing") > -1) {
-                    this.showsidemenu = true;
-                    if (this.menuItems) {
+                if (event.url.indexOf('landing') < 0) {
+                    this.hideSideMenu = false;
+                    if (this.menuItems)
                         this.selectMenuAndNotify();
-                    } else {
-                        // on page load we have to wait as event is fired before menu elements are prepared
+                    else
                         setTimeout(() => this.selectMenuAndNotify());
-                    }
                 }
-                else {
-                    this.showsidemenu = false;
-                }
-
+                else
+                    this.hideSideMenu = true;
             }
         });
         this._menuItemsSub = this._service.menuItems.subscribe(this.updateMenu.bind(this));
@@ -93,7 +90,7 @@ export class SidebarComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private toggleSideMenuDock(): void {
-        let $self = $(this._elementRef.nativeElement).find('.side-menu');
+        const $self = $(this._elementRef.nativeElement).find('.side-menu');
         console.log($self);
 
         if ($(window).width() > 426) {

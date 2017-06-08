@@ -3,12 +3,12 @@ import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class GlobalStateService {
-    private _data = new Subject<Object>();
+    private _data = new Subject<object>();
     private _dataStream$ = this._data.asObservable();
     private _subscriptions: Map<string, Function[]> = new Map<string, Function[]>();
 
     constructor() {
-        this._dataStream$.subscribe((data: Object) => this._onEvent(data));
+        this._dataStream$.subscribe((data: object) => this._onEvent(data));
     }
 
     NotifyDataChanged(_event: string, value: any) {
@@ -26,7 +26,7 @@ export class GlobalStateService {
     }
 
     Subscribe(event: string, callback: Function) {
-        let subscribers = this._subscriptions.get(event) || [];
+        const subscribers = this._subscriptions.get(event) || [];
         subscribers.push(callback);
 
         this._subscriptions.set(event, subscribers);
@@ -37,7 +37,7 @@ export class GlobalStateService {
     }
 
     _onEvent(data: any) {
-        let subscribers = this._subscriptions.get(data['event']) || [];
+        const subscribers = this._subscriptions.get(data['event']) || [];
 
         subscribers.forEach((callback) => {
             callback.call(null, data['data']);

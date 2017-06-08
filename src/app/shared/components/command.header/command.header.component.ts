@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { KeyValue } from '../../models/base.model';
-
+import { UtilityService } from "../../services/common.service/utility.service";
 @Component({
     selector: '[command-header]',
     templateUrl: './command.header.view.html',
@@ -18,10 +18,13 @@ export class CommandHeaderComponent implements OnInit {
 
     incidentPlaceholder: string='Incident';
     departmentPlaceholder: string= 'Department';
+    clientName: string;
     
     constructor() { }
 
-    ngOnInit() { }
+    ngOnInit() { 
+        this.clientName = UtilityService.licenseInfo.ClientName;
+    }
 
     public onDepartmentChange(selectedDepartment: KeyValue): void {
         this.departmentChange.emit(selectedDepartment);
