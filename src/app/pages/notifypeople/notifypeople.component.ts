@@ -60,7 +60,10 @@ export class NotifyPeopleComponent implements OnInit {
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.PopulateNotifyDepartmentUsers(this.currentDepartmentId, this.currentIncidentId);
+
+
     }
+
     private resetAdditionalForm(): void {
         this.form = new FormGroup({
             AdditionalData: new FormControl('')
@@ -102,13 +105,15 @@ export class NotifyPeopleComponent implements OnInit {
                 dataSource: jQuery.parseJSON(this.allDepartmentUserPermissionString),//this.allDepartmentUserPermissionString,
                 checkboxes: true
             })
-
+            var node = this.tree.getNodeByText(result[0].text);
+            jQuery(jQuery(jQuery(jQuery(jQuery(node[0])[0])[0])[0]).find('div')[0]).hide();
+            jQuery(jQuery(jQuery(jQuery(jQuery(node[0])[0])[0])[0]).find('ul')[0]).addClass("first-row-alignment");
+            this.tree.expand(node);
         });
     }
 
     public notify(): void {
         let checkedIds: number[] = this.tree.getCheckedNodes();
-
         this.notifyPeopleService.NotifyPeopleCall(checkedIds, this.currentDepartmentId, this.currentIncidentId, (item: TemplateModel) => {
             this.appendedTemplate.AppendedTemplateId = 0;
             this.appendedTemplate.TemplateId = item.TemplateId;
@@ -119,7 +124,7 @@ export class NotifyPeopleComponent implements OnInit {
             this.appendedTemplate.ActiveFlag = 'Active';
             this.appendedTemplate.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
             this.appendedTemplate.CreatedOn = new Date();
-            this.childModalNoificationMessage.show();
+            this.childModalNoificationMessage.hide();
         });
     }
 

@@ -181,7 +181,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     getAllActiveEmergencyTypes(): void {
-        this.emergencyTypeService.GetAll()
+        this.emergencyTypeService.GetAllActive()
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                 this.activeEmergencyTypes = response.Records;
             }, (error: any) => {
@@ -387,7 +387,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
 
             Description: new FormControl('', [Validators.required]),
             EmergencyDate: new FormControl('', [Validators.required]),
-            Severity: new FormControl('', [Validators.required]),
+            Severity: new FormControl(''),
             OrganizationId: new FormControl('', [Validators.required]),
 
 
@@ -586,7 +586,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         });
         this.IsDrillPopup = this.incidentDataExchangeModel.IncidentModel.IsDrill;
         this.isFlightRelatedPopup = false;
-        if (this.incidentDataExchangeModel.FLightModel != null) {
+        if (this.incidentDataExchangeModel.IsFlightRelated ==true) {
             this.formPopup = new FormGroup({
                 IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
                 EmergencyTypeIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyTypeId),
@@ -603,6 +603,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
 
                 DescriptionPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Description),
                 EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('YYYY-MM-DD h:mm a')),
+                EmergencyDateLocalPopup: new FormControl(moment(this.EmergencyDateLocal).format('YYYY-MM-DD h:mm a')),
+            
                 SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity),
                 //AirportInChargePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.AirportInCharge),
                 OrganizationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OrganizationId),

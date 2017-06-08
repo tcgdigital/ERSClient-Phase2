@@ -17,7 +17,7 @@ import { Observable } from 'rxjs/Rx';
 export class UserProfileListComponent implements OnInit, OnDestroy {
     userProfiles: UserProfileModel[] = [];
     searchConfigs: SearchConfigModel<any>[] = [];
-    userProfilePatch : UserProfileModel = null;
+    userProfilePatch: UserProfileModel = null;
 
     constructor(private userProfileService: UserProfileService,
         private dataExchange: DataExchangeService<UserProfileModel>) { }
@@ -26,6 +26,9 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
         this.userProfileService.GetAll()
             .subscribe((response: ResponseModel<UserProfileModel>) => {
                 this.userProfiles = response.Records;
+                this.userProfiles.map((item: UserProfileModel) => {
+                    item.isActive = (item.ActiveFlag == 'Active');
+                });
             });
     }
 
@@ -89,7 +92,7 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
 
     private initiateSearchConfigurations(): void {
         let status: NameValue<boolean>[] = [
-             new NameValue<boolean>('Active', true),
+            new NameValue<boolean>('Active', true),
             new NameValue<boolean>('In Active', false)
         ]
         this.searchConfigs = [
@@ -103,7 +106,7 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
                 Description: 'Name',
                 Value: ''
             }),
-           new SearchTextBox({
+            new SearchTextBox({
                 Name: 'Email',
                 Description: 'Email',
                 Value: ''

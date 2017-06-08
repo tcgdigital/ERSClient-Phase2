@@ -14,9 +14,10 @@
                                     {{checklist.CheckListCode}}
                                 </option>
                             </select>
-                            <small *ngIf="!form.controls.ParentCheckListId.valid" class="text-danger">
-                            Required.
-                            </small>
+                            
+                            <small *ngIf="form.controls.ParentCheckListId.hasError('required')" 
+                                    [hidden]="form.controls.ParentCheckListId.valid || (form.controls.ParentCheckListId.pristine && !submitted)"
+                                class="text-danger">Required</small>
                         </div>
                     </div>
                 </div>
@@ -25,9 +26,10 @@
                         <label for="Duration">Duration:<span class="required">*</span></label>
                         <input id="Duration" class="form-control" type="number" name="Duration" formControlName="Duration" placeholder="Enter Duration"
                         />
-                        <small *ngIf="!form.controls.Duration.valid" class="text-danger">
-                            Required.
-                        </small>
+                        
+                        <small *ngIf="form.controls.Duration.hasError('required')" 
+                                    [hidden]="form.controls.Duration.valid || (form.controls.Duration.pristine && !submitted)"
+                                class="text-danger">Required</small>
                     </div>
                     <div class="form-group col-lg-6">
                         <label for="Department">Department:<span class="required">*</span></label>
@@ -37,9 +39,10 @@
                                 {{department.DepartmentName}}
                             </option>
                         </select>
-                        <small *ngIf="!form.controls.DepartmentId.valid" class="text-danger">
-                            Required.
-                        </small>
+                        
+                        <small *ngIf="form.controls.DepartmentId.hasError('required')" 
+                                    [hidden]="form.controls.DepartmentId.valid || (form.controls.DepartmentId.pristine && !submitted)"
+                                class="text-danger">Required</small>
                     </div>
                 </div>
             </div>
@@ -48,9 +51,10 @@
                     <label for="CheckListDetails">Check List Details:<span class="required">*</span></label>
                     <textarea class="form-control heightFix" id="CheckListDetails" formControlName="CheckListDetails" maxlength="1000" placeholder="Enter CheckList Details"
                         required autofocus></textarea>
-                        <small *ngIf="!form.controls.CheckListDetails.valid" class="text-danger">
-                            Required.
-                        </small>
+                        
+                        <small *ngIf="form.controls.CheckListDetails.hasError('required')" 
+                                    [hidden]="form.controls.CheckListDetails.valid || (form.controls.CheckListDetails.pristine && !submitted)"
+                                class="text-danger">Required</small>
                 </div>
             </div>
         </div>
@@ -59,9 +63,10 @@
                 <div class="form-group">
                     <label for="URL">URL:<span class="required">*</span></label>
                     <input id="URL" class="form-control" type="text" name="URL" formControlName="URL" placeholder="Enter URL" />
-                    <small *ngIf="!form.controls.URL.valid" class="text-danger">
-                        Required.
-                    </small>
+                    
+                    <small *ngIf="form.controls.URL.hasError('required')" 
+                                    [hidden]="form.controls.URL.valid || (form.controls.URL.pristine && !submitted)"
+                                class="text-danger">Required</small>
                 </div>
             </div>
             <div class="col-lg-3">
@@ -73,9 +78,10 @@
                             {{emergencytype.EmergencyTypeName}}
                         </option>
                     </select>
-                    <small *ngIf="!form.controls.EmergencyTypeId.valid" class="text-danger">
-                        Required.
-                    </small>
+                    
+                    <small *ngIf="form.controls.EmergencyTypeId.hasError('required')" 
+                                    [hidden]="form.controls.EmergencyTypeId.valid || (form.controls.EmergencyTypeId.pristine && !submitted)"
+                                class="text-danger">Required</small>
                 </div>
             </div>
             <div class="col-lg-3">
@@ -83,9 +89,10 @@
                     <label for="Sequence">Sequence:<span class="required">*</span></label>
                     <input id="Sequence" class="form-control" type="number" name="Sequence" formControlName="Sequence" placeholder="Enter Sequence Details"
                     />
-                    <small *ngIf="!form.controls.Sequence.valid" class="text-danger">
-                        Required.
-                    </small>
+                    
+                    <small *ngIf="form.controls.Sequence.hasError('required')" 
+                                    [hidden]="form.controls.Sequence.valid || (form.controls.Sequence.pristine && !submitted)"
+                                class="text-danger">Required</small>
                 </div>
             </div>
             <div class="col-lg-3">
@@ -105,33 +112,17 @@
                             {{organization.OrganizationCode}}
                         </option>
                     </select>
-                    <small *ngIf="form.controls.OrganizationId.hasError('required')" [hidden]="form.controls.OrganizationId.valid || (form.controls.OrganizationId.pristine && !submitted)"
-                    class="text-danger">Required</small>
+                    
+                    <small *ngIf="form.controls.OrganizationId.hasError('required')" 
+                                    [hidden]="form.controls.OrganizationId.valid || (form.controls.OrganizationId.pristine && !submitted)"
+                                class="text-danger">Required</small>
                 </div>
             </div>
             <div class="col-lg-4">
                 <div class="form-group">
                     <label for="Stations">Stations</label>
                     <input id="Stations" class="form-control" type="text" name="Stations" formControlName="Stations" placeholder="Enter Stations in comma separated format" />
-                    <!--<div class="multiselect-container">
-                        <div class="multiselect-selector" (click)="showList(); $event.stopPropagation();">
-                            <i class="fa fa-caret-down fa-pull-right fa-fw" aria-hidden="true">
-                                {{selectedcount>0 ? selectedcount
-                                    + ' Station(s) selected' : 'Select Station'}}
-                            </i>
-                        </div>
-                        <ul class="multiselect-list" [hidden]="!listSelected" (click)="$event.stopPropagation();">                            
-                            <li *ngFor="let station of AllStations">
-                                <md-checkbox formControlName="StationList" aria-label="Callback" [checked]="IsSelected"
-                                    (change)="selectStation($event,station.IATA)"></md-checkbox>
-                                <span>{{station.IATA}}</span>                            
-                            </li>
-                        </ul>
-                        <span >Please Select </span>
-                        <small *ngIf="selectedcount==0" class="text-danger">
-                            Required.
-                        </small>
-                    </div>-->
+                    
                    
                 </div>
             </div>
