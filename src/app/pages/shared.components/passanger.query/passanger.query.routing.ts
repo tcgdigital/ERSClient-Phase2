@@ -21,7 +21,7 @@ const passangerQueryComponent: Routes = [
                 component: PassangerQueryRecievedCallsListComponent
             },
             {
-                path: 'recievedCalls',
+                path: 'receivedCalls',
                 component: PassangerQueryAssignedCallsListComponent
             }]
     }];

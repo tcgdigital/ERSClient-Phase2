@@ -21,7 +21,7 @@ const cargoQueryComponent: Routes = [
                 component: CargoQueryRecievedCallsListComponent 
             },
              {
-                path: 'recievedCalls',
+                path: 'receivedCalls',
                  component: CargoQueryAssignedCallsListComponent
             }]
     }];

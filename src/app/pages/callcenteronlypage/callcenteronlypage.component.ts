@@ -92,7 +92,6 @@ export class CallCenterOnlyPageComponent implements OnInit {
     }
 
     save(): void {
-        debugger;
         this.isSubmitted = true;
         if (this.generalform.valid && ((this.pdacrewform.valid && (this.enquiryType == 1 || this.enquiryType == 3)) ||
             (this.cargoform.valid && this.enquiryType == 2) || (this.otherform.valid && this.enquiryType >= 4))) {

@@ -53,7 +53,6 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         this.Action = 'Edit';
         this.showAdd = true;
         this.showApproverDept = !this.demandTypeModel.IsAutoApproved;
-        debugger;
         delete this.demandTypeModel.ApproverDepartment;
         this.form = new FormGroup({
             DemandTypeId: new FormControl(model.DemandTypeId),
@@ -108,7 +107,6 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
     }
 
     onSubmit() {
-        debugger;
         if (this.demandTypeModel.DemandTypeId === 0) {
             if (this.form.controls['DemandTypeName'].value == '') {
                     this.toastrService.error('Please provide demand type.', 'Error', this.toastrConfig);

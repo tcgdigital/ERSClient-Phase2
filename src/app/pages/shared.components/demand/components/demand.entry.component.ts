@@ -264,29 +264,29 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     };
 
     ChangeAffectedPeople(): void {
+        this.demandModel.AffectedPersonId=this.form.controls["AffectedPersonId"].value;
         if (this.demandModel.AffectedPersonId != 0) {
-            this.form.controls["AffectedObjectId"].reset({ value: 0, disabled: true });
-            this.demandModel.AffectedPersonId=this.form.controls["AffectedPersonId"].value;
+            this.form.controls["AffectedObjectId"].reset({ value: '', disabled: true });
             this.demandModel.PDATicketNumber = this.affectedPeople
                 .find(x => x.AffectedPersonId == this.demandModel.AffectedPersonId).TicketNumber;
             this.form.controls["PDATicketNumber"].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
         }
         else {
-            this.form.controls["AffectedObjectId"].reset({ value: 0, disabled: false });
+            this.form.controls["AffectedObjectId"].reset({ value: '', disabled: false });
             this.form.controls["PDATicketNumber"].reset({ value: "", disabled: true });
         }
     };
 
     ChangeAffectedObjects(): void {
+        this.demandModel.AffectedObjectId=this.form.controls["AffectedObjectId"].value;
         if (this.demandModel.AffectedObjectId != 0) {
-            this.form.controls["AffectedPersonId"].reset({ value: 0, disabled: true });
-            this.demandModel.AffectedObjectId=this.form.controls["AffectedObjectId"].value;
+            this.form.controls["AffectedPersonId"].reset({ value: '', disabled: true });
             this.demandModel.PDATicketNumber = this.affectedObjects
                 .find(x => x.AffectedObjectId == this.demandModel.AffectedObjectId).TicketNumber;
             this.form.controls["PDATicketNumber"].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
         }
         else {
-            this.form.controls["AffectedPersonId"].reset({ value: 0, disabled: false });
+            this.form.controls["AffectedPersonId"].reset({ value: '', disabled: false });
             this.form.controls["PDATicketNumber"].reset({ value: "", disabled: true });
         }
     };
@@ -517,8 +517,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             ContactNumber: new FormControl({ value: '', disabled: false },[Validators.required]),
             ScheduleTime: new FormControl({ value: '', disabled: false }),
             RequiredLocation: new FormControl({ value: '', disabled: false },[Validators.required]),
-            AffectedPersonId: new FormControl({ value: 0, disabled: false }),
-            AffectedObjectId: new FormControl({ value: 0, disabled: false }),
+            AffectedPersonId: new FormControl({ value: '', disabled: false }),
+            AffectedObjectId: new FormControl({ value: '', disabled: false }),
             FileInputDemand: new FormControl()
         });
     };
@@ -535,8 +535,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.form.controls["ContactNumber"].reset({ value: '', disabled: false });
         this.form.controls["ScheduleTime"].reset({ value: '', disabled: false });
         this.form.controls["RequiredLocation"].reset({ value: '', disabled: false });
-        this.form.controls["AffectedPersonId"].reset({ value: 0, disabled: false });
-        this.form.controls["AffectedObjectId"].reset({ value: 0, disabled: false });
+        this.form.controls["AffectedPersonId"].reset({ value: '', disabled: false });
+        this.form.controls["AffectedObjectId"].reset({ value: '', disabled: false });
     }
 
     formControlDirtyCheck(): void {
@@ -669,13 +669,16 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             if (this.demandTypes.find(x => x.DemandTypeId == this.demandModel.DemandTypeId).IsAutoApproved) {
                 this.demandModel.IsApproved = true;
                 this.demandModel.ApproverDepartmentId = null;
+                 this.demandModel.DemandStatusDescription = 'New Request by ' + this.currentDepartmentName;
             }
             else {
                 this.demandModel.IsApproved = false;
-                this.demandModel.ApproverDepartmentId = this.demandTypes.find(x => x.DemandTypeId == this.demandModel.DemandTypeId).DepartmentId;
+                let demandtypeitem: DemandTypeModel =this.demandTypes.find(x => x.DemandTypeId == this.demandModel.DemandTypeId)
+                 this.demandModel.DemandStatusDescription = 'Pending approval from ' + demandtypeitem.ApproverDepartment.DepartmentName;
+                this.demandModel.ApproverDepartmentId = demandtypeitem.DepartmentId;
             }
             
-            this.demandModel.DemandStatusDescription = 'New Request by ' + this.currentDepartmentName;
+           
             this.demandModel.DemandCode = "DEM-" + UtilityService.UUID();
             if (this.demandModel.AffectedObjectId == 0) {
                 delete this.demandModel.AffectedObjectId;

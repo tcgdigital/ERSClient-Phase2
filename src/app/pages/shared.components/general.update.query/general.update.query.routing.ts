@@ -21,7 +21,7 @@ const GeneralUpdateQueryRoutes: Routes = [
                 component: GeneralUpdateQueryRecievedCallsListComponent
             },
             {
-                path: 'recievedCalls',
+                path: 'receivedCalls',
                 component: GeneralUpdateQueryAssignedCallsListComponent
             }]
     }];

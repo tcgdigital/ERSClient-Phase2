@@ -21,7 +21,7 @@ const crewQueryComponent: Routes = [
                 component: CrewQueryRecievedCallsListComponent
             },
             {
-                path: 'recievedCalls',
+                path: 'receivedCalls',
                 component: CrewQueryAssignedCallsListComponent
             }]
     }];

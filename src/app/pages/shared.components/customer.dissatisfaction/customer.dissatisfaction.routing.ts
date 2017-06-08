@@ -21,7 +21,7 @@ const customerDissatisfactionRoutes: Routes = [
                 component: CustomerDissatisfactionRecievedCallsListComponent
             },
             {
-                path: 'recievedCalls',
+                path: 'receivedCalls',
                 component: CustomerDissatisfactionAssignedCallsListComponent
             }]
     }];

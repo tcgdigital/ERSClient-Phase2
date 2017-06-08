@@ -21,7 +21,7 @@ const situationalUpdateQueryRoutes: Routes = [
                 component: SituationalUpdateQueryRecievedCallsListComponent
             },
             {
-                path: 'recievedCalls',
+                path: 'receivedCalls',
                 component: SituationalUpdateQueryAssignedCallsListComponent
             }]
     }];

@@ -21,7 +21,7 @@ const futureTravelQueryRoutes: Routes = [
                 component: FutureTravelQueryRecievedCallsListComponent
             },
             {
-                path: 'recievedCalls',
+                path: 'receivedCalls',
                 component: FutureTravelQueryAssignedCallsListComponent
             }]
     }];

@@ -21,7 +21,7 @@ const mediaQueryRoutes: Routes = [
                 component: MediaQueryRecievedCallsListComponent
             },
             {
-                path: 'recievedCalls',
+                path: 'receivedCalls',
                 component: MediaQueryAssignedCallsListComponent
             }]
     }];
