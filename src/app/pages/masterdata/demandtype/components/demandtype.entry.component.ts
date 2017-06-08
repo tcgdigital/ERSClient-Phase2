@@ -46,17 +46,20 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
     }
 
     onDemandTypeUpdate(model: DemandTypeModel): void {
-        this.getAllDepartments();
+      //  this.getAllDepartments();
         this.demandTypeModel = model;
         this.demandTypeModel.DepartmentId = model.DepartmentId;
+        let approverDept = this.demandTypeModel.IsAutoApproved ? '' : model.DepartmentId.toString();
         this.Action = 'Edit';
         this.showAdd = true;
+        this.showApproverDept = !this.demandTypeModel.IsAutoApproved;
+        debugger;
         delete this.demandTypeModel.ApproverDepartment;
         this.form = new FormGroup({
-            DemandTypeId: new FormControl(model.DepartmentId),
+            DemandTypeId: new FormControl(model.DemandTypeId),
             DemandTypeName: new FormControl(this.demandTypeModel.DemandTypeName, [Validators.required, Validators.maxLength(50)]),
             IsAutoApproved: new FormControl(this.demandTypeModel.IsAutoApproved),
-            ApproverDept: new FormControl(this.demandTypeModel.DepartmentId, [Validators.required])
+            ApproverDept: new FormControl(approverDept, [Validators.required])
         });
     }
 
@@ -105,6 +108,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
     }
 
     onSubmit() {
+        debugger;
         if (this.demandTypeModel.DemandTypeId === 0) {
             if (this.form.controls['DemandTypeName'].value == '') {
                     this.toastrService.error('Please provide demand type.', 'Error', this.toastrConfig);
@@ -139,7 +143,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         }
         else {
             this.formControlDirtyCheck();
-            this.demandTypeService.Update(this.demandTypeModelToEdit)
+            this.demandTypeService.Update(this.demandTypeModelToEdit,this.demandTypeModelToEdit.DemandTypeId)
                 .subscribe((response: DemandTypeModel) => {
                     this.toastrService.success('Demand Edited Successfully.', 'Success', this.toastrConfig);
                     this.resetDemandTypeForm();
@@ -161,13 +165,13 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         this.demandTypeModelToEdit.DemandTypeId = this.form.controls['DemandTypeId'].value;
 
         if (this.form.controls['DemandTypeName'].touched) {
-            this.demandTypeModelToEdit.DemandTypeName = this.form.controls['Priority'].value;
+            this.demandTypeModelToEdit.DemandTypeName = this.form.controls['DemandTypeName'].value;
         }
         if (this.form.controls['IsAutoApproved'].touched) {
-            this.demandTypeModelToEdit.IsAutoApproved = this.form.controls['DemandDesc'].value;
+            this.demandTypeModelToEdit.IsAutoApproved = this.form.controls['IsAutoApproved'].value;
         }
         if (this.form.controls['ApproverDept'].touched) {
-            this.demandTypeModelToEdit.ApproverDepartment = this.form.controls['RequestedBy'].value;
+            this.demandTypeModelToEdit.DepartmentId = +this.form.controls['ApproverDept'].value;
         }
     }
 

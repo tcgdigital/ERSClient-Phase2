@@ -6,9 +6,9 @@ import { CustomerDissatisfactionAssignedCallsListComponent, CustomerDissatisfact
 
 
 const customerDissatisfactionRoutes: Routes = [
-    
+
     {
-       
+
         path: '',
         component: CustomerDissatisfactionComponent,
         children: [
@@ -16,15 +16,15 @@ const customerDissatisfactionRoutes: Routes = [
                 path: '',
                 component: CustomerDissatisfactionAssignedCallsListComponent
             },
-             {
-                 path: 'assignedcalls',
-                component: CustomerDissatisfactionAssignedCallsListComponent
+            {
+                path: 'assignedcalls',
+                component: CustomerDissatisfactionRecievedCallsListComponent
             },
-             {
+            {
                 path: 'recievedCalls',
-                 component: CustomerDissatisfactionRecievedCallsListComponent
+                component: CustomerDissatisfactionAssignedCallsListComponent
             }]
     }];
 
-export const  CustomerDissatisfactionRoutesRouting: ModuleWithProviders
+export const CustomerDissatisfactionRoutesRouting: ModuleWithProviders
     = RouterModule.forChild(customerDissatisfactionRoutes);

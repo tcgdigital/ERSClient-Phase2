@@ -6,9 +6,9 @@ import { FutureTravelQueryAssignedCallsListComponent, FutureTravelQueryRecievedC
 
 
 const futureTravelQueryRoutes: Routes = [
-    
+
     {
-       
+
         path: '',
         component: FutureTravelQueryComponent,
         children: [
@@ -16,15 +16,15 @@ const futureTravelQueryRoutes: Routes = [
                 path: '',
                 component: FutureTravelQueryAssignedCallsListComponent
             },
-             {
-                 path: 'assignedcalls',
-                component: FutureTravelQueryAssignedCallsListComponent
+            {
+                path: 'assignedcalls',
+                component: FutureTravelQueryRecievedCallsListComponent
             },
-             {
+            {
                 path: 'recievedCalls',
-                 component: FutureTravelQueryRecievedCallsListComponent
+                component: FutureTravelQueryAssignedCallsListComponent
             }]
     }];
 
-export const  FutureTravelQueryRouting: ModuleWithProviders
+export const FutureTravelQueryRouting: ModuleWithProviders
     = RouterModule.forChild(futureTravelQueryRoutes);

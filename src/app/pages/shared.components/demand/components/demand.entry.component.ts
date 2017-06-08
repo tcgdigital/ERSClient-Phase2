@@ -124,7 +124,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     getDemandType(): void {
         this.demandTypeService.GetAll()
             .subscribe((response: ResponseModel<DemandTypeModel>) => {
-                this.demandTypes = response.Records;
+                this.demandTypes = response.Records.filter(x=>x.ActiveFlag=='Active');
                 this.demandModel.DemandTypeId = (this.demandModel.DemandTypeId == 0)
                     ? this.demandTypes[0].DemandTypeId
                     : this.demandModel.DemandTypeId;

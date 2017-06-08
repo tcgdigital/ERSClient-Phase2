@@ -6,9 +6,9 @@ import { CrewQueryAssignedCallsListComponent, CrewQueryRecievedCallsListComponen
 
 
 const crewQueryComponent: Routes = [
-    
+
     {
-       
+
         path: '',
         component: CrewQueryComponent,
         children: [
@@ -16,15 +16,15 @@ const crewQueryComponent: Routes = [
                 path: '',
                 component: CrewQueryAssignedCallsListComponent
             },
-             {
-                 path: 'assignedcalls',
-                component: CrewQueryAssignedCallsListComponent
+            {
+                path: 'assignedcalls',
+                component: CrewQueryRecievedCallsListComponent
             },
-             {
+            {
                 path: 'recievedCalls',
-                 component: CrewQueryRecievedCallsListComponent
+                component: CrewQueryAssignedCallsListComponent
             }]
     }];
 
-export const  CrewQueryRouting: ModuleWithProviders
+export const CrewQueryRouting: ModuleWithProviders
     = RouterModule.forChild(crewQueryComponent);

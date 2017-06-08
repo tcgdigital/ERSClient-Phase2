@@ -104,7 +104,7 @@ export class AffectedPeopleListComponent implements OnInit {
                 if (affectedModifiedForm.PassengerId != null && affectedModifiedForm.PassengerId != 0 && affectedModifiedForm.PassengerId != undefined) {
                     this.passengerUpdate(pasengerModel, this.affectedPersonToUpdate.PassengerId);
                 }
-                this.toastrService.success('Adiitional Information updated.')
+                this.toastrService.success('Aditional Information updated.')
                 this.getAffectedPeople(this.currentIncident);
                 affectedModifiedForm["MedicalStatusToshow"] = affectedModifiedForm.MedicalStatus;
                 let num = UtilityService.UUID();
