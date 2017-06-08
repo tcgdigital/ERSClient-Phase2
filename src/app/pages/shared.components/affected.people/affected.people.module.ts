@@ -12,6 +12,7 @@ import {
     AffectedPeopleVerificationComponent
 } from './components';
 import { InvolvePartyService } from '../involveparties';
+import { CallerService } from '../caller';
 //import { EnquiryService } from '../call.centre';
 import { SharedModule, DataExchangeService } from '../../../shared';
 import { ModalModule} from 'ng2-bootstrap/modal';
@@ -37,7 +38,8 @@ import { ModalModule} from 'ng2-bootstrap/modal';
     providers: [
         AffectedPeopleService,
         DataExchangeService,
-        InvolvePartyService
+        InvolvePartyService,
+        CallerService
       //  EnquiryService
     ]
 })

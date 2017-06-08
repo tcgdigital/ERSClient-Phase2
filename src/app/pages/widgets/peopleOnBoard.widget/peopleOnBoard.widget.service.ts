@@ -79,7 +79,6 @@ export class PeopleOnBoardWidgetService implements OnInit {
                 let cargoListLocal: CargoModel[] = [];                
                 
                 cargoListLocal = dataTotalAffectedCargo.Records[0].Flights[0].Cargoes;
-                debugger;
                 
 
                 this.peopleOnBoard.totalAffectedCargoCount = isNaN(cargoListLocal.length) ? 0 : cargoListLocal.length;

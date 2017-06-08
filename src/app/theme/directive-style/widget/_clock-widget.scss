@@ -21,9 +21,9 @@
 .clock-text {
     text-transform: uppercase;
     font-family: $font-family-widget;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: bold;
-    background-color: $clock-widget-title;
+    background-color: none;
     padding: 5px;
     border-top: 1px solid $clock-widget-border;
     border-bottom: 1px solid $clock-widget-border;

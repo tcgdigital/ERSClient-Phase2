@@ -34,6 +34,7 @@ export class PagesComponent implements OnInit {
     lastLogin: Date;
     userId: number;
     private sub: any;
+    isLanding : boolean = false;
 
     /**
      * Creates an instance of PagesComponent.
@@ -137,21 +138,6 @@ export class PagesComponent implements OnInit {
                     UtilityService.SetToSession({ CurrentDepartmentId: this.currentDepartmentId });
                 }
         });
-
-// this.departmentService.GetAll()
-// .map((x: ResponseModel<DepartmentModel>) => x.Records.sort((a, b) => {
-// if (a.DepartmentName < b.DepartmentName) return -1;
-// if (a.DepartmentName > b.DepartmentName) return 1;
-// return 0;
-// })).subscribe((x: DepartmentModel[]) => {
-// this.departments = x.map((y: DepartmentModel) => new KeyValue(y.DepartmentName, y.DepartmentId));
-// if (this.departments.length > 0) {
-// this.currentDepartmentId = this.departments[0].Value;
-// console.log(this.currentDepartmentId);
-// UtilityService.SetToSession({ CurrentDepartmentId: this.currentDepartmentId });
-// }
-//});
-
     }
 
     private getIncidents(): void {
@@ -162,10 +148,14 @@ export class PagesComponent implements OnInit {
                 return dateA > dateB ? 1 : -1;
             })).subscribe((x: IncidentModel[]) => {
                 this.incidents = x.map((y: IncidentModel) => new KeyValue(y.EmergencyName, y.IncidentId));
-                if (this.departments.length > 0) {
+                if (this.incidents.length > 0) {
                     this.currentIncidentId = this.incidents[0].Value;
                     console.log(this.currentIncidentId);
                     UtilityService.SetToSession({ CurrentIncidentId: this.currentIncidentId });
+                    this.isLanding=false;
+                }
+                else{
+                    this.isLanding=true;
                 }
             });
     }

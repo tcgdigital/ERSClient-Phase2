@@ -22,7 +22,8 @@ import * as _ from 'underscore';
 @Component({
     selector: 'peopleOnBoard-widget',
     templateUrl: './peopleOnBoard.widget.view.html',
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+     styleUrls: ['./peopleOnBoard.widget.style.scss']
 })
 export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
     @Input('initiatedDepartmentId') initiatedDepartmentId: number;
@@ -287,7 +288,6 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
     private openAllCargoDetails(): void {            
         const involvedParties: InvolvePartyModel[] = [];
         let cargoListLocal: CargoModel[] = [];
-        debugger;
         this.peopleOnBoardWidgetService.GetAllCargosByIncident(this.currentIncidentId)
         .subscribe((result: ResponseModel<InvolvePartyModel>) => {
             cargoListLocal = result.Records[0].Flights[0].Cargoes;                        

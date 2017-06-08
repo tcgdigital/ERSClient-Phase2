@@ -1,5 +1,7 @@
 <div class="card card-without-top-border noBorder">
-   <div *ngIf="!isArchive"> <demand-entry></demand-entry></div>
+    <div *ngIf="!isArchive">
+        <demand-entry></demand-entry>
+    </div>
     <div class="card-block">
         <responsive-table>
             <table responsive-table-body>
@@ -25,7 +27,8 @@
                     </tr>
                     <tr *ngFor="let demand of mydemands">
                         <td data-title="Demand Type">{{demand.DemandTypeName}}&nbsp;</td>
-                        <td data-title="Demand Description"><i (click)="openDemandDetails(demand.DemandId)">{{demand.DemandDesc}}</i>&nbsp;<i class="fa fa-info-circle" (click)="openTrail(demand)"></i> </td>
+                        <td data-title="Demand Description"><i (click)="openDemandDetails(demand.DemandId)">{{demand.DemandDesc}}</i>&nbsp;<i class="fa fa-info-circle"
+                                (click)="openTrail(demand)"></i> </td>
                         <td data-title="Target Department">{{demand.TargetDepartmentName}}&nbsp;</td>
                         <td data-title="Priority">{{demand.Priority}}&nbsp;</td>
                         <td data-title="Schedule Time Close">{{demand.ScheduleTimeToShow}}&nbsp;</td>
@@ -112,37 +115,18 @@
                    </button>
                     </div>
                     <div class="modal-body">
-                        <div class="row modalBodyHeaderStyle">
-                            <div class="col-sm-6 form-group">
-                                <label class="lebelHeaderStyle"><strong>Demand Type Name</strong></label>
-                                <br>
-                                <label class="form-control">{{demandTypeName}}</label>
-                            </div>
-                            <div class="col-sm-6 form-group">
-                                <label class="lebelHeaderStyle"><strong>Requester Department</strong></label>
-                                <br>
-                                <label class="form-control">{{requesterDepartmentName}}</label>
-                            </div>
-                        </div>
-                        <br>
-                        <!--<div class="holderStyle">
-                             <div class="col-sm-12">
-                        <div class="col-sm-6 form-group">
-                            <label>Demand Type Name</label>
-                            <label>{{demandTypeName}}</label>
-                        </div>
-                        <div class="col-sm-6 form-group">
-                            <label>Requester Department</label>
-                            <label>{{requesterDepartmentName}}</label>
-                        </div>
-                    </div>-->
                         <responsive-table>
                             <table responsive-table-body>
                                 <tbody>
-                                    <tr *ngFor="let trail of demandTrails">
-                                        <td>
-                                            <div [innerHTML]="trail.Answers" type="text"></div>
-                                        </td>
+                                    <thead>
+                                        <th>Work Details</th>
+                                        <th>Deployed On</th>
+                                        <th>Undeployed On</th>
+                                    </thead>
+                                    <tr *ngFor="let work of memberHistory">
+                                        <td>{{work.Remarks}}</td>
+                                        <td>{{work.DeployedOn}}</td>
+                                        <td>{{work.UnDeployedOn}}</td>
                                     </tr>
                                 </tbody>
                             </table>

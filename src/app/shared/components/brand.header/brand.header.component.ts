@@ -16,6 +16,7 @@ import { GlobalConstants } from '../../constants/constants';
 export class BrandHeaderComponent implements OnInit {
     @Input() userName: string;
     @Input() lastLogin: Date;
+    @Input() isLanding : boolean;
 
     @Output() hambargerClicked: EventEmitter<any> = new EventEmitter<any>();
     @Output() contactClicked: EventEmitter<any> = new EventEmitter<any>();

@@ -8,7 +8,8 @@ import { InvolvePartyModel, CommunicationLogModel } from '../../../shared.compon
 import { InvolvePartyService } from '../../involveparties';
 //import { EnquiryService } from '../../call.centre/components/call.centre.service';
 import { EnquiryModel } from '../../call.centre/components/call.centre.model';
-import { CallerModel } from '../../caller';
+import { CallerModel, CallerService } from '../../caller';
+import { PassengerModel } from '../../passenger';
 import { NextOfKinModel } from '../../nextofkins';
 import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';
 import { AffectedPeopleService } from './affected.people.service';
@@ -41,8 +42,8 @@ export class AffectedPeopleListComponent implements OnInit {
     protected _onRouteChange: Subscription;
     isArchive: boolean = false;
     callers: CallerModel[] = [];
-    affectedPersonModel : AffectedPeopleModel = new AffectedPeopleModel();
-    nextOfKins : NextOfKinModel[] = [];
+    affectedPersonModel: AffectedPeopleModel = new AffectedPeopleModel();
+    nextOfKins: NextOfKinModel[] = [];
 
     /**
      * Creates an instance of AffectedPeopleListComponent.
@@ -54,12 +55,12 @@ export class AffectedPeopleListComponent implements OnInit {
      * 
      * @memberOf AffectedPeopleListComponent
      */
-    constructor(private affectedPeopleService: AffectedPeopleService,
+    constructor(private affectedPeopleService: AffectedPeopleService, private callerservice: CallerService,
         private involvedPartyService: InvolvePartyService, private dataExchange: DataExchangeService<number>,
         private globalState: GlobalStateService, private _router: Router, private toastrService: ToastrService,
         private toastrConfig: ToastrConfig
         //, private enquiryService: EnquiryService
-        ) { }
+    ) { }
 
     //   medicalStatusForm: string = "";
 
@@ -75,7 +76,15 @@ export class AffectedPeopleListComponent implements OnInit {
         if (affectedPerson.MedicalStatus != "NA") {
             this.affectedPersonModelForStatus["MedicalStatusToshow"] = this.medicalStatus.find(x => { return x.value == affectedPerson.MedicalStatus; }).value;
         }
-        this.childModal.show();
+        this.affectedPeopleService.GetCallerListForAffectedPerson(affectedPerson.AffectedPersonId)
+            .subscribe((response: ResponseModel<EnquiryModel>) => {
+                this.callers = response.Records.map(x => {
+                    return x.Caller;
+                });
+                this.childModal.show();
+            });
+
+
     }
 
     cancelModal() {
@@ -87,8 +96,13 @@ export class AffectedPeopleListComponent implements OnInit {
         this.affectedPersonToUpdate.Identification = affectedModifiedForm.Identification;
         this.affectedPersonToUpdate.MedicalStatus = affectedModifiedForm["MedicalStatusToshow"];
         this.affectedPersonToUpdate.Remarks = affectedModifiedForm.Remarks;
+        let pasengerModel = new PassengerModel();
+        pasengerModel.CoTravellerInformation = affectedModifiedForm.CoTravellerInformation;
         this.affectedPeopleService.Update(this.affectedPersonToUpdate)
             .subscribe((response: AffectedPeopleModel) => {
+                if (affectedModifiedForm.PassengerId != null && affectedModifiedForm.PassengerId != 0 && affectedModifiedForm.PassengerId != undefined) {
+                    this.passengerUpdate(pasengerModel, this.affectedPersonToUpdate.PassengerId);
+                }
                 this.toastrService.success('Adiitional Information updated.')
                 this.getAffectedPeople(this.currentIncident);
                 affectedModifiedForm["MedicalStatusToshow"] = affectedModifiedForm.MedicalStatus;
@@ -99,6 +113,14 @@ export class AffectedPeopleListComponent implements OnInit {
                 alert(error);
             });
     }
+
+    passengerUpdate(passenger: PassengerModel, key: number): void {
+        this.affectedPeopleService.updatePassanger(passenger, key)
+            .subscribe((response: PassengerModel) => {
+
+            });
+    }
+
 
     cancelUpdate(affectedModifiedForm: AffectedPeopleToView): void {
         this.childModal.hide();
@@ -188,35 +210,46 @@ export class AffectedPeopleListComponent implements OnInit {
                 this.callers = response.Records.map(x => {
                     return x.Caller;
                 });
-                this.callers.forEach(x=>{
+                this.callers.forEach(x => {
                     x["isnok"] = false;
                 });
-                this.childModalForCallers.show();
+                //  this.childModalForCallers.show();
             });
     }
 
-     cancelCallersModal() {
+    cancelCallersModal() {
         this.childModalForCallers.hide();
     }
 
-    saveNok(affectedpersonId) : void{
-           this.nextOfKins = this.callers.filter(x=> x.IsNok==true).map(y=>{
-               let nok = new NextOfKinModel();
-               nok.AffectedPersonId = affectedpersonId;
-               nok.AlternateContactNumber = y.AlternateContactNumber;
-               nok.CallerId = y.CallerId;
-               nok.ContactNumber = y.ContactNumber;
-               nok.IncidentId = this.currentIncident;
-               nok.NextOfKinName = y.FirstName +"  "+y.LastName;
-               nok.Relationship = y.Relationship;
-               nok.Location = y.Location;
-               return nok;
-           })
-           this.affectedPeopleService.CreateNoks(this.nextOfKins)
-         //  .flatMap(() => this.affectedPeopleService.(communicationlogToDeactivate, this.communicationlogtoupdateId))
-           .subscribe((response : NextOfKinModel[])=>{
-               this.toastrService.success('NOK created.')
-           });
-           
+    saveNok(affectedpersonId, caller: CallerModel, event: any): void {
+        if (event.checked) {
+            let nok = new NextOfKinModel();
+            nok.AffectedPersonId = affectedpersonId;
+            nok.AlternateContactNumber = caller.AlternateContactNumber;
+            nok.CallerId = caller.CallerId;
+            nok.ContactNumber = caller.ContactNumber;
+            nok.IncidentId = this.currentIncident;
+            nok.NextOfKinName = caller.FirstName + "  " + caller.LastName;
+            nok.Relationship = caller.Relationship;
+            nok.Location = caller.Location;
+            let callertoupdate = new CallerModel();
+            callertoupdate.IsNok = true;
+            callertoupdate.deleteAttributes();
+            this.affectedPeopleService.CreateNok(nok)
+                .flatMap(() => this.callerservice.Update(callertoupdate, caller.CallerId))
+                .subscribe(() => {
+                    this.toastrService.success('NOK updated.')
+                });
+        }
+        else {
+            let callertoupdate = new CallerModel();
+            callertoupdate.IsNok = false;
+            callertoupdate.deleteAttributes();
+            this.callerservice.Update(callertoupdate, caller.CallerId)
+                .subscribe(() => {
+                    this.toastrService.success('NOK updated.')
+                });
+        }
+
     }
 }

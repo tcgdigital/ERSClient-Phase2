@@ -45,6 +45,7 @@ export interface IActionableStatus {
 }
 
 export class GlobalConstants {
+    // public static EXTERNAL_URL: string = 'http://202.54.73.219:86/';
     public static EXTERNAL_URL: string = 'http://localhost:5001/';
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
     public static GRANT_TYPE: string = 'password';
@@ -300,18 +301,18 @@ export class GlobalConstants {
     public static MedicalStatus: IMedicalStatus[] = [
         {
             key: 1,
-            value: 'Minorinjurycareneeded',
-            caption: 'Minor Injury'
+            value: 'Uninjured',
+            caption: 'Uninjured'
         },
         {
             key: 2,
-            value: 'Critical',
-            caption: 'Critical'
+            value: 'Injured',
+            caption: 'Injured'
         },
         {
             key: 3,
-            value: 'Reunited',
-            caption: 'Reunited'
+            value: 'Missing',
+            caption: 'Missing'
         },
         {
             key: 4,
@@ -320,13 +321,9 @@ export class GlobalConstants {
         },
         {
             key: 5,
-            value : 'Immediatecare',
-            caption : 'Immediatecare'
-        },
-        {
-            key: 6,
-            value : 'UnidentifiedPDA',
-            caption : 'Unidentified PDA'
+            value: 'Others',
+            caption: 'Others'
+
         }
     ];
 
@@ -386,6 +383,25 @@ export class GlobalConstants {
             caption: 'Others'
         }
     ];
+
+    public static CargoStatus: IMedicalStatus[] = [
+        {
+            key: 1,
+            value: 'Missing',
+            caption: 'Missing'
+        },
+        {
+            key: 2,
+            value: 'Found',
+            caption: 'Found'
+        },
+        {
+            key: 3,
+            value: 'Others',
+            caption: 'Others'
+        }
+    ];
+
 }
 
 export enum DataModels {

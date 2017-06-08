@@ -33,6 +33,9 @@
     border:$entryholder-color solid 1px;
     float: left;
     margin: 15px 23px;
+    @media screen and (max-width: $resMD-S){
+margin: 15px 1.5%;
+}
 }
 
 .addbuttonHolder{
@@ -54,7 +57,7 @@
 }
 
 .modalBodyHeaderStyle {
-    background-color: #ccc;
+    background-color: #e8e5e5;
     padding: 5px;
 }
 

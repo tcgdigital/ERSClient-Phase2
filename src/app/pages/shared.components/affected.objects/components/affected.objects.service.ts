@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Rx';
 import { IAffectedObjectsService } from './IAffectedObjectsService';
 import { InvolvePartyModel, AffectedModel } from '../../../shared.components';
 import { AffectedObjectModel, AffectedObjectsToView } from './affected.objects.model';
+import { EnquiryModel } from '../../call.centre';
 import {
     ResponseModel, DataService,
     DataServiceFactory, DataProcessingService,
@@ -14,7 +15,8 @@ import {
 export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> implements IAffectedObjectsService {
     // private _dataService: DataService<InvolvePartyModel>;
     private _bulkDataService: DataService<AffectedObjectModel>;
-    private _dataServiceForCargo : DataService<AffectedObjectModel>;
+    private _dataServiceForCargo: DataService<AffectedObjectModel>;
+    private _enquiryService: DataService<EnquiryModel>;
 
     constructor(private dataServiceFactory: DataServiceFactory) {
         super(dataServiceFactory, 'InvolvedParties');
@@ -22,8 +24,10 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
         let option: DataProcessingService = new DataProcessingService();
         this._bulkDataService = this.dataServiceFactory
             .CreateServiceWithOptions<AffectedObjectModel>('AffectedObjectBatch', option);
-       this._dataServiceForCargo = this.dataServiceFactory.CreateServiceWithOptions<AffectedObjectModel>('AffectedObjects',option);
-        
+        this._dataServiceForCargo = this.dataServiceFactory.CreateServiceWithOptions<AffectedObjectModel>('AffectedObjects', option);
+        this._enquiryService = dataServiceFactory
+            .CreateServiceWithOptions<EnquiryModel>('Enquiries', option);
+
     }
 
     GetAll(): Observable<ResponseModel<InvolvePartyModel>> {
@@ -59,6 +63,13 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
                     item.mftwgt = data.Cargo.mftwgt;
                     item.IsVerified = data.IsVerified;
                     item.Details = data.Cargo.Details;
+                    item.LostFoundStatus = data.LostFoundStatus;
+                    item.ShipperName = data.Cargo.ShipperName;
+                    item.ShipperAddress = data.Cargo.ShipperAddress;
+                    item.ShipperContactNo = data.Cargo.ShipperContactNo;
+                    item.ConsigneeName = data.Cargo.ConsigneeName;
+                    item.ConsigneeAddress = data.Cargo.ConsigneeAddress;
+                    item.ConsigneeContactNo = data.Cargo.ConsigneeContactNo;
                     // item.CommunicationLogs: data.CommunicationLogs
                     return item;
                 });
@@ -73,7 +84,7 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
     }
 
     MapAffectedPeopleToSave(affectedObjectsForVerification): AffectedObjectModel[] {
-        let verifiedAffectedObjects: AffectedObjectModel[] =[];
+        let verifiedAffectedObjects: AffectedObjectModel[] = [];
         verifiedAffectedObjects = affectedObjectsForVerification.map(function (affected) {
             let item = new AffectedObjectModel;
             item.AffectedObjectId = affected.AffectedObjectId;
@@ -88,10 +99,22 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
         return verifiedAffectedObjects;
     }
 
-     public GetCommunicationByAWB(id: number): Observable<ResponseModel<AffectedObjectModel>> {
+    public GetCommunicationByAWB(id: number): Observable<ResponseModel<AffectedObjectModel>> {
         return this._dataServiceForCargo.Query()
             .Filter(`AffectedObjectId eq ${id}`)
             .Expand('Cargo,CommunicationLogs')
             .Execute();
     }
+
+    public UpdateStatus(entity: AffectedObjectModel, key?: number): Observable<AffectedObjectModel> {
+        return this._dataServiceForCargo.Patch(entity, key.toString()).Execute();
+    }
+
+    public GetCallerListForAffectedObject(affectedObjectId: number): Observable<ResponseModel<EnquiryModel>> {
+        return this._enquiryService.Query()
+            .Filter(`AffectedObjectId eq ${affectedObjectId}`)
+            .Expand(`Caller`)
+            .Execute();
+    }
+
 }

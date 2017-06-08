@@ -1,16 +1,21 @@
 @import '../../config/config';
 .widget-container {
     @include box-shadow(0px, 3px, 5px, 0, $header-shadow);
-    background-color: $summary-widget-bg;
+    background-color: $summary-widget-bg1;
+    color:#fff;
     height: 92px;
 }
+
+incident-header-widget .widget-container{height: auto;}
+
+incident-header-widget a{ font-size: 12px;}
 
 .widget-title {
     text-transform: uppercase;
     font-family: $font-family-widget;
     font-size: $font-size-below-normal;
     font-weight: $font-weight-bold;
-    background-color: $summary-widget-title;
+    background-color: none;
     padding: 2px;
     border-bottom: 1px solid $summary-widget-title-border;
     span {
@@ -62,6 +67,8 @@
     padding-right: 0 !important;
     padding-top: 15px !important;
 }
+
+
 
 .statusRed, .statusGreen, .statusAmber {
     border-radius: 20px;
