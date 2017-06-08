@@ -6,9 +6,9 @@ import { MediaQueryAssignedCallsListComponent, MediaQueryRecievedCallsListCompon
 
 
 const mediaQueryRoutes: Routes = [
-    
+
     {
-       
+
         path: '',
         component: MediaQueryComponent,
         children: [
@@ -16,15 +16,15 @@ const mediaQueryRoutes: Routes = [
                 path: '',
                 component: MediaQueryAssignedCallsListComponent
             },
-             {
-                 path: 'assignedcalls',
-                component: MediaQueryAssignedCallsListComponent
+            {
+                path: 'assignedcalls',
+                component: MediaQueryRecievedCallsListComponent
             },
-             {
-                path: 'recievedCalls',
-                 component: MediaQueryRecievedCallsListComponent
+            {
+                path: 'receivedCalls',
+                component: MediaQueryAssignedCallsListComponent
             }]
     }];
 
-export const  MediaQueryRouting: ModuleWithProviders
+export const MediaQueryRouting: ModuleWithProviders
     = RouterModule.forChild(mediaQueryRoutes);
