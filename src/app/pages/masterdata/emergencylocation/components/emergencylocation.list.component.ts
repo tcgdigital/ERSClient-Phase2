@@ -28,12 +28,12 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.getAllEmergencyLocations();
         this.initiateSearchConfigurations();
-        this.dataExchange.Subscribe("EmergencyLocationModelEntry", model => {                        
-            let existingItemIndex = this.emergencyLocations.findIndex(a=>a.EmergencyLocationId == model.EmergencyLocationId);
-            if(existingItemIndex < 0)
-                this.emergencyLocations.unshift(model);
-            else                
-                this.emergencyLocations[existingItemIndex] = model;
+        this.dataExchange.Subscribe("EmergencyLocationModelSaved", model => {                                
+            this.emergencyLocations.unshift(model);            
+        }); 
+
+        this.dataExchange.Subscribe("EmergencyLocationModelUpdated", model => {                                
+            this.getAllEmergencyLocations();            
         }); 
 
         this.dataExchange.Subscribe("FileUploadedSuccessfully", ()=> {
@@ -42,11 +42,13 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy():void {
-        this.dataExchange.Unsubscribe("EmergencyLocationModelEntry");
+        this.dataExchange.Unsubscribe("FileUploadedSuccessfully");
+        this.dataExchange.Unsubscribe("EmergencyLocationModelSaved");
+        this.dataExchange.Unsubscribe("EmergencyLocationModelUpdated");
     }
 
     getAllEmergencyLocations(): void {
-        this.emergencyLocationService.GetAll()
+        this.emergencyLocationService.GetAllEmergencyLocations()
         .subscribe((response: ResponseModel<EmergencyLocationModel>) => {     
             this.emergencyLocations = response.Records;
             this.emergencyLocations.forEach(x=>{
@@ -85,8 +87,7 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
             this.emergencyLocationPatch.ActiveFlag = 'InActive'
         this.emergencyLocationService.Update(this.emergencyLocationPatch)
             .subscribe((response: EmergencyLocationModel) => {                
-                let existingIndex = this.emergencyLocations.findIndex(a=>a.EmergencyLocationId == response.EmergencyLocationId);
-                this.emergencyLocations[existingIndex] = response;
+                this.getAllEmergencyLocations();
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
