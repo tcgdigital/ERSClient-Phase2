@@ -24,7 +24,7 @@ import { LayoutPaths } from './shared/constants';
         RAGScaleService
     ],
     templateUrl: './app.view.html',
-    styleUrls:['./app.style.scss']
+    styleUrls: ['./app.style.scss']
 })
 export class AppComponent implements OnInit {
     isMenuCollapsed: boolean = false;
@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
         private menuService: SideMenuService,
         private ragScaleService:RAGScaleService
     ) {
-        this.menuService.updateMenuByRoutes(<Routes>MENU);
+        this.menuService.updateMenuByRoutes(MENU as Routes);
         this.LoadImages();
 
         this.globalState.Subscribe('menu.isCollapsed', (isCollapsed) => {

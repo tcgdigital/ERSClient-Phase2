@@ -1,6 +1,6 @@
 import { IMenuItem } from '../shared/components/sidemenu';
 
-export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
+export const PAGES_MENU: IMenuItem[] = [
     {
         path: 'pages',
         children: [
@@ -128,7 +128,7 @@ export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
             }
         ]
     }
-];
+] as IMenuItem[];
 
 
 /*export const PAGES_MENU: IMenuItem[] = <IMenuItem[]>[
