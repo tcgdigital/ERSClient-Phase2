@@ -6,6 +6,7 @@ import { BaseModel, ResponseModel, WEB_METHOD, RequestModel } from '../../models
 import { ODataKeyConfig } from './odata.keyconfig';
 import { GlobalConstants } from '../../constants';
 import { UtilityService } from '../common.service';
+import * as jstz from 'jstimezonedetect';
 
 @Injectable()
 export class DataProcessingService {
@@ -89,10 +90,8 @@ export class DataProcessingService {
      * @memberOf DataProcessingService
      */
     public SetRequestOptions(requestType: WEB_METHOD, headers: Headers, params?: URLSearchParams): RequestOptions {
-        const _headers: Headers = new Headers({
-            'Content-Type': 'application/json; charset=utf-8; odata.metadata=none',
-            'Accept': 'application/json; charset=utf-8; odata.metadata=none'
-        });
+        const _headers: Headers = new Headers(this.RequestHeader);
+        // _headers.set('TimeZone', jstz.determine().name());
 
         const token: string = UtilityService.GetFromSession('access_token');
         if (token !== '' && requestType !== WEB_METHOD.SIMPLEPOST && !this.SkipAuthentication) {
@@ -100,10 +99,16 @@ export class DataProcessingService {
                 headers.set('Authorization', `Bearer ${token}`);
             else
                 headers = new Headers({ Authorization: `Bearer ${token}` });
+            headers.set('TimeZone', jstz.determine().name());
         }
 
-        const finalHeaders = Object.assign<Headers, Headers>(_headers, headers);
+        // const finalHeaders: Headers = _headers;
+        const finalHeaders: Headers = Object.assign<Headers, Headers>(_headers, headers);
+        // for (const key of headers.keys()) {
+        //     finalHeaders.set(key, headers.get(key));
+        // }
 
+        // finalHeaders.set('TimeZone', jstz.determine().name());
         const requestOptions: RequestOptions = new RequestOptions({
             headers: finalHeaders
         });

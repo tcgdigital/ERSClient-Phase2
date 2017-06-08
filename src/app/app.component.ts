@@ -19,7 +19,7 @@ import { LayoutPaths } from './shared/constants';
     encapsulation: ViewEncapsulation.None,
     
     templateUrl: './app.view.html',
-    styleUrls:['./app.style.scss']
+    styleUrls: ['./app.style.scss']
 })
 export class AppComponent implements OnInit {
     isMenuCollapsed: boolean = false;
@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
         private spinner: ThemeSpinnerService,
         private menuService: SideMenuService
     ) {
-        this.menuService.updateMenuByRoutes(<Routes>MENU);
+        this.menuService.updateMenuByRoutes(MENU as Routes);
         this.LoadImages();
 
         this.globalState.Subscribe('menu.isCollapsed', (isCollapsed) => {

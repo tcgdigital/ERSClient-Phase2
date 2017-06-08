@@ -3,7 +3,7 @@ import {
     OnInit, OnDestroy, AfterContentInit, ViewChild
 } from '@angular/core';
 import {
-    FormGroup, FormControl, FormBuilder, 
+    FormGroup, FormControl, FormBuilder,
     AbstractControl, Validators, ReactiveFormsModule
 } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
@@ -46,7 +46,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
     objFileData: FileData;
     form: FormGroup;
     disableUploadButton: boolean;
-  
+
 
     constructor(formBuilder: FormBuilder,
         private fileUploadService: FileUploadService,
@@ -58,9 +58,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        //this.DepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-	    //this.IncidentId = +UtilityService.GetFromSession("CurrentIncidentId");       
-        this.disableUploadButton = true;          
+        this.disableUploadButton = true;
         this.initiateForm();
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
@@ -71,54 +69,46 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
         this.globalState.Unsubscribe('departmentChange');
     }
 
-    reset(): void{
-        this.inputFilePax.nativeElement.value = "";
-        this.inputFileCrew.nativeElement.value = "";
-        this.inputFileCargo.nativeElement.value = "";
+    reset(): void {
+        this.inputFilePax.nativeElement.value = '';
+        this.inputFileCrew.nativeElement.value = '';
+        this.inputFileCargo.nativeElement.value = '';
     }
 
     uploadFiles(): void {
-        if(this.inputFilePax.nativeElement.value!=="" || this.inputFileCrew.nativeElement.value !== "" || this.inputFileCargo.nativeElement.value != "")
-        {
+        if (this.inputFilePax.nativeElement.value !== '' || this.inputFileCrew.nativeElement.value !== '' || this.inputFileCargo.nativeElement.value !== '') {
             this.disableUploadButton = false;
-            let baseUrl = GlobalConstants.EXTERNAL_URL;
-            let param = "IncidentId=" + this.IncidentId + "&CreatedBy=" + this.CreatedBy;
-            
-            this.fileUploadService.uploadFiles<string>(baseUrl + "./api/MasterDataUploadBatch?" + param, this.filesToUpload)
-                .subscribe((result: any) => {                
-                    console.log("success");
-                    this.toastrService.success('Uploaded Data is processed successfully.' + '\n' 
-                        + 'To check any invalid records, please refer \"View Invalid Records\" link for the current timestamp.', 'Success', this.toastrConfig);
-                    
+            const baseUrl = GlobalConstants.EXTERNAL_URL;
+            const param = 'IncidentId=' + this.IncidentId + '&CreatedBy=' + this.CreatedBy;
+
+            this.fileUploadService.uploadFiles<string>(baseUrl + './api/MasterDataUploadBatch?' + param, this.filesToUpload)
+                .subscribe((result: any) => {
+                    console.log('success');
+                    this.toastrService.success('Uploaded Data is processed successfully.' + '\n'
+                        + 'To check any invalid records, please refer \'View Invalid Records\' link for the current timestamp.', 'Success', this.toastrConfig);
+
                     this.form.reset();
                     this.disableUploadButton = true;
-                    
-                }, (error) => {                 
+
+                }, (error) => {
                     console.log(`Error: ${error}`);
                 });
         }
-        else
-        {
+        else {
             this.disableUploadButton = true;
         }
     }
 
-    private initiateForm(): void {        
-        this.form = new FormGroup({
-            filePax: new FormControl(),
-            fileCrew: new FormControl(),
-            fileCargo: new FormControl()            
-        });
-    }
+
 
     getFileDetails(e: any, type: string): void {
         this.disableUploadButton = false;
         this.filesToUpload = [];
 
-        for (var i = 0; i < e.target.files.length; i++) {
-            var extension = e.target.files[i].name.split('.').pop();
+        for (let i = 0; i < e.target.files.length; i++) {
+            const extension = e.target.files[i].name.split('.').pop();
 
-            if (extension.toLowerCase() == "xls" || extension.toLowerCase() == "xlsx") {
+            if (extension.toLowerCase() === 'xls' || extension.toLowerCase() === 'xlsx') {
                 this.objFileData = new FileData();
                 this.objFileData.field = type;
                 this.objFileData.file = e.target.files[i];
@@ -129,15 +119,15 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
 
     openPassenger(): void {
         this.validPassengersModal.show();
-        this.dataExchange.Publish("OpenPassengers", true);
+        this.dataExchange.Publish('OpenPassengers', true);
     }
     closePassenger(): void {
-        this.validPassengersModal.hide();        
+        this.validPassengersModal.hide();
     }
 
     openCrew(): void {
         this.validCrewModal.show();
-        this.dataExchange.Publish("OpenCrews", true);
+        this.dataExchange.Publish('OpenCrews', true);
     }
     closeCrew(): void {
         this.validCrewModal.hide();
@@ -145,7 +135,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
 
     openCargo(): void {
         this.validCargoModal.show();
-        this.dataExchange.Publish("OpenCargoes", true);
+        this.dataExchange.Publish('OpenCargoes', true);
     }
     closeCargo(): void {
         this.validCargoModal.hide();
@@ -153,7 +143,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
 
     openInvalidPax(): void {
         this.invalidPassengersModal.show();
-        this.dataExchange.Publish("OpenInvalidPassengers", true);
+        this.dataExchange.Publish('OpenInvalidPassengers', true);
     }
     closeInvalidPax(): void {
         this.invalidPassengersModal.hide();
@@ -161,15 +151,15 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
 
     openInvalidCrew(): void {
         this.invalidCrewModal.show();
-        this.dataExchange.Publish("OpenInvalidCrews", true);
+        this.dataExchange.Publish('OpenInvalidCrews', true);
     }
     closeInvalidCrew(): void {
-        this.invalidCrewModal.hide();        
+        this.invalidCrewModal.hide();
     }
 
     openInvalidCargo(): void {
         this.invalidCargoModal.show();
-        this.dataExchange.Publish("OpenInvalidCargoes", true);
+        this.dataExchange.Publish('OpenInvalidCargoes', true);
     }
     closeInvalidCargo(): void {
         this.invalidCargoModal.hide();
@@ -177,9 +167,17 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
 
     private incidentChangeHandler(incident: KeyValue): void {
         this.IncidentId = incident.Value;
-    };
+    }
 
     private departmentChangeHandler(department: KeyValue): void {
         this.DepartmentId = department.Value;
-    };
+    }
+
+    private initiateForm(): void {
+        this.form = new FormGroup({
+            filePax: new FormControl(),
+            fileCrew: new FormControl(),
+            fileCargo: new FormControl()
+        });
+    }
 }

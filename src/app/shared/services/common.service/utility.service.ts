@@ -1,6 +1,6 @@
 import { URLSearchParams } from '@angular/http';
 import { FormGroup } from '@angular/forms';
-import { KeyValue, BaseModel } from '../../models';
+import { KeyValue, BaseModel, LicenseInformationModel} from '../../models';
 import * as jwtDecode from 'jwt-decode';
 import { GlobalConstants } from '../../constants';
 import { AuthModel } from '../../models';
@@ -8,7 +8,6 @@ import * as moment from 'moment/moment';
 import { RAGScaleModel } from "../../../pages/shared.components";
 import { Observable } from 'rxjs/Rx';
 import {
-
     DemandRaisedModel,
     AllDeptDemandRaisedSummary,
     SubDeptDemandRaisedSummary
@@ -25,6 +24,7 @@ export class UtilityService {
     private static ARGUMENT_NAMES: RegExp = /([^\s,]+)/g;
     private static CACHE_PROPERTY: string = '__paramNames';
     public static RAGScaleData: RAGScaleModel[] = [];
+    public static licenseInfo: LicenseInformationModel;
     public static IsEmptyObject = (obj: {}): boolean => Object.keys(obj).length === 0 && obj.constructor === Object;
 
     public static IsEmptyArray = (obj: any[]): boolean => obj.length > 0 && obj[0] !== null;
