@@ -17,6 +17,7 @@ export class PageHeaderComponent implements AfterContentInit {
     @Input() incidents: KeyValue[];
     @Input() currentDepartmentId: number = 0;
     @Input() currentIncidentId: number = 0;
+    @Input() isLanding : boolean;
 
     @Output() toggleSideMenu: EventEmitter<any> = new EventEmitter<any>();
     @Output() contactClicked: EventEmitter<any> = new EventEmitter<any>();

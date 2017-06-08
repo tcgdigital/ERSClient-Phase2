@@ -76,6 +76,13 @@ export class GlobalConstants {
         { value: 'NonFlightRelated', key: 2 }
     ];
 
+    public static MediaReleaseStatuses: IKeyValue[] = [
+        { value: 'Saved', key: 1 },
+        { value: 'SentForApproval', key: 2 },
+        { value: 'Approved', key: 3 },
+        { value: 'Published', key: 4 }
+    ];
+
     public static ActiveFlag: IKeyValue[] = [
         { value: 'Active', key: 0 },
         { value: 'InActive', key: 1 }
@@ -294,18 +301,18 @@ export class GlobalConstants {
     public static MedicalStatus: IMedicalStatus[] = [
         {
             key: 1,
-            value: 'Minorinjurycareneeded',
-            caption: 'Minor Injury'
+            value: 'Uninjured',
+            caption: 'Uninjured'
         },
         {
             key: 2,
-            value: 'Critical',
-            caption: 'Critical'
+            value: 'Injured',
+            caption: 'Injured'
         },
         {
             key: 3,
-            value: 'Reunited',
-            caption: 'Reunited'
+            value: 'Missing',
+            caption: 'Missing'
         },
         {
             key: 4,
@@ -314,13 +321,9 @@ export class GlobalConstants {
         },
         {
             key: 5,
-            value : 'Immediatecare',
-            caption : 'Immediatecare'
-        },
-        {
-            key: 6,
-            value : 'UnidentifiedPDA',
-            caption : 'Unidentified PDA'
+            value: 'Others',
+            caption: 'Others'
+
         }
     ];
 
@@ -380,6 +383,25 @@ export class GlobalConstants {
             caption: 'Others'
         }
     ];
+
+    public static CargoStatus: IMedicalStatus[] = [
+        {
+            key: 1,
+            value: 'Missing',
+            caption: 'Missing'
+        },
+        {
+            key: 2,
+            value: 'Found',
+            caption: 'Found'
+        },
+        {
+            key: 3,
+            value: 'Others',
+            caption: 'Others'
+        }
+    ];
+
 }
 
 export enum DataModels {

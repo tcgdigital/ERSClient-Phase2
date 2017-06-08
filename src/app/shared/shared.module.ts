@@ -38,7 +38,8 @@ import {
 
 import {
     EmailValidator,
-    EqualPasswordsValidator
+    EqualPasswordsValidator,
+    NameValidator
 } from './validators';
 
 import {
@@ -109,7 +110,8 @@ const SHARED_SERVICES: any[] = [
 
 const SHARED_VALIDATORS: any[] = [
     EmailValidator,
-    EqualPasswordsValidator
+    EqualPasswordsValidator,
+    NameValidator
 ];
 
 const SHARED_CONSTANTS: any[] = [

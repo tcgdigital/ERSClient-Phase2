@@ -5,6 +5,7 @@ import { InvolvePartyModel, AffectedModel } from '../../../shared.components';
 import { EnquiryModel } from '../../call.centre';
 import { NextOfKinModel } from '../../nextofkins';
 import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';
+import { PassengerModel } from '../../passenger/components';
 import { IAffectedPeopleService } from './IAffectedPeopleService';
 import { CasualtySummeryModel } from '../../../widgets/casualty.summary.widget/casualty.summary.widget.model';
 import {
@@ -12,6 +13,7 @@ import {
     DataServiceFactory, DataProcessingService,
     IServiceInretface, UtilityService
 } from '../../../../shared';
+import * as moment from 'moment/moment';
 import { CountOperation } from '../../../../shared/services/data.service/operations';
 
 @Injectable()
@@ -23,6 +25,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     private _casualtySummery: CasualtySummeryModel;
     private _enquiryService: DataService<EnquiryModel>;
     private _nokService: DataService<NextOfKinModel>;
+    private _passengerService : DataService<PassengerModel>;
 
     public affectedPeoples: ResponseModel<AffectedPeopleModel>;
     /**
@@ -41,8 +44,10 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
         this._enquiryService = dataServiceFactory
             .CreateServiceWithOptions<EnquiryModel>('Enquiries', option);
         this._nokService = this.dataServiceFactory
-            .CreateServiceWithOptionsAndActionSuffix<NextOfKinModel>
-            ('NextOfKinBatch', '', option);
+           .CreateServiceWithOptions<NextOfKinModel>('NextOfKins', option);
+         this._passengerService = this.dataServiceFactory
+            .CreateServiceWithOptions<PassengerModel>
+            ('Passengers', option);
 
     }
 
@@ -65,17 +70,39 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
                     item.CrewName = dataItem.Crew != null ? dataItem.Crew.CrewName : '';
                     item.CrewNameWithCategory = dataItem.Crew != null ? dataItem.Crew.CrewName + '(' + dataItem.Crew.AsgCat + ')' : '';
                     item.ContactNumber = dataItem.Passenger != null ? (dataItem.Passenger.ContactNumber == null ? 'NA' : dataItem.Passenger.ContactNumber) : (dataItem.Crew == null ? 'NA' : dataItem.Crew.ContactNumber);
+                    item.Gender = dataItem.Passenger != null ? (dataItem.Passenger.PassengerGender == null ? 'NA' : dataItem.Passenger.PassengerGender)
+                        : (dataItem.Crew == null ? 'NA' : dataItem.Crew.CrewGender);
+                    item.Nationality = dataItem.Passenger != null ? (dataItem.Passenger.PassengerNationality == null ? 'NA' : dataItem.Passenger.PassengerNationality)
+                        : (dataItem.Crew == null ? 'NA' : dataItem.Crew.CrewNationality);
+                    var now = moment(new Date());
+                    var dob = dataItem.Passenger != null ? moment(dataItem.Passenger.PassengerDob) : moment(dataItem.Crew.CrewDob);
+                    var duration = moment.duration(now.diff(dob));
+                    var age = duration.asYears();
+                    item.Age = Math.floor(age).toString();
                     item.TicketNumber = dataItem.TicketNumber;
                     item.IsVerified = dataItem.IsVerified;
                     item.IsCrew = dataItem.IsCrew;
+                    item.BaggageCount = dataItem.Passenger != null ? (dataItem.Passenger.BaggageCount == null ? 0 : dataItem.Passenger.BaggageCount) : 0;
+                    item.BaggageWeight = dataItem.Passenger != null ? (dataItem.Passenger.BaggageWeight == null ? 0 : dataItem.Passenger.BaggageWeight) : 0;
+                    item.PassengerSpecialServiceRequestCode = dataItem.Passenger != null ? (dataItem.Passenger.SpecialServiceRequestCode.trim() == null ? 'NA' : dataItem.Passenger.SpecialServiceRequestCode) : 'NA';
+                    item.PassengerEmployeeId = dataItem.Passenger != null ? (dataItem.Passenger.EmployeeId == null ? 'NA' : dataItem.Passenger.EmployeeId) : 'NA';
+                    item.CoTravellerInformation = dataItem.Passenger != null ? (dataItem.Passenger.CoTravellerInformation == null ? 'NA' : dataItem.Passenger.CoTravellerInformation) : 'NA';
+                    item.CrewIdCode = dataItem.Crew != null ? (dataItem.Crew.EmployeeNumber == null ? 'NA' : dataItem.Crew.EmployeeNumber) : 'NA';
                     item.IsStaff = dataItem.IsStaff != null ? dataItem.IsStaff : false;
                     item.MedicalStatus = dataItem.MedicalStatus != null ? dataItem.MedicalStatus : 'NA';
-                    item.Remarks = dataItem.Remarks.trim() != null ? dataItem.Remarks : 'NA';
+                    item.Remarks = dataItem.Remarks != null ? dataItem.Remarks : 'NA';
                     item.Identification = dataItem.Identification != null ? dataItem.Identification : 'NA';
                     item.SeatNo = dataItem.Passenger != null ? dataItem.Passenger.Seatno : 'No Seat Number Available';
                     // item.CommunicationLogs: dataItem.CommunicationLogs,
                     item.PaxType = dataItem.Passenger != null ? dataItem.Passenger.PassengerType : dataItem.Crew != null ? 'Crew' : '';
-                    
+                    if(dataItem.Crew)
+                    {
+                        item.CrewId = dataItem.CrewId;
+                    }
+                    if(dataItem.Passenger)
+                    {
+                        item.PassengerId = dataItem.PassengerId;
+                    }
                     item.IsNokInformed = dataItem.IsNokInformed;
                     return item;
                 });
@@ -194,7 +221,12 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
             .Expand(`Caller`)
             .Execute();
     }
-    public CreateNoks(noks: NextOfKinModel[]): Observable<NextOfKinModel[]> {
-        return this._nokService.BulkPost(noks).Execute();
+    public CreateNok(noks: NextOfKinModel): Observable<NextOfKinModel> {
+        return this._nokService.Post(noks).Execute();
+    }
+
+
+    public updatePassanger(passenger : PassengerModel,key?:number): Observable<PassengerModel> {
+     return this._passengerService.Patch(passenger, key.toString()).Execute();
     }
 }

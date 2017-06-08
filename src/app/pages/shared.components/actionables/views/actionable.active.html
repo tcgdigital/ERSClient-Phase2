@@ -22,11 +22,13 @@
                         <i class="fa fa-plus" aria-hidden="true" [hidden]="hasChildChecklist(actionable.ChklistId)==false || actionable.expanded == true"
                             (click)="openChildActionable(actionable); $event.stopPropagation();"></i>
                         <i class="fa fa-minus" aria-hidden="true" [hidden]="hasChildChecklist(actionable.ChklistId)==false || actionable.expanded == false "
-                            (click)="openChildActionable(actionable); $event.stopPropagation();"></i>                        {{actionable.Description}}
+                            (click)="openChildActionable(actionable); $event.stopPropagation();"></i>                        &nbsp;{{actionable.Description}}
                     </td>
                     <td data-title="Schedule Close Time">{{actionable.ScheduleClose | amDateFormat:'LL - HH:mm:ss'}}</td>
                     <td data-title="Completion Status">
-                        <select id="selectCompletionStatus" class="form-control" [(ngModel)]="actionable.CompletionStatus" (change)="IsDone($event,actionable)">
+                        <span *ngIf="hasChildChecklist(actionable.ChklistId)==true">{{actionable.CompletionStatus}}</span>
+                        <select id="selectCompletionStatus" *ngIf="hasChildChecklist(actionable.ChklistId)==false" class="form-control" [(ngModel)]="actionable.CompletionStatus"
+                            (change)="IsDone($event,actionable)">
                             <option value=''>Select Completion Status</option>
                             <option *ngFor="let completionStatusType of completionStatusTypes" [value]="completionStatusType.caption">
                                     {{completionStatusType.text}}
@@ -50,16 +52,15 @@
                                 <thead>
                                     <th>Description</th>
                                     <th>Scheduled End Time</th>
-                                    <th>Status</th>
+                                    <th>Completion Status</th>
                                     <th>Department Name</th>
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let actionableChild of actionable.actionableChilds; let i = index;">
                                         <td data-title="Description">{{actionableChild.Description}}</td>
                                         <td data-title="Scheduled End Time">{{actionableChild.ScheduleClose | amDateFormat:'LL - HH:mm:ss'}}</td>
-                                        <td data-title="Status">
-                                            <p ng-if="actionableChild.ActualClose!=null">{{actionableChild.ActualClose | amDateFormat:'LL - HH:mm:ss'}}</p>
-                                            <p ng-if="actionableChild.ActualClose==null">"Work In progress"</p>
+                                        <td data-title="Completion Status">
+                                            {{actionableChild.CompletionStatus}}
                                         </td>
                                         <td data-title="Department Name">{{actionableChild.DepartmentName}}</td>
                                     </tr>
@@ -72,7 +73,7 @@
         </tbody>
     </table>
 </responsive-table>
-<button class="btn btn-primary" type="submit" (click)="activeActionableClick(activeActionables)" *ngIf="!isArchive">Save</button>
+<button class="btn btn-primary" type="submit" (click)="activeActionableClick(activeActionables)" *ngIf="!isArchive">Submit</button>
 
 
 
@@ -102,16 +103,17 @@
                         </div>
                         <div class="row" *ngIf="!isArchive">
                             <a class="glyphicon glyphicon-download-alt" target="_self" *ngIf="filepathWithLinks!=null" href="{{filepathWithLinks}}" download="{{fileName}}">Download</a>
-                            <div class="buttonholder offset-5">
+                            <div class="buttonholder col-sm-10">
                                 <input #myFileInput type="file" (change)="fileChangeEvent($event)" placeholder="Upload file..." />
                                 <button type="button" class="btn btn-primary" (click)="upload(actionableModelToUpdate)">Upload</button>
                                 <button type="button" class="btn btn-primary" (click)="clearFileUpload($event)">Clear</button>
                             </div>
+                            <div class="col-sm-2"><div class="row buttonholder" *ngIf="!isArchive">
+                            <button class="btn btn-primary" type="submit">Save</button>&nbsp;
+                        </div></div>
                         </div>
 
-                        <div class="row buttonholder" *ngIf="!isArchive">
-                            <button class="btn btn-primary" type="submit">Save</button>&nbsp;
-                        </div>
+                        
                     </form>
                 </div>
             </div>

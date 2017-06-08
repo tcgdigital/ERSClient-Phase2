@@ -20,7 +20,8 @@ export class EmergencyTypeService extends ServiceBase<EmergencyTypeModel> {
     }
 
     GetAll(): Observable<ResponseModel<EmergencyTypeModel>> {
-        return this._dataService.Query().Execute()
+        return this._dataService.Query()
+            .Execute()
             .map((emergencyTypes: ResponseModel<EmergencyTypeModel>) => {
                 this._emergencyTypes = emergencyTypes;
                 this._emergencyTypes.Records.forEach(element => {
@@ -30,9 +31,19 @@ export class EmergencyTypeService extends ServiceBase<EmergencyTypeModel> {
             });
     }
 
-      GetQuery(query: string): Observable<ResponseModel<EmergencyTypeModel>> {
+    GetAllActive(): Observable<ResponseModel<EmergencyTypeModel>> {
         return this._dataService.Query()
-            .Filter(query).Execute() .map((emergencyTypes: ResponseModel<EmergencyTypeModel>) => {
+            .Filter(`ActiveFlag eq 'Active'`)
+            .Execute()
+            .map((emergencyTypes: ResponseModel<EmergencyTypeModel>) => {
+                this._emergencyTypes = emergencyTypes;
+                return emergencyTypes;
+            });
+    }
+
+    GetQuery(query: string): Observable<ResponseModel<EmergencyTypeModel>> {
+        return this._dataService.Query()
+            .Filter(query).Execute().map((emergencyTypes: ResponseModel<EmergencyTypeModel>) => {
                 this._emergencyTypes = emergencyTypes;
                 this._emergencyTypes.Records.forEach(element => {
                     element.Active = (element.ActiveFlag == 'Active')

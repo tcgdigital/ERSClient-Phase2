@@ -17,7 +17,7 @@ import { AccountResponse } from '../../../../shared/models';
 
 import {
     ResponseModel, DataExchangeService,
-    GlobalConstants, EmailValidator, UtilityService, AuthModel
+    GlobalConstants, EmailValidator, UtilityService, AuthModel, NameValidator
 } from '../../../../shared';
 
 @Component({
@@ -27,6 +27,7 @@ import {
 })
 export class UserProfileEntryComponent implements OnInit, OnDestroy {
     public form: FormGroup;
+    public submitted: boolean = false;
     mailAddress: FormControl;
     userProfileModel: UserProfileModel = new UserProfileModel();
     date: Date = new Date();
@@ -45,6 +46,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.submitted = false;
         this.showAdd = false;
         this.initiateForm();
         this.credential = UtilityService.getCredentialDetails();
@@ -61,10 +63,18 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
     cancel(): void {
         this.initiateForm();
         this.showAdd = false;
+        this.submitted = false;
     }
 
     onSubmit() {
+        this.submitted = true;
         if (this.form.valid) {
+            let cleanInputValue: string = this.form.controls['Name'].value.replace(/[^\w\s]/gi, '');
+            if (cleanInputValue != this.form.controls['Name'].value) {
+                this.toastrService.error('User name should consist number or special character.', 'Error', this.toastrConfig);
+                return null;
+            }
+            this.submitted = false;
             if (this.userProfileModel.UserProfileId === 0) {
                 this.userProfileModel.CreatedBy = +this.credential.UserId;
 
@@ -72,7 +82,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
                     (x) => x.UserProfileId, (x) => x.Email, (x) => x.UserId, (x) => x.Name,
                     (x) => x.MainContact, (x) => x.AlternateContact, (x) => x.Location);
 
-                if (this.form.controls['isActive'].value === 0)
+                if (this.form.controls['isActive'].value)
                     this.userProfileModel.ActiveFlag = 'Active';
                 else
                     this.userProfileModel.ActiveFlag = 'InActive';
@@ -82,84 +92,26 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
                         this.form.reset();
                         this.toastrService.success('User profile created Successfully.', 'Success', this.toastrConfig);
                         this.dataExchange.Publish('UserProfileModelCreated', response);
-
-                        // this.userAuthService.CreateUserAccess(this.generateUserAuthData(response))
-                        //     .subscribe((acctresponse: AccountResponse) => {
-                        //         if (acctresponse) {
-                        //             if (acctresponse.Code === 1001) {
-                        //                 this.toastrService.success('User profile created Successfully.', 'Success', this.toastrConfig);
-                        //                 this.dataExchange.Publish('UserProfileModelCreated', response);
-                        //             } else {
-                        //                 this.toastrService.error('Unable to create the user profile', 'Error', this.toastrConfig);
-                        //             }
-                        //         }
-                        //     });
+                        this.showAdd = false;
 
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
+                        this.toastrService.error(`${error.message}`, 'Error', this.toastrConfig);
                     });
             }
             else {
                 this.userProfileService.Update(this.userProfileModel)
                     .subscribe((response: UserProfileModel) => {
+                        this.showAdd = false;
                         this.toastrService.success('User profile edited Successfully.', 'Success', this.toastrConfig);
                         this.dataExchange.Publish('UserProfileModelModified', response);
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
+                        this.toastrService.error(`${error.message}`, 'Error', this.toastrConfig);
                     });
             }
         }
-        if (this.form.controls['UserId'].value == '') {
-            this.toastrService.error('Please provide user id.', 'Error', this.toastrConfig);
-            return null;
-        }
-        if (this.form.controls['Name'].value == '') {
-            this.toastrService.error('Please provide name.', 'Error', this.toastrConfig);
-            return null;
-        }
-        if (this.form.controls['MainContact'].value == '') {
-            this.toastrService.error('Please provide main contact.', 'Error', this.toastrConfig);
-            return null;
-        }
-        if (this.form.controls['Location'].value == '') {
-            this.toastrService.error('Please provide location.', 'Error', this.toastrConfig);
-            return null;
-        }
-
-        this.userProfileModel.Email = this.form.controls["Email"].value;
-        this.userProfileModel.UserId = this.form.controls["UserId"].value;
-        this.userProfileModel.Name = this.form.controls["Name"].value;
-        this.userProfileModel.Location = this.form.controls["Location"].value;
-        this.userProfileModel.isActive = this.form.controls["isActive"].value;
-
-        if (this.userProfileModel.UserProfileId == 0) {
-            this.userProfileModel.CreatedBy = +this.credential.UserId;
-            UtilityService.setModelFromFormGroup<UserProfileModel>(this.userProfileModel, this.form,
-                x => x.UserProfileId, x => x.Email, x => x.UserId, x => x.Name,
-                x => x.MainContact, x => x.AlternateContact, x => x.Location);
-
-            if (this.form.controls["isActive"].value == 0)
-                this.userProfileModel.ActiveFlag = "Active";
-            else
-                this.userProfileModel.ActiveFlag = "InActive";
-
-            this.userProfileService.Create(this.userProfileModel)
-                .subscribe((response: UserProfileModel) => {
-                    this.toastrService.success('User profile created Successfully.', 'Success', this.toastrConfig);
-                    this.dataExchange.Publish("UserProfileModelCreated", response);
-                }, (error: any) => {
-                    console.log(`Error: ${error}`);
-                });
-        }
-        else {
-            this.userProfileService.Update(this.userProfileModel)
-                .subscribe((response: UserProfileModel) => {
-                    this.toastrService.success('User profile edited Successfully.', 'Success', this.toastrConfig);
-                    this.dataExchange.Publish("UserProfileModelModified", response);
-                }, (error: any) => {
-                    console.log(`Error: ${error}`);
-                });
-        }
+        
 
     }
 
@@ -180,7 +132,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
             UserProfileId: new FormControl(0),
             Email: new FormControl('', [Validators.required, EmailValidator.validate]),
             UserId: new FormControl('', Validators.required),
-            Name: new FormControl('', Validators.required),
+            Name: new FormControl('', [Validators.required, NameValidator.validate]),
             MainContact: new FormControl('', Validators.required),
             AlternateContact: new FormControl(''),
             Location: new FormControl('', Validators.required),

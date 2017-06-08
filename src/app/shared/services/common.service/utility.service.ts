@@ -1,6 +1,6 @@
 import { URLSearchParams } from '@angular/http';
 import { FormGroup } from '@angular/forms';
-import { KeyValue, BaseModel } from '../../models';
+import { KeyValue, BaseModel, LicenseInformationModel} from '../../models';
 import * as jwtDecode from 'jwt-decode';
 import { GlobalConstants } from '../../constants';
 import { AuthModel } from '../../models';
@@ -8,7 +8,6 @@ import * as moment from 'moment/moment';
 import { RAGScaleModel } from "../../../pages/shared.components";
 import { Observable } from 'rxjs/Rx';
 import {
-
     DemandRaisedModel,
     AllDeptDemandRaisedSummary,
     SubDeptDemandRaisedSummary
@@ -25,6 +24,7 @@ export class UtilityService {
     private static ARGUMENT_NAMES: RegExp = /([^\s,]+)/g;
     private static CACHE_PROPERTY: string = '__paramNames';
     public static RAGScaleData: RAGScaleModel[] = [];
+    public static licenseInfo: LicenseInformationModel;
     public static IsEmptyObject = (obj: {}): boolean => Object.keys(obj).length === 0 && obj.constructor === Object;
 
     public static IsEmptyArray = (obj: any[]): boolean => obj.length > 0 && obj[0] !== null;
@@ -337,7 +337,7 @@ export class UtilityService {
         });
     }
 
-    public static SetRAGStatusGridActionable(appliedModule: string, assignDate?: Date, scheduleClose?: Date): string {
+    public static GetRAGStatus(appliedModule: string, assignDate?: Date, scheduleClose?: Date): string {
         //TODO:  RAG code should come from database.
         let RAGScale: RAGScaleModel[] = UtilityService.RAGScaleData.filter((item: RAGScaleModel) => {
             return item.AppliedModule === appliedModule;
@@ -367,40 +367,9 @@ export class UtilityService {
 
                 let selectedRag: RAGScaleModel = RAGScale.find((x: RAGScaleModel) => x.StartingPoint <= workPercentage
                     && ((x.EndingPoint == undefined || x.EndingPoint == null) ? workPercentage : x.EndingPoint) >= workPercentage);
-
                     return selectedRag.StyleCode;
-               
             }
-
         }
-
-
-
-
-        // if (assignDate != undefined && scheduleClose != undefined) {
-        //     let startTime: number = (new Date(assignDate)).getTime();
-        //     let endTime: number = (new Date(scheduleClose)).getTime();
-        //     let totalTimeDifferenceInMilliSeconds: number = null;
-        //     let _Adiff: number = null;
-        //     let _Cdiff1: number = null;
-        //     totalTimeDifferenceInMilliSeconds = endTime - startTime;
-        //     _Adiff = ((totalTimeDifferenceInMilliSeconds / 1000) / 60);
-
-        //     let datetimenow: Date = null;
-        //     datetimenow = new Date();
-        //     datetimenow.getTime();
-
-        //     _Cdiff1 = ((datetimenow.getTime() - endTime) / 1000) / 60;
-        //     if (_Cdiff1 >= _Adiff) {
-        //         return "statusRed";
-        //     }
-        //     if (((_Adiff / 2) <= _Cdiff1) && _Cdiff1 < _Adiff) {
-        //         return "statusAmber";
-        //     }
-        //     else if (_Cdiff1 < _Adiff / 2) {
-        //         return "statusGreen";
-        //     }
-        // }
     }
 
     private static pad4(num: number): string {

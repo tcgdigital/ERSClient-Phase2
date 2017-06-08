@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
-import { MediaModel } from './media.model';
+import { MediaModel, MediaReleaseTemplate } from './media.model';
 import { IMediaService } from './IMediaService';
 import {
     ResponseModel,
     DataServiceFactory,
-    ServiceBase
+    ServiceBase, DataProcessingService
 } from '../../../../shared';
 
 
@@ -68,6 +68,15 @@ export class MediaService
         return this._dataService.Query()
             .Filter(`IncidentId eq ${incidentId} and IsPublished eq true`)
             .OrderBy('PublishedOn desc')
+            .Execute();
+    }
+
+    GetContentFromTemplate(incidentId: number, departmentId: number, templateId: number): Observable<MediaReleaseTemplate> {
+        let option = new DataProcessingService();
+        let _templateService = this.dataServiceFactory
+            .CreateServiceWithOptionsAndActionSuffix<MediaReleaseTemplate>
+            ('TemplateMediaPresident', `GetContentFromTemplate/${incidentId}/${departmentId}/${templateId}`, option);
+        return _templateService.Get(incidentId.toString())
             .Execute();
     }
 }
