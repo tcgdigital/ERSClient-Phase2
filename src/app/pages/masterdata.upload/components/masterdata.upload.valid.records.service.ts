@@ -55,7 +55,7 @@ export class MasterDataUploadForValidService {
         'PassengerId,FlightNumber,PassengerName,PassengerGender,PassengerNationality,BaggageCount,Pnr,PassengerType,ContactNumber,Seatno,IdentificationDocType,IdentificationDocNumber,PassengerType,IsVip,Origin,Destination,InboundFlightNumber,OutBoundFlightNumber,EmployeeId';
 
         return this._dataServiceAffectedPeople.Query()
-            .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=PassengerId ne null;$select=${affectedPeopleProjection};$expand=Passenger($select=${passengerPrjection})))`)
+            .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=PassengerId ne null;$select=${affectedPeopleProjection};$expand=Passenger))`)
             .Filter(`IncidentId eq ${incidentId}`)
             .Select(involvePartyProjection)
             .Execute()
@@ -78,7 +78,7 @@ export class MasterDataUploadForValidService {
         let crewPrjection = 'CrewId,EmployeeNumber,CrewName,AsgCat,DeadheadCrew,BaseLocation,Email,DepartureStationCode,ArrivalStationCode,FlightNo,WorkPosition,ContactNumber';
 
         return this._dataServiceAffectedPeople.Query()
-        .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=CrewId ne null;$select=${affectedPeopleProjection};$expand=Crew($select=${crewPrjection})))`)
+        .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=CrewId ne null;$select=${affectedPeopleProjection};$expand=Crew))`)
         .Filter(`IncidentId eq ${incidentId}`)
         .Select(`${involvePartyProjection}`)
         .Execute()

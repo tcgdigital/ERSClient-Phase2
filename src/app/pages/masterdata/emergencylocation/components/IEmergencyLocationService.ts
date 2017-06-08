@@ -11,4 +11,6 @@ export interface IEmergencyLocationService extends IServiceInretface<EmergencyLo
     GetQuery(query: string): Observable<ResponseModel<EmergencyLocationModel>>;
 
     CreateEmergencyLocation(entity: EmergencyLocationModel): Observable<EmergencyLocationModel>;
+
+    GetAllEmergencyLocations(): Observable<ResponseModel<EmergencyLocationModel>>;
 }

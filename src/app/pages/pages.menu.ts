@@ -29,7 +29,7 @@ export const PAGES_MENU: IMenuItem[] = [
                 }
             },
             {
-                path: 'masterdataupload',
+                path: 'uploaddata',
                 data: {
                     menu: {
                         title: 'Upload',

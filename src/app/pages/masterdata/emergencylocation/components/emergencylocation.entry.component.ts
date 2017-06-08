@@ -26,6 +26,7 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
     credential: AuthModel;
     filesToUpload: File[];
     isDisabledUpload = true;
+    isInvalidForm: boolean = false;
     airportStationTemplatePath: string = './assets/static-content/AirportStation.xlsx';
     @ViewChild('inputFileStations') inputFileStations: any
 
@@ -38,6 +39,7 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void{
         this.showAdd = false;
+        this.isInvalidForm = false;
         this.initiateForm();
         this.credential = UtilityService.getCredentialDetails();
         this.dataExchange.Subscribe("OnEmergencyLocationUpdate", model => {
@@ -94,6 +96,7 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
     onSubmit() {
         delete this.emergencyLocation.Active;        
         if (this.form.valid) {
+            this.isInvalidForm = false;
             if (this.emergencyLocation.EmergencyLocationId == 0) {
                 this.emergencyLocation.CreatedBy = +this.credential.UserId;
                 UtilityService.setModelFromFormGroup<EmergencyLocationModel>(this.emergencyLocation, this.form,
@@ -107,8 +110,9 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
                 this.emergencyLocationService.Create(this.emergencyLocation)
                     .subscribe((response: EmergencyLocationModel) => {
                         this.toastrService.success('Emergency Location is created Successfully.', 'Success', this.toastrConfig);
-                        this.dataExchange.Publish("EmergencyLocationModelEntry", response);
+                        this.dataExchange.Publish("EmergencyLocationModelSaved", response);
                         this.initiateForm();
+                        this.showAdd = false;
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                     });
@@ -121,11 +125,16 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
                 this.emergencyLocationService.Update(this.emergencyLocation)
                     .subscribe((response: EmergencyLocationModel) => {
                         this.toastrService.success('Emergency Location is updated Successfully.', 'Success', this.toastrConfig);
-                        this.dataExchange.Publish("EmergencyLocationModelEntry", response);
+                        this.dataExchange.Publish("EmergencyLocationModelUpdated", response);
+                        this.initiateForm();
+                        this.showAdd = false;
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                     });
             }
+        }
+        else{
+            this.isInvalidForm = true
         }
     }
 
@@ -151,5 +160,6 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
     cancel(): void {
         this.initiateForm();
         this.showAdd = false;
+        this.isInvalidForm = false;
     }
 }

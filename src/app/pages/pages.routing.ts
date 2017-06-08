@@ -25,7 +25,7 @@ const pageRoutes: Routes = [
             { path: 'archivedashboard', loadChildren: './archive.dashboard/archive.dashboard.module#ArchiveDashboardModule' },
             { path: 'masterdata', loadChildren: './masterdata/masterdata.module#MasterDateModule' },
             { path: 'incident', loadChildren: './incident/incident.module#IncidentModule' },
-            { path: 'masterdataupload', loadChildren: './masterdata.upload/masterdata.upload.module#MasterDataUploadModule' },
+            { path: 'uploaddata', loadChildren: './masterdata.upload/masterdata.upload.module#MasterDataUploadModule' },
             { path: 'notifypeople', loadChildren: './notifypeople/notifypeople.module#NotifyPeopleModule' },
             { path: 'departmentclosure', loadChildren: './department.closure/department.closure.module#DepartmentClosureModule' },
             { path: 'emergencyclosure', loadChildren: './emergency.closure/emergency.closure.module#EmergencyClosureModule' },
