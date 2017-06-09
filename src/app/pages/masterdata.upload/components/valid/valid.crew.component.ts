@@ -53,7 +53,8 @@ export class ValidCrewListComponent implements OnInit, OnDestroy {
         this._validRecordService.GetAllCrewByIncidentId(this.IncidentId)
         .flatMap(x=>x)
         .subscribe(a=>{
-            this.crews.push(a.Crew);              
+            this.crews.push(a.Crew); 
+            console.log(this.crews);             
         }), 
         (error: any) => {
             console.log(`Error: ${error}`);

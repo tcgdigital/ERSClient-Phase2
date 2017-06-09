@@ -89,12 +89,8 @@
                                <td colspan="2"><strong> Passenger Type Wise Passengers: </strong>    </td>
                               <td class="marker"> <span *ngFor="let paxType of peopleOnBoard.totalPaxTypeCount">
                              <strong>{{paxType.Key}}</strong>:{{paxType.Value}}&nbsp; &nbsp;
-                        </span></td>
-
-                              
+                        </span></td>                              
                         </tr>
-
-
                     </tbody>
                  </table>
                 </responsive-table>
@@ -205,33 +201,22 @@
                 <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideAllCargoDetails()"></i>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-lg-2">
-                        <strong>
-                            Total Cargos:                             
-                        </strong>
-                        <span class="marker">{{peopleOnBoard.totalAffectedCargoCount | padding: '0': 2}}</span>
-                    </div>
-                    <!--<div class="col-lg-10">
-                        <strong>
-                            Enquired Cargos:                             
-                        </strong>
-                        <span class="marker">{{peopleOnBoard.enquiredAffectedCrewCount | padding: '0': 2}}</span>
-                    </div>-->
-                </div>
-                <div class = "row">
-                    <div class="col-lg-2">
-                        <strong>
-                            Type Wise Cargos:                     
-                        </strong>
-                    </div>
-                    <div class="col-lg-10">
-                        <span *ngFor="let Type of peopleOnBoard.cargoOnBoardCountByType">
-                             <strong>{{Type.Key}}</strong>:{{Type.Value}},
-                        </span>
-                    </div>
-                </div>
-                
+                <responsive-table>
+                    <table responsive-table-body>
+                    <tbody>
+                        <tr>
+                            <td><strong>Total Cargos: </strong>    </td>
+                              <td class="marker">{{peopleOnBoard.totalAffectedCargoCount | padding: '0': 2}}     </td>
+                               
+                               <td><strong> Type Wise Cargos: </strong> </td>
+                              <td class="marker"><span *ngFor="let Type of peopleOnBoard.cargoOnBoardCountByType">
+                             <strong>{{Type.Key}}</strong>:{{Type.Value}} &nbsp; &nbsp;
+                        </span>    </td>
+                        </tr>                       
+                    </tbody>
+                 </table>
+                </responsive-table>
+                                
                 <div class = "row"> </div>
 
                 <generic-search [filterConfigs] = "searchConfigsCargo" 

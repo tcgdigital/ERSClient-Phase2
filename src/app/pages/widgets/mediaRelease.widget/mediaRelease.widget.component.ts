@@ -60,8 +60,8 @@ export class MediaReleaseWidgetComponent implements OnInit {
         this.mediaReleaseWidgetService
             .GetAllMediaReleaseByIncident(incidentId)
             .flatMap(x => x)
-            .take(2)
-            .subscribe(x => {
+            .take(2)           
+            .subscribe((x: MediaReleaseWidgetModel) => {
                 data.push(x);
             }, (error: any) => {
                 console.log(`Error: ${error}`);

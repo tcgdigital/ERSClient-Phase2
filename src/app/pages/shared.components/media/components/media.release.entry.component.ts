@@ -129,12 +129,19 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
             this.applyReadOnlyButtons = true;
             this.appReadOnlyPublish = true;
         }
-        if(this.media.MediaReleaseStatus === 'Approved')
+        else if(this.media.MediaReleaseStatus === 'Approved')
         {
             this.appReadOnlyPublish = false;
             this.form.controls["MediaReleaseType"].reset({ value: this.currentTemplateMediaId, disabled: true });
             this.applyReadOnlytextBox = true;  
             this.applyReadOnlyButtons = true;
+        }
+        else
+        {
+            this.form.controls["MediaReleaseType"].reset({ value: this.currentTemplateMediaId, disabled: false });
+            this.applyReadOnlytextBox = false;  
+            this.applyReadOnlyButtons = false;
+            this.appReadOnlyPublish = true;
         }
         this.Action = "Edit";
         this.showAdd = true;
@@ -229,7 +236,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
                         this.dataExchange.Publish("MediaModelSentForApproval", response);
                     }
                     if(this.media.IsPublished)
-                    {                        
+                    {                                               
                         this.globalState.NotifyDataChanged('MediaReleasePublished', response);
                     }
                     this.showAdd = false;
