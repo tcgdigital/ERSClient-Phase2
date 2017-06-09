@@ -16,7 +16,7 @@
                 <td colspan="10">No Releases to show.</td>
             </tr>
             <tr *ngFor="let query of mediaReleases">
-                <td data-title="Releases">{{query.MediaReleaseType}}</td>
+                <td data-title="Releases" width="60%">{{query.MediaReleaseType}}</td>
                 <td data-title="Status">{{query.MediaReleaseStatus=== 'SentForApproval' ? 'Sent For Approval': query.MediaReleaseStatus}}</td>
                 <td data-title="Created On">{{query.CreatedOn | date:' dd-MM-yyyy hh:mm a'}}</td>
                 <td data-title="Sent For Approval On">{{query.SentForApprovalOn | date:' dd-MM-yyyy hh:mm a'}}</td>

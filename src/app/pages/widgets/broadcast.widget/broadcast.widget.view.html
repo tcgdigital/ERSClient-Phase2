@@ -33,7 +33,7 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let broadcast of AllPublishedBroadcasts">
-                                <td data-title="Broadcast Messages">{{broadcast.Message}}</td>
+                                <td data-title="Broadcast Messages" width="60%">{{broadcast.Message}}</td>
                                 <td data-title="Priority">{{broadcast.Priority}}</td>
                                 <td data-title="Initiated Department">{{broadcast.InitiateDepartment.DepartmentName}}</td>
                                 <td data-title="Published On">{{broadcast.SubmittedOn | date:' dd-MM-yyyy hh:mm a'}}</td>
