@@ -97,7 +97,6 @@ export class DepartmentEntryComponent implements OnInit {
         //     return null;
         // }
         this.submitted = true;
-        debugger;
         if (this.form.valid) {
             if (values.DepartmentId === 0) {
                 // ADD REGION
