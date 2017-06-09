@@ -28,11 +28,12 @@
                     <label for="Name">Name:<span class="required">*</span></label>
                     <input class="form-control" id="txtName" type="text" formControlName="Name" placeholder="Enter Name" 
                         />
-
-                        
                         <small *ngIf="form.controls.Name.hasError('required')" 
                         [hidden]="form.controls.Name.valid || (form.controls.Name.pristine && !submitted)"
                                 class="text-danger">Required</small>
+                        <small *ngIf="form.controls.Name.hasError('validateName')" 
+                        [hidden]="form.controls.Name.valid || (form.controls.Name.pristine && !submitted)"
+                                class="text-danger">Invalid Input</small>
 
                 </div>
             </div>
