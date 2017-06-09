@@ -43,7 +43,7 @@ export class MediaReleaseWidgetComponent implements OnInit {
         this.globalState.Subscribe('MediaReleasePublished', model => this.onMediaReleasePublish(model));        
     };
 
-    private incidentChangeHandler(incident: KeyValue): void {       
+    private incidentChangeHandler(incident: KeyValue): void {  
         this.currentIncidentId = incident.Value;        
         this.getLatestMediaReleases(this.currentIncidentId);
         this.getAllMediaReleases();
