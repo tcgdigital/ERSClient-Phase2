@@ -78,7 +78,6 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
             this.date = new Date();
             this.fileUploadService.uploadFiles<string>(baseUrl + "./api/MasterDataExportImport/AirportStationUpload/" + param, 
             this.filesToUpload, this.date.toString()).subscribe((result: string) => {
-                debugger;
                 if(result.startsWith("Error:"))
                 {                   
                     this.toastrService.error(result,"Error",this.toastrConfig);
