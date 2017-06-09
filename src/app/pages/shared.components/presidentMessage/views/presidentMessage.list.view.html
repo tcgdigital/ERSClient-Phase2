@@ -11,7 +11,7 @@
                 <td colspan="10">No Message to show.</td>
             </tr>
             <tr *ngFor="let message of PresidentsMessages">
-                <td data-title="President's Messages">{{message.Message}}</td>
+                <td data-title="President's Messages" width="60%">{{message.Message}}</td>
                 <td data-title="Edit">
                     <button class="btn btn-warning" type="button" (click)="UpdatePresidentMessage(message)">Edit</button>
                 </td>

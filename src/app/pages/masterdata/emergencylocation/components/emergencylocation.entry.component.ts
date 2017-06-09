@@ -74,11 +74,19 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
         {
             let baseUrl = GlobalConstants.EXTERNAL_URL;
             let param = this.credential.UserId;
+            let errorMsg: string;
             this.date = new Date();
             this.fileUploadService.uploadFiles<string>(baseUrl + "./api/MasterDataExportImport/AirportStationUpload/" + param, 
-            this.filesToUpload, this.date.toString()).subscribe((result: any) => {
+            this.filesToUpload, this.date.toString()).subscribe((result: string) => {
+                if(result.startsWith("Error:"))
+                {                   
+                    this.toastrService.error(result,"Error",this.toastrConfig);
+                }
+                else
+                {
+                    this.toastrService.success("File Uploaded successfully.\n" + result, "Success", this.toastrConfig);
+                }
                 this.dataExchange.Publish("FileUploadedSuccessfully", new EmergencyLocationModel());
-                this.toastrService.success("File Uploaded successfully.", "Success", this.toastrConfig);
                 this.initiateForm();
                 this.isDisabledUpload = true;
             });

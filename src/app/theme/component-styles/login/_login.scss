@@ -1,20 +1,32 @@
 @import '../../config/config';
-
-.container-fluid{ background: #efefef; padding:0;
-    
+.container-fluid {
+    background: #efefef;
+    padding: 0;
 }
-login-root{    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#0073cc+0,4a97d6+50,9cc4e2+100 */
-background: #0073cc; /* Old browsers */
-background: -moz-linear-gradient(top,  #0073cc 0%, #4a97d6 50%, #9cc4e2 100%); /* FF3.6-15 */
-background: -webkit-linear-gradient(top,  #0073cc 0%,#4a97d6 50%,#9cc4e2 100%); /* Chrome10-25,Safari5.1-6 */
-background: linear-gradient(to bottom,  #0073cc 0%,#4a97d6 50%,#9cc4e2 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0073cc', endColorstr='#9cc4e2',GradientType=0 ); /* IE6-9 */
 
+login-root {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#0073cc+0,4a97d6+50,9cc4e2+100 */
+    background-color: #1a82f7;
+    background-image: url(images/linear_bg_1.png);
+    background-repeat: repeat-y;
+    /* Safari 4-5, Chrome 1-9 */
+    background: -webkit-gradient(linear, left top, right top, from(#436dcc), to(#3aa3cc));
+    /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(left, #436dcc, #3aa3cc);
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(left, #436dcc, #3aa3cc);
+    /* IE 10 */
+    background: -ms-linear-gradient(left, #436dcc, #3aa3cc);
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(left, #436dcc, #3aa3cc);
     background-size: cover;
     display: block;
     float: left;
-    width: 100%;     position: fixed;
-    height: 100%;}
+    width: 100%;
+    position: fixed;
+    height: 100%;
+}
+
 .Absolute-Center {
     margin: auto;
     position: absolute;
@@ -59,7 +71,7 @@ forgot-password .Absolute-Center.is-Responsive {
             -moz-box-sizing: border-box;
             -webkit-box-sizing: border-box;
             box-sizing: border-box;
-        } 
+        }
         .btn {
             font-weight: 700;
             height: 36px;
@@ -102,82 +114,105 @@ forgot-password .Absolute-Center.is-Responsive {
 
 #logo-container {
     width: auto;
-    height: 113px;
-    margin: 22px auto 15px;
+    height: 95px;
+    margin: 0 auto 15px;
     display: block;
     -moz-border-radius: 50%;
     -webkit-border-radius: 50%;
     border-radius: 0;
     background: url(./assets/images/pal_logo.png) center center no-repeat;
+    background-size: 40%;
 }
-.loginform{
-    .form-control{      border: none;
-    border-bottom: rgba(68, 68, 68, 0.56) solid 1px;
-    background: none;
-    color: #666;
-    width: 100%;
 
-    }
-    label{ color:#666;}
-    .input-group{ display:block;}
-    
-    .btn-block{border-radius: 30px;
-    opacity: 1;
-    color: #666;
-    font-size: 16px;
-    background: none;
-    background-size: 15%;
-    margin-top: 20px;
-    height: 40px; }
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px #1a82f7 inset !important;
 }
-.loginholder-container{     width: 18%;
+
+.loginform {
+    a {
+        color: #fff;
+        font-size: 12px
+    }
+    .form-control {
+        border: none;
+        border-bottom: #fff solid 1px;
+        background: none;
+        color: #666;
+        width: 100%;
+        -webkit-text-fill-color: #ccc!important;
+    }
+    label {
+        color: #fff;
+    }
+    .input-group {
+        display: block;
+    }
+    .btn-block {
+        border-radius: 0;
+        opacity: 1;
+        color: #fff;
+        font-size: 14px;
+        background: none;
+        /* background-size: 15%; */
+        margin-top: 20px;
+        padding: 5px;
+        border: #fff solid 1px;
+    }
+    .input-group-addon {
+        position: relative;
+        float: right;
+        margin-top: -35px;
+        color: #fff;
+        border: 0;
+        z-index: 10;
+        background-color: transparent!important;
+    }
+}
+
+.loginholder-container {
+    width: 25%;
     margin: 5% auto;
     position: relative;
     overflow: auto;
-    background: #fff;
+    background: transparent;
     border-radius: 5px;
-    box-shadow: 0px 0px 10px #333;
-@media screen and (max-width: $resLG-E){
-width:45%;     margin-top: 9%;
-
-}
-@media screen and (max-width: $resMD-E){
-width:65%;
-
-}
-@media screen and (max-width: $resSM-S){
-width:75%;  margin-left: 11%;
-
-}
-}
-.error_holder{    position: absolute;
-    right: 27%;
-    top: 48%;     width: 12%;
-    @media screen and (max-width: $resLG-E){
-right: 1%;
-    top: 45%;
-
-}
-    @media screen and (max-width: $resMD-E){
-    right: 40%;
-    top: 50%;
-
-}
-    @media screen and (max-width: $resSM-S){
-    right: 23%;
-    top: 0;
-
-}
-    
-    
-    
+    @media screen and (max-width: $resLG-E) {
+        width:45%;
+        margin-top: 9%;
     }
-    .input-group-addon{    position: relative;
-    float: right;
-    margin-top: -35px;
-    border: 0;
-    z-index: 10;}
-    .error_white{ background: #fff; padding: 10px; margin: 2px 0;}
+    @media screen and (max-width: $resMD-E) {
+        width: 65%;
+    }
+    @media screen and (max-width: $resSM-S) {
+        width: 75%;
+        margin-left: 11%;
+    }
+}
+
+.error_holder {
+    position: absolute;
+    right: 24%;
+    top: 48%;
+    width: 12%;
+    @media screen and (max-width: $resLG-E) {
+        right: 1%;
+        top: 45%;
+    }
+    @media screen and (max-width: $resMD-E) {
+        right: 40%;
+        top: 50%;
+    }
+    @media screen and (max-width: $resSM-S) {
+        right: 23%;
+        top: 0;
+    }
+}
+
+.error_white {
+    background: #fff;
+    padding: 10px;
+    margin: 2px 0;
+}
 
 @media screen and (max-width: $resXS-E) {}
 

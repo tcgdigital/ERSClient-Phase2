@@ -231,6 +231,7 @@ export class EmergencyClosureComponent implements OnInit {
 			this.incident.SavedOn = new Date();
 			this.incidentService.Update(this.incident, this.incident.IncidentId)
 				.subscribe(() => {
+					
 					this.toastrService.info('Closure Report Saved Successfully.', 'Success', this.toastrConfig);
 				}, (error) => {
 					this.toastrService.info('Some error occured.', 'Error', this.toastrConfig);

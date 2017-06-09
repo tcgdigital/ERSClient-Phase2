@@ -56,6 +56,8 @@ export class GlobalConstants {
     public static ACCESS_TOKEN: string = 'access_token';
     public static AD_AUTH_ENABLED: boolean = false;
     public static PASSWORD_PATTERN: string = '((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})';
+    public static NUMBER_PATTERN: string = '^[0-9-+]*$';
+    public static EMAIL_PATTERN: string = '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$';
     public static LAST_INCIDENT_PICK_COUNT: string = '5';
     public static ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION: number = 12;
 
@@ -323,6 +325,12 @@ export class GlobalConstants {
             key: 5,
             value: 'Others',
             caption: 'Others'
+
+        },
+        {
+            key: 6,
+            value: 'UnidentifiedPDA',
+            caption: 'Unidentified PDA'
 
         }
     ];

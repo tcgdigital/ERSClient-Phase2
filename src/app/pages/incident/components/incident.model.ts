@@ -21,7 +21,7 @@ export class IncidentModel extends BaseModel {
     public WhatHappend: string;
     public WhereHappend: string;
     public OtherConfirmationInformation: string;
-
+    public ReportedDate: Date;
 
     public IsSubmitted: boolean;
     public IsSaved: boolean;
@@ -76,6 +76,7 @@ export class IncidentModel extends BaseModel {
         this.WhatHappend = '';
         this.WhereHappend = '';
         this.OtherConfirmationInformation = '';
+        this.ReportedDate = new Date();
 
         this.IsSubmitted = false;
         this.IsSaved = false;

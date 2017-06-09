@@ -27,7 +27,7 @@ import { ModalDirective } from 'ng2-bootstrap/modal';
     encapsulation: ViewEncapsulation.None,
     // styleUrls: ['./styles/member.track.style.scss'],
     templateUrl: './views/member.track.views.html',
-      styleUrls:['./styles/member.track.styles.scss']
+    styleUrls: ['./styles/member.track.styles.scss']
 })
 
 export class MemberTrackComponent implements OnInit, AfterViewChecked {
@@ -144,6 +144,8 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
 
 
             }
+            this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
+
         }
 
         else {
