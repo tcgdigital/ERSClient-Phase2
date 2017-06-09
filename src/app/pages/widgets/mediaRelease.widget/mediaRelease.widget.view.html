@@ -32,7 +32,7 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let mediaRelease of AllMediaReleases | async">
-                        <td data-title="Media Releases">{{mediaRelease.MediaReleaseType}}</td>
+                        <td data-title="Media Releases" width="60%">{{mediaRelease.MediaReleaseType}}</td>
                         <td data-title="Status">{{mediaRelease.MediaReleaseStatus}}</td>
                         <td data-title="Date">{{mediaRelease.PublishedOn | date:' dd-MM-yyyy hh:mm a'}}</td>
                     </tr>
