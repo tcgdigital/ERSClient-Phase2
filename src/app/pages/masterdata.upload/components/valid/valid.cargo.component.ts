@@ -53,6 +53,7 @@ export class ValidCargoListComponent implements OnInit, OnDestroy {
             .flatMap(x => x)
             .subscribe(a => {
                 this.cargoes.push(a);
+                console.log(this.cargoes);
             }),
             (error: any) => {
                 console.log(`Error: ${error}`);

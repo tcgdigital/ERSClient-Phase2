@@ -30,6 +30,12 @@ export class EmergencyLocationService extends ServiceBase<EmergencyLocationModel
             .Execute();
     }
 
+     GetAllEmergencyLocations(): Observable<ResponseModel<EmergencyLocationModel>> {
+        return this._dataService.Query()            
+            .OrderBy("IATA asc")
+            .Execute();
+    }
+
     GetAllActiveEmergencyLocations(): Observable<ResponseModel<EmergencyLocationModel>> {
         return this._dataService.Query()
             .Select('EmergencyLocationId', 'City', 'IATA','AirportName', 'CreatedBy', 'CreatedOn')

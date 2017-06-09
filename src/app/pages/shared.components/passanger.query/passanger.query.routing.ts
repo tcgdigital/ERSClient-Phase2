@@ -6,9 +6,9 @@ import { PassangerQueryAssignedCallsListComponent, PassangerQueryRecievedCallsLi
 
 
 const passangerQueryComponent: Routes = [
-    
+
     {
-       
+
         path: '',
         component: PassangerQueryComponent,
         children: [
@@ -16,15 +16,15 @@ const passangerQueryComponent: Routes = [
                 path: '',
                 component: PassangerQueryAssignedCallsListComponent
             },
-             {
-                 path: 'assignedcalls',
-                component: PassangerQueryAssignedCallsListComponent
+            {
+                path: 'assignedcalls',
+                component: PassangerQueryRecievedCallsListComponent
             },
-             {
-                path: 'recievedCalls',
-                 component: PassangerQueryRecievedCallsListComponent
+            {
+                path: 'receivedCalls',
+                component: PassangerQueryAssignedCallsListComponent
             }]
     }];
 
-export const  PassangerQueryRouting: ModuleWithProviders
+export const PassangerQueryRouting: ModuleWithProviders
     = RouterModule.forChild(passangerQueryComponent);

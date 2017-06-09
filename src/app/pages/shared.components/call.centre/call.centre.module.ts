@@ -14,6 +14,7 @@ import { DemandService } from '../demand';
 import { DataExchangeService, SharedModule } from '../../../shared';
 import { InvolvePartyService } from '../involveparties';
 import { CommunicationLogService } from '../communicationlogs';
+import { ModalModule} from 'ng2-bootstrap/modal';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { CommunicationLogService } from '../communicationlogs';
         FormsModule,
         HttpModule,
         SharedModule,
-        MdCheckboxModule
+        MdCheckboxModule,
+        ModalModule
     ],
     declarations: [
         EnquiryEntryComponent

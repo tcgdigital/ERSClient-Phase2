@@ -12,6 +12,7 @@
                 <th>Requester Department</th>
                 <th>Requested By</th>
                 <th>Target Department</th>
+                 <th>Required Location</th>
                 <th>Priority</th>
                 <th>Schedule Time Close</th>
                 <th>RAG</th>
@@ -31,6 +32,7 @@
                 <td data-title="Requester Department">{{demand.RequesterDepartmentName}}&nbsp;</td>
                 <td data-title="Requested By">{{demand.RequestedBy}}&nbsp;</td>
                 <td data-title="Target Department">{{demand.TargetDepartmentName}}&nbsp;</td>
+                <td data-title="Required Location">{{demand.RequiredLocation}}&nbsp;</td>
                 <td data-title="Priority">{{demand.Priority}}&nbsp;</td>
                 <td data-title="Schedule Time Close">{{demand.ScheduleTimeToShow}}&nbsp;</td>
                 <td data-title="RAG"><span [ngClass]="demand.RagStatus"></span></td>

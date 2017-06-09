@@ -14,15 +14,15 @@ const cargoQueryComponent: Routes = [
         children: [
             {
                 path: '',
-                component: CargoQueryAssignedCallsListComponent
+                component: CargoQueryRecievedCallsListComponent
             },
              {
                  path: 'assignedcalls',
-                component: CargoQueryAssignedCallsListComponent
+                component: CargoQueryRecievedCallsListComponent 
             },
              {
-                path: 'recievedCalls',
-                 component: CargoQueryRecievedCallsListComponent
+                path: 'receivedCalls',
+                 component: CargoQueryAssignedCallsListComponent
             }]
     }];
 
