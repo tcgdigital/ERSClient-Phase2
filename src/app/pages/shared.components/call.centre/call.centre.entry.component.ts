@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnInit, Input } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, Input, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router, NavigationEnd } from '@angular/router';
@@ -11,6 +11,7 @@ import {
     GlobalConstants, UtilityService, GlobalStateService, AuthModel
 } from '../../../shared';
 import { EnquiryModel, EnquiryService } from './components';
+import { AffectedPeopleModel } from "../affected.people/components";
 
 import {
     CommunicationLogModel, InvolvePartyModel,
@@ -28,6 +29,7 @@ import {
 } from '../../callcenteronlypage/component';
 
 import { IAutocompleteActions } from '../../../shared/components/autocomplete/IAutocompleteActions';
+import { ModalDirective } from 'ng2-bootstrap/modal';
 
 @Component({
     selector: 'call-centre-main',
@@ -47,6 +49,7 @@ import { IAutocompleteActions } from '../../../shared/components/autocomplete/IA
 export class EnquiryEntryComponent /*implements OnInit*/ {
     @Input('callid') callid: number;
     @Input('enquiryType') enquiryType: number;
+   // @ViewChild('childModalForTrail') public childModalForTrail: ModalDirective;
 
 
 
@@ -109,11 +112,12 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         ActionName: 'Test1',
         ActionDescription: 'Test Icon 1',
         ActionIcon: 'fa fa-comments-o fa-lg'
-    }, {
-        ActionName: 'Test2',
-        ActionDescription: 'Test Icon 1',
-        ActionIcon: 'fa fa-coffee fa-lg'
     }];
+    pdaNameForTrail: string = "";
+    ticketNumber: string = "";
+    communications: CommunicationLogModel[] = [];
+    showCallcenterModal:boolean = false;
+    hideModal : boolean = true;
 
     protected _onRouteChange: Subscription;
     externalInput: ExternalInputModel = new ExternalInputModel();
@@ -244,7 +248,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         this.communicationLog.InteractionDetailsId = 0;
         this.communicationLog.InteractionDetailsType = interactionType;
         this.communicationLog.Answers = this.form.controls['Queries'].value + ' Caller:'
-            + this.caller.FirstName+ "  "+this.caller.LastName + ' Contact Number:' + this.caller.ContactNumber;
+            + this.caller.FirstName + "  " + this.caller.LastName + ' Contact Number:' + this.caller.ContactNumber;
         this.communicationLog.RequesterName = this.credential.UserName;
         this.communicationLog.RequesterDepartment = this.currentDepartmentName;
         this.communicationLog.RequesterType = requestertype;
@@ -362,7 +366,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                     communicationlogs[0].AffectedPersonId = this.enquiry.AffectedPersonId;
                     delete communicationlogs[0].AffectedObjectId;
                 }
-                if (this.enquiry.AffectedObjectId && this.enquiry.AffectedObjectId != 0  ) {
+                if (this.enquiry.AffectedObjectId && this.enquiry.AffectedObjectId != 0) {
                     this.enquiryToUpdate.AffectedObjectId = this.enquiry.AffectedObjectId;
                     communicationlogs[0].AffectedObjectId = this.enquiry.AffectedObjectId;
                     delete communicationlogs[0].AffectedPersonId;
@@ -446,6 +450,21 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
 
     onActionClick(eventArgs: any) {
         console.log(eventArgs);
+        let affectedPersonid = eventArgs.selectedItem.Value;
+        this.affectedPeopleService.GetCommunicationByPDA(affectedPersonid)
+            .subscribe((response: ResponseModel<AffectedPeopleModel>) => {
+                let responseModel: AffectedPeopleModel = response.Records[0];
+                this.pdaNameForTrail = responseModel.Passenger != null ? responseModel.Passenger.PassengerName.toUpperCase() : '';
+                this.pdaNameForTrail = this.pdaNameForTrail ? this.pdaNameForTrail : responseModel.Crew != null ? responseModel.Crew.CrewName.toUpperCase() : '';
+                this.ticketNumber = responseModel.TicketNumber;
+                this.communications = responseModel.CommunicationLogs;
+                this.showCallcenterModal=true;
+               // this.childModalForTrail.show();
+                this.hideModal=false;
+
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
     }
 
 
@@ -459,4 +478,11 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             IsTravelRequest: new FormControl(false)
         });
     }
+
+    cancelModal() {
+       // this.childModalForTrail.hide();
+        this.hideModal=true;
+        this.showCallcenterModal=false;
+    }
+
 }

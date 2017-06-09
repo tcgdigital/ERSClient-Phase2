@@ -6,9 +6,9 @@ import { GeneralUpdateQueryAssignedCallsListComponent, GeneralUpdateQueryRecieve
 
 
 const GeneralUpdateQueryRoutes: Routes = [
-    
+
     {
-       
+
         path: '',
         component: GeneralUpdateQueryComponent,
         children: [
@@ -16,15 +16,15 @@ const GeneralUpdateQueryRoutes: Routes = [
                 path: '',
                 component: GeneralUpdateQueryAssignedCallsListComponent
             },
-             {
-                 path: 'assignedcalls',
-                component: GeneralUpdateQueryAssignedCallsListComponent
+            {
+                path: 'assignedcalls',
+                component: GeneralUpdateQueryRecievedCallsListComponent
             },
-             {
-                path: 'recievedCalls',
-                 component: GeneralUpdateQueryRecievedCallsListComponent
+            {
+                path: 'receivedCalls',
+                component: GeneralUpdateQueryAssignedCallsListComponent
             }]
     }];
 
-export const  GeneralUpdateQueryRouting: ModuleWithProviders
+export const GeneralUpdateQueryRouting: ModuleWithProviders
     = RouterModule.forChild(GeneralUpdateQueryRoutes);

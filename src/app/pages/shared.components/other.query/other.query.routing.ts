@@ -6,9 +6,9 @@ import { OtherQueryAssignedCallsListComponent, OtherQueryRecievedCallsListCompon
 
 
 const otherQueryRoutes: Routes = [
-    
+
     {
-       
+
         path: '',
         component: OtherQueryComponent,
         children: [
@@ -16,15 +16,15 @@ const otherQueryRoutes: Routes = [
                 path: '',
                 component: OtherQueryAssignedCallsListComponent
             },
-             {
-                 path: 'assignedcalls',
-                component: OtherQueryAssignedCallsListComponent
+            {
+                path: 'assignedcalls',
+                component: OtherQueryRecievedCallsListComponent
             },
-             {
-                path: 'recievedCalls',
-                 component: OtherQueryRecievedCallsListComponent
+            {
+                path: 'receivedCalls',
+                component: OtherQueryAssignedCallsListComponent
             }]
     }];
 
-export const  OtherQueryRouting: ModuleWithProviders
+export const OtherQueryRouting: ModuleWithProviders
     = RouterModule.forChild(otherQueryRoutes);
