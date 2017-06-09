@@ -73,6 +73,9 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
                     console.log(`Error: ${error}`);
                 }));                       
         }
+        else{
+            this.getAllEmergencyLocations();
+        }
     }
 
     IsActive(event: any, editedEmergencyLocation: EmergencyLocationModel): void {

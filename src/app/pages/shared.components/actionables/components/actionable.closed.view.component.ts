@@ -116,8 +116,8 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
             .find((item: ActionableModel) => item.ActionId == editedActionable.ActionId);
         tempActionable.Done = true;
         this.actionableService.SetParentActionableStatusByIncidentIdandDepartmentIdandActionable(this.currentIncident,
-            this.currentDepartmentId, editedActionable, this.closeActionables)
-            .subscribe();
+            this.currentDepartmentId, editedActionable, this.closeActionables);
+            
     }
 
     getAllCloseActionable(incidentId: number, departmentId: number): void {

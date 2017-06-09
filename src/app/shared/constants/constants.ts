@@ -46,7 +46,7 @@ export interface IActionableStatus {
 
 export class GlobalConstants {
     // public static EXTERNAL_URL: string = 'http://202.54.73.219:86/';
-    public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
+    public static EXTERNAL_URL: string = 'http://localhost:5001/';
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
     public static GRANT_TYPE: string = 'password';
     public static ODATA: string = 'odata';
@@ -56,6 +56,8 @@ export class GlobalConstants {
     public static ACCESS_TOKEN: string = 'access_token';
     public static AD_AUTH_ENABLED: boolean = false;
     public static PASSWORD_PATTERN: string = '((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})';
+    public static NUMBER_PATTERN: string = '^[0-9-+]*$';
+    public static EMAIL_PATTERN: string = '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$';
     public static LAST_INCIDENT_PICK_COUNT: string = '5';
     public static ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION: number = 12;
 
@@ -323,6 +325,12 @@ export class GlobalConstants {
             key: 5,
             value: 'Others',
             caption: 'Others'
+
+        },
+        {
+            key: 6,
+            value: 'UnidentifiedPDA',
+            caption: 'Unidentified PDA'
 
         }
     ];
