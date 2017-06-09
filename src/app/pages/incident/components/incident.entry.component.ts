@@ -436,7 +436,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
 
     }
     onSubmit(): void {
-        debugger;
         this.submitted = true;
         this.submittedFlight = true;
         //let tt:string = this.form.controls['EmergencyDate'].value;
@@ -476,7 +475,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     onPOPUPSubmit(values: object): void {
-        debugger;
         console.log('Incident Created.');
         console.log(this.incidentDataExchangeModel);
         if (this.incidentDataExchangeModel.IncidentModel.EmergencyLocation === 'Offsite') {
@@ -648,7 +646,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             this.isFlightRelatedPopup = true;
         }
         if (this.isBorrowedIncidentPopup) {
-            debugger;
             let id: number = +this.formPopup.controls['BorrowedIncidentPopup'].value;
             if (id) {
                 let selectedIncident: IncidentModel = this.incidentsToPickForReplication.find((item: IncidentModel) => {

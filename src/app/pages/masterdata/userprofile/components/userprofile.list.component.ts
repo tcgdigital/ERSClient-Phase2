@@ -53,13 +53,15 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
         this.dataExchange.Unsubscribe('UserProfileModelModified');
     }
 
-    IsActive(event: any, editedUderProfile: UserProfileModel): void {
+    checkChange(event: any, editedUderProfile: UserProfileModel): void {
         this.userProfilePatch = new UserProfileModel();
         this.userProfilePatch.deleteAttributes();
         this.userProfilePatch.UserProfileId = editedUderProfile.UserProfileId;
+        this.userProfilePatch.ActiveFlag = 'Active';
         this.userProfilePatch.isActive = true;
         if (!event.checked) {
             this.userProfilePatch.isActive = false;
+            this.userProfilePatch.ActiveFlag = 'InActive';
         }
         this.userProfileService.Update(this.userProfilePatch)
             .subscribe((response: UserProfileModel) => {
