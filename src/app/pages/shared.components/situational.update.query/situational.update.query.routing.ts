@@ -6,9 +6,9 @@ import { SituationalUpdateQueryAssignedCallsListComponent, SituationalUpdateQuer
 
 
 const situationalUpdateQueryRoutes: Routes = [
-    
+
     {
-       
+
         path: '',
         component: SituationalUpdateQueryComponent,
         children: [
@@ -16,15 +16,15 @@ const situationalUpdateQueryRoutes: Routes = [
                 path: '',
                 component: SituationalUpdateQueryAssignedCallsListComponent
             },
-             {
-                 path: 'assignedcalls',
-                component: SituationalUpdateQueryAssignedCallsListComponent
+            {
+                path: 'assignedcalls',
+                component: SituationalUpdateQueryRecievedCallsListComponent
             },
-             {
-                path: 'recievedCalls',
-                 component: SituationalUpdateQueryRecievedCallsListComponent
+            {
+                path: 'receivedCalls',
+                component: SituationalUpdateQueryAssignedCallsListComponent
             }]
     }];
 
-export const  SituationalUpdateQueryRouting: ModuleWithProviders
+export const SituationalUpdateQueryRouting: ModuleWithProviders
     = RouterModule.forChild(situationalUpdateQueryRoutes);

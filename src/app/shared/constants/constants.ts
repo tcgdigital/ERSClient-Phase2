@@ -174,17 +174,17 @@ export class GlobalConstants {
         {
             value: '1',
             caption: 'High',
-            text: 'Priority High'
+            text: 'High'
         },
         {
             value: '2',
             caption: 'Medium',
-            text: 'Priority Medium',
+            text: 'Medium',
         },
         {
             value: '3',
             caption: 'Low',
-            text: 'Priority Low'
+            text: 'Low'
         }
     ];
 
