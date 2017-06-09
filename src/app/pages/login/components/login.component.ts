@@ -6,12 +6,14 @@ import * as jwtDecode from 'jwt-decode';
 import { RAGScaleService,RAGScaleModel } from "../../../pages/shared.components/ragscale";
 import { AuthenticationService } from './authentication.service';
 import { UtilityService } from '../../../shared/services';
-import { GlobalStateService, ResponseModel } from '../../../shared';
+import { GlobalStateService, ResponseModel,KeyValue } from '../../../shared';
 import { AuthRequestModel, AuthResponseModel } from './auth.model';
 import { IncidentModel, IncidentService } from '../../incident';
 import { UserProfileService, UserProfileModel } from '../../masterdata/userprofile/index';
 import { LicensingService } from '../../../shared/services/common.service';
 import { LicenseVerificationResponse, LicenseInformationModel } from '../../../shared/models';
+import { UserPermissionService } from '../../masterdata/userpermission/components';
+import { UserPermissionModel } from '../../masterdata/userpermission/components';
 import * as _ from 'underscore';
 
 @Component({
@@ -26,6 +28,10 @@ export class LoginComponent implements OnInit {
     public userId: AbstractControl;
     public password: AbstractControl;
     public submitted: boolean;
+    departments: KeyValue[] = [];
+    incidents: KeyValue[] = [];
+    currentDepartmentId: number = 0;
+    currentIncidentId: number = 0;
 
     constructor(formBuilder: FormBuilder,
         private userProfileService: UserProfileService,
@@ -36,7 +42,8 @@ export class LoginComponent implements OnInit {
         private router: Router,
         private incidentService: IncidentService,
         private licensingService: LicensingService,
-        private ragScaleService: RAGScaleService) {
+        private ragScaleService: RAGScaleService,
+        private userPermissionService:UserPermissionService) {
 
         this.form = formBuilder.group({
             userId: ['', Validators.compose([Validators.required, Validators.minLength(4)])],
@@ -69,6 +76,41 @@ export class LoginComponent implements OnInit {
             });
     }
 
+    private getDepartments(userId:number): void {
+        this.userPermissionService.GetAllDepartmentsAssignedToUser(userId)
+        .map((x: ResponseModel<UserPermissionModel>) => x.Records.sort((a, b) => {
+                if (a.Department.DepartmentName < b.Department.DepartmentName) return -1;
+                if (a.Department.DepartmentName > b.Department.DepartmentName) return 1;
+                return 0;
+            })
+        ).subscribe((x: UserPermissionModel[]) => {
+                this.departments = x.map((y: UserPermissionModel) =>
+                 new KeyValue(y.Department.DepartmentName, y.Department.DepartmentId));
+                if (this.departments.length > 0) {
+                    this.currentDepartmentId = this.departments[0].Value;
+                    console.log(this.currentDepartmentId);
+                    UtilityService.SetToSession({ CurrentDepartmentId: this.currentDepartmentId });
+                }
+        });
+    }
+
+    private getIncidents(): void {
+        this.incidentService.GetAllActiveIncidents()
+            .map((x: ResponseModel<IncidentModel>) => x.Records.sort((a, b) => {
+                const dateA = new Date(a.SubmittedOn).getTime();
+                const dateB = new Date(b.SubmittedOn).getTime();
+                return dateA > dateB ? 1 : -1;
+            })).subscribe((x: IncidentModel[]) => {
+                this.incidents = x.map((y: IncidentModel) => new KeyValue(y.EmergencyName, y.IncidentId));
+                if (this.incidents.length > 0) {
+                    this.currentIncidentId = this.incidents[0].Value;
+                    console.log(this.currentIncidentId);
+                    UtilityService.SetToSession({ CurrentIncidentId: this.currentIncidentId });
+                }
+                
+            });
+    }
+
     Login(userid: string, password: string): void {
         this.authService.Login(userid, password)
             .subscribe((data: AuthResponseModel) => {
@@ -77,7 +119,8 @@ export class LoginComponent implements OnInit {
                 if (loginCredentialBasic) {
                     // This is to check that whether the user has department associated with him. From UserPermission table.
                     //let errorSuccess: boolean = this.userProfileService.VerifyUserDepartmentMapping(+loginCredentialBasic.UserId.toString());
-
+                    this.getDepartments(loginCredentialBasic.UserId);
+                    this.getIncidents();
 
                     if (!Object.keys(loginCredentialBasic).some((x) => x === 'EmailConfirmed')) {
                         localStorage.setItem('LastLoginTime', (new Date()).toString());

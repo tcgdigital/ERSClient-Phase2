@@ -130,13 +130,13 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
 
         this.form = new FormGroup({
             UserProfileId: new FormControl(0),
-            Email: new FormControl('', [Validators.required, EmailValidator.validate]),
+            Email: new FormControl('', [Validators.required, Validators.pattern(GlobalConstants.EMAIL_PATTERN)]),
             UserId: new FormControl('', Validators.required),
             Name: new FormControl('', [Validators.required, NameValidator.validate]),
-            MainContact: new FormControl('', Validators.required),
+            MainContact: new FormControl('', [Validators.required, Validators.minLength(14), Validators.maxLength(15), Validators.pattern(GlobalConstants.NUMBER_PATTERN)]),
             AlternateContact: new FormControl(''),
             Location: new FormControl('', Validators.required),
-            isActive: new FormControl(0)
+            isActive: new FormControl(1)
         });
     }
 

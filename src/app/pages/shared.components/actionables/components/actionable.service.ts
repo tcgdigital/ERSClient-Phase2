@@ -8,7 +8,7 @@ import {
     ResponseModel, DataService, DataServiceFactory,
     DataProcessingService, IServiceInretface,
     RequestModel, WEB_METHOD, GlobalConstants, ICompletionStatusType,
-    ServiceBase, BaseModel,UtilityService
+    ServiceBase, BaseModel, UtilityService
 } from '../../../../shared';
 
 @Injectable()
@@ -125,17 +125,20 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
 
     public SetParentActionableStatusByIncidentIdandDepartmentIdandActionable(incidentId: number,
         departmentId: number, actionable: ActionableModel,
-        currentActionables: ActionableModel[]): Observable<void> {
+        currentActionables: ActionableModel[]): void {
+        console.log(actionable);
         if (actionable.ParentCheckListId != null) {
-            return this._dataService.Query()
+            this._dataService.Query()
                 .Filter(`IncidentId eq ${incidentId} and ChklistId eq ${actionable.ParentCheckListId} and ActiveFlag eq 'Active'`)
                 .Execute()
                 .map((actionableResult: ResponseModel<ActionableModel>) => {
+                    console.log(actionableResult);
                     this.parentActionable = actionableResult.Records[0];
                     return actionableResult;
                 })
                 .flatMap((actionableResult: ResponseModel<ActionableModel>) => this.GetChildActionables(this.parentActionable.ChklistId, incidentId))
-                .map((childActionables: ResponseModel<ActionableModel>) => {
+                .subscribe((childActionables: ResponseModel<ActionableModel>) => {
+                    console.log(childActionables);
                     if (childActionables.Count > 0) {
                         let globalStatus: ICompletionStatusType[] = childActionables.Records
                             .map((elm: ActionableModel) => {
@@ -160,6 +163,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
                         currentActionable.CompletionStatus = consolidatedMinimumCompletionStatus;
                         currentActionable.Done = actionable.Done;
                     }
+
                 });
         }
     }
