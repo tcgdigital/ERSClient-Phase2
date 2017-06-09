@@ -14,7 +14,7 @@
                 <td colspan="10">No Message is broadcasted yet.</td>
             </tr>
             <tr *ngFor="let broadcastMessage of broadcastMessages">
-                <td data-title="Broadcast Message">{{broadcastMessage.Message}}</td>
+                <td data-title="Broadcast Message" width="60%">{{broadcastMessage.Message}}</td>
                 <td data-title="Created On">{{broadcastMessage.CreatedOn | date:' dd-MM-yyyy hh:mm a'}}</td>
                 <td data-title="Submitted On">{{broadcastMessage.SubmittedOn | date:' dd-MM-yyyy hh:mm a'}}</td>
                 <td data-title="Priority">{{broadcastMessage.Priority}}</td>

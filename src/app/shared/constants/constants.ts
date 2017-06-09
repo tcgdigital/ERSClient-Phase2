@@ -326,6 +326,12 @@ export class GlobalConstants {
             value: 'Others',
             caption: 'Others'
 
+        },
+        {
+            key: 6,
+            value: 'UnidentifiedPDA',
+            caption: 'Unidentified PDA'
+
         }
     ];
 
