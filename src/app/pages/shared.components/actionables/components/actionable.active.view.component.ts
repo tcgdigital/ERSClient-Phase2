@@ -180,8 +180,8 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         });
         tempActionable.Done = editedActionable.Done;
         this.actionableService.SetParentActionableStatusByIncidentIdandDepartmentIdandActionable(this.currentIncident,
-            this.currentDepartmentId, editedActionable, this.activeActionables)
-            .subscribe();
+            this.currentDepartmentId, editedActionable, this.activeActionables);
+            
     }
 
     upload(actionableClicked: ActionableModel) {
