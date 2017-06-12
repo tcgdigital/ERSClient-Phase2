@@ -12,6 +12,9 @@
     <meta name="description" content="<%= htmlWebpackPlugin.options.metadata.description %>">
 
     <!-- base url -->
+    <script>
+        window.CKEDITOR_BASEPATH = 'assets/scripts/ckeditor/';
+    </script>
     <base href="<%= htmlWebpackPlugin.options.metadata.baseUrl %>">
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Intl.~locale.en"></script>
 </head>

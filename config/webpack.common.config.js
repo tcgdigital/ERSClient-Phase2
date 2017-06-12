@@ -265,6 +265,9 @@ module.exports = function (options) {
             }, {
                 from: 'src/assets/static-content',
                 to: 'assets/static-content'
+            },{
+                from: 'node_modules/ckeditor',
+                to: 'assets/scripts/ckeditor'
             },]),
 
             /** Plugin: HtmlWebpackPlugin
