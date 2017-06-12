@@ -64,6 +64,21 @@ export class GlobalConstants {
     public static INTERCEPTOR_PERFORM: boolean = false;
     public static PRESERVE_DATA_FROM_CONVERSION = ['EmergencyDate'];
 
+    public static EditorToolbarConfig: any = {
+        // uiColor: '#99000',
+        toolbar: [
+            { name: 'clipboard', items: ['Cut', 'Copy', 'Paste', '-', 'Undo', 'Redo'] },
+            { name: 'links', items: ['Link', 'Unlink'] },
+            { name: 'insert', items: ['Table', 'HorizontalRule', 'SpecialChar'] },
+            { name: 'tools', items: ['Maximize'] },
+            { name: 'document', items: ['Source'] },
+            '/',
+            { name: 'basicstyles', items: ['Bold', 'Italic', 'Strike', '-', 'RemoveFormat'] },
+            { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent'] },
+            { name: 'styles', items: ['Styles', 'Format'] },
+        ]
+    };
+
     public static LicenseValidationCode: IKeyValue[] = [
         { key: 101, value: 'License is valid' },
         { key: 102, value: 'License info file not found'},
@@ -71,7 +86,7 @@ export class GlobalConstants {
         { key: 104, value: 'Current machine is not registered with the license'},
         { key: 105, value: 'License key is invalid or not provided'},
         { key: 106, value: 'License has expired'}
-    ]
+    ];
 
     public static EmergencyCategories: IKeyValue[] = [
         { value: 'FlightRelated', key: 1 },

@@ -5,10 +5,11 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Ng2BootstrapModule } from 'ng2-bootstrap';
 import { NgSelectizeModule } from 'ng-selectize';
-import { HTTP_INTERCEPTOR_PROVIDER,HTTP_INTERCEPTOR_NO_OVERRIDE_PROVIDER } from './interceptor';
 import {
-    PaddingFormatterPipe
-} from './pipes';
+    HTTP_INTERCEPTOR_PROVIDER,
+    HTTP_INTERCEPTOR_NO_OVERRIDE_PROVIDER
+} from './interceptor';
+import { PaddingFormatterPipe } from './pipes';
 
 import {
     BrandHeaderComponent,
@@ -140,7 +141,7 @@ const SHARED_PIPES: any[] = [
         HttpModule,
         NgSelectizeModule,
         Ng2BootstrapModule.forRoot()
-        
+
     ],
     exports: [
         ...SHARED_COMPONENTS,
