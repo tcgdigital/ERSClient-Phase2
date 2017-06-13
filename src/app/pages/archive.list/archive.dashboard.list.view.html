@@ -35,7 +35,7 @@
                         <td data-title="Emergency Date">{{closedCrisis.EmergencyDate | date:' dd-MM-yyyy hh:mm a'}}</td>
                         <td data-title="Closed On">{{closedCrisis.ClosedOn | date:' dd-MM-yyyy hh:mm a'}}</td>
                         <td data-title="Action">
-                            <i class="fa fa-edit fa-lg" (click)="viewClosedCrisis(closedCrisis.IncidentId)"></i>
+                            <i class="fa fa-edit fa-2x" (click)="viewClosedCrisis(closedCrisis.IncidentId)"></i>
                         </td>
                         <td data-title="Active">
                             <md-checkbox md-no-ink id="IsActive" [ngModel]="closedCrisis.isReopen" name="IsActive" (change)="IsReopenCheckedChange($event,closedCrisis)"
