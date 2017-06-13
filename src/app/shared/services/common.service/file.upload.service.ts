@@ -18,7 +18,7 @@ export class FileUploadService {
         this.progressObservable = new Observable((observer: Observer<number>) => {
             this.progressObserver = observer;
         });
-   }
+    }
  
     /**
      * Get file upload progress observable;
@@ -43,7 +43,8 @@ export class FileUploadService {
      * @memberOf FileUploadService
      */
     public uploadFiles<T>(url: string, files: FileData[] | File[], fieldName: string = ''): Observable<T> {
-        if (files.length > 0) {            
+        if (files.length > 0) {
+            const token: string = UtilityService.GetFromSession('access_token');        
             const fileUploadPromise: Promise<T> = new Promise((resolve, reject) => {
                 const formData: FormData = new FormData();
                 const xhr: XMLHttpRequest = new XMLHttpRequest();
@@ -65,7 +66,7 @@ export class FileUploadService {
                 xhr.onreadystatechange = () => {
                     if (xhr.readyState === 4) {
                         if (xhr.status === 200) {
-                            resolve((xhr.response !== "") ? JSON.parse(xhr.response) as T : new Object() as T);
+                            resolve((xhr.response !== '') ? JSON.parse(xhr.response) as T : new Object() as T);
                         } else {
                             reject(xhr.response);
                         }
@@ -81,27 +82,30 @@ export class FileUploadService {
                 };
  
                 xhr.open('POST', url, true);
+                xhr.setRequestHeader('Authorization', `Bearer ${token}`);
                 xhr.send(formData);
             });
  
             return Observable.fromPromise(fileUploadPromise);
         }
     }
-
-     public uploadFilesWithDate<T>(url: string, files: File[], date: string): Observable<T> {
-        if (files.length > 0) {            
+ 
+    public uploadFilesWithDate<T>(url: string, files: File[], date: string): Observable<T> {
+        if (files.length > 0) {
+            const token: string = UtilityService.GetFromSession('access_token'); 
             const fileUploadPromise: Promise<T> = new Promise((resolve, reject) => {
                 const formData: FormData = new FormData();
                 const xhr: XMLHttpRequest = new XMLHttpRequest();
+ 
                 for (const f of files) {
                     const file: File = f as File;
-                    formData.append(date, file, file.name);                    
-                }                
+                    formData.append(date, file, file.name);
+                }
  
                 xhr.onreadystatechange = () => {
                     if (xhr.readyState === 4) {
                         if (xhr.status === 200) {
-                            resolve((xhr.response !== "") ? JSON.parse(xhr.response) as T : new Object() as T);
+                            resolve((xhr.response !== '') ? JSON.parse(xhr.response) as T : new Object() as T);
                         } else {
                             reject(xhr.response);
                         }
@@ -117,6 +121,7 @@ export class FileUploadService {
                 };
  
                 xhr.open('POST', url, true);
+                xhr.setRequestHeader('Authorization', `Bearer ${token}`);
                 xhr.send(formData);
             });
  
@@ -124,16 +129,10 @@ export class FileUploadService {
         }
     }
  
- 
-    /**
-     * Set interval for frequency with which Observable inside Promise will share data with subscribers.
-     *
-     * @private
-     * @param {number} interval
-     *
-     * @memberOf FileUploadService
-     */
-    private setUploadUpdateInterval(interval: number): void {
-        setInterval(() => { }, interval);
+    private getRequestObject(): XMLHttpRequest {
+        const xhr: XMLHttpRequest = new XMLHttpRequest();
+        const token: string = UtilityService.GetFromSession('access_token');
+        xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+        return xhr;
     }
 }
