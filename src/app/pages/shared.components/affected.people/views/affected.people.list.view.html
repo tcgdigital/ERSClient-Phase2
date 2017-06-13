@@ -31,7 +31,7 @@
                     <i class="fa fa-address-book fa-lg" (click)="openCallerList(affectedperson)"></i>
                 </td>-->
                 <td data-title="Action">
-                    <i class="fa fa-edit fa-lg" (click)="openAffectedPersonDetail(affectedperson)"></i>
+                    <i class="fa fa-edit fa-2x" (click)="openAffectedPersonDetail(affectedperson)"></i>
                 </td>
                 <td data-title="Active">
                     <md-checkbox class="Marght" id="IsNokInformed" name="IsNokInformed" [ngModel]="affectedperson.IsNokInformed" (change)="IsNokInformed($event,affectedperson.AffectedPersonId,affectedperson.CrewName || affectedperson.PassengerName)"
@@ -108,7 +108,7 @@
                     </div>-->
                     <div class="form-group col-lg-4 col-sm-12 col-md-6">
                         Callers:
-                        <i class="fa fa-edit fa-md" data-dropdown="#drop1" (click)="openCallerList(affectedPersonModelForStatus)"></i>
+                        <i class="fa fa-edit fa-2x" data-dropdown="#drop1" (click)="openCallerList(affectedPersonModelForStatus)"></i>
                       
                         <div class="dropdown-menu dropdown-anchor-top-left dropdown-has-anchor" id="drop1">
                             <!--<ul class="f-dropdown" data-dropdown-content aria-hidden="true" tabindex="-1">
