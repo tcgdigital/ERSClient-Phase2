@@ -124,6 +124,9 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     communicationlogtoupdateId: number;
     communicationlog: CommunicationLogModel = new CommunicationLogModel();
     public submitted: boolean = false;
+    copassengerlist :  AffectedPeopleToView[] = [];
+    selectedcount : number;
+    listSelected : boolean = false;
 
 
 
@@ -133,6 +136,17 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         this.communicationLog.AffectedPersonId = message.Value;
         delete this.communicationLog.AffectedObjectId;
         delete this.enquiry.AffectedObjectId;
+        let pnr = this.affectedPeople.find(x=>x.AffectedPersonId==message.Value).Pnr;
+        this.copassengerlist= this.affectedPeople.filter(x=>x.Pnr==pnr);
+        this.copassengerlist.map(x=>x["IsSelected"]=false);
+    }
+
+    selectCopassenger($event: any,copassenger:AffectedPeopleToView) : void{
+            this.selectedcount = this.copassengerlist.filter(x=> x["IsSelected"]==true).length;
+    }
+
+    showList() :void {
+        this.listSelected=!this.listSelected;
     }
 
     onNotifyCrew(message: KeyValue): void {

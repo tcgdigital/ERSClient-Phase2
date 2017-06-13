@@ -67,6 +67,24 @@
                         <label for="KINContactNumber">KIN Contact Number </label>
                         <label class="form-control grey-input">{{pdaenquery.KINContactNumber}}</label>
                     </div>
+                    <div class="multiselect-container" [hidden]="copassengerlist.length<=0">
+                        <div class="multiselect-selector" (click)="showList(); $event.stopPropagation();">
+                            <i class="fa fa-caret-down fa-pull-right fa-fw" aria-hidden="true"></i> {{selectedcount>0? selectedcount
+                            + ' Passengers(s) selected' : 'Select Co-passenger'}}
+                        </div>
+                        <ul class="multiselect-list1 dropdown-menu-down" [hidden]="!listSelected" (click)="$event.stopPropagation();">
+                            <!--<li>
+                                <input type="checkbox" [(ngModel)]="IsAllSelected" formControlName="SelectAllDepartment" aria-label="Callback" (change)="selectAllDepartment(IsAllSelected)"
+                                    [readOnly]="broadcast.IsSubmitted" />
+                                <span>Select All</span>
+                            </li>-->
+                            <li *ngFor="let copassenger of copassengerlist">
+                                <input type="checkbox" aria-label="Callback" [checked]="copassenger.IsSelected"
+                                    (change)="selectCopassenger($event,copassenger)" />
+                                <span>{{copassenger.PassengerName}}</span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
