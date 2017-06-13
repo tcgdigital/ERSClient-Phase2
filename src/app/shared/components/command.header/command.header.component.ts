@@ -22,7 +22,7 @@ export class CommandHeaderComponent implements OnInit {
 
     constructor() { }
 
-    ngOnInit() {
+    ngOnInit() { 
         if (UtilityService.licenseInfo)
             this.clientName = UtilityService.licenseInfo.ClientName;
         else

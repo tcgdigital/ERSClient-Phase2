@@ -2,7 +2,7 @@
     <table responsive-table-body>
         <thead>
             <tr>
-                <th>Passenge Name</th>
+                <th>Passenger Name</th>
                 <th>PNR</th>
                 <th>Seat Number</th>
                 <th>Baggage Count</th>
@@ -16,7 +16,7 @@
                 <td data-title="Records" colspan="7">No records to show.</td>
             </tr>
             <tr *ngFor="let affected of invalidPassengers">
-                <td data-title="Passenge Name">{{affected.PassengerName}}</td>
+                <td data-title="Passenger Name">{{affected.PassengerName}}</td>
                 <td data-title="PNR">{{affected.Pnr}}</td>
                 <td data-title="Seat Number">{{affected.Seatno}}</td>
                 <td data-title="Baggage Count">{{affected.BaggageCount}}</td>
