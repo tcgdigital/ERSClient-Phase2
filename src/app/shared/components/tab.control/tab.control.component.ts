@@ -4,7 +4,7 @@ import {
     ElementRef
 } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { Subscription } from 'rxjs/Rx'
+import { Subscription } from 'rxjs/Rx';
 import { ITabLinkInterface } from './tab.control.interface';
 
 @Component({
@@ -27,19 +27,19 @@ export class TabControlComponent implements OnInit, AfterViewInit {
 
     /**
      * Creates an instance of TabControlComponent.
-     * @param {ElementRef} elementRef 
-     * @param {Router} router 
-     * 
+     * @param {ElementRef} elementRef
+     * @param {Router} router
+     *
      * @memberOf TabControlComponent
      */
     constructor(private elementRef: ElementRef, private router: Router) {
     }
 
     public ngOnInit(): void {
-        this.allowedTabLinks = this.tabLinks
+        this.allowedTabLinks = this.tabLinks;
         this._onRouteChange = this.router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
-                this.selectSpecificTabs(event.url)
+                this.selectSpecificTabs(event.url);
             }
         });
     }
@@ -54,16 +54,16 @@ export class TabControlComponent implements OnInit, AfterViewInit {
 
         this.$rootContainer.hover(
             ($event: JQueryEventObject) => {
-                let $itemWrapper: JQuery = jQuery($event.currentTarget);
-                let $navigation = $itemWrapper.find('.tab-nav');
-                let $tabColumns = $itemWrapper.find('.tab-column');
+                const $itemWrapper: JQuery = jQuery($event.currentTarget);
+                const $navigation = $itemWrapper.find('.tab-nav');
+                const $tabColumns = $itemWrapper.find('.tab-column');
 
                 this.updateNavigation($navigation, $itemWrapper, $tabColumns);
                 this.$slider.show();
             },
             ($event: JQueryEventObject) => {
-                let $itemWrapper: JQuery = jQuery($event.currentTarget);
-                let $navigation = $itemWrapper.find('.tab-nav');
+                const $itemWrapper: JQuery = jQuery($event.currentTarget);
+                const $navigation = $itemWrapper.find('.tab-nav');
                 this.hideNavigation($navigation);
                 this.$slider.hide();
             }
@@ -72,41 +72,41 @@ export class TabControlComponent implements OnInit, AfterViewInit {
 
     public onTabLinkClick($event, index: number): void {
         $event.preventDefault();
-        let $self: JQuery = jQuery($event.currentTarget);
-        let $currentItem: JQuery = $self.parent('li.tab-item');
+        const $self: JQuery = jQuery($event.currentTarget);
+        const $currentItem: JQuery = $self.parent('li.tab-item');
 
         this.resetSelection();
-        this.setSelection($currentItem, $event.pageX, $event.pageY)
+        this.setSelection($currentItem, $event.pageX, $event.pageY);
         this.$slider.hide();
     }
 
     public onTabItemClick($event, index: number): void {
-        let $self: JQuery = jQuery($event.currentTarget);
+        const $self: JQuery = jQuery($event.currentTarget);
         this.resetSelection();
-        this.setSelection($self, $event.pageX, $event.pageY)
+        this.setSelection($self, $event.pageX, $event.pageY);
         this.$slider.hide();
     }
 
     public onTabLinkMouseEnter($event, index: number): void {
-        let $self: JQuery = jQuery($event.currentTarget);
+        const $self: JQuery = jQuery($event.currentTarget);
         this.moveSliderOnFocus($self, index);
         // if ($self.hasClass('active'))
         //     this.$slider.hide();
     }
 
     public onTabLinkMouseLeave($event, index: number): void {
-        let $self: JQuery = jQuery($event.currentTarget);
+        const $self: JQuery = jQuery($event.currentTarget);
         this.moveSliderOnFocus($self, index);
         // this.$slider.hide();
     }
 
     public gotoPrevious($event): void {
-        let $self: JQuery = jQuery($event.currentTarget);
+        const $self: JQuery = jQuery($event.currentTarget);
         this.updateSlider($self, false);
     }
 
     public gotoNext($event): void {
-        let $self: JQuery = jQuery($event.currentTarget);
+        const $self: JQuery = jQuery($event.currentTarget);
         this.updateSlider($self, true);
     }
 
@@ -127,11 +127,11 @@ export class TabControlComponent implements OnInit, AfterViewInit {
     }
 
     private updateSlider($currentElm, bool): void {
-        let $navigation = $currentElm.closest('.tab-nav');
-        let $itemWrapper = $navigation.siblings('.tab-link');
-        let $tabColumns = $itemWrapper.children('.tab-column');
-        let $tabItems = $tabColumns.children('li.tab-item');
-        let tabWidth = $tabItems.eq(0).width();
+        const $navigation = $currentElm.closest('.tab-nav');
+        const $itemWrapper = $navigation.siblings('.tab-link');
+        const $tabColumns = $itemWrapper.children('.tab-column');
+        const $tabItems = $tabColumns.children('li.tab-item');
+        const tabWidth = $tabItems.eq(0).width();
 
         $tabColumns.css('width', (tabWidth * $tabItems.length) + 'px');
 
@@ -148,17 +148,22 @@ export class TabControlComponent implements OnInit, AfterViewInit {
     }
 
     private updateNavigation($navigation, $container, $tabColumns) {
-        var scrollLeft = $container.scrollLeft();
-        var isPrevActive = false;
-        var isNextActive = false;
+        const scrollLeft = $container.scrollLeft();
+        let isPrevActive = false;
+        let isNextActive = false;
 
         if (($tabColumns.outerWidth(true) - $container.width()) > 0) {
             isPrevActive = (scrollLeft <= 0) ? false : true;
-            isNextActive = (scrollLeft == Math.floor($tabColumns.outerWidth(true) - $container.width())) ? false : true;
+            isNextActive = (scrollLeft === Math.floor($tabColumns.outerWidth(true) - $container.width())) ? false : true;
+
+            isPrevActive = true;
+            isNextActive = true;
         }
 
-        (isNextActive) ? $navigation.find('a').eq(1).addClass('visible') : $navigation.find('a').eq(1).removeClass('visible');
-        (isPrevActive) ? $navigation.find('a').eq(0).addClass('visible') : $navigation.find('a').eq(0).removeClass('visible');
+        (isNextActive) ? $navigation.find('a').eq(1).addClass('visible')
+            : $navigation.find('a').eq(1).removeClass('visible');
+        (isPrevActive) ? $navigation.find('a').eq(0).addClass('visible')
+            : $navigation.find('a').eq(0).removeClass('visible');
     }
 
     private hideNavigation($navigation) {
@@ -172,30 +177,30 @@ export class TabControlComponent implements OnInit, AfterViewInit {
     }
 
     private setSelection($tabItem: JQuery, pageXPos: number, pageYPos: number): void {
-        let posX: number = $tabItem.offset().left;
-        let posY: number = $tabItem.offset().top;
-        let buttonWidth: number = $tabItem.width();
-        let buttonHeight: number = $tabItem.height();
+        const posX: number = $tabItem.offset().left;
+        const posY: number = $tabItem.offset().top;
+        const buttonWidth: number = $tabItem.width();
+        const buttonHeight: number = $tabItem.height();
 
-        let x: number = pageXPos - posX - buttonWidth / 2;
-        let y: number = pageYPos - posY - buttonHeight / 2;
+        const x: number = pageXPos - posX - buttonWidth / 2;
+        const y: number = pageYPos - posY - buttonHeight / 2;
 
-        $tabItem.prepend("<span class='ripple'></span>");
-        let $ripple: JQuery = $tabItem.find('.ripple');
+        $tabItem.prepend('<span class="ripple"></span>');
+        const $ripple: JQuery = $tabItem.find('.ripple');
 
         $ripple.css({
             width: buttonWidth,
             height: buttonHeight,
             top: y + 'px',
             left: x + 'px'
-        }).addClass("rippleEffect");
+        }).addClass('rippleEffect');
 
         $ripple.parent('li').addClass('selected');
     }
 
     private moveSliderOnFocus($tabItem: JQuery, tabIndex: number): void {
-        let whatTab: number = tabIndex;
-        let howFar: number = $tabItem.width() * whatTab;
+        const whatTab: number = tabIndex;
+        const howFar: number = $tabItem.width() * whatTab;
 
         // if (!$tabItem.hasClass('active'))
         //     this.$slider.show();
@@ -204,7 +209,7 @@ export class TabControlComponent implements OnInit, AfterViewInit {
 
     private selectSpecificTabs(tabUrl: string): void {
         this.allowedTabLinks.forEach((tab: ITabLinkInterface) => {
-            tab.selected = (tabUrl.indexOf(tab.url) != -1);
+            tab.selected = (tabUrl.indexOf(tab.url) !== -1);
         });
     }
 }
