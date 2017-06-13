@@ -31,6 +31,7 @@ import 'font-awesome-sass-loader';
 import 'lodash';
 import 'air-datepicker';
 import 'moment';
+import 'ckeditor';
 import 'underscore';
 import 'jstimezonedetect';
 import '../node_modules/air-datepicker/dist/js/i18n/datepicker.en';

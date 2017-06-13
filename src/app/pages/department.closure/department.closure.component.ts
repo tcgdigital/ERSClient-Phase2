@@ -152,6 +152,7 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
                         this.departmentClosureModelSave.CreatedOn = new Date();
                         this.departmentClosureService.CreateDepartmentClosure(this.departmentClosureModelSave)
                             .subscribe((resultReturn: DepartmentClosureModel) => {
+                                //this.formReset();
                                 this.toastrService.success('The Department Closure Save is performed.', 'Department Closure', this.toastrConfig);
                             }, () => {
                                 this.toastrService.error('Error Occured', 'Department Closure', this.toastrConfig);
@@ -170,6 +171,7 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
                         delete result.Records[0].Department;
                         this.departmentClosureService.UpdateDepartmentClosure(result.Records[0])
                             .subscribe((resultReturn: DepartmentClosureModel) => {
+                                //this.formReset();
                                 this.toastrService.success('The Department Closure Save is performed.', 'Department Closure', this.toastrConfig);
                             }, () => {
                                 this.toastrService.error('Error Occured', 'Department Closure', this.toastrConfig);
@@ -181,6 +183,7 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
         }
         
     }
+
 
     public onSubmit(): void {
         if (this.form.valid) {
@@ -210,6 +213,7 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
                                 this.departmentClosureService.CreateDepartmentClosure(this.departmentClosureModelSubmit)
                                     .subscribe((resultReturn: DepartmentClosureModel) => {
                                         this.isSubmited = true;
+                                        //this.formReset();
                                         this.toastrService.success('The Department Closure Submit is performed.', 'Department Closure', this.toastrConfig);
                                     }, () => {
                                         this.toastrService.error('Error Occured', 'Department Closure', this.toastrConfig);
@@ -232,6 +236,7 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
                                 this.departmentClosureService.UpdateDepartmentClosure(result.Records[0])
                                     .subscribe((resultReturn: DepartmentClosureModel) => {
                                         this.isSubmited = true;
+                                        //this.formReset();
                                         this.toastrService.success('The Department Closure Submit is performed.', 'Department Closure', this.toastrConfig);
                                     }, () => {
                                         this.toastrService.error('Error Occured', 'Department Closure', this.toastrConfig);
@@ -244,4 +249,8 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
         
     }
 
+    private formReset():void{
+        this.form.controls["ClosureReport"].reset({ value: '' });
+        this.form.controls["ClosureRemarks"].reset({ value: '' });
+    }
 }

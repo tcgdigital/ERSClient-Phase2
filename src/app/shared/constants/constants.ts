@@ -56,11 +56,28 @@ export class GlobalConstants {
     public static ACCESS_TOKEN: string = 'access_token';
     public static AD_AUTH_ENABLED: boolean = false;
     public static PASSWORD_PATTERN: string = '((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})';
+    public static NUMBER_PATTERN: string = '^[0-9-+]*$';
+    public static EMAIL_PATTERN: string = '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$';
     public static LAST_INCIDENT_PICK_COUNT: string = '5';
     public static ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION: number = 12;
 
     public static INTERCEPTOR_PERFORM: boolean = false;
     public static PRESERVE_DATA_FROM_CONVERSION = ['EmergencyDate'];
+
+    public static EditorToolbarConfig: any = {
+        // uiColor: '#99000',
+        toolbar: [
+            { name: 'clipboard', items: ['Cut', 'Copy', 'Paste', '-', 'Undo', 'Redo'] },
+            { name: 'links', items: ['Link', 'Unlink'] },
+            { name: 'insert', items: ['Table', 'HorizontalRule', 'SpecialChar'] },
+            { name: 'tools', items: ['Maximize'] },
+            { name: 'document', items: ['Source'] },
+            '/',
+            { name: 'basicstyles', items: ['Bold', 'Italic', 'Strike', '-', 'RemoveFormat'] },
+            { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent'] },
+            { name: 'styles', items: ['Styles', 'Format'] },
+        ]
+    };
 
     public static LicenseValidationCode: IKeyValue[] = [
         { key: 101, value: 'License is valid' },
@@ -69,7 +86,7 @@ export class GlobalConstants {
         { key: 104, value: 'Current machine is not registered with the license'},
         { key: 105, value: 'License key is invalid or not provided'},
         { key: 106, value: 'License has expired'}
-    ]
+    ];
 
     public static EmergencyCategories: IKeyValue[] = [
         { value: 'FlightRelated', key: 1 },

@@ -72,6 +72,8 @@ export class EmergencyTypeEntryComponent implements OnInit {
             this.emergencyTypeModel.CreatedBy = +this.credential.UserId;
             this.emergencyTypeService.Create(this.emergencyTypeModel)
                 .subscribe((response: EmergencyTypeModel) => {
+                    this.resetForm();
+                    this.showAdd = false;
                     this.toastrService.success('Emergency Type saved Successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("EmergencyTypeModelSaved", response);
                 }, (error: any) => {
@@ -83,6 +85,8 @@ export class EmergencyTypeEntryComponent implements OnInit {
             delete this.emergencyTypeModelWithoutActive.Active;
             this.emergencyTypeService.Update(this.emergencyTypeModelWithoutActive)
                 .subscribe((response: EmergencyTypeModel) => {
+                    this.resetForm();
+                    this.showAdd = false;
                     this.toastrService.success('Emergency Type edited Successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("EmergencyTypeModelUpdated", response);
                 }, (error: any) => {
@@ -101,6 +105,16 @@ export class EmergencyTypeEntryComponent implements OnInit {
     }
 
     private initiateForm(): void {
+        this.emergencyTypeModel.EmergencyTypeId = 0;
+        this.form = new FormGroup({
+            EmergencyTypeId: new FormControl(0),
+            EmergencyTypeName: new FormControl('', [Validators.required]),
+            EmergencyCategory: new FormControl('', [Validators.required]),
+            ActiveFlag: new FormControl('', [Validators.required])
+        });
+    }
+
+    private resetForm(): void {
         this.emergencyTypeModel.EmergencyTypeId = 0;
         this.form = new FormGroup({
             EmergencyTypeId: new FormControl(0),

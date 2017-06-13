@@ -7,33 +7,34 @@
                     <label for="Email">Email:<span class="required">*</span></label>
                     <input class="form-control" id="txtEmail" type="email" formControlName="Email" ngControl="mailAddress" placeholder="Enter Email"
                         autofocus />
-                        <small *ngIf="form.controls.Email.hasError('required')" [hidden]="form.controls.Email.valid || (form.controls.Email.pristine && !submitted)"
-                                class="text-danger">Required</small>
+
+                    <div class="error_white" *ngIf="form.controls.Email.hasError('required')" [hidden]="form.controls.Email.valid || (form.controls.Email.pristine && !submitted)">
+                        <small class="text-danger">Required</small></div>
+                    <div class="error_white" *ngIf="form.controls.Email.hasError('pattern')" [hidden]="form.controls.Email.valid || (form.controls.Email.pristine && !submitted)">
+                        <small class="text-danger">Email address is not proper.</small>
+                    </div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-12">
                 <div class="form-group">
                     <label for="UserId">User Id:<span class="required">*</span></label>
-                    <input class="form-control" id="txtUserId" type="text" formControlName="UserId" placeholder="Enter User Id" 
-                          />
-                        
-                        <small *ngIf="form.controls.UserId.hasError('required')" 
-                        [hidden]="form.controls.UserId.valid || (form.controls.UserId.pristine && !submitted)"
-                                class="text-danger">Required</small>
+                    <input class="form-control" id="txtUserId" type="text" formControlName="UserId" placeholder="Enter User Id" />
+
+                    <small *ngIf="form.controls.UserId.hasError('required')" [hidden]="form.controls.UserId.valid || (form.controls.UserId.pristine && !submitted)"
+                        class="text-danger">Required</small>
                 </div>
             </div>
 
             <div class="col-lg-3 col-md-6 col-12">
                 <div class="form-group">
                     <label for="Name">Name:<span class="required">*</span></label>
-                    <input class="form-control" id="txtName" type="text" formControlName="Name" placeholder="Enter Name" 
-                        />
 
-                        
-                        <small *ngIf="form.controls.Name.hasError('required')" 
-                        [hidden]="form.controls.Name.valid || (form.controls.Name.pristine && !submitted)"
-                                class="text-danger">Required</small>
+                    <input class="form-control" id="txtName" type="text" formControlName="Name" placeholder="Enter Name" />
 
+                    <small *ngIf="form.controls.Name.hasError('required')" [hidden]="form.controls.Name.valid || (form.controls.Name.pristine && !submitted)"
+                        class="text-danger">Required</small>
+                        <small *ngIf="form.controls.Name.hasError('validateName')" [hidden]="form.controls.Name.valid || (form.controls.Name.pristine && !submitted)"
+                        class="text-danger">Invalid</small>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-12">
@@ -41,10 +42,19 @@
                     <label for="MainContact">MainContact:<span class="required">*</span></label>
                     <input class="form-control" id="txtMainContact" type="text" formControlName="MainContact" placeholder="Enter MainContact"
                         autofocus />
-                        
-                        <small *ngIf="form.controls.MainContact.hasError('required')" 
-                        [hidden]="form.controls.MainContact.valid || (form.controls.MainContact.pristine && !submitted)"
-                                class="text-danger">Required</small>
+
+                    <small *ngIf="form.controls.MainContact.hasError('required')" [hidden]="form.controls.MainContact.valid || (form.controls.MainContact.pristine && !submitted)"
+                        class="text-danger">Required</small>
+
+                    <small *ngIf="form.controls.MainContact.hasError('minlength')" [hidden]="form.controls.MainContact.valid || (form.controls.MainContact.pristine && !submitted)"
+                        class="text-danger">Minimum contact lenght 10 is required</small>
+
+                    <small *ngIf="form.controls.MainContact.hasError('maxlength')" [hidden]="form.controls.MainContact.valid || (form.controls.MainContact.pristine && !submitted)"
+                        class="text-danger">Maximum contact lenght 10 is allowed</small>
+
+                    <small *ngIf="form.controls.MainContact.hasError('pattern')" [hidden]="form.controls.MainContact.valid || (form.controls.MainContact.pristine && !submitted)"
+                        class="text-danger">Only number allowed.</small>
+
                 </div>
             </div>
         </div>
@@ -53,24 +63,31 @@
                 <div class="form-group">
                     <label for="AlternateContact">AlternateContact:</label>
                     <input class="form-control" id="txtAlternateContact" type="text" formControlName="AlternateContact" placeholder="Enter AlternateContact"
-                          />
-                        
+                    />
+                    
+
+                    <small *ngIf="form.controls.AlternateContact.hasError('minlength')" [hidden]="form.controls.AlternateContact.valid || (form.controls.AlternateContact.pristine && !submitted)"
+                        class="text-danger">Minimum contact lenght 10 is required</small>
+
+                    <small *ngIf="form.controls.AlternateContact.hasError('maxlength')" [hidden]="form.controls.AlternateContact.valid || (form.controls.AlternateContact.pristine && !submitted)"
+                        class="text-danger">Maximum contact lenght 10 is allowed</small>
+
+                    <small *ngIf="form.controls.AlternateContact.hasError('pattern')" [hidden]="form.controls.AlternateContact.valid || (form.controls.AlternateContact.pristine && !submitted)"
+                        class="text-danger">Only number allowed.</small>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-12">
                 <div class="form-group">
                     <label for="Location">Location:<span class="required">*</span></label>
-                    <input class="form-control" id="Location" type="text" formControlName="Location" placeholder="Enter Location" 
-                         />
-                       
-                        <small *ngIf="form.controls.Location.hasError('required')" 
-                        [hidden]="form.controls.Location.valid || (form.controls.Location.pristine && !submitted)"
-                                class="text-danger">Required</small>
+                    <input class="form-control" id="Location" type="text" formControlName="Location" placeholder="Enter Location" />
+
+                    <small *ngIf="form.controls.Location.hasError('required')" [hidden]="form.controls.Location.valid || (form.controls.Location.pristine && !submitted)"
+                        class="text-danger">Required</small>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="form-group">
-                    <md-checkbox class="Marght" id="IsTravelRequest" formControlName="isActive" aria-label="IsActive" >
+                    <md-checkbox class="Marght" id="IsTravelRequest" formControlName="isActive" aria-label="IsActive">
                         Active
                     </md-checkbox>
                 </div>
