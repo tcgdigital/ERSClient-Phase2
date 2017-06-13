@@ -64,6 +64,7 @@ export class LoginComponent implements OnInit {
                     this.licensingService.GetLicenseInfo()
                         .subscribe((data: LicenseInformationModel) => {
                             UtilityService.licenseInfo = data;
+                            UtilityService.SetToSession({ ClientName: UtilityService.licenseInfo.ClientName });
                         });
                 }
                 else {

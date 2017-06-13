@@ -23,7 +23,10 @@ export class CommandHeaderComponent implements OnInit {
     constructor() { }
 
     ngOnInit() { 
-        this.clientName = UtilityService.licenseInfo.ClientName;
+        if (UtilityService.licenseInfo)
+            this.clientName = UtilityService.licenseInfo.ClientName;
+        else
+            this.clientName = UtilityService.GetFromSession('ClientName');
     }
 
     public onDepartmentChange(selectedDepartment: KeyValue): void {
