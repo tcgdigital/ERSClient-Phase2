@@ -21,6 +21,9 @@ export class CrewModel extends BaseModel {
 	public CrewNationality: string;
 	public ContactNumber: string;
 	public AlternateContactNumber: string;
+	public PersonalInformationFile: string;
+	public TrainingRecords: string;
+	public LicenseRecords: string;
 
 	public Age : string;
 	public PassportNumber : string;
