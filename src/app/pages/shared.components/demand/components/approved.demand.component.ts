@@ -47,7 +47,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     credential: AuthModel;
     protected _onRouteChange: Subscription;
     isArchive : boolean = false;
-
+    demandFilePath: string;
 
     /**
      * Creates an instance of ApprovedDemandComponent.
@@ -64,9 +64,10 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         private departmentService: DepartmentService,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig, private _router: Router) {
-        this.createdByName = 'Anwesha Ray';
+        this.createdByName = this.credential.UserName;
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
+        this.demandFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Demand/';
     };
 
     getDemandsForApproval(deptId, incidentId): void {
