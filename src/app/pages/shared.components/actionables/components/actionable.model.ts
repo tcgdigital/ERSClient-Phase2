@@ -11,7 +11,7 @@ export class ActionableModel extends BaseModel {
     public AssignedBy: number;
     public AssignedDt?: Date;
     public CompletionStatus: string;
-    public ParentCheckListId?: number;
+    //public ParentCheckListId?: number;
     public AssignToDepartment: number;
     public EndTime?: Date;
     public RaisedBy?: number;
@@ -43,5 +43,7 @@ export class ActionableModel extends BaseModel {
     
     public Incident: IncidentModel;
     public CheckList: ChecklistModel;
+
+    
 }
 

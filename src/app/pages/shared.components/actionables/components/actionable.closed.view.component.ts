@@ -140,8 +140,9 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<ActionableModel>) => {
                 this.actionableWithParents = response.Records;
                 this.parentChecklistIds = this.actionableWithParents.map(function (actionable) {
-                    let Id = actionable.ParentCheckListId;
-                    return Id;
+                   // let Id = actionable.ParentCheckListId;
+                    //return Id;
+                    return 1;
                 })
             }, (error: any) => {
                 console.log(`Error: ${error}`);
