@@ -16,14 +16,17 @@ export class CommandHeaderComponent implements OnInit {
     @Output() departmentChange: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
     @Output() incidentChange: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
 
-    incidentPlaceholder: string='Incident';
-    departmentPlaceholder: string= 'Department';
+    incidentPlaceholder: string = 'Incident';
+    departmentPlaceholder: string = 'Department';
     clientName: string;
-    
+
     constructor() { }
 
     ngOnInit() { 
-        this.clientName = UtilityService.licenseInfo.ClientName;
+        if (UtilityService.licenseInfo)
+            this.clientName = UtilityService.licenseInfo.ClientName;
+        else
+            this.clientName = UtilityService.GetFromSession('ClientName');
     }
 
     public onDepartmentChange(selectedDepartment: KeyValue): void {

@@ -91,6 +91,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.isOffSetPopup = false;
         this.resetIncidentViewForm();
+        // this.initiatepopupform();
         this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
 
         this.emergencyLocationService.GetAllActiveEmergencyLocations()
@@ -139,7 +140,17 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
             DestinationPopup: new FormControl(''),
             ScheduleddeparturePopup: new FormControl(''),
             ScheduledarrivalPopup: new FormControl(''),
-            FlightTailNumberPopup: new FormControl('')
+            WhatHappendPopup: new FormControl(''),
+            WhereHappendPopup: new FormControl(''),
+            FlightTailNumberPopup: new FormControl(''),
+            OtherConfirmationInformationPopup: new FormControl(''),
+            OrganizationIdPopup: new FormControl(''),
+            SourceInformationPopup: new FormControl(''),
+            ReportedByNamePopup: new FormControl(''),
+            ReportedByAddressPopup: new FormControl(''),
+            ContactOfWitnessPopup: new FormControl(''),
+            SenderOfCrisisInformationPopup: new FormControl(''),
+            BorrowedIncidentPopup: new FormControl('')
         });
         this.IsDrillPopup = false;
     }
@@ -273,6 +284,8 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
         }
         this.childModalViewClosedIncident.show();
     }
+
+
 
     public hideClosedIncidentView(): void {
         this.childModalViewClosedIncident.hide();

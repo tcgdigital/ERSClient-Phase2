@@ -34,7 +34,7 @@
                     <i class="fa fa-edit fa-lg" (click)="openAffectedPersonDetail(affectedperson)"></i>
                 </td>
                 <td data-title="Active">
-                    <md-checkbox class="Marght" id="IsNokInformed" name="IsNokInformed" [ngModel]="affectedperson.IsNokInformed" (change)="IsNokInformed($event,affectedperson.AffectedPersonId)"
+                    <md-checkbox class="Marght" id="IsNokInformed" name="IsNokInformed" [ngModel]="affectedperson.IsNokInformed" (change)="IsNokInformed($event,affectedperson.AffectedPersonId,affectedperson.CrewName || affectedperson.PassengerName)"
                         aria-label="ActiveFlag">
                     </md-checkbox>
                 </td>

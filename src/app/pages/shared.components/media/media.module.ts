@@ -2,17 +2,19 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { CKEditorModule } from 'ng2-ckeditor';
 
 import { MediaRouting } from './media.routing';
 import { MediaComponent } from './media.component';
 import {
     MediaReleaseComponent, MediaReleaseEntryComponent,
     MediaReleaseListComponent, MediaQueryListComponent, MediaService,
-    MediaReleaseApprovalComponent,MediaReleaseApprovalListComponent, MediaReleaseApprovalEntryComponent
+    MediaReleaseApprovalComponent, MediaReleaseApprovalListComponent,
+    MediaReleaseApprovalEntryComponent
 } from './components';
 import { BrowserModule } from '@angular/platform-browser';
 import { EnquiryService } from '../../shared.components';
-import { DataExchangeService , SharedModule } from '../../../shared';
+import { DataExchangeService, SharedModule } from '../../../shared';
 import { TemplateMediaService } from '../template.media/components';
 
 @NgModule({
@@ -21,8 +23,9 @@ import { TemplateMediaService } from '../template.media/components';
         FormsModule,
         HttpModule,
         ReactiveFormsModule,
-        MediaRouting,
-        SharedModule
+        CKEditorModule,
+        SharedModule,
+        MediaRouting
     ],
     declarations: [
         MediaComponent,

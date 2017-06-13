@@ -84,6 +84,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     filesToUpload: File[]=[];
     demandFilePath: string;
     demandFileName: string;
+
      
     /**
      * Creates an instance of DemandEntryComponent.
@@ -118,8 +119,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         private toastrConfig: ToastrConfig, private _router: Router) {
         this.showAdd = false;
         this.buttonValue = "Create Demand";
-        this.departments = [];
-        
+        this.departments = [];            
     }
 
     getDemandType(): void {
@@ -589,14 +589,15 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             this.filesToUpload, this.date.toString()).subscribe((result: string) => {
                 console.log(result);
                 
-                this.demandFilePath = GlobalConstants.EXTERNAL_URL + result.substr(result.indexOf('UploadFiles'),result.length).replace(/\\/g,"/");
+                //this.demandFilePath = GlobalConstants.EXTERNAL_URL + result.substr(result.indexOf('UploadFiles'),result.length).replace(/\\/g,"/");
                 let fileStore: FileStoreModel = new FileStoreModel();
                 fileStore.FileStoreID = 0;
                 //delete fileStore.FileStoreID;
                 fileStore.IncidentId = this.currentIncidentId;
                 fileStore.DepartmentId = this.currentDepartmentId;
                 fileStore.OrganizationId = organizationId;
-                fileStore.FilePath = this.demandFilePath;
+                //fileStore.FilePath = this.demandFilePath;
+                fileStore.FilePath = result;
                 fileStore.UploadedFileName = this.filesToUpload[0].name;  
                 if(this.demandModel.DemandId == 0) {
                     fileStore.DemandId = this.demandModel.DemandId;

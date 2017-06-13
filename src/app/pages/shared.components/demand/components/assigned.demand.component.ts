@@ -43,7 +43,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     credential: AuthModel;
     protected _onRouteChange: Subscription;
     isArchive : boolean = false;
-
+    demandFilePath: string;
 
     /**
      * Creates an instance of AssignedDemandComponent.
@@ -63,6 +63,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         //   this.createdByName = "Anwesha Ray";
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
+        this.demandFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Demand/';
     }
 
     getAssignedDemands(deptId, incidentId): void {
