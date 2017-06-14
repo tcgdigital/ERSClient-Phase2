@@ -1,6 +1,10 @@
-import { Component, ViewEncapsulation, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import {
+    Component, ViewEncapsulation, OnInit,
+    Input, Output, EventEmitter, SimpleChange
+} from '@angular/core';
 import { KeyValue } from '../../models/base.model';
-import { UtilityService } from "../../services/common.service/utility.service";
+import { UtilityService } from '../../services/common.service/utility.service';
+
 @Component({
     selector: '[command-header]',
     templateUrl: './command.header.view.html',
@@ -20,9 +24,7 @@ export class CommandHeaderComponent implements OnInit {
     departmentPlaceholder: string = 'Department';
     clientName: string;
 
-    constructor() { }
-
-    ngOnInit() { 
+    public ngOnInit(): void {
         if (UtilityService.licenseInfo)
             this.clientName = UtilityService.licenseInfo.ClientName;
         else
