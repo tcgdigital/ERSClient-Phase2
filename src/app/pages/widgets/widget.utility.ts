@@ -7,7 +7,7 @@ import {
 export class WidgetUtilityService {
     public static elapsedHourForGraph: number = GlobalConstants.ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION;
 
-    public static GetDemandGraph(requesterDepartmentId: number, Highcharts: any, arrGraphData: GraphObject[],containerName:string): void {
+    public static GetGraph(requesterDepartmentId: number, Highcharts: any, arrGraphData: GraphObject[],containerName:string): void {
         console.log(requesterDepartmentId);
         let filterDepartments = arrGraphData.filter((item: GraphObject) => {
             return item.requesterDepartmentId == requesterDepartmentId;
@@ -56,6 +56,56 @@ export class WidgetUtilityService {
         }
         this.setDemandRaisedGraphData(Highcharts, DepartmentName, arrGraphCompleted, arrGraphPending,containerName);
     }
+
+    // public static GetCheckListGraph(requesterDepartmentId: number, Highcharts: any, arrGraphData: GraphObject[],containerName:string): void {
+    //     console.log(requesterDepartmentId);
+    //     let filterDepartments = arrGraphData.filter((item: GraphObject) => {
+    //         return item.requesterDepartmentId == requesterDepartmentId;
+    //     });
+
+    //     let DepartmentName = filterDepartments[0].requesterDepartmentName;
+    //     let ConfigurationHoursBackTime: Date = new Date();
+    //     ConfigurationHoursBackTime.setMinutes(ConfigurationHoursBackTime.getMinutes() - (this.elapsedHourForGraph * 60));
+
+    //     // Created count array
+    //     let limitPoint: Date = new Date();
+    //     let arrGraphPending: number[] = [];
+    //     let arrGraphCompleted: number[] = [];
+    //     let pendingCount: number = 0;
+    //     let completedCount: number = 0;
+    //     let stepPoint: Date = new Date();
+    //     let totalCompletedCountPresent: number = filterDepartments.filter((item: GraphObject) => item.isClosed === true).length;
+    //     let totalPendingCountPresent: number = filterDepartments.filter((item: GraphObject) => item.isClosed === false).length;
+
+    //     for (let i: number = this.elapsedHourForGraph; i >= 1; i--) {
+    //         stepPoint = new Date(limitPoint.toString());
+    //         stepPoint.setMinutes(stepPoint.getMinutes() - 60);
+
+    //         let completedList: GraphObject[] =
+    //             filterDepartments.filter((x) => x.closedOn != null)
+    //                 .filter((x) => {
+    //                     return ((stepPoint <= x.closedOn && x.closedOn < limitPoint)
+    //                         || (stepPoint <= x.closedOn && x.closedOn <= limitPoint
+    //                             && i === this.elapsedHourForGraph));
+    //                 });
+
+    //         if (completedList.length > 0) {
+    //             pendingCount = totalCompletedCountPresent - completedList.length;
+    //             totalPendingCountPresent = pendingCount;
+    //             completedCount = completedList.length;
+    //         }
+    //         else {
+    //             pendingCount = totalPendingCountPresent;
+    //             completedCount = 0;
+    //         }
+    //         totalCompletedCountPresent = totalPendingCountPresent;
+
+    //         arrGraphCompleted.push(completedCount);
+    //         arrGraphPending.push(pendingCount);
+    //         limitPoint = new Date(stepPoint.toString());
+    //     }
+    //     this.setDemandRaisedGraphData(Highcharts, DepartmentName, arrGraphCompleted, arrGraphPending,containerName);
+    // }
 
     public static setDemandRaisedGraphData(Highcharts: any, departmentName: string, arrGraphCompleted: number[],
      arrGraphPending: number[],containerName:string): void {

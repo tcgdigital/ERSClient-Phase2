@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Routes } from '@angular/router';
+import { Routes, Router,ActivatedRoute  } from '@angular/router';
 //import { RAGScaleService,RAGScaleModel } from "./pages/shared.components/ragscale";
 import { ResponseModel } from "./shared";
 
@@ -17,7 +17,7 @@ import { LayoutPaths } from './shared/constants';
 @Component({
     selector: 'app',
     encapsulation: ViewEncapsulation.None,
-    
+
     templateUrl: './app.view.html',
     styleUrls: ['./app.style.scss']
 })
@@ -25,6 +25,7 @@ export class AppComponent implements OnInit {
     isMenuCollapsed: boolean = false;
 
     constructor(private globalState: GlobalStateService,
+        private route: ActivatedRoute,
         private imageLoader: ImageLoaderService,
         private spinner: ThemeSpinnerService,
         private menuService: SideMenuService
@@ -37,9 +38,12 @@ export class AppComponent implements OnInit {
         });
     }
 
+    
+
     public ngOnInit(): void {
         console.log('Initial App State');
-        
+        let id = this.route.snapshot.paramMap.get('id');
+
     }
 
     public ngAfterViewInit(): void {
@@ -59,5 +63,5 @@ export class AppComponent implements OnInit {
             .Load(LayoutPaths.images.root + 'sky-bg.jpg'));
     }
 
-    
+
 }

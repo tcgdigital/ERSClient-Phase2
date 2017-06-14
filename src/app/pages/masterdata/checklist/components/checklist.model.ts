@@ -9,7 +9,7 @@ export class ChecklistModel extends BaseModel {
     public CheckListId: number;
     public CheckListCode: string;
     public CheckListDetails: string;
-    public ParentCheckListId: number;
+    //public ParentCheckListId: number;
     public Duration: number;
     public DepartmentId: number;
     public URL: string;
@@ -24,6 +24,10 @@ export class ChecklistModel extends BaseModel {
     public ParentCheckList?: ChecklistModel;
     public EmergencyType: EmergencyTypeModel;
     public Organization: OrganizationModel;
+    public IsSelected: boolean; 
+    
+    public CheckListParent?: ChecklistModel[];
+    public CheckListChildren?: ChecklistModel[];
 
     constructor(flag?: boolean) {
         super();
@@ -31,7 +35,7 @@ export class ChecklistModel extends BaseModel {
             this.CheckListId = 0;
             this.CheckListCode = '';
             this.CheckListDetails = '';
-            this.ParentCheckListId = 0;
+            //this.ParentCheckListId = 0;
             this.Duration = 0;
             this.DepartmentId = 0;
             this.URL = '';
