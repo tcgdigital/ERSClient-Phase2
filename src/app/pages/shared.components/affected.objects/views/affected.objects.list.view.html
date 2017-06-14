@@ -42,7 +42,7 @@
                     </div>
                 </td>-->
                  <td data-title="Interaction Details">
-                      <i class="fa fa-edit fa-lg" (click)="openAffectedObjectDetail(affectedObject)"></i>
+                      <i class="fa fa-edit fa-2x" (click)="openAffectedObjectDetail(affectedObject)"></i>
                 </td>
             </tr>
         </tbody>
@@ -146,7 +146,7 @@
                     <div class="row">
                         <div class="form-group col-lg-4 col-sm-12 col-md-6">
                             Callers:
-                            <i class="fa fa-edit fa-md" data-dropdown="#drop1" (click)="openCallerList(affectedPersonModelForStatus)"></i>
+                            <i class="fa fa-edit fa-2x" data-dropdown="#drop1" (click)="openCallerList(affectedPersonModelForStatus)"></i>
                             <div class="dropdown-menu dropdown-anchor-top-left dropdown-has-anchor" id="drop1">
                                 <!--<ul class="f-dropdown" data-dropdown-content aria-hidden="true" tabindex="-1">
                                 <li *ngFor="let status of callers"><a href="javascript:void(0);" (click)="updateStatus(status.key)">{{status.caption}}</a></li>
@@ -204,7 +204,7 @@
                     <div class="row">
                         <div class="col-lg-6 col-sm-12 col-md-6" *ngIf="!isArchive">
                             <div class="buttonholder">
-                                <button class="btn btn-primary" type="button" (click)="saveUpdateAffectedObject(affectedObjectDetails)">Save</button>
+                                <button class="btn btn-primary" type="button" (click)="saveUpdateAffectedObject(affectedObjectDetails)">Submit</button>
                             </div>
                         </div>
                     </div>

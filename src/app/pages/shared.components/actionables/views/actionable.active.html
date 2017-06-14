@@ -42,7 +42,7 @@
                         <a class="glyphicon glyphicon-download-alt" target="_self" *ngIf="actionable.UploadLinks!=null" href="{{actionable.UploadLinks}}"
                             download="{{actionable.FileName}}">Download</a>
                     </td>
-                    <td data-title="Details"><i class="fa fa-edit" (click)="openActionableDetail(actionable)"></i>
+                    <td data-title="Details"><i class="fa fa-edit fa-2x" (click)="openActionableDetail(actionable)"></i>
                     </td>
                 </tr>
                 <tr *ngIf="actionable.expanded">
@@ -109,7 +109,7 @@
                                 <button type="button" class="btn btn-primary" (click)="clearFileUpload($event)">Clear</button>
                             </div>
                             <div class="col-sm-2"><div class="row buttonholder" *ngIf="!isArchive">
-                            <button class="btn btn-primary" type="submit">Save</button>&nbsp;
+                            <button class="btn btn-primary" type="submit">Submit</button>&nbsp;
                         </div></div>
                         </div>
 
