@@ -58,12 +58,6 @@ export class ChecklistListComponent implements OnInit {
                         a.StationList = [];
                 })
                 console.log(this.checkLists);
-                // this.parentChecklistListForSearch = this.checkLists.filter(this.findIfParent)
-                //     .map((x:ChecklistModel) => {
-                //         return new NameValue<number>(x.ParentCheckList.CheckListCode, x.ParentCheckListId)
-
-
-                //     });
                 this.initiateSearchConfigurations();
             });
     }

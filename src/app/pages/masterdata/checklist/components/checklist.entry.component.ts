@@ -170,19 +170,6 @@ export class ChecklistEntryComponent implements OnInit {
         this.dataExchange.Unsubscribe('checklistModelEdited');
     }
 
-    // showList = function (e) {
-    //     if (this.listSelected)
-    //         this.listSelected = false;
-    //     else
-    //         this.listSelected = true;
-    // };
-
-    // getAllEmergencyLocations(): void {
-    //     this.emergencyLocationService.GetAllActiveEmergencyLocations()
-    //     .subscribe((response: ResponseModel<EmergencyLocationModel>)=> {
-    //         this.AllStations = response.Records;
-    //     });
-    // }
     private getCheckListParents(departmentId): void {
         this.checkListService.GetAllParents()
             .subscribe((response: ResponseModel<ChecklistModel>) => {
@@ -194,16 +181,6 @@ export class ChecklistEntryComponent implements OnInit {
                 });
                 this.parentdepartments = _.unique(_.flatten(_.pluck(this.CheckListParents, 'TargetDepartment')), (x) => { return x.DepartmentId; });
 
-                //     this.currentDepartment.TargetDepartmentId = departmentId;
-                //     this.currentDepartment.BroadcastDepartmentMappingId = Math.max.apply(Math, broadcastmappingIds) + 1;
-                //     this.currentDepartment.TargetDepartment = new DepartmentModel();
-                //     this.currentDepartment.TargetDepartment.DepartmentId = departmentId;
-                //     this.departmentService.Get(departmentId)
-                //         .subscribe((response1: DepartmentModel) => {
-                //             this.currentDepartment.TargetDepartment.DepartmentName = response1.DepartmentName;
-                //         });
-
-                //     this.BroadCastDepartmentMappings.push(this.currentDepartment);
             });
     }
 
@@ -222,9 +199,6 @@ export class ChecklistEntryComponent implements OnInit {
         if (this.form.controls['CheckListDetails'].touched) {
             this.checkListModelEdit.CheckListDetails = this.form.controls['CheckListDetails'].value;
         }
-        // if (this.form.controls['ParentCheckListId'].touched) {
-        //     this.checkListModelEdit.ParentCheckListId = this.form.controls['ParentCheckListId'].value;
-        // }
         if (this.form.controls['Duration'].touched) {
             this.checkListModelEdit.Duration = this.form.controls['Duration'].value;
         }
@@ -272,7 +246,6 @@ export class ChecklistEntryComponent implements OnInit {
 
 
                 this.checkListModel.CheckListDetails = this.form.controls['CheckListDetails'].value;
-                //this.checkListModel.ParentCheckListId = this.form.controls['ParentCheckListId'].value;
                 this.checkListModel.Duration = this.form.controls['Duration'].value;
                 this.checkListModel.DepartmentId = this.form.controls['DepartmentId'].value;
                 this.checkListModel.URL = this.form.controls['URL'].value;
@@ -280,11 +253,8 @@ export class ChecklistEntryComponent implements OnInit {
                 this.checkListModel.Sequence = this.form.controls['Sequence'].value;
                 this.checkListModel.OrganizationId = this.form.controls['OrganizationId'].value;
                 this.checkListModel.Stations = this.form.controls['Stations'].value;
-                // if (this.activeOrganizations.length)
-                // this.checkListModel.Organization = this.activeOrganizations.find(a => a.OrganizationId == this.checkListModel.OrganizationId)
                 delete this.checkListModel['Active'];
                 delete this.checkListModel['IsSelected'];
-                //delete this.checkListModel.StationList;
 
                 let CheckList_Code = '';
                 const dep = this.currentDepartmentName;
@@ -299,24 +269,6 @@ export class ChecklistEntryComponent implements OnInit {
 
                 this.checkListModel.CheckListCode = CheckList_Code;
                 this.createChecklist(this.checkListModel);
-                // if (this.checkListModel.ParentCheckListId != null) {
-                //     this.checkListService.GetParentChecklistCode(this.checkListModel.ParentCheckListId)
-                //         .subscribe((response: ResponseModel<ChecklistModel>) => {
-                //             CheckList_Code = CheckList_Code + '_' + response.Records[0].CheckListCode;
-                //             const d = new Date();
-                //             const time = d.getTime();
-                //             const timestring = time.toString();
-                //             const n = timestring.substr(timestring.length - 5);
-
-                //             CheckList_Code = CheckList_Code + '_' + n;
-                //             this.checkListModel.CheckListCode = CheckList_Code;
-                //             this.createChecklist(this.checkListModel);
-                //         });
-                // }
-                // else {
-                //     this.checkListModel.CheckListCode = CheckList_Code;
-                //     this.createChecklist(this.checkListModel);
-                // }
             }
             else {// EDIT REGION
                 delete this.checkListModel['Active'];
@@ -353,7 +305,6 @@ export class ChecklistEntryComponent implements OnInit {
                 this.selectedcount = 0;
                 this.toastrService.success('Checklist Created Successfully.', 'Success', this.toastrConfig);
                 response.Organization = this.checkListModel.Organization;
-                //this.dataExchange.Publish('checkListModelSaved', response);
                 this.dataExchange.Publish('checkListListReload', response);
                 this.form = this.resetCheckListForm();
                 this.showAdd = false;
@@ -363,41 +314,16 @@ export class ChecklistEntryComponent implements OnInit {
             });
     }
 
-    // selectAllParent(IsAllSelected: boolean): void {
-    //     this.checkListModel.DepartmentBroadcasts = [];
-    //     this.CheckListParents.forEach(element => {
-    //         element.IsSelected = IsAllSelected;
-    //         if (IsAllSelected) {
-    //             this.deptBroadcast = new DepartmentBroadcastModel();
-    //             this.deptBroadcast.DepartmentId = element.TargetDepartmentId;
-    //             this.broadcast.DepartmentBroadcasts.push(this.deptBroadcast);
-    //         }
-    //         else {
-    //             this.broadcast.DepartmentBroadcasts = [];
-    //             this.selectedcount = 0;
-    //         }
-    //     });
-    //     this.selectedcount = this.broadcast.DepartmentBroadcasts.length;
-    // }
-
     onCheckListEditSuccess(data: ChecklistModel): void {
         this.showAdd = true;
         this.initiateCheckListModel();
         this.checkListModel = data;
         this.form = this.resetCheckListForm(this.checkListModel);
-        // this.form.controls["ParentDepartmentId"].reset({ value: data.DepartmentId, disabled: false });
-        // this.checkListParentDepartmentWise=this.CheckListParents.filter(x=>x.DepartmentId==data.DepartmentId);
-        // data.CheckListParent.forEach(x=>{
-        //     this.checkListParentDepartmentWise.find(y=>y.CheckListId==x.CheckListId).IsSelected=true;
-        // });
-        // this.checkListParentDepartmentWise = _.clone(data.CheckListParent);
         if (data.CheckListParent.length > 0) {
-            // this.parentChecklists = _.clone(data.CheckListParent);
             this.parentChecklists = [];
             data.CheckListParent.map(y => {
                 let obj = Object.assign({}, y);
                 this.parentChecklists.push(obj);
-                // this.checkListParentDepartmentWise.push(obj);
             });
             this.parentChecklists = this.addDepartmentName(this.parentChecklists);
         }
@@ -421,7 +347,6 @@ export class ChecklistEntryComponent implements OnInit {
             CheckListId: new FormControl(checkList ? checkList.CheckListId : 0),
             CheckListDetails: new FormControl(checkList ? checkList.CheckListDetails : '', [Validators.required]),
             ParentDepartmentId: new FormControl(''),
-            //ParentCheckListId: new FormControl(checkList ? checkList.ParentCheckListId : '', [Validators.required]),
             Duration: new FormControl(checkList ? checkList.Duration : '', [Validators.required]),
             DepartmentId: new FormControl(checkList ? checkList.DepartmentId : '', [Validators.required]),
             URL: new FormControl(checkList ? checkList.URL : '', [Validators.required]),

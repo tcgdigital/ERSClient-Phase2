@@ -32,20 +32,6 @@
                         </li>
                     </ul>
                 </div>
-                <!--<div class="form-group">
-                            <label for="ParentCheckList">ParentCheckList:<span class="required">*</span></label>
-                            <select id="selectApprover" formControlName="ParentCheckListId" name="ParentCheckList" class="form-control">
-                                <option value=''>Select Parent Checklist</option>
-                                <option *ngFor="let checklist of activeCheckLists" [value]="checklist.CheckListId" >
-                                    {{checklist.CheckListCode}}
-                                </option>
-                            </select>
-                            
-                            <small *ngIf="form.controls.ParentCheckListId.hasError('required')" 
-                                    [hidden]="form.controls.ParentCheckListId.valid || (form.controls.ParentCheckListId.pristine && !submitted)"
-                                class="text-danger">Required</small>
-                        </div>-->
-
             </div>
             <div class="form-group col-lg-4 col-md-6 cl-sm-12">
                 <label for="Department">Selected Parent Checklists(click on the checklist to view details):</label>

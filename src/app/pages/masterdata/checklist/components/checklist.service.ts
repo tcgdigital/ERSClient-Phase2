@@ -46,8 +46,6 @@ export class ChecklistService extends ServiceBase<ChecklistModel> implements ICh
         return this._dataService.Query()
             .Filter(`ActiveFlag eq 'Active'`)
             .Expand('TargetDepartment($select=DepartmentId,DepartmentName)')
-            // .Filter(`DepartmentId eq ${departmentId}`)
-            // .Expand('CheckListParent')
             .Execute();
 
     }
@@ -75,12 +73,6 @@ export class ChecklistService extends ServiceBase<ChecklistModel> implements ICh
                 checkList.TargetDepartment = data;
                 return checkList;
             })
-            // .flatMap((data: ChecklistModel) =>
-            //     this.Get(data.ParentCheckListId))
-            // .map((data: ChecklistModel) => {
-            //     checkList.ParentCheckList = data;
-            //     return checkList;
-            // })
             .flatMap((data: ChecklistModel) =>
                 this.emergencyTypeService.Get(data.EmergencyTypeId))
             .map((data: EmergencyTypeModel) => {
