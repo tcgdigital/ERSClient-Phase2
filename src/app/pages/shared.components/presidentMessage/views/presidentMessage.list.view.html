@@ -13,7 +13,7 @@
             <tr *ngFor="let message of PresidentsMessages">
                 <td data-title="President's Messages" width="60%">{{message.Message}}</td>
                 <td data-title="Edit">
-                    <button class="btn btn-warning" type="button" (click)="UpdatePresidentMessage(message)">Edit</button>
+                   <i class="fa fa-edit" (click)="UpdatePresidentMessage(message)"></i>
                 </td>
             </tr>
         </tbody>

@@ -12,13 +12,13 @@ const mediaRoutes: Routes = [
              {
                 path: '',
                 // component: MediaQueryListComponent
-                redirectTo: 'query', 
+                redirectTo: 'release', 
                 pathMatch: 'full'
             },
-            {
-                path: 'query',
-                component: MediaQueryListComponent
-            },
+            // {
+            //     path: 'query',
+            //     component: MediaQueryListComponent
+            // },
             {
                 path: 'release',
                 component: MediaReleaseComponent

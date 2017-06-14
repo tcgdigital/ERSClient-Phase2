@@ -60,7 +60,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         private globalState: GlobalStateService,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig, private _router: Router) {
-        //   this.createdByName = "Anwesha Ray";
+        this.createdByName = "Anwesha Ray";
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
         this.demandFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Demand/';
@@ -278,7 +278,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
             }
         });
         this.credential = UtilityService.getCredentialDetails();
-        this.createdByName = this.credential.UserName;
+        this.createdByName = "Anwesha Ray";
 
         
         this.getAllDepartments();

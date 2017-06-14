@@ -14,12 +14,12 @@
                 <td colspan="10">No Releases to show.</td>
             </tr>
             <tr *ngFor="let query of mediaReleases">
-                <td data-title="Releases">{{query.MediaReleaseType}}</td>
+                <td data-title="Releases" width="50%">{{query.MediaReleaseType}}</td>
                 <td data-title="Status">{{query.MediaReleaseStatus === 'SentForApproval' ? 'Approval Pending': query.MediaReleaseStatus}}</td>
                 <td data-title="Created On">{{query.CreatedOn | date:' dd-MM-yyyy hh:mm a'}}</td>
                 <td data-title="Sent For Approval On">{{query.SentForApprovalOn | date:' dd-MM-yyyy hh:mm a'}}</td>                
                 <td data-title="Edit">
-                    <button class="btn btn-warning" type="button" (click)="UpdateMediaRelease(query)">Edit</button>
+                    <i class="fa fa-edit" (click)="UpdateMediaRelease(query)"></i>
                 </td>
             </tr>
         </tbody>

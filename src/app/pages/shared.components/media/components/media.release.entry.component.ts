@@ -43,6 +43,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     applyReadOnlytextBox: boolean = false;
     applyReadOnlyButtons: boolean = false;
     appReadOnlyPublish: boolean = true;
+    isInvalidForm: boolean = false;
 
     toolbarConfig: any = GlobalConstants.EditorToolbarConfig;
 
@@ -71,6 +72,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
         this.currentDepartmentId = this.initiatedDepartmentId;
         this.formInit();
         this.getTemplateMedias();
+        this.isInvalidForm = false;
         this.credential = UtilityService.getCredentialDetails();
         this.dataExchange.Subscribe('OnMediaReleaseUpdate', (model) => this.onMediaReleaseUpdate(model));
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
@@ -95,11 +97,12 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     getContentFromTemplate(evt: any) {
         if (evt.target.value !== '') {
             const templateId = evt.target.value;
+            //this.toolbarConfig['readOnly'] = false;
             this.mediaQueryService.GetContentFromTemplate(this.currentIncidentId, this.currentDepartmentId, +templateId)
                 .subscribe((response: any) => {
-                    this.templateContent = `${response.Subject}\n\r${response.Body}`;
+                    this.templateContent = `${response.Subject}<br />${response.Body}`;
                     this.media.Message = this.templateContent;
-                    this.applyReadOnlytextBox = false;
+                    this.applyReadOnlytextBox = false; 
                 });
         }
         else {
@@ -113,41 +116,66 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
         this.media = mediaModel;
         this.media.MediaqueryId = mediaModel.MediaqueryId;
         this.media.IsUpdated = true;
+        
         this.currentTemplateMediaId = this.templateMedias
             .find((a) => a.TemplatePurpose === mediaModel.MediaReleaseType).TemplateMediaId.toString();
-
+        
+      
         if (this.media.MediaReleaseStatus === 'SentForApproval' || this.media.MediaReleaseStatus === 'Published') {
             this.form.controls['MediaReleaseType'].reset({ value: this.currentTemplateMediaId, disabled: true });
             this.applyReadOnlytextBox = true;
             this.applyReadOnlyButtons = true;
             this.appReadOnlyPublish = true;
+            this.toolbarConfig['readOnly'] = true;
         }
         else if (this.media.MediaReleaseStatus === 'Approved') {
             this.appReadOnlyPublish = false;
             this.form.controls['MediaReleaseType'].reset({ value: this.currentTemplateMediaId, disabled: true });
             this.applyReadOnlytextBox = true;
             this.applyReadOnlyButtons = true;
+            this.toolbarConfig['readOnly'] = true;
         }
         else {
             this.form.controls['MediaReleaseType'].reset({ value: this.currentTemplateMediaId, disabled: false });
             this.applyReadOnlytextBox = false;
             this.applyReadOnlyButtons = false;
             this.appReadOnlyPublish = true;
+            this.toolbarConfig['readOnly'] = false;
         }
         this.Action = 'Edit';
         this.showAdd = true;
     }
 
-    save(): void {
-        if (this.media.Message === '' || this.media.Message === null || this.media.Message === undefined) {
+    validateForm(): boolean{
+        if((this.form.controls['Message'].value == "" || this.form.controls['Message'].value == undefined) 
+        && (this.form.controls['Remarks'].value == "" || this.form.controls['Remarks'].value == undefined ))
+        {
             this.hideMessageError = false;
+            this.hideRemarksError = false;
+            return false;
         }
-        else if (this.media.Remarks === '' || this.media.Remarks === null || this.media.Remarks === undefined) {
+        if(this.form.controls['Message'].value == "" || this.form.controls['Message'].value == null || this.form.controls['Message'].value == undefined)
+        {
+            this.hideMessageError = false;
+            return false;
+        } 
+        else if(this.form.controls['Remarks'].value == "" || this.form.controls['Remarks'].value == null || this.form.controls['Remarks'].value == undefined)
+        {
             this.hideMessageError = true;
             this.hideRemarksError = false;
+            return false;
+        } 
+        else
+        {               
+            this.hideMessageError = true;
+            this.hideRemarksError = true;    
+            return true;
         }
-        else {
+    }
 
+    save(): void {
+        if(this.validateForm())
+        {
             this.hideMessageError = true;
             this.hideRemarksError = true;
             this.media.IsPublished = false;
@@ -157,19 +185,19 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     }
 
     SentForApproval(): void {
-        this.Action = 'SentForApproval';
-        this.CreateOrUpdateMediaQuery();
+        if(this.validateForm())
+        {
+            this.hideMessageError = true;
+            this.hideRemarksError = true;
+            this.media.IsPublished = false;
+            this.Action = 'SentForApproval';
+            this.CreateOrUpdateMediaQuery();
+        }        
     }
 
-    publish(): void {
-        if (this.media.Message === '' || this.media.Message == null || this.media.Message === undefined) {
-            this.hideMessageError = false;
-        }
-        else if (this.media.Remarks === '' || this.media.Remarks == null || this.media.Remarks === undefined) {
-            this.hideMessageError = true;
-            this.hideRemarksError = false;
-        }
-        else {
+    publish(): void {       
+       if(this.validateForm())
+        {
             this.hideMessageError = true;
             this.hideRemarksError = true;
             this.media.IsPublished = true;
@@ -178,11 +206,12 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
             this.media.PublishedOn = this.date;
             this.Action = 'Publish';
             this.CreateOrUpdateMediaQuery();
-        }
+        }       
     }
 
     cancel(): void {
         this.formInit();
+        //this.toolbarConfig['readOnly'] = true;
         this.showAdd = false;
         this.hideMessageError = true;
         this.hideRemarksError = true;
@@ -194,9 +223,12 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
         this.applyReadOnlytextBox = false;
         this.applyReadOnlyButtons = false;
         this.appReadOnlyPublish = true;
+        this.isInvalidForm = false;
+        //this.toolbarConfig['readOnly'] = true;
     }
 
-    public onChangeMessage($event): void {
+    public onMessageChange($event): void {
+        //this.media.Message = this.form.controls['Message'].value;
         console.log($event);
     }
 
@@ -233,7 +265,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
         if (this.Action === 'Publish') {
             this.media.MediaReleaseStatus = 'Published';
         }
-
+        
         if (this.media.MediaqueryId === 0) {
             this.media.CreatedBy = +this.credential.UserId;
             this.media.CreatedOn = new Date();
@@ -273,6 +305,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
                     console.log(`Error: ${error}`);
                 });
         }
+        
     }
 
     private formInit(): void {
