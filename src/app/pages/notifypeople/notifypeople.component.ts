@@ -106,8 +106,8 @@ export class NotifyPeopleComponent implements OnInit {
                 checkboxes: true
             })
             var node = this.tree.getNodeByText(result[0].text);
-            jQuery(jQuery(jQuery(jQuery(jQuery(node[0])[0])[0])[0]).find('div')[0]).hide();
-            jQuery(jQuery(jQuery(jQuery(jQuery(node[0])[0])[0])[0]).find('ul')[0]).addClass("first-row-alignment");
+            jQuery('#tree ul.gj-tree-bootstrap-list li div[data-role="wrapper"]:eq(0)').hide();
+            jQuery('#tree ul.gj-tree-bootstrap-list li ul.gj-tree-bootstrap-list:eq(0)').addClass("first-row-alignment");
             this.tree.expand(node);
         });
     }
