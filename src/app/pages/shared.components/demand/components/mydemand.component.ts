@@ -49,6 +49,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     credential: AuthModel;
     protected _onRouteChange: Subscription;
     isArchive: boolean = false;
+    demandFilePath: string
 
     /**
      * Creates an instance of MyDemandComponent.
@@ -68,6 +69,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig, private _router: Router) {
         this.demandForRemarks = new DemandModelToView();
+        this.demandFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Demand/';    
     }
 
     getMyDemands(deptId, incidentId): void {

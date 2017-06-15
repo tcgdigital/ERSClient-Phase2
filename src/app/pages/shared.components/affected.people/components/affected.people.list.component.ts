@@ -167,13 +167,13 @@ export class AffectedPeopleListComponent implements OnInit {
         this.IsDestroyed = false;
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
     }
-    IsNokInformed(event : any,id : number){
+    IsNokInformed(event : any,id : number,name: string){
         let affectedpersonToUpdate = new AffectedPeopleModel();
         affectedpersonToUpdate.IsNokInformed = event.checked;
         affectedpersonToUpdate.AffectedPersonId = id;
         this.affectedPeopleService.Update(affectedpersonToUpdate,id)
             .subscribe((response: AffectedPeopleModel) => {
-                this.toastrService.success('NOK is informed.')
+                this.toastrService.success(`Status changed for ${name}`)
                 this.getAffectedPeople(this.currentIncident);
             }, (error: any) => {
                 alert(error);

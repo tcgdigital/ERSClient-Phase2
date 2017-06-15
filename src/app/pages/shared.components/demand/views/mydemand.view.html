@@ -40,11 +40,11 @@
                         <td data-title="Download File">
                             <ul>
                                 <li *ngFor="let file of demand.FileStores">
-                                    <a target="_self" href="{{file.FilePath}}" download="file.UploadedFileName">{{file.UploadedFileName}}</a>
+                                    <a target="_blank" href="{{demandFilePath + file.FileStoreID}}" download="file.UploadedFileName">{{file.UploadedFileName}}</a>
                                 </li>
                             </ul>
                         </td>
-                        <td data-title="Edit" *ngIf="!isArchive"><i class="fa fa-edit" (click)="open(demand.DemandId)" ></i></td>
+                        <td data-title="Edit" *ngIf="!isArchive"><i class="fa fa-edit fa-2x" (click)="open(demand.DemandId)" ></i></td>
                     </tr>
                 </tbody>
             </table>

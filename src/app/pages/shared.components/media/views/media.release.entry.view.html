@@ -8,15 +8,15 @@
                         <div class="col-sm-6 col-lg-4 col-md-6">
                             <div class="form-group">
                                 <label for="Media Release Type">Select Media Release Type:<span class="red">*</span></label>
-                                <select id="selectMediaRelease" formControlName="MediaReleaseType" name="MediaReleaseType"
-                                    [ngModel] = "currentTemplateMediaId" class="form-control" (change)= "getContentFromTemplate($event)">
+                                <select id="selectMediaRelease" formControlName="MediaReleaseType" name="MediaReleaseType" [ngModel]="currentTemplateMediaId"
+                                    class="form-control" (change)="getContentFromTemplate($event)">
                                     <option value=''>Select Media Release Type</option>
                                     <option *ngFor="let template of templateMedias" [value]="template.TemplateMediaId" >
                                         {{template.TemplatePurpose}}
                                     </option>
                                 </select>
                             </div>
-                        </div>                        
+                        </div>
                     </div>
                     <div class="row"></div>
                     <br/>
@@ -24,9 +24,15 @@
                         <div class="col-sm-6 col-lg-4 col-md-6">
                             <div class="form-group">
                                 <label for="Message">Media Release Message:<span class="red">*</span></label>
-                                <textarea class="form-control" id="Message" formControlName="Message" [readOnly]="applyReadOnlytextBox" placeholder="Enter Media Release Message"
+
+                                <ckeditor formControlName="Message" [(ngModel)]="media.Message" (change)="onMessageChange($event)" (blur)="onMessageBlur($event)" (focus)="onMessageFocus($event)" (ready)="onMessageReady($event)" debounce="500" [config]="toolbarConfig">
+                                </ckeditor>
+
+                                <!--<text-editor [config]="{uiColor: '#99000'}"></text-editor>-->
+
+                                <!--<textarea class="form-control" id="Message" formControlName="Message" [readOnly]="applyReadOnlytextBox" placeholder="Enter Media Release Message"
                                     [(ngModel)]="media.Message" required autofocus></textarea>
-                                <span [hidden]="hideMessageError">Please Input Message</span>
+                                <span [hidden]="hideMessageError">Please Input Message</span>-->
                             </div>
                         </div>
                         <div class="col-sm-6 col-lg-4 col-md-6">
@@ -53,7 +59,7 @@
     </form>
 </div>
 
-        <div class="addbuttonHolder">
-            <button class="btn btn-primary" type="submit" (click)="showAddRegion(showAdd)" >Add New Media Release</button>
-            <!--[disabled]="media.IsPublished": Disable feature will be required in Archieve dashboard-->
-        </div>
+<div class="addbuttonHolder">
+    <button class="btn btn-primary" type="submit" (click)="showAddRegion(showAdd)">Add New Media Release</button>
+    <!--[disabled]="media.IsPublished": Disable feature will be required in Archieve dashboard-->
+</div>

@@ -276,7 +276,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
     }
 
     public GetDemandRaisedGraph(requesterDepartmentId: number) {
-        WidgetUtilityService.GetDemandGraph(requesterDepartmentId,Highcharts,this.arrGraphData,'demand-raised-graph-container');
+        WidgetUtilityService.GetGraph(requesterDepartmentId,Highcharts,this.arrGraphData,'demand-raised-graph-container');
         this.showDemandRaisedGraph = true;
     }
 

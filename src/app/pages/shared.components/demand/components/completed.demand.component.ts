@@ -49,6 +49,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
     credential: AuthModel;
     protected _onRouteChange: Subscription;
     isArchive : boolean = false;
+    demandFilePath: string;
 
     /**
      * Creates an instance of CompletedDemandComponent.
@@ -65,9 +66,10 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         private departmentService: DepartmentService,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig, private _router: Router) {
-        this.createdByName = "Anwesha Ray";
+        this.createdByName = this.credential.UserName;
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
+        this.demandFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Demand/';   
     }
 
     getCompletedDemands(deptId, incidentId): void {
