@@ -9,7 +9,10 @@ import {
     DateTimePickerChangeMonthEventArgs, DateTimePickerRenderCellEventArgs
 } from './datetimepicker.model';
 
-@Directive({ selector: '[datetime-picker]' })
+@Directive({ 
+    selector: '[datetime-picker]',
+    exportAs: 'datetimepicker'
+})
 export class DateTimePickerDirective implements AfterViewInit {
     @Input() options: DateTimePickerOptions;
 
@@ -25,6 +28,8 @@ export class DateTimePickerDirective implements AfterViewInit {
     @Output() changeViewHandler: EventEmitter<string> = new EventEmitter<string>();
     @Output() renderCellHandler: EventEmitter<DateTimePickerRenderCellEventArgs>
     = new EventEmitter<DateTimePickerRenderCellEventArgs>();
+
+    datepickerInstance: any;
 
 
     /**
@@ -81,13 +86,17 @@ export class DateTimePickerDirective implements AfterViewInit {
             args.CellType = cellType;
             this.renderCellHandler.emit(args);
         };
-        const datePicker = $self.datepicker(options).data('datepicker');
+        this.datepickerInstance = $self.datepicker(options).data('datepicker');
 
         $self.siblings('.input-group-addon').on('click', () => {
-            if (datePicker) {
-                datePicker.show();
+            if (this.datepickerInstance) {
+                this.datepickerInstance.show();
             }
         });
+    }
+
+    public updateConfig(config: any){
+        this.datepickerInstance.update(config);
     }
 
     private addPickerIcon($element: JQuery): void {
