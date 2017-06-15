@@ -38,7 +38,9 @@ export class MediaReleaseApprovalEntryComponent implements OnInit, OnDestroy {
     credential: AuthModel;
     hideMessageError: boolean = true;
     hideRemarksError: boolean = true;
+    isInvalidForm: boolean = false;
     
+    toolbarConfig: any = GlobalConstants.EditorToolbarConfig;
 
     /**
      * Creates an instance of MediaQueryEntryComponent.
@@ -56,7 +58,7 @@ export class MediaReleaseApprovalEntryComponent implements OnInit, OnDestroy {
         private toastrConfig: ToastrConfig,
         private templateMediaService: TemplateMediaService) {
         this.showAdd = false;
-       
+        this.toolbarConfig['readOnly'] = false;
     }
 
     ngOnInit(): void {
@@ -64,7 +66,9 @@ export class MediaReleaseApprovalEntryComponent implements OnInit, OnDestroy {
         this.initiatedDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.initiatedDepartmentId;
-        this.formInit();       
+        this.isInvalidForm = false;
+        this.formInit();   
+        this.toolbarConfig['readOnly'] = false;    
         this.credential = UtilityService.getCredentialDetails();
         this.dataExchange.Subscribe("OnMediaReleaseUpdate", model => this.onMediaReleaseUpdate(model));
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
@@ -87,41 +91,55 @@ export class MediaReleaseApprovalEntryComponent implements OnInit, OnDestroy {
     onMediaReleaseUpdate(mediaModel: MediaModel): void {
         this.media = new MediaModel();
         this.media = mediaModel;
-        this.media.MediaqueryId = mediaModel.MediaqueryId;
+        this.media.MediaqueryId = mediaModel.MediaqueryId;        
         this.media.IsUpdated = true;
         this.Action = "Edit";
         this.showAdd = true;
+        this.toolbarConfig['readOnly'] = false;
     }
 
     approve(): void { 
-        this.validateForm();       
-        this.media.IsPublished = false;
-        this.Action = "Approve";
-        this.UpdateMediaQuery();           
-    }
-
-    validateForm(): void{
-        if(this.media.Message == "" || this.media.Message == null || this.media.Message == undefined)
+       if(this.validateForm())
         {
-            this.hideMessageError = false;
-        } 
-        else if(this.media.Remarks == "" || this.media.Remarks == null || this.media.Remarks == undefined)
-        {
-            this.hideMessageError = true;
-            this.hideRemarksError = false;
-        } 
-        else
-        {
-               
-            this.hideMessageError = true;
-            this.hideRemarksError = true;    
-        }
+            this.media.IsPublished = false;
+            this.Action = "Approve";
+            this.UpdateMediaQuery();
+        }           
     }
 
     reject(): void {
-        this.validateForm();
-        this.Action = "Reject";
-        this.UpdateMediaQuery();
+        if(this.validateForm())
+        {
+            this.Action = "Reject";
+            this.UpdateMediaQuery();
+        }
+    }
+
+   validateForm(): boolean{
+        if((this.form.controls['Message'].value == "" || this.form.controls['Message'].value == undefined) 
+        && (this.form.controls['Remarks'].value == "" || this.form.controls['Remarks'].value == undefined ))
+        {
+            this.hideMessageError = false;
+            this.hideRemarksError = false;
+            return false;
+        }
+        if(this.form.controls['Message'].value == "" || this.form.controls['Message'].value == null || this.form.controls['Message'].value == undefined)
+        {
+            this.hideMessageError = false;
+            return false;
+        } 
+        else if(this.form.controls['Remarks'].value == "" || this.form.controls['Remarks'].value == null || this.form.controls['Remarks'].value == undefined)
+        {
+            this.hideMessageError = true;
+            this.hideRemarksError = false;
+            return false;
+        } 
+        else
+        {               
+            this.hideMessageError = true;
+            this.hideRemarksError = true;    
+            return true;
+        }
     }
 
     private UpdateMediaQuery(): void {
@@ -148,11 +166,12 @@ export class MediaReleaseApprovalEntryComponent implements OnInit, OnDestroy {
             this.media.ApproverDepartmentId = this.currentDepartmentId;
             this.media.RejectedOn = new Date();                            
         }
+        
         this.media.UpdatedBy = +this.credential.UserId;
         this.media.UpdatedOn = new Date();
         this.mediaQueryService.Update(this.media)
             .subscribe((response: MediaModel) => {
-                this.toastrService.success('Media release edited successfully.', 'Success', this.toastrConfig);
+                this.toastrService.success('Media release is approved successfully.', 'Success', this.toastrConfig);
                 this.dataExchange.Publish("MediaModelUpdated", response);                                                
                 if(this.media.IsPublished)
                 {                        
@@ -188,4 +207,18 @@ export class MediaReleaseApprovalEntryComponent implements OnInit, OnDestroy {
     showAddRegion(ShowAdd: Boolean): void {
         this.showAdd = true;
     };
+
+    public onMessageChange($event): void {
+        console.log($event);
+    }
+
+    public onMessageBlur($event): void {
+        console.log($event);
+    }
+    public onMessageFocus($event): void {
+        console.log($event);
+    }
+    public onMessageReady($event): void {
+        console.log($event);
+    }
 }

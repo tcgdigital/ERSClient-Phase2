@@ -5,7 +5,7 @@ import {
 import { MediaModel } from './media.model';
 import { MediaService } from './media.service';
 import {
-    ResponseModel, DataExchangeService,
+    ResponseModel, DataExchangeService, GlobalConstants,
     GlobalStateService, KeyValue, UtilityService
 } from '../../../../shared';
 
@@ -21,7 +21,7 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
     mediaReleases: MediaModel[] = [];
     currentIncidentId: number;
     currentDepartmentId: number;
-
+    downloadPath: string; 
     /**
      * Creates an instance of MediaReleaseListComponent.
      * @param {MediaService} mediaService 
@@ -59,7 +59,7 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.initiatedDepartmentId;
         this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
-
+        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/' + this.currentIncidentId + '/';
         this.dataExchange.Subscribe("MediaModelSaved", model => this.onMediaSuccess(model));
         this.dataExchange.Subscribe("MediaModelUpdated", model => this.onMediaSuccess(model));
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
@@ -69,6 +69,7 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
     private incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
         this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
+        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/' + this.currentIncidentId + '/';
     }
 
     private departmentChangeHandler(department: KeyValue): void {
