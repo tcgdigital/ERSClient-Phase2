@@ -35,12 +35,13 @@
             padding: 20px 13px 5px;
             background: $text-accordion-bg;
             line-height: 18px;
-            >i {
-                position: absolute;
-                top: 0;
-                right: 15px;
-                color: $text-accordion-date;
-            }
+        }
+        i.publish-date {
+            position: absolute;
+            top: 0;
+            right: 15px;
+            color: $text-accordion-date;
+            background-color: #f5f5f5;
         }
     }
 }
@@ -57,8 +58,7 @@
         @include transition(all, 0.4s);
         &.cd-item-front {
             position: relative;
-            z-index: 3;
-            // @include box-shadow(0, 0, 6px, 2px, $header-shadow);
+            z-index: 3; // @include box-shadow(0, 0, 6px, 2px, $header-shadow);
         }
         &.cd-item-middle {
             z-index: 2;
@@ -240,14 +240,15 @@
     }
 }
 
-.nodatafound{ 
-    width:50%; 
-    margin:0 auto;    
+.nodatafound {
+    width: 50%;
+    margin: 0 auto;
     text-align: center;
-    i{
-       width: 100%;
+    i {
+        width: 100%;
     }
 }
+
 @media screen and (max-width: $resXS-E) {}
 
 @media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {}
