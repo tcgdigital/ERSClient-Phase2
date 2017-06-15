@@ -35,13 +35,15 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
     public departmentClosureModel: DepartmentClosureModel;
     public departmentClosureModelSave: DepartmentClosureModel;
     public departmentClosureModelSubmit: DepartmentClosureModel;
-    public isSubmited: boolean;
+    public submited: boolean = false;
+    public isSubmited:boolean=false;
     constructor(formBuilder: FormBuilder, private globalState: GlobalStateService,
         private departmentClosureService: DepartmentClosureService, private toastrConfig: ToastrConfig,
         private toastrService: ToastrService) {
     }
 
     ngOnInit(): void {
+        this.submited = false;
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
@@ -132,6 +134,7 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
     }
 
     public onSave(): void {
+        this.submited = true;
         if (this.form.valid) {
             this.departmentClosureService.GetAllByIncidentDepartment(this.currentIncidentId, this.currentDepartmentId)
                 .subscribe((result: ResponseModel<DepartmentClosureModel>) => {
@@ -186,6 +189,7 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
 
 
     public onSubmit(): void {
+        this.submited = true;
         if (this.form.valid) {
             this.departmentClosureService.CheckPendingCheckListOrDemandForIncidentAndDepartment(this.currentIncidentId, this.currentDepartmentId, (item: boolean) => {
                 if (item) {
@@ -250,6 +254,7 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
     }
 
     private formReset():void{
+        this.submited = false;
         this.form.controls["ClosureReport"].reset({ value: '' });
         this.form.controls["ClosureRemarks"].reset({ value: '' });
     }

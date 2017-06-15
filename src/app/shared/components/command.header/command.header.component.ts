@@ -1,6 +1,10 @@
-import { Component, ViewEncapsulation, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import {
+    Component, ViewEncapsulation, OnInit,
+    Input, Output, EventEmitter, SimpleChange
+} from '@angular/core';
 import { KeyValue } from '../../models/base.model';
-import { UtilityService } from "../../services/common.service/utility.service";
+import { UtilityService } from '../../services/common.service/utility.service';
+
 @Component({
     selector: '[command-header]',
     templateUrl: './command.header.view.html',
@@ -22,7 +26,7 @@ export class CommandHeaderComponent implements OnInit {
 
     constructor() {}
 
-    ngOnInit() {
+    public ngOnInit(): void {
         if (UtilityService.licenseInfo)
             this.clientName = UtilityService.licenseInfo.ClientName;
         else
@@ -36,4 +40,3 @@ export class CommandHeaderComponent implements OnInit {
     public onIncidentChange(selectedIncident: KeyValue): void {
         this.incidentChange.emit(selectedIncident);
     }
-}

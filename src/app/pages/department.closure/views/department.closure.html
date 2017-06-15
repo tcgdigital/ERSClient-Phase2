@@ -20,16 +20,16 @@
             <div class="row">
                 <div class="form-group col-lg-6 col-sm-12 col-md-6">
                     <label for="ClosureReport">Closure Reports<span class="required">*</span></label>
-                    <textarea [readonly]="isSubmited" rows="7" cols="130" id="ClosureReport" class="form-control" type="text" name="ClosureReport" formControlName="ClosureReport" placeholder="Enter Closure Report"
-                         ></textarea>
-                         <small *ngIf="!form.controls.ClosureReport.valid" class="text-danger">
-                            Required.
-                        </small>
+                    <textarea [readonly]="isSubmited" rows="7" cols="130" id="ClosureReport" class="form-control" type="text" name="ClosureReport"
+                        formControlName="ClosureReport" placeholder="Enter Closure Report"></textarea>
+
+                    <small *ngIf="form.controls.ClosureReport.hasError('required')" [hidden]="form.controls.ClosureReport.valid || (form.controls.ClosureReport.pristine && !submited)"
+                        class="text-danger">Required</small>
                 </div>
                 <div class="form-group col-lg-6 col-sm-12 col-md-6">
                     <label for="ClosureRemarks">Closure Remarks (Optional)</label>
-                    <textarea [readonly]="isSubmited" rows="7" cols="130" id="ClosureRemarks" class="form-control" type="text" name="ClosureRemarks" formControlName="ClosureRemarks" placeholder="Enter Closure Remarks"
-                         ></textarea>
+                    <textarea [readonly]="isSubmited" rows="7" cols="130" id="ClosureRemarks" class="form-control" type="text" name="ClosureRemarks"
+                        formControlName="ClosureRemarks" placeholder="Enter Closure Remarks"></textarea>
                 </div>
             </div>
 

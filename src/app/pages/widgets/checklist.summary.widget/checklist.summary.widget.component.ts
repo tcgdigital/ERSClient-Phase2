@@ -10,6 +10,10 @@ import { ActionableModel } from '../../shared.components/actionables/components/
 import { ResponseModel, GlobalStateService, KeyValue } from '../../../shared';
 import { DepartmentModel } from '../../masterdata/department/components/department.model';
 import * as Highcharts from 'highcharts';
+import { WidgetUtilityService } from "../widget.utility";
+import {
+    GraphObject
+} from '../demand.raised.summary.widget/demand.raised.summary.widget.model';
 
 @Component({
     selector: 'checklist-summary-widget',
@@ -34,6 +38,8 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
     public subDeptCompletedCheckLists: Observable<SubDeptCheckListModel[]>;
     public subDeptPendingCheckLists: SubDeptCheckListModel[];
     public subdeptChecklistsLoc: ActionableModel[];
+    public arrGraphData: GraphObject[];
+    public showCheckListGraph: boolean = false;
     currentDepartmentId: number;
     currentIncidentId: number;
 
@@ -111,6 +117,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
                     deptCheckListsLocal.push(depCM);
                 });
                 this.deptCheckListsAll = Observable.of(deptCheckListsLocal);
+                this.graphDataFormationForCheckListWidget(deptCheckListsLocal);
                 if (callback) {
                     callback();
                 }
@@ -386,6 +393,34 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
 
     private checkListStatusChangeHandler(): void {
         this.getActionableCount(this.currentIncidentId, this.currentDepartmentId);
+    }
+
+    private graphDataFormationForCheckListWidget(entity: DeptCheckListModel[]): void {
+
+        this.arrGraphData = [];
+        entity.map((item: DeptCheckListModel) => {
+            item.actionableModelList.map((itemActionable:ActionableModel) => {
+                let graphObject: GraphObject = new GraphObject();
+                graphObject.requesterDepartmentName = item.departmentName;
+                graphObject.requesterDepartmentId = item.departmentId;
+                graphObject.isAssigned = true;
+                if (itemActionable.ActualClose != null) {
+                    graphObject.isClosed = true;
+                    graphObject.closedOn = new Date(itemActionable.ActualClose);
+                }
+                else {
+                    graphObject.isPending = true;
+                }
+                graphObject.CreatedOn = new Date(itemActionable.CreatedOn);
+                this.arrGraphData.push(graphObject);
+            });
+        });
+        this.GetCheckListGraph(entity[0].departmentId);
+    }
+
+    public GetCheckListGraph(requesterDepartmentId: number) {
+        WidgetUtilityService.GetGraph(requesterDepartmentId,Highcharts,this.arrGraphData,'checklist-graph-container');
+        this.showCheckListGraph = true;
     }
 
     private setChecklistGraphData(): void {
