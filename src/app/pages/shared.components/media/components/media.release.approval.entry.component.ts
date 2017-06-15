@@ -171,7 +171,7 @@ export class MediaReleaseApprovalEntryComponent implements OnInit, OnDestroy {
         this.media.UpdatedOn = new Date();
         this.mediaQueryService.Update(this.media)
             .subscribe((response: MediaModel) => {
-                this.toastrService.success('Media release edited successfully.', 'Success', this.toastrConfig);
+                this.toastrService.success('Media release is approved successfully.', 'Success', this.toastrConfig);
                 this.dataExchange.Publish("MediaModelUpdated", response);                                                
                 if(this.media.IsPublished)
                 {                        

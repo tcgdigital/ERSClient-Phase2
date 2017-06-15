@@ -1,3 +1,5 @@
+declare const CKEDITOR;
+
 export interface IEmergencySituationEnum {
     EmergencySituationId: number;
     enumtype: string;
@@ -66,6 +68,9 @@ export class GlobalConstants {
 
     public static EditorToolbarConfig: any = {
         // uiColor: '#99000',
+        enterMode: CKEDITOR.ENTER_BR,
+        allowedContent: true,
+        extraAllowedContent: 'br',
         toolbar: [
             { name: 'clipboard', items: ['Cut', 'Copy', 'Paste', '-', 'Undo', 'Redo'] },
             { name: 'links', items: ['Link', 'Unlink'] },

@@ -44,9 +44,11 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     applyReadOnlyButtons: boolean = false;
     appReadOnlyPublish: boolean = true;
     isInvalidForm: boolean = false;
+    isApprovedContent: boolean = false;
+    isSavedContent: boolean = true;
 
     toolbarConfig: any = GlobalConstants.EditorToolbarConfig;
-
+    toolbarConfigApproved: any = GlobalConstants.EditorToolbarConfig;
     /**
      * Creates an instance of MediaQueryEntryComponent.
      * @param {MediaQueryService} mediaQueryService
@@ -119,7 +121,17 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
         
         this.currentTemplateMediaId = this.templateMedias
             .find((a) => a.TemplatePurpose === mediaModel.MediaReleaseType).TemplateMediaId.toString();
-        
+
+        if(this.media.MediaReleaseStatus === 'Approved' || this.media.MediaReleaseStatus === 'Published')
+        {
+            this.isApprovedContent = true;
+            this.isSavedContent = false;
+        }
+        else
+        {
+            this.isApprovedContent = false;
+            this.isSavedContent = true;
+        }            
       
         if (this.media.MediaReleaseStatus === 'SentForApproval' || this.media.MediaReleaseStatus === 'Published') {
             this.form.controls['MediaReleaseType'].reset({ value: this.currentTemplateMediaId, disabled: true });
@@ -224,6 +236,8 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
         this.applyReadOnlyButtons = false;
         this.appReadOnlyPublish = true;
         this.isInvalidForm = false;
+        this.isApprovedContent = false;
+        this.isSavedContent = true;
         //this.toolbarConfig['readOnly'] = true;
     }
 
@@ -271,14 +285,18 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
             this.media.CreatedOn = new Date();
             this.mediaQueryService.Create(this.media)
                 .subscribe((response: MediaModel) => {
-                    this.toastrService.success('Media release Saved successfully.', 'Success', this.toastrConfig);
-                    this.dataExchange.Publish('MediaModelSaved', response);
+                    if (this.Action === 'Save') 
+                        this.toastrService.success('Media release is saved successfully.', 'Success', this.toastrConfig);
+                    
                     if (this.Action === 'SentForApproval') {
                         this.dataExchange.Publish('MediaModelSentForApproval', response);
+                        this.toastrService.success('Media release is successfully sent for approval.', 'Success', this.toastrConfig);
                     }
                     if (this.media.IsPublished) {
                         this.globalState.NotifyDataChanged('MediaReleasePublished', response);
+                        this.toastrService.success('Media release is published successfully.', 'Success', this.toastrConfig);
                     }
+                    this.dataExchange.Publish('MediaModelSaved', response);
                     this.showAdd = false;
                     this.formInit();
                 }, (error: any) => {
@@ -290,14 +308,16 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
             this.media.UpdatedOn = new Date();
             this.mediaQueryService.Update(this.media)
                 .subscribe((response: MediaModel) => {
-                    this.toastrService.success('Media release edited successfully.', 'Success', this.toastrConfig);
+                    if (this.Action === 'Save')
+                        this.toastrService.success('Media release is edited successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish('MediaModelUpdated', response);
                     if (this.Action === 'SentForApproval') {
                         this.dataExchange.Publish('MediaModelSentForApproval', response);
+                        this.toastrService.success('Media release is successfully sent for approval.', 'Success', this.toastrConfig);
                     }
                     if (this.media.IsPublished) {
                         this.globalState.NotifyDataChanged('MediaReleasePublished', this.media);
-
+                        this.toastrService.success('Media release is published successfully.', 'Success', this.toastrConfig);
                     }
                     this.showAdd = false;
                     this.formInit();

@@ -21,7 +21,7 @@ export class MediaReleaseApprovalListComponent implements OnInit, OnDestroy {
     mediaReleases: MediaModel[] = [];
     currentIncidentId: number;
     currentDepartmentId: number;
-    downloadPath: string = GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/' + this.currentIncidentId + '/';
+    downloadPath: string;
 
     /**
      * Creates an instance of MediaReleaseListComponent.
@@ -61,7 +61,7 @@ export class MediaReleaseApprovalListComponent implements OnInit, OnDestroy {
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.initiatedDepartmentId;
         this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
-
+        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/' + this.currentIncidentId + '/';
         this.dataExchange.Subscribe("MediaModelSaved", model => this.onMediaSuccess(model));
         this.dataExchange.Subscribe("MediaModelSentForApproval", model => this.onMediaSuccess(model));
         this.dataExchange.Subscribe("MediaModelUpdated", model => this.onMediaSuccess(model));
@@ -72,6 +72,7 @@ export class MediaReleaseApprovalListComponent implements OnInit, OnDestroy {
     private incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
         this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
+        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/' + this.currentIncidentId + '/';
     }
 
     private departmentChangeHandler(department: KeyValue): void {
