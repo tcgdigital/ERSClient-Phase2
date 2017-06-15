@@ -21,6 +21,7 @@ import { ResponseModel, DataExchangeService, AuthModel, UtilityService } from '.
 })
 export class QuickLinkEntryComponent implements OnInit, OnDestroy {
     public form: FormGroup;
+    public submitted: boolean;
 
     quickLinkModel: QuickLinkModel = null;
     quickLinkModelEdit: QuickLinkModel = null;
@@ -38,13 +39,14 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.submitted = false;
         this.credential = UtilityService.getCredentialDetails();
         this.initializeInputForm();
         this.initiateQuickLinkModel();
         this.dataExchange.Subscribe("quickLinkModelEdited", model => this.onQuickLinkEditSuccess(model));
     }
 
-    initializeInputForm():void{
+    initializeInputForm(): void {
         this.form = new FormGroup({
             QuickLinkId: new FormControl(0),
             QuickLinkName: new FormControl('', [Validators.required]),
@@ -64,6 +66,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(values: Object): void {
+        this.submitted = true;
         if (this.form.valid) {
             if (this.quickLinkModel.QuickLinkId == 0) {//ADD REGION
                 delete this.quickLinkModel.Active;
@@ -107,6 +110,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
     }
 
     cancel(): void {
+        this.submitted = false;
         this.initiateQuickLinkModel();
         this.showAdd = false;
         this.form = new FormGroup({
