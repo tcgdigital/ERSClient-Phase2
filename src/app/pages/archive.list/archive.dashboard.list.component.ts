@@ -44,7 +44,7 @@ import { ArchiveListService } from './archive.dashboard.list.service';
 export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     @ViewChild('childModalViewClosedIncident') public childModalViewClosedIncident: ModalDirective;
 
-    public closedCrisises: IncidentModel[];
+    public closedCrisises: any[];
     activeEmergencyTypes: EmergencyTypeModel[] = [];
     affectedStations: EmergencyLocationModel[] = [];
     public formPopup: FormGroup;
@@ -60,6 +60,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     activeOrganizations: OrganizationModel[] = [];
     activeAircraftTypes: AircraftTypeModel[] = [];
     incidentsToPickForReplication: IncidentModel[] = [];
+    public useLink: boolean;
 
     constructor(formBuilder: FormBuilder,
         private toastrService: ToastrService,
@@ -81,6 +82,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
+        this.useLink = false;
         this.getAllActiveEmergencyTypes();
         this.getAllActiveOrganizations();
         this.getAllActiveAircraftTypes();
@@ -114,6 +116,9 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
                     else {
                         itemIncident.isReopen = false;
                     }
+
+                    let editIncident: KeyValue = { Key: itemIncident.EmergencyName, Value: itemIncident.IncidentId };
+                    itemIncident["IncidentView"] = editIncident;
                     this.closedCrisises.push(itemIncident);
                 });
             });
