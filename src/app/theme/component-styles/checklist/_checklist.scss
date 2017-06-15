@@ -45,3 +45,30 @@ margin: 15px 1.5%;
     vertical-align: middle;
     padding-top: 27px;
 }
+
+.multiselect-selector {
+    background: $multiselect-background none repeat scroll 0 0;
+    border: $multiselect-border solid 1px;
+    border-radius: 3px;
+    color: $multiselect-color;
+    padding: 4px 5px;
+    width: 100%;
+    font-size: 12px;
+}
+
+.multiselect-list {
+    background: $multiselect-background none repeat scroll 0 0;
+    border: $multiselect-border solid 1px;
+    border-radius: 0 0 6px 6px;
+    color: $multiselect-color;
+    padding: 5px 8px;
+    width: 93.5%;
+    font-size: 12px;
+    height: 150px;
+    position: absolute;
+    z-index: 999;
+    overflow-x: hidden;
+    overflow-y: auto;
+    top: 51px;
+}
+

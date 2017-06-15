@@ -252,7 +252,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
     }
 
     public GetDemandReceivedGraph(targetDepartmentId: number) {
-        WidgetUtilityService.GetDemandGraph(targetDepartmentId,Highcharts,this.arrGraphData,'demand-received-graph-container');
+        WidgetUtilityService.GetGraph(targetDepartmentId,Highcharts,this.arrGraphData,'demand-received-graph-container');
         this.showDemandReceivedGraph = true;
     }
 

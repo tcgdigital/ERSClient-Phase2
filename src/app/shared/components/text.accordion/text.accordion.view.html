@@ -6,9 +6,10 @@
                     <div *ngIf="i === 0" class="ribbon-wrapper-green">
                         <div class="ribbon-green">new</div>
                     </div>
-                    <span>
-                        {{accordionItem.Message}}
-                        <i>{{accordionItem.PublishedOn | date:'medium'}}</i>    
+                    <i class="publish-date">{{accordionItem.PublishedOn | date:'medium'}}</i> 
+                    <span [innerHTML]="accordionItem.Message">
+                        <!--{{accordionItem.Message}}-->
+                           
                     </span>
                 </li>
             </ng-container>

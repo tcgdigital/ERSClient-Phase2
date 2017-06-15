@@ -35,7 +35,8 @@ export class ChecklistListComponent implements OnInit {
         private dataExchange: DataExchangeService<ChecklistModel>, private globalState: GlobalStateService) { }
 
     findIfParent(item: ChecklistModel): any {
-        return item.ParentCheckListId != null;
+        return (item.CheckListChildren.length > 0);
+
     }
 
     getCheckLists(departmentId): void {
@@ -47,7 +48,7 @@ export class ChecklistListComponent implements OnInit {
                 this.checkLists = response.Records;
                 this.checkLists.forEach(a => {
                     if (a.Stations != null && a.Stations != "") {
-                        a.StationList=[];
+                        a.StationList = [];
                         if (a.Stations.indexOf(',') > 0)
                             a.StationList = a.Stations.split(',');
                         else
@@ -57,8 +58,6 @@ export class ChecklistListComponent implements OnInit {
                         a.StationList = [];
                 })
                 console.log(this.checkLists);
-                this.parentChecklistListForSearch = this.checkLists.filter(this.findIfParent)
-                    .map((x) => new NameValue<number>(x.ParentCheckList.CheckListCode, x.ParentCheckListId));
                 this.initiateSearchConfigurations();
             });
     }
@@ -177,9 +176,9 @@ export class ChecklistListComponent implements OnInit {
                 Description: 'Parent Checklist',
                 PlaceHolder: 'Select Parent Checklist',
                 Value: '',
-                ListData: this.checkListService.GetAllParents(this.currentDepartmentId)
+                ListData: this.checkListService.GetAllParents()
                     .map((x) => x.Records)
-                    .map((x) => x.map((y) => new NameValue<number>(y.ParentCheckList.CheckListCode, y.ParentCheckListId)))
+                    .map((y) => y.map(z => z.CheckListParent.map((q) => new NameValue<number>(q.CheckListCode, q.CheckListId))))
             }),
             new SearchDropdown({
                 Name: 'EmergencyTypeId',
