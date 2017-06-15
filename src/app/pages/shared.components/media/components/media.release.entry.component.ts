@@ -100,7 +100,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
             //this.toolbarConfig['readOnly'] = false;
             this.mediaQueryService.GetContentFromTemplate(this.currentIncidentId, this.currentDepartmentId, +templateId)
                 .subscribe((response: any) => {
-                    this.templateContent = `${response.Subject}<br />${response.Body}`;
+                    this.templateContent = `${response.Subject}${response.Body}`;
                     this.media.Message = this.templateContent;
                     this.applyReadOnlytextBox = false; 
                 });

@@ -5,7 +5,7 @@ import {
 import { MediaModel } from './media.model';
 import { MediaService } from './media.service';
 import {
-    ResponseModel, DataExchangeService,
+    ResponseModel, DataExchangeService, GlobalConstants,
     GlobalStateService, KeyValue, UtilityService
 } from '../../../../shared';
 
@@ -21,6 +21,7 @@ export class MediaReleaseApprovalListComponent implements OnInit, OnDestroy {
     mediaReleases: MediaModel[] = [];
     currentIncidentId: number;
     currentDepartmentId: number;
+    downloadPath: string = GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/' + this.currentIncidentId + '/';
 
     /**
      * Creates an instance of MediaReleaseListComponent.
@@ -37,7 +38,8 @@ export class MediaReleaseApprovalListComponent implements OnInit, OnDestroy {
     getMediaReleases(departmentId, incidentId): void {
         this.mediaService.Query(departmentId, incidentId)
             .subscribe((response: ResponseModel<MediaModel>) => {                
-                this.mediaReleases = response.Records.filter(a=>a.MediaReleaseStatus === 'SentForApproval');
+                this.mediaReleases = response.Records.
+                filter(a=>a.MediaReleaseStatus === 'SentForApproval' || a.MediaReleaseStatus === 'Published');
                 console.log(this.mediaReleases);
             }, (error: any) => {
                 console.log(`Error: ${error}`);

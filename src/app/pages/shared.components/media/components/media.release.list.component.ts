@@ -5,7 +5,7 @@ import {
 import { MediaModel } from './media.model';
 import { MediaService } from './media.service';
 import {
-    ResponseModel, DataExchangeService,
+    ResponseModel, DataExchangeService, GlobalConstants,
     GlobalStateService, KeyValue, UtilityService
 } from '../../../../shared';
 
@@ -21,6 +21,7 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
     mediaReleases: MediaModel[] = [];
     currentIncidentId: number;
     currentDepartmentId: number;
+    downloadPath: string = GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/' + this.currentIncidentId + '/';
 
     /**
      * Creates an instance of MediaReleaseListComponent.
