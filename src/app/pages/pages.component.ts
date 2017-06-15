@@ -34,7 +34,7 @@ export class PagesComponent implements OnInit {
     lastLogin: Date;
     userId: number;
     private sub: any;
-    isLanding : boolean = false;
+    isLanding: boolean = false;
 
     /**
      * Creates an instance of PagesComponent.
@@ -63,13 +63,14 @@ export class PagesComponent implements OnInit {
 
     ngOnInit(): void {
         this.sideMenuService.updateMenuByRoutes(PAGES_MENU as Routes);
-        
+
         this.getIncidents();
         this.userName = localStorage.getItem('CurrentLoggedInUserName');
         this.userId = +UtilityService.GetFromSession("CurrentUserId");
         this.getDepartments();
         this.lastLogin = new Date(localStorage.getItem('LastLoginTime'));
         this.globalState.Subscribe('incidentCreate', (model: number) => this.incidentCreateHandler(model));
+
     }
 
     ngOnDestroy(): void {
@@ -124,20 +125,34 @@ export class PagesComponent implements OnInit {
 
     private getDepartments(): void {
         this.userPermissionService.GetAllDepartmentsAssignedToUser(this.userId)
-        .map((x: ResponseModel<UserPermissionModel>) => x.Records.sort((a, b) => {
+            .map((x: ResponseModel<UserPermissionModel>) => x.Records.sort((a, b) => {
                 if (a.Department.DepartmentName < b.Department.DepartmentName) return -1;
                 if (a.Department.DepartmentName > b.Department.DepartmentName) return 1;
                 return 0;
             })
-        ).subscribe((x: UserPermissionModel[]) => {
+            ).subscribe((x: UserPermissionModel[]) => {
                 this.departments = x.map((y: UserPermissionModel) =>
-                 new KeyValue(y.Department.DepartmentName, y.Department.DepartmentId));
+                    new KeyValue(y.Department.DepartmentName, y.Department.DepartmentId));
                 if (this.departments.length > 0) {
-                    this.currentDepartmentId = this.departments[0].Value;
+                    let departmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+                    if (departmentId > 0) {
+                        this.currentDepartmentId = departmentId;
+                    }
+                    else {
+                        this.currentDepartmentId = this.departments[0].Value;
+                        UtilityService.SetToSession({ CurrentDepartmentId: this.currentDepartmentId });
+                    }
                     console.log(this.currentDepartmentId);
-                    UtilityService.SetToSession({ CurrentDepartmentId: this.currentDepartmentId });
+                    this.isLanding = false;
+
+                    // this.currentDepartmentId = this.departments[0].Value;
+                    // console.log(this.currentDepartmentId);
+                    // UtilityService.SetToSession({ CurrentDepartmentId: this.currentDepartmentId });
                 }
-        });
+                else {
+                    this.isLanding = true;
+                }
+            });
     }
 
     private getIncidents(): void {
@@ -149,13 +164,20 @@ export class PagesComponent implements OnInit {
             })).subscribe((x: IncidentModel[]) => {
                 this.incidents = x.map((y: IncidentModel) => new KeyValue(y.EmergencyName, y.IncidentId));
                 if (this.incidents.length > 0) {
-                    this.currentIncidentId = this.incidents[0].Value;
+                    let incidentId = +UtilityService.GetFromSession('CurrentIncidentId');
+                    if (incidentId > 0) {
+                        this.currentIncidentId = incidentId;
+                    }
+                    else {
+                        this.currentIncidentId = this.incidents[0].Value;
+                        UtilityService.SetToSession({ CurrentIncidentId: this.currentIncidentId });
+                    }
                     console.log(this.currentIncidentId);
-                    UtilityService.SetToSession({ CurrentIncidentId: this.currentIncidentId });
-                    this.isLanding=false;
+
+                    this.isLanding = false;
                 }
-                else{
-                    this.isLanding=true;
+                else {
+                    this.isLanding = true;
                 }
             });
     }

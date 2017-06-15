@@ -7,7 +7,7 @@
                     <label for="DemandTypeName">Request Type:<span class="required">*</span></label>
                     <input id="DemandTypeName" type="text" class="form-control" formControlName="DemandTypeName" placeholder="Enter RequestType Name"
                         autofocus />
-                        <small *ngIf="!form.controls.DemandTypeName.valid" class="text-danger">
+                        <small *ngIf="!form.controls.DemandTypeName.valid" [hidden]="form.controls.DemandTypeName.valid || (form.controls.DemandTypeName.pristine && !submitted)" class="text-danger">
                         Required.
                         </small>
                 </div>
@@ -16,14 +16,14 @@
                 <div class="form-group">
                     <!--<label for="IsAutoApproved">Is Auto Approved:</label>
                     <br>-->
-                    <md-checkbox class="Marght" id="IsAutoApproved" formControlName="IsAutoApproved" aria-label="Add" (change)="IsAutoApproved($event)">
+                    <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="autoApproved" formControlName="IsAutoApproved" aria-label="Add" (change)="IsAutoApproved($event)">
                         Is Auto Approved:
                     </md-checkbox>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="form-group">
-                    <div *ngIf="showApproverDept">
+                    <div [hidden]="!showApproverDept">
                         <label for="ApproverDept">Approver Department:<span class="required">*</span></label>
                         <select id="selectApprover" formControlName="ApproverDept" class="form-control">
                         <option value=''>Select Approver Department</option>
@@ -31,7 +31,7 @@
                         {{department.DepartmentName}}
                         </option>
                     </select>
-                    <small *ngIf="!form.controls.ApproverDept.valid && showApproverDept" class="text-danger">
+                    <small *ngIf="!form.controls.ApproverDept.valid" [hidden]="form.controls.ApproverDept.valid || (form.controls.ApproverDept.pristine && !submitted)" class="text-danger">
                         Required.
                         </small>
                     </div>
