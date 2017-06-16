@@ -64,7 +64,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         private departmentService: DepartmentService,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig, private _router: Router) {
-        this.createdByName = this.credential.UserName;
+        this.createdByName = "Anwesha ray";
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
         this.demandFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Demand/';

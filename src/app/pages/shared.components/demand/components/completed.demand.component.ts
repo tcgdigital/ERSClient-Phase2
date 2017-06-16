@@ -66,7 +66,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         private departmentService: DepartmentService,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig, private _router: Router) {
-        this.createdByName = this.credential.UserName;
+        this.createdByName = "Anwesha Ray";
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
         this.demandFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Demand/';   
@@ -252,7 +252,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
             }
         });
         this.credential = UtilityService.getCredentialDetails();
-        this.createdBy = +this.credential.UserName;
+        this.createdBy = +this.credential.UserId;
         this.getDepartmentName(this.currentDepartmentId);
         
         this.getCurrentDepartmentName(this.currentDepartmentId);

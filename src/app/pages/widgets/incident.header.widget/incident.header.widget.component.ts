@@ -16,18 +16,23 @@ export class IncidentHeaderWidgetComponent implements OnInit, OnChanges {
     @Input() currentIncident: KeyValue;
     @Input() currentDepartment: KeyValue;
 
+
     @Output() viewIncidentHandler: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
 
     incidentName: string = '';
     departmentName: string = '';
+    public useLink:boolean;
 
     constructor() { }
 
-    ngOnInit() { }
+    ngOnInit() { 
 
-    public onViewIncidentClick(): void {
-        this.viewIncidentHandler.emit(this.currentIncident);
+        this.useLink=true;
     }
+
+    // public onViewIncidentClick(): void {
+    //     this.viewIncidentHandler.emit(this.currentIncident);
+    // }
 
     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
         if(this.currentIncident !== undefined){

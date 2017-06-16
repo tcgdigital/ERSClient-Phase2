@@ -1,0 +1,1 @@
+export * from './quicklink.quickview.widget.component';

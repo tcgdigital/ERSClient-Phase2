@@ -21,12 +21,22 @@
                     <div class="row"></div>
                     <br/>
                     <div class="row">
-                        <div class="col-sm-6 col-lg-4 col-md-6">
+                        <div class="col-sm-6 col-lg-6 col-md-6">
                             <div class="form-group">
                                 <label for="Message">Media Release Message:<span class="red">*</span></label>
-
-                                <ckeditor formControlName="Message" [(ngModel)]="media.Message" (change)="onMessageChange($event)" (blur)="onMessageBlur($event)" (focus)="onMessageFocus($event)" (ready)="onMessageReady($event)" debounce="500" [config]="toolbarConfig">
-                                </ckeditor>
+                                <ng-container *ngIf = "isApprovedContent">
+                                    <ckeditor formControlName="Message" [(ngModel)]="media.ApprovedContent" debounce="500" (change)="onMessageChange($event)" (blur)="onMessageBlur($event)"
+                                        (focus)="onMessageFocus($event)" (ready)="onMessageReady($event)" [config]="toolbarConfigApproved">
+                                    </ckeditor>
+                                </ng-container>
+                                <ng-container *ngIf = "isSavedContent">
+                                    <ckeditor formControlName="Message" [(ngModel)]="media.Message" debounce="500" (change)="onMessageChange($event)" (blur)="onMessageBlur($event)"
+                                        (focus)="onMessageFocus($event)" (ready)="onMessageReady($event)" [config]="toolbarConfig">
+                                    </ckeditor>
+                                </ng-container>
+                                <small class="text-danger" [hidden]="hideMessageError">
+                                Required.
+                                </small>
 
                                 <!--<text-editor [config]="{uiColor: '#99000'}"></text-editor>-->
 
@@ -35,16 +45,19 @@
                                 <span [hidden]="hideMessageError">Please Input Message</span>-->
                             </div>
                         </div>
-                        <div class="col-sm-6 col-lg-4 col-md-6">
+                        <div class="col-sm-6 col-lg-6 col-md-6">
                             <div class="form-group">
                                 <label for="Remarks">Remarks:</label>
-                                <textarea class="form-control" id="Remarks" formControlName="Remarks" maxlength="500" [readOnly]="applyReadOnlytextBox" placeholder="Enter Remarks"
-                                    [(ngModel)]="media.Remarks" required autofocus></textarea>
-                                <span [hidden]="hideRemarksError">Please Input Remarks</span>
+                                <textarea class="form-control" id="Remarks" formControlName="Remarks" [readOnly]="applyReadOnlytextBox" placeholder="Enter Remarks"
+                                    [(ngModel)]="media.Remarks"></textarea>
+                                <small class="text-danger" [hidden]="hideRemarksError">
+                                Required.
+                                </small>
                             </div>
                         </div>
-
-                        <div class="col-sm-6 col-lg-4 col-md-6">
+                    </div>
+                    <div class ="row">
+                        <div class="col-sm-12 col-lg-12 col-md-12">
                             <div class="buttonholder">
                                 <button class="btn btn-primary" (click)="SentForApproval()" [disabled]="applyReadOnlyButtons">Send for Approval</button>
                                 <button class="btn btn-primary" (click)="publish()" [disabled]="appReadOnlyPublish">Publish</button>

@@ -1,0 +1,226 @@
+<a *ngIf="useLink" href="javascript:void(0);" (click)="onViewIncidentClick()">View Incident</a>
+<a  class="fa fa-edit fa-2x" *ngIf="!useLink" href="javascript:void(0);" (click)="onViewIncidentClick()"></a>
+
+<div bsModal #childModalViewIncident="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form [formGroup]="formPopup">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <strong>Incident View</strong>
+                    <div *ngIf="IsDrillPopup" class="dilld pull-left">DRILL</div>
+                    <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideIncidentView()"></i>
+
+                </div>
+                <div class="modal-body card">
+                    <div class="row">
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <label for="OrganizationId">Organization</label>
+                            <select id="OrganizationIdPopup" disabled class="form-control" formControlName="OrganizationIdPopup" name="OrganizationIdPopup">
+                                        <option value=''>Select Organization</option>
+                                        <option *ngFor="let organization of activeOrganizations" [value]="organization.OrganizationId" >
+                                            {{organization.OrganizationCode}}
+                                        </option>
+                                    </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <label for="EmergencyType">EmergencyType</label>
+                            <select id="EmergencyTypeIdPopup" disabled class="form-control" formControlName="EmergencyTypeIdPopup" name="EmergencyTypeIdPopup">
+                                    <option value="0" >Select Emergency Type</option>
+                                    <option *ngFor="let emergencyType of activeEmergencyTypes" [value]="emergencyType.EmergencyTypeId" >
+                                        {{emergencyType.EmergencyTypeName}}
+                                    </option>
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <label for="AffectedStation">Affected Station</label>
+                            <input id="AffectedStationIdPopup" disabled formControlName="AffectedStationIdPopup" class="form-control" type="text" name="AffectedStationIdPopup"
+                                placeholder="Enter Affected Station" />
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <label for="EmergencyDate">Date of Crisis(UTC)</label>
+                            <input id="EmergencyDatePopup" disabled formControlName="EmergencyDatePopup" class="form-control" type="text" name="EmergencyDatePopup"
+                                placeholder="Enter EmergencyDate" />
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <label for="EmergencyDateLocal">Date of Crisis (LOCAL)</label>
+                            <input id="EmergencyDateLocalPopup" disabled formControlName="EmergencyDateLocalPopup" class="form-control" type="text" name="EmergencyDateLocalPopup"
+                                placeholder="Enter EmergencyDate" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="EmergencyName">Emergency Name</label>
+                                <input id="EmergencyNamePopup" disabled formControlName="EmergencyNamePopup" class="form-control" type="text" name="EmergencyNamePopup"
+                                    placeholder="Enter Emergency Name" />
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-9 col-sm-12 col-md-6">
+                            <label for="Description">Note</label>
+                            <textarea id="DescriptionPopup" disabled formControlName="DescriptionPopup" class="form-control textarea" type="text" name="DescriptionPopup"
+                                placeholder="Enter Description"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="WhatHappend">What Happened</label>
+                                <input id="WhatHappendPopup" disabled class="form-control" type="text" name="WhatHappendPopup" formControlName="WhatHappendPopup"
+                                    placeholder="What Happend" />
+
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="WhereHappend">Where Happened</label>
+                                <input id="WhereHappendPopup" disabled class="form-control" type="text" name="WhereHappendPopup" formControlName="WhereHappendPopup"
+                                    placeholder="Where Happend" />
+
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="OtherConfirmationInformation">Other Confirmation Information</label>
+                                <input id="OtherConfirmationInformationPopup" disabled class="form-control" type="text" name="OtherConfirmationInformationPopup" formControlName="OtherConfirmationInformationPopup"
+                                    placeholder="Other Confirmation Information" />
+
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="SourceInformation">Source Information</label>
+                                <input id="SourceInformationPopup" disabled class="form-control" type="text" name="SourceInformationPopup" formControlName="SourceInformationPopup"
+                                    placeholder="Source Information" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="ReportedByName">ReportedBy Name</label>
+                                <input id="ReportedByNamePopup" disabled class="form-control" type="text" name="ReportedByNamePopup" formControlName="ReportedByNamePopup"
+                                    placeholder="ReportedBy Name" />
+
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="ReportedByAddress">ReportedBy Address</label>
+                                <input id="ReportedByAddressPopup" disabled class="form-control" type="text" name="ReportedByAddressPopup" formControlName="ReportedByAddressPopup"
+                                    placeholder="ReportedBy Address" />
+
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="ContactOfWitness">Contact Of Witness</label>
+                                <input id="ContactOfWitnessPopup" disabled class="form-control" type="text" name="ContactOfWitnessPopup" formControlName="ContactOfWitnessPopup"
+                                    placeholder="Contact Of Witness" />
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="SenderOfCrisisInformation">Sender Of Crisis Information</label>
+                                <input id="SenderOfCrisisInformationPopup" disabled class="form-control" type="text" name="SenderOfCrisisInformationPopup" formControlName="SenderOfCrisisInformationPopup"
+                                    placeholder="Sender Of Crisis Information" />
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <label for="ReportedDatePopup">Date Time Reported (UTC)</label>
+                            <input id="ReportedDatePopup" disabled formControlName="ReportedDatePopup" class="form-control" type="text" name="ReportedDatePopup"
+                                placeholder="Reported Date" />
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <label for="ReportedDateLocalPopup">Date Time Reported (LOCAL)</label>
+                            <input id="ReportedDateLocalPopup" disabled formControlName="ReportedDateLocalPopup" class="form-control" type="text" name="ReportedDateLocalPopup"
+                                placeholder="Reported Date" />
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <label for="Severity">Severity</label>
+                            <input id="SeverityPopup" class="form-control" type="text" name="SeverityPopup" formControlName="SeverityPopup" disabled
+                                placeholder="Severity" />
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label for="IncidentsToPickForReplication">Incidents To Pick For Replication</label>
+                                <input id="BorrowedIncidentPopup" disabled formControlName="BorrowedIncidentPopup" class="form-control" type="text" name="BorrowedIncidentPopup"
+                                    placeholder="Enter Borrowed Incident" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" *ngIf="isFlightRelatedPopup">
+                        <div class="card-header ">
+                            <strong>Flight Information:</strong>
+                        </div>
+                        <div class="card-block">
+                            <div class="row">
+                                <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                                    <label for="FlightNumber">Flight Number</label>
+                                    <input id="FlightNumberPopup" disabled formControlName="FlightNumberPopup" class="form-control" type="text" name="FlightNumberPopup"
+                                        placeholder="FlightNumber" />
+                                </div>
+                                <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                                    <label for="Origin">Origin</label>
+                                    <input id="Origin" disabled formControlName="OriginPopup" class="form-control" type="text" name="OriginPopup" placeholder="Origin"
+                                    />
+                                </div>
+                                <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                                    <label for="Destination">Destination</label>
+                                    <input id="DestinationPopup" disabled formControlName="DestinationPopup" class="form-control" type="text" name="DestinationPopup"
+                                        placeholder="Destination" />
+                                </div>
+                                <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                                    <label for="Scheduleddeparture(UTC)">Scheduled departure (UTC)<span class="red">*</span></label>
+                                    <input id="ScheduleddeparturePopup" disabled formControlName="ScheduleddeparturePopup" class="form-control" type="text" name="ScheduleddeparturePopup"
+                                        placeholder="Scheduled Departure" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                                    <label for="Scheduleddeparture(LOCAL)">Scheduled Departure (LOCAL)<span class="red">*</span></label>
+                                    <input id="ScheduleddepartureLOCPopup" disabled formControlName="ScheduleddepartureLOCPopup" class="form-control" type="text"
+                                        name="ScheduleddepartureLOCPopup" placeholder="Scheduled Departure" />
+                                </div>
+                                <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                                    <label for="Scheduledarrival(UTC)">Scheduled arrival (UTC)<span class="red">*</span></label>
+                                    <input id="ScheduledarrivalPopup" disabled formControlName="ScheduledarrivalPopup" class="form-control" type="text" name="ScheduledarrivalPopup"
+                                        placeholder="Scheduled Arrival" />
+                                </div>
+                                <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                                    <label for="Scheduledarrival(LOCAL)">Scheduled Arrival (LOCAL)</label>
+                                    <input id="ScheduledarrivalLOCPopup" disabled class="form-control" [ngClass]="flightClass" type="text" name="ScheduledarrivalLOCPopup"
+                                        formControlName="ScheduledarrivalLOCPopup" placeholder="Scheduled Arrival" />
+                                </div>
+                                <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                                    <label for="FlightTailNumber">FlightTailNumber</label>
+                                    <input id="FlightTailNumberPopup" disabled formControlName="FlightTailNumberPopup" class="form-control" type="text" name="FlightTailNumberPopup"
+                                        placeholder="Flight Tail Number" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                                    <label for="AircraftTypeId">Aircraft Type<span class="required">*</span></label>
+                                    <select id="AircraftTypeIdPopup" disabled class="form-control" formControlName="AircraftTypeIdPopup" name="AircraftTypeIdPopup">
+                                                <option value=''>Select Aircraft Type</option>
+                                                <option *ngFor="let activeAircraftType of activeAircraftTypes" [value]="activeAircraftType.AircraftTypeId" >
+                                                    {{activeAircraftType.AircraftTypeCode}}
+                                                </option>
+                                            </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

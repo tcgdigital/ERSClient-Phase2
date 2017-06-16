@@ -22,6 +22,7 @@ import {
     PeopleOnBoardWidgetComponent,
     PresidentMessageWidgetComponent,
     IncidentHeaderWidgetComponent,
+    ReadOnlyIncidentWidgetComponent,
     ArchiveReportWidgetComponent,
     ArchiveUploadWidgetComponent
     
@@ -54,6 +55,7 @@ const WIDGET_COMPONENTS: any[] = [
     PeopleOnBoardWidgetComponent,
     PresidentMessageWidgetComponent,
     IncidentHeaderWidgetComponent,
+    ReadOnlyIncidentWidgetComponent,
     ArchiveReportWidgetComponent,
     ArchiveUploadWidgetComponent
 ];

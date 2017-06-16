@@ -14,6 +14,7 @@ export class SideMenuItemComponent {
 
     @Output() itemHover = new EventEmitter<any>();
     @Output() toggleMenu = new EventEmitter<any>();
+    @Output() menuClick = new EventEmitter<any>();
 
     public onHoverItem($event): void {
         this.itemHover.emit($event);
@@ -23,5 +24,9 @@ export class SideMenuItemComponent {
         $event.item = item;
         this.toggleMenu.emit($event);
         return false;
+    }
+
+    public onMenuClick($event):void{
+        this.menuClick.emit($event);
     }
 }
