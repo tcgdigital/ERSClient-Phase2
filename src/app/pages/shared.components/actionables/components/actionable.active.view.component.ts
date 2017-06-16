@@ -182,7 +182,6 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     };
 
     IsDone(event: any, editedActionable: ActionableModel): void {
-        debugger;
         editedActionable.Done = true;
         let tempActionable = this.activeActionables.find(function (item: ActionableModel) {
             return (item.ActionId == editedActionable.ActionId);
