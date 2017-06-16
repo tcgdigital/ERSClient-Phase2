@@ -248,7 +248,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     getPassengersCrews(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
-                debugger;
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
             }, (error: any) => {
                 console.log(`Error: ${error}`);

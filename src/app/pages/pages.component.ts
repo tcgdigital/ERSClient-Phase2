@@ -125,7 +125,6 @@ export class PagesComponent implements OnInit {
     }
 
     public onMenuClick($event):void{
-      //  debugger;
        // window.alert($event);
        this.showQuicklink = true;
     //  let num = UtilityService.UUID;

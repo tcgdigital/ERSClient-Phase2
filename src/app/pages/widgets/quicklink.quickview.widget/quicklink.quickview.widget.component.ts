@@ -26,7 +26,6 @@ export class QuickLinkQuickViewWidgetComponent implements OnInit {
     }
 
     public onViewQLinkClick(): void {
-        debugger;
         this.incidentId = this.currentIncident;
         this.childModalViewQLink.show();
         

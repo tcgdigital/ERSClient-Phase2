@@ -92,7 +92,6 @@ export class AffectedPeopleListComponent implements OnInit {
     }
 
     saveUpdateAffectedPerson(affectedModifiedForm: AffectedPeopleToView): void {
-        debugger;
         this.affectedPersonToUpdate.AffectedPersonId = affectedModifiedForm.AffectedPersonId;
         this.affectedPersonToUpdate.Identification = affectedModifiedForm.Identification;
         this.affectedPersonToUpdate.MedicalStatus = affectedModifiedForm["MedicalStatusToshow"];
