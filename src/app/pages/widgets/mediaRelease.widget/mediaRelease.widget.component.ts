@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { DataServiceFactory, DataExchangeService, GlobalStateService, KeyValue, UtilityService } from '../../../shared'
+import { DataServiceFactory, DataExchangeService, GlobalStateService, KeyValue, UtilityService, TextAccordionModel } from '../../../shared'
 import { MediaReleaseWidgetModel } from './mediaRelease.widget.model'
 import { MediaModel } from '../../shared.components';
 import { MediaReleaseWidgetService } from './mediaRelease.widget.service'
@@ -16,7 +16,7 @@ export class MediaReleaseWidgetComponent implements OnInit {
     @Input('currentIncidentId') incidentId: number;    
     @ViewChild('childModalMediaRelease') public childModal: ModalDirective;
 
-    mediaReleases: Observable<MediaReleaseWidgetModel[]>;
+    mediaReleases: Observable<TextAccordionModel[]>;
     AllMediaReleases: Observable<MediaReleaseWidgetModel[]>;
     currentDepartmentId: number;
     currentIncidentId: number;
@@ -66,7 +66,11 @@ export class MediaReleaseWidgetComponent implements OnInit {
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             },
-            () => this.mediaReleases = Observable.of(data));
+            () => {
+                this.mediaReleases = Observable.of(data
+                    .map((x: MediaReleaseWidgetModel) => new TextAccordionModel(x.MediaReleaseType, x.PublishedOn)));
+                console.log(this.mediaReleases);                
+            });
     }
 
     public getAllMediaReleases(callback?: Function): void {

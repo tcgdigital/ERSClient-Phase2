@@ -24,6 +24,8 @@ export class CommandHeaderComponent implements OnInit {
     departmentPlaceholder: string = 'Department';
     clientName: string;
 
+    constructor() {}
+
     public ngOnInit(): void {
         if (UtilityService.licenseInfo)
             this.clientName = UtilityService.licenseInfo.ClientName;
@@ -38,4 +40,3 @@ export class CommandHeaderComponent implements OnInit {
     public onIncidentChange(selectedIncident: KeyValue): void {
         this.incidentChange.emit(selectedIncident);
     }
-}
