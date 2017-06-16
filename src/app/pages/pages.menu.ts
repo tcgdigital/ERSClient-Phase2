@@ -108,7 +108,7 @@ export const PAGES_MENU: IMenuItem[] = [
                         icon: 'fa fa-phone fa-lg',
                         selected: false,
                         expanded: false,
-                        order: 6
+                        order: 7
                     }
                 }
 
@@ -121,7 +121,21 @@ export const PAGES_MENU: IMenuItem[] = [
                         icon: 'fa fa-phone fa-lg',
                         selected: false,
                         expanded: false,
-                        order: 6
+                        order: 8
+                    }
+                }
+
+            },
+            {
+                path: 'quickviewquicklink',
+                data: {
+                    menu: {
+                        title: 'Quick View Quick Link',
+                        icon: 'fa fa-phone fa-lg',
+                        selected: false,
+                        expanded: false,
+                        order: 9,
+                        command: 'quicklink'
                     }
                 }
 
