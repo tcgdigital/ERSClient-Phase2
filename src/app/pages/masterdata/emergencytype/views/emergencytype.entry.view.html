@@ -8,10 +8,13 @@
                     <label for="EmergencyTypeName">Emergency Type Name:<span class="required">*</span></label>
                     <input id="txtEmergencyTypeName" type="text" formControlName="EmergencyTypeName" class="form-control" placeholder="Enter Emergency Type Name"
                         autofocus />
-                    <small *ngIf="!form.controls.EmergencyTypeName.valid" [hidden]="form.controls.EmergencyTypeName.valid || (form.controls.EmergencyTypeName.pristine && !submitted)"
+                    <small *ngIf="form.controls.EmergencyTypeName.hasError('required')" [hidden]="form.controls.EmergencyTypeName.valid || (form.controls.EmergencyTypeName.pristine && !submitted)"
                         class="text-danger">
                     Required.
                     </small>
+                    <small *ngIf="form.controls.EmergencyTypeName.hasError('validateName')" 
+                        [hidden]="form.controls.EmergencyTypeName.valid || (form.controls.EmergencyTypeName.pristine && !submitted)"
+                                class="text-danger">Invalid Input</small>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12">
