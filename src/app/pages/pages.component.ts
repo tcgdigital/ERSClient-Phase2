@@ -123,6 +123,10 @@ export class PagesComponent implements OnInit {
         this.globalState.NotifyDataChanged('incidentChange', selectedIncident);
     }
 
+    public onMenuClick($event):void{
+        window.alert($event);
+    }
+
     private getDepartments(): void {
         this.userPermissionService.GetAllDepartmentsAssignedToUser(this.userId)
             .map((x: ResponseModel<UserPermissionModel>) => x.Records.sort((a, b) => {
