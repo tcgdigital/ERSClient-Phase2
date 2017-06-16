@@ -3,7 +3,7 @@
     (incidentChange)="onIncidentChange($event)" (contactClicked)="onContactClicked($event)" (helpClicked)="onHelpClicked($event)"
     (logoutClicked)="onLogoutClicked($event)" (changePasswordClicked)="onChangePasswordClicked($event)" [isLanding]="isLanding">
 </div>
-<side-bar [dockingState]="sideMenuState"></side-bar>
+<side-bar [dockingState]="sideMenuState" (menuClick)="onMenuClick($event)"></side-bar>
 <section class="body-container">
     <router-outlet></router-outlet>
 </section>

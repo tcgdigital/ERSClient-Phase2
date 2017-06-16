@@ -29,7 +29,8 @@ import {
     UtilityService,
     LocationService,
     Location,
-    DateTimePickerOptions
+    DateTimePickerOptions,
+    DateTimePickerDirective
 } from '../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { FlightModel, InvolvePartyModel } from '../../shared.components';
@@ -44,6 +45,8 @@ import { IncidentDataExchangeModel } from './incidentDataExchange.model';
 export class IncidentEntryComponent implements OnInit, OnDestroy {
     @ViewChild('childModalViewIncident') public childModalViewIncident: ModalDirective;
     @ViewChild('childModalViewWeatherLocation') public childModalViewWeatherLocation: ModalDirective;
+
+    @ViewChild('arrivaldatepicker') private arrivaldatepicker: DateTimePickerDirective
     incident: IncidentModel;
     lat: number = 51.678418;
     lng: number = 7.809007;
@@ -64,6 +67,11 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     };
     datepickerOptionED: DateTimePickerOptions = new DateTimePickerOptions();
     datepickerOptionFLT: DateTimePickerOptions = new DateTimePickerOptions();
+
+    datepickerOptionDeparture: DateTimePickerOptions = new DateTimePickerOptions();
+    datepickerOptionArrival: DateTimePickerOptions = new DateTimePickerOptions();
+
+
     disableIsDrill: boolean;
     disableIsDrillPopup: boolean;
     isFlightRelated: boolean = false;
@@ -130,6 +138,9 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
 
         this.datepickerOptionED = new DateTimePickerOptions();
         this.datepickerOptionFLT = new DateTimePickerOptions();
+
+        this.datepickerOptionDeparture = new DateTimePickerOptions();
+        this.datepickerOptionArrival = new DateTimePickerOptions();
         // This proxy is created for not create the GlobalStateService in constructor level and reuse the 
         // GlobalStateService.
         this.globalStateProxy = injector.get(GlobalStateService);
@@ -144,6 +155,9 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.isBorrowed = false;
         this.datepickerOptionED.maxDate = new Date();
         this.datepickerOptionFLT.position = 'top left';
+
+        this.datepickerOptionDeparture.position = 'top left';
+        this.datepickerOptionArrival.position = 'top left';
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.isFlightRelated = false;
         this.disableIsDrill = true;
@@ -739,13 +753,13 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.incidentModel.ReportedByAddress = this.form.controls['ReportedByAddress'].value;
         this.incidentModel.ContactOfWitness = this.form.controls['ContactOfWitness'].value;
         this.incidentModel.SenderOfCrisisInformation = this.form.controls['SenderOfCrisisInformation'].value;
-        if(this.isBorrowedIncidentPopup){
+        if (this.isBorrowedIncidentPopup) {
             this.incidentModel.BorrowedIncident = +this.form.controls['BorrowedIncident'].value;
         }
-        else{
+        else {
             this.incidentModel.BorrowedIncident = null;
         }
-        
+
         // if (this.incidentModel.EmergencyLocation === 'Offset') {
         //     this.incidentModel.OffSetLocation = this.form.controls['OffsiteDetails'].value;
         // }
@@ -792,6 +806,12 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             this.ScheduleDepartureLocal = new Date(date.SelectedDate.toLocaleString() + " UTC");
             this.formFlight.get("ScheduleddepartureLOC")
                 .setValue(moment(this.ScheduleDepartureLocal).format('YYYY-MM-DD h:mm A'));
+
+            // this.datepickerOptionArrival.minDate = new Date(date.SelectedDate.toLocaleString());
+            this.arrivaldatepicker.updateConfig({
+                minDate: new Date(date.SelectedDate.toLocaleString())
+            });
+
         }
         else if (controlName === 'Scheduledarrival') {
             this.formFlight.get("Scheduledarrival")

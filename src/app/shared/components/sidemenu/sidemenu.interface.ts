@@ -7,6 +7,7 @@ export interface IMenu {
     order?: number;
     skip?: boolean;
     target?: string;
+    command?: string;
 }
 
 export interface IMenuData {

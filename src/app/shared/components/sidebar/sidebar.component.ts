@@ -1,6 +1,6 @@
 import {
-    Component, ViewEncapsulation, SimpleChange,
-    OnInit, OnDestroy, Input, OnChanges, ElementRef
+    Component, ViewEncapsulation, SimpleChange, EventEmitter,
+    OnInit, OnDestroy, Input, OnChanges, ElementRef, Output
 } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
@@ -14,6 +14,7 @@ import { SideMenuService, GlobalStateService } from '../../services';
 })
 export class SidebarComponent implements OnInit, OnChanges, OnDestroy {
     @Input() dockingState: boolean;
+    @Output() menuClick = new EventEmitter<any>();
 
     public menuItems: any[];
     protected _menuItemsSub: Subscription;
@@ -89,6 +90,10 @@ export class SidebarComponent implements OnInit, OnChanges, OnDestroy {
         this._menuItemsSub.unsubscribe();
     }
 
+    public onMenuClick($event):void{
+        this.menuClick.emit($event);
+    }
+    
     private toggleSideMenuDock(): void {
         const $self = $(this._elementRef.nativeElement).find('.side-menu');
         console.log($self);
