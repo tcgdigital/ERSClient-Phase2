@@ -588,7 +588,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             WhatHappenedPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.WhatHappend),
             WhereHappenedPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.WhereHappend),
             OtherConfirmationInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OtherConfirmationInformation),
-            ReportedDatePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ReportedDate),
+            ReportedDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.ReportedDate).format('YYYY-MM-DD h:mm a')),
             ReportedDateLocalPopup: new FormControl(moment(this.ReportedDateLocal).format('YYYY-MM-DD h:mm a')),
 
 
