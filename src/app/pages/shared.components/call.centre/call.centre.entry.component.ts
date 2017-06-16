@@ -12,6 +12,7 @@ import {
 } from '../../../shared';
 import { EnquiryModel, EnquiryService } from './components';
 import { AffectedPeopleModel } from "../affected.people/components";
+import { PassengerService, CoPassengerMappingModel } from "../passenger/components";
 
 import {
     CommunicationLogModel, InvolvePartyModel,
@@ -30,6 +31,7 @@ import {
 
 import { IAutocompleteActions } from '../../../shared/components/autocomplete/IAutocompleteActions';
 import { ModalDirective } from 'ng2-bootstrap/modal';
+import * as _ from 'underscore';
 
 @Component({
     selector: 'call-centre-main',
@@ -49,7 +51,7 @@ import { ModalDirective } from 'ng2-bootstrap/modal';
 export class EnquiryEntryComponent /*implements OnInit*/ {
     @Input('callid') callid: number;
     @Input('enquiryType') enquiryType: number;
-   // @ViewChild('childModalForTrail') public childModalForTrail: ModalDirective;
+    // @ViewChild('childModalForTrail') public childModalForTrail: ModalDirective;
 
 
 
@@ -77,7 +79,8 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig,
         private callcenteronlypageservice: CallCenterOnlyPageService,
-        private communicationlogservice: CommunicationLogService) { }
+        private communicationlogservice: CommunicationLogService,
+        private passangerService : PassengerService) { }
 
 
     public form: FormGroup;
@@ -116,17 +119,25 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     pdaNameForTrail: string = "";
     ticketNumber: string = "";
     communications: CommunicationLogModel[] = [];
-    showCallcenterModal:boolean = false;
-    hideModal : boolean = true;
+    showCallcenterModal: boolean = false;
+    hideModal: boolean = true;
+    groupId : number;
 
     protected _onRouteChange: Subscription;
     externalInput: ExternalInputModel = new ExternalInputModel();
     communicationlogtoupdateId: number;
     communicationlog: CommunicationLogModel = new CommunicationLogModel();
     public submitted: boolean = false;
-    copassengerlist :  AffectedPeopleToView[] = [];
-    selectedcount : number;
-    listSelected : boolean = false;
+    copassengerlistpnr: AffectedPeopleToView[] = [];
+    copassengerlistPassenger: AffectedPeopleToView[] = [];
+    selectedcountpnr: number;
+    selectedcountpassenger: number;
+    list1Selected: boolean = false;
+    list2Selected: boolean = false;
+    totallistselected: boolean = false;
+    totalcount: number;
+    consolidatedCopassengers: AffectedPeopleToView[] = [];
+    copassengersBygroup : CoPassengerMappingModel[]=[];
 
 
 
@@ -136,18 +147,15 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         this.communicationLog.AffectedPersonId = message.Value;
         delete this.communicationLog.AffectedObjectId;
         delete this.enquiry.AffectedObjectId;
-        let pnr = this.affectedPeople.find(x=>x.AffectedPersonId==message.Value).Pnr;
-        this.copassengerlist= this.affectedPeople.filter(x=>x.Pnr==pnr);
-        this.copassengerlist.map(x=>x["IsSelected"]=false);
+        let pnr = this.affectedPeople.find(x => x.AffectedPersonId == message.Value).Pnr;
+        this.affectedPeople.filter(x => x.Pnr == pnr).map(y => this.copassengerlistpnr.push(Object.assign({}, y)));
+        this.copassengerlistpnr.forEach(x => {
+            x.IsSelected = false;
+            this.copassengerlistPassenger = _.without(this.copassengerlistPassenger, _.findWhere(this.copassengerlistPassenger, { AffectedPersonId: x.AffectedPersonId }));
+        });
     }
 
-    selectCopassenger($event: any,copassenger:AffectedPeopleToView) : void{
-            this.selectedcount = this.copassengerlist.filter(x=> x["IsSelected"]==true).length;
-    }
 
-    showList() :void {
-        this.listSelected=!this.listSelected;
-    }
 
     onNotifyCrew(message: KeyValue): void {
         this.enquiry.AffectedPersonId = message.Value;
@@ -163,23 +171,25 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         delete this.communicationLog.AffectedPersonId;
     }
 
-    iscrew(item: AffectedPeopleToView): any {
-        return item.IsCrew === true;
-    }
+    // iscrew(item: AffectedPeopleToView): any {
+    //     return item.IsCrew === true;
+    // }
 
-    ispassenger(item: AffectedPeopleToView): any {
-        return item.IsCrew === false;
-    }
+    // ispassenger(item: AffectedPeopleToView): any {
+    //     return item.IsCrew === false;
+    // }
 
     getPassengersCrews(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
-                const passengerModels = this.affectedPeople.filter(this.ispassenger);
-                const crewModels = this.affectedPeople.filter(this.iscrew);
+                const passengerModels = this.affectedPeople.filter(x => x.IsCrew === false);
+                const crewModels = this.affectedPeople.filter(x => x.IsCrew == true);
                 for (const affectedPerson of passengerModels) {
                     this.passengers.push(new KeyValue((affectedPerson.PassengerName || affectedPerson.CrewName), affectedPerson.AffectedPersonId));
+                    this.copassengerlistPassenger.push(Object.assign({}, affectedPerson));
                 }
+                this.copassengerlistPassenger.forEach(x => x.IsSelected = false);
                 for (const affectedPerson of crewModels) {
                     this.crews.push(new KeyValue((affectedPerson.PassengerName || affectedPerson.CrewName), affectedPerson.AffectedPersonId));
                 }
@@ -324,7 +334,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             this.demand.CreatedBy = +this.credential.UserId;
             this.demand.RequiredLocation = GlobalConstants.RequiredLocation;
             this.demand.ScheduleTime = scheduleTime.toString();
-            this.demand.RequesterType = GlobalConstants.RequesterTypeDemand;
+            this.demand.RequesterType = "Others";
             this.demand.CommunicationLogs = this.SetCommunicationLog(GlobalConstants.RequesterTypeDemand, GlobalConstants.InteractionDetailsTypeDemand);
 
             this.demands.push(this.demand);
@@ -472,9 +482,9 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                 this.pdaNameForTrail = this.pdaNameForTrail ? this.pdaNameForTrail : responseModel.Crew != null ? responseModel.Crew.CrewName.toUpperCase() : '';
                 this.ticketNumber = responseModel.TicketNumber;
                 this.communications = responseModel.CommunicationLogs;
-                this.showCallcenterModal=true;
-               // this.childModalForTrail.show();
-                this.hideModal=false;
+                this.showCallcenterModal = true;
+                // this.childModalForTrail.show();
+                this.hideModal = false;
 
             }, (error: any) => {
                 console.log(`Error: ${error}`);
@@ -494,9 +504,69 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     }
 
     cancelModal() {
-       // this.childModalForTrail.hide();
-        this.hideModal=true;
-        this.showCallcenterModal=false;
+        // this.childModalForTrail.hide();
+        this.hideModal = true;
+        this.showCallcenterModal = false;
+    }
+
+    //co-passenger selection
+    selectCopassengerpnr($event: any, copassenger: AffectedPeopleToView): void {
+        copassenger.IsSelected = !copassenger.IsSelected;
+        this.selectedcountpnr = this.copassengerlistpnr.filter(x => x.IsSelected == true).length;
+        this.consolidatedCopassengers = [];
+        this.copassengerlistpnr.filter(x => x.IsSelected == true).map(x => {
+            let obj = Object.assign({}, x);
+            obj.IsSelected = false;
+            this.consolidatedCopassengers.push(obj);
+        });
+        this.copassengerlistPassenger.filter(x => x.IsSelected == true).map(x => {
+            let obj = Object.assign({}, x);
+            obj.IsSelected = false;
+            this.consolidatedCopassengers.push(obj);
+        });
+
+    }
+
+    showListsamepnr(): void {
+        this.list1Selected = !this.list1Selected;
+    }
+    selectCopassengerfrompassenger($event: any, copassenger: AffectedPeopleToView): void {
+        copassenger.IsSelected = !copassenger.IsSelected;
+        this.selectedcountpassenger = this.copassengerlistPassenger.filter(x => x.IsSelected == true).length;
+        this.consolidatedCopassengers = [];
+        this.copassengerlistpnr.filter(x => x.IsSelected == true).map(x => {
+            let obj = Object.assign({}, x);
+            obj.IsSelected = false;
+            this.consolidatedCopassengers.push(obj);
+        });
+        this.copassengerlistPassenger.filter(x => x.IsSelected == true).map(x => {
+            let obj = Object.assign({}, x);
+            obj.IsSelected = false;
+            this.consolidatedCopassengers.push(obj);
+        });
+    }
+
+    showListPassengers(): void {
+        this.list2Selected = !this.list2Selected;
+    }
+
+    selectCopassengerAll($event: any, copassenger: AffectedPeopleToView): void {
+        copassenger.IsSelected = !copassenger.IsSelected;
+        this.passangerService.getGroupId(copassenger.PassengerId)
+        .map((response:ResponseModel<CoPassengerMappingModel>)=> this.groupId = response.Records[0].GroupId)
+        .flatMap(_=>this.passangerService.getCoPassengers(this.groupId))
+        .map((response1 : ResponseModel<CoPassengerMappingModel>)=> this.copassengersBygroup = response1.Records)
+        .subscribe(()=>{
+             this.copassengersBygroup.map(x=>{
+                  _.findWhere( this.consolidatedCopassengers,{ PassengerId : x.PassengerId}).IsSelected = true;
+             })
+         
+        })
+        this.totalcount = this.consolidatedCopassengers.filter(x => x.IsSelected == true).length;
+    }
+
+    showListall(): void {
+        this.totallistselected = !this.totallistselected;
     }
 
 }

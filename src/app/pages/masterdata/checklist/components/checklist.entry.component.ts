@@ -91,7 +91,9 @@ export class ChecklistEntryComponent implements OnInit {
             });
             this.parentChecklists = this.addDepartmentName(this.parentChecklists);
         }
+        else{
         this.parentChecklists = this.noDtaList;
+        }
         this.selectedcount = this.checkListParentDepartmentWise.filter(x => x["IsSelected"] == true).length;
     }
 

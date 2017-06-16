@@ -28,6 +28,7 @@ export class PassengerModel extends BaseModel {
 	public CoTravellerInformation : string;
 
 	public Flight: FlightModel;
+	public CoPassengerMappings: CoPassengerMappingModel[];
 
 	public Origin: string; 
 	public IdentificationDocType : string; 
@@ -46,3 +47,11 @@ export class PassengerModel extends BaseModel {
 		super();
 	}
 }
+
+	export class CoPassengerMappingModel extends BaseModel {
+		public CoPassengerMappingId: number;
+		public PassengerId: number;
+		public GroupId: number;
+
+		public Passenger?: PassengerModel;
+	}
