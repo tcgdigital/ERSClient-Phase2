@@ -9,7 +9,7 @@ import {
 import { Observable, Subscription } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router, NavigationEnd } from '@angular/router';
-
+import { ChecklistModel } from "../../../masterdata/checklist/components/checklist.model";
 
 import { ActionableModel } from './actionable.model';
 import { ActionableService } from './actionable.service';
@@ -20,7 +20,7 @@ import {
     FileUploadService, GlobalStateService, SharedModule, AuthModel
 } from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
-
+import * as _ from 'underscore';
 
 
 @Component({
@@ -102,19 +102,27 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
 
     }
 
+    private GetListOfChildActionables(checkListId: number, incidentId: number, callback?: Function): void {
+        this.actionableService.GetAcionableByIncidentIdandCheckListId(incidentId, checkListId)
+            .subscribe((res: ResponseModel<ActionableModel>) => {
+                if (callback) {
+                    callback(res.Records[0]);
+                }
+            });
+    }
+
     openChildActionable(actionable: ActionableModel): void {
         actionable["expanded"] = !actionable["expanded"];
         this.actionableService.GetChildActionables(actionable.ChklistId, this.currentIncident)
             .subscribe((responseActionable: ResponseModel<ActionableModel>) => {
                 this.departmentService.GetDepartmentNameIds()
                     .subscribe((response: ResponseModel<DepartmentModel>) => {
-                        let childActionables: ActionableModel[] = [];
-                        childActionables = responseActionable.Records;
-                        childActionables.forEach(x => {
-                            x["DepartmentName"] = response.Records.find(y => { return y.DepartmentId == x.DepartmentId; }).DepartmentName;
+                        responseActionable.Records[0].CheckList.CheckListChildren.forEach((item: ChecklistModel) => {
+                            this.GetListOfChildActionables(item.CheckListId,this.currentIncident, (child: ActionableModel) => {
+                                child["DepartmentName"] = response.Records.find(y => { return y.DepartmentId == child.DepartmentId; }).DepartmentName;
+                                actionable["actionableChilds"].push(child);
+                            });
                         });
-                        actionable["actionableChilds"] = childActionables;
-
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                     });
@@ -174,6 +182,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     };
 
     IsDone(event: any, editedActionable: ActionableModel): void {
+        debugger;
         editedActionable.Done = true;
         let tempActionable = this.activeActionables.find(function (item: ActionableModel) {
             return (item.ActionId == editedActionable.ActionId);
@@ -181,7 +190,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         tempActionable.Done = editedActionable.Done;
         this.actionableService.SetParentActionableStatusByIncidentIdandDepartmentIdandActionable(this.currentIncident,
             this.currentDepartmentId, editedActionable, this.activeActionables);
-            
+
     }
 
     upload(actionableClicked: ActionableModel) {
@@ -223,20 +232,28 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     getAllActiveActionableByIncident(incidentId): void {
+        this.parentChecklistIds = [];
+        let parents: number[] = [];
         this.actionableService.GetAllOpenByIncidentId(incidentId)
             .subscribe((response: ResponseModel<ActionableModel>) => {
                 this.actionableWithParents = response.Records;
-                this.parentChecklistIds = this.actionableWithParents.map(function (actionable) {
-                  //  let Id = actionable.ParentCheckListId;
-                    //return Id;
-                    return 1;
+
+                this.actionableWithParents.forEach(function (actionable: ActionableModel) {
+
+                    if (actionable.CheckList.CheckListParent.length > 0) {
+                        actionable.CheckList.CheckListParent.forEach((item: ChecklistModel) => {
+                            parents.push(item.CheckListId);
+                        });
+                    }
                 })
+                this.parentChecklistIds = _.unique(parents);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
     }
 
     private setRagIntervalHandler(): void {
+
         Observable.interval(10000).subscribe(_ => {
             this.activeActionables.forEach((item: ActionableModel) => {
                 //item.RagColor = this.actionableService.setRagColor(item.AssignedDt, item.ScheduleClose);
