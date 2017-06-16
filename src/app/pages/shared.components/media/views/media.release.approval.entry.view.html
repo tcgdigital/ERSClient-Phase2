@@ -48,9 +48,9 @@
                     <div class ="row">
                         <div class="col-sm-12 col-lg-12 col-md-12">
                             <div class="buttonholder">                               
-                                <button class="btn btn-primary" (click)="approve()">Approve</button>
+                                <button class="btn btn-primary" (click)="approve()" [disabled] = "media.IsPublished">Approve</button>
                                 <button class="btn btn-warning" (click)="cancel()">Cancel</button>
-                                <button class="btn btn-primary" (click)="reject()">Reject</button>
+                                <button class="btn btn-primary" (click)="reject()" [disabled] = "media.IsPublished">Reject</button>
                             </div>
                         </div>
                     </div>

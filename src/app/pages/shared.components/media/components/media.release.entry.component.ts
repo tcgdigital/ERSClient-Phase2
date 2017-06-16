@@ -113,24 +113,26 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
         }
     }
 
-    onMediaReleaseUpdate(mediaModel: MediaModel): void {
-        this.media = new MediaModel();
-        this.media = mediaModel;
-        this.media.MediaqueryId = mediaModel.MediaqueryId;
-        this.media.IsUpdated = true;
+    onMediaReleaseUpdate(mediaModel: MediaModel): void {        
         
         this.currentTemplateMediaId = this.templateMedias
             .find((a) => a.TemplatePurpose === mediaModel.MediaReleaseType).TemplateMediaId.toString();
 
         if(this.media.MediaReleaseStatus === 'Approved' || this.media.MediaReleaseStatus === 'Published')
         {
-            this.isApprovedContent = true;
-            this.isSavedContent = false;
+            // this.isApprovedContent = true;
+            // this.isSavedContent = false;
+            this.media = new MediaModel();
+            this.media = mediaModel;
+            this.media.MediaqueryId = mediaModel.MediaqueryId;
+            this.media.Message = this.media.ApprovedContent;
         }
         else
         {
-            this.isApprovedContent = false;
-            this.isSavedContent = true;
+            this.media = new MediaModel();
+            this.media = mediaModel;
+            this.media.MediaqueryId = mediaModel.MediaqueryId;
+            this.media.IsUpdated = true;
         }            
       
         if (this.media.MediaReleaseStatus === 'SentForApproval' || this.media.MediaReleaseStatus === 'Published') {
@@ -139,7 +141,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
             this.applyReadOnlyButtons = true;
             this.appReadOnlyPublish = true;
             this.toolbarConfig['readOnly'] = true;
-        }
+        }        
         else if (this.media.MediaReleaseStatus === 'Approved') {
             this.appReadOnlyPublish = false;
             this.form.controls['MediaReleaseType'].reset({ value: this.currentTemplateMediaId, disabled: true });
@@ -231,13 +233,16 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
 
     showAddRegion(ShowAdd: boolean): void {
         this.showAdd = true;
+        this.media = new MediaModel();
         this.currentTemplateMediaId = '';
         this.applyReadOnlytextBox = false;
         this.applyReadOnlyButtons = false;
         this.appReadOnlyPublish = true;
         this.isInvalidForm = false;
-        this.isApprovedContent = false;
-        this.isSavedContent = true;
+        // this.isApprovedContent = false;
+        // this.isSavedContent = true;
+        this.toolbarConfig['readOnly'] = false;
+        this.form.controls['MediaReleaseType'].reset({ value: '', disabled: false });
         //this.toolbarConfig['readOnly'] = true;
     }
 
@@ -278,6 +283,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
 
         if (this.Action === 'Publish') {
             this.media.MediaReleaseStatus = 'Published';
+            delete this.media.Message;
         }
         
         if (this.media.MediaqueryId === 0) {
@@ -332,6 +338,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
         this.form = new FormGroup({
             MediaqueryId: new FormControl(0),
             Message: new FormControl('', [Validators.required, Validators.maxLength(500)]),
+            //ApprovedContent:  new FormControl(''),
             Remarks: new FormControl('', [Validators.required, Validators.maxLength(500)]),
             MediaReleaseType: new FormControl('')
         });

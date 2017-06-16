@@ -59,6 +59,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         this.disableUploadButton = true;
+        this.filesToUpload = [];
         this.initiateForm();
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
@@ -84,6 +85,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
             this.fileUploadService.uploadFiles<string>(baseUrl + './api/MasterDataUploadBatch?' + param, this.filesToUpload)
                 .subscribe((result: any) => {
                     console.log('success');
+                    this.filesToUpload = [];
                     this.toastrService.success('Uploaded Data is processed successfully.' + '\n'
                         + 'To check any invalid records, please refer \'View Invalid Records\' link for the current timestamp.', 'Success', this.toastrConfig);
 
@@ -103,7 +105,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
 
     getFileDetails(e: any, type: string): void {
         this.disableUploadButton = false;
-        this.filesToUpload = [];
+        //this.filesToUpload = [];
 
         for (let i = 0; i < e.target.files.length; i++) {
             const extension = e.target.files[i].name.split('.').pop();
@@ -113,6 +115,10 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
                 this.objFileData.field = type;
                 this.objFileData.file = e.target.files[i];
                 this.filesToUpload.push(this.objFileData);
+            }
+            else
+            {
+                 this.toastrService.error('Invalid File Format!', 'Error', this.toastrConfig);
             }
         }
     }
