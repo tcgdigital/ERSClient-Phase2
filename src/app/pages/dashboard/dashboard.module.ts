@@ -17,6 +17,8 @@ import {
     OrganizationService,
     AircraftTypeService
 } from '../shared.components';
+//import { QuickLinkQuickViewWidgetComponent } from "widgets/quicklink.quickview.widget";
+
 
 @NgModule({
     imports: [

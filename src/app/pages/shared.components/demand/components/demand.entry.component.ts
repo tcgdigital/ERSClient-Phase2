@@ -248,6 +248,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     getPassengersCrews(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
+                debugger;
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
@@ -479,7 +480,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.communicationLog.Answers = demand.DemandStatusDescription + ", "
             + this.demandTypes.find(x => x.DemandTypeId == demand.DemandTypeId).DemandTypeName + " request for " +
             this.departments.find(x => x.DepartmentId == demand.TargetDepartmentId).DepartmentName
-            + ". Request Details : " + demand.DemandDesc + ". " + "created with status " + demand.ActiveFlag + ".";
+            + ". Request Details : " + demand.DemandDesc + ". "+"Request Code : "+demand.DemandCode + "created with status " + demand.ActiveFlag + ".";
         
         this.communicationLog.RequesterName = demand.RequestedBy;
         this.communicationLog.RequesterDepartment = this.departments

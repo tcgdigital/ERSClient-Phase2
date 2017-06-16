@@ -83,6 +83,8 @@
 
                     <small *ngIf="form.controls.URL.hasError('required')" [hidden]="form.controls.URL.valid || (form.controls.URL.pristine && !submitted)"
                         class="text-danger">Required</small>
+                    <small *ngIf="form.controls.URL.hasError('validateURL') && !form.controls.URL.hasError('required')" [hidden]="form.controls.URL.valid || (form.controls.URL.pristine && !submitted)"
+                        class="text-danger">Invalid Input</small>    
                 </div>
             </div>
             <div class="col-lg-3">

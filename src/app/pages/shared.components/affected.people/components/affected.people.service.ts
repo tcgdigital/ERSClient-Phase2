@@ -86,7 +86,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
                     item.BaggageWeight = dataItem.Passenger != null ? (dataItem.Passenger.BaggageWeight == null ? 0 : dataItem.Passenger.BaggageWeight) : 0;
                     item.PassengerSpecialServiceRequestCode = dataItem.Passenger != null ? (dataItem.Passenger.SpecialServiceRequestCode.trim() == null ? 'NA' : dataItem.Passenger.SpecialServiceRequestCode) : 'NA';
                     item.PassengerEmployeeId = dataItem.Passenger != null ? (dataItem.Passenger.EmployeeId == null ? 'NA' : dataItem.Passenger.EmployeeId) : 'NA';
-                    item.CoTravellerInformation = dataItem.Passenger != null ? (dataItem.Passenger.CoTravellerInformation == null ? 'NA' : dataItem.Passenger.CoTravellerInformation) : 'NA';
+                 //   item.CoTravellerInformation = dataItem.Passenger != null ? (dataItem.Passenger.CoTravellerInformation == null ? 'NA' : dataItem.Passenger.CoTravellerInformation) : 'NA';
                     item.CrewIdCode = dataItem.Crew != null ? (dataItem.Crew.EmployeeNumber == null ? 'NA' : dataItem.Crew.EmployeeNumber) : 'NA';
                     item.IsStaff = dataItem.IsStaff != null ? dataItem.IsStaff : false;
                     item.MedicalStatus = dataItem.MedicalStatus != null ? dataItem.MedicalStatus : 'NA';
@@ -210,7 +210,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     public GetCommunicationByPDA(id: number): Observable<ResponseModel<AffectedPeopleModel>> {
         return this._dataService.Query()
             .Filter(`AffectedPersonId eq ${id}`)
-            .Expand("Passenger , Crew, CommunicationLogs($filter=ActiveFlag eq 'Active')")
+            .Expand("Passenger , Crew, CommunicationLogs($filter=ActiveFlag eq 'Active';$orderby=CreatedOn desc)")
             .Execute();
     }
 
