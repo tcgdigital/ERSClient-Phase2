@@ -24,16 +24,16 @@
                         <div class="col-sm-6 col-lg-6 col-md-6">
                             <div class="form-group">
                                 <label for="Message">Media Release Message:<span class="red">*</span></label>
-                                <ng-container *ngIf = "isApprovedContent">
-                                    <ckeditor formControlName="Message" [(ngModel)]="media.ApprovedContent" debounce="500" (change)="onMessageChange($event)" (blur)="onMessageBlur($event)"
+                                <!--<div [hidden] = "isApprovedContent">
+                                    <ckeditor formControlName="ApprovedContent" [(ngModel)]="media.ApprovedContent" debounce="500" (change)="onMessageChange($event)" (blur)="onMessageBlur($event)"
                                         (focus)="onMessageFocus($event)" (ready)="onMessageReady($event)" [config]="toolbarConfigApproved">
                                     </ckeditor>
-                                </ng-container>
-                                <ng-container *ngIf = "isSavedContent">
-                                    <ckeditor formControlName="Message" [(ngModel)]="media.Message" debounce="500" (change)="onMessageChange($event)" (blur)="onMessageBlur($event)"
-                                        (focus)="onMessageFocus($event)" (ready)="onMessageReady($event)" [config]="toolbarConfig">
-                                    </ckeditor>
-                                </ng-container>
+                                </div>-->
+                               
+                                <ckeditor formControlName="Message" [(ngModel)]="media.Message" debounce="500" (change)="onMessageChange($event)" (blur)="onMessageBlur($event)"
+                                    (focus)="onMessageFocus($event)" (ready)="onMessageReady($event)" [config]="toolbarConfig">
+                                </ckeditor>
+                               
                                 <small class="text-danger" [hidden]="hideMessageError">
                                 Required.
                                 </small>
