@@ -162,7 +162,7 @@ export class MediaReleaseApprovalEntryComponent implements OnInit, OnDestroy {
         {                
             this.media.SentForApprovalContent = this.media.Message;
             this.media.MediaReleaseStatus = "Rejected";
-            this.media.ApprovedBy = +this.credential.UserId;    
+            this.media.RejectedBy = +this.credential.UserId;    
             this.media.ApproverDepartmentId = this.currentDepartmentId;
             this.media.RejectedOn = new Date();                            
         }
@@ -171,7 +171,11 @@ export class MediaReleaseApprovalEntryComponent implements OnInit, OnDestroy {
         this.media.UpdatedOn = new Date();
         this.mediaQueryService.Update(this.media)
             .subscribe((response: MediaModel) => {
-                this.toastrService.success('Media release is approved successfully.', 'Success', this.toastrConfig);
+                if(this.Action ==="Approve")
+                    this.toastrService.success('Media release is approved successfully.', 'Success', this.toastrConfig);
+                if(this.Action === "Reject")
+                     this.toastrService.success('Media release is rejected successfully.', 'Success', this.toastrConfig);
+                     
                 this.dataExchange.Publish("MediaModelUpdated", response);                                                
                 if(this.media.IsPublished)
                 {                        

@@ -76,7 +76,7 @@ export class GlobalConstants {
             { name: 'links', items: ['Link', 'Unlink'] },
             { name: 'insert', items: ['Table', 'HorizontalRule', 'SpecialChar'] },
             { name: 'tools', items: ['Maximize'] },
-            { name: 'document', items: ['Source'] },
+            //{ name: 'document', items: ['Source'] },
             '/',
             { name: 'basicstyles', items: ['Bold', 'Italic', 'Strike', '-', 'RemoveFormat'] },
             { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent'] },
