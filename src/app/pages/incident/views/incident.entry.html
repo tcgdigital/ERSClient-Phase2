@@ -10,7 +10,7 @@
                             <input id="IncidentId" type="hidden" name="IncidentId" formControlName="IncidentId" [(ngModel)]="incidentModel.IncidentId"
                             />
                             <label for="IsDrill">IsDrill</label>
-                            <md-checkbox md-no-ink id="IsDrill" name="IsDrill" formControlName="IsDrill" [ngModel]="incidentModel.IsDrill" (change)="IsDrill($event)"
+                            <md-checkbox class="drill-checkbox-style" md-no-ink id="IsDrill" name="IsDrill" formControlName="IsDrill" [ngModel]="incidentModel.IsDrill" (change)="IsDrill($event)"
                                 aria-label="Drill">
                             </md-checkbox>
                         </div>
@@ -40,7 +40,7 @@
                             <small *ngIf="form.controls.EmergencyTypeId.hasError('required')" [hidden]="form.controls.EmergencyTypeId.valid || (form.controls.EmergencyTypeId.pristine && !submitted)"
                                 class="text-danger">Required</small>
                         </div>
-                        <div class="form-group col-lg-2 col-sm-12 col-md-6">
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="AffectedStation">Responsible Station<span class="required">*</span></label>
                             <select id="AffectedStationId" class="form-control" formControlName="AffectedStationId" name="AffectedStationId" (change)="affectedStationChange($event.target.value,affectedStations)">
                                     <option value=''>Select Affected Station</option>
@@ -67,7 +67,7 @@
                             <small *ngIf="form.controls.EmergencyDate.hasError('required')" [hidden]="form.controls.EmergencyDate.valid || (form.controls.EmergencyDate.pristine && !submitted)"
                                 class="text-danger">Required</small>
                         </div>
-                        <div class="form-group col-lg-2 col-sm-12 col-md-6">
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="EmergencyDateLocal">Date of Crisis (LOCAL)</label>
                             <input id="EmergencyDateLocal" disabled formControlName="EmergencyDateLocal" class="form-control" type="text" name="EmergencyDateLocal"
                                 placeholder="Emergency Date" />
@@ -203,8 +203,8 @@
                                     class="text-danger">Required</small>
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="Scheduleddeparture(UTC)">Scheduled departure<span class="required">*</span></label>
-                                <input id="Scheduleddeparture" readonly class="form-control" [ngClass]="flightClass" type="text" name="Scheduleddeparture"
+                                <label for="Scheduleddeparture(UTC)">Scheduled departure (UTC)<span class="required">*</span></label>
+                                <input  [readonly]="true" id="Scheduleddeparture" readonly class="form-control" [ngClass]="flightClass" type="text" name="Scheduleddeparture"
                                     formControlName="Scheduleddeparture" placeholder="Scheduled Departure" datetime-picker [options]="datepickerOptionDeparture"
                                     (selectHandler)="dateTimeSet($event,'Scheduleddeparture');" />
                                 <small *ngIf="formFlight.controls.Scheduleddeparture.hasError('required')" [hidden]="formFlight.controls.Scheduleddeparture.valid || (formFlight.controls.Scheduleddeparture.pristine && !submittedFlight)"
@@ -214,7 +214,7 @@
                         <div class="row">
 
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="ScheduledDeparture(LOCAL)">Scheduled Departure (LOC)<span class="required">*</span></label>
+                                <label for="ScheduledDeparture(LOCAL)">Scheduled Departure (LOCAL)<span class="required">*</span></label>
                                 <input id="ScheduleddepartureLOC" disabled class="form-control" [ngClass]="flightClass" type="text" name="ScheduleddepartureLOC"
                                     formControlName="ScheduleddepartureLOC" placeholder="Scheduled Departure" />
                             </div>
@@ -227,7 +227,7 @@
                                     class="text-danger">Required</small>
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="ScheduledArrival(LOCAL)">Scheduled Arrival (LOC)<span class="required">*</span></label>
+                                <label for="ScheduledArrival(LOCAL)">Scheduled Arrival (LOCAL)<span class="required">*</span></label>
                                 <input id="ScheduledarrivalLOC" disabled class="form-control" [ngClass]="flightClass" type="text" name="ScheduledarrivalLOC"
                                     formControlName="ScheduledarrivalLOC" placeholder="Scheduled Arrival" />
                             </div>
@@ -318,7 +318,7 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="EmergencyType">EmergencyType</label>
+                            <label for="EmergencyType">Emergency Type</label>
                             <select id="EmergencyTypeIdPopup" disabled class="form-control" formControlName="EmergencyTypeIdPopup" name="EmergencyTypeIdPopup">
                                     <option value="0" >Select Emergency Type</option>
                                     <option *ngFor="let emergencyType of activeEmergencyTypes" [value]="emergencyType.EmergencyTypeId" >
@@ -326,7 +326,7 @@
                                     </option>
                             </select>
                         </div>
-                        <div class="form-group col-lg-2 col-sm-12 col-md-6">
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="AffectedStation">Affected Station</label>
                             <input id="AffectedStationIdPopup" disabled formControlName="AffectedStationIdPopup" class="form-control" type="text" name="AffectedStationIdPopup"
                                 placeholder="Enter Affected Station" />
@@ -342,7 +342,7 @@
                             <input id="EmergencyDatePopup" disabled formControlName="EmergencyDatePopup" class="form-control" type="text" name="EmergencyDatePopup"
                                 placeholder="Enter EmergencyDate" />
                         </div>
-                        <div class="form-group col-lg-2 col-sm-12 col-md-6">
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="EmergencyDateLocal">Date of Crisis (LOCAL)</label>
                             <input id="EmergencyDateLocalPopup" disabled formControlName="EmergencyDateLocalPopup" class="form-control" type="text" name="EmergencyDateLocalPopup"
                                 placeholder="Enter EmergencyDate" />
@@ -509,7 +509,7 @@
 
                                 </div>
                                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                    <label for="FlightTailNumber">FlightTailNumber</label>
+                                    <label for="FlightTailNumber">Flight Tail Number</label>
                                     <input id="FlightTailNumberPopup" disabled formControlName="FlightTailNumberPopup" class="form-control" type="text" name="FlightTailNumberPopup"
                                         placeholder="Flight Tail Number" />
 

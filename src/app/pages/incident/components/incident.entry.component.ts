@@ -53,7 +53,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     zoom: number = 8;
     public submitted: boolean = false;
     public submittedFlight: boolean = false;
-    public isBorrowedIncidentPopup: boolean = false;
+    public isBorrowedIncidentPopup: boolean = true;
     //public IsReadonlyFlight:boolean;
     currentDepartmentId: number;
     location: Location;
@@ -311,7 +311,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     incidentsToPickForReplicationChange(incidentId: string, incidentsToPickForReplication: IncidentModel[]): void {
-        this.isBorrowedIncidentPopup = false;
+        //this.isBorrowedIncidentPopup = false;
         if (this.isFlightRelated) {
             this.submittedFlight = false;
             if (incidentId != '0') {
@@ -327,7 +327,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             }
             else {
                 this.ResetFlightFields();
-                this.isBorrowedIncidentPopup = false;
+                //this.isBorrowedIncidentPopup = false;
             }
         }
 
@@ -607,7 +607,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             SenderOfCrisisInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.SenderOfCrisisInformation),
 
 
-            BorrowedIncidentPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.BorrowedIncident)
+            BorrowedIncidentPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.BorrowedIncident==0?'':this.incidentDataExchangeModel.IncidentModel.BorrowedIncident)
         });
         this.IsDrillPopup = this.incidentDataExchangeModel.IncidentModel.IsDrill;
         this.isFlightRelatedPopup = false;
