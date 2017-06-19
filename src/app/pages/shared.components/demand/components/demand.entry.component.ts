@@ -479,7 +479,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.communicationLog.Answers = demand.DemandStatusDescription + ", "
             + this.demandTypes.find(x => x.DemandTypeId == demand.DemandTypeId).DemandTypeName + " request for " +
             this.departments.find(x => x.DepartmentId == demand.TargetDepartmentId).DepartmentName
-            + ". Request Details : " + demand.DemandDesc + ". " + "created with status " + demand.ActiveFlag + ".";
+            + ". Request Details : " + demand.DemandDesc + ". "+"Request Code : "+demand.DemandCode + "created with status " + demand.ActiveFlag + ".";
         
         this.communicationLog.RequesterName = demand.RequestedBy;
         this.communicationLog.RequesterDepartment = this.departments

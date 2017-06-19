@@ -40,4 +40,6 @@ export class CommandHeaderComponent implements OnInit {
     public onIncidentChange(selectedIncident: KeyValue): void {
         this.incidentChange.emit(selectedIncident);
     }
+
 }
+

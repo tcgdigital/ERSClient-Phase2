@@ -14,18 +14,19 @@ import { ModalDirective } from 'ng2-bootstrap/modal';
 })
 
 export class QuickLinkQuickViewWidgetComponent implements OnInit {
-    @Input() currentIncident: KeyValue;
+    @Input() currentIncident: number;
     @ViewChild('childModalViewQLink') public childModalViewQLink: ModalDirective;
     public incidentId:number;
     constructor() { }
 
     ngOnInit() {
         this.incidentId=0;
+        this.onViewQLinkClick();
 
     }
 
     public onViewQLinkClick(): void {
-        this.incidentId = this.currentIncident.Value;
+        this.incidentId = this.currentIncident;
         this.childModalViewQLink.show();
         
     }
