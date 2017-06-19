@@ -149,6 +149,18 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         }
         else {
             this.formControlDirtyCheck();
+            if (!this.demandTypeModelToEdit.IsAutoApproved) {
+                if (this.form.controls['ApproverDept'].value == '') {
+                    this.toastrService.error('Please provide approver department.', 'Error', this.toastrConfig);
+                    return false;
+                }
+                else {
+                    this.demandTypeModelToEdit.DepartmentId = this.form.controls['ApproverDept'].value;
+                }
+            }
+            else {
+                this.demandTypeModelToEdit.DepartmentId = null;
+            }
             this.demandTypeService.Update(this.demandTypeModelToEdit, this.demandTypeModelToEdit.DemandTypeId)
                 .subscribe((response: DemandTypeModel) => {
                     this.toastrService.success('Demand Edited Successfully.', 'Success', this.toastrConfig);

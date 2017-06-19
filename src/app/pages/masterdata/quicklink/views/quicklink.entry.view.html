@@ -19,9 +19,13 @@
                     <label for="QuickLinkURL">Quick Link URL:<span class="required">*</span></label>
                     <input id="QuickLinkURL" class="form-control" type="text" name="QuickLinkURL" formControlName="QuickLinkURL" placeholder="Enter QuickLink URL"
                     />
-                    <small *ngIf="!form.controls.QuickLinkURL.valid" [hidden]="form.controls.QuickLinkURL.valid || (form.controls.QuickLinkURL.pristine && !submitted)"
+                    <small *ngIf="form.controls.QuickLinkURL.hasError('required')" [hidden]="form.controls.QuickLinkURL.valid || (form.controls.QuickLinkURL.pristine && !submitted)"
                         class="text-danger">
                     Required.
+                    </small>
+                    <small *ngIf="form.controls.QuickLinkURL.hasError('validateURL') && !form.controls.QuickLinkURL.hasError('required')" [hidden]="form.controls.QuickLinkURL.valid || (form.controls.QuickLinkURL.pristine && !submitted)"
+                        class="text-danger">
+                    Invalid Input.
                     </small>
                 </div>
             </div>

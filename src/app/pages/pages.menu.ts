@@ -131,7 +131,7 @@ export const PAGES_MENU: IMenuItem[] = [
                 data: {
                     menu: {
                         title: 'Quick View Quick Link',
-                        icon: 'fa fa-phone fa-lg',
+                        icon: 'fa fa-link fa-lg',
                         selected: false,
                         expanded: false,
                         order: 9,

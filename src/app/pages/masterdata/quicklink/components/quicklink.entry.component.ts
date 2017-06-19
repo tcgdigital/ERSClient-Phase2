@@ -12,7 +12,7 @@ import { ToastrService, ToastrConfig } from 'ngx-toastr';
 
 import { QuickLinkModel } from './quicklink.model';
 import { QuickLinkService } from './quicklink.service';
-import { ResponseModel, DataExchangeService, AuthModel, UtilityService } from '../../../../shared';
+import { ResponseModel, DataExchangeService, AuthModel, UtilityService, URLValidator } from '../../../../shared';
 
 @Component({
     selector: 'quicklink-entry',
@@ -50,7 +50,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
         this.form = new FormGroup({
             QuickLinkId: new FormControl(0),
             QuickLinkName: new FormControl('', [Validators.required]),
-            QuickLinkURL: new FormControl('', [Validators.required])
+            QuickLinkURL: new FormControl('', [Validators.required, URLValidator.validate])
         });
     }
 
@@ -116,9 +116,9 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
         this.form = new FormGroup({
             QuickLinkId: new FormControl(0),
             QuickLinkName: new FormControl(this.quickLinkModel.QuickLinkName,
-                [Validators.required, Validators.minLength(5)]),
+                [Validators.required]),
             QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL,
-                [Validators.required, Validators.minLength(12)])
+                [Validators.required, URLValidator.validate])
         });
     }
 
@@ -146,9 +146,9 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
         this.form = new FormGroup({
             QuickLinkId: new FormControl(this.quickLinkModel.QuickLinkId),
             QuickLinkName: new FormControl(this.quickLinkModel.QuickLinkName,
-                [Validators.required, Validators.minLength(5)]),
+                [Validators.required]),
             QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL,
-                [Validators.required, Validators.minLength(12)])
+                [Validators.required, URLValidator.validate])
         });
     }
 

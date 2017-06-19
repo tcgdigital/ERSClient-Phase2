@@ -66,6 +66,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     activeOrganizations: OrganizationModel[] = [];
     activeAircraftTypes: AircraftTypeModel[] = [];
     incidentsToPickForReplication: IncidentModel[] = [];
+    showQuicklink : boolean = false;
 
     constructor(private globalState: GlobalStateService,
         private departmentService: DepartmentService,
@@ -74,8 +75,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         private emergencyTypeService: EmergencyTypeService,
         private flightService: FlightService,
         private incidentService: IncidentService,
-        private organizationService:OrganizationService,
-        private aircraftTypeService:AircraftTypeService) {
+        private organizationService: OrganizationService,
+        private aircraftTypeService: AircraftTypeService) {
         this.incidentDate = new Date();
         this.severities = UtilityService.GetKeyValues(Severity);
     }
@@ -100,11 +101,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.getIncidentsToPickForReplication();
         this.getIncident(this.currentIncidentId);
         this.getDepartment(this.currentDepartmentId);
-        
+
         this.tablinks = TAB_LINKS;
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+       // this.globalState.Subscribe('quicklinkclicked', (model: number) => this.quicklinkClicked(model));
+
     }
+
+    // quicklinkClicked(model : number) :  void{
+    //     this.showQuicklink = true;
+    // }
 
     getAllActiveOrganizations(): void {
         this.organizationService.GetAllActiveOrganizations()

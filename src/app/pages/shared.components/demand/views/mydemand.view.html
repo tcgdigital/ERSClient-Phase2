@@ -44,7 +44,7 @@
                                 </li>
                             </ul>
                         </td>
-                        <td data-title="Edit" *ngIf="!isArchive"><i class="fa fa-edit fa-2x" (click)="open(demand.DemandId)" ></i></td>
+                        <td data-title="Edit" *ngIf="!isArchive"><i class="fa fa-edit fa-2x" (click)="open(demand.DemandId)"></i></td>
                     </tr>
                 </tbody>
             </table>
@@ -115,18 +115,24 @@
                    </button>
                     </div>
                     <div class="modal-body">
+                        <div class="row modalBodyHeaderStyle">
+                            
+                            <div class="col-sm-6 form-group">
+                                 <label class="lebelHeaderStyle"><strong>Demand Type Name</strong></label>  <br> 
+                                <label class="form-control">{{demandTypeName}}</label>  </div>
+                            
+                            <div class="col-sm-6 form-group">
+                                 <label class="lebelHeaderStyle"><strong>Requester Department</strong></label> <br> 
+                                <label class="form-control">{{requesterDepartmentName}}</label>  </div>
+                             </div>
+                         <br>
                         <responsive-table>
                             <table responsive-table-body>
                                 <tbody>
-                                    <thead>
-                                        <th>Work Details</th>
-                                        <th>Deployed On</th>
-                                        <th>Undeployed On</th>
-                                    </thead>
-                                    <tr *ngFor="let work of memberHistory">
-                                        <td>{{work.Remarks}}</td>
-                                        <td>{{work.DeployedOn}}</td>
-                                        <td>{{work.UnDeployedOn}}</td>
+                                    <tr *ngFor="let trail of demandTrails">
+                                        <td>
+                                            <div [innerHTML]="trail.Answers" type="text"></div>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>

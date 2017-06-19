@@ -220,7 +220,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.communicationLog = new CommunicationLogModel();
         this.communicationLog.InteractionDetailsId = 0;
         this.communicationLog.Queries = demand.DemandDesc;
-        this.communicationLog.Answers = `${demand.DemandStatusDescription}, ${demand.DemandTypeName} request for ${demand.TargetDepartmentName}. Request Details : ${demand.DemandDesc}.`;
+        this.communicationLog.Answers = `${demand.DemandStatusDescription}, ${demand.DemandTypeName} request for ${demand.TargetDepartmentName}. Request Details : ${demand.DemandDesc}. Request Code ${demand.DemandCode}`;
         this.communicationLog.RequesterName = demand.RequestedBy;
         this.communicationLog.RequesterDepartment = demand.TargetDepartmentName;
         this.communicationLog.RequesterType = 'Request';
