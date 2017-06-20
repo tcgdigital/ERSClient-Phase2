@@ -34,7 +34,7 @@ import { ModalDirective } from 'ng2-bootstrap/modal';
 import * as moment from 'moment/moment';
 import { DateTimePickerSelectEventArgs } from '../../../../shared/directives/datetimepicker';
 import { FileStoreModel } from '../../../../shared/models/file.store.model';
-import { FileStoreService } from '../../../../shared/services/common.service'
+import { FileStoreService } from '../../../../shared/services/common.service';
 
 
 
@@ -61,6 +61,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     pdas: Array<KeyValue> = [];
     awbs: Array<KeyValue> = [];
     currentIncidentId: number;
+    currentOrganizationId: number;
     currentDepartmentId: number;
     parentDeptId: number = null;
     currentDepartmentName: string = "Command Centre";
@@ -133,9 +134,16 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     };
 
     getFileDetails(e: any): void {
-        this.filesToUpload = [];
+        this.filesToUpload = []; 
         for (var i = 0; i < e.target.files.length; i++) {
-            this.filesToUpload.push(e.target.files[i]);
+            const extension = e.target.files[i].name.split('.').pop();                                  
+            if(extension != "exe" || extension != "dll")                
+                this.filesToUpload.push(e.target.files[i]);
+            else
+            {
+              this.toastrService.error('Invalid File Format!', 'Error', this.toastrConfig);
+              this.inputFileDemand.nativeElement.value = "";
+            }            
         }
     }
 
@@ -402,6 +410,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     ngOnInit(): any {
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        this.currentOrganizationId = +UtilityService.GetFromSession("CurrentOrganizationId");
+        debugger;
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this._onRouteChange = this._router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
@@ -584,7 +594,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         if (this.filesToUpload.length) {
             let baseUrl = GlobalConstants.EXTERNAL_URL;
             //let param = this.credential.UserId;
-            let organizationId = 2 // To be changed by Dropdown when Demand table will change
+            let organizationId = +UtilityService.GetFromSession("CurrentOrganizationId"); // To be changed by Dropdown when Demand table will change
             let moduleName = "Demand"
             let param = `${this.currentIncidentId}/${organizationId}/${this.currentDepartmentId}/${moduleName}`;
             this.date = new Date();

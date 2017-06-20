@@ -3,7 +3,8 @@ import { Observable } from 'rxjs/Rx';
 import { PresidentMessageWidgetModel } from './presidentMessage.widget.model';
 import { PresidentMessageModel } from '../../shared.components';
 import { PresidentMessageWidgetService } from './presidentMessage.widget.service'
-import { DataServiceFactory, DataExchangeService, GlobalStateService, KeyValue, UtilityService } from '../../../shared'
+import { DataServiceFactory, DataExchangeService, GlobalStateService, 
+    TextAccordionModel, KeyValue, UtilityService } from '../../../shared'
 import { ModalDirective } from 'ng2-bootstrap/modal';
 
 @Component({
@@ -20,7 +21,7 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
     currentDepartmentId: number;
     currentIncidentId: number;
 
-    presidentMessages: Observable<PresidentMessageWidgetModel[]>;
+    presidentMessages: Observable<TextAccordionModel[]>;
     AllPresidentMessages: Observable<PresidentMessageWidgetModel[]>;
 
     constructor(private presidentMessagewidgetService: PresidentMessageWidgetService,
@@ -63,8 +64,11 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
             .take(2)
             .subscribe(x => {
                 data.push(x);
-            }, (error: any) => { },
-            () => this.presidentMessages = Observable.of(data));
+            }, (error: any) => { 
+                 console.log(`Error: ${error}`);
+            },
+            () => this.presidentMessages = Observable.of(data
+                    .map((x: PresidentMessageWidgetModel) => new TextAccordionModel(x.Message, x.PublishedOn,''))));
     }
 
     getAllPresidentsMessages(callback?: Function): void {

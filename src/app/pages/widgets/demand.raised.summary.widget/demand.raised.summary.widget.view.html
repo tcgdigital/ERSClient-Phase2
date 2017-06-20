@@ -56,7 +56,7 @@
                             <tr *ngFor="let demand of allDemandRaisedSummaryModel | async">
                                 <td data-title="Department">{{demand.DemandDesc}}</td>
                                 <td data-title="Requester Department">{{demand.RequesterDepartment.DepartmentName}}</td>
-                                <td data-title="Schedule close time">{{demand.ScheduledClose | date:"dd-MMM-yy h:mma"}}</td>
+                                <td data-title="Schedule close time">{{demand.ScheduledClose | date:' dd-MMM-yyyy hh:mm a'}}</td>
                                 <td data-title="RAG"><span [ngClass]="demand.RagStatus"></span></td>
                                 <td data-title="Status">{{demand.DemandStatusDescription}}</td>
                             </tr>
@@ -147,7 +147,7 @@
                                             <tr *ngFor="let allDeptDemandRaisedCompleted of allDeptDemandRaisedSummaries">
                                                 <td data-title="Description">{{allDeptDemandRaisedCompleted.description}}</td>
                                                 <td data-title="Requester Department">{{allDeptDemandRaisedCompleted.targetDepartmentName}}</td>
-                                                <td data-title="Schedule Close Time">{{allDeptDemandRaisedCompleted.scheduleCloseTime | date:"dd-MMM-yy h:mma"}}</td>
+                                                <td data-title="Schedule Close Time">{{allDeptDemandRaisedCompleted.scheduleCloseTime | date:' dd-MMM-yyyy hh:mm a'}}</td>
                                                 <td data-title="RAG">
                                                     <span [ngClass]="allDeptDemandRaisedCompleted.RagStatus"></span>
                                                 </td>
@@ -180,7 +180,7 @@
                                             <tr *ngFor="let allDeptDemandRaisedCompleted of allDeptDemandRaisedSummaries">
                                                 <td data-title="Description">{{allDeptDemandRaisedCompleted.description}}</td>
                                                 <td data-title="Requester Department">{{allDeptDemandRaisedCompleted.targetDepartmentName}}</td>
-                                                <td data-title="Schedule Close Time">{{allDeptDemandRaisedCompleted.scheduleCloseTime | date:"dd-MMM-yy h:mma"}}</td>
+                                                <td data-title="Schedule Close Time">{{allDeptDemandRaisedCompleted.scheduleCloseTime | date:' dd-MMM-yyyy hh:mm a'}}</td>
                                                 <td data-title="RAG"><span [ngClass]="allDeptDemandRaisedCompleted.RagStatus"></span></td>
                                             </tr>
                                         </tbody>
@@ -211,7 +211,7 @@
                                             <tr *ngFor="let allDeptDemandRaisedCompleted of allDeptDemandRaisedSummaries">
                                                 <td data-title="Description">{{allDeptDemandRaisedCompleted.description}}</td>
                                                 <td data-title="Requester Department">{{allDeptDemandRaisedCompleted.targetDepartmentName}}</td>
-                                                <td data-title="Schedule Close Time">{{allDeptDemandRaisedCompleted.scheduleCloseTime | date:"dd-MMM-yy h:mma"}}</td>
+                                                <td data-title="Schedule Close Time">{{allDeptDemandRaisedCompleted.scheduleCloseTime | date:' dd-MMM-yyyy hh:mm a'}}</td>
                                                 <td data-title="RAG"><span [ngClass]="allDeptDemandRaisedCompleted.RagStatus"></span></td>
                                             </tr>
                                         </tbody>
@@ -281,7 +281,7 @@
                                     <tr *ngFor="let subDeptDemandRaisedCompleted of subDeptDemandRaisedSummaries">
                                         <td data-title="Description">{{subDeptDemandRaisedCompleted.description}}</td>
                                         <td data-title="Target Department">{{subDeptDemandRaisedCompleted.targetDepartmentName}}</td>
-                                        <td data-title="Schedule Close Time">{{subDeptDemandRaisedCompleted.scheduleCloseTime | date:"dd-MMM-yy h:mma"}}</td>
+                                        <td data-title="Schedule Close Time">{{subDeptDemandRaisedCompleted.scheduleCloseTime | date:' dd-MMM-yyyy hh:mm a'}}</td>
                                         <td data-title="RAG">
                                             <span [ngClass]="subDeptDemandRaisedCompleted.RagStatus"></span>
                                         </td>
@@ -314,7 +314,7 @@
                                     <tr *ngFor="let subDeptDemandRaisedCompleted of subDeptDemandRaisedSummaries">
                                         <td data-title="Description">{{subDeptDemandRaisedCompleted.description}}</td>
                                         <td data-title="Requster Department">{{subDeptDemandRaisedCompleted.targetDepartmentName}}</td>
-                                        <td data-title="Schedule Close Time">{{subDeptDemandRaisedCompleted.scheduleCloseTime | date:"dd-MMM-yy h:mma"}}</td>
+                                        <td data-title="Schedule Close Time">{{subDeptDemandRaisedCompleted.scheduleCloseTime | date:' dd-MMM-yyyy hh:mm a'}}</td>
                                         <td data-title="RAG">
                                             <span [ngClass]="subDeptDemandRaisedCompleted.RagStatus"></span>
                                         </td>

@@ -160,9 +160,9 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
         this.showAdd = true;
     }
 
-    validateForm(): boolean{
+    validateForm(): boolean {
         if((this.form.controls['Message'].value == "" || this.form.controls['Message'].value == undefined) 
-        && (this.form.controls['Remarks'].value == "" || this.form.controls['Remarks'].value == undefined ))
+        && (this.form.controls['MediaReleaseType'].value == "" || this.form.controls['MediaReleaseType'].value == undefined ))
         {
             this.hideMessageError = false;
             this.hideRemarksError = false;
@@ -173,7 +173,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
             this.hideMessageError = false;
             return false;
         } 
-        else if(this.form.controls['Remarks'].value == "" || this.form.controls['Remarks'].value == null || this.form.controls['Remarks'].value == undefined)
+        else if(this.form.controls['MediaReleaseType'].value == "" || this.form.controls['MediaReleaseType'].value == null || this.form.controls['MediaReleaseType'].value == undefined)
         {
             this.hideMessageError = true;
             this.hideRemarksError = false;
@@ -186,7 +186,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
             return true;
         }
     }
-
+    
     save(): void {
         if(this.validateForm())
         {

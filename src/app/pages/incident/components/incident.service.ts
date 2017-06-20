@@ -51,6 +51,7 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
 
     GetAllActiveIncidents(): Observable<ResponseModel<IncidentModel>> {
         return this._dataService.Query()
+            .Expand(`Organization($select=OrganizationId,OrganizationCode,OrganizationName)`)
             .Filter("ActiveFlag eq 'Active' and ClosedOn eq null and IncidentId ne 0")
             .OrderBy('CreatedOn desc')
             .Execute();
