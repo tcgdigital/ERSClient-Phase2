@@ -1,1 +1,15 @@
 @import '../../config/config';
+.summary-container {
+    max-height: 380px;
+    overflow-y: scroll;
+}
+
+.bg-blue-color {
+    background-color: #03A9F4 !important;
+    td {
+        color: #fff;
+        a {
+            color: #fff;
+        }
+    }
+}

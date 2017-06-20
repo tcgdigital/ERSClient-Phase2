@@ -49,7 +49,6 @@ export class DateTimePickerDirective implements AfterViewInit {
         const options: DateTimePickerOptions = Object.assign(new DateTimePickerOptions(), this.options);
 
         options.onSelect = (formattedDate: string, date: Date | Date[], inst: object) => {
-            debugger;
             const args: DateTimePickerSelectEventArgs = new DateTimePickerSelectEventArgs();
             args.FormattedDate = formattedDate;
             args.SelectedDate = date;
@@ -114,7 +113,7 @@ export class DateTimePickerDirective implements AfterViewInit {
 
     public toggleControl() {
         const $element: JQuery = jQuery(this.elementRef.nativeElement);
-        if (!$element.is(':readonly')) {
+        if ($element.attr('data-disable') !== undefined) {
             $element.siblings('.input-group-addon').hide();
         } else {
             $element.siblings('.input-group-addon').show();
@@ -122,12 +121,15 @@ export class DateTimePickerDirective implements AfterViewInit {
     }
 
     private addPickerIcon($element: JQuery): void {
-        if (!$element.is(':readonly')) {
-            $element.wrap('<div class="input-group date"></div>');
-            const $root: JQuery = $element.closest('.input-group');
-            $root.append(`<span class="input-group-addon">
+        $element.wrap('<div class="input-group date"></div>');
+        const $root: JQuery = $element.closest('.input-group');
+        $root.append(`<span class="input-group-addon">
                         <i class="fa fa-calendar" aria-hidden="true"></i>
                     </span>`);
+        if ($element.attr('data-disable') == undefined) {
+            $root.find('.input-group-addon').show();
+        } else {
+            $root.find('.input-group-addon').hide();
         }
     }
 }

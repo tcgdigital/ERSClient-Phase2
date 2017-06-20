@@ -310,8 +310,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     private getIncident(incidentId: number): void {
         this.incidentService.Get(incidentId)
-            .subscribe((data) => {
-                this.currentIncident = new KeyValue(data.Description, data.IncidentId);
+            .subscribe((data:IncidentModel) => {
+                this.currentIncident = new KeyValue(data.EmergencyName, data.IncidentId);
                 this.incidentDate = new Date(data.EmergencyDate);
             });
     }

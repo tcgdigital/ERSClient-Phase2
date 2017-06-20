@@ -59,7 +59,7 @@ export class DateTimePickerOptions {
      */
     constructor(maxDate?: Date) {
         this.language = 'en';
-        this.dateFormat = 'yyyy-mm-dd';
+        this.dateFormat = 'DD-MMM-YYYY';
         // if (maxDate != undefined) {
         //     this.maxDate = maxDate;
         // }
@@ -67,7 +67,7 @@ export class DateTimePickerOptions {
         this.clearButton = true;
         this.autoClose = true;
         this.timepicker = true;
-        this.timeFormat = 'h:ii AA';
+        this.timeFormat = 'hh:ii AA';
     }
 }
 
