@@ -70,7 +70,7 @@ export class MediaReleaseApprovalEntryComponent implements OnInit, OnDestroy {
         this.formInit();   
         this.toolbarConfig['readOnly'] = false;    
         this.credential = UtilityService.getCredentialDetails();
-        this.dataExchange.Subscribe("OnMediaReleaseUpdate", model => this.onMediaReleaseUpdate(model));
+        this.dataExchange.Subscribe("OnMediaReleaseApproverUpdate", model => this.onMediaReleaseUpdate(model));
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
     }
