@@ -59,7 +59,7 @@ export class DateTimePickerOptions {
      */
     constructor(maxDate?: Date) {
         this.language = 'en';
-        this.dateFormat = 'dd/mm/yyyy';
+        this.dateFormat = 'DD-MMM-YYYY';
         // if (maxDate != undefined) {
         //     this.maxDate = maxDate;
         // }

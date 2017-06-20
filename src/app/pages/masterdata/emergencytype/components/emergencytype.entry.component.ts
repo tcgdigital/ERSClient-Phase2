@@ -10,7 +10,7 @@ import { EmergencyTypeService } from './emergencytype.service';
 import { EmergencyTypeModel } from './emergencytype.model';
 import {
     ResponseModel, DataExchangeService, GlobalConstants,
-    BaseModel, UtilityService, AuthModel
+    BaseModel, UtilityService, AuthModel, NameValidator
 } from '../../../../shared';
 
 @Component({
@@ -112,7 +112,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
         this.emergencyTypeModel.EmergencyTypeId = 0;
         this.form = new FormGroup({
             EmergencyTypeId: new FormControl(0),
-            EmergencyTypeName: new FormControl('', [Validators.required]),
+            EmergencyTypeName: new FormControl('', [Validators.required, NameValidator.validate]),
             EmergencyCategory: new FormControl('', [Validators.required]),
             ActiveFlag: new FormControl('', [Validators.required])
         });

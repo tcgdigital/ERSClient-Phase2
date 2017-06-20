@@ -76,7 +76,7 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
         $.each($inputs, (index, element) => {
             $(element).bootstrapToggle({
                 on: 'Busy',
-                off: 'Free'
+                off: 'Available'
             }, 'disable');
             $(element).change(function ($event) {
                 self.datachanged($event);
@@ -162,7 +162,7 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
                 .flatMap(() => this.membertrackService.UpdateMemberTrack(memberTrackModel, memberTrackModel.MemberEngagementTrackId))
                 .subscribe(() => {
                     // this.toastrService.success('Member is free now.');
-                    alert('Member is free now.');
+                    alert('Member is available now.');
                     this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId)
                     // obj.isRemarksSubmitted=false;
                 });

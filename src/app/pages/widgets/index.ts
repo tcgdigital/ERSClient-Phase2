@@ -11,5 +11,6 @@ export * from './incident.header.widget';
 export * from './readOnlyIncident.widget';
 export * from './archive.report.widget';
 export * from './archive.upload.widget';
+export * from './quicklink.quickview.widget';
 export * from './widget.module';
 export * from './widget.utility';

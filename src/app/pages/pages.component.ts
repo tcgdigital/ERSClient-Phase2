@@ -36,6 +36,7 @@ export class PagesComponent implements OnInit {
     userId: number;
     private sub: any;
     isLanding: boolean = false;
+    showQuicklink : boolean = false;
 
     /**
      * Creates an instance of PagesComponent.
@@ -127,7 +128,10 @@ export class PagesComponent implements OnInit {
     }
 
     public onMenuClick($event):void{
-        window.alert($event);
+       // window.alert($event);
+       this.showQuicklink = true;
+    //  let num = UtilityService.UUID;
+      //  this.globalState.NotifyDataChanged('quicklinkclicked', num);
     }
 
     private getDepartments(): void {

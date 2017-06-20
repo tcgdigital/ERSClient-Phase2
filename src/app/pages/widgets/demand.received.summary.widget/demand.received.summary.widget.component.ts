@@ -62,15 +62,15 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
     }
 
     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
-        if(changes['incidentId'] !== undefined && (changes['incidentId'].currentValue !==
+        if (changes['incidentId'] !== undefined && (changes['incidentId'].currentValue !==
             changes['incidentId'].previousValue) &&
-            changes['incidentId'].previousValue !== undefined){
-        this.demandReceivedSummary = this.demandReceivedSummaryWidgetService.GetDemandReceivedCount(this.incidentId, this.departmentId);
+            changes['incidentId'].previousValue !== undefined) {
+            this.demandReceivedSummary = this.demandReceivedSummaryWidgetService.GetDemandReceivedCount(this.incidentId, this.departmentId);
         }
-        if(changes['departmentId'] !== undefined && (changes['departmentId'].currentValue !==
+        if (changes['departmentId'] !== undefined && (changes['departmentId'].currentValue !==
             changes['departmentId'].previousValue) &&
-            changes['departmentId'].previousValue !== undefined){
-        this.demandReceivedSummary = this.demandReceivedSummaryWidgetService.GetDemandReceivedCount(this.incidentId, this.departmentId);
+            changes['departmentId'].previousValue !== undefined) {
+            this.demandReceivedSummary = this.demandReceivedSummaryWidgetService.GetDemandReceivedCount(this.incidentId, this.departmentId);
         }
     }
 
@@ -133,7 +133,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
 
         });
 
-        UtilityService.SetRAGStatus(this.allDeptDemandReceivedSummaries,'Demand');
+        UtilityService.SetRAGStatus(this.allDeptDemandReceivedSummaries, 'Demand');
         this.showAllDeptSubCompleted = true;
         this.showAllDeptSubPending = false;
     }
@@ -161,7 +161,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
             }
         });
 
-        UtilityService.SetRAGStatus(this.allDeptDemandReceivedSummaries,'Demand');
+        UtilityService.SetRAGStatus(this.allDeptDemandReceivedSummaries, 'Demand');
 
         this.showAllDeptSubPending = true;
 
@@ -190,7 +190,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
             }
         });
 
-        UtilityService.SetRAGStatus(this.subDeptDemandReceivedSummaries,'Demand');
+        UtilityService.SetRAGStatus(this.subDeptDemandReceivedSummaries, 'Demand');
         this.showSubDeptSubCompleted = true;
         this.showSubDeptSubPending = false;
     }
@@ -219,7 +219,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
 
         });
 
-        UtilityService.SetRAGStatus(this.subDeptDemandReceivedSummaries,'Demand');
+        UtilityService.SetRAGStatus(this.subDeptDemandReceivedSummaries, 'Demand');
         this.showSubDeptSubCompleted = false;
         this.showSubDeptSubPending = true;
     }
@@ -227,6 +227,10 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
     public hideSubDeptSubPending(): void {
         this.showSubDeptSubCompleted = false;
         this.showSubDeptSubPending = false;
+    }
+
+    public onViewAllDemandReceivedShown($event: ModalDirective): void {
+        jQuery("#demand-table tbody tr:nth-child(1)").addClass("bg-blue-color");
     }
 
     public graphDataFormationForDemandReceivedSummeryWidget(entity: DemandReceivedModel[]): void {
@@ -248,11 +252,17 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
                 this.arrGraphData.push(graphObject);
             });
         });
-        this.GetDemandReceivedGraph(entity[0].departmentId);
+        this.GetDemandReceivedGraph(entity[0].departmentId, null);
     }
 
-    public GetDemandReceivedGraph(targetDepartmentId: number) {
-        WidgetUtilityService.GetGraph(targetDepartmentId,Highcharts,this.arrGraphData,'demand-received-graph-container');
+    public GetDemandReceivedGraph(targetDepartmentId: number, $event: any) {
+        if ($event !== null) {
+            const $currentRow: JQuery = jQuery($event.currentTarget);
+            $currentRow.closest('tbody').find('tr').removeClass('bg-blue-color');
+            $currentRow.closest('tr').addClass('bg-blue-color');
+        }
+
+        WidgetUtilityService.GetGraphDemand(targetDepartmentId, Highcharts, this.arrGraphData, 'demand-received-graph-container','Received');
         this.showDemandReceivedGraph = true;
     }
 

@@ -83,9 +83,9 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
                     (x) => x.MainContact, (x) => x.AlternateContact, (x) => x.Location);
 
                 if (this.form.controls['isActive'].value)
-                    this.userProfileModel.ActiveFlag = 'Active';
+                    this.userProfileModel.isActive = true;
                 else
-                    this.userProfileModel.ActiveFlag = 'InActive';
+                    this.userProfileModel.isActive = false;
 
                 this.userProfileService.Create(this.userProfileModel)
                     .subscribe((response: UserProfileModel) => {

@@ -68,7 +68,7 @@
     </div>
 </div>
 
-<div bsModal #childModalViewAllDemandRaisedSummary="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+<div bsModal #childModalViewAllDemandRaisedSummary="bs-modal"  (onShown)="onViewAllDemandRaisedShown($event)" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -82,7 +82,7 @@
                         <div class="row">
                             <div [ngClass]="((allDemandRaisedList | async)?.length>0)?'col-md-12 col-lg-6':'col-12'">
                                 <responsive-table>
-                                    <table responsive-table-body>
+                                    <table id="demand-table" responsive-table-body>
                                         <thead>
                                             <tr>
                                                 <th>Requester Department</th>
@@ -97,7 +97,7 @@
                                             </tr>
                                             <tr *ngFor="let demand of allDemandRaisedList | async">
                                                 <td data-title="Target Department">
-                                                    <a href="javascript:void(0);" (click)="GetDemandRaisedGraph(demand.departmentId)">
+                                                    <a href="javascript:void(0);" (click)="GetDemandRaisedGraph(demand.departmentId, $event)">
                                                         {{demand.requesterDepartmentName}}
                                                     </a>
                                                 </td>

@@ -158,17 +158,18 @@ export class AffectedPeopleListComponent implements OnInit {
         this.affectedPersonToUpdate.Identification = affectedModifiedForm.Identification;
         this.affectedPersonToUpdate.MedicalStatus = affectedModifiedForm["MedicalStatusToshow"];
         this.affectedPersonToUpdate.Remarks = affectedModifiedForm.Remarks;
-        let pasengerModel = new PassengerModel();
-        pasengerModel.CoTravellerInformation = affectedModifiedForm.CoTravellerInformation;
+       // let pasengerModel = new PassengerModel();
+       // pasengerModel.CoTravellerInformation = affectedModifiedForm.CoTravellerInformation;
         this.affectedPeopleService.Update(this.affectedPersonToUpdate)
             .subscribe((response: AffectedPeopleModel) => {
-                if (affectedModifiedForm.PassengerId != null && affectedModifiedForm.PassengerId != 0 && affectedModifiedForm.PassengerId != undefined) {
-                    this.passengerUpdate(pasengerModel, this.affectedPersonToUpdate.PassengerId);
-                }
+                // if (affectedModifiedForm.PassengerId != null && affectedModifiedForm.PassengerId != 0 && affectedModifiedForm.PassengerId != undefined) {
+                //     this.passengerUpdate(pasengerModel, this.affectedPersonToUpdate.PassengerId);
+                // }
                 if(this.filesToUpload.length)
                 {
                     this.uploadFile();
                 }
+
                 this.toastrService.success('Aditional Information updated.')
                 //this.getAffectedPeople(this.currentIncident);
                 affectedModifiedForm["MedicalStatusToshow"] = affectedModifiedForm.MedicalStatus;
