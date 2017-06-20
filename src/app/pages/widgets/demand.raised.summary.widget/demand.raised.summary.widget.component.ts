@@ -199,6 +199,11 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         this.showAllDeptSubCompleted = false;
     }
 
+
+    public onViewAllDemandRaisedShown($event: ModalDirective): void {
+        jQuery("#demand-table tbody tr:nth-child(1)").addClass("bg-blue-color");
+    }
+
     // TODO: Need to refactor
     public showSubDeptSubCompletedFunc(demandModelList: DemandModel[]): void {
         this.subDeptDemandRaisedSummaries = [];
@@ -272,11 +277,17 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
                 this.arrGraphData.push(graphObject);
             });
         });
-        this.GetDemandRaisedGraph(entity[0].departmentId);
+        this.GetDemandRaisedGraph(entity[0].departmentId, null);
     }
 
-    public GetDemandRaisedGraph(requesterDepartmentId: number) {
-        WidgetUtilityService.GetGraph(requesterDepartmentId,Highcharts,this.arrGraphData,'demand-raised-graph-container');
+    public GetDemandRaisedGraph(requesterDepartmentId: number, $event: any) {
+        if ($event !== null) {
+            const $currentRow: JQuery = jQuery($event.currentTarget);
+            $currentRow.closest('tbody').find('tr').removeClass('bg-blue-color');
+            $currentRow.closest('tr').addClass('bg-blue-color');
+        }
+
+        WidgetUtilityService.GetGraphDemand(requesterDepartmentId, Highcharts, this.arrGraphData, 'demand-raised-graph-container','Raised');
         this.showDemandRaisedGraph = true;
     }
 

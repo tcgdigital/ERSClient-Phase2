@@ -1,6 +1,6 @@
 import {
     Component, OnInit, ViewEncapsulation,
-    Input, ViewChild, OnDestroy
+    Input, ViewChild, OnDestroy, SimpleChange, AfterViewInit
 } from '@angular/core';
 import { CheckListSummeryModel, DeptCheckListModel, SubDeptCheckListModel } from './checklist.summary.widget.model';
 import { ChecklistSummaryWidgetService } from './checklist.summary.widget.service';
@@ -40,6 +40,8 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
     public subdeptChecklistsLoc: ActionableModel[];
     public arrGraphData: GraphObject[];
     public showCheckListGraph: boolean = false;
+
+    public baseLocationURl: string = window.location.pathname;
     currentDepartmentId: number;
     currentIncidentId: number;
 
@@ -62,8 +64,16 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
         this.globalState.Subscribe('checkListStatusChange', () => this.checkListStatusChangeHandler());
         this.showAllDeptSubChecklistCompleted = false;
         this.showAllDeptSubChecklistPending = false;
-
         this.setChecklistGraphData();
+    }
+
+    public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
+        if (changes['departmentId'] !== undefined && (changes['departmentId'].currentValue !==
+            changes['departmentId'].previousValue) &&
+            changes['departmentId'].previousValue !== undefined) {
+            this.currentDepartmentId = changes['departmentId'].currentValue;
+            this.getActionableCount(this.currentIncidentId, this.currentDepartmentId);
+        }
     }
 
     getActionableCount(incidentId, departmentId): void {
@@ -174,6 +184,10 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
         this.ViewAllChecklist(() => {
             this.childModalViewAllChecklist.show();
         });
+    }
+
+    public onViewAllCheckListShown($event: ModalDirective): void {
+        jQuery("#checklist-table tbody tr:nth-child(1)").addClass("bg-blue-color");
     }
 
     public hideViewAllChecklist(): void {
@@ -396,10 +410,9 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
     }
 
     private graphDataFormationForCheckListWidget(entity: DeptCheckListModel[]): void {
-
         this.arrGraphData = [];
         entity.map((item: DeptCheckListModel) => {
-            item.actionableModelList.map((itemActionable:ActionableModel) => {
+            item.actionableModelList.map((itemActionable: ActionableModel) => {
                 let graphObject: GraphObject = new GraphObject();
                 graphObject.requesterDepartmentName = item.departmentName;
                 graphObject.requesterDepartmentId = item.departmentId;
@@ -415,11 +428,17 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
                 this.arrGraphData.push(graphObject);
             });
         });
-        this.GetCheckListGraph(entity[0].departmentId);
+        this.GetCheckListGraph(entity[0].departmentId, null);
     }
 
-    public GetCheckListGraph(requesterDepartmentId: number) {
-        WidgetUtilityService.GetGraph(requesterDepartmentId,Highcharts,this.arrGraphData,'checklist-graph-container');
+    public GetCheckListGraph(requesterDepartmentId: number, $event: any) {
+        if ($event !== null) {
+            const $currentRow: JQuery = jQuery($event.currentTarget);
+            $currentRow.closest('tbody').find('tr').removeClass('bg-blue-color');
+            $currentRow.closest('tr').addClass('bg-blue-color');
+        }
+
+        WidgetUtilityService.GetGraphCheckList(requesterDepartmentId, Highcharts, this.arrGraphData, 'checklist-graph-container');
         this.showCheckListGraph = true;
     }
 
