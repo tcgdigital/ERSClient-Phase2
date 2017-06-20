@@ -17,6 +17,7 @@ import {
     OrganizationService,
     AircraftTypeService
 } from '../shared.components';
+
 //import { QuickLinkQuickViewWidgetComponent } from "widgets/quicklink.quickview.widget";
 
 
@@ -41,6 +42,7 @@ import {
         FlightService,
         InvolvePartyService,
         OrganizationService,
+
         AircraftTypeService
     ]
 })
