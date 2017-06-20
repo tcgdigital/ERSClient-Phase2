@@ -306,8 +306,9 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.demandModel.Caller = new CallerModel();
         this.demandModel.RequestedBy = this.credentialName;
         this.demandModel.Caller.FirstName = this.credentialName;
-        this.demandModel.Caller.LastName = "";
-        this.Action = "Save";
+
+        this.demandModel.Caller.LastName ="";
+        this.Action = "Submit";
         this.isReadonly = false;
         this.childModal.show();
     };
@@ -444,7 +445,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.demandModel.RequestedBy = this.credentialName;
         this.demandModel.Caller.FirstName = this.credentialName;
         this.demandModel.Caller.LastName = "";
-        this.Action = "Save";
+        this.Action = "Submit";
         this.isReadonly = false;
 
         this.dataExchange.Subscribe("OnDemandUpdate", model => this.setModelForUpdate(model));

@@ -33,8 +33,8 @@
 
                     <small *ngIf="form.controls.Name.hasError('required')" [hidden]="form.controls.Name.valid || (form.controls.Name.pristine && !submitted)"
                         class="text-danger">Required</small>
-                        <small *ngIf="form.controls.Name.hasError('validateName')" [hidden]="form.controls.Name.valid || (form.controls.Name.pristine && !submitted)"
-                        class="text-danger">Invalid</small>
+                    <small *ngIf="form.controls.Name.hasError('validateName')" [hidden]="form.controls.Name.valid || (form.controls.Name.pristine && !submitted)"
+                        class="text-danger">Invalid Input</small>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-12">
@@ -64,7 +64,7 @@
                     <label for="AlternateContact">AlternateContact:</label>
                     <input class="form-control" id="txtAlternateContact" type="text" formControlName="AlternateContact" placeholder="Enter AlternateContact"
                     />
-                    
+
 
                     <small *ngIf="form.controls.AlternateContact.hasError('minlength')" [hidden]="form.controls.AlternateContact.valid || (form.controls.AlternateContact.pristine && !submitted)"
                         class="text-danger">Minimum contact lenght 10 is required</small>

@@ -4,6 +4,7 @@
             [menuItem]="item" 
             (itemHover)="hoverItem($event)"
             (toggleMenu)="toggleMenu($event)"
+            (menuClick)="onMenuClick($event)"
             *ngFor="let item of menuItems">
         </side-menu-item>
     </ul>

@@ -21,28 +21,36 @@
                     <div class="row"></div>
                     <br/>
                     <div class="row">
-                        <div class="col-sm-6 col-lg-4 col-md-6">
+                        <div class="col-sm-6 col-lg-6 col-md-6">
                             <div class="form-group">
                                 <label for="Message">Media Release Message:<span class="red">*</span></label>
-                                <textarea class="form-control" id="Message" formControlName="Message" [readOnly]="applyReadOnlytextBox" placeholder="Enter Media Release Message"
-                                    [(ngModel)]="media.SentForApprovalContent" required autofocus></textarea>
-                                <span [hidden]="hideMessageError">Please Input Message</span>
+                                <!--<textarea class="form-control" id="Message" formControlName="Message" [readOnly]="applyReadOnlytextBox" placeholder="Enter Media Release Message"
+                                    [(ngModel)]="media.SentForApprovalContent" required autofocus></textarea>-->
+                                  <ckeditor formControlName="Message" [(ngModel)]="media.SentForApprovalContent" (change)="onMessageChange($event)" (blur)="onMessageBlur($event)" (focus)="onMessageFocus($event)" (ready)="onMessageReady($event)" debounce="500" [config]="toolbarConfig">
+                                  </ckeditor>
+                                  <small class="text-danger" [hidden] = "hideMessageError">
+                                    Required.
+                                  </small>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-lg-4 col-md-6">
+                        <div class="col-sm-6 col-lg-6 col-md-6">
                             <div class="form-group">
                                 <label for="Remarks">Remarks:</label>
                                 <textarea class="form-control" id="Remarks" formControlName="Remarks" maxlength="500" [readOnly]="applyReadOnlytextBox" placeholder="Enter Remarks"
-                                    [(ngModel)]="media.Remarks" required autofocus></textarea>
-                                <span [hidden]="hideRemarksError">Please Input Remarks</span>
+                                    [(ngModel)]="media.Remarks"></textarea>
+                                <small class="text-danger" [hidden] = "hideRemarksError">
+                                    Required.
+                                </small>
                             </div>
                         </div>
 
-                        <div class="col-sm-6 col-lg-4 col-md-6">
+                    </div>
+                    <div class ="row">
+                        <div class="col-sm-12 col-lg-12 col-md-12">
                             <div class="buttonholder">                               
-                                <button class="btn btn-primary" (click)="approve()">Approve</button>
+                                <button class="btn btn-primary" (click)="approve()" [disabled] = "media.IsPublished">Approve</button>
                                 <button class="btn btn-warning" (click)="cancel()">Cancel</button>
-                                <button class="btn btn-primary" (click)="reject()">Reject</button>
+                                <button class="btn btn-primary" (click)="reject()" [disabled] = "media.IsPublished">Reject</button>
                             </div>
                         </div>
                     </div>

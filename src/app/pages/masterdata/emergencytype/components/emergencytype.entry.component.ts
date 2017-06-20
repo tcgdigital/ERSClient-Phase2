@@ -27,6 +27,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
     Action: string;
     showAdd: boolean;
     credential: AuthModel;
+    public submitted: boolean;
 
     emergencyCategory: Object = GlobalConstants.EmergencyCategories;
 
@@ -42,6 +43,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.submitted = false;
         this.initiateForm();
         this.showAdd = false;
         this.emergencyTypeModel = new EmergencyTypeModel();
@@ -51,6 +53,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
     }
 
     onSubmit(): void {
+        this.submitted = true;
         if (this.form.controls['EmergencyTypeName'].value == '') {
             this.toastrService.error('Please provide emergency type name.', 'Error', this.toastrConfig);
             return null;
@@ -97,6 +100,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
     }
 
     cancel(): void {
+        this.submitted = false;
         this.emergencyTypeModel = new EmergencyTypeModel();
         this.Action = "Save";
         this.initiateForm();

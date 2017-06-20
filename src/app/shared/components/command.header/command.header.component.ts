@@ -24,6 +24,8 @@ export class CommandHeaderComponent implements OnInit {
     departmentPlaceholder: string = 'Department';
     clientName: string;
 
+    constructor() {}
+
     public ngOnInit(): void {
         if (UtilityService.licenseInfo)
             this.clientName = UtilityService.licenseInfo.ClientName;

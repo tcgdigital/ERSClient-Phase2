@@ -25,7 +25,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     private _casualtySummery: CasualtySummeryModel;
     private _enquiryService: DataService<EnquiryModel>;
     private _nokService: DataService<NextOfKinModel>;
-    private _passengerService : DataService<PassengerModel>;
+    private _passengerService: DataService<PassengerModel>;
 
     public affectedPeoples: ResponseModel<AffectedPeopleModel>;
     /**
@@ -44,8 +44,8 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
         this._enquiryService = dataServiceFactory
             .CreateServiceWithOptions<EnquiryModel>('Enquiries', option);
         this._nokService = this.dataServiceFactory
-           .CreateServiceWithOptions<NextOfKinModel>('NextOfKins', option);
-         this._passengerService = this.dataServiceFactory
+            .CreateServiceWithOptions<NextOfKinModel>('NextOfKins', option);
+        this._passengerService = this.dataServiceFactory
             .CreateServiceWithOptions<PassengerModel>
             ('Passengers', option);
 
@@ -95,15 +95,20 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
                     item.SeatNo = dataItem.Passenger != null ? dataItem.Passenger.Seatno : 'No Seat Number Available';
                     // item.CommunicationLogs: dataItem.CommunicationLogs,
                     item.PaxType = dataItem.Passenger != null ? dataItem.Passenger.PassengerType : dataItem.Crew != null ? 'Crew' : '';
-                    if(dataItem.Crew)
-                    {
+                    if (dataItem.Crew) {
                         item.CrewId = dataItem.CrewId;
                     }
-                    if(dataItem.Passenger)
-                    {
+                    if (dataItem.Passenger) {
                         item.PassengerId = dataItem.PassengerId;
+                        if (dataItem.Passenger.CoPassengerMappings.length > 0) {
+                            item.GroupId = dataItem.Passenger.CoPassengerMappings[0].GroupId;
+                        }
+                        else{
+                            item.GroupId=0;
+                        }
                     }
                     item.IsNokInformed = dataItem.IsNokInformed;
+
                     return item;
                 });
             }
@@ -226,7 +231,16 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     }
 
 
-    public updatePassanger(passenger : PassengerModel,key?:number): Observable<PassengerModel> {
-     return this._passengerService.Patch(passenger, key.toString()).Execute();
+    public updatePassanger(passenger: PassengerModel, key?: number): Observable<PassengerModel> {
+        return this._passengerService.Patch(passenger, key.toString()).Execute();
+    }
+
+
+      getGroupId(affectedPersonId: number): Observable<ResponseModel<AffectedPeopleModel>> {
+        return this._dataService.Query()
+            .Filter(`AffectedPersonId eq ${affectedPersonId} and IsCrew eq false`)
+            .Expand(`Passenger($expand=CoPassengerMappings($select=GroupId);$select=PassengerId;)`)
+            .Select('AffectedPersonId')
+            .Execute();
     }
 }

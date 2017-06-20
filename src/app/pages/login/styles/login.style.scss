@@ -1,1 +1,5 @@
 @import '../../../theme/component-styles/login/login';
+
+.error-login{
+    color:$login-error !important; font-weight: bold;
+}

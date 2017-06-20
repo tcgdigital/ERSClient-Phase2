@@ -38,6 +38,7 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void{
+        this.emergencyLocation.Active = true;
         this.showAdd = false;
         this.isInvalidForm = false;
         this.initiateForm();
