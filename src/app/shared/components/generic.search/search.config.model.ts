@@ -9,6 +9,8 @@ export class SearchConfigModel<T> {
     Type: SearchControlType;
     ListData: Observable<NameValue<T>[]>;
     Order: number;
+    OrCommand: string;
+    AndCommand: string;
 
     constructor(options: {
         Name?: string,
@@ -17,7 +19,9 @@ export class SearchConfigModel<T> {
         PlaceHolder?: string,
         Type?: SearchControlType,
         ListData?: Observable<NameValue<T>[]>,
-        Order?: number
+        Order?: number,
+        OrCommand?: string,
+        AndCommand?: string
     }) {
         this.Name = options.Name || '';
         this.Value = options.Value;
@@ -26,6 +30,8 @@ export class SearchConfigModel<T> {
         this.Type = options.Type || SearchControlType.TEXTBOX;
         this.ListData = options.ListData || Observable.of([]);
         this.Order = options.Order === undefined ? 1 : options.Order;
+        this.OrCommand = options.OrCommand || '';
+        this.AndCommand = options.AndCommand || '';
     }
 }
 

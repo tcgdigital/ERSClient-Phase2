@@ -27,4 +27,19 @@
     </div>
 </div>
 
-<!--<quick-link-widget [currentIncident]="CurrentIncidentId" *ngIf="showQuicklink"></quick-link-widget>-->
+<div bsModal #quickLinkModel="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Quick Links</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="closeQuickLinkModel()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <quick-link-widget [currentIncident]="CurrentIncidentId" *ngIf="showQuicklink"></quick-link-widget>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -24,8 +24,8 @@ export class GenericSearchComponent implements OnInit, AfterContentInit {
     controlType: any = SearchControlType;
     form: FormGroup;
     filterQuery: string = '';
-    expandSearch : boolean = false;
-    searchValue : string = "Expand Search";
+    expandSearch: boolean = false;
+    searchValue: string = "Expand Search";
 
     constructor(private elementRef: ElementRef,
         private searchService: GenericSearchService) { }
@@ -50,18 +50,17 @@ export class GenericSearchComponent implements OnInit, AfterContentInit {
         this.form.reset(defaultValue);
         this.invokeReset.emit();
     }
-    
-   expandSearchPanel(value) : void{
-       if(!value)
-       {
-           this.searchValue = "Hide Search Panel";
-       }
-       else{
-           this.searchValue = "Expand Search Panel";
-       }
-       this.expandSearch = !this.expandSearch;
 
-   }
+    expandSearchPanel(value): void {
+        if (!value) {
+            this.searchValue = "Hide Search Panel";
+        }
+        else {
+            this.searchValue = "Expand Search Panel";
+        }
+        this.expandSearch = !this.expandSearch;
+
+    }
 
     private generateFilterQuery(): string {
         let query: string = '';
@@ -71,10 +70,37 @@ export class GenericSearchComponent implements OnInit, AfterContentInit {
 
             this.filterConfigs.forEach((x: SearchConfigModel<any>) => {
                 if (this.form.controls[x.Name].value) {
+                    debugger;
                     switch (x.Type) {
                         case SearchControlType.TEXTBOX: {
-                            odata.startsWith(y => y.toLower(x.Name),
-                                this.form.controls[x.Name].value);
+                            if (x.OrCommand) {
+                                let orCommandFields: string[] = x.OrCommand.split('|');
+                                if (orCommandFields.length > 0) {
+                                    let orConditions: OData[];
+                                    orCommandFields.forEach((z: string) => {
+                                        let orCondition: OData = (new OData())
+                                            .startsWith(y => y.toLower(z),
+                                            this.form.controls[x.Name].value);
+                                        odata.or(orCondition);
+                                    });
+                                }
+                            }
+                            if (x.AndCommand) {
+                                let andCommandFields: string[] = x.AndCommand.split('|');
+                                if (andCommandFields.length > 0) {
+                                    let andConditions: OData[];
+                                    andCommandFields.forEach((z: string) => {
+                                        let andCondition: OData = (new OData())
+                                            .startsWith(y => y.toLower(z),
+                                            this.form.controls[x.Name].value);
+                                        odata.and(andCondition);
+                                    });
+                                }
+                            }
+                            if (!x.OrCommand && !x.AndCommand) {
+                                odata.startsWith(y => y.toLower(x.Name),
+                                    this.form.controls[x.Name].value);
+                            }
                             break;
                         }
                         case SearchControlType.DATEPICKER:

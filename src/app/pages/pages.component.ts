@@ -24,6 +24,7 @@ import * as _ from 'underscore';
 })
 export class PagesComponent implements OnInit {
     @ViewChild('changePasswordModel') public changePasswordModel: ModalDirective;
+    @ViewChild('quickLinkModel') public quickLinkModel: ModalDirective;
 
     sideMenuState: boolean = false;
     departments: KeyValue[] = [];
@@ -35,7 +36,7 @@ export class PagesComponent implements OnInit {
     userId: number;
     private sub: any;
     isLanding: boolean = false;
-    showQuicklink : boolean = false;
+    showQuicklink: boolean = false;
 
     /**
      * Creates an instance of PagesComponent.
@@ -114,6 +115,10 @@ export class PagesComponent implements OnInit {
         this.router.navigate(['login']);
     }
 
+    public closeQuickLinkModel(): void {
+        this.quickLinkModel.hide();
+    }
+
     public onDepartmentChange(selectedDepartment: KeyValue): void {
         UtilityService.SetToSession({ CurrentDepartmentId: selectedDepartment.Value });
         this.globalState.NotifyDataChanged('departmentChange', selectedDepartment);
@@ -124,11 +129,16 @@ export class PagesComponent implements OnInit {
         this.globalState.NotifyDataChanged('incidentChange', selectedIncident);
     }
 
-    public onMenuClick($event):void{
-       // window.alert($event);
-       this.showQuicklink = true;
-    //  let num = UtilityService.UUID;
-      //  this.globalState.NotifyDataChanged('quicklinkclicked', num);
+    public onMenuClick($event): void {
+        debugger;
+        this.showQuicklink=true;
+        if ($event === 'quicklink') {
+            this.quickLinkModel.show();
+        }
+        // window.alert($event);
+        //this.showQuicklink = true;
+        //  let num = UtilityService.UUID;
+        //  this.globalState.NotifyDataChanged('quicklinkclicked', num);
     }
 
     private getDepartments(): void {

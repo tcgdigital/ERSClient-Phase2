@@ -255,7 +255,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
                 x.IsApproved ? item.ApprovedBy = this.createdBy : item.RejectedBy = this.createdBy;
                 item.ApproverDepartmentId = x.IsApproved ? this.currentDepartmentId : item.ApproverDepartmentId;
                 item.DemandStatusDescription = item.IsApproved ? `Approved and pending with ${x.TargetDepartmentName}` :
-                    `On Hold by ${this.currentDepartmentName}`;
+                    `Rejected by ${this.currentDepartmentName}`;
                 item.CommunicationLogs = this.SetCommunicationLog(x);
                 item.DemandTrails = x.IsApproved ? this.createDemandTrailModel(x, true) : this.createDemandTrailModel(x, false);
                 return item;
@@ -297,6 +297,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
             }
         });
         this.credential = UtilityService.getCredentialDetails();
+        debugger;
         this.createdBy = +this.credential.UserId;
        
         this.getCurrentDepartmentName(this.currentDepartmentId);
