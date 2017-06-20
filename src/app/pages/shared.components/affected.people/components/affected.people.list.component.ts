@@ -14,7 +14,8 @@ import { NextOfKinModel } from '../../nextofkins';
 import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';
 import { AffectedPeopleService } from './affected.people.service';
 import {
-    ResponseModel, DataExchangeService, GlobalConstants,
+    ResponseModel, DataExchangeService, SearchConfigModel,
+    SearchTextBox, SearchDropdown, GlobalConstants,
     GlobalStateService, UtilityService, KeyValue
 } from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
@@ -44,6 +45,7 @@ export class AffectedPeopleListComponent implements OnInit {
     callers: CallerModel[] = [];
     affectedPersonModel: AffectedPeopleModel = new AffectedPeopleModel();
     nextOfKins: NextOfKinModel[] = [];
+    searchConfigs: Array<SearchConfigModel<any>> = new Array<SearchConfigModel<any>>();
 
     /**
      * Creates an instance of AffectedPeopleListComponent.
@@ -96,8 +98,8 @@ export class AffectedPeopleListComponent implements OnInit {
         this.affectedPersonToUpdate.Identification = affectedModifiedForm.Identification;
         this.affectedPersonToUpdate.MedicalStatus = affectedModifiedForm["MedicalStatusToshow"];
         this.affectedPersonToUpdate.Remarks = affectedModifiedForm.Remarks;
-       // let pasengerModel = new PassengerModel();
-       // pasengerModel.CoTravellerInformation = affectedModifiedForm.CoTravellerInformation;
+        // let pasengerModel = new PassengerModel();
+        // pasengerModel.CoTravellerInformation = affectedModifiedForm.CoTravellerInformation;
         this.affectedPeopleService.Update(this.affectedPersonToUpdate)
             .subscribe((response: AffectedPeopleModel) => {
 
@@ -137,7 +139,20 @@ export class AffectedPeopleListComponent implements OnInit {
                     function () {
                         x["MedicalStatusToshow"] = x.MedicalStatus;
                         x["showDiv"] = false;
+                    });
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
+    }
 
+    searchAffectedPeople(query: string, incidentId: number): void {
+        this.involvedPartyService.GetQuery(query, incidentId)
+            .subscribe((response: ResponseModel<InvolvePartyModel>) => {
+                this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
+                this.affectedPeople.forEach(x =>
+                    function () {
+                        x["MedicalStatusToshow"] = x.MedicalStatus;
+                        x["showDiv"] = false;
                     });
             }, (error: any) => {
                 console.log(`Error: ${error}`);
@@ -164,23 +179,24 @@ export class AffectedPeopleListComponent implements OnInit {
                 }
             }
         });
-
+        this.initiateSearchConfigurations();
         this.IsDestroyed = false;
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
     }
-    IsNokInformed(event : any,id : number,name: string){
+
+    IsNokInformed(event: any, id: number, name: string) {
         let affectedpersonToUpdate = new AffectedPeopleModel();
         affectedpersonToUpdate.IsNokInformed = event.checked;
         affectedpersonToUpdate.AffectedPersonId = id;
-        this.affectedPeopleService.Update(affectedpersonToUpdate,id)
+        this.affectedPeopleService.Update(affectedpersonToUpdate, id)
             .subscribe((response: AffectedPeopleModel) => {
                 this.toastrService.success(`Status changed for ${name}`)
                 this.getAffectedPeople(this.currentIncident);
             }, (error: any) => {
                 alert(error);
             });
-
     }
+
     ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChangefromDashboard');
     }
@@ -252,5 +268,49 @@ export class AffectedPeopleListComponent implements OnInit {
                 });
         }
 
+    }
+
+    invokeSearch(query: string): void {
+        if (query !== '') {
+            this.selectCurrentIncident();
+            this.searchAffectedPeople(query, this.currentIncident);
+        }
+    }
+
+    invokeReset(): void {
+        this.selectCurrentIncident();
+        this.getAffectedPeople(this.currentIncident);
+    }
+
+    private selectCurrentIncident() {
+        if (this._router.url.indexOf("archivedashboard") > -1) {
+            this.isArchive = true;
+            this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
+        }
+        else {
+            this.isArchive = false;
+            this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
+        }
+    }
+
+    private initiateSearchConfigurations(): void {
+        this.searchConfigs = [
+            new SearchTextBox({
+                Name: 'TicketNumber',
+                Description: 'Reference Number',
+                Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'PDAName',
+                Description: 'PDA Name',
+                Value: '',
+                OrCommand: 'Passenger/PassengerName|Crew/CrewName'
+            }),
+            new SearchTextBox({
+                Name: 'Pnr',
+                Description: 'PNR',
+                Value: ''
+            })
+        ]
     }
 }
