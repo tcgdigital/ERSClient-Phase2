@@ -1,3 +1,4 @@
+<button class="btn btn-primary" type="submit" (click)="activeActionableClick(activeActionables)" *ngIf="!isArchive">Submit</button><br/><br/>
 <responsive-table>
     <table responsive-table-body>
         <thead>
@@ -39,8 +40,8 @@
                         <div [class]="actionable.RagColor"></div>
                     </td>
                     <td data-title="Download">
-                        <a class="glyphicon glyphicon-download-alt" target="_self" *ngIf="actionable.UploadLinks!=null" href="{{actionable.UploadLinks}}"
-                            download="{{actionable.FileName}}">Download</a>
+                        <a class="fa fa-download fa-2x" target="_self" *ngIf="actionable.UploadLinks!=null" href="{{actionable.UploadLinks}}"
+                            download="{{actionable.FileName}}"></a>
                     </td>
                     <td data-title="Details"><i class="fa fa-edit fa-2x" (click)="openActionableDetail(actionable)"></i>
                     </td>
@@ -73,7 +74,7 @@
         </tbody>
     </table>
 </responsive-table>
-<button class="btn btn-primary" type="submit" (click)="activeActionableClick(activeActionables)" *ngIf="!isArchive">Submit</button>
+
 
 
 
@@ -105,7 +106,7 @@
                             <a class="glyphicon glyphicon-download-alt" target="_self" *ngIf="filepathWithLinks!=null" href="{{filepathWithLinks}}" download="{{fileName}}">Download</a>
                             <div class="buttonholder col-sm-10">
                                 <input #myFileInput type="file" (change)="fileChangeEvent($event)" placeholder="Upload file..." />
-                                <button type="button" class="btn btn-primary" (click)="upload(actionableModelToUpdate)">Upload</button>
+                                <button type="button" class="btn btn-primary" (click)="upload(actionableModelToUpdate)" [disabled] = "disableUploadButton">Upload</button>
                                 <button type="button" class="btn btn-primary" (click)="clearFileUpload($event)">Clear</button>
                             </div>
                             <div class="col-sm-2"><div class="row buttonholder" *ngIf="!isArchive">

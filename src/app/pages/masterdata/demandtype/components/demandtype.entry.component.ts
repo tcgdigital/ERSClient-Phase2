@@ -117,7 +117,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         this.submitted = true;
         if (this.demandTypeModel.DemandTypeId === 0) {
             if (this.form.controls['DemandTypeName'].value == '') {
-                this.toastrService.error('Please provide demand type.', 'Error', this.toastrConfig);
+                this.toastrService.error('Please provide request type.', 'Error', this.toastrConfig);
                 return false;
             }
             this.demandTypeModel.DemandTypeName = this.form.controls['DemandTypeName'].value;
