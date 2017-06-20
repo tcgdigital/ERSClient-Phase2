@@ -5,14 +5,14 @@ import { EnquiryModel, QueryModel } from './call.centre.model';
 import { IEnquiryService } from './IEnquiryService';
 import {
     ResponseModel,
-    DataServiceFactory,
+    DataServiceFactory, DataProcessingService, DataService,
     ServiceBase, UtilityService
 } from '../../../../shared';
 
 @Injectable()
 export class EnquiryService extends ServiceBase<EnquiryModel>
     implements IEnquiryService {
-
+    private _bulkDataService: DataService<EnquiryModel>;
     /**
      * Creates an instance of DepartmentService.
      * @param {DataServiceFactory} dataServiceFactory 
@@ -21,6 +21,10 @@ export class EnquiryService extends ServiceBase<EnquiryModel>
      */
     constructor(private dataServiceFactory: DataServiceFactory) {
         super(dataServiceFactory, 'Enquiries');
+        let option: DataProcessingService = new DataProcessingService();
+        this._bulkDataService = this.dataServiceFactory
+            .CreateServiceWithOptionsAndActionSuffix<EnquiryModel>
+            ('EnquiryBatch', '', option);
     }
 
     public getOtherQueryByIncident(IncidentId: number): Observable<ResponseModel<EnquiryModel>> {
@@ -49,7 +53,7 @@ export class EnquiryService extends ServiceBase<EnquiryModel>
             let item = new QueryModel();
             item.EnquiryId = enquiry.EnquiryId;
             item.Queries = enquiry.Queries;
-            item.CallerName = enquiry.Caller.FirstName+"  "+enquiry.Caller.LastName;
+            item.CallerName = enquiry.Caller.FirstName + "  " + enquiry.Caller.LastName;
             item.ContactNumber = enquiry.Caller.ContactNumber;
             item.AlternateContactNumber = enquiry.Caller.AlternateContactNumber;
             return item;
@@ -91,7 +95,18 @@ export class EnquiryService extends ServiceBase<EnquiryModel>
                 return enquiryModelList;
             });
     }
-
     
+    public CreateBulk(entities: EnquiryModel[]): Observable<EnquiryModel[]> {
+        return this._bulkDataService.BulkPost(entities).Execute();
+    };
+
+     public UpdateBulkToDeactivateFromExternalId(externalInputId: number): Observable<EnquiryModel[]> {
+        let option = new DataProcessingService();
+        let bulkDataServiceToDeactivate = this.dataServiceFactory
+            .CreateServiceWithOptionsAndActionSuffix<EnquiryModel>
+            ('EnquiryBatch', `BatchDeactivate/${externalInputId}`, option);
+        return bulkDataServiceToDeactivate.JsonPost(externalInputId).Execute();
+    };
+
 
 }
