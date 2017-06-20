@@ -132,7 +132,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
                 }
             }
             else {
-                this.demandTypeModel.DepartmentId = null;
+              this.demandTypeModel.DepartmentId= null;
             }
             this.demandTypeService.Create(this.demandTypeModel)
                 .subscribe((response: DemandTypeModel) => {
@@ -149,7 +149,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         }
         else {
             this.formControlDirtyCheck();
-            if (!this.demandTypeModelToEdit.IsAutoApproved) {
+             if (!this.demandTypeModelToEdit.IsAutoApproved) {
                 if (this.form.controls['ApproverDept'].value == '') {
                     this.toastrService.error('Please provide approver department.', 'Error', this.toastrConfig);
                     return false;

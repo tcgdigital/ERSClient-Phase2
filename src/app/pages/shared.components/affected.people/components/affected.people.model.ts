@@ -87,5 +87,7 @@ export class AffectedPeopleToView extends BaseModel {
 	public PassengerId?: number;
 	public CrewId?: number;
 	public IsNokInformed: boolean;
+	public IsSelected: boolean;
+	public GroupId: number;
 }
 

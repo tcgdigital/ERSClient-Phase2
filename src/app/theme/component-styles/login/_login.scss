@@ -122,6 +122,9 @@ forgot-password .Absolute-Center.is-Responsive {
     border-radius: 0;
     background: url(./assets/images/pal_logo.png) center center no-repeat;
     background-size: 40%;
+    @media screen and (max-width: $resLG-E) { 
+            height: 115px;
+    }
 }
 
 input:-webkit-autofill {

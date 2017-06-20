@@ -10,7 +10,7 @@ export class PassengerModel extends BaseModel {
 	public PassengerGender: string; //m
 	public PassengerNationality: string; //m
 	public SpecialServiceRequestCode: string;
-	public BaggageCount?: number; 
+	public BaggageCount?: number;
 	public Destination: string; //m
 	public IsVip?: boolean; //m
 	public PassengerDob?: Date;
@@ -25,23 +25,35 @@ export class PassengerModel extends BaseModel {
 	public PassengerType: string; //m
 	public DepartureDateTime?: Date;
 	public ArrivalDateTime?: Date;
-//	public CoTravellerInformation : string;
 
 	public Flight: FlightModel;
+	public CoPassengerMappings: CoPassengerMappingModel[];
 
-	public Origin: string; 
-	public IdentificationDocType : string; 
-	public IdentificationDocNumber : string;
-	public InboundFlightNumber : string;
-	public OutBoundFlightNumber : string;
-	public EmployeeId : string;
-	public BaggageWeight : number;
+	public Origin: string;
+	public IdentificationDocType: string;
+	public IdentificationDocNumber: string;
+	public InboundFlightNumber: string;
+	public OutBoundFlightNumber: string;
+	public EmployeeId: string;
+	public BaggageWeight: number;
 
 	/**
 	 * Creates an instance of PassengerModel.
 	 * 
 	 * @memberOf PassengerModel
 	 */
+	constructor() {
+		super();
+	}
+}
+
+export class CoPassengerMappingModel extends BaseModel {
+	public CoPassengerMappingId: number;
+	public PassengerId: number;
+	public GroupId: number;
+
+	public Passenger?: PassengerModel;
+
 	constructor() {
 		super();
 	}

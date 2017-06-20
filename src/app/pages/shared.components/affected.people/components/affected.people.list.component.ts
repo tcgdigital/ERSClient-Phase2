@@ -102,10 +102,11 @@ export class AffectedPeopleListComponent implements OnInit {
         // pasengerModel.CoTravellerInformation = affectedModifiedForm.CoTravellerInformation;
         this.affectedPeopleService.Update(this.affectedPersonToUpdate)
             .subscribe((response: AffectedPeopleModel) => {
+
+                this.toastrService.success('Additional Information updated.')
                 // if (affectedModifiedForm.PassengerId != null && affectedModifiedForm.PassengerId != 0 && affectedModifiedForm.PassengerId != undefined) {
                 //     this.passengerUpdate(pasengerModel, this.affectedPersonToUpdate.PassengerId);
                 // }
-                this.toastrService.success('Aditional Information updated.')
                 this.getAffectedPeople(this.currentIncident);
                 affectedModifiedForm["MedicalStatusToshow"] = affectedModifiedForm.MedicalStatus;
                 let num = UtilityService.UUID();
