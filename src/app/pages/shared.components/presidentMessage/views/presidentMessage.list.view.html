@@ -11,9 +11,9 @@
                 <td colspan="10">No Message to show.</td>
             </tr>
             <tr *ngFor="let message of PresidentsMessages">
-                <td data-title="President's Messages" width="60%">{{message.Message}}</td>
+                <td data-title="President's Messages" width="50%">{{message.Message}}</td>
                 <td data-title="Edit">
-                   <i class="fa fa-edit" (click)="UpdatePresidentMessage(message)"></i>
+                   <i class="fa fa-edit fa-2x" (click)="UpdatePresidentMessage(message)"></i>
                 </td>
             </tr>
         </tbody>

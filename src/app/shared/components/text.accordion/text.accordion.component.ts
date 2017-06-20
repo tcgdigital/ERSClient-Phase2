@@ -19,6 +19,7 @@ export class TextAccordionComponent implements OnInit, AfterViewInit {
 
     public ngOnInit(): void {
         // assignClassToItems();
+        console.log(this.accordionItems);
     }
 
     public ngAfterViewInit(): void {

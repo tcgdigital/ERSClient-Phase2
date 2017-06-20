@@ -244,10 +244,11 @@
                 <tr *ngFor="let comm of communications">
                     <td data-title="comm"><strong>{{comm.RequesterType}}</strong> logged by
                         <span [hidden]="comm.RequesterDepartment.length==0"><strong>{{comm.RequesterName}} (Dept: {{comm.RequesterDepartment}})</strong></span>
-                        <span> on <strong>{{comm.CreatedOn | date:"dd-MMM-yy h:mma"}}&nbsp;:</strong></span> {{comm.Answers}}
+                        <span> on <strong>{{comm.CreatedOn | date:' dd-MMM-yyyy hh:mm a'}}&nbsp;:</strong></span> {{comm.Answers}}
                     </td>
                 </tr>
             </tbody>
         </table>
     </responsive-table>
 </div>
+

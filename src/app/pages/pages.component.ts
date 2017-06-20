@@ -29,6 +29,7 @@ export class PagesComponent implements OnInit {
     sideMenuState: boolean = false;
     departments: KeyValue[] = [];
     incidents: KeyValue[] = [];
+    incidentOrganizations: KeyValue[] = [];
     currentDepartmentId: number = 0;
     currentIncidentId: number = 0;
     userName: string;
@@ -126,6 +127,8 @@ export class PagesComponent implements OnInit {
 
     public onIncidentChange(selectedIncident: KeyValue): void {
         UtilityService.SetToSession({ CurrentIncidentId: selectedIncident.Value });
+        UtilityService.SetToSession({CurrentOrganizationId: this.incidentOrganizations
+                            .find(z=>z.Key === selectedIncident.Value.toString()).Value});
         this.globalState.NotifyDataChanged('incidentChange', selectedIncident);
     }
 
@@ -180,8 +183,11 @@ export class PagesComponent implements OnInit {
                 return dateA > dateB ? 1 : -1;
             })).subscribe((x: IncidentModel[]) => {
                 this.incidents = x.map((y: IncidentModel) => new KeyValue(y.EmergencyName, y.IncidentId));
+                this.incidentOrganizations = x.map((y: IncidentModel) => new KeyValue(y.IncidentId.toString(), y.OrganizationId));
+
                 if (this.incidents.length > 0) {
                     let incidentId = +UtilityService.GetFromSession('CurrentIncidentId');
+
                     if (incidentId > 0) {
                         this.currentIncidentId = incidentId;
                     }
@@ -189,6 +195,8 @@ export class PagesComponent implements OnInit {
                         this.currentIncidentId = this.incidents[0].Value;
                         UtilityService.SetToSession({ CurrentIncidentId: this.currentIncidentId });
                     }
+                    UtilityService.SetToSession({CurrentOrganizationId: this.incidentOrganizations
+                        .find(z=>z.Key === this.currentIncidentId.toString()).Value})
                     console.log(this.currentIncidentId);
 
                     this.isLanding = false;

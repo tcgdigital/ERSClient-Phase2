@@ -7,7 +7,7 @@
                     <div class="row">
                         <div class="col-sm-6 col-lg-4 col-md-6">
                             <div class="form-group">
-                                <label for="Media Release Type">Select Media Release Type:<span class="red">*</span></label>
+                                <label for="Media Release Type">Select Media Release Type:<span class="required">*</span></label>
                                 <select id="selectMediaRelease" formControlName="MediaReleaseType" name="MediaReleaseType" [ngModel]="currentTemplateMediaId"
                                     class="form-control" (change)="getContentFromTemplate($event)">
                                     <option value=''>Select Media Release Type</option>
@@ -15,6 +15,9 @@
                                         {{template.TemplatePurpose}}
                                     </option>
                                 </select>
+                                <small class="text-danger" [hidden]="hideRemarksError">
+                                 Required.
+                                </small>
                             </div>
                         </div>
                     </div>
@@ -23,7 +26,7 @@
                     <div class="row">
                         <div class="col-sm-6 col-lg-6 col-md-6">
                             <div class="form-group">
-                                <label for="Message">Media Release Message:<span class="red">*</span></label>
+                                <label for="Message">Media Release Message:<span class="required">*</span></label>
                                 <!--<div [hidden] = "isApprovedContent">
                                     <ckeditor formControlName="ApprovedContent" [(ngModel)]="media.ApprovedContent" debounce="500" (change)="onMessageChange($event)" (blur)="onMessageBlur($event)"
                                         (focus)="onMessageFocus($event)" (ready)="onMessageReady($event)" [config]="toolbarConfigApproved">
@@ -50,9 +53,7 @@
                                 <label for="Remarks">Remarks:</label>
                                 <textarea class="form-control" id="Remarks" formControlName="Remarks" [readOnly]="applyReadOnlytextBox" placeholder="Enter Remarks"
                                     [(ngModel)]="media.Remarks"></textarea>
-                                <small class="text-danger" [hidden]="hideRemarksError">
-                                Required.
-                                </small>
+                                
                             </div>
                         </div>
                     </div>

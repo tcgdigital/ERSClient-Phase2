@@ -6,11 +6,12 @@
                     <div *ngIf="i === 0" class="ribbon-wrapper-green">
                         <div class="ribbon-green">new</div>
                     </div>
-                    <i class="publish-date">{{accordionItem.PublishedOn | date:'medium'}}</i> 
-                    <span [innerHTML]="accordionItem.Message">
-                        <!--{{accordionItem.Message}}-->
-                           
-                    </span>
+                    <i class="publish-date">{{accordionItem.PublishedOn | date:'medium'}}</i>                     
+                    <span>
+                        {{accordionItem.Message}}
+                        <br />
+                        <a *ngIf = "accordionItem.DownloadLink != '' " target = "_blank" href="{{accordionItem.DownloadLink}}"><i class="fa fa-download fa-lg" aria-hidden="true"></i>&nbsp; Download</a>                                                  
+                    </span>                                      
                 </li>
             </ng-container>
             <li class="cd-item-front" *ngIf="(accordionItems | async)?.length==0">
