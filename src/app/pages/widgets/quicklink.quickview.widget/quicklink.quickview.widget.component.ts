@@ -24,7 +24,6 @@ export class QuickLinkQuickViewWidgetComponent implements OnInit {
     constructor(private quicklinkService : QuickLinkService) { }
 
     ngOnInit() {
-        debugger;
         this.incidentId=0;
         this.onViewQLinkClick();
         this.getQuickLinks();

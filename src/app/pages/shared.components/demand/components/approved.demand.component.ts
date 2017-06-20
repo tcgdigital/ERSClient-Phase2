@@ -297,7 +297,6 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
             }
         });
         this.credential = UtilityService.getCredentialDetails();
-        debugger;
         this.createdBy = +this.credential.UserId;
        
         this.getCurrentDepartmentName(this.currentDepartmentId);

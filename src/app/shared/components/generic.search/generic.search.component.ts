@@ -70,7 +70,6 @@ export class GenericSearchComponent implements OnInit, AfterContentInit {
 
             this.filterConfigs.forEach((x: SearchConfigModel<any>) => {
                 if (this.form.controls[x.Name].value) {
-                    debugger;
                     switch (x.Type) {
                         case SearchControlType.TEXTBOX: {
                             if (x.OrCommand) {

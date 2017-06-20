@@ -130,7 +130,6 @@ export class PagesComponent implements OnInit {
     }
 
     public onMenuClick($event): void {
-        debugger;
         this.showQuicklink=true;
         if ($event === 'quicklink') {
             this.quickLinkModel.show();
