@@ -23,7 +23,7 @@
                     <div class="row">
                         <div class="col-sm-6 col-lg-6 col-md-6">
                             <div class="form-group">
-                                <label for="Message">Media Release Message:<span class="red">*</span></label>
+                                <label for="Message">Media Release Message:<span class="required">*</span></label>
                                 <!--<textarea class="form-control" id="Message" formControlName="Message" [readOnly]="applyReadOnlytextBox" placeholder="Enter Media Release Message"
                                     [(ngModel)]="media.SentForApprovalContent" required autofocus></textarea>-->
                                   <ckeditor formControlName="Message" [(ngModel)]="media.SentForApprovalContent" (change)="onMessageChange($event)" (blur)="onMessageBlur($event)" (focus)="onMessageFocus($event)" (ready)="onMessageReady($event)" debounce="500" [config]="toolbarConfig">

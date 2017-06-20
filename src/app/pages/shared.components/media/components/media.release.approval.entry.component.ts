@@ -116,28 +116,14 @@ export class MediaReleaseApprovalEntryComponent implements OnInit, OnDestroy {
     }
 
    validateForm(): boolean{
-        if((this.form.controls['Message'].value == "" || this.form.controls['Message'].value == undefined) 
-        && (this.form.controls['Remarks'].value == "" || this.form.controls['Remarks'].value == undefined ))
+        if((this.form.controls['Message'].value == "" || this.form.controls['Message'].value == undefined))
         {
             this.hideMessageError = false;
             this.hideRemarksError = false;
             return false;
         }
-        if(this.form.controls['Message'].value == "" || this.form.controls['Message'].value == null || this.form.controls['Message'].value == undefined)
-        {
-            this.hideMessageError = false;
-            return false;
-        } 
-        else if(this.form.controls['Remarks'].value == "" || this.form.controls['Remarks'].value == null || this.form.controls['Remarks'].value == undefined)
-        {
-            this.hideMessageError = true;
-            this.hideRemarksError = false;
-            return false;
-        } 
         else
-        {               
-            this.hideMessageError = true;
-            this.hideRemarksError = true;    
+        {
             return true;
         }
     }
@@ -160,7 +146,7 @@ export class MediaReleaseApprovalEntryComponent implements OnInit, OnDestroy {
         }
         if(this.Action === "Reject")
         {                
-            this.media.SentForApprovalContent = this.media.Message;
+            this.media.Message = this.form.controls['Message'].value;
             this.media.MediaReleaseStatus = "Rejected";
             this.media.RejectedBy = +this.credential.UserId;    
             this.media.ApproverDepartmentId = this.currentDepartmentId;

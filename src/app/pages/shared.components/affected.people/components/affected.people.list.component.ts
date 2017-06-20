@@ -14,10 +14,12 @@ import { NextOfKinModel } from '../../nextofkins';
 import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';
 import { AffectedPeopleService } from './affected.people.service';
 import {
-    ResponseModel, DataExchangeService, GlobalConstants,
-    GlobalStateService, UtilityService, KeyValue
+    ResponseModel, DataExchangeService, GlobalConstants, AuthModel,
+    GlobalStateService, UtilityService, KeyValue, FileUploadService
 } from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
+import { FileStoreModel } from '../../../../shared/models/file.store.model';
+import { FileStoreService } from '../../../../shared/services/common.service';
 
 @Component({
     selector: 'affectedpeople-list',
@@ -28,6 +30,7 @@ export class AffectedPeopleListComponent implements OnInit {
     @ViewChild('childModal') public childModal: ModalDirective;
     @ViewChild('childModalForTrail') public childModalForTrail: ModalDirective;
     @ViewChild('childModalForCallers') public childModalForCallers: ModalDirective;
+    @ViewChild('inputFileCrew') inputFileCrew: any;
 
     affectedPeople: AffectedPeopleToView[] = [];
     currentIncident: number;
@@ -39,11 +42,16 @@ export class AffectedPeopleListComponent implements OnInit {
     pdaReferenceNumberForTrail: string = "";
     communications: CommunicationLogModel[] = [];
     ticketNumber: string = "";
+    currentDepartmentId: number;
     protected _onRouteChange: Subscription;
     isArchive: boolean = false;
     callers: CallerModel[] = [];
     affectedPersonModel: AffectedPeopleModel = new AffectedPeopleModel();
     nextOfKins: NextOfKinModel[] = [];
+    filesToUpload: File[]=[];
+    credential: AuthModel;
+    date: Date;
+    downloadFilePath: string;
 
     /**
      * Creates an instance of AffectedPeopleListComponent.
@@ -58,9 +66,13 @@ export class AffectedPeopleListComponent implements OnInit {
     constructor(private affectedPeopleService: AffectedPeopleService, private callerservice: CallerService,
         private involvedPartyService: InvolvePartyService, private dataExchange: DataExchangeService<number>,
         private globalState: GlobalStateService, private _router: Router, private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig
+        private toastrConfig: ToastrConfig, private fileUploadService: FileUploadService, 
+        private fileStoreService: FileStoreService
         //, private enquiryService: EnquiryService
-    ) { }
+    ) 
+    { 
+        this.downloadFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Affected People/'; 
+    }
 
     //   medicalStatusForm: string = "";
 
@@ -91,6 +103,56 @@ export class AffectedPeopleListComponent implements OnInit {
         this.childModal.hide();
     }
 
+     getFileDetails(e: any): void {
+        this.filesToUpload = []; 
+        for (var i = 0; i < e.target.files.length; i++) {
+            const extension = e.target.files[i].name.split('.').pop();                                  
+            if(extension != "exe" || extension != "dll")                
+                this.filesToUpload.push(e.target.files[i]);
+            else
+            {
+              this.toastrService.error('Invalid File Format!', 'Error', this.toastrConfig);
+              this.inputFileCrew.nativeElement.value = "";
+            }            
+        }
+        
+    }
+
+    uploadFile(): void{
+        if(this.filesToUpload.length)
+        {
+            debugger;
+            let baseUrl = GlobalConstants.EXTERNAL_URL;
+            
+            let organizationId = +UtilityService.GetFromSession("CurrentOrganizationId");
+            let moduleName = "Affected People"
+            let param = `${this.currentIncident}/${organizationId}/${this.currentDepartmentId}/${moduleName}`;
+            this.date = new Date();
+            this.fileUploadService.uploadFiles<string>(baseUrl + "./api/fileUpload/UploadFilesModuleWise/" + param, 
+            this.filesToUpload, this.date.toString()).subscribe((result: string) => {
+                console.log(result);                                
+                let fileStore: FileStoreModel = new FileStoreModel();
+                fileStore.FileStoreID = 0;                
+                fileStore.IncidentId = this.currentIncident;
+                fileStore.DepartmentId = this.currentDepartmentId;
+                fileStore.OrganizationId = organizationId;                
+                fileStore.FilePath = result;
+                fileStore.UploadedFileName = this.filesToUpload[0].name;  
+                fileStore.CrewId = this.affectedPersonModelForStatus.CrewId;
+                fileStore.ModuleName = moduleName;
+                fileStore.CreatedBy = +this.credential.UserId;
+                fileStore.CreatedOn = new Date();
+                fileStore.ActiveFlag = 'Active';             
+                                   
+				this.fileStoreService.Create(fileStore)
+				.subscribe((response: FileStoreModel) =>{
+                    this.getAffectedPeople(this.currentIncident);                        
+					console.log(response);					
+				});                                               
+            });
+        }
+    }
+
     saveUpdateAffectedPerson(affectedModifiedForm: AffectedPeopleToView): void {
         this.affectedPersonToUpdate.AffectedPersonId = affectedModifiedForm.AffectedPersonId;
         this.affectedPersonToUpdate.Identification = affectedModifiedForm.Identification;
@@ -103,8 +165,12 @@ export class AffectedPeopleListComponent implements OnInit {
                 if (affectedModifiedForm.PassengerId != null && affectedModifiedForm.PassengerId != 0 && affectedModifiedForm.PassengerId != undefined) {
                     this.passengerUpdate(pasengerModel, this.affectedPersonToUpdate.PassengerId);
                 }
+                if(this.filesToUpload.length)
+                {
+                    this.uploadFile();
+                }
                 this.toastrService.success('Aditional Information updated.')
-                this.getAffectedPeople(this.currentIncident);
+                //this.getAffectedPeople(this.currentIncident);
                 affectedModifiedForm["MedicalStatusToshow"] = affectedModifiedForm.MedicalStatus;
                 let num = UtilityService.UUID();
                 this.globalState.NotifyDataChanged('AffectedPersonStatusChanged', num);
@@ -138,6 +204,7 @@ export class AffectedPeopleListComponent implements OnInit {
                         x["showDiv"] = false;
 
                     });
+                    console.log(this.affectedPeople);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -147,6 +214,9 @@ export class AffectedPeopleListComponent implements OnInit {
         this.currentIncident = incident.Value;
         this.getAffectedPeople(this.currentIncident);
     }
+     private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;        
+    };
 
     ngOnInit(): any {
         this._onRouteChange = this._router.events.subscribe((event) => {
@@ -154,14 +224,18 @@ export class AffectedPeopleListComponent implements OnInit {
                 if (event.url.indexOf("archivedashboard") > -1) {
                     this.isArchive = true;
                     this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
+                    this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+                    
                     this.getAffectedPeople(this.currentIncident);
                 }
                 else {
                     this.isArchive = false;
                     this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
+                    this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
                     this.getAffectedPeople(this.currentIncident);
                 }
             }
+            this.credential = UtilityService.getCredentialDetails();
         });
 
         this.IsDestroyed = false;

@@ -20,10 +20,12 @@ import { DemandTrailModel } from './demand.trail.model';
 
 import {
     ResponseModel, DataExchangeService, KeyValue,
-    GlobalConstants, GlobalStateService, UtilityService, AuthModel
+    GlobalConstants, GlobalStateService, UtilityService, AuthModel, FileUploadService
 } from '../../../../shared';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
 import { ModalDirective } from 'ng2-bootstrap/modal';
+import { FileStoreModel } from '../../../../shared/models/file.store.model';
+import { FileStoreService } from '../../../../shared/services/common.service';
 
 @Component({
     selector: 'my-demand',

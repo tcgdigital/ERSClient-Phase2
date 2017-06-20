@@ -1,5 +1,6 @@
 import { BaseModel } from '../../../../shared';
 import { FlightModel, AffectedPeopleModel } from '../../../shared.components';
+import {  FileStoreModel } from '../../../../shared/models/file.store.model';
 
 export class CrewModel extends BaseModel {
 	public CrewId: number;
@@ -34,6 +35,7 @@ export class CrewModel extends BaseModel {
 
 	public Flight?: FlightModel;
 	public AffectedPeople?: AffectedPeopleModel[];
+	public FileStores?: FileStoreModel[] = [];
 
 	/**
 	 * Creates an instance of CrewModel.

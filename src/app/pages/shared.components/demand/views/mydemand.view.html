@@ -40,7 +40,7 @@
                         <td data-title="Download File">
                             <ul>
                                 <li *ngFor="let file of demand.FileStores">
-                                    <a target="_blank" href="{{demandFilePath + file.FileStoreID}}" download="file.UploadedFileName">{{file.UploadedFileName}}</a>
+                                    <a target="_blank" href="{{demandFilePath + file.FileStoreID}}" download="file.UploadedFileName"><i class="fa fa-download fa-2x" aria-hidden="true"></i>&nbsp;&nbsp;{{file.UploadedFileName}}</a>
                                 </li>
                             </ul>
                         </td>
@@ -91,7 +91,7 @@
                                         <tr *ngFor="let remark of demandRemarks">
                                             <td data-title="Requester Department">{{remark.RequesterDepartmentName}}</td>
                                             <td data-title="Remarks added by">{{remark.CreatedByName}}</td>
-                                            <td data-title="Remarks added on">{{remark.CreatedOn | date:"dd-MMM-yy h:mma"}}</td>
+                                            <td data-title="Remarks added on">{{remark.CreatedOn | date:' dd-MMM-yyyy hh:mm a'}}</td>
                                             <td data-title="Remarks">{{remark.Remark}}</td>
                                         </tr>
                                     </tbody>

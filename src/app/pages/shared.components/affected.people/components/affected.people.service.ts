@@ -98,6 +98,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
                     if(dataItem.Crew)
                     {
                         item.CrewId = dataItem.CrewId;
+                        item.Crew = dataItem.Crew;
                     }
                     if(dataItem.Passenger)
                     {
