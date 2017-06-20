@@ -9,7 +9,7 @@ import {
     DataService,
     DataServiceFactory,
     DataProcessingService,
-    ServiceBase,UtilityService
+    ServiceBase, UtilityService
 } from '../../../../shared';
 import {
     IncidentService,
@@ -21,7 +21,7 @@ export class InvolvePartyService
     extends ServiceBase<InvolvePartyModel>
     implements IInvolvePartyService {
     private _incidentDataService: DataService<IncidentModel>;
-public affectedPeoples: ResponseModel<AffectedPeopleModel>;
+    public affectedPeoples: ResponseModel<AffectedPeopleModel>;
     /**
      * Creates an instance of InvolvePartyService.
      * @param {DataServiceFactory} dataServiceFactory 
@@ -71,20 +71,28 @@ public affectedPeoples: ResponseModel<AffectedPeopleModel>;
 
     GetByIncidentId(id: string | number): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
-        .Filter(`IncidentId eq ${id}`)
-        .Execute();
+            .Filter(`IncidentId eq ${id}`)
+            .Execute();
     }
 
-     GetAllPassengers(): Observable<ResponseModel<InvolvePartyModel>> {
+    GetAllPassengers(): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
             .Expand('Affecteds($expand=AffectedPeople($expand=Passenger))')
             .Execute();
     }
 
-     GetFilterByIncidentId(IncidentId): Observable<ResponseModel<InvolvePartyModel>> {
+    GetFilterByIncidentId(IncidentId): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq  ${IncidentId}`)
             .Expand('Affecteds($expand=AffectedPeople($expand=Passenger,Crew($expand=FileStores)))')
+            .Execute();
+    }
+
+    GetQuery(query: string, incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
+        return this._dataService.Query()
+            .Filter(`IncidentId eq  ${incidentId}`)
+            .Expand(`Affecteds($expand=AffectedPeople($expand=Passenger,Crew;$filter=${query}))`)
+            //.Filter(query)
             .Execute();
     }
 
@@ -115,29 +123,29 @@ public affectedPeoples: ResponseModel<AffectedPeopleModel>;
     }
 
     public GetQueryForPassenger(query: string, incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
-       let involvePartyProjection: string = 'InvolvedPartyType,InvolvedPartyDesc';
+        let involvePartyProjection: string = 'InvolvedPartyType,InvolvedPartyDesc';
         let affectedProjection: string = 'Severity';
         let affectedPeopleProjection: string = 'AffectedPersonId,TicketNumber,IsStaff,IsCrew,IsVerified,Identification';
         let passengerPrjection: string = 'PassengerId,FlightNumber,PassengerName,PassengerGender,BaggageCount,Destination,PassengerDob,Pnr,PassengerType,PassengerNationality,DepartureDateTime,ArrivalDateTime,ContactNumber,Seatno';
         return this._dataService.Query()
             .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=PassengerId ne null and ${query};$select=${affectedPeopleProjection};$expand=Passenger($select=${passengerPrjection}),NextOfKins))`)
-            .Filter(`IncidentId eq ${incidentId}`)                            
+            .Filter(`IncidentId eq ${incidentId}`)
             .Select(`${involvePartyProjection}`)
             .Execute();
     }
 
     public GetAllCargosByIncident(incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
-        .Expand(`Flights($expand=Cargoes)`)
-        .Filter(`IncidentId eq ${incidentId}`)
-        .Execute();
+            .Expand(`Flights($expand=Cargoes)`)
+            .Filter(`IncidentId eq ${incidentId}`)
+            .Execute();
     }
 
     public GetQueryCargosByIncident(query: string, incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
-        .Expand(`Flights($expand=Cargoes($filter=${query}))`)    
-        .Filter(`IncidentId eq ${incidentId}`)
-        .Execute();
+            .Expand(`Flights($expand=Cargoes($filter=${query}))`)
+            .Filter(`IncidentId eq ${incidentId}`)
+            .Execute();
     }
 
 }

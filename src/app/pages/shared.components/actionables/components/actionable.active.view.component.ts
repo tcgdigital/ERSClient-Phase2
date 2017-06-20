@@ -50,6 +50,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
 
     private currentDepartmentId: number = null;
     private currentIncident: number = null;
+    disableUploadButton: boolean;
 
     /**
      * Creates an instance of ActionableActiveComponent.
@@ -70,6 +71,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     public ngOnInit(): any {
+        this.disableUploadButton = true;
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this._onRouteChange = this._router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
@@ -194,6 +196,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
 
     upload(actionableClicked: ActionableModel) {
         if (this.filesToUpload.length > 0) {
+            this.disableUploadButton = false;
             let baseUrl = GlobalConstants.EXTERNAL_URL;
             this.fileUploadService.uploadFiles<string>(baseUrl + "api/fileUpload/upload", this.filesToUpload)
                 .subscribe((result: string) => {
@@ -208,12 +211,19 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
 
     fileChangeEvent(fileInput: any) {
         this.filesToUpload = <Array<File>>fileInput.target.files;
+        if(this.filesToUpload.length > 0){
+        this.disableUploadButton = false;
+    }
+    else{
+        this.disableUploadButton = true;
+    }
     }
 
     clearFileUpload(event: any): void {
         this.myInputVariable.nativeElement.value = "";
         this.filepathWithLinks = null;
         this.fileName = null;
+        this.disableUploadButton = true;
     }
 
     getAllActiveActionable(incidentId: number, departmentId: number): void {

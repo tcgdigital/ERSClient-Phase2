@@ -13,4 +13,6 @@ export interface IInvolvePartyService extends IServiceInretface<InvolvePartyMode
     GetAllPassengers(): Observable<ResponseModel<InvolvePartyModel>>;
 
     GetFilterByIncidentId(IncidentId): Observable<ResponseModel<InvolvePartyModel>>
+
+    GetQuery(query: string, incidentId: number): Observable<ResponseModel<InvolvePartyModel>>;
 }

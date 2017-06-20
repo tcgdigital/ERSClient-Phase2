@@ -3,8 +3,11 @@ import {
     Output, EventEmitter, ViewEncapsulation,
     SimpleChange
 } from '@angular/core';
-import { KeyValue } from '../../../shared/models';
+import { KeyValue, ResponseModel } from '../../../shared/models';
 import { ModalDirective } from 'ng2-bootstrap/modal';
+import { QuickLinkModel } from '../../masterdata/quicklink/components';
+import { QuickLinkService } from '../../masterdata/quicklink/components';
+import { Observable } from 'rxjs/Rx';
 
 @Component({
     selector: 'quick-link-widget',
@@ -17,12 +20,21 @@ export class QuickLinkQuickViewWidgetComponent implements OnInit {
     @Input() currentIncident: number;
     @ViewChild('childModalViewQLink') public childModalViewQLink: ModalDirective;
     public incidentId:number;
-    constructor() { }
+    quicklinks: QuickLinkModel[] = [];
+    constructor(private quicklinkService : QuickLinkService) { }
 
     ngOnInit() {
         this.incidentId=0;
         this.onViewQLinkClick();
+        this.getQuickLinks();
 
+    }
+
+    getQuickLinks(): void {
+        this.quicklinkService.GetAll()
+            .subscribe((response: ResponseModel<QuickLinkModel>) => {
+                this.quicklinks = response.Records;
+            });
     }
 
     public onViewQLinkClick(): void {
