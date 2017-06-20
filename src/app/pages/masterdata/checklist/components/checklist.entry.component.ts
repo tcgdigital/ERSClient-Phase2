@@ -91,6 +91,7 @@ export class ChecklistEntryComponent implements OnInit {
             });
             this.parentChecklists = this.addDepartmentName(this.parentChecklists);
         }
+
         else {
             this.parentChecklists = this.noDtaList;
         }

@@ -4,28 +4,24 @@
             <div [hidden]="enquiryType!=1 && enquiryType!=3">
                 <div class="row">
                     <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                        <label for="FirstName">PDA First Name </label>
+                        <label class="form-control grey-input">{{pdaenquery.FirstName}}</label>
+                    </div>
+                    <div class="form-group col-lg-3 col-sm-12 col-md-6">
                         <label for="LastName">PDA Last Name </label>
                         <label class="form-control grey-input">{{pdaenquery.LastName}}</label>
                     </div>
                     <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                        <label for="FirstName">PDA First Name </label>
-                        <label class="form-control grey-input">{{pdaenquery.FirstName}}</label>
+                        <label for="Nationality">Nationality </label>
+                        <label class="form-control grey-input">{{pdaenquery.Nationality}}</label>
                     </div>
                     <div class="form-group col-lg-3 col-sm-12 col-md-6">
                         <label for="Age">Age </label>
                         <label class="form-control grey-input">{{pdaenquery.Age}}</label>
                     </div>
-                    <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                        <label for="KINRelationShip">KIN Relationship </label>
-                        <label class="form-control grey-input">{{pdaenquery.KINRelationShip}}</label>
-                    </div>
                 </div>
 
                 <div class="row">
-                    <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                        <label for="Nationality">Nationality </label>
-                        <label class="form-control grey-input">{{pdaenquery.Nationality}}</label>
-                    </div>
                     <div class="form-group col-lg-3 col-sm-12 col-md-6">
                         <label for="PermanentAddress">Permanent Address </label>
                         <label class="form-control grey-input">{{pdaenquery.PermanentAddress}}</label>
@@ -38,27 +34,16 @@
                         <label for="DepartedFrom">Departed From </label>
                         <label class="form-control grey-input">{{pdaenquery.DepartedFrom}}</label>
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="form-group col-lg-3 col-sm-12 col-md-6">
                         <label for="TravellingTo">Travelling To </label>
                         <label class="form-control grey-input">{{pdaenquery.TravellingTo}}</label>
                     </div>
-                    <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                        <label for="TravellingWith">Travelling With </label>
-                        <label class="form-control grey-input">{{pdaenquery.TravellingWith}}</label>
-                    </div>
-                    <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                        <label for="EnquiryReason">Enquiry Reason </label>
-                        <label class="form-control grey-input">{{pdaenquery.EnquiryReason}}</label>
-                    </div>
+                </div>
+                <div class="row">
                     <div class="form-group col-lg-3 col-sm-12 col-md-6">
                         <label for="KINFirstName">KIN First Name </label>
                         <label class="form-control grey-input">{{pdaenquery.KINFirstName}}</label>
                     </div>
-                </div>
-                <div class="row">
                     <div class="form-group col-lg-3 col-sm-12 col-md-6">
                         <label for="KINLastName">KIN Last Name </label>
                         <label class="form-control grey-input">{{pdaenquery.KINLastName}}</label>
@@ -67,6 +52,69 @@
                         <label for="KINContactNumber">KIN Contact Number </label>
                         <label class="form-control grey-input">{{pdaenquery.KINContactNumber}}</label>
                     </div>
+                    <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                        <label for="KINRelationShip">KIN Relationship </label>
+                        <label class="form-control grey-input">{{pdaenquery.KINRelationShip}}</label>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="form-group col-lg-6 col-sm-12 col-md-6">
+                        <label for="EnquiryReason">Enquiry Reason </label>
+                        <label class="form-control grey-input">{{pdaenquery.EnquiryReason}}</label>
+                    </div>
+                    <div class="form-group col-lg-6 col-sm-12 col-md-6">
+                        <label for="TravellingWith">Travelling With </label>
+                        <label class="form-control grey-input">{{pdaenquery.TravellingWith}}</label>
+                    </div>
+                </div>
+                <div class="row" [hidden]="!showCoPassangerPannel">
+                    <div class="form-group col-lg-4 col-sm-12 col-md-6">
+                        <div class="multiselect-container" [hidden]="copassengerlistpnr.length<=0">
+                            <div class="multiselect-selector" (click)="showListsamepnr(); $event.stopPropagation();">
+                                <i class="fa fa-caret-down fa-pull-right fa-fw" aria-hidden="true"></i> {{selectedcountpnr>0?
+                                selectedcountpnr + ' Passengers(s) selected' : 'Select Co-passenger'}}
+                            </div>
+                            <ul class="multiselect-list1 dropdown-menu-down" [hidden]="!list1Selected" (click)="$event.stopPropagation();">
+                                <li *ngFor="let copassenger of copassengerlistpnr">
+                                    <input type="checkbox" aria-label="Callback" [checked]="copassenger.IsSelected" (change)="selectCopassengerpnr($event,copassenger)"
+                                    />
+                                    <span>{{copassenger.PassengerName}}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-4 col-sm-12 col-md-6">
+                        <div class="multiselect-container" [hidden]="copassengerlistPassenger.length<=0">
+                            <div class="multiselect-selector" (click)="showListPassengers(); $event.stopPropagation();">
+                                <i class="fa fa-caret-down fa-pull-right fa-fw" aria-hidden="true"></i> {{selectedcountpassenger>0?
+                                selectedcountpassenger + ' Passengers(s) selected' : 'Select Co-passenger'}}
+                            </div>
+                            <ul class="multiselect-list1 dropdown-menu-down" [hidden]="!list2Selected" (click)="$event.stopPropagation();">
+                                <li *ngFor="let copassenger of copassengerlistPassenger">
+                                    <input type="checkbox" aria-label="Callback" [checked]="copassenger.IsSelected" (change)="selectCopassengerfrompassenger($event,copassenger)"
+                                    />
+                                    <span>{{copassenger.PassengerName}}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-4 col-sm-12 col-md-6">
+                        <div class="multiselect-container" [hidden]="consolidatedCopassengers.length<=0">
+                            <div class="multiselect-selector" (click)="showListall(); $event.stopPropagation();">
+                                <i class="fa fa-caret-down fa-pull-right fa-fw" aria-hidden="true"></i> {{totalcount>0? totalcount
+                                + ' Passengers(s) selected' : 'Select Co-passenger'}}
+                            </div>
+                            <ul class="multiselect-list1 dropdown-menu-down" [hidden]="!totallistselected" (click)="$event.stopPropagation();">
+                                <li *ngFor="let copassenger of consolidatedCopassengers">
+                                    <input type="checkbox" aria-label="Callback" [checked]="copassenger.IsSelected" (change)="selectCopassengerAll($event,copassenger)"
+                                    />
+                                    <span>{{copassenger.PassengerName}}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -147,7 +195,7 @@
                     </div>
                     <div [hidden]="enquiryType!=1  && enquiryType!=2 && enquiryType!=3" class="col-lg-6 col-sm-12">
                         <md-checkbox id="IsCallBack" formControlName="IsCallBack" aria-label="Add">
-                            Callbcak:
+                            Callback:
                         </md-checkbox>
                         <br>
                         <md-checkbox id="IsTravelRequest" formControlName="IsTravelRequest" aria-label="Add">
@@ -204,44 +252,3 @@
     </responsive-table>
 </div>
 
-<!--
-<div bsModal #childModalForTrail="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title pull-left">Communication Trail</h4>
-                <button type="button" class="close pull-right" aria-label="Close" (click)="cancelModal()">
-                  <span aria-hidden="true">&times;</span>
-                   </button>
-            </div>
-            <div class="modal-body">
-                <div class="row modalBodyHeaderStyle">
-                    <div class="col-sm-6 form-group">
-                        <label class="lebelHeaderStyle"><strong>PDA Name</strong></label>
-                        <br>
-                        <label class="form-control">{{pdaNameForTrail}}</label>
-                    </div>
-                    <div class="col-sm-6 form-group">
-                        <label class="lebelHeaderStyle"><strong>Reference Number</strong></label>
-                        <br>
-                        <label class="form-control">{{ticketNumber}}</label>
-                    </div>
-                </div>
-                <br>
-                <responsive-table>
-                    <table responsive-table-body>
-                        <tbody>
-                            <tr *ngFor="let comm of communications">
-                                <td data-title="comm"><strong>{{comm.RequesterType}}</strong> logged by
-                                    <span [hidden]="comm.RequesterDepartment.length==0"><strong>{{comm.RequesterName}} (Dept: {{comm.RequesterDepartment}})</strong></span>
-                                    <span> on <strong>{{comm.CreatedOn | date:' dd-MMM-yyyy hh:mm a'}}&nbsp;:</strong></span>                                    {{comm.Answers}}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </responsive-table>
-            </div>
-        </div>
-    </div>
-</div>-->

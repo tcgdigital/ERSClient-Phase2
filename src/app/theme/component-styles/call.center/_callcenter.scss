@@ -11,6 +11,45 @@
 @media screen and (max-width: $resMD-S){
 margin: 15px 1.5%;
 }
-
-
 }
+
+.multiselect-list1 {
+    background: $multiselect-background none repeat scroll 0 0;
+    border: $multiselect-border solid 1px;
+    border-radius: 0 0 6px 6px;
+    color: $multiselect-color;
+    padding: 5px 8px;
+    width: 90.5%;
+    font-size: 12px;
+    max-height: 120px;
+    position: absolute;
+    z-index: 999;
+    overflow-x: hidden;
+    overflow-y: auto;
+    top: 28px;
+}
+
+.multiselect-selector {
+    background: $multiselect-background none repeat scroll 0 0;
+    border: $multiselect-border solid 1px;
+    border-radius: 3px;
+    color: $multiselect-color;
+    padding: 4px 5px;
+    width: 100%;
+    font-size: 12px;
+}
+
+
+.entryHolder{
+    background: $entryholder-background ;
+    padding: 15px;
+    border: $entryholder-color solid 1px;
+    float: left;
+    margin: 15px 23px;
+    @media screen and (max-width: $resMD-S){
+margin: 15px 1.5%;
+}
+}
+
+
+

@@ -26,7 +26,7 @@
                                                                         <select id="selectDemandTypeId" class="form-control" formControlName="DemandTypeId">
                                                                                 <option value=''>Select Demand Type</option>
                                                                                 <!--<option [value]=''>Select Demand Type</option>-->
-                                                                                <option *ngFor="let demandType of demandTypes" [value]="demandType.DemandTypeId">
+                                                                                <option *ngFor="let demandType of demandTypes" [(value)]="demandType.DemandTypeId">
                                                                                         {{demandType.DemandTypeName}}
                                                                                 </option>
                                                                                 </select>
