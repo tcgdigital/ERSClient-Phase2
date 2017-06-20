@@ -159,7 +159,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
                 }
             }
             else {
-             this.demandTypeModelToEdit.DepartmentId = null;
+                this.demandTypeModelToEdit.DepartmentId = null;
             }
             this.demandTypeService.Update(this.demandTypeModelToEdit, this.demandTypeModelToEdit.DemandTypeId)
                 .subscribe((response: DemandTypeModel) => {

@@ -82,7 +82,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
 
     public GetAllOpenByIncidentIdandDepartmentId(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
-            .Expand('CheckList($select=CheckListId,CheckListCode,ParentCheckListId)')
+            .Expand('CheckList($select=CheckListId,CheckListCode)')
             .Filter(`CompletionStatus ne 'Closed' and IncidentId eq ${incidentId} and DepartmentId eq ${departmentId}`)
             .OrderBy("CreatedOn desc")
             .Execute()
@@ -170,15 +170,17 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
 
     public GetAllOpenByIncidentId(incidentId: number): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
-            .Filter(`CompletionStatus ne 'Closed' and IncidentId eq ${incidentId} and ParentCheckListId ne null`)
-            .Select('ParentCheckListId')
+            .Filter(`CompletionStatus ne 'Closed' and IncidentId eq ${incidentId}`)
+            .Expand('CheckList($expand=CheckListParent)')
+            // .Select('ParentCheckListId')
             .Execute();
     }
 
     public GetChildActionables(checklistId, incidentId): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
-            .Filter(`ParentCheckListId eq ${checklistId} and IncidentId eq ${incidentId}`)
-            .Select('ActionId,Description,ScheduleClose,ActualClose,ActionId,DepartmentId,CompletionStatus')
+            .Filter(`ChklistId eq ${checklistId} and IncidentId eq ${incidentId}`)
+            .Expand('CheckList($expand=CheckListChildren)')
+            //.Select('ActionId,Description,ScheduleClose,ActualClose,ActionId,DepartmentId,CompletionStatus')
             .Execute();
 
     }
@@ -199,10 +201,17 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
             });
     }
 
+    public GetAcionableByIncidentIdandCheckListId(incidentId: number, checkListId: number):Observable<ResponseModel<ActionableModel>>{
+         return this._dataService.Query()
+            .Filter(`IncidentId eq ${incidentId} and ChklistId eq ${checkListId}`)
+            //.Select('ParentCheckListId')
+            .Execute();
+    }
+
     public GetAllCloseByIncidentId(incidentId: number): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
-            .Filter(`CompletionStatus eq 'Closed' and IncidentId eq ${incidentId} and ParentCheckListId ne null`)
-            .Select('ParentCheckListId')
+            .Filter(`CompletionStatus eq 'Closed' and IncidentId eq ${incidentId}`)
+            //.Select('ParentCheckListId')
             .Execute();
     }
 

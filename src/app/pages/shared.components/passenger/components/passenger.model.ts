@@ -25,7 +25,6 @@ export class PassengerModel extends BaseModel {
 	public PassengerType: string; //m
 	public DepartureDateTime?: Date;
 	public ArrivalDateTime?: Date;
-	public CoTravellerInformation: string;
 
 	public Flight: FlightModel;
 	public CoPassengerMappings: CoPassengerMappingModel[];

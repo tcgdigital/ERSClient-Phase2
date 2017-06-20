@@ -205,7 +205,6 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this._onRouteChange = this._router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {

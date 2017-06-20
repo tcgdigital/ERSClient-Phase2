@@ -18,6 +18,7 @@ import {
 import { ContactInfoComponent } from './shared.components/contact.info';
 import { AuthenticationService } from './login/components/authentication.service';
 import { UserPermissionService } from "./masterdata/userpermission/components";
+import { QuickLinkQuickViewWidgetComponent } from "../pages/widgets/quicklink.quickview.widget";
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { UserPermissionService } from "./masterdata/userpermission/components";
     declarations: [
         PagesComponent,
         ChangePasswordComponent,
-        ContactInfoComponent
+        ContactInfoComponent,
+        QuickLinkQuickViewWidgetComponent
     ],
     providers: [
         GlobalStateService,

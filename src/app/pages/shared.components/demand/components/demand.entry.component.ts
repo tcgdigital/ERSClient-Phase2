@@ -332,7 +332,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.demandService.GetByDemandId(id)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demandModel = response.Records[0];
-                 debugger;
                 this.setModelFormGroup(response.Records[0], false, x => x.DemandId, x => x.DemandTypeId,
                     x => x.Priority, x => x.DemandDesc, x => x.RequestedBy, x => x.RequesterType,
                     x => x.PDATicketNumber, x => x.TargetDepartmentId, x => x.ContactNumber, x => x.RequiredLocation);
@@ -484,8 +483,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.communicationLog.Answers = demand.DemandStatusDescription + ", "
             + this.demandTypes.find(x => x.DemandTypeId == demand.DemandTypeId).DemandTypeName + " request for " +
             this.departments.find(x => x.DepartmentId == demand.TargetDepartmentId).DepartmentName
-            + ". Request Details : " + demand.DemandDesc + ". " + "created with status " + demand.ActiveFlag + ".";
-
+            + ". Request Details : " + demand.DemandDesc + ". "+"Request Code : "+demand.DemandCode + "created with status " + demand.ActiveFlag + ".";
+        
         this.communicationLog.RequesterName = demand.RequestedBy;
         this.communicationLog.RequesterDepartment = this.departments
             .find(x => x.DepartmentId == demand.TargetDepartmentId).DepartmentName;

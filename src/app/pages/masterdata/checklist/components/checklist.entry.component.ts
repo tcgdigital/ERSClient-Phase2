@@ -16,7 +16,7 @@ import { EmergencyTypeModel, EmergencyTypeService } from '../../emergencytype';
 import { ChecklistService } from './checklist.service';
 import {
     ResponseModel, DataExchangeService, BaseModel,
-    UtilityService, GlobalStateService, KeyValue, AuthModel
+    UtilityService, GlobalStateService, KeyValue, AuthModel, URLValidator
 } from '../../../../shared';
 
 import {
@@ -75,7 +75,7 @@ export class ChecklistEntryComponent implements OnInit {
         let x: ChecklistModel = new ChecklistModel();
         x.CheckListCode = "No Checklist Selected.";
         this.noDtaList.push(x);
-       // this.parentChecklists = this.noDtaList;
+        // this.parentChecklists = this.noDtaList;
     }
 
     showList(): void {
@@ -91,8 +91,9 @@ export class ChecklistEntryComponent implements OnInit {
             });
             this.parentChecklists = this.addDepartmentName(this.parentChecklists);
         }
-        else{
-        this.parentChecklists = this.noDtaList;
+
+        else {
+            this.parentChecklists = this.noDtaList;
         }
         this.selectedcount = this.checkListParentDepartmentWise.filter(x => x["IsSelected"] == true).length;
     }
@@ -351,7 +352,7 @@ export class ChecklistEntryComponent implements OnInit {
             ParentDepartmentId: new FormControl(''),
             Duration: new FormControl(checkList ? checkList.Duration : '', [Validators.required]),
             DepartmentId: new FormControl(checkList ? checkList.DepartmentId : '', [Validators.required]),
-            URL: new FormControl(checkList ? checkList.URL : '', [Validators.required]),
+            URL: new FormControl(checkList ? checkList.URL : '', [Validators.required, URLValidator.validate]),
             EmergencyTypeId: new FormControl(checkList ? checkList.EmergencyTypeId : '', [Validators.required]),
             Sequence: new FormControl(checkList ? checkList.Sequence : '', [Validators.required]),
             OrganizationId: new FormControl(checkList ? checkList.OrganizationId : '', [Validators.required]),

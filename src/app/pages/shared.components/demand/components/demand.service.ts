@@ -116,6 +116,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
             item.RagStatus = 'statusGreen';
             item.IsRejected = demand.IsRejected;
             item.Remarks = demand.Remarks;
+            item.DemandCode=demand.DemandCode;
             item.RequesterDepartmentId = demand.RequesterDepartmentId;
             item.IsCompleted = demand.IsCompleted;
             item.CreatedOn = demand.CreatedOn;

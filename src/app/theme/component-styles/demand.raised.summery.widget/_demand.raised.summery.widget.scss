@@ -27,3 +27,13 @@
 .statusAmber {
     background: $rag-amber none repeat scroll 0 0;
 }
+
+.bg-blue-color {
+    background-color: #03A9F4 !important;
+    td {
+        color: #fff;
+        a {
+            color: #fff;
+        }
+    }
+}

@@ -570,7 +570,6 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                 this.toastrService.success('Enquiry Saved successfully.', 'Success', this.toastrConfig);
                 let num = UtilityService.UUID();
                 this.globalState.NotifyDataChanged('CallRecieved', num);
-                debugger;
                 if (this.selectedCoPassangers.length > 0) {
                     let afftedIdstocreateDemand: number[] = [];
                     this.selectedCoPassangers.map(x => afftedIdstocreateDemand.push(x.AffectedPersonId));
@@ -692,7 +691,6 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     }
 
     populateconsolidatedcopassangers(): void {
-        debugger;
         this.copassengerlistpnr.filter(x => x.IsSelected == true).map(x => {
             let obj = Object.assign({}, x);
             obj.IsSelected = false;

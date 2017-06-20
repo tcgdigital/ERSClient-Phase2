@@ -72,6 +72,7 @@ export class DemandModelToView extends BaseModel {
     public DemandId: number;
     public DemandTypeName: string;
     public DemandDesc: string;
+    public DemandCode: string;
     public RequesterDepartmentName: string;
     public TargetDepartmentName: string;
     public Priority: string;

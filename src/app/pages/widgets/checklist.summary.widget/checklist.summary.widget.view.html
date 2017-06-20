@@ -27,7 +27,8 @@
 </div>
 
 <!--Checklist All-->
-<div bsModal #childModalViewAllChecklist="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+<div bsModal #childModalViewAllChecklist="bs-modal" class="modal fade" (onShown)="onViewAllCheckListShown($event)"
+tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -37,9 +38,9 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-12 col-lg-6">
+                    <div class="summary-container col-lg-12 col-md-12 col-lg-6">
                         <responsive-table>
-                            <table responsive-table-body>
+                            <table id="checklist-table" responsive-table-body>
                                 <thead>
                                     <tr>
                                         <th>Department</th>
@@ -54,17 +55,17 @@
                                     </tr>
                                     <tr *ngFor="let deptCheckList of deptCheckListsAll | async">
                                         <td data-title="Department">
-                                            <a href="javascript:void(0);" (click)="GetCheckListGraph(deptCheckList.departmentId)">
+                                            <a href="javascript:void(0);" (click)="GetCheckListGraph(deptCheckList.departmentId, $event)">
                                             {{deptCheckList.departmentName}}
                                             </a>
                                         </td>
                                         <td data-title="Assigned">{{deptCheckList.assigned}}</td>
                                         <td data-title="Completed" *ngIf="deptCheckList.completed>0">
-                                            <span (click)="showAllDeptSubTableCompleted(deptCheckList)">{{deptCheckList.completed}}</span>
+                                            <a href="{{baseLocationURl}}#showAllCompleted" (click)="showAllDeptSubTableCompleted(deptCheckList)">{{deptCheckList.completed}}</a>
                                         </td>
                                         <td data-title="Completed" *ngIf="deptCheckList.completed==0">{{deptCheckList.completed}}</td>
                                         <td data-title="Pending" *ngIf="deptCheckList.pending>0">
-                                            <span (click)="showAllDeptSubTablePending(deptCheckList)">{{deptCheckList.pending}}</span>
+                                            <a href="{{baseLocationURl}}#showAllPending" (click)="showAllDeptSubTablePending(deptCheckList)">{{deptCheckList.pending}}</a>
                                         </td>
                                         <td data-title="Pending" *ngIf="deptCheckList.pending==0">{{deptCheckList.pending}}</td>
                                     </tr>
@@ -72,12 +73,12 @@
                             </table>
                         </responsive-table>
                     </div>
-                    <div class="col-md-12 col-lg-6">
+                    <!--<div class="col-md-12 col-lg-6">
                         <div id="checklist-graph-container">
                         </div>
-                    </div>
+                    </div>-->
                 </div>
-                <div class="card" *ngIf="showAllDeptSubChecklistCompleted">
+                <div class="card" id="showAllCompleted" *ngIf="showAllDeptSubChecklistCompleted">
                     <div class="card-header">
                         <strong>Completed Sub Department Checklist</strong>
                         <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideAllDeptSubTableCompleted()"></i>
@@ -106,7 +107,7 @@
                         </responsive-table>
                     </div>
                 </div>
-                <div class="card" *ngIf="showAllDeptSubChecklistPending">
+                <div class="card" id="showAllPending" *ngIf="showAllDeptSubChecklistPending">
                     <div class="card-header">
                         <strong>Pending Sub Department Checklist</strong>
                         <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideAllDeptSubTablePending()"></i>

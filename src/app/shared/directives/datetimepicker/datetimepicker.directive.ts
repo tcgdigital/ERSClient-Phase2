@@ -3,13 +3,13 @@ import {
     Input, Output, AfterViewInit
 } from '@angular/core';
 
-// import { CalendarComponent, CalendarOptions } from '../../components/calendar';
+import * as moment from 'moment/moment';
 import {
     DateTimePickerOptions, DateTimePickerSelectEventArgs,
     DateTimePickerChangeMonthEventArgs, DateTimePickerRenderCellEventArgs
 } from './datetimepicker.model';
 
-@Directive({ 
+@Directive({
     selector: '[datetime-picker]',
     exportAs: 'datetimepicker'
 })
@@ -30,7 +30,8 @@ export class DateTimePickerDirective implements AfterViewInit {
     = new EventEmitter<DateTimePickerRenderCellEventArgs>();
 
     datepickerInstance: any;
-
+    selectedDate: Date;
+    formatedDate: string;
 
     /**
      * Creates an instance of DateTimePickerDirective.
@@ -52,9 +53,20 @@ export class DateTimePickerDirective implements AfterViewInit {
             args.FormattedDate = formattedDate;
             args.SelectedDate = date;
 
-            if (this.elementRef.nativeElement)
-                this.renderer.setElementProperty(this.elementRef.nativeElement, 'value', formattedDate);
-            this.selectHandler.emit(args);
+            if (args.SelectedDate instanceof Date) {
+                this.selectedDate = args.SelectedDate;
+                this.formatedDate = args.FormattedDate;
+
+                if (this.elementRef.nativeElement) {
+                    this.renderer.setElementProperty(this.elementRef.nativeElement, 'value', args.FormattedDate);
+                }
+                this.selectHandler.emit(args);
+            } else {
+                if (this.elementRef.nativeElement) {
+                    this.renderer.setElementProperty(this.elementRef.nativeElement, 'value', this.formatedDate);
+                }
+                this.datepickerInstance.hide();
+            }
         };
 
         options.onShow = (inst: object, animationCompleted: boolean) => {
@@ -95,8 +107,17 @@ export class DateTimePickerDirective implements AfterViewInit {
         });
     }
 
-    public updateConfig(config: any){
+    public updateConfig(config: any) {
         this.datepickerInstance.update(config);
+    }
+
+    public toggleControl() {
+        const $element: JQuery = jQuery(this.elementRef.nativeElement);
+        if ($element.attr('data-disable') !== undefined) {
+            $element.siblings('.input-group-addon').hide();
+        } else {
+            $element.siblings('.input-group-addon').show();
+        }
     }
 
     private addPickerIcon($element: JQuery): void {
@@ -105,5 +126,10 @@ export class DateTimePickerDirective implements AfterViewInit {
         $root.append(`<span class="input-group-addon">
                         <i class="fa fa-calendar" aria-hidden="true"></i>
                     </span>`);
+        if ($element.attr('data-disable') == undefined) {
+            $root.find('.input-group-addon').show();
+        } else {
+            $root.find('.input-group-addon').hide();
+        }
     }
 }
