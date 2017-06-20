@@ -18,14 +18,14 @@ import { Observable } from 'rxjs/Rx';
 
 export class QuickLinkQuickViewWidgetComponent implements OnInit {
     @Input() currentIncident: number;
-    @ViewChild('childModalViewQLink') public childModalViewQLink: ModalDirective;
+  //  @ViewChild('childModalViewQLink') public childModalViewQLink: ModalDirective;
     public incidentId:number;
     quicklinks: QuickLinkModel[] = [];
     constructor(private quicklinkService : QuickLinkService) { }
 
     ngOnInit() {
         this.incidentId=0;
-        this.onViewQLinkClick();
+       // this.onViewQLinkClick();
         this.getQuickLinks();
 
     }
@@ -37,11 +37,11 @@ export class QuickLinkQuickViewWidgetComponent implements OnInit {
             });
     }
 
-    public onViewQLinkClick(): void {
-        this.incidentId = this.currentIncident;
-        this.childModalViewQLink.show();
+    // public onViewQLinkClick(): void {
+    //     this.incidentId = this.currentIncident;
+    //     this.childModalViewQLink.show();
         
-    }
+    // }
 
     
 
