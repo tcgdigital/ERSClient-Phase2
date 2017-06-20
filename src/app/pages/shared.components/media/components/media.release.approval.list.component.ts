@@ -52,7 +52,7 @@ export class MediaReleaseApprovalListComponent implements OnInit, OnDestroy {
 
     UpdateMediaRelease(mediaQueryModelUpdate: MediaModel): void {
         let mediaReleaseModelToSend = Object.assign({}, mediaQueryModelUpdate)
-        this.dataExchange.Publish("OnMediaReleaseUpdate", mediaReleaseModelToSend);
+        this.dataExchange.Publish("OnMediaReleaseApproverUpdate", mediaReleaseModelToSend);
     }
 
     ngOnInit(): void {

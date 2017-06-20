@@ -97,6 +97,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
                     item.PaxType = dataItem.Passenger != null ? dataItem.Passenger.PassengerType : dataItem.Crew != null ? 'Crew' : '';
                     if (dataItem.Crew) {
                         item.CrewId = dataItem.CrewId;
+                        item.Crew = dataItem.Crew;
                     }
                     if (dataItem.Passenger) {
                         item.PassengerId = dataItem.PassengerId;

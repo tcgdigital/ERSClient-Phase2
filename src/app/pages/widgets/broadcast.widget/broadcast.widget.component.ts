@@ -64,7 +64,7 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
                 console.log(`Error: ${error}`);
             }, () => {
                 this.LatestBroadcasts = Observable.of(data
-                    .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn)));
+                    .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn,'')));
                 console.log(this.LatestBroadcasts);
                 console.log(departmentId);
             });

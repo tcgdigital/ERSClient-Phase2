@@ -8,6 +8,7 @@
     </div>
     <div class="col-9 col-md-12 col-lg-9">
         <text-accordion [accordionItems]="mediaReleases"></text-accordion>
+        
     </div>
 </div>
 
@@ -28,13 +29,17 @@
                         <th>Media Releases</th>
                         <th>Status</th>
                         <th>Published On</th>
+                        <th>Download Report</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let mediaRelease of AllMediaReleases | async">
-                        <td data-title="Media Releases" width="60%">{{mediaRelease.MediaReleaseType}}</td>
+                        <td data-title="Media Releases" width="30%">{{mediaRelease.MediaReleaseType}}</td>
                         <td data-title="Status">{{mediaRelease.MediaReleaseStatus}}</td>
-                        <td data-title="Date">{{mediaRelease.PublishedOn | date:' dd-MM-yyyy hh:mm a'}}</td>
+                        <td data-title="Date">{{mediaRelease.PublishedOn | date:' dd-MMM-yyyy hh:mm a'}}</td>
+                        <td data-title="Download Report">
+                            <a *ngIf = "mediaRelease.IsPublished" target = "_blank" href="{{downloadPath + mediaRelease.MediaqueryId}}"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>                                                  
+                        </td>
                     </tr>
                 </tbody>
             </table>
