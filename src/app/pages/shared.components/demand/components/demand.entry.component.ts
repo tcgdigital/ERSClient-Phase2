@@ -349,11 +349,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 let timediff = createdOn.getTime() + (+scheduleTime) * 60000;
 
                 let resolutiontime = new Date(timediff);
-                this.form.controls["ScheduleTime"]
-                    .reset({
-                        value: moment(resolutiontime)
-                            .format('DD/MM/YYYY h:mm a'), disabled: false
-                    });
+                //this.form.controls["ScheduleTime"].reset({ value: moment(resolutiontime).format('DD/MM/YYYY h:mm a'), disabled: false });
+                this.form.controls["ScheduleTime"].reset({ value: moment(resolutiontime).format('DD-MMM-YYYY h:mm A'), disabled: false });
                 this.caller = this.demandModel.Caller || new CallerModel();
                 this.showAdd = true;
                 this.buttonValue = "Create Demand";
@@ -383,11 +380,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 let createdOn = new Date(response.Records[0].CreatedOn);
                 let timediff = createdOn.getTime() + (+scheduleTime) * 60000;
                 let resolutiontime = new Date(timediff);
-                this.form.controls["ScheduleTime"]
-                    .reset({
-                        value: moment(resolutiontime)
-                            .format('DD/MM/YYYY h:mm a'), disabled: true
-                    });
+                //this.form.controls["ScheduleTime"].reset({ value: moment(resolutiontime).format('DD/MM/YYYY h:mm a'), disabled: true });
+                this.form.controls["ScheduleTime"].reset({ value: moment(resolutiontime).format('DD-MMM-YYYY h:mm A'), disabled: true });
                 this.caller = this.demandModel.Caller || new CallerModel();
                 this.showAdd = true;
                 this.isReadonly = true;
@@ -790,6 +784,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     public dateTimeSet(date: DateTimePickerSelectEventArgs, controlName: string): void {
         this.resolutionTime = new Date(date.SelectedDate.toString());
+         this.form.get("ScheduleTime")
+                .setValue(moment(this.resolutionTime).format('DD-MMM-YYYY hh:mm A'));
     }
 
     ngOnDestroy(): void {
