@@ -1,7 +1,7 @@
 import {
     Component, OnInit, AfterViewInit,
     AfterContentInit, ElementRef, Input,
-    ViewEncapsulation
+    ViewEncapsulation, HostListener
 } from '@angular/core';
 
 @Component({
@@ -10,10 +10,12 @@ import {
     styleUrls: ['./responsive.table.style.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class ResponsiveTableComponent implements AfterContentInit {
+export class ResponsiveTableComponent implements AfterContentInit, AfterViewInit {
     @Input() isbordered: boolean = false;
     @Input() isStriped: boolean = false;
     @Input() isHoverable: boolean = true;
+
+    $currentElement: JQuery;
 
     /*
     Available classes are as follows
@@ -43,8 +45,67 @@ export class ResponsiveTableComponent implements AfterContentInit {
         this.initiateResponsiveTable();
     }
 
+    public ngAfterViewInit(): void {
+        this.$currentElement = jQuery(this.elementRef.nativeElement);
+        const $table: JQuery = this.$currentElement.find('table.table');
+
+        this.$currentElement.closest('[bsmodal]')
+            .scroll((event) => {
+                // const $scrollableElm: JQuery = jQuery(event.currentTarget);
+                // const $navs: JQuery = this.$currentElement.find('a.scroll-nav.prev');
+                // let top: number = +$navs.css('top').replace('px', '');
+                // top += $scrollableElm.scrollTop();
+                // $navs.css('top', `${top}px`);
+                // debugger;
+            });
+    }
+
+    public onHover($event): void {
+        const $container: JQuery = this.$currentElement.find('.table-responsive-vertical');
+        const $table: JQuery = $container.find('table.table');
+        if ($container.width() < $table.outerWidth(true)) {
+            $container.find('a.scroll-nav.prev, a.scroll-nav.next').show();
+        } else {
+            $container.find('a.scroll-nav.prev, a.scroll-nav.next').hide();
+        }
+    }
+
+    public onPreviousNevClick($event): void {
+        this.updateSlider('P');
+    }
+
+    public onNextNevClick($event): void {
+        this.updateSlider('N');
+    }
+
+    // @HostListener('window:scroll', ['$event'])
+    // public onDocumentScroll($event): void {
+    //     debugger;
+    // }
+
+    private updateSlider(position: string): void {
+        const $wrapperElm: JQuery = this.$currentElement.find('.table-responsive-vertical');
+        const $tableElm: JQuery = $wrapperElm.find('table.table');
+
+        const columnWidth: number = 100;
+        let scrollLeftPos: number = $wrapperElm.scrollLeft();
+        scrollLeftPos = isNaN(scrollLeftPos) ? 0 : scrollLeftPos;
+
+        scrollLeftPos = (position === 'N') ? scrollLeftPos + columnWidth : scrollLeftPos - columnWidth;
+        if (scrollLeftPos < 0) scrollLeftPos = 0;
+        if (scrollLeftPos > $tableElm.outerWidth(true) - $wrapperElm.width())
+            scrollLeftPos = $tableElm.outerWidth(true) - $wrapperElm.width();
+
+        $wrapperElm.animate(
+            { scrollLeft: scrollLeftPos },
+            {
+                duration: 'slow',
+                easing: 'easeInSine'
+            });
+    }
+
     private initiateResponsiveTable(): void {
-        let $table = jQuery(this.elementRef.nativeElement).find('table');
+        const $table = jQuery(this.elementRef.nativeElement).find('table');
         $table.addClass('table');
 
         if (this.isbordered) {
@@ -62,9 +123,9 @@ export class ResponsiveTableComponent implements AfterContentInit {
 
     private removeCalss(elements: any, value: string): void {
         for (let i = 0, l = elements.length; i < l; i++) {
-            let elem = elements[i];
+            const elem = elements[i];
             if (elem.nodeType === 1 && elem.className) {
-                let classNames = elem.className.split(/\s+/);
+                const classNames = elem.className.split(/\s+/);
 
                 for (let n = classNames.length; n--;) {
                     if (value.match(classNames[n])) {

@@ -135,15 +135,18 @@ export class TabControlComponent implements OnInit, AfterViewInit {
 
         $tabColumns.css('width', (tabWidth * $tabItems.length) + 'px');
 
-        let scrollLeft = $itemWrapper.scrollLeft();
-        scrollLeft = isNaN(scrollLeft) ? 0 : scrollLeft;
+        let scrollLeftPos = $itemWrapper.scrollLeft();
+        scrollLeftPos = isNaN(scrollLeftPos) ? 0 : scrollLeftPos;
 
-        scrollLeft = (bool) ? scrollLeft + tabWidth : scrollLeft - tabWidth;
-        if (scrollLeft < 0) scrollLeft = 0;
-        if (scrollLeft > $tabColumns.outerWidth(true) - $itemWrapper.width())
-            scrollLeft = $tabColumns.outerWidth(true) - $itemWrapper.width();
+        scrollLeftPos = (bool) ? scrollLeftPos + tabWidth : scrollLeftPos - tabWidth;
+        if (scrollLeftPos < 0) scrollLeftPos = 0;
+        if (scrollLeftPos > $tabColumns.outerWidth(true) - $itemWrapper.width())
+            scrollLeftPos = $tabColumns.outerWidth(true) - $itemWrapper.width();
 
-        $itemWrapper.animate({ scrollLeft: scrollLeft }, 200);
+        $itemWrapper.animate({ scrollLeft: scrollLeftPos }, {
+                duration: 'slow',
+                easing: 'easeInSine'
+            });
         this.updateNavigation($navigation, $itemWrapper, $tabColumns);
     }
 
