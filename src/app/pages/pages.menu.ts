@@ -79,7 +79,7 @@ export const PAGES_MENU: IMenuItem[] = [
                 path: 'departmentclosure',
                 data: {
                     menu: {
-                        title: 'Department Wise Closure',
+                        title: 'Dept Closure',
                         icon: 'fa fa-id-badge fa-lg',
                         selected: false,
                         expanded: false,
@@ -91,7 +91,7 @@ export const PAGES_MENU: IMenuItem[] = [
                 path: 'archivelist',
                 data: {
                     menu: {
-                        title: 'Archive List Dashboard',
+                        title: 'Archive ',
                         icon: 'fa fa-archive fa-lg',
                         selected: false,
                         expanded: false,
@@ -104,7 +104,7 @@ export const PAGES_MENU: IMenuItem[] = [
                 path: 'callcenteronlypage',
                 data: {
                     menu: {
-                        title: 'Call center only page',
+                        title: 'Call center ',
                         icon: 'fa fa-phone fa-lg',
                         selected: false,
                         expanded: false,
@@ -130,7 +130,7 @@ export const PAGES_MENU: IMenuItem[] = [
                 path: 'quickviewquicklink',
                 data: {
                     menu: {
-                        title: 'Quick View Quick Link',
+                        title: 'Quick View',
                         icon: 'fa fa-link fa-lg',
                         selected: false,
                         expanded: false,
