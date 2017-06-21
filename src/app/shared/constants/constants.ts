@@ -48,7 +48,7 @@ export interface IActionableStatus {
 
 export class GlobalConstants {
     // public static EXTERNAL_URL: string = 'http://202.54.73.219:86/';
-    public static EXTERNAL_URL: string = 'http://localhost:5001/';
+    public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
     public static GRANT_TYPE: string = 'password';
     public static ODATA: string = 'odata';
@@ -86,11 +86,11 @@ export class GlobalConstants {
 
     public static LicenseValidationCode: IKeyValue[] = [
         { key: 101, value: 'License is valid' },
-        { key: 102, value: 'License info file not found.Please contact Administrator.'},
-        { key: 103, value: 'License info file is invalid or corrupted.Please contact Administrator.'},
-        { key: 104, value: 'Current machine is not registered with the license.Please contact Administrator.'},
-        { key: 105, value: 'License key is invalid or not provided.Please contact Administrator.'},
-        { key: 106, value: 'License has expired.Please contact Administrator.'}
+        { key: 102, value: 'License info file not found.Please contact Administrator.' },
+        { key: 103, value: 'License info file is invalid or corrupted.Please contact Administrator.' },
+        { key: 104, value: 'Current machine is not registered with the license.Please contact Administrator.' },
+        { key: 105, value: 'License key is invalid or not provided.Please contact Administrator.' },
+        { key: 106, value: 'License has expired.Please contact Administrator.' }
     ];
 
     public static EmergencyCategories: IKeyValue[] = [
@@ -388,7 +388,7 @@ export class GlobalConstants {
         },
     ];
 
-    
+
     public static RequesterType: IRequesterType[] = [
         {
             value: '1',
