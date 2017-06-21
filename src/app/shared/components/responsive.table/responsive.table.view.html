@@ -1,3 +1,9 @@
-<div class="table-responsive-vertical shadow-z-1">
+<div class="table-responsive-vertical shadow-z-1" (mouseover)="onHover($event)">
+    <a href="javascript:void(0);" class="scroll-nav prev" (click)="onPreviousNevClick($event)">
+        <i aria-hidden="true" class="fa fa-angle-left fa-3x"></i>
+    </a>
     <ng-content select="[responsive-table-body]"></ng-content>
+    <a href="javascript:void(0);" class="scroll-nav next" (click)="onNextNevClick($event)">
+        <i aria-hidden="true" class="fa fa-angle-right fa-3x"></i>
+    </a>
 </div>

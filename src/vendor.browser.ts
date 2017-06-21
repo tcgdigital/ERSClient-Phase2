@@ -24,6 +24,7 @@ import 'jquery';
 import 'signalr';
 import 'gijgo';
 import 'jquery-slimscroll';
+import 'jquery.easing';
 import 'selectize';
 import 'bootstrap';
 import 'bootstrap-toggle';
