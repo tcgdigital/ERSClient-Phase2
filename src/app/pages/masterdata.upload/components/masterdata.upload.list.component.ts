@@ -20,7 +20,7 @@ import { FileData } from '../../../shared/models';
 @Component({
     selector: 'masterdatauploadlist-main',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: '../views/masterdata.upload.list.view.html'
+    templateUrl: '../views/masterdata.upload.list.view.html'   
 })
 
 export class MasterDataUploadListComponent implements OnInit, OnDestroy {

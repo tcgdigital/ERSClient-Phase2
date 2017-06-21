@@ -18,7 +18,7 @@ import { InvolvePartyModel, AffectedPeopleModel, PassengerModel } from '../../..
 @Component({
     selector: 'validPassengers-list',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: '../../views/valid/valid.passenger.list.view.html'
+    templateUrl: '../../views/valid/valid.passenger.list.view.html'  
 })
 
 export class ValidPassengersListComponent implements OnInit, OnDestroy{
