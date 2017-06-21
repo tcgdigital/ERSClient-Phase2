@@ -405,7 +405,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     ngOnInit(): any {
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentOrganizationId = +UtilityService.GetFromSession("CurrentOrganizationId");
-        debugger;
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this._onRouteChange = this._router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
