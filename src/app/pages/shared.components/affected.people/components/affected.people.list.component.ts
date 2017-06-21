@@ -124,7 +124,6 @@ export class AffectedPeopleListComponent implements OnInit {
     uploadFile(): void{
         if(this.filesToUpload.length)
         {
-            debugger;
             let baseUrl = GlobalConstants.EXTERNAL_URL;
             
             let organizationId = +UtilityService.GetFromSession("CurrentOrganizationId");

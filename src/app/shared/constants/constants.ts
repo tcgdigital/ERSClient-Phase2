@@ -85,12 +85,12 @@ export class GlobalConstants {
     };
 
     public static LicenseValidationCode: IKeyValue[] = [
-        { key: 101, value: 'License is valid' },
-        { key: 102, value: 'License info file not found.Please contact Administrator.' },
-        { key: 103, value: 'License info file is invalid or corrupted.Please contact Administrator.' },
-        { key: 104, value: 'Current machine is not registered with the license.Please contact Administrator.' },
-        { key: 105, value: 'License key is invalid or not provided.Please contact Administrator.' },
-        { key: 106, value: 'License has expired.Please contact Administrator.' }
+        { key: 101, value: 'License is valid.' },
+        { key: 102, value: 'License info file not found. Please contact the Administrator.'},
+        { key: 103, value: 'License info file is invalid or corrupted. Please contact the Administrator.'},
+        { key: 104, value: 'Current machine is not registered with the license. Please contact the Administrator.'},
+        { key: 105, value: 'License key is invalid or not provided. Please enter your license key or contact the Administrator.'},
+        { key: 106, value: 'License has expired. To renew the license please contact the Administrator.'}
     ];
 
     public static EmergencyCategories: IKeyValue[] = [
