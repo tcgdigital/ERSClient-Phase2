@@ -1,21 +1,22 @@
 <div class="row  no-gutters">
     <div class="col-12">
-        
+
         <div class="row no-gutters">
             <div class="col-lg-8 col-md-12">
-               <div class="header-incident"> <strong>Incident: </strong> {{incidentName}} </div>
-               <div class="view-inc">
-                    
-                    
+                <div class="header-incident"> <strong>Incident: </strong> {{incidentName}} </div>
+                <div class="header-drill"> Drill</div>
+                <div class="view-inc">
+
+
                     <view-readOnly-incident-widget [currentIncidentLocal]="currentIncident" [useLink]="useLink"></view-readOnly-incident-widget>
-                    
-                    </div>
-               <div class="header-drill">  Drill</div>
+
+                </div>
+
             </div>
             <div class="col-lg-4 col-md-12 ">
-               <div class="dept-header"> <strong>Department: </strong> {{departmentName}}</div>
+                <div class="dept-header"> <strong>Department: </strong> {{departmentName}}</div>
             </div>
-           
+
         </div>
     </div>
 </div>
