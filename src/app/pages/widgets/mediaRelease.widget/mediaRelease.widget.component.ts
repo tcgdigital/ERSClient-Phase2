@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { DataServiceFactory, DataExchangeService, GlobalStateService, KeyValue, UtilityService, TextAccordionModel } from '../../../shared'
+import { DataServiceFactory, DataExchangeService, GlobalStateService, 
+    KeyValue, UtilityService, TextAccordionModel, GlobalConstants } from '../../../shared'
 import { MediaReleaseWidgetModel } from './mediaRelease.widget.model'
 import { MediaModel } from '../../shared.components';
 import { MediaReleaseWidgetService } from './mediaRelease.widget.service'
@@ -21,6 +22,7 @@ export class MediaReleaseWidgetComponent implements OnInit {
     currentDepartmentId: number;
     currentIncidentId: number;
     currentMediaRelaseModel: MediaReleaseWidgetModel = new MediaReleaseWidgetModel(); 
+    downloadPath: string;
 
     /**
      * Creates an instance of MediaReleaseWidgetComponent.
@@ -37,6 +39,7 @@ export class MediaReleaseWidgetComponent implements OnInit {
 	    // this.departmentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.departmentId;
+        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/' + this.currentIncidentId + '/';
         this.getLatestMediaReleases(this.currentIncidentId);
         this.getAllMediaReleases();
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
@@ -68,7 +71,8 @@ export class MediaReleaseWidgetComponent implements OnInit {
             },
             () => {
                 this.mediaReleases = Observable.of(data
-                    .map((x: MediaReleaseWidgetModel) => new TextAccordionModel(x.MediaReleaseType, x.PublishedOn)));
+                    .map((x: MediaReleaseWidgetModel) => new TextAccordionModel(x.MediaReleaseType, x.PublishedOn,
+                    this.downloadPath + x.MediaqueryId)));
                 console.log(this.mediaReleases);                
             });
     }

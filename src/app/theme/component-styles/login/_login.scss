@@ -113,17 +113,17 @@ forgot-password .Absolute-Center.is-Responsive {
 }
 
 #logo-container {
-    width: auto;
-    height: 95px;
+    width: 150px;
+    height: 150px;
     margin: 0 auto 15px;
     display: block;
     -moz-border-radius: 50%;
     -webkit-border-radius: 50%;
-    border-radius: 0;
-    background: url(./assets/images/pal_logo.png) center center no-repeat;
-    background-size: 40%;
+    background: url(./assets/images/pal_logo.png) #fff center center no-repeat;
+    background-size: 83%;
+    border-radius: 100px;
     @media screen and (max-width: $resLG-E) { 
-            height: 115px;
+            height: 110px; width: 110px;  background-size:82%;
     }
 }
 
@@ -159,7 +159,7 @@ input:-webkit-autofill {
         /* background-size: 15%; */
         margin-top: 20px;
         padding: 5px;
-        border: #fff solid 1px;
+        border: #fff solid 1px; cursor: pointer;
     }
     .input-group-addon {
         position: relative;

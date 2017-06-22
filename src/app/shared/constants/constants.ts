@@ -47,8 +47,8 @@ export interface IActionableStatus {
 }
 
 export class GlobalConstants {
-    // public static EXTERNAL_URL: string = 'http://202.54.73.219:86/';
-    public static EXTERNAL_URL: string = 'http://localhost:5001/';
+    // public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
+    public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
     public static GRANT_TYPE: string = 'password';
     public static ODATA: string = 'odata';
@@ -57,9 +57,10 @@ export class GlobalConstants {
     public static BATCH: string = 'odata/$batch';
     public static ACCESS_TOKEN: string = 'access_token';
     public static AD_AUTH_ENABLED: boolean = false;
-    public static PASSWORD_PATTERN: string = '((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})';
+    public static PASSWORD_PATTERN: RegExp = /^(?!.*[\s])(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,20}$/ig;
     public static NUMBER_PATTERN: string = '^[0-9-+]*$';
     public static EMAIL_PATTERN: string = '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$';
+    public static URL_PATTERN: string = '^(((http|ftp|https):\/{2})+(([0-9a-z_-]+\.)+(aero|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cu|cv|cx|cy|cz|cz|de|dj|dk|dm|do|dz|ec|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mn|mn|mo|mp|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|nom|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ra|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sj|sk|sl|sm|sn|so|sr|st|su|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw|arpa)(:[0-9]+)?((\/([~0-9a-zA-Z\#\+\%@\.\/_-]+))?(\?[0-9a-zA-Z\+\%@\/&\[\];=_-]+)?)?))\b$';
     public static LAST_INCIDENT_PICK_COUNT: string = '5';
     public static ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION: number = 12;
 
@@ -76,7 +77,6 @@ export class GlobalConstants {
             { name: 'links', items: ['Link', 'Unlink'] },
             { name: 'insert', items: ['Table', 'HorizontalRule', 'SpecialChar'] },
             { name: 'tools', items: ['Maximize'] },
-            //{ name: 'document', items: ['Source'] },
             '/',
             { name: 'basicstyles', items: ['Bold', 'Italic', 'Strike', '-', 'RemoveFormat'] },
             { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent'] },
@@ -85,12 +85,12 @@ export class GlobalConstants {
     };
 
     public static LicenseValidationCode: IKeyValue[] = [
-        { key: 101, value: 'License is valid' },
-        { key: 102, value: 'License info file not found.Please contact Administrator.'},
-        { key: 103, value: 'License info file is invalid or corrupted.Please contact Administrator.'},
-        { key: 104, value: 'Current machine is not registered with the license.Please contact Administrator.'},
-        { key: 105, value: 'License key is invalid or not provided.Please contact Administrator.'},
-        { key: 106, value: 'License has expired.Please contact Administrator.'}
+        { key: 101, value: 'License is valid.' },
+        { key: 102, value: 'License info file not found. Please contact the Administrator.'},
+        { key: 103, value: 'License info file is invalid or corrupted. Please contact the Administrator.'},
+        { key: 104, value: 'Current machine is not registered with the license. Please contact the Administrator.'},
+        { key: 105, value: 'License key is invalid or not provided. Please enter your license key or contact the Administrator.'},
+        { key: 106, value: 'License has expired. To renew the license please contact the Administrator.'}
     ];
 
     public static EmergencyCategories: IKeyValue[] = [
@@ -388,7 +388,7 @@ export class GlobalConstants {
         },
     ];
 
-    
+
     public static RequesterType: IRequesterType[] = [
         {
             value: '1',

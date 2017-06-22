@@ -60,13 +60,16 @@ export class DateTimePickerDirective implements AfterViewInit {
                 if (this.elementRef.nativeElement) {
                     this.renderer.setElementProperty(this.elementRef.nativeElement, 'value', args.FormattedDate);
                 }
-                this.selectHandler.emit(args);
+                
             } else {
+                 args.SelectedDate = this.selectedDate;
+                 args.FormattedDate = this.formatedDate;
                 if (this.elementRef.nativeElement) {
                     this.renderer.setElementProperty(this.elementRef.nativeElement, 'value', this.formatedDate);
                 }
                 this.datepickerInstance.hide();
             }
+            this.selectHandler.emit(args);
         };
 
         options.onShow = (inst: object, animationCompleted: boolean) => {

@@ -42,6 +42,7 @@ import {
     ArchiveReportWidgetService,
     ArchiveDocumentTypeService,
     DepartmentClosureService
+    
 } from './index';
 
 const WIDGET_COMPONENTS: any[] = [
@@ -58,6 +59,7 @@ const WIDGET_COMPONENTS: any[] = [
     ReadOnlyIncidentWidgetComponent,
     ArchiveReportWidgetComponent,
     ArchiveUploadWidgetComponent
+    
 ];
 
 const WIDGET_SERVICE: any[] = [

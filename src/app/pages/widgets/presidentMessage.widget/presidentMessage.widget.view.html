@@ -32,7 +32,7 @@
             <tbody>
                 <tr *ngFor="let presidentMessage of AllPresidentMessages | async">
                     <td data-title="President's Messages" width="60%">{{presidentMessage.Message}}</td>
-                    <td data-title="Date">{{presidentMessage.PublishedOn | date:' dd-MM-yyyy hh:mm a'}}</td>
+                    <td data-title="Date">{{presidentMessage.PublishedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
                 </tr>
             </tbody>
           </table>

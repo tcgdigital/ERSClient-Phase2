@@ -43,7 +43,6 @@ import { ModalDirective } from 'ng2-bootstrap/modal';
 
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-    // @ViewChild('childModalViewIncident') public childModalViewIncident: ModalDirective;
     public incidentDate: Date;
     public tablinks: ITabLinkInterface[];
     incidentDataExchangeModel: IncidentDataExchangeModel = null;
@@ -105,14 +104,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.tablinks = TAB_LINKS;
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
-       // this.globalState.Subscribe('quicklinkclicked', (model: number) => this.quicklinkClicked(model));
-
     }
 
-    // quicklinkClicked(model : number) :  void{
-    //     this.showQuicklink = true;
-    // }
-
+   
     getAllActiveOrganizations(): void {
         this.organizationService.GetAllActiveOrganizations()
             .subscribe((response: ResponseModel<OrganizationModel>) => {
@@ -151,157 +145,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 console.log(`Error: ${error}`);
             });
     }
-
-    // public onViewIncidentClick(incidentId: number): void {
-    //     this.incidentDataExchangeModel = new IncidentDataExchangeModel();
-    //     this.incidentService.GetIncidentById(incidentId)
-    //         .subscribe((incidentModel: IncidentModel) => {
-    //             this.incidentDataExchangeModel.IncidentModel = new IncidentModel();
-    //             this.incidentDataExchangeModel.IncidentModel = incidentModel;
-    //             this.involvePartyService.GetByIncidentId(this.incidentDataExchangeModel.IncidentModel.IncidentId)
-    //                 .subscribe((involveParties: ResponseModel<InvolvePartyModel>) => {
-    //                     if (involveParties.Count > 0) {
-    //                         this.incidentDataExchangeModel.InvolvedPartyModel = new InvolvePartyModel();
-    //                         this.incidentDataExchangeModel.InvolvedPartyModel = involveParties.Records[0];
-    //                         this.flightService.GetFlightByInvolvedPartyId(this.incidentDataExchangeModel.InvolvedPartyModel.InvolvedPartyId)
-    //                             .subscribe((flights: ResponseModel<FlightModel>) => {
-    //                                 this.incidentDataExchangeModel.FLightModel = new FlightModel();
-    //                                 this.incidentDataExchangeModel.FLightModel = flights.Records[0];
-    //                                 this.loadDataIncidentViewPopup();
-    //                             })
-    //                     }
-    //                     else {
-    //                         this.loadDataIncidentViewPopup();
-    //                     }
-
-    //                 });
-    //         })
-
-    // }
-
-    // resetIncidentViewForm(): void {
-    //     this.formPopup = new FormGroup({
-    //         IncidentId: new FormControl(0),
-    //         //IsDrillPopup: new FormControl(false),
-    //         EmergencyTypeIdPopup: new FormControl('0'),
-    //         AffectedStationIdPopup: new FormControl('0'),
-    //         OffsiteDetailsPopup: new FormControl(''),
-    //         EmergencyNamePopup: new FormControl(''),
-    //         //AlertMessagePopup: new FormControl(''),
-    //         WhatHappendPopup: new FormControl(''),
-    //         WhereHappendPopup: new FormControl(''),
-    //         OtherConfirmationInformationPopup: new FormControl(''),
-
-    //         DescriptionPopup: new FormControl(''),
-    //         EmergencyDatePopup: new FormControl(''),
-    //         SeverityPopup: new FormControl('0'),
-    //         OrganizationIdPopup: new FormControl(''),
-
-
-    //         SourceInformationPopup: new FormControl(''),
-    //         ReportedByNamePopup: new FormControl(''),
-    //         ReportedByAddressPopup: new FormControl(''),
-    //         ContactOfWitnessPopup: new FormControl(''),
-    //         SenderOfCrisisInformationPopup: new FormControl(''),
-    //         BorrowedIncidentPopup: new FormControl(''),
-
-    //         FlightNumberPopup: new FormControl(''),
-    //         OriginPopup: new FormControl(''),
-    //         DestinationPopup: new FormControl(''),
-    //         ScheduleddeparturePopup: new FormControl(''),
-    //         ScheduledarrivalPopup: new FormControl(''),
-    //         FlightTailNumberPopup: new FormControl(''),
-    //         AircraftTypeIdPopup: new FormControl('')
-    //     });
-    //     this.IsDrillPopup = false;
-    // }
-
-    // public loadDataIncidentViewPopup(): void {
-    //     let offsetVal: string = '';
-    //     this.disableIsDrillPopup = true;
-    //     this.isOffSetPopup = false;
-    //     if (this.incidentDataExchangeModel.IncidentModel.EmergencyLocation == 'Offset') {
-    //         this.isOffSetPopup = true;
-    //     }
-    //     this.formPopup = new FormGroup({
-    //         IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
-    //         //IsDrillPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.IsDrill),
-    //         EmergencyTypeIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyTypeId),
-    //         AffectedStationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyLocation),
-    //         OffsiteDetailsPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OffSetLocation),
-    //         EmergencyNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyName),
-    //         //AlertMessagePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.AlertMessage),
-
-    //         WhatHappendPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.WhatHappend),
-    //         WhereHappendPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.WhereHappend),
-    //         OtherConfirmationInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OtherConfirmationInformation),
-
-
-    //         DescriptionPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Description),
-    //         EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD-MM-YYYY h:mm a')),
-    //         SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity),
-
-    //         OrganizationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OrganizationId),
-    //         //CrisisReporterIdentityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.CrisisReporterIdentity),
-
-    //         SourceInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.SourceInformation),
-    //         ReportedByNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ReportedByName),
-    //         ReportedByAddressPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ReportedByAddress),
-    //         ContactOfWitnessPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ContactOfWitness),
-    //         SenderOfCrisisInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.SenderOfCrisisInformation),
-
-    //     });
-    //     this.IsDrillPopup = this.incidentDataExchangeModel.IncidentModel.IsDrill;
-
-    //     this.isFlightRelatedPopup = false;
-    //     if (this.incidentDataExchangeModel.FLightModel != undefined) {
-    //         this.formPopup = new FormGroup({
-    //             IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
-    //             //IsDrillPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.IsDrill),
-    //             EmergencyTypeIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyTypeId),
-    //             AffectedStationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyLocation),
-    //             OffsiteDetailsPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OffSetLocation),
-    //             EmergencyNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyName),
-    //             //AlertMessagePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.AlertMessage),
-
-    //             WhatHappendPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.WhatHappend),
-    //             WhereHappendPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.WhereHappend),
-    //             OtherConfirmationInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OtherConfirmationInformation),
-
-
-    //             DescriptionPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Description),
-    //             EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD-MM-YYYY h:mm a')),
-    //             SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity),
-
-    //             OrganizationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OrganizationId),
-
-
-    //             SourceInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.SourceInformation),
-    //             ReportedByNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ReportedByName),
-    //             ReportedByAddressPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ReportedByAddress),
-    //             ContactOfWitnessPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ContactOfWitness),
-    //             SenderOfCrisisInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.SenderOfCrisisInformation),
-
-
-
-
-    //             FlightNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightNo),
-    //             OriginPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.OriginCode),
-    //             DestinationPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.DestinationCode),
-    //             ScheduleddeparturePopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.DepartureDate).format('DD-MM-YYYY h:mm a')),
-    //             ScheduledarrivalPopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.ArrivalDate).format('DD-MM-YYYY h:mm a')),
-    //             FlightTailNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightTaleNumber),
-    //             AircraftTypeIdPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.AircraftTypeId)
-    //         });
-    //         this.IsDrillPopup = this.incidentDataExchangeModel.IncidentModel.IsDrill;
-    //         this.isFlightRelatedPopup = true;
-    //     }
-    //     //this.childModalViewIncident.show();
-    // }
-
-    // public hideIncidentView(): void {
-    //     //this.childModalViewIncident.hide();
-    // }
 
     public ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChange');

@@ -99,7 +99,7 @@ tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                                     </tr>
                                     <tr *ngFor="let subDeptCheckList of subDeptCompletedCheckLists | async">
                                         <td data-title="Description">{{subDeptCheckList.checkListDesc}}</td>
-                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date:"dd-MMM-yy h:mma"}}</td>
+                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date: 'dd-MMM-yyyy hh:mm a'}}</td>
                                         <td data-title="RAG"><span [ngClass]="subDeptCheckList.RAG"></span></td>
                                     </tr>
                                 </tbody>
@@ -128,7 +128,7 @@ tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                                     </tr>
                                     <tr *ngFor="let subDeptCheckList of subDeptPendingCheckLists">
                                         <td data-title="Description">{{subDeptCheckList.checkListDesc}}</td>
-                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date:"dd-MMM-yy h:mma"}}</td>
+                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date: 'dd-MMM-yyyy hh:mm a'}}</td>
                                         <td data-title="RAG"><span [ngClass]="subDeptCheckList.RAG"></span></td>
                                     </tr>
                                 </tbody>
@@ -202,7 +202,7 @@ tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                                     </tr>
                                     <tr *ngFor="let subDeptCheckList of subDeptCompletedCheckLists | async">
                                         <td data-title="Description">{{subDeptCheckList.checkListDesc}}</td>
-                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date:"dd-MMM-yy h:mma"}}</td>
+                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date: 'dd-MMM-yyyy hh:mm a'}}</td>
                                         <td data-title="RAG"><span [ngClass]="subDeptCheckList.RAG"></span></td>
                                     </tr>
                                 </tbody>
@@ -231,7 +231,7 @@ tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                                     </tr>
                                     <tr *ngFor="let subDeptCheckList of subDeptPendingCheckLists">
                                         <td data-title="Description">{{subDeptCheckList.checkListDesc}}</td>
-                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date:"dd-MMM-yy h:mma"}}</td>
+                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date: 'dd-MMM-yyyy hh:mm a'}}</td>
                                         <td data-title="RAG"><span [ngClass]="subDeptCheckList.RAG"></span></td>
                                     </tr>
                                 </tbody>

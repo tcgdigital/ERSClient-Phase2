@@ -15,8 +15,8 @@
             </tr>
             <tr *ngFor="let broadcastMessage of broadcastMessages">
                 <td data-title="Broadcast Message" width="60%">{{broadcastMessage.Message}}</td>
-                <td data-title="Created On">{{broadcastMessage.CreatedOn | date:' dd-MM-yyyy hh:mm a'}}</td>
-                <td data-title="Submitted On">{{broadcastMessage.SubmittedOn | date:' dd-MM-yyyy hh:mm a'}}</td>
+                <td data-title="Created On">{{broadcastMessage.CreatedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
+                <td data-title="Submitted On">{{broadcastMessage.SubmittedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
                 <td data-title="Priority">{{broadcastMessage.Priority}}</td>
                 <td data-title="Edit">
                     <button class="md-icon-button" aria-label="Edit" type="button" (click)="UpdateBroadcast(broadcastMessage)">

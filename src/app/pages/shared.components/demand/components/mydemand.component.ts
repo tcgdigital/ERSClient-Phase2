@@ -20,10 +20,12 @@ import { DemandTrailModel } from './demand.trail.model';
 
 import {
     ResponseModel, DataExchangeService, KeyValue,
-    GlobalConstants, GlobalStateService, UtilityService, AuthModel
+    GlobalConstants, GlobalStateService, UtilityService, AuthModel, FileUploadService
 } from '../../../../shared';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
 import { ModalDirective } from 'ng2-bootstrap/modal';
+import { FileStoreModel } from '../../../../shared/models/file.store.model';
+import { FileStoreService } from '../../../../shared/services/common.service';
 
 @Component({
     selector: 'my-demand',
@@ -84,7 +86,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
                         let createdOn = new Date(x.CreatedOn);
                         let timediff = createdOn.getTime() + (+scheduleTime) * 60000;
                         let resolutiontime = new Date(timediff);
-                        x.ScheduleTimeToShow = moment(resolutiontime).format('DD/MM/YYYY h:mm a');
+                        x.ScheduleTimeToShow = moment(resolutiontime).format('DD-MMM-YYYY hh:mm A');
                         x["showRemarks"] = false;
                     });
             }, (error: any) => {
