@@ -60,7 +60,7 @@ export class PassengerService extends ServiceBase<CoPassengerMappingModel>
          let option: DataProcessingService = new DataProcessingService();
         let setcopassangerdataservice: DataService<CoPassengerMappingModel> = this.dataServiceFactory
             .CreateServiceWithOptionsAndActionSuffix<CoPassengerMappingModel>
-            ('CoPassengerMappingBatch', 'BatchDeleteCoPassangers', option);
+            ('CoPassengerMappingBatch', `BatchDeleteCoPassangers/${groupid}`, option);
         return setcopassangerdataservice.JsonPost(groupid).Execute();
     };
 
@@ -74,9 +74,8 @@ export class PassengerService extends ServiceBase<CoPassengerMappingModel>
 
     public deleteoldgroupsandupdatecopassanger(entity: CoPassangerModelsGroupIdsModel): Observable<CoPassengerMappingModel[]> {
          let option: DataProcessingService = new DataProcessingService();
-        let setcopassangerdataservice: DataService<CoPassangerModelsGroupIdsModel> = this.dataServiceFactory
-            .CreateServiceWithOptionsAndActionSuffix<CoPassangerModelsGroupIdsModel>
-            ('CoPassengerMappingBatch', 'BatchDeleteOldGroupsUpdateCoPassangers', option);
-        return setcopassangerdataservice.BatchPost(entity).Execute();
+        let setcopassangerdataservice: DataService<any> = this.dataServiceFactory
+            .CreateServiceWithOptionsAndActionSuffix('CoPassengerMappingBatch', 'BatchDeleteOldGroupsUpdateCoPassangers', option);
+        return setcopassangerdataservice.JsonPost(entity).Execute();
     };
 }

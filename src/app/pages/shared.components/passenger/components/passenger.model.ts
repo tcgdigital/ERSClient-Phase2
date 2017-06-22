@@ -59,7 +59,7 @@ export class CoPassengerMappingModel extends BaseModel {
 	}
 }
 
-export class CoPassangerModelsGroupIdsModel extends BaseModel  {
+export class CoPassangerModelsGroupIdsModel{
 	public copassangers : CoPassengerMappingModel[];
 	public groupIds : number[];
 }
