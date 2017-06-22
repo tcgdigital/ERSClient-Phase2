@@ -14,7 +14,7 @@ export class IncidentModel extends BaseModel {
     public Description: string;
     public ClosureNote: string;
     public EmergencyDate: Date;
-    public Severity: string;
+    public Severity?: string;
     public EmergencyLocation: string;
     public OffSetLocation: string;
 
@@ -35,7 +35,7 @@ export class IncidentModel extends BaseModel {
     public ReportedByAddress: string;
     public ContactOfWitness: string;
     public SenderOfCrisisInformation: string;
-    public BorrowedIncident: number;
+    public BorrowedIncident?: number;
 
 
     public ClosedBy?: number;
@@ -70,7 +70,7 @@ export class IncidentModel extends BaseModel {
         this.Description = '';
         this.ClosureNote = '';
         this.EmergencyDate = new Date();
-        this.Severity = '';
+        this.Severity = null;
         this.EmergencyLocation = '';
 
         this.WhatHappend = '';
@@ -90,7 +90,7 @@ export class IncidentModel extends BaseModel {
         this.ReportedByAddress = '';
         this.ContactOfWitness = '';
         this.SenderOfCrisisInformation = '';
-        this.BorrowedIncident = 0;
+        this.BorrowedIncident = null;
 
         this.ClosedBy = null;
         this.ClosedOn = null;

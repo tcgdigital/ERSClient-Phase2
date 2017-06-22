@@ -68,13 +68,14 @@ header.branding {
 }
 
 footer {
-    position: absolute;
+    position: relative;
     z-index: 99;
+        margin-top: 50px;
 }
 
 footer .row {
     bottom: 0;
-    height: $footer-height;
+    height: 27px;
     position: fixed;
     background-color: $footer-bg;
     width: 100%;
@@ -82,11 +83,12 @@ footer .row {
     text-align: center;
     font-size: $font-size-small;
     vertical-align: middle;
-    padding-top: 9px;
+    padding-top: 7px;
 }
 
 .container-fluid {
     background-color: $body-bg;
+     padding: 0;
 }
 
 
@@ -102,7 +104,7 @@ footer .row {
 }
 
 section.body-container>.row {
-    padding-right: 15px; background: #eeeded
+    padding-right: 15px; background: #eeeded; margin-top:15px;
 }
 pages{padding: 0 15px;
     float: left;

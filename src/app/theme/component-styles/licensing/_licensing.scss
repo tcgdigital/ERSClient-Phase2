@@ -1,7 +1,8 @@
 @import '../../config/config';
 
 .container-fluid{
-    background: none;
+    background: url(./assets/images/sky-bg.jpg) center center no-repeat;
+    padding: 0;
 }
 .btn {
      display: block;
