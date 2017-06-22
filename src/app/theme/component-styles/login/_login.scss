@@ -10,15 +10,15 @@ login-root {
     background-image: url(images/linear_bg_1.png);
     background-repeat: repeat-y;
     /* Safari 4-5, Chrome 1-9 */
-    background: -webkit-gradient(linear, left top, right top, from(#436dcc), to(#3aa3cc));
+    background: -webkit-gradient(linear, left top, right top, from(#c13a3a), to(#2d3d88));
     /* Safari 5.1, Chrome 10+ */
-    background: -webkit-linear-gradient(left, #436dcc, #3aa3cc);
+    background: -webkit-linear-gradient(left, #c13a3a, #2d3d88));
     /* Firefox 3.6+ */
-    background: -moz-linear-gradient(left, #436dcc, #3aa3cc);
+    background: -moz-linear-gradient(left, #c13a3a, #2d3d88));
     /* IE 10 */
-    background: -ms-linear-gradient(left, #436dcc, #3aa3cc);
+    background: -ms-linear-gradient(left, #c13a3a, #2d3d88));
     /* Opera 11.10+ */
-    background: -o-linear-gradient(left, #436dcc, #3aa3cc);
+    background: -o-linear-gradient(left, #c13a3a, #2d3d88));
     background-size: cover;
     display: block;
     float: left;
@@ -127,10 +127,13 @@ forgot-password .Absolute-Center.is-Responsive {
     }
 }
 
-input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 1000px #1a82f7 inset !important;
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-transition-delay: 9999s;
+    -webkit-transition: color 9999s ease-out, background-color 9999s ease-out;
 }
-
 .loginform {
     a {
         color: #fff;
