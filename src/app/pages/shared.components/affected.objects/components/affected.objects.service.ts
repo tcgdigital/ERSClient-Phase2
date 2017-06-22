@@ -41,7 +41,12 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
             .Expand('Affecteds($expand=AffectedObjects($expand=Cargo))')
             .Execute();
     }
-
+    GetAffectedObjectQuery(incidentId, query):  Observable<ResponseModel<InvolvePartyModel>> {
+        return this._dataService.Query()
+            .Filter(`IncidentId eq ${incidentId}`)
+            .Expand(`Affecteds($expand=AffectedObjects($expand=Cargo;$filter=${query}))`)
+            .Execute();
+    }
     FlattenAffactedObjects(involvedParty: InvolvePartyModel): AffectedObjectsToView[] {
         let affectedObjectsToView: AffectedObjectsToView[] = [];
         let affectedObjects: AffectedObjectModel[];

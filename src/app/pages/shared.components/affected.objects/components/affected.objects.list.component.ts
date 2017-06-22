@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, OnInit, ViewChild } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { Subscription, Observable } from 'rxjs/Rx';
 
 
 import { InvolvePartyModel, CommunicationLogModel } from '../../../shared.components';
@@ -10,7 +10,8 @@ import { EnquiryModel } from '../../call.centre/components/call.centre.model';
 import { CallerModel, CallerService } from '../../caller';
 import {
     ResponseModel, DataExchangeService,
-    GlobalStateService, KeyValue, UtilityService, GlobalConstants
+    GlobalStateService, KeyValue, UtilityService, GlobalConstants, 
+    SearchConfigModel, SearchTextBox, SearchDropdown, NameValue
 } from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
@@ -41,6 +42,7 @@ export class AffectedObjectsListComponent implements OnInit {
     allcargostatus: any[] = GlobalConstants.CargoStatus;
     affectedObjId: number;
     callers: CallerModel[] = [];
+    searchConfigs: Array<SearchConfigModel<any>> = new Array<SearchConfigModel<any>>();
 
 
 
@@ -73,7 +75,7 @@ export class AffectedObjectsListComponent implements OnInit {
                 }
             }
         });
-
+        this.initiateSearchConfigurations();
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
     }
 
@@ -128,8 +130,24 @@ export class AffectedObjectsListComponent implements OnInit {
             });
 
     }
+    searchAffectedObject(query: string, incidentId: number): void {
+        this.affectedObjectService.GetAffectedObjectQuery(incidentId,query)
+            .subscribe((response: ResponseModel<InvolvePartyModel>) => {
+                this.affectedObjects = this.affectedObjectService.FlattenAffactedObjects(response.Records[0]);
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
+    }
 
-
+    invokeSearch(query: string): void {
+        if (query !== '') {
+            this.searchAffectedObject(query, this.currentIncident);
+        }
+    }
+    invokeReset(): void {
+        this.getAffectedObjects(this.currentIncident);
+    }
+    
     saveUpdateAffectedObject(affectedObject: AffectedObjectsToView) {
         let affectedObjectUpdate = new AffectedObjectModel();
         affectedObjectUpdate.Remarks = affectedObject.Remarks;
@@ -147,5 +165,50 @@ export class AffectedObjectsListComponent implements OnInit {
 
     cancelModal() {
         this.childAffectedObjectDetailsModal.hide();
+    }
+    private initiateSearchConfigurations(): void {
+        const status: Array<NameValue<string>> = [
+            new NameValue<string>('Active', 'Active'),
+            new NameValue<string>('InActive', 'InActive'),
+        ] as Array<NameValue<string>>;
+        this.searchConfigs = [
+            new SearchTextBox({
+                Name: 'TicketNumber',
+                Description: 'Reference Number',
+                Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'AWB',
+                Description: 'Air Way Bill',
+                Value: '',
+            }),
+            new SearchTextBox({
+                Name: 'mftpcs',
+                Description: 'Manifest Pieces',
+                Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'mftwgt',
+                Description: 'Manifest weight',
+                Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'POU',
+                Description: 'POU',
+                Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'POL',
+                Description: 'POL',
+                Value:''
+            }),
+            new SearchDropdown({
+                Name: 'ActiveFlag',
+                Description: 'Verification Status',
+                PlaceHolder: 'Select Status',
+                Value: '',
+                ListData: Observable.of(status)
+            })
+        ]
     }
 }
