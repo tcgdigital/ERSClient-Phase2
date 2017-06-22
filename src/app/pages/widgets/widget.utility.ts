@@ -57,57 +57,60 @@ export class WidgetUtilityService {
         //this.setGraphData(Highcharts, DepartmentName, arrGraphCompleted.reverse(), arrGraphPending.reverse(), containerName, 'CheckList');
     }
 
-    public static GetGraphDemand(requesterDepartmentId: number, Highcharts: any, arrGraphData: GraphObject[], containerName: string, graphSubjectType: string): void {
+    public static GetGraphDemand(requesterDepartmentId: number, Highcharts: any, arrGraphData: GraphObject[],
+     containerName: string, graphSubjectType: string,emergencyDate:Date): void {
         console.log(requesterDepartmentId);
         let filterDepartments = arrGraphData.filter((item: GraphObject) => {
             return item.requesterDepartmentId == requesterDepartmentId;
         });
 
         let DepartmentName = filterDepartments[0].requesterDepartmentName;
-        let ConfigurationHoursBackTime: Date = new Date();
-        ConfigurationHoursBackTime.setMinutes(ConfigurationHoursBackTime.getMinutes() - (this.elapsedHourForGraph * 60));
 
         let arrGraphPending: number[] = [];
         let arrGraphCompleted: number[] = [];
-        let pendingCount: number = 0;
-        let completedCount: number = 0;
-        let actualCompletedCount: number = 0;
-        let startPoint: Date = new Date();
-        let endPoint: Date = new Date();
-        let startCompletedPoint: Date = new Date();
-        let endCompletedPoint: Date = new Date();
-        endCompletedPoint.setMinutes(endCompletedPoint.getMinutes() - 60);
 
-        let totalCompletedCountPresent: number = filterDepartments.filter((item: GraphObject) => item.isClosed === true).length;
-        let totalPendingCountPresent: number = filterDepartments.filter((item: GraphObject) => item.isClosed === false).length;
-        let totalCount: number = totalCompletedCountPresent + totalPendingCountPresent;
-        endPoint.setMinutes(endPoint.getMinutes() - (this.elapsedHourForGraph * 60));
-        for (let i: number = this.elapsedHourForGraph; i >= 1; i--) {
-            let completedList: GraphObject[] =
-                filterDepartments.filter((x) => x.closedOn != null)
-                    .filter((x) => {
-                        return ((startPoint > x.closedOn && x.closedOn >= endPoint)
-                            || (startPoint >= x.closedOn && x.closedOn >= endPoint
-                                && i === this.elapsedHourForGraph));
-                    });
+        let start: Date = new Date(emergencyDate);
+        let temp: Date = new Date(emergencyDate);
+        let inter: string = JSON.stringify(start);
+        temp = new Date(JSON.parse(inter));
+        temp = start;
+        let end: Date = new Date(emergencyDate);
+        end = start;
+        inter = JSON.stringify(start);
+        end = new Date(JSON.parse(inter));
+        end.setMinutes(temp.getMinutes() + 60);
+        for (let i: number = 1; i <= this.elapsedHourForGraph; i++) {
+            let pendingTotal: number = 0;
+            let closedTotal: number = 0;
+            let pendingOld: number = 0;
 
-            pendingCount = totalCount - completedList.length;
-            completedCount = completedList.length;
+            ///////This is for demands which are created after crisis initiation and closed in this hour.
+            let closeList: GraphObject[] = filterDepartments.filter((x) => x.closedOn != null)
+                .filter((x) => {
+                    return ((temp <= x.closedOn && x.closedOn <= end));
+                });
+            closedTotal = closedTotal + closeList.length;
+            arrGraphCompleted.push(closedTotal);
 
-            let actualCompletedList: GraphObject[] =
-                filterDepartments.filter((x) => x.closedOn != null)
-                    .filter((x) => {
-                        return ((startCompletedPoint > x.closedOn && x.closedOn >= endCompletedPoint)
-                            || (startCompletedPoint >= x.closedOn && x.closedOn >= endCompletedPoint
-                                && i === this.elapsedHourForGraph));
-                    });
-            arrGraphCompleted.push(actualCompletedList.length);
-            arrGraphPending.push(pendingCount);
-            startPoint.setMinutes(startPoint.getMinutes() - 60);
-            startCompletedPoint.setMinutes(startCompletedPoint.getMinutes() - 60);
-            endCompletedPoint.setMinutes(endCompletedPoint.getMinutes() - 60);
+
+            //This is for demands which are created after crisis initiation but not yet closed.
+            let pendingList: GraphObject[] = filterDepartments.filter((x) => {
+                return ((temp <= x.CreatedOn) && (x.CreatedOn <= end));
+            });
+            pendingTotal = pendingList.length;
+            if (i == 1) {
+                pendingTotal = pendingTotal - closedTotal;
+            }
+            else {
+                pendingOld = pendingTotal + arrGraphPending[i - 2] - closedTotal;
+                pendingTotal = pendingOld;
+            }
+            arrGraphPending.push(pendingTotal);
+            
+            temp.setMinutes(temp.getMinutes() + 60);
+            end.setMinutes(end.getMinutes() + 60);
         }
-        this.setGraphData(Highcharts, DepartmentName, arrGraphCompleted.reverse(), arrGraphPending.reverse(), containerName, 'Demand', graphSubjectType);
+        this.setGraphData(Highcharts, DepartmentName, arrGraphCompleted, arrGraphPending, containerName, 'Demand', graphSubjectType);
     }
 
 
@@ -115,6 +118,10 @@ export class WidgetUtilityService {
     public static setGraphData(Highcharts: any, departmentName: string, arrGraphCompleted: number[],
         arrGraphPending: number[], containerName: string, moduleName: string, graphSubjectType: string): void {
         let x_axis_points: string[] = _.range(1, this.elapsedHourForGraph + 1).map((item) => item.toString());
+
+        let y_axis_points: number[] = _.range(1, _.max(_.union(arrGraphPending, arrGraphCompleted)));
+
+
         Highcharts.chart(containerName, {
             chart: {
                 type: 'column'
@@ -127,9 +134,13 @@ export class WidgetUtilityService {
             },
             xAxis: {
                 categories: x_axis_points,
-                crosshair: true
+                crosshair: true,
+                title: {
+                    text: 'Time elapse (Hourly)'
+                }
             },
             yAxis: {
+                //categories: y_axis_points,
                 min: 0,
                 title: {
                     text: `${moduleName} Count`
