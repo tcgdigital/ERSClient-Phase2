@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, OnInit, ViewChild } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { Subscription, Observable } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 
 
@@ -16,7 +16,7 @@ import { AffectedPeopleService } from './affected.people.service';
 import {
     ResponseModel, DataExchangeService, GlobalConstants, AuthModel,
     GlobalStateService, UtilityService, KeyValue, FileUploadService, SearchConfigModel,
-    SearchTextBox, SearchDropdown
+    SearchTextBox, SearchDropdown, NameValue
 } from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { FileStoreModel } from '../../../../shared/models/file.store.model';
@@ -369,6 +369,10 @@ export class AffectedPeopleListComponent implements OnInit {
     }
 
     private initiateSearchConfigurations(): void {
+        const status: Array<NameValue<string>> = [
+            new NameValue<string>('Informed', 'Informed'),
+            new NameValue<string>('Not Informed', 'Not Informed'),
+        ] as Array<NameValue<string>>;
         this.searchConfigs = [
             new SearchTextBox({
                 Name: 'TicketNumber',
@@ -385,6 +389,32 @@ export class AffectedPeopleListComponent implements OnInit {
                 Name: 'Pnr',
                 Description: 'PNR',
                 Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'ContactNumber',
+                Description: 'PDA Contact',
+                Value: ''
+            }),
+            new SearchDropdown({
+                Name: 'PassengerTypeId',
+                Description: 'Passenger Types',
+                PlaceHolder: 'Select Type',
+                Value: ''
+        
+            }),
+            new SearchDropdown({
+                Name: 'MedicalStatus',
+                Description: 'Medical Status',
+                PlaceHolder: 'Select Status',
+                Value: ''
+                
+            }),
+             new SearchDropdown({
+                Name: 'IsNokInformed',
+                Description: 'Is NOK Informed',
+                PlaceHolder: 'Select Status',
+                Value: '',
+                ListData: Observable.of(status)
             })
         ]
     }

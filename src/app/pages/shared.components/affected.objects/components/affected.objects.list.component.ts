@@ -10,7 +10,7 @@ import { EnquiryModel } from '../../call.centre/components/call.centre.model';
 import { CallerModel, CallerService } from '../../caller';
 import {
     ResponseModel, DataExchangeService,
-    GlobalStateService, KeyValue, UtilityService, GlobalConstants, 
+    GlobalStateService, KeyValue, UtilityService, GlobalConstants,
     SearchConfigModel, SearchTextBox, SearchDropdown, NameValue
 } from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
@@ -131,7 +131,7 @@ export class AffectedObjectsListComponent implements OnInit {
 
     }
     searchAffectedObject(query: string, incidentId: number): void {
-        this.affectedObjectService.GetAffectedObjectQuery(incidentId,query)
+        this.affectedObjectService.GetAffectedObjectQuery(incidentId, query)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedObjects = this.affectedObjectService.FlattenAffactedObjects(response.Records[0]);
             }, (error: any) => {
@@ -141,19 +141,26 @@ export class AffectedObjectsListComponent implements OnInit {
 
     invokeSearch(query: string): void {
         if (query !== '') {
-            this.searchAffectedObject(query, this.currentIncident);
+            if (query.indexOf('IsVerified') >= 0) {
+                if (query.indexOf("'true'") >= 0)
+                    query = query.replace("'true'", "true");
+                if (query.indexOf("'false'") >= 0)
+                    query = query.replace("'false'", "false");
+                this.searchAffectedObject(query, this.currentIncident);
+            }
         }
     }
+
     invokeReset(): void {
         this.getAffectedObjects(this.currentIncident);
     }
-    
+
     saveUpdateAffectedObject(affectedObject: AffectedObjectsToView) {
         let affectedObjectUpdate = new AffectedObjectModel();
         affectedObjectUpdate.Remarks = affectedObject.Remarks;
         affectedObjectUpdate.IdentificationDesc = affectedObject.IdentificationDesc;
         affectedObject.LostFoundStatus = affectedObject.LostFoundStatus;
-        this.affectedObjectService.UpdateStatus(affectedObjectUpdate,affectedObject.AffectedObjectId)
+        this.affectedObjectService.UpdateStatus(affectedObjectUpdate, affectedObject.AffectedObjectId)
             .subscribe((response: AffectedObjectModel) => {
                 this.toastrService.success('Adiitional Information updated.')
                 this.getAffectedObjects(this.currentIncident);
@@ -167,9 +174,10 @@ export class AffectedObjectsListComponent implements OnInit {
         this.childAffectedObjectDetailsModal.hide();
     }
     private initiateSearchConfigurations(): void {
+        let cargostatus: Array<NameValue<string>> = GlobalConstants.CargoStatus.map(x => new NameValue<string>(x.caption, x.caption))
         const status: Array<NameValue<string>> = [
-            new NameValue<string>('Active', 'Active'),
-            new NameValue<string>('InActive', 'InActive'),
+            new NameValue<string>('Active', 'true'),
+            new NameValue<string>('InActive', 'false'),
         ] as Array<NameValue<string>>;
         this.searchConfigs = [
             new SearchTextBox({
@@ -200,10 +208,17 @@ export class AffectedObjectsListComponent implements OnInit {
             new SearchTextBox({
                 Name: 'POL',
                 Description: 'POL',
-                Value:''
+                Value: ''
             }),
             new SearchDropdown({
-                Name: 'ActiveFlag',
+                Name: 'LostFoundStatus',
+                Description: 'Cargo Status',
+                PlaceHolder: 'Select Status',
+                Value: '',
+                ListData: Observable.of(cargostatus)
+            }),
+            new SearchDropdown({
+                Name: 'IsVerified',
                 Description: 'Verification Status',
                 PlaceHolder: 'Select Status',
                 Value: '',
