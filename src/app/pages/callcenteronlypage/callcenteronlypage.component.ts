@@ -72,7 +72,8 @@ export class CallCenterOnlyPageComponent implements OnInit {
             KINLastName: new FormControl('', [Validators.required]),
             KINContactNumber: new FormControl('', [Validators.required]),
             KINRelationShip: new FormControl('', [Validators.required]),
-            Query: new FormControl('', [Validators.required])
+            Query: new FormControl('', [Validators.required]),
+            FinalDestination: new FormControl('', [Validators.required])
         });
         this.cargoform = new FormGroup({
             ShippersName: new FormControl('', [Validators.required]),
@@ -92,6 +93,7 @@ export class CallCenterOnlyPageComponent implements OnInit {
     }
 
     save(): void {
+        debugger;
         this.isSubmitted = true;
         if (this.generalform.valid && ((this.pdacrewform.valid && (this.enquiryType == 1 || this.enquiryType == 3)) ||
             (this.cargoform.valid && this.enquiryType == 2) || (this.otherform.valid && this.enquiryType >= 4))) {
@@ -108,7 +110,7 @@ export class CallCenterOnlyPageComponent implements OnInit {
             if (this.enquiryType == 1 || this.enquiryType == 3) {
                 this.externnalInputModelToSave.PDAEnquiry = new PDAEnquiryModel();
                 UtilityService.setModelFromFormGroup<PDAEnquiryModel>(this.externnalInputModelToSave.PDAEnquiry, this.pdacrewform,
-                    x => x.DepartedFrom, x => x.KINContactNumber, x => x.FirstName, x => x.FlightNumber, x => x.EnquiryReason, x => x.KINFirstName,
+                    x => x.DepartedFrom, x => x.KINContactNumber,x=>x.FinalDestination, x => x.FirstName, x => x.FlightNumber, x => x.EnquiryReason, x => x.KINFirstName,
                     x => x.KINLastName, x => x.KINRelationShip, x => x.LastName, x => x.Nationality, x => x.Age, x => x.PermanentAddress,
                     x => x.TravellingWith, x => x.TravellingTo, x => x.Query);
                 this.externnalInputModelToSave.PDAEnquiry.IncidentId = this.currentIncident;

@@ -217,6 +217,10 @@ input:-webkit-autofill {
     margin: 2px 0;
 }
 
+.error-login{
+    color:$login-error !important; font-weight: bold;
+}
+
 @media screen and (max-width: $resXS-E) {}
 
 @media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {}

@@ -58,3 +58,8 @@ export class CoPassengerMappingModel extends BaseModel {
 		super();
 	}
 }
+
+export class CoPassangerModelsGroupIdsModel extends BaseModel  {
+	public copassangers : CoPassengerMappingModel[];
+	public groupIds : number[];
+}
