@@ -10,6 +10,7 @@ import {
     AllDeptDemandReceivedSummary,
     SubDeptDemandReceivedSummary
 } from './demand.received.summary.widget.model';
+import { IncidentModel, IncidentService } from "../../incident";
 import {
     GraphObject
 } from '../demand.raised.summary.widget/demand.raised.summary.widget.model';
@@ -22,7 +23,8 @@ import * as Highcharts from 'highcharts';
 @Component({
     selector: 'demand-received-summary-widget',
     templateUrl: './demand.received.summary.widget.view.html',
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    providers: [IncidentService]
 })
 export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewInit {
     @Input('currentIncidentId') incidentId: number;
@@ -51,7 +53,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
     private $placeholder: JQuery;
 
     constructor(private elementRef: ElementRef,
-        private demandReceivedSummaryWidgetService: DemandReceivedSummaryWidgetService) { }
+        private demandReceivedSummaryWidgetService: DemandReceivedSummaryWidgetService, private incidentService: IncidentService) { }
 
     public ngOnInit(): void {
         this.arrGraphData = [];
@@ -261,9 +263,11 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
             $currentRow.closest('tbody').find('tr').removeClass('bg-blue-color');
             $currentRow.closest('tr').addClass('bg-blue-color');
         }
-
-        WidgetUtilityService.GetGraphDemand(targetDepartmentId, Highcharts, this.arrGraphData, 'demand-received-graph-container','Received');
-        this.showDemandReceivedGraph = true;
+        this.incidentService.GetIncidentById(this.incidentId)
+            .subscribe((incidentModel: IncidentModel) => {
+                WidgetUtilityService.GetGraphDemand(targetDepartmentId, Highcharts, this.arrGraphData, 'demand-received-graph-container', 'Received',incidentModel.EmergencyDate);
+                this.showDemandReceivedGraph = true;
+            });
     }
 
 }

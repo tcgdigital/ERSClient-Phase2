@@ -178,9 +178,9 @@ export class PagesComponent implements OnInit {
     private getIncidents(): void {
         this.incidentService.GetAllActiveIncidents()
             .map((x: ResponseModel<IncidentModel>) => x.Records.sort((a, b) => {
-                const dateA = new Date(a.SubmittedOn).getTime();
-                const dateB = new Date(b.SubmittedOn).getTime();
-                return dateA > dateB ? 1 : -1;
+                const dateA = new Date(a.CreatedOn).getTime();
+                const dateB = new Date(b.CreatedOn).getTime();
+                return dateA > dateB ? -1 : 1;
             })).subscribe((x: IncidentModel[]) => {
                 this.incidents = x.map((y: IncidentModel) => new KeyValue(y.EmergencyName, y.IncidentId));
                 this.incidentOrganizations = x.map((y: IncidentModel) => new KeyValue(y.IncidentId.toString(), y.OrganizationId));

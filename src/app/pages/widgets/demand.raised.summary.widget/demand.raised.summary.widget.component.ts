@@ -15,6 +15,7 @@ import { WidgetUtilityService } from "../widget.utility";
 import { UtilityService, GlobalConstants } from '../../../shared';
 import { DemandRaisedSummaryWidgetService } from './demand.raised.summary.widget.service';
 import { DemandModel } from '../../shared.components/demand/components/demand.model';
+import { IncidentModel, IncidentService } from "../../incident";
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { Observable } from 'rxjs/Rx';
 import * as Highcharts from 'highcharts';
@@ -22,7 +23,8 @@ import * as Highcharts from 'highcharts';
 @Component({
     selector: 'demand-raised-summary-widget',
     templateUrl: './demand.raised.summary.widget.view.html',
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    providers: [IncidentService]
 })
 export class DemandRaisedSummaryWidgetComponent implements OnInit {
     @Input('initiatedDepartmentId') departmentId: number;
@@ -54,7 +56,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
     public arrGraphData: GraphObject[];
     //public elapsedHourForGraph: number = GlobalConstants.ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION;
     public graphCategories: string[] = [];
-    constructor(private demandRaisedSummaryWidgetService: DemandRaisedSummaryWidgetService) { }
+    constructor(private demandRaisedSummaryWidgetService: DemandRaisedSummaryWidgetService, private incidentService: IncidentService) { }
 
     public ngOnInit(): void {
         this.arrGraphData = [];
@@ -118,6 +120,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         this.demandRaisedSummaryWidgetService.GetAllDepartmentDemandByIncident
             (this.incidentId, (item: DemandRaisedModel[]) => {
                 this.allDemandRaisedList = Observable.of(item);
+
                 this.childModalViewAllDemandRaisedSummary.show();
                 this.graphDataFormationForDemandRaisedSummeryWidget(item);
             });
@@ -286,9 +289,12 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
             $currentRow.closest('tbody').find('tr').removeClass('bg-blue-color');
             $currentRow.closest('tr').addClass('bg-blue-color');
         }
+        this.incidentService.GetIncidentById(this.incidentId)
+            .subscribe((incidentModel: IncidentModel) => {
+                WidgetUtilityService.GetGraphDemand(requesterDepartmentId, Highcharts, this.arrGraphData, 'demand-raised-graph-container', 'Raised', incidentModel.EmergencyDate);
+                this.showDemandRaisedGraph = true;
+            });
 
-        WidgetUtilityService.GetGraphDemand(requesterDepartmentId, Highcharts, this.arrGraphData, 'demand-raised-graph-container','Raised');
-        this.showDemandRaisedGraph = true;
     }
 
     private activator<T>(type: { new (): T; }): T {
