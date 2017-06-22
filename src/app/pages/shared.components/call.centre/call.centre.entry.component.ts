@@ -230,7 +230,6 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                 this.pdaenquiryid = this.pdaenquery.PDAEnquiryId;
             }
             if (this.isCallrecieved) {
-                debugger;
                 this.enquiryToUpdate = this.enquiryType != 1 ? response[0].Enquiries[0] :
                     response[0].Enquiries.find(x => x.AffectedPersonId == this.pdaenquery.AffectedPersonId);
                 this.form.controls["Queries"].reset({ value: this.enquiryToUpdate.Queries, disabled: false });
@@ -339,7 +338,6 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         let obj = this.affectedPeople.find(x => x.AffectedPersonId == message.Value);
         this.affectedId = obj.AffectedId;
         this.copassangerlistpopulation(obj);
-        debugger;
         // this.copassengerlistPassenger = _.without(this.copassengerlistPassenger, _.findWhere(this.copassengerlistPassenger, { AffectedPersonId: message.Value }));
         this.showCoPassangerPannel = true;
         if (obj.GroupId > 0) {
@@ -495,7 +493,6 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
 
 
     returncopassangerservice(affectedpersonId): Observable<CoPassengerMappingModel[]> {
-        debugger;
         let copassangerModels: CoPassengerMappingModel[] = [];
         this.consolidatedCopassengers.map(x => {
             let copssanger: CoPassengerMappingModel = new CoPassengerMappingModel();
