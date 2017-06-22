@@ -118,6 +118,7 @@ export class PagesComponent implements OnInit {
 
     public closeQuickLinkModel(): void {
         this.quickLinkModel.hide();
+        this.showQuicklink=false;
     }
 
     public onDepartmentChange(selectedDepartment: KeyValue): void {
@@ -133,7 +134,7 @@ export class PagesComponent implements OnInit {
     }
 
     public onMenuClick($event): void {
-        this.showQuicklink=true;
+        this.showQuicklink = true;
         if ($event === 'quicklink') {
             this.quickLinkModel.show();
         }

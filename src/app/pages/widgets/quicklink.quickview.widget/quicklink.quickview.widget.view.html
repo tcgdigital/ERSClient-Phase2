@@ -1,9 +1,4 @@
-<!--<a  class="fa fa-edit fa-2x" href="javascript:void(0);" (click)="onViewQLinkClick()"></a>-->
-
-<!--<div bsModal #childModalViewQLink="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg">-->
-     <responsive-table>
+<responsive-table>
     <table responsive-table-body>
         <thead>
             <tr>
@@ -17,10 +12,8 @@
             </tr>
             <tr *ngFor="let quicklink of quicklinks">
                 <td data-title="Quick Link Name">{{quicklink.QuickLinkName}}</td>
-                <td data-title="Quick Link URL">{{ quicklink.QuickLinkURL }}</td>
+                <td data-title="Quick Link URL"><a href="{{quicklink.QuickLinkURL}}" target="_blank">{{ quicklink.QuickLinkURL }}</a></td>
             </tr>
         </tbody>
     </table>
 </responsive-table>
-    <!--</div>
-</div>-->

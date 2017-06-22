@@ -62,8 +62,8 @@
                                 </tr>
                                 <tr *ngFor="let work of memberHistory">
                                     <td data-title="Work Details">{{work.Remarks}}</td>
-                                    <td data-title="Deployed On">{{work.DeployedOn | date:' dd-MMM-yyyy hh:mm a'}}</td>
-                                    <td data-title="UndeployedOn">{{work.UnDeployedOn | date:' dd-MMM-yyyy hh:mm a'}}</td>
+                                    <td data-title="Deployed On">{{work.DeployedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
+                                    <td data-title="UndeployedOn">{{work.UnDeployedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
                                 </tr>
                             </tbody>
                         </table>

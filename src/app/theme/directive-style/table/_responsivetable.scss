@@ -3,6 +3,71 @@
     @include box-shadow-multi(0px 2px 3px 0 $header-shadow, 0px 0px 2px 0 $header-shadow);
 }
 
+.table-responsive-vertical {
+    overflow-x: hidden; // a.nav
+    a.scroll-nav {
+        &:active, &:hover {
+            text-decoration: none;
+        }
+        position: absolute;
+        top: 50%;
+        @include transform(translateY(-50%));
+        width: 22px;
+        height: 46px;
+        background-color: $text-accordion-nav-bg;
+        background-repeat: no-repeat;
+        background-position: center center;
+        z-index: 4;
+        display: none;
+        border-radius: 0.25em;
+        &:hover {
+            background-color: rgba(216, 216, 216, 0.9);
+        }
+        &.visible {
+            display: block;
+            @include animation(cd-fade-in, 0.4s)
+        }
+        i {
+            margin-top: 5px;
+            margin-left: 5px;
+            color: #fff;
+        }
+        &.prev {
+            left: 25px;
+        }
+        &.next {
+            right: 25px;
+        }
+    }
+}
+
+@-webkit-keyframes cd-fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@-moz-keyframes cd-fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes cd-fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 .table {
     width: 100%;
     max-width: 100%;
@@ -20,8 +85,7 @@
         thead>tr>td,
         tbody>tr>td,
         tfoot>tr>td {
-            text-align: left;
-            // padding: $table-cell-padding;
+            text-align: left; // padding: $table-cell-padding;
             vertical-align: middle;
             border-top: 0;
             font-size: 12px;
@@ -53,21 +117,18 @@
         border: 0;
     }
 }
- .table {
-     
-    tbody>tr>td{
-        font-size:11px;
-        }
-   
- }
- @media screen and (max-width: $resLG-E){
-      .card-block{ 
-          padding:0.25em;
-          }
-   }
 
+.table {
+    tbody>tr>td {
+        font-size: 11px;
+    }
+}
 
-
+@media screen and (max-width: $resLG-E) {
+    .card-block {
+        padding: 0.25em;
+    }
+}
 
 .table-condensed> {
     thead>tr>th,
