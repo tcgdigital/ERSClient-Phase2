@@ -10,7 +10,7 @@ import { BaseModel, GlobalConstants } from '../../../../shared';
 export class AffectedModel extends BaseModel {
     public AffectedId: number;
     public InvolvedPartyId: number;
-    public Severity: string;
+    public Severity?: string;
 
     public Active: boolean;
 

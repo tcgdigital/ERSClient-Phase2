@@ -67,7 +67,7 @@ export class CustomDropdownComponent implements AfterContentInit, OnChanges, OnI
         const $self = jQuery($event.currentTarget);
         this.value = dataItem;
         this.index = $self.index();
-        this.$placeholder.text(`${this.placeholder}: ${this.value.Key.substring(0, 10)}`);
+        this.$placeholder.text(`${this.placeholder}: ${this.value.Key.substring(0, 20)}`);
         this.onChange.emit(dataItem);
     }
 
@@ -75,7 +75,7 @@ export class CustomDropdownComponent implements AfterContentInit, OnChanges, OnI
         if (this.initialValue > 0 && this.dataItems.length > 0
             && changes['initialValue'].currentValue !== changes['initialValue'].previousValue) {
             const selected: KeyValue = this.dataItems.find((x) => x.Value === this.initialValue);
-            this.$placeholder.text(`${this.placeholder}: ${selected.Key.substring(0, 10)}`);
+            this.$placeholder.text(`${this.placeholder}: ${selected.Key.substring(0, 20)}`);
         }
     }
 
