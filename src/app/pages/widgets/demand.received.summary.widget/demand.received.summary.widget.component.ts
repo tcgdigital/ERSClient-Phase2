@@ -88,7 +88,8 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
             (this.incidentId, (item: DemandReceivedModel[]) => {
                 this.allDemandReceivedList = Observable.of(item);
                 this.childModalViewAllDemandReceivedSummary.show();
-                this.graphDataFormationForDemandReceivedSummeryWidget(item);
+                if (item.length > 0)
+                    this.graphDataFormationForDemandReceivedSummeryWidget(item);
                 // this.hasDemandReceivedList = item.length > 0;
                 // this.setDemandReceivedGraphData();
             });
@@ -265,7 +266,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
         }
         this.incidentService.GetIncidentById(this.incidentId)
             .subscribe((incidentModel: IncidentModel) => {
-                WidgetUtilityService.GetGraphDemand(targetDepartmentId, Highcharts, this.arrGraphData, 'demand-received-graph-container', 'Received',incidentModel.EmergencyDate);
+                WidgetUtilityService.GetGraphDemand(targetDepartmentId, Highcharts, this.arrGraphData, 'demand-received-graph-container', 'Received', incidentModel.EmergencyDate);
                 this.showDemandReceivedGraph = true;
             });
     }

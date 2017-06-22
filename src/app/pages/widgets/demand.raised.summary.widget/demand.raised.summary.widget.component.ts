@@ -122,7 +122,8 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
                 this.allDemandRaisedList = Observable.of(item);
 
                 this.childModalViewAllDemandRaisedSummary.show();
-                this.graphDataFormationForDemandRaisedSummeryWidget(item);
+                if (item.length > 0)
+                    this.graphDataFormationForDemandRaisedSummeryWidget(item);
             });
     }
 
