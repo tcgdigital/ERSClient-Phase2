@@ -159,7 +159,7 @@ export class AffectedObjectsListComponent implements OnInit {
         let affectedObjectUpdate = new AffectedObjectModel();
         affectedObjectUpdate.Remarks = affectedObject.Remarks;
         affectedObjectUpdate.IdentificationDesc = affectedObject.IdentificationDesc;
-        affectedObject.LostFoundStatus = affectedObject.LostFoundStatus;
+        affectedObjectUpdate.LostFoundStatus = affectedObject.LostFoundStatus;
         this.affectedObjectService.UpdateStatus(affectedObjectUpdate, affectedObject.AffectedObjectId)
             .subscribe((response: AffectedObjectModel) => {
                 this.toastrService.success('Adiitional Information updated.')
@@ -198,6 +198,11 @@ export class AffectedObjectsListComponent implements OnInit {
             new SearchTextBox({
                 Name: 'Cargo/POL',
                 Description: 'POL',
+                Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'Cargo/CargoType',
+                Description: 'Cargo Type',
                 Value: ''
             }),
             new SearchDropdown({

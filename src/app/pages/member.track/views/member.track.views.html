@@ -15,8 +15,8 @@
                                         <th>Member's Contact Number</th>
                                         <th>Is Notified </th>
                                         <th>Is Notification Acknowledged </th>
-                                        <th>Work Details</th>
                                         <th>Busy</th>
+                                        <th>Work Details</th>
                                         <th>View History</th>
                                     </tr>
                                 </thead>
@@ -29,15 +29,14 @@
                                         <td data-title="Member's Contact Number">{{memberengagement.MemberContactNumber}} </td>
                                         <td data-title="Is Notified"><i class="fa fa-check fa-2x fontGreen" aria-hidden="true" [hidden]="memberengagement.IsNotyfied == false"></i>&nbsp;</td>
                                         <td data-title="Is Notification Acknowledged"><i class="fa fa-check fa-2x fontGreen" aria-hidden="true" [hidden]="memberengagement.IsAcknowledged == false"></i>&nbsp;</td>
-                                        <td data-title="Remarks"><textarea class="form-control" id="Remarks" placeholder="Remarks" [(ngModel)]="memberengagement.Remarks"
-                                                autofocus [(disabled)]="memberengagement.IsBusy"></textarea>
-                                            <small *ngIf="memberengagement.Remarks.length<=0 && memberengagement.isRemarksSubmitted" class="text-danger">
-                            Required.
-                        </small>
-                                        </td>
                                         <td data-title="Busy"><input type="checkbox" [checked]="memberengagement.IsBusy" [attr.data-userid]="memberengagement.UserId"
                                                 data-toggle="toggle" data-id="{{i}}" data-style="ios" data-onstyle="success"
                                                 data-offstyle="info"></td>
+                                        <td data-title="Remarks"><textarea class="form-control" id="Remarks" placeholder="Remarks" [(ngModel)]="memberengagement.Remarks"
+                                                autofocus [(disabled)]="memberengagement.IsBusy"></textarea>
+                                            <small *ngIf="memberengagement.Remarks.length<=0 && memberengagement.isRemarksSubmitted" class="text-danger">Required.
+                                            </small>
+                                        </td>
                                         <td data-title="View History"><i class="fa fa-edit fa-2x" (click)="open(memberengagement.UserId)"></i>
                                         </td>
                                     </tr>
