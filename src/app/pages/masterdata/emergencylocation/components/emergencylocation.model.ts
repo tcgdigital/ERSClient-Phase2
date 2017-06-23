@@ -7,6 +7,7 @@ export class EmergencyLocationModel extends BaseModel {
     public City: string;
     public IATA: string;
     public AirportName: string;
+    public Country: string;
     public Active?: boolean;
 
     constructor() {
@@ -15,6 +16,7 @@ export class EmergencyLocationModel extends BaseModel {
         this.City = '';
         this.IATA = '';
         this.AirportName = '';
+        this.Country='';
         this.Active = false;
     }
 }
