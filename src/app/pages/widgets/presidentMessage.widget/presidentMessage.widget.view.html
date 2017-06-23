@@ -26,13 +26,21 @@
             <thead>
                 <tr>
                     <th>President's Messages</th>
-                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Published On</th>
+                    <th>Download Report</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let presidentMessage of AllPresidentMessages | async">
-                    <td data-title="President's Messages" width="60%">{{presidentMessage.Message}}</td>
-                    <td data-title="Date">{{presidentMessage.PublishedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
+                    <td data-title="President's Message Releases" width="30%">{{presidentMessage.PresidentMessageType}}</td>
+                    <td data-title="Status">{{presidentMessage.PresidentMessageStatus}}</td>
+                    <td data-title="Published On">{{presidentMessage.PublishedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
+                    <td data-title="Download Report">
+                        <a *ngIf = "presidentMessage.IsPublished" target = "_blank" href="{{downloadPath + presidentMessage.PresidentsMessageId}}">
+                            <i class="fa fa-download fa-2x" aria-hidden="true"></i>
+                        </a>                                                  
+                    </td>
                 </tr>
             </tbody>
           </table>

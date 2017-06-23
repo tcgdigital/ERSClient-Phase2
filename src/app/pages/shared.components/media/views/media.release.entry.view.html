@@ -5,7 +5,7 @@
                 <input type="hidden" *ngIf="media.MediaqueryId != undefined" [(ngModel)]="media.MediaqueryId" formControlName="MediaqueryId">
                 <div class="AllSearchHolder">
                     <div class="row">
-                        <div class="col-sm-6 col-lg-4 col-md-6">
+                        <div class="col-sm-12 col-lg-4 col-md-6">
                             <div class="form-group">
                                 <label for="Media Release Type">Select Media Release Type:<span class="required">*</span></label>
                                 <select id="selectMediaRelease" formControlName="MediaReleaseType" name="MediaReleaseType" [ngModel]="currentTemplateMediaId"
@@ -24,7 +24,7 @@
                     <div class="row"></div>
                     <br/>
                     <div class="row">
-                        <div class="col-sm-6 col-lg-6 col-md-6">
+                        <div class="col-sm-12 col-lg-6 col-md-6">
                             <div class="form-group">
                                 <label for="Message">Media Release Message:<span class="required">*</span></label>
                                 <!--<div [hidden] = "isApprovedContent">
@@ -48,7 +48,7 @@
                                 <span [hidden]="hideMessageError">Please Input Message</span>-->
                             </div>
                         </div>
-                        <div class="col-sm-6 col-lg-6 col-md-6">
+                        <div class="col-sm-12 col-lg-6 col-md-6">
                             <div class="form-group">
                                 <label for="Remarks">Remarks:</label>
                                 <textarea class="form-control" id="Remarks" formControlName="Remarks" [readOnly]="applyReadOnlytextBox" placeholder="Enter Remarks"
