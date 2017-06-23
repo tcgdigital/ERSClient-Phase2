@@ -91,7 +91,7 @@ export class InvolvePartyService
     GetQuery(query: string, incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq  ${incidentId}`)
-            .Expand(`Affecteds($expand=AffectedPeople($expand=Passenger,Crew;$filter=${query}))`)
+            .Expand(`Affecteds($expand=AffectedPeople($expand=Passenger($expand=CoPassengerMappings),Crew($expand=FileStores);$filter=${query}))`)
             //.Filter(query)
             .Execute();
     }

@@ -6,14 +6,15 @@
             <tr>
                 <th>Reference Number</th>
                 <th>Air Way Bill</th>
+                <th>Cargo Type</th>
                 <th>Manifest Pieces</th>
                 <th>Manifest weight(kg)</th>
                 <th>POU</th>
                 <th>POL</th>
+                <th>Cargo Status</th>
                 <th>Verification Status</th>
                 <th>Interaction Details</th>
                 <th>Update Status</th>
-
             </tr>
         </thead>
         <tbody>
@@ -23,10 +24,12 @@
             <tr *ngFor="let affectedObject of affectedObjects">
                 <td data-title="Reference Number">{{affectedObject.TicketNumber}}&nbsp;</td>
                 <td data-title="Air Way Bill">{{affectedObject.AWB}}&nbsp;</td>
+                <td data-title="Cargo Type">{{cargo.CargoType}}&nbsp;</td>
                 <td data-title="Manifest Pieces">{{affectedObject.mftpcs}}&nbsp;</td>
                 <td data-title="Manifest weight">{{affectedObject.mftwgt}}&nbsp;</td>
                 <td data-title="POU">{{affectedObject.POU}}&nbsp;</td>
                 <td data-title="POL">{{affectedObject.POL}}&nbsp;</td>
+                <td data-title="Cargo Status">{{}}&nbsp;</td>
                 <td data-title="Verification Status">
                     <i class="fa fa-check fa-lg fontGreen" aria-hidden="true" [hidden]="affectedObject.IsVerified == false"></i>
                     <i class="fa fa-question fa-lg fontAmber" aria-hidden="true" [hidden]="affectedObject.IsVerified == true"></i>

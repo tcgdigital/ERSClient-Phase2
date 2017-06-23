@@ -191,16 +191,6 @@ export class AffectedObjectsListComponent implements OnInit {
                 Value: '',
             }),
             new SearchTextBox({
-                Name: 'Cargo/mftpcs',
-                Description: 'Manifest Pieces',
-                Value: ''
-            }),
-            new SearchTextBox({
-                Name: 'Cargo/mftwgt',
-                Description: 'Manifest weight',
-                Value: ''
-            }),
-            new SearchTextBox({
                 Name: 'Cargo/POU',
                 Description: 'POU',
                 Value: ''

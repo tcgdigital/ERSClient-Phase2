@@ -349,15 +349,18 @@ export class AffectedPeopleListComponent implements OnInit {
                 if (query.indexOf("'false'") >= 0)
                     query = query.replace("'false'", "false");
             }
-            if (query.toLowerCase().indexOf("contains(tolower(Passenger/PassengerType), 'crew')".toLowerCase())>=0) {
-                debugger;
+            if (query.toLowerCase().indexOf("contains(tolower(Passenger/PassengerType), 'crew')".toLowerCase()) >= 0) {
                 let index = query.indexOf("contains(tolower(Passenger/PassengerType), ");
                 let length = "contains(tolower(Passenger/PassengerType), ".length;
-                query = query.replace(query.substring(index,length+7),'IsCrew eq true');
+                query = query.replace(query.substring(index, length + 7), 'IsCrew eq true');
             }
+            this.selectCurrentIncident();
+            this.searchAffectedPeople(query, this.currentIncident);
         }
-        this.selectCurrentIncident();
-        this.searchAffectedPeople(query, this.currentIncident);
+        else{
+            this.getAffectedPeople(this.currentIncident);
+        }
+
     }
 
     invokeReset(): void {
