@@ -36,18 +36,6 @@
     font-size: 10px;
 }
 .cmsicon-2x{
-<<<<<<< HEAD
-    font-size: 11px;
-}
-.cmsicon-3x{
-    font-size: 12px;
-}
-.cmsicon-4x{
-    font-size: 13px;
-}
-.cmsicon-5x{
-    font-size: 14px;
-=======
     font-size: 12px;
 }
 .cmsicon-3x{
@@ -73,7 +61,6 @@
 }
 .cmsicon-10x{
     font-size: 72px;
->>>>>>> master
 }
 .cmsicon-plane:before {
     content: "\e000";
