@@ -158,6 +158,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
+                debugger;
                 const passengerModels = this.affectedPeople.filter(x => x.IsCrew === false);
                 const crewModels = this.affectedPeople.filter(x => x.IsCrew == true);
                 for (const affectedPerson of passengerModels) {
@@ -519,8 +520,14 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                     }
                 });
         }
-        else if (groupids.length == 2 && groupids.some(x => x == 0)) {
-            let copassengerstoaddingroup = copassangerModels.filter(x => x.GroupId == 0);
+        else if ((groupids.length == 2 && groupids.some(x => x == 0)) || (groupids.length == 1 && copssanger.GroupId != 0)) {
+            let copassengerstoaddingroup: CoPassengerMappingModel[] = [];
+            if (groupids.some(x => x == 0)) {
+                copassengerstoaddingroup = copassangerModels.filter(x => x.GroupId == 0);
+            }
+            else {
+                copassengerstoaddingroup = copassangerModels;
+            }
             copassengerstoaddingroup.forEach(x => x.GroupId = copssanger.GroupId)
             return this.passangerService.updatecopassangerstogroup(copassengerstoaddingroup)
                 .flatMap(_ => {
@@ -532,11 +539,12 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                     }
                 });
         }
-        else if (groupids.length > 2) {
+        else if (groupids.length >= 2 && !groupids.some(x => x == 0)) {
             let copassangerstoupdate = copassangerModels.filter(x => x.GroupId != copssanger.GroupId);
             copassangerstoupdate.forEach(x => x.GroupId = copssanger.GroupId);
             let copassangergroup: CoPassangerModelsGroupIdsModel = new CoPassangerModelsGroupIdsModel();
             copassangergroup.copassangers = copassangerstoupdate;
+            groupids = _.without(groupids, copssanger.GroupId);
             copassangergroup.groupIds = groupids;
             return this.passangerService.deleteoldgroupsandupdatecopassanger(copassangergroup)
                 .flatMap(_ => {
@@ -547,6 +555,9 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                         return Observable.of(new Array<CoPassengerMappingModel>());
                     }
                 });
+        }
+        else{
+            return Observable.of(new Array<CoPassengerMappingModel>());
         }
     }
 
@@ -723,6 +734,9 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         }
         else {
             this.enquiryToUpdate.Queries = this.enquiry.Queries;
+            if (this.enquiry.AffectedPersonId == null) {
+                this.enquiry.AffectedPersonId = this.initialvalue.Value;
+            }
             if (this.enquiryType == 2 || this.enquiryType == 3) {
                 let communicationlogToDeactivate = new CommunicationLogModel();
                 communicationlogToDeactivate.deleteAttributes();
@@ -774,10 +788,16 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                         else if (this.consolidatedCopassengers.length == 0 && this.initialgroupId != 0) {
                             return this.passangerService.deleteoldgroups(this.initialgroupId);
                         }
+                        else {
+                            return Observable.of(new Array<CoPassengerMappingModel>());
+                        }
                     })
                     .flatMap(_ => {
-                        if (this.pdaenquery.AffectedPersonId != this.enquiry.AffectedPersonId) {
+                        if (this.pdaenquery.AffectedPersonId != null && this.pdaenquery.AffectedPersonId != this.enquiry.AffectedPersonId) {
                             return this.callcenteronlypageservice.updatepdaenquiry(pdaenquirytoupdate, this.pdaenquiryid);
+                        }
+                        else {
+                            return Observable.of(new PDAEnquiryModel());
                         }
                     })
                     .subscribe(() => {

@@ -60,7 +60,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
 
             if (affected != null) {
                 affectedPeople = UtilityService.pluck(affected, ['AffectedPeople'])[0];
-
+                debugger;
                 affectedPeopleForView = affectedPeople.map(function (dataItem) {
                     let item = new AffectedPeopleToView();
                     item.AffectedId = dataItem.AffectedId;
@@ -102,6 +102,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
                     if (dataItem.Passenger) {
                         item.PassengerId = dataItem.PassengerId;
                         if (dataItem.Passenger.CoPassengerMappings.length > 0) {
+                            debugger;
                             item.GroupId = dataItem.Passenger.CoPassengerMappings[0].GroupId;
                         }
                         else{
