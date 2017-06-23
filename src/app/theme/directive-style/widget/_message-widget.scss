@@ -76,7 +76,7 @@
 
 @media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
     .messaging-widget{
-        max-width: 32.8%;
+        max-width: 32.8%;     margin-left: 2px;
     }
     .messaging-widget-container {
         height: 245px !important;
