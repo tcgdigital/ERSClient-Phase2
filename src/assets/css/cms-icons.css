@@ -36,6 +36,7 @@
     font-size: 10px;
 }
 .cmsicon-2x{
+<<<<<<< HEAD
     font-size: 11px;
 }
 .cmsicon-3x{
@@ -46,6 +47,33 @@
 }
 .cmsicon-5x{
     font-size: 14px;
+=======
+    font-size: 12px;
+}
+.cmsicon-3x{
+    font-size: 14px;
+}
+.cmsicon-4x{
+    font-size: 16px;
+}
+.cmsicon-5x{
+    font-size: 18px;
+}
+.cmsicon-6x{
+    font-size: 20px;
+}
+.cmsicon-7x{
+    font-size: 24px;
+}
+.cmsicon-8x{
+    font-size: 36px;
+}
+.cmsicon-9x{
+    font-size: 48px;
+}
+.cmsicon-10x{
+    font-size: 72px;
+>>>>>>> master
 }
 .cmsicon-plane:before {
     content: "\e000";
