@@ -66,6 +66,9 @@ incident-header-widget a{ font-size: 12px;}
 .widget-layout-fix {
     padding-right: 0 !important;
     padding-top: 15px !important;
+    @media screen and (max-width: $resLG-E) {
+    padding-right: 15px !important;
+    }
 }
 
 
