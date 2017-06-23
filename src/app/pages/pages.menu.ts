@@ -55,7 +55,7 @@ export const PAGES_MENU: IMenuItem[] = [
                 path: 'emergencyclosure',
                 data: {
                     menu: {
-                        title: 'Close Emergency',
+                        title: 'Close Crisis',
                         icon: 'fa fa-bell-slash fa-lg',
                         selected: false,
                         expanded: false,

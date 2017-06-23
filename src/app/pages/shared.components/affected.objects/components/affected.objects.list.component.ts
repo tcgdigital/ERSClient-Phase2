@@ -146,9 +146,9 @@ export class AffectedObjectsListComponent implements OnInit {
                     query = query.replace("'true'", "true");
                 if (query.indexOf("'false'") >= 0)
                     query = query.replace("'false'", "false");
-                this.searchAffectedObject(query, this.currentIncident);
             }
         }
+        this.searchAffectedObject(query, this.currentIncident);
     }
 
     invokeReset(): void {

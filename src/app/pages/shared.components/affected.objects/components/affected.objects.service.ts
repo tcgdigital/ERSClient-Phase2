@@ -10,6 +10,7 @@ import {
     DataServiceFactory, DataProcessingService,
     ServiceBase, UtilityService
 } from '../../../../shared';
+import * as _ from 'underscore';
 
 @Injectable()
 export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> implements IAffectedObjectsService {
@@ -17,6 +18,7 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
     private _bulkDataService: DataService<AffectedObjectModel>;
     private _dataServiceForCargo: DataService<AffectedObjectModel>;
     private _enquiryService: DataService<EnquiryModel>;
+    private _affectedObjectService: DataService<AffectedObjectModel>;
 
     constructor(private dataServiceFactory: DataServiceFactory) {
         super(dataServiceFactory, 'InvolvedParties');
@@ -27,6 +29,8 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
         this._dataServiceForCargo = this.dataServiceFactory.CreateServiceWithOptions<AffectedObjectModel>('AffectedObjects', option);
         this._enquiryService = dataServiceFactory
             .CreateServiceWithOptions<EnquiryModel>('Enquiries', option);
+        this._affectedObjectService = dataServiceFactory
+            .CreateServiceWithOptions<AffectedObjectModel>('AffectedObjects', option);
 
     }
 
@@ -34,7 +38,14 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
         return this._dataService.Query()
             .Expand('Affecteds($expand=AffectedObjects($expand=Cargo))').Execute();
     }
-
+    GetCargoFromAffectedObject():Observable<any>{
+        return this._affectedObjectService.Query()
+        .Expand('Cargo')
+        .Execute()
+        .map((item:ResponseModel<AffectedObjectModel>)=>{
+            return (_.pluck(item.Records,'Cargo'));
+        });
+    }
     GetFilterByIncidentId(incidentId): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq ${incidentId}`)
