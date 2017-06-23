@@ -71,7 +71,7 @@
 .table {
     width: 100%;
     max-width: 100%;
-    margin-bottom: 2rem;
+    // margin-bottom: 2rem;
     background-color: $table-bg;
     > {
         thead>tr,
@@ -193,7 +193,7 @@
                         display: block;
                         border: 1px solid $table-border-color;
                         border-radius: 2px;
-                        margin-bottom: 1.6rem;
+                        // margin-bottom: 1.6rem;
                         >td {
                             background-color: $table-bg;
                             display: block;
