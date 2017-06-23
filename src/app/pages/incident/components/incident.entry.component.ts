@@ -111,6 +111,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     public ScheduleDepartureLocal: Date;
     public ScheduleArrivalLocal: Date;
     public lastCount: string = GlobalConstants.LAST_INCIDENT_PICK_COUNT;
+    public EmergencyCountry: string = '';
     /**
      * Creates an instance of IncidentEntryComponent.
      * @param {FormBuilder} formBuilder
@@ -184,6 +185,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                     const emergencyLocationModel: EmergencyLocationModel = new EmergencyLocationModel();
                     emergencyLocationModel.IATA = item.IATA;
                     emergencyLocationModel.AirportName = item.AirportName;
+                    emergencyLocationModel.Country = item.Country;
                     this.affectedStations.push(emergencyLocationModel);
                 });
             });
@@ -292,12 +294,22 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
 
 
     affectedStationChange(IATAVal: string, affectedStations: EmergencyLocationModel[]): void {
+        this.EmergencyCountry = '';
         if (IATAVal === 'Offsite') {
             this.isOffsite = true;
+            this.EmergencyCountry = '';
+            this.form.controls["AffectedCountry"].reset({ value: '', disabled: false });
         }
         else {
             this.isOffsite = false;
+            let list: EmergencyLocationModel[] = affectedStations.filter((item: EmergencyLocationModel) => { return item.IATA == IATAVal; });
+            if (list.length > 0) {
+                this.EmergencyCountry = list[0].Country;
+                this.form.controls["AffectedCountry"].reset({ value: this.EmergencyCountry, disabled: false });
+            }
+
         }
+
     }
 
     organizationChange(organizationId: string, activeOrganizations: OrganizationModel[]): void {
@@ -402,6 +414,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             IsDrill: new FormControl(false),
             EmergencyTypeId: new FormControl('', [Validators.required]),
             AffectedStationId: new FormControl('', [Validators.required]),
+            AffectedCountry: new FormControl('', [Validators.required]),
             OffsiteDetails: new FormControl(''),
             EmergencyName: new FormControl('', [Validators.required, Validators.maxLength(100)]),
             //AlertMessage: new FormControl('', [Validators.required]),
@@ -539,7 +552,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             IsDrill: new FormControl(false),
             EmergencyTypeIdPopup: new FormControl('0'),
             AffectedStationIdPopup: new FormControl(''),
-            //OffsiteDetailsPopup: new FormControl(''),
+            AffectedCountryPopup: new FormControl(''),
             EmergencyNamePopup: new FormControl(''),
             //AlertMessagePopup: new FormControl(''),
             WhatHappenedPopup: new FormControl(''),
@@ -589,6 +602,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
             EmergencyTypeIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyTypeId),
             AffectedStationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyLocation),
+            AffectedCountryPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyCountry),
             OffsiteDetailsPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OffSetLocation),
             EmergencyNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyName),
             //AlertMessagePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.AlertMessage),
@@ -624,6 +638,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                 IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
                 EmergencyTypeIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyTypeId),
                 AffectedStationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyLocation),
+                AffectedCountryPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyCountry),
                 OffsiteDetailsPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OffSetLocation),
                 EmergencyNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyName),
                 //AlertMessagePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.AlertMessage),
@@ -746,11 +761,13 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.incidentModel.Severity = this.form.controls['Severity'].value == '' ? null : this.form.controls['Severity'].value;
         if (this.form.controls['AffectedStationId'].value !== 'Offsite') {
             this.incidentModel.EmergencyLocation = this.form.controls['AffectedStationId'].value;
+
         }
         else {
             this.incidentModel.EmergencyLocation = this.form.controls['AffectedStationId'].value;
             this.incidentModel.OffSetLocation = this.form.controls['OffsiteDetails'].value;
         }
+        this.incidentModel.EmergencyCountry = this.form.controls['AffectedCountry'].value;
 
         //this.incidentModel.AirportInCharge = this.form.controls['AirportInCharge'].value;
         this.incidentModel.OrganizationId = +this.form.controls['OrganizationId'].value;

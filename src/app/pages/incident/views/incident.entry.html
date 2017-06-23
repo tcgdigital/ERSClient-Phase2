@@ -52,6 +52,14 @@
                             <small *ngIf="form.controls.AffectedStationId.hasError('required')" [hidden]="form.controls.AffectedStationId.valid || (form.controls.AffectedStationId.pristine && !submitted)"
                                 class="text-danger">Required</small>
                         </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <label for="AffectedCountry">Responsible Country<span class="required">*</span></label>
+                            <input id="AffectedCountry" class="form-control" type="text" name="AffectedCountry" formControlName="AffectedCountry" placeholder="Enter Country"
+                            />
+                            <small *ngIf="form.controls.AffectedCountry.hasError('required')" [hidden]="form.controls.AffectedCountry.valid || (form.controls.AffectedCountry.pristine && !submitted)"
+                                class="text-danger">Required</small>
+                        
+                        </div>
                         <div *ngIf="isOffsite" class="form-group col-lg-2 col-sm-12 col-md-6">
                             <label for="OffsiteDetails">Offsite Details<span class="required">*</span></label>
                             <input id="OffsiteDetails" class="form-control" type="text" name="OffsiteDetails" formControlName="OffsiteDetails" placeholder="Enter Offsite Details"
@@ -227,7 +235,7 @@
                             Maximum length 50 is allowed</small>
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="Scheduleddeparture(UTC)">Scheduled departure (UTC)<span class="required">*</span></label>
+                                <label for="Scheduleddeparture(UTC)">Scheduled Departure (UTC)<span class="required">*</span></label>
                                 <input id="Scheduleddeparture" #departuredatepicker="datetimepicker" readonly class="form-control" [ngClass]="flightClass"
                                     type="text" name="Scheduleddeparture" formControlName="Scheduleddeparture" placeholder="Scheduled Departure"
                                     datetime-picker [options]="datepickerOptionDeparture" (selectHandler)="dateTimeSet($event,'Scheduleddeparture');"
@@ -244,7 +252,7 @@
                                     formControlName="ScheduleddepartureLOC" placeholder="Scheduled Departure" />
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="Scheduledarrival(UTC)">Scheduled arrival (UTC)<span class="required">*</span></label>
+                                <label for="Scheduledarrival(UTC)">Scheduled Arrival (UTC)<span class="required">*</span></label>
                                 <input #arrivaldatepicker="datetimepicker" id="Scheduledarrival" readonly class="form-control" [ngClass]="flightClass" type="text"
                                     name="Scheduledarrival" formControlName="Scheduledarrival" placeholder="Scheduled Arrival"
                                     datetime-picker [options]="datepickerOptionArrival" (selectHandler)="dateTimeSet($event,'Scheduledarrival');"
@@ -360,6 +368,11 @@
                             <input id="AffectedStationIdPopup" disabled formControlName="AffectedStationIdPopup" class="form-control" type="text" name="AffectedStationIdPopup"
                                 placeholder="Enter Affected Station" />
 
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <label for="AffectedCountryPopup">Responsible Country<span class="required">*</span></label>
+                            <input id="AffectedCountryPopup" disabled class="form-control" type="text" name="AffectedCountryPopup" formControlName="AffectedCountryPopup" placeholder="Enter Country"
+                            />
                         </div>
                         <div *ngIf="isOffSitePopup" class="form-group col-lg-2 col-sm-12 col-md-6">
                             <label for="OffsiteDetails">Offsite Details</label>
