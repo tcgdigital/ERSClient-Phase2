@@ -3,6 +3,7 @@ import { BaseModel, KeyValue } from '../../../shared';
 import { CallerModel } from "../../shared.components/caller";
 import { IncidentModel } from "../../incident/components";
 import { EnquiryModel } from "../../shared.components/call.centre";
+import { AffectedPeopleModel } from "../../shared.components/affected.people/components";
 
 
 export class ExternalInputModel extends BaseModel {
@@ -21,6 +22,7 @@ export class ExternalInputModel extends BaseModel {
     public MediaAndOtherQuery?: MediaAndOtherQueryModel;
     public PDAEnquiry?: PDAEnquiryModel;
     public Incident?: IncidentModel;
+    
 
     public Enquiries ? : EnquiryModel[];
 }
@@ -44,8 +46,11 @@ export class PDAEnquiryModel extends BaseModel {
     public KINRelationShip: string;
     public Query: string;
     public IncidentId: number;
+    public FinalDestination: string;
+    public AffectedPersonId: number;
 
     public Incident?: IncidentModel;
+    public AffectedPerson?: AffectedPeopleModel;
 
     public ExternalInputs: ExternalInputModel[];
     constructor() {

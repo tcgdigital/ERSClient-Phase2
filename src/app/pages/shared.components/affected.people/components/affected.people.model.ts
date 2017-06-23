@@ -8,6 +8,7 @@ import {
 	CommunicationLogModel,
 	DemandModel
 } from '../../../shared.components';
+ import { PDAEnquiryModel } from "../../../callcenteronlypage";
 
 export class AffectedPeopleModel extends BaseModel {
 	public AffectedPersonId: number;
@@ -33,6 +34,7 @@ export class AffectedPeopleModel extends BaseModel {
 
 	public NextOfKins?: NextOfKinModel[];
 	public Enquiries?: EnquiryModel[];
+	public PDAEnquiries?: PDAEnquiryModel[];
 	public CommunicationLogs?: CommunicationLogModel[];
 	public Demands?: DemandModel[];
 

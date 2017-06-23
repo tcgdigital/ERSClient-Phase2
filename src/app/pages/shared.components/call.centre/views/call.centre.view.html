@@ -85,13 +85,13 @@
                         </div>
                     </div>
                     <div class="form-group col-lg-4 col-sm-12 col-md-6">
-                        <div class="multiselect-container" [hidden]="copassengerlistPassenger.length<=0">
+                        <div class="multiselect-container" [hidden]="copassengerlistPassengerForMappedPerson.length<=0">
                             <div class="multiselect-selector" (click)="showListPassengers(); $event.stopPropagation();">
                                 <i class="fa fa-caret-down fa-pull-right fa-fw" aria-hidden="true"></i> {{selectedcountpassenger>0?
                                 selectedcountpassenger + ' Passengers(s) selected' : 'Select Co-passenger'}}
                             </div>
                             <ul class="multiselect-list1 dropdown-menu-down" [hidden]="!list2Selected" (click)="$event.stopPropagation();">
-                                <li *ngFor="let copassenger of copassengerlistPassenger">
+                                <li *ngFor="let copassenger of copassengerlistPassengerForMappedPerson">
                                     <input type="checkbox" aria-label="Callback" [checked]="copassenger.IsSelected" (change)="selectCopassengerfrompassenger($event,copassenger)"
                                     />
                                     <span>{{copassenger.PassengerName}}</span>
