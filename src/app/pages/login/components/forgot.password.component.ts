@@ -73,7 +73,7 @@ export class ForgotPasswordComponent implements OnInit, AfterViewInit {
                     if (response) {
                         if (response.Code === 4001) {
                             this.forgotPasswordForm.reset();
-                            this.toastrService.success('Psaaword has been reset successfully. Redirecting to login for sign in again.', 'Reset Password', this.toastrConfig);
+                            this.toastrService.success('Password has been reset successfully. Redirecting to login for sign in again.', 'Reset Password', this.toastrConfig);
                             this.router.navigate(['login']);
                         } else if (response.Code === 0) {
                             this.errorMessage = 'User does not exists or invalid user';

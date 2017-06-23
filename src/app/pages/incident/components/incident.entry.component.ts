@@ -111,6 +111,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     public ScheduleDepartureLocal: Date;
     public ScheduleArrivalLocal: Date;
     public lastCount: string = GlobalConstants.LAST_INCIDENT_PICK_COUNT;
+    public EmergencyCountry: string = '';
     /**
      * Creates an instance of IncidentEntryComponent.
      * @param {FormBuilder} formBuilder
@@ -184,6 +185,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                     const emergencyLocationModel: EmergencyLocationModel = new EmergencyLocationModel();
                     emergencyLocationModel.IATA = item.IATA;
                     emergencyLocationModel.AirportName = item.AirportName;
+                    emergencyLocationModel.Country = item.Country;
                     this.affectedStations.push(emergencyLocationModel);
                 });
             });
@@ -292,12 +294,22 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
 
 
     affectedStationChange(IATAVal: string, affectedStations: EmergencyLocationModel[]): void {
+        this.EmergencyCountry = '';
         if (IATAVal === 'Offsite') {
             this.isOffsite = true;
+            this.EmergencyCountry = '';
+            this.form.controls["AffectedCountry"].reset({ value: '', disabled: false });
         }
         else {
             this.isOffsite = false;
+            let list: EmergencyLocationModel[] = affectedStations.filter((item: EmergencyLocationModel) => { return item.IATA == IATAVal; });
+            if (list.length > 0) {
+                this.EmergencyCountry = list[0].Country;
+                this.form.controls["AffectedCountry"].reset({ value: this.EmergencyCountry, disabled: false });
+            }
+
         }
+
     }
 
     organizationChange(organizationId: string, activeOrganizations: OrganizationModel[]): void {
@@ -342,15 +354,14 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     public ResetFlightFields(): void {
-        //this.IsReadonlyFlight=false;
         this.flightClass = { 'is-disabled': false };
         this.formFlight = new FormGroup({
-            FlightNumber: new FormControl('', [Validators.required]),
-            Origin: new FormControl('', [Validators.required]),
-            Destination: new FormControl('', [Validators.required]),
+            FlightNumber: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+            Origin: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+            Destination: new FormControl('', [Validators.required, Validators.maxLength(50)]),
             Scheduleddeparture: new FormControl('', [Validators.required]),
             Scheduledarrival: new FormControl('', [Validators.required]),
-            FlightTailNumber: new FormControl(''),
+            FlightTailNumber: new FormControl('', [Validators.required, Validators.maxLength(50)]),
             AircraftTypeId: new FormControl('', [Validators.required]),
             ScheduleddepartureLOC: new FormControl(''),
             ScheduledarrivalLOC: new FormControl('')
@@ -403,8 +414,9 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             IsDrill: new FormControl(false),
             EmergencyTypeId: new FormControl('', [Validators.required]),
             AffectedStationId: new FormControl('', [Validators.required]),
+            AffectedCountry: new FormControl('', [Validators.required]),
             OffsiteDetails: new FormControl(''),
-            EmergencyName: new FormControl('', [Validators.required]),
+            EmergencyName: new FormControl('', [Validators.required, Validators.maxLength(100)]),
             //AlertMessage: new FormControl('', [Validators.required]),
             WhatHappened: new FormControl('', [Validators.required]),
             WhereHappened: new FormControl(''),
@@ -418,11 +430,11 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             OrganizationId: new FormControl('', [Validators.required]),
 
 
-            SourceInformation: new FormControl(''),
-            ReportedByName: new FormControl(''),
+            SourceInformation: new FormControl('', [Validators.maxLength(100)]),
+            ReportedByName: new FormControl('', [Validators.maxLength(100)]),
             ReportedByAddress: new FormControl(''),
-            ContactOfWitness: new FormControl(''),
-            SenderOfCrisisInformation: new FormControl(''),
+            ContactOfWitness: new FormControl('', [Validators.maxLength(50)]),
+            SenderOfCrisisInformation: new FormControl('', [Validators.maxLength(100)]),
             BorrowedIncident: new FormControl(0),
             EmergencyDateLocal: new FormControl(''),
             //AirportInCharge: new FormControl('', [Validators.required]),
@@ -434,12 +446,12 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
 
     resetFlightForm(): void {
         this.formFlight = new FormGroup({
-            FlightNumber: new FormControl('', [Validators.required]),
-            Origin: new FormControl('', [Validators.required]),
-            Destination: new FormControl('', [Validators.required]),
+            FlightNumber: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+            Origin: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+            Destination: new FormControl('', [Validators.required, Validators.maxLength(50)]),
             Scheduleddeparture: new FormControl('', [Validators.required]),
             Scheduledarrival: new FormControl('', [Validators.required]),
-            FlightTailNumber: new FormControl('', [Validators.required]),
+            FlightTailNumber: new FormControl('', [Validators.required, Validators.maxLength(50)]),
             AircraftTypeId: new FormControl('', [Validators.required]),
             ScheduleddepartureLOC: new FormControl(''),
             ScheduledarrivalLOC: new FormControl('')
@@ -494,6 +506,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.createAffectedModel();
     }
 
+
+
     onPOPUPSubmit(values: object): void {
         console.log('Incident Created.');
         console.log(this.incidentDataExchangeModel);
@@ -507,6 +521,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             this.incidentDataExchangeModel.AffectedModel)
             .subscribe((response: IncidentModel) => {
                 console.log(response);
+                UtilityService.SetToSession({ CurrentIncidentId: response.IncidentId });
                 console.log("Success");
                 this.globalStateProxy.NotifyDataChanged('incidentCreate', response.IncidentId);
                 console.log('Success');
@@ -537,7 +552,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             IsDrill: new FormControl(false),
             EmergencyTypeIdPopup: new FormControl('0'),
             AffectedStationIdPopup: new FormControl(''),
-            //OffsiteDetailsPopup: new FormControl(''),
+            AffectedCountryPopup: new FormControl(''),
             EmergencyNamePopup: new FormControl(''),
             //AlertMessagePopup: new FormControl(''),
             WhatHappenedPopup: new FormControl(''),
@@ -587,6 +602,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
             EmergencyTypeIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyTypeId),
             AffectedStationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyLocation),
+            AffectedCountryPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyCountry),
             OffsiteDetailsPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OffSetLocation),
             EmergencyNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyName),
             //AlertMessagePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.AlertMessage),
@@ -613,7 +629,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             SenderOfCrisisInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.SenderOfCrisisInformation),
 
 
-            BorrowedIncidentPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.BorrowedIncident==0?'':this.incidentDataExchangeModel.IncidentModel.BorrowedIncident)
+            BorrowedIncidentPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.BorrowedIncident == 0 ? '' : this.incidentDataExchangeModel.IncidentModel.BorrowedIncident)
         });
         this.IsDrillPopup = this.incidentDataExchangeModel.IncidentModel.IsDrill;
         this.isFlightRelatedPopup = false;
@@ -622,6 +638,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                 IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
                 EmergencyTypeIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyTypeId),
                 AffectedStationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyLocation),
+                AffectedCountryPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyCountry),
                 OffsiteDetailsPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OffSetLocation),
                 EmergencyNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyName),
                 //AlertMessagePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.AlertMessage),
@@ -701,7 +718,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.affectedModel = new AffectedModel();
         this.affectedModel.AffectedId = 0;
         this.affectedModel.InvolvedPartyId = 0;
-        this.affectedModel.Severity = this.form.controls['Severity'].value;
+        this.affectedModel.Severity = this.form.controls['Severity'].value == '' ? null : this.form.controls['Severity'].value;;
         this.affectedModel.ActiveFlag = 'Active';
         this.flightModel.CreatedBy = 1;
         this.flightModel.CreatedOn = this.date;
@@ -741,14 +758,16 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
 
         this.incidentModel.Description = this.form.controls['Description'].value;
         this.incidentModel.EmergencyDate = new Date(this.form.controls['EmergencyDate'].value);
-        this.incidentModel.Severity = this.form.controls['Severity'].value;
+        this.incidentModel.Severity = this.form.controls['Severity'].value == '' ? null : this.form.controls['Severity'].value;
         if (this.form.controls['AffectedStationId'].value !== 'Offsite') {
             this.incidentModel.EmergencyLocation = this.form.controls['AffectedStationId'].value;
+
         }
         else {
             this.incidentModel.EmergencyLocation = this.form.controls['AffectedStationId'].value;
             this.incidentModel.OffSetLocation = this.form.controls['OffsiteDetails'].value;
         }
+        this.incidentModel.EmergencyCountry = this.form.controls['AffectedCountry'].value;
 
         //this.incidentModel.AirportInCharge = this.form.controls['AirportInCharge'].value;
         this.incidentModel.OrganizationId = +this.form.controls['OrganizationId'].value;
@@ -759,7 +778,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.incidentModel.ReportedByAddress = this.form.controls['ReportedByAddress'].value;
         this.incidentModel.ContactOfWitness = this.form.controls['ContactOfWitness'].value;
         this.incidentModel.SenderOfCrisisInformation = this.form.controls['SenderOfCrisisInformation'].value;
-        if (this.isBorrowedIncidentPopup) {
+        if (+this.form.controls['BorrowedIncident'].value != 0) {
             this.incidentModel.BorrowedIncident = +this.form.controls['BorrowedIncident'].value;
         }
         else {

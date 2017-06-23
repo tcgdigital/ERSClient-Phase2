@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { ExternalInputModel } from './callcenteronlypage.model';
+import { ExternalInputModel,PDAEnquiryModel } from './callcenteronlypage.model';
 import { ICallCenterService } from './ICallCenterService';
 import {
     ResponseModel, DataService,
@@ -14,10 +14,14 @@ import { AffectedModel } from '../../shared.components/affected/components/affec
 
 @Injectable()
 export class CallCenterOnlyPageService extends ServiceBase<ExternalInputModel> implements ICallCenterService {
-   
+    private _dataServiceForPDAEnquiry: DataService<PDAEnquiryModel>;  
+ 
+
     constructor(private dataServiceFactory: DataServiceFactory) {
         super(dataServiceFactory, 'ExternalInputs');
         const option: DataProcessingService = new DataProcessingService();
+        this._dataServiceForPDAEnquiry = this.dataServiceFactory.CreateServiceWithOptions<PDAEnquiryModel>('PDAEnquiries', option);
+
     }
 
     public GetPassengerQueryCallsByIncident(IncidentId: number): Observable<ResponseModel<ExternalInputModel>> {
@@ -26,14 +30,14 @@ export class CallCenterOnlyPageService extends ServiceBase<ExternalInputModel> i
             .Expand('Caller').Execute();
     }
 
-    
+
     public GetPassengerQueryByIncident(IncidentId: number, CallId: number): Observable<ResponseModel<ExternalInputModel>> {
         let enquiryprojection = 'Queries,AffectedPersonId,AffectedObjectId,IsCallBack,IsTravelRequest,IsAdminRequest,EnquiryId';
         return this._dataService.Query().Filter(`IncidentId eq  ${IncidentId}  and ExternalInputId eq ${CallId}`)
             .Expand(`Caller,PDAEnquiry,Enquiries($select=${enquiryprojection};$expand=CommunicationLogs($select=InteractionDetailsId;$filter=ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and DemandId eq null))`).Execute();
     }
 
-     public GetPassengerQueryCallsRecievedByIncident(IncidentId: number): Observable<ResponseModel<ExternalInputModel>> {
+    public GetPassengerQueryCallsRecievedByIncident(IncidentId: number): Observable<ResponseModel<ExternalInputModel>> {
         return this._dataService.Query().Filter(`IncidentId eq  ${IncidentId}  and EnquiryType eq 
         CMS.DataModel.Enum.EnquiryType'Passenger' and IsCallRecieved eq true`)
             .Expand('Caller').Execute();
@@ -52,7 +56,7 @@ export class CallCenterOnlyPageService extends ServiceBase<ExternalInputModel> i
     }
 
     public GetCargoQueryByIncident(IncidentId: number, CallId: number): Observable<ResponseModel<ExternalInputModel>> {
-         let enquiryprojection = 'Queries,AffectedPersonId,AffectedObjectId,IsCallBack,IsTravelRequest,IsAdminRequest,EnquiryId';
+        let enquiryprojection = 'Queries,AffectedPersonId,AffectedObjectId,IsCallBack,IsTravelRequest,IsAdminRequest,EnquiryId';
         return this._dataService.Query().Filter(`IncidentId eq  ${IncidentId}  and ExternalInputId eq ${CallId}`)
             .Expand(`Caller,CargoEnquiry,Enquiries($select=${enquiryprojection};$expand=CommunicationLogs($select=InteractionDetailsId;$filter=ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and DemandId eq null))`).Execute();
     }
@@ -88,9 +92,15 @@ export class CallCenterOnlyPageService extends ServiceBase<ExternalInputModel> i
     }
 
 
+    public updatepdaenquiry(entity:PDAEnquiryModel, key?: number) : Observable<PDAEnquiryModel>{
+        // key = (key) ? key : entity[Object.keys(entity)[0]].toString();
+        return this._dataServiceForPDAEnquiry.Patch(entity, key.toString()).Execute();
+    }
 
 
-   public GetMediaQueryCallsByIncident(IncidentId: number): Observable<ResponseModel<ExternalInputModel>> {
+
+
+    public GetMediaQueryCallsByIncident(IncidentId: number): Observable<ResponseModel<ExternalInputModel>> {
         return this._dataService.Query().Filter(`IncidentId eq  ${IncidentId}  and EnquiryType eq 
         CMS.DataModel.Enum.EnquiryType'Media' and IsCallRecieved eq false`)
             .Expand('Caller').Execute();

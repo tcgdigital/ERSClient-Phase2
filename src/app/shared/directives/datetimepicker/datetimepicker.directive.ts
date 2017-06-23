@@ -46,7 +46,6 @@ export class DateTimePickerDirective implements AfterViewInit {
     public ngAfterViewInit(): void {
         const $self: JQuery = jQuery(this.elementRef.nativeElement);
         this.addPickerIcon($self);
-        debugger;
         const options: DateTimePickerOptions = Object.assign(new DateTimePickerOptions(), this.options);
 
         options.onSelect = (formattedDate: string, date: Date | Date[], inst: object) => {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
-import { CoPassengerMappingModel, PassengerModel } from './passenger.model';
+import { CoPassengerMappingModel, PassengerModel, CoPassangerModelsGroupIdsModel } from './passenger.model';
 import { IPassengerService } from './IPassengerService';
 import {
     ResponseModel,
@@ -14,7 +14,7 @@ export class PassengerService extends ServiceBase<CoPassengerMappingModel>
     implements IPassengerService {
     private _bulkDataService: DataService<CoPassengerMappingModel>;
 
-    private _bulkDataServiceForUpdate : DataService<CoPassengerMappingModel>;
+    private _bulkDataServiceForUpdate: DataService<CoPassengerMappingModel>;
 
     /**
      * Creates an instance of DepartmentService.
@@ -29,7 +29,7 @@ export class PassengerService extends ServiceBase<CoPassengerMappingModel>
             .CreateServiceWithOptionsAndActionSuffix<CoPassengerMappingModel>
             ('CoPassengerMappingBatch', 'BatchPostAsync', option);
 
-         this._bulkDataServiceForUpdate = this.dataServiceFactory
+        this._bulkDataServiceForUpdate = this.dataServiceFactory
             .CreateServiceWithOptionsAndActionSuffix<CoPassengerMappingModel>
             ('CoPassengerMappingBatch', 'BatchUpdateAsync', option);
     }
@@ -49,10 +49,33 @@ export class PassengerService extends ServiceBase<CoPassengerMappingModel>
     }
 
     public setcopassangers(entities: CoPassengerMappingModel[]): Observable<CoPassengerMappingModel[]> {
-        return this._bulkDataService.BulkPost(entities).Execute();
+        let option: DataProcessingService = new DataProcessingService();
+        let setcopassangerdataservice: DataService<CoPassengerMappingModel> = this.dataServiceFactory
+            .CreateServiceWithOptionsAndActionSuffix<CoPassengerMappingModel>
+            ('CoPassengerMappingBatch', 'BatchPostAsync', option);
+        return setcopassangerdataservice.BulkPost(entities).Execute();
     };
 
-    public updatecopassangers(entities: CoPassengerMappingModel[]): Observable<CoPassengerMappingModel[]> {
-        return this._bulkDataServiceForUpdate.BulkPost(entities).Execute();
+    public deleteoldgroups(groupid : number): Observable<CoPassengerMappingModel[]> {
+         let option: DataProcessingService = new DataProcessingService();
+        let setcopassangerdataservice: DataService<CoPassengerMappingModel> = this.dataServiceFactory
+            .CreateServiceWithOptionsAndActionSuffix<CoPassengerMappingModel>
+            ('CoPassengerMappingBatch', `BatchDeleteCoPassangers/${groupid}`, option);
+        return setcopassangerdataservice.JsonPost(groupid).Execute();
+    };
+
+    public updatecopassangerstogroup(entities: CoPassengerMappingModel[]): Observable<CoPassengerMappingModel[]> {
+         let option: DataProcessingService = new DataProcessingService();
+        let setcopassangerdataservice: DataService<CoPassengerMappingModel> = this.dataServiceFactory
+            .CreateServiceWithOptionsAndActionSuffix<CoPassengerMappingModel>
+            ('CoPassengerMappingBatch', 'BatchUpdateCoPassangersToGroupAsync', option);
+        return setcopassangerdataservice.BulkPost(entities).Execute();
+    };
+
+    public deleteoldgroupsandupdatecopassanger(entity: CoPassangerModelsGroupIdsModel): Observable<CoPassengerMappingModel[]> {
+         let option: DataProcessingService = new DataProcessingService();
+        let setcopassangerdataservice: DataService<any> = this.dataServiceFactory
+            .CreateServiceWithOptionsAndActionSuffix('CoPassengerMappingBatch', 'BatchDeleteOldGroupsUpdateCoPassangers', option);
+        return setcopassangerdataservice.JsonPost(entity).Execute();
     };
 }

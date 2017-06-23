@@ -88,7 +88,6 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
     }
 
     public onViewIncidentClick(): void {
-
         this.incidentId = this.currentIncidentLocal.Value;
         this.readOnlyIncidentWidgetService.GetIncidentByIncidentId(this.incidentId)
             .subscribe((item: IncidentModel) => {
@@ -106,7 +105,7 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
                         this.incidentDataExchangeModel.FLightModel = item.InvolvedParties[0].Flights[0];
                     }
                 }
-                if (this.incidentDataExchangeModel.IncidentModel.BorrowedIncident != 0) {
+                if (this.incidentDataExchangeModel.IncidentModel.BorrowedIncident != null) {
                     this.fetchBorrowedIncident(this.incidentDataExchangeModel.IncidentModel.BorrowedIncident);
                 }
                 else {
