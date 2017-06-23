@@ -14,7 +14,8 @@ const otherQueryRoutes: Routes = [
         children: [
             {
                 path: '',
-                component: OtherQueryAssignedCallsListComponent
+                redirectTo: 'receivedCalls',
+                pathMatch: 'full'
             },
             {
                 path: 'assignedcalls',

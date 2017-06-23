@@ -55,6 +55,7 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit(): any {
+        debugger;
         this.licensingService.VerifyLicense()
             .subscribe((response: LicenseVerificationResponse) => {
                 if (response.Code === 105) {

@@ -14,7 +14,8 @@ const futureTravelQueryRoutes: Routes = [
         children: [
             {
                 path: '',
-                component: FutureTravelQueryAssignedCallsListComponent
+                redirectTo: 'receivedCalls',
+                pathMatch: 'full'
             },
             {
                 path: 'assignedcalls',
