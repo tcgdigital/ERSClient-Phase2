@@ -30,7 +30,7 @@
             text-align: justify;
             padding: 14px 13px;
             background: $widget-accordion-bg;
-            line-height: 1.6em;
+            line-height: 1.6em; border:#ccc solid 1px;
             >i {
                 position: absolute;
                 top: 0;
@@ -62,18 +62,18 @@
     }
 }
 
-.active .cd-item-wrapper li.cd-item-middle {
+.active .cd-item-wrapper li.cd-item-middle { min-width:150px;
     /* 3D effect on touch devices */
     @include translate3d(0, 0, -100px);
     @include box-shadow(0, 1px, 4px, 1px, $header-shadow);
     opacity: .8;
 }
 
-.cd-item-wrapper li.cd-item-back {
+.cd-item-wrapper li.cd-item-back {min-width:150px;
     z-index: 1;
 }
 
-.active .cd-item-wrapper li.cd-item-back {
+.active .cd-item-wrapper li.cd-item-back {min-width:100px;
     /* 3D effect on touch devices */
     @include translate3d(0, 0, -200px);
     @include box-shadow(0, 1px, 4px, 1px, $header-shadow);
@@ -221,7 +221,7 @@
 .ribbon-green {
     text-transform: uppercase;
     letter-spacing: 2px;
-    font: 7px Sans-Serif;
+    font: 9px Sans-Serif;
     font-weight: bold;
     color: #333;
     text-align: center;
@@ -229,8 +229,8 @@
     transform: rotate(-45deg);
     position: relative;
     padding: 3px 0;
-    left: -2.0em;
-    top: 1.20em;
+          left: -1.6em;
+        top: 0.07em;
     width: 58px;
     background-color: #BFDC7A;
     background: -webkit-gradient(linear, left top, left bottom, from(#BFDC7A), to(#8EBF45));
