@@ -16,6 +16,7 @@ export class IncidentModel extends BaseModel {
     public EmergencyDate: Date;
     public Severity?: string;
     public EmergencyLocation: string;
+    public EmergencyCountry: string;
     public OffSetLocation: string;
 
     public WhatHappend: string;
@@ -72,7 +73,7 @@ export class IncidentModel extends BaseModel {
         this.EmergencyDate = new Date();
         this.Severity = null;
         this.EmergencyLocation = '';
-
+        this.EmergencyCountry = '';
         this.WhatHappend = '';
         this.WhereHappend = '';
         this.OtherConfirmationInformation = '';

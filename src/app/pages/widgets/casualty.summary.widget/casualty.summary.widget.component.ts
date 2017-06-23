@@ -36,7 +36,6 @@ export class CasualtySummaryWidgetComponent implements OnInit {
     affectedPeopleStatusChanged(): void {
         this.getCausaltyStatusSummery(this.incidentId);
     }
-
     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
         if (changes['incidentId'] !== undefined && (changes['incidentId'].currentValue !==
             changes['incidentId'].previousValue) &&

@@ -108,7 +108,21 @@ incident-header-widget a{ font-size: 12px;}
         max-width: 96%;
     }
 }
+@media screen and (max-width: $resLG-E){
+    .demand-raised-layout{
+        margin-left: 5px;
+    width: 100%;
+    padding-right: 8px !important;
+    }
+}
 
+@media screen and (max-width: $resLG-E){
+   .checklist-layout{
+        margin-left: 5px;
+    width: 100%;
+    padding-right: 25px !important;
+    }
+}
 @media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {}
 
 @media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
