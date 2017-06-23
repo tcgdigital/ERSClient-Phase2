@@ -48,11 +48,7 @@ export interface IActionableStatus {
 
 export class GlobalConstants {
     // public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
-<<<<<<< HEAD
-    public static EXTERNAL_URL: string = 'http://localhost:3000/';
-=======
     public static EXTERNAL_URL: string = 'http://localhost:5001/';
->>>>>>> c26bfcc1f0216410b2c4b26238d9c564b7ddf1f9
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
     public static GRANT_TYPE: string = 'password';
     public static ODATA: string = 'odata';

@@ -32,7 +32,21 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
-
+.cmsicon-1x{
+    font-size: 10px;
+}
+.cmsicon-2x{
+    font-size: 11px;
+}
+.cmsicon-3x{
+    font-size: 12px;
+}
+.cmsicon-4x{
+    font-size: 13px;
+}
+.cmsicon-5x{
+    font-size: 14px;
+}
 .cmsicon-plane:before {
     content: "\e000";
 }
