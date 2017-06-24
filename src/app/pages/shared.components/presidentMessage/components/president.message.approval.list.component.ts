@@ -1,24 +1,23 @@
 import { Component, OnInit, ViewEncapsulation, Input, OnDestroy } from '@angular/core';
 import { PresidentMessageModel } from './presidentMessage.model';
 import { PresidentMessageService } from './presidentMessage.service';
-import { ResponseModel, DataExchangeService, GlobalStateService, KeyValue, UtilityService, GlobalConstants } from '../../../../shared';
+import { ResponseModel, DataExchangeService, GlobalStateService, KeyValue,UtilityService } from '../../../../shared';
 import { Router, NavigationEnd } from '@angular/router';
-import {Subscription } from 'rxjs/Rx';
+import { Subscription } from 'rxjs/Rx';
 
 @Component({
-    selector: 'presidentMessage-detail',
+    selector: 'presidentMessage-approval-list',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: '../views/presidentMessage.list.view.html'
+    templateUrl: '../views/president.message.approval.list.view.html'
 })
-export class PresidentMessageListComponent implements OnInit, OnDestroy {
+export class PresidentMessageApprovalListComponent implements OnInit, OnDestroy {
     @Input() initiatedDepartmentId: number;
     @Input() incidentId: number;
 
     PresidentsMessages: PresidentMessageModel[] = [];
     currentIncidentId: number;
     currentDepartmentId: number;
-    isArchive: boolean = false;
-    downloadPath: string;
+      isArchive: boolean = false;
     protected _onRouteChange: Subscription;
 
     /**
@@ -36,7 +35,7 @@ export class PresidentMessageListComponent implements OnInit, OnDestroy {
     getPresidentMessages(departmentId, incidentId): void {
         this.presidentMessageService.Query(departmentId, incidentId)
             .subscribe((response: ResponseModel<PresidentMessageModel>) => {
-                this.PresidentsMessages = response.Records;
+                this.PresidentsMessages = response.Records.filter(a=>a.PresidentMessageStatus === 'SentForApproval');
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -48,7 +47,7 @@ export class PresidentMessageListComponent implements OnInit, OnDestroy {
 
     UpdatePresidentMessage(presidentMessageModelUpdate: PresidentMessageModel): void {
         let presidentMessageModelToSend = Object.assign({}, presidentMessageModelUpdate)
-        this.dataExchange.Publish("OnPresidentMessageUpdate", presidentMessageModelToSend);
+        this.dataExchange.Publish("OnPresidentMessageApprovalUpdate", presidentMessageModelToSend);
     }
 
     public ngOnInit(): void {
@@ -56,7 +55,6 @@ export class PresidentMessageListComponent implements OnInit, OnDestroy {
         this.initiatedDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.currentIncidentId = +this.incidentId;
         this.currentDepartmentId = +this.initiatedDepartmentId;
-        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/PresidentMessage/' + this.currentIncidentId + '/';
         this._onRouteChange = this._router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
                 if (event.url.indexOf("archivedashboard") > -1) {
@@ -71,9 +69,7 @@ export class PresidentMessageListComponent implements OnInit, OnDestroy {
                 }
             }
         });
-
-        this.dataExchange.Subscribe("PresidentMessageModelSaved", model => this.onPresidentMessageSuccess(model));
-        this.dataExchange.Subscribe("PresidentMessageModelUpdated", model => this.onPresidentMessageSuccess(model));
+        this.dataExchange.Subscribe("PresidentsMessageSentForApproval", model => this.onPresidentMessageSuccess(model));
         this.dataExchange.Subscribe("PresidentMessageApprovalUpdated", model => this.onPresidentMessageSuccess(model));
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
@@ -81,7 +77,6 @@ export class PresidentMessageListComponent implements OnInit, OnDestroy {
 
     private incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
-        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/PresidentMessage/' + this.currentIncidentId + '/';
         this.getPresidentMessages(this.currentDepartmentId, this.currentIncidentId);
     }
 
@@ -90,9 +85,8 @@ export class PresidentMessageListComponent implements OnInit, OnDestroy {
         this.getPresidentMessages(this.currentDepartmentId, this.currentIncidentId);
     }
 
-    public ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe('PresidentMessageModelSaved');
-        this.dataExchange.Unsubscribe('PresidentMessageModelUpdated');
+    public ngOnDestroy(): void {       
+        this.dataExchange.Unsubscribe('PresidentMessageApprovalUpdated');
         this.globalState.Unsubscribe('incidentChangefromDashboard');
         this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }

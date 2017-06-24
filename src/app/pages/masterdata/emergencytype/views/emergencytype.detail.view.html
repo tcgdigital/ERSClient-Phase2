@@ -17,7 +17,7 @@
             </tr>
             <tr *ngFor="let emergencyType of emergencyTypes">
                 <td data-title="Emergency Type Name">{{emergencyType.EmergencyTypeName}}</td>
-                <td data-title="Emergency Category">{{emergencyType.EmergencyCategory}}</td>
+                <td data-title="Emergency Category">{{emergencyType.EmergencyCategory == 'FlightRelated' ? 'Flight Related': 'Non Flight Related'}}</td>
                 <td data-title="Active">
                     <md-checkbox class="Marght" id="IsActive" name="IsActive" [ngModel]="emergencyType.Active"  aria-label="ActiveFlag" (change)="IsActive($event,emergencyType)">
                     </md-checkbox>

@@ -4,7 +4,7 @@ import { PresidentMessageWidgetModel } from './presidentMessage.widget.model';
 import { PresidentMessageModel } from '../../shared.components';
 import { PresidentMessageWidgetService } from './presidentMessage.widget.service'
 import { DataServiceFactory, DataExchangeService, GlobalStateService, 
-    TextAccordionModel, KeyValue, UtilityService } from '../../../shared'
+    TextAccordionModel, KeyValue, UtilityService, GlobalConstants } from '../../../shared'
 import { ModalDirective } from 'ng2-bootstrap/modal';
 
 @Component({
@@ -23,6 +23,7 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
 
     presidentMessages: Observable<TextAccordionModel[]>;
     AllPresidentMessages: Observable<PresidentMessageWidgetModel[]>;
+    downloadPath: string;
 
     constructor(private presidentMessagewidgetService: PresidentMessageWidgetService,
         private dataExchange: DataExchangeService<PresidentMessageWidgetModel>,
@@ -35,6 +36,7 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
         this.currentDepartmentId = this.departmentId;
         this.getLatestPresidentsMessages(this.currentIncidentId);
         this.getAllPresidentsMessages();
+        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/PresidentMessage/' + this.currentIncidentId + '/';
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('PresidentMessagePublished', model => this.onPresidentMessagePublish(model));
     }
@@ -47,6 +49,7 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
 
     private incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
+        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/PresidentMessage/' + this.currentIncidentId + '/';
         this.getLatestPresidentsMessages(this.currentIncidentId);
         this.getAllPresidentsMessages();
     }
@@ -68,7 +71,9 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
                  console.log(`Error: ${error}`);
             },
             () => this.presidentMessages = Observable.of(data
-                    .map((x: PresidentMessageWidgetModel) => new TextAccordionModel(x.Message, x.PublishedOn,''))));
+                    .map((x: PresidentMessageWidgetModel) => 
+                    new TextAccordionModel(x.PresidentMessageType, x.PublishedOn,
+                    this.downloadPath + x.PresidentsMessageId))));
     }
 
     getAllPresidentsMessages(callback?: Function): void {

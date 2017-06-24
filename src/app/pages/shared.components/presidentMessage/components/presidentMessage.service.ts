@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
+import { Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
-import { PresidentMessageModel } from './presidentMessage.model';
+import { PresidentMessageModel, PresidentMessageTemplate } from './presidentMessage.model';
 import { IPresidentMessageService } from './IPresidentMessageService'
 import {
     ResponseModel,
-    DataServiceFactory,
+    DataServiceFactory, DataProcessingService,
     ServiceBase
 } from '../../../../shared';
 
@@ -21,7 +22,7 @@ export class PresidentMessageService
      * 
      * @memberOf PresidentMessageService
      */
-    constructor(dataServiceFactory: DataServiceFactory) {
+    constructor(private dataServiceFactory: DataServiceFactory) {
         super(dataServiceFactory, 'PresidentsMessages');
     }
 
@@ -66,5 +67,14 @@ export class PresidentMessageService
         return this._dataService.Query()
             .Filter(`IncidentId eq ${incidentId} and IsPublished eq true`)
             .OrderBy(`PublishedOn desc`).Execute();
+    }
+
+     GetContentFromTemplate(incidentId: number, departmentId: number, templateId: number): Observable<PresidentMessageTemplate> {
+        let option = new DataProcessingService();
+        let _templateService = this.dataServiceFactory
+            .CreateServiceWithOptionsAndActionSuffix<PresidentMessageTemplate>
+            ('TemplateMediaPresident', `GetContentFromTemplate/${incidentId}/${departmentId}/${templateId}`, option);
+        return _templateService.Get(incidentId.toString())
+            .Execute();
     }
 }
