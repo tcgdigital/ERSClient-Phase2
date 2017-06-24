@@ -1,73 +1,86 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>Member Tracking</strong>
+            </div>
+            <div class="card-block">
+                <div class="row">
+                    <div class="col-12">
+                        <responsive-table>
+                            <table responsive-table-body>
+                                <thead>
+                                    <tr>
+                                        <th>Member Name </th>
+                                        <th>Member's Contact Number</th>
+                                        <th>Is Notified </th>
+                                        <th>Is Notification Acknowledged </th>
+                                        <th>Busy</th>
+                                        <th>Work Details</th>
+                                        <th>View History</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr [hidden]="memberEngagementsToView.length != 0">
+                                        <td colspan="8">No records found.</td>
+                                    </tr>
+                                    <tr *ngFor="let memberengagement of memberEngagementsToView; let i = index">
+                                        <td data-title="Member Name">{{memberengagement.MemberName}}</td>
+                                        <td data-title="Member's Contact Number">{{memberengagement.MemberContactNumber}} </td>
+                                        <td data-title="Is Notified"><i class="fa fa-check fa-2x fontGreen" aria-hidden="true" [hidden]="memberengagement.IsNotyfied == false"></i>&nbsp;</td>
+                                        <td data-title="Is Notification Acknowledged"><i class="fa fa-check fa-2x fontGreen" aria-hidden="true" [hidden]="memberengagement.IsAcknowledged == false"></i>&nbsp;</td>
+                                        <td data-title="Busy"><input type="checkbox" [checked]="memberengagement.IsBusy" [attr.data-userid]="memberengagement.UserId"
+                                                data-toggle="toggle" data-id="{{i}}" data-style="ios" data-onstyle="success"
+                                                data-offstyle="info"></td>
+                                        <td data-title="Remarks"><textarea class="form-control" id="Remarks" placeholder="Remarks" [(ngModel)]="memberengagement.Remarks"
+                                                autofocus [(disabled)]="memberengagement.IsBusy"></textarea>
+                                            <small *ngIf="memberengagement.Remarks.length<=0 && memberengagement.isRemarksSubmitted" class="text-danger">Required.
+                                            </small>
+                                        </td>
+                                        <td data-title="View History"><i class="fa fa-edit fa-2x" (click)="open(memberengagement.UserId)"></i>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </responsive-table>
 
-
-<responsive-table>
-    <table responsive-table-body>
-        <thead>
-            <tr>
-                <th>Member Name </th>
-                <th>Member's Contact Number</th>
-                <th>Is Notified </th>
-                <th>Is Notification Acknowledged </th>
-                <th>Work Details</th>
-                <th>Busy</th>
-                <th>View History</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr [hidden]="memberEngagementsToView.length != 0">
-                <td colspan="8">No records found.</td>
-            </tr>
-            <tr *ngFor="let memberengagement of memberEngagementsToView; let i = index">
-                <td data-title="Member Name">{{memberengagement.MemberName}}</td>
-                <td data-title="Member's Contact Number">{{memberengagement.MemberContactNumber}} </td>
-                <td data-title="Is Notified"><i class="fa fa-check fa-2x fontGreen" aria-hidden="true" [hidden]="memberengagement.IsNotyfied == false"></i>&nbsp;</td>
-                <td data-title="Is Notification Acknowledged"><i class="fa fa-check fa-2x fontGreen" aria-hidden="true" [hidden]="memberengagement.IsAcknowledged == false"></i>&nbsp;</td>
-                <td data-title="Remarks"><textarea class="form-control" id="Remarks" placeholder="Remarks" [(ngModel)]="memberengagement.Remarks"
-                        autofocus [(disabled)]="memberengagement.IsBusy"></textarea>
-                    <small *ngIf="memberengagement.Remarks.length<=0 && memberengagement.isRemarksSubmitted" class="text-danger">
-                            Required.
-                        </small>
-                </td>
-                <td data-title="Busy"><input type="checkbox" [checked]="memberengagement.IsBusy" [attr.data-userid]="memberengagement.UserId" data-toggle="toggle"
-                        data-id="{{i}}" data-style="ios" data-onstyle="success" data-offstyle="info"></td>
-                <td data-title="View History"><i class="fa fa-edit fa-2x" (click)="open(memberengagement.UserId)"></i>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</responsive-table>
-
-<div bsModal #childModalHistory="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title pull-left">View Work History</h4>
-                <button type="button" class="close pull-right" aria-label="Close" (click)="cancelHistory()">
+                        <div bsModal #childModalHistory="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title pull-left">View Work History</h4>
+                                        <button type="button" class="close pull-right" aria-label="Close" (click)="cancelHistory()">
                   <span aria-hidden="true">&times;</span>
                    </button>
-            </div>
-            <div class="modal-body">
-                <div class="card-block">
-                    <responsive-table>
-                        <table responsive-table-body>
-                            <thead>
-                                <th>Work Details</th>
-                                <th>Deployed On</th>
-                                <th>Undeployed On</th>
-                            </thead>
-                            <tbody>
-                                <tr [hidden]="memberHistory.length != 0">
-                                    <td colspan="9">No history to show.</td>
-                                </tr>
-                                <tr *ngFor="let work of memberHistory">
-                                    <td data-title="Work Details">{{work.Remarks}}</td>
-                                    <td data-title="Deployed On">{{work.DeployedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
-                                    <td data-title="UndeployedOn">{{work.UnDeployedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </responsive-table>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="card-block">
+                                            <responsive-table>
+                                                <table responsive-table-body>
+                                                    <thead>
+                                                        <th>Work Details</th>
+                                                        <th>Deployed On</th>
+                                                        <th>Undeployed On</th>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr [hidden]="memberHistory.length != 0">
+                                                            <td colspan="9">No history to show.</td>
+                                                        </tr>
+                                                        <tr *ngFor="let work of memberHistory">
+                                                            <td data-title="Work Details">{{work.Remarks}}</td>
+                                                            <td data-title="Deployed On">{{work.DeployedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
+                                                            <td data-title="UndeployedOn">{{work.UnDeployedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </responsive-table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

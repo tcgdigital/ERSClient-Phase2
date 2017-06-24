@@ -14,7 +14,8 @@ const mediaQueryRoutes: Routes = [
         children: [
             {
                 path: '',
-                component: MediaQueryAssignedCallsListComponent
+                redirectTo: 'receivedCalls',
+                pathMatch: 'full'
             },
             {
                 path: 'assignedcalls',

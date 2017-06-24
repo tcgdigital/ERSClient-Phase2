@@ -50,6 +50,14 @@ export class ChecklistService extends ServiceBase<ChecklistModel> implements ICh
 
     }
 
+    GetAllWithParentsByDepartment(departmentId): Observable<ResponseModel<ChecklistModel>> {
+        return this._dataService.Query()
+            .Filter(`DepartmentId eq ${departmentId} and ActiveFlag eq 'Active'`)
+            .Expand('CheckListParentMapper')
+            .Execute();
+
+    }
+
     GetQuery(query: string): Observable<ResponseModel<ChecklistModel>> {
         return this._dataService.Query()
             .Expand('TargetDepartment($select=DepartmentId,DepartmentName)',
@@ -98,7 +106,7 @@ export class ChecklistService extends ServiceBase<ChecklistModel> implements ICh
         return this._dataService.Query()
             .Select('CheckListId', 'CheckListCode')
             .Filter(`ActiveFlag eq 'Active'`)
-            .Expand('CheckListParent($expand=TargetDepartment($select=DepartmentId,DepartmentName))','TargetDepartment')
+            .Expand('CheckListParent($expand=TargetDepartment($select=DepartmentId,DepartmentName))', 'TargetDepartment')
             .OrderBy('CreatedOn desc')
             .Execute();
     }

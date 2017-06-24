@@ -7,7 +7,7 @@
             <table responsive-table-body>
                 <thead>
                     <tr>
-                        <th>Emergency Name</th>
+                        <th>Crisis Name</th>
                         <th>Severity</th>
                         <th>Drill Indicator</th>
                         <th>Type</th>
@@ -15,7 +15,7 @@
                         <th>Initiation Date</th>
                         <th>Closed Date</th>
                         <th>View Details</th>
-                        <th>Reopen Emergency</th>
+                        <th>Reopen Crisis</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -68,9 +68,9 @@
                     <div class="card-block">
                         <div class="row">
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="EmergencyType">EmergencyType:<span class="red">*</span></label>
+                                <label for="EmergencyType">CrisisType:<span class="red">*</span></label>
                                 <select id="EmergencyTypeIdPopup" disabled class="form-control" formControlName="EmergencyTypeIdPopup" name="EmergencyTypeIdPopup">
-                                    <option value="0" >Select Emergency Type</option>
+                                    <option value="0" >Select Crisis Type</option>
                                     <option *ngFor="let emergencyType of activeEmergencyTypes" [value]="emergencyType.EmergencyTypeId" >
                                         {{emergencyType.EmergencyTypeName}}
                                     </option>
@@ -109,9 +109,9 @@
                         <div class="row">
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
                                 <div class="form-group">
-                                    <label for="EmergencyName">Emergency Name:<span class="red">*</span></label>
+                                    <label for="EmergencyName">Crisis Name:<span class="red">*</span></label>
                                     <input id="EmergencyNamePopup" disabled formControlName="EmergencyNamePopup" class="form-control" type="text" name="EmergencyNamePopup"
-                                        placeholder="Enter Emergency Name" />
+                                        placeholder="Enter Crisis Name" />
                                 </div>
                                 <!--<div class="form-group">
                                     <label for="AlertMessage">Dashboard Alert Message:<span class="red">*</span></label>

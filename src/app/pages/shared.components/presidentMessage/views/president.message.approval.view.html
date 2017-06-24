@@ -1,0 +1,6 @@
+<div class="card card-without-top-border card-block">
+       <div *ngIf="!isArchive"> <presidentMessage-approval-entry [initiatedDepartmentId]="initiatedDepartment" [incidentId]="incidentId"></presidentMessage-approval-entry></div>
+    <div class="card-block">
+        <presidentMessage-approval-list [initiatedDepartmentId]="initiatedDepartment" [incidentId]="incidentId"></presidentMessage-approval-list>
+    </div>
+</div>

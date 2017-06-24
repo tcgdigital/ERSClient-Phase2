@@ -5,11 +5,9 @@
                 <th>Releases</th>
                 <th>Status</th>
                 <th>Created On</th>
-                <th>Sent For Approval On</th>
-                <th>Approved On</th>
-                <th>Published On</th>                 
+                <th>Sent For Approval On</th>                           
                 <th>Edit</th>
-                <th>Download Report</th>
+                
             </tr>
         </thead>
         <tbody>
@@ -20,17 +18,10 @@
                 <td data-title="Releases" width="30%">{{query.MediaReleaseType}}</td>
                 <td data-title="Status">{{query.MediaReleaseStatus === 'SentForApproval' ? 'Approval Pending': query.MediaReleaseStatus}}</td>
                 <td data-title="Created On">{{query.CreatedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
-                <td data-title="Sent For Approval On">{{query.SentForApprovalOn | date: 'dd-MMM-yyyy hh:mm a'}}</td> 
-                <td data-title="Approved On">{{query.ApprovedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
-                <td data-title="Published On">{{query.PublishedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>               
+                <td data-title="Sent For Approval On">{{query.SentForApprovalOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>                      
                 <td data-title="Edit">
                     <i class="fa fa-edit fa-2x" (click)="UpdateMediaRelease(query)"></i>
-                </td>
-                <td data-title= "Download Report">
-                    <a *ngIf="query.MediaReleaseStatus === 'Published'" target="_blank" href="{{downloadPath + query.MediaqueryId}}">
-                        <i class="fa fa-download fa-2x" aria-hidden="true"></i>
-                    </a> 
-                </td>
+                </td>               
             </tr>
         </tbody>
     </table>

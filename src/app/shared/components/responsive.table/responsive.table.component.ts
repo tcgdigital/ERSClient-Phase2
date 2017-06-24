@@ -57,7 +57,6 @@ export class ResponsiveTableComponent implements AfterContentInit, AfterViewInit
                 // let top: number = +$navs.css('top').replace('px', '');
                 // top += $scrollableElm.scrollTop();
                 // $navs.css('top', `${top}px`);
-                // debugger;
             });
     }
 
@@ -81,7 +80,6 @@ export class ResponsiveTableComponent implements AfterContentInit, AfterViewInit
 
     // @HostListener('window:scroll', ['$event'])
     // public onDocumentScroll($event): void {
-    //     debugger;
     // }
 
     private updateSlider(position: string): void {

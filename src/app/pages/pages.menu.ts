@@ -34,6 +34,7 @@ export const PAGES_MENU: IMenuItem[] = [
                     menu: {
                         title: 'Upload',
                         icon: 'fa fa-cloud-upload fa-lg',
+                        // icon: 'cmsicon-master-data-upload cmsicon-5x',
                         selected: false,
                         expanded: false,
                     }
@@ -45,6 +46,7 @@ export const PAGES_MENU: IMenuItem[] = [
                     menu: {
                         title: 'Incident',
                         icon: 'fa fa-bell fa-lg',
+                        // icon: 'cmsicon-initiate-emergency cmsicon-5x',
                         selected: false,
                         expanded: false,
                         order: 3
@@ -55,8 +57,9 @@ export const PAGES_MENU: IMenuItem[] = [
                 path: 'emergencyclosure',
                 data: {
                     menu: {
-                        title: 'Close Emergency',
+                        title: 'Close Crisis',
                         icon: 'fa fa-bell-slash fa-lg',
+                        // icon: 'cmsicon-close-emergency cmsicon-6x',
                         selected: false,
                         expanded: false,
                     }

@@ -59,9 +59,10 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.initiatedDepartmentId;
         this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
-        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/' + this.currentIncidentId + '/';
+        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/Media' + this.currentIncidentId + '/';
         this.dataExchange.Subscribe("MediaModelSaved", model => this.onMediaSuccess(model));
         this.dataExchange.Subscribe("MediaModelUpdated", model => this.onMediaSuccess(model));
+        this.dataExchange.Subscribe("MediaModelApprovalUpdated", model => this.onMediaSuccess(model));
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
     }
@@ -69,7 +70,7 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
     private incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
         this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
-        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/' + this.currentIncidentId + '/';
+        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/Media' + this.currentIncidentId + '/';
     }
 
     private departmentChangeHandler(department: KeyValue): void {
@@ -80,6 +81,7 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe('MediaModelSaved');
         this.dataExchange.Unsubscribe('MediaModelUpdated');
+        this.dataExchange.Unsubscribe('MediaModelApprovalUpdated');
         this.globalState.Unsubscribe('incidentChangefromDashboard');
         this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }

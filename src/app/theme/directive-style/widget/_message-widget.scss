@@ -42,6 +42,9 @@
     border-radius: 3px; background: #01a3a9;
     color: $message-widget-button-text;
     line-height: 18px;
+    @media screen and (max-width: $resLG-E) {
+        margin: 5px 9px;
+    }
     // @include box-shadow(0px, 1px, 6px, 1px, $header-shadow);
     &:hover,
     &:active {
@@ -51,7 +54,7 @@
 
 @media screen and (max-width: $resXS-E) {
     .messaging-widget{
-        max-width: 98%;;
+        max-width: 98%;
     }
     .message-icon {
         margin-top: 25% !important;
@@ -73,7 +76,7 @@
 
 @media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
     .messaging-widget{
-        max-width: 32.8%;
+        max-width: 32.8%;     margin-left: 2px;
     }
     .messaging-widget-container {
         height: 245px !important;

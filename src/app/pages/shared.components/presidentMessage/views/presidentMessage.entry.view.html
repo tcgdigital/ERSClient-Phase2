@@ -5,32 +5,58 @@
             <input type="hidden" *ngIf="PresidentsMessage.PresidentsMessageId != undefined" [(ngModel)]="PresidentsMessage.PresidentsMessageId"
                 formControlName="PresidentsMessageId">
             <div class="AllSearchHolder">
+
                 <div class="row">
-                <div class="col-sm-6 col-lg-5 col-md-6">
+                    <div class="col-sm-12 col-lg-4 col-md-6">
+                        <div class="form-group">
+                            <label for="Media Release Type">Select President Message Type:<span class="required">*</span></label>
+                            <select id="selectMediaRelease" formControlName="PresidentMessageType" name="PresidentMessageType" [ngModel]="currentTemplateMediaId"
+                                class="form-control" (change)="getContentFromTemplate($event)">
+                                <option value=''>Select Media Release Type</option>
+                                <option *ngFor="let template of templateMedias" [value]="template.TemplateMediaId" >
+                                    {{template.TemplatePurpose}}
+                                </option>
+                            </select>
+                            <small class="text-danger" [hidden]="hideRemarksError">
+                                Required.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="row"></div>
+                <br/>
+
+                <div class="row">
+                <div class="col-sm-12 col-lg-6 col-md-6">
                     <div class="form-group">
                         <label for="Message">President's Message:<span class="required">*</span></label><span class="MaxChartr">Max 500 chars</span>
-                        <textarea class="form-control" id="Message" formControlName="Message" maxlength="500" [readOnly]="PresidentsMessage.IsPublished"
-                            placeholder="Enter President's Message" [(ngModel)]="PresidentsMessage.Message" autofocus></textarea>
-                        <small *ngIf="!form.controls.Message.valid" class="text-danger">
-                            Required.
+                        <ckeditor formControlName="Message" [(ngModel)]="PresidentsMessage.Message" debounce="500" (change)="onMessageChange($event)" (blur)="onMessageBlur($event)"
+                                    (focus)="onMessageFocus($event)" (ready)="onMessageReady($event)" [config]="toolbarConfig">
+                        </ckeditor>
+                        
+                        <small class="text-danger" [hidden]="hideMessageError">
+                        Required.
                         </small>
                     </div>
                 </div>
-                <div class="col-sm-6 col-lg-4 col-md-6">
+                <div class="col-sm-12 col-lg-6 col-md-6">
                     <div class="form-group">
                         <label for="Remarks">Remarks:</label><span class="MaxChartr">Max 500 chars</span>
                         <textarea class="form-control" id="Remarks" formControlName="Remarks" maxlength="500" [readOnly]="PresidentsMessage.IsPublished"
                             placeholder="Enter Remarks" [(ngModel)]="PresidentsMessage.Remarks" required autofocus></textarea>
-                        <span [hidden]="hideRemarksError">Plese Input Remarks</span>
+                        
                     </div>
                 </div>
-                  <div class="col-sm-6 col-lg-12 col-md-6">
-                    <div class="buttonholder">
-                        <button class="btn btn-primary" type="submit" (click)="publish()" [disabled]="PresidentsMessage.IsPublished">Publish</button>
-                        <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
-                        <button class="btn btn-primary" type="submit" (click)="save()" [disabled]="PresidentsMessage.IsPublished">Save</button>
-                    </div>
                 </div>
+                <div class ="row">
+                   <div class="col-sm-12 col-lg-12 col-md-12">
+                        <div class="buttonholder">
+                            <button class="btn btn-primary" (click)="SentForApproval()" [disabled]="applyReadOnlyButtons">Send for Approval</button>
+                            <button class="btn btn-primary" (click)="publish()" [disabled]="appReadOnlyPublish">Publish</button>
+                            <button class="btn btn-warning" (click)="cancel()">Cancel</button>
+                            <button class="btn btn-primary" (click)="save()" [disabled]="applyReadOnlyButtons">Save</button>
+                        </div>
+                    </div>
                 </div>
               
             </div>

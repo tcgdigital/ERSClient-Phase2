@@ -17,7 +17,7 @@ import { AccountResponse } from '../../../../shared/models';
 
 import {
     ResponseModel, DataExchangeService,
-    GlobalConstants, EmailValidator, UtilityService, AuthModel, NameValidator
+    GlobalConstants, EmailValidator, UtilityService, AuthModel, NameValidator, UserIdValidator
 } from '../../../../shared';
 
 @Component({
@@ -60,7 +60,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
          this.form = new FormGroup({
             UserProfileId: new FormControl(userProfileModel.UserProfileId),
             Email: new FormControl(userProfileModel.Email, [Validators.required, Validators.pattern(GlobalConstants.EMAIL_PATTERN)]),
-            UserId: new FormControl(userProfileModel.UserId, Validators.required),
+            UserId: new FormControl(userProfileModel.UserId, [Validators.required, UserIdValidator.validate]),
             Name: new FormControl(userProfileModel.Name, [Validators.required, NameValidator.validate]),
             MainContact: new FormControl(userProfileModel.MainContact, [Validators.required, Validators.minLength(14), Validators.maxLength(15), Validators.pattern(GlobalConstants.NUMBER_PATTERN)]),
             AlternateContact: new FormControl(userProfileModel.AlternateContact, [Validators.minLength(14), Validators.maxLength(15), Validators.pattern(GlobalConstants.NUMBER_PATTERN)]),
@@ -141,7 +141,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
         this.form = new FormGroup({
             UserProfileId: new FormControl(0),
             Email: new FormControl('', [Validators.required, Validators.pattern(GlobalConstants.EMAIL_PATTERN)]),
-            UserId: new FormControl('', Validators.required),
+            UserId: new FormControl('', [Validators.required, UserIdValidator.validate]),
             Name: new FormControl('', [Validators.required, NameValidator.validate]),
             MainContact: new FormControl('', [Validators.required, Validators.minLength(14), Validators.maxLength(15), Validators.pattern(GlobalConstants.NUMBER_PATTERN)]),
             AlternateContact: new FormControl('', [Validators.minLength(14), Validators.maxLength(15), Validators.pattern(GlobalConstants.NUMBER_PATTERN)]),

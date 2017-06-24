@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, OnInit, ViewChild } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { Subscription, Observable } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 
 
@@ -16,7 +16,7 @@ import { AffectedPeopleService } from './affected.people.service';
 import {
     ResponseModel, DataExchangeService, GlobalConstants, AuthModel,
     GlobalStateService, UtilityService, KeyValue, FileUploadService, SearchConfigModel,
-    SearchTextBox, SearchDropdown
+    SearchTextBox, SearchDropdown, NameValue
 } from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { FileStoreModel } from '../../../../shared/models/file.store.model';
@@ -349,9 +349,24 @@ export class AffectedPeopleListComponent implements OnInit {
 
     invokeSearch(query: string): void {
         if (query !== '') {
+            if (query.indexOf('IsNokInformed') >= 0) {
+                if (query.indexOf("'true'") >= 0)
+                    query = query.replace("'true'", "true");
+                if (query.indexOf("'false'") >= 0)
+                    query = query.replace("'false'", "false");
+            }
+            if (query.toLowerCase().indexOf("contains(tolower(Passenger/PassengerType), 'crew')".toLowerCase()) >= 0) {
+                let index = query.indexOf("contains(tolower(Passenger/PassengerType), ");
+                let length = "contains(tolower(Passenger/PassengerType), ".length;
+                query = query.replace(query.substring(index, length + 7), 'IsCrew eq true');
+            }
             this.selectCurrentIncident();
             this.searchAffectedPeople(query, this.currentIncident);
         }
+        else{
+            this.getAffectedPeople(this.currentIncident);
+        }
+
     }
 
     invokeReset(): void {
@@ -371,6 +386,11 @@ export class AffectedPeopleListComponent implements OnInit {
     }
 
     private initiateSearchConfigurations(): void {
+        let medstatus: Array<NameValue<string>> = GlobalConstants.MedicalStatus.map(x => new NameValue<string>(x.caption, x.caption))
+        const status: Array<NameValue<string>> = [
+            new NameValue<string>('Informed', 'true'),
+            new NameValue<string>('Not Informed', 'false'),
+        ] as Array<NameValue<string>>;
         this.searchConfigs = [
             new SearchTextBox({
                 Name: 'TicketNumber',
@@ -387,6 +407,31 @@ export class AffectedPeopleListComponent implements OnInit {
                 Name: 'Pnr',
                 Description: 'PNR',
                 Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'ContactNumber',
+                Description: 'PDA Contact',
+                Value: '',
+                OrCommand: 'Passenger/ContactNumber|Crew/ContactNumber'
+            }),
+            new SearchTextBox({
+                Name: 'Passenger/PassengerType',
+                Description: 'Passenger Types',
+                Value: ''
+            }),
+            new SearchDropdown({
+                Name: 'MedicalStatus',
+                Description: 'Medical Status',
+                PlaceHolder: 'Select Status',
+                Value: '',
+                ListData: Observable.of(medstatus)
+            }),
+            new SearchDropdown({
+                Name: 'IsNokInformed',
+                Description: 'Is NOK Informed',
+                PlaceHolder: 'Select Status',
+                Value: '',
+                ListData: Observable.of(status)
             })
         ]
     }

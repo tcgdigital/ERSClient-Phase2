@@ -160,8 +160,9 @@ export class ChecklistEntryComponent implements OnInit {
     ngOnInit(): void {
         this.submitted = false;
         this.selectedcount = 0;
-        this.getCheckListParents(this.currentDepartmentId);
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+        this.getCheckListByDepartment(this.currentDepartmentId);
+        
         this.mergeResponses(this.currentDepartmentId);
         this.getAllActiveOrganizations();
         this.credential = UtilityService.getCredentialDetails();
@@ -173,8 +174,8 @@ export class ChecklistEntryComponent implements OnInit {
         this.dataExchange.Unsubscribe('checklistModelEdited');
     }
 
-    private getCheckListParents(departmentId): void {
-        this.checkListService.GetAllParents()
+    private getCheckListByDepartment(departmentId): void {
+        this.checkListService.GetAllWithParentsByDepartment(departmentId)
             .subscribe((response: ResponseModel<ChecklistModel>) => {
                 let parentIds: number[] = this.CheckListParents.map(item => item.CheckListId);
                 this.CheckListParents = response.Records;
@@ -182,7 +183,7 @@ export class ChecklistEntryComponent implements OnInit {
                 this.CheckListParents.forEach(element => {
                     element.IsSelected = false;
                 });
-                this.parentdepartments = _.unique(_.flatten(_.pluck(this.CheckListParents, 'TargetDepartment')), (x) => { return x.DepartmentId; });
+                this.parentdepartments = _.unique(_.flatten(_.pluck(this.CheckListParents, 'CheckListParentMapper')), (x) => { return x.DepartmentId; });
 
             });
     }
