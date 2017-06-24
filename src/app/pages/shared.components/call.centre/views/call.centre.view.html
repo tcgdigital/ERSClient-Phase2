@@ -146,7 +146,7 @@
                                 <autocomplete [items]="awbs" (notify)='onNotifyCargo($event)' [initialvalue]="initialvalue"></autocomplete>
 
                             </div>
-                            <div class="form-group col-lg-6 col-sm-12 col-md-6">
+                            <div class="form-group col-lg-6 col-sm-12 col-md-6" [hidden]="enquiryType!=1">
                                 <label for="LastName">Passangers with same PNR </label>
                                 <div class="multiselect-container">
                                     <div class="multiselect-selector" (click)="showListsamepnr(); $event.stopPropagation();">
@@ -162,7 +162,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div class="form-group col-lg-6 col-sm-12 col-md-6">
+                            <div class="form-group col-lg-6 col-sm-12 col-md-6" [hidden]="enquiryType!=1">
                                 <label for="LastName">All Passangers</label>
                                 <div class="multiselect-container">
                                     <div class="multiselect-selector" (click)="showListPassengers(); $event.stopPropagation();">
@@ -194,12 +194,10 @@
                             <div class="form-group col-lg-6 col-sm-12 col-md-6"> <button class="btn btn-primary" type="button" (click)="saveEnquiryDemandCaller()">Save</button></div>
                         </div>
                     </form>
-                    <div class="col-lg-12" [hidden]="!showCoPassangerPannel && enquiryType!=1">
-
-                    </div>
                 </div>
 
-                <div class="form-group col-lg-4 col-sm-12 col-md-6">
+                    
+                <div class="form-group col-lg-4 col-sm-12 col-md-6" [hidden]="enquiryType!=1">
                     <responsive-table [scrollableclass]="true">
                         <table responsive-table-body>
                             <thead>
@@ -216,21 +214,8 @@
                             </tbody>
                         </table>
                     </responsive-table>
-                    <!--<div class="multiselect-container">
-                    <div class="multiselect-selector" (click)="showListall(); $event.stopPropagation();">
-                        <i class="fa fa-caret-down fa-pull-right fa-fw" aria-hidden="true"></i> {{totalcount>0? totalcount
-                        + ' Passengers(s) selected' : 'Select Co-passenger'}}
-                    </div>
-                    <ul class="multiselect-list1 dropdown-menu-down" [hidden]="!totallistselected" (click)="$event.stopPropagation();">
-                        <li *ngFor="let copassenger of consolidatedCopassengers">
-                            <input type="checkbox" aria-label="Callback" [checked]="copassenger.IsSelected" (change)="selectCopassengerAll($event,copassenger)"
-                            />
-                            <span>{{copassenger.PassengerName}}</span>
-                        </li>
-                    </ul>
-
-                </div>-->
                 </div>
+
             </div>
 
 

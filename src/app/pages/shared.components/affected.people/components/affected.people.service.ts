@@ -60,7 +60,6 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
 
             if (affected != null) {
                 affectedPeople = UtilityService.pluck(affected, ['AffectedPeople'])[0];
-                debugger;
                 affectedPeopleForView = affectedPeople.map(function (dataItem) {
                     let item = new AffectedPeopleToView();
                     item.AffectedId = dataItem.AffectedId;
@@ -102,12 +101,15 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
                     if (dataItem.Passenger) {
                         item.PassengerId = dataItem.PassengerId;
                         if (dataItem.Passenger.CoPassengerMappings.length > 0) {
-                            debugger;
                             item.GroupId = dataItem.Passenger.CoPassengerMappings[0].GroupId;
                         }
                         else{
                             item.GroupId=0;
                         }
+                    }
+                    else
+                    {
+                        item.PassengerId=0;
                     }
                     item.IsNokInformed = dataItem.IsNokInformed;
 
@@ -117,6 +119,13 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
         }
         return affectedPeopleForView;
 
+    }
+
+    public GetCoPassangers(AffectedPersonId) : Observable<ResponseModel<AffectedPeopleModel>>{
+       return this._dataService.Query()
+        .Filter(`AffectedPersonId eq ${AffectedPersonId}`)
+        .Expand('Passenger($expand=CoPassengerMappings($expand=Passenger))')
+        .Execute();
     }
 
     public CreateBulk(entities: AffectedPeopleModel[]): Observable<AffectedPeopleModel[]> {

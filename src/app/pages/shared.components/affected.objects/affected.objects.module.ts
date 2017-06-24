@@ -11,6 +11,8 @@ import { AffectedObjectsService,
      AffectedObjectsVerificationComponent} from './components';
 import {SharedModule, DataExchangeService } from '../../../shared';
 import { ModalModule} from 'ng2-bootstrap/modal';
+import {  CallerService } from '../caller';
+
 
 
 @NgModule({
@@ -32,7 +34,8 @@ import { ModalModule} from 'ng2-bootstrap/modal';
     ],
     providers: [
         AffectedObjectsService,
-        DataExchangeService
+        DataExchangeService,
+        CallerService
     ]
 })
 export class AffectedObjectsModule { }

@@ -158,7 +158,6 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
-                debugger;
                 const passengerModels = this.affectedPeople.filter(x => x.IsCrew === false);
                 const crewModels = this.affectedPeople.filter(x => x.IsCrew == true);
                 for (const affectedPerson of passengerModels) {
@@ -233,6 +232,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             if (this.isCallrecieved) {
                 this.enquiryToUpdate = this.enquiryType != 1 ? response[0].Enquiries[0] :
                     response[0].Enquiries.find(x => x.AffectedPersonId == this.pdaenquery.AffectedPersonId);
+                this.enquiry=this.enquiryToUpdate;
                 this.form.controls["Queries"].reset({ value: this.enquiryToUpdate.Queries, disabled: false });
                 if (this.enquiryType == 1 || this.enquiryType == 2 || this.enquiryType == 3) {
                     this.form.controls["IsCallBack"].reset({ value: this.enquiryToUpdate.IsCallBack, disabled: false });
@@ -461,7 +461,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             demand.ScheduleTime = scheduleTime.toString();
             demand.RequesterType = "Others";
             demand.CommunicationLogs = this.SetCommunicationLog(GlobalConstants.RequesterTypeDemand, GlobalConstants.InteractionDetailsTypeDemand);
-
+            demand.CommunicationLogs[0].Queries=demand.CommunicationLogs[0].Queries+' Demand Code: '+demand.DemandCode;
             this.demands.push(demand);
         }
     }
@@ -473,6 +473,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             enquiry.AffectedPersonId = x.AffectedPersonId;
             enquiry.IncidentId = this.currentIncident;
             enquiry.Remarks = '';
+            enquiry.CallerId=enquiryModel.CallerId;
             enquiry.Queries = enquiryModel.Queries;
             enquiry.CreatedBy = +this.credential.UserId;
             enquiry.EnquiryType = this.enquiry.EnquiryType;
@@ -708,6 +709,12 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             else {
                 let pdaenquirytoupdate: PDAEnquiryModel = new PDAEnquiryModel();
                 pdaenquirytoupdate.deleteAttributes();
+                if(this.enquiryType != 1 && this.enquiryType != 3){
+                    delete this.enquiry.AffectedPersonId;
+                }
+                if(this.enquiryType != 2){
+                    delete this.enquiry.AffectedObjectId;
+                }
                 pdaenquirytoupdate.AffectedPersonId = this.enquiry.AffectedPersonId;
                 this.enquiryService.Create(this.enquiry)
                     .flatMap(_ => this.callcenteronlypageservice.Update(this.externalInput, this.callid))

@@ -5,6 +5,7 @@ import { IAffectedObjectsService } from './IAffectedObjectsService';
 import { InvolvePartyModel, AffectedModel } from '../../../shared.components';
 import { AffectedObjectModel, AffectedObjectsToView } from './affected.objects.model';
 import { EnquiryModel } from '../../call.centre';
+import { NextOfKinModel } from '../../nextofkins';
 import {
     ResponseModel, DataService,
     DataServiceFactory, DataProcessingService,
@@ -17,6 +18,8 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
     private _bulkDataService: DataService<AffectedObjectModel>;
     private _dataServiceForCargo: DataService<AffectedObjectModel>;
     private _enquiryService: DataService<EnquiryModel>;
+    private _nokService: DataService<NextOfKinModel>;
+
 
     constructor(private dataServiceFactory: DataServiceFactory) {
         super(dataServiceFactory, 'InvolvedParties');
@@ -27,12 +30,18 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
         this._dataServiceForCargo = this.dataServiceFactory.CreateServiceWithOptions<AffectedObjectModel>('AffectedObjects', option);
         this._enquiryService = dataServiceFactory
             .CreateServiceWithOptions<EnquiryModel>('Enquiries', option);
+        this._nokService = this.dataServiceFactory
+            .CreateServiceWithOptions<NextOfKinModel>('NextOfKins', option);
 
     }
 
     GetAll(): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
             .Expand('Affecteds($expand=AffectedObjects($expand=Cargo))').Execute();
+    }
+
+    CreateNok(noks: NextOfKinModel): Observable<NextOfKinModel> {
+        return this._nokService.Post(noks).Execute();
     }
 
     GetFilterByIncidentId(incidentId): Observable<ResponseModel<InvolvePartyModel>> {
@@ -102,7 +111,7 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
     public GetCommunicationByAWB(id: number): Observable<ResponseModel<AffectedObjectModel>> {
         return this._dataServiceForCargo.Query()
             .Filter(`AffectedObjectId eq ${id}`)
-            .Expand('Cargo,CommunicationLogs')
+            .Expand("Cargo,CommunicationLogs($filter=ActiveFlag eq 'Active';$orderby=CreatedOn desc)")
             .Execute();
     }
 
