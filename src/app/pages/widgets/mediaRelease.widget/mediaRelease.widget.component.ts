@@ -39,7 +39,7 @@ export class MediaReleaseWidgetComponent implements OnInit {
 	    // this.departmentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.departmentId;
-        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/' + this.currentIncidentId + '/';
+        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/Media/' + this.currentIncidentId + '/';
         this.getLatestMediaReleases(this.currentIncidentId);
         this.getAllMediaReleases();
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
@@ -47,7 +47,8 @@ export class MediaReleaseWidgetComponent implements OnInit {
     };
 
     private incidentChangeHandler(incident: KeyValue): void {  
-        this.currentIncidentId = incident.Value;        
+        this.currentIncidentId = incident.Value;    
+        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/Media/' + this.currentIncidentId + '/';    
         this.getLatestMediaReleases(this.currentIncidentId);
         this.getAllMediaReleases();
     };
