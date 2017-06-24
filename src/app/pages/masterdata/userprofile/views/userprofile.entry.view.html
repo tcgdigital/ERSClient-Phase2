@@ -22,6 +22,8 @@
 
                     <small *ngIf="form.controls.UserId.hasError('required')" [hidden]="form.controls.UserId.valid || (form.controls.UserId.pristine && !submitted)"
                         class="text-danger">Required</small>
+                    <small *ngIf="form.controls.UserId.hasError('validateUserId')" [hidden]="form.controls.UserId.valid || (form.controls.UserId.pristine && !submitted)"
+                        class="text-danger">Invalid Input</small>
                 </div>
             </div>
 

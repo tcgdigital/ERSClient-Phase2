@@ -89,9 +89,9 @@
             </div>
             <div class="col-lg-3">
                 <div class="form-group">
-                    <label for="EmergencyType">EmergencyType:<span class="required">*</span></label>
+                    <label for="EmergencyType">Crisis Type:<span class="required">*</span></label>
                     <select id="selectApprover" formControlName="EmergencyTypeId" name="EmergencyType" class="form-control">
-                        <option value=''>Select Emergency Type</option>
+                        <option value=''>Select Crisis Type</option>
                         <option *ngFor="let emergencytype of activeEmergencyTypes" [value]="emergencytype.EmergencyTypeId" >
                             {{emergencytype.EmergencyTypeName}}
                         </option>

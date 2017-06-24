@@ -14,7 +14,8 @@ const customerDissatisfactionRoutes: Routes = [
         children: [
             {
                 path: '',
-                component: CustomerDissatisfactionAssignedCallsListComponent
+                redirectTo: 'receivedCalls',
+                pathMatch: 'full'
             },
             {
                 path: 'assignedcalls',

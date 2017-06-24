@@ -27,7 +27,7 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         order: 3
     }, {
         id: 'emergencytype',
-        title: 'Emergency Type',
+        title: 'Crisis Type',
         // icon: 'fa fa-drupal fa-2x',
         url: '/pages/masterdata/emergencytype',
         selected: false,
@@ -43,7 +43,7 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         order: 5
     }, {
         id: 'emergencydepartment',
-        title: 'Emergency Department Mapping',
+        title: 'Crisis Department Mapping',
         // icon: 'fa fa-firefox fa-2x',
         url: '/pages/masterdata/emergencydepartment',
         selected: false,

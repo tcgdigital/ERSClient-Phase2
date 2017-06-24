@@ -131,6 +131,7 @@ export class CallCenterOnlyPageComponent implements OnInit {
             this.callcenteronlypageservice.Create(this.externnalInputModelToSave)
                 .subscribe((response: ExternalInputModel) => {
                     this.toastrService.success('Enquiry saved successfully.');
+                    this.enquiryType=0;
                     this.initializeForm();
                     this.initiateEnquiryForms();
                     this.isSubmitted=false;

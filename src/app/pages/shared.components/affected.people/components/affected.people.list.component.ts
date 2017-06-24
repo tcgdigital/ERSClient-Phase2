@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, OnInit, ViewChild } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { Subscription, Observable } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 
 
@@ -16,7 +16,7 @@ import { AffectedPeopleService } from './affected.people.service';
 import {
     ResponseModel, DataExchangeService, GlobalConstants, AuthModel,
     GlobalStateService, UtilityService, KeyValue, FileUploadService, SearchConfigModel,
-    SearchTextBox, SearchDropdown
+    SearchTextBox, SearchDropdown, NameValue
 } from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { FileStoreModel } from '../../../../shared/models/file.store.model';
@@ -49,7 +49,7 @@ export class AffectedPeopleListComponent implements OnInit {
     callers: CallerModel[] = [];
     affectedPersonModel: AffectedPeopleModel = new AffectedPeopleModel();
     nextOfKins: NextOfKinModel[] = [];
-    filesToUpload: File[]=[];
+    filesToUpload: File[] = [];
     credential: AuthModel;
     date: Date;
     downloadFilePath: string;
@@ -69,12 +69,11 @@ export class AffectedPeopleListComponent implements OnInit {
     constructor(private affectedPeopleService: AffectedPeopleService, private callerservice: CallerService,
         private involvedPartyService: InvolvePartyService, private dataExchange: DataExchangeService<number>,
         private globalState: GlobalStateService, private _router: Router, private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig, private fileUploadService: FileUploadService, 
+        private toastrConfig: ToastrConfig, private fileUploadService: FileUploadService,
         private fileStoreService: FileStoreService
         //, private enquiryService: EnquiryService
-    ) 
-    { 
-        this.downloadFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Affected People/'; 
+    ) {
+        this.downloadFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Affected People/';
     }
 
     //   medicalStatusForm: string = "";
@@ -106,52 +105,50 @@ export class AffectedPeopleListComponent implements OnInit {
         this.childModal.hide();
     }
 
-     getFileDetails(e: any): void {
-        this.filesToUpload = []; 
+    getFileDetails(e: any): void {
+        this.filesToUpload = [];
         for (var i = 0; i < e.target.files.length; i++) {
-            const extension = e.target.files[i].name.split('.').pop();                                  
-            if(extension != "exe" || extension != "dll")                
+            const extension = e.target.files[i].name.split('.').pop();
+            if (extension != "exe" || extension != "dll")
                 this.filesToUpload.push(e.target.files[i]);
-            else
-            {
-              this.toastrService.error('Invalid File Format!', 'Error', this.toastrConfig);
-              this.inputFileCrew.nativeElement.value = "";
-            }            
+            else {
+                this.toastrService.error('Invalid File Format!', 'Error', this.toastrConfig);
+                this.inputFileCrew.nativeElement.value = "";
+            }
         }
-        
+
     }
 
-    uploadFile(): void{
-        if(this.filesToUpload.length)
-        {
+    uploadFile(): void {
+        if (this.filesToUpload.length) {
             let baseUrl = GlobalConstants.EXTERNAL_URL;
-            
+
             let organizationId = +UtilityService.GetFromSession("CurrentOrganizationId");
             let moduleName = "Affected People"
             let param = `${this.currentIncident}/${organizationId}/${this.currentDepartmentId}/${moduleName}`;
             this.date = new Date();
-            this.fileUploadService.uploadFiles<string>(baseUrl + "./api/fileUpload/UploadFilesModuleWise/" + param, 
-            this.filesToUpload, this.date.toString()).subscribe((result: string) => {
-                console.log(result);                                
-                let fileStore: FileStoreModel = new FileStoreModel();
-                fileStore.FileStoreID = 0;                
-                fileStore.IncidentId = this.currentIncident;
-                fileStore.DepartmentId = this.currentDepartmentId;
-                fileStore.OrganizationId = organizationId;                
-                fileStore.FilePath = result;
-                fileStore.UploadedFileName = this.filesToUpload[0].name;  
-                fileStore.CrewId = this.affectedPersonModelForStatus.CrewId;
-                fileStore.ModuleName = moduleName;
-                fileStore.CreatedBy = +this.credential.UserId;
-                fileStore.CreatedOn = new Date();
-                fileStore.ActiveFlag = 'Active';             
-                                   
-				this.fileStoreService.Create(fileStore)
-				.subscribe((response: FileStoreModel) =>{
-                    this.getAffectedPeople(this.currentIncident);                        
-					console.log(response);					
-				});                                               
-            });
+            this.fileUploadService.uploadFiles<string>(baseUrl + "./api/fileUpload/UploadFilesModuleWise/" + param,
+                this.filesToUpload, this.date.toString()).subscribe((result: string) => {
+                    console.log(result);
+                    let fileStore: FileStoreModel = new FileStoreModel();
+                    fileStore.FileStoreID = 0;
+                    fileStore.IncidentId = this.currentIncident;
+                    fileStore.DepartmentId = this.currentDepartmentId;
+                    fileStore.OrganizationId = organizationId;
+                    fileStore.FilePath = result;
+                    fileStore.UploadedFileName = this.filesToUpload[0].name;
+                    fileStore.CrewId = this.affectedPersonModelForStatus.CrewId;
+                    fileStore.ModuleName = moduleName;
+                    fileStore.CreatedBy = +this.credential.UserId;
+                    fileStore.CreatedOn = new Date();
+                    fileStore.ActiveFlag = 'Active';
+
+                    this.fileStoreService.Create(fileStore)
+                        .subscribe((response: FileStoreModel) => {
+                            this.getAffectedPeople(this.currentIncident);
+                            console.log(response);
+                        });
+                });
         }
     }
 
@@ -169,8 +166,7 @@ export class AffectedPeopleListComponent implements OnInit {
                 // if (affectedModifiedForm.PassengerId != null && affectedModifiedForm.PassengerId != 0 && affectedModifiedForm.PassengerId != undefined) {
                 //     this.passengerUpdate(pasengerModel, this.affectedPersonToUpdate.PassengerId);
                 // }
-                if(this.filesToUpload.length)
-                {
+                if (this.filesToUpload.length) {
                     this.uploadFile();
                 }
 
@@ -221,7 +217,7 @@ export class AffectedPeopleListComponent implements OnInit {
                         x["MedicalStatusToshow"] = x.MedicalStatus;
                         x["showDiv"] = false;
                     });
-                    console.log(this.affectedPeople);
+                console.log(this.affectedPeople);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -231,8 +227,8 @@ export class AffectedPeopleListComponent implements OnInit {
         this.currentIncident = incident.Value;
         this.getAffectedPeople(this.currentIncident);
     }
-     private departmentChangeHandler(department: KeyValue): void {
-        this.currentDepartmentId = department.Value;        
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
     };
 
     ngOnInit(): any {
@@ -242,7 +238,7 @@ export class AffectedPeopleListComponent implements OnInit {
                     this.isArchive = true;
                     this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
                     this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-                    
+
                     this.getAffectedPeople(this.currentIncident);
                 }
                 else {
@@ -347,9 +343,24 @@ export class AffectedPeopleListComponent implements OnInit {
 
     invokeSearch(query: string): void {
         if (query !== '') {
+            if (query.indexOf('IsNokInformed') >= 0) {
+                if (query.indexOf("'true'") >= 0)
+                    query = query.replace("'true'", "true");
+                if (query.indexOf("'false'") >= 0)
+                    query = query.replace("'false'", "false");
+            }
+            if (query.toLowerCase().indexOf("contains(tolower(Passenger/PassengerType), 'crew')".toLowerCase()) >= 0) {
+                let index = query.indexOf("contains(tolower(Passenger/PassengerType), ");
+                let length = "contains(tolower(Passenger/PassengerType), ".length;
+                query = query.replace(query.substring(index, length + 7), 'IsCrew eq true');
+            }
             this.selectCurrentIncident();
             this.searchAffectedPeople(query, this.currentIncident);
         }
+        else{
+            this.getAffectedPeople(this.currentIncident);
+        }
+
     }
 
     invokeReset(): void {
@@ -369,6 +380,11 @@ export class AffectedPeopleListComponent implements OnInit {
     }
 
     private initiateSearchConfigurations(): void {
+        let medstatus: Array<NameValue<string>> = GlobalConstants.MedicalStatus.map(x => new NameValue<string>(x.caption, x.caption))
+        const status: Array<NameValue<string>> = [
+            new NameValue<string>('Informed', 'true'),
+            new NameValue<string>('Not Informed', 'false'),
+        ] as Array<NameValue<string>>;
         this.searchConfigs = [
             new SearchTextBox({
                 Name: 'TicketNumber',
@@ -385,6 +401,31 @@ export class AffectedPeopleListComponent implements OnInit {
                 Name: 'Pnr',
                 Description: 'PNR',
                 Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'ContactNumber',
+                Description: 'PDA Contact',
+                Value: '',
+                OrCommand: 'Passenger/ContactNumber|Crew/ContactNumber'
+            }),
+            new SearchTextBox({
+                Name: 'Passenger/PassengerType',
+                Description: 'Passenger Types',
+                Value: ''
+            }),
+            new SearchDropdown({
+                Name: 'MedicalStatus',
+                Description: 'Medical Status',
+                PlaceHolder: 'Select Status',
+                Value: '',
+                ListData: Observable.of(medstatus)
+            }),
+            new SearchDropdown({
+                Name: 'IsNokInformed',
+                Description: 'Is NOK Informed',
+                PlaceHolder: 'Select Status',
+                Value: '',
+                ListData: Observable.of(status)
             })
         ]
     }

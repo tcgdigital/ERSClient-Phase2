@@ -14,7 +14,8 @@ const passangerQueryComponent: Routes = [
         children: [
             {
                 path: '',
-                component: PassangerQueryAssignedCallsListComponent
+                redirectTo: 'receivedCalls',
+                pathMatch: 'full'
             },
             {
                 path: 'assignedcalls',

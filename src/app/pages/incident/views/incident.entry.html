@@ -30,9 +30,9 @@
                 <div class="card-block">
                     <div class="row">
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="EmergencyType">Emergency Type<span class="required">*</span></label>
+                            <label for="EmergencyType">Crisis Type<span class="required">*</span></label>
                             <select id="EmergencyTypeId" class="form-control" formControlName="EmergencyTypeId" name="EmergencyTypeId" (change)="emergencyTypeChange($event.target.value,activeEmergencyTypes)">
-                                    <option value='' >Select Emergency Type</option>
+                                    <option value='' >Select Crisis Type</option>
                                     <option *ngFor="let emergencyType of activeEmergencyTypes" [value]="emergencyType.EmergencyTypeId" >
                                         {{emergencyType.EmergencyTypeName}}
                                     </option>
@@ -70,7 +70,7 @@
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="EmergencyDate">Date of Crisis<span class="required">*</span>&nbsp;&nbsp;(UTC)</label>
                             <input id="EmergencyDate" readonly class="form-control" type="text" name="EmergencyDate" formControlName="EmergencyDate"
-                                placeholder="Emergency Date" datetime-picker [options]="datepickerOptionED" (selectHandler)="dateTimeSet($event,'EmergencyDate');"
+                                placeholder="Crisis Date" datetime-picker [options]="datepickerOptionED" (selectHandler)="dateTimeSet($event,'EmergencyDate');"
                             />
                             <small *ngIf="form.controls.EmergencyDate.hasError('required')" [hidden]="form.controls.EmergencyDate.valid || (form.controls.EmergencyDate.pristine && !submitted)"
                                 class="text-danger">Required</small>
@@ -78,15 +78,15 @@
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="EmergencyDateLocal">Date of Crisis (LOCAL)</label>
                             <input id="EmergencyDateLocal" disabled formControlName="EmergencyDateLocal" class="form-control" type="text" name="EmergencyDateLocal"
-                                placeholder="Emergency Date" />
+                                placeholder="Crisis Date" />
 
 
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="EmergencyName">Emergency Name<span class="required">*</span> (Max character length 100)</label>
-                            <input id="EmergencyName" class="form-control" type="text" name="EmergencyName" formControlName="EmergencyName" placeholder="Enter Emergency Name"
+                            <label for="EmergencyName">Crisis Name<span class="required">*</span> (Max character length 100)</label>
+                            <input id="EmergencyName" class="form-control" type="text" name="EmergencyName" formControlName="EmergencyName" placeholder="Enter Crisis Name"
                             />
                             <small *ngIf="form.controls.EmergencyName.hasError('required')" [hidden]="form.controls.EmergencyName.valid || (form.controls.EmergencyName.pristine && !submitted)"
                                 class="text-danger">Required</small>
@@ -355,9 +355,9 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="EmergencyType">Emergency Type</label>
+                            <label for="EmergencyType">Crisis Type</label>
                             <select id="EmergencyTypeIdPopup" disabled class="form-control" formControlName="EmergencyTypeIdPopup" name="EmergencyTypeIdPopup">
-                                    <option value="0" >Select Emergency Type</option>
+                                    <option value="0" >Select Crisis Type</option>
                                     <option *ngFor="let emergencyType of activeEmergencyTypes" [value]="emergencyType.EmergencyTypeId" >
                                         {{emergencyType.EmergencyTypeName}}
                                     </option>
@@ -395,9 +395,9 @@
                     <div class="row">
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <div class="form-group">
-                                <label for="EmergencyName">Emergency Name</label>
+                                <label for="EmergencyName">Crisis Name</label>
                                 <input id="EmergencyNamePopup" disabled formControlName="EmergencyNamePopup" class="form-control" type="text" name="EmergencyNamePopup"
-                                    placeholder="Enter Emergency Name" />
+                                    placeholder="Enter Crisis Name" />
                             </div>
 
                         </div>

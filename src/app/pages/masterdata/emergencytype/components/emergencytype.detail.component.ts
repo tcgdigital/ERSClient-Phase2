@@ -104,12 +104,12 @@ export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
         this.searchConfigs = [
             new SearchTextBox({
                 Name: 'EmergencyTypeName',
-                Description: 'Emergency Type',
+                Description: 'Crisis Type',
                 Value: ''
             }),
              new SearchDropdown({
                 Name: 'EmergencyCategory',
-                Description: 'Emergency Category',
+                Description: 'Crisis Category',
                 PlaceHolder: 'Select Status',
                 Value: '',
                 ListData: Observable.of(emergencyCategories)

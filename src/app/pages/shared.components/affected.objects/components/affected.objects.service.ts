@@ -17,6 +17,7 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
     private _bulkDataService: DataService<AffectedObjectModel>;
     private _dataServiceForCargo: DataService<AffectedObjectModel>;
     private _enquiryService: DataService<EnquiryModel>;
+    private _affectedObjectService: DataService<AffectedObjectModel>;
 
     constructor(private dataServiceFactory: DataServiceFactory) {
         super(dataServiceFactory, 'InvolvedParties');
@@ -41,7 +42,12 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
             .Expand('Affecteds($expand=AffectedObjects($expand=Cargo))')
             .Execute();
     }
-
+    GetAffectedObjectQuery(incidentId, query): Observable<ResponseModel<InvolvePartyModel>> {
+        return this._dataService.Query()
+            .Filter(`IncidentId eq ${incidentId}`)
+            .Expand(`Affecteds($expand=AffectedObjects($expand=Cargo;$filter=${query}))`)
+            .Execute();
+    }
     FlattenAffactedObjects(involvedParty: InvolvePartyModel): AffectedObjectsToView[] {
         let affectedObjectsToView: AffectedObjectsToView[] = [];
         let affectedObjects: AffectedObjectModel[];
@@ -63,13 +69,14 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
                     item.mftwgt = data.Cargo.mftwgt;
                     item.IsVerified = data.IsVerified;
                     item.Details = data.Cargo.Details;
-                    item.LostFoundStatus = data.LostFoundStatus;
+                    item.LostFoundStatus = data.LostFoundStatus != null ? data.LostFoundStatus: 'NA';;
                     item.ShipperName = data.Cargo.ShipperName;
                     item.ShipperAddress = data.Cargo.ShipperAddress;
                     item.ShipperContactNo = data.Cargo.ShipperContactNo;
                     item.ConsigneeName = data.Cargo.ConsigneeName;
                     item.ConsigneeAddress = data.Cargo.ConsigneeAddress;
                     item.ConsigneeContactNo = data.Cargo.ConsigneeContactNo;
+                    item.CargoType = data.Cargo.CargoType != null ? data.Cargo.CargoType : 'NA';
                     // item.CommunicationLogs: data.CommunicationLogs
                     return item;
                 });

@@ -1,17 +1,20 @@
+<generic-search [filterConfigs]="searchConfigs" (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();">
+</generic-search>
 <responsive-table>
     <table responsive-table-body>
         <thead>
             <tr>
                 <th>Reference Number</th>
                 <th>Air Way Bill</th>
+                <th>Cargo Type</th>
                 <th>Manifest Pieces</th>
                 <th>Manifest weight(kg)</th>
                 <th>POU</th>
                 <th>POL</th>
+                <th>Cargo Status</th>
                 <th>Verification Status</th>
                 <th>Interaction Details</th>
                 <th>Update Status</th>
-
             </tr>
         </thead>
         <tbody>
@@ -21,10 +24,12 @@
             <tr *ngFor="let affectedObject of affectedObjects">
                 <td data-title="Reference Number">{{affectedObject.TicketNumber}}&nbsp;</td>
                 <td data-title="Air Way Bill">{{affectedObject.AWB}}&nbsp;</td>
+                <td data-title="Cargo Type">{{affectedObject.CargoType}}&nbsp;</td>
                 <td data-title="Manifest Pieces">{{affectedObject.mftpcs}}&nbsp;</td>
                 <td data-title="Manifest weight">{{affectedObject.mftwgt}}&nbsp;</td>
                 <td data-title="POU">{{affectedObject.POU}}&nbsp;</td>
                 <td data-title="POL">{{affectedObject.POL}}&nbsp;</td>
+                <td data-title="Cargo Status">{{affectedObject.LostFoundStatus}}&nbsp;</td>
                 <td data-title="Verification Status">
                     <i class="fa fa-check fa-lg fontGreen" aria-hidden="true" [hidden]="affectedObject.IsVerified == false"></i>
                     <i class="fa fa-question fa-lg fontAmber" aria-hidden="true" [hidden]="affectedObject.IsVerified == true"></i>
@@ -41,8 +46,8 @@
                         </ul>
                     </div>
                 </td>-->
-                 <td data-title="Interaction Details">
-                      <i class="fa fa-edit fa-2x" (click)="openAffectedObjectDetail(affectedObject)"></i>
+                <td data-title="Interaction Details">
+                    <i class="fa fa-edit fa-2x" (click)="openAffectedObjectDetail(affectedObject)"></i>
                 </td>
             </tr>
         </tbody>
@@ -181,14 +186,14 @@
                         </div>
                         <div class="form-group col-lg-4 col-sm-12 col-md-6">
                             <label for="DiscussionNote">Shipper's Name:</label>
-                             <input value="{{affectedObjectDetails.ShipperName}}" readonly type="text" class="form-control" />
+                            <input value="{{affectedObjectDetails.ShipperName}}" readonly type="text" class="form-control" />
                         </div>
 
                         <div class="form-group col-lg-4 col-sm-12 col-md-6">
                             <label for="DiscussionNote">Shipper's Address::</label>
-                             <input value="{{affectedObjectDetails.ShipperAddress}}" readonly type="text" class="form-control" />
+                            <input value="{{affectedObjectDetails.ShipperAddress}}" readonly type="text" class="form-control" />
                         </div>
-                        
+
                     </div>
                     <div class="row">
                         <div class="form-group col-lg-4 col-sm-12 col-md-6">
@@ -198,7 +203,7 @@
 
                         <div class="form-group col-lg-4 col-sm-12 col-md-6">
                             <label for="DiscussionNote">Consignee’s Address::</label>
-                             <input value="{{affectedObjectDetails.ConsigneeAddress}}" readonly type="text" class="form-control" />
+                            <input value="{{affectedObjectDetails.ConsigneeAddress}}" readonly type="text" class="form-control" />
                         </div>
                     </div>
                     <div class="row">

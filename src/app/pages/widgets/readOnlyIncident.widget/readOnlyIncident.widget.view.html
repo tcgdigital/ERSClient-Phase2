@@ -26,9 +26,9 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="EmergencyType">EmergencyType</label>
+                            <label for="EmergencyType">Crisis Type</label>
                             <select id="EmergencyTypeIdPopup" disabled class="form-control" formControlName="EmergencyTypeIdPopup" name="EmergencyTypeIdPopup">
-                                    <option value="0" >Select Emergency Type</option>
+                                    <option value="0" >Select Crisis Type</option>
                                     <option *ngFor="let emergencyType of activeEmergencyTypes" [value]="emergencyType.EmergencyTypeId" >
                                         {{emergencyType.EmergencyTypeName}}
                                     </option>
@@ -53,9 +53,9 @@
                     <div class="row">
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <div class="form-group">
-                                <label for="EmergencyName">Emergency Name</label>
+                                <label for="EmergencyName">Crisis Name</label>
                                 <input id="EmergencyNamePopup" disabled formControlName="EmergencyNamePopup" class="form-control" type="text" name="EmergencyNamePopup"
-                                    placeholder="Enter Emergency Name" />
+                                    placeholder="Enter Crisis Name" />
                             </div>
                         </div>
                         <div class="form-group col-lg-9 col-sm-12 col-md-6">
