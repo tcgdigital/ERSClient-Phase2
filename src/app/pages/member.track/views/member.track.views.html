@@ -7,6 +7,15 @@
             <div class="card-block">
                 <div class="row">
                     <div class="col-12">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                <i class="fa fa-circle"></i>&nbsp;&nbsp; <strong>Available Resources(number)  : {{availblecount}}</strong>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                <i class="fa fa-circle"></i>&nbsp;&nbsp;<strong>Busy Resources(number) :  {{freecount}}</strong>
+                            </div>
+                        </div>
+                        <br/>
                         <responsive-table>
                             <table responsive-table-body>
                                 <thead>
@@ -15,6 +24,7 @@
                                         <th>Member's Contact Number</th>
                                         <th>Is Notified </th>
                                         <th>Is Notification Acknowledged </th>
+                                        <th>Is Volunteered</th>
                                         <th>Busy</th>
                                         <th>Work Details</th>
                                         <th>View History</th>
@@ -27,8 +37,9 @@
                                     <tr *ngFor="let memberengagement of memberEngagementsToView; let i = index">
                                         <td data-title="Member Name">{{memberengagement.MemberName}}</td>
                                         <td data-title="Member's Contact Number">{{memberengagement.MemberContactNumber}} </td>
-                                        <td data-title="Is Notified"><i class="fa fa-check fa-2x fontGreen" aria-hidden="true" [hidden]="memberengagement.IsNotyfied == false"></i>&nbsp;</td>
-                                        <td data-title="Is Notification Acknowledged"><i class="fa fa-check fa-2x fontGreen" aria-hidden="true" [hidden]="memberengagement.IsAcknowledged == false"></i>&nbsp;</td>
+                                        <td data-title="Is Notified"><i class="fa fa-check fa-2x" aria-hidden="true" [hidden]="memberengagement.IsNotyfied == false"></i>&nbsp;</td>
+                                        <td data-title="Is Notification Acknowledged"><i class="fa fa-check fa-2x" aria-hidden="true" [hidden]="memberengagement.IsAcknowledged == false"></i>&nbsp;</td>
+                                        <td data-title="Is Volunteered"><i class="fa fa-check fa-2x" aria-hidden="true" [hidden]="memberengagement.isVolunteered == false"></i>&nbsp;</td>
                                         <td data-title="Busy"><input type="checkbox" [checked]="memberengagement.IsBusy" [attr.data-userid]="memberengagement.UserId"
                                                 data-toggle="toggle" data-id="{{i}}" data-style="ios" data-onstyle="success"
                                                 data-offstyle="info"></td>
@@ -51,26 +62,28 @@
                                     <div class="modal-header">
                                         <h4 class="modal-title pull-left">View Work History</h4>
                                         <button type="button" class="close pull-right" aria-label="Close" (click)="cancelHistory()">
-                  <span aria-hidden="true">&times;</span>
-                   </button>
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
                                     </div>
                                     <div class="modal-body">
                                         <div class="card-block">
                                             <responsive-table>
                                                 <table responsive-table-body>
                                                     <thead>
-                                                        <th>Work Details</th>
                                                         <th>Deployed On</th>
                                                         <th>Undeployed On</th>
+                                                        <th>Work Details</th>
+                                                        <th>Assigned by</th>
                                                     </thead>
                                                     <tbody>
                                                         <tr [hidden]="memberHistory.length != 0">
                                                             <td colspan="9">No history to show.</td>
                                                         </tr>
                                                         <tr *ngFor="let work of memberHistory">
-                                                            <td data-title="Work Details">{{work.Remarks}}</td>
                                                             <td data-title="Deployed On">{{work.DeployedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
                                                             <td data-title="UndeployedOn">{{work.UnDeployedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
+                                                            <td data-title="Work Details">{{work.Remarks}}</td>
+                                                            <td data-title="Assigned by">{{work.createdby}}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
