@@ -8,6 +8,7 @@ import { AffectedObjectsToView, AffectedObjectModel } from './affected.objects.m
 import { AffectedObjectsService } from './affected.objects.service';
 import { EnquiryModel } from '../../call.centre/components/call.centre.model';
 import { CallerModel, CallerService } from '../../caller';
+import { NextOfKinModel } from '../../nextofkins';
 import {
     ResponseModel, DataExchangeService,
     GlobalStateService, KeyValue, UtilityService, GlobalConstants,
@@ -15,6 +16,7 @@ import {
 } from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
 
 @Component({
     selector: 'affectedobject-list',
@@ -28,7 +30,7 @@ export class AffectedObjectsListComponent implements OnInit {
 
 
 
-    constructor(private affectedObjectService: AffectedObjectsService,
+    constructor(private affectedObjectService: AffectedObjectsService,private callerservice: CallerService,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig, private globalState: GlobalStateService, private _router: Router) { }
     affectedObjects: AffectedObjectsToView[] = [];
@@ -130,6 +132,37 @@ export class AffectedObjectsListComponent implements OnInit {
             });
 
     }
+    saveNok(affectedpersonId, caller: CallerModel, event: any): void {
+        if (event.checked) {
+            let nok = new NextOfKinModel();
+            nok.AffectedPersonId = affectedpersonId;
+            nok.AlternateContactNumber = caller.AlternateContactNumber;
+            nok.CallerId = caller.CallerId;
+            nok.ContactNumber = caller.ContactNumber;
+            nok.IncidentId = this.currentIncident;
+            nok.NextOfKinName = caller.FirstName + "  " + caller.LastName;
+            nok.Relationship = caller.Relationship;
+            nok.Location = caller.Location;
+            let callertoupdate = new CallerModel();
+            callertoupdate.IsNok = true;
+            callertoupdate.deleteAttributes();
+            this.affectedObjectService.CreateNok(nok)
+                .flatMap(() => this.callerservice.Update(callertoupdate, caller.CallerId))
+                .subscribe(() => {
+                    this.toastrService.success('NOK updated.')
+                });
+        }
+        else {
+            let callertoupdate = new CallerModel();
+            callertoupdate.IsNok = false;
+            callertoupdate.deleteAttributes();
+            this.callerservice.Update(callertoupdate, caller.CallerId)
+                .subscribe(() => {
+                    this.toastrService.success('NOK updated.')
+                });
+        }
+    }
+
     searchAffectedObject(query: string, incidentId: number): void {
         this.affectedObjectService.GetAffectedObjectQuery(incidentId, query)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
@@ -159,6 +192,7 @@ export class AffectedObjectsListComponent implements OnInit {
         let affectedObjectUpdate = new AffectedObjectModel();
         affectedObjectUpdate.Remarks = affectedObject.Remarks;
         affectedObjectUpdate.IdentificationDesc = affectedObject.IdentificationDesc;
+
         affectedObjectUpdate.LostFoundStatus = affectedObject.LostFoundStatus;
         this.affectedObjectService.UpdateStatus(affectedObjectUpdate, affectedObject.AffectedObjectId)
             .subscribe((response: AffectedObjectModel) => {

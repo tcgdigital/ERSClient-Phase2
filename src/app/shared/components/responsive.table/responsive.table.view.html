@@ -1,4 +1,4 @@
-<div class="table-responsive-vertical shadow-z-1" (mouseover)="onHover($event)">
+<div class="table-responsive-vertical shadow-z-1" (mouseover)="onHover($event)" [ngClass]="{scrollclass: scrollableclass}">
     <a href="javascript:void(0);" class="scroll-nav prev" (click)="onPreviousNevClick($event)">
         <i aria-hidden="true" class="fa fa-angle-left fa-3x"></i>
     </a>

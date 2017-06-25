@@ -35,6 +35,7 @@ export class UserProfileModel extends BaseModel {
     public DeviceOS: string;
     public ResignedOn?: Date;
     public isActive: boolean;
+    public isVolunteered : boolean;
 
     public UserPermissions?: UserPermissionModel[];
     public Notifications?: NotificationModel[];

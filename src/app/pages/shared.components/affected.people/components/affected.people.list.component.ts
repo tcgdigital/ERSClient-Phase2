@@ -9,7 +9,7 @@ import { InvolvePartyService } from '../../involveparties';
 //import { EnquiryService } from '../../call.centre/components/call.centre.service';
 import { EnquiryModel } from '../../call.centre/components/call.centre.model';
 import { CallerModel, CallerService } from '../../caller';
-import { PassengerModel } from '../../passenger';
+import { PassengerService, CoPassengerMappingModel, PassengerModel } from "../../passenger/components";
 import { NextOfKinModel } from '../../nextofkins';
 import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';
 import { AffectedPeopleService } from './affected.people.service';
@@ -21,6 +21,7 @@ import {
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { FileStoreModel } from '../../../../shared/models/file.store.model';
 import { FileStoreService } from '../../../../shared/services/common.service';
+import * as _ from 'underscore';
 
 @Component({
     selector: 'affectedpeople-list',
@@ -53,6 +54,7 @@ export class AffectedPeopleListComponent implements OnInit {
     credential: AuthModel;
     date: Date;
     downloadFilePath: string;
+    copassangers: PassengerModel[] = [];
 
     searchConfigs: Array<SearchConfigModel<any>> = new Array<SearchConfigModel<any>>();
 
@@ -70,7 +72,7 @@ export class AffectedPeopleListComponent implements OnInit {
         private involvedPartyService: InvolvePartyService, private dataExchange: DataExchangeService<number>,
         private globalState: GlobalStateService, private _router: Router, private toastrService: ToastrService,
         private toastrConfig: ToastrConfig, private fileUploadService: FileUploadService,
-        private fileStoreService: FileStoreService
+        private fileStoreService: FileStoreService, private passangerService: PassengerService
         //, private enquiryService: EnquiryService
     ) {
         this.downloadFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Affected People/';
@@ -86,7 +88,10 @@ export class AffectedPeopleListComponent implements OnInit {
      * @memberOf AffectedPeopleListComponent
      */
     openAffectedPersonDetail(affectedPerson: AffectedPeopleToView): void {
+        this.copassangers = [];
         this.affectedPersonModelForStatus = affectedPerson;
+
+
         if (affectedPerson.MedicalStatus != "NA") {
             this.affectedPersonModelForStatus["MedicalStatusToshow"] = this.medicalStatus.find(x => { return x.value == affectedPerson.MedicalStatus; }).value;
         }
@@ -95,8 +100,23 @@ export class AffectedPeopleListComponent implements OnInit {
                 this.callers = response.Records.map(x => {
                     return x.Caller;
                 });
-                this.childModal.show();
+                if (affectedPerson.PassengerId != 0 && affectedPerson.GroupId != 0) {
+                    this.passangerService.getCoPassengers(affectedPerson.GroupId)
+                        .subscribe((response: ResponseModel<CoPassengerMappingModel>) => {
+                            if (response.Records.length > 0) {
+                                this.copassangers = _.flatten(_.pluck(response.Records, 'Passenger'));
+                                this.copassangers = _.without(this.copassangers, _.findWhere(this.copassangers, { PassengerId: affectedPerson.PassengerId }));
+                                //_.flatten(_.pluck(response.Records[0].Passenger.CoPassengerMappings, 'Passenger'));
+                                this.childModal.show();
+                            }
+                        })
+                }
+                else {
+                    this.childModal.show();
+                }
+
             });
+
 
 
     }
@@ -157,33 +177,19 @@ export class AffectedPeopleListComponent implements OnInit {
         this.affectedPersonToUpdate.Identification = affectedModifiedForm.Identification;
         this.affectedPersonToUpdate.MedicalStatus = affectedModifiedForm["MedicalStatusToshow"];
         this.affectedPersonToUpdate.Remarks = affectedModifiedForm.Remarks;
-        // let pasengerModel = new PassengerModel();
-        // pasengerModel.CoTravellerInformation = affectedModifiedForm.CoTravellerInformation;
         this.affectedPeopleService.Update(this.affectedPersonToUpdate)
             .subscribe((response: AffectedPeopleModel) => {
-
                 this.toastrService.success('Additional Information updated.')
-                // if (affectedModifiedForm.PassengerId != null && affectedModifiedForm.PassengerId != 0 && affectedModifiedForm.PassengerId != undefined) {
-                //     this.passengerUpdate(pasengerModel, this.affectedPersonToUpdate.PassengerId);
-                // }
                 if (this.filesToUpload.length) {
                     this.uploadFile();
                 }
-
-                this.toastrService.success('Aditional Information updated.')
+                this.getAffectedPeople(this.currentIncident);
                 affectedModifiedForm["MedicalStatusToshow"] = affectedModifiedForm.MedicalStatus;
                 let num = UtilityService.UUID();
                 this.globalState.NotifyDataChanged('AffectedPersonStatusChanged', num);
                 this.childModal.hide();
             }, (error: any) => {
                 alert(error);
-            });
-    }
-
-    passengerUpdate(passenger: PassengerModel, key: number): void {
-        this.affectedPeopleService.updatePassanger(passenger, key)
-            .subscribe((response: PassengerModel) => {
-
             });
     }
 

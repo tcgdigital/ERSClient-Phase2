@@ -9,9 +9,9 @@
                         <div class="form-group col-lg-1 col-sm-12 col-md-6">
                             <input id="IncidentId" type="hidden" name="IncidentId" formControlName="IncidentId" [(ngModel)]="incidentModel.IncidentId"
                             />
-                            <label for="IsDrill">IsDrill</label>
+                            <label for="IsDrill"></label>
                             <md-checkbox class="drill-checkbox-style" md-no-ink id="IsDrill" name="IsDrill" formControlName="IsDrill" [ngModel]="incidentModel.IsDrill"
-                                (change)="IsDrill($event)" aria-label="Drill">
+                                (change)="IsDrill($event)" aria-label="Drill">IsDrill
                             </md-checkbox>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
