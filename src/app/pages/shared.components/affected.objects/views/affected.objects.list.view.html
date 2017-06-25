@@ -134,7 +134,7 @@
 
                     <div>
                         <div class="row">
-                            <div class="col-lg-6">
+                            <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="row">
                                     <div class="form-group col-lg-6 col-sm-12 col-md-6">
                                         <label for="DiscussionNote">Shipper's Name:</label>
@@ -159,8 +159,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-lg-6 col-sm-12 col-md-6">
-                                        <md-checkbox id="VerificationStatus" [disabled]="true" [(ngModel)]="affectedObjectDetails.IsVerified" aria-label="Add"
-                                            ng-disabled="true">
+                                        <md-checkbox id="VerificationStatus" [disabled]="true" [(ngModel)]="affectedObjectDetails.IsVerified" aria-label="Add" ng-disabled="true">
                                             Verification Status:
                                         </md-checkbox>
                                     </div>
@@ -168,12 +167,12 @@
                                     <div class="form-group col-lg-6 col-sm-12 col-md-6">
                                         <label for="DiscussionNote">Status:</label>
                                         <select id="selectStatus" [(ngModel)]="affectedObjectDetails.LostFoundStatus" class="form-control">
-                                     <option *ngFor="let status of allcargostatus" [value]="status.caption" >{{status.caption}} </option>                      
-                                     </select>
+                                           <option *ngFor="let status of allcargostatus" [value]="status.caption" >{{status.caption}} </option>                      
+                                         </select>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-6 col-md-6 col-sm-12">
                                 <responsive-table [scrollableclass]="true">
                                     <table responsive-table-body>
                                         <thead>
@@ -192,7 +191,7 @@
                                                     <td data-title="comm"><strong>{{caller.ContactNumber}}</strong>
                                                     </td>
                                                     <td data-title="Select NOK">
-                                                        <md-checkbox [(ngModel)]="caller.IsNok" (change)="saveNok(affectedPersonModel.AffectedPersonId,caller,$event)" aria-label="Add"></md-checkbox>
+                                                        <md-checkbox [(ngModel)]="caller.IsNok" (change)="saveNok(affectedObjectDetails.AffectedObjectId,caller,$event)" aria-label="Add"></md-checkbox>
                                                     </td>
                                             </tr>
                                         </tbody>
@@ -203,15 +202,17 @@
                         <div class="row">
                             <div class="form-group col-lg-4 col-sm-12 col-md-6">
                                 <label for="DiscussionNote">Identification Details:</label>
-                                <input value="{{affectedObjectDetails.IdentificationDesc}}" type="text" class="form-control" />
+                                <input value="{{affectedObjectDetails.IdentificationDesc}}" [(ngModel)]="affectedObjectDetails.IdentificationDesc" type="text"
+                                    class="form-control" />
                             </div>
                             <div class="form-group col-lg-4 col-sm-12 col-md-6">
                                 <label for="DiscussionNote">Remarks:</label>
-                                <input value="{{affectedObjectDetails.Remarks}}" type="text" class="form-control" />
+                                <input value="{{affectedObjectDetails.Remarks}}" [(ngModel)]="affectedObjectDetails.Remarks" type="text" class="form-control"
+                                />
                             </div>
                             <div class="form-group col-lg-4 col-sm-12 col-md-6">
                                 <div class="buttonholder">
-                                <button class="btn btn-primary" type="button" (click)="saveUpdateAffectedObject(affectedObjectDetails)">Submit</button>
+                                    <button class="btn btn-primary" type="button" (click)="saveUpdateAffectedObject(affectedObjectDetails)">Submit</button>
                                 </div>
                             </div>
                         </div>

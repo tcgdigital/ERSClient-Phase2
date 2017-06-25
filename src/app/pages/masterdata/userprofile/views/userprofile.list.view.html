@@ -12,6 +12,7 @@
                 <th>Alternate Contact</th>
                 <th>Location</th>
                 <th>IsActive</th>
+                <th>Is Volunteered</th>
                 <th>Edit</th>
             </tr>
         </thead>
@@ -28,6 +29,11 @@
                 <td data-title="Location">{{userprofile.Location}}</td>
                  <td data-title="IsActive">
                     <md-checkbox class="Marght" id="IsActive" name="IsActive" [(ngModel)]="userprofile.isActive" (change)="checkChange($event,userprofile)"
+                        aria-label="ActiveFlag">
+                    </md-checkbox>
+                </td>
+                 <td data-title="Is Volunteered">
+                    <md-checkbox class="Marght" id="IsActive" name="IsActive" [(ngModel)]="userprofile.isVolunteered" (change)="checkChangeVolunteered($event,userprofile)"
                         aria-label="ActiveFlag">
                     </md-checkbox>
                 </td>

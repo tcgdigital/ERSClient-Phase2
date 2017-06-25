@@ -132,10 +132,10 @@ export class AffectedObjectsListComponent implements OnInit {
             });
 
     }
-    saveNok(affectedpersonId, caller: CallerModel, event: any): void {
+    saveNok(affectedObjectId, caller: CallerModel, event: any): void {
         if (event.checked) {
             let nok = new NextOfKinModel();
-            nok.AffectedPersonId = affectedpersonId;
+            nok.AffectedObjectId = affectedObjectId;
             nok.AlternateContactNumber = caller.AlternateContactNumber;
             nok.CallerId = caller.CallerId;
             nok.ContactNumber = caller.ContactNumber;
@@ -192,7 +192,6 @@ export class AffectedObjectsListComponent implements OnInit {
         let affectedObjectUpdate = new AffectedObjectModel();
         affectedObjectUpdate.Remarks = affectedObject.Remarks;
         affectedObjectUpdate.IdentificationDesc = affectedObject.IdentificationDesc;
-
         affectedObjectUpdate.LostFoundStatus = affectedObject.LostFoundStatus;
         this.affectedObjectService.UpdateStatus(affectedObjectUpdate, affectedObject.AffectedObjectId)
             .subscribe((response: AffectedObjectModel) => {

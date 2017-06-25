@@ -58,6 +58,7 @@ export class MemberCurrentEngagementModelToView {
     public IsNotyfied : boolean;
     public IsAcknowledged : boolean;
     public isRemarksSubmitted : boolean;
+    public isVolunteered : boolean;
 
    
 }

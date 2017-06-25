@@ -71,6 +71,19 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
             });
     }
 
+    checkChangeVolunteered(event: any, editedUderProfile: UserProfileModel): void {
+        this.userProfilePatch = new UserProfileModel();
+        this.userProfilePatch.deleteAttributes();
+        this.userProfilePatch.UserProfileId = editedUderProfile.UserProfileId;
+        this.userProfilePatch.isVolunteered = event.checked;
+        this.userProfileService.Update(this.userProfilePatch)
+            .subscribe((response: UserProfileModel) => {
+                this.getUserProfiles();
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
+    }
+
     invokeSearch(query: string): void {
         if (query !== '') {
             if (query.indexOf('isActive') >= 0) {

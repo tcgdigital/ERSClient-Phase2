@@ -85,6 +85,8 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
                     item.ConsigneeAddress = data.Cargo.ConsigneeAddress;
                     item.ConsigneeContactNo = data.Cargo.ConsigneeContactNo;
                     item.CargoType = data.Cargo.CargoType != null ? data.Cargo.CargoType : 'NA';
+                    item.IdentificationDesc = data.IdentificationDesc;
+                    item.Remarks=data.Remarks;
                     // item.CommunicationLogs: data.CommunicationLogs
                     return item;
                 });
