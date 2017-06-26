@@ -99,6 +99,9 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
                     console.log(`Error: ${error}`);
                 }));
         }
+        else {
+            this.getUserProfiles();
+        }
     }
 
     invokeReset(): void {

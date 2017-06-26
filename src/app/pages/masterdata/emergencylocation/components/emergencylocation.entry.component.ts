@@ -67,6 +67,11 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
             if (extension.toLowerCase() == "xls" || extension.toLowerCase() == "xlsx") {                                           
                 this.filesToUpload.push(e.target.files[i]);
             }
+            else{
+                this.toastrService.error('Invalid File Format!', 'Error', this.toastrConfig);
+                this.inputFileStations.nativeElement.value = "";
+                this.isDisabledUpload = true;
+            }
         }
     }
 

@@ -119,6 +119,10 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
             else
             {
                  this.toastrService.error('Invalid File Format!', 'Error', this.toastrConfig);
+                 this.inputFileCargo.nativeElement.value = "";
+                 this.inputFileCrew.nativeElement.value = "";
+                 this.inputFilePax.nativeElement.value = "";
+                 this.disableUploadButton = true;
             }
         }
     }

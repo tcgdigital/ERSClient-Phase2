@@ -145,6 +145,9 @@ export class ChecklistListComponent implements OnInit {
                     console.log(`Error: ${error}`);
                 }));
         }
+        else {
+            this.getCheckLists(this.currentDepartmentId);
+        }
     }
 
     invokeReset(): void {
