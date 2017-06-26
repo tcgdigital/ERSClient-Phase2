@@ -3,7 +3,7 @@ import { PresidentMessageModel } from './presidentMessage.model';
 import { PresidentMessageService } from './presidentMessage.service';
 import { ResponseModel, DataExchangeService, GlobalStateService, KeyValue, UtilityService, GlobalConstants } from '../../../../shared';
 import { Router, NavigationEnd } from '@angular/router';
-import {Subscription } from 'rxjs/Rx';
+import { Subscription } from 'rxjs/Rx';
 
 @Component({
     selector: 'presidentMessage-detail',
@@ -31,7 +31,7 @@ export class PresidentMessageListComponent implements OnInit, OnDestroy {
      */
     constructor(private presidentMessageService: PresidentMessageService,
         private dataExchange: DataExchangeService<PresidentMessageModel>,
-        private globalState: GlobalStateService,private _router: Router) { }
+        private globalState: GlobalStateService, private _router: Router) { }
 
     getPresidentMessages(departmentId, incidentId): void {
         this.presidentMessageService.Query(departmentId, incidentId)
@@ -56,22 +56,18 @@ export class PresidentMessageListComponent implements OnInit, OnDestroy {
         this.initiatedDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.currentIncidentId = +this.incidentId;
         this.currentDepartmentId = +this.initiatedDepartmentId;
-        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/PresidentMessage/' + this.currentIncidentId + '/';
-        this._onRouteChange = this._router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                if (event.url.indexOf("archivedashboard") > -1) {
-                    this.isArchive = true;
-                    this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
-                    this.getPresidentMessages(this.currentDepartmentId, this.currentIncidentId);
-                }
-                else {
-                    this.isArchive = false;
-                    this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
-                    this.getPresidentMessages(this.currentDepartmentId, this.currentIncidentId);
-                }
-            }
-        });
+        this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/PresidentMessage/' + this.currentIncidentId + '/';
+        if (this._router.url.indexOf("archivedashboard") > -1) {
+            this.isArchive = true;
+            this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
 
+        }
+        else {
+            this.isArchive = false;
+            this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        }
+
+        this.getPresidentMessages(this.currentDepartmentId, this.currentIncidentId);
         this.dataExchange.Subscribe("PresidentMessageModelSaved", model => this.onPresidentMessageSuccess(model));
         this.dataExchange.Subscribe("PresidentMessageModelUpdated", model => this.onPresidentMessageSuccess(model));
         this.dataExchange.Subscribe("PresidentMessageApprovalUpdated", model => this.onPresidentMessageSuccess(model));
@@ -81,7 +77,7 @@ export class PresidentMessageListComponent implements OnInit, OnDestroy {
 
     private incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
-        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/PresidentMessage/' + this.currentIncidentId + '/';
+        this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/PresidentMessage/' + this.currentIncidentId + '/';
         this.getPresidentMessages(this.currentDepartmentId, this.currentIncidentId);
     }
 

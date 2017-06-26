@@ -174,13 +174,11 @@ export class ChecklistEntryComponent implements OnInit {
     }
 
     ngOnDestroy(): void {
-        debugger;
         this.dataExchange.Unsubscribe('departmentChange');
         this.dataExchange.Unsubscribe('checklistModelEdited');
     }
 
     getAllActiveDepartments(): void {
-        debugger;
         this.departmentService.GetAllActiveDepartments()
             .subscribe((item: ResponseModel<DepartmentModel>) => {
                 this.allDepartments = item.Records;
@@ -216,7 +214,7 @@ export class ChecklistEntryComponent implements OnInit {
                     element.IsSelected = false;
                 });
 
-                this.parentdepartments = _.unique(_.flatten(_.pluck(this.CheckListParents, 'CheckListParentMapper')), (x) => { return x.DepartmentId; });
+              //  this.parentdepartments = _.unique(_.flatten(_.pluck(this.CheckListParents, 'CheckListParentMapper')), (x) => { return x.DepartmentId; });
 
             });
     }
@@ -357,7 +355,6 @@ export class ChecklistEntryComponent implements OnInit {
     createChecklist(checklistMode: ChecklistModel): void {
         this.checkListService.Create(this.checkListModel)
             .subscribe((response: ChecklistModel) => {
-                debugger;
                 this.selectedcount = 0;
                 this.toastrService.success('Checklist Created Successfully.', 'Success', this.toastrConfig);
                 response.Organization = this.checkListModel.Organization;

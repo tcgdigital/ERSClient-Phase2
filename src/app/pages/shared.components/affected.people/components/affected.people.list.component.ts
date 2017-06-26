@@ -238,24 +238,22 @@ export class AffectedPeopleListComponent implements OnInit {
     };
 
     ngOnInit(): any {
-        this._onRouteChange = this._router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                if (event.url.indexOf("archivedashboard") > -1) {
-                    this.isArchive = true;
-                    this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
-                    this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
 
-                    this.getAffectedPeople(this.currentIncident);
-                }
-                else {
-                    this.isArchive = false;
-                    this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
-                    this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-                    this.getAffectedPeople(this.currentIncident);
-                }
-            }
-            this.credential = UtilityService.getCredentialDetails();
-        });
+        if (this._router.url.indexOf("archivedashboard") > -1) {
+            this.isArchive = true;
+            this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
+            this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+
+            this.getAffectedPeople(this.currentIncident);
+        }
+        else {
+            this.isArchive = false;
+            this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
+            this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+            this.getAffectedPeople(this.currentIncident);
+        }
+        this.credential = UtilityService.getCredentialDetails();
+
         this.initiateSearchConfigurations();
         this.IsDestroyed = false;
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
@@ -363,7 +361,7 @@ export class AffectedPeopleListComponent implements OnInit {
             this.selectCurrentIncident();
             this.searchAffectedPeople(query, this.currentIncident);
         }
-        else{
+        else {
             this.getAffectedPeople(this.currentIncident);
         }
 

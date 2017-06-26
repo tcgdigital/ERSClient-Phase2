@@ -30,7 +30,7 @@ export class AffectedObjectsListComponent implements OnInit {
 
 
 
-    constructor(private affectedObjectService: AffectedObjectsService,private callerservice: CallerService,
+    constructor(private affectedObjectService: AffectedObjectsService, private callerservice: CallerService,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig, private globalState: GlobalStateService, private _router: Router) { }
     affectedObjects: AffectedObjectsToView[] = [];
@@ -63,20 +63,16 @@ export class AffectedObjectsListComponent implements OnInit {
     }
 
     ngOnInit(): any {
-        this._onRouteChange = this._router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                if (event.url.indexOf("archivedashboard") > -1) {
-                    this.isArchive = true;
-                    this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
-                    this.getAffectedObjects(this.currentIncident);
-                }
-                else {
-                    this.isArchive = false;
-                    this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
-                    this.getAffectedObjects(this.currentIncident);
-                }
-            }
-        });
+        if (this._router.url.indexOf("archivedashboard") > -1) {
+            this.isArchive = true;
+            this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
+        }
+        else {
+            this.isArchive = false;
+            this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
+        }
+        this.getAffectedObjects(this.currentIncident);
+
         this.initiateSearchConfigurations();
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
     }

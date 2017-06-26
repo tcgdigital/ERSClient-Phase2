@@ -23,7 +23,7 @@
                                                         <div class="row">
                                                                 <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                                                         <label for="DemandTypeId">Demand Type<span class="required"  *ngIf="isReadonly">*</span></label>
-                                                                        <select id="selectDemandTypeId" class="form-control" formControlName="DemandTypeId">
+                                                                        <select id="selectDemandTypeId"  class="form-control" formControlName="DemandTypeId">
                                                                                 <option value=''>Select Demand Type</option>
                                                                                 <!--<option [value]=''>Select Demand Type</option>-->
                                                                                 <option *ngFor="let demandType of demandTypes" [(value)]="demandType.DemandTypeId">
@@ -36,7 +36,7 @@
                                                                 </div>
                                                                 <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                                                         <label for="Priority">Priority<span class="required">*</span></label>
-                                                                        <select id="selectPriority" class="form-control" formControlName="Priority">
+                                                                        <select id="selectPriority"  class="form-control" formControlName="Priority">
                                                                                 <option value=''>Select Priority</option>
                                                           <!--<option [value]=''>Select Priority</option>-->
                                                           <option *ngFor="let priority of priorities" [value]="priority.caption">
@@ -51,7 +51,7 @@
 
                                                         <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                                                 <label for="DemandDesc">Demand Description:<span class="required">*</span></label>
-                                                                <textarea class="form-control" maxlength="500" id="DemandDesc" name="DemandDesc" rows="4" cols="50" ng-disabled="disableDemandSubmit"
+                                                                <textarea class="form-control"  maxlength="500" id="DemandDesc" name="DemandDesc" rows="4" cols="50" ng-disabled="disableDemandSubmit"
                                                                         placeholder="Enter Request Desc" formControlName="DemandDesc"></textarea>
                                                                 <small *ngIf="(!form.controls.DemandDesc.valid && submitted)" class="text-danger">
                                                                                 Required.
@@ -60,7 +60,7 @@
                                                         <div class="row">
                                                                 <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                                                         <label for="RequestedBy">Requested By:<span class="required">*</span></label>
-                                                                        <input id="RequestedBy" type="text" formControlName="RequestedBy" class="form-control" placeholder="Enter Requested By" autofocus
+                                                                        <input id="RequestedBy"  type="text" formControlName="RequestedBy" class="form-control" placeholder="Enter Requested By" autofocus
                                                                         />
                                                                         <small *ngIf="!form.controls.RequestedBy.valid" class="text-danger">
                                                                                 Required.
@@ -69,7 +69,7 @@
 
                                                                 <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                                                         <label for="RequesterType">Requester Type:<span class="required">*</span></label>
-                                                                        <select id="selectRequesterType" class="form-control" formControlName="RequesterType">
+                                                                        <select id="selectRequesterType"  class="form-control" formControlName="RequesterType">
                                                                                 <option value=''>Select Requester Type</option>
                                                                          <!--<option [value]=''>Select Requester Type</option>-->
                                                                           <option *ngFor="let requesterType of requesterTypes" [value]="requesterType.caption">
@@ -86,7 +86,7 @@
                                                                 <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                                                         <label for="PDA">PDA Name:</label>
                                                                         <!--<autocomplete [items]="pdas" (notify)='onNotifyPassengerCrew($event)'></autocomplete>-->
-                                                                        <select id="selectenquiryType" class="form-control" formControlName="AffectedPersonId" (change)="ChangeAffectedPeople()">
+                                                                        <select id="selectenquiryType"  class="form-control" formControlName="AffectedPersonId" (change)="ChangeAffectedPeople()">
                                                           <option value=''>Select PDA</option>
                                                                <option *ngFor="let affectedPerson of affectedPeople" [value]="affectedPerson.AffectedPersonId">
                                                                        {{affectedPerson.PassengerName || affectedPerson.CrewName}}
@@ -101,7 +101,7 @@
                                                                 <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                                                         <label for="awb">AWB</label>
                                                                         <!--<autocomplete [items]="awbs" (notify)='onNotifyCargo($event)'></autocomplete>-->
-                                                                        <select id="selectenquiryType" class="form-control" formControlName="AffectedObjectId" (change)="ChangeAffectedObjects()">
+                                                                        <select id="selectenquiryType"  class="form-control" formControlName="AffectedObjectId" (change)="ChangeAffectedObjects()">
                                                                <option value=''>Select Cargo</option>
                                                                           <option *ngFor="let affectedObject of affectedObjects" [value]="affectedObject.AffectedObjectId">
                                                                                   {{affectedObject.AWB}}
@@ -113,13 +113,13 @@
                                                         <div class="row">
                                                                 <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                                                         <label for="ReferenceNumber">Reference Number</label>
-                                                                        <input id="PDATicketNumber" type="text" formControlName="PDATicketNumber" class="form-control" [disabled]="true" placeholder="Enter Reference Number"
+                                                                        <input id="PDATicketNumber"  type="text" formControlName="PDATicketNumber" class="form-control" [disabled]="true" placeholder="Enter Reference Number"
                                                                                 autofocus />
                                                                 </div>
 
                                                                 <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                                                         <label for="DepartmentId">Target Department:<span class="required">*</span></label>
-                                                                        <select id="selectTargetDepartmentId" class="form-control" formControlName="TargetDepartmentId">
+                                                                        <select id="selectTargetDepartmentId"  class="form-control" formControlName="TargetDepartmentId">
                                                                  <option value=''>Select Target Department</option>
                                                                         <option *ngFor="let department of departments" [value]="department.DepartmentId">
                                                                                 {{department.DepartmentName}}
@@ -133,7 +133,7 @@
                                                         <div class="row">
                                                                 <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                                                         <label for="ContactNumber"> Contact Number:<span class="required">*</span></label>
-                                                                        <input id="ContactNumber" type="text" formControlName="ContactNumber" class="form-control" placeholder="Enter Contact Number"
+                                                                        <input id="ContactNumber"  type="text" formControlName="ContactNumber" class="form-control" placeholder="Enter Contact Number"
                                                                                 autofocus />
                                                                         <small *ngIf="(!form.controls.ContactNumber.valid && submitted)" class="text-danger">
                                                                                 Required.
@@ -142,7 +142,7 @@
 
                                                                 <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                                                         <label for="ExpectedResolutionTime">Expected Resolution Time:<span class="required">*</span></label>
-                                                                        <div *ngIf="!isReadonly"> <input id="EmergencyDate" class="form-control" type="text"
+                                                                        <div *ngIf="!isReadonly"> <input id="EmergencyDate"  class="form-control" type="text"
                                                                                         formControlName="ScheduleTime" placeholder="Enter Resolution Time"
                                                                                         datetime-picker [options]="datepickerOption"
                                                                                         (selectHandler)="dateTimeSet($event,'EmergencyDate');"
@@ -151,7 +151,7 @@
                                                                                 Required.
                                                                                 </small>
                                                                         </div>
-                                                                        <input id="ExpectedResolutionTime" type="text" formControlName="ScheduleTime" class="form-control" placeholder="Enter Resolution Time"
+                                                                        <input id="ExpectedResolutionTime"  type="text" formControlName="ScheduleTime" class="form-control" placeholder="Enter Resolution Time"
                                                                                 *ngIf="isReadonly" />
                                                                         <small *ngIf="(!form.controls.ScheduleTime.valid && submitted)" class="text-danger">
                                                                                 Required.
@@ -161,7 +161,7 @@
                                                         <div class="row">
                                                                 <div class="form-group col-lg-4 col-md-4 col-sm-4">
                                                                         <label for="RequiredLocation">Required Location:<span class="required">*</span></label>
-                                                                        <input id="RequiredLocation" type="text" formControlName="RequiredLocation" class="form-control" placeholder="Enter Required Location"
+                                                                        <input id="RequiredLocation"  type="text" formControlName="RequiredLocation" class="form-control" placeholder="Enter Required Location"
                                                                                 autofocus />
                                                                         <!--<input id="RequiredLocation" type="text" formControlName="RequiredLocation" style="width: 89%;" />-->
                                                                         <small *ngIf="(!form.controls.RequiredLocation.valid && submitted)" class="text-danger">
@@ -175,7 +175,7 @@
                                                                         <!--<input id="RequiredLocation" type="text" formControlName="RequiredLocation" style="width: 89%;" />-->
                                                                 </div>
                                                                 <div class="col-lg-4 col-md-4 col-sm-4" *ngIf="!isReadonly">
-                                                                        <button class="btn btn-primary" type="submit" *ngIf="!isArchive">{{Action}}</button>
+                                                                        <button [disabled]="!freshDemand" class="btn btn-primary" type="submit" *ngIf="!isArchive">{{Action}}</button>
                                                                 </div>
                                                         </div>
                                                 </form>
