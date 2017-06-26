@@ -3,9 +3,11 @@ import { QuickLinkModel } from './quicklink.model';
 import { QuickLinkService } from './quicklink.service';
 import { Observable } from 'rxjs/Rx';
 
-import { ResponseModel, DataExchangeService , SearchConfigModel,
+import {
+    ResponseModel, DataExchangeService, SearchConfigModel,
     SearchTextBox, SearchDropdown,
-    NameValue} from '../../../../shared';
+    NameValue
+} from '../../../../shared';
 
 @Component({
     selector: 'quicklink-list',
@@ -71,7 +73,7 @@ export class QuickLinkListComponent implements OnInit, OnDestroy {
             });
     }
 
-     private initiateSearchConfigurations(): void {
+    private initiateSearchConfigurations(): void {
         let status: NameValue<string>[] = [
             new NameValue<string>('Active', 'Active'),
             new NameValue<string>('InActive', 'InActive'),
@@ -87,16 +89,19 @@ export class QuickLinkListComponent implements OnInit, OnDestroy {
                 Description: 'QuickLink URL',
                 Value: ''
             })
-        ];        
+        ];
     }
-      invokeSearch(query: string): void {
+    invokeSearch(query: string): void {
         if (query !== '') {
             this.quicklinkService.GetQuery(query)
                 .subscribe((response: ResponseModel<QuickLinkModel>) => {
-                  this.quicklinks = response.Records;
+                    this.quicklinks = response.Records;
                 }, ((error: any) => {
                     console.log(`Error: ${error}`);
                 }));
+        }
+        else {
+            this.getQuickLinks();
         }
     }
 

@@ -138,8 +138,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     getFileDetails(e: any): void {
         this.filesToUpload = [];
         for (var i = 0; i < e.target.files.length; i++) {
-            const extension = e.target.files[i].name.split('.').pop();
-            if (extension != "exe" || extension != "dll")
+            const extension = e.target.files[i].name.split('.').pop();                                  
+            if(extension != "exe" && extension != "dll")                
                 this.filesToUpload.push(e.target.files[i]);
             else {
                 this.toastrService.error('Invalid File Format!', 'Error', this.toastrConfig);
