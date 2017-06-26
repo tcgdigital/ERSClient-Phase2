@@ -37,7 +37,7 @@ export class ChecklistService extends ServiceBase<ChecklistModel> implements ICh
             .Filter(`DepartmentId eq ${departmentId}`)
             .Expand('TargetDepartment($select=DepartmentId,DepartmentName)',
             'EmergencyType($select=EmergencyTypeId,EmergencyTypeName)',
-            'Organization', 'CheckListParent($expand=TargetDepartment($select=DepartmentId,DepartmentName))', 'CheckListChildren')
+            'Organization', 'CheckListParentMapper', 'CheckListChildrenMapper')
             .OrderBy('CreatedOn desc')
             .Execute();
     }
@@ -53,7 +53,7 @@ export class ChecklistService extends ServiceBase<ChecklistModel> implements ICh
     GetAllWithParentsByDepartment(departmentId): Observable<ResponseModel<ChecklistModel>> {
         return this._dataService.Query()
             .Filter(`DepartmentId eq ${departmentId} and ActiveFlag eq 'Active'`)
-            .Expand('CheckListParentMapper')
+            .Expand('CheckListParentMapper($expand=ParentCheckList)')
             .Execute();
 
     }

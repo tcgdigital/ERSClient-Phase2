@@ -18,16 +18,16 @@ export class ChecklistModel extends BaseModel {
     public Active: boolean;
     public OrganizationId: number;
     public Stations?: string
-    public StationList? : string[];
+    public StationList?: string[];
 
     public TargetDepartment: DepartmentModel;
     public ParentCheckList?: ChecklistModel;
     public EmergencyType: EmergencyTypeModel;
     public Organization: OrganizationModel;
-    public IsSelected: boolean; 
-    
-    public CheckListParent?: ChecklistModel[];
-    public CheckListChildren?: ChecklistModel[];
+    public IsSelected: boolean;
+
+    public CheckListParentMapper?: ChecklistMapper[];
+    public CheckListChildrenMapper?: ChecklistMapper[];
 
     constructor(flag?: boolean) {
         super();
@@ -48,7 +48,17 @@ export class ChecklistModel extends BaseModel {
     }
 }
 
-export class CheckListStationModel{
+export class CheckListStationModel {
     station: string;
     IsSelected: boolean;
+}
+
+export class ChecklistMapper {
+    public ChecklistMapperId: number;
+    public ChildCheckListId: number;
+    public ParentCheckListId: number;
+
+    public ChildCheckList?: ChecklistModel;
+    public ParentCheckList?: ChecklistModel;
+
 }

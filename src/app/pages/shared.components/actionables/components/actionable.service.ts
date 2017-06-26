@@ -171,7 +171,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
     public GetAllOpenByIncidentId(incidentId: number): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
             .Filter(`CompletionStatus ne 'Closed' and IncidentId eq ${incidentId}`)
-            .Expand('CheckList($expand=CheckListParent)')
+            .Expand('CheckList($expand=CheckListParentMapper,CheckListChildrenMapper)')
             // .Select('ParentCheckListId')
             .Execute();
     }
@@ -179,7 +179,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
     public GetChildActionables(checklistId, incidentId): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
             .Filter(`ChklistId eq ${checklistId} and IncidentId eq ${incidentId}`)
-            .Expand('CheckList($expand=CheckListChildren)')
+            .Expand('CheckList($expand=CheckListChildrenMapper)')
             //.Select('ActionId,Description,ScheduleClose,ActualClose,ActionId,DepartmentId,CompletionStatus')
             .Execute();
 

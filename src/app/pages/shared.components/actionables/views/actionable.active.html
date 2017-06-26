@@ -16,7 +16,61 @@
             <tr [hidden]="activeActionables.length != 0">
                 <td colspan="8">No records found.</td>
             </tr>
-            <template ngFor let-actionable [ngForOf]="activeActionables" let-i="index">
+            <tr *ngFor="let actionable of activeActionables; let i = index;">
+                <td data-title="Serial Number">{{i+1}}</td>
+                <td data-title="Description">
+                    <i class="fa fa-plus" aria-hidden="true" [hidden]="hasChildChecklist(actionable.ChklistId)==false || actionable.expanded == true"
+                        (click)="openChildActionable(actionable); $event.stopPropagation();"></i>
+                    <i class="fa fa-minus" aria-hidden="true" [hidden]="hasChildChecklist(actionable.ChklistId)==false || actionable.expanded == false "
+                        (click)="openChildActionable(actionable); $event.stopPropagation();"></i> &nbsp;{{actionable.Description}}
+                </td>
+                <td data-title="Schedule Close Time">{{actionable.ScheduleClose | amDateFormat:'LL - HH:mm:ss'}}</td>
+                <td data-title="Completion Status">
+                    <span *ngIf="hasChildChecklist(actionable.ChklistId)==true">{{actionable.CompletionStatus}}</span>
+                    <select id="selectCompletionStatus" *ngIf="hasChildChecklist(actionable.ChklistId)==false" class="form-control" [(ngModel)]="actionable.CompletionStatus"
+                        (change)="IsDone($event,actionable)">
+                            <option value=''>Select Completion Status</option>
+                            <option *ngFor="let completionStatusType of completionStatusTypes" [value]="completionStatusType.caption">
+                                    {{completionStatusType.text}}
+                            </option>
+                        </select>
+                </td>
+                <td data-title="RAG">
+                    <div [class]="actionable.RagColor"></div>
+                </td>
+                <td data-title="Download">
+                    <a class="fa fa-download fa-2x" target="_self" *ngIf="actionable.UploadLinks!=null" href="{{actionable.UploadLinks}}" download="{{actionable.FileName}}"></a>
+                </td>
+                <td data-title="Details"><i class="fa fa-edit fa-2x" (click)="openActionableDetail(actionable)"></i>
+                </td>
+                <ng-container *ngIf="actionable.expanded == true">
+                    <responsive-table>
+                        <table responsive-table-body>
+                            <thead>
+                                <th>Description</th>
+                                <th>Scheduled End Time</th>
+                                <th>Completion Status</th>
+                                <th>Department Name</th>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let actionableChild of actionable.actionableChilds">
+                                    <td data-title="Description">{{actionableChild.Description}}</td>
+                                    <td data-title="Scheduled End Time">{{actionableChild.ScheduleClose | amDateFormat:'LL - HH:mm:ss'}}</td>
+                                    <td data-title="Completion Status">
+                                        {{actionableChild.CompletionStatus}}
+                                    </td>
+                                    <td data-title="Department Name">{{actionableChild.DepartmentName}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </responsive-table>
+                </ng-container>
+            </tr>
+
+
+
+
+            <!--<template ngFor let-actionable [ngForOf]="activeActionables" let-i="index">
                 <tr>
                     <td data-title="Serial Number">{{i+1}}</td>
                     <td data-title="Description">
@@ -70,7 +124,7 @@
                         </responsive-table>
                     </td>
                 </tr>
-            </template>
+            </template>-->
         </tbody>
     </table>
 </responsive-table>
@@ -106,15 +160,17 @@
                             <a class="glyphicon glyphicon-download-alt" target="_self" *ngIf="filepathWithLinks!=null" href="{{filepathWithLinks}}" download="{{fileName}}">Download</a>
                             <div class="buttonholder col-sm-10">
                                 <input #myFileInput type="file" (change)="fileChangeEvent($event)" placeholder="Upload file..." />
-                                <button type="button" class="btn btn-primary" (click)="upload(actionableModelToUpdate)" [disabled] = "disableUploadButton">Upload</button>
+                                <button type="button" class="btn btn-primary" (click)="upload(actionableModelToUpdate)" [disabled]="disableUploadButton">Upload</button>
                                 <button type="button" class="btn btn-primary" (click)="clearFileUpload($event)">Clear</button>
                             </div>
-                            <div class="col-sm-2"><div class="row buttonholder" *ngIf="!isArchive">
-                            <button class="btn btn-primary" type="submit">Submit</button>&nbsp;
-                        </div></div>
+                            <div class="col-sm-2">
+                                <div class="row buttonholder" *ngIf="!isArchive">
+                                    <button class="btn btn-primary" type="submit">Submit</button>&nbsp;
+                                </div>
+                            </div>
                         </div>
 
-                        
+
                     </form>
                 </div>
             </div>
