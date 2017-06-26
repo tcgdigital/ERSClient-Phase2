@@ -30,7 +30,7 @@
                                                                                         {{demandType.DemandTypeName}}
                                                                                 </option>
                                                                                 </select>
-                                                                        <small *ngIf="(!form.controls.DemandTypeId.valid && submitted)" class="text-danger">
+                                                                        <small *ngIf="(!form.controls.DemandTypeId.valid && submitted) && !isReadonly" class="text-danger">
                                                                                 Required.
                                                                                 </small>
                                                                 </div>

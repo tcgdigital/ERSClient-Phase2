@@ -30,7 +30,7 @@ export class AffectedObjectsListComponent implements OnInit {
 
 
 
-    constructor(private affectedObjectService: AffectedObjectsService,private callerservice: CallerService,
+    constructor(private affectedObjectService: AffectedObjectsService, private callerservice: CallerService,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig, private globalState: GlobalStateService, private _router: Router) { }
     affectedObjects: AffectedObjectsToView[] = [];
@@ -180,8 +180,11 @@ export class AffectedObjectsListComponent implements OnInit {
                 if (query.indexOf("'false'") >= 0)
                     query = query.replace("'false'", "false");
             }
+            this.searchAffectedObject(query, this.currentIncident);
         }
-        this.searchAffectedObject(query, this.currentIncident);
+        else{
+            this.getAffectedObjects(this.currentIncident);
+        }
     }
 
     invokeReset(): void {

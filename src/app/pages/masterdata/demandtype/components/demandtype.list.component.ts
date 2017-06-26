@@ -87,6 +87,9 @@ export class DemandTypeListComponent implements OnInit {
                     console.log(`Error: ${error}`);
                 }));
         }
+        else {
+            this.getDemandTypes();
+        }
     }
 
     invokeReset(): void {
