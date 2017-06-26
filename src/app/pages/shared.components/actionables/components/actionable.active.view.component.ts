@@ -9,7 +9,7 @@ import {
 import { Observable, Subscription } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router, NavigationEnd } from '@angular/router';
-import { ChecklistModel } from "../../../masterdata/checklist/components/checklist.model";
+import { ChecklistModel,ChecklistMapper } from "../../../masterdata/checklist/components/checklist.model";
 
 import { ActionableModel } from './actionable.model';
 import { ActionableService } from './actionable.service';
@@ -39,7 +39,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     filepathWithLinks: string = null;
     fileName: string = null;
     actionableModelToUpdate: ActionableModel = null;
-    actionableWithParents: ActionableModel[] = [];
+    actionableWithParentsChilds: ActionableModel[] = [];
     parentChecklistIds: number[] = [];
     credential: AuthModel;
     protected _onRouteChange: Subscription;
@@ -50,6 +50,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
 
     private currentDepartmentId: number = null;
     private currentIncident: number = null;
+    public ChecklistMappers:ChecklistMapper[]=[];
     disableUploadButton: boolean;
 
     /**
@@ -68,25 +69,38 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         private injector: Injector) {
         this.filesToUpload = [];
         this.globalStateProxyOpen = injector.get(GlobalStateService);
+        // this._onRouteChange = this._router.events.subscribe((event) => {
+        //     if (event instanceof NavigationEnd) {
+        //         debugger;
+        //         if (event.url.indexOf("archivedashboard") > -1) {
+        //             this.isArchive = true;
+        //             this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
+        //         }
+        //         else {
+        //             this.isArchive = false;
+        //             this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
+        //         }
+        //         //this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
+        //     }
+        // });
     }
 
     public ngOnInit(): any {
+        debugger;
+        this.ChecklistMappers=[];
         this.disableUploadButton = true;
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-        this._onRouteChange = this._router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                if (event.url.indexOf("archivedashboard") > -1) {
-                    this.isArchive = true;
-                    this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
-                    this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
-                }
-                else {
-                    this.isArchive = false;
-                    this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
-                    this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
-                }
-            }
-        });
+
+        debugger;
+        if (this._router.url.indexOf("archivedashboard") > -1) {
+            this.isArchive = true;
+            this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
+        }else{
+            this.isArchive = false;
+            this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
+        }
+        this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
+        
         this.credential = UtilityService.getCredentialDetails();
         this.form = this.resetActionableForm();
         this.actionableModelToUpdate = new ActionableModel();
@@ -97,8 +111,17 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     private hasChildChecklist(checkListId): boolean {
-        if (this.parentChecklistIds.length != 0)
-            return this.parentChecklistIds.some(x => x == checkListId);
+        debugger;
+        //console.log(this.actionableWithParentsChilds);
+        let currentDepartmentActionables:ActionableModel[] = this.actionableWithParentsChilds.filter((item:ActionableModel)=>{
+            return item.DepartmentId==this.currentDepartmentId;
+        });
+        let currentActionable:ActionableModel =  currentDepartmentActionables.filter((item:ActionableModel)=>{
+            return item.ChklistId==checkListId;
+        })[0];
+        if(currentActionable.CheckList.CheckListChildrenMapper.length>0){
+            return true;
+        }
         else
             return false;
 
@@ -114,13 +137,16 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     openChildActionable(actionable: ActionableModel): void {
+        debugger;
         actionable["expanded"] = !actionable["expanded"];
         this.actionableService.GetChildActionables(actionable.ChklistId, this.currentIncident)
             .subscribe((responseActionable: ResponseModel<ActionableModel>) => {
+                debugger;
                 this.departmentService.GetDepartmentNameIds()
                     .subscribe((response: ResponseModel<DepartmentModel>) => {
-                        responseActionable.Records[0].CheckList.CheckListChildren.forEach((item: ChecklistModel) => {
-                            this.GetListOfChildActionables(item.CheckListId,this.currentIncident, (child: ActionableModel) => {
+                        debugger;
+                        responseActionable.Records[0].CheckList.CheckListChildrenMapper.forEach((item: ChecklistMapper) => {
+                            this.GetListOfChildActionables(item.ChildCheckListId,this.currentIncident, (child: ActionableModel) => {
                                 child["DepartmentName"] = response.Records.find(y => { return y.DepartmentId == child.DepartmentId; }).DepartmentName;
                                 actionable["actionableChilds"].push(child);
                             });
@@ -229,6 +255,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     getAllActiveActionable(incidentId: number, departmentId: number): void {
         this.actionableService.GetAllOpenByIncidentIdandDepartmentId(incidentId, departmentId)
             .subscribe((response: ResponseModel<ActionableModel>) => {
+                debugger;
                 this.activeActionables = response.Records;
                 this.activeActionables.forEach(x => {
                     x["expanded"] = false;
@@ -243,19 +270,25 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     getAllActiveActionableByIncident(incidentId): void {
         this.parentChecklistIds = [];
         let parents: number[] = [];
+        this.ChecklistMappers=[];
+        let mappers:ChecklistMapper[]=[];
         this.actionableService.GetAllOpenByIncidentId(incidentId)
             .subscribe((response: ResponseModel<ActionableModel>) => {
-                this.actionableWithParents = response.Records;
+                debugger;
+                this.actionableWithParentsChilds = response.Records;
 
-                this.actionableWithParents.forEach(function (actionable: ActionableModel) {
+                this.actionableWithParentsChilds.forEach(function (actionable: ActionableModel) {
 
-                    if (actionable.CheckList.CheckListParent.length > 0) {
-                        actionable.CheckList.CheckListParent.forEach((item: ChecklistModel) => {
-                            parents.push(item.CheckListId);
+                    if (actionable.CheckList.CheckListParentMapper.length > 0) {
+                        debugger;
+                        actionable.CheckList.CheckListParentMapper.forEach((item: ChecklistMapper) => {
+                            parents.push(item.ParentCheckListId);
+                            mappers.push(item);
                         });
                     }
                 })
                 this.parentChecklistIds = _.unique(parents);
+                this.ChecklistMappers = _.unique(mappers);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
