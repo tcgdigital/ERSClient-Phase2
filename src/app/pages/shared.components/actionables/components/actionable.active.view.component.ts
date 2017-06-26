@@ -71,7 +71,6 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         this.globalStateProxyOpen = injector.get(GlobalStateService);
         // this._onRouteChange = this._router.events.subscribe((event) => {
         //     if (event instanceof NavigationEnd) {
-        //         debugger;
         //         if (event.url.indexOf("archivedashboard") > -1) {
         //             this.isArchive = true;
         //             this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
@@ -86,12 +85,10 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     public ngOnInit(): any {
-        debugger;
         this.ChecklistMappers=[];
         this.disableUploadButton = true;
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
 
-        debugger;
         if (this._router.url.indexOf("archivedashboard") > -1) {
             this.isArchive = true;
             this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
@@ -111,7 +108,6 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     private hasChildChecklist(checkListId): boolean {
-        debugger;
         //console.log(this.actionableWithParentsChilds);
         let currentDepartmentActionables:ActionableModel[] = this.actionableWithParentsChilds.filter((item:ActionableModel)=>{
             return item.DepartmentId==this.currentDepartmentId;
@@ -137,14 +133,11 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     openChildActionable(actionable: ActionableModel): void {
-        debugger;
         actionable["expanded"] = !actionable["expanded"];
         this.actionableService.GetChildActionables(actionable.ChklistId, this.currentIncident)
             .subscribe((responseActionable: ResponseModel<ActionableModel>) => {
-                debugger;
                 this.departmentService.GetDepartmentNameIds()
                     .subscribe((response: ResponseModel<DepartmentModel>) => {
-                        debugger;
                         responseActionable.Records[0].CheckList.CheckListChildrenMapper.forEach((item: ChecklistMapper) => {
                             this.GetListOfChildActionables(item.ChildCheckListId,this.currentIncident, (child: ActionableModel) => {
                                 child["DepartmentName"] = response.Records.find(y => { return y.DepartmentId == child.DepartmentId; }).DepartmentName;
@@ -255,7 +248,6 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     getAllActiveActionable(incidentId: number, departmentId: number): void {
         this.actionableService.GetAllOpenByIncidentIdandDepartmentId(incidentId, departmentId)
             .subscribe((response: ResponseModel<ActionableModel>) => {
-                debugger;
                 this.activeActionables = response.Records;
                 this.activeActionables.forEach(x => {
                     x["expanded"] = false;
@@ -274,13 +266,11 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         let mappers:ChecklistMapper[]=[];
         this.actionableService.GetAllOpenByIncidentId(incidentId)
             .subscribe((response: ResponseModel<ActionableModel>) => {
-                debugger;
                 this.actionableWithParentsChilds = response.Records;
 
                 this.actionableWithParentsChilds.forEach(function (actionable: ActionableModel) {
 
                     if (actionable.CheckList.CheckListParentMapper.length > 0) {
-                        debugger;
                         actionable.CheckList.CheckListParentMapper.forEach((item: ChecklistMapper) => {
                             parents.push(item.ParentCheckListId);
                             mappers.push(item);

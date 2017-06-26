@@ -232,7 +232,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             if (this.isCallrecieved) {
                 this.enquiryToUpdate = this.enquiryType != 1 ? response[0].Enquiries[0] :
                     response[0].Enquiries.find(x => x.AffectedPersonId == this.pdaenquery.AffectedPersonId);
-                this.enquiry=this.enquiryToUpdate;
+                this.enquiry = this.enquiryToUpdate;
                 this.form.controls["Queries"].reset({ value: this.enquiryToUpdate.Queries, disabled: false });
                 if (this.enquiryType == 1 || this.enquiryType == 2 || this.enquiryType == 3) {
                     this.form.controls["IsCallBack"].reset({ value: this.enquiryToUpdate.IsCallBack, disabled: false });
@@ -461,7 +461,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             demand.ScheduleTime = scheduleTime.toString();
             demand.RequesterType = "Others";
             demand.CommunicationLogs = this.SetCommunicationLog(GlobalConstants.RequesterTypeDemand, GlobalConstants.InteractionDetailsTypeDemand);
-            demand.CommunicationLogs[0].Queries=demand.CommunicationLogs[0].Queries+' Demand Code: '+demand.DemandCode;
+            demand.CommunicationLogs[0].Queries = demand.CommunicationLogs[0].Queries + ' Demand Code: ' + demand.DemandCode;
             this.demands.push(demand);
         }
     }
@@ -473,7 +473,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             enquiry.AffectedPersonId = x.AffectedPersonId;
             enquiry.IncidentId = this.currentIncident;
             enquiry.Remarks = '';
-            enquiry.CallerId=enquiryModel.CallerId;
+            enquiry.CallerId = enquiryModel.CallerId;
             enquiry.Queries = enquiryModel.Queries;
             enquiry.CreatedBy = +this.credential.UserId;
             enquiry.EnquiryType = this.enquiry.EnquiryType;
@@ -557,7 +557,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                     }
                 });
         }
-        else{
+        else {
             return Observable.of(new Array<CoPassengerMappingModel>());
         }
     }
@@ -647,7 +647,6 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         return new FormGroup({
             EnquiryId: new FormControl(0),
             Queries: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-            Relationship: new FormControl('', [Validators.required, Validators.maxLength(50)]),
             IsAdminRequest: new FormControl(false),
             IsCallBack: new FormControl(false),
             IsTravelRequest: new FormControl(false)
@@ -660,215 +659,233 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         this.showCallcenterModal = false;
     }
 
+    nullorwhitecheck(id: number): boolean {
+        if ((id == null) || (id == undefined) || (id == 0)) {
+            return false
+        }
+        else {
+            return true;
+        }
+    }
+
     saveEnquiryDemandCaller(): void {
         this.submitted = true;
-        UtilityService.setModelFromFormGroup<EnquiryModel>(this.enquiry, this.form,
-            (x) => x.IsAdminRequest, (x) => x.IsCallBack, (x) => x.IsTravelRequest, (x) => x.Queries);
-        this.enquiry.IncidentId = this.currentIncident;
-        this.enquiry.Remarks = '';
-        this.enquiry.CreatedBy = +this.credential.UserId;
-        this.demands = new Array<DemandModel>();
-        let communicationlogs = this.SetCommunicationLog(GlobalConstants.RequesterTypeEnquiry, GlobalConstants.InteractionDetailsTypeEnquiry);
-        if (!this.isCallrecieved) {
+        if (this.form.valid && (((this.enquiryType == 1 || this.enquiryType == 3) && this.nullorwhitecheck(this.enquiry.AffectedPersonId)) ||
+            (this.enquiryType == 2 && this.nullorwhitecheck(this.enquiry.AffectedObjectId) || (this.enquiryType >=4)))) {
+            UtilityService.setModelFromFormGroup<EnquiryModel>(this.enquiry, this.form,
+                (x) => x.IsAdminRequest, (x) => x.IsCallBack, (x) => x.IsTravelRequest, (x) => x.Queries);
+            this.enquiry.IncidentId = this.currentIncident;
+            this.enquiry.Remarks = '';
+            this.enquiry.CreatedBy = +this.credential.UserId;
+            this.demands = new Array<DemandModel>();
+            let communicationlogs = this.SetCommunicationLog(GlobalConstants.RequesterTypeEnquiry, GlobalConstants.InteractionDetailsTypeEnquiry);
+            if (!this.isCallrecieved) {
 
-            if (this.enquiryType == 1 || this.enquiryType == 2 || this.enquiryType == 3) {
-                this.enquiry.CommunicationLogs = communicationlogs;
-                this.enquiry.CommunicationLogs[0].Queries = this.enquiry.Queries;
-            }
-            this.externalInput.deleteAttributes();
-            this.externalInput.IsCallRecieved = true;
-            this.externalInput.ExternalInputId = this.callid;
-            if (this.enquiryType == 1 && this.consolidatedCopassengers.length > 0) {
-                let enquiryModelsToSave: EnquiryModel[] = [];
-                enquiryModelsToSave = this.setenquiryModelforCopassangers(this.enquiry);
-                enquiryModelsToSave.push(this.enquiry);
-                let pdaenquirytoupdate: PDAEnquiryModel = new PDAEnquiryModel();
-                pdaenquirytoupdate.deleteAttributes();
-                pdaenquirytoupdate.AffectedPersonId = this.enquiry.AffectedPersonId;
-                //  this.enquiriesCopassangerscreate(enquiryModelsToSave, this.enquiry.AffectedPersonId);
-                this.enquiryService.CreateBulk(enquiryModelsToSave)
-                    .flatMap(_ => this.returncopassangerservice(this.enquiry.AffectedPersonId))
-                    .flatMap(_ => this.callcenteronlypageservice.Update(this.externalInput, this.callid))
-                    .flatMap(_ => this.callcenteronlypageservice.updatepdaenquiry(pdaenquirytoupdate, this.pdaenquiryid))
-                    .subscribe(() => {
-                        this.toastrService.success('Enquiry Saved successfully.', 'Success', this.toastrConfig);
-                        let num = UtilityService.UUID();
-                        this.globalState.NotifyDataChanged('CallRecieved', num);
-                        if (this.selectedCoPassangers.length > 0) {
-                            let afftedIdstocreateDemand: number[] = [];
-                            this.selectedCoPassangers.map(x => afftedIdstocreateDemand.push(x.AffectedPersonId));
-                            //   afftedIdstocreateDemand.push(this.) 
-                            this.createDemands(this.affectedId, afftedIdstocreateDemand);
-                        }
-                        else {
+                if (this.enquiryType == 1 || this.enquiryType == 2 || this.enquiryType == 3) {
+                    this.enquiry.CommunicationLogs = communicationlogs;
+                    this.enquiry.CommunicationLogs[0].Queries = this.enquiry.Queries;
+                }
+                this.externalInput.deleteAttributes();
+                this.externalInput.IsCallRecieved = true;
+                this.externalInput.ExternalInputId = this.callid;
+                if (this.enquiryType == 1 && this.consolidatedCopassengers.length > 0) {
+                    let enquiryModelsToSave: EnquiryModel[] = [];
+                    enquiryModelsToSave = this.setenquiryModelforCopassangers(this.enquiry);
+                    enquiryModelsToSave.push(this.enquiry);
+                    let pdaenquirytoupdate: PDAEnquiryModel = new PDAEnquiryModel();
+                    pdaenquirytoupdate.deleteAttributes();
+                    pdaenquirytoupdate.AffectedPersonId = this.enquiry.AffectedPersonId;
+                    //  this.enquiriesCopassangerscreate(enquiryModelsToSave, this.enquiry.AffectedPersonId);
+                    this.enquiryService.CreateBulk(enquiryModelsToSave)
+                        .flatMap(_ => this.returncopassangerservice(this.enquiry.AffectedPersonId))
+                        .flatMap(_ => this.callcenteronlypageservice.Update(this.externalInput, this.callid))
+                        .flatMap(_ => this.callcenteronlypageservice.updatepdaenquiry(pdaenquirytoupdate, this.pdaenquiryid))
+                        .subscribe(() => {
+                            this.toastrService.success('Enquiry Saved successfully.', 'Success', this.toastrConfig);
+                            let num = UtilityService.UUID();
+                            this.globalState.NotifyDataChanged('CallRecieved', num);
+                            if (this.selectedCoPassangers.length > 0) {
+                                let afftedIdstocreateDemand: number[] = [];
+                                this.selectedCoPassangers.map(x => afftedIdstocreateDemand.push(x.AffectedPersonId));
+                                //   afftedIdstocreateDemand.push(this.) 
+                                this.createDemands(this.affectedId, afftedIdstocreateDemand);
+                            }
+                            else {
+                                this.createDemands(this.affectedId);
+                            }
+                        });
+
+                }
+                else {
+                    let pdaenquirytoupdate: PDAEnquiryModel = new PDAEnquiryModel();
+                    pdaenquirytoupdate.deleteAttributes();
+                    if (this.enquiryType != 1 && this.enquiryType != 3) {
+                        delete this.enquiry.AffectedPersonId;
+                    }
+                    if (this.enquiryType != 2) {
+                        delete this.enquiry.AffectedObjectId;
+                    }
+                    pdaenquirytoupdate.AffectedPersonId = this.enquiry.AffectedPersonId;
+                    this.enquiryService.Create(this.enquiry)
+                        .flatMap(_ => this.callcenteronlypageservice.Update(this.externalInput, this.callid))
+                        .flatMap(_ => {
+                            if (this.enquiryType == 1) {
+                                return this.callcenteronlypageservice.updatepdaenquiry(pdaenquirytoupdate, this.pdaenquiryid)
+                            }
+                            else {
+                                return Observable.of(new PDAEnquiryModel());
+                            }
+                        })
+                        .subscribe(() => {
+                            this.form = this.formInitialization();
+                            this.toastrService.success('Enquiry Saved successfully.', 'Success', this.toastrConfig);
+                            let num = UtilityService.UUID();
+                            this.globalState.NotifyDataChanged('CallRecieved', num);
+                            this.dataExchange.Publish('clearAutoCompleteInput', '');
                             this.createDemands(this.affectedId);
-                        }
-                    });
+                        }, (error: any) => {
+                            console.log(`Error: ${error}`);
+                        });
+                }
 
             }
             else {
-                let pdaenquirytoupdate: PDAEnquiryModel = new PDAEnquiryModel();
-                pdaenquirytoupdate.deleteAttributes();
-                if(this.enquiryType != 1 && this.enquiryType != 3){
-                    delete this.enquiry.AffectedPersonId;
+                this.enquiryToUpdate.Queries = this.enquiry.Queries;
+                if (this.enquiry.AffectedPersonId == null) {
+                    this.enquiry.AffectedPersonId = this.initialvalue.Value;
                 }
-                if(this.enquiryType != 2){
-                    delete this.enquiry.AffectedObjectId;
+                if (this.enquiryType == 2 || this.enquiryType == 3) {
+                    let communicationlogToDeactivate = new CommunicationLogModel();
+                    communicationlogToDeactivate.deleteAttributes();
+                    communicationlogToDeactivate.InteractionDetailsId = this.communicationlogstoupdateId[0];
+                    communicationlogToDeactivate.ActiveFlag = 'InActive';
+                    if (this.enquiry.AffectedPersonId && this.enquiry.AffectedPersonId != 0) {
+                        this.enquiryToUpdate.AffectedPersonId = this.enquiry.AffectedPersonId;
+                        communicationlogs[0].AffectedPersonId = this.enquiry.AffectedPersonId;
+                        delete communicationlogs[0].AffectedObjectId;
+                    }
+                    if (this.enquiry.AffectedObjectId && this.enquiry.AffectedObjectId != 0) {
+                        this.enquiryToUpdate.AffectedObjectId = this.enquiry.AffectedObjectId;
+                        communicationlogs[0].AffectedObjectId = this.enquiry.AffectedObjectId;
+                        delete communicationlogs[0].AffectedPersonId;
+                    }
+                    delete this.enquiryToUpdate.CommunicationLogs;
+                    communicationlogs[0].Queries = this.enquiryToUpdate.Queries;
+                    communicationlogs[0].EnquiryId = this.enquiryToUpdate.EnquiryId;
+                    this.pdaenquery.AffectedPersonId
+                    this.enquiryService.Update(this.enquiryToUpdate, this.enquiryToUpdate.EnquiryId)
+                        .flatMap(() => this.communicationlogservice.Update(communicationlogToDeactivate, this.communicationlogstoupdateId[0]))
+                        .flatMap(() => this.communicationlogservice.Create(communicationlogs[0]))
+                        .flatMap(() => this.demandService.UpdateBulkToDeactivateFromCallId(this.caller.CallerId))
+                        .subscribe(() => {
+                            this.form = this.formInitialization();
+                            this.toastrService.success('Enquiry updated successfully.', 'Success', this.toastrConfig);
+                            let num = UtilityService.UUID();
+                            this.globalState.NotifyDataChanged('CallRecieved', num);
+                            this.createDemands(this.affectedId);
+
+                        })
                 }
-                pdaenquirytoupdate.AffectedPersonId = this.enquiry.AffectedPersonId;
-                this.enquiryService.Create(this.enquiry)
-                    .flatMap(_ => this.callcenteronlypageservice.Update(this.externalInput, this.callid))
-                    .flatMap(_ => {
-                        if (this.enquiryType == 1) {
-                            return this.callcenteronlypageservice.updatepdaenquiry(pdaenquirytoupdate, this.pdaenquiryid)
-                        }
-                        else {
-                            return Observable.of(new PDAEnquiryModel());
-                        }
-                    })
-                    .subscribe(() => {
-                        this.form = this.formInitialization();
-                        this.toastrService.success('Enquiry Saved successfully.', 'Success', this.toastrConfig);
-                        let num = UtilityService.UUID();
-                        this.globalState.NotifyDataChanged('CallRecieved', num);
-                        this.dataExchange.Publish('clearAutoCompleteInput', '');
-                        this.createDemands(this.affectedId);
-                    }, (error: any) => {
-                        console.log(`Error: ${error}`);
-                    });
+                else if ((this.enquiryType == 1)) {
+                    this.consolidatedCopassengers.length == 0;
+                    let enquiryModelsToSave: EnquiryModel[] = [];
+                    enquiryModelsToSave = this.setenquiryModelforCopassangers(this.enquiry);
+                    this.enquiry.CommunicationLogs = communicationlogs;
+                    enquiryModelsToSave.push(this.enquiry);
+                    let pdaenquirytoupdate: PDAEnquiryModel = new PDAEnquiryModel();
+                    pdaenquirytoupdate.deleteAttributes();
+                    pdaenquirytoupdate.AffectedPersonId = this.enquiry.AffectedPersonId;
+                    this.enquiryService.UpdateBulkToDeactivateFromExternalId(this.callid)
+                        .flatMap(_ => this.demandService.UpdateBulkToDeactivateFromCallId(this.caller.CallerId))
+                        .flatMap(_ => this.enquiryService.CreateBulk(enquiryModelsToSave))
+                        .flatMap(_ => {
+                            if (this.consolidatedCopassengers.length > 0) {
+                                return this.returncopassangerservice(this.enquiry.AffectedPersonId);
+                            }
+                            else if (this.consolidatedCopassengers.length == 0 && this.initialgroupId != 0) {
+                                return this.passangerService.deleteoldgroups(this.initialgroupId);
+                            }
+                            else {
+                                return Observable.of(new Array<CoPassengerMappingModel>());
+                            }
+                        })
+                        .flatMap(_ => {
+                            if (this.pdaenquery.AffectedPersonId != null && this.pdaenquery.AffectedPersonId != this.enquiry.AffectedPersonId) {
+                                return this.callcenteronlypageservice.updatepdaenquiry(pdaenquirytoupdate, this.pdaenquiryid);
+                            }
+                            else {
+                                return Observable.of(new PDAEnquiryModel());
+                            }
+                        })
+                        .subscribe(() => {
+                            this.toastrService.success('Enquiry Saved successfully.', 'Success', this.toastrConfig);
+                            if (this.selectedCoPassangers.length > 0) {
+                                let afftedIdstocreateDemand: number[] = [];
+                                this.selectedCoPassangers.map(x => afftedIdstocreateDemand.push(x.AffectedPersonId));
+                                //   afftedIdstocreateDemand.push(this.) 
+                                this.createDemands(this.affectedId, afftedIdstocreateDemand);
+                            }
+                            else {
+                                this.createDemands(this.affectedId);
+                            }
+                        });
+
+                }
+                //  else if (this.enquiryType == 1 && this.consolidatedCopassengers.length > 0) {
+                // let externalInputId: number;
+                // let enquiryModelsToSave: EnquiryModel[] = [];
+                // enquiryModelsToSave = this.setenquiryModelforCopassangers(this.enquiry);
+                // this.enquiry.CommunicationLogs = communicationlogs;
+                // enquiryModelsToSave.push(this.enquiry);
+                // let copassangerModels: CoPassengerMappingModel[] = [];
+                // this.consolidatedCopassengers.map(x => {
+                //     let copssanger: CoPassengerMappingModel = new CoPassengerMappingModel();
+                //     copssanger.PassengerId = x.PassengerId;
+                //     if (this.groupId > 0) {
+                //         copssanger.GroupId = this.groupId
+                //     }
+                //     copassangerModels.push(copssanger);
+                // });
+                //     this.enquiryService.UpdateBulkToDeactivateFromExternalId(this.callid)
+                //         .flatMap(_ => this.demandService.UpdateBulkToDeactivateFromCallId(this.caller.CallerId))
+                //         .flatMap(_ => this.enquiryService.CreateBulk(enquiryModelsToSave))
+                //         .flatMap(_ => {
+                //             if (this.groupId > 0) {
+                //                 return this.passangerService.setcopassangers(copassangerModels)
+                //             }
+                //             else
+                //                 return this.passangerService.updatecopassangers(copassangerModels)
+                //         })
+                //         .flatMap(_ =>if(this.init))
+                //         .subscribe(() => {
+                //             this.toastrService.success('Enquiry Saved successfully.', 'Success', this.toastrConfig);
+                //             if (this.selectedCoPassangers.length > 0) {
+                //                 let afftedIdstocreateDemand: number[] = [];
+                //                 this.selectedCoPassangers.map(x => afftedIdstocreateDemand.push(x.AffectedPersonId));
+                //                 //   afftedIdstocreateDemand.push(this.) 
+                //                 this.createDemands(this.affectedId, afftedIdstocreateDemand);
+                //             }
+                //             else {
+                //                 this.createDemands(this.affectedId);
+                //             }
+                //         });
+                // }
+                // else {
+                //     this.enquiryService.Update(this.enquiryToUpdate, this.enquiryToUpdate.EnquiryId)
+                //         .subscribe(() => {
+                //             this.form = this.formInitialization();
+                //             this.toastrService.success('Enquiry updated successfully.', 'Success', this.toastrConfig);
+                //             let num = UtilityService.UUID();
+                //             this.globalState.NotifyDataChanged('CallRecieved', num);
+                //         });
+                // }
             }
 
         }
+
         else {
-            this.enquiryToUpdate.Queries = this.enquiry.Queries;
-            if (this.enquiry.AffectedPersonId == null) {
-                this.enquiry.AffectedPersonId = this.initialvalue.Value;
-            }
-            if (this.enquiryType == 2 || this.enquiryType == 3) {
-                let communicationlogToDeactivate = new CommunicationLogModel();
-                communicationlogToDeactivate.deleteAttributes();
-                communicationlogToDeactivate.InteractionDetailsId = this.communicationlogstoupdateId[0];
-                communicationlogToDeactivate.ActiveFlag = 'InActive';
-                if (this.enquiry.AffectedPersonId && this.enquiry.AffectedPersonId != 0) {
-                    this.enquiryToUpdate.AffectedPersonId = this.enquiry.AffectedPersonId;
-                    communicationlogs[0].AffectedPersonId = this.enquiry.AffectedPersonId;
-                    delete communicationlogs[0].AffectedObjectId;
-                }
-                if (this.enquiry.AffectedObjectId && this.enquiry.AffectedObjectId != 0) {
-                    this.enquiryToUpdate.AffectedObjectId = this.enquiry.AffectedObjectId;
-                    communicationlogs[0].AffectedObjectId = this.enquiry.AffectedObjectId;
-                    delete communicationlogs[0].AffectedPersonId;
-                }
-                delete this.enquiryToUpdate.CommunicationLogs;
-                communicationlogs[0].Queries = this.enquiryToUpdate.Queries;
-                communicationlogs[0].EnquiryId = this.enquiryToUpdate.EnquiryId;
-                this.pdaenquery.AffectedPersonId
-                this.enquiryService.Update(this.enquiryToUpdate, this.enquiryToUpdate.EnquiryId)
-                    .flatMap(() => this.communicationlogservice.Update(communicationlogToDeactivate, this.communicationlogstoupdateId[0]))
-                    .flatMap(() => this.communicationlogservice.Create(communicationlogs[0]))
-                    .flatMap(() => this.demandService.UpdateBulkToDeactivateFromCallId(this.caller.CallerId))
-                    .subscribe(() => {
-                        this.form = this.formInitialization();
-                        this.toastrService.success('Enquiry updated successfully.', 'Success', this.toastrConfig);
-                        let num = UtilityService.UUID();
-                        this.globalState.NotifyDataChanged('CallRecieved', num);
-                        this.createDemands(this.affectedId);
+            this.toastrService.info('Form not valid.');
 
-                    })
-            }
-            else if ((this.enquiryType == 1)) {
-                this.consolidatedCopassengers.length == 0;
-                let enquiryModelsToSave: EnquiryModel[] = [];
-                enquiryModelsToSave = this.setenquiryModelforCopassangers(this.enquiry);
-                this.enquiry.CommunicationLogs = communicationlogs;
-                enquiryModelsToSave.push(this.enquiry);
-                let pdaenquirytoupdate: PDAEnquiryModel = new PDAEnquiryModel();
-                pdaenquirytoupdate.deleteAttributes();
-                pdaenquirytoupdate.AffectedPersonId = this.enquiry.AffectedPersonId;
-                this.enquiryService.UpdateBulkToDeactivateFromExternalId(this.callid)
-                    .flatMap(_ => this.demandService.UpdateBulkToDeactivateFromCallId(this.caller.CallerId))
-                    .flatMap(_ => this.enquiryService.CreateBulk(enquiryModelsToSave))
-                    .flatMap(_ => {
-                        if (this.consolidatedCopassengers.length > 0) {
-                            return this.returncopassangerservice(this.enquiry.AffectedPersonId);
-                        }
-                        else if (this.consolidatedCopassengers.length == 0 && this.initialgroupId != 0) {
-                            return this.passangerService.deleteoldgroups(this.initialgroupId);
-                        }
-                        else {
-                            return Observable.of(new Array<CoPassengerMappingModel>());
-                        }
-                    })
-                    .flatMap(_ => {
-                        if (this.pdaenquery.AffectedPersonId != null && this.pdaenquery.AffectedPersonId != this.enquiry.AffectedPersonId) {
-                            return this.callcenteronlypageservice.updatepdaenquiry(pdaenquirytoupdate, this.pdaenquiryid);
-                        }
-                        else {
-                            return Observable.of(new PDAEnquiryModel());
-                        }
-                    })
-                    .subscribe(() => {
-                        this.toastrService.success('Enquiry Saved successfully.', 'Success', this.toastrConfig);
-                        if (this.selectedCoPassangers.length > 0) {
-                            let afftedIdstocreateDemand: number[] = [];
-                            this.selectedCoPassangers.map(x => afftedIdstocreateDemand.push(x.AffectedPersonId));
-                            //   afftedIdstocreateDemand.push(this.) 
-                            this.createDemands(this.affectedId, afftedIdstocreateDemand);
-                        }
-                        else {
-                            this.createDemands(this.affectedId);
-                        }
-                    });
-
-            }
-            //  else if (this.enquiryType == 1 && this.consolidatedCopassengers.length > 0) {
-            // let externalInputId: number;
-            // let enquiryModelsToSave: EnquiryModel[] = [];
-            // enquiryModelsToSave = this.setenquiryModelforCopassangers(this.enquiry);
-            // this.enquiry.CommunicationLogs = communicationlogs;
-            // enquiryModelsToSave.push(this.enquiry);
-            // let copassangerModels: CoPassengerMappingModel[] = [];
-            // this.consolidatedCopassengers.map(x => {
-            //     let copssanger: CoPassengerMappingModel = new CoPassengerMappingModel();
-            //     copssanger.PassengerId = x.PassengerId;
-            //     if (this.groupId > 0) {
-            //         copssanger.GroupId = this.groupId
-            //     }
-            //     copassangerModels.push(copssanger);
-            // });
-            //     this.enquiryService.UpdateBulkToDeactivateFromExternalId(this.callid)
-            //         .flatMap(_ => this.demandService.UpdateBulkToDeactivateFromCallId(this.caller.CallerId))
-            //         .flatMap(_ => this.enquiryService.CreateBulk(enquiryModelsToSave))
-            //         .flatMap(_ => {
-            //             if (this.groupId > 0) {
-            //                 return this.passangerService.setcopassangers(copassangerModels)
-            //             }
-            //             else
-            //                 return this.passangerService.updatecopassangers(copassangerModels)
-            //         })
-            //         .flatMap(_ =>if(this.init))
-            //         .subscribe(() => {
-            //             this.toastrService.success('Enquiry Saved successfully.', 'Success', this.toastrConfig);
-            //             if (this.selectedCoPassangers.length > 0) {
-            //                 let afftedIdstocreateDemand: number[] = [];
-            //                 this.selectedCoPassangers.map(x => afftedIdstocreateDemand.push(x.AffectedPersonId));
-            //                 //   afftedIdstocreateDemand.push(this.) 
-            //                 this.createDemands(this.affectedId, afftedIdstocreateDemand);
-            //             }
-            //             else {
-            //                 this.createDemands(this.affectedId);
-            //             }
-            //         });
-            // }
-            // else {
-            //     this.enquiryService.Update(this.enquiryToUpdate, this.enquiryToUpdate.EnquiryId)
-            //         .subscribe(() => {
-            //             this.form = this.formInitialization();
-            //             this.toastrService.success('Enquiry updated successfully.', 'Success', this.toastrConfig);
-            //             let num = UtilityService.UUID();
-            //             this.globalState.NotifyDataChanged('CallRecieved', num);
-            //         });
-            // }
         }
 
 

@@ -14,7 +14,8 @@ import { CallerModel } from "../shared.components/caller";
 @Component({
     selector: 'login',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './views/callcenteronlypage.view.html'
+    templateUrl: './views/callcenteronlypage.view.html',
+    styleUrls: ['./styles/call.center.only.style.scss']
 })
 export class CallCenterOnlyPageComponent implements OnInit {
     public generalform: FormGroup;
@@ -49,8 +50,8 @@ export class CallCenterOnlyPageComponent implements OnInit {
             CallerFirstName: new FormControl('', [Validators.required]),
             CallerLastName: new FormControl('', [Validators.required]),
             ContactNumber: new FormControl('', [Validators.required]),
-            AlternateContactNumber: new FormControl('', [Validators.required]),
-            Relationship: new FormControl('', [Validators.required])
+            AlternateContactNumber: new FormControl(''),
+            Relationship: new FormControl('')
 
         });
       
@@ -66,12 +67,12 @@ export class CallCenterOnlyPageComponent implements OnInit {
             FlightNumber: new FormControl('', [Validators.required]),
             DepartedFrom: new FormControl('', [Validators.required]),
             TravellingTo: new FormControl('', [Validators.required]),
-            TravellingWith: new FormControl('', [Validators.required]),
+            TravellingWith: new FormControl(''),
             EnquiryReason: new FormControl('', [Validators.required]),
-            KINFirstName: new FormControl('', [Validators.required]),
-            KINLastName: new FormControl('', [Validators.required]),
-            KINContactNumber: new FormControl('', [Validators.required]),
-            KINRelationShip: new FormControl('', [Validators.required]),
+            KINFirstName: new FormControl(''),
+            KINLastName: new FormControl(''),
+            KINContactNumber: new FormControl(''),
+            KINRelationShip: new FormControl(''),
             Query: new FormControl('', [Validators.required]),
             FinalDestination: new FormControl('', [Validators.required])
         });

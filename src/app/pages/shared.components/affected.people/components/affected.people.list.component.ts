@@ -405,7 +405,7 @@ export class AffectedPeopleListComponent implements OnInit {
                 OrCommand: 'Passenger/PassengerName|Crew/CrewName'
             }),
             new SearchTextBox({
-                Name: 'Pnr',
+                Name: 'Passenger/Pnr',
                 Description: 'PNR',
                 Value: ''
             }),
