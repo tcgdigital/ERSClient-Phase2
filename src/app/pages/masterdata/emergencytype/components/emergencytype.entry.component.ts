@@ -36,6 +36,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
         private toastrConfig: ToastrConfig) { }
 
     onEmergencyTypeUpdate(model: EmergencyTypeModel): void {
+        this.emergencyTypeModel = new EmergencyTypeModel();
         this.emergencyTypeModel = model;
         this.emergencyTypeModel.EmergencyTypeId = model.EmergencyTypeId;
         this.Action = "Edit";
@@ -55,11 +56,11 @@ export class EmergencyTypeEntryComponent implements OnInit {
     onSubmit(): void {
         this.submitted = true;
         if (this.form.controls['EmergencyTypeName'].value == '') {
-            this.toastrService.error('Please provide emergency type name.', 'Error', this.toastrConfig);
+            this.toastrService.error('Please provide Crisis type name.', 'Error', this.toastrConfig);
             return null;
         }
         if (this.form.controls['EmergencyCategory'].value == '') {
-            this.toastrService.error('Please provide emergency type category.', 'Error', this.toastrConfig);
+            this.toastrService.error('Please provide Crisis type category.', 'Error', this.toastrConfig);
             return null;
         }
         if (this.form.controls['ActiveFlag'].value == '') {
@@ -77,7 +78,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
                 .subscribe((response: EmergencyTypeModel) => {
                     this.resetForm();
                     this.showAdd = false;
-                    this.toastrService.success('Emergency Type saved Successfully.', 'Success', this.toastrConfig);
+                    this.toastrService.success('Crisis Type saved Successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("EmergencyTypeModelSaved", response);
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
@@ -90,7 +91,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
                 .subscribe((response: EmergencyTypeModel) => {
                     this.resetForm();
                     this.showAdd = false;
-                    this.toastrService.success('Emergency Type edited Successfully.', 'Success', this.toastrConfig);
+                    this.toastrService.success('Crisis Type edited Successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("EmergencyTypeModelUpdated", response);
                 }, (error: any) => {
                     console.log(`Error: ${error}`);

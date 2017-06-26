@@ -2,8 +2,17 @@
     label {
         margin: 0;
         font-size: 12px;
-        font-weight: 600;
+        font-weight: 600; 
     }
+}
+.entryHolder {
+
+    .form-group {
+        label {
+       font-weight: 500; overflow: auto;
+        }
+    }
+
 }
 
 .form-control {

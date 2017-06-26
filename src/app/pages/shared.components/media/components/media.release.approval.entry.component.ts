@@ -83,7 +83,7 @@ export class MediaReleaseApprovalEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe("OnMediaReleaseUpdate");
+        this.dataExchange.Unsubscribe("OnMediaReleaseApproverUpdate");
         this.globalState.Unsubscribe('incidentChangefromDashboard');
         this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }    
@@ -162,7 +162,7 @@ export class MediaReleaseApprovalEntryComponent implements OnInit, OnDestroy {
                 if(this.Action === "Reject")
                      this.toastrService.success('Media release is rejected successfully.', 'Success', this.toastrConfig);
                      
-                this.dataExchange.Publish("MediaModelUpdated", response);                                                
+                this.dataExchange.Publish("MediaModelApprovalUpdated", response);                                                
                 if(this.media.IsPublished)
                 {                        
                     this.globalState.NotifyDataChanged('MediaReleasePublished', this.media);

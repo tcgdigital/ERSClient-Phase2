@@ -184,8 +184,8 @@ export class ChecklistListComponent implements OnInit {
             // }),
             new SearchDropdown({
                 Name: 'EmergencyTypeId',
-                Description: 'Emergency Type',
-                PlaceHolder: 'Select Emergency Type',
+                Description: 'Crisis Type',
+                PlaceHolder: 'Select Crisis Type',
                 Value: '',
                 ListData: this.emergencytypeService.GetAll()
                     .map((x) => x.Records)

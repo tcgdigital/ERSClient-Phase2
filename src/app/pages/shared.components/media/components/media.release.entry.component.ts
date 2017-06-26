@@ -118,7 +118,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
         this.currentTemplateMediaId = this.templateMedias
             .find((a) => a.TemplatePurpose === mediaModel.MediaReleaseType).TemplateMediaId.toString();
 
-        if(this.media.MediaReleaseStatus === 'Approved' || this.media.MediaReleaseStatus === 'Published')
+        if(mediaModel.MediaReleaseStatus === 'Approved' || mediaModel.MediaReleaseStatus === 'Published')
         {
             // this.isApprovedContent = true;
             // this.isSavedContent = false;
@@ -316,7 +316,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
                 .subscribe((response: MediaModel) => {
                     if (this.Action === 'Save')
                         this.toastrService.success('Media release is edited successfully.', 'Success', this.toastrConfig);
-                    this.dataExchange.Publish('MediaModelUpdated', response);
+                   
                     if (this.Action === 'SentForApproval') {
                         this.dataExchange.Publish('MediaModelSentForApproval', response);
                         this.toastrService.success('Media release is successfully sent for approval.', 'Success', this.toastrConfig);
@@ -325,6 +325,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
                         this.globalState.NotifyDataChanged('MediaReleasePublished', this.media);
                         this.toastrService.success('Media release is published successfully.', 'Success', this.toastrConfig);
                     }
+                    this.dataExchange.Publish('MediaModelUpdated', response);
                     this.showAdd = false;
                     this.formInit();
                 }, (error: any) => {

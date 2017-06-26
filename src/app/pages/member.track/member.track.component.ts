@@ -14,7 +14,7 @@ import {
     KeyValue,
     IncidentStatus,
     GlobalStateService,
-    UtilityService
+    UtilityService, AuthModel
 } from '../../shared';
 
 import { UserProfileService, UserProfileModel } from "../masterdata/userprofile/components";
@@ -44,6 +44,10 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
     isRemarksSubmitted: boolean = false;
     isChecked: boolean = false;
     memberHistory: MemberEngagementTrackModel[] = [];
+    createdBy: number;
+    credential: AuthModel;
+    availblecount: number;
+    freecount: number;
 
     constructor(private globalState: GlobalStateService, private userProfileService: UserProfileService,
         private userpermissionService: UserPermissionService, private membertrackService: MemberTrackService,
@@ -57,6 +61,8 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
+        this.credential = UtilityService.getCredentialDetails();
+        this.createdBy = +this.credential.UserId;
     }
 
     ngAfterViewChecked() {
@@ -107,6 +113,7 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
                 memberTrackModel.Deploy = true;
                 memberTrackModel.Remarks = obj.Remarks;
                 memberTrackModel.UnDeploy = false;
+                memberTrackModel.CreatedBy = this.createdBy;
                 if (obj.MemberEngagementTrackId == null || obj.MemberEngagementTrackId == 0 || obj.MemberEngagementTrackId == undefined) {
                     let memberCurrentEngagementToSave: MemberCurrentEngagementModel = new MemberCurrentEngagementModel();
                     memberCurrentEngagementToSave.DepartmentId = this.currentDepartmentId;
@@ -119,6 +126,7 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
                         .subscribe((response: MemberCurrentEngagementModel) => {
                             //this.toastrService.success('Member is engaged now.');
                             alert('Member is engaged now.');
+
                             this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
 
 
@@ -201,6 +209,7 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
                     member.IsNotyfied = (x.User.Notifications.length > 0) ? true : false;
                     member.IsAcknowledged = (x.User.Notifications.length > 0) ? (x.User.Notifications.some(x => x.AckStatus == "Accepted")) : false;
                     member.IsBusy = false;
+                    member.isVolunteered = x.User.isVolunteered;
                     member.Remarks = "";
                     if (this.memberTracks.length > 0 && this.memberTracks.find(y => y.UserId == x.UserId) != null) {
                         let obj: MemberCurrentEngagementModel = new MemberCurrentEngagementModel();
@@ -214,6 +223,8 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
 
                     return member;
                 });
+                this.availblecount = this.memberEngagementsToView.filter(x => x.IsBusy == false).length;
+                this.freecount = this.memberEngagementsToView.filter(x => x.IsBusy == true).length;
                 this.GenerateToggle();
             });
 
@@ -224,6 +235,14 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
         this.membertrackService.GetAllHistory(id, this.currentDepartmentId, this.currentIncidentId)
             .subscribe((response: ResponseModel<MemberEngagementTrackModel>) => {
                 this.memberHistory = response.Records;
+                //  this.memberHistory["createdby"]=
+                this.memberHistory.forEach(x => {
+                    this.userProfileService.Get(x.CreatedBy)
+                        .subscribe((response1: UserProfileModel) => {
+                            x["createdby"] = response1.Name;
+                        })
+                });
+
                 this.childModalHistory.show();
             })
 

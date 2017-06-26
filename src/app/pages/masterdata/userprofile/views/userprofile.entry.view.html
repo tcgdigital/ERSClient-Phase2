@@ -22,6 +22,8 @@
 
                     <small *ngIf="form.controls.UserId.hasError('required')" [hidden]="form.controls.UserId.valid || (form.controls.UserId.pristine && !submitted)"
                         class="text-danger">Required</small>
+                    <small *ngIf="form.controls.UserId.hasError('validateUserId')" [hidden]="form.controls.UserId.valid || (form.controls.UserId.pristine && !submitted)"
+                        class="text-danger">Invalid Input</small>
                 </div>
             </div>
 
@@ -87,8 +89,16 @@
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="form-group">
-                    <md-checkbox class="Marght" id="IsTravelRequest" formControlName="isActive" aria-label="IsActive">
+                    <md-checkbox id="IsTravelRequest" formControlName="isActive">
                         Active
+                    </md-checkbox>
+                </div>
+
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                    <md-checkbox id="IsVolunteered" formControlName="isVolunteered">
+                        Is Volunteered
                     </md-checkbox>
                 </div>
             </div>

@@ -80,12 +80,10 @@ export class ChecklistEntryComponent implements OnInit {
     }
 
     showList(): void {
-        debugger;
         this.listSelected = !this.listSelected;
     }
 
     selectParentChecklist(checklistParent: ChecklistModel): void {
-        debugger;
         checklistParent.IsSelected = !checklistParent.IsSelected;
         this.parentChecklists = [];
         if (this.CheckListParents.filter(x => x["IsSelected"] == true).length > 0) {
@@ -102,13 +100,11 @@ export class ChecklistEntryComponent implements OnInit {
     }
 
     addDepartmentName(x: ChecklistModel[]): ChecklistModel[] {
-        debugger;
-        //x.forEach(y => y.CheckListCode = `${y.CheckListCode} (${y.TargetDepartment.DepartmentName}) `);
+        x.forEach(y => y.CheckListCode = `${y.CheckListCode} (${y.TargetDepartment.DepartmentName}) `);
         return x;
     }
 
     selectAllParent(): void {
-        debugger;
 
         let isSelected = this.form.controls["isSelected"].value;
         this.checkListParentDepartmentWise.forEach(x => x["IsSelected"] = (isSelected));
@@ -126,7 +122,6 @@ export class ChecklistEntryComponent implements OnInit {
     }
 
     mergeResponses(departmentId): void {
-        debugger;
         const allChecklists: Observable<ResponseModel<ChecklistModel>>
             = this.checkListService.GetAllByDepartment(departmentId);
 
@@ -139,7 +134,6 @@ export class ChecklistEntryComponent implements OnInit {
         Observable.merge(allChecklists, activeDepartments, activeEmergencyTypes)
             .subscribe(
             (response: ResponseModel<BaseModel>) => {
-                debugger;
                 if (response.Records.length > 0 && Object.keys(response.Records[0]).some((x) => x === 'CheckListId')) {
                     this.activeCheckLists = response.Records as ChecklistModel[];
                     //this.checkListModel.ParentCheckListId = this.activeCheckLists[0].CheckListId;
@@ -166,7 +160,6 @@ export class ChecklistEntryComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        debugger;
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.getAllActiveDepartments();
         this.submitted = false;
@@ -196,11 +189,10 @@ export class ChecklistEntryComponent implements OnInit {
     }
 
     private getCheckListByDepartment(departmentId): void {
-        debugger;
         this.checkListService.GetAllWithParentsByDepartment(departmentId)
             .subscribe((response: ResponseModel<ChecklistModel>) => {
-                debugger;
-                let parentIds: number[] = [];
+
+                let parentIds: number[] = this.CheckListParents.map(item => item.CheckListId);
                 this.CheckListParents = response.Records;
                 let CheckListParentMappers: any = _.pluck(this.CheckListParents, 'CheckListParentMapper');
                 CheckListParentMappers.forEach(element => {
@@ -223,14 +215,13 @@ export class ChecklistEntryComponent implements OnInit {
                 this.CheckListParents.forEach(element => {
                     element.IsSelected = false;
                 });
-                debugger;
-                //this.parentdepartments = _.unique(_.flatten(_.pluck(this.CheckListParents, 'CheckListParentMapper')), (x) => { return x.DepartmentId; });
+
+                this.parentdepartments = _.unique(_.flatten(_.pluck(this.CheckListParents, 'CheckListParentMapper')), (x) => { return x.DepartmentId; });
 
             });
     }
 
     initiateCheckListModel(): void {
-        debugger;
         this.checkListModel = new ChecklistModel();
         this.checkListModel.ActiveFlag = 'Active';
         this.checkListModel.CreatedBy = +this.credential.UserId;
@@ -239,7 +230,7 @@ export class ChecklistEntryComponent implements OnInit {
     }
 
     formControlDirtyCheck() {
-        //debugger;
+
         this.checkListModelEdit = new ChecklistModel();
         this.checkListModelEdit.CheckListId = this.form.controls['CheckListId'].value;
 
@@ -272,7 +263,6 @@ export class ChecklistEntryComponent implements OnInit {
     }
 
     getAllActiveOrganizations(): void {
-        debugger;
         this.organizationService.GetAllActiveOrganizations()
             .subscribe((response: ResponseModel<OrganizationModel>) => {
                 this.activeOrganizations = response.Records;
@@ -282,7 +272,6 @@ export class ChecklistEntryComponent implements OnInit {
     }
 
     onSubmit(values: object): void {
-        debugger;
         this.submitted = true;
         let intermediate:ChecklistMapper[]=[];
         this.checkListModel.CheckListParentMapper=[];
@@ -359,7 +348,6 @@ export class ChecklistEntryComponent implements OnInit {
     }
 
     cancel(): void {
-        //debugger;
         this.selectedcount = 0;
         this.resetCheckListForm();
         this.showAdd = false;
@@ -367,7 +355,6 @@ export class ChecklistEntryComponent implements OnInit {
     }
 
     createChecklist(checklistMode: ChecklistModel): void {
-        debugger;
         this.checkListService.Create(this.checkListModel)
             .subscribe((response: ChecklistModel) => {
                 debugger;
@@ -384,7 +371,6 @@ export class ChecklistEntryComponent implements OnInit {
     }
 
     onCheckListEditSuccess(data: ChecklistModel): void {
-        debugger;
         this.showAdd = true;
         this.initiateCheckListModel();
         this.checkListModel = data;
@@ -408,13 +394,13 @@ export class ChecklistEntryComponent implements OnInit {
     }
 
     parentDepartmentChange(): void {
-        //debugger;
+
         let departmentId: number = +this.form.controls['ParentDepartmentId'].value;
         this.checkListParentDepartmentWise = this.CheckListParents.filter(x => x.DepartmentId == departmentId);
     }
 
     private resetCheckListForm(checkList?: ChecklistModel): FormGroup {
-        //debugger;
+
         return new FormGroup({
             CheckListId: new FormControl(checkList ? checkList.CheckListId : 0),
             CheckListDetails: new FormControl(checkList ? checkList.CheckListDetails : '', [Validators.required]),
@@ -431,7 +417,6 @@ export class ChecklistEntryComponent implements OnInit {
     }
 
     private departmentChangeHandler(department: KeyValue): void {
-        //debugger;
         this.currentDepartmentId = department.Value;
         this.mergeResponses(this.currentDepartmentId);
     }

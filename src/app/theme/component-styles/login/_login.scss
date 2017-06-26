@@ -122,8 +122,10 @@ forgot-password .Absolute-Center.is-Responsive {
     background: url(./assets/images/pal_logo.png) #fff center center no-repeat;
     background-size: 83%;
     border-radius: 100px;
-    @media screen and (max-width: $resLG-E) { 
-            height: 110px; width: 110px;  background-size:82%;
+    @media screen and (max-width: $resLG-E) {
+        height: 110px;
+        width: 110px;
+        background-size: 82%;
     }
 }
 
@@ -134,6 +136,7 @@ input:-webkit-autofill:active {
     -webkit-transition-delay: 9999s;
     -webkit-transition: color 9999s ease-out, background-color 9999s ease-out;
 }
+
 .loginform {
     a {
         color: #fff;
@@ -162,7 +165,8 @@ input:-webkit-autofill:active {
         /* background-size: 15%; */
         margin-top: 20px;
         padding: 5px;
-        border: #fff solid 1px; cursor: pointer;
+        border: #fff solid 1px;
+        cursor: pointer;
     }
     .input-group-addon {
         position: relative;
@@ -220,8 +224,9 @@ input:-webkit-autofill:active {
     margin: 2px 0;
 }
 
-.error-login{
-    color:$login-error !important; font-weight: bold;
+.error-login {
+    color: $login-error !important;
+    font-weight: bold;
 }
 
 @media screen and (max-width: $resXS-E) {}

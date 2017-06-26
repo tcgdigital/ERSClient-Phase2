@@ -14,6 +14,7 @@ export class ResponsiveTableComponent implements AfterContentInit, AfterViewInit
     @Input() isbordered: boolean = false;
     @Input() isStriped: boolean = false;
     @Input() isHoverable: boolean = true;
+    @Input() scrollableclass: boolean = false;
 
     $currentElement: JQuery;
 

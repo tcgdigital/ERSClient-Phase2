@@ -39,7 +39,7 @@ export class MediaReleaseApprovalListComponent implements OnInit, OnDestroy {
         this.mediaService.Query(departmentId, incidentId)
             .subscribe((response: ResponseModel<MediaModel>) => {                
                 this.mediaReleases = response.Records.
-                filter(a=>a.MediaReleaseStatus === 'SentForApproval' || a.MediaReleaseStatus === 'Published');
+                filter(a=>a.MediaReleaseStatus === 'SentForApproval');
                 console.log(this.mediaReleases);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
@@ -61,10 +61,10 @@ export class MediaReleaseApprovalListComponent implements OnInit, OnDestroy {
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.initiatedDepartmentId;
         this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
-        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/' + this.currentIncidentId + '/';
-        this.dataExchange.Subscribe("MediaModelSaved", model => this.onMediaSuccess(model));
+        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/Media/' + this.currentIncidentId + '/';
+        
         this.dataExchange.Subscribe("MediaModelSentForApproval", model => this.onMediaSuccess(model));
-        this.dataExchange.Subscribe("MediaModelUpdated", model => this.onMediaSuccess(model));
+        this.dataExchange.Subscribe("MediaModelApprovalUpdated", model => this.onMediaSuccess(model));
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
     }
@@ -72,7 +72,7 @@ export class MediaReleaseApprovalListComponent implements OnInit, OnDestroy {
     private incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
         this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
-        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/' + this.currentIncidentId + '/';
+        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/Media/' + this.currentIncidentId + '/';
     }
 
     private departmentChangeHandler(department: KeyValue): void {

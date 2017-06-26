@@ -177,6 +177,11 @@
     }
 }
 
+.scrollclass{
+    height:200px;
+    overflow: auto;
+}
+
 @media screen and (max-width: $resMD-S) {
     .table-responsive-vertical {
         >.table {
