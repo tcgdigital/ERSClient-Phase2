@@ -137,7 +137,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.filesToUpload = []; 
         for (var i = 0; i < e.target.files.length; i++) {
             const extension = e.target.files[i].name.split('.').pop();                                  
-            if(extension != "exe" || extension != "dll")                
+            if(extension != "exe" && extension != "dll")                
                 this.filesToUpload.push(e.target.files[i]);
             else
             {
