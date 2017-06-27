@@ -9,7 +9,7 @@ import {
 import { Observable, Subscription } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router, NavigationEnd } from '@angular/router';
-import { ChecklistModel,ChecklistMapper } from "../../../masterdata/checklist/components/checklist.model";
+import { ChecklistModel, ChecklistMapper } from "../../../masterdata/checklist/components/checklist.model";
 
 import { ActionableModel } from './actionable.model';
 import { ActionableService } from './actionable.service';
@@ -50,7 +50,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
 
     private currentDepartmentId: number = null;
     private currentIncident: number = null;
-    public ChecklistMappers:ChecklistMapper[]=[];
+    public ChecklistMappers: ChecklistMapper[] = [];
     disableUploadButton: boolean;
 
     /**
@@ -69,35 +69,24 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         private injector: Injector) {
         this.filesToUpload = [];
         this.globalStateProxyOpen = injector.get(GlobalStateService);
-        // this._onRouteChange = this._router.events.subscribe((event) => {
-        //     if (event instanceof NavigationEnd) {
-        //         if (event.url.indexOf("archivedashboard") > -1) {
-        //             this.isArchive = true;
-        //             this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
-        //         }
-        //         else {
-        //             this.isArchive = false;
-        //             this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
-        //         }
-        //         //this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
-        //     }
-        // });
+
     }
 
     public ngOnInit(): any {
-        this.ChecklistMappers=[];
+        
+        this.ChecklistMappers = [];
         this.disableUploadButton = true;
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
 
         if (this._router.url.indexOf("archivedashboard") > -1) {
             this.isArchive = true;
             this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
-        }else{
+        } else {
             this.isArchive = false;
             this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
         }
         this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
-        
+
         this.credential = UtilityService.getCredentialDetails();
         this.form = this.resetActionableForm();
         this.actionableModelToUpdate = new ActionableModel();
@@ -108,18 +97,21 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     private hasChildChecklist(checkListId): boolean {
-        //console.log(this.actionableWithParentsChilds);
-        let currentDepartmentActionables:ActionableModel[] = this.actionableWithParentsChilds.filter((item:ActionableModel)=>{
-            return item.DepartmentId==this.currentDepartmentId;
-        });
-        let currentActionable:ActionableModel =  currentDepartmentActionables.filter((item:ActionableModel)=>{
-            return item.ChklistId==checkListId;
-        })[0];
-        if(currentActionable.CheckList.CheckListChildrenMapper.length>0){
-            return true;
-        }
-        else
+
+
+        try {
+            return this.actionableWithParentsChilds.find(
+                (item: ActionableModel) => item.DepartmentId === this.currentDepartmentId && item.ChklistId === checkListId)
+                .CheckList.CheckListChildrenMapper.length > 0;
+        } catch (x) {
             return false;
+        }
+
+        // if(currentActionable.CheckList.CheckListChildrenMapper.length>0){
+        //     return true;
+        // }
+        // else
+        //     return false;
 
     }
 
@@ -139,7 +131,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                 this.departmentService.GetDepartmentNameIds()
                     .subscribe((response: ResponseModel<DepartmentModel>) => {
                         responseActionable.Records[0].CheckList.CheckListChildrenMapper.forEach((item: ChecklistMapper) => {
-                            this.GetListOfChildActionables(item.ChildCheckListId,this.currentIncident, (child: ActionableModel) => {
+                            this.GetListOfChildActionables(item.ChildCheckListId, this.currentIncident, (child: ActionableModel) => {
                                 child["DepartmentName"] = response.Records.find(y => { return y.DepartmentId == child.DepartmentId; }).DepartmentName;
                                 actionable["actionableChilds"].push(child);
                             });
@@ -230,12 +222,12 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
 
     fileChangeEvent(fileInput: any) {
         this.filesToUpload = <Array<File>>fileInput.target.files;
-        if(this.filesToUpload.length > 0){
-        this.disableUploadButton = false;
-    }
-    else{
-        this.disableUploadButton = true;
-    }
+        if (this.filesToUpload.length > 0) {
+            this.disableUploadButton = false;
+        }
+        else {
+            this.disableUploadButton = true;
+        }
     }
 
     clearFileUpload(event: any): void {
@@ -262,8 +254,8 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     getAllActiveActionableByIncident(incidentId): void {
         this.parentChecklistIds = [];
         let parents: number[] = [];
-        this.ChecklistMappers=[];
-        let mappers:ChecklistMapper[]=[];
+        this.ChecklistMappers = [];
+        let mappers: ChecklistMapper[] = [];
         this.actionableService.GetAllOpenByIncidentId(incidentId)
             .subscribe((response: ResponseModel<ActionableModel>) => {
                 this.actionableWithParentsChilds = response.Records;

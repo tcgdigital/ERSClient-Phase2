@@ -214,7 +214,7 @@ export class ChecklistEntryComponent implements OnInit {
                     element.IsSelected = false;
                 });
 
-                this.parentdepartments = _.unique(_.flatten(_.pluck(this.CheckListParents, 'CheckListParentMapper')), (x) => { return x.DepartmentId; });
+              //  this.parentdepartments = _.unique(_.flatten(_.pluck(this.CheckListParents, 'CheckListParentMapper')), (x) => { return x.DepartmentId; });
 
             });
     }

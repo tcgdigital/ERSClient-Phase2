@@ -12,7 +12,7 @@ import {
     GraphObject
 } from './demand.raised.summary.widget.model';
 import { WidgetUtilityService } from "../widget.utility";
-import { UtilityService, GlobalConstants } from '../../../shared';
+import { UtilityService, GlobalConstants, DataExchangeService, GlobalStateService } from '../../../shared';
 import { DemandRaisedSummaryWidgetService } from './demand.raised.summary.widget.service';
 import { DemandModel } from '../../shared.components/demand/components/demand.model';
 import { IncidentModel, IncidentService } from "../../incident";
@@ -56,7 +56,9 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
     public arrGraphData: GraphObject[];
     //public elapsedHourForGraph: number = GlobalConstants.ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION;
     public graphCategories: string[] = [];
-    constructor(private demandRaisedSummaryWidgetService: DemandRaisedSummaryWidgetService, private incidentService: IncidentService) { }
+    constructor(private demandRaisedSummaryWidgetService: DemandRaisedSummaryWidgetService,
+        private incidentService: IncidentService, private globalState: GlobalStateService,
+        private dataExchange: DataExchangeService<DemandModel>) { }
 
     public ngOnInit(): void {
         this.arrGraphData = [];
@@ -65,6 +67,16 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         this.showAllDeptSubPending = false;
         this.showSubDeptSubCompleted = false;
         this.showSubDeptSubPending = false;
+        this.demandRaisedSummary = this.demandRaisedSummaryWidgetService
+            .GetDemandRaisedCount(this.incidentId, this.departmentId);
+
+        this.globalState.Subscribe('DemandAddedUpdated', () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe('DemandApproved', () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe('DemandAssigned', () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe('DemandCompleted', () => this.onDemandAddedUpdatedSuccess());
+    }
+
+    public onDemandAddedUpdatedSuccess(): void {
         this.demandRaisedSummary = this.demandRaisedSummaryWidgetService
             .GetDemandRaisedCount(this.incidentId, this.departmentId);
     }
@@ -298,6 +310,9 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
 
     }
 
+    ngOnDestroy(): void {
+        //this.dataExchange.Unsubscribe('DemandAddedUpdated');
+    }
     private activator<T>(type: { new (): T; }): T {
         return new type();
     }
