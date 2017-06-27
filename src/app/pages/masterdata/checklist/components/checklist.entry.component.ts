@@ -123,7 +123,7 @@ export class ChecklistEntryComponent implements OnInit {
 
     mergeResponses(departmentId): void {
         const allChecklists: Observable<ResponseModel<ChecklistModel>>
-            = this.checkListService.GetAllByDepartment(departmentId);
+            = this.checkListService.GetAllActiveCheckListsForParent();
 
         const activeDepartments: Observable<ResponseModel<DepartmentModel>>
             = this.departmentService.GetAll();
@@ -136,11 +136,19 @@ export class ChecklistEntryComponent implements OnInit {
             (response: ResponseModel<BaseModel>) => {
                 if (response.Records.length > 0 && Object.keys(response.Records[0]).some((x) => x === 'CheckListId')) {
                     this.activeCheckLists = response.Records as ChecklistModel[];
+                    this.CheckListParents = response.Records as ChecklistModel[];
+                    this.CheckListParents.forEach(element => {
+                        element.IsSelected = false;
+                    });
+
                     //this.checkListModel.ParentCheckListId = this.activeCheckLists[0].CheckListId;
 
                 } else if (response.Records.length > 0 && Object.keys(response.Records[0]).some((x) => x === 'DepartmentId')) {
                     this.activeDepartments = response.Records as DepartmentModel[];
                     this.checkListModel.DepartmentId = this.activeDepartments[0].DepartmentId;
+                    this.activeDepartments.forEach(x => {
+                        this.parentdepartments.push(Object.assign({}, x));
+                    })
 
                 } else if (response.Records.length > 0 && Object.keys(response.Records[0]).some((x) => x === 'EmergencyTypeId')) {
                     this.activeEmergencyTypes = response.Records as EmergencyTypeModel[];
@@ -174,17 +182,15 @@ export class ChecklistEntryComponent implements OnInit {
     }
 
     ngOnDestroy(): void {
-        debugger;
         this.dataExchange.Unsubscribe('departmentChange');
         this.dataExchange.Unsubscribe('checklistModelEdited');
     }
 
     getAllActiveDepartments(): void {
-        debugger;
         this.departmentService.GetAllActiveDepartments()
             .subscribe((item: ResponseModel<DepartmentModel>) => {
                 this.allDepartments = item.Records;
-                this.getCheckListByDepartment(this.currentDepartmentId);
+                // this.getCheckListByDepartment(this.currentDepartmentId);
             });
     }
 
@@ -204,11 +210,11 @@ export class ChecklistEntryComponent implements OnInit {
                             department = this.allDepartments.find((itemDept: DepartmentModel) => {
                                 return itemDept.DepartmentId == item.ParentCheckList.DepartmentId;
                             });
-                            this.parentdepartments.push(department);
+                            //   this.parentdepartments.push(department);
                         });
                     }
                 });
-                this.parentdepartments = _.unique(this.parentdepartments);
+                // this.parentdepartments = _.unique(this.parentdepartments);
                 parentIds = _.unique(parentIds);
                 //let parentIds: number[] = _.pluck(this.CheckListParents, 'CheckListParentMapper').map(item => item.ParentCheckListId);
                 //let parentIds: number[] = this.CheckListParents.map(item => item.CheckListId);
@@ -216,7 +222,7 @@ export class ChecklistEntryComponent implements OnInit {
                     element.IsSelected = false;
                 });
 
-                this.parentdepartments = _.unique(_.flatten(_.pluck(this.CheckListParents, 'CheckListParentMapper')), (x) => { return x.DepartmentId; });
+                //  this.parentdepartments = _.unique(_.flatten(_.pluck(this.CheckListParents, 'CheckListParentMapper')), (x) => { return x.DepartmentId; });
 
             });
     }
@@ -273,17 +279,17 @@ export class ChecklistEntryComponent implements OnInit {
 
     onSubmit(values: object): void {
         this.submitted = true;
-        let intermediate:ChecklistMapper[]=[];
-        this.checkListModel.CheckListParentMapper=[];
+        let intermediate: ChecklistMapper[] = [];
+        this.checkListModel.CheckListParentMapper = [];
         if (this.form.valid) {
             this.submitted = false;
             let CheckListParentMappers: any = _.pluck(this.CheckListParents, 'CheckListParentMapper');
-            this.CheckListParents.forEach((element:ChecklistModel) => {
+            this.CheckListParents.forEach((element: ChecklistModel) => {
 
-                if (element.CheckListParentMapper.length > 0 && element.IsSelected==true) {
+                if (element.CheckListParentMapper.length > 0 && element.IsSelected == true) {
                     element.CheckListParentMapper.forEach((item: ChecklistMapper) => {
                         //delete item['IsSelected']
-                        item.ChecklistMapperId=0;
+                        item.ChecklistMapperId = 0;
                         delete item['ChildCheckList'];
                         delete item['ParentCheckList'];
                         intermediate.push(item);
@@ -357,7 +363,6 @@ export class ChecklistEntryComponent implements OnInit {
     createChecklist(checklistMode: ChecklistModel): void {
         this.checkListService.Create(this.checkListModel)
             .subscribe((response: ChecklistModel) => {
-                debugger;
                 this.selectedcount = 0;
                 this.toastrService.success('Checklist Created Successfully.', 'Success', this.toastrConfig);
                 response.Organization = this.checkListModel.Organization;
@@ -377,9 +382,15 @@ export class ChecklistEntryComponent implements OnInit {
         this.form = this.resetCheckListForm(this.checkListModel);
         if (data.CheckListParentMapper.length > 0) {
             this.parentChecklists = [];
-            data.CheckListParentMapper.map(y => {
-                let obj = Object.assign({}, y);
-                //this.parentChecklists.push(obj);
+            data.CheckListParentMapper.forEach(y => {
+                let obj: ChecklistModel = Object.assign({}, y.ParentCheckList);
+                obj.TargetDepartment = this.activeDepartments.find(x => x.DepartmentId == obj.DepartmentId);
+                this.parentChecklists.push(obj);
+                this.CheckListParents.forEach(x => {
+                    if (x.CheckListId == obj.CheckListId)
+                        x.IsSelected = true;
+                });
+
             });
             this.parentChecklists = this.addDepartmentName(this.parentChecklists);
         }
@@ -391,6 +402,10 @@ export class ChecklistEntryComponent implements OnInit {
     showAddRegion(): void {
         this.form = this.resetCheckListForm();
         this.showAdd = true;
+        this.CheckListParents.forEach(element => {
+            element.IsSelected = false;
+        });
+        this.parentChecklists = [];
     }
 
     parentDepartmentChange(): void {

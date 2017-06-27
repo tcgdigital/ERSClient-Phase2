@@ -107,12 +107,10 @@ export class ChecklistListComponent implements OnInit {
     }
 
     editChecklist(editedChecklistModel: ChecklistModel): void {
-        debugger;
         this.dataExchange.Publish('checklistModelEdited', editedChecklistModel);
     }
 
     onCheckListModelReloadSuccess(editedChecklistModel: ChecklistModel): void {
-        debugger;
         this.getCheckLists(this.currentDepartmentId);
     }
 
