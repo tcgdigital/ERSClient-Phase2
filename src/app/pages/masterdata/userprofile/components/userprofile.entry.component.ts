@@ -94,12 +94,10 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
                 UtilityService.setModelFromFormGroup<UserProfileModel>(this.userProfileModel, this.form,
                     (x) => x.UserProfileId, (x) => x.Email, (x) => x.UserId, (x) => x.Name,
                     (x) => x.MainContact, (x) => x.AlternateContact, (x) => x.Location);
-                debugger;
                 if (this.form.controls['isActive'].value == "true")
                     this.userProfileModel.isActive = true;
                 else
                     this.userProfileModel.isActive = false;
-                debugger;
                     this.userProfileModel.isVolunteered = this.form.controls['isVolunteered'].value;
 
                 this.userProfileService.Create(this.userProfileModel)
