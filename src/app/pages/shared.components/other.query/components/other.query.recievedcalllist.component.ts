@@ -24,27 +24,23 @@ export class OtherQueryRecievedCallsListComponent implements OnInit {
     protected _onRouteChange: Subscription;
     callId: number;
     callcenterload: boolean = false;
+    public isArchive: boolean = false;
     constructor(private callcenteronlypageservice: CallCenterOnlyPageService, private _router: Router,
         private globalState: GlobalStateService) {
 
     }
 
     ngOnInit() {
-        this._onRouteChange = this._router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                if (event.url.indexOf("archivedashboard") > -1) {
-                    // this.isArchive = true;
-                    this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
-                    this.getAllOtherQueryCallsRecieved(this.currentIncidentId);
-                }
-                else {
-                    // this.isArchive = false;
-                    this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
-                    this.getAllOtherQueryCallsRecieved(this.currentIncidentId);
-                }
-            }
-        });
+        if (this._router.url.indexOf("archivedashboard") > -1) {
+            this.isArchive = true;
+            this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
+        }
+        else {
+            this.isArchive = false;
+            this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        }
 
+        this.getAllOtherQueryCallsRecieved(this.currentIncidentId);
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllOtherQueryCallsRecieved(this.currentIncidentId));
 

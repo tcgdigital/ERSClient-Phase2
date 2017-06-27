@@ -69,22 +69,12 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         private injector: Injector) {
         this.filesToUpload = [];
         this.globalStateProxyOpen = injector.get(GlobalStateService);
-        // this._onRouteChange = this._router.events.subscribe((event) => {
-        //     if (event instanceof NavigationEnd) {
-        //         if (event.url.indexOf("archivedashboard") > -1) {
-        //             this.isArchive = true;
-        //             this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
-        //         }
-        //         else {
-        //             this.isArchive = false;
-        //             this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
-        //         }
-        //         //this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
-        //     }
-        // });
+
+        
     }
 
     public ngOnInit(): any {
+        
         this.ChecklistMappers = [];
         this.disableUploadButton = true;
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
@@ -108,18 +98,21 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     private hasChildChecklist(checkListId): boolean {
-        //console.log(this.actionableWithParentsChilds);
-        let currentDepartmentActionables: ActionableModel[] = this.actionableWithParentsChilds.filter((item: ActionableModel) => {
-            return item.DepartmentId == this.currentDepartmentId;
-        });
-        let currentActionable: ActionableModel = currentDepartmentActionables.filter((item: ActionableModel) => {
-            return item.ChklistId == checkListId;
-        })[0];
-        if (currentActionable.CheckList.CheckListChildrenMapper.length > 0) {
-            return true;
-        }
-        else
+
+
+        try {
+            return this.actionableWithParentsChilds.find(
+                (item: ActionableModel) => item.DepartmentId === this.currentDepartmentId && item.ChklistId === checkListId)
+                .CheckList.CheckListChildrenMapper.length > 0;
+        } catch (x) {
             return false;
+        }
+
+        // if(currentActionable.CheckList.CheckListChildrenMapper.length>0){
+        //     return true;
+        // }
+        // else
+        //     return false;
 
     }
 
@@ -229,14 +222,6 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     fileChangeEvent(fileInput: any) {
-        // this.filesToUpload = <Array<File>>fileInput.target.files;
-        // if (this.filesToUpload.length > 0) {
-        //     this.disableUploadButton = false;
-        // }
-        // else {
-        //     this.disableUploadButton = true;
-        // }
-
         this.filesToUpload = [];
         for (var i = 0; i < fileInput.target.files.length; i++) {
             const extension = fileInput.target.files[i].name.split('.').pop();

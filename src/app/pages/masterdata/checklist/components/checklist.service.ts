@@ -106,7 +106,7 @@ export class ChecklistService extends ServiceBase<ChecklistModel> implements ICh
         return this._dataService.Query()
             .Select('CheckListId', 'CheckListCode')
             .Filter(`ActiveFlag eq 'Active'`)
-            .Expand('CheckListParent($expand=TargetDepartment($select=DepartmentId,DepartmentName))', 'TargetDepartment')
+            .Expand('CheckListParentMapper($expand=ParentCheckList($expand=TargetDepartment($select=DepartmentId,DepartmentName)))', 'TargetDepartment')
             .OrderBy('CreatedOn desc')
             .Execute();
     }

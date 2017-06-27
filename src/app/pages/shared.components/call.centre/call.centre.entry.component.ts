@@ -4,7 +4,7 @@ import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription, Observable } from 'rxjs/Rx';
 
-
+import { DemandTrailModel } from '../demand/components/demand.trail.model';
 import {
     ResponseModel, DataExchangeService,
     AutocompleteComponent, KeyValue,
@@ -149,6 +149,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     initialgrouidlist: number[] = [];
     pdaenquiryid: number;
     affectedId: number;
+    createdBy: number;
     // grouidlistselected: number[] = [];
 
 
@@ -232,7 +233,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             if (this.isCallrecieved) {
                 this.enquiryToUpdate = this.enquiryType != 1 ? response[0].Enquiries[0] :
                     response[0].Enquiries.find(x => x.AffectedPersonId == this.pdaenquery.AffectedPersonId);
-                this.enquiry=this.enquiryToUpdate;
+                this.enquiry = this.enquiryToUpdate;
                 this.form.controls["Queries"].reset({ value: this.enquiryToUpdate.Queries, disabled: false });
                 if (this.enquiryType == 1 || this.enquiryType == 2 || this.enquiryType == 3) {
                     this.form.controls["IsCallBack"].reset({ value: this.enquiryToUpdate.IsCallBack, disabled: false });
@@ -407,6 +408,52 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         return communicationLogs;
     }
 
+    createDemandTrail(demand: DemandModel): DemandTrailModel[] {
+        let demandTrails: DemandTrailModel[] = [];
+        let demandTrail: DemandTrailModel = new DemandTrailModel();
+        let editedFields = '';
+        let answer = '';
+
+        demandTrail.Answers = "";
+        demandTrail.IncidentId = demand.IncidentId;
+        demandTrail.DemandTypeId = demand.DemandTypeId;
+        demandTrail.DemandCode = demand.DemandCode;
+        demandTrail.ScheduleTime = demand.ScheduleTime;
+        demandTrail.ContactNumber = demand.ContactNumber;
+        demandTrail.Priority = demand.Priority;
+        demandTrail.RequiredLocation = demand.RequiredLocation;
+        demandTrail.RequesterName = demand.RequestedBy;
+        demandTrail.RequesterDepartmentName = this.departments.some(x => x.DepartmentId == demand.RequesterDepartmentId) ?
+            this.departments.find(x => x.DepartmentId == demand.RequesterDepartmentId).DepartmentName : null;
+        demandTrail.RequesterParentDepartmentName = this.departments.some(x => x.DepartmentId == demand.RequesterParentDepartmentId) ?
+            this.departments.find(x => x.DepartmentId == demand.RequesterParentDepartmentId).DepartmentName : null;
+        demandTrail.TargetDepartmentName = this.departments.find(x => x.DepartmentId == demand.TargetDepartmentId).DepartmentName;
+        demandTrail.ApproverDepartmentName = this.departments.some(x => x.DepartmentId == demand.ApproverDepartmentId) ?
+            this.departments.find(x => x.DepartmentId == demand.ApproverDepartmentId).DepartmentName : null;
+        demandTrail.RequesterType = demand.RequesterType;
+        demandTrail.DemandDesc = demand.DemandDesc;
+        demandTrail.IsApproved = demand.IsApproved;
+        demandTrail.ApprovedDt = demand.ApprovedDt;
+        demandTrail.IsCompleted = false;
+        demandTrail.ScheduledClose = null;
+        demandTrail.IsClosed = false;
+        demandTrail.ClosedOn = null;
+        demandTrail.IsRejected = false;
+        demandTrail.RejectedDate = null;
+        demandTrail.DemandStatusDescription = demand.DemandStatusDescription;
+        demandTrail.Remarks = demand.Remarks;
+        demandTrail.ActiveFlag = "Active";
+        demandTrail.CreatedBy = demand.CreatedBy ? demand.CreatedBy : this.createdBy;
+        demandTrail.CreatedOn = demand.CreatedOn ? demand.CreatedOn : new Date();
+
+         let date = new Date();
+        answer = `<div><p> ${demand.DemandStatusDescription} <strong>Date :</strong>  ${date.toLocaleString()}  </p><div>`;
+        answer = answer + '</p><div>';
+        demandTrail.Answers = answer;
+        demandTrails.push(demandTrail);
+        return demandTrails;
+    }
+
     SetDemands(isCallback, isTravelRequest, isAdmin, isCrew, affectedId, affectedPersonId?: number): void {
         if (isCallback || isCrew || isTravelRequest || isAdmin) {
             let demand: DemandModel = new DemandModel();
@@ -460,8 +507,9 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             demand.RequiredLocation = GlobalConstants.RequiredLocation;
             demand.ScheduleTime = scheduleTime.toString();
             demand.RequesterType = "Others";
+            demand.DemandTrails=this.createDemandTrail(demand);
             demand.CommunicationLogs = this.SetCommunicationLog(GlobalConstants.RequesterTypeDemand, GlobalConstants.InteractionDetailsTypeDemand);
-            demand.CommunicationLogs[0].Queries=demand.CommunicationLogs[0].Queries+' Demand Code: '+demand.DemandCode;
+            demand.CommunicationLogs[0].Queries = demand.CommunicationLogs[0].Queries + ' Demand Code: ' + demand.DemandCode;
             this.demands.push(demand);
         }
     }
@@ -473,7 +521,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             enquiry.AffectedPersonId = x.AffectedPersonId;
             enquiry.IncidentId = this.currentIncident;
             enquiry.Remarks = '';
-            enquiry.CallerId=enquiryModel.CallerId;
+            enquiry.CallerId = enquiryModel.CallerId;
             enquiry.Queries = enquiryModel.Queries;
             enquiry.CreatedBy = +this.credential.UserId;
             enquiry.EnquiryType = this.enquiry.EnquiryType;
@@ -557,7 +605,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                     }
                 });
         }
-        else{
+        else {
             return Observable.of(new Array<CoPassengerMappingModel>());
         }
     }
@@ -621,6 +669,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
 
         this.enquiry.EnquiryType = this.enquiryTypes.find((x) => x.value == this.enquiryType).caption;
         this.enquiry.ExternalInputId = this.callid;
+        this.createdBy = +this.credential.UserId;
     }
 
     onActionClick(eventArgs: any) {
@@ -709,10 +758,10 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             else {
                 let pdaenquirytoupdate: PDAEnquiryModel = new PDAEnquiryModel();
                 pdaenquirytoupdate.deleteAttributes();
-                if(this.enquiryType != 1 && this.enquiryType != 3){
+                if (this.enquiryType != 1 && this.enquiryType != 3) {
                     delete this.enquiry.AffectedPersonId;
                 }
-                if(this.enquiryType != 2){
+                if (this.enquiryType != 2) {
                     delete this.enquiry.AffectedObjectId;
                 }
                 pdaenquirytoupdate.AffectedPersonId = this.enquiry.AffectedPersonId;

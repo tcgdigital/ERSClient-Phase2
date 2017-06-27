@@ -71,7 +71,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig, private _router: Router) {
         this.demandForRemarks = new DemandModelToView();
-        this.demandFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Demand/';    
+        this.demandFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Demand/';
     }
 
     getMyDemands(deptId, incidentId): void {
@@ -80,15 +80,14 @@ export class MyDemandComponent implements OnInit, OnDestroy {
                 console.log(response);
                 this.mydemands = this.demandService.DemandMapper(response.Records);
                 console.log(this.mydemands);
-                this.mydemands.forEach(x =>
-                    {
-                        let scheduleTime = x.ScheduleTime;
-                        let createdOn = new Date(x.CreatedOn);
-                        let timediff = createdOn.getTime() + (+scheduleTime) * 60000;
-                        let resolutiontime = new Date(timediff);
-                        x.ScheduleTimeToShow = moment(resolutiontime).format('DD-MMM-YYYY hh:mm A');
-                        x["showRemarks"] = false;
-                    });
+                this.mydemands.forEach(x => {
+                    let scheduleTime = x.ScheduleTime;
+                    let createdOn = new Date(x.CreatedOn);
+                    let timediff = createdOn.getTime() + (+scheduleTime) * 60000;
+                    let resolutiontime = new Date(timediff);
+                    x.ScheduleTimeToShow = moment(resolutiontime).format('DD-MMM-YYYY hh:mm A');
+                    x["showRemarks"] = false;
+                });
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -208,27 +207,23 @@ export class MyDemandComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-        this._onRouteChange = this._router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                if (event.url.indexOf("archivedashboard") > -1) {
-                    this.isArchive = true;
-                    this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
-                    this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
-                }
-                else {
-                    this.isArchive = false;
-                    this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
-                    this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
-                }
-            }
-        });
+        if (this._router.url.indexOf("archivedashboard") > -1) {
+            this.isArchive = true;
+            this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
+
+        }
+        else {
+            this.isArchive = false;
+            this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        }
+        this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
         this.credential = UtilityService.getCredentialDetails();
         this.createdBy = +this.credential.UserId;
         this.createdByName = this.credential.UserName;
 
         this.Remarks = "";
 
-        this.dataExchange.Subscribe("DemandAddedUpdated", model => this.demandUpdated(model));
+        this.globalState.Subscribe("DemandAddedUpdated", model => this.demandUpdated(model));
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
     };
