@@ -164,31 +164,31 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
             .Execute();
     }
 
-    public GetReunitedPeopleCount(incidentId: number): Observable<number> {
+    public GetMissingPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
             .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
-             ActiveFlag eq 'Active' and tolower(MedicalStatus) eq 'reunited'`)
+             ActiveFlag eq 'Active' and tolower(MedicalStatus) eq 'missing'`)
             .Execute();
     }
 
-    public GetMinorInjuryPeopleCount(incidentId: number): Observable<number> {
+    public GetInjuredPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
             .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
-             ActiveFlag eq 'Active' and tolower(MedicalStatus) eq 'injury'`)
+             ActiveFlag eq 'Active' and tolower(MedicalStatus) eq 'injured'`)
             .Execute();
     }
 
-    public GetCriticalPeopleCount(incidentId: number): Observable<number> {
+    public GetUninjuredPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
             .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
-             ActiveFlag eq 'Active' and tolower(MedicalStatus) eq 'critical'`)
+             ActiveFlag eq 'Active' and tolower(MedicalStatus) eq 'uninjured'`)
             .Execute();
     }
 
-    public GetImmediateCarePeopleCount(incidentId: number): Observable<number> {
+    public GetOtherPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
             .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
-             ActiveFlag eq 'Active' and tolower(MedicalStatus) eq 'immediatecare'`)
+             ActiveFlag eq 'Active' and tolower(MedicalStatus) eq 'other'`)
             .Execute();
     }
 
@@ -197,26 +197,32 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
         this._casualtySummery = new CasualtySummeryModel();
         return this.GetDeceasedPeopleCount(incidentId)
             .map((dataDeceasedPeopleCount: number) => {
-                //this._casualtySummery.deceasedCasualtyCount = dataDeceasedPeopleCount;
-                this._casualtySummery.deceasedCasualtyCount = 0;
+                this._casualtySummery.deceasedCount = dataDeceasedPeopleCount;
+                //this._casualtySummery.deceasedCasualtyCount = 0;
                 return this._casualtySummery;
             })
-            .flatMap(() => this.GetReunitedPeopleCount(incidentId))
-            .map((dataReunitedPeopleCount: number) => {
-                //this._casualtySummery.reunitedCasualtyCount = dataReunitedPeopleCount;
-                this._casualtySummery.reunitedCasualtyCount = 0;
+            .flatMap(() => this.GetMissingPeopleCount(incidentId))
+            .map((dataMissingPeopleCount: number) => {
+                this._casualtySummery.missingCount = dataMissingPeopleCount;
+                //this._casualtySummery.reunitedCasualtyCount = 0;
                 return this._casualtySummery;
             })
-            .flatMap(() => this.GetMinorInjuryPeopleCount(incidentId))
-            .map((dataMinorInjuryPeople: number) => {
-                //this._casualtySummery.minorCasualtyCount = dataMinorInjuryPeople;
-                this._casualtySummery.minorCasualtyCount = 0;
+            .flatMap(() => this.GetInjuredPeopleCount(incidentId))
+            .map((dataInjuredPeople: number) => {
+                this._casualtySummery.injuredCount = dataInjuredPeople;
+                //this._casualtySummery.minorCasualtyCount = 0;
                 return this._casualtySummery;
             })
-            .flatMap(() => this.GetCriticalPeopleCount(incidentId))
-            .map((dataCriticalPeopleCount: number) => {
-                //this._casualtySummery.criticalCasualtyCount = dataCriticalPeopleCount;
-                this._casualtySummery.criticalCasualtyCount = 0;
+            .flatMap(() => this.GetUninjuredPeopleCount(incidentId))
+            .map((dataUninjuredPeopleCount: number) => {
+                this._casualtySummery.uninjuredCount = dataUninjuredPeopleCount;
+                //this._casualtySummery.criticalCasualtyCount = 0;
+                return this._casualtySummery;
+            })
+            .flatMap(() => this.GetOtherPeopleCount(incidentId))
+            .map((dataOtherPeopleCount: number) => {
+                this._casualtySummery.othersCount = dataOtherPeopleCount;
+                //this._casualtySummery.criticalCasualtyCount = 0;
                 return this._casualtySummery;
             });
 

@@ -2,7 +2,7 @@ import {
     Component, OnInit, ElementRef, AfterViewInit,
     ViewEncapsulation, Input, ViewChild, SimpleChange
 } from '@angular/core';
-import { UtilityService } from '../../../shared';
+import { UtilityService, GlobalStateService } from '../../../shared';
 import { WidgetUtilityService } from "../widget.utility";
 import {
     DemandReceivedSummaryModel,
@@ -52,7 +52,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
     private $selfElement: JQuery;
     private $placeholder: JQuery;
 
-    constructor(private elementRef: ElementRef,
+    constructor(private elementRef: ElementRef, private globalState: GlobalStateService,
         private demandReceivedSummaryWidgetService: DemandReceivedSummaryWidgetService, private incidentService: IncidentService) { }
 
     public ngOnInit(): void {
@@ -60,7 +60,16 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
         this.demandReceivedSummary = new DemandReceivedSummaryModel();
         this.demandReceivedSummary = this.demandReceivedSummaryWidgetService
             .GetDemandReceivedCount(this.incidentId, this.departmentId);
+        this.globalState.Subscribe('DemandAddedUpdated', () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe('DemandApproved', () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe('DemandAssigned', () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe('DemandCompleted', () => this.onDemandAddedUpdatedSuccess());
         //this.setDemandReceivedGraphData();
+    }
+
+    public onDemandAddedUpdatedSuccess(): void {
+        this.demandReceivedSummary = this.demandReceivedSummaryWidgetService
+            .GetDemandReceivedCount(this.incidentId, this.departmentId);
     }
 
     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {

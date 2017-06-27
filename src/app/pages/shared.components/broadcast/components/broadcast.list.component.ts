@@ -43,7 +43,7 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
 
     UpdateBroadcast(broadcastModelUpdate: BroadCastModel): void {
         let broadcastModelToSend = Object.assign({}, broadcastModelUpdate)
-        this.dataExchange.Publish("OnBroadcastUpdate", broadcastModelToSend);        
+        this.dataExchange.Publish("OnBroadcastUpdate", broadcastModelToSend);
     }
 
     ngOnInit(): void {
@@ -51,22 +51,18 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
         this.incidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentDepartmentId = this.initiatedDepartmentId;
         this.currentIncidentId = this.incidentId;
-        this._onRouteChange = this._router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                if (event.url.indexOf("archivedashboard") > -1) {
-                    this.isArchive = true;
-                    this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
-                    this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
-                }
-                else {
-                    this.isArchive = false;
-                    this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
-                    this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
-                }
-            }
-        });
-       // this.currentIncidentId = +this.incidentId;
-       //  this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
+        this.isArchive = false;
+        if (this._router.url.indexOf("archivedashboard") > -1) {
+            this.isArchive = true;
+            this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
+        }
+        else {
+            this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        }
+        this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
+
+        // this.currentIncidentId = +this.incidentId;
+        //  this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
         this.dataExchange.Subscribe("BroadcastModelUpdated", model => this.onBroadcastSuccess(model));
         this.dataExchange.Subscribe("BroadcastModelSaved", model => this.onBroadcastSuccess(model));
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));

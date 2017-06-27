@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, ViewChild, Injector } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription, Observable } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
@@ -55,7 +55,7 @@ export class AffectedPeopleListComponent implements OnInit {
     date: Date;
     downloadFilePath: string;
     copassangers: PassengerModel[] = [];
-
+    public globalStateProxyOpen: GlobalStateService;
     searchConfigs: Array<SearchConfigModel<any>> = new Array<SearchConfigModel<any>>();
 
     /**
@@ -68,7 +68,7 @@ export class AffectedPeopleListComponent implements OnInit {
      * 
      * @memberOf AffectedPeopleListComponent
      */
-    constructor(private affectedPeopleService: AffectedPeopleService, private callerservice: CallerService,
+    constructor(private affectedPeopleService: AffectedPeopleService, private injector: Injector, private callerservice: CallerService,
         private involvedPartyService: InvolvePartyService, private dataExchange: DataExchangeService<number>,
         private globalState: GlobalStateService, private _router: Router, private toastrService: ToastrService,
         private toastrConfig: ToastrConfig, private fileUploadService: FileUploadService,
@@ -76,6 +76,7 @@ export class AffectedPeopleListComponent implements OnInit {
         //, private enquiryService: EnquiryService
     ) {
         this.downloadFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Affected People/';
+        this.globalStateProxyOpen = injector.get(GlobalStateService);
     }
 
     //   medicalStatusForm: string = "";
@@ -186,7 +187,8 @@ export class AffectedPeopleListComponent implements OnInit {
                 this.getAffectedPeople(this.currentIncident);
                 affectedModifiedForm["MedicalStatusToshow"] = affectedModifiedForm.MedicalStatus;
                 let num = UtilityService.UUID();
-                this.globalState.NotifyDataChanged('AffectedPersonStatusChanged', num);
+                this.globalStateProxyOpen.NotifyDataChanged('AffectedPersonStatusChanged', num);
+                //this.globalState.NotifyDataChanged('AffectedPersonStatusChanged', num);
                 this.childModal.hide();
             }, (error: any) => {
                 alert(error);
@@ -238,24 +240,22 @@ export class AffectedPeopleListComponent implements OnInit {
     };
 
     ngOnInit(): any {
-        this._onRouteChange = this._router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                if (event.url.indexOf("archivedashboard") > -1) {
-                    this.isArchive = true;
-                    this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
-                    this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
 
-                    this.getAffectedPeople(this.currentIncident);
-                }
-                else {
-                    this.isArchive = false;
-                    this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
-                    this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-                    this.getAffectedPeople(this.currentIncident);
-                }
-            }
-            this.credential = UtilityService.getCredentialDetails();
-        });
+        if (this._router.url.indexOf("archivedashboard") > -1) {
+            this.isArchive = true;
+            this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
+            this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+
+            this.getAffectedPeople(this.currentIncident);
+        }
+        else {
+            this.isArchive = false;
+            this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
+            this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+            this.getAffectedPeople(this.currentIncident);
+        }
+        this.credential = UtilityService.getCredentialDetails();
+
         this.initiateSearchConfigurations();
         this.IsDestroyed = false;
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
@@ -363,7 +363,8 @@ export class AffectedPeopleListComponent implements OnInit {
             this.selectCurrentIncident();
             this.searchAffectedPeople(query, this.currentIncident);
         }
-        else{
+
+        else {
             this.selectCurrentIncident();
             this.getAffectedPeople(this.currentIncident);
         }
