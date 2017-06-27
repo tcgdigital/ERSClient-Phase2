@@ -282,19 +282,21 @@ export class ChecklistEntryComponent implements OnInit {
         this.checkListModel.CheckListParentMapper = [];
         if (this.form.valid) {
             this.submitted = false;
-            let CheckListParentMappers: any = _.pluck(this.CheckListParents, 'CheckListParentMapper');
-            this.CheckListParents.forEach((element: ChecklistModel) => {
 
-                if (element.CheckListParentMapper.length > 0 && element.IsSelected == true) {
-                    element.CheckListParentMapper.forEach((item: ChecklistMapper) => {
-                        //delete item['IsSelected']
-                        item.ChecklistMapperId = 0;
-                        delete item['ChildCheckList'];
-                        delete item['ParentCheckList'];
-                        intermediate.push(item);
-                    });
-                }
-            });
+           // this.parentChecklists.forEach(x=>);
+            // let CheckListParentMappers: any = _.pluck(this.CheckListParents, 'CheckListParentMapper');
+            // this.CheckListParents.forEach((element: ChecklistModel) => {
+
+            //     if (element.CheckListParentMapper.length > 0 && element.IsSelected == true) {
+            //         element.CheckListParentMapper.forEach((item: ChecklistMapper) => {
+            //             //delete item['IsSelected']
+            //             item.ChecklistMapperId = 0;
+            //             delete item['ChildCheckList'];
+            //             delete item['ParentCheckList'];
+            //             intermediate.push(item);
+            //         });
+            //     }
+            // });
             this.checkListModel.CheckListParentMapper = _.unique(intermediate);
             //this.checkListModel.CheckListParentMapper.map((x: ChecklistMapper) => delete x);
             //this.checkListModel.CheckListParentMapper = this.CheckListParents.filter((x: ChecklistModel) => x.IsSelected == true);

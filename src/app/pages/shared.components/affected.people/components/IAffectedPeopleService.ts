@@ -21,13 +21,13 @@ export interface IAffectedPeopleService extends IServiceInretface<AffectedPeople
 
     GetDeceasedPeopleCount(incidentId: number): Observable<number>;
 
-    GetReunitedPeopleCount(incidentId: number): Observable<number>;
+    GetMissingPeopleCount(incidentId: number): Observable<number>;
 
-    GetMinorInjuryPeopleCount(incidentId: number): Observable<number>;
+    GetInjuredPeopleCount(incidentId: number): Observable<number>;
 
-    GetCriticalPeopleCount(incidentId: number): Observable<number>;
+    GetUninjuredPeopleCount(incidentId: number): Observable<number>;
 
-    GetImmediateCarePeopleCount(incidentId: number): Observable<number>;
+    GetOtherPeopleCount(incidentId: number): Observable<number>;
 
     GetCasualtyStatus(incidentId: number): Observable<CasualtySummeryModel>;
 

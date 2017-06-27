@@ -70,7 +70,6 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         this.filesToUpload = [];
         this.globalStateProxyOpen = injector.get(GlobalStateService);
 
-        
     }
 
     public ngOnInit(): any {

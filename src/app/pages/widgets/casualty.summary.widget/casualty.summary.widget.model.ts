@@ -3,15 +3,17 @@ import { BaseModel } from '../../../shared';
 
 
 export class CasualtySummeryModel {
-    public criticalCasualtyCount: number;
-    public deceasedCasualtyCount: number;
-    public minorCasualtyCount: number;
-    public reunitedCasualtyCount: number;
+    public uninjuredCount: number;
+    public injuredCount: number;
+    public deceasedCount: number;
+    public missingCount: number;
+    public othersCount: number;
 
     constructor() {
-        this.criticalCasualtyCount = 0;
-        this.deceasedCasualtyCount = 0;
-        this.minorCasualtyCount = 0;
-        this.reunitedCasualtyCount = 0;
+        this.uninjuredCount = 0;
+        this.injuredCount = 0;
+        this.deceasedCount = 0;
+        this.missingCount = 0;
+        this.othersCount = 0;
     }
 }
