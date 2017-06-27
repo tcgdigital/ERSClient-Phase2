@@ -1,10 +1,10 @@
 import {
-    Component, ViewEncapsulation,
+    Component, ViewEncapsulation, Injector,
     OnInit, ViewChild, OnDestroy
 } from '@angular/core';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router, NavigationEnd } from '@angular/router';
-import {Subscription } from 'rxjs/Rx';
+import { Subscription } from 'rxjs/Rx';
 
 
 import { InvolvePartyModel } from '../../involveparties';
@@ -48,9 +48,9 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
     demandForRemarks: DemandModelToView;
     credential: AuthModel;
     protected _onRouteChange: Subscription;
-    isArchive : boolean = false;
+    isArchive: boolean = false;
     demandFilePath: string;
-
+    public globalStateProxyOpen: GlobalStateService;
     /**
      * Creates an instance of CompletedDemandComponent.
      * @param {DemandService} demandService 
@@ -60,7 +60,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
      * 
      * @memberOf CompletedDemandComponent
      */
-    constructor(private demandService: DemandService,
+    constructor(private demandService: DemandService, private injector: Injector,
         private demandRemarkLogsService: DemandRemarkLogService,
         private globalState: GlobalStateService,
         private departmentService: DepartmentService,
@@ -69,7 +69,8 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         this.createdByName = "Anwesha Ray";
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
-        this.demandFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Demand/';   
+        this.demandFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Demand/';
+        this.globalStateProxyOpen = injector.get(GlobalStateService);
     }
 
     getCompletedDemands(deptId, incidentId): void {
@@ -143,7 +144,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         this.RemarkToCreate = new DemandRemarkLogModel();
         this.RemarkToCreate.Remark = remarks;
         this.RemarkToCreate.DemandId = demand.DemandId;
-        this.RemarkToCreate.RequesterDepartmentName = demand.RequesterDepartmentName;
+        this.RemarkToCreate.RequesterDepartmentName = this.currentDepartmentName;
         this.RemarkToCreate.TargetDepartmentName = demand.TargetDepartmentName;
         this.RemarkToCreate.CreatedByName = this.createdByName;
         this.demandRemarkLogsService.Create(this.RemarkToCreate)
@@ -222,39 +223,36 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
                     .subscribe((response: DemandModel[]) => {
                         this.toastrService.success('Demand updated successfully.', 'Success', this.toastrConfig);
                         this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
+                        this.globalStateProxyOpen.NotifyDataChanged('DemandCompleted', null);
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                     });
             };
         }
 
-        else{
+        else {
             this.toastrService.error("There is no completed request.");
         }
     };
 
 
     ngOnInit() {
-        
+
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-        this._onRouteChange = this._router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                if (event.url.indexOf("archivedashboard") > -1) {
-                    this.isArchive = true;
-                    this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
-                     this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
-                }
-                else {
-                    this.isArchive = false;
-                     this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
-                     this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
-                }
-            }
-        });
+        if (this._router.url.indexOf("archivedashboard") > -1) {
+            this.isArchive = true;
+            this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
+
+        }
+        else {
+            this.isArchive = false;
+            this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        }
+        this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
         this.credential = UtilityService.getCredentialDetails();
         this.createdBy = +this.credential.UserId;
         this.getDepartmentName(this.currentDepartmentId);
-        
+
         this.getCurrentDepartmentName(this.currentDepartmentId);
 
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));

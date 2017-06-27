@@ -14,7 +14,8 @@ const crewQueryComponent: Routes = [
         children: [
             {
                 path: '',
-                component: CrewQueryAssignedCallsListComponent
+                redirectTo: 'receivedCalls',
+                pathMatch: 'full'
             },
             {
                 path: 'assignedcalls',

@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, OnInit, ViewChild } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { Subscription, Observable } from 'rxjs/Rx';
 
 
 import { InvolvePartyModel, CommunicationLogModel } from '../../../shared.components';
@@ -8,12 +8,15 @@ import { AffectedObjectsToView, AffectedObjectModel } from './affected.objects.m
 import { AffectedObjectsService } from './affected.objects.service';
 import { EnquiryModel } from '../../call.centre/components/call.centre.model';
 import { CallerModel, CallerService } from '../../caller';
+import { NextOfKinModel } from '../../nextofkins';
 import {
     ResponseModel, DataExchangeService,
-    GlobalStateService, KeyValue, UtilityService, GlobalConstants
+    GlobalStateService, KeyValue, UtilityService, GlobalConstants,
+    SearchConfigModel, SearchTextBox, SearchDropdown, NameValue
 } from '../../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
+
 
 @Component({
     selector: 'affectedobject-list',
@@ -27,7 +30,7 @@ export class AffectedObjectsListComponent implements OnInit {
 
 
 
-    constructor(private affectedObjectService: AffectedObjectsService,
+    constructor(private affectedObjectService: AffectedObjectsService, private callerservice: CallerService,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig, private globalState: GlobalStateService, private _router: Router) { }
     affectedObjects: AffectedObjectsToView[] = [];
@@ -41,6 +44,7 @@ export class AffectedObjectsListComponent implements OnInit {
     allcargostatus: any[] = GlobalConstants.CargoStatus;
     affectedObjId: number;
     callers: CallerModel[] = [];
+    searchConfigs: Array<SearchConfigModel<any>> = new Array<SearchConfigModel<any>>();
 
 
 
@@ -59,21 +63,17 @@ export class AffectedObjectsListComponent implements OnInit {
     }
 
     ngOnInit(): any {
-        this._onRouteChange = this._router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                if (event.url.indexOf("archivedashboard") > -1) {
-                    this.isArchive = true;
-                    this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
-                    this.getAffectedObjects(this.currentIncident);
-                }
-                else {
-                    this.isArchive = false;
-                    this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
-                    this.getAffectedObjects(this.currentIncident);
-                }
-            }
-        });
+        if (this._router.url.indexOf("archivedashboard") > -1) {
+            this.isArchive = true;
+            this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
+        }
+        else {
+            this.isArchive = false;
+            this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
+        }
+        this.getAffectedObjects(this.currentIncident);
 
+        this.initiateSearchConfigurations();
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
     }
 
@@ -128,14 +128,71 @@ export class AffectedObjectsListComponent implements OnInit {
             });
 
     }
+    saveNok(affectedObjectId, caller: CallerModel, event: any): void {
+        if (event.checked) {
+            let nok = new NextOfKinModel();
+            nok.AffectedObjectId = affectedObjectId;
+            nok.AlternateContactNumber = caller.AlternateContactNumber;
+            nok.CallerId = caller.CallerId;
+            nok.ContactNumber = caller.ContactNumber;
+            nok.IncidentId = this.currentIncident;
+            nok.NextOfKinName = caller.FirstName + "  " + caller.LastName;
+            nok.Relationship = caller.Relationship;
+            nok.Location = caller.Location;
+            let callertoupdate = new CallerModel();
+            callertoupdate.IsNok = true;
+            callertoupdate.deleteAttributes();
+            this.affectedObjectService.CreateNok(nok)
+                .flatMap(() => this.callerservice.Update(callertoupdate, caller.CallerId))
+                .subscribe(() => {
+                    this.toastrService.success('NOK updated.')
+                });
+        }
+        else {
+            let callertoupdate = new CallerModel();
+            callertoupdate.IsNok = false;
+            callertoupdate.deleteAttributes();
+            this.callerservice.Update(callertoupdate, caller.CallerId)
+                .subscribe(() => {
+                    this.toastrService.success('NOK updated.')
+                });
+        }
+    }
 
+    searchAffectedObject(query: string, incidentId: number): void {
+        this.affectedObjectService.GetAffectedObjectQuery(incidentId, query)
+            .subscribe((response: ResponseModel<InvolvePartyModel>) => {
+                this.affectedObjects = this.affectedObjectService.FlattenAffactedObjects(response.Records[0]);
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
+    }
+
+    invokeSearch(query: string): void {
+        if (query !== '') {
+            if (query.indexOf('IsVerified') >= 0) {
+                if (query.indexOf("'true'") >= 0)
+                    query = query.replace("'true'", "true");
+                if (query.indexOf("'false'") >= 0)
+                    query = query.replace("'false'", "false");
+            }
+            this.searchAffectedObject(query, this.currentIncident);
+        }
+        else{
+            this.getAffectedObjects(this.currentIncident);
+        }
+    }
+
+    invokeReset(): void {
+        this.getAffectedObjects(this.currentIncident);
+    }
 
     saveUpdateAffectedObject(affectedObject: AffectedObjectsToView) {
         let affectedObjectUpdate = new AffectedObjectModel();
         affectedObjectUpdate.Remarks = affectedObject.Remarks;
         affectedObjectUpdate.IdentificationDesc = affectedObject.IdentificationDesc;
-        affectedObject.LostFoundStatus = affectedObject.LostFoundStatus;
-        this.affectedObjectService.UpdateStatus(affectedObjectUpdate,affectedObject.AffectedObjectId)
+        affectedObjectUpdate.LostFoundStatus = affectedObject.LostFoundStatus;
+        this.affectedObjectService.UpdateStatus(affectedObjectUpdate, affectedObject.AffectedObjectId)
             .subscribe((response: AffectedObjectModel) => {
                 this.toastrService.success('Adiitional Information updated.')
                 this.getAffectedObjects(this.currentIncident);
@@ -147,5 +204,53 @@ export class AffectedObjectsListComponent implements OnInit {
 
     cancelModal() {
         this.childAffectedObjectDetailsModal.hide();
+    }
+    private initiateSearchConfigurations(): void {
+        let cargostatus: Array<NameValue<string>> = GlobalConstants.CargoStatus.map(x => new NameValue<string>(x.caption, x.caption))
+        const status: Array<NameValue<string>> = [
+            new NameValue<string>('Active', 'true'),
+            new NameValue<string>('InActive', 'false'),
+        ] as Array<NameValue<string>>;
+        this.searchConfigs = [
+            new SearchTextBox({
+                Name: 'TicketNumber',
+                Description: 'Reference Number',
+                Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'AWB',
+                Description: 'Air Way Bill',
+                Value: '',
+            }),
+            new SearchTextBox({
+                Name: 'Cargo/POU',
+                Description: 'POU',
+                Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'Cargo/POL',
+                Description: 'POL',
+                Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'Cargo/CargoType',
+                Description: 'Cargo Type',
+                Value: ''
+            }),
+            new SearchDropdown({
+                Name: 'LostFoundStatus',
+                Description: 'Cargo Status',
+                PlaceHolder: 'Select Status',
+                Value: '',
+                ListData: Observable.of(cargostatus)
+            }),
+            new SearchDropdown({
+                Name: 'IsVerified',
+                Description: 'Verification Status',
+                PlaceHolder: 'Select Status',
+                Value: '',
+                ListData: Observable.of(status)
+            })
+        ]
     }
 }

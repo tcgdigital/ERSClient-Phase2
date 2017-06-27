@@ -14,7 +14,8 @@ const cargoQueryComponent: Routes = [
         children: [
             {
                 path: '',
-                component: CargoQueryRecievedCallsListComponent
+                redirectTo: 'receivedCalls',
+                pathMatch: 'full'
             },
              {
                  path: 'assignedcalls',

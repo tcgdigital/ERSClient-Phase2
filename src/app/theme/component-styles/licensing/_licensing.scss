@@ -1,7 +1,19 @@
 @import '../../config/config';
 
 .container-fluid{
-    background: url(./assets/images/sky-bg.jpg) center center no-repeat;
+    background-color: #1a82f7;
+    background-image: url(images/linear_bg_1.png);
+    background-repeat: repeat-y;
+    /* Safari 4-5, Chrome 1-9 */
+    background: -webkit-gradient(linear, left top, right top, from(#c13a3a), to(#2d3d88));
+    /* Safari 5.1, Chrome 10+ */
+    background: -webkit-linear-gradient(left, #c13a3a, #2d3d88);
+    /* Firefox 3.6+ */
+    background: -moz-linear-gradient(left, #c13a3a, #2d3d88);
+    /* IE 10 */
+    background: -ms-linear-gradient(left, #c13a3a, #2d3d88);
+    /* Opera 11.10+ */
+    background: -o-linear-gradient(left, #c13a3a, #2d3d88);
     padding: 0;
 }
 .btn {
@@ -14,8 +26,8 @@
 
 p{
     text-align: center;
-    color: rgb(0, 0, 0);
-    font-size: 40px; 
+    color: #fff;
+    font-size: 30px; 
 }
 
 .key-submit{

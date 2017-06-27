@@ -57,8 +57,16 @@ export class WidgetUtilityService {
         //this.setGraphData(Highcharts, DepartmentName, arrGraphCompleted.reverse(), arrGraphPending.reverse(), containerName, 'CheckList');
     }
 
+    public static diff_minutes(dt2: Date, dt1: Date): number {
+
+        var diff = (dt2.getTime() - dt1.getTime()) / 1000;
+        diff /= 60;
+        return Math.abs(Math.round(diff));
+
+    }
+
     public static GetGraphDemand(requesterDepartmentId: number, Highcharts: any, arrGraphData: GraphObject[],
-     containerName: string, graphSubjectType: string,emergencyDate:Date): void {
+        containerName: string, graphSubjectType: string, emergencyDate: Date): void {
         console.log(requesterDepartmentId);
         let filterDepartments = arrGraphData.filter((item: GraphObject) => {
             return item.requesterDepartmentId == requesterDepartmentId;
@@ -79,6 +87,22 @@ export class WidgetUtilityService {
         inter = JSON.stringify(start);
         end = new Date(JSON.parse(inter));
         end.setMinutes(temp.getMinutes() + 60);
+
+        // If the elapse hours is less than time since incident create then the elapse hour will be 
+        // hour difference between now - incident create.
+
+        let now: Date = new Date();
+        let timediff: number = this.diff_minutes(now, new Date(emergencyDate));
+        if (timediff < 60 && timediff < (this.elapsedHourForGraph*60)) {
+            this.elapsedHourForGraph = 1;
+        }
+        else if (timediff < (this.elapsedHourForGraph*60) && timediff >= 60) {
+            this.elapsedHourForGraph = ((timediff % 60) > 0 ? 1 : 0) + (Math.abs(timediff / 60));
+        }
+        else {
+            this.elapsedHourForGraph = this.elapsedHourForGraph;
+        }
+
         for (let i: number = 1; i <= this.elapsedHourForGraph; i++) {
             let pendingTotal: number = 0;
             let closedTotal: number = 0;
@@ -106,7 +130,7 @@ export class WidgetUtilityService {
                 pendingTotal = pendingOld;
             }
             arrGraphPending.push(pendingTotal);
-            
+
             temp.setMinutes(temp.getMinutes() + 60);
             end.setMinutes(end.getMinutes() + 60);
         }
@@ -141,6 +165,7 @@ export class WidgetUtilityService {
             },
             yAxis: {
                 //categories: y_axis_points,
+                //verticalAlign: 'bottom',
                 min: 0,
                 title: {
                     text: `${moduleName} Count`

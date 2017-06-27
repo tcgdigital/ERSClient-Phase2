@@ -50,20 +50,17 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
 
     ngOnInit(): any {
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-        this._onRouteChange = this._router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                if (event.url.indexOf("archivedashboard") > -1) {
-                    this.isArchive = true;
-                    this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
-                    this.getAllCloseActionable(this.currentIncident, this.currentDepartmentId);
-                }
-                else {
-                    this.isArchive = false;
-                    this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
-                    this.getAllCloseActionable(this.currentIncident, this.currentDepartmentId);
-                }
-            }
-        });
+
+        if (this._router.url.indexOf("archivedashboard") > -1) {
+            this.isArchive = true;
+            this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
+
+        }
+        else {
+            this.isArchive = false;
+            this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
+        }
+        this.getAllCloseActionable(this.currentIncident, this.currentDepartmentId);
         this.credential = UtilityService.getCredentialDetails();
 
 
@@ -117,7 +114,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
         tempActionable.Done = true;
         this.actionableService.SetParentActionableStatusByIncidentIdandDepartmentIdandActionable(this.currentIncident,
             this.currentDepartmentId, editedActionable, this.closeActionables);
-            
+
     }
 
     getAllCloseActionable(incidentId: number, departmentId: number): void {
@@ -140,7 +137,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<ActionableModel>) => {
                 this.actionableWithParents = response.Records;
                 this.parentChecklistIds = this.actionableWithParents.map(function (actionable) {
-                   // let Id = actionable.ParentCheckListId;
+                    // let Id = actionable.ParentCheckListId;
                     //return Id;
                     return 1;
                 })

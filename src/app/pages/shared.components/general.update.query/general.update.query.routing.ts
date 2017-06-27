@@ -14,7 +14,8 @@ const GeneralUpdateQueryRoutes: Routes = [
         children: [
             {
                 path: '',
-                component: GeneralUpdateQueryAssignedCallsListComponent
+                redirectTo: 'receivedCalls',
+                pathMatch: 'full'
             },
             {
                 path: 'assignedcalls',

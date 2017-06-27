@@ -67,6 +67,11 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
             if (extension.toLowerCase() == "xls" || extension.toLowerCase() == "xlsx") {                                           
                 this.filesToUpload.push(e.target.files[i]);
             }
+            else{
+                this.toastrService.error('Invalid File Format!', 'Error', this.toastrConfig);
+                this.inputFileStations.nativeElement.value = "";
+                this.isDisabledUpload = true;
+            }
         }
     }
 
@@ -118,7 +123,7 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
 
                 this.emergencyLocationService.Create(this.emergencyLocation)
                     .subscribe((response: EmergencyLocationModel) => {
-                        this.toastrService.success('Emergency Location is created Successfully.', 'Success', this.toastrConfig);
+                        this.toastrService.success('Crisis Location is created Successfully.', 'Success', this.toastrConfig);
                         this.dataExchange.Publish("EmergencyLocationModelSaved", response);
                         this.initiateForm();
                         this.showAdd = false;
@@ -133,7 +138,7 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
                     this.emergencyLocation.ActiveFlag = "InActive";
                 this.emergencyLocationService.Update(this.emergencyLocation)
                     .subscribe((response: EmergencyLocationModel) => {
-                        this.toastrService.success('Emergency Location is updated Successfully.', 'Success', this.toastrConfig);
+                        this.toastrService.success('Crisis Location is updated Successfully.', 'Success', this.toastrConfig);
                         this.dataExchange.Publish("EmergencyLocationModelUpdated", response);
                         this.initiateForm();
                         this.showAdd = false;

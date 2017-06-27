@@ -14,7 +14,8 @@ const situationalUpdateQueryRoutes: Routes = [
         children: [
             {
                 path: '',
-                component: SituationalUpdateQueryAssignedCallsListComponent
+                redirectTo: 'receivedCalls',
+                pathMatch: 'full'
             },
             {
                 path: 'assignedcalls',

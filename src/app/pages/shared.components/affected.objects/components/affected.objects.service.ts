@@ -5,6 +5,7 @@ import { IAffectedObjectsService } from './IAffectedObjectsService';
 import { InvolvePartyModel, AffectedModel } from '../../../shared.components';
 import { AffectedObjectModel, AffectedObjectsToView } from './affected.objects.model';
 import { EnquiryModel } from '../../call.centre';
+import { NextOfKinModel } from '../../nextofkins';
 import {
     ResponseModel, DataService,
     DataServiceFactory, DataProcessingService,
@@ -17,6 +18,8 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
     private _bulkDataService: DataService<AffectedObjectModel>;
     private _dataServiceForCargo: DataService<AffectedObjectModel>;
     private _enquiryService: DataService<EnquiryModel>;
+    private _nokService: DataService<NextOfKinModel>;
+    private _affectedObjectService: DataService<AffectedObjectModel>;
 
     constructor(private dataServiceFactory: DataServiceFactory) {
         super(dataServiceFactory, 'InvolvedParties');
@@ -27,6 +30,8 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
         this._dataServiceForCargo = this.dataServiceFactory.CreateServiceWithOptions<AffectedObjectModel>('AffectedObjects', option);
         this._enquiryService = dataServiceFactory
             .CreateServiceWithOptions<EnquiryModel>('Enquiries', option);
+        this._nokService = this.dataServiceFactory
+            .CreateServiceWithOptions<NextOfKinModel>('NextOfKins', option);
 
     }
 
@@ -35,13 +40,22 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
             .Expand('Affecteds($expand=AffectedObjects($expand=Cargo))').Execute();
     }
 
+    CreateNok(noks: NextOfKinModel): Observable<NextOfKinModel> {
+        return this._nokService.Post(noks).Execute();
+    }
+
     GetFilterByIncidentId(incidentId): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq ${incidentId}`)
             .Expand('Affecteds($expand=AffectedObjects($expand=Cargo))')
             .Execute();
     }
-
+    GetAffectedObjectQuery(incidentId, query): Observable<ResponseModel<InvolvePartyModel>> {
+        return this._dataService.Query()
+            .Filter(`IncidentId eq ${incidentId}`)
+            .Expand(`Affecteds($expand=AffectedObjects($expand=Cargo;$filter=${query}))`)
+            .Execute();
+    }
     FlattenAffactedObjects(involvedParty: InvolvePartyModel): AffectedObjectsToView[] {
         let affectedObjectsToView: AffectedObjectsToView[] = [];
         let affectedObjects: AffectedObjectModel[];
@@ -63,13 +77,16 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
                     item.mftwgt = data.Cargo.mftwgt;
                     item.IsVerified = data.IsVerified;
                     item.Details = data.Cargo.Details;
-                    item.LostFoundStatus = data.LostFoundStatus;
+                    item.LostFoundStatus = data.LostFoundStatus != null ? data.LostFoundStatus: 'NA';;
                     item.ShipperName = data.Cargo.ShipperName;
                     item.ShipperAddress = data.Cargo.ShipperAddress;
                     item.ShipperContactNo = data.Cargo.ShipperContactNo;
                     item.ConsigneeName = data.Cargo.ConsigneeName;
                     item.ConsigneeAddress = data.Cargo.ConsigneeAddress;
                     item.ConsigneeContactNo = data.Cargo.ConsigneeContactNo;
+                    item.CargoType = data.Cargo.CargoType != null ? data.Cargo.CargoType : 'NA';
+                    item.IdentificationDesc = data.IdentificationDesc;
+                    item.Remarks=data.Remarks;
                     // item.CommunicationLogs: data.CommunicationLogs
                     return item;
                 });
@@ -102,7 +119,7 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
     public GetCommunicationByAWB(id: number): Observable<ResponseModel<AffectedObjectModel>> {
         return this._dataServiceForCargo.Query()
             .Filter(`AffectedObjectId eq ${id}`)
-            .Expand('Cargo,CommunicationLogs')
+            .Expand("Cargo,CommunicationLogs($filter=ActiveFlag eq 'Active';$orderby=CreatedOn desc)")
             .Execute();
     }
 

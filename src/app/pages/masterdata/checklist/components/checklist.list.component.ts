@@ -35,7 +35,7 @@ export class ChecklistListComponent implements OnInit {
         private dataExchange: DataExchangeService<ChecklistModel>, private globalState: GlobalStateService) { }
 
     findIfParent(item: ChecklistModel): any {
-        return (item.CheckListChildren.length > 0);
+        return (item.CheckListChildrenMapper.length > 0);
 
     }
 
@@ -143,6 +143,9 @@ export class ChecklistListComponent implements OnInit {
                     console.log(`Error: ${error}`);
                 }));
         }
+        else {
+            this.getCheckLists(this.currentDepartmentId);
+        }
     }
 
     invokeReset(): void {
@@ -171,19 +174,19 @@ export class ChecklistListComponent implements OnInit {
                 Description: 'Checklist Details',
                 Value: ''
             }),
-            new SearchDropdown({
-                Name: 'ParentCheckListId',
-                Description: 'Parent Checklist',
-                PlaceHolder: 'Select Parent Checklist',
-                Value: '',
-                ListData: this.checkListService.GetAllParents()
-                    .map((x) => x.Records)
-                    .map((y) => y.map(z => z.CheckListParent.map((q) => new NameValue<number>(q.CheckListCode, q.CheckListId))))
-            }),
+            // new SearchDropdown({
+            //     Name: 'ParentCheckListId',
+            //     Description: 'Parent Checklist',
+            //     PlaceHolder: 'Select Parent Checklist',
+            //     Value: '',
+            //     ListData: this.checkListService.GetAllParents()
+            //         .map((x) => x.Records)
+            //         .map((y) => y.map(z => z.CheckListParentMapper.map((q) => new NameValue<number>(q.CheckListCode, q.ChecklistMapperId))))
+            // }),
             new SearchDropdown({
                 Name: 'EmergencyTypeId',
-                Description: 'Emergency Type',
-                PlaceHolder: 'Select Emergency Type',
+                Description: 'Crisis Type',
+                PlaceHolder: 'Select Crisis Type',
                 Value: '',
                 ListData: this.emergencytypeService.GetAll()
                     .map((x) => x.Records)

@@ -83,6 +83,9 @@ export class DepartmentListComponent implements OnInit {
                     console.log(`Error: ${error}`);
                 }));
         }
+        else {
+            this.getDepertments();
+        }
     }
 
     invokeReset(): void {
