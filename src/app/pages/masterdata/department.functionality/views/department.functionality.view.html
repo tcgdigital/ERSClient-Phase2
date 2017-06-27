@@ -1,7 +1,7 @@
 <div class="card-block">
     <div class="row">
         <div class="form-group col-lg-6 col-sm-12 col-md-12">
-            <label for="Passengers">Departments:<span class="red">*</span></label>
+            <label for="Passengers">Departments:<span class="required">*</span></label>
             <autocomplete [items]="items" (notify)='onNotify($event)' (InvokeAutoCompleteReset)="invokeReset();"></autocomplete>
         </div>
     </div>
