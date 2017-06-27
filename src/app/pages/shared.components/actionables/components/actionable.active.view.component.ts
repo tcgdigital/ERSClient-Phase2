@@ -221,13 +221,20 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     fileChangeEvent(fileInput: any) {
-        this.filesToUpload = <Array<File>>fileInput.target.files;
-        if (this.filesToUpload.length > 0) {
-            this.disableUploadButton = false;
+        this.filesToUpload = [];
+        for (var i = 0; i < fileInput.target.files.length; i++) {
+            const extension = fileInput.target.files[i].name.split('.').pop();
+            if (extension != "exe" && extension != "dll") {
+                this.filesToUpload.push(fileInput.target.files[i]);
+                this.disableUploadButton = false;
+            }
+            else {
+                this.toastrService.error('Invalid File Format!', 'Error', this.toastrConfig);
+                this.disableUploadButton = true;
+                this.myInputVariable.nativeElement.value = "";
+            }
         }
-        else {
-            this.disableUploadButton = true;
-        }
+
     }
 
     clearFileUpload(event: any): void {

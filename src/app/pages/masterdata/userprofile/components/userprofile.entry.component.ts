@@ -94,12 +94,8 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
                 UtilityService.setModelFromFormGroup<UserProfileModel>(this.userProfileModel, this.form,
                     (x) => x.UserProfileId, (x) => x.Email, (x) => x.UserId, (x) => x.Name,
                     (x) => x.MainContact, (x) => x.AlternateContact, (x) => x.Location);
-                if (this.form.controls['isActive'].value == "true")
-                    this.userProfileModel.isActive = true;
-                else
-                    this.userProfileModel.isActive = false;
-                    this.userProfileModel.isVolunteered = this.form.controls['isVolunteered'].value;
-
+                this.userProfileModel.isActive = this.form.controls['isActive'].value;
+                this.userProfileModel.isVolunteered = this.form.controls['isVolunteered'].value;
                 this.userProfileService.Create(this.userProfileModel)
                     .subscribe((response: UserProfileModel) => {
                         this.form.reset();
@@ -178,7 +174,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
             MainContact: new FormControl('', [Validators.required, Validators.minLength(14), Validators.maxLength(15), Validators.pattern(GlobalConstants.NUMBER_PATTERN)]),
             AlternateContact: new FormControl('', [Validators.minLength(14), Validators.maxLength(15), Validators.pattern(GlobalConstants.NUMBER_PATTERN)]),
             Location: new FormControl('', Validators.required),
-            isActive: new FormControl(1),
+            isActive: new FormControl(true),
             isVolunteered: new FormControl(false)
         });
     }
