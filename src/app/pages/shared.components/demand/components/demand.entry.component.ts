@@ -213,10 +213,10 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         let date = new Date();
 
         if (flag) {
-            answer = `<div><p> ${demand.DemandStatusDescription} <strong>Date :</strong>  ${date.toLocaleString()} `;
+            answer = `<p>${demand.DemandStatusDescription} <strong>Date :</strong>  ${date.toLocaleString()} `;
         }
         else {
-            answer = `<div><p> Request Edited By ${demandTrail.RequesterDepartmentName} <strong>Date :</strong>  ${date.toLocaleString()} `;
+            answer = `<p>Request Edited By ${demandTrail.RequesterDepartmentName} <strong>Date :</strong>  ${date.toLocaleString()} `;
         }
         if (!flag && (demandForAnswer != undefined)) {
 
@@ -246,7 +246,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 editedFields = editedFields + `<strong>Required At Location</strong> : ${demandForAnswer.RequiredLocation} `;
             }
         }
-        answer = answer + editedFields + '</p><div>';
+        answer = answer + editedFields + '</p>';
         demandTrail.Answers = answer;
         if ((!editedFields && flag) || (!flag && editedFields)) {
             demandTrails.push(demandTrail);
