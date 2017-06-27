@@ -1,8 +1,8 @@
 import {
-    Component, ViewEncapsulation, OnDestroy,
+    Component, ViewEncapsulation, OnDestroy, Injector,
     OnInit, AfterContentInit, ViewChild
 } from '@angular/core';
-import { Observable,Subscription } from 'rxjs/Rx';
+import { Observable, Subscription } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router, NavigationEnd } from '@angular/router';
 
@@ -17,7 +17,7 @@ import { DemandRemarkLogService } from './demand.remarklogs.service';
 import {
     ResponseModel, DataExchangeService,
     GlobalConstants, GlobalStateService,
-    UtilityService, KeyValue,AuthModel
+    UtilityService, KeyValue, AuthModel
 } from '../../../../shared';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
 import { ModalDirective } from 'ng2-bootstrap/modal';
@@ -46,8 +46,9 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     demandTrail: DemandTrailModel;
     credential: AuthModel;
     protected _onRouteChange: Subscription;
-    isArchive : boolean = false;
+    isArchive: boolean = false;
     demandFilePath: string;
+    public globalStateProxyOpen: GlobalStateService;
 
     /**
      * Creates an instance of ApprovedDemandComponent.
@@ -58,7 +59,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
      * 
      * @memberOf ApprovedDemandComponent
      */
-    constructor(private demandService: DemandService,
+    constructor(private demandService: DemandService,private injector: Injector,
         private demandRemarkLogsService: DemandRemarkLogService,
         private globalState: GlobalStateService,
         private departmentService: DepartmentService,
@@ -68,6 +69,8 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
         this.demandFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Demand/';
+        this.globalStateProxyOpen = injector.get(GlobalStateService);
+        
     };
 
     getDemandsForApproval(deptId, incidentId): void {
@@ -197,7 +200,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.RemarkToCreate = new DemandRemarkLogModel();
         this.RemarkToCreate.Remark = remarks;
         this.RemarkToCreate.DemandId = demand.DemandId;
-        this.RemarkToCreate.RequesterDepartmentName = demand.RequesterDepartmentName;
+        this.RemarkToCreate.RequesterDepartmentName = this.currentDepartmentName;
         this.RemarkToCreate.TargetDepartmentName = demand.TargetDepartmentName;
         this.RemarkToCreate.CreatedByName = this.createdByName;
         this.RemarkToCreate.CreatedBy = +this.credential.UserId;
@@ -262,43 +265,39 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
             });
 
             if (demandCompletion.length == 0) {
-               this.toastrService.error("Please select at least one request");
+                this.toastrService.error("Please select at least one request");
             }
             else {
                 this.demandService.UpdateBulkForApproval(demandCompletion)
                     .subscribe((response: DemandModel[]) => {
                         this.toastrService.success('Demand status successfully updated.', 'Success', this.toastrConfig);
                         this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
+                        this.globalStateProxyOpen.NotifyDataChanged('DemandApproved', null);
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                     });
             };
         }
-        else{
+        else {
             this.toastrService.error("There is no request to be approved");
         }
     };
 
     ngOnInit(): any {
-        
+
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-         this._onRouteChange = this._router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                if (event.url.indexOf("archivedashboard") > -1) {
-                    this.isArchive = true;
-                    this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
-                      this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
-                }
-                else {
-                    this.isArchive = false;
-                     this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
-                      this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
-                }
-            }
-        });
+        if (this._router.url.indexOf("archivedashboard") > -1) {
+            this.isArchive = true;
+            this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
+        }
+        else {
+            this.isArchive = false;
+            this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        }
+        this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
         this.credential = UtilityService.getCredentialDetails();
         this.createdBy = +this.credential.UserId;
-       
+
         this.getCurrentDepartmentName(this.currentDepartmentId);
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
@@ -312,7 +311,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     private departmentChangeHandler(department: KeyValue): void {
         this.currentDepartmentId = department.Value;
         this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
-         this.currentDepartmentName = department.Key;
+        this.currentDepartmentName = department.Key;
     };
 
     getCurrentDepartmentName(departmentId): void {

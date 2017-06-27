@@ -1,5 +1,5 @@
 import {
-    Component, ViewEncapsulation, OnDestroy,
+    Component, ViewEncapsulation, OnDestroy, Injector,
     OnInit, AfterContentInit, ViewChild
 } from '@angular/core';
 import { Observable, Subscription } from 'rxjs/Rx';
@@ -42,9 +42,9 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     demandForRemarks: DemandModelToView;
     credential: AuthModel;
     protected _onRouteChange: Subscription;
-    isArchive : boolean = false;
+    isArchive: boolean = false;
     demandFilePath: string;
-
+    public globalStateProxyOpen: GlobalStateService;
     /**
      * Creates an instance of AssignedDemandComponent.
      * @param {DemandService} demandService 
@@ -54,7 +54,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
      * 
      * @memberOf AssignedDemandComponent
      */
-    constructor(private demandService: DemandService,
+    constructor(private demandService: DemandService, private injector: Injector,
         private departmentService: DepartmentService,
         private demandRemarkLogsService: DemandRemarkLogService,
         private globalState: GlobalStateService,
@@ -64,6 +64,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
         this.demandFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Demand/';
+        this.globalStateProxyOpen = injector.get(GlobalStateService);
     }
 
     getAssignedDemands(deptId, incidentId): void {
@@ -132,7 +133,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.departmentService.GetAll()
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
-               this.currentDepartmentName = this.getCurrentDepartmentName(this.currentDepartmentId);
+                this.currentDepartmentName = this.getCurrentDepartmentName(this.currentDepartmentId);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -206,7 +207,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.RemarkToCreate = new DemandRemarkLogModel();
         this.RemarkToCreate.Remark = remarks;
         this.RemarkToCreate.DemandId = demand.DemandId;
-        this.RemarkToCreate.RequesterDepartmentName = demand.RequesterDepartmentName;
+        this.RemarkToCreate.RequesterDepartmentName = this.currentDepartmentName;
         this.RemarkToCreate.TargetDepartmentName = demand.TargetDepartmentName;
         this.RemarkToCreate.CreatedByName = this.createdByName;
         this.demandRemarkLogsService.Create(this.RemarkToCreate)
@@ -250,37 +251,33 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
                     .subscribe((response: DemandModel[]) => {
                         this.toastrService.success('Demand status updated successfully.', 'Success', this.toastrConfig);
                         this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
+                        this.globalStateProxyOpen.NotifyDataChanged('DemandAssigned', null);
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                     });
             };
         }
-        else{
+        else {
             this.toastrService.error("There is no request assigned.");
         }
     };
 
     ngOnInit(): any {
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-        
-        this._onRouteChange = this._router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                if (event.url.indexOf("archivedashboard") > -1) {
-                    this.isArchive = true;
-                    this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
-                     this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
-                }
-                else {
-                    this.isArchive = false;
-                     this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
-                     this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
-                }
-            }
-        });
+
+        if (this._router.url.indexOf("archivedashboard") > -1) {
+            this.isArchive = true;
+            this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
+        }
+        else {
+            this.isArchive = false;
+            this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        }
+        this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
         this.credential = UtilityService.getCredentialDetails();
         this.createdByName = "Anwesha Ray";
 
-        
+
         this.getAllDepartments();
 
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));

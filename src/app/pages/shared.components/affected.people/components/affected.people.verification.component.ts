@@ -36,7 +36,7 @@ export class AffectedPeopleVerificationComponent implements OnInit {
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeopleForVerification = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
                 this.isVerfiedChange();
-         }, (error: any) => {
+            }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
     }
@@ -53,19 +53,19 @@ export class AffectedPeopleVerificationComponent implements OnInit {
                 alert(error);
             });
     };
- selectAllVerify(value: any) : void{
-       this.affectedPeopleForVerification.forEach((x:AffectedPeopleToView) =>{
-                x.IsVerified = value.checked;
-       });
-  }
+    selectAllVerify(value: any): void {
+        this.affectedPeopleForVerification.forEach((x: AffectedPeopleToView) => {
+            x.IsVerified = value.checked;
+        });
+    }
     isValidView(item: AffectedPeopleToView) {
-        return (item.IsVerified == true );
+        return (item.IsVerified == true);
     };
 
-    isVerfiedChange():void{
-        this.allSelectVerify = this.affectedPeopleForVerification.length != 0 && this.affectedPeopleForVerification.filter(x=>{
-              return x.IsVerified == true;
-          }).length == this.affectedPeopleForVerification.length;
+    isVerfiedChange(): void {
+        this.allSelectVerify = this.affectedPeopleForVerification.length != 0 && this.affectedPeopleForVerification.filter(x => {
+            return x.IsVerified == true;
+        }).length == this.affectedPeopleForVerification.length;
     }
 
     incidentChangeHandler(incident: KeyValue) {
@@ -75,20 +75,16 @@ export class AffectedPeopleVerificationComponent implements OnInit {
 
     ngOnInit(): any {
         this.allSelectVerify = false;
-        this._onRouteChange = this._router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                if (event.url.indexOf("archivedashboard") > -1) {
-                    this.isArchive = true;
-                    this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
-                    this.getAffectedPeople(this.currentIncident);
-                }
-                else {
-                    this.isArchive = false;
-                    this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
-                    this.getAffectedPeople(this.currentIncident);
-                }
-            }
-        });
+        if (this._router.url.indexOf("archivedashboard") > -1) {
+            this.isArchive = true;
+            this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
+
+        }
+        else {
+            this.isArchive = false;
+            this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
+        }
+        this.getAffectedPeople(this.currentIncident);
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
     }
 

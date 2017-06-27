@@ -27,17 +27,14 @@ export class BroadcastComponent {
     ngOnInit(): any {
         this.incidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.initiatedDepartment = +UtilityService.GetFromSession("CurrentDepartmentId");
-        this._onRouteChange = this._router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                if (event.url.indexOf("archivedashboard") > -1) {
-                    this.incidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
-                    this.isArchive = true;
-                }
-                else {
-                    this.incidentId = +UtilityService.GetFromSession("CurrentIncidentId");
-                    this.isArchive = false;
-                }
-            }
-        });
+        if (this._router.url.indexOf("archivedashboard") > -1) {
+            this.incidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
+            this.isArchive = true;
+        }
+        else {
+            this.incidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+            this.isArchive = false;
+        }
+
     }
 }

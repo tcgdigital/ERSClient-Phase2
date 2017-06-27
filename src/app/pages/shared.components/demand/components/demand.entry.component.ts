@@ -1,5 +1,5 @@
 import {
-    Component, ViewEncapsulation, Output,
+    Component, ViewEncapsulation, Output, Injector,
     EventEmitter, OnInit, OnDestroy, ViewChild
 } from '@angular/core';
 import {
@@ -85,7 +85,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     filesToUpload: File[] = [];
     demandFilePath: string;
     demandFileName: string;
-
+    public globalStateProxyOpen: GlobalStateService;
+    public freshDemand: boolean = true;
 
     /**
      * Creates an instance of DemandEntryComponent.
@@ -104,7 +105,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
      * @memberOf DemandEntryComponent
      */
     constructor(private demandService: DemandService,
-        private demandTypeService: DemandTypeService,
+        private demandTypeService: DemandTypeService, private injector: Injector,
         private departmentService: DepartmentService,
         private pageService: PageService,
         private demandTrailService: DemandTrailService,
@@ -121,6 +122,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.showAdd = false;
         this.buttonValue = "Create Demand";
         this.departments = [];
+        this.globalStateProxyOpen = injector.get(GlobalStateService);
     }
 
     getDemandType(): void {
@@ -134,16 +136,15 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     };
 
     getFileDetails(e: any): void {
-        this.filesToUpload = []; 
+        this.filesToUpload = [];
         for (var i = 0; i < e.target.files.length; i++) {
             const extension = e.target.files[i].name.split('.').pop();                                  
             if(extension != "exe" && extension != "dll")                
                 this.filesToUpload.push(e.target.files[i]);
-            else
-            {
-              this.toastrService.error('Invalid File Format!', 'Error', this.toastrConfig);
-              this.inputFileDemand.nativeElement.value = "";
-            }            
+            else {
+                this.toastrService.error('Invalid File Format!', 'Error', this.toastrConfig);
+                this.inputFileDemand.nativeElement.value = "";
+            }
         }
     }
 
@@ -212,10 +213,10 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         let date = new Date();
 
         if (flag) {
-            answer = `<div><p> ${demand.DemandStatusDescription} <strong>Date :</strong>  ${date.toLocaleString()}  </p><div>`;
+            answer = `<div><p> ${demand.DemandStatusDescription} <strong>Date :</strong>  ${date.toLocaleString()} `;
         }
         else {
-            answer = `<div><p> Request Edited By ${demandTrail.RequesterDepartmentName} <strong>Date :</strong>  ${date.toLocaleString()}  </p><div>`;
+            answer = `<div><p> Request Edited By ${demandTrail.RequesterDepartmentName} <strong>Date :</strong>  ${date.toLocaleString()} `;
         }
         if (!flag && (demandForAnswer != undefined)) {
 
@@ -300,6 +301,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     };
 
     showAddRegion(ShowAdd: Boolean): void {
+
         this.showAdd = true;
         this.buttonValue = "Create Demand";
         this.resetForm();
@@ -315,7 +317,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.demandModel.RequestedBy = this.credentialName;
         this.demandModel.Caller.FirstName = this.credentialName;
 
-        this.demandModel.Caller.LastName ="";
+        this.demandModel.Caller.LastName = "";
         this.Action = "Submit";
         this.isReadonly = false;
         this.childModal.show();
@@ -330,7 +332,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
             if (paramNames.length > 0) {
                 paramNames.forEach((x: string) => {
-                        this.form.controls[x].reset({ value: model[x].toString(), disabled: isDisable });
+                    this.form.controls[x].reset({ value: model[x].toString(), disabled: isDisable });
                 })
             }
         }
@@ -339,7 +341,13 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     setModelForUpdate(id) {
         this.demandService.GetByDemandId(id)
             .subscribe((response: ResponseModel<DemandModel>) => {
+
+                this.freshDemand = false;
+                //freshDemand
                 this.demandModel = response.Records[0];
+                if (this.demandModel.DemandStatusDescription.indexOf('New Request by') > -1) {
+                    this.freshDemand = true;
+                }
                 this.setModelFormGroup(response.Records[0], false, x => x.DemandId, x => x.DemandTypeId,
                     x => x.Priority, x => x.DemandDesc, x => x.RequestedBy, x => x.RequesterType,
                     x => x.PDATicketNumber, x => x.TargetDepartmentId, x => x.ContactNumber, x => x.RequiredLocation);
@@ -356,7 +364,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.buttonValue = "Create Demand";
                 this.isReadonly = false;
                 this.childModal.show();
- 
+
                 this.form.controls["PDATicketNumber"].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
                 this.form.controls["AffectedPersonId"].reset({ value: this.demandModel.AffectedPersonId, disabled: true });
                 this.form.controls["AffectedObjectId"].reset({ value: this.demandModel.AffectedObjectId, disabled: true });
@@ -403,25 +411,24 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): any {
+
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentOrganizationId = +UtilityService.GetFromSession("CurrentOrganizationId");
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-        this._onRouteChange = this._router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                if (event.url.indexOf("archivedashboard") > -1) {
-                    this.isArchive = true;
-                    this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
-                    this.demandModel.IncidentId = this.currentIncidentId;
-                }
-                else {
-                    this.isArchive = false;
-                    this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
-                    this.demandModel.IncidentId = this.currentIncidentId;
-                    this.getPassengersCrews(this.currentIncidentId);
-                    this.getCargo(this.currentIncidentId);
-                }
-            }
-        });
+
+        if (this._router.url.indexOf("archivedashboard") > -1) {
+            this.isArchive = true;
+            this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
+            this.demandModel.IncidentId = this.currentIncidentId;
+        }
+        else {
+            this.isArchive = false;
+            this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+            this.demandModel.IncidentId = this.currentIncidentId;
+            this.getPassengersCrews(this.currentIncidentId);
+            this.getCargo(this.currentIncidentId);
+        }
+
         this.credential = UtilityService.getCredentialDetails();
         this.createdBy = +this.credential.UserId;
         this.credentialName = this.credential.UserName;
@@ -486,8 +493,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.communicationLog.Answers = demand.DemandStatusDescription + ", "
             + this.demandTypes.find(x => x.DemandTypeId == demand.DemandTypeId).DemandTypeName + " request for " +
             this.departments.find(x => x.DepartmentId == demand.TargetDepartmentId).DepartmentName
-            + ". Request Details : " + demand.DemandDesc + ". "+"Request Code : "+demand.DemandCode + "created with status " + demand.ActiveFlag + ".";
-        
+            + ". Request Details : " + demand.DemandDesc + ". " + "Request Code : " + demand.DemandCode + "created with status " + demand.ActiveFlag + ".";
+
         this.communicationLog.RequesterName = demand.RequestedBy;
         this.communicationLog.RequesterDepartment = this.departments
             .find(x => x.DepartmentId == demand.TargetDepartmentId).DepartmentName;
@@ -645,6 +652,10 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         }
     }
 
+    // getDemandPresentStatus(): void {
+    //     [readonly] = "!freshDemand"
+    // }
+
 
     onSubmit(): void {
         this.submitted = true;
@@ -738,11 +749,14 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.demandService.Create(this.demandModel)
             .subscribe((response: DemandModel) => {
                 this.toastrService.success('Demand successfully created.', 'Success', this.toastrConfig);
-                this.dataExchange.Publish("DemandAddedUpdated", response.DemandId);
+                //this.dataExchange.Publish("DemandAddedUpdated", response.DemandId);
+                let num = UtilityService.UUID();
+                this.globalStateProxyOpen.NotifyDataChanged('DemandAddedUpdated', num);
                 this.initializeForm();
                 this.demandModel = new DemandModel();
                 this.showAdd = false;
                 this.buttonValue = "Create Demand";
+                this.submitted=false;
                 this.childModal.hide();
             }, (error: any) => {
                 console.log(`Error: ${error}`);
@@ -754,7 +768,9 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             this.demandService.Update(this.demandModelEdit)
                 .subscribe((response: DemandModel) => {
                     this.toastrService.success('Demand successfully updated.', 'Success', this.toastrConfig);
-                    this.dataExchange.Publish("DemandAddedUpdated", this.demandModelEdit.DemandId);
+                    //this.dataExchange.Publish("DemandAddedUpdated", this.demandModelEdit.DemandId);
+                    let num = UtilityService.UUID();
+                    this.globalStateProxyOpen.NotifyDataChanged('DemandAddedUpdated', num);
                     let demandTrail = this.createDemandTrailModel(this.demandModel, this.demandModelEdit, false)[0];
                     demandTrail.DemandId = this.demandModel.DemandId;
 
@@ -774,6 +790,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                     this.demandModel = new DemandModel();
                     this.showAdd = false;
                     this.buttonValue = "Create Demand";
+                    this.submitted=false;
                     this.childModal.hide();
                 }, (error: any) => {
                     console.log("Error");
@@ -783,8 +800,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     public dateTimeSet(date: DateTimePickerSelectEventArgs, controlName: string): void {
         this.resolutionTime = new Date(date.SelectedDate.toString());
-         this.form.get("ScheduleTime")
-                .setValue(moment(this.resolutionTime).format('DD-MMM-YYYY hh:mm A'));
+        this.form.get("ScheduleTime")
+            .setValue(moment(this.resolutionTime).format('DD-MMM-YYYY hh:mm A'));
     }
 
     ngOnDestroy(): void {

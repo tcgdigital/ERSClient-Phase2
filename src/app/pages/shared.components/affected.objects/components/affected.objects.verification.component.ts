@@ -32,25 +32,25 @@ export class AffectedObjectsVerificationComponent implements OnInit {
     getAffectedObjects(incidentId): void {
         this.affectedObjectsService.GetFilterByIncidentId(incidentId)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
-                if(response.Records[0]){
-                this.affectedObjectsForVerification = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
+                if (response.Records[0]) {
+                    this.affectedObjectsForVerification = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
                 }
                 this.isVerifiedStatusChange();
-        }, (error: any) => {
+            }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
     }
-   
-   selectAllVerify(value: any) : void{
-            this.affectedObjectsForVerification.forEach(x =>{
-                x.IsVerified = value.checked;
-            });
+
+    selectAllVerify(value: any): void {
+        this.affectedObjectsForVerification.forEach(x => {
+            x.IsVerified = value.checked;
+        });
     }
-isVerifiedStatusChange() : void{
-          this.allSelectVerify= this.affectedObjectsForVerification.length!=0 && this.affectedObjectsForVerification.filter(x=>{
-              return x.IsVerified == true;
-          }).length == this.affectedObjectsForVerification.length;
-}
+    isVerifiedStatusChange(): void {
+        this.allSelectVerify = this.affectedObjectsForVerification.length != 0 && this.affectedObjectsForVerification.filter(x => {
+            return x.IsVerified == true;
+        }).length == this.affectedObjectsForVerification.length;
+    }
     saveVerifiedObjects(): void {
         let datenow = this.date;
         this.verifiedAffectedObjects = this.affectedObjectsService.MapAffectedPeopleToSave(this.affectedObjectsForVerification);
@@ -69,21 +69,16 @@ isVerifiedStatusChange() : void{
     }
 
     ngOnInit(): any {
+        this.isArchive = false;
         this.allSelectVerify = false;
-        this._onRouteChange = this._router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                if (event.url.indexOf("archivedashboard") > -1) {
-                    this.isArchive = true;
-                    this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
-                    this.getAffectedObjects(this.currentIncident);
-                }
-                else {
-                    this.isArchive = false;
-                    this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
-                    this.getAffectedObjects(this.currentIncident);
-                }
-            }
-        });
+        if (this._router.url.indexOf("archivedashboard") > -1) {
+            this.isArchive = true;
+            this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
+        }
+        else {
+            this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
+        }
+        this.getAffectedObjects(this.currentIncident);
 
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
     }
