@@ -22,7 +22,9 @@ export class CasualtySummaryWidgetService {
         this.casualtySummery = new CasualtySummeryModel();
     }
 
-    GetCasualtyCount(incidentId: number): Observable<CasualtySummeryModel> {
+    
+
+    public GetCasualtyCount(incidentId: number): Observable<CasualtySummeryModel> {
         return this.affectedPeopleService.GetCasualtyStatus(incidentId)
             .map((dataCasualtySummery: CasualtySummeryModel) => {
                 this.casualtySummery = dataCasualtySummery;
