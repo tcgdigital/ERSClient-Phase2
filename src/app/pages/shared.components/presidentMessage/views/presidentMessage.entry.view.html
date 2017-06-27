@@ -12,7 +12,7 @@
                             <label for="Media Release Type">Select President Message Type:<span class="required">*</span></label>
                             <select id="selectMediaRelease" formControlName="PresidentMessageType" name="PresidentMessageType" [ngModel]="currentTemplateMediaId"
                                 class="form-control" (change)="getContentFromTemplate($event)">
-                                <option value=''>Select Media Release Type</option>
+                                <option value=''>Select President Message Type</option>
                                 <option *ngFor="let template of templateMedias" [value]="template.TemplateMediaId" >
                                     {{template.TemplatePurpose}}
                                 </option>
@@ -29,7 +29,7 @@
                 <div class="row">
                 <div class="col-sm-12 col-lg-6 col-md-6">
                     <div class="form-group">
-                        <label for="Message">President's Message:<span class="required">*</span></label><span class="MaxChartr">Max 500 chars</span>
+                        <label for="Message">President's Message:<span class="required">*</span></label>
                         <ckeditor formControlName="Message" [(ngModel)]="PresidentsMessage.Message" debounce="500" (change)="onMessageChange($event)" (blur)="onMessageBlur($event)"
                                     (focus)="onMessageFocus($event)" (ready)="onMessageReady($event)" [config]="toolbarConfig">
                         </ckeditor>
@@ -41,8 +41,8 @@
                 </div>
                 <div class="col-sm-12 col-lg-6 col-md-6">
                     <div class="form-group">
-                        <label for="Remarks">Remarks:</label><span class="MaxChartr">Max 500 chars</span>
-                        <textarea class="form-control" id="Remarks" formControlName="Remarks" maxlength="500" [readOnly]="PresidentsMessage.IsPublished"
+                        <label for="Remarks">Remarks:</label>
+                        <textarea class="form-control" id="Remarks" formControlName="Remarks" [readOnly]="PresidentsMessage.IsPublished"
                             placeholder="Enter Remarks" [(ngModel)]="PresidentsMessage.Remarks" required autofocus></textarea>
                         
                     </div>
