@@ -79,7 +79,7 @@ export class GenericSearchComponent implements OnInit, AfterContentInit {
                                     orCommandFields.forEach((z: string) => {
                                         let orCondition: OData = (new OData())
                                             .contains(y => y.toLower(z),
-                                            this.form.controls[x.Name].value);
+                                            this.form.controls[x.Name].value.toString().trim());
                                         odata.or(orCondition);
                                     });
                                 }
@@ -91,14 +91,14 @@ export class GenericSearchComponent implements OnInit, AfterContentInit {
                                     andCommandFields.forEach((z: string) => {
                                         let andCondition: OData = (new OData())
                                             .contains(y => y.toLower(z),
-                                            this.form.controls[x.Name].value);
+                                            this.form.controls[x.Name].value.toString().trim());
                                         odata.and(andCondition);
                                     });
                                 }
                             }
                             if (!x.OrCommand && !x.AndCommand) {
                                 odata.contains(y => y.toLower(x.Name),
-                                    this.form.controls[x.Name].value);
+                                    this.form.controls[x.Name].value.toString().trim());
                             }
                             break;
                         }
