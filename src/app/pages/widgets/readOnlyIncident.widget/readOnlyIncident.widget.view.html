@@ -1,5 +1,5 @@
 <a *ngIf="useLink" href="javascript:void(0);" (click)="onViewIncidentClick()">View Incident</a>
-<a  class="fa fa-edit fa-2x" *ngIf="!useLink" href="javascript:void(0);" (click)="onViewIncidentClick()"></a>
+<a class="fa fa-edit fa-2x" *ngIf="!useLink" href="javascript:void(0);" (click)="onViewIncidentClick()"></a>
 
 <div bsModal #childModalViewIncident="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
     aria-hidden="true">
@@ -10,7 +10,6 @@
                     <span class="mod-head"><strong>Incident View</strong></span>
                     <div *ngIf="IsDrillPopup" class="dilld pull-left">DRILL</div>
                     <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideIncidentView()"></i>
-
                 </div>
                 <div class="modal-body card">
                     <div class="row">
@@ -35,27 +34,38 @@
                             </select>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="AffectedStation">Affected Station</label>
-                            <input id="AffectedStationIdPopup" disabled formControlName="AffectedStationIdPopup" class="form-control" type="text" name="AffectedStationIdPopup"
-                                placeholder="Enter Affected Station" />
-                        </div>
-                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="EmergencyDate">Date of Crisis(UTC)</label>
-                            <input id="EmergencyDatePopup" disabled formControlName="EmergencyDatePopup" class="form-control" type="text" name="EmergencyDatePopup"
-                                placeholder="Enter EmergencyDate" />
-                        </div>
-                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="EmergencyDateLocal">Date of Crisis (LOCAL)</label>
-                            <input id="EmergencyDateLocalPopup" disabled formControlName="EmergencyDateLocalPopup" class="form-control" type="text" name="EmergencyDateLocalPopup"
-                                placeholder="Enter EmergencyDate" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <div class="form-group">
                                 <label for="EmergencyName">Crisis Name</label>
                                 <input id="EmergencyNamePopup" disabled formControlName="EmergencyNamePopup" class="form-control" type="text" name="EmergencyNamePopup"
                                     placeholder="Enter Crisis Name" />
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <label for="AffectedStation">Responsible Station</label>
+                            <input id="AffectedStationIdPopup" disabled formControlName="AffectedStationIdPopup" class="form-control" type="text" name="AffectedStationIdPopup"
+                                placeholder="Enter Responsible Station" />
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <label for="AffectedCountry">Responsible Country</label>
+                            <input id="AffectedCountryPopup" class="form-control" type="text" name="AffectedCountry" disabled formControlName="AffectedCountryPopup" 
+                            placeholder="Enter Country"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <div class="row">
+                                <div class="form-group col-lg-12 col-sm-12 col-md-6">
+                                    <label for="EmergencyDate">Date of Crisis(UTC)</label>
+                                    <input id="EmergencyDatePopup" disabled formControlName="EmergencyDatePopup" class="form-control" type="text" name="EmergencyDatePopup"
+                                        placeholder="Enter EmergencyDate" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-12 col-sm-12 col-md-6">
+                                    <label for="EmergencyDateLocal">Date of Crisis (LOCAL)</label>
+                                    <input id="EmergencyDateLocalPopup" disabled formControlName="EmergencyDateLocalPopup" class="form-control" type="text" name="EmergencyDateLocalPopup"
+                                        placeholder="Enter EmergencyDate" />
+                                </div>
                             </div>
                         </div>
                         <div class="form-group col-lg-9 col-sm-12 col-md-6">
@@ -84,9 +94,9 @@
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <div class="form-group">
                                 <label for="OtherConfirmationInformation">Other Confirmation Information</label>
-                                <input id="OtherConfirmationInformationPopup" disabled class="form-control" type="text" name="OtherConfirmationInformationPopup" formControlName="OtherConfirmationInformationPopup"
-                                    placeholder="Other Confirmation Information" />
-
+                                <input id="OtherConfirmationInformationPopup" disabled class="form-control" type="text" name="OtherConfirmationInformationPopup"
+                                    formControlName="OtherConfirmationInformationPopup" placeholder="Other Confirmation Information"
+                                />
                             </div>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
@@ -98,7 +108,6 @@
                         </div>
                     </div>
                     <div class="row">
-
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <div class="form-group">
                                 <label for="ReportedByName">ReportedBy Name</label>
@@ -112,7 +121,6 @@
                                 <label for="ReportedByAddress">ReportedBy Address</label>
                                 <input id="ReportedByAddressPopup" disabled class="form-control" type="text" name="ReportedByAddressPopup" formControlName="ReportedByAddressPopup"
                                     placeholder="ReportedBy Address" />
-
                             </div>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
@@ -125,9 +133,9 @@
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <div class="form-group">
                                 <label for="SenderOfCrisisInformation">Sender Of Crisis Information</label>
-                                <input id="SenderOfCrisisInformationPopup" disabled class="form-control" type="text" name="SenderOfCrisisInformationPopup" formControlName="SenderOfCrisisInformationPopup"
-                                    placeholder="Sender Of Crisis Information" />
-
+                                <input id="SenderOfCrisisInformationPopup" disabled class="form-control" type="text" name="SenderOfCrisisInformationPopup"
+                                    formControlName="SenderOfCrisisInformationPopup" placeholder="Sender Of Crisis Information"
+                                />
                             </div>
                         </div>
                     </div>
@@ -155,7 +163,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="card" *ngIf="isFlightRelatedPopup">
                         <div class="card-header ">
                             <strong>Flight Information:</strong>
