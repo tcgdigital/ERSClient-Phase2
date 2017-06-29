@@ -13,7 +13,7 @@
                 <th>Flight Number</th>
                 <th>Work Position</th>
                 <th>Contact Number</th>
-                <th>Age</th>
+                <th>Date Of Birth</th>
                 <th>Gender</th>
                 <th>Nationality</th>
                 <th>Passport Number</th>
@@ -39,7 +39,7 @@
                 <td data-title="Flight Number">{{affected.FlightNo}}</td>
                 <td data-title="Work Position">{{affected.WorkPosition}}</td>
                 <td data-title="Contact Number">{{affected.ContactNumber}}</td>
-                <td data-title="Age">{{affected.Age}}</td>
+                <td data-title="Date Of Birth">{{ affected.CrewDob | date: 'dd-MMM-yyyy' }}</td>
                 <td data-title="Gender">{{affected.CrewGender}}</td>
                 <td data-title="Nationality">{{affected.CrewNationality}}</td>
                 <td data-title="Passport Number">{{affected.PassportNumber}}</td>
