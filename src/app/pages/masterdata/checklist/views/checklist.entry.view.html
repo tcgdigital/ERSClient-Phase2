@@ -6,7 +6,7 @@
                 <div class="form-group col-lg-4 col-md-12 cl-sm-12">
                     <label for="Department">Parent Department:</label>
                     <select id="selectApprover" [(ngModel)]="ParentDepartmentId" name="ParentDepartmentId" class="form-control" (change)="parentDepartmentChange()">
-                            <option value=''>Select Parent Department</option>
+                            <option value='0'>Select Parent Department</option>
                             <option *ngFor="let parentdepartment of parentdepartments" [value]="parentdepartment.DepartmentId" >
                                 {{parentdepartment.DepartmentName}}
                             </option>
@@ -22,7 +22,7 @@
                         </div>
                         <ul class="multiselect-list" [hidden]="!listSelected" (click)="$event.stopPropagation();">
                             <li>
-                                <input type="checkbox" aria-label="Callback" (change)="selectAllParent()" />
+                                <input type="checkbox" aria-label="Callback" [(ngModel)]="isSelected" (change)="selectAllParent()" />
                                 <span>Select All</span>
                             </li>
                             <li *ngFor="let checklistparent of checkListParentDepartmentWise">

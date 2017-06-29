@@ -78,6 +78,7 @@ export class ChecklistEntryComponent implements OnInit {
         //this.noDtaList.push(new DepartmentModel{'DepartmentName' : "No Department Selected"});
         let x: ChecklistModel = new ChecklistModel();
         x.CheckListCode = "No Checklist Selected.";
+        x.CheckListDetails = "";
         this.noDtaList.push(x);
         // this.parentChecklists = this.noDtaList;
     }
@@ -94,12 +95,15 @@ export class ChecklistEntryComponent implements OnInit {
                 this.parentChecklists.push(Object.assign({}, y))
             });
             this.parentChecklists = this.addDepartmentName(this.parentChecklists);
+
         }
 
         else {
             this.parentChecklists = this.noDtaList;
         }
+        this.selectedparentChecklistdetails = this.parentChecklists[0].CheckListDetails;
         this.selectedcount = this.checkListParentDepartmentWise.filter(x => x["IsSelected"] == true).length;
+        this.isSelected = this.checkListParentDepartmentWise.length == this.selectedcount;
     }
 
     addDepartmentName(x: ChecklistModel[]): ChecklistModel[] {
@@ -114,21 +118,27 @@ export class ChecklistEntryComponent implements OnInit {
 
         let isSelected = this.isSelected;
         this.checkListParentDepartmentWise.forEach(x => x["IsSelected"] = (isSelected));
+        this.parentChecklists = [];
         //  this.parentChecklists = _.clone(this.CheckListParents.filter(x => x["IsSelected"] == true));
         if (isSelected == true) {
             this.CheckListParents.filter(x => x["IsSelected"] == true).map(y => {
                 this.parentChecklists.push(Object.assign({}, y))
             });
             this.parentChecklists = this.addDepartmentName(this.parentChecklists);
+
         }
         else {
             this.parentChecklists = this.noDtaList;
         }
+        this.selectedparentChecklistdetails = this.parentChecklists[0].CheckListDetails;
         this.selectedcount = this.checkListParentDepartmentWise.filter(x => x["IsSelected"] == true).length;
     }
 
     parentDepartmentChange(): void {
+        //  this.selectedcount = 0;
         this.checkListParentDepartmentWise = this.CheckListParents.filter(x => x.DepartmentId == this.ParentDepartmentId);
+        this.selectedcount = this.checkListParentDepartmentWise.filter(x => x.IsSelected == true).length;
+        this.isSelected = this.checkListParentDepartmentWise.length == this.selectedcount;
     }
 
     mergeResponses(departmentId): void {
@@ -182,7 +192,7 @@ export class ChecklistEntryComponent implements OnInit {
         this.getAllActiveDepartments();
         this.submitted = false;
         this.selectedcount = 0;
-
+        this.ParentDepartmentId = 0;
 
 
         this.mergeResponses(this.currentDepartmentId);
@@ -347,14 +357,14 @@ export class ChecklistEntryComponent implements OnInit {
                     this.checkListModelEdit.CheckListParentMapper = _.unique(intermediate);
                     this.checkListModelEdit.CheckListParentMapper.forEach(x => x.ChildCheckListId = this.checkListModelEdit.CheckListId);
                     this.checkListService.editchecklist(this.checkListModelEdit)
-                        .subscribe((response1 : ChecklistModel) => {
+                        .subscribe((response1: ChecklistModel) => {
                             this.selectedcount = 0;
                             this.toastrService.success('Checklist Edited Successfully.', 'Success', this.toastrConfig);
                             this.initiateCheckListModel();
                             this.form = this.resetCheckListForm();
                             this.showAdd = false;
                             this.CheckListParents.forEach(x => x.IsSelected = false);
-                              this.dataExchange.Publish('checkListListReload',response1);
+                            this.dataExchange.Publish('checkListListReload', response1);
                         }, (error: any) => {
                             console.log(`Error: ${error}`);
                         });
@@ -370,6 +380,7 @@ export class ChecklistEntryComponent implements OnInit {
         this.showAdd = false;
         this.submitted = false;
         this.CheckListParents.forEach(x => x.IsSelected = false);
+        this.parentChecklists = this.noDtaList;
     }
 
     createChecklist(checklistMode: ChecklistModel): void {
@@ -419,7 +430,7 @@ export class ChecklistEntryComponent implements OnInit {
         this.CheckListParents.forEach(element => {
             element.IsSelected = false;
         });
-        this.parentChecklists = [];
+        this.parentChecklists = this.noDtaList;
     }
 
 

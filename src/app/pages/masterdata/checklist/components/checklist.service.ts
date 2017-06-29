@@ -61,7 +61,9 @@ export class ChecklistService extends ServiceBase<ChecklistModel> implements ICh
     GetQuery(query: string): Observable<ResponseModel<ChecklistModel>> {
         return this._dataService.Query()
             .Expand('TargetDepartment($select=DepartmentId,DepartmentName)',
-            'EmergencyType($select=EmergencyTypeId,EmergencyTypeName)')
+            'EmergencyType($select=EmergencyTypeId,EmergencyTypeName)',
+            'Organization', 'CheckListParentMapper($expand=ParentCheckList($expand=TargetDepartment($select=DepartmentId,DepartmentName)))', 'CheckListChildrenMapper')
+            .OrderBy('CreatedOn desc')
             .Filter(query).Execute();
     }
 

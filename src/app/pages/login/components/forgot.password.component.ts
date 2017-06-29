@@ -32,11 +32,23 @@ export class ForgotPasswordComponent implements OnInit, AfterViewInit {
     }
 
     public onBlurMethod(value): void {
+        debugger;
         this.forgotPasswordService.GetEecurityQuestion(value)
             .subscribe((x) => {
                 this.SecurityQuestion = x;
-                this.forgotPasswordForm.controls['SecurityQuestion']
-                    .setValue(this.SecurityQuestion);
+                if (x == null || x == undefined) {
+                    this.toastrService.error('The UserId or Email does not exist');
+                }
+                else if (x.trim().length <= 0) {
+                    this.toastrService.error('The UserId or Email does not exist');
+                }
+                else {
+                    this.forgotPasswordForm.controls['SecurityQuestion']
+                        .setValue(this.SecurityQuestion);
+                }
+            }, (error) => {
+                this.toastrService.error('The UserId or Email does not exist');
+
             });
     }
 
