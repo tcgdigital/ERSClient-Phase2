@@ -37,7 +37,7 @@ export class ChecklistService extends ServiceBase<ChecklistModel> implements ICh
             .Filter(`DepartmentId eq ${departmentId}`)
             .Expand('TargetDepartment($select=DepartmentId,DepartmentName)',
             'EmergencyType($select=EmergencyTypeId,EmergencyTypeName)',
-            'Organization', 'CheckListParentMapper', 'CheckListChildrenMapper')
+            'Organization', 'CheckListParentMapper($expand=ParentCheckList($expand=TargetDepartment($select=DepartmentId,DepartmentName)))', 'CheckListChildrenMapper')
             .OrderBy('CreatedOn desc')
             .Execute();
     }
@@ -61,7 +61,9 @@ export class ChecklistService extends ServiceBase<ChecklistModel> implements ICh
     GetQuery(query: string): Observable<ResponseModel<ChecklistModel>> {
         return this._dataService.Query()
             .Expand('TargetDepartment($select=DepartmentId,DepartmentName)',
-            'EmergencyType($select=EmergencyTypeId,EmergencyTypeName)')
+            'EmergencyType($select=EmergencyTypeId,EmergencyTypeName)',
+            'Organization', 'CheckListParentMapper($expand=ParentCheckList($expand=TargetDepartment($select=DepartmentId,DepartmentName)))', 'CheckListChildrenMapper')
+            .OrderBy('CreatedOn desc')
             .Filter(query).Execute();
     }
 
@@ -89,6 +91,31 @@ export class ChecklistService extends ServiceBase<ChecklistModel> implements ICh
             });
     }
 
+    editchecklist(entity: ChecklistModel): Observable<ChecklistModel> {
+        let checklist: ChecklistModel;
+        return this._dataService.Post(entity)
+            .Execute()
+            .flatMap(_ => this.Get(entity.CheckListId))
+            .map((data: ChecklistModel) => {
+                checklist = data;
+                checklist.Active = (data.ActiveFlag === 'Active');
+                return checklist;
+            })
+            .flatMap((data: ChecklistModel) =>
+                this.departmentService.Get(data.DepartmentId))
+            .map((data: DepartmentModel) => {
+                checklist.TargetDepartment = data;
+                return checklist;
+            })
+            .flatMap((data: ChecklistModel) =>
+                this.emergencyTypeService.Get(data.EmergencyTypeId))
+            .map((data: EmergencyTypeModel) => {
+                checklist.EmergencyType = data;
+                return checklist;
+            });
+
+    }
+
     Update(entity: ChecklistModel): Observable<ChecklistModel> {
         const key: string = entity.CheckListId.toString();
         // const checkList: ChecklistModel;
@@ -107,6 +134,15 @@ export class ChecklistService extends ServiceBase<ChecklistModel> implements ICh
             .Select('CheckListId', 'CheckListCode')
             .Filter(`ActiveFlag eq 'Active'`)
             .Expand('CheckListParentMapper($expand=ParentCheckList($expand=TargetDepartment($select=DepartmentId,DepartmentName)))', 'TargetDepartment')
+            .OrderBy('CreatedOn desc')
+            .Execute();
+    }
+
+    GetAllActiveCheckListsForParent(): Observable<ResponseModel<ChecklistModel>> {
+        return this._dataService.Query()
+            .Select('CheckListId', 'CheckListCode,DepartmentId,CheckListDetails')
+            .Filter(`ActiveFlag eq 'Active'`)
+            .Expand('TargetDepartment($select=DepartmentId,DepartmentName)')
             .OrderBy('CreatedOn desc')
             .Execute();
     }

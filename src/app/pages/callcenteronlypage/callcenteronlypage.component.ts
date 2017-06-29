@@ -5,7 +5,7 @@ import {
     ReactiveFormsModule
 } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-import { GlobalConstants, UtilityService, GlobalStateService, KeyValue, ResponseModel, NumberValidator  } from "../../shared";
+import { GlobalConstants, UtilityService, GlobalStateService, KeyValue, ResponseModel, NumberValidator, KeyValueService, KeyValueModel } from "../../shared";
 import { ExternalInputModel, PDAEnquiryModel, CargoEnquiryModel, MediaAndOtherQueryModel } from "./component/callcenteronlypage.model";
 import { CallCenterOnlyPageService } from "./component/callcenteronlypage.service";
 import { CallerModel } from "../shared.components/caller";
@@ -14,7 +14,8 @@ import { CallerModel } from "../shared.components/caller";
 @Component({
     selector: 'login',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './views/callcenteronlypage.view.html'
+    templateUrl: './views/callcenteronlypage.view.html',
+    styleUrls: ['./styles/call.center.only.style.scss']
 })
 export class CallCenterOnlyPageComponent implements OnInit {
     public generalform: FormGroup;
@@ -26,9 +27,12 @@ export class CallCenterOnlyPageComponent implements OnInit {
     externnalInputModelToSave: ExternalInputModel = new ExternalInputModel;
     currentIncident: number;
     isSubmitted: boolean = false;
+    speilEnglish : string;
+    speilTagalog : string;
+    public spielText: string;
 
     constructor(formBuilder: FormBuilder, private callcenteronlypageservice: CallCenterOnlyPageService, private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig, private globalState: GlobalStateService) { }
+        private toastrConfig: ToastrConfig, private globalState: GlobalStateService, private keyValueService: KeyValueService) { }
 
     ngOnInit() {
         this.enquiryType = 0;
@@ -36,6 +40,17 @@ export class CallCenterOnlyPageComponent implements OnInit {
         this.initiateEnquiryForms();
         this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.keyValueService.GetValue('SpielTextEnglish')
+        .map(data=>{
+           return this.speilEnglish =data.Records[0].Value;
+        })
+        .flatMap(_=>this.keyValueService.GetValue('SpielTextTagalog'))
+        .map(data=>{
+           return this.speilTagalog =data.Records[0].Value;
+        })
+            .subscribe(() => {
+                
+            });
     }
 
     incidentChangeHandler(incident: KeyValue): void {
@@ -49,15 +64,15 @@ export class CallCenterOnlyPageComponent implements OnInit {
             CallerFirstName: new FormControl('', [Validators.required]),
             CallerLastName: new FormControl('', [Validators.required]),
             ContactNumber: new FormControl('', [Validators.required]),
-            AlternateContactNumber: new FormControl('', [Validators.required]),
-            Relationship: new FormControl('', [Validators.required])
+            AlternateContactNumber: new FormControl(''),
+            Relationship: new FormControl('')
 
         });
-      
+
     }
 
-    initiateEnquiryForms(): void{
-              this.pdacrewform = new FormGroup({
+    initiateEnquiryForms(): void {
+        this.pdacrewform = new FormGroup({
             LastName: new FormControl('', [Validators.required]),
             FirstName: new FormControl('', [Validators.required]),
             Age: new FormControl('', [Validators.required, NumberValidator.validate]),
@@ -66,12 +81,12 @@ export class CallCenterOnlyPageComponent implements OnInit {
             FlightNumber: new FormControl('', [Validators.required]),
             DepartedFrom: new FormControl('', [Validators.required]),
             TravellingTo: new FormControl('', [Validators.required]),
-            TravellingWith: new FormControl('', [Validators.required]),
+            TravellingWith: new FormControl(''),
             EnquiryReason: new FormControl('', [Validators.required]),
-            KINFirstName: new FormControl('', [Validators.required]),
-            KINLastName: new FormControl('', [Validators.required]),
-            KINContactNumber: new FormControl('', [Validators.required]),
-            KINRelationShip: new FormControl('', [Validators.required]),
+            KINFirstName: new FormControl(''),
+            KINLastName: new FormControl(''),
+            KINContactNumber: new FormControl(''),
+            KINRelationShip: new FormControl(''),
             Query: new FormControl('', [Validators.required]),
             FinalDestination: new FormControl('', [Validators.required])
         });
@@ -86,7 +101,7 @@ export class CallCenterOnlyPageComponent implements OnInit {
             Query: new FormControl('', [Validators.required])
         });
         this.otherform = new FormGroup({
-         //   MediaAndOtherQueriesId: new FormControl('', [Validators.required]),
+            //   MediaAndOtherQueriesId: new FormControl('', [Validators.required]),
             source: new FormControl('', [Validators.required]),
             Query: new FormControl('', [Validators.required])
         });
@@ -109,7 +124,7 @@ export class CallCenterOnlyPageComponent implements OnInit {
             if (this.enquiryType == 1 || this.enquiryType == 3) {
                 this.externnalInputModelToSave.PDAEnquiry = new PDAEnquiryModel();
                 UtilityService.setModelFromFormGroup<PDAEnquiryModel>(this.externnalInputModelToSave.PDAEnquiry, this.pdacrewform,
-                    x => x.DepartedFrom, x => x.KINContactNumber,x=>x.FinalDestination, x => x.FirstName, x => x.FlightNumber, x => x.EnquiryReason, x => x.KINFirstName,
+                    x => x.DepartedFrom, x => x.KINContactNumber, x => x.FinalDestination, x => x.FirstName, x => x.FlightNumber, x => x.EnquiryReason, x => x.KINFirstName,
                     x => x.KINLastName, x => x.KINRelationShip, x => x.LastName, x => x.Nationality, x => x.Age, x => x.PermanentAddress,
                     x => x.TravellingWith, x => x.TravellingTo, x => x.Query);
                 this.externnalInputModelToSave.PDAEnquiry.IncidentId = this.currentIncident;
@@ -131,10 +146,10 @@ export class CallCenterOnlyPageComponent implements OnInit {
             this.callcenteronlypageservice.Create(this.externnalInputModelToSave)
                 .subscribe((response: ExternalInputModel) => {
                     this.toastrService.success('Enquiry saved successfully.');
-                    this.enquiryType=0;
+                    this.enquiryType = 0;
                     this.initializeForm();
                     this.initiateEnquiryForms();
-                    this.isSubmitted=false;
+                    this.isSubmitted = false;
                 });
         }
     }

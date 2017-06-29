@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, ViewChild, Injector } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription, Observable } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
@@ -55,7 +55,7 @@ export class AffectedPeopleListComponent implements OnInit {
     date: Date;
     downloadFilePath: string;
     copassangers: PassengerModel[] = [];
-
+    public globalStateProxyOpen: GlobalStateService;
     searchConfigs: Array<SearchConfigModel<any>> = new Array<SearchConfigModel<any>>();
 
     /**
@@ -68,7 +68,7 @@ export class AffectedPeopleListComponent implements OnInit {
      * 
      * @memberOf AffectedPeopleListComponent
      */
-    constructor(private affectedPeopleService: AffectedPeopleService, private callerservice: CallerService,
+    constructor(private affectedPeopleService: AffectedPeopleService, private injector: Injector, private callerservice: CallerService,
         private involvedPartyService: InvolvePartyService, private dataExchange: DataExchangeService<number>,
         private globalState: GlobalStateService, private _router: Router, private toastrService: ToastrService,
         private toastrConfig: ToastrConfig, private fileUploadService: FileUploadService,
@@ -76,6 +76,7 @@ export class AffectedPeopleListComponent implements OnInit {
         //, private enquiryService: EnquiryService
     ) {
         this.downloadFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Affected People/';
+        this.globalStateProxyOpen = injector.get(GlobalStateService);
     }
 
     //   medicalStatusForm: string = "";
@@ -186,7 +187,8 @@ export class AffectedPeopleListComponent implements OnInit {
                 this.getAffectedPeople(this.currentIncident);
                 affectedModifiedForm["MedicalStatusToshow"] = affectedModifiedForm.MedicalStatus;
                 let num = UtilityService.UUID();
-                this.globalState.NotifyDataChanged('AffectedPersonStatusChanged', num);
+                this.globalStateProxyOpen.NotifyDataChanged('AffectedPersonStatusChanged', num);
+                //this.globalState.NotifyDataChanged('AffectedPersonStatusChanged', num);
                 this.childModal.hide();
             }, (error: any) => {
                 alert(error);
@@ -265,7 +267,7 @@ export class AffectedPeopleListComponent implements OnInit {
         affectedpersonToUpdate.AffectedPersonId = id;
         this.affectedPeopleService.Update(affectedpersonToUpdate, id)
             .subscribe((response: AffectedPeopleModel) => {
-                this.toastrService.success(`Status changed for ${name}`)
+                this.toastrService.success(`NOK information status updated for ${name}`)
                 this.getAffectedPeople(this.currentIncident);
             }, (error: any) => {
                 alert(error);
@@ -362,7 +364,7 @@ export class AffectedPeopleListComponent implements OnInit {
             this.searchAffectedPeople(query, this.currentIncident);
         }
 
-        else{
+        else {
             this.selectCurrentIncident();
             this.getAffectedPeople(this.currentIncident);
         }
@@ -404,7 +406,7 @@ export class AffectedPeopleListComponent implements OnInit {
                 OrCommand: 'Passenger/PassengerName|Crew/CrewName'
             }),
             new SearchTextBox({
-                Name: 'Pnr',
+                Name: 'Passenger/Pnr',
                 Description: 'PNR',
                 Value: ''
             }),

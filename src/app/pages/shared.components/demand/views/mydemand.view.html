@@ -9,6 +9,7 @@
                     <tr>
                         <th>Demand Type</th>
                         <th>Demand Description</th>
+                        <th>Trail</th>
                         <th>Target Department</th>
                         <th>Priority</th>
                         <th>Schedule Time Close</th>
@@ -23,12 +24,12 @@
                 </thead>
                 <tbody>
                     <tr [hidden]="mydemands.length != 0">
-                        <td colspan="9">No Demand is created yet.</td>
+                        <td colspan="13">No Demand is created yet.</td>
                     </tr>
                     <tr *ngFor="let demand of mydemands">
                         <td data-title="Demand Type">{{demand.DemandTypeName}}&nbsp;</td>
-                        <td data-title="Demand Description"><i (click)="openDemandDetails(demand.DemandId)">{{demand.DemandDesc}}</i>&nbsp;<i class="fa fa-info-circle"
-                                (click)="openTrail(demand)"></i> </td>
+                        <td data-title="Demand Description"><i (click)="openDemandDetails(demand.DemandId)">{{demand.DemandDesc}}</i>&nbsp;</td>
+                        <td data-title="Trail"><i class="fa fa-info-circle fa-2x" (click)="openTrail(demand)"></i> </td>
                         <td data-title="Target Department">{{demand.TargetDepartmentName}}&nbsp;</td>
                         <td data-title="Priority">{{demand.Priority}}&nbsp;</td>
                         <td data-title="Schedule Time Close">{{demand.ScheduleTimeToShow}}&nbsp;</td>
@@ -79,7 +80,7 @@
                             <responsive-table>
                                 <table responsive-table-body>
                                     <thead>
-                                        <th>Requester Department</th>
+                                        <th>Department</th>
                                         <th>Remarks added by</th>
                                         <th>Remarks added on</th>
                                         <th>Remarks</th>
@@ -116,22 +117,22 @@
                     </div>
                     <div class="modal-body">
                         <div class="row modalBodyHeaderStyle">
-                            
+
                             <div class="col-sm-6 form-group">
-                                 <label class="lebelHeaderStyle"><strong>Demand Type Name</strong></label>  <br> 
-                                <label class="form-control">{{demandTypeName}}</label>  </div>
-                            
+                                <label class="lebelHeaderStyle"><strong>Demand Type Name</strong></label> <br>
+                                <label class="form-control">{{demandTypeName}}</label> </div>
+
                             <div class="col-sm-6 form-group">
-                                 <label class="lebelHeaderStyle"><strong>Requester Department</strong></label> <br> 
-                                <label class="form-control">{{requesterDepartmentName}}</label>  </div>
-                             </div>
-                         <br>
+                                <label class="lebelHeaderStyle"><strong>Requester Department</strong></label> <br>
+                                <label class="form-control">{{requesterDepartmentName}}</label> </div>
+                        </div>
+                        <br>
                         <responsive-table>
                             <table responsive-table-body>
                                 <tbody>
                                     <tr *ngFor="let trail of demandTrails">
-                                        <td>
-                                            <div [innerHTML]="trail.Answers" type="text"></div>
+                                        <td [innerHTML]="trail.Answers" type="text">
+                                            
                                         </td>
                                     </tr>
                                 </tbody>

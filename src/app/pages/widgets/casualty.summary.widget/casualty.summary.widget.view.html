@@ -2,39 +2,52 @@
     <div class="col-12">
         <div class="row no-gutters">
             <div class="col-12 widget-title">
-                <span>Casualty Status</span>
+                <span>PDA Casualty Status</span>
             </div>
         </div>
         <div class="row no-gutters">
+            <!--<div class="col widget-block">
+                <span class="widget-number">
+                        <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
+                        <span>{{casualtySummery.uninjuredCount | padding: '0': 2}}</span>
+                </span>
+                <span class="widget-text">Uninjured</span>
+            </div>-->
             <div class="col widget-block">
                 <span class="widget-number">
                         <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
-                        <span>{{casualtySummery.criticalCasualtyCount | padding: '0': 2}}</span>
+                        <span>{{casualtySummery.injuredCount | padding: '0': 2}}</span>
                 </span>
-                <span class="widget-text">Critical</span>
+                <span class="widget-text">Injured</span>
             </div>
             <div class="col widget-block">
                 <span class="widget-number">
                         <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
-                        <span>{{casualtySummery.deceasedCasualtyCount | padding: '0': 2}}</span>
+                        <span>{{casualtySummery.deceasedCount | padding: '0': 2}}</span>
                 </span>
                 <span class="widget-text">Deceased</span>
             </div>
             <div class="col widget-block">
                 <span class="widget-number">
                         <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
-                        <span>{{casualtySummery.minorCasualtyCount | padding: '0': 2}}</span>
+                        <span>{{casualtySummery.missingCount | padding: '0': 2}}</span>
                 </span>
-                <span class="widget-text">Minor Injury</span>
+                <span class="widget-text">Missing</span>
             </div>
             <div class="col widget-block">
                 <span class="widget-number">
                         <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
-                        <span>{{casualtySummery.reunitedCasualtyCount | padding: '0': 2}}</span>
+                        <span>{{casualtySummery.othersCount | padding: '0': 2}}</span>
                 </span>
-                <span class="widget-text">Reunited</span>
+                <span class="widget-text">Others</span>
             </div>
+            <!--<div class="col widget-block">
+                <span class="widget-number">
+                        <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
+                        <span>{{casualtySummery.unidentifiedCount | padding: '0': 2}}</span>
+                </span>
+                <span class="widget-text">Un Identified</span>
+            </div>-->
         </div>
     </div>
 </div>
-

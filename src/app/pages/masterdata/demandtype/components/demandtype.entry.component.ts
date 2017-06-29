@@ -53,9 +53,10 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         this.demandTypeModel = model;
         this.demandTypeModel.DepartmentId = model.DepartmentId;
         let approverDept = this.demandTypeModel.IsAutoApproved ? '' : model.DepartmentId.toString();
-        this.Action = 'Edit';
+        this.Action = 'Submit';
         this.showAdd = true;
         this.showApproverDept = !this.demandTypeModel.IsAutoApproved;
+        this.autoApproved = this.demandTypeModel.IsAutoApproved;
         delete this.demandTypeModel.ApproverDepartment;
         this.form = new FormGroup({
             DemandTypeId: new FormControl(model.DemandTypeId),

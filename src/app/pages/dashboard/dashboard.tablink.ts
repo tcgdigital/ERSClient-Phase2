@@ -2,13 +2,29 @@ import { ITabLinkInterface } from '../../shared';
 
 export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
     {
+        id: 'Actionables',
+        title: 'Checklists',
+        // icon: 'fa fa-edge fa-2x',
+        url: '/pages/dashboard/actionable',
+        selected: false,
+        hidden: false,
+        order: 1
+    }, {
+        id: 'Demand',
+        title: 'Demand',
+        // icon: 'fa fa-linux fa-2x',
+        url: '/pages/dashboard/demand',
+        selected: false,
+        hidden: false,
+        order: 2
+    }, {
         id: 'AffectedPeople',
         title: 'Affected People',
         // icon: 'fa fa-apple fa-2x',
         url: '/pages/dashboard/people',
         selected: true,
         hidden: false,
-        order: 1
+        order: 3
     }, {
         id: 'AffectedObjects',
         title: 'Affected Cargo',
@@ -16,15 +32,7 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         url: '/pages/dashboard/cargo',
         selected: false,
         hidden: false,
-        order: 2
-    }, {
-        id: 'Actionables',
-        title: 'Checklists',
-        // icon: 'fa fa-edge fa-2x',
-        url: '/pages/dashboard/actionable',
-        selected: false,
-        hidden: false,
-        order: 3
+        order: 4
     }, {
         //     id: 'CallCenters',
         //     title: 'Call Centers',
@@ -51,20 +59,12 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         order: 6
     }, {
         id: 'MediaManagement',
-        title: 'Media Management',
+        title: 'Media Messages',
         // icon: 'fa fa-medium fa-2x',
         url: '/pages/dashboard/media',
         selected: false,
         hidden: false,
         order: 7
-    }, {
-        id: 'Demand',
-        title: 'Demand',
-        // icon: 'fa fa-linux fa-2x',
-        url: '/pages/dashboard/demand',
-        selected: false,
-        hidden: false,
-        order: 8
     }, {
         id: 'OtherQuery',
         title: 'Other Query',
@@ -80,7 +80,7 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         url: '/pages/dashboard/crewQuery',
         selected: false,
         hidden: false,
-        order: 10
+        order: 9
     }, {
         id: 'PassengerQuery',
         title: 'Passenger Query',
@@ -88,7 +88,7 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         url: '/pages/dashboard/passengerquery',
         selected: false,
         hidden: false,
-        order: 9
+        order: 10
     }
     , {
         id: 'CargoQuery',
@@ -97,7 +97,7 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         url: '/pages/dashboard/cargoquery',
         selected: false,
         hidden: false,
-        order: 10
+        order: 11
 
     }, {
         id: 'MediaQuery',
@@ -130,7 +130,7 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         url: '/pages/dashboard/situationalupdatesquery',
         selected: false,
         hidden: false,
-        order: 16
+        order: 15
     }, {
         id: 'CustomerDissatisfactionQuery',
         title: 'Customer Dissatisfaction Query',
@@ -138,6 +138,6 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         url: '/pages/dashboard/customerdissatisfactionquery',
         selected: false,
         hidden: false,
-        order: 17
+        order: 16
     }
 ];

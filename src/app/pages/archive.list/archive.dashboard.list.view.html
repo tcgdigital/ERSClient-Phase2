@@ -59,7 +59,7 @@
         <form [formGroup]="formPopup">
             <div class="modal-content">
                 <div class="modal-header">
-                    <strong>Incident View</strong>
+                    <span class="mod-head"><strong>Incident View</strong></span>
                     <div *ngIf="IsDrillPopup" class="dilld pull-left">DRILL</div>
                     <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideClosedIncidentView()"></i>
 
@@ -77,9 +77,9 @@
                             </select>
                             </div>
                             <div class="form-group col-lg-2 col-sm-12 col-md-6">
-                                <label for="AffectedStation">Affected Station:<span class="red">*</span></label>
+                                <label for="AffectedStation">Responsible Station:<span class="red">*</span></label>
                                 <select id="AffectedStationIdPopup" disabled class="form-control" name="AffectedStationIdPopup" formControlName="AffectedStationIdPopup">
-                                    <option value="0" >Select Affected Station</option>
+                                    <option value="0" >Select Responsible Station</option>
                                     <option value="Offset">Offset</option>
                                     <option *ngFor="let affectedStation of affectedStations" [value]="affectedStation.IATA" >
                                         {{affectedStation.AirportName}}

@@ -69,7 +69,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         private injector: Injector) {
         this.filesToUpload = [];
         this.globalStateProxyOpen = injector.get(GlobalStateService);
-        
+
     }
 
     public ngOnInit(): any {
@@ -78,7 +78,6 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         this.disableUploadButton = true;
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
 
-        
         if (this._router.url.indexOf("archivedashboard") > -1) {
             this.isArchive = true;
             this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
@@ -98,12 +97,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     private hasChildChecklist(checkListId): boolean {
-        // let currentDepartmentActionables:ActionableModel[] = this.actionableWithParentsChilds.filter((item:ActionableModel)=>{
-        //     return item.DepartmentId==this.currentDepartmentId;
-        // });
-        // let currentActionable:ActionableModel =  currentDepartmentActionables.filter((item:ActionableModel)=>{
-        //     return item.ChklistId==checkListId;
-        // })[0];
+
 
         try {
             return this.actionableWithParentsChilds.find(
@@ -227,13 +221,20 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     fileChangeEvent(fileInput: any) {
-        this.filesToUpload = <Array<File>>fileInput.target.files;
-        if (this.filesToUpload.length > 0) {
-            this.disableUploadButton = false;
+        this.filesToUpload = [];
+        for (var i = 0; i < fileInput.target.files.length; i++) {
+            const extension = fileInput.target.files[i].name.split('.').pop();
+            if (extension != "exe" && extension != "dll") {
+                this.filesToUpload.push(fileInput.target.files[i]);
+                this.disableUploadButton = false;
+            }
+            else {
+                this.toastrService.error('Invalid File Format!', 'Error', this.toastrConfig);
+                this.disableUploadButton = true;
+                this.myInputVariable.nativeElement.value = "";
+            }
         }
-        else {
-            this.disableUploadButton = true;
-        }
+
     }
 
     clearFileUpload(event: any): void {

@@ -9,8 +9,8 @@
                 <th>Cargo Type</th>
                 <th>Manifest Pieces</th>
                 <th>Manifest weight(kg)</th>
+                 <th>POL</th>
                 <th>POU</th>
-                <th>POL</th>
                 <th>Cargo Status</th>
                 <th>Verification Status</th>
                 <th>Interaction Details</th>
@@ -27,8 +27,8 @@
                 <td data-title="Cargo Type">{{affectedObject.CargoType}}&nbsp;</td>
                 <td data-title="Manifest Pieces">{{affectedObject.mftpcs}}&nbsp;</td>
                 <td data-title="Manifest weight">{{affectedObject.mftwgt}}&nbsp;</td>
-                <td data-title="POU">{{affectedObject.POU}}&nbsp;</td>
                 <td data-title="POL">{{affectedObject.POL}}&nbsp;</td>
+                <td data-title="POU">{{affectedObject.POU}}&nbsp;</td>
                 <td data-title="Cargo Status">{{affectedObject.LostFoundStatus}}&nbsp;</td>
                 <td data-title="Verification Status">
                     <i class="fa fa-check fa-lg fontGreen" aria-hidden="true" [hidden]="affectedObject.IsVerified == false"></i>
@@ -179,7 +179,7 @@
                                             <tr>
                                                 <th>Caller Name</th>
                                                 <th>Contact Number</th>
-                                                <th>Select as nok</th>
+                                                <th>Select as NOK</th>
                                             </tr>
                                         </thead>
                                         <tbody>
