@@ -16,7 +16,7 @@
             </tr>
             <tr *ngFor="let quicklink of quicklinks">
                 <td data-title="Quick Link Name">{{quicklink.QuickLinkName}}</td>
-                <td data-title="Quick Link URL">{{ quicklink.QuickLinkURL }}</td>
+                <td data-title="Quick Link URL" ><a href="{{ quicklink.QuickLinkURL }}" target="_blank">{{ quicklink.QuickLinkURL }}</a></td>
                 <td data-title="Edit">
                     <i class="fa fa-edit fa-2x" (click)="editQuickLink(quicklink)"></i>
                 </td>
