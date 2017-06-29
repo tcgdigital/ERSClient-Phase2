@@ -67,7 +67,7 @@ incident-header-widget a{ font-size: 12px;}
     padding-right: 0 !important;
     padding-top: 15px !important;
     @media screen and (max-width: $resLG-E) {
-    padding-right: 15px !important;
+    //padding-right: 15px !important;
     }
 }
 
@@ -110,17 +110,17 @@ incident-header-widget a{ font-size: 12px;}
 }
 @media screen and (max-width: $resLG-E){
     .demand-raised-layout{
-        margin-left: 5px;
+        //margin-left: 5px;
     width: 100%;
-    padding-right: 8px !important;
+    //padding-right: 8px !important;
     }
 }
 
 @media screen and (max-width: $resLG-E){
    .checklist-layout{
-        margin-left: 5px;
+        //margin-left: 5px;
     width: 100%;
-    padding-right: 25px !important;
+    //padding-right: 25px !important;
     }
 }
 @media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {}
@@ -164,13 +164,16 @@ incident-header-widget a{ font-size: 12px;}
 }
 
 @media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {
+    .row-fix {
+        margin-right:0;
+    }
     .casualty-layout {
-        max-width: 31.7%;
+        //max-width: 31.7%;
     }
     .demand-received-layout,
     .demand-raised-layout,
     .checklist-layout {
-        max-width: 32.8%;
+        //max-width: 32.8%;
     }
 }
 
