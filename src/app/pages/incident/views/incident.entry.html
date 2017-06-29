@@ -337,7 +337,7 @@
         <form [formGroup]="formPopup" (ngSubmit)="onPOPUPSubmit(formPopup.value)">
             <div class="modal-content">
                 <div class="modal-header">
-                    <strong>Incident View</strong>
+                    <span class="mod-head"><strong>Incident View</strong></span>
                     <div *ngIf="IsDrillPopup" class="dilld pull-left">DRILL</div>
                     <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideIncidentView()"></i>
                 </div>

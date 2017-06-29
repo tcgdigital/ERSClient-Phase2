@@ -24,7 +24,7 @@
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="form-group">
                     <div [hidden]="!showApproverDept">
-                        <label for="ApproverDept">Approver Department:</label>
+                        <label for="ApproverDept">Approver Department:<span class="required">*</span></label>
                         <select id="selectApprover" formControlName="ApproverDept" class="form-control">
                         <option value=''>Select Approver Department</option>
                         <option *ngFor="let department of departments" [value]="department.DepartmentId" >
