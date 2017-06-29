@@ -56,7 +56,8 @@ import {
     ThemeConfigProviderService,
     LocationService,
     FileStoreService,
-    LicensingService
+    LicensingService,
+    KeyValueService
 } from './services';
 
 import {
@@ -104,6 +105,7 @@ const SHARED_SERVICES: any[] = [
     LocationService,
     FileStoreService,
     LicensingService,
+    KeyValueService,
     ENV_PROVIDERS,
     HTTP_INTERCEPTOR_PROVIDER,
     HTTP_INTERCEPTOR_NO_OVERRIDE_PROVIDER
