@@ -74,32 +74,40 @@
             <div class="modal-body">
                 <responsive-table>
                     <table responsive-table-body>
-                    <tbody>
-                        <tr>
-                            <td><strong>Total Passengers:  </strong>    </td>
-                              <td class="marker">{{peopleOnBoard.totalAffectedPassengerCount | padding: '0': 2}}     </td>
-                               <td><strong>Enquired Passengers:       </strong>    </td>
-                              <td class="marker">{{peopleOnBoard.enquiredAffectedCrewCount | padding: '0': 2}}    </td>
+                        <tbody>
+                            <tr>
+                                <td><strong>Total Passengers:  </strong> {{peopleOnBoard.totalAffectedPassengerCount | padding:
+                                    '0': 2}} </td>
+                                <!--<td class="marker">{{peopleOnBoard.totalAffectedPassengerCount | padding: '0': 2}}     </td>-->
+                                <td><strong>Enquired Passengers:       </strong> {{peopleOnBoard.enquiredAffectedCrewCount |
+                                    padding: '0': 2}} </td>
+                                <!--<td class="marker">   {{peopleOnBoard.enquiredAffectedCrewCount | padding: '0': 2}} </td>-->
 
-                               <td><strong> Gender Wise Passengers: </strong>    </td>
-                              <td class="marker"><span *ngFor="let gender of peopleOnBoard.totalGenderTypeCount">
+                                <td><strong> Gender Wise Passengers: </strong> <span *ngFor="let gender of peopleOnBoard.totalGenderTypeCount">
                              <strong>{{gender.Key}}</strong>:{{gender.Value}}
-                        </span>    </td>
-                        </tr>
+                        </span> </td>
+                                <!--<td class="marker"><span *ngFor="let gender of peopleOnBoard.totalGenderTypeCount">
+                             <strong>{{gender.Key}}</strong>:{{gender.Value}}
+                        </span>    </td>-->
+                            </tr>
 
 
-                        <tr>
-                            <td><strong> Nationality Wise Passengers:  </strong>    </td>
-                              <td class="marker fixed_td_width"><span *ngFor="let nationality of peopleOnBoard.totalNationalityTypeCount">
+                            <tr>
+                                <td><strong> Nationality Wise Passengers:  </strong> <span *ngFor="let nationality of peopleOnBoard.totalNationalityTypeCount">
                              <strong>{{nationality.Key}}</strong>:{{nationality.Value}}&nbsp; &nbsp;
-                        </span></td>
-                               <td colspan="2"><strong> Passenger Type Wise Passengers: </strong>    </td>
-                              <td class="marker"> <span *ngFor="let paxType of peopleOnBoard.totalPaxTypeCount">
+                        </span> </td>
+                                <!--<td class="marker fixed_td_width"><span *ngFor="let nationality of peopleOnBoard.totalNationalityTypeCount">
+                             <strong>{{nationality.Key}}</strong>:{{nationality.Value}}&nbsp; &nbsp;
+                        </span></td>-->
+                                <td colspan="2"><strong> Passenger Type: </strong> <span *ngFor="let paxType of peopleOnBoard.totalPaxTypeCount">
                              <strong>{{paxType.Key}}</strong>:{{paxType.Value}}&nbsp; &nbsp;
-                        </span></td>                              
-                        </tr>
-                    </tbody>
-                 </table>
+                        </span> </td>
+                                <!--<td class="marker"> <span *ngFor="let paxType of peopleOnBoard.totalPaxTypeCount">
+                             <strong>{{paxType.Key}}</strong>:{{paxType.Value}}&nbsp; &nbsp;
+                        </span></td>                              -->
+                            </tr>
+                        </tbody>
+                    </table>
                 </responsive-table>
                 <!--<div class="row">
                     <div class="col-lg-2">
@@ -152,8 +160,7 @@
                     </div>
                 </div>-->
 
-                <generic-search [filterConfigs] = "searchConfigsPax" 
-                (InvokeSearch)="invokeSearchPassenger($event);" (InvokeReset)="invokeResetPassenger();"></generic-search>
+                <generic-search [filterConfigs]="searchConfigsPax" (InvokeSearch)="invokeSearchPassenger($event);" (InvokeReset)="invokeResetPassenger();"></generic-search>
 
                 <responsive-table>
                     <table responsive-table-body>
@@ -210,24 +217,23 @@
             <div class="modal-body">
                 <responsive-table>
                     <table responsive-table-body>
-                    <tbody>
-                        <tr>
-                            <td><strong>Total Cargos: </strong>    </td>
-                              <td class="marker">{{peopleOnBoard.totalAffectedCargoCount | padding: '0': 2}}     </td>
-                               
-                               <td><strong> Type Wise Cargos: </strong> </td>
-                              <td class="marker"><span *ngFor="let Type of peopleOnBoard.cargoOnBoardCountByType">
-                             <strong>{{Type.Key}}</strong>:{{Type.Value}} &nbsp; &nbsp;
-                        </span>    </td>
-                        </tr>                       
-                    </tbody>
-                 </table>
-                </responsive-table>
-                                
-                <div class = "row"> </div>
+                        <tbody>
+                            <tr>
+                                <td><strong>Total Cargos: </strong> </td>
+                                <td class="marker">{{peopleOnBoard.totalAffectedCargoCount | padding: '0': 2}} </td>
 
-                <generic-search [filterConfigs] = "searchConfigsCargo" 
-                (InvokeSearch)="invokeSearchCargo($event);" (InvokeReset)="invokeResetCargo();"></generic-search>
+                                <td><strong> Type Wise Cargos: </strong> </td>
+                                <td class="marker"><span *ngFor="let Type of peopleOnBoard.cargoOnBoardCountByType">
+                             <strong>{{Type.Key}}</strong>:{{Type.Value}} &nbsp; &nbsp;
+                        </span> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </responsive-table>
+
+                <div class="row"> </div>
+
+                <generic-search [filterConfigs]="searchConfigsCargo" (InvokeSearch)="invokeSearchCargo($event);" (InvokeReset)="invokeResetCargo();"></generic-search>
 
                 <responsive-table>
                     <table responsive-table-body>
@@ -236,11 +242,11 @@
                                 <th>AWB Number</th>
                                 <th>POL</th>
                                 <th>POU</th>
-                                <th>Cargo Pieces</th>                                
+                                <th>Cargo Pieces</th>
                                 <th>Cargo Weight</th>
                                 <th>Cargo Type</th>
                                 <th>Origin</th>
-                                <th>Destination</th>                                
+                                <th>Destination</th>
                                 <th>Shipper name</th>
                                 <th>Shipper Address</th>
                                 <th>Shipper Contact Number</th>
@@ -289,13 +295,13 @@
                 <strong>All Passenger Details</strong>
                 <div class="row">
                     <div class="col-lg-4">
-                        <strong>Gender Wise Passenger Count</strong>                
+                        <strong>Gender Wise Passenger Count</strong>
                         <responsive-table>
                             <table responsive-table-body>
                                 <thead>
                                     <tr>
                                         <th>Gender</th>
-                                        <th>Count</th>                                    
+                                        <th>Count</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -304,7 +310,7 @@
                                     </tr>
                                     <tr *ngFor="let gender of peopleOnBoard.totalGenderTypeCount">
                                         <td data-title="Gender">{{gender.Key}}</td>
-                                        <td data-title="Count">{{gender.Value}}</td>                                    
+                                        <td data-title="Count">{{gender.Value}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -312,13 +318,13 @@
                     </div>
 
                     <div class="col-lg-4">
-                        <strong>Nationality Wise Passenger Count</strong>                
+                        <strong>Nationality Wise Passenger Count</strong>
                         <responsive-table>
                             <table responsive-table-body>
                                 <thead>
                                     <tr>
                                         <th>Nationality</th>
-                                        <th>Count</th>                                    
+                                        <th>Count</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -327,7 +333,7 @@
                                     </tr>
                                     <tr *ngFor="let nationality of peopleOnBoard.totalNationalityTypeCount">
                                         <td data-title="Nationality">{{nationality.Key}}</td>
-                                        <td data-title="Count">{{nationality.Value}}</td>                                    
+                                        <td data-title="Count">{{nationality.Value}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -335,13 +341,13 @@
                     </div>
 
                     <div class="col-lg-4">
-                        <strong>Passenger Type Wise Count</strong>                
+                        <strong>Passenger Type Wise Count</strong>
                         <responsive-table>
                             <table responsive-table-body>
                                 <thead>
                                     <tr>
                                         <th>Passenger Type</th>
-                                        <th>Count</th>                                    
+                                        <th>Count</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -350,7 +356,7 @@
                                     </tr>
                                     <tr *ngFor="let paxType of peopleOnBoard.totalPaxTypeCount">
                                         <td data-title="Passenger Type">{{paxType.Key}}</td>
-                                        <td data-title="Count">{{paxType.Value}}</td>                                    
+                                        <td data-title="Count">{{paxType.Value}}</td>
                                     </tr>
                                 </tbody>
                             </table>
