@@ -59,6 +59,8 @@ export class ChecklistEntryComponent implements OnInit {
     selectedparentChecklistdetails: string = "";
     ParentDepartmentId: number;
     isSelected: boolean = false;
+    oldparents: number[] = [];
+    newparents: number[] = [];
     //AllStations: EmergencyLocationModel[] = [];
 
     constructor(formBuilder: FormBuilder,
@@ -117,19 +119,24 @@ export class ChecklistEntryComponent implements OnInit {
     selectAllParent(): void {
 
         let isSelected = this.isSelected;
-        this.checkListParentDepartmentWise.forEach(x => x["IsSelected"] = (isSelected));
+        if (this.checkListParentDepartmentWise.length > 0) {
+            this.checkListParentDepartmentWise.forEach(x => x["IsSelected"] = (isSelected));
+        }
         this.parentChecklists = [];
         //  this.parentChecklists = _.clone(this.CheckListParents.filter(x => x["IsSelected"] == true));
-        if (isSelected == true) {
+
+        if (isSelected == false && this.CheckListParents.filter(x => x["IsSelected"] == true).length <= 0) {
+            this.parentChecklists = this.noDtaList;
+        }
+        //  if (isSelected == true && this.checkListParentDepartmentWise.filter(x => x["IsSelected"] == true).length > 0) {
+        else {
             this.CheckListParents.filter(x => x["IsSelected"] == true).map(y => {
                 this.parentChecklists.push(Object.assign({}, y))
             });
             this.parentChecklists = this.addDepartmentName(this.parentChecklists);
 
         }
-        else {
-            this.parentChecklists = this.noDtaList;
-        }
+
         this.selectedparentChecklistdetails = this.parentChecklists[0].CheckListDetails;
         this.selectedcount = this.checkListParentDepartmentWise.filter(x => x["IsSelected"] == true).length;
     }
@@ -344,7 +351,10 @@ export class ChecklistEntryComponent implements OnInit {
             else {// EDIT REGION
                 delete this.checkListModel['Active'];
                 delete this.checkListModel['IsSelected'];
-                if (this.form.dirty) {
+                this.newparents = _.pluck(this.checkListModelEdit.CheckListParentMapper,'ParentCheckListId');
+                let diff1= _.difference(this.newparents,this.oldparents);
+                let diff2= _.difference(this.oldparents,this.newparents);
+                if (this.form.dirty || diff1.length>0 || diff2.length>0) {
 
                     delete this.checkListModelEdit.TargetDepartment;
                     delete this.checkListModelEdit.CheckListParentMapper;
@@ -418,6 +428,7 @@ export class ChecklistEntryComponent implements OnInit {
 
             });
             this.parentChecklists = this.addDepartmentName(this.parentChecklists);
+            this.oldparents=_.pluck(data.CheckListParentMapper,'ParentCheckListId');
         }
         else {
             this.parentChecklists = this.noDtaList;
