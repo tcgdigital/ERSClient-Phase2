@@ -267,7 +267,7 @@ export class AffectedPeopleListComponent implements OnInit {
         affectedpersonToUpdate.AffectedPersonId = id;
         this.affectedPeopleService.Update(affectedpersonToUpdate, id)
             .subscribe((response: AffectedPeopleModel) => {
-                this.toastrService.success(`Status changed for ${name}`)
+                this.toastrService.success(`NOK information status updated for ${name}`)
                 this.getAffectedPeople(this.currentIncident);
             }, (error: any) => {
                 alert(error);

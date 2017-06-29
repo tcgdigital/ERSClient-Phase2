@@ -56,6 +56,9 @@ export class ChecklistEntryComponent implements OnInit {
     parentChecklists: ChecklistModel[] = [];
     noDtaList: ChecklistModel[] = [];
     public allDepartments: DepartmentModel[] = [];
+    selectedparentChecklistdetails: string = "";
+    ParentDepartmentId: number;
+    isSelected: boolean = false;
     //AllStations: EmergencyLocationModel[] = [];
 
     constructor(formBuilder: FormBuilder,
@@ -75,6 +78,7 @@ export class ChecklistEntryComponent implements OnInit {
         //this.noDtaList.push(new DepartmentModel{'DepartmentName' : "No Department Selected"});
         let x: ChecklistModel = new ChecklistModel();
         x.CheckListCode = "No Checklist Selected.";
+        x.CheckListDetails = "";
         this.noDtaList.push(x);
         // this.parentChecklists = this.noDtaList;
     }
@@ -91,12 +95,15 @@ export class ChecklistEntryComponent implements OnInit {
                 this.parentChecklists.push(Object.assign({}, y))
             });
             this.parentChecklists = this.addDepartmentName(this.parentChecklists);
+
         }
 
         else {
             this.parentChecklists = this.noDtaList;
         }
+        this.selectedparentChecklistdetails = this.parentChecklists[0].CheckListDetails;
         this.selectedcount = this.checkListParentDepartmentWise.filter(x => x["IsSelected"] == true).length;
+        this.isSelected = this.checkListParentDepartmentWise.length == this.selectedcount;
     }
 
     addDepartmentName(x: ChecklistModel[]): ChecklistModel[] {
@@ -104,21 +111,34 @@ export class ChecklistEntryComponent implements OnInit {
         return x;
     }
 
+    // selectedParentChecklist(): void {
+    //     this.form.controls["selectedchecklistdetails"].reset({ value: this.form.controls["checklistparentselected"].value });
+    // }
     selectAllParent(): void {
 
-        let isSelected = this.form.controls["isSelected"].value;
+        let isSelected = this.isSelected;
         this.checkListParentDepartmentWise.forEach(x => x["IsSelected"] = (isSelected));
+        this.parentChecklists = [];
         //  this.parentChecklists = _.clone(this.CheckListParents.filter(x => x["IsSelected"] == true));
         if (isSelected == true) {
             this.CheckListParents.filter(x => x["IsSelected"] == true).map(y => {
                 this.parentChecklists.push(Object.assign({}, y))
             });
             this.parentChecklists = this.addDepartmentName(this.parentChecklists);
+
         }
         else {
             this.parentChecklists = this.noDtaList;
         }
+        this.selectedparentChecklistdetails = this.parentChecklists[0].CheckListDetails;
         this.selectedcount = this.checkListParentDepartmentWise.filter(x => x["IsSelected"] == true).length;
+    }
+
+    parentDepartmentChange(): void {
+        //  this.selectedcount = 0;
+        this.checkListParentDepartmentWise = this.CheckListParents.filter(x => x.DepartmentId == this.ParentDepartmentId);
+        this.selectedcount = this.checkListParentDepartmentWise.filter(x => x.IsSelected == true).length;
+        this.isSelected = this.checkListParentDepartmentWise.length == this.selectedcount;
     }
 
     mergeResponses(departmentId): void {
@@ -172,7 +192,7 @@ export class ChecklistEntryComponent implements OnInit {
         this.getAllActiveDepartments();
         this.submitted = false;
         this.selectedcount = 0;
-
+        this.ParentDepartmentId = 0;
 
 
         this.mergeResponses(this.currentDepartmentId);
@@ -194,37 +214,37 @@ export class ChecklistEntryComponent implements OnInit {
             });
     }
 
-    private getCheckListByDepartment(departmentId): void {
-        this.checkListService.GetAllWithParentsByDepartment(departmentId)
-            .subscribe((response: ResponseModel<ChecklistModel>) => {
+    // private getCheckListByDepartment(departmentId): void {
+    //     this.checkListService.GetAllWithParentsByDepartment(departmentId)
+    //         .subscribe((response: ResponseModel<ChecklistModel>) => {
 
-                let parentIds: number[] = this.CheckListParents.map(item => item.CheckListId);
-                this.CheckListParents = response.Records;
-                let CheckListParentMappers: any = _.pluck(this.CheckListParents, 'CheckListParentMapper');
-                CheckListParentMappers.forEach(element => {
-                    if (element.length > 0) {
-                        element.forEach((item: ChecklistMapper) => {
-                            parentIds.push(item.ParentCheckListId);
-                            let department: DepartmentModel = new DepartmentModel();
-                            department.DepartmentId = item.ParentCheckList.DepartmentId;
-                            department = this.allDepartments.find((itemDept: DepartmentModel) => {
-                                return itemDept.DepartmentId == item.ParentCheckList.DepartmentId;
-                            });
-                            //   this.parentdepartments.push(department);
-                        });
-                    }
-                });
-                // this.parentdepartments = _.unique(this.parentdepartments);
-                parentIds = _.unique(parentIds);
-                //let parentIds: number[] = _.pluck(this.CheckListParents, 'CheckListParentMapper').map(item => item.ParentCheckListId);
-                //let parentIds: number[] = this.CheckListParents.map(item => item.CheckListId);
-                this.CheckListParents.forEach(element => {
-                    element.IsSelected = false;
-                });
+    //             let parentIds: number[] = this.CheckListParents.map(item => item.CheckListId);
+    //             this.CheckListParents = response.Records;
+    //             let CheckListParentMappers: any = _.pluck(this.CheckListParents, 'CheckListParentMapper');
+    //             CheckListParentMappers.forEach(element => {
+    //                 if (element.length > 0) {
+    //                     element.forEach((item: ChecklistMapper) => {
+    //                         parentIds.push(item.ParentCheckListId);
+    //                         let department: DepartmentModel = new DepartmentModel();
+    //                         department.DepartmentId = item.ParentCheckList.DepartmentId;
+    //                         department = this.allDepartments.find((itemDept: DepartmentModel) => {
+    //                             return itemDept.DepartmentId == item.ParentCheckList.DepartmentId;
+    //                         });
+    //                         //   this.parentdepartments.push(department);
+    //                     });
+    //                 }
+    //             });
+    //             // this.parentdepartments = _.unique(this.parentdepartments);
+    //             parentIds = _.unique(parentIds);
+    //             //let parentIds: number[] = _.pluck(this.CheckListParents, 'CheckListParentMapper').map(item => item.ParentCheckListId);
+    //             //let parentIds: number[] = this.CheckListParents.map(item => item.CheckListId);
+    //             this.CheckListParents.forEach(element => {
+    //                 element.IsSelected = false;
+    //             });
 
 
-            });
-    }
+    //         });
+    // }
 
     initiateCheckListModel(): void {
         this.checkListModel = new ChecklistModel();
@@ -236,7 +256,7 @@ export class ChecklistEntryComponent implements OnInit {
 
     formControlDirtyCheck() {
 
-        this.checkListModelEdit = new ChecklistModel();
+        //  this.checkListModelEdit = new ChecklistModel();
         this.checkListModelEdit.CheckListId = this.form.controls['CheckListId'].value;
 
         if (this.form.controls['CheckListDetails'].touched) {
@@ -283,25 +303,14 @@ export class ChecklistEntryComponent implements OnInit {
         if (this.form.valid) {
             this.submitted = false;
 
-           // this.parentChecklists.forEach(x=>);
-            // let CheckListParentMappers: any = _.pluck(this.CheckListParents, 'CheckListParentMapper');
-            // this.CheckListParents.forEach((element: ChecklistModel) => {
-
-            //     if (element.CheckListParentMapper.length > 0 && element.IsSelected == true) {
-            //         element.CheckListParentMapper.forEach((item: ChecklistMapper) => {
-            //             //delete item['IsSelected']
-            //             item.ChecklistMapperId = 0;
-            //             delete item['ChildCheckList'];
-            //             delete item['ParentCheckList'];
-            //             intermediate.push(item);
-            //         });
-            //     }
-            // });
+            this.parentChecklists.forEach(x => {
+                let item: ChecklistMapper = new ChecklistMapper();
+                item.ParentCheckListId = x.CheckListId;
+                delete item.ParentCheckList;
+                delete item.ParentCheckList;
+                intermediate.push(item);
+            });
             this.checkListModel.CheckListParentMapper = _.unique(intermediate);
-            //this.checkListModel.CheckListParentMapper.map((x: ChecklistMapper) => delete x);
-            //this.checkListModel.CheckListParentMapper = this.CheckListParents.filter((x: ChecklistModel) => x.IsSelected == true);
-            //this.checkListModel.CheckListParentMapper.forEach(x => delete x.TargetDepartment);
-            //this.checkListModel.CheckListParentMapper.map((x: ChecklistModel) => delete x.IsSelected);
             if (this.checkListModel.CheckListId === 0) {// ADD REGION
 
 
@@ -336,15 +345,26 @@ export class ChecklistEntryComponent implements OnInit {
                 delete this.checkListModel['Active'];
                 delete this.checkListModel['IsSelected'];
                 if (this.form.dirty) {
+
+                    delete this.checkListModelEdit.TargetDepartment;
+                    delete this.checkListModelEdit.CheckListParentMapper;
+                    delete this.checkListModelEdit.CheckListChildrenMapper;
+                    delete this.checkListModelEdit.Organization;
+                    delete this.checkListModelEdit.StationList;
+                    delete this.checkListModelEdit.EmergencyType;
+                    //  this.checkListModelEdit= this.deleteattributeschecklist(this.checkListModelEdit);
                     this.formControlDirtyCheck();
-                    this.checkListService.Update(this.checkListModelEdit)
-                        .subscribe((response: ChecklistModel) => {
+                    this.checkListModelEdit.CheckListParentMapper = _.unique(intermediate);
+                    this.checkListModelEdit.CheckListParentMapper.forEach(x => x.ChildCheckListId = this.checkListModelEdit.CheckListId);
+                    this.checkListService.editchecklist(this.checkListModelEdit)
+                        .subscribe((response1: ChecklistModel) => {
                             this.selectedcount = 0;
                             this.toastrService.success('Checklist Edited Successfully.', 'Success', this.toastrConfig);
                             this.initiateCheckListModel();
                             this.form = this.resetCheckListForm();
-                            this.dataExchange.Publish('checkListListReload', response);
                             this.showAdd = false;
+                            this.CheckListParents.forEach(x => x.IsSelected = false);
+                            this.dataExchange.Publish('checkListListReload', response1);
                         }, (error: any) => {
                             console.log(`Error: ${error}`);
                         });
@@ -359,6 +379,8 @@ export class ChecklistEntryComponent implements OnInit {
         this.resetCheckListForm();
         this.showAdd = false;
         this.submitted = false;
+        this.CheckListParents.forEach(x => x.IsSelected = false);
+        this.parentChecklists = this.noDtaList;
     }
 
     createChecklist(checklistMode: ChecklistModel): void {
@@ -371,6 +393,7 @@ export class ChecklistEntryComponent implements OnInit {
                 this.form = this.resetCheckListForm();
                 this.showAdd = false;
                 this.initiateCheckListModel();
+                this.CheckListParents.forEach(x => x.IsSelected = false);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -380,6 +403,7 @@ export class ChecklistEntryComponent implements OnInit {
         this.showAdd = true;
         this.initiateCheckListModel();
         this.checkListModel = data;
+        this.checkListModelEdit = data;
         this.form = this.resetCheckListForm(this.checkListModel);
         if (data.CheckListParentMapper.length > 0) {
             this.parentChecklists = [];
@@ -406,14 +430,10 @@ export class ChecklistEntryComponent implements OnInit {
         this.CheckListParents.forEach(element => {
             element.IsSelected = false;
         });
-        this.parentChecklists = [];
+        this.parentChecklists = this.noDtaList;
     }
 
-    parentDepartmentChange(): void {
 
-        let departmentId: number = +this.form.controls['ParentDepartmentId'].value;
-        this.checkListParentDepartmentWise = this.CheckListParents.filter(x => x.DepartmentId == departmentId);
-    }
 
     private resetCheckListForm(checkList?: ChecklistModel): FormGroup {
 
@@ -428,13 +448,25 @@ export class ChecklistEntryComponent implements OnInit {
             Sequence: new FormControl(checkList ? checkList.Sequence : '', [Validators.required]),
             OrganizationId: new FormControl(checkList ? checkList.OrganizationId : '', [Validators.required]),
             Stations: new FormControl(checkList ? checkList.Stations : ''),
-            isSelected: new FormControl(false)
+            isSelected: new FormControl(false),
+            selectedchecklistdetails: new FormControl(''),
+            checklistparentselected: new FormControl('')
         });
     }
 
     private departmentChangeHandler(department: KeyValue): void {
         this.currentDepartmentId = department.Value;
         this.mergeResponses(this.currentDepartmentId);
+    }
+
+
+
+    private deleteattributeschecklist(checklist: ChecklistModel): ChecklistModel {
+        delete checklist.ActiveFlag;
+        delete checklist.CreatedBy;
+        delete checklist.CreatedOn;
+        return checklist;
+
     }
 }
 

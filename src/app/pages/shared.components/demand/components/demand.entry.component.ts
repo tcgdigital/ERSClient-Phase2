@@ -345,7 +345,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.freshDemand = false;
                 //freshDemand
                 this.demandModel = response.Records[0];
-                if (this.demandModel.DemandStatusDescription.indexOf('New Request by') > -1) {
+               // if (this.demandModel.DemandStatusDescription.indexOf('New Request by') > -1) {
+                   if((this.demandModel.ApprovedBy == null && this.demandModel.IsCompleted == false) || this.demandModel.IsRejected == true){
                     this.freshDemand = true;
                 }
                 this.setModelFormGroup(response.Records[0], false, x => x.DemandId, x => x.DemandTypeId,
@@ -773,7 +774,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                     this.globalStateProxyOpen.NotifyDataChanged('DemandAddedUpdated', num);
                     let demandTrail = this.createDemandTrailModel(this.demandModel, this.demandModelEdit, false)[0];
                     demandTrail.DemandId = this.demandModel.DemandId;
-
+                    this.freshDemand = false;
                     this.demandTrailService.Create(demandTrail)
                         .subscribe((response: DemandTrailModel) => { },
                         (error: any) => {
