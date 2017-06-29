@@ -188,7 +188,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     public GetOtherPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
             .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
-             ActiveFlag eq 'Active' and tolower(MedicalStatus) eq 'other'`)
+             ActiveFlag eq 'Active' and tolower(MedicalStatus) eq 'others'`)
             .Execute();
     }
 
