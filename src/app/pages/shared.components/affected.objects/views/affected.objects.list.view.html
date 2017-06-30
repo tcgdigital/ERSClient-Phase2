@@ -36,7 +36,7 @@
                 </td>
                 <!--<td data-title="Verification Status"> <i class="fa fa-check fa-2x fontGreen" aria-hidden="true" [hidden]="affectedObject.IsVerified == false"></i>
                     <i class="fa fa-question fa-2x fontAmber" aria-hidden="true" [hidden]="affectedObject.IsVerified == true"></i>&nbsp;</td>-->
-                <td data-title="Interaction Details"><i class="fa fa-comments trailButtonStyle" (click)="openChatTrails(affectedObject.AffectedObjectId)"></i>
+                <td data-title="Interaction Details"><i class="fa fa-comments" [ngClass]="{'trailActiveButtonStyle': affectedObject.commlength, 'trailNormalButtonStyle': !affectedObject.commlength}" (click)="openChatTrails(affectedObject.AffectedObjectId)"></i>
                 </td>
                 <!--<td data-title="Update Status">{{affectedObject.LostFoundStatus!=null ? affectedObject.LostFoundStatus : "NA"}}&nbsp;&nbsp;<i class="fa fa-edit fa-md"
                         data-dropdown="#drop1" (click)="updateobjId(affectedObject.AffectedObjectId)"></i>

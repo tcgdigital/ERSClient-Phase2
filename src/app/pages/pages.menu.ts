@@ -29,18 +29,6 @@ export const PAGES_MENU: IMenuItem[] = [
                 }
             },
             {
-                path: 'uploaddata',
-                data: {
-                    menu: {
-                        title: 'Upload',
-                        icon: 'fa fa-cloud-upload fa-lg',
-                        // icon: 'cmsicon-master-data-upload cmsicon-5x',
-                        selected: false,
-                        expanded: false,
-                    }
-                }
-            },
-            {
                 path: 'incident',
                 data: {
                     menu: {
@@ -54,14 +42,15 @@ export const PAGES_MENU: IMenuItem[] = [
                 }
             },
             {
-                path: 'emergencyclosure',
+                path: 'uploaddata',
                 data: {
                     menu: {
-                        title: 'Close Crisis',
-                        icon: 'fa fa-bell-slash fa-lg',
-                        // icon: 'cmsicon-close-emergency cmsicon-6x',
+                        title: 'Upload',
+                        icon: 'fa fa-cloud-upload fa-lg',
+                        // icon: 'cmsicon-master-data-upload cmsicon-5x',
                         selected: false,
                         expanded: false,
+                        order: 4
                     }
                 }
             },
@@ -73,32 +62,7 @@ export const PAGES_MENU: IMenuItem[] = [
                         icon: 'fa fa-paper-plane fa-lg',
                         selected: false,
                         expanded: false,
-                        order: 4
-                    }
-                }
-
-            },
-            {
-                path: 'departmentclosure',
-                data: {
-                    menu: {
-                        title: 'Dept Closure',
-                        icon: 'fa fa-id-badge fa-lg',
-                        selected: false,
-                        expanded: false,
                         order: 5
-                    }
-                }
-            },
-            {
-                path: 'archivelist',
-                data: {
-                    menu: {
-                        title: 'Archive ',
-                        icon: 'fa fa-archive fa-lg',
-                        selected: false,
-                        expanded: false,
-                        order: 6
                     }
                 }
 
@@ -111,7 +75,7 @@ export const PAGES_MENU: IMenuItem[] = [
                         icon: 'fa fa-phone fa-lg',
                         selected: false,
                         expanded: false,
-                        order: 7
+                        order: 6
                     }
                 }
 
@@ -121,10 +85,10 @@ export const PAGES_MENU: IMenuItem[] = [
                 data: {
                     menu: {
                         title: 'Member Tracking',
-                        icon: 'fa fa-phone fa-lg',
+                        icon: 'fa fa-group fa-lg',
                         selected: false,
                         expanded: false,
-                        order: 8
+                        order: 7
                     }
                 }
 
@@ -137,8 +101,46 @@ export const PAGES_MENU: IMenuItem[] = [
                         icon: 'fa fa-link fa-lg',
                         selected: false,
                         expanded: false,
-                        order: 9,
+                        order: 8,
                         command: 'quicklink'
+                    }
+                }
+
+            },
+            {
+                path: 'departmentclosure',
+                data: {
+                    menu: {
+                        title: 'Dept Closure',
+                        icon: 'fa fa-id-badge fa-lg',
+                        selected: false,
+                        expanded: false,
+                        order: 9
+                    }
+                }
+            },
+            {
+                path: 'emergencyclosure',
+                data: {
+                    menu: {
+                        title: 'Close Crisis',
+                        icon: 'fa fa-bell-slash fa-lg',
+                        // icon: 'cmsicon-close-emergency cmsicon-6x',
+                        selected: false,
+                        expanded: false,
+                        order: 10
+                    }
+                }
+            },
+            {
+                path: 'archivelist',
+                data: {
+                    menu: {
+                        title: 'Archive ',
+                        icon: 'fa fa-archive fa-lg',
+                        selected: false,
+                        expanded: false,
+                        order: 11
                     }
                 }
 

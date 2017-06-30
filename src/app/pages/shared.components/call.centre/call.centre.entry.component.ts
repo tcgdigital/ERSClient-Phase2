@@ -150,6 +150,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     pdaenquiryid: number;
     affectedId: number;
     createdBy: number;
+    createdByName : string;
     // grouidlistselected: number[] = [];
 
 
@@ -491,7 +492,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             demand.DemandCode = 'DEM-' + UtilityService.UUID();
             demand.DemandDesc = (this.enquiryType == 1 || this.enquiryType == 3) ?
                 (type + ' Requested for ' + personName + ' (' + this.selctedEnquiredPerson.TicketNumber + ')') : (type + ' Requested for ' + this.selctedEnquiredObject.AWB + ' (' + this.selctedEnquiredObject.TicketNumber + ')');
-            demand.DemandStatusDescription = 'New request by ' + this.currentDepartmentName;
+            demand.DemandStatusDescription = `New demand by ${this.createdByName} (${this.currentDepartmentName})` ;
             demand.DemandTypeId = GlobalConstants.DemandTypeId;
             demand.CallerId = this.caller.CallerId;
             demand.IncidentId = this.currentIncident;
@@ -508,7 +509,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             demand.ScheduleTime = scheduleTime.toString();
             demand.RequesterType = "Others";
             demand.DemandTrails=this.createDemandTrail(demand);
-            demand.CommunicationLogs = this.SetCommunicationLog(GlobalConstants.RequesterTypeDemand, GlobalConstants.InteractionDetailsTypeDemand);
+            demand.CommunicationLogs = this.SetCommunicationLog("Demand", GlobalConstants.InteractionDetailsTypeDemand);
             demand.CommunicationLogs[0].Queries = demand.CommunicationLogs[0].Queries + ' Demand Code: ' + demand.DemandCode;
             this.demands.push(demand);
         }
@@ -622,9 +623,9 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         if (this.enquiry.IsTravelRequest) {
             this.callSetDemands(false, true, false, false, affectedId, affectedPersonIds);
         }
-        if (this.enquiryType === 3) {
-            this.callSetDemands(false, false, false, true, affectedId, affectedPersonIds);
-        }
+        // if (this.enquiryType === 3) {
+        //     this.callSetDemands(false, false, false, true, affectedId, affectedPersonIds);
+        // }
         if (this.demands.length !== 0)
             this.demandService.CreateBulk(this.demands)
                 .subscribe(() => {
@@ -670,6 +671,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         this.enquiry.EnquiryType = this.enquiryTypes.find((x) => x.value == this.enquiryType).caption;
         this.enquiry.ExternalInputId = this.callid;
         this.createdBy = +this.credential.UserId;
+         this.createdByName = this.credential.UserName;
     }
 
     onActionClick(eventArgs: any) {

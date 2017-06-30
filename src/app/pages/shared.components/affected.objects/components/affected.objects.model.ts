@@ -57,6 +57,7 @@ export class AffectedObjectsToView extends BaseModel {
         public Remarks : string;
         public IdentificationDesc : string;
         public CargoType : string;
+        public commlength : boolean;
 
         //   public   CommunicationLogs: data.CommunicationLogs
 
