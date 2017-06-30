@@ -3,10 +3,13 @@
 .card-without-top-border {
     border-top: none !important;
 }
-
-.trailButtonStyle {
+.trailActiveButtonStyle {
     font-size:20px;
     color:$trail-green;
+}
+.trailNormalButtonStyle {
+    font-size:20px;
+    color:$dropdown-item-text;
 }
 
 .modalBodyHeaderStyle {

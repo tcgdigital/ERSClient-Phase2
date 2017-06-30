@@ -47,13 +47,13 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
     GetFilterByIncidentId(incidentId): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq ${incidentId}`)
-            .Expand('Affecteds($expand=AffectedObjects($expand=Cargo))')
+            .Expand('Affecteds($expand=AffectedObjects($expand=Cargo,CommunicationLogs($select=InteractionDetailsId)))')
             .Execute();
     }
     GetAffectedObjectQuery(incidentId, query): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq ${incidentId}`)
-            .Expand(`Affecteds($expand=AffectedObjects($expand=Cargo;$filter=${query}))`)
+            .Expand(`Affecteds($expand=AffectedObjects($expand=Cargo,CommunicationLogs($select=InteractionDetailsId);$filter=${query}))`)
             .Execute();
     }
     FlattenAffactedObjects(involvedParty: InvolvePartyModel): AffectedObjectsToView[] {
@@ -87,6 +87,7 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
                     item.CargoType = data.Cargo.CargoType != null ? data.Cargo.CargoType : 'NA';
                     item.IdentificationDesc = data.IdentificationDesc;
                     item.Remarks=data.Remarks;
+                    item.commlength = data.CommunicationLogs.length>0;
                     // item.CommunicationLogs: data.CommunicationLogs
                     return item;
                 });

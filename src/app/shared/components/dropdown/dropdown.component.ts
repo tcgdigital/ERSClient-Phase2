@@ -15,6 +15,7 @@ import { KeyValue } from '../../models/base.model';
 })
 export class CustomDropdownComponent implements AfterContentInit, OnChanges, OnInit {
     @Input() dataItems: KeyValue[];
+    @Input() customCss: string;
     @Input() initialValue: number = 0;
     @Input() placeholder: string;
     @Output() onChange: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
@@ -36,6 +37,7 @@ export class CustomDropdownComponent implements AfterContentInit, OnChanges, OnI
     constructor(private elementRef: ElementRef, private _router: Router) { }
 
     ngOnInit() {
+        console.log(this.customCss);
         // Called after the constructor, initializing input properties, and the first call to ngOnChanges.
         // Add 'implements OnInit' to the class.
         this._onRouteChange = this._router.events.subscribe((event) => {

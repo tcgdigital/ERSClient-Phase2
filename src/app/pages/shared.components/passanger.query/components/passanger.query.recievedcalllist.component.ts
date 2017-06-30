@@ -18,6 +18,7 @@ import { ModalDirective } from 'ng2-bootstrap/modal';
 })
 export class PassangerQueryRecievedCallsListComponent implements OnInit {
     @ViewChild('childModalcallcenter') public childModalcallcenter: ModalDirective;
+    @ViewChild('childModaldemand') public childModaldemand: ModalDirective;
 
     allAssignedCalls: ExternalInputModel[] = [];
     currentIncidentId: number;

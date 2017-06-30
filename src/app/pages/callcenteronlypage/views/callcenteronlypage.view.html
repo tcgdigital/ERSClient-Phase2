@@ -131,7 +131,7 @@
                             </small>
                 </div>
                 <div class="form-group col-lg-2 col-sm-6 col-md-4" [hidden]="enquiryType!=1 && enquiryType!=3">
-                    <label for="FinalDestination">FinalDestination<span class="required">*</span></label>
+                    <label for="FinalDestination">Final Destination<span class="required">*</span></label>
                     <input id="FinalDestination" class="form-control" type="text" name="Age" formControlName="FinalDestination" placeholder="Enter Final Destination"
                     />
                     <small *ngIf="!pdacrewform.controls.FinalDestination.valid && isSubmitted" class="text-danger">
@@ -308,11 +308,11 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="row">
                 <div class="form-group col-lg-6 col-sm-12 col-md-6">
-                    <label for="EnglishSpielText">Spiel(English)</label>
+                    <label for="EnglishSpielText">Spiel (English)</label>
                     <p>{{speilEnglish}}</p>
                 </div>
                 <div class="form-group col-lg-6 col-sm-12 col-md-6">
-                    <label for="TagalogSpielText">Spiel(Tagalog)</label>
+                    <label for="TagalogSpielText">Spiel (Tagalog)</label>
                     <p>{{speilTagalog}}</p>
                 </div>
             </div>
