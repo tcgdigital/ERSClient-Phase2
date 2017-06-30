@@ -19,7 +19,7 @@
         text-transform: uppercase;
         float: left;
         text-align: center;
-        width: 100%;
+        width: 97%;
         line-height: 16px;
         font-size: $font-size-below-normal;
     }
@@ -59,7 +59,7 @@
     .message-icon {
         margin-top: 25% !important;
         i {
-            margin-left: 20%;
+            margin-left: 28%;
         }
         span {
             font-size: 11px;
@@ -76,7 +76,8 @@
 
 @media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
     .messaging-widget{
-        max-width: 32.8%;     margin-left: 2px;
+        max-width: 32.5%;     
+        margin-left: 2px;
     }
     .messaging-widget-container {
         height: 245px !important;
