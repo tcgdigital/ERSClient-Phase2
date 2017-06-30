@@ -82,6 +82,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
             IsAutoApproved: new FormControl(false),
             ApproverDept: new FormControl('', [Validators.required])
         });
+         this.showApproverDept = true;
     }
 
     IsAutoApproved(value: any): void {
@@ -96,11 +97,12 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
             IsAutoApproved: new FormControl(false),
             ApproverDept: new FormControl('', [Validators.required])
         });
+        this.showApproverDept = true;
     }
 
     ngOnInit(): any {
         this.submitted = false;
-        this.showApproverDept = false;
+        this.showApproverDept = true;
         this.autoApproved = true;
         this.getAllDepartments();
         this.showAdd = false;
@@ -150,7 +152,8 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         }
         else {
             this.formControlDirtyCheck();
-             if (!this.demandTypeModelToEdit.IsAutoApproved) {
+            debugger;
+             if (this.showApproverDept) {
                 if (this.form.controls['ApproverDept'].value == '') {
                     this.toastrService.error('Please provide approver department.', 'Error', this.toastrConfig);
                     return false;
@@ -188,6 +191,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         }
         if (this.form.controls['IsAutoApproved'].touched) {
             this.demandTypeModelToEdit.IsAutoApproved = this.form.controls['IsAutoApproved'].value;
+            this.showApproverDept = !this.form.controls['IsAutoApproved'].value;
         }
         if (this.form.controls['ApproverDept'].touched) {
             this.demandTypeModelToEdit.DepartmentId = +this.form.controls['ApproverDept'].value;
