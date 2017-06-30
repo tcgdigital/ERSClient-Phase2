@@ -28,7 +28,7 @@
                 <td data-title="PNR">{{affectedperson.Pnr}}&nbsp;</td>
                 <td data-title="Passenger Type">{{affectedperson.PaxType}}&nbsp;</td>
                 <td data-title="Medical Status">{{affectedperson.MedicalStatus}}&nbsp;</td>
-                <td data-title="Interaction Details"><i class="fa fa-comments trailButtonStyle" (click)="openChatTrails(affectedperson.AffectedPersonId)"></i>
+                <td data-title="Interaction Details"><i class="fa fa-comments" [ngClass]="{'trailActiveButtonStyle': affectedperson.commlength, 'trailNormalButtonStyle': !affectedperson.commlength}" (click)="openChatTrails(affectedperson.AffectedPersonId)"></i>
                 </td>
                 <!--<td data-title="Action">
                     <i class="fa fa-address-book fa-lg" (click)="openCallerList(affectedperson)"></i>
@@ -325,7 +325,7 @@
                             <tr *ngFor="let comm of communications">
                                 <td data-title="comm"><strong>{{comm.RequesterType}}</strong> logged by
                                     <span [hidden]="comm.RequesterDepartment.length==0"><strong>{{comm.RequesterName}} (Dept: {{comm.RequesterDepartment}})</strong></span>
-                                    <span> on <strong>{{comm.CreatedOn | date: 'dd-MMM-yyyy hh:mm a'}}&nbsp;:</strong></span>                                    {{comm.Answers}}
+                                    <span> on <strong>{{comm.CreatedOn | date: 'dd-MMM-yyyy hh:mm a'}}&nbsp;:</strong></span>  {{comm.Answers}}
                                 </td>
                             </tr>
                         </tbody>

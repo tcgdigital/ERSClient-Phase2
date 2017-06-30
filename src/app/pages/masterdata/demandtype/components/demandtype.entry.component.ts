@@ -152,7 +152,6 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         }
         else {
             this.formControlDirtyCheck();
-            debugger;
              if (this.showApproverDept) {
                 if (this.form.controls['ApproverDept'].value == '') {
                     this.toastrService.error('Please provide approver department.', 'Error', this.toastrConfig);

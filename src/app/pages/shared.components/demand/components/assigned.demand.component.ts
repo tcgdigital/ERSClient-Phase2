@@ -60,7 +60,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         private globalState: GlobalStateService,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig, private _router: Router) {
-        this.createdByName = "Anwesha Ray";
+      //  this.createdByName = "Anwesha Ray";
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
         this.demandFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Demand/';
@@ -142,7 +142,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     createDemandTrailModel(demand: DemandModelToView, flag, OriginalDemand?: DemandModel): DemandTrailModel[] {
         this.demandTrails = [];
         this.demandTrail = new DemandTrailModel();
-        let description = flag ? `Completed by ${this.currentDepartmentName}` : demand.DemandDesc;
+        let description = flag ? `Completed by ${this.createdByName}( ${this.currentDepartmentName})` : demand.DemandStatusDescription;
         this.demandTrail.Answers = "";
         this.demandTrail.DemandId = demand.DemandId;
         this.demandTrail.ScheduleTime = demand.ScheduleTime;
@@ -275,7 +275,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         }
         this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
         this.credential = UtilityService.getCredentialDetails();
-        this.createdByName = "Anwesha Ray";
+        this.createdByName = this.credential.UserName;
 
 
         this.getAllDepartments();
