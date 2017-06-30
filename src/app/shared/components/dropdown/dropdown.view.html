@@ -1,4 +1,4 @@
-<div class="wrapper-dropdown" (click)="onDropdownClick($event)" [hidden]="showdropdown">
+<div class="wrapper-dropdown" [ngClass]="customCss" (click)="onDropdownClick($event)" [hidden]="showdropdown">
     <span>{{placeholder}}</span>
     <!--<i class="fa fa-caret-right" aria-hidden="true"></i>-->
     <ul class="dropdown">
