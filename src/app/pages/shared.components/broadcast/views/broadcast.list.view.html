@@ -11,7 +11,7 @@
         </thead>
         <tbody>
             <tr *ngIf="broadcastMessages.length <= 0">
-                <td colspan="10">No Message is broadcasted yet.</td>
+                <td colspan="5">No Message is broadcasted yet.</td>
             </tr>
             <tr *ngFor="let broadcastMessage of broadcastMessages">
                 <td data-title="Broadcast Message" width="60%">{{broadcastMessage.Message}}</td>

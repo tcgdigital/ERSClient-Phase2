@@ -1,6 +1,12 @@
-<div class="card card-without-top-border card-block">
-       <div *ngIf="!isArchive"> <presidentMessage-approval-entry [initiatedDepartmentId]="initiatedDepartment" [incidentId]="incidentId"></presidentMessage-approval-entry></div>
-    <div class="card-block">
+<div class="row">
+    <div class="col-12">
+        <div *ngIf="!isArchive">
+            <presidentMessage-approval-entry [initiatedDepartmentId]="initiatedDepartment" [incidentId]="incidentId"></presidentMessage-approval-entry>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
         <presidentMessage-approval-list [initiatedDepartmentId]="initiatedDepartment" [incidentId]="incidentId"></presidentMessage-approval-list>
     </div>
 </div>

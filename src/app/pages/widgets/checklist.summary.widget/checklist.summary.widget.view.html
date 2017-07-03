@@ -27,9 +27,8 @@
 </div>
 
 <!--Checklist All-->
-<div bsModal #childModalViewAllChecklist="bs-modal" class="modal fade" (onShown)="onViewAllCheckListShown($event)"
-tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-    aria-hidden="true">
+<div bsModal #childModalViewAllChecklist="bs-modal" class="modal fade" (onShown)="onViewAllCheckListShown($event)" tabindex="-1"
+    role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -95,7 +94,7 @@ tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                                 </thead>
                                 <tbody>
                                     <tr *ngIf="!(subDeptCompletedCheckLists | async)?.length>0">
-                                        <td data-title="Records" colspan="4">No demands to show.</td>
+                                        <td data-title="Records" colspan="3">No demands to show.</td>
                                     </tr>
                                     <tr *ngFor="let subDeptCheckList of subDeptCompletedCheckLists | async">
                                         <td data-title="Description">{{subDeptCheckList.checkListDesc}}</td>
@@ -124,7 +123,7 @@ tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                                 </thead>
                                 <tbody>
                                     <tr *ngIf="!(subDeptPendingCheckLists)?.length>0">
-                                        <td data-title="Records" colspan="5">No records to show.</td>
+                                        <td data-title="Records" colspan="3">No records to show.</td>
                                     </tr>
                                     <tr *ngFor="let subDeptCheckList of subDeptPendingCheckLists">
                                         <td data-title="Description">{{subDeptCheckList.checkListDesc}}</td>
@@ -163,7 +162,7 @@ tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                         </thead>
                         <tbody>
                             <tr *ngIf="!(deptCheckListsSubDept | async)?.length>0">
-                                <td data-title="Records" colspan="5">No records to show.</td>
+                                <td data-title="Records" colspan="4">No records to show.</td>
                             </tr>
                             <tr *ngFor="let deptCheckList of deptCheckListsSubDept | async">
                                 <td data-title="Description">{{deptCheckList.departmentName}}</td>
@@ -198,7 +197,7 @@ tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                                 </thead>
                                 <tbody>
                                     <tr *ngIf="!(subDeptCompletedCheckLists | async)?.length>0">
-                                        <td colspan="4">No demands to show.</td>
+                                        <td colspan="3">No demands to show.</td>
                                     </tr>
                                     <tr *ngFor="let subDeptCheckList of subDeptCompletedCheckLists | async">
                                         <td data-title="Description">{{subDeptCheckList.checkListDesc}}</td>
@@ -227,7 +226,7 @@ tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                                 </thead>
                                 <tbody>
                                     <tr *ngIf="!(subDeptPendingCheckLists)?.length>0">
-                                        <td colspan="4">No checklists to show.</td>
+                                        <td colspan="3">No checklists to show.</td>
                                     </tr>
                                     <tr *ngFor="let subDeptCheckList of subDeptPendingCheckLists">
                                         <td data-title="Description">{{subDeptCheckList.checkListDesc}}</td>
