@@ -55,7 +55,7 @@ export class CustomDropdownComponent implements AfterContentInit, OnChanges, OnI
 
     public ngAfterContentInit(): void {
         this.$selfElement = jQuery(this.elementRef.nativeElement);
-        this.$placeholder = this.$selfElement.find('span');
+        this.$placeholder = this.$selfElement.find('.text-display');
         this.$options = this.$selfElement.find('ul.dropdown > li');
     }
 

@@ -11,7 +11,6 @@
                 <th>Passenger Type</th>
                 <th>Medical Status</th>
                 <th>Interaction Details</th>
-                <!--<th>Caller list</th>-->
                 <th>View</th>
                 <th>Is NOK Informed</th>
                 <th>Crew 201 File</th>
@@ -19,7 +18,7 @@
         </thead>
         <tbody>
             <tr [hidden]="affectedPeople.length != 0">
-                <td colspan="9">No PDA is available.</td>
+                <td colspan="10">No PDA is available.</td>
             </tr>
             <tr *ngFor="let affectedperson of affectedPeople">
                 <td data-title="Reference Number">{{affectedperson.TicketNumber}}&nbsp;</td>
@@ -28,11 +27,9 @@
                 <td data-title="PNR">{{affectedperson.Pnr}}&nbsp;</td>
                 <td data-title="Passenger Type">{{affectedperson.PaxType}}&nbsp;</td>
                 <td data-title="Medical Status">{{affectedperson.MedicalStatus}}&nbsp;</td>
-                <td data-title="Interaction Details"><i class="fa fa-comments" [ngClass]="{'trailActiveButtonStyle': affectedperson.commlength, 'trailNormalButtonStyle': !affectedperson.commlength}" (click)="openChatTrails(affectedperson.AffectedPersonId)"></i>
+                <td data-title="Interaction Details"><i class="fa fa-comments" [ngClass]="{'trailActiveButtonStyle': affectedperson.commlength, 'trailNormalButtonStyle': !affectedperson.commlength}"
+                        (click)="openChatTrails(affectedperson.AffectedPersonId)"></i>
                 </td>
-                <!--<td data-title="Action">
-                    <i class="fa fa-address-book fa-lg" (click)="openCallerList(affectedperson)"></i>
-                </td>-->
                 <td data-title="Action">
                     <i class="fa fa-edit fa-2x" (click)="openAffectedPersonDetail(affectedperson)"></i>
                 </td>
@@ -81,7 +78,7 @@
                     </div>
 
                 </div>
-                
+
                 <div [hidden]="!affectedPersonModelForStatus.IsCrew">
                     <div class="row rowpadding">
                         <div class="col-lg-6 col-md-6 col-sm-12">
@@ -169,7 +166,7 @@
                         </div>
                         <div class="form-group col-lg-6 col-sm-12 col-md-6" *ngIf="!isArchive">
                             <div class="buttonholder">
-                            <button class="btn btn-primary" type="button" (click)="saveUpdateAffectedPerson(affectedPersonModelForStatus)">Submit</button>
+                                <button class="btn btn-primary" type="button" (click)="saveUpdateAffectedPerson(affectedPersonModelForStatus)">Submit</button>
                             </div>
                         </div>
                     </div>
@@ -308,16 +305,6 @@
                         <label class="form-control">{{ticketNumber}}</label>
                     </div>
                 </div>
-                <!--<div class="col-sm-12">
-                    <div class="col-sm-6 form-group">
-                        <label>PDA Name</label>
-                        <label>{{pdaNameForTrail}}</label>
-                    </div>
-                    <div class="col-sm-6 form-group">
-                        <label>Reference Number</label>
-                        <label>{{ticketNumber}}</label>
-                    </div>
-                </div>-->
                 <br>
                 <responsive-table>
                     <table responsive-table-body>
@@ -325,7 +312,7 @@
                             <tr *ngFor="let comm of communications">
                                 <td data-title="comm"><strong>{{comm.RequesterType}}</strong> logged by
                                     <span [hidden]="comm.RequesterDepartment.length==0"><strong>{{comm.RequesterName}} (Dept: {{comm.RequesterDepartment}})</strong></span>
-                                    <span> on <strong>{{comm.CreatedOn | date: 'dd-MMM-yyyy hh:mm a'}}&nbsp;:</strong></span>  {{comm.Answers}}
+                                    <span> on <strong>{{comm.CreatedOn | date: 'dd-MMM-yyyy hh:mm a'}}&nbsp;:</strong></span>                                    {{comm.Answers}}
                                 </td>
                             </tr>
                         </tbody>
