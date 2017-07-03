@@ -49,6 +49,7 @@
 .cd-item-wrapper {
     @include perspective(500px);
     @include perspective-origin(50%, -30%);
+    border: 1px solid #cccccc;
     li {
         position: absolute;
         top: 0;

@@ -65,7 +65,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         private departmentService: DepartmentService,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig, private _router: Router) {
-        this.createdByName = "Anwesha ray";
+     //   this.createdByName = "Anwesha ray";
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
         this.demandFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Demand/';
@@ -166,26 +166,26 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
 
         let date = new Date();
         let answer = `<div><p> ${demand.DemandStatusDescription}   <strong>Date :</strong>  ${date.toLocaleString()}  </p><div>`;
-        if (originalDemand != undefined) {
-            this.demandTrail.DemandTypeId = originalDemand.DemandTypeId;
-            this.demandTrail.DemandCode = originalDemand.DemandCode;
-            this.demandTrail.IsRejected = false;
-            this.demandTrail.IsApproved = false;
-            this.demandTrail.ApprovedDt = null;
-            this.demandTrail.RejectedDate = null;
-            this.demandTrail.ContactNumber = originalDemand.ContactNumber;
-            this.demandTrail.DemandStatusDescription = originalDemand.DemandStatusDescription;
-            this.demandTrail.RequiredLocation = originalDemand.RequiredLocation;
-            this.demandTrail.RequesterType = originalDemand.RequesterType;
-            answer = `<div><p> Request Edited By ${this.demandTrail.RequesterDepartmentName} <strong>Date :</strong> ${date} </p><div>`;
-            if (originalDemand.ScheduleTime) {
-                var minutesInt = parseInt(originalDemand.ScheduleTime);
-                var d = new Date(originalDemand.CreatedOn);
-                d.setMinutes(d.getMinutes() + minutesInt);
-                var editedDate = new Date(d);
-                answer = answer + `<strong>Expected Resolution Time</strong> : ${editedDate}`;
-            }
-        }
+        // if (originalDemand != undefined) {
+        //     this.demandTrail.DemandTypeId = originalDemand.DemandTypeId;
+        //     this.demandTrail.DemandCode = originalDemand.DemandCode;
+        //     this.demandTrail.IsRejected = false;
+        //     this.demandTrail.IsApproved = false;
+        //     this.demandTrail.ApprovedDt = null;
+        //     this.demandTrail.RejectedDate = null;
+        //     this.demandTrail.ContactNumber = originalDemand.ContactNumber;
+        //     this.demandTrail.DemandStatusDescription = originalDemand.DemandStatusDescription;
+        //     this.demandTrail.RequiredLocation = originalDemand.RequiredLocation;
+        //     this.demandTrail.RequesterType = originalDemand.RequesterType;
+        //     answer = `<div><p> Request Edited By ${this.demandTrail.RequesterDepartmentName} <strong>Date :</strong> ${date} </p><div>`;
+        //     if (originalDemand.ScheduleTime) {
+        //         var minutesInt = parseInt(originalDemand.ScheduleTime);
+        //         var d = new Date(originalDemand.CreatedOn);
+        //         d.setMinutes(d.getMinutes() + minutesInt);
+        //         var editedDate = new Date(d);
+        //         answer = answer + `<strong>Expected Resolution Time</strong> : ${editedDate}`;
+        //     }
+        // }
         this.demandTrail.Answers = answer;
         this.demandTrails.push(this.demandTrail);
         return this.demandTrails;
@@ -257,8 +257,9 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
                 x.IsApproved ? item.ApprovedDt = new Date() : item.RejectedDate = new Date;
                 x.IsApproved ? item.ApprovedBy = this.createdBy : item.RejectedBy = this.createdBy;
                 item.ApproverDepartmentId = x.IsApproved ? this.currentDepartmentId : item.ApproverDepartmentId;
-                item.DemandStatusDescription = item.IsApproved ? `Approved and pending with ${x.TargetDepartmentName}` :
-                    `Rejected by ${this.currentDepartmentName}`;
+                item.DemandStatusDescription = item.IsApproved ? `Approved by ${this.createdByName} (${this.currentDepartmentName}) and pending with ${x.TargetDepartmentName}` :
+                    `Rejected by ${this.createdByName} (${this.currentDepartmentName})`;
+                x.DemandStatusDescription = item.DemandStatusDescription;
                 item.CommunicationLogs = this.SetCommunicationLog(x);
                 item.DemandTrails = x.IsApproved ? this.createDemandTrailModel(x, true) : this.createDemandTrailModel(x, false);
                 return item;
@@ -297,6 +298,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
         this.credential = UtilityService.getCredentialDetails();
         this.createdBy = +this.credential.UserId;
+        this.createdByName = this.credential.UserName;
 
         this.getCurrentDepartmentName(this.currentDepartmentId);
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));

@@ -92,5 +92,6 @@ export class AffectedPeopleToView extends BaseModel {
 	public Crew?: CrewModel;
 	public IsSelected: boolean;
 	public GroupId: number;
+	public commlength : boolean;
 }
 

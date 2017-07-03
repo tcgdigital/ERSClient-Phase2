@@ -66,7 +66,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         private departmentService: DepartmentService,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig, private _router: Router) {
-        this.createdByName = "Anwesha Ray";
+        //    this.createdByName = "Anwesha Ray";
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
         this.demandFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Demand/';
@@ -199,7 +199,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
                     item.IsClosed = x.IsClosed;
                     item.ClosedBy = this.createdBy;
                     item.ClosedOn = new Date;
-                    item.DemandStatusDescription = `Closed by ${this.currentDepartmentName}`;
+                    item.DemandStatusDescription = `Closed by ${this.createdByName} ( ${this.currentDepartmentName})`;
                     item.CommunicationLogs = this.SetCommunicationLog(x);
                     x.DemandStatusDescription = item.DemandStatusDescription;
                     item.DemandTrails = this.createDemandTrailModel(x, true);
@@ -251,6 +251,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
         this.credential = UtilityService.getCredentialDetails();
         this.createdBy = +this.credential.UserId;
+        this.createdByName = this.credential.UserName;
         this.getDepartmentName(this.currentDepartmentId);
 
         this.getCurrentDepartmentName(this.currentDepartmentId);

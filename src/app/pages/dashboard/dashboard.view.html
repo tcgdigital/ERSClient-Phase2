@@ -4,7 +4,7 @@
     </incident-header-widget>
 </div>
 <!-- KPI Section Starts-->
-<div class="row">
+<div class="row row-fix">
     <clock-widget [initiationDateTime]="incidentDate" 
     [currentIncidentId]="currentIncidentId" class="col-12 col-md-4 col-lg-4 col-xl-2 clock-layout widget-layout-fix">
     </clock-widget>
@@ -30,7 +30,7 @@
     </checklist-summary-widget>
 </div>
 
-<div class="row">
+<div class="row row-fix">
     <broadcast-widget [initiatedDepartmentId]="currentDepartmentId" 
     [currentIncidentId]="currentIncidentId" class="col-12 col-md-4 messaging-widget widget-layout-fix">
     </broadcast-widget>
@@ -46,7 +46,7 @@
 <!-- Messaging Section Ends-->
 
 <!-- Tab Section Starts-->
-<div class="row">
+<div class="row row-fix">
     <div class="col-12 widget-layout-fix">
         <div class="row tab-root-container no-gutters">
             <div class="col-12">
