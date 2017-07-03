@@ -70,7 +70,7 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
     private incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
         this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
-        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/Media' + this.currentIncidentId + '/';
+        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/Media/' + this.currentIncidentId + '/';
     }
 
     private departmentChangeHandler(department: KeyValue): void {

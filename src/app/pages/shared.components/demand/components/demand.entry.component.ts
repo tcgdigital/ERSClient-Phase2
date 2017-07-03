@@ -248,7 +248,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 editedFields = editedFields + `<strong>Required At Location</strong> : ${demandForAnswer.RequiredLocation} `;
             }
 
-            if (demandForAnswer.DemandStatusDescription.length > 0) {
+            if (demandForAnswer.DemandStatusDescription != undefined  &&  demandForAnswer.DemandStatusDescription.length > 0) {
                 descchanged = `. ${demandForAnswer.DemandStatusDescription}.`;
             }
         }
@@ -333,6 +333,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
         this.demandModel.Caller.LastName = "";
         this.Action = "Submit";
+        this.freshDemand = true;
         this.isReadonly = false;
         this.childModal.show();
     };
@@ -837,6 +838,10 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 }, (error: any) => {
                     console.log("Error");
                 });
+        }
+        else {
+            this.submitted  =  false;
+            this.childModal.hide();
         }
     }
 

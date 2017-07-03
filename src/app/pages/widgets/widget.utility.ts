@@ -189,7 +189,7 @@ export class WidgetUtilityService {
                 enabled: false
             },
             series: [{
-                name: 'Completed',
+                name: 'Closed',
                 data: arrGraphCompleted,
                 color: '#119272'
 
