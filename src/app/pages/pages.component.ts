@@ -164,14 +164,15 @@ export class PagesComponent implements OnInit {
                         UtilityService.SetToSession({ CurrentDepartmentId: this.currentDepartmentId });
                     }
                     console.log(this.currentDepartmentId);
-                    this.isLanding = false;
+                 //   this.isLanding = false;
+                    // console.log(this.isLanding+"-----page");
 
                     // this.currentDepartmentId = this.departments[0].Value;
                     // console.log(this.currentDepartmentId);
                     // UtilityService.SetToSession({ CurrentDepartmentId: this.currentDepartmentId });
                 }
                 else {
-                    this.isLanding = true;
+                   // this.isLanding = true;
                 }
             });
     }
@@ -185,7 +186,6 @@ export class PagesComponent implements OnInit {
             })).subscribe((x: IncidentModel[]) => {
                 this.incidents = x.map((y: IncidentModel) => new KeyValue(y.EmergencyName, y.IncidentId));
                 this.incidentOrganizations = x.map((y: IncidentModel) => new KeyValue(y.IncidentId.toString(), y.OrganizationId));
-
                 if (this.incidents.length > 0) {
                     let incidentId = +UtilityService.GetFromSession('CurrentIncidentId');
 

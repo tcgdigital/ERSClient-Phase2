@@ -27,7 +27,7 @@
             </tr>
             <tr *ngFor="let demand of demands">
                 <td data-title="Reference Number">{{demand.DemandTypeName}}&nbsp;</td>
-                <td data-title="PDA Name">{{demand.DemandDesc}}&nbsp;</td>
+                <td data-title="PDA Name"><a href="javascript:void(0);" (click)="openDemandDetails(demand.DemandId)">{{demand.DemandDesc}}</a>&nbsp;</td>
                 <td data-title="PDA Contact">{{demand.RequesterDepartmentName}}&nbsp;</td>
                 <td data-title="PNR">{{demand.Priority}}&nbsp;</td>
                 <td data-title="Passenger Type">{{demand.ScheduleTimeToShow}}&nbsp;</td>
@@ -74,27 +74,117 @@
                         </div>
                     </div>
                     <div class="card-block">
-                    <responsive-table>
-                        <table responsive-table-body>
-                            <thead>
-                                <th>Department</th>
-                                <th>Remarks added by</th>
-                                <th>Remarks added on</th>
-                                <th>Remarks</th>
-                            </thead>
-                            <tbody>
-                                <tr [hidden]="demandRemarks.length != 0">
-                                    <td colspan="9">No Remark is added yet.</td>
-                                </tr>
-                                <tr *ngFor="let remark of demandRemarks">
-                                    <td data-title="Requester Department">{{remark.RequesterDepartmentName}}</td>
-                                    <td data-title="Remarks added by">{{remark.CreatedByName}}</td>
-                                    <td data-title="Remarks added on">{{remark.CreatedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
-                                    <td data-title="Remarks">{{remark.Remark}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </responsive-table>
+                        <responsive-table>
+                            <table responsive-table-body>
+                                <thead>
+                                    <th>Department</th>
+                                    <th>Remarks added by</th>
+                                    <th>Remarks added on</th>
+                                    <th>Remarks</th>
+                                </thead>
+                                <tbody>
+                                    <tr [hidden]="demandRemarks.length != 0">
+                                        <td colspan="9">No Remark is added yet.</td>
+                                    </tr>
+                                    <tr *ngFor="let remark of demandRemarks">
+                                        <td data-title="Requester Department">{{remark.RequesterDepartmentName}}</td>
+                                        <td data-title="Remarks added by">{{remark.CreatedByName}}</td>
+                                        <td data-title="Remarks added on">{{remark.CreatedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
+                                        <td data-title="Remarks">{{remark.Remark}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </responsive-table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Demand Details</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="cancelModal()">
+                  <span aria-hidden="true">&times;</span>
+                   </button>
+            </div>
+            <div class="modal-body">
+                <div class="holderStyle">
+                    <div class="formStyle">
+                        <div class="row">
+                            <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                <label for="DemandTypeId">Demand Type</label>
+                                <label class="form-control" for="DemandTypeId">{{demand.DemandTypeName}}</label>
+                            </div>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                <label for="Priority">Priority</label>
+                                <label class="form-control" for="DemandTypeId">{{demand.Priority}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                <label for="DemandDesc">Demand Description:</label>
+                                <label class="form-control" for="DemandTypeId">{{demand.DemandDesc}}</label>
+                            </div>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                        <label for="RequestedBy">Requested By:</label>
+                                        <label class="form-control" for="DemandTypeId">{{demand.RequestedBy}}</label>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                        <label for="RequesterType">Requester Type:</label>
+                                        <label class="form-control" for="DemandTypeId">{{demand.RequesterType}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                        <label for="DepartmentId">Target Department:</label>
+                                        <label class="form-control" for="DemandTypeId">{{demand.TargetDepartmentName}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                <label for="ReferenceNumber">Reference Number</label>
+                                <label class="form-control" for="DemandTypeId">{{demand.ReferenceNumber}}</label>
+                            </div>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                        <label for="PDA">PDA Name:</label>
+                                        <label class="form-control" for="DemandTypeId">{{demand.AffectedPersonName}}</label>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                        <label for="awb">AWB</label>
+                                        <label class="form-control" for="DemandTypeId">{{demand.AWB}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                <label for="ContactNumber"> Contact Number:</label>
+                                <label class="form-control" for="DemandTypeId">{{demand.ContactNumber}}</label>
+                            </div>
+
+                            <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                <label for="ExpectedResolutionTime">Expected Resolution Time:</label>
+                                <label class="form-control" for="DemandTypeId">{{demand.ScheduleTimeToShow}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                                <label for="RequiredLocation">Required Location:</label>
+                                <label class="form-control" for="DemandTypeId">{{demand.RequiredLocation}}</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

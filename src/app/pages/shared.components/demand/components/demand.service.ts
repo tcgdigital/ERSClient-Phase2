@@ -58,7 +58,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
     public GetForAssignedDept(targetDeptId: number, incidentId: number): Observable<ResponseModel<DemandModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq ${incidentId} and TargetDepartmentId eq ${targetDeptId}  and IsClosed eq false and IsApproved eq true and IsCompleted eq false and ActiveFlag eq 'Active'`)
-            .Expand('RequesterDepartment($select=DepartmentName) , DemandType($select=DemandTypeName), RequesterParentDepartment($select=DepartmentName), FileStores($select=UploadedFileName,FilePath)')
+            .Expand('TargetDepartment($select=DepartmentName),RequesterDepartment($select=DepartmentName) , DemandType($select=DemandTypeName), RequesterParentDepartment($select=DepartmentName),AffectedPerson($select=TicketNumber;$expand=Passenger($select = PassengerName),Crew($select=CrewName)),AffectedObject($select=AWB,TicketNumber), FileStores($select=UploadedFileName,FilePath)')
             .Execute();
     };
     GetByDemandId(id: string | number): Observable<ResponseModel<DemandModel>> {
@@ -71,7 +71,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
     public GetByRequesterDepartment(requesterDeptId: number, incidentId: number): Observable<ResponseModel<DemandModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq  ${incidentId} and RequesterDepartmentId eq ${requesterDeptId} and ActiveFlag eq 'Active'`)
-            .Expand('TargetDepartment($select=DepartmentName) , DemandType($select=DemandTypeName) ,RequesterDepartment($select=DepartmentName), FileStores($select=UploadedFileName,FilePath)')
+            .Expand('TargetDepartment($select=DepartmentName) , DemandType($select=DemandTypeName) ,RequesterDepartment($select=DepartmentName),AffectedPerson($select=TicketNumber;$expand=Passenger($select = PassengerName),Crew($select=CrewName)),AffectedObject($select=AWB,TicketNumber), FileStores($select=UploadedFileName,FilePath)')
             .Execute();
     };
 
@@ -79,14 +79,14 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
         return this._dataService.Query()
             .Filter(`ApproverDepartmentId eq ${approverDeptId} and IncidentId eq ${incidentId} and
              IsClosed eq false and IsApproved eq false and IsRejected eq false and IsCompleted eq false and ActiveFlag eq 'Active'`)
-            .Expand('TargetDepartment($select=DepartmentName), RequesterDepartment($select=DepartmentName) , DemandType($select=DemandTypeName), RequesterParentDepartment($select=DepartmentName), FileStores($select=UploadedFileName,FilePath)')
+            .Expand('TargetDepartment($select=DepartmentName), RequesterDepartment($select=DepartmentName) , DemandType($select=DemandTypeName), RequesterParentDepartment($select=DepartmentName),AffectedPerson($select=TicketNumber;$expand=Passenger($select = PassengerName),Crew($select=CrewName)),AffectedObject($select=AWB,TicketNumber), FileStores($select=UploadedFileName,FilePath)')
             .Execute();
     };
 
     public GetCompletedDemands(deptId: number, incidentId: number): Observable<ResponseModel<DemandModel>> {
         return this._dataService.Query()
             .Filter(`RequesterDepartmentId eq ${deptId} and IncidentId eq ${incidentId} and IsClosed eq false and IsCompleted eq true and IsApproved eq true and ActiveFlag eq 'Active'`)
-            .Expand('TargetDepartment($select=DepartmentName), RequesterDepartment($select=DepartmentName) ,RequesterParentDepartment($select=DepartmentName), DemandType($select=DemandTypeName), FileStores($select=UploadedFileName,FilePath)')
+            .Expand('TargetDepartment($select=DepartmentName), RequesterDepartment($select=DepartmentName) ,RequesterParentDepartment($select=DepartmentName), DemandType($select=DemandTypeName),AffectedPerson($select=TicketNumber;$expand=Passenger($select = PassengerName),Crew($select=CrewName)),AffectedObject($select=AWB,TicketNumber), FileStores($select=UploadedFileName,FilePath)')
             .Execute();
     };
 
@@ -116,7 +116,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
             item.RagStatus = 'statusGreen';
             item.IsRejected = demand.IsRejected;
             item.Remarks = demand.Remarks;
-            item.DemandCode=demand.DemandCode;
+            item.DemandCode = demand.DemandCode;
             item.RequesterDepartmentId = demand.RequesterDepartmentId;
             item.IsCompleted = demand.IsCompleted;
             item.CreatedOn = demand.CreatedOn;
@@ -132,6 +132,23 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
             item.CreatedBy = demand.CreatedBy;
             item.CreatedOn = demand.CreatedOn;
             item.FileStores = demand.FileStores;
+            item.RequesterType = demand.RequesterType;
+            if (demand.AffectedPersonId != null) {
+                item.AffectedPersonName = demand.AffectedPerson.Passenger != null ?
+                    demand.AffectedPerson.Passenger.PassengerName : (demand.AffectedPerson.Crew != null ? demand.AffectedPerson.Crew.CrewName : "");
+                item.ReferenceNumber = demand.AffectedPerson.TicketNumber;
+            }
+            else {
+                item.AffectedPersonName = "";
+            }
+            if (demand.AffectedObjectId != null) {
+                item.AWB = demand.AffectedObject.AWB;
+                item.ReferenceNumber = demand.AffectedObject.TicketNumber;
+
+            } else {
+                item.AWB = "";
+            }
+
             return item;
 
         });
