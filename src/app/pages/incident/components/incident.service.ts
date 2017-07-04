@@ -97,6 +97,14 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
             .Execute();
     }
 
+    GetIncidentByIncidentId(incidentId: number): Observable<IncidentModel> {
+        return this._dataService.Query()
+            .Filter(`IncidentId eq ${incidentId}`)
+            .Expand('InvolvedParties($expand=Flights)')
+            .Execute()
+            .map(x => x.Records[0]);
+    }
+
     CreateInvolveParty(entity: InvolvePartyModel): Observable<InvolvePartyModel> {
         let involvedParty: InvolvePartyModel;
         return this._involvePartyDataService.Post(entity)
