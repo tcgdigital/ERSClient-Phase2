@@ -27,8 +27,11 @@ import { ModalDirective } from 'ng2-bootstrap/modal';
 })
 export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDestroy {
     @ViewChild('childModalRemarks') public childModalRemarks: ModalDirective;
+    @ViewChild('childModal') public childModal: ModalDirective;
+
 
     demands: DemandModelToView[] = [];
+    demand: DemandModelToView = new DemandModelToView();
     currentDepartmentId: number;
     currentDepartmentName: string;
     currentIncidentId: number;
@@ -58,13 +61,19 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         private departmentService: DepartmentService,
         private demandRemarkLogsService: DemandRemarkLogService,
         private globalState: GlobalStateService,
+        private dataExchange: DataExchangeService<number>,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig, private _router: Router) {
-      //  this.createdByName = "Anwesha Ray";
+        //  this.createdByName = "Anwesha Ray";
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
         this.demandFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Demand/';
         this.globalStateProxyOpen = injector.get(GlobalStateService);
+    }
+
+    openDemandDetails(demandId: number): void {
+        this.demand = this.demands.find(x=>x.DemandId==demandId);
+        this.childModal.show();
     }
 
     getAssignedDemands(deptId, incidentId): void {
@@ -75,6 +84,11 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
                 console.log(`Error: ${error}`);
             });
     };
+
+     cancelModal() : any {
+        this.demand= new DemandModelToView();
+        this.childModal.hide();
+    }
 
     setRagStatus(): void {
         Observable.interval(1000).subscribe(_ => {

@@ -29,6 +29,8 @@ import { ModalDirective } from 'ng2-bootstrap/modal';
 })
 export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentInit {
     @ViewChild('childModalRemarks') public childModalRemarks: ModalDirective;
+    @ViewChild('childModal') public childModal: ModalDirective;
+
 
     demandsForApproval: DemandModelToView[] = [];
     currentDepartmentId: number;
@@ -49,6 +51,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     isArchive: boolean = false;
     demandFilePath: string;
     public globalStateProxyOpen: GlobalStateService;
+    demand : DemandModelToView = new DemandModelToView();
 
     /**
      * Creates an instance of ApprovedDemandComponent.
@@ -59,18 +62,19 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
      * 
      * @memberOf ApprovedDemandComponent
      */
-    constructor(private demandService: DemandService,private injector: Injector,
+    constructor(private demandService: DemandService, private injector: Injector,
         private demandRemarkLogsService: DemandRemarkLogService,
         private globalState: GlobalStateService,
         private departmentService: DepartmentService,
         private toastrService: ToastrService,
+        private dataExchange: DataExchangeService<number>,
         private toastrConfig: ToastrConfig, private _router: Router) {
-     //   this.createdByName = "Anwesha ray";
+        //   this.createdByName = "Anwesha ray";
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
         this.demandFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Demand/';
         this.globalStateProxyOpen = injector.get(GlobalStateService);
-        
+
     };
 
     getDemandsForApproval(deptId, incidentId): void {
@@ -81,6 +85,11 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
                 console.log(`Error: ${error}`);
             });
     };
+
+     cancelModal() : any {
+        this.demand= new DemandModelToView();
+        this.childModal.hide();
+    }
 
     setRagStatus(): void {
         Observable.interval(1000).subscribe(_ => {
@@ -333,5 +342,10 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.globalState.Unsubscribe('incidentChangefromDashboard');
         this.globalState.Unsubscribe('departmentChangeFromDashboard');
 
+    }
+
+    openDemandDetails(demandId: number): void {
+        this.demand = this.demandsForApproval.find(x=>x.DemandId==demandId);
+        this.childModal.show();
     }
 }
