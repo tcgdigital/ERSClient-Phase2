@@ -356,6 +356,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         // this.copassengerlistPassenger.forEach(x => x.IsSelected = false);
         this.consolidatedCopassengers = [];
         this.selectedCoPassangers = [];
+         this.demands=[];
         this.selectedcountpnr = 0;
         this.selectedcountpassenger = 0;
         this.totalcount = 0;

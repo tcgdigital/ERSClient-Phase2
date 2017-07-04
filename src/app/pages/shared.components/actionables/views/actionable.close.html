@@ -1,3 +1,5 @@
+<button class="btn btn-primary" type="submit" (click)="closedActionableClick(closeActionables)" *ngIf="!isArchive">Submit</button><br/><br/>
+
 <responsive-table>
     <table responsive-table-body>
         <thead>
@@ -57,7 +59,7 @@
                                 <tbody>
                                     <tr *ngFor="let actionableChild of actionable.actionableChilds; let i = index;">
                                         <td data-title="Description">{{actionableChild.Description}}</td>
-                                        <td data-title="Scheduled End Time">{{actionableChild.ScheduleClose  | date: 'dd-MMM-yyyy hh:mm a'}}</td>
+                                        <td data-title="Scheduled End Time">{{actionableChild.ScheduleClose | date: 'dd-MMM-yyyy hh:mm a'}}</td>
                                         <td data-title="Completion Status">
                                             {{actionableChild.CompletionStatus}}
                                         </td>
@@ -72,7 +74,6 @@
         </tbody>
     </table>
 </responsive-table>
-<button class="btn btn-primary" type="submit" (click)="closedActionableClick(closeActionables)" *ngIf="!isArchive">Submit</button>
 
 
 

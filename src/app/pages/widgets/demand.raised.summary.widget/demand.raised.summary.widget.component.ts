@@ -304,7 +304,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         }
         this.incidentService.GetIncidentById(this.incidentId)
             .subscribe((incidentModel: IncidentModel) => {
-                WidgetUtilityService.GetGraphDemand(requesterDepartmentId, Highcharts, this.arrGraphData, 'demand-raised-graph-container', 'Raised', incidentModel.EmergencyDate);
+                WidgetUtilityService.GetGraphDemand(requesterDepartmentId, Highcharts, this.arrGraphData, 'demand-raised-graph-container', 'Raised', incidentModel.CreatedOn);
                 this.showDemandRaisedGraph = true;
             });
 

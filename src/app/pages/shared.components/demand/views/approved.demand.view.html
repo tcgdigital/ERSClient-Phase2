@@ -28,7 +28,7 @@
             </tr>
             <tr *ngFor="let demand of demandsForApproval">
                 <td data-title="Demand Type">{{demand.DemandTypeName}}&nbsp;</td>
-                <td data-title="Demand Description">{{demand.DemandDesc}}&nbsp;</td>
+                <td data-title="Demand Description"><a href="javascript:void(0);" (click)="openDemandDetails(demand.DemandId)">{{demand.DemandDesc}}</a>&nbsp;</td>
                 <td data-title="Requester Department">{{demand.RequesterDepartmentName}}&nbsp;</td>
                 <td data-title="Requested By">{{demand.RequestedBy}}&nbsp;</td>
                 <td data-title="Target Department">{{demand.TargetDepartmentName}}&nbsp;</td>
@@ -107,3 +107,92 @@
     </div>
 </div>
 </div>
+
+
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title pull-left">Demand Details</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="cancelModal()">
+                  <span aria-hidden="true">&times;</span>
+                   </button>
+                </div>
+                <div class="modal-body">
+                    <div class="holderStyle">
+                        <div class="formStyle">
+                            <div class="row">
+                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                    <label for="DemandTypeId">Demand Type</label>
+                                    <label class="form-control" for="DemandTypeId">{{demand.DemandTypeName}}</label>
+                                </div>
+                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                    <label for="Priority">Priority</label>
+                                    <label class="form-control" for="DemandTypeId">{{demand.Priority}}</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                    <label for="DemandDesc">Demand Description:</label>
+                                    <label class="form-control" for="DemandTypeId">{{demand.DemandDesc}}</label>
+                                </div>
+                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                    <div class="row">
+                                        <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                            <label for="RequestedBy">Requested By:</label>
+                                            <label class="form-control" for="DemandTypeId">{{demand.RequestedBy}}</label>
+                                        </div>
+                                        <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                            <label for="RequesterType">Requester Type:</label>
+                                            <label class="form-control" for="DemandTypeId">{{demand.RequesterType}}</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                            <label for="DepartmentId">Target Department:</label>
+                                            <label class="form-control" for="DemandTypeId">{{demand.TargetDepartmentName}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                    <label for="ReferenceNumber">Reference Number</label>
+                                    <label class="form-control" for="DemandTypeId">{{demand.ReferenceNumber}}</label>
+                                </div>
+                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                    <div class="row">
+                                        <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                            <label for="PDA">PDA Name:</label>
+                                            <label class="form-control" for="DemandTypeId">{{demand.AffectedPersonName}}</label>
+                                        </div>
+                                        <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                            <label for="awb">AWB</label>
+                                            <label class="form-control" for="DemandTypeId">{{demand.AWB}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                    <label for="ContactNumber"> Contact Number:</label>
+                                    <label class="form-control" for="DemandTypeId">{{demand.ContactNumber}}</label>
+                                </div>
+
+                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                    <label for="ExpectedResolutionTime">Expected Resolution Time:</label>
+                                    <label class="form-control" for="DemandTypeId">{{demand.ScheduleTimeToShow}}</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                                    <label for="RequiredLocation">Required Location:</label>
+                                    <label class="form-control" for="DemandTypeId">{{demand.RequiredLocation}}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
