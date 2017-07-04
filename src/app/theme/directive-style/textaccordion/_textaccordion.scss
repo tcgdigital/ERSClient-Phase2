@@ -111,7 +111,7 @@
         position: absolute;
         top: 50%;
         @include transform(translateY(-50%));
-        width: 22px;
+        width: 21px;
         height: 46px;
         background-color: $text-accordion-nav-bg;
         background-repeat: no-repeat;
@@ -202,8 +202,8 @@
     height: 4.9em;
     overflow: hidden;
     position: absolute;
-    top: -0.29em;
-    left: -0.30em;
+    top: -6px;
+    left: -5px;
 }
 
 .ribbon-green {
@@ -224,7 +224,7 @@
     background: -webkit-gradient(linear, left top, left bottom, from(#BFDC7A), to(#8EBF45));
     -webkit-box-shadow: 2px 3px 6px 0 rgba(0, 0, 0, 0.55);
     -moz-box-shadow: 2px 3px 6px 0 rgba(0, 0, 0, 0.55);
-    box-shadow: 2px 3px 6px 0 rgba(0, 0, 0, 0.55);
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.55);
     &:before,
     &:after {
         content: "";

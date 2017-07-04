@@ -59,7 +59,7 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.initiatedDepartmentId;
         this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
-        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/Media' + this.currentIncidentId + '/';
+        this.downloadPath =  GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/Media/' + this.currentIncidentId + '/';
         this.dataExchange.Subscribe("MediaModelSaved", model => this.onMediaSuccess(model));
         this.dataExchange.Subscribe("MediaModelUpdated", model => this.onMediaSuccess(model));
         this.dataExchange.Subscribe("MediaModelApprovalUpdated", model => this.onMediaSuccess(model));

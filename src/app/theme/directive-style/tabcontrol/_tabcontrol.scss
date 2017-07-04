@@ -1,4 +1,12 @@
 @import '../../config/config';
+.tab-containet {
+    .row-fix {
+        padding: 5px 15px 15px;
+    }
+}
+.tab-root-width-fix{
+    width: 100%;
+}
 .tab-control {
     .tab-nav a {
         top: 0;
@@ -47,10 +55,10 @@
                 &.selected {
                     background: $tab-item-selected-bg;
                     border-top: 2px solid $tab-item-selected-border;
-                    i{
+                    i {
                         color: $tab-item-selected-border;
                     }
-                    span{
+                    span {
                         color: $tab-item-selected-border;
                     }
                 }
