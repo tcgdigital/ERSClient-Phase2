@@ -1,10 +1,62 @@
 <div class="row">
-    <div class="addbuttonHolder">
-        <button class="btn btn-primary" type="button" (click)="submit()" *ngIf="!isArchive">Submit</button>
+    <div class="col-12">
+        <div class="addbuttonHolder">
+            <button class="btn btn-primary" type="button" (click)="submit()" *ngIf="!isArchive">Submit</button>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <responsive-table>
+            <table responsive-table-body>
+                <thead>
+                    <tr>
+                        <th>Demand Type</th>
+                        <th>Demand Description</th>
+                        <th>Requester Department</th>
+                        <th>Priority</th>
+                        <th>Schedule Time Close</th>
+                        <th>Requester Contact Number</th>
+                        <th>Required Location</th>
+                        <th>Remarks</th>
+                        <th>RAG</th>
+                        <th>Download File</th>
+                        <th>Done</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr [hidden]="demands.length != 0">
+                        <td colspan="11">No Demand is Assigned.</td>
+                    </tr>
+                    <tr *ngFor="let demand of demands">
+                        <td data-title="Reference Number">{{demand.DemandTypeName}} </td>
+                        <td data-title="PDA Name"><a href="javascript:void(0);" (click)="openDemandDetails(demand.DemandId)">{{demand.DemandDesc}} </a></td>
+                        <td data-title="PDA Contact">{{demand.RequesterDepartmentName}} </td>
+                        <td data-title="PNR">{{demand.Priority}} </td>
+                        <td data-title="Passenger Type">{{demand.ScheduleTimeToShow}} </td>
+                        <td data-title="Medical Status">{{demand.ContactNumber}} </td>
+                        <td data-title="Medical Status">{{demand.RequiredLocation}} </td>
+                        <td><i class="fa fa-list-alt fa-2x" (click)="openDemandRemarks(demand)"></i></td>
+                        <td><span [ngClass]="demand.RagStatus"></span></td>
+                        <td data-title="Download File">
+                            <ul>
+                                <li *ngFor="let file of demand.FileStores">
+                                    <a target="_self" href="{{demandFilePath + file.FileStoreID}}" download="file.UploadedFileName">{{file.UploadedFileName}}</a>
+                                </li>
+                            </ul>
+                        </td>
+                        <td>
+                            <md-checkbox class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsCompleted" aria-label="Done">
+                            </md-checkbox>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </responsive-table>
     </div>
 </div>
 
-<responsive-table>
+<!--<responsive-table>
     <table responsive-table-body>
         <thead>
             <tr>
@@ -49,7 +101,7 @@
             </tr>
         </tbody>
     </table>
-</responsive-table>
+</responsive-table>-->
 
 
 <div bsModal #childModalRemarks="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
@@ -63,7 +115,7 @@
                    </button>
             </div>
             <div class="modal-body">
-                <div class="row holderRemark" *ngIf="!isArchive">
+                <div class="row" *ngIf="!isArchive">
                     <div class="col-lg-8 col-sm-12 col-md-6 form-group">
                         <label>Remarks</label>
                         <input [(ngModel)]="Remarks" class="form-control" type="text" />
@@ -73,7 +125,9 @@
                             <button class="btn btn-primary" type="button" (click)="saveRemark(Remarks)" *ngIf="!isArchive">Submit</button>
                         </div>
                     </div>
-                    <div class="card-block">
+                </div>
+                <div class="row">
+                    <div class="col-12">
                         <responsive-table>
                             <table responsive-table-body>
                                 <thead>
@@ -84,7 +138,7 @@
                                 </thead>
                                 <tbody>
                                     <tr [hidden]="demandRemarks.length != 0">
-                                        <td colspan="9">No Remark is added yet.</td>
+                                        <td colspan="4">No Remark is added yet.</td>
                                     </tr>
                                     <tr *ngFor="let remark of demandRemarks">
                                         <td data-title="Requester Department">{{remark.RequesterDepartmentName}}</td>

@@ -14,7 +14,7 @@
         </thead>
         <tbody>
             <tr *ngIf="!mediaReleases.length">
-                <td colspan="10">No Releases to show.</td>
+                <td colspan="8">No Releases to show.</td>
             </tr>
             <tr *ngFor="let query of mediaReleases">
                 <td data-title="Releases" width="30%">{{query.MediaReleaseType}}</td>
@@ -26,10 +26,10 @@
                 <td data-title="Edit">
                     <i class="fa fa-edit fa-2x" (click)="UpdateMediaRelease(query)"></i>
                 </td>
-                <td data-title= "Download Report">
+                <td data-title="Download Report">
                     <a *ngIf="query.MediaReleaseStatus === 'Published'" target="_blank" href="{{downloadPath + query.MediaqueryId}}">
                         <i class="fa fa-download fa-2x" aria-hidden="true"></i>
-                    </a> 
+                    </a>
                 </td>
             </tr>
         </tbody>

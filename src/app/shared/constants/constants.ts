@@ -47,8 +47,10 @@ export interface IActionableStatus {
 }
 
 export class GlobalConstants {
-   // public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
-     public static EXTERNAL_URL: string = 'http://localhost:5001/';
+    public static EXTERNAL_URL: string = 'http://202.54.73.219/';
+    //public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
+    // public static EXTERNAL_URL: string = 'http://localhost:5001/';
+
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
     public static GRANT_TYPE: string = 'password';
     public static ODATA: string = 'odata';
@@ -306,9 +308,9 @@ export class GlobalConstants {
         { value: 'NonFlight', key: 2 }
     ];
 
-    public static TargetDepartmentTravel: number = 3;
-    public static TargetDepartmentAdmin: number = 4;
-    public static TargetDepartmentCrew: number = 6;
+    public static TargetDepartmentTravel: number = 10;
+    public static TargetDepartmentAdmin: number = 13;
+    public static TargetDepartmentCrew: number = 9;
     public static DemandTypeId: number = 1;
     public static RequiredLocation: string = 'Office';
     public static ScheduleTimeForCallback: number = 75;

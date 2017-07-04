@@ -1,5 +1,5 @@
 <div class="wrapper-dropdown" [ngClass]="customCss" (click)="onDropdownClick($event)" [hidden]="showdropdown">
-    <span>{{placeholder}}</span>
+    <div class="text-display">{{placeholder}}</div>
     <!--<i class="fa fa-caret-right" aria-hidden="true"></i>-->
     <ul class="dropdown">
         <li *ngFor="let dataItem of dataItems" (click)="onItemClick($event, dataItem)">
