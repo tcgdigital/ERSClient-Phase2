@@ -49,6 +49,7 @@ export interface IActionableStatus {
 export class GlobalConstants {
     public static EXTERNAL_URL: string = 'http://202.54.73.219/';
     //public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
+    //public static EXTERNAL_URL: string = 'http://localhost:5001/';
     // public static EXTERNAL_URL: string = 'http://localhost:5001/';
 
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';

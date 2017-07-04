@@ -49,6 +49,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
     public hasDemandReceivedList: boolean = false;
     public arrGraphData: GraphObject[];
     public showDemandReceivedGraph: boolean = false;
+    public showGraph: boolean = false;
     private $selfElement: JQuery;
     private $placeholder: JQuery;
 
@@ -56,6 +57,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
         private demandReceivedSummaryWidgetService: DemandReceivedSummaryWidgetService, private incidentService: IncidentService) { }
 
     public ngOnInit(): void {
+        this.showGraph = false;
         this.arrGraphData = [];
         this.demandReceivedSummary = new DemandReceivedSummaryModel();
         this.demandReceivedSummary = this.demandReceivedSummaryWidgetService
@@ -73,6 +75,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
     }
 
     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
+        this.showGraph = false;
         if (changes['incidentId'] !== undefined && (changes['incidentId'].currentValue !==
             changes['incidentId'].previousValue) &&
             changes['incidentId'].previousValue !== undefined) {
@@ -247,24 +250,28 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
 
     public graphDataFormationForDemandReceivedSummeryWidget(entity: DemandReceivedModel[]): void {
         this.arrGraphData = [];
-        entity.map((item: DemandReceivedModel) => {
-            item.demandModelList.map((itemDemand: DemandModel) => {
-                let graphObject: GraphObject = new GraphObject();
-                graphObject.requesterDepartmentName = item.targetDepartmentName;
-                graphObject.requesterDepartmentId = item.departmentId;
-                graphObject.isAssigned = true;
-                if (itemDemand.ClosedOn != null) {
-                    graphObject.isClosed = true;
-                    graphObject.closedOn = new Date(itemDemand.ClosedOn);
-                }
-                else {
-                    graphObject.isPending = true;
-                }
-                graphObject.CreatedOn = new Date(itemDemand.CreatedOn);
-                this.arrGraphData.push(graphObject);
+         this.showGraph = false;
+        if (entity.length > 0) {
+            entity.map((item: DemandReceivedModel) => {
+                item.demandModelList.map((itemDemand: DemandModel) => {
+                    let graphObject: GraphObject = new GraphObject();
+                    graphObject.requesterDepartmentName = item.targetDepartmentName;
+                    graphObject.requesterDepartmentId = item.departmentId;
+                    graphObject.isAssigned = true;
+                    if (itemDemand.ClosedOn != null) {
+                        graphObject.isClosed = true;
+                        graphObject.closedOn = new Date(itemDemand.ClosedOn);
+                    }
+                    else {
+                        graphObject.isPending = true;
+                    }
+                    graphObject.CreatedOn = new Date(itemDemand.CreatedOn);
+                    this.arrGraphData.push(graphObject);
+                });
             });
-        });
-        this.GetDemandReceivedGraph(entity[0].departmentId, null);
+            this.showGraph = true;
+            this.GetDemandReceivedGraph(entity[0].departmentId, null);
+        }
     }
 
     public GetDemandReceivedGraph(targetDepartmentId: number, $event: any) {
