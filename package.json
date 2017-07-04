@@ -91,6 +91,7 @@
     "ngx-toastr": "^5.2.0",
     "normalize.css": "^7.0.0",
     "odata-filter-builder": "^0.2.0",
+    "proxy-oo-polyfill": "^1.0.0",
     "reflect-metadata": "^0.1.10",
     "rxjs": "^5.3.1",
     "selectize": "^0.12.4",
