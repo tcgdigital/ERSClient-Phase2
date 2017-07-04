@@ -5,6 +5,8 @@ import { DemandTypeModel } from '../../../masterdata/demandtype';
 import { DepartmentModel } from '../../../masterdata/department';
 import { DemandTrailModel } from './demand.trail.model';
 import { CallerModel } from '../../caller';
+import { AffectedObjectModel } from '../../affected.objects';
+import { AffectedPeopleModel } from '../../affected.people';
 
 export class DemandModel extends BaseModel {
     public DemandId: number;
@@ -54,6 +56,8 @@ export class DemandModel extends BaseModel {
     public ClosedByDepartment: DepartmentModel;
     public ApproverDepartment: DepartmentModel;
     public Caller : CallerModel;
+    public AffectedPerson : AffectedPeopleModel;
+    public AffectedObject : AffectedObjectModel;
 
     public DemandTrails?: DemandTrailModel[];
     public DemandRemarkLogs?: DemandRemarkLogModel[];
@@ -94,10 +98,14 @@ export class DemandModelToView extends BaseModel {
     public IsApproved: boolean;
     public AffectedPersonId: number;
     public AffectedObjectId: number;
+    public AffectedPersonName: string;
+    public AWB: string;
+    public ReferenceNumber : string;
     public IsClosed: boolean;
     public ApproverDeptId : number;
     public ApproverDepartmentName : string;
     public RequesterParentDepartmentName : string;
+    public RequesterType : string;
 
     public FileStores?: FileStoreModel[] = [];
 }

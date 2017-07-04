@@ -413,7 +413,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.showAdd = true;
                 this.isReadonly = true;
                 this.childModal.show();
-
+                this.submitted=false;
                 this.form.controls["PDATicketNumber"].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
                 this.form.controls["AffectedPersonId"].reset({ value: this.demandModel.AffectedPersonId, disabled: true });
                 this.form.controls["AffectedObjectId"].reset({ value: this.demandModel.AffectedObjectId, disabled: true });

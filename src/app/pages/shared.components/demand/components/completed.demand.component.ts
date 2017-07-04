@@ -31,6 +31,8 @@ import { ModalDirective } from 'ng2-bootstrap/modal';
 })
 export class CompletedDemandComponent implements OnInit, OnDestroy {
     @ViewChild('childModalRemarks') public childModalRemarks: ModalDirective;
+    @ViewChild('childModal') public childModal: ModalDirective;
+
 
     completedDemands: DemandModelToView[] = [];
     currentDepartmentId: number;
@@ -51,6 +53,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
     isArchive: boolean = false;
     demandFilePath: string;
     public globalStateProxyOpen: GlobalStateService;
+    demand : DemandModelToView = new DemandModelToView();
     /**
      * Creates an instance of CompletedDemandComponent.
      * @param {DemandService} demandService 
@@ -65,12 +68,18 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         private globalState: GlobalStateService,
         private departmentService: DepartmentService,
         private toastrService: ToastrService,
+        private dataExchange: DataExchangeService<number>,
         private toastrConfig: ToastrConfig, private _router: Router) {
         //    this.createdByName = "Anwesha Ray";
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
         this.demandFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Demand/';
         this.globalStateProxyOpen = injector.get(GlobalStateService);
+    }
+
+     openDemandDetails(demandId: number): void {
+        this.demand = this.completedDemands.find(x=>x.DemandId==demandId);
+        this.childModal.show();
     }
 
     getCompletedDemands(deptId, incidentId): void {
@@ -81,6 +90,11 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
                 console.log(`Error: ${error}`);
             });
     };
+
+    cancelModal() : any {
+        this.demand= new DemandModelToView();
+        this.childModal.hide();
+    }
 
     getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
