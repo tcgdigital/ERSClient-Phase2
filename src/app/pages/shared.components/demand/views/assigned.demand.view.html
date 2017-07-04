@@ -29,7 +29,6 @@
                         <td colspan="11">No Demand is Assigned.</td>
                     </tr>
                     <tr *ngFor="let demand of demands">
-
                         <td data-title="Reference Number">{{demand.DemandTypeName}} </td>
                         <td data-title="PDA Name"><a href="javascript:void(0);" (click)="openDemandDetails(demand.DemandId)">{{demand.DemandDesc}} </a></td>
                         <td data-title="PDA Contact">{{demand.RequesterDepartmentName}} </td>
@@ -56,6 +55,7 @@
         </responsive-table>
     </div>
 </div>
+
 
 <!--<responsive-table>
     <table responsive-table-body>
