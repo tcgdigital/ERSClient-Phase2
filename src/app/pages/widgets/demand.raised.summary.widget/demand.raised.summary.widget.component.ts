@@ -11,12 +11,15 @@ import {
     SubDeptDemandRaisedSummary,
     GraphObject
 } from './demand.raised.summary.widget.model';
-import { WidgetUtilityService } from "../widget.utility";
-import { UtilityService, GlobalConstants, DataExchangeService, GlobalStateService } from '../../../shared';
+import { WidgetUtilityService } from '../widget.utility';
+import {
+    UtilityService, GlobalConstants,
+    DataExchangeService, GlobalStateService
+} from '../../../shared';
 import { DemandRaisedSummaryWidgetService } from './demand.raised.summary.widget.service';
 import { DemandModel } from '../../shared.components/demand/components/demand.model';
-import { IncidentModel, IncidentService } from "../../incident";
-import { ModalDirective } from 'ng2-bootstrap/modal';
+import { IncidentModel, IncidentService } from '../../incident';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Observable } from 'rxjs/Rx';
 import * as Highcharts from 'highcharts';
 
@@ -217,7 +220,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
 
 
     public onViewAllDemandRaisedShown($event: ModalDirective): void {
-        jQuery("#demand-table tbody tr:nth-child(1)").addClass("bg-blue-color");
+        jQuery('#demand-table tbody tr:nth-child(1)').addClass('bg-blue-color');
     }
 
     // TODO: Need to refactor

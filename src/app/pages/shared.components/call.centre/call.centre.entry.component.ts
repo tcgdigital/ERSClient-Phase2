@@ -24,14 +24,13 @@ import { CommunicationLogService } from '../communicationlogs';
 import { CallerModel } from '../caller';
 import { DepartmentService, DepartmentModel } from '../../masterdata/department';
 import { InvolvePartyService } from '../involveparties';
-//import { PassengerService } from '../passenger';
 import {
     CallCenterOnlyPageService, ExternalInputModel,
     PDAEnquiryModel, CargoEnquiryModel, MediaAndOtherQueryModel
 } from '../../callcenteronlypage/component';
 
 import { IAutocompleteActions } from '../../../shared/components/autocomplete/IAutocompleteActions';
-import { ModalDirective } from 'ng2-bootstrap/modal';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 import * as _ from 'underscore';
 
 @Component({
