@@ -1,12 +1,12 @@
 import { ITabLinkInterface } from '../../shared';
 
-export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
+export const TAB_LINKS: ITabLinkInterface[] = [
     {
-        id: 'department',
-        title: 'Department',
-        // icon: 'fa fa-apple fa-2x',
-        url: '/pages/masterdata/department',
-        selected: true,
+        id: 'userprofile',
+        title: 'Userprofile',
+        // icon: 'fa fa-twitter fa-2x',
+        url: '/pages/masterdata/userprofile',
+        selected: false,
         hidden: false,
         order: 1
     }, {
@@ -18,13 +18,29 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         hidden: false,
         order: 2
     }, {
-        id: 'demandtype',
-        title: 'Demand Type',
-        // icon: 'fa fa-edge fa-2x',
-        url: '/pages/masterdata/demandtype',
+        id: 'departmentfunctionality',
+        title: 'Department Functionality Mapping',
+        // icon: 'fa fa-windows fa-2x',
+        url: '/pages/masterdata/departmentfunctionality',
         selected: false,
         hidden: false,
         order: 3
+    }, {
+        id: 'userpermission',
+        title: 'User Department Mapping',
+        // icon: 'fa fa-linux fa-2x',
+        url: '/pages/masterdata/userpermission',
+        selected: false,
+        hidden: false,
+        order: 4
+    }, {
+        id: 'department',
+        title: 'Department',
+        // icon: 'fa fa-apple fa-2x',
+        url: '/pages/masterdata/department',
+        selected: true,
+        hidden: false,
+        order: 5
     }, {
         id: 'emergencytype',
         title: 'Crisis Type',
@@ -32,15 +48,7 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         url: '/pages/masterdata/emergencytype',
         selected: false,
         hidden: false,
-        order: 4
-    }, {
-        id: 'quicklink',
-        title: 'Quicklink',
-        // icon: 'fa fa-envira fa-2x',
-        url: '/pages/masterdata/quicklink',
-        selected: false,
-        hidden: false,
-        order: 5
+        order: 6
     }, {
         id: 'emergencydepartment',
         title: 'Crisis Department Mapping',
@@ -48,22 +56,21 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         url: '/pages/masterdata/emergencydepartment',
         selected: false,
         hidden: false,
-        order: 6
-    }, {
-        id: 'template',
-        title: 'Template',
-        // icon: 'fa fa-medium fa-2x',
-        url: '/pages/masterdata/template',
-        selected: false,
-        hidden: false,
         order: 7
     }, {
-        id: 'userpermission',
-        title: 'Userpermission',
-        // icon: 'fa fa-linux fa-2x',
-        url: '/pages/masterdata/userpermission',
+
+        id: 'emergencylocation',
+        title: 'Responsible Station',
+        // icon: 'fa fa-twitter fa-2x',
+        url: '/pages/masterdata/affectedstation',
         selected: false,
         hidden: false,
+        order: 8
+    }, {
+        id: 'demandtype',
+        title: 'Demand Type',
+        // icon: 'fa fa-edge fa-2x',
+        url: '/pages/masterdata/demandtype',
         order: 8
     }, {
         id: 'pagefunctionality',
@@ -74,21 +81,20 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         hidden: false,
         order: 9
     }, {
-        id: 'userprofile',
-        title: 'Userprofile',
-        // icon: 'fa fa-twitter fa-2x',
-        url: '/pages/masterdata/userprofile',
+        id: 'quicklink',
+        title: 'Quicklinks',
+        // icon: 'fa fa-envira fa-2x',
+        url: '/pages/masterdata/quicklink',
         selected: false,
         hidden: false,
         order: 10
     }, {
-        
-        id: 'emergencylocation',
-        title: 'Affected Station',
-        // icon: 'fa fa-twitter fa-2x',
-        url: '/pages/masterdata/affectedstation',
+        id: 'template',
+        title: 'Notification Template',
+        // icon: 'fa fa-medium fa-2x',
+        url: '/pages/masterdata/template',
         selected: false,
         hidden: false,
-        order: 11   
+        order: 11
     }
-];
+] as ITabLinkInterface[];

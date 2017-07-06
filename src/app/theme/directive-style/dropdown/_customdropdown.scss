@@ -8,14 +8,20 @@
     color: $dropdown-text;
     outline: none;
     cursor: pointer;
-    font-family: arial;
+    font-family: $font-family-body;
     font-size: $font-size-below-normal;
+    .text-display{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 160px;
+    }
     &:after {
         content: "";
         width: 0;
         height: 0;
         position: absolute;
-        right: 16px;
+        right: 8px;
         top: 50%;
         margin-top: -6px;
         border-width: 6px 0 6px 6px;
@@ -89,7 +95,7 @@
         margin: 10px 0;
         span {
             overflow: hidden;
-            white-space: nowrap;
+           // white-space: nowrap;
         }
         &:after {
             right: 9px;
@@ -99,11 +105,11 @@
 
 @media screen and (min-width: $resXS-S) and (max-width: $resXS-E) {
     .wrapper-dropdown {
-        width: 164px;
+        width: 180px;
         text-align: left;
         margin: 10px 0;
         &:after {
-            right: 16px;
+            right: 8px;
         }
     }
 }
@@ -113,6 +119,13 @@
 @media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
     .wrapper-dropdown {
         width: 138px;
+    }
+
+    .wrapper-dropdown-incident {
+        width: 180px !important;
+    }
+    .wrapper-dropdown-department {
+        margin-left: 46px !important;
     }
 }
 

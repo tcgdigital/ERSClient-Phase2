@@ -21,8 +21,10 @@
 @media screen and (max-width: $resXXS-S) {
     .branding {
         img {
-            width: 54%;
+                width: 32%;
+                float: left;
             text-align: center;
+            height: 44px;
         }
         .logo-align {
             text-align: center;
@@ -79,7 +81,7 @@
         img {
             width: 78%;
             text-align: center;
-            margin-top: 5px;
+            margin-top: 0px;
         }
         .prod-align {
             padding-left: 5px !important;
@@ -103,7 +105,8 @@
     .branding img {
         width: 114%;
         text-align: center;
-        margin-top: 3px;
+        height: 45px;
+        margin-top: 0px;
     }
     .hambarger-menu {
         position: absolute;

@@ -79,7 +79,7 @@ export class MasterDataUploadForValidService {
         let involvePartyProjection = 'InvolvedPartyType,InvolvedPartyDesc';
         let affectedProjection = 'Severity';
         let affectedPeopleProjection = 'AffectedPersonId,TicketNumber,IsStaff,IsCrew,IsVerified,Identification';
-        let crewPrjection = 'CrewId,EmployeeNumber,CrewName,AsgCat,DeadheadCrew,BaseLocation,Email,DepartureStationCode,ArrivalStationCode,FlightNo,WorkPosition,ContactNumber';
+        let crewPrjection = 'CrewId,EmployeeNumber,CrewName,CrewDob,AsgCat,DeadheadCrew,BaseLocation,Email,DepartureStationCode,ArrivalStationCode,FlightNo,WorkPosition,ContactNumber';
 
         return this._dataServiceAffectedPeople.Query()
         .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=CrewId ne null;$select=${affectedPeopleProjection};$expand=Crew))`)

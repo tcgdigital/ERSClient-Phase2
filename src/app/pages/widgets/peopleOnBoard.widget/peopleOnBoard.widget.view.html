@@ -3,9 +3,6 @@
         <div class="row no-gutters">
             <div class="col-12 widget-title">
                 <span>affected on board</span>
-                <!--<span class="marker">                    
-                    <a class = "markar" (click)="OpenPassengerDetailsKPI()" href="javascript:void(0)">Details</a>
-                </span>-->
             </div>
         </div>
         <div class="row no-gutters">
@@ -16,13 +13,6 @@
                 </span>
                 <span class="widget-text">passengers</span>
             </div>
-            <!--<div class="col widget-block">
-                <span class="widget-number">
-                    <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
-                    <span class="marker" (click)="openEnquiredPassengersDetails()">{{peopleOnBoard.enquiredAffectedPassengerCount | padding: '0': 2}}</span>
-                </span>
-                <span class="widget-text">enquired passengers</span>
-            </div>-->
             <div class="col widget-block">
                 <span class="widget-number">
                     <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
@@ -30,13 +20,6 @@
                 </span>
                 <span class="widget-text">crew members</span>
             </div>
-            <!--<div class="col widget-block">
-                <span class="widget-number">
-                    <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
-                    <span class="marker" (click)="openEnquiredCrewsDetails()">{{peopleOnBoard.enquiredAffectedCrewCount | padding: '0': 2}}</span>
-                </span>
-                <span class="widget-text">Enquired crew</span>
-            </div>-->
             <div class="col widget-block">
                 <span class="widget-number">
                     <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
@@ -44,13 +27,6 @@
                 </span>
                 <span class="widget-text">Cargos</span>
             </div>
-            <!--<div class="col widget-block">
-                <span class="widget-number">
-                    <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
-                    <span class="marker" (click)="openEnquiredCrewsDetails()">{{peopleOnBoard.enquiredAffectedCrewCount | padding: '0': 2}}</span>
-                </span>
-                <span class="widget-text">Enquired Cargo</span>
-            </div>-->
             <div class="col widget-block">
                 <span class="widget-number">
                     <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
@@ -72,129 +48,122 @@
                 <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideAllPassengers()"></i>
             </div>
             <div class="modal-body">
-                <responsive-table>
-                    <table responsive-table-body>
-                    <tbody>
-                        <tr>
-                            <td><strong>Total Passengers:  </strong>    </td>
-                              <td class="marker">{{peopleOnBoard.totalAffectedPassengerCount | padding: '0': 2}}     </td>
-                               <td><strong>Enquired Passengers:       </strong>    </td>
-                              <td class="marker">{{peopleOnBoard.enquiredAffectedCrewCount | padding: '0': 2}}    </td>
-
-                               <td><strong> Gender Wise Passengers: </strong>    </td>
-                              <td class="marker"><span *ngFor="let gender of peopleOnBoard.totalGenderTypeCount">
-                             <strong>{{gender.Key}}</strong>:{{gender.Value}}
-                        </span>    </td>
-                        </tr>
-
-
-                        <tr>
-                            <td><strong> Nationality Wise Passengers:  </strong>    </td>
-                              <td class="marker fixed_td_width"><span *ngFor="let nationality of peopleOnBoard.totalNationalityTypeCount">
-                             <strong>{{nationality.Key}}</strong>:{{nationality.Value}}&nbsp; &nbsp;
-                        </span></td>
-                               <td colspan="2"><strong> Passenger Type Wise Passengers: </strong>    </td>
-                              <td class="marker"> <span *ngFor="let paxType of peopleOnBoard.totalPaxTypeCount">
-                             <strong>{{paxType.Key}}</strong>:{{paxType.Value}}&nbsp; &nbsp;
-                        </span></td>                              
-                        </tr>
-                    </tbody>
-                 </table>
-                </responsive-table>
-                <!--<div class="row">
-                    <div class="col-lg-2">
-                        <strong>
-                            Total Passengers:                             
-                        </strong>
-                        <span class="marker">{{peopleOnBoard.totalAffectedPassengerCount | padding: '0': 2}}</span>
-                    </div>
-                    <div class="col-lg-10">
-                        <strong>
-                            Enquired Passengers:                             
-                        </strong>
-                        <span class="marker">{{peopleOnBoard.enquiredAffectedCrewCount | padding: '0': 2}}</span>
-                    </div>
-                </div>
-                <div class = "row">
-                    <div class="col-lg-2">
-                        <strong>
-                            Gender Wise Passengers:                     
-                        </strong>
-                    </div>
-                    <div class="col-lg-10">
-                        <span *ngFor="let gender of peopleOnBoard.totalGenderTypeCount">
-                             <strong>{{gender.Key}}</strong>:{{gender.Value}}
-                        </span>
-                    </div>
-                </div>
-                <div class = "row">
-                    <div class="col-lg-2">
-                        <strong>
-                            Nationality Wise Passengers:                     
-                        </strong>
-                    </div>
-                    <div class="col-lg-10">
-                        <span *ngFor="let nationality of peopleOnBoard.totalNationalityTypeCount">
-                             <strong>{{nationality.Key}}</strong>:{{nationality.Value}},
-                        </span>
-                    </div>
-                </div>
-                <div class = "row">
-                    <div class="col-lg-2">
-                        <strong>
-                            Passenger Type Wise Passengers:                     
-                        </strong>
-                    </div>
-                    <div class="col-lg-10">
-                        <span *ngFor="let paxType of peopleOnBoard.totalPaxTypeCount">
-                             <strong>{{paxType.Key}}</strong>:{{paxType.Value}},
-                        </span>
-                    </div>
-                </div>-->
-
-                <generic-search [filterConfigs] = "searchConfigsPax" 
-                (InvokeSearch)="invokeSearchPassenger($event);" (InvokeReset)="invokeResetPassenger();"></generic-search>
-
-                <responsive-table>
-                    <table responsive-table-body>
-                        <thead>
+                <div class="row">
+                    <div class="col-12">
+                        <responsive-table>
+                            <table responsive-table-body>
+                                <tbody>
+                                    <tr>
+                                        <td data-title="Total Passengers:" width="25%"><strong>Total Passengers:</strong></td>
+                                        <td data-title="">{{peopleOnBoard.totalAffectedPassengerCount | padding: '0': 2}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-title="Enquired Passengers:"><strong>Enquired Passengers:</strong></td>
+                                        <td data-title="">{{peopleOnBoard.enquiredAffectedCrewCount | padding: '0': 2}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-title="Gender Wise Passengers:"><strong>Gender Wise Passengers:</strong></td>
+                                        <td data-title="">
+                                            <span *ngFor="let gender of peopleOnBoard.totalGenderTypeCount">
+                                        {{gender.Key}}: {{gender.Value}}
+                                    </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td data-title="Nationality Wise Passengers:"><strong>Nationality Wise Passengers:</strong></td>
+                                        <td data-title="">
+                                            <span *ngFor="let nationality of peopleOnBoard.totalNationalityTypeCount">
+                                        {{nationality.Key}}: {{nationality.Value}}
+                                    </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td data-title="Passenger Type:"><strong>Passenger Type:</strong></td>
+                                        <td data-title="">
+                                            <span *ngFor="let paxType of peopleOnBoard.totalPaxTypeCount">
+                                        {{paxType.Key}}: {{paxType.Value}}
+                                    </span>
+                                        </td>
+                                    </tr>
+                                    <!--<tr>
+                                <td><strong>Total Passengers:  </strong> {{peopleOnBoard.totalAffectedPassengerCount | padding:
+                                    '0': 2}}
+                                </td>
+                                <td>
+                                    <strong>Enquired Passengers:</strong> {{peopleOnBoard.enquiredAffectedCrewCount | padding:
+                                    '0': 2}}
+                                </td>
+                                <td>
+                                    <strong> Gender Wise Passengers: </strong>
+                                    <span *ngFor="let gender of peopleOnBoard.totalGenderTypeCount">
+                                        <strong>{{gender.Key}}:</strong>{{gender.Value}}
+                                    </span>
+                                </td>
+                            </tr>
                             <tr>
-                                <th>Passenge Name</th>
-                                <th>PNR</th>
-                                <th>Seat Number</th>
-                                <th>Baggage Count</th>
-                                <th>Destination</th>
-                                <th>Gender</th>
-                                <th>Nationality</th>
-                                <th>Contact Number</th>
-                                <th>PAX Type</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngIf="!(passengerList | async)?.length>0">
-                                <td data-title="Records" colspan="7">No passenger to show.</td>
-                            </tr>
-                            <tr *ngFor="let passenger of passengerList | async">
-                                <td data-title="Passenge Name">{{passenger.PassengerName}}</td>
-                                <td data-title="PNR">{{passenger.Pnr}}</td>
-                                <td data-title="Seat Number">{{passenger.Seatno}}</td>
-                                <td data-title="Baggage Count">{{passenger.BaggageCount}}</td>
-                                <td data-title="Destination">{{passenger.Destination}}</td>
-                                <td data-title="Gender">{{passenger.PassengerGender}}</td>
-                                <td data-title="Nationality">{{passenger.PassengerNationality}}</td>
-                                <td data-title="Contact Number">{{passenger.ContactNumber}}</td>
-                                <td data-title="PAX Type">{{passenger.PassengerType}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </responsive-table>
-                <!--<div class="pull-right">
-                    <button type="submit" class="pull-right btn btn-primary" aria-label="Close" (click)="hideAllPassengers()">Close</button>
-                </div>-->
+                                <td>
+                                    <strong> Nationality Wise Passengers:</strong>
+                                    <span *ngFor="let nationality of peopleOnBoard.totalNationalityTypeCount">
+                                        <strong>{{nationality.Key}}</strong>:
+                                        {{nationality.Value}}&nbsp; &nbsp;
+                                    </span>
+                                </td>
+                                <td colspan="2">
+                                    <strong> Passenger Type: </strong>
+                                    <span *ngFor="let paxType of peopleOnBoard.totalPaxTypeCount">
+                                        <strong>{{paxType.Key}}:</strong>{{paxType.Value}}&nbsp; &nbsp;
+                                    </span>
+                                </td>
+                            </tr>-->
+                                </tbody>
+                            </table>
+                        </responsive-table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <generic-search [filterConfigs]="searchConfigsPax" (InvokeSearch)="invokeSearchPassenger($event);" (InvokeReset)="invokeResetPassenger();"></generic-search>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <responsive-table>
+                            <table responsive-table-body>
+                                <thead>
+                                    <tr>
+                                        <th>Passenge Name</th>
+                                        <th>PNR</th>
+                                        <th>Seat Number</th>
+                                        <th>Baggage Count</th>
+                                        <th>Destination</th>
+                                        <th>Gender</th>
+                                        <th>Nationality</th>
+                                        <th>Contact Number</th>
+                                        <th>PAX Type</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="!(passengerList | async)?.length>0">
+                                        <td data-title="Records" colspan="9">No passenger to show.</td>
+                                    </tr>
+                                    <tr *ngFor="let passenger of passengerList | async">
+                                        <td data-title="Passenge Name">{{passenger.PassengerName}}</td>
+                                        <td data-title="PNR">{{passenger.Pnr}}</td>
+                                        <td data-title="Seat Number">{{passenger.Seatno}}</td>
+                                        <td data-title="Baggage Count">{{passenger.BaggageCount}}</td>
+                                        <td data-title="Destination">{{passenger.Destination}}</td>
+                                        <td data-title="Gender">{{passenger.PassengerGender}}</td>
+                                        <td data-title="Nationality">{{passenger.PassengerNationality}}</td>
+                                        <td data-title="Contact Number">{{passenger.ContactNumber}}</td>
+                                        <td data-title="PAX Type">{{passenger.PassengerType}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </responsive-table>
+                    </div>
+                </div>
             </div>
-
         </div>
-
     </div>
 </div>
 
@@ -210,24 +179,25 @@
             <div class="modal-body">
                 <responsive-table>
                     <table responsive-table-body>
-                    <tbody>
-                        <tr>
-                            <td><strong>Total Cargos: </strong>    </td>
-                              <td class="marker">{{peopleOnBoard.totalAffectedCargoCount | padding: '0': 2}}     </td>
-                               
-                               <td><strong> Type Wise Cargos: </strong> </td>
-                              <td class="marker"><span *ngFor="let Type of peopleOnBoard.cargoOnBoardCountByType">
-                             <strong>{{Type.Key}}</strong>:{{Type.Value}} &nbsp; &nbsp;
-                        </span>    </td>
-                        </tr>                       
-                    </tbody>
-                 </table>
-                </responsive-table>
-                                
-                <div class = "row"> </div>
+                        <tbody>
+                            <tr>
+                                <td><strong>Total Cargos: </strong></td>
+                                <td class="marker">{{peopleOnBoard.totalAffectedCargoCount | padding: '0': 2}} </td>
 
-                <generic-search [filterConfigs] = "searchConfigsCargo" 
-                (InvokeSearch)="invokeSearchCargo($event);" (InvokeReset)="invokeResetCargo();"></generic-search>
+                                <td><strong> Type Wise Cargos: </strong></td>
+                                <td class="marker">
+                                    <span *ngFor="let Type of peopleOnBoard.cargoOnBoardCountByType">
+                                        <strong>{{Type.Key}}</strong>:{{Type.Value}} &nbsp; &nbsp;
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </responsive-table>
+
+                <div class="row"> </div>
+
+                <generic-search [filterConfigs]="searchConfigsCargo" (InvokeSearch)="invokeSearchCargo($event);" (InvokeReset)="invokeResetCargo();"></generic-search>
 
                 <responsive-table>
                     <table responsive-table-body>
@@ -236,11 +206,11 @@
                                 <th>AWB Number</th>
                                 <th>POL</th>
                                 <th>POU</th>
-                                <th>Cargo Pieces</th>                                
+                                <th>Cargo Pieces</th>
                                 <th>Cargo Weight</th>
                                 <th>Cargo Type</th>
                                 <th>Origin</th>
-                                <th>Destination</th>                                
+                                <th>Destination</th>
                                 <th>Shipper name</th>
                                 <th>Shipper Address</th>
                                 <th>Shipper Contact Number</th>
@@ -249,7 +219,7 @@
                         </thead>
                         <tbody>
                             <tr *ngIf="!(cargoList | async)?.length>0">
-                                <td data-title="Records" colspan="7">No cargo to show.</td>
+                                <td data-title="Records" colspan="12">No cargo to show.</td>
                             </tr>
                             <tr *ngFor="let cargo of cargoList | async">
                                 <td data-title="AWB Number">{{cargo.AWB}}</td>
@@ -268,9 +238,6 @@
                         </tbody>
                     </table>
                 </responsive-table>
-                <!--<div class="pull-right">
-                    <button type="submit" class="pull-right btn btn-primary" aria-label="Close" (click)="hideAllPassengers()">Close</button>
-                </div>-->
             </div>
         </div>
     </div>
@@ -289,22 +256,22 @@
                 <strong>All Passenger Details</strong>
                 <div class="row">
                     <div class="col-lg-4">
-                        <strong>Gender Wise Passenger Count</strong>                
+                        <strong>Gender Wise Passenger Count</strong>
                         <responsive-table>
                             <table responsive-table-body>
                                 <thead>
                                     <tr>
                                         <th>Gender</th>
-                                        <th>Count</th>                                    
+                                        <th>Count</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr *ngIf="!peopleOnBoard.totalGenderTypeCount.length > 0">
-                                        <td data-title="Records" colspan="7">No passenger to show.</td>
+                                        <td data-title="Records" colspan="2">No passenger to show.</td>
                                     </tr>
                                     <tr *ngFor="let gender of peopleOnBoard.totalGenderTypeCount">
                                         <td data-title="Gender">{{gender.Key}}</td>
-                                        <td data-title="Count">{{gender.Value}}</td>                                    
+                                        <td data-title="Count">{{gender.Value}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -312,22 +279,22 @@
                     </div>
 
                     <div class="col-lg-4">
-                        <strong>Nationality Wise Passenger Count</strong>                
+                        <strong>Nationality Wise Passenger Count</strong>
                         <responsive-table>
                             <table responsive-table-body>
                                 <thead>
                                     <tr>
                                         <th>Nationality</th>
-                                        <th>Count</th>                                    
+                                        <th>Count</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr *ngIf="!peopleOnBoard.totalNationalityTypeCount.length > 0">
-                                        <td data-title="Records" colspan="7">No passenger to show.</td>
+                                        <td data-title="Records" colspan="2">No passenger to show.</td>
                                     </tr>
                                     <tr *ngFor="let nationality of peopleOnBoard.totalNationalityTypeCount">
                                         <td data-title="Nationality">{{nationality.Key}}</td>
-                                        <td data-title="Count">{{nationality.Value}}</td>                                    
+                                        <td data-title="Count">{{nationality.Value}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -335,35 +302,30 @@
                     </div>
 
                     <div class="col-lg-4">
-                        <strong>Passenger Type Wise Count</strong>                
+                        <strong>Passenger Type Wise Count</strong>
                         <responsive-table>
                             <table responsive-table-body>
                                 <thead>
                                     <tr>
                                         <th>Passenger Type</th>
-                                        <th>Count</th>                                    
+                                        <th>Count</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr *ngIf="!peopleOnBoard.totalPaxTypeCount.length > 0">
-                                        <td data-title="Records" colspan="7">No passenger to show.</td>
+                                        <td data-title="Records" colspan="2">No passenger to show.</td>
                                     </tr>
                                     <tr *ngFor="let paxType of peopleOnBoard.totalPaxTypeCount">
                                         <td data-title="Passenger Type">{{paxType.Key}}</td>
-                                        <td data-title="Count">{{paxType.Value}}</td>                                    
+                                        <td data-title="Count">{{paxType.Value}}</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </responsive-table>
                     </div>
                 </div>
-                <!--<div class="pull-right">
-                    <button type="submit" class="pull-right btn btn-primary" aria-label="Close" (click)="hideAllPassengers()">Close</button>
-                </div>-->
             </div>
-
         </div>
-
     </div>
 </div>
 
@@ -406,13 +368,8 @@
                         </tbody>
                     </table>
                 </responsive-table>
-                <!--<div class="pull-right">
-                    <button type="submit" class="pull-right btn btn-primary" aria-label="Close" (click)="hideEnquiredPassengers()">Close</button>
-                </div>-->
             </div>
-
         </div>
-
     </div>
 </div>
 
@@ -423,7 +380,6 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title pull-left"><strong>All Crews</strong></h4>
-
                 <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideAllCrews()"></i>
             </div>
             <div class="modal-body">
@@ -464,13 +420,8 @@
                         </tbody>
                     </table>
                 </responsive-table>
-                <!--<div class="pull-right">
-                    <button type="submit" class="pull-right btn btn-primary" aria-label="Close" (click)="hideAllCrews()">Close</button>
-                </div>-->
             </div>
-
         </div>
-
     </div>
 </div>
 
@@ -486,7 +437,6 @@
             <div class="modal-body">
                 <responsive-table>
                     <table responsive-table-body>
-
                         <thead>
                             <tr>
                                 <th>Employee Number</th>
@@ -522,9 +472,6 @@
                         </tbody>
                     </table>
                 </responsive-table>
-                <!--<div class="pull-right">
-                    <button type="submit" class="pull-right btn btn-primary" aria-label="Close" (click)="hideEnquiredCrews()">Close</button>
-                </div>-->
             </div>
         </div>
     </div>

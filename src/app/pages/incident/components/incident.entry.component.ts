@@ -15,8 +15,8 @@ import {
     OrganizationService,
     AircraftTypeModel,
     AircraftTypeService
-} from "../../shared.components";
-import { AffectedModel } from "../../shared.components/affected";
+} from '../../shared.components';
+import { AffectedModel } from '../../shared.components/affected';
 import {
     ResponseModel,
     GlobalStateService,
@@ -33,7 +33,7 @@ import {
     DateTimePickerDirective,
     AuthModel
 } from '../../../shared';
-import { ModalDirective } from 'ng2-bootstrap/modal';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 import { FlightModel, InvolvePartyModel } from '../../shared.components';
 import { IncidentDataExchangeModel } from './incidentDataExchange.model';
 
@@ -46,8 +46,9 @@ import { IncidentDataExchangeModel } from './incidentDataExchange.model';
 export class IncidentEntryComponent implements OnInit, OnDestroy {
     @ViewChild('childModalViewIncident') public childModalViewIncident: ModalDirective;
     @ViewChild('childModalViewWeatherLocation') public childModalViewWeatherLocation: ModalDirective;
-    @ViewChild('departuredatepicker') private departuredatepicker: DateTimePickerDirective
-    @ViewChild('arrivaldatepicker') private arrivaldatepicker: DateTimePickerDirective
+    @ViewChild('departuredatepicker') public departuredatepicker: DateTimePickerDirective;
+    @ViewChild('arrivaldatepicker') public arrivaldatepicker: DateTimePickerDirective;
+
     incident: IncidentModel;
     lat: number = 51.678418;
     lng: number = 7.809007;
@@ -55,7 +56,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     public submitted: boolean = false;
     public submittedFlight: boolean = false;
     public isBorrowedIncidentPopup: boolean = true;
-    //public IsReadonlyFlight:boolean;
     currentDepartmentId: number;
     location: Location;
     datePickerOption: any = {
@@ -68,10 +68,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     };
     datepickerOptionED: DateTimePickerOptions = new DateTimePickerOptions();
     datepickerOptionFLT: DateTimePickerOptions = new DateTimePickerOptions();
-
     datepickerOptionDeparture: DateTimePickerOptions = new DateTimePickerOptions();
     datepickerOptionArrival: DateTimePickerOptions = new DateTimePickerOptions();
-
 
     disableIsDrill: boolean;
     disableIsDrillPopup: boolean;
@@ -93,12 +91,11 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     severities: KeyValue[] = [];
     incidentStatuses: KeyValue[] = [];
     affectedStations: EmergencyLocationModel[] = [];
+
     public form: FormGroup;
     public formFlight: FormGroup;
     public formPopup: FormGroup;
     public flightClass: {};
-    //public EmergencyDate: Date;
-    //public hasEmergencyDateValue = false;
     public EmergencyDateCompare: Date;
     public ArrivalDate: Date;
     public DepartureDate: Date;
@@ -113,8 +110,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     public ScheduleArrivalLocal: Date;
     public lastCount: string = GlobalConstants.LAST_INCIDENT_PICK_COUNT;
     public EmergencyCountry: string = '';
-
     credential: AuthModel;
+
     /**
      * Creates an instance of IncidentEntryComponent.
      * @param {FormBuilder} formBuilder
@@ -145,13 +142,12 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
 
         this.datepickerOptionDeparture = new DateTimePickerOptions();
         this.datepickerOptionArrival = new DateTimePickerOptions();
-        // This proxy is created for not create the GlobalStateService in constructor level and reuse the 
+        // This proxy is created for not create the GlobalStateService in constructor level and reuse the
         // GlobalStateService.
         this.globalStateProxy = injector.get(GlobalStateService);
     }
 
     ngOnInit(): void {
-        //this.IsReadonlyFlight=false;
         this.submitted = false;
         this.EmergencyDateLocal = new Date();
         this.submittedFlight = false;
@@ -169,8 +165,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.disableIsDrillPopup = true;
         this.IsDrillPopup = false;
         this.isOffsite = false;
-        let d = new Date();
-        let tomorrowDate = d.getDate() + 1000;
+        const d = new Date();
+        const tomorrowDate = d.getDate() + 1000;
         d.setDate(tomorrowDate);
         this.EmergencyDateCompare = new Date(d);
         this.ArrivalDateCompare = new Date(d);
@@ -221,7 +217,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     getIncidentsToPickForReplication(isFlightRelated: boolean, emergencyTypeId: string): boolean {
-        if (emergencyTypeId == '') {
+        if (emergencyTypeId === '') {
             this.incidentsToPickForReplication = [];
             this.isBorrowed = false;
             return false;
@@ -238,33 +234,20 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                 for (let i: number = 0; internalCount < +this.lastCount; i++) {
                     if (response.Records[i].InvolvedParties.length > 0) {
                         if (isFlightRelated) {
-                            if (response.Records[i].InvolvedParties[0].InvolvedPartyType == 'Flight') {
+                            if (response.Records[i].InvolvedParties[0].InvolvedPartyType === 'Flight') {
                                 this.incidentsToPickForReplication.push(response.Records[i]);
                                 internalCount++;
                             }
                         }
                         else {
-                            if (response.Records[i].InvolvedParties[0].InvolvedPartyType == 'NonFlight') {
+                            if (response.Records[i].InvolvedParties[0].InvolvedPartyType === 'NonFlight') {
                                 this.incidentsToPickForReplication.push(response.Records[i]);
                                 internalCount++;
                             }
                         }
                     }
                 }
-                // response.Records.forEach((item: IncidentModel)=>{
-                //     if(item.InvolvedParties.length>0){
-                //         if(isFlightRelated){
-                //             if(item.InvolvedParties[0].InvolvedPartyType=='Flight'){
-                //                 this.incidentsToPickForReplication.push(item);
-                //             }
-                //         }
-                //         else{
-                //             if(item.InvolvedParties[0].InvolvedPartyType=='NonFlight'){
-                //                 this.incidentsToPickForReplication.push(item);
-                //             }
-                //         }
-                //     }
-                // });
+
                 this.incidentsToPickForReplication.map((item: IncidentModel) => {
                     if (item.ClosedOn != null) {
                         item.EmergencyName = item.EmergencyName + ' (closed)';
@@ -296,24 +279,22 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.getIncidentsToPickForReplication(this.isFlightRelated, emergencyTypeId);
     }
 
-
     affectedStationChange(IATAVal: string, affectedStations: EmergencyLocationModel[]): void {
         this.EmergencyCountry = '';
         if (IATAVal === 'Offsite') {
             this.isOffsite = true;
             this.EmergencyCountry = '';
-            this.form.controls["AffectedCountry"].reset({ value: '', disabled: false });
+            this.form.controls['AffectedCountry'].reset({ value: '', disabled: false });
         }
         else {
             this.isOffsite = false;
-            let list: EmergencyLocationModel[] = affectedStations.filter((item: EmergencyLocationModel) => { return item.IATA == IATAVal; });
+            const list: EmergencyLocationModel[] = affectedStations
+                .filter((item: EmergencyLocationModel) => item.IATA === IATAVal);
             if (list.length > 0) {
                 this.EmergencyCountry = list[0].Country;
-                this.form.controls["AffectedCountry"].reset({ value: this.EmergencyCountry, disabled: false });
+                this.form.controls['AffectedCountry'].reset({ value: this.EmergencyCountry, disabled: false });
             }
-
         }
-
     }
 
     organizationChange(organizationId: string, activeOrganizations: OrganizationModel[]): void {
@@ -327,10 +308,9 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     incidentsToPickForReplicationChange(incidentId: string, incidentsToPickForReplication: IncidentModel[]): void {
-        //this.isBorrowedIncidentPopup = false;
         if (this.isFlightRelated) {
             this.submittedFlight = false;
-            if (incidentId != '0') {
+            if (incidentId !== '0') {
                 this.ResetFlightFields();
 
                 const incidentToPickForReplication: IncidentModel = incidentsToPickForReplication
@@ -346,15 +326,11 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             }
             else {
                 this.ResetFlightFields();
-                //this.isBorrowedIncidentPopup = false;
                 jQuery('#Scheduleddeparture, #Scheduledarrival').removeAttr('data-disable');
                 this.departuredatepicker.toggleControl();
                 this.arrivaldatepicker.toggleControl();
             }
         }
-
-
-
     }
 
     public ResetFlightFields(): void {
@@ -373,10 +349,9 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     public FillFlightFields(itemFlight: FlightModel): void {
-        //this.IsReadonlyFlight=true;
         this.flightClass = { 'is-disabled': true };
-        this.ScheduleDepartureLocal = new Date(new Date(itemFlight.DepartureDate).toLocaleString() + " UTC");
-        this.ScheduleArrivalLocal = new Date(new Date(itemFlight.ArrivalDate).toLocaleString() + " UTC");
+        this.ScheduleDepartureLocal = new Date(new Date(itemFlight.DepartureDate).toLocaleString() + ' UTC');
+        this.ScheduleArrivalLocal = new Date(new Date(itemFlight.ArrivalDate).toLocaleString() + ' UTC');
         this.formFlight = new FormGroup({
             FlightNumber: new FormControl(itemFlight.FlightNo),
             Origin: new FormControl(itemFlight.OriginCode),
@@ -388,7 +363,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             ScheduleddepartureLOC: new FormControl(moment(this.ScheduleDepartureLocal).format('DD-MMM-YYYY hh:mm A')),
             ScheduledarrivalLOC: new FormControl(moment(this.ScheduleArrivalLocal).format('DD-MMM-YYYY hh:mm A'))
         });
-
     }
 
     public IsDrill(event: any): void {
@@ -421,19 +395,15 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             AffectedCountry: new FormControl('', [Validators.required]),
             OffsiteDetails: new FormControl(''),
             EmergencyName: new FormControl('', [Validators.required, Validators.maxLength(100)]),
-            //AlertMessage: new FormControl('', [Validators.required]),
             WhatHappened: new FormControl('', [Validators.required]),
             WhereHappened: new FormControl(''),
             OtherConfirmationInformation: new FormControl(''),
             ReportedDate: new FormControl('', [Validators.required]),
             ReportedDateLocal: new FormControl(''),
-
             Description: new FormControl('', [Validators.required]),
             EmergencyDate: new FormControl('', [Validators.required]),
             Severity: new FormControl(''),
             OrganizationId: new FormControl('', [Validators.required]),
-
-
             SourceInformation: new FormControl('', [Validators.maxLength(100)]),
             ReportedByName: new FormControl('', [Validators.maxLength(100)]),
             ReportedByAddress: new FormControl(''),
@@ -441,10 +411,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             SenderOfCrisisInformation: new FormControl('', [Validators.maxLength(100)]),
             BorrowedIncident: new FormControl(0),
             EmergencyDateLocal: new FormControl(''),
-            //AirportInCharge: new FormControl('', [Validators.required]),
-            //CrisisReporterIdentity: new FormControl('', [Validators.required]),
             IncidentsToPickForReplication: new FormControl('')
-
         });
     }
 
@@ -466,24 +433,18 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.resetIncidentForm();
         if (this.isFlightRelated) {
             this.submittedFlight = false;
-            //this.resetFlightForm();
             this.ResetFlightFields();
         }
-
     }
     onSubmit(): void {
         this.submitted = true;
         this.submittedFlight = true;
-        //let tt:string = this.form.controls['EmergencyDate'].value;
-
-        if (this.form.valid && this.isFlightRelated == false) {
+        if (this.form.valid && this.isFlightRelated === false) {
             this.submitted = false;
             this.submittedFlight = false;
             this.proceed();
         }
         else if (this.form.valid && this.formFlight.valid && this.isFlightRelated) {
-
-
             this.submitted = false;
             this.submittedFlight = false;
             this.proceed();
@@ -515,13 +476,11 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     //     this.loadDataIncidentViewPopup();
     // }
 
-    createInvolvepartyAndFlight(isFlightRelated: boolean) {      
+    createInvolvepartyAndFlight(isFlightRelated: boolean) {
         this.createInvolvePartyModel(this.isFlightRelated);
         this.createFlightModel(isFlightRelated);
         this.createAffectedModel();
     }
-
-
 
     onPOPUPSubmit(values: object): void {
         console.log('Incident Created.');
@@ -537,7 +496,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             .subscribe((response: IncidentModel) => {
                 console.log(response);
                 UtilityService.SetToSession({ CurrentIncidentId: response.IncidentId });
-                console.log("Success");
+                console.log('Success');
                 this.globalStateProxy.NotifyDataChanged('incidentCreate', response.IncidentId);
                 console.log('Success');
                 this.router.navigate(['pages/dashboard']);
@@ -545,8 +504,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                 console.log('Error');
             });
     }
-
-
 
     fillIncidentDataExchangeModelData(incidentModel: IncidentModel,
         involvedPartyModel?: InvolvePartyModel, flightModel?: FlightModel, affectedModel?: AffectedModel): void {
@@ -557,8 +514,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.incidentDataExchangeModel.AffectedModel = affectedModel;
         this.incidentDataExchangeModel.IsFlightRelated = this.isFlightRelated;
         console.log('Going to the View page.........................');
-        //this.dataExchangeDecision.Publish('instructionToCloseInsertOpenViewCommand', true);
-        //this.dataExchange.Publish('incidentCreatedPreCheck', this.incidentDataExchangeModel);
     }
 
     resetIncidentViewForm(): void {
@@ -569,19 +524,15 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             AffectedStationIdPopup: new FormControl(''),
             AffectedCountryPopup: new FormControl(''),
             EmergencyNamePopup: new FormControl(''),
-            //AlertMessagePopup: new FormControl(''),
             WhatHappenedPopup: new FormControl(''),
             WhereHappenedPopup: new FormControl(''),
             OtherConfirmationInformationPopup: new FormControl(''),
             ReportedDatePopup: new FormControl(''),
             ReportedDateLocalPopup: new FormControl(''),
-
             DescriptionPopup: new FormControl(''),
             EmergencyDatePopup: new FormControl(''),
             SeverityPopup: new FormControl('0'),
             OrganizationIdPopup: new FormControl(''),
-
-
             SourceInformationPopup: new FormControl(''),
             ReportedByNamePopup: new FormControl(''),
             ReportedByAddressPopup: new FormControl(''),
@@ -589,8 +540,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             SenderOfCrisisInformationPopup: new FormControl(''),
             BorrowedIncidentPopup: new FormControl(''),
             EmergencyDateLocalPopup: new FormControl(''),
-            //AirportInChargePopup: new FormControl(''),
-            //CrisisReporterIdentityPopup: new FormControl(''),
             IncidentsToPickForReplication: new FormControl(''),
             FlightNumberPopup: new FormControl(''),
             OriginPopup: new FormControl(''),
@@ -606,49 +555,39 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     loadDataIncidentViewPopup() {
-        // let offsetVal: string = '';
         this.disableIsDrill = true;
         this.isOffSitePopup = false;
         if (this.incidentDataExchangeModel.IncidentModel.EmergencyLocation === 'Offsite') {
             this.isOffSitePopup = true;
         }
         this.formPopup = new FormGroup({
-
             IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
             EmergencyTypeIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyTypeId),
             AffectedStationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyLocation),
             AffectedCountryPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyCountry),
             OffsiteDetailsPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OffSetLocation),
             EmergencyNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyName),
-            //AlertMessagePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.AlertMessage),
-
             WhatHappenedPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.WhatHappend),
             WhereHappenedPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.WhereHappend),
             OtherConfirmationInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OtherConfirmationInformation),
             ReportedDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.ReportedDate).format('DD-MMM-YYYY hh:mm a')),
             ReportedDateLocalPopup: new FormControl(moment(this.ReportedDateLocal).format('DD-MMM-YYYY hh:mm a')),
-
-
             DescriptionPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Description),
             EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD-MMM-YYYY hh:mm a')),
-            ////Soumit
             EmergencyDateLocalPopup: new FormControl(moment(this.EmergencyDateLocal).format('DD-MMM-YYYY hh:mm a')),
             SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity),
-            //AirportInChargePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.AirportInCharge),
             OrganizationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OrganizationId),
-
             SourceInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.SourceInformation),
             ReportedByNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ReportedByName),
             ReportedByAddressPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ReportedByAddress),
             ContactOfWitnessPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ContactOfWitness),
             SenderOfCrisisInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.SenderOfCrisisInformation),
-
-
-            BorrowedIncidentPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.BorrowedIncident == 0 ? '' : this.incidentDataExchangeModel.IncidentModel.BorrowedIncident)
+            BorrowedIncidentPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.BorrowedIncident === 0 ? '' : this.incidentDataExchangeModel.IncidentModel.BorrowedIncident)
         });
         this.IsDrillPopup = this.incidentDataExchangeModel.IncidentModel.IsDrill;
         this.isFlightRelatedPopup = false;
-        if (this.incidentDataExchangeModel.IsFlightRelated == true) {
+
+        if (this.incidentDataExchangeModel.IsFlightRelated === true) {
             this.formPopup = new FormGroup({
                 IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
                 EmergencyTypeIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyTypeId),
@@ -656,34 +595,22 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                 AffectedCountryPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyCountry),
                 OffsiteDetailsPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OffSetLocation),
                 EmergencyNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyName),
-                //AlertMessagePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.AlertMessage),
-
                 WhatHappenedPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.WhatHappend),
                 WhereHappenedPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.WhereHappend),
                 OtherConfirmationInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OtherConfirmationInformation),
                 ReportedDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.ReportedDate).format('DD-MMM-YYYY hh:mm a')),
                 ReportedDateLocalPopup: new FormControl(moment(this.ReportedDateLocal).format('DD-MMM-YYYY hh:mm a')),
-
-
-
                 DescriptionPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Description),
                 EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD-MMM-YYYY hh:mm a')),
                 EmergencyDateLocalPopup: new FormControl(moment(this.EmergencyDateLocal).format('DD-MMM-YYYY hh:mm a')),
-
                 SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity),
-                //AirportInChargePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.AirportInCharge),
                 OrganizationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OrganizationId),
-                //CrisisReporterIdentityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.CrisisReporterIdentity),
-
                 SourceInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.SourceInformation),
                 ReportedByNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ReportedByName),
                 ReportedByAddressPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ReportedByAddress),
                 ContactOfWitnessPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ContactOfWitness),
                 SenderOfCrisisInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.SenderOfCrisisInformation),
-
                 BorrowedIncidentPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.BorrowedIncident),
-
-
                 FlightNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightNo),
                 OriginPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.OriginCode),
                 DestinationPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.DestinationCode),
@@ -698,19 +625,16 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             this.isFlightRelatedPopup = true;
         }
         if (this.isBorrowedIncidentPopup) {
-            let id: number = +this.formPopup.controls['BorrowedIncidentPopup'].value;
+            const id: number = +this.formPopup.controls['BorrowedIncidentPopup'].value;
             if (id) {
-                let selectedIncident: IncidentModel = this.incidentsToPickForReplication.find((item: IncidentModel) => {
-                    return item.IncidentId == id;
-                });
+                const selectedIncident: IncidentModel = this.incidentsToPickForReplication
+                    .find((item: IncidentModel) => {
+                        return item.IncidentId === id;
+                    });
 
-                this.formPopup.controls["BorrowedIncidentPopup"].setValue(selectedIncident.EmergencyName);
+                this.formPopup.controls['BorrowedIncidentPopup'].setValue(selectedIncident.EmergencyName);
             }
         }
-        //this.isBorrowedIncidentPopup = false;
-        // if (this.formFlight.controls['BorrowedIncidentPopup'].value!='') {
-        //     this.isBorrowedIncidentPopup = true;
-        // }
     }
 
     createInvolvePartyModel(isFlightRelated: boolean): void {
@@ -729,11 +653,12 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.involvePartyModel.CreatedBy = +this.credential.UserId;
         this.involvePartyModel.CreatedOn = this.date;
     }
+
     createAffectedModel(): void {
         this.affectedModel = new AffectedModel();
         this.affectedModel.AffectedId = 0;
         this.affectedModel.InvolvedPartyId = 0;
-        this.affectedModel.Severity = this.form.controls['Severity'].value == '' ? null : this.form.controls['Severity'].value;;
+        this.affectedModel.Severity = this.form.controls['Severity'].value === '' ? null : this.form.controls['Severity'].value;
         this.affectedModel.ActiveFlag = 'Active';
         this.flightModel.CreatedBy = +this.credential.UserId;
         this.flightModel.CreatedOn = this.date;
@@ -743,20 +668,25 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.flightModel = new FlightModel();
         this.flightModel.FlightId = 0;
         this.flightModel.InvolvedPartyId = 0;
-        this.flightModel.FlightNo = (isFlightRelated == true) ? this.formFlight.controls['FlightNumber'].value : "DUMMY_FLIGHT";
-        this.flightModel.OriginCode = (isFlightRelated == true) ? this.formFlight.controls['Origin'].value : "DUMMY_ORG";
-        this.flightModel.DestinationCode = (isFlightRelated == true) ? this.formFlight.controls['Destination'].value : "DUMMY_DES";
-        this.flightModel.DepartureDate = (isFlightRelated == true) ? new Date(this.formFlight.controls['Scheduleddeparture'].value) : new Date("01/01/2001");//this.DepartureDate;
-        this.flightModel.ArrivalDate = (isFlightRelated == true) ? new Date(this.formFlight.controls['Scheduledarrival'].value) : new Date("01/02/2001");//this.ArrivalDate;
-        this.flightModel.FlightTaleNumber = (isFlightRelated == true) ? this.formFlight.controls['FlightTailNumber'].value : "DUMMY_FLT_TAIL";
-        this.flightModel.AircraftTypeId = (isFlightRelated == true) ? this.formFlight.controls['AircraftTypeId'].value : 1;
+        this.flightModel.FlightNo = (isFlightRelated === true) ?
+            this.formFlight.controls['FlightNumber'].value : 'DUMMY_FLIGHT';
+        this.flightModel.OriginCode = (isFlightRelated === true) ?
+            this.formFlight.controls['Origin'].value : 'DUMMY_ORG';
+        this.flightModel.DestinationCode = (isFlightRelated === true) ?
+            this.formFlight.controls['Destination'].value : 'DUMMY_DES';
+        this.flightModel.DepartureDate = (isFlightRelated === true) ?
+            new Date(this.formFlight.controls['Scheduleddeparture'].value) : new Date('01/01/2001');
+        this.flightModel.ArrivalDate = (isFlightRelated === true) ?
+            new Date(this.formFlight.controls['Scheduledarrival'].value) : new Date('01/02/2001');
+        this.flightModel.FlightTaleNumber = (isFlightRelated === true) ?
+            this.formFlight.controls['FlightTailNumber'].value : 'DUMMY_FLT_TAIL';
+        this.flightModel.AircraftTypeId = (isFlightRelated === true) ?
+            this.formFlight.controls['AircraftTypeId'].value : 1;
         this.flightModel.LoadAndTrimInfo = null;
         this.flightModel.ActiveFlag = 'Active';
         this.flightModel.CreatedBy = +this.credential.UserId;
         this.flightModel.CreatedOn = this.date;
     }
-
-
 
     createIncidentModel(): void {
         this.initiateIncidentModel();
@@ -764,8 +694,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.incidentModel.EmergencyTypeId = Number(this.form.controls['EmergencyTypeId'].value);
         this.incidentModel.IncidentStatus = UtilityService.GetKeyValues(IncidentStatus)[0].Key;
         this.incidentModel.EmergencyName = this.form.controls['EmergencyName'].value;
-        //this.incidentModel.AlertMessage = this.form.controls['AlertMessage'].value;
-
         this.incidentModel.WhatHappend = this.form.controls['WhatHappened'].value;
         this.incidentModel.WhereHappend = this.form.controls['WhereHappened'].value;
         this.incidentModel.OtherConfirmationInformation = this.form.controls['OtherConfirmationInformation'].value;
@@ -773,36 +701,28 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
 
         this.incidentModel.Description = this.form.controls['Description'].value;
         this.incidentModel.EmergencyDate = new Date(this.form.controls['EmergencyDate'].value);
-        this.incidentModel.Severity = this.form.controls['Severity'].value == '' ? null : this.form.controls['Severity'].value;
+        this.incidentModel.Severity = this.form.controls['Severity'].value === '' ? null : this.form.controls['Severity'].value;
         if (this.form.controls['AffectedStationId'].value !== 'Offsite') {
             this.incidentModel.EmergencyLocation = this.form.controls['AffectedStationId'].value;
-
         }
         else {
             this.incidentModel.EmergencyLocation = this.form.controls['AffectedStationId'].value;
             this.incidentModel.OffSetLocation = this.form.controls['OffsiteDetails'].value;
         }
         this.incidentModel.EmergencyCountry = this.form.controls['AffectedCountry'].value;
-
-        //this.incidentModel.AirportInCharge = this.form.controls['AirportInCharge'].value;
         this.incidentModel.OrganizationId = +this.form.controls['OrganizationId'].value;
-        //this.incidentModel.CrisisReporterIdentity = this.form.controls['CrisisReporterIdentity'].value;
-
         this.incidentModel.SourceInformation = this.form.controls['SourceInformation'].value;
         this.incidentModel.ReportedByName = this.form.controls['ReportedByName'].value;
         this.incidentModel.ReportedByAddress = this.form.controls['ReportedByAddress'].value;
         this.incidentModel.ContactOfWitness = this.form.controls['ContactOfWitness'].value;
         this.incidentModel.SenderOfCrisisInformation = this.form.controls['SenderOfCrisisInformation'].value;
-        if (+this.form.controls['BorrowedIncident'].value != 0) {
+        if (+this.form.controls['BorrowedIncident'].value !== 0) {
             this.incidentModel.BorrowedIncident = +this.form.controls['BorrowedIncident'].value;
         }
         else {
             this.incidentModel.BorrowedIncident = null;
         }
 
-        // if (this.incidentModel.EmergencyLocation === 'Offset') {
-        //     this.incidentModel.OffSetLocation = this.form.controls['OffsiteDetails'].value;
-        // }
         this.incidentModel.IsSubmitted = false;
         this.incidentModel.IsSaved = false;
         this.incidentModel.DepartmentId = Number(this.currentDepartmentId);
@@ -827,37 +747,34 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
 
     public dateTimeSet(date: DateTimePickerSelectEventArgs, controlName: string): void {
         if (controlName === 'EmergencyDate') {
-            this.form.get("EmergencyDate")
+            this.form.get('EmergencyDate')
                 .setValue(moment(date.SelectedDate).format('DD-MMM-YYYY hh:mm A'));
-            this.EmergencyDateLocal = new Date(date.SelectedDate.toLocaleString() + " UTC");
-            this.form.get("EmergencyDateLocal")
+            this.EmergencyDateLocal = new Date(date.SelectedDate.toLocaleString() + ' UTC');
+            this.form.get('EmergencyDateLocal')
                 .setValue(moment(this.EmergencyDateLocal).format('DD-MMM-YYYY hh:mm A'));
         }
         else if (controlName === 'ReportedDate') {
-            this.form.get("ReportedDate")
+            this.form.get('ReportedDate')
                 .setValue(moment(date.SelectedDate).format('DD-MMM-YYYY hh:mm A'));
-            this.ReportedDateLocal = new Date(date.SelectedDate.toLocaleString() + " UTC");
-            this.form.get("ReportedDateLocal")
+            this.ReportedDateLocal = new Date(date.SelectedDate.toLocaleString() + ' UTC');
+            this.form.get('ReportedDateLocal')
                 .setValue(moment(this.ReportedDateLocal).format('DD-MMM-YYYY hh:mm A'));
         }
         else if (controlName === 'Scheduleddeparture') {
-            this.formFlight.get("Scheduleddeparture")
+            this.formFlight.get('Scheduleddeparture')
                 .setValue(moment(date.SelectedDate).format('DD-MMM-YYYY hh:mm A'));
-            this.ScheduleDepartureLocal = new Date(date.SelectedDate.toLocaleString() + " UTC");
-            this.formFlight.get("ScheduleddepartureLOC")
+            this.ScheduleDepartureLocal = new Date(date.SelectedDate.toLocaleString() + ' UTC');
+            this.formFlight.get('ScheduleddepartureLOC')
                 .setValue(moment(this.ScheduleDepartureLocal).format('DD-MMM-YYYY hh:mm A'));
-
-            // this.datepickerOptionArrival.minDate = new Date(date.SelectedDate.toLocaleString());
             this.arrivaldatepicker.updateConfig({
                 minDate: new Date(date.SelectedDate.toLocaleString())
             });
-
         }
         else if (controlName === 'Scheduledarrival') {
-            this.formFlight.get("Scheduledarrival")
+            this.formFlight.get('Scheduledarrival')
                 .setValue(moment(date.SelectedDate).format('DD-MMM-YYYY hh:mm A'));
-            this.ScheduleArrivalLocal = new Date(date.SelectedDate.toLocaleString() + " UTC");
-            this.formFlight.get("ScheduledarrivalLOC")
+            this.ScheduleArrivalLocal = new Date(date.SelectedDate.toLocaleString() + ' UTC');
+            this.formFlight.get('ScheduledarrivalLOC')
                 .setValue(moment(this.ScheduleArrivalLocal).format('DD-MMM-YYYY hh:mm A'));
         }
     }

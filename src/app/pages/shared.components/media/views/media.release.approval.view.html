@@ -1,8 +1,12 @@
-<div class="card">
-    <div *ngIf="!isArchive">
+<div class="row">
+    <div class="col-12">
+        <div *ngIf="!isArchive">
         <mediaRelease-approval-entry [initiatedDepartmentId]="initiatedDepartment" [incidentId]="incidentId"></mediaRelease-approval-entry>
     </div>
-    <div class="card-block">
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
         <mediaRelease-approval-list [initiatedDepartmentId]="initiatedDepartment" [incidentId]="incidentId"></mediaRelease-approval-list>
     </div>
 </div>

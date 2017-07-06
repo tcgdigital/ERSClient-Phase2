@@ -75,9 +75,14 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
                         : (dataItem.Crew == null ? 'NA' : dataItem.Crew.CrewNationality);
                     var now = moment(new Date());
                     var dob = dataItem.Passenger != null ? moment(dataItem.Passenger.PassengerDob) : moment(dataItem.Crew.CrewDob);
-                    var duration = moment.duration(now.diff(dob));
-                    var age = duration.asYears();
-                    item.Age = Math.floor(age).toString();
+                    if (dob == null || dob == undefined) {
+                        item.Age = "";
+                    }
+                    else {
+                        var duration = moment.duration(now.diff(dob));
+                        var age = duration.asYears();
+                        item.Age = Math.floor(age).toString();
+                    }
                     item.TicketNumber = dataItem.TicketNumber;
                     item.IsVerified = dataItem.IsVerified;
                     item.IsCrew = dataItem.IsCrew;
@@ -85,7 +90,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
                     item.BaggageWeight = dataItem.Passenger != null ? (dataItem.Passenger.BaggageWeight == null ? 0 : dataItem.Passenger.BaggageWeight) : 0;
                     item.PassengerSpecialServiceRequestCode = dataItem.Passenger != null ? (dataItem.Passenger.SpecialServiceRequestCode.trim() == null ? 'NA' : dataItem.Passenger.SpecialServiceRequestCode) : 'NA';
                     item.PassengerEmployeeId = dataItem.Passenger != null ? (dataItem.Passenger.EmployeeId == null ? 'NA' : dataItem.Passenger.EmployeeId) : 'NA';
-                 //   item.CoTravellerInformation = dataItem.Passenger != null ? (dataItem.Passenger.CoTravellerInformation == null ? 'NA' : dataItem.Passenger.CoTravellerInformation) : 'NA';
+                    //   item.CoTravellerInformation = dataItem.Passenger != null ? (dataItem.Passenger.CoTravellerInformation == null ? 'NA' : dataItem.Passenger.CoTravellerInformation) : 'NA';
                     item.CrewIdCode = dataItem.Crew != null ? (dataItem.Crew.EmployeeNumber == null ? 'NA' : dataItem.Crew.EmployeeNumber) : 'NA';
                     item.IsStaff = dataItem.IsStaff != null ? dataItem.IsStaff : false;
                     item.MedicalStatus = dataItem.MedicalStatus != null ? dataItem.MedicalStatus : 'NA';
@@ -103,15 +108,15 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
                         if (dataItem.Passenger.CoPassengerMappings.length > 0) {
                             item.GroupId = dataItem.Passenger.CoPassengerMappings[0].GroupId;
                         }
-                        else{
-                            item.GroupId=0;
+                        else {
+                            item.GroupId = 0;
                         }
                     }
-                    else
-                    {
-                        item.PassengerId=0;
+                    else {
+                        item.PassengerId = 0;
                     }
                     item.IsNokInformed = dataItem.IsNokInformed;
+                    item.commlength = dataItem.CommunicationLogs.length>0;
 
                     return item;
                 });
@@ -121,11 +126,11 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
 
     }
 
-    public GetCoPassangers(AffectedPersonId) : Observable<ResponseModel<AffectedPeopleModel>>{
-       return this._dataService.Query()
-        .Filter(`AffectedPersonId eq ${AffectedPersonId}`)
-        .Expand('Passenger($expand=CoPassengerMappings($expand=Passenger))')
-        .Execute();
+    public GetCoPassangers(AffectedPersonId): Observable<ResponseModel<AffectedPeopleModel>> {
+        return this._dataService.Query()
+            .Filter(`AffectedPersonId eq ${AffectedPersonId}`)
+            .Expand('Passenger($expand=CoPassengerMappings($expand=Passenger))')
+            .Execute();
     }
 
     public CreateBulk(entities: AffectedPeopleModel[]): Observable<AffectedPeopleModel[]> {
@@ -188,7 +193,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     public GetOtherPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
             .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
-             ActiveFlag eq 'Active' and tolower(MedicalStatus) eq 'other'`)
+             ActiveFlag eq 'Active' and tolower(MedicalStatus) eq 'others'`)
             .Execute();
     }
 
@@ -253,7 +258,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     }
 
 
-      getGroupId(affectedPersonId: number): Observable<ResponseModel<AffectedPeopleModel>> {
+    getGroupId(affectedPersonId: number): Observable<ResponseModel<AffectedPeopleModel>> {
         return this._dataService.Query()
             .Filter(`AffectedPersonId eq ${affectedPersonId} and IsCrew eq false`)
             .Expand(`Passenger($expand=CoPassengerMappings($select=GroupId);$select=PassengerId;)`)

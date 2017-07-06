@@ -10,17 +10,17 @@
                 </div>
                 <div class="form-group input-group ">
                    <label>User Name</label>
-                    <input class="form-control" type="text" id="userId" [formControl]="userId" placeholder="User Name" />
+                    <input class="form-control" type="text" autocomplete="new-password" id="userId" [formControl]="userId" placeholder="User Name" />
                 </div>
                 <div class="form-group input-group ">
                      <label>Password</label>
-                    <input class="form-control" type="password" id="password" [formControl]="password" placeholder="Password" />
+                    <input class="form-control" type="password" autocomplete="new-password" id="password" [formControl]="password" placeholder="Password" />
                 </div>
-                <div class="checkbox">
+                <!--<div class="checkbox">
                     <label>
                         <input type="checkbox" value="remember-me"> Remember Me
                     </label>
-                </div>
+                </div>-->
                 <div class="form-group">
                     <button type="submit" class="btn btn-def btn-block">Sign In</button>
                 </div>

@@ -71,7 +71,7 @@
 .table {
     width: 100%;
     max-width: 100%;
-    // margin-bottom: 2rem;
+    margin-bottom: 0 !important;
     p{
         margin: 0;
     }
@@ -91,7 +91,7 @@
             text-align: left; // padding: $table-cell-padding;
             vertical-align: middle;
             border-top: 0;
-            font-size: 12px;
+            font-size: $font-size-normal;
             @include transition(all, 0.3s ease);
         }
         thead>tr>th {
@@ -123,7 +123,10 @@
 
 .table {
     tbody>tr>td {
-        font-size: 11px;
+        font-size: $font-size-normal;
+        a{
+            font-size: $font-size-normal;
+        }
     }
 }
 
@@ -188,7 +191,7 @@
 @media screen and (max-width: $resMD-S) {
     .table-responsive-vertical {
         >.table {
-            margin-bottom: 0;
+            margin-bottom: 0 !important;
             background-color: transparent;
             > {
                 thead,

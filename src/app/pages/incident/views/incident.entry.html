@@ -6,9 +6,10 @@
                 <div class="card-header">
                     <strong>Create an Incident</strong>
                     <div class="row">
-                        <div class="form-group col-lg-1 col-sm-12 col-md-6">
-                            <input id="IncidentId" type="hidden" name="IncidentId" formControlName="IncidentId" [(ngModel)]="incidentModel.IncidentId"
-                            />
+                        <input id="IncidentId" type="hidden" name="IncidentId" formControlName="IncidentId" [(ngModel)]="incidentModel.IncidentId"
+                        />
+                        <div class="form-group col-lg-2 col-sm-12 col-md-6">
+
                             <label for="IsDrill"></label>
                             <md-checkbox class="drill-checkbox-style" md-no-ink id="IsDrill" name="IsDrill" formControlName="IsDrill" [ngModel]="incidentModel.IsDrill"
                                 (change)="IsDrill($event)" aria-label="Drill">IsDrill
@@ -41,9 +42,19 @@
                                 class="text-danger">Required</small>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <label for="EmergencyName">Crisis Name<span class="required">*</span></label>
+                            <input id="EmergencyName" class="form-control" type="text" name="EmergencyName" formControlName="EmergencyName" placeholder="Enter Crisis Name"
+                            />
+                            <small *ngIf="form.controls.EmergencyName.hasError('required')" [hidden]="form.controls.EmergencyName.valid || (form.controls.EmergencyName.pristine && !submitted)"
+                                class="text-danger">Required</small>
+                            <small *ngIf="form.controls.EmergencyName.hasError('maxlength')" [hidden]="form.controls.EmergencyName.valid || (form.controls.EmergencyName.pristine && !submitted)"
+                                class="text-danger">
+                            </small>
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="AffectedStation">Responsible Station<span class="required">*</span></label>
                             <select id="AffectedStationId" class="form-control" formControlName="AffectedStationId" name="AffectedStationId" (change)="affectedStationChange($event.target.value,affectedStations)">
-                                    <option value=''>Select Affected Station</option>
+                                    <option value=''>Select Responsible Station</option>
                                     <option value="Offsite">Offsite</option>
                                     <option *ngFor="let affectedStation of affectedStations" [value]="affectedStation.IATA" >
                                         {{affectedStation.AirportName}}
@@ -51,14 +62,6 @@
                             </select>
                             <small *ngIf="form.controls.AffectedStationId.hasError('required')" [hidden]="form.controls.AffectedStationId.valid || (form.controls.AffectedStationId.pristine && !submitted)"
                                 class="text-danger">Required</small>
-                        </div>
-                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="AffectedCountry">Responsible Country<span class="required">*</span></label>
-                            <input id="AffectedCountry" class="form-control" type="text" name="AffectedCountry" formControlName="AffectedCountry" placeholder="Enter Country"
-                            />
-                            <small *ngIf="form.controls.AffectedCountry.hasError('required')" [hidden]="form.controls.AffectedCountry.valid || (form.controls.AffectedCountry.pristine && !submitted)"
-                                class="text-danger">Required</small>
-                        
                         </div>
                         <div *ngIf="isOffsite" class="form-group col-lg-2 col-sm-12 col-md-6">
                             <label for="OffsiteDetails">Offsite Details<span class="required">*</span></label>
@@ -68,33 +71,32 @@
                                 class="text-danger">Required</small>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="EmergencyDate">Date of Crisis<span class="required">*</span>&nbsp;&nbsp;(UTC)</label>
-                            <input id="EmergencyDate" readonly class="form-control" type="text" name="EmergencyDate" formControlName="EmergencyDate"
-                                placeholder="Crisis Date" datetime-picker [options]="datepickerOptionED" (selectHandler)="dateTimeSet($event,'EmergencyDate');"
+                            <label for="AffectedCountry">Responsible Country<span class="required">*</span></label>
+                            <input id="AffectedCountry" class="form-control" type="text" name="AffectedCountry" formControlName="AffectedCountry" placeholder="Enter Country"
                             />
-                            <small *ngIf="form.controls.EmergencyDate.hasError('required')" [hidden]="form.controls.EmergencyDate.valid || (form.controls.EmergencyDate.pristine && !submitted)"
+                            <small *ngIf="form.controls.AffectedCountry.hasError('required')" [hidden]="form.controls.AffectedCountry.valid || (form.controls.AffectedCountry.pristine && !submitted)"
                                 class="text-danger">Required</small>
-                        </div>
-                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="EmergencyDateLocal">Date of Crisis (LOCAL)</label>
-                            <input id="EmergencyDateLocal" disabled formControlName="EmergencyDateLocal" class="form-control" type="text" name="EmergencyDateLocal"
-                                placeholder="Crisis Date" />
-
-
                         </div>
                     </div>
                     <div class="row">
-                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="EmergencyName">Crisis Name<span class="required">*</span> (Max character length 100)</label>
-                            <input id="EmergencyName" class="form-control" type="text" name="EmergencyName" formControlName="EmergencyName" placeholder="Enter Crisis Name"
-                            />
-                            <small *ngIf="form.controls.EmergencyName.hasError('required')" [hidden]="form.controls.EmergencyName.valid || (form.controls.EmergencyName.pristine && !submitted)"
-                                class="text-danger">Required</small>
-                            <small *ngIf="form.controls.EmergencyName.hasError('maxlength')" [hidden]="form.controls.EmergencyName.valid || (form.controls.EmergencyName.pristine && !submitted)"
-                                class="text-danger">
-                            Maximum length 100 is allowed</small>
-
-
+                        <div class="col-lg-3 col-sm-12 col-md-6">
+                            <div class="row">
+                                <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                    <label for="EmergencyDate">Date of Crisis<span class="required">*</span>&nbsp;&nbsp;(UTC)</label>
+                                    <input id="EmergencyDate" readonly class="form-control" type="text" name="EmergencyDate" formControlName="EmergencyDate"
+                                        placeholder="Crisis Date" datetime-picker [options]="datepickerOptionED" (selectHandler)="dateTimeSet($event,'EmergencyDate');"
+                                    />
+                                    <small *ngIf="form.controls.EmergencyDate.hasError('required')" [hidden]="form.controls.EmergencyDate.valid || (form.controls.EmergencyDate.pristine && !submitted)"
+                                        class="text-danger">Required</small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                    <label for="EmergencyDateLocal">Date of Crisis (LOCAL)</label>
+                                    <input id="EmergencyDateLocal" disabled formControlName="EmergencyDateLocal" class="form-control" type="text" name="EmergencyDateLocal"
+                                        placeholder="Crisis Date" />
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group col-lg-9 col-sm-12 col-md-6">
                             <label for="Description">Note<span class="required">*</span></label>
@@ -122,22 +124,22 @@
                                 placeholder="Other Confirmation Information" />
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="SourceInformation">Source Information (Max character length 100)</label>
+                            <label for="SourceInformation">Source Information</label>
                             <input id="SourceInformation" class="form-control" type="text" name="SourceInformation" formControlName="SourceInformation"
                                 placeholder="Source Information" />
                             <small *ngIf="form.controls.SourceInformation.hasError('maxlength')" [hidden]="form.controls.SourceInformation.valid || (form.controls.SourceInformation.pristine && !submitted)"
                                 class="text-danger">
-                            Maximum length 100 is allowed</small>
+                            </small>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="ReportedByName">Reported By Name (Max character length 100)</label>
+                            <label for="ReportedByName">Reported By Name</label>
                             <input id="ReportedByName" class="form-control" type="text" name="ReportedByName" formControlName="ReportedByName" placeholder="Reported By Name"
                             />
                             <small *ngIf="form.controls.ReportedByName.hasError('maxlength')" [hidden]="form.controls.ReportedByName.valid || (form.controls.ReportedByName.pristine && !submitted)"
                                 class="text-danger">
-                            Maximum length 100 is allowed</small>
+                            </small>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="ReportedByAddress">Reported By Address</label>
@@ -145,20 +147,20 @@
                                 placeholder="Reported By Address" />
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="ContactOfWitness">Contact Of Witness (Max character length 50)</label>
+                            <label for="ContactOfWitness">Contact Of Witness</label>
                             <input id="ContactOfWitness" class="form-control" type="text" name="ContactOfWitness" formControlName="ContactOfWitness"
                                 placeholder="Contact Of Witness" />
                             <small *ngIf="form.controls.ContactOfWitness.hasError('maxlength')" [hidden]="form.controls.ContactOfWitness.valid || (form.controls.ContactOfWitness.pristine && !submitted)"
                                 class="text-danger">
-                            Maximum length 50 is allowed</small>
+                            </small>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="SenderOfCrisisInformation">Sender Of Crisis Information (Max character length 100)</label>
+                            <label for="SenderOfCrisisInformation">Sender Of Crisis Information</label>
                             <input id="SenderOfCrisisInformation" class="form-control" type="text" name="SenderOfCrisisInformation" formControlName="SenderOfCrisisInformation"
                                 placeholder="Sender Of Crisis Information" />
                             <small *ngIf="form.controls.SenderOfCrisisInformation.hasError('maxlength')" [hidden]="form.controls.SenderOfCrisisInformation.valid || (form.controls.SenderOfCrisisInformation.pristine && !submitted)"
                                 class="text-danger">
-                            Maximum length 100 is allowed</small>
+                            </small>
                         </div>
                     </div>
                     <div class="row">
@@ -186,7 +188,7 @@
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6" *ngIf="isBorrowed">
                             <label for="IncidentsToPickForReplication">Incidents To Pick For Replication</label>
-                            <select id="BorrowedIncident" [(ngModel)]="incidentModel.BorrowedIncident" class="form-control" formControlName="BorrowedIncident"
+                            <select id="BorrowedIncident" [(ngModel)]="incidentModel.BorrowedIncident" class="form-control" formControlName="BorrowedIncident" disabled
                                 name="BorrowedIncident" (change)="incidentsToPickForReplicationChange($event.target.value,incidentsToPickForReplication)">
                                     <option value=0>Select Incident To Pick</option>
                                     <option *ngFor="let incidentToPickForReplication of incidentsToPickForReplication" [value]="incidentToPickForReplication.IncidentId" >
@@ -205,34 +207,34 @@
                     <div class="card-block">
                         <div class="row">
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="FlightNumber">Flight Number<span class="required">*</span> (Max character length 50)</label>
+                                <label for="FlightNumber">Flight Number<span class="required">*</span></label>
                                 <input id="FlightNumber" class="form-control" [ngClass]="flightClass" type="text" name="FlightNumber" formControlName="FlightNumber"
                                     placeholder="FlightNumber" />
                                 <small *ngIf="formFlight.controls.FlightNumber.hasError('required')" [hidden]="formFlight.controls.FlightNumber.valid || (formFlight.controls.FlightNumber.pristine && !submittedFlight)"
                                     class="text-danger">Required</small>
                                 <small *ngIf="formFlight.controls.FlightNumber.hasError('maxlength')" [hidden]="formFlight.controls.FlightNumber.valid || (formFlight.controls.FlightNumber.pristine && !submitted)"
                                     class="text-danger">
-                            Maximum length 50 is allowed</small>
+                            </small>
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="Origin">Origin<span class="required">*</span> (Max character length 50)</label>
+                                <label for="Origin">Origin<span class="required">*</span></label>
                                 <input id="Origin" class="form-control" [ngClass]="flightClass" type="text" name="Origin" formControlName="Origin" placeholder="Origin"
                                 />
                                 <small *ngIf="formFlight.controls.Origin.hasError('required')" [hidden]="formFlight.controls.Origin.valid || (formFlight.controls.Origin.pristine && !submittedFlight)"
                                     class="text-danger">Required</small>
                                 <small *ngIf="formFlight.controls.Origin.hasError('maxlength')" [hidden]="formFlight.controls.Origin.valid || (formFlight.controls.Origin.pristine && !submitted)"
                                     class="text-danger">
-                            Maximum length 50 is allowed</small>
+                            </small>
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="Destination">Destination<span class="required">*</span> (Max character length 50)</label>
+                                <label for="Destination">Destination<span class="required">*</span></label>
                                 <input id="Destination" class="form-control" [ngClass]="flightClass" type="text" name="Destination" formControlName="Destination"
                                     placeholder="Destination" />
                                 <small *ngIf="formFlight.controls.Destination.hasError('required')" [hidden]="formFlight.controls.Destination.valid || (formFlight.controls.Destination.pristine && !submittedFlight)"
                                     class="text-danger">Required</small>
                                 <small *ngIf="formFlight.controls.Destination.hasError('maxlength')" [hidden]="formFlight.controls.Destination.valid || (formFlight.controls.Destination.pristine && !submitted)"
                                     class="text-danger">
-                            Maximum length 50 is allowed</small>
+                            </small>
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
                                 <label for="Scheduleddeparture(UTC)">Scheduled Departure (UTC)<span class="required">*</span></label>
@@ -266,14 +268,14 @@
                                     formControlName="ScheduledarrivalLOC" placeholder="Scheduled Arrival" />
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="FlightTailNumber">Flight Tail Number<span class="required">*</span> (Max character length 50)</label>
+                                <label for="FlightTailNumber">Flight Tail Number<span class="required">*</span></label>
                                 <input id="FlightTailNumber" class="form-control" [ngClass]="flightClass" type="text" name="FlightTailNumber" formControlName="FlightTailNumber"
                                     placeholder="Flight Tail Number" />
                                 <small *ngIf="formFlight.controls.FlightTailNumber.hasError('required')" [hidden]="formFlight.controls.FlightTailNumber.valid || (formFlight.controls.FlightTailNumber.pristine && !submittedFlight)"
                                     class="text-danger">Required</small>
                                 <small *ngIf="formFlight.controls.FlightTailNumber.hasError('maxlength')" [hidden]="formFlight.controls.FlightTailNumber.valid || (formFlight.controls.FlightTailNumber.pristine && !submitted)"
                                     class="text-danger">
-                            Maximum length 50 is allowed</small>
+                            </small>
                             </div>
                         </div>
                         <div class="row">
@@ -364,15 +366,14 @@
                             </select>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="AffectedStation">Affected Station</label>
-                            <input id="AffectedStationIdPopup" disabled formControlName="AffectedStationIdPopup" class="form-control" type="text" name="AffectedStationIdPopup"
-                                placeholder="Enter Affected Station" />
-
+                            <label for="EmergencyName">Crisis Name</label>
+                            <input id="EmergencyNamePopup" disabled formControlName="EmergencyNamePopup" class="form-control" type="text" name="EmergencyNamePopup"
+                                placeholder="Enter Crisis Name" />
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="AffectedCountryPopup">Responsible Country<span class="required">*</span></label>
-                            <input id="AffectedCountryPopup" disabled class="form-control" type="text" name="AffectedCountryPopup" formControlName="AffectedCountryPopup" placeholder="Enter Country"
-                            />
+                            <label for="AffectedStation">Responsible Station</label>
+                            <input id="AffectedStationIdPopup" disabled formControlName="AffectedStationIdPopup" class="form-control" type="text" name="AffectedStationIdPopup"
+                                placeholder="Enter Responsible Station" />
                         </div>
                         <div *ngIf="isOffSitePopup" class="form-group col-lg-2 col-sm-12 col-md-6">
                             <label for="OffsiteDetails">Offsite Details</label>
@@ -380,26 +381,27 @@
                                 placeholder="Enter Offsite Details" />
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="EmergencyDate">Date of Crisis (UTC)</label>
-                            <input id="EmergencyDatePopup" disabled formControlName="EmergencyDatePopup" class="form-control" type="text" name="EmergencyDatePopup"
-                                placeholder="Enter EmergencyDate" />
-                        </div>
-                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="EmergencyDateLocal">Date of Crisis (LOCAL)</label>
-                            <input id="EmergencyDateLocalPopup" disabled formControlName="EmergencyDateLocalPopup" class="form-control" type="text" name="EmergencyDateLocalPopup"
-                                placeholder="Enter EmergencyDate" />
-
-
+                            <label for="AffectedCountryPopup">Responsible Country<span class="required">*</span></label>
+                            <input id="AffectedCountryPopup" disabled class="form-control" type="text" name="AffectedCountryPopup" formControlName="AffectedCountryPopup"
+                                placeholder="Enter Country" />
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <div class="form-group">
-                                <label for="EmergencyName">Crisis Name</label>
-                                <input id="EmergencyNamePopup" disabled formControlName="EmergencyNamePopup" class="form-control" type="text" name="EmergencyNamePopup"
-                                    placeholder="Enter Crisis Name" />
+                            <div class="row">
+                                <div class="form-group col-lg-12 col-sm-12 col-md-6">
+                                    <label for="EmergencyDate">Date of Crisis (UTC)</label>
+                                    <input id="EmergencyDatePopup" disabled formControlName="EmergencyDatePopup" class="form-control" type="text" name="EmergencyDatePopup"
+                                        placeholder="Enter EmergencyDate" />
+                                </div>
                             </div>
-
+                            <div class="row">
+                                <div class="form-group col-lg-12 col-sm-12 col-md-6">
+                                    <label for="EmergencyDateLocal">Date of Crisis (LOCAL)</label>
+                                    <input id="EmergencyDateLocalPopup" disabled formControlName="EmergencyDateLocalPopup" class="form-control" type="text" name="EmergencyDateLocalPopup"
+                                        placeholder="Enter EmergencyDate" />
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group col-lg-9 col-sm-12 col-md-6">
                             <label for="Description">Note</label>
@@ -497,7 +499,7 @@
 
                             <label for="IncidentsToPickForReplication">Incidents To Pick For Replication</label>
 
-                            <input id="BorrowedIncidentPopup" disabled formControlName="BorrowedIncidentPopup" class="form-control" type="text" name="BorrowedIncidentPopup"
+                            <input id="BorrowedIncidentPopup" disabled formControlName="BorrowedIncidentPopup" class="form-control" type="text" name="BorrowedIncidentPopup" readonly
                                 placeholder="Enter Borrowed Incident" />
 
                         </div>
@@ -585,5 +587,4 @@
             </div>
         </form>
     </div>
-
 </div>

@@ -48,7 +48,6 @@ export class DepartmentService
     GetAll(): Observable<ResponseModel<DepartmentModel>> {
         return this._dataService.Query()
             .Expand('ParentDepartment($select=DepartmentName)', 'UserProfile($select=Name)')
-            .Filter('ActiveFlag eq CMS.DataModel.Enum.ActiveFlag\'Active\'')
             .Execute();
     }
 
