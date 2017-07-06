@@ -91,6 +91,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
             .subscribe((responseActionable: ResponseModel<ActionableModel>) => {
                 this.departmentService.GetDepartmentNameIds()
                     .subscribe((response: ResponseModel<DepartmentModel>) => {
+                        actionable["actionableChilds"]=[];
                         responseActionable.Records[0].CheckList.CheckListChildrenMapper.forEach((item: ChecklistMapper) => {
                             this.GetListOfChildActionables(item.ChildCheckListId, this.currentIncident, (child: ActionableModel) => {
                                 child['DepartmentName'] = response.Records
