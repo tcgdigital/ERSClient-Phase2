@@ -36,4 +36,6 @@ export class PagesForDepartmentModel extends BaseModel {
     public SortOrder: string;
     public AllowView: boolean;
     public OnlyForHod: boolean;
+    public isAllowView: boolean;
+    public isOnlyHOD:boolean;
 }

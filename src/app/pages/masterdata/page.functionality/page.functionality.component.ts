@@ -100,6 +100,7 @@ export class PageFunctionalityComponent implements OnInit {
     }
 
     onNotify(message: KeyValue): void {
+        debugger;
         this.selectedDepartment = message.Value;
         this.pagePermissionService.GetFilter(message.Value.toString())
             .subscribe((response: ResponseModel<PagePermissionModel>) => {

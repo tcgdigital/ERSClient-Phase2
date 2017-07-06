@@ -40,12 +40,12 @@
                     <td data-title="Module Name" title="{{pageFordepartment.ModuleName}}"><span class="trimString">{{pageFordepartment.ModuleName}}</span></td>
                     <td data-title="Page Name" title="{{pageFordepartment.PageName}}"><span class="trimString">{{pageFordepartment.PageName}}</span></td>
                     <td data-title="Parent Page" title="{{pageFordepartment.ParentPageName}}"><span class="trimString">{{pageFordepartment.ParentPageName}}</span></td>
-                    <td data-title="Sort Order" ><span>{{pageFordepartment.SortOrder}}</span></td>
+                    <td data-title="Sort Order"><span>{{pageFordepartment.SortOrder}}</span></td>
                     <td data-title="Can View">
-                        <md-checkbox id="IsAutoApproved" [(ngModel)]="pageFordepartment.AllowView" aria-label="Add" (change)="checkAllStatusView($event)"></md-checkbox>
+                        <md-checkbox id="IsAutoApproved" class="allowView" [(ngModel)]="pageFordepartment.AllowView" aria-label="Add" (change)="checkAllStatusView($event)"></md-checkbox>
                     </td>
                     <td data-title="Is HOD">
-                        <md-checkbox id="IsAutoApproved" [(ngModel)]="pageFordepartment.OnlyForHod" aria-label="Add" (change)="checkAllStatusOnlyHOD($event)"></md-checkbox>
+                        <md-checkbox id="IsAutoApproved" class="onlyHod" [(ngModel)]="pageFordepartment.OnlyForHod" aria-label="Add" (change)="checkAllStatusOnlyHOD($event)"></md-checkbox>
                     </td>
                 </tr>
             </tbody>
