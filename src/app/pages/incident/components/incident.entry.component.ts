@@ -30,7 +30,8 @@ import {
     LocationService,
     Location,
     DateTimePickerOptions,
-    DateTimePickerDirective
+    DateTimePickerDirective,
+    AuthModel
 } from '../../../shared';
 import { ModalDirective } from 'ng2-bootstrap/modal';
 import { FlightModel, InvolvePartyModel } from '../../shared.components';
@@ -112,6 +113,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     public ScheduleArrivalLocal: Date;
     public lastCount: string = GlobalConstants.LAST_INCIDENT_PICK_COUNT;
     public EmergencyCountry: string = '';
+
+    credential: AuthModel;
     /**
      * Creates an instance of IncidentEntryComponent.
      * @param {FormBuilder} formBuilder
@@ -160,6 +163,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.datepickerOptionDeparture.position = 'top left';
         this.datepickerOptionArrival.position = 'top left';
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+        this.credential = UtilityService.getCredentialDetails();
         this.isFlightRelated = false;
         this.disableIsDrill = true;
         this.disableIsDrillPopup = true;
@@ -490,19 +494,30 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.isFlightRelatedPopup = false;
         this.isFlightRelatedPopup = this.isFlightRelated;
         this.createIncidentModel();
-        if (this.isFlightRelated) {
-            this.createInvolvepartyAndFlight();
-        }
-
+        this.createInvolvepartyAndFlight(this.isFlightRelated);
         this.fillIncidentDataExchangeModelData(this.incidentModel, this.involvePartyModel,
             this.flightModel, this.affectedModel);
         this.childModalViewIncident.show();
         this.loadDataIncidentViewPopup();
     }
 
-    createInvolvepartyAndFlight() {
+    // proceed() {
+    //     this.isFlightRelatedPopup = false;
+    //     this.isFlightRelatedPopup = this.isFlightRelated;
+    //     this.createIncidentModel();
+    //     if (this.isFlightRelated) {
+    //     this.createInvolvepartyAndFlight();
+    //     }
+
+    //     this.fillIncidentDataExchangeModelData(this.incidentModel, this.involvePartyModel,
+    //     this.flightModel, this.affectedModel);
+    //     this.childModalViewIncident.show();
+    //     this.loadDataIncidentViewPopup();
+    // }
+
+    createInvolvepartyAndFlight(isFlightRelated: boolean) {      
         this.createInvolvePartyModel(this.isFlightRelated);
-        this.createFlightModel();
+        this.createFlightModel(isFlightRelated);
         this.createAffectedModel();
     }
 
@@ -711,7 +726,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             this.involvePartyModel.InvolvedPartyType = UtilityService.GetKeyValues(InvolvedPartyType)[1].Key;
         }
         this.involvePartyModel.ActiveFlag = 'Active';
-        this.involvePartyModel.CreatedBy = 1;
+        this.involvePartyModel.CreatedBy = +this.credential.UserId;
         this.involvePartyModel.CreatedOn = this.date;
     }
     createAffectedModel(): void {
@@ -720,24 +735,24 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.affectedModel.InvolvedPartyId = 0;
         this.affectedModel.Severity = this.form.controls['Severity'].value == '' ? null : this.form.controls['Severity'].value;;
         this.affectedModel.ActiveFlag = 'Active';
-        this.flightModel.CreatedBy = 1;
+        this.flightModel.CreatedBy = +this.credential.UserId;
         this.flightModel.CreatedOn = this.date;
     }
 
-    createFlightModel(): void {
+    createFlightModel(isFlightRelated: boolean): void {
         this.flightModel = new FlightModel();
         this.flightModel.FlightId = 0;
         this.flightModel.InvolvedPartyId = 0;
-        this.flightModel.FlightNo = this.formFlight.controls['FlightNumber'].value;
-        this.flightModel.OriginCode = this.formFlight.controls['Origin'].value;
-        this.flightModel.DestinationCode = this.formFlight.controls['Destination'].value;
-        this.flightModel.DepartureDate = new Date(this.formFlight.controls['Scheduleddeparture'].value);//this.DepartureDate;
-        this.flightModel.ArrivalDate = new Date(this.formFlight.controls['Scheduledarrival'].value);//this.ArrivalDate;
-        this.flightModel.FlightTaleNumber = this.formFlight.controls['FlightTailNumber'].value;
-        this.flightModel.AircraftTypeId = this.formFlight.controls['AircraftTypeId'].value;
+        this.flightModel.FlightNo = (isFlightRelated == true) ? this.formFlight.controls['FlightNumber'].value : "DUMMY_FLIGHT";
+        this.flightModel.OriginCode = (isFlightRelated == true) ? this.formFlight.controls['Origin'].value : "DUMMY_ORG";
+        this.flightModel.DestinationCode = (isFlightRelated == true) ? this.formFlight.controls['Destination'].value : "DUMMY_DES";
+        this.flightModel.DepartureDate = (isFlightRelated == true) ? new Date(this.formFlight.controls['Scheduleddeparture'].value) : new Date("01/01/2001");//this.DepartureDate;
+        this.flightModel.ArrivalDate = (isFlightRelated == true) ? new Date(this.formFlight.controls['Scheduledarrival'].value) : new Date("01/02/2001");//this.ArrivalDate;
+        this.flightModel.FlightTaleNumber = (isFlightRelated == true) ? this.formFlight.controls['FlightTailNumber'].value : "DUMMY_FLT_TAIL";
+        this.flightModel.AircraftTypeId = (isFlightRelated == true) ? this.formFlight.controls['AircraftTypeId'].value : 1;
         this.flightModel.LoadAndTrimInfo = null;
         this.flightModel.ActiveFlag = 'Active';
-        this.flightModel.CreatedBy = 1;
+        this.flightModel.CreatedBy = +this.credential.UserId;
         this.flightModel.CreatedOn = this.date;
     }
 
@@ -802,7 +817,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.incidentModel.SavedBy = null;
         this.incidentModel.SavedOn = null;
         this.incidentModel.ActiveFlag = 'Active';
-        this.incidentModel.CreatedBy = 1;
+        this.incidentModel.CreatedBy = +this.credential.UserId;
         this.incidentModel.CreatedOn = this.date;
     }
 

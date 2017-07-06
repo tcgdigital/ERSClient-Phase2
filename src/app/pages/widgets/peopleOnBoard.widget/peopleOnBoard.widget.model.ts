@@ -12,6 +12,7 @@ export class PeopleOnBoardModel extends BaseModel {
     public totalPaxTypeCount: KeyValue[] = [];
     public totalAffectedCargoCount: number;
     public cargoOnBoardCountByType: KeyValue[] = [];
+    public totalGroundVictimCount: number = 0;
 
     
     constructor() {

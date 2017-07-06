@@ -6,7 +6,7 @@ import {
     DataProcessingService
 } from '../../../shared';
 
-import { InvolvePartyModel, AffectedPeopleModel, CargoModel } from '../../shared.components';
+import { InvolvePartyModel, AffectedPeopleModel, CargoModel, GroundVictimModel } from '../../shared.components';
 
 
 
@@ -21,6 +21,7 @@ export class MasterDataUploadForValidService {
    
     private _dataServiceAffectedPeople: DataService<InvolvePartyModel>;
     private _dataServiceAffectedObject: DataService<InvolvePartyModel>;
+    private _dataServiceGroundVictims: DataService<InvolvePartyModel>;
     private _validPassengers: AffectedPeopleModel[] = [];
     
     /**
@@ -36,6 +37,9 @@ export class MasterDataUploadForValidService {
             .CreateServiceWithOptions<InvolvePartyModel>('InvolvedParties', option);
 
         this._dataServiceAffectedObject = this.dataServiceFactory
+            .CreateServiceWithOptions<InvolvePartyModel>('InvolvedParties', option);
+
+        this._dataServiceGroundVictims = this.dataServiceFactory
             .CreateServiceWithOptions<InvolvePartyModel>('InvolvedParties', option);
     }
 
@@ -101,5 +105,22 @@ export class MasterDataUploadForValidService {
         .Execute()
         .map(a=>a.Records.map(b=>b.Flights).reduce((a,b)=>a.concat(b)))
         .map(a=>a.map(b=>b.Cargoes).reduce((a,b)=>a.concat(b)));
+    }
+
+
+    /**
+     * Get All Ground Victims
+     * 
+     * @param {number} incidentId 
+     * @returns {Observable<GroundVictimModel[]>} 
+     * 
+     * @memberOf MasterDataUploadForValidService
+     */
+    GetAllGroundVictimsByIncidentId(incidentId: number): Observable<GroundVictimModel[]>{
+        return this._dataServiceGroundVictims.Query()
+        .Expand(`GroundVictims`)
+        .Filter(`IncidentId eq ${incidentId}`)
+        .Execute()
+        .map(a=>a.Records.map(b=>b.GroundVictims).reduce((a,b)=>a.concat(b)));
     }
 }

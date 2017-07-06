@@ -5,7 +5,7 @@ import { ModalDirective } from 'ng2-bootstrap/modal';
 import { Observable } from 'rxjs/Rx';
 import { InvolvePartyModel } from '../../shared.components/involveparties';
 import { AffectedPeopleModel } from '../../shared.components/affected.people/components/affected.people.model';
-import { PassengerModel, CargoModel, CrewModel } from '../../shared.components';
+import { PassengerModel, CargoModel, CrewModel, GroundVictimModel } from '../../shared.components';
 import { EnquiryModel } from '../../shared.components/call.centre/components/call.centre.model';
 import {
     ResponseModel,
@@ -39,7 +39,8 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
     @ViewChild('childModalPassengersByNationality') public childModalPassengersByNationality: ModalDirective;
     @ViewChild('childModalPassengersByPaxType') public childModalPassengersByPaxType: ModalDirective;
     @ViewChild('childModalCargos') public childModalCargos: ModalDirective;
-
+    @ViewChild('childModalGroundVictims') public childModalGroundVictims: ModalDirective;
+    
 
     peopleOnBoard: PeopleOnBoardModel;
     public passengerList: Observable<PassengerModel[]>;
@@ -54,6 +55,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
     public enquiries: ResponseModel<EnquiryModel>;
     public affectedEnquiredPeoples: Observable<PassengerModel[]>;
     public affectedEnquiredCrews: Observable<CrewModel[]>;
+    public groundVictimList: Observable<GroundVictimModel[]>;
 
     public cargoList: Observable<CargoModel[]>;
     currentDepartmentId: number;
@@ -126,7 +128,19 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
 
     }
 
+    public openAllGroundVictims(): void {
+        let groundVictimListLocal : GroundVictimModel[] = [];
+        this.peopleOnBoardWidgetService.GetAllGroundVictimsByIncident(this.currentIncidentId)
+        .subscribe((result: ResponseModel<InvolvePartyModel>) => {
+            groundVictimListLocal = result.Records[0].GroundVictims;
+            this.groundVictimList = Observable.of(groundVictimListLocal);
+            this.childModalGroundVictims.show();            
+        })
+    }
 
+    public hideAllGroundVictims(): void {
+        this.childModalGroundVictims.hide();
+    }
 
     public openAllPassengersByFilter(filterValue: string, filterCriteria: string): void {
         const involvedParties: InvolvePartyModel[] = [];
