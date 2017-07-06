@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
-import { PageModel } from './department.functionality.model';
+import { PageModel } from './page.functionality.model';
 import {
     ResponseModel,
     DataService,
@@ -22,6 +22,14 @@ export class PageService implements IServiceInretface<PageModel>{
 
     GetAll(): Observable<ResponseModel<PageModel>> {
         return this._dataServiceForPage.Query().Execute();
+    }
+
+    GetPagesOrderBySortOrder():Observable<ResponseModel<PageModel>> {
+        return this._dataServiceForPage
+        .Query()
+        .Expand('ParentPage($select=PageName)')
+        .OrderBy('ModuleName,SortOrder')
+        .Execute();
     }
 
     GetFilter(filter: string): Observable<ResponseModel<PageModel>> {

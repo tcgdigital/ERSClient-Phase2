@@ -67,29 +67,60 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
         return this._dataService.Get(id.toString()).Execute();
     }
 
-    CreateIncident(incidentModel: IncidentModel, isFlightRelated: boolean, involvedParty?: InvolvePartyModel,
+    // CreateIncident(incidentModel: IncidentModel, isFlightRelated: boolean, involvedParty?: InvolvePartyModel,
+    //     flight?: FlightModel, affected?: AffectedModel): Observable<IncidentModel> {
+    //     let incident: IncidentModel;
+    //     if (isFlightRelated) {
+    //         involvedParty.Affecteds = [];
+    //         delete affected.Active;
+    //         involvedParty.Affecteds.push(affected);
+    //         involvedParty.Flights = [];
+    //         involvedParty.Flights.push(flight);
+    //         incidentModel.InvolvedParties = [];
+    //         incidentModel.InvolvedParties.push(involvedParty);
+    //         return this._dataService.Post(incidentModel)
+    //             .Execute()
+    //             .map((data: IncidentModel) => {
+    //                 incident = data;
+    //                 involvedParty.IncidentId = incident.IncidentId;
+    //                 return data;
+    //             });
+    //     }
+    //     else {
+    //         return this._dataService.Post(incidentModel)
+    //             .Execute();
+    //     }
+    // }
+
+     /**
+      * Create Incident for both
+      * NonFlightRelated(With Dummy Flight Object) & FlightRelated Emergency
+      * @param {IncidentModel} incidentModel 
+      * @param {boolean} isFlightRelated 
+      * @param {InvolvePartyModel} [involvedParty] 
+      * @param {FlightModel} [flight] 
+      * @param {AffectedModel} [affected] 
+      * @returns {Observable<IncidentModel>} 
+      * 
+      * @memberOf IncidentService
+      */
+     CreateIncident(incidentModel: IncidentModel, isFlightRelated: boolean, involvedParty?: InvolvePartyModel,
         flight?: FlightModel, affected?: AffectedModel): Observable<IncidentModel> {
-        let incident: IncidentModel;
-        if (isFlightRelated) {
-            involvedParty.Affecteds = [];
-            delete affected.Active;
-            involvedParty.Affecteds.push(affected);
-            involvedParty.Flights = [];
-            involvedParty.Flights.push(flight);
-            incidentModel.InvolvedParties = [];
-            incidentModel.InvolvedParties.push(involvedParty);
-            return this._dataService.Post(incidentModel)
-                .Execute()
-                .map((data: IncidentModel) => {
-                    incident = data;
-                    involvedParty.IncidentId = incident.IncidentId;
-                    return data;
-                });
-        }
-        else {
-            return this._dataService.Post(incidentModel)
-                .Execute();
-        }
+        let incident: IncidentModel;        
+        involvedParty.Affecteds = [];
+        delete affected.Active;
+        involvedParty.Affecteds.push(affected);
+        involvedParty.Flights = [];
+        involvedParty.Flights.push(flight);
+        incidentModel.InvolvedParties = [];
+        incidentModel.InvolvedParties.push(involvedParty);
+        return this._dataService.Post(incidentModel)
+            .Execute()
+            .map((data: IncidentModel) => {
+                incident = data;
+                involvedParty.IncidentId = incident.IncidentId;
+                return data;
+            });
     }
 
     GetIncidentById(id: number): Observable<IncidentModel> {

@@ -18,7 +18,7 @@ import { DemandModel } from './demand.model';
 import { DemandTrailModel } from './demand.trail.model';
 import { DemandTypeService, DemandTypeModel } from '../../../masterdata/demandtype';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
-import { PageService, PageModel } from '../../../masterdata/department.functionality';
+import { PageService, PageModel } from '../../../masterdata/page.functionality';
 import {
     AffectedObjectsService, AffectedObjectsToView, AffectedPeopleService,
     AffectedPeopleToView, InvolvePartyModel, CommunicationLogModel

@@ -1,7 +1,7 @@
 import { ITabLinkInterface } from '../../shared';
 
-export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
-     {
+export const TAB_LINKS: ITabLinkInterface[] = [
+    {
         id: 'userprofile',
         title: 'Userprofile',
         // icon: 'fa fa-twitter fa-2x',
@@ -9,7 +9,7 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         selected: false,
         hidden: false,
         order: 1
-    },{
+    }, {
         id: 'checklist',
         title: 'Checklist',
         // icon: 'fa fa-chrome fa-2x',
@@ -17,7 +17,7 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         selected: false,
         hidden: false,
         order: 2
-    },{
+    }, {
         id: 'departmentfunctionality',
         title: 'Department Functionality Mapping',
         // icon: 'fa fa-windows fa-2x',
@@ -33,7 +33,7 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         selected: false,
         hidden: false,
         order: 4
-    },{
+    }, {
         id: 'department',
         title: 'Department',
         // icon: 'fa fa-apple fa-2x',
@@ -49,7 +49,7 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         selected: false,
         hidden: false,
         order: 6
-    },  {
+    }, {
         id: 'emergencydepartment',
         title: 'Crisis Department Mapping',
         // icon: 'fa fa-firefox fa-2x',
@@ -58,19 +58,25 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         hidden: false,
         order: 7
     }, {
-        
+
         id: 'emergencylocation',
         title: 'Responsible Station',
         // icon: 'fa fa-twitter fa-2x',
         url: '/pages/masterdata/affectedstation',
         selected: false,
         hidden: false,
-        order: 8   
-    },{
+        order: 8
+    }, {
         id: 'demandtype',
         title: 'Demand Type',
         // icon: 'fa fa-edge fa-2x',
         url: '/pages/masterdata/demandtype',
+        order: 8
+    }, {
+        id: 'pagefunctionality',
+        title: 'Department Functionality Mapping',
+        // icon: 'fa fa-windows fa-2x',
+        url: '/pages/masterdata/pagefunctionality',
         selected: false,
         hidden: false,
         order: 9
@@ -82,7 +88,7 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         selected: false,
         hidden: false,
         order: 10
-    },  {
+    }, {
         id: 'template',
         title: 'Notification Template',
         // icon: 'fa fa-medium fa-2x',
@@ -91,4 +97,4 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         hidden: false,
         order: 11
     }
-];
+] as ITabLinkInterface[];

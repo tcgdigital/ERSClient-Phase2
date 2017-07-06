@@ -81,17 +81,41 @@
                                         </a>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td data-title="File Name">Ground Victim Manifest</td>
+                                    <td data-title="Select File">
+                                        <input type="file" #inputFileGroundVictim id="file" formControlName="fileGroundVictim" (change)="getFileDetails($event,'GroundVictim')" />
+                                    </td>
+                                    <td data-title="Download Templates">
+                                        <a target="_self" href="{{groundVictimTemplatePath}}" download="GroundVictim.xlsx">
+                                            <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Ground Victim Template
+                                        </a>
+                                    </td>
+                                    <td data-title="View Records">
+                                        <a href="javascript: void(0)" (click)="openGroundVictims()">
+                                            <i class="fa fa-file-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Valid Ground Victim Records
+                                        </a>
+                                    </td>
+                                    <td data-title="View Invalid Records">
+                                        <a href="javascript: void(0)" (click)="openInvalidGroundVictims()">
+                                            <i class="fa fa-file fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Invalid Ground Victim Records
+                                        </a>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </responsive-table>
                 </div>
                 <div class="col-12">
+                    <br />
                     <button class="btn btn-primary" type="submit" (click)="uploadFiles()" [disabled] = "disableUploadButton">Upload</button>
                     <!--<button class="btn btn-warning" type="button">Back To DashBoard</button>-->
+                    
                 </div>
                 <div class="col-12">
                     <div class="row">
                         <div class="col-12">
+                            <br />
                             <strong>Important instructions for filling out the excel templates:</strong>
                         </div>
                         <div class="col-12">
@@ -219,6 +243,38 @@
             </div>
             <div class="modal-body">
                 <invalidCargo-list [IncidentId]="IncidentId"></invalidCargo-list>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div bsModal #validGroundVictimModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">View Valid Ground Victims</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="closeGroundVictim()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <validGroundVictim-list [IncidentId]="IncidentId"></validGroundVictim-list>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div bsModal #invalidGroundVictimModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">View Invalid Ground Victims</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="closeInvalidGroundVictim()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <invalidGroundVictim-list [IncidentId]="IncidentId"></invalidGroundVictim-list>
             </div>
         </div>
     </div>

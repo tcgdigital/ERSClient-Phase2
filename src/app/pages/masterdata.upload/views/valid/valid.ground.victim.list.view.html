@@ -1,0 +1,27 @@
+<responsive-table>
+    <table responsive-table-body>
+        <thead>
+            <tr>
+                <th>Ground Victim Type</th>
+                <th>Victim Name</th>
+                <th>Affected Count</th>
+                <th>Status</th>
+                <th>NOK Name</th>
+                <th>NOK Contact Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngIf="groundVictims.length <= 0">
+                <td data-title="Records" colspan="6">No records to show.</td>
+            </tr>
+            <tr *ngFor="let affected of groundVictims">
+                <td data-title="Ground Victim Type">{{affected.GroundVictimType}}</td>
+                <td data-title="Victim Name">{{affected.GroundVictimName}}</td>
+                <td data-title="Affected Count">{{affected.AffectedCount}}</td>
+                <td data-title="Status">{{affected.Status}}</td>
+                <td data-title="NOK Name">{{affected.NOKName}}</td>
+                <td data-title="NOK Contact Number">{{affected.NOKContactNumber}}</td>
+            </tr>
+        </tbody>
+    </table>
+</responsive-table>
