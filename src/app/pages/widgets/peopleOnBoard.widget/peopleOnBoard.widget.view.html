@@ -555,7 +555,7 @@
                         </thead>
                         <tbody>
                             <tr *ngIf="!(groundVictimList | async)?.length>0">
-                                <td data-title="Records" colspan="11">No crew to show.</td>
+                                <td data-title="Records" colspan="6">No crew to show.</td>
                             </tr>
                             <tr *ngFor="let affected of groundVictimList | async">
                                 <td data-title="Ground Victim Type">{{affected.GroundVictimType}}</td>

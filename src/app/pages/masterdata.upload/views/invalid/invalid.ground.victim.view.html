@@ -11,8 +11,8 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngIf="invalidGroundVictims.length<=0">
-                <td data-title="Records" colspan="11">No records to show.</td>
+            <tr *ngIf="invalidGroundVictims.length <= 0">
+                <td data-title="Records" colspan="6">No records to show.</td>
             </tr>
             <tr *ngFor="let affected of invalidGroundVictims">
                 <td data-title="Ground Victim Type">{{affected.InvalidGroundVictimType}}</td>
