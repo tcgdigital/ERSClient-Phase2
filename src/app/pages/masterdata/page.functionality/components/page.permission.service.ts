@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
-import { PagePermissionModel } from './department.functionality.model';
+import { PagePermissionModel } from './page.functionality.model';
 import { IPagePermissionService } from './IPagePermissionService';
 import {
     ResponseModel,

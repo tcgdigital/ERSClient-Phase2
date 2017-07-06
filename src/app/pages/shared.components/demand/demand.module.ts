@@ -15,7 +15,7 @@ import { CallerService } from '../caller';
 import { DemandTypeService } from '../../masterdata/demandtype';
 import { InvolvePartyService } from '../involveparties';
 import { DepartmentService } from '../../masterdata/department';
-import { PageService } from '../../masterdata/department.functionality';
+import { PageService } from '../../masterdata/page.functionality';
 import { ModalModule} from 'ng2-bootstrap/modal';
 import { FileUploadService } from '../../../shared'
 import { FileStoreService } from '../../../shared/services/common.service'
