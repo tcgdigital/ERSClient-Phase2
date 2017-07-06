@@ -106,8 +106,7 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
       */
      CreateIncident(incidentModel: IncidentModel, isFlightRelated: boolean, involvedParty?: InvolvePartyModel,
         flight?: FlightModel, affected?: AffectedModel): Observable<IncidentModel> {
-        let incident: IncidentModel;
-        debugger;
+        let incident: IncidentModel;        
         involvedParty.Affecteds = [];
         delete affected.Active;
         involvedParty.Affecteds.push(affected);

@@ -43,8 +43,7 @@ export class ValidPassengersListComponent implements OnInit, OnDestroy{
 
     
 
-    getValidPassengerRecords(): void {
-        debugger;
+    getValidPassengerRecords(): void {       
         this._validRecordService.GetAllPassengerByIncidentId(this.IncidentId)
         .flatMap(x=>x)
         .subscribe(a=>{            

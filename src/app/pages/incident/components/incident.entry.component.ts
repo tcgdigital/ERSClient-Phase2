@@ -515,8 +515,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     //     this.loadDataIncidentViewPopup();
     // }
 
-    createInvolvepartyAndFlight(isFlightRelated: boolean) {
-        debugger;
+    createInvolvepartyAndFlight(isFlightRelated: boolean) {      
         this.createInvolvePartyModel(this.isFlightRelated);
         this.createFlightModel(isFlightRelated);
         this.createAffectedModel();
