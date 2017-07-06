@@ -5,7 +5,7 @@ import { InvolvePartyModel, InvolvePartyService } from '../../shared.components/
 import { AffectedModel } from '../../shared.components/affected';
 import { EnquiryModel, EnquiryService } from '../../shared.components/call.centre';
 import { PeopleOnBoardModel } from './peopleOnBoard.widget.model';
-import { PassengerModel, CrewModel, CargoModel } from '../../shared.components';
+import { PassengerModel, CrewModel, CargoModel, GroundVictimModel } from '../../shared.components';
 import {
     IServiceInretface,
     ResponseModel,
@@ -87,6 +87,12 @@ export class PeopleOnBoardWidgetService implements OnInit {
                     .map(x=> { return {Key: x, Value: cargoTypeKPIData[x]}; });                
                 return this.peopleOnBoard;
             })
+            .flatMap((peopleOnBoard: PeopleOnBoardModel) => this.GetAllGroundVictimsByIncident(incidentId))
+            .map((dataTotalAffectedGroundVictim: ResponseModel<InvolvePartyModel>) => {
+                let groundVictimListLocal = dataTotalAffectedGroundVictim.Records[0].GroundVictims;
+                this.peopleOnBoard.totalGroundVictimCount = isNaN(groundVictimListLocal.length) ? 0 :groundVictimListLocal.length;
+                return this.peopleOnBoard;
+            })
             .flatMap((peopleOnBoard: PeopleOnBoardModel) => this.GetEnquiredAffectedPeople(incidentId))
             .map((dataEnquiryModels: ResponseModel<EnquiryModel>) => {
                 this.enquiries = dataEnquiryModels;
@@ -163,6 +169,10 @@ export class PeopleOnBoardWidgetService implements OnInit {
 
     GetAllCargosByIncident(incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
         return this.involvedPartyService.GetAllCargosByIncident(incidentId);
+    }
+
+    GetAllGroundVictimsByIncident(incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
+        return this.involvedPartyService.GetAllGroundVictimsByIncident(incidentId);
     }
 
     GetEnquiredAffectedPeople(incidentId: number): Observable<ResponseModel<EnquiryModel>> {

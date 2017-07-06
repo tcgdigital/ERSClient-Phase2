@@ -1,12 +1,16 @@
 @import '../../config/config';
-
 .card-without-top-border {
     border-top: none !important;
 }
 
-.trailButtonStyle {
-    font-size:20px;
-    color:$trail-green;
+.trailActiveButtonStyle {
+    font-size: 20px;
+    color: $trail-green;
+}
+
+.trailNormalButtonStyle {
+    font-size: 20px;
+    color: $dropdown-item-text;
 }
 
 .modalBodyHeaderStyle {
@@ -14,14 +18,13 @@
     padding: 5px;
 }
 
-.lebelHeaderStyle{
+.lebelHeaderStyle {
     text-align: center;
 }
 
-.buttonholder{
-        float: right;
-    vertical-align: middle;
-    padding-top: 27px;
+.buttonholder {
+    float: right;
+    vertical-align: middle; //padding-top: 27px;
 }
 
 .modalBodyHeaderStyle {
@@ -29,23 +32,35 @@
     padding: 5px;
 }
 
-.CallerClass{
+.CallerClass {
     padding: 2px;
 }
 
-.dropdown-menu{
-      padding: 0;
-        margin-top: 19px;
-        margin-left: 16px;
-        border: none;
-        ul li>a:hover {
-            background-color: $sidemenu-active;
-        }
-        li.disable-hover>a:hover {
-            background-color: $default !important;
-            color: #000;
-        }
+.dropdown-menu {
+    padding: 0;
+    margin-top: 19px;
+    margin-left: 16px;
+    border: none;
+    ul li>a:hover {
+        background-color: $sidemenu-active;
+    }
+    li.disable-hover>a:hover {
+        background-color: $default !important;
+        color: #000;
+    }
 }
-.top-padding{
+
+.top-padding {
     padding-top: 20px;
+}
+
+.rowpadding {
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+
+affectedpeople-verify {
+    div.row {
+        padding-bottom: 10px;
+    }
 }

@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-import { ModalDirective } from 'ng2-bootstrap/modal';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import {
     ResponseModel, DataExchangeService,
@@ -20,7 +20,7 @@ import { FileData } from '../../../shared/models';
 @Component({
     selector: 'masterdatauploadlist-main',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: '../views/masterdata.upload.list.view.html'   
+    templateUrl: '../views/masterdata.upload.list.view.html'
 })
 
 export class MasterDataUploadListComponent implements OnInit, OnDestroy {
@@ -30,6 +30,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
     @ViewChild('inputFilePax') inputFilePax: any;
     @ViewChild('inputFileCrew') inputFileCrew: any;
     @ViewChild('inputFileCargo') inputFileCargo: any;
+    @ViewChild('inputFileGroundVictim') inputFileGroundVictim: any;
 
     @ViewChild('validPassengersModal') public validPassengersModal: ModalDirective;
     @ViewChild('validCargoModal') public validCargoModal: ModalDirective;
@@ -37,10 +38,13 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
     @ViewChild('invalidCrewModal') public invalidCrewModal: ModalDirective;
     @ViewChild('invalidPassengersModal') public invalidPassengersModal: ModalDirective;
     @ViewChild('invalidCargoModal') public invalidCargoModal: ModalDirective;
+    @ViewChild('validGroundVictimModal') public validGroundVictimModal: ModalDirective;
+    @ViewChild('invalidGroundVictimModal') public invalidGroundVictimModal: ModalDirective;
 
     passengerTemplatePath: string = './assets/static-content/Passengers.xlsx';
     cargoTemplatePath: string = './assets/static-content/Cargo.xlsx';
     crewTemplatePath: string = './assets/static-content/Crews.xlsx';
+    groundVictimTemplatePath: string = './assets/static-content/GroundVictim.xlsx';
 
     filesToUpload: FileData[];
     objFileData: FileData;
@@ -74,10 +78,12 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
         this.inputFilePax.nativeElement.value = '';
         this.inputFileCrew.nativeElement.value = '';
         this.inputFileCargo.nativeElement.value = '';
+        this.inputFileGroundVictim.nativeElement.value = '';
     }
 
     uploadFiles(): void {
-        if (this.inputFilePax.nativeElement.value !== '' || this.inputFileCrew.nativeElement.value !== '' || this.inputFileCargo.nativeElement.value !== '') {
+        if (this.inputFilePax.nativeElement.value !== '' || this.inputFileCrew.nativeElement.value !== ''
+            || this.inputFileCargo.nativeElement.value !== '' || this.inputFileGroundVictim.nativeElement.value !== '') {
             this.disableUploadButton = false;
             const baseUrl = GlobalConstants.EXTERNAL_URL;
             const param = 'IncidentId=' + this.IncidentId + '&CreatedBy=' + this.CreatedBy;
@@ -101,11 +107,8 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
         }
     }
 
-
-
     getFileDetails(e: any, type: string): void {
         this.disableUploadButton = false;
-        //this.filesToUpload = [];
 
         for (let i = 0; i < e.target.files.length; i++) {
             const extension = e.target.files[i].name.split('.').pop();
@@ -116,13 +119,10 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
                 this.objFileData.file = e.target.files[i];
                 this.filesToUpload.push(this.objFileData);
             }
-            else
-            {
-                 this.toastrService.error('Invalid File Format!', 'Error', this.toastrConfig);
-                 this.inputFileCargo.nativeElement.value = "";
-                 this.inputFileCrew.nativeElement.value = "";
-                 this.inputFilePax.nativeElement.value = "";
-                 this.disableUploadButton = true;
+            else {
+                this.toastrService.error('Invalid File Format!', 'Error', this.toastrConfig);
+                this.reset();
+                this.disableUploadButton = true;
             }
         }
     }
@@ -175,6 +175,24 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
         this.invalidCargoModal.hide();
     }
 
+    openGroundVictims(): void {
+        this.validGroundVictimModal.show();
+        this.dataExchange.Publish('OpenGroundVictims', true);
+    }
+
+    closeGroundVictim(): void {
+        this.validGroundVictimModal.hide();
+    }
+
+    openInvalidGroundVictims(): void {
+        this.invalidGroundVictimModal.show();
+        this.dataExchange.Publish('OpenInvalidGroundVictims', true);
+    }
+
+    closeInvalidGroundVictim(): void {
+        this.invalidGroundVictimModal.hide();
+    }
+
     private incidentChangeHandler(incident: KeyValue): void {
         this.IncidentId = incident.Value;
     }
@@ -187,7 +205,8 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
         this.form = new FormGroup({
             filePax: new FormControl(),
             fileCrew: new FormControl(),
-            fileCargo: new FormControl()
+            fileCargo: new FormControl(),
+            fileGroundVictim: new FormControl()
         });
     }
 }

@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewEncapsulation, Input, ViewChild, OnDestroy } from '@angular/core';
 import { PeopleOnBoardWidgetService } from './peopleOnBoard.widget.service';
 import { PeopleOnBoardModel } from './peopleOnBoard.widget.model';
-import { ModalDirective } from 'ng2-bootstrap/modal';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Observable } from 'rxjs/Rx';
 import { InvolvePartyModel } from '../../shared.components/involveparties';
 import { AffectedPeopleModel } from '../../shared.components/affected.people/components/affected.people.model';
-import { PassengerModel, CargoModel, CrewModel } from '../../shared.components';
+import { PassengerModel, CargoModel, CrewModel, GroundVictimModel } from '../../shared.components';
 import { EnquiryModel } from '../../shared.components/call.centre/components/call.centre.model';
 import {
     ResponseModel,
@@ -39,7 +39,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
     @ViewChild('childModalPassengersByNationality') public childModalPassengersByNationality: ModalDirective;
     @ViewChild('childModalPassengersByPaxType') public childModalPassengersByPaxType: ModalDirective;
     @ViewChild('childModalCargos') public childModalCargos: ModalDirective;
-
+    @ViewChild('childModalGroundVictims') public childModalGroundVictims: ModalDirective;
 
     peopleOnBoard: PeopleOnBoardModel;
     public passengerList: Observable<PassengerModel[]>;
@@ -47,13 +47,14 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
     public passengerListByGender: PassengerModel[] = [];
     public passengerListByNationality: PassengerModel[] = [];
     public passengerListByPaxType: PassengerModel[] = [];
-    public searchConfigsPax: SearchConfigModel<any>[] = [];
-    public searchConfigsCargo: SearchConfigModel<any>[] = [];
+    public searchConfigsPax: Array<SearchConfigModel<any>> = [];
+    public searchConfigsCargo: Array<SearchConfigModel<any>> = [];
 
     public crewList: Observable<CrewModel[]>;
     public enquiries: ResponseModel<EnquiryModel>;
     public affectedEnquiredPeoples: Observable<PassengerModel[]>;
     public affectedEnquiredCrews: Observable<CrewModel[]>;
+    public groundVictimList: Observable<GroundVictimModel[]>;
 
     public cargoList: Observable<CargoModel[]>;
     currentDepartmentId: number;
@@ -87,9 +88,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
         this.initiateSearchConfigurationsPassenger();
         this.initiateSearchConfigurationsCargo();
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
-        
     }
-
 
     public openAllPassengersDetails(): void {
         const involvedParties: InvolvePartyModel[] = [];
@@ -110,7 +109,6 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
                     this.passengerList = Observable.of([]);
                     this.childModalPassengers.show();
                 }
-
             });
     }
 
@@ -122,11 +120,22 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
             .subscribe((result: ResponseModel<InvolvePartyModel>) => {
                 cargoListLocal = result.Records[0].Flights[0].Cargoes;
                 this.cargoList = Observable.of(cargoListLocal);
-            })
-
+            });
     }
 
+    public openAllGroundVictims(): void {
+        let groundVictimListLocal: GroundVictimModel[] = [];
+        this.peopleOnBoardWidgetService.GetAllGroundVictimsByIncident(this.currentIncidentId)
+            .subscribe((result: ResponseModel<InvolvePartyModel>) => {
+                groundVictimListLocal = result.Records[0].GroundVictims;
+                this.groundVictimList = Observable.of(groundVictimListLocal);
+                this.childModalGroundVictims.show();
+            });
+    }
 
+    public hideAllGroundVictims(): void {
+        this.childModalGroundVictims.hide();
+    }
 
     public openAllPassengersByFilter(filterValue: string, filterCriteria: string): void {
         const involvedParties: InvolvePartyModel[] = [];
@@ -144,18 +153,19 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
                         passengerListLocal.push(UtilityService.pluck(item, ['Passenger'])[0]);
                     });
                     if (filterCriteria.toLowerCase() === 'gender')
-                        this.passengerListByGender = passengerListLocal.filter(a => a.PassengerGender === filterValue);
+                        this.passengerListByGender = passengerListLocal
+                            .filter((a) => a.PassengerGender === filterValue);
                     if (filterCriteria.toLowerCase() === 'nationality')
-                        this.passengerListByNationality = passengerListLocal.filter(a => a.PassengerNationality === filterValue);
+                        this.passengerListByNationality = passengerListLocal
+                            .filter((a) => a.PassengerNationality === filterValue);
                     if (filterCriteria.toLowerCase() === 'pax type')
-                        this.passengerListByPaxType = passengerListLocal.filter(a => a.PassengerType === filterValue)
-                    //this.childModalPassengers.show();
+                        this.passengerListByPaxType = passengerListLocal
+                            .filter((a) => a.PassengerType === filterValue);
                 }
                 else {
                     this.passengerListByGender = [];
                     this.passengerListByNationality = [];
                     this.passengerListByNationality = [];
-                    //this.childModalPassengers.show();
                 }
             });
     }
@@ -283,6 +293,43 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
         this.globalState.Unsubscribe('AffectedPersonStatusChanged');
     }
 
+    invokeSearchPassenger(query: string): void {
+        const involvedParties: InvolvePartyModel[] = [];
+        const passengerListLocal: PassengerModel[] = [];
+        this.peopleOnBoardWidgetService.GetQueryForPassenger(query, this.currentIncidentId)
+            .subscribe((result: ResponseModel<InvolvePartyModel>) => {
+                let affectedPeoples: AffectedPeopleModel[];
+                if (result.Records[0].Affecteds.length > 0) {
+                    affectedPeoples = result.Records[0].Affecteds[0].AffectedPeople;
+                    affectedPeoples.forEach((item: AffectedPeopleModel) => {
+                        passengerListLocal.push(UtilityService.pluck(item, ['Passenger'])[0]);
+                    });
+                    this.passengerList = Observable.of(passengerListLocal);
+                }
+            }, ((error: any) => {
+                console.log(`Error: ${error}`);
+            }));
+    }
+
+    invokeResetPassenger(): void {
+        this.openAllPassengersDetails();
+    }
+
+    invokeSearchCargo(query: string): void {
+        let cargoListLocal: CargoModel[] = [];
+        this.peopleOnBoardWidgetService.GetQueryForCargo(query, this.currentIncidentId)
+            .subscribe((result: ResponseModel<InvolvePartyModel>) => {
+                cargoListLocal = result.Records[0].Flights[0].Cargoes;
+                this.cargoList = Observable.of(cargoListLocal);
+            }, ((error: any) => {
+                console.log(`Error: ${error}`);
+            }));
+    }
+
+    invokeResetCargo(): void {
+        this.openAllCargoDetails();
+    }
+
     private incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
         this.getPeopleOnboardCounts(this.currentIncidentId);
@@ -295,7 +342,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
             .subscribe((result: ResponseModel<InvolvePartyModel>) => {
                 cargoListLocal = result.Records[0].Flights[0].Cargoes;
                 this.cargoList = Observable.of(cargoListLocal);
-            })
+            });
         this.childModalCargos.show();
     }
     private hideAllCargoDetails(): void {
@@ -303,10 +350,10 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
     }
 
     private initiateSearchConfigurationsPassenger(): void {
-        let Gender: NameValue<string>[] = [
-            new NameValue<string>('Male', "Male"),
-            new NameValue<string>('Female', "Female")
-        ]
+        const Gender: Array<NameValue<string>> = [
+            new NameValue<string>('Male', 'Male'),
+            new NameValue<string>('Female', 'Female')
+        ];
         this.searchConfigsPax = [
             new SearchTextBox({
                 Name: 'Passenger/PassengerName',
@@ -406,42 +453,5 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
                 Value: ''
             }),
         ];
-    }
-
-    invokeSearchPassenger(query: string): void {
-        const involvedParties: InvolvePartyModel[] = [];
-        const passengerListLocal: PassengerModel[] = [];
-        this.peopleOnBoardWidgetService.GetQueryForPassenger(query, this.currentIncidentId)
-            .subscribe((result: ResponseModel<InvolvePartyModel>) => {
-                let affectedPeoples: AffectedPeopleModel[];
-                if (result.Records[0].Affecteds.length > 0) {
-                    affectedPeoples = result.Records[0].Affecteds[0].AffectedPeople;
-                    affectedPeoples.forEach((item: AffectedPeopleModel) => {
-                        passengerListLocal.push(UtilityService.pluck(item, ['Passenger'])[0]);
-                    });
-                    this.passengerList = Observable.of(passengerListLocal);
-                }
-            }, ((error: any) => {
-                console.log(`Error: ${error}`);
-            }));
-    }
-
-    invokeResetPassenger(): void {
-        this.openAllPassengersDetails();
-    }
-
-    invokeSearchCargo(query: string): void {
-        let cargoListLocal: CargoModel[] = [];
-        this.peopleOnBoardWidgetService.GetQueryForCargo(query, this.currentIncidentId)
-            .subscribe((result: ResponseModel<InvolvePartyModel>) => {
-                cargoListLocal = result.Records[0].Flights[0].Cargoes;
-                this.cargoList = Observable.of(cargoListLocal);
-            }, ((error: any) => {
-                console.log(`Error: ${error}`);
-            }));
-    }
-
-    invokeResetCargo(): void {
-        this.openAllCargoDetails();
     }
 }

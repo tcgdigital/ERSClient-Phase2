@@ -10,17 +10,7 @@ body {
     margin: 0 auto;
     font-size: $font-size-normal;
     font-family: $font-family-body;
-    // -webkit-animation-duration: 0.1s;
-    // -webkit-animation-name: fontfix;
-    // -webkit-animation-iteration-count: 1;
-    // -webkit-animation-timing-function: linear;
-    // -webkit-animation-delay: 0.1s;
 }
-
-// @-webkit-keyframes fontfix {
-//   from { opacity: 1; }
-//   to { opacity: 1; }
-// }
 
 ul {
     list-style: none;
@@ -30,7 +20,16 @@ ul {
 
 a {
     text-decoration: none;
-    font-size: $font-size-small;
+    font-size: $font-size-normal;
+    &:hover {
+        text-decoration: none;
+    }
+    &:active {
+        text-decoration: none;
+    }
+    &:visited {
+        text-decoration: none;
+    }
 }
 
 .fill-height {
@@ -70,7 +69,7 @@ header.branding {
 footer {
     position: relative;
     z-index: 99;
-        margin-top: 50px;
+    margin-top: 50px;
 }
 
 footer .row {
@@ -88,12 +87,11 @@ footer .row {
 
 .container-fluid {
     background-color: $body-bg;
-     padding: 0;
+    padding: 0;
 }
 
-
-.grey-input{
-    background-color:$disabled-background;
+.grey-input {
+    background-color: $disabled-background;
 }
 
 .tab-root-container {
@@ -104,11 +102,16 @@ footer .row {
 }
 
 section.body-container>.row {
-    padding-right: 15px; background: #eeeded; margin-top:15px;
+    padding-right: 15px;
+    background: #eeeded;
+    margin-top: 15px;
 }
-pages{padding: 0 15px;
+
+pages {
+    padding: 0 15px;
     float: left;
-    width: 100%;}
+    width: 100%;
+}
 
 @media screen and (max-width: $resXS-E) {
     .body-container {
@@ -123,7 +126,7 @@ pages{padding: 0 15px;
 
 @media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
     .body-container {
-        padding-top: 60px;
+        padding-top: 62px;
         padding-left: 17%;
     }
     .tab-root-container {
@@ -133,20 +136,19 @@ pages{padding: 0 15px;
 
 @media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {
     .body-container {
-        padding-top: 36px;
+        padding-top: 53px;
         padding-left: 15%;
     }
     .tab-root-container {
-        width: 98.4%;
+        width: 100%;
     }
 }
 
 @media screen and (min-width: $resXL-S) {
     .body-container {
-        padding-top: 36px;
+        padding-top: 47px;
         padding-left: 12%;
     }
-    
 }
 
 

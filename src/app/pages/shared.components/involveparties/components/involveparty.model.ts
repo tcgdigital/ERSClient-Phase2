@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { IncidentModel } from '../../../incident';
 import { AffectedModel } from '../../affected';
-import { FlightModel } from '../../../shared.components';
+import { FlightModel, GroundVictimModel, InvalidGroundVictimModel } from '../../../shared.components';
 import { BaseModel, InvolvedPartyType, GlobalConstants } from '../../../../shared';
 
 export class InvolvePartyModel extends BaseModel {
@@ -15,6 +15,8 @@ export class InvolvePartyModel extends BaseModel {
 
     public Affecteds ? : AffectedModel[];
     public Flights ? : FlightModel[];
+    public GroundVictims? : GroundVictimModel[];
+    public InvalidGroundVictims? : InvalidGroundVictimModel[];
 
     constructor() {
         super();
@@ -22,5 +24,7 @@ export class InvolvePartyModel extends BaseModel {
         this.IncidentId = 0;
         this.InvolvedPartyType = GlobalConstants.EmergencyCategories
         this.InvolvedPartyDesc = '';
+        this.GroundVictims = new Array();
+        this.InvalidGroundVictims = new Array();
     }
 }

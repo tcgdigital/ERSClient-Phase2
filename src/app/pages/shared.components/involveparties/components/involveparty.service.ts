@@ -84,14 +84,14 @@ export class InvolvePartyService
     GetFilterByIncidentId(IncidentId): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq  ${IncidentId}`)
-            .Expand('Affecteds($expand=AffectedPeople($expand=Passenger($expand=CoPassengerMappings),Crew($expand=FileStores)))')
+            .Expand('Affecteds($expand=AffectedPeople($expand=Passenger($expand=CoPassengerMappings),Crew($expand=FileStores),CommunicationLogs($select=InteractionDetailsId)))')
             .Execute();
     }
 
     GetQuery(query: string, incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq  ${incidentId}`)
-            .Expand(`Affecteds($expand=AffectedPeople($expand=Passenger($expand=CoPassengerMappings),Crew($expand=FileStores);$filter=${query}))`)
+            .Expand(`Affecteds($expand=AffectedPeople($expand=Passenger($expand=CoPassengerMappings),Crew($expand=FileStores),CommunicationLogs($select=InteractionDetailsId;);$filter=${query}))`)
             //.Filter(query)
             .Execute();
     }
@@ -139,6 +139,13 @@ export class InvolvePartyService
             .Expand(`Flights($expand=Cargoes)`)
             .Filter(`IncidentId eq ${incidentId}`)
             .Execute();
+    }
+
+    public GetAllGroundVictimsByIncident(incidentId: number): Observable<ResponseModel<InvolvePartyModel>>{
+        return this._dataService.Query()
+        .Expand(`GroundVictims`)
+        .Filter(`IncidentId eq ${incidentId}`)
+        .Execute();
     }
 
     public GetQueryCargosByIncident(query: string, incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {

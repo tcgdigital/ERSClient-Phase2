@@ -1,8 +1,12 @@
-<div class="card card-without-top-border noBorder">
-    <div *ngIf="!isArchive">
-        <demand-entry></demand-entry>
+<div class="row">
+    <div class="col-sm-12">
+        <div *ngIf="!isArchive">
+            <demand-entry></demand-entry>
+        </div>
     </div>
-    <div class="card-block">
+</div>
+<div class="row">
+    <div class="col-sm-12">
         <responsive-table>
             <table responsive-table-body>
                 <thead>
@@ -28,7 +32,7 @@
                     </tr>
                     <tr *ngFor="let demand of mydemands">
                         <td data-title="Demand Type">{{demand.DemandTypeName}}&nbsp;</td>
-                        <td data-title="Demand Description"><i (click)="openDemandDetails(demand.DemandId)">{{demand.DemandDesc}}</i>&nbsp;</td>
+                        <td data-title="Demand Description"><a href="javascript:void(0);" (click)="openDemandDetails(demand.DemandId)">{{demand.DemandDesc}}</a>&nbsp;</td>
                         <td data-title="Trail"><i class="fa fa-info-circle fa-2x" (click)="openTrail(demand)"></i> </td>
                         <td data-title="Target Department">{{demand.TargetDepartmentName}}&nbsp;</td>
                         <td data-title="Priority">{{demand.Priority}}&nbsp;</td>
@@ -50,89 +54,90 @@
                 </tbody>
             </table>
         </responsive-table>
+    </div>
+</div>
 
-
-
-        <div bsModal #childModalRemarks="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title pull-left">Demand Remarks</h4>
-                        <button type="button" class="close pull-right" aria-label="Close" (click)="cancelRemarkUpdate()">
+<div bsModal #childModalRemarks="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Demand Remarks</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="cancelRemarkUpdate()">
                   <span aria-hidden="true">&times;</span>
                    </button>
+            </div>
+            <div class="modal-body">
+                <div class="row" *ngIf="!isArchive">
+                    <div class="col-lg-8 col-sm-12 col-md-6 form-group">
+                        <label>Remarks</label>
+                        <input [(ngModel)]="Remarks" class="form-control" type="text" />
                     </div>
-                    <div class="modal-body">
-                        <div class="row holderRemark" *ngIf="!isArchive">
-                            <div class="col-lg-8 col-sm-12 col-md-6 form-group">
-                                <label>Remarks</label>
-                                <input [(ngModel)]="Remarks" class="form-control" type="text" />
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-12 form-group">
-                                <div class="buttonholderRemark">
-                                    <button class="btn btn-primary" type="button" (click)="saveRemark(Remarks)" *ngIf="!isArchive">Submit</button>
-                                    <button class="btn btn-primary" type="button" (click)="cancelRemarkUpdate()">Cancel</button>
-                                </div>
-                            </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 form-group">
+                        <div class="buttonholderRemark">
+                            <button class="btn btn-primary" type="button" (click)="saveRemark(Remarks)" *ngIf="!isArchive">Submit</button>
+                            <button class="btn btn-primary" type="button" (click)="cancelRemarkUpdate()">Cancel</button>
                         </div>
-                        <div class="card-block">
-                            <responsive-table>
-                                <table responsive-table-body>
-                                    <thead>
-                                        <th>Requester Department</th>
-                                        <th>Remarks added by</th>
-                                        <th>Remarks added on</th>
-                                        <th>Remarks</th>
-                                    </thead>
-                                    <tbody>
-                                        <tr [hidden]="demandRemarks.length != 0">
-                                            <td colspan="9">No Remark is added yet.</td>
-                                        </tr>
-                                        <tr *ngFor="let remark of demandRemarks">
-                                            <td data-title="Requester Department">{{remark.RequesterDepartmentName}}</td>
-                                            <td data-title="Remarks added by">{{remark.CreatedByName}}</td>
-                                            <td data-title="Remarks added on">{{remark.CreatedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
-                                            <td data-title="Remarks">{{remark.Remark}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </responsive-table>
-                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <responsive-table>
+                            <table responsive-table-body>
+                                <thead>
+                                    <th>Department</th>
+                                    <th>Remarks added by</th>
+                                    <th>Remarks added on</th>
+                                    <th>Remarks</th>
+                                </thead>
+                                <tbody>
+                                    <tr [hidden]="demandRemarks.length != 0">
+                                        <td colspan="4">No Remark is added yet.</td>
+                                    </tr>
+                                    <tr *ngFor="let remark of demandRemarks">
+                                        <td data-title="Requester Department">{{remark.RequesterDepartmentName}}</td>
+                                        <td data-title="Remarks added by">{{remark.CreatedByName}}</td>
+                                        <td data-title="Remarks added on">{{remark.CreatedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
+                                        <td data-title="Remarks">{{remark.Remark}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </responsive-table>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
 
-        <div bsModal #childModalTrail="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title pull-left">Demand Trail</h4>
-                        <button type="button" class="close pull-right" aria-label="Close" (click)="cancelTrail()">
+<div bsModal #childModalTrail="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Demand Trail</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="cancelTrail()">
                   <span aria-hidden="true">&times;</span>
                    </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row modalBodyHeaderStyle">
+            </div>
+            <div class="modal-body">
+                <div class="row modalBodyHeaderStyle">
+                    <div class="col-sm-6 form-group">
+                        <label class="lebelHeaderStyle"><strong>Demand Type Name</strong></label> <br>
+                        <label class="form-control">{{demandTypeName}}</label> </div>
 
-                            <div class="col-sm-6 form-group">
-                                <label class="lebelHeaderStyle"><strong>Demand Type Name</strong></label> <br>
-                                <label class="form-control">{{demandTypeName}}</label> </div>
-
-                            <div class="col-sm-6 form-group">
-                                <label class="lebelHeaderStyle"><strong>Requester Department</strong></label> <br>
-                                <label class="form-control">{{requesterDepartmentName}}</label> </div>
-                        </div>
-                        <br>
+                    <div class="col-sm-6 form-group">
+                        <label class="lebelHeaderStyle"><strong>Requester Department</strong></label> <br>
+                        <label class="form-control">{{requesterDepartmentName}}</label> </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
                         <responsive-table>
                             <table responsive-table-body>
                                 <tbody>
                                     <tr *ngFor="let trail of demandTrails">
                                         <td [innerHTML]="trail.Answers" type="text">
-                                            
                                         </td>
                                     </tr>
                                 </tbody>
@@ -142,6 +147,5 @@
                 </div>
             </div>
         </div>
-
-
     </div>
+</div>

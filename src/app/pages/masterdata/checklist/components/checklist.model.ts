@@ -53,12 +53,16 @@ export class CheckListStationModel {
     IsSelected: boolean;
 }
 
-export class ChecklistMapper {
+export class ChecklistMapper extends BaseModel {
     public ChecklistMapperId: number;
     public ChildCheckListId: number;
     public ParentCheckListId: number;
 
     public ChildCheckList?: ChecklistModel;
     public ParentCheckList?: ChecklistModel;
+
+    constructor() {
+        super();
+    }
 
 }

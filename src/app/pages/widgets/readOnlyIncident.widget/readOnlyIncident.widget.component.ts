@@ -9,20 +9,23 @@ import {
     OrganizationService,
     AircraftTypeModel,
     AircraftTypeService
-} from "../../shared.components";
+} from '../../shared.components';
 import {
     FormGroup, FormControl, FormBuilder, Validators,
     ReactiveFormsModule
 } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
-import { IncidentModel } from "../../incident/components/incident.model";
-import { InvolvePartyModel } from "../../shared.components/involveparties/components/involveparty.model";
-import { FlightModel } from "../../shared.components/flights/components/flight.model";
+import { IncidentModel } from '../../incident/components/incident.model';
+import { InvolvePartyModel } from '../../shared.components/involveparties/components/involveparty.model';
+import { FlightModel } from '../../shared.components/flights/components/flight.model';
 import { IncidentDataExchangeModel } from '../../incident/components/incidentDataExchange.model';
 import { PresidentMessageModel } from '../../shared.components';
-import { ReadOnlyIncidentWidgetService } from './readOnlyIncident.widget.service'
-import { DataServiceFactory, DataExchangeService, GlobalStateService, KeyValue, UtilityService, Severity } from '../../../shared'
-import { ModalDirective } from 'ng2-bootstrap/modal';
+import { ReadOnlyIncidentWidgetService } from './readOnlyIncident.widget.service';
+import {
+    DataServiceFactory, DataExchangeService,
+    GlobalStateService, KeyValue, UtilityService, Severity
+} from '../../../shared';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
     selector: 'view-readOnly-incident-widget',
@@ -37,7 +40,6 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
     incidentDataExchangeModel: IncidentDataExchangeModel = null;
     disableIsDrillPopup: boolean;
     severities: KeyValue[] = [];
-    //isOffSetPopup: boolean = false;
     public IsDrillPopup: boolean;
     isFlightRelatedPopup: boolean = false;
     activeOrganizations: OrganizationModel[] = [];
@@ -123,21 +125,17 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
     }
 
     public loadDataIncidentViewPopup(): void {
-        let offsetVal: string = '';
+        const offsetVal: string = '';
         this.disableIsDrillPopup = true;
-        //this.isOffSetPopup = false;
-        // if (this.incidentDataExchangeModel.IncidentModel.EmergencyLocation == 'Offset') {
-        //     this.isOffSetPopup = true;
-        // }
-        this.EmergencyDateLocal = new Date(new Date(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).toLocaleString() + " UTC");
-        this.ReportedDateLocal = new Date(new Date(this.incidentDataExchangeModel.IncidentModel.ReportedDate).toLocaleString() + " UTC");
-
+        this.EmergencyDateLocal = new Date(new Date(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).toLocaleString() + ' UTC');
+        this.ReportedDateLocal = new Date(new Date(this.incidentDataExchangeModel.IncidentModel.ReportedDate).toLocaleString() + ' UTC');
 
         this.formPopup = new FormGroup({
             IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
             OrganizationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OrganizationId),
             EmergencyTypeIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyTypeId),
             AffectedStationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyLocation),
+            AffectedCountryPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyCountry),
             EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD-MM-YYYY h:mm a')),
             EmergencyDateLocalPopup: new FormControl(moment(this.EmergencyDateLocal).format('DD-MM-YYYY h:mm a')),
             EmergencyNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyName),
@@ -158,10 +156,10 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
         this.IsDrillPopup = this.incidentDataExchangeModel.IncidentModel.IsDrill;
 
         this.isFlightRelatedPopup = false;
-        if (this.incidentDataExchangeModel.FLightModel != undefined) {
+        if (this.incidentDataExchangeModel.FLightModel !== undefined) {
 
-            this.ScheduleDepartureLocal = new Date(new Date(this.incidentDataExchangeModel.FLightModel.DepartureDate).toLocaleString() + " UTC");
-            this.ScheduleArrivalLocal = new Date(new Date(this.incidentDataExchangeModel.FLightModel.ArrivalDate).toLocaleString() + " UTC");
+            this.ScheduleDepartureLocal = new Date(new Date(this.incidentDataExchangeModel.FLightModel.DepartureDate).toLocaleString() + ' UTC');
+            this.ScheduleArrivalLocal = new Date(new Date(this.incidentDataExchangeModel.FLightModel.ArrivalDate).toLocaleString() + ' UTC');
 
 
             this.formPopup = new FormGroup({
@@ -169,6 +167,7 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
                 OrganizationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OrganizationId),
                 EmergencyTypeIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyTypeId),
                 AffectedStationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyLocation),
+                AffectedCountryPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyCountry),
                 EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD-MM-YYYY h:mm a')),
                 EmergencyDateLocalPopup: new FormControl(moment(this.EmergencyDateLocal).format('DD-MM-YYYY h:mm a')),
                 EmergencyNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyName),
@@ -222,6 +221,7 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
             OrganizationIdPopup: new FormControl(''),
             EmergencyTypeIdPopup: new FormControl('0'),
             AffectedStationIdPopup: new FormControl('0'),
+            AffectedCountryPopup: new FormControl(''),
             EmergencyDatePopup: new FormControl(''),
             EmergencyDateLocalPopup: new FormControl(''),
             EmergencyNamePopup: new FormControl(''),
@@ -251,12 +251,4 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
         });
         this.IsDrillPopup = false;
     }
-    // public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
-    //     if(this.currentIncident !== undefined){
-    //         this.incidentName = this.currentIncident.Key;
-    //     }
-    //     if(this.currentDepartment !== undefined){
-    //         this.departmentName = this.currentDepartment.Key;
-    //     }
-    // }
 }

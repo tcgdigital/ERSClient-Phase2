@@ -25,8 +25,8 @@ const WebpackDashboard = require('webpack-dashboard/plugin');
 const HOT = helpers.hasProcessFlag('hot');
 const AOT = helpers.hasNpmFlag('aot');
 const METADATA = {
-    title: 'Emergency Response System (PAL)',
-    description: 'Emergency Response System (PAL)',
+    title: 'Crisis Management System (PAL)',
+    description: 'Crisis Management System (PAL)',
     baseUrl: '/',
     isDevServer: helpers.isWebpackDevserver()
 }

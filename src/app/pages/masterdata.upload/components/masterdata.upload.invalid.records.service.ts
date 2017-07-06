@@ -7,7 +7,8 @@ import {
 } from '../../../shared';
 
 import { IncidentModel } from '../../incident'
-import { InvalidCrewModel, InvalidCargoModel, InvalidPassengerModel } from '../../shared.components';
+import { InvalidCrewModel, InvalidCargoModel, 
+    InvalidPassengerModel, InvalidGroundVictimModel, InvolvePartyModel } from '../../shared.components';
 
 /**
  * Service Classfor fetching invalid uploaded records
@@ -19,7 +20,8 @@ export class MasterDataUploadForInvalidService {
    
     private _dataServiceInvalidPassenger: DataService<IncidentModel>;
     private _dataServiceInvalidCargo: DataService<IncidentModel>;
-    private _dataServiceInvalidCrew: DataService<IncidentModel>;   
+    private _dataServiceInvalidCrew: DataService<IncidentModel>; 
+    private _dataServiceInvalidGroundVictim: DataService<InvolvePartyModel>;  
     /**
      * Creates an instance of MasterDataUploadForInvalidService.
      * @param {DataServiceFactory} dataServiceFactory 
@@ -37,6 +39,9 @@ export class MasterDataUploadForInvalidService {
 
         this._dataServiceInvalidCrew = this.dataServiceFactory
             .CreateServiceWithOptions<IncidentModel>('Incidents', option);
+
+        this._dataServiceInvalidGroundVictim = this.dataServiceFactory
+            .CreateServiceWithOptions<InvolvePartyModel>('InvolvedParties', option);
     }
 
     /**
@@ -93,4 +98,19 @@ export class MasterDataUploadForInvalidService {
         .map(a=>a.map(b=>b.InvalidCrewRecords).reduce((a,b)=>a.concat(b)));
     }
 
+    /**
+     * Get All Invalid Ground Victims
+     * 
+     * @param {number} incidentId 
+     * @returns {Observable<GroundVictimModel[]>} 
+     * 
+     * @memberOf MasterDataUploadForInvalidService
+     */
+    GetAllInvalidGroundVictimsByIncidentId(incidentId: number): Observable<InvalidGroundVictimModel[]>{
+        return this._dataServiceInvalidGroundVictim.Query()
+        .Expand(`InvalidGroundVictims`)
+        .Filter(`IncidentId eq ${incidentId}`)
+        .Execute()
+        .map(a=>a.Records.map(b=>b.InvalidGroundVictims).reduce((a,b)=>a.concat(b)));
+    }
 }

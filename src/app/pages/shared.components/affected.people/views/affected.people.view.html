@@ -1,15 +1,19 @@
-<div class="card card-without-top-border ">
+<!--<div class="card card-without-top-border ">
     <div class="card-header">
         <ul class="nav nav-tabs card-header-tabs">
             <li class="nav-item">
                  <a class="nav-link" [routerLink]="['./detail']" routerLinkActive="active">Affected People</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" [routerLink]="['./verify']" routerLinkActive="active">Affected People Verify</a>
+                <a class="nav-link" [routerLink]="['./verify']" routerLinkActive="active">Verify Affected People</a>
             </li>
         </ul>
     </div>
     <div class="card-block">
         <router-outlet></router-outlet>
     </div>
+</div>-->
+
+<div class="card card-without-top-border" subtab-control [tabLinks]="subTabs">
+    <router-outlet outlet-body></router-outlet>
 </div>

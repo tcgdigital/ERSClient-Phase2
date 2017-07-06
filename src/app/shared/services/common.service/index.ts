@@ -6,4 +6,5 @@ export * from './location.service';
 export * from './localization.service';
 export * from './file.store.service';
 export * from './licensing.service';
+export * from  './keyvalue.service';
 
