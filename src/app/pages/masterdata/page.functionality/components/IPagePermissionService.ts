@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs/Rx';
-import { PagePermissionModel } from './department.functionality.model';
+import { PagePermissionModel } from './page.functionality.model';
 import { ResponseModel, IServiceInretface } from '../../../../shared';
 
 export interface IPagePermissionService extends IServiceInretface<PagePermissionModel> {

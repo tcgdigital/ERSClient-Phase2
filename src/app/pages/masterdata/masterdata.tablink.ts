@@ -66,10 +66,10 @@ export const TAB_LINKS: ITabLinkInterface[] = <ITabLinkInterface[]>[
         hidden: false,
         order: 8
     }, {
-        id: 'departmentfunctionality',
+        id: 'pagefunctionality',
         title: 'Department Functionality Mapping',
         // icon: 'fa fa-windows fa-2x',
-        url: '/pages/masterdata/departmentfunctionality',
+        url: '/pages/masterdata/pagefunctionality',
         selected: false,
         hidden: false,
         order: 9
