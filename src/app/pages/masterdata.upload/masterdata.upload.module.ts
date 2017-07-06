@@ -15,11 +15,11 @@ import {
 } from './components'
 import {
     ValidPassengersListComponent, ValidCargoListComponent,
-    ValidCrewListComponent
+    ValidCrewListComponent, ValidGroundVictimListComponent
 } from './components/valid'
 import {
     InvalidCrewListComponent, InvalidPassengersListComponent,
-    InvalidCargoListComponent
+    InvalidCargoListComponent, InvalidGroundVictimListComponent
 } from './components/invalid'
 import { DataExchangeService, FileUploadService, SharedModule } from '../../shared';
 
@@ -41,7 +41,9 @@ import { DataExchangeService, FileUploadService, SharedModule } from '../../shar
         ValidCrewListComponent,
         InvalidCrewListComponent,
         InvalidPassengersListComponent,
-        InvalidCargoListComponent
+        InvalidCargoListComponent,
+        ValidGroundVictimListComponent,
+        InvalidGroundVictimListComponent
     ],
     providers: [
         DataExchangeService,

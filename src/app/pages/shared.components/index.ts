@@ -22,3 +22,4 @@ export * from './organization';
 export * from './aircrafttype';
 export * from './common.service';
 export * from './ragscale';
+export * from './ground.victim';

@@ -54,7 +54,7 @@
             <div class="col widget-block">
                 <span class="widget-number">
                     <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
-                    <span class="marker">{{0 | padding: '0': 2}}</span>
+                    <span class="marker" (click) = "openAllGroundVictims()">{{peopleOnBoard.totalGroundVictimCount | padding: '0': 2}}</span>
                 </span>
                 <span class="widget-text">ground members</span>
             </div>
@@ -527,5 +527,53 @@
                 </div>-->
             </div>
         </div>
+    </div>
+</div>
+
+<!--All GroundVictims Popup-->
+<div bsModal #childModalGroundVictims="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left"><strong>All Ground Members</strong></h4>
+
+                <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideAllGroundVictims()"></i>
+            </div>
+            <div class="modal-body">
+                <responsive-table>
+                    <table responsive-table-body>
+                        <thead>
+                            <tr>
+                                <th>Ground Victim Type</th>
+                                <th>Victim Name</th>
+                                <th>Affected Count</th>
+                                <th>Status</th>
+                                <th>NOK Name</th>
+                                <th>NOK Contact Number</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngIf="!(groundVictimList | async)?.length>0">
+                                <td data-title="Records" colspan="11">No crew to show.</td>
+                            </tr>
+                            <tr *ngFor="let affected of groundVictimList | async">
+                                <td data-title="Ground Victim Type">{{affected.GroundVictimType}}</td>
+                                <td data-title="Victim Name">{{affected.GroundVictimName}}</td>
+                                <td data-title="Affected Count">{{affected.AffectedCount}}</td>
+                                <td data-title="Status">{{affected.Status}}</td>
+                                <td data-title="NOK Name">{{affected.NOKName}}</td>
+                                <td data-title="NOK Contact Number">{{affected.NOKContactNumber}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </responsive-table>
+                <!--<div class="pull-right">
+                    <button type="submit" class="pull-right btn btn-primary" aria-label="Close" (click)="hideAllCrews()">Close</button>
+                </div>-->
+            </div>
+
+        </div>
+
     </div>
 </div>
