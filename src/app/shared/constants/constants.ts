@@ -1,4 +1,5 @@
 import { ITabLinkInterface } from '../components/tab.control/tab.control.interface';
+import { PagesPermissionMatrixModel } from "../../pages/masterdata/page.functionality/components/page.functionality.model";
 declare const CKEDITOR;
 
 export interface IEmergencySituationEnum {
@@ -49,8 +50,8 @@ export interface IActionableStatus {
 
 export class GlobalConstants {
     // public static EXTERNAL_URL: string = 'http://202.54.73.219/';
-    public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
-    // public static EXTERNAL_URL: string = 'http://localhost:5001/';
+    //public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
+    public static EXTERNAL_URL: string = 'http://localhost:5001/';
 
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
     public static GRANT_TYPE: string = 'password';
@@ -66,7 +67,8 @@ export class GlobalConstants {
     public static URL_PATTERN: string = '^(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:\~\+#]*[\w\-\@?^=%&amp;\~\+#])?$';
     public static LAST_INCIDENT_PICK_COUNT: string = '5';
     public static ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION: number = 12;
-
+    public static currentLoggedInUser: number = 0;
+    public static PagePermissionMatrix: PagesPermissionMatrixModel[] = [];
     public static INTERCEPTOR_PERFORM: boolean = false;
     public static PRESERVE_DATA_FROM_CONVERSION = ['EmergencyDate'];
 
@@ -258,7 +260,11 @@ export class GlobalConstants {
             text: 'Audit Report'
         }
     ];
-
+    //Page permission string
+    public static CreateCrisis = 'CreateCrisis';
+    public static DashboardAffectedOnBoard = 'DashboardAffectedOnBoard';
+    public static DashboardDemandTab = 'DashboardDemandTab';
+    //Page permission string
 
     public static EmergencySituationEnum: IEmergencySituationEnum[] = [
         {

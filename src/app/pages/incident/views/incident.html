@@ -1,1 +1,2 @@
-<incident-entry></incident-entry>
+<span class="validationAlert" *ngIf="!isShowPage">{{pagePermissionValidationMessage}}</span>
+<incident-entry *ngIf="isShowPage"></incident-entry>

@@ -22,7 +22,8 @@ import {
     KeyVal,
     ResponseModel,
     IncidentStatus,
-    InvolvedPartyType
+    InvolvedPartyType,
+    GlobalConstants
 } from '../../shared';
 import {
     FlightModel,
@@ -69,6 +70,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     activeAircraftTypes: AircraftTypeModel[] = [];
     incidentsToPickForReplication: IncidentModel[] = [];
     showQuicklink: boolean = false;
+    public isShowAffectedOnBoard:boolean;
+    public isShowDemandTab:boolean;
     private sub: any;
 
     constructor(private globalState: GlobalStateService,
@@ -85,6 +88,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
+        this.isShowAffectedOnBoard=false;
+        this.isShowDemandTab=false;
         this.getAllActiveEmergencyTypes();
         this.IsDrillPopup = false;
         this.disableIsDrillPopup = true;
@@ -106,9 +111,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.getDepartment(this.currentDepartmentId);
 
         this.tablinks = TAB_LINKS;
+
+        this.PageLevelPermissionValidation(this.currentDepartmentId);
+
+
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
+
+     
 
     getAllActiveOrganizations(): void {
         this.organizationService.GetAllActiveOrganizations()
@@ -154,6 +165,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.globalState.Unsubscribe('departmentChange');
     }
 
+    PageLevelPermissionValidation(departmentId: number): void {
+        this.isShowAffectedOnBoard = UtilityService.GetNecessaryPageLevelPermissionValidation(departmentId, GlobalConstants.DashboardAffectedOnBoard);
+        this.isShowDemandTab = UtilityService.GetNecessaryPageLevelPermissionValidation(departmentId, GlobalConstants.DashboardDemandTab);
+        
+    }
+
     private getIncident(incidentId: number): void {
         this.incidentService.Get(incidentId)
             .subscribe((data: IncidentModel) => {
@@ -180,6 +197,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private departmentChangeHandler(department: KeyValue): void {
         this.currentDepartment = department;
         this.currentDepartmentId = department.Value;
+         this.PageLevelPermissionValidation(this.currentDepartmentId);
         this.globalState.NotifyDataChanged('departmentChangeFromDashboard', department);
     }
 }

@@ -11,7 +11,7 @@ import { IncidentComponent } from './incident.component';
 import { EmergencyLocationService } from '../masterdata/emergencylocation';
 import { IncidentEntryComponent, IncidentViewComponent, IncidentService } from './components';
 import { DepartmentService, EmergencyTypeService } from '../masterdata';
-import { SharedModule, DataExchangeService, LocationService } from '../../shared';
+import { SharedModule, DataExchangeService, LocationService,GlobalStateService } from '../../shared';
 import { FlightModule, InvolvePartyModule, OrganizationService, AircraftTypeService } from '../shared.components';
 @NgModule({
     imports: [

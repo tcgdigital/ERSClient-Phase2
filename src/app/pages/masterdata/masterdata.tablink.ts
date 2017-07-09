@@ -18,21 +18,13 @@ export const TAB_LINKS: ITabLinkInterface[] = [
         hidden: false,
         order: 2
     }, {
-        id: 'departmentfunctionality',
-        title: 'Department Functionality Mapping',
-        // icon: 'fa fa-windows fa-2x',
-        url: '/pages/masterdata/departmentfunctionality',
-        selected: false,
-        hidden: false,
-        order: 3
-    }, {
         id: 'userpermission',
         title: 'User Department Mapping',
         // icon: 'fa fa-linux fa-2x',
         url: '/pages/masterdata/userpermission',
         selected: false,
         hidden: false,
-        order: 4
+        order: 3
     }, {
         id: 'department',
         title: 'Department',
@@ -40,7 +32,7 @@ export const TAB_LINKS: ITabLinkInterface[] = [
         url: '/pages/masterdata/department',
         selected: true,
         hidden: false,
-        order: 5
+        order: 4
     }, {
         id: 'emergencytype',
         title: 'Crisis Type',
@@ -48,7 +40,7 @@ export const TAB_LINKS: ITabLinkInterface[] = [
         url: '/pages/masterdata/emergencytype',
         selected: false,
         hidden: false,
-        order: 6
+        order: 5
     }, {
         id: 'emergencydepartment',
         title: 'Crisis Department Mapping',
@@ -56,7 +48,7 @@ export const TAB_LINKS: ITabLinkInterface[] = [
         url: '/pages/masterdata/emergencydepartment',
         selected: false,
         hidden: false,
-        order: 7
+        order: 6
     }, {
 
         id: 'emergencylocation',
@@ -65,7 +57,7 @@ export const TAB_LINKS: ITabLinkInterface[] = [
         url: '/pages/masterdata/affectedstation',
         selected: false,
         hidden: false,
-        order: 8
+        order: 7
     }, {
         id: 'demandtype',
         title: 'Demand Type',
