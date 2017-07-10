@@ -9,7 +9,10 @@ import {
     HTTP_INTERCEPTOR_PROVIDER,
     HTTP_INTERCEPTOR_NO_OVERRIDE_PROVIDER
 } from './interceptor';
-import { PaddingFormatterPipe } from './pipes';
+import {
+    PaddingFormatterPipe,
+    AccessibilityPipe
+} from './pipes';
 
 
 import {
@@ -127,7 +130,8 @@ const SHARED_CONSTANTS: any[] = [
 ];
 
 const SHARED_PIPES: any[] = [
-    PaddingFormatterPipe
+    PaddingFormatterPipe,
+    AccessibilityPipe
 ];
 
 @NgModule({

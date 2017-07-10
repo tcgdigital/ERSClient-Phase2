@@ -261,9 +261,6 @@ export class GlobalConstants {
         }
     ];
     //Page permission string
-    public static CreateCrisis = 'CreateCrisis';
-    public static DashboardAffectedOnBoard = 'DashboardAffectedOnBoard';
-    public static DashboardDemandTab = 'DashboardDemandTab';
     //Page permission string
 
     public static EmergencySituationEnum: IEmergencySituationEnum[] = [
@@ -441,7 +438,7 @@ export class GlobalConstants {
 
     public static TabLinks: ITabLinkInterface[] = [
         {
-            id: 'Actionables',
+            id: 'Checklist',
             title: 'Checklists',
             // icon: 'fa fa-edge fa-2x',
             url: '/pages/dashboard/actionable',
@@ -475,14 +472,14 @@ export class GlobalConstants {
             order: 2,
             subtab: [
                 {
-                    id: 'AssignedDemand',
+                    id: 'AssignedToMeDemand',
                     title: 'Assigned To Me',
                     url: './assigned',
                     selected: true,
                     hidden: false,
                     order: 1
                 }, {
-                    id: 'OwnDemand',
+                    id: 'MyDemand',
                     title: 'My Demands',
                     url: './own',
                     selected: false,
@@ -496,7 +493,7 @@ export class GlobalConstants {
                     hidden: false,
                     order: 3
                 }, {
-                    id: 'CompletedDemand',
+                    id: 'CompleteDemand',
                     title: 'Completed',
                     url: './completed',
                     selected: false,
@@ -530,7 +527,7 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'AffectedObjects',
+            id: 'AffectedCargo',
             title: 'Affected Cargo',
             // icon: 'fa fa-chrome fa-2x',
             url: '/pages/dashboard/cargo',
@@ -555,7 +552,7 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'BroadcastMessages',
+            id: 'BroadcastMessage',
             title: 'Broadcast Messages',
             // icon: 'fa fa-envira fa-2x',
             url: '/pages/dashboard/broadcast',
@@ -563,7 +560,7 @@ export class GlobalConstants {
             hidden: false,
             order: 5
         }, {
-            id: 'PresidentMessages',
+            id: 'PresidentMessage',
             title: 'President Messages',
             // icon: 'fa fa-firefox fa-2x',
             url: '/pages/dashboard/presidentMessage',
@@ -588,7 +585,7 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'MediaManagement',
+            id: 'MediaMessage',
             title: 'Media Messages',
             // icon: 'fa fa-medium fa-2x',
             url: '/pages/dashboard/media',
@@ -663,7 +660,7 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'PassengerQuery',
+            id: 'TabPassengerQuery',
             title: 'Passenger Query',
             // icon: 'fa fa-twitter fa-2x',
             url: '/pages/dashboard/passengerquery',

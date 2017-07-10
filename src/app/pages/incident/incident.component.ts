@@ -11,33 +11,20 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 export class IncidentComponent implements OnInit {
     public currentDepartment: number;
     public currentUserId: number;
-    public isShowPage: boolean;
+    public isShowPage: boolean = true;
     public pagePermissionValidationMessage:string;
     constructor(private globalState: GlobalStateService) {
         this.currentDepartment = 0;
     }
 
     ngOnInit(): any {
-        this.isShowPage = false;
         this.pagePermissionValidationMessage='you are not authorize to view this page. Please contact system administrator.';
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
         this.currentDepartment = +UtilityService.GetFromSession('CurrentDepartmentId');
-        this.PageLevelPermissionValidation(this.currentDepartment);
     }
 
     public departmentChangeHandler(department: KeyValue): void {
-        this.PageLevelPermissionValidation(department.Value);
-
-
+        this.currentDepartment =department.Value;
     }
 
-    ngOnDestroy(): void {
-
-    }
-
-    PageLevelPermissionValidation(departmentId: number): void {
-        
-        this.isShowPage = UtilityService.GetNecessaryPageLevelPermissionValidation(departmentId, GlobalConstants.CreateCrisis);
-        
-    }
 }

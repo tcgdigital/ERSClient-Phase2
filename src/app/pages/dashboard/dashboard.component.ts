@@ -39,7 +39,7 @@ import {
     FormGroup, FormControl, FormBuilder, Validators,
     ReactiveFormsModule
 } from '@angular/forms';
-import { EmergencyTypeModel, EmergencyTypeService } from '../masterdata';
+import { EmergencyTypeModel, EmergencyTypeService, PagesPermissionMatrixModel } from '../masterdata';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -70,8 +70,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     activeAircraftTypes: AircraftTypeModel[] = [];
     incidentsToPickForReplication: IncidentModel[] = [];
     showQuicklink: boolean = false;
-    public isShowAffectedOnBoard:boolean;
-    public isShowDemandTab:boolean;
     private sub: any;
 
     constructor(private globalState: GlobalStateService,
@@ -88,8 +86,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        this.isShowAffectedOnBoard=false;
-        this.isShowDemandTab=false;
         this.getAllActiveEmergencyTypes();
         this.IsDrillPopup = false;
         this.disableIsDrillPopup = true;
@@ -110,16 +106,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.getIncident(this.currentIncidentId);
         this.getDepartment(this.currentDepartmentId);
 
-        this.tablinks = TAB_LINKS;
+        const rootTab: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
+            .find((x: PagesPermissionMatrixModel) => x.ModuleName === 'Dashboard' && x.ParentPageId === null && x.Type === 'Tab');
 
-        this.PageLevelPermissionValidation(this.currentDepartmentId);
-
+        if (rootTab) {
+            const tabs: string[] = GlobalConstants.PagePermissionMatrix
+                .filter((x: PagesPermissionMatrixModel) => x.ParentPageId === rootTab.PageId)
+                .map((x) => x.PageCode);
+            if (tabs.length > 0) {
+               this.tablinks = GlobalConstants.TabLinks.filter((x: ITabLinkInterface) => tabs.some((y) => y === x.id));
+            }
+        }
+        // this.tablinks = TAB_LINKS;
 
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
-     
+
 
     getAllActiveOrganizations(): void {
         this.organizationService.GetAllActiveOrganizations()
@@ -165,11 +169,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.globalState.Unsubscribe('departmentChange');
     }
 
-    PageLevelPermissionValidation(departmentId: number): void {
-        this.isShowAffectedOnBoard = UtilityService.GetNecessaryPageLevelPermissionValidation(departmentId, GlobalConstants.DashboardAffectedOnBoard);
-        this.isShowDemandTab = UtilityService.GetNecessaryPageLevelPermissionValidation(departmentId, GlobalConstants.DashboardDemandTab);
-        
-    }
+
 
     private getIncident(incidentId: number): void {
         this.incidentService.Get(incidentId)
@@ -197,7 +197,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private departmentChangeHandler(department: KeyValue): void {
         this.currentDepartment = department;
         this.currentDepartmentId = department.Value;
-         this.PageLevelPermissionValidation(this.currentDepartmentId);
         this.globalState.NotifyDataChanged('departmentChangeFromDashboard', department);
     }
 }

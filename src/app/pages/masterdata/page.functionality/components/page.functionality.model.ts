@@ -53,6 +53,7 @@ export class PagesForDepartmentModel extends BaseModel {
 }
 
 export class PagesPermissionMatrixModel extends BaseModel {
+    public PageId: number;
     public PageCode: string;
     public PageName: string;
     public CanView: boolean;
