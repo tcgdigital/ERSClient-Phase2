@@ -121,7 +121,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
      *
      * @memberOf IncidentEntryComponent
      */
-    constructor(formBuilder: FormBuilder,
+    constructor(formBuilder: FormBuilder,private globalState: GlobalStateService,
         private router: Router,
         private incidentService: IncidentService,
         private emergencyTypeService: EmergencyTypeService,
@@ -148,6 +148,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+         //this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
         this.submitted = false;
         this.EmergencyDateLocal = new Date();
         this.submittedFlight = false;
@@ -191,6 +192,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             });
 
     }
+
+   
 
     initiateIncidentModel(): void {
         this.incidentModel = new IncidentModel();

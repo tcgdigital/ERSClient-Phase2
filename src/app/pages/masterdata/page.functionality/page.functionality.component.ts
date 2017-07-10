@@ -104,31 +104,52 @@ export class PageFunctionalityComponent implements OnInit {
         this.pagePermissionService.GetFilter(message.Value.toString())
             .subscribe((response: ResponseModel<PagePermissionModel>) => {
                 this.pagesForDepartment = this.SetAllSelectedToFalse(this.pagesForDepartmentConstant);
+
                 if (response.Count !== 0) {
                     this.pagesForDepartment.forEach((item: PagesForDepartmentModel) => {
                         response.Records.forEach((pagePermission: PagePermissionModel) => {
                             if (item.PageId === pagePermission.PageId) {
                                 item.AllowView = true;
                                 item.OnlyForHod = pagePermission.OnlyHOD;
+
+                            }
+                            item.isOnlyHOD = false;
+                            if (item.AllowView == true) {
+                                item.isOnlyHOD = true;
                             }
                         });
                     });
                 }
 
-                // for (const item2 of this.pagesForDepartment) {
-                //     if (response.Count !== 0) {
-                //         for (const model of response.Records) {
-                //             if (item2.PageId === model.PageId) {
-                //                 item2.AllowView = true;
-                //                 item2.OnlyForHod = model.OnlyHOD;
-                //             }
-                //         }
-                //     }
-                // }
+
                 this.checkAllStatusView();
                 this.checkAllStatusOnlyHOD();
+                this.disableChildIfNotParentAllowView(this.pagesForDepartment);
             });
     }
+
+    disableChildIfNotParentAllowView(pagesForDepartmentModel: PagesForDepartmentModel[]): void {
+        pagesForDepartmentModel.forEach((item: PagesForDepartmentModel) => {
+            let filter: boolean = false;
+            let pageId: number = item.PageId;
+            let filteredChilds: PagesForDepartmentModel[] = pagesForDepartmentModel.filter((itemFilter: PagesForDepartmentModel) => {
+                return itemFilter.ParentPageId === pageId;
+            });
+            if (item.AllowView == false) {
+                filter = true;
+
+            }
+            else {
+                filter = false;
+            }
+            filteredChilds.map((mappingData: PagesForDepartmentModel) => {
+                mappingData.isDisabled = filter;
+            });
+        });
+
+    }
+
+
     selectAllDeptView(value: any): void {
         this.pagesForDepartment.forEach(x => {
             x.AllowView = value.checked;
@@ -141,10 +162,27 @@ export class PageFunctionalityComponent implements OnInit {
 
     }
     checkAllStatusView(): void {
+
         this.allSelectView = this.pagesForDepartment.length != 0 && this.pagesForDepartment.filter(x => {
+
             return x.AllowView == true;
         }).length == this.pagesForDepartment.length;
     }
+
+    checkStatusView(event: any, elm: PagesForDepartmentModel): void {
+        elm.isOnlyHOD = event.checked;
+        if (event.checked == false) {
+            elm.OnlyForHod = false;
+            this.allSelectOnlyHOD = false;
+        }
+        this.allSelectView = this.pagesForDepartment.length != 0 && this.pagesForDepartment.filter(x => {
+
+            return x.AllowView == true;
+        }).length == this.pagesForDepartment.length;
+        this.checkAllStatusOnlyHOD();
+        this.disableChildIfNotParentAllowView(this.pagesForDepartment);
+    }
+
     checkAllStatusOnlyHOD(): void {
         this.allSelectOnlyHOD = this.pagesForDepartment.length != 0 && this.pagesForDepartment.filter(x => {
             return x.OnlyForHod == true;
@@ -169,11 +207,18 @@ export class PageFunctionalityComponent implements OnInit {
                     const pageForDepartment = new PagesForDepartmentModel();
                     pageForDepartment.PageId = item.PageId;
                     pageForDepartment.PageName = item.PageName;
-                    pageForDepartment.ParentPageName = item.ParentPageId!=null?item.ParentPage.PageName:'';
-                    pageForDepartment.ModuleName=item.ModuleName;
-                    pageForDepartment.SortOrder=item.SortOrder!=null?item.SortOrder.toString():'';
+                    pageForDepartment.ParentPageId = item.ParentPageId;
+                    pageForDepartment.ParentPageName = item.ParentPageId != null ? item.ParentPage.PageName : '';
+                    pageForDepartment.ModuleName = item.ModuleName;
+                    pageForDepartment.SortOrder = item.SortOrder != null ? item.SortOrder.toString() : '';
+                    pageForDepartment.ID = item.ID;
+                    pageForDepartment.URL = item.URL;
+                    pageForDepartment.Type = item.Type;
+                    pageForDepartment.Selected = item.Selected;
+                    pageForDepartment.Hidden = item.Hidden;
                     pageForDepartment.AllowView = false;
                     pageForDepartment.OnlyForHod = false;
+                    pageForDepartment.isDisabled = false;
                     this.pagesForDepartmentConstant.push(pageForDepartment);
                 });
                 

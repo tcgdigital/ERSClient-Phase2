@@ -22,7 +22,8 @@ import {
     KeyVal,
     ResponseModel,
     IncidentStatus,
-    InvolvedPartyType
+    InvolvedPartyType,
+    GlobalConstants
 } from '../../shared';
 import {
     FlightModel,
@@ -38,7 +39,7 @@ import {
     FormGroup, FormControl, FormBuilder, Validators,
     ReactiveFormsModule
 } from '@angular/forms';
-import { EmergencyTypeModel, EmergencyTypeService } from '../masterdata';
+import { EmergencyTypeModel, EmergencyTypeService, PagesPermissionMatrixModel } from '../masterdata';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -105,10 +106,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.getIncident(this.currentIncidentId);
         this.getDepartment(this.currentDepartmentId);
 
-        this.tablinks = TAB_LINKS;
+        const rootTab: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
+            .find((x: PagesPermissionMatrixModel) => x.ModuleName === 'Dashboard' && x.ParentPageId === null && x.Type === 'Tab');
+
+        if (rootTab) {
+            const tabs: string[] = GlobalConstants.PagePermissionMatrix
+                .filter((x: PagesPermissionMatrixModel) => x.ParentPageId === rootTab.PageId)
+                .map((x) => x.PageCode);
+            if (tabs.length > 0) {
+               this.tablinks = GlobalConstants.TabLinks.filter((x: ITabLinkInterface) => tabs.some((y) => y === x.id));
+            }
+        }
+        // this.tablinks = TAB_LINKS;
+
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
+
+
 
     getAllActiveOrganizations(): void {
         this.organizationService.GetAllActiveOrganizations()
@@ -153,6 +168,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.globalState.Unsubscribe('incidentChange');
         this.globalState.Unsubscribe('departmentChange');
     }
+
+
 
     private getIncident(incidentId: number): void {
         this.incidentService.Get(incidentId)
