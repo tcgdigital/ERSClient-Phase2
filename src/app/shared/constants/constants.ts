@@ -1,10 +1,16 @@
 import { ITabLinkInterface } from '../components/tab.control/tab.control.interface';
+import { PagesPermissionMatrixModel } from '../../pages/masterdata/page.functionality';
 declare const CKEDITOR;
 
 export interface IEmergencySituationEnum {
     EmergencySituationId: number;
     enumtype: string;
     EmergencySituationName: string;
+}
+export interface INotificationMessage {
+    Key: string;
+    Title: string;
+    Message: string;
 }
 export interface IKeyValue {
     value: string;
@@ -47,11 +53,16 @@ export interface IActionableStatus {
     caption: string;
 }
 
+export enum StorageType {
+    SessionStorage,
+    LocalStorage
+}
+
 export class GlobalConstants {
     // public static EXTERNAL_URL: string = 'http://202.54.73.219/';
-    public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
-    // public static EXTERNAL_URL: string = 'http://localhost:5001/';
-
+    // public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
+    public static EXTERNAL_URL: string = 'http://localhost:5001/';
+    public static NOTIFICATION_URL: string = `${GlobalConstants.EXTERNAL_URL}Notification/Hubs`;
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
     public static GRANT_TYPE: string = 'password';
     public static ODATA: string = 'odata';
@@ -66,7 +77,8 @@ export class GlobalConstants {
     public static URL_PATTERN: string = '^(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:\~\+#]*[\w\-\@?^=%&amp;\~\+#])?$';
     public static LAST_INCIDENT_PICK_COUNT: string = '5';
     public static ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION: number = 12;
-
+    public static currentLoggedInUser: number = 0;
+    public static PagePermissionMatrix: PagesPermissionMatrixModel[] = [];
     public static INTERCEPTOR_PERFORM: boolean = false;
     public static PRESERVE_DATA_FROM_CONVERSION = ['EmergencyDate'];
 
@@ -259,7 +271,7 @@ export class GlobalConstants {
         }
     ];
 
-
+    // Page permission string
     public static EmergencySituationEnum: IEmergencySituationEnum[] = [
         {
             EmergencySituationId: 1,
@@ -433,9 +445,157 @@ export class GlobalConstants {
         }
     ];
 
+    public static NotificationMessage: INotificationMessage[] = [
+        {
+            Key: 'ReceiveBroadcastCreationResponse',
+            Title: 'Broadcast Created',
+            Message: 'A new Broadcast has been created. Please refer to tab section "Broadcast Message"'
+        }, {
+            Key: 'ReceiveBroadcastModificationResponse',
+            Title: 'Broadcast Modified',
+            Message: 'A existing Broadcast message has been modified. Please refer to tab section "Broadcast Message"'
+        }, {
+            Key: 'ReceiveChecklistCreationResponse',
+            Title: 'Checklist Created',
+            Message: 'A Checklist has been created. Please refer to tab section "Checklist > Active"'
+        }, {
+            Key: 'ReceiveChecklistActivationResponse',
+            Title: 'Checklist Closed',
+            Message: 'A Checklist has been closed. Please refer to tab section "Checklist > Closed"'
+        }, {
+            Key: 'ReceiveChecklistClosureResponse',
+            Title: 'Checklist Reopened',
+            Message: 'A Checklist has been reopened. Please refer to tab section "Checklist > Active"'
+        }, {
+            Key: 'ReceiveCrisisClosureResponse',
+            Title: 'Crisis Closed',
+            Message: 'Current crisis has been closed by {0}, you will be redirected to login page.'
+        }, {
+            Key: 'ReceiveCrisisCreationResponse',
+            Title: 'Crisis Created',
+            Message: 'A new crisis has been initiated. Please logout and re-login to the system to see the details of the new crisis'
+        }, {
+            Key: 'ReceiveDemandCreationResponse',
+            Title: 'Demand Created',
+            Message: 'A new Demand has been created. Please refer to tab section "Demand > My Demands"'
+        }, {
+            Key: 'ReceiveDemandApprovalPendingResponse',
+            Title: 'Demand Approval Pending',
+            Message: 'A Demand has been assigned for your approval. Please refer to tab section "Demand > Approval Pending"'
+        }, {
+            Key: 'ReceiveDemandApprovedResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceiveDemandAssignedResponse',
+            Title: 'Demand Assigned to Me',
+            Message: 'A new Demand has been assigned to you. Please refer to tab section "Demand > Assigned to Me"'
+        }, {
+            Key: 'ReceiveCompletedDemandAssignedResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceiveDemandClosedResponse',
+            Title: 'Demand Completed',
+            Message: 'A Demand has been completed. Please refer to tab section "Demand > Completed"'
+        }, {
+            Key: 'ReceiveDemandStatusUpdateResponse',
+            Title: 'Demand Status Updated',
+            Message: 'A Demand\'s status has been updated. Please refer to tab section "Demand > My Demands"'
+        }, {
+            Key: 'ReceiveCompletedDemandstoCloseResponse',
+            Title: 'Demand Closed',
+            Message: 'A Demand has been closed. Please refer to tab section "Demand > Completed"'
+        }, {
+            Key: 'ReceiveRejectedDemandstoAssignResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceiveMediaMessageResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceivePresidentsMessageResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceiveCargoEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'AssignedCargoEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceiveCrewEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'AssignedCrewEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceiveMediaEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'AssignedMediaEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceiveOtherEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'AssignedOtherEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceivePassangerEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'AssignedPassangerEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceiveFutureTravelEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'AssignedFutureTravelEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceiveGeneralUpdateEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'AssignedGeneralUpdateEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceiveSituationalEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'AssignedSituationalUpdatesEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceiveCustomerDissatisfactionEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'AssignedCustomerDissatisfactionEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }
+    ];
+
     public static TabLinks: ITabLinkInterface[] = [
         {
-            id: 'Actionables',
+            id: 'Checklist',
             title: 'Checklists',
             // icon: 'fa fa-edge fa-2x',
             url: '/pages/dashboard/actionable',
@@ -469,14 +629,14 @@ export class GlobalConstants {
             order: 2,
             subtab: [
                 {
-                    id: 'AssignedDemand',
+                    id: 'AssignedToMeDemand',
                     title: 'Assigned To Me',
                     url: './assigned',
                     selected: true,
                     hidden: false,
                     order: 1
                 }, {
-                    id: 'OwnDemand',
+                    id: 'MyDemand',
                     title: 'My Demands',
                     url: './own',
                     selected: false,
@@ -490,7 +650,7 @@ export class GlobalConstants {
                     hidden: false,
                     order: 3
                 }, {
-                    id: 'CompletedDemand',
+                    id: 'CompleteDemand',
                     title: 'Completed',
                     url: './completed',
                     selected: false,
@@ -524,7 +684,7 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'AffectedObjects',
+            id: 'AffectedCargo',
             title: 'Affected Cargo',
             // icon: 'fa fa-chrome fa-2x',
             url: '/pages/dashboard/cargo',
@@ -549,7 +709,7 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'BroadcastMessages',
+            id: 'BroadcastMessage',
             title: 'Broadcast Messages',
             // icon: 'fa fa-envira fa-2x',
             url: '/pages/dashboard/broadcast',
@@ -557,7 +717,7 @@ export class GlobalConstants {
             hidden: false,
             order: 5
         }, {
-            id: 'PresidentMessages',
+            id: 'PresidentMessage',
             title: 'President Messages',
             // icon: 'fa fa-firefox fa-2x',
             url: '/pages/dashboard/presidentMessage',
@@ -582,7 +742,7 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'MediaManagement',
+            id: 'MediaMessage',
             title: 'Media Messages',
             // icon: 'fa fa-medium fa-2x',
             url: '/pages/dashboard/media',
@@ -657,7 +817,7 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'PassengerQuery',
+            id: 'TabPassengerQuery',
             title: 'Passenger Query',
             // icon: 'fa fa-twitter fa-2x',
             url: '/pages/dashboard/passengerquery',

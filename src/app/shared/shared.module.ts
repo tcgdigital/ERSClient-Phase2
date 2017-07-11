@@ -9,8 +9,14 @@ import {
     HTTP_INTERCEPTOR_PROVIDER,
     HTTP_INTERCEPTOR_NO_OVERRIDE_PROVIDER
 } from './interceptor';
-import { PaddingFormatterPipe } from './pipes';
-
+import {
+    NotificationModule,
+    ConnectionConfig
+} from './services/notification.services';
+import {
+    PaddingFormatterPipe,
+    AccessibilityPipe
+} from './pipes';
 
 import {
     BrandHeaderComponent,
@@ -127,8 +133,18 @@ const SHARED_CONSTANTS: any[] = [
 ];
 
 const SHARED_PIPES: any[] = [
-    PaddingFormatterPipe
+    PaddingFormatterPipe,
+    AccessibilityPipe
 ];
+
+export function createConfig(): ConnectionConfig {
+    const config = new ConnectionConfig();
+    // config.hubName = 'Ng2SignalRHub';
+    // config.qs = { user: 'donald' };
+    config.url = GlobalConstants.NOTIFICATION_URL;
+    config.logging = true;
+    return config;
+}
 
 @NgModule({
     declarations: [
@@ -145,8 +161,8 @@ const SHARED_PIPES: any[] = [
         ReactiveFormsModule,
         HttpModule,
         NgSelectizeModule,
-        Ng2BootstrapModule.forRoot()
-
+        Ng2BootstrapModule.forRoot(),
+        NotificationModule.forRoot(createConfig)
     ],
     exports: [
         ...SHARED_COMPONENTS,

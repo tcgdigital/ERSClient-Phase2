@@ -1,5 +1,5 @@
 import { BaseModel } from '../../../../shared';
-import {  FileStoreModel } from '../../../../shared/models/file.store.model';
+import { FileStoreModel } from '../../../../shared/models/file.store.model';
 import { CommunicationLogModel } from '../../../shared.components';
 import { DemandTypeModel } from '../../../masterdata/demandtype';
 import { DepartmentModel } from '../../../masterdata/department';
@@ -46,23 +46,19 @@ export class DemandModel extends BaseModel {
     public RejectedBy?: number;
     public RejectedDate?: Date;
     public ClosedByDepartmentId?: number;
-
-
     public ParentDemand?: DemandModel;
     public DemandType: DemandTypeModel;
     public RequesterDepartment: DepartmentModel;
-    public RequesterParentDepartment : DepartmentModel;
+    public RequesterParentDepartment: DepartmentModel;
     public TargetDepartment: DepartmentModel;
     public ClosedByDepartment: DepartmentModel;
     public ApproverDepartment: DepartmentModel;
-    public Caller : CallerModel;
-    public AffectedPerson : AffectedPeopleModel;
-    public AffectedObject : AffectedObjectModel;
-
+    public Caller: CallerModel;
+    public AffectedPerson: AffectedPeopleModel;
+    public AffectedObject: AffectedObjectModel;
     public DemandTrails?: DemandTrailModel[];
     public DemandRemarkLogs?: DemandRemarkLogModel[];
     public CommunicationLogs?: CommunicationLogModel[];
-
     public FileStores?: FileStoreModel[];
 
     constructor() {
@@ -72,7 +68,6 @@ export class DemandModel extends BaseModel {
 }
 
 export class DemandModelToView extends BaseModel {
-
     public DemandId: number;
     public DemandTypeName: string;
     public DemandDesc: string;
@@ -82,7 +77,7 @@ export class DemandModelToView extends BaseModel {
     public Priority: string;
     public RequiredLocation: string;
     public ScheduleTime: string;
-    public ScheduleTimeToShow : string;
+    public ScheduleTimeToShow: string;
     public EndTime: Date;
     public ElapseTime: number;
     public RagStatus: string;
@@ -90,7 +85,6 @@ export class DemandModelToView extends BaseModel {
     public Remarks: string;
     public RequesterDepartmentId: number;
     public IsCompleted: boolean;
-  //  public CreatedOn: Date;
     public ContactNumber: string;
     public DemandStatusDescription: string;
     public RequestedBy: string;
@@ -100,13 +94,12 @@ export class DemandModelToView extends BaseModel {
     public AffectedObjectId: number;
     public AffectedPersonName: string;
     public AWB: string;
-    public ReferenceNumber : string;
+    public ReferenceNumber: string;
     public IsClosed: boolean;
-    public ApproverDeptId : number;
-    public ApproverDepartmentName : string;
-    public RequesterParentDepartmentName : string;
-    public RequesterType : string;
-
+    public ApproverDeptId: number;
+    public ApproverDepartmentName: string;
+    public RequesterParentDepartmentName: string;
+    public RequesterType: string;
     public FileStores?: FileStoreModel[] = [];
 }
 
@@ -117,7 +110,6 @@ export class DemandRemarkLogModel extends BaseModel {
     public RequesterDepartmentName: string;
     public TargetDepartmentName: string;
     public CreatedByName: string;
-
     public Demand?: DemandModel;
 
     constructor() {

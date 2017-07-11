@@ -5,3 +5,4 @@ export * from './image.loader';
 export * from './theme';
 export * from './data.exchange';
 export * from './shared.service';
+export * from './notification.services';

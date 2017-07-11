@@ -1,55 +1,66 @@
 import { Observable, Subject } from 'rxjs/Rx';
 import { NgZone } from '@angular/core';
-import { ConnectionStatus } from './notification.model';
+import { ConnectionStatus, ConnectionConfig, ConnectionTransport } from './notification.model';
 import { INotificationConnection } from './notification.connection.interface';
 import { BroadcastEventListener } from './broadcast.event.listener';
 
 export class NotificationConnection implements INotificationConnection {
     private _status: Observable<ConnectionStatus>;
     private _errors: Observable<any>;
-    private _jConnection: any;
-    private _jProxy: any;
+    private _connection: any;
+    private _proxy: any;
     private _zone: NgZone;
+    private _config: ConnectionConfig;
 
     /**
      * Creates an instance of NotificationConnection.
      * @param {*} jConnection
-     * @param {*} jProxy
+     * @param {*} proxy
      * @param {NgZone} zone
      *
      * @memberOf NotificationConnection
      */
-    constructor(jConnection: any, jProxy: any, zone: NgZone) {
-        this._jProxy = jProxy;
-        this._jConnection = jConnection;
+    constructor(jConnection: any, proxy: any, zone: NgZone, config: ConnectionConfig) {
+        this._proxy = proxy;
+        this._connection = jConnection;
         this._zone = zone;
         this._errors = this.wireUpErrorsAsObservable();
         this._status = this.wireUpStatusEventsAsObservable();
-    }
-
-    public get status(): Observable<ConnectionStatus> {
-        return this._status;
+        this._config = config;
     }
 
     public get errors(): Observable<any> {
         return this._errors;
     }
 
-    public get id(): string {
-        return this._jConnection.id;
+    public get status(): Observable<ConnectionStatus> {
+        return this._status;
     }
 
-    public start(): Promise<any> {
-        const $promise: Promise<any> = new Promise<any>((resolve, reject) => {
-            this._jConnection.start()
-                .done((...results: any[]) => {
-                    resolve(results);
+    public get id(): string {
+        return this._connection.id;
+    }
+
+    public start(): Promise<INotificationConnection> {
+        const transports = this.convertTransports(this._config.transport);
+
+        const $promise = new Promise<INotificationConnection>((resolve, reject) => {
+            this._connection
+                .start({
+                    jsonp: this._config.jsonp,
+                    transport: transports,
+                    withCredentials: this._config.withCredentials,
+                })
+                .done(() => {
+                    console.log(`Connection established, ID: ${this._connection.id}`);
+                    console.log(`Connection established, Transport: ${this._connection.transport.name}`);
+                    resolve(this);
                 })
                 .fail((error: any) => {
-                    reject(error);
+                    console.log('Could not connect');
+                    reject(`Failed to connect. Error: ${error.message}`); // ex: Error during negotiation request.
                 });
         });
-
         return $promise;
     }
 
@@ -60,7 +71,7 @@ export class NotificationConnection implements INotificationConnection {
         this.log(`SignalRConnection. Start invoking \'${method}\'...`);
 
         const $promise: Promise<any> = new Promise<any>((resolve, reject) => {
-            this._jProxy.invoke(method, ...parameters)
+            this._proxy.invoke(method, ...parameters)
                 .done((result: any) => {
                     this.log(`\'${method}\' invoked succesfully. Resolving promise...`);
                     resolve(result);
@@ -81,7 +92,7 @@ export class NotificationConnection implements INotificationConnection {
             throw new Error('Failed to listen. Argument \'listener\' can not be null');
 
         this.log(`SignalRConnection: Starting to listen to server event with name ${listener.event}`);
-        this._jProxy.on(listener.event, (...args: any[]) => {
+        this._proxy.on(listener.event, (...args: any[]) => {
             this._zone.run(() => {
                 let casted: T = null;
                 if (args.length === 0) {
@@ -106,37 +117,56 @@ export class NotificationConnection implements INotificationConnection {
     }
 
     public stop(): void {
-        this._jConnection.stop();
+        this._connection.stop();
     }
 
     private wireUpErrorsAsObservable(): Observable<any> {
         const sError = new Subject<any>();
 
-        this._jConnection.error((error: any) => {
-            this._zone.run(() => {
-                sError.next(error);
-            });
+        this._connection.error((error: any) => {
+            // this._zone.run(() => {
+            sError.next(error);
+            // });
         });
         return sError;
     }
 
     private wireUpStatusEventsAsObservable(): Observable<ConnectionStatus> {
         const sStatus = new Subject<ConnectionStatus>();
-        const connStatusNames = ['starting', 'received', 'connectionSlow', 'reconnecting', 'reconnected', 'stateChanged', 'disconnected'];
         // aggregate all signalr connection status handlers into 1 observable.
-        connStatusNames.forEach((statusName) => {
-            // handler wire up, for signalr connection status callback.
-            this._jConnection[statusName]((...args: any[]) => {
-                this._zone.run(() => {
-                    sStatus.next(new ConnectionStatus(statusName));
-                });
+        // handler wire up, for signalr connection status callback.
+        this._connection.stateChanged((change: any) => {
+            this._zone.run(() => {
+                sStatus.next(new ConnectionStatus(change.newState));
             });
         });
         return sStatus;
     }
 
+    private convertTransports(transports: ConnectionTransport | ConnectionTransport[]): any {
+        if (transports instanceof Array) {
+            return transports.map((t: ConnectionTransport) => t.name);
+        }
+        return transports.name;
+    }
+
+    private onBroadcastEventReceived<T>(listener: BroadcastEventListener<T>, ...args: any[]) {
+        this.log('SignalRConnection.proxy.on invoked. Calling listener next() ...');
+
+        let casted: T = null;
+        if (args.length > 0) {
+            casted = args[0] as T;
+        }
+
+        this._zone.run(() => {
+            listener.next(casted);
+        });
+
+        this.log('listener next() called.');
+    }
+
     private log(...args: any[]) {
-        if (this._jConnection.logging === false) {
+        if (this._connection.logging === false) {
             return;
         }
         console.log(args.join(', '));

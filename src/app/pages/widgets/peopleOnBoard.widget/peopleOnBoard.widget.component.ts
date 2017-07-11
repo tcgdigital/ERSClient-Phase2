@@ -57,6 +57,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
     public groundVictimList: Observable<GroundVictimModel[]>;
 
     public cargoList: Observable<CargoModel[]>;
+    public isShow: boolean = true;
     currentDepartmentId: number;
     currentIncidentIdLocal: number;
 

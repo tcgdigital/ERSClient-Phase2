@@ -48,6 +48,7 @@ export class OtherQueryRecievedCallsListComponent implements OnInit {
         this.getAllOtherQueryCallsRecieved(this.currentIncidentId);
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllOtherQueryCallsRecieved(this.currentIncidentId));
+        this.globalState.Subscribe('ReceiveOtherEnquiryCreationResponse', (model: ExternalInputModel) => this.getAllOtherQueryCallsRecieved(model.IncidentId));
     }
 
     incidentChangeHandler(incident: KeyValue): void {

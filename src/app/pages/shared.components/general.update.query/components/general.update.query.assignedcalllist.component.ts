@@ -1,15 +1,19 @@
-import { Component, ViewEncapsulation, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import {
+    Component, ViewEncapsulation,
+    OnInit, OnDestroy, ViewChild
+} from '@angular/core';
 import {
     ResponseModel, GlobalConstants, KeyValue,
     GlobalStateService, UtilityService
 } from '../../../../shared';
 import { Observable, Subscription } from 'rxjs/Rx';
 
-import { CallCenterOnlyPageService, ExternalInputModel } from '../../../callcenteronlypage/component';
+import {
+    CallCenterOnlyPageService,
+    ExternalInputModel
+} from '../../../callcenteronlypage/component';
 import { Router, NavigationEnd } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-
-
 
 @Component({
     selector: 'passengerquery-assignedcalls',
@@ -44,6 +48,7 @@ export class GeneralUpdateQueryAssignedCallsListComponent implements OnInit {
         this.getAllGeneralUpdatesCalls(this.currentIncidentId);
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllGeneralUpdatesCalls(this.currentIncidentId));
+        this.globalState.Subscribe('AssignedGeneralUpdateEnquiryCreationResponse', (model: ExternalInputModel) => this.getAllGeneralUpdatesCalls(model.IncidentId));
     }
 
     incidentChangeHandler(incident: KeyValue): void {
