@@ -182,7 +182,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
 
     public GetDepartmentIdProjection(departmentId: number): Observable<ResponseModel<DepartmentAccessOwnerModel>> {
         const departmentIdProjection: string = '';
-        const departmentIds: number[];
+        const departmentIds: number[]=[];
         return this.departmentAccessOwnerService.GetDependentDepartmentAccessOwners(departmentId);
     }
 

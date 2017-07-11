@@ -30,7 +30,7 @@ import * as Highcharts from 'highcharts';
     providers: [IncidentService]
 })
 export class DemandRaisedSummaryWidgetComponent implements OnInit {
-    @Input('initiatedDepartmentId') departmentId: number;
+    @Input('initiatedDepartmentId') initiatedDepartmentId: number;
     @Input('currentIncidentId') incidentId: number;
 
     @ViewChild('childModalAllDemandRaisedSummary')
@@ -58,6 +58,8 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
     public showDemandRaisedGraph: boolean = false;
     public arrGraphData: GraphObject[];
     public showGraph: boolean = false;
+    public isShow: boolean = true;
+    public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
     //public elapsedHourForGraph: number = GlobalConstants.ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION;
     public graphCategories: string[] = [];
     constructor(private demandRaisedSummaryWidgetService: DemandRaisedSummaryWidgetService,
@@ -73,7 +75,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         this.showSubDeptSubCompleted = false;
         this.showSubDeptSubPending = false;
         this.demandRaisedSummary = this.demandRaisedSummaryWidgetService
-            .GetDemandRaisedCount(this.incidentId, this.departmentId);
+            .GetDemandRaisedCount(this.incidentId, this.initiatedDepartmentId);
 
         this.globalState.Subscribe('DemandAddedUpdated', () => this.onDemandAddedUpdatedSuccess());
         this.globalState.Subscribe('DemandApproved', () => this.onDemandAddedUpdatedSuccess());
@@ -83,7 +85,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
 
     public onDemandAddedUpdatedSuccess(): void {
         this.demandRaisedSummary = this.demandRaisedSummaryWidgetService
-            .GetDemandRaisedCount(this.incidentId, this.departmentId);
+            .GetDemandRaisedCount(this.incidentId, this.initiatedDepartmentId);
     }
 
     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
@@ -92,18 +94,18 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
             && (changes['incidentId'].currentValue !== changes['incidentId'].previousValue)
             && changes['incidentId'].previousValue !== undefined) {
             this.demandRaisedSummary = this.demandRaisedSummaryWidgetService
-                .GetDemandRaisedCount(this.incidentId, this.departmentId);
+                .GetDemandRaisedCount(this.incidentId, this.initiatedDepartmentId);
         }
         if (changes['departmentId'] !== undefined
             && (changes['departmentId'].currentValue !== changes['departmentId'].previousValue)
             && changes['departmentId'].previousValue !== undefined) {
             this.demandRaisedSummary = this.demandRaisedSummaryWidgetService
-                .GetDemandRaisedCount(this.incidentId, this.departmentId);
+                .GetDemandRaisedCount(this.incidentId, this.initiatedDepartmentId);
         }
     }
 
     public openAllocatedActionableDetails(): void {
-        this.getOpenAllocatedDemandDetails(this.incidentId, this.departmentId, () => {
+        this.getOpenAllocatedDemandDetails(this.incidentId, this.initiatedDepartmentId, () => {
             this.childModalAllDemandRaisedSummary.show();
         });
     }
@@ -114,7 +116,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
 
     public getOpenAllocatedDemandDetails(incidentId: number, departmentId: number, callback?: () => void): void {
         this.demandRaisedSummaryWidgetService.GetAllDemandByRequesterDepartment
-            (this.incidentId, this.departmentId, (x: AllDemandRaisedSummaryModel[]) => {
+            (this.incidentId, this.initiatedDepartmentId, (x: AllDemandRaisedSummaryModel[]) => {
                 this.allDemandRaisedSummaryModelList = x;
                 this.setRagStatus();
                 this.allDemandRaisedSummaryModel = Observable.of(this.allDemandRaisedSummaryModelList);
@@ -154,7 +156,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
     // TODO: Need to refactor
     public openViewAllSubDeptDemandRaisedSummary(): void {
         this.demandRaisedSummaryWidgetService.GetSubDepartmentDemandByRaisedDepartment
-            (this.incidentId, this.departmentId, (item: DemandRaisedModel[]) => {
+            (this.incidentId, this.initiatedDepartmentId, (item: DemandRaisedModel[]) => {
                 this.allSubDeptDemandRaisedList = Observable.of([]);
                 this.allSubDeptDemandRaisedList = Observable.of(item);
                 this.childModalViewAllSubDeptDemandRaisedSummary.show();
