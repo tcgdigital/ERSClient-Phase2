@@ -91,6 +91,7 @@ export class DataProcessingService {
      */
     public SetRequestOptions(requestType: WEB_METHOD, headers: Headers, params?: URLSearchParams): RequestOptions {
         const _headers: Headers = new Headers(this.RequestHeader);
+        let incidentId: number = +UtilityService.GetFromSession('CurrentIncidentId');
         // _headers.set('TimeZone', jstz.determine().name());
 
         const token: string = UtilityService.GetFromSession('access_token');
@@ -100,6 +101,10 @@ export class DataProcessingService {
             else
                 headers = new Headers({ Authorization: `Bearer ${token}` });
             headers.set('TimeZone', jstz.determine().name());
+        }
+        debugger;
+        if(!isNaN(incidentId) && incidentId > 0){
+            headers.set('CurrentIncidentId', incidentId.toString());
         }
 
         // const finalHeaders: Headers = _headers;
