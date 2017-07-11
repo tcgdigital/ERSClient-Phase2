@@ -1,5 +1,5 @@
 import { ITabLinkInterface } from '../components/tab.control/tab.control.interface';
-import { PagesPermissionMatrixModel } from "../../pages/masterdata/page.functionality/components/page.functionality.model";
+import { PagesPermissionMatrixModel } from '../../pages/masterdata/page.functionality';
 declare const CKEDITOR;
 
 export interface IEmergencySituationEnum {
@@ -60,15 +60,9 @@ export enum StorageType {
 
 export class GlobalConstants {
     // public static EXTERNAL_URL: string = 'http://202.54.73.219/';
-<<<<<<< HEAD
     // public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
     public static EXTERNAL_URL: string = 'http://localhost:5001/';
     public static NOTIFICATION_URL: string = `${GlobalConstants.EXTERNAL_URL}Notification/Hubs`;
-=======
-    //public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
-    public static EXTERNAL_URL: string = 'http://localhost:5001/';
-
->>>>>>> master
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
     public static GRANT_TYPE: string = 'password';
     public static ODATA: string = 'odata';
@@ -276,9 +270,8 @@ export class GlobalConstants {
             text: 'Audit Report'
         }
     ];
-    //Page permission string
-    //Page permission string
 
+    // Page permission string
     public static EmergencySituationEnum: IEmergencySituationEnum[] = [
         {
             EmergencySituationId: 1,
