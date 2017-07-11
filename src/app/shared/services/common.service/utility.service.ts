@@ -7,6 +7,8 @@ import { AuthModel } from '../../models';
 import * as moment from 'moment/moment';
 import { RAGScaleModel } from '../../../pages/shared.components';
 import { Observable } from 'rxjs/Rx';
+import { PagesPermissionMatrixModel } from "../../../pages/masterdata/page.functionality/components/page.functionality.model";
+
 import {
     DemandRaisedModel,
     AllDeptDemandRaisedSummary,
@@ -26,7 +28,8 @@ export class UtilityService {
     public static RAGScaleData: RAGScaleModel[] = [];
     public static licenseInfo: LicenseInformationModel;
     public static IsEmptyObject = (obj: {}): boolean => Object.keys(obj).length === 0 && obj.constructor === Object;
-
+    public static isShowPage: boolean = false;
+    public static pagePermissionMatrix: PagesPermissionMatrixModel[] = [];
     public static IsEmptyArray = (obj: any[]): boolean => obj.length > 0 && obj[0] !== null;
 
     public static GetKeyValues(obj: any): KeyValue[] {
@@ -393,6 +396,32 @@ export class UtilityService {
             keys.push(sessionStorage.key(i));
         }
         return keys;
+    }
+
+    public static GetNecessaryPageLevelPermissionValidation(departmentId: number, pageCode: string): boolean {
+        this.isShowPage = false;
+        this.pagePermissionMatrix = GlobalConstants.PagePermissionMatrix;
+        //this.currentUserId = GlobalConstants.currentLoggedInUser;
+
+        let pagePermissionInitial: PagesPermissionMatrixModel[] = this.pagePermissionMatrix.filter((item: PagesPermissionMatrixModel) => {
+            return ((item.IsHod == true) || (item.IsHod == false && item.OnlyHOD == false));
+        });
+        let pagePermission: PagesPermissionMatrixModel[] = pagePermissionInitial.filter((item: PagesPermissionMatrixModel) => {
+            return (item.PageCode == pageCode && item.DepartmentId == departmentId);
+        });
+
+        if (pagePermission.length == 0) {
+            this.isShowPage = false;
+        }
+        else if (pagePermission.length > 0) {
+            if (pagePermission[0].CanView == false) {
+                this.isShowPage = false;
+            }
+            else {
+                this.isShowPage = true;
+            }
+        }
+        return this.isShowPage;
     }
 }
 
