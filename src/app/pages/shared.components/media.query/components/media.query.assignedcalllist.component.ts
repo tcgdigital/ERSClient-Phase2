@@ -48,6 +48,7 @@ export class MediaQueryAssignedCallsListComponent implements OnInit {
         this.getAllMediaQueryCalls(this.currentIncidentId);
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('CallRecieved', (model: KeyValue) => this.getAllMediaQueryCalls(this.currentIncidentId));
+        this.globalState.Subscribe('AssignedMediaEnquiryCreationResponse', (model: ExternalInputModel) => this.getAllMediaQueryCalls(model.IncidentId));
     }
 
     incidentChangeHandler(incident: KeyValue): void {

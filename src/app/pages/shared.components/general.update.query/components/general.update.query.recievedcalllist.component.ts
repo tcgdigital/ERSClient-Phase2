@@ -48,6 +48,7 @@ export class GeneralUpdateQueryRecievedCallsListComponent implements OnInit {
 
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllGeneralUpdatesCallsRecieved(this.currentIncidentId));
+        this.globalState.Subscribe('ReceiveGeneralUpdateEnquiryCreationResponse', (model: ExternalInputModel) => this.getAllGeneralUpdatesCallsRecieved(model.IncidentId));
     }
 
     incidentChangeHandler(incident: KeyValue): void {

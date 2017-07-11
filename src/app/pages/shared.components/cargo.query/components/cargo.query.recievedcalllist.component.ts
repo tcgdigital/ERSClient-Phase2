@@ -1,15 +1,19 @@
-import { Component, ViewEncapsulation, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import {
+    Component, ViewEncapsulation,
+    OnInit, OnDestroy, ViewChild
+} from '@angular/core';
 import {
     ResponseModel, GlobalConstants, KeyValue,
     GlobalStateService, UtilityService
 } from '../../../../shared';
 import { Observable, Subscription } from 'rxjs/Rx';
 
-import { CallCenterOnlyPageService, ExternalInputModel } from '../../../callcenteronlypage/component';
+import {
+    CallCenterOnlyPageService,
+    ExternalInputModel
+} from '../../../callcenteronlypage/component';
 import { Router, NavigationEnd } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-
-
 
 @Component({
     selector: 'cargoquery-assignedcalls',
@@ -25,9 +29,10 @@ export class CargoQueryRecievedCallsListComponent implements OnInit {
     callId: number;
     callcenterload: boolean = false;
     public isArchive: boolean = false;
-    constructor(private callcenteronlypageservice: CallCenterOnlyPageService, private _router: Router,
-        private globalState: GlobalStateService) {
 
+    constructor(private callcenteronlypageservice: CallCenterOnlyPageService,
+        private _router: Router,
+        private globalState: GlobalStateService) {
     }
 
     ngOnInit() {
@@ -43,7 +48,7 @@ export class CargoQueryRecievedCallsListComponent implements OnInit {
         this.getAllCargoQueryCallsRecieved(this.currentIncidentId);
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllCargoQueryCallsRecieved(this.currentIncidentId));
-
+        this.globalState.Subscribe('ReceiveCargoEnquiryCreationResponse', (model: ExternalInputModel) => this.getAllCargoQueryCallsRecieved(model.IncidentId));
     }
 
     incidentChangeHandler(incident: KeyValue): void {
@@ -59,8 +64,6 @@ export class CargoQueryRecievedCallsListComponent implements OnInit {
                 this.allAssignedCalls = response.Records;
             });
     }
-
-
 
     openCallcenter(externalInputId): void {
         this.callId = externalInputId;

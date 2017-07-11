@@ -2,7 +2,7 @@ import { URLSearchParams } from '@angular/http';
 import { FormGroup } from '@angular/forms';
 import { KeyValue, BaseModel, LicenseInformationModel } from '../../models';
 import * as jwtDecode from 'jwt-decode';
-import { GlobalConstants } from '../../constants';
+import { GlobalConstants, StorageType } from '../../constants';
 import { AuthModel } from '../../models';
 import * as moment from 'moment/moment';
 import { RAGScaleModel } from '../../../pages/shared.components';
@@ -22,11 +22,12 @@ import {
 } from '../../../pages/widgets/demand.received.summary.widget';
 
 export class UtilityService {
+    public static RAGScaleData: RAGScaleModel[] = [];
+    public static licenseInfo: LicenseInformationModel;
     private static STRIP_COMMENTS: RegExp = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
     private static ARGUMENT_NAMES: RegExp = /([^\s,]+)/g;
     private static CACHE_PROPERTY: string = '__paramNames';
-    public static RAGScaleData: RAGScaleModel[] = [];
-    public static licenseInfo: LicenseInformationModel;
+
     public static IsEmptyObject = (obj: {}): boolean => Object.keys(obj).length === 0 && obj.constructor === Object;
     public static isShowPage: boolean = false;
     public static pagePermissionMatrix: PagesPermissionMatrixModel[] = [];
@@ -83,30 +84,43 @@ export class UtilityService {
         return params.toString();
     }
 
-    public static SetToSession(data: {}): void {
-        for (let key in data) {
+    public static SetToSession(data: {},
+        storage: StorageType = StorageType.SessionStorage): void {
+        for (const key in data) {
             if (data.hasOwnProperty(key) && typeof key !== 'function') {
-                sessionStorage.setItem(key, <string>data[key]);
+                if (storage === StorageType.SessionStorage)
+                    sessionStorage.setItem(key, data[key] as string);
+                else
+                    localStorage.setItem(key, data[key] as string);
             }
         }
     }
 
-    public static GetFromSession(key: string): string {
-        if (this.IsSessionKeyExists(key)) {
-            return sessionStorage.getItem(key);
+    public static GetFromSession(key: string, storage:
+        StorageType = StorageType.SessionStorage): string {
+        if (this.IsSessionKeyExists(key, storage)) {
+            if (storage === StorageType.SessionStorage)
+                return sessionStorage.getItem(key);
+            else
+                return localStorage.getItem(key);
         }
         return '';
     }
 
-    public static RemoveFromSession(key: string): void {
-        if (this.IsSessionKeyExists(key)) {
-            sessionStorage.removeItem(key);
+    public static RemoveFromSession(key: string,
+        storage: StorageType = StorageType.SessionStorage): void {
+        if (this.IsSessionKeyExists(key, storage)) {
+            if (storage === StorageType.SessionStorage)
+                sessionStorage.removeItem(key);
+            else
+                localStorage.removeItem(key);
         }
     }
 
-    public static IsSessionKeyExists(key: string): boolean {
-        const keys: string[] = this.listAllSessionItems();
-        return (keys.some((x: string) => x === key))
+    public static IsSessionKeyExists(key: string,
+        storage: StorageType = StorageType.SessionStorage): boolean {
+        const keys: string[] = this.listAllSessionItems(storage);
+        return (keys.some((x: string) => x === key));
     }
 
     public static shade(color, weight) {
@@ -183,7 +197,7 @@ export class UtilityService {
         func[UtilityService.CACHE_PROPERTY] = props
             .filter((x: string) => pattern.test(x))
             .map((x: string) => {
-                let prop = /\.(.*?)\;/gi.exec(x);
+                const prop = /\.(.*?)\;/gi.exec(x);
                 return prop[1];
             });
         return func[UtilityService.CACHE_PROPERTY];
@@ -220,8 +234,8 @@ export class UtilityService {
     }
 
     public static setModelFromFormGroup<T extends BaseModel>
-        (entity: T, fromGroup: FormGroup, ...params: ((entity: T) => any)[]): void {
-        let paramNames: string[] = [];
+        (entity: T, fromGroup: FormGroup, ...params: Array<(entity: T) => any>): void {
+        const paramNames: string[] = [];
         if (params.length > 0) {
             params.forEach((x: Function) => {
                 paramNames.push(UtilityService.getReturnType(x)[0]);
@@ -235,7 +249,7 @@ export class UtilityService {
         }
     }
 
-    public static formDirtyCheck<T extends BaseModel>(entity: T, fromGroup: FormGroup, ...params: ((entity: T) => any)[]): void {
+    public static formDirtyCheck<T extends BaseModel>(entity: T, fromGroup: FormGroup, ...params: Array<(entity: T) => any>): void {
         const paramNames: string[] = [];
         if (params.length > 0) {
             params.forEach((x: Function) => {
@@ -390,9 +404,10 @@ export class UtilityService {
             .substring(1);
     }
 
-    private static listAllSessionItems(): string[] {
+    private static listAllSessionItems(storage: StorageType = StorageType.SessionStorage): string[] {
         const keys: string[] = new Array<string>();
-        for (let i = 0; i <= sessionStorage.length - 1; i++) {
+        for (let i = 0; i <= ((storage === StorageType.SessionStorage) ?
+            (sessionStorage.length - 1) : (localStorage.length - 1)); i++) {
             keys.push(sessionStorage.key(i));
         }
         return keys;
