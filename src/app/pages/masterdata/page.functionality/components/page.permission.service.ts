@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
-import { PagePermissionModel } from './page.functionality.model';
+import { PagePermissionModel, PagesPermissionMatrixModel } from './page.functionality.model';
 import { IPagePermissionService } from './IPagePermissionService';
 import {
     ResponseModel,
@@ -16,6 +16,7 @@ import {
 export class PagePermissionService extends ServiceBase<PagePermissionModel>
     implements IPagePermissionService {
     private _bulkDataService: DataService<PagePermissionModel>;
+    private _pagePermissionMatrixService: DataService<any>;
 
     constructor(private dataServiceFactory: DataServiceFactory) {
         super(dataServiceFactory, 'PagePermissions');
@@ -23,6 +24,8 @@ export class PagePermissionService extends ServiceBase<PagePermissionModel>
 
         this._bulkDataService = this.dataServiceFactory
             .CreateServiceWithOptions<PagePermissionModel>('PermissionBatch/BatchPostAsync', option);
+
+
     }
 
     GetFilter(deptId: string): Observable<ResponseModel<PagePermissionModel>> {
@@ -34,4 +37,15 @@ export class PagePermissionService extends ServiceBase<PagePermissionModel>
     CreateBulk(entities: PagePermissionModel[]): Observable<PagePermissionModel[]> {
         return this._bulkDataService.BulkPost(entities).Execute();
     }
+
+    GetPagePermissionMatrix(userId: number): Observable<PagesPermissionMatrixModel[]> {
+
+        let option = new DataProcessingService();
+        this._pagePermissionMatrixService = this.dataServiceFactory
+            .CreateServiceWithOptionsAndActionSuffix<any>('PagePermissionMatrix', `GetPermissionMatrix/${userId}`, option);
+        return this._pagePermissionMatrixService.Get(userId.toString())
+            .Execute();
+    }
+
+
 }

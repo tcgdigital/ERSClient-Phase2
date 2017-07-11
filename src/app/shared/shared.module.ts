@@ -9,8 +9,16 @@ import {
     HTTP_INTERCEPTOR_PROVIDER,
     HTTP_INTERCEPTOR_NO_OVERRIDE_PROVIDER
 } from './interceptor';
+<<<<<<< HEAD
 import { PaddingFormatterPipe } from './pipes';
 import { NotificationModule, ConnectionConfig } from './services';
+=======
+import {
+    PaddingFormatterPipe,
+    AccessibilityPipe
+} from './pipes';
+
+>>>>>>> master
 
 import {
     BrandHeaderComponent,
@@ -127,7 +135,8 @@ const SHARED_CONSTANTS: any[] = [
 ];
 
 const SHARED_PIPES: any[] = [
-    PaddingFormatterPipe
+    PaddingFormatterPipe,
+    AccessibilityPipe
 ];
 
 export function createConfig(): ConnectionConfig {

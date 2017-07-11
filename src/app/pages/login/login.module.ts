@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IncidentService } from '../incident';
 import { LoginRoutings } from './login.routing';
+import { PagePermissionService } from "../../pages/masterdata/page.functionality/components/page.permission.service";
 import {
     LoginComponent, ForgotPasswordComponent,
     ChangePasswordComponent
@@ -25,7 +26,8 @@ import { LoginRootComponent } from './login.root.component';
     ],
     providers: [
         IncidentService,
-        UserProfileService
+        UserProfileService,
+        PagePermissionService
     ]
 })
 export class LoginModule {

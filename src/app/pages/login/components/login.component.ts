@@ -6,7 +6,7 @@ import * as jwtDecode from 'jwt-decode';
 import { RAGScaleService, RAGScaleModel } from '../../../pages/shared.components/ragscale';
 import { AuthenticationService } from './authentication.service';
 import { UtilityService } from '../../../shared/services';
-import { GlobalStateService, ResponseModel, KeyValue } from '../../../shared';
+import { GlobalStateService, ResponseModel, KeyValue, GlobalConstants } from '../../../shared';
 import { AuthRequestModel, AuthResponseModel } from './auth.model';
 import { IncidentModel, IncidentService } from '../../incident';
 import { UserProfileService, UserProfileModel } from '../../masterdata/userprofile/index';
@@ -14,6 +14,8 @@ import { LicensingService } from '../../../shared/services/common.service';
 import { LicenseVerificationResponse, LicenseInformationModel } from '../../../shared/models';
 import { UserPermissionService } from '../../masterdata/userpermission/components';
 import { UserPermissionModel } from '../../masterdata/userpermission/components';
+import { PagePermissionService } from "../../../pages/masterdata/page.functionality/components/page.permission.service";
+import { PagesPermissionMatrixModel } from "../../../pages/masterdata/page.functionality/components/page.functionality.model";
 import * as _ from 'underscore';
 
 @Component({
@@ -43,7 +45,8 @@ export class LoginComponent implements OnInit {
         private incidentService: IncidentService,
         private licensingService: LicensingService,
         private ragScaleService: RAGScaleService,
-        private userPermissionService: UserPermissionService) {
+        private userPermissionService: UserPermissionService,
+        private pagePermissionService: PagePermissionService) {
 
         this.form = formBuilder.group({
             userId: ['', Validators.compose([Validators.required, Validators.minLength(4)])],
@@ -77,7 +80,7 @@ export class LoginComponent implements OnInit {
 
     private getDepartments(userId: number): void {
         this.userPermissionService.GetAllDepartmentsAssignedToUser(userId)
-            .map((x:  ResponseModel<UserPermissionModel>)  =>  x.Records.sort((a,  b)  =>  {
+            .map((x: ResponseModel<UserPermissionModel>) => x.Records.sort((a, b) => {
                 if (a.Department.DepartmentName < b.Department.DepartmentName) return -1;
                 if (a.Department.DepartmentName > b.Department.DepartmentName) return 1;
                 return 0;
@@ -113,34 +116,42 @@ export class LoginComponent implements OnInit {
     Login(userid: string, password: string): void {
         this.authService.Login(userid, password)
             .subscribe((data: AuthResponseModel) => {
+
                 console.log(jwtDecode(data.access_token));
                 const loginCredentialBasic: any = jwtDecode(data.access_token);
+                this.pagePermissionService.GetPagePermissionMatrix(loginCredentialBasic.UserId)
+                    .subscribe((item: PagesPermissionMatrixModel[]) => {
+                        GlobalConstants.PagePermissionMatrix = item;
+                        if (loginCredentialBasic) {
+                            // This is to check that whether the user has department associated with him. From UserPermission table.
+                            //let errorSuccess: boolean = this.userProfileService.VerifyUserDepartmentMapping(+loginCredentialBasic.UserId.toString());
+                            this.getDepartments(loginCredentialBasic.UserId);
+                            GlobalConstants.currentLoggedInUser = +loginCredentialBasic.UserId.toString();
+                            this.getIncidents();
 
-                if (loginCredentialBasic) {
-                    // This is to check that whether the user has department associated with him. From UserPermission table.
-                    //let errorSuccess: boolean = this.userProfileService.VerifyUserDepartmentMapping(+loginCredentialBasic.UserId.toString());
-                    this.getDepartments(loginCredentialBasic.UserId);
-                    this.getIncidents();
+                            if (!Object.keys(loginCredentialBasic).some((x) => x === 'EmailConfirmed')) {
+                                localStorage.setItem('LastLoginTime', (new Date()).toString());
+                                UtilityService.SetToSession({ CurrentUserId: loginCredentialBasic.UserId });
+                                this.GetUserInfoFromUserProfileByUserProfileId(loginCredentialBasic.UserId);
+                                this.getRAGScaleData();
+                            } else {
+                                this.toastrService.warning('Please change your default password', 'Sign In', this.toastrConfig);
+                                this.router.navigate(['login/change']);
+                            }
+                        } else {
+                            this.toastrService.error('Unable to connect the server or an unspecified exception',
+                                'Sign In Exception', this.toastrConfig);
+                        }
+                    });
 
-                    if (!Object.keys(loginCredentialBasic).some((x) => x === 'EmailConfirmed')) {
-                        localStorage.setItem('LastLoginTime', (new Date()).toString());
-                        UtilityService.SetToSession({ CurrentUserId: loginCredentialBasic.UserId });
-                        this.GetUserInfoFromUserProfileByUserProfileId(loginCredentialBasic.UserId);
-                        this.getRAGScaleData();
-                    } else {
-                        this.toastrService.warning('Please change your default password', 'Sign In', this.toastrConfig);
-                        this.router.navigate(['login/change']);
-                    }
-                } else {
-                    this.toastrService.error('Unable to connect the server or an unspecified exception',
-                        'Sign In Exception', this.toastrConfig);
-                }
             }, (error: any) => {
                 console.log(`Error: ${error}`);
                 if (error.error === 'invalid_grant') {
                     this.toastrService.error(error.error_description, 'Sign In Exception', this.toastrConfig);
                 }
                 console.log('Notify User Clicked error');
+            }, () => {
+
             });
     }
 

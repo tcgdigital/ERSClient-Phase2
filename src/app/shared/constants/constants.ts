@@ -1,4 +1,5 @@
 import { ITabLinkInterface } from '../components/tab.control/tab.control.interface';
+import { PagesPermissionMatrixModel } from "../../pages/masterdata/page.functionality/components/page.functionality.model";
 declare const CKEDITOR;
 
 export interface IEmergencySituationEnum {
@@ -59,9 +60,15 @@ export enum StorageType {
 
 export class GlobalConstants {
     // public static EXTERNAL_URL: string = 'http://202.54.73.219/';
+<<<<<<< HEAD
     // public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
     public static EXTERNAL_URL: string = 'http://localhost:5001/';
     public static NOTIFICATION_URL: string = `${GlobalConstants.EXTERNAL_URL}Notification/Hubs`;
+=======
+    //public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
+    public static EXTERNAL_URL: string = 'http://localhost:5001/';
+
+>>>>>>> master
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
     public static GRANT_TYPE: string = 'password';
     public static ODATA: string = 'odata';
@@ -76,7 +83,8 @@ export class GlobalConstants {
     public static URL_PATTERN: string = '^(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:\~\+#]*[\w\-\@?^=%&amp;\~\+#])?$';
     public static LAST_INCIDENT_PICK_COUNT: string = '5';
     public static ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION: number = 12;
-
+    public static currentLoggedInUser: number = 0;
+    public static PagePermissionMatrix: PagesPermissionMatrixModel[] = [];
     public static INTERCEPTOR_PERFORM: boolean = false;
     public static PRESERVE_DATA_FROM_CONVERSION = ['EmergencyDate'];
 
@@ -268,7 +276,8 @@ export class GlobalConstants {
             text: 'Audit Report'
         }
     ];
-
+    //Page permission string
+    //Page permission string
 
     public static EmergencySituationEnum: IEmergencySituationEnum[] = [
         {
@@ -593,7 +602,7 @@ export class GlobalConstants {
 
     public static TabLinks: ITabLinkInterface[] = [
         {
-            id: 'Actionables',
+            id: 'Checklist',
             title: 'Checklists',
             // icon: 'fa fa-edge fa-2x',
             url: '/pages/dashboard/actionable',
@@ -627,14 +636,14 @@ export class GlobalConstants {
             order: 2,
             subtab: [
                 {
-                    id: 'AssignedDemand',
+                    id: 'AssignedToMeDemand',
                     title: 'Assigned To Me',
                     url: './assigned',
                     selected: true,
                     hidden: false,
                     order: 1
                 }, {
-                    id: 'OwnDemand',
+                    id: 'MyDemand',
                     title: 'My Demands',
                     url: './own',
                     selected: false,
@@ -648,7 +657,7 @@ export class GlobalConstants {
                     hidden: false,
                     order: 3
                 }, {
-                    id: 'CompletedDemand',
+                    id: 'CompleteDemand',
                     title: 'Completed',
                     url: './completed',
                     selected: false,
@@ -682,7 +691,7 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'AffectedObjects',
+            id: 'AffectedCargo',
             title: 'Affected Cargo',
             // icon: 'fa fa-chrome fa-2x',
             url: '/pages/dashboard/cargo',
@@ -707,7 +716,7 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'BroadcastMessages',
+            id: 'BroadcastMessage',
             title: 'Broadcast Messages',
             // icon: 'fa fa-envira fa-2x',
             url: '/pages/dashboard/broadcast',
@@ -715,7 +724,7 @@ export class GlobalConstants {
             hidden: false,
             order: 5
         }, {
-            id: 'PresidentMessages',
+            id: 'PresidentMessage',
             title: 'President Messages',
             // icon: 'fa fa-firefox fa-2x',
             url: '/pages/dashboard/presidentMessage',
@@ -740,7 +749,7 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'MediaManagement',
+            id: 'MediaMessage',
             title: 'Media Messages',
             // icon: 'fa fa-medium fa-2x',
             url: '/pages/dashboard/media',
@@ -815,7 +824,7 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'PassengerQuery',
+            id: 'TabPassengerQuery',
             title: 'Passenger Query',
             // icon: 'fa fa-twitter fa-2x',
             url: '/pages/dashboard/passengerquery',
