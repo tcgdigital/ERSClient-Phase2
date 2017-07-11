@@ -1,15 +1,19 @@
-import { Component, ViewEncapsulation, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import {
+    Component, ViewEncapsulation,
+    OnInit, OnDestroy, ViewChild
+} from '@angular/core';
 import {
     ResponseModel, GlobalConstants, KeyValue,
     GlobalStateService, UtilityService
 } from '../../../../shared';
 import { Observable, Subscription } from 'rxjs/Rx';
 
-import { CallCenterOnlyPageService, ExternalInputModel } from '../../../callcenteronlypage/component';
+import {
+    CallCenterOnlyPageService,
+    ExternalInputModel
+} from '../../../callcenteronlypage/component';
 import { Router, NavigationEnd } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-
-
 
 @Component({
     selector: 'crewquery-assignedcalls',
@@ -24,10 +28,11 @@ export class CrewQueryRecievedCallsListComponent implements OnInit {
     protected _onRouteChange: Subscription;
     callId: number;
     callcenterload: boolean = false;
-    public isArchive:boolean = false;
-    constructor(private callcenteronlypageservice: CallCenterOnlyPageService, private _router: Router,
-        private globalState: GlobalStateService) {
+    public isArchive: boolean = false;
 
+    constructor(private callcenteronlypageservice: CallCenterOnlyPageService,
+        private _router: Router,
+        private globalState: GlobalStateService) {
     }
 
     ngOnInit() {
@@ -43,7 +48,7 @@ export class CrewQueryRecievedCallsListComponent implements OnInit {
         this.getAllCrewQueryCallsRecieved(this.currentIncidentId);
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllCrewQueryCallsRecieved(this.currentIncidentId));
-
+        this.globalState.Subscribe('ReceiveCrewEnquiryCreationResponse', (model: ExternalInputModel) => this.getAllCrewQueryCallsRecieved(model.IncidentId));
     }
 
     incidentChangeHandler(incident: KeyValue): void {
@@ -59,8 +64,6 @@ export class CrewQueryRecievedCallsListComponent implements OnInit {
                 this.allAssignedCalls = response.Records;
             });
     }
-
-
 
     openCallcenter(externalInputId): void {
         this.callId = externalInputId;

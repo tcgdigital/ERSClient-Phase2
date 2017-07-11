@@ -5,8 +5,6 @@ import {
 import { Observable, Subscription } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router, NavigationEnd } from '@angular/router';
-
-
 import { InvolvePartyModel } from '../../involveparties';
 import { DemandModel, DemandModelToView, DemandRemarkLogModel } from './demand.model';
 import { DemandService } from './demand.service';
@@ -29,7 +27,6 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     @ViewChild('childModalRemarks') public childModalRemarks: ModalDirective;
     @ViewChild('childModal') public childModal: ModalDirective;
 
-
     demands: DemandModelToView[] = [];
     demand: DemandModelToView = new DemandModelToView();
     currentDepartmentId: number;
@@ -48,13 +45,14 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     isArchive: boolean = false;
     demandFilePath: string;
     public globalStateProxyOpen: GlobalStateService;
+
     /**
      * Creates an instance of AssignedDemandComponent.
-     * @param {DemandService} demandService 
-     * @param {DepartmentService} departmentService 
-     * @param {DemandRemarkLogService} demandRemarkLogsService 
-     * @param {GlobalStateService} globalState 
-     * 
+     * @param {DemandService} demandService
+     * @param {DepartmentService} departmentService
+     * @param {DemandRemarkLogService} demandRemarkLogsService
+     * @param {GlobalStateService} globalState
+     *
      * @memberOf AssignedDemandComponent
      */
     constructor(private demandService: DemandService, private injector: Injector,
@@ -64,7 +62,6 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         private dataExchange: DataExchangeService<number>,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig, private _router: Router) {
-        //  this.createdByName = "Anwesha Ray";
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
         this.demandFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Demand/';
@@ -72,7 +69,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     }
 
     openDemandDetails(demandId: number): void {
-        this.demand = this.demands.find(x=>x.DemandId==demandId);
+        this.demand = this.demands.find((x) => x.DemandId === demandId);
         this.childModal.show();
     }
 
@@ -83,23 +80,23 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
-    };
+    }
 
-     cancelModal() : any {
-        this.demand= new DemandModelToView();
+    cancelModal(): any {
+        this.demand = new DemandModelToView();
         this.childModal.hide();
     }
 
     setRagStatus(): void {
-        Observable.interval(1000).subscribe(_ => {
+        Observable.interval(1000).subscribe((_) => {
             if (this.demands && this.demands.length > 0) {
-                this.demands.forEach(x => {
+                this.demands.forEach((x) => {
                     if (x.ClosedOn == null) {
-                        let ScheduleTime: number = (Number(x.ScheduleTime) * 60000);
-                        let CreatedOn: number = new Date(x.CreatedOn).getTime();
-                        let CurrentTime: number = new Date().getTime();
-                        let TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-                        let percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
+                        const ScheduleTime: number = (Number(x.ScheduleTime) * 60000);
+                        const CreatedOn: number = new Date(x.CreatedOn).getTime();
+                        const CurrentTime: number = new Date().getTime();
+                        const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
+                        const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
                         if (percentage < 50) {
                             x.RagStatus = 'statusGreen';
                         } else if (percentage >= 100) {
@@ -110,11 +107,11 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
                         }
                     }
                     else {
-                        let ScheduleTime: number = (Number(x.ScheduleTime) * 60000);
-                        let CreatedOn: number = new Date(x.CreatedOn).getTime();
-                        let CurrentTime: number = new Date().getTime();
-                        let TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-                        let percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
+                        const ScheduleTime: number = (Number(x.ScheduleTime) * 60000);
+                        const CreatedOn: number = new Date(x.CreatedOn).getTime();
+                        const CurrentTime: number = new Date().getTime();
+                        const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
+                        const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
                         if (percentage < 50) {
                             x.RagStatus = 'statusGreen';
                         } else if (percentage >= 100) {
@@ -127,7 +124,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
                 });
             }
         });
-    };
+    }
 
     getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
@@ -137,11 +134,11 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
-    };
+    }
 
     getCurrentDepartmentName(departmentId): string {
-        return this.departments.find(x => { return x.DepartmentId == departmentId; }).DepartmentName;
-    };
+        return this.departments.find((x) => x.DepartmentId === departmentId).DepartmentName;
+    }
 
     getAllDepartments() {
         this.departmentService.GetAll()
@@ -156,8 +153,8 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     createDemandTrailModel(demand: DemandModelToView, flag, OriginalDemand?: DemandModel): DemandTrailModel[] {
         this.demandTrails = [];
         this.demandTrail = new DemandTrailModel();
-        let description = flag ? `Completed by ${this.createdByName}( ${this.currentDepartmentName})` : demand.DemandStatusDescription;
-        this.demandTrail.Answers = "";
+        const description = flag ? `Completed by ${this.createdByName}( ${this.currentDepartmentName})` : demand.DemandStatusDescription;
+        this.demandTrail.Answers = '';
         this.demandTrail.DemandId = demand.DemandId;
         this.demandTrail.ScheduleTime = demand.ScheduleTime;
         this.demandTrail.ContactNumber = demand.ContactNumber;
@@ -165,8 +162,9 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.demandTrail.RequiredLocation = demand.RequiredLocation;
         this.demandTrail.RequesterDepartmentName = demand.RequesterDepartmentName;
         this.demandTrail.TargetDepartmentName = this.currentDepartmentName;
-        this.demandTrail.ApproverDepartmentName = this.departments.some((x: DepartmentModel) => x.DepartmentId == demand.ApproverDeptId) ?
-            this.departments.find((x: DepartmentModel) => x.DepartmentId == demand.ApproverDeptId).DepartmentName : null;
+        this.demandTrail.ApproverDepartmentName = this.departments
+            .some((x: DepartmentModel) => x.DepartmentId === demand.ApproverDeptId) ?
+            this.departments.find((x: DepartmentModel) => x.DepartmentId === demand.ApproverDeptId).DepartmentName : null;
         this.demandTrail.DemandDesc = demand.DemandDesc;
         this.demandTrail.IsCompleted = true;
         this.demandTrail.ScheduledClose = new Date();
@@ -174,10 +172,10 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.demandTrail.ClosedOn = null;
         this.demandTrail.DemandStatusDescription = description;
         this.demandTrail.Remarks = demand.Remarks;
-        this.demandTrail.ActiveFlag = "Active";
-        this.demandTrail.CreatedOn = demand.CreatedOn
+        this.demandTrail.ActiveFlag = 'Active';
+        this.demandTrail.CreatedOn = demand.CreatedOn;
 
-        let date = new Date();
+        const date = new Date();
         let answer = `<div><p>Request ${this.demandTrail.DemandStatusDescription} <strong>Date :</strong>  ${date.toLocaleString()} </p><div>`;
         if (!flag && (OriginalDemand != null)) {
             this.demandTrail.IncidentId = OriginalDemand.IncidentId;
@@ -194,10 +192,10 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
             answer = `<div><p> Request Edited By ${this.currentDepartmentName}  <strong>Date :</strong> ${date}  </p><div>`;
 
             if (OriginalDemand.ScheduleTime) {
-                let minutesInt = parseInt(OriginalDemand.ScheduleTime);
-                let d = new Date(OriginalDemand.CreatedOn);
+                const minutesInt = parseInt(OriginalDemand.ScheduleTime);
+                const d = new Date(OriginalDemand.CreatedOn);
                 d.setMinutes(d.getMinutes() + minutesInt);
-                let editedDate = new Date(d);
+                const editedDate = new Date(d);
                 answer = answer + '<strong>Expected Resolution Time</strong> : ' + editedDate + '  ';
             }
         }
@@ -205,19 +203,19 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.demandTrail.Answers = answer;
         this.demandTrails.push(this.demandTrail);
         return this.demandTrails;
-    };
+    }
 
     openDemandRemarks(demand) {
         this.demandForRemarks = demand;
         this.getDemandRemarks(demand.DemandId);
-    };
+    }
 
     cancelRemarkUpdate(): void {
         this.childModalRemarks.hide();
-    };
+    }
 
     saveRemark(remarks): void {
-        let demand: DemandModelToView = this.demandForRemarks;
+        const demand: DemandModelToView = this.demandForRemarks;
         this.RemarkToCreate = new DemandRemarkLogModel();
         this.RemarkToCreate.Remark = remarks;
         this.RemarkToCreate.DemandId = demand.DemandId;
@@ -228,37 +226,37 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
             .subscribe((response: DemandRemarkLogModel) => {
                 this.toastrService.success('Remark saved successfully.', 'Success', this.toastrConfig);
                 this.getDemandRemarks(demand.DemandId);
-                this.Remarks = "";
+                this.Remarks = '';
             }, (error: any) => {
                 console.log(`Error: ${error}`);
-                alert("Error occured during saving the remark");
+                alert('Error occured during saving the remark');
             });
-    };
+    }
 
     isCompleted(item: DemandModelToView): any {
-        return item.IsCompleted == true;
-
-    };
+        return item.IsCompleted === true;
+    }
 
     submit(): void {
         if (this.demands.length > 0) {
-            let demandCompletion: DemandModel[] = this.demands.filter(this.isCompleted).map(x => {
-                let item: DemandModel = new DemandModel();
-                item.DemandId = x.DemandId;
-                item.ScheduledClose = new Date(),
-                    item.ClosedByDepartmentId = this.currentDepartmentId;
-                item.DemandStatusDescription = `Completed by ${this.currentDepartmentName}`,
-                    item.IsCompleted = x.IsCompleted,
-                    item.IsRejected = false;
-                item.RejectedDate = null;
-                item.RejectedBy = null;
-                item.Remarks = x.Remarks;
-                item.DemandTrails = this.createDemandTrailModel(x, true);
-                return item;
-            });
+            const demandCompletion: DemandModel[] = this.demands
+                .filter(this.isCompleted).map((x) => {
+                    const item: DemandModel = new DemandModel();
+                    item.DemandId = x.DemandId;
+                    item.ScheduledClose = new Date(),
+                        item.ClosedByDepartmentId = this.currentDepartmentId;
+                    item.DemandStatusDescription = `Completed by ${this.currentDepartmentName}`,
+                        item.IsCompleted = x.IsCompleted,
+                        item.IsRejected = false;
+                    item.RejectedDate = null;
+                    item.RejectedBy = null;
+                    item.Remarks = x.Remarks;
+                    item.DemandTrails = this.createDemandTrailModel(x, true);
+                    return item;
+                });
 
-            if (demandCompletion.length == 0) {
-                this.toastrService.error("Please select at least one request");
+            if (demandCompletion.length === 0) {
+                this.toastrService.error('Please select at least one request');
             }
             else {
                 this.demandService.UpdateBulkForCompletion(demandCompletion)
@@ -269,45 +267,32 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                     });
-            };
+            }
         }
         else {
-            this.toastrService.error("There is no request assigned.");
+            this.toastrService.error('There is no request assigned.');
         }
-    };
+    }
 
     ngOnInit(): any {
-        this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
 
-        if (this._router.url.indexOf("archivedashboard") > -1) {
+        if (this._router.url.indexOf('archivedashboard') > -1) {
             this.isArchive = true;
-            this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
+            this.currentIncidentId = +UtilityService.GetFromSession('ArchieveIncidentId');
         }
         else {
             this.isArchive = false;
-            this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+            this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
         }
         this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
         this.credential = UtilityService.getCredentialDetails();
         this.createdByName = this.credential.UserName;
-
-
         this.getAllDepartments();
 
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
-    };
-
-    private incidentChangeHandler(incident: KeyValue): void {
-        this.currentIncidentId = incident.Value;
-        this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
-    };
-
-    private departmentChangeHandler(department: KeyValue): void {
-        this.currentDepartmentId = department.Value;
-        this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
-        this.currentDepartmentName = department.Key;
-    };
+    }
 
     ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChangefromDashboard');
@@ -316,5 +301,17 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
 
     ngAfterContentInit(): any {
         this.setRagStatus();
-    };
+    }
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.currentIncidentId = incident.Value;
+        this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
+    }
+
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
+        this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
+        this.currentDepartmentName = department.Key;
+    }
+
+
 }

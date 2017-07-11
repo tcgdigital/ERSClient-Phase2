@@ -1,4 +1,7 @@
-import { Component, ViewEncapsulation, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import {
+    Component, ViewEncapsulation,
+    OnInit, OnDestroy, ViewChild
+} from '@angular/core';
 import {
     ResponseModel, GlobalConstants, KeyValue,
     GlobalStateService, UtilityService
@@ -45,6 +48,7 @@ export class SituationalUpdateQueryAssignedCallsListComponent implements OnInit 
         this.getAllSituationalUpdatesCalls(this.currentIncidentId);
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllSituationalUpdatesCalls(this.currentIncidentId));
+        this.globalState.Subscribe('AssignedSituationalUpdatesEnquiryCreationResponse', (model: ExternalInputModel) => this.getAllSituationalUpdatesCalls(model.IncidentId));
     }
 
     incidentChangeHandler(incident: KeyValue): void {
