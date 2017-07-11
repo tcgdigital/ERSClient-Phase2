@@ -9,7 +9,7 @@ import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.mod
 import { AffectedPeopleService } from './affected.people.service';
 import {
     ResponseModel, DataExchangeService,
-    GlobalStateService, UtilityService, KeyValue
+    GlobalStateService, UtilityService, KeyValue, AuthModel
 } from '../../../../shared';
 import { InvolvePartyService } from '../../involveparties';
 
@@ -30,6 +30,9 @@ export class AffectedPeopleVerificationComponent implements OnInit {
     protected _onRouteChange: Subscription;
     isArchive: boolean = false;
     allSelectVerify: boolean;
+    userid: number;
+    credential: AuthModel;
+
 
     getAffectedPeople(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
@@ -43,7 +46,7 @@ export class AffectedPeopleVerificationComponent implements OnInit {
 
     saveVerifiedAffectedPeople(): void {
         let datenow = this.date;
-        this.verifiedAffectedPeople = this.affectedPeopleService.MapAffectedPeople(this.affectedPeopleForVerification);
+        this.verifiedAffectedPeople = this.affectedPeopleService.MapAffectedPeople(this.affectedPeopleForVerification, this.userid);
         this.affectedPeopleService.CreateBulk(this.verifiedAffectedPeople)
             .subscribe((response: AffectedPeopleModel[]) => {
                 this.toastrService.success('Selected People directly affected are verified.', 'Success', this.toastrConfig);
@@ -85,6 +88,8 @@ export class AffectedPeopleVerificationComponent implements OnInit {
             this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
         }
         this.getAffectedPeople(this.currentIncident);
+        this.credential = UtilityService.getCredentialDetails();
+        this.userid = +this.credential.UserId;
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
     }
 

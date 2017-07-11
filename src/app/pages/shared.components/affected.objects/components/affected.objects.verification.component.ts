@@ -9,7 +9,7 @@ import { AffectedObjectModel, AffectedObjectsToView } from './affected.objects.m
 import { AffectedObjectsService } from './affected.objects.service';
 import {
     ResponseModel, DataExchangeService,
-    GlobalStateService, UtilityService, KeyValue
+    GlobalStateService, UtilityService, KeyValue, AuthModel
 } from '../../../../shared';
 
 
@@ -28,6 +28,8 @@ export class AffectedObjectsVerificationComponent implements OnInit {
     isArchive: boolean = false;
     protected _onRouteChange: Subscription;
     allSelectVerify: boolean;
+    userid: number;
+    credential: AuthModel;
 
     getAffectedObjects(incidentId): void {
         this.affectedObjectsService.GetFilterByIncidentId(incidentId)
@@ -53,7 +55,7 @@ export class AffectedObjectsVerificationComponent implements OnInit {
     }
     saveVerifiedObjects(): void {
         let datenow = this.date;
-        this.verifiedAffectedObjects = this.affectedObjectsService.MapAffectedPeopleToSave(this.affectedObjectsForVerification);
+        this.verifiedAffectedObjects = this.affectedObjectsService.MapAffectedPeopleToSave(this.affectedObjectsForVerification, this.userid);
         this.affectedObjectsService.CreateBulkObjects(this.verifiedAffectedObjects)
             .subscribe((response: AffectedObjectModel[]) => {
                 this.toastrService.success('Selected Objects are verified.', 'Success', this.toastrConfig);
@@ -79,7 +81,8 @@ export class AffectedObjectsVerificationComponent implements OnInit {
             this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
         }
         this.getAffectedObjects(this.currentIncident);
-
+        this.credential = UtilityService.getCredentialDetails();
+        this.userid = +this.credential.UserId;
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
     }
     ngOnDestroy(): void {

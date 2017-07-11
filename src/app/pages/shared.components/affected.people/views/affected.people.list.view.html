@@ -1,5 +1,16 @@
-<generic-search [filterConfigs]="searchConfigs" (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();">
-</generic-search>
+<div class="row">
+    <div class="col-12">
+        <generic-search [filterConfigs]="searchConfigs" (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();">
+        </generic-search>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <button class="btn btn-primary" type="button">download</button>
+        <button class="btn btn-primary" type="button">download1</button>
+    </div>
+</div>
+
 <responsive-table>
     <table responsive-table-body>
         <thead>
