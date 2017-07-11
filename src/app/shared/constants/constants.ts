@@ -459,11 +459,15 @@ export class GlobalConstants {
             Title: 'Checklist Created',
             Message: 'A Checklist has been created. Please refer to tab section "Checklist > Active"'
         }, {
-            Key: 'ReceiveChecklistActivationResponse',
+            Key: 'ReceiveChecklistStatusChangeResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceiveChecklistClosureResponse',
             Title: 'Checklist Closed',
             Message: 'A Checklist has been closed. Please refer to tab section "Checklist > Closed"'
         }, {
-            Key: 'ReceiveChecklistClosureResponse',
+            Key: 'ReceiveChecklistActivationResponse',
             Title: 'Checklist Reopened',
             Message: 'A Checklist has been reopened. Please refer to tab section "Checklist > Active"'
         }, {
@@ -495,6 +499,10 @@ export class GlobalConstants {
             Title: '',
             Message: ''
         }, {
+            Key: 'ReceiveDemandRejectedFromApprovalResponse',
+            Title: '',
+            Message: ''
+        }, {
             Key: 'ReceiveDemandClosedResponse',
             Title: 'Demand Completed',
             Message: 'A Demand has been completed. Please refer to tab section "Demand > Completed"'
@@ -507,18 +515,90 @@ export class GlobalConstants {
             Title: 'Demand Closed',
             Message: 'A Demand has been closed. Please refer to tab section "Demand > Completed"'
         }, {
+            Key: 'ReceiveRejectedDemandsFromClosureResponse',
+            Title: '',
+            Message: ''
+        }, {
             Key: 'ReceiveRejectedDemandstoAssignResponse',
             Title: '',
             Message: ''
-        }, {
-            Key: 'ReceiveMediaMessageResponse',
-            Title: '',
-            Message: ''
-        }, {
+        },
+
+
+        {
             Key: 'ReceivePresidentsMessageResponse',
+            Title: 'Presidents Message Published',
+            Message: 'A Presidents Message has been published. Please refer to dashboard\'s "Presidents Message Block"'
+        }, {
+            Key: 'ReceivePresidentsMessageCreatedResponse',
+            Title: 'Presidents Message Created',
+            Message: 'A Presidents Message has been created. Please refer to tab section "Presidents Message > Presidents Message Release"'
+        }, {
+            Key: 'ReceivePresidentsMessageSendForApprovalResponse',
+            Title: 'Presidents Message is Sent for Approval',
+            Message: 'A Presidents Message has been sent for approval. Please refer to tab section "Presidents Message > Pending Approval"'
+        }, {
+            Key: 'ReceivePresidentsMessageApprovedResponse',
+            Title: 'Presidents Message Approved',
+            Message: 'A Presidents Message has been approved. Please refer to tab section "Presidents Message > Presidents Message Release"'
+        }, {
+            Key: 'ReceivePresidentsMessageRejectedResponse',
+            Title: 'Presidents Message Rejected',
+            Message: 'A Presidents Message has been rejected. Please refer to tab section "Presidents Message > Presidents Message Release"'
+        }, {
+            Key: 'ReceivePresidentsMessagePublishedResponse',
+            Title: 'Presidents Message Published',
+            Message: 'A Presidents Message has been published. Please refer to tab section "Presidents Message > Presidents Message Release"'
+        }, {
+            Key: 'ReceivePresidentsMessageUpdateResponse',
             Title: '',
             Message: ''
+        },
+
+
+
+        {
+            Key: 'ReceiveMediaMessageResponse',
+            Title: 'Media Release Published',
+            Message: 'A Media Release has been published. Please refer to dashboard\'s "Media Release Block"'
         }, {
+            Key: 'ReceiveMediaMessageCreatedResponse',
+            Title: 'Media Release Created',
+            Message: 'A Media Release has been created. Please refer to tab section "Media Management > Media Release"'
+        }, {
+            Key: 'ReceiveMediaMessageSendForApprovalResponse',
+            Title: 'Media Release is Sent for Approval',
+            Message: 'A Media Release has been sent for approval. Please refer to tab section "Media Management > Pending Approval"'
+        }, {
+            Key: 'ReceiveMediaMessageApprovedResponse',
+            Title: 'Media Release Approved',
+            Message: 'A Media Release has been approved. Please refer to tab section "Media Management > Media Release"'
+        }, {
+            Key: 'ReceiveMediaMessageRejectedResponse',
+            Title: 'Media Release Rejected',
+            Message: 'A Media Release has been rejected. Please refer to tab section "Media Management > Media Release"'
+        }, {
+            Key: 'ReceiveMediaMessagePublishedResponse',
+            Title: 'Media Release Published',
+            Message: 'A Media Release has been published. Please refer to tab section "Media Management > Media Release"'
+        }, {
+            Key: 'ReceiveMediaMessageUpdateResponse',
+            Title: '',
+            Message: ''
+        },
+
+
+
+
+
+
+
+
+
+
+
+
+        {
             Key: 'ReceiveCargoEnquiryCreationResponse',
             Title: '',
             Message: ''

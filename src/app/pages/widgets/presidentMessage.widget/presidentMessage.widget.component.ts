@@ -39,6 +39,10 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/PresidentMessage/' + this.currentIncidentId + '/';
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('PresidentMessagePublished', (model) => this.onPresidentMessagePublish(model));
+
+        // Signalr Notification
+        this.globalState.Subscribe('ReceivePresidentsMessageResponse', (model: PresidentMessageWidgetModel) =>
+            this.getLatestPresidentsMessages(model.IncidentId));
     }
 
     public ngOnDestroy(): void {
@@ -46,7 +50,7 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
         this.globalState.Unsubscribe('PresidentMessagePublished');
     }
 
-    getLatestPresidentsMessages(incidentId): void {
+    getLatestPresidentsMessages(incidentId: number): void {
         let data: PresidentMessageWidgetModel[] = [];
         this.presidentMessagewidgetService
             .GetAllPresidentMessageByIncident(incidentId)

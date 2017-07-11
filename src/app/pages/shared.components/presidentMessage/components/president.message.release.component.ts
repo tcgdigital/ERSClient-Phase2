@@ -19,21 +19,16 @@ export class PresidentMessageReleaseComponent {
 
     constructor(private _router: Router) { }
 
-    getNotification(evt: PresidentMessageModel) {
-
-    }
-
     ngOnInit(): any {
-        this.incidentId = +UtilityService.GetFromSession("CurrentIncidentId");
-        this.initiatedDepartment = +UtilityService.GetFromSession("CurrentDepartmentId");
-        if (this._router.url.indexOf("archivedashboard") > -1) {
+        this.incidentId = +UtilityService.GetFromSession('CurrentIncidentId');
+        this.initiatedDepartment = +UtilityService.GetFromSession('CurrentDepartmentId');
+        if (this._router.url.indexOf('archivedashboard') > -1) {
             this.isArchive = true;
-            this.incidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
+            this.incidentId = +UtilityService.GetFromSession('ArchieveIncidentId');
         }
         else {
             this.isArchive = false;
-            this.incidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+            this.incidentId = +UtilityService.GetFromSession('CurrentIncidentId');
         }
-
     }
 }

@@ -4,7 +4,6 @@ import { GlobalConstants } from '../../../shared/constants';
 import * as _ from 'underscore';
 
 @Component({
-
     selector: 'actionable-main',
     encapsulation: ViewEncapsulation.None,
     templateUrl: './views/actionable.html',

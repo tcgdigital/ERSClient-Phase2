@@ -11,7 +11,6 @@ export class ActionableModel extends BaseModel {
     public AssignedBy: number;
     public AssignedDt?: Date;
     public CompletionStatus: string;
-    //public ParentCheckListId?: number;
     public AssignToDepartment: number;
     public EndTime?: Date;
     public RaisedBy?: number;
@@ -27,12 +26,8 @@ export class ActionableModel extends BaseModel {
     public FileName: string;
     public ActualClose?: Date;
     public IsClosed: boolean;
-    public CompletionStatusChangedBy?:number;
-    public CompletionStatusChangedOn?:Date;
-    // public ClosedBy?: number;
-    // public ClosedOn?: Date;
-    // public ReopenedBy?: number;
-    // public ReopenedOn?: Date;
+    public CompletionStatusChangedBy?: number;
+    public CompletionStatusChangedOn?: Date;
     public Done: boolean;
     public Reopen: boolean;
     public IsDisabled: boolean;
@@ -40,10 +35,7 @@ export class ActionableModel extends BaseModel {
     public RagColor: string;
     public Comments: string;
     public show: boolean;
-    
     public Incident: IncidentModel;
     public CheckList: ChecklistModel;
-
-    
 }
 

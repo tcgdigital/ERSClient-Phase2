@@ -106,6 +106,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.getIncident(this.currentIncidentId);
         this.getDepartment(this.currentDepartmentId);
 
+        debugger;
         const rootTab: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
             .find((x: PagesPermissionMatrixModel) => x.ModuleName === 'Dashboard' && x.ParentPageId === null && x.Type === 'Tab');
 

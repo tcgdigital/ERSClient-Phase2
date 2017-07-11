@@ -28,7 +28,9 @@ import { DemandModel } from './shared.components/demand';
 import { MediaModel } from './shared.components/media';
 import { EnquiryModel } from './shared.components/call.centre';
 import { ExternalInputModel } from './callcenteronlypage';
-
+import { PresidentMessageModel } from './shared.components/presidentMessage';
+import { PresidentMessageWidgetModel } from './widgets/presidentMessage.widget';
+import { MediaReleaseWidgetModel } from './widgets/mediaRelease.widget';
 
 @Component({
     selector: 'pages',
@@ -85,6 +87,7 @@ export class PagesComponent implements OnInit {
         private crisisCreationNotificationHub: NotificationBroadcastService,
         private demandSubmissionNotificationHub: NotificationBroadcastService,
         private presidentsMessageAndMediaReleaseNotificationHub: NotificationBroadcastService,
+        private presidentAndMediaWorkflowNotificationHub: NotificationBroadcastService,
         private queryNotificationHub: NotificationBroadcastService) {
         toastrConfig.closeButton = true;
         toastrConfig.progressBar = true;
@@ -259,7 +262,7 @@ export class PagesComponent implements OnInit {
     }
 
     private ProcessData(callback: () => void, ...observables: Array<Observable<any[]>>): void {
-        debugger;
+        // debugger;
         Observable.forkJoin(observables).subscribe((res: any[]) => {
             if (res && res.length > 0) {
                 if (res[0].length > 0 && _.all(res[0], (x) => _.some(Object.keys(x), (y) => y === 'EmergencyTypeId'))) {
@@ -323,13 +326,23 @@ export class PagesComponent implements OnInit {
     }
 
     private PrepareConnectionAndCall(incId: number, deptId: number) {
-        this.CloseConnection(this.connectionStaters);
+        this.CloseConnection();
         this.connectionStaters = new Array<ConnectionStarter>();
 
         const broadcastNotificationResponse: string[] = ['ReceiveBroadcastCreationResponse', 'ReceiveBroadcastModificationResponse'];
+        const presidentMessageNotificationResponse: string[] = ['ReceivePresidentsMessageResponse'];
+        const presidentMessageWorkflowResponse: string[] = ['ReceivePresidentsMessageCreatedResponse',
+            'ReceivePresidentsMessageSendForApprovalResponse', 'ReceivePresidentsMessageApprovedResponse',
+            'ReceivePresidentsMessageRejectedResponse', 'ReceivePresidentsMessagePublishedResponse', 'ReceivePresidentsMessageUpdateResponse'];
+
+        const mediaMessageNotificationResponse: string[] = ['ReceiveMediaMessageResponse'];
+        const mediaMessageWorkflowResponse: string[] = ['ReceiveMediaMessageCreatedResponse',
+            'ReceiveMediaMessageSendForApprovalResponse', 'ReceiveMediaMessageApprovedResponse',
+            'ReceiveMediaMessageRejectedResponse', 'ReceiveMediaMessagePublishedResponse', 'ReceiveMediaMessageUpdateResponse'];
+
         const casualtyNotificationResponse: string[] = ['ReceiveCasualtyCountResponse'];
         const checklistNotificationResponse: string[] = ['ReceiveChecklistCreationResponse',
-            'ReceiveChecklistActivationResponse', 'ReceiveChecklistClosureResponse'];
+            'ReceiveChecklistActivationResponse', 'ReceiveChecklistClosureResponse', 'ReceiveChecklistStatusChangeResponse'];
         const crisisCreationNotificationResponse: string[] = ['ReceiveCrisisCreationResponse'];
         const crisisClosureNotificationResponse: string[] = ['ReceiveCrisisClosureResponse'];
         const mediaNotificationResponse: string[] = ['ReceiveMediaMessageResponse', 'ReceivePresidentsMessageResponse'];
@@ -371,7 +384,7 @@ export class PagesComponent implements OnInit {
             'CasualtyStatusUpdateNotificationHub', {
                 incidentId: incId
             }, callbackListners<CasualtyExchangeModel>(casualtyNotificationResponse)
-        ));
+        ));*/
 
         this.connectionStaters.push(new ConnectionStarter(this.checklistSubmissionNotificationHub,
             'ChecklistSubmissionNotificationHub', {
@@ -379,7 +392,7 @@ export class PagesComponent implements OnInit {
             }, callbackListners<ActionableModel>(checklistNotificationResponse)
         ));
 
-        this.connectionStaters.push(new ConnectionStarter(this.crisisClosureNotificationHub,
+        /*this.connectionStaters.push(new ConnectionStarter(this.crisisClosureNotificationHub,
             'CrisisClosureNotificationHub', {
                 incidentId: incId
             }, callbackListners<IncidentModel>(crisisClosureNotificationResponse)
@@ -401,6 +414,30 @@ export class PagesComponent implements OnInit {
             }, callbackListners<MediaModel>(mediaNotificationResponse)
         ));*/
 
+        this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
+            'PresidentsMessageAndMediaReleaseNotificationHub', {
+                incidentId: incId
+            }, callbackListners<PresidentMessageWidgetModel>(presidentMessageNotificationResponse)
+        ));
+
+        this.connectionStaters.push(new ConnectionStarter(this.presidentAndMediaWorkflowNotificationHub,
+            'PresidentAndMediaWorkflowNotificationHub', {
+                departmentId: deptId, incidentId: incId
+            }, callbackListners<PresidentMessageModel>(presidentMessageWorkflowResponse)
+        ));
+
+        this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
+            'PresidentsMessageAndMediaReleaseNotificationHub', {
+                incidentId: incId
+            }, callbackListners<MediaReleaseWidgetModel>(mediaMessageNotificationResponse)
+        ));
+
+        this.connectionStaters.push(new ConnectionStarter(this.presidentAndMediaWorkflowNotificationHub,
+            'PresidentAndMediaWorkflowNotificationHub', {
+                departmentId: deptId, incidentId: incId
+            }, callbackListners<MediaModel>(mediaMessageWorkflowResponse)
+        ));
+
         this.connectionStaters.push(new ConnectionStarter(this.queryNotificationHub,
             'QueryNotificationHub', {
                 incidentId: incId
@@ -410,15 +447,18 @@ export class PagesComponent implements OnInit {
         this.ConnectAndListen(this.connectionStaters);
     }
 
-    private CloseConnection(connectionStaters: ConnectionStarter[]): void {
+    private CloseConnection(): void {
         try {
-            if (connectionStaters.length > 0) {
-                connectionStaters.forEach((x: ConnectionStarter) => {
-                    debugger;
+            // debugger;
+            if (this.connectionStaters !== undefined && this.connectionStaters.length > 0) {
+                this.connectionStaters.forEach((x: ConnectionStarter) => {
+                    // debugger;
                     if (x.Connection)
                         x.Connection.stop();
                     x.Connection = null;
+                    x.Callbacks = null;
                 });
+                this.connectionStaters = null;
             }
         } catch (ex) {
             console.log(ex);
@@ -426,7 +466,7 @@ export class PagesComponent implements OnInit {
     }
 
     private ConnectAndListen(connectionStaters: ConnectionStarter[]): void {
-        debugger;
+        // debugger;
         connectionStaters.forEach((x) => {
             x.HubConnection.createConnection({
                 hubName: x.HubName,
