@@ -31,7 +31,7 @@ import {
     DataExchangeService,
     LocationService,
     Location,
-    DateTimePickerOptions
+    DateTimePickerOptions, GlobalConstants
 } from '../../shared';
 import { ArchiveListService } from './archive.dashboard.list.service';
 
@@ -56,6 +56,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     isFlightRelatedPopup: boolean = false;
     incidentDataExchangeModel: IncidentDataExchangeModel = null;
     currentIncidentId: number;
+    currentDepartmentId: number;
     public IsDrillPopup: boolean;
     activeOrganizations: OrganizationModel[] = [];
     activeAircraftTypes: AircraftTypeModel[] = [];
@@ -66,6 +67,8 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     public ScheduleDepartureLocal: Date;
     public ScheduleArrivalLocal: Date;
     public BorrowedIncidentName: string;
+    public isShowPage: boolean = true;
+    public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
 
     constructor(formBuilder: FormBuilder,
         private toastrService: ToastrService,
@@ -97,11 +100,18 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
         this.resetIncidentViewForm();
         this.GetAllClosedIncidents();
         this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
+        this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+		
     }
 
     public IsReopenCheckedChange(event: any, closedCrisis: IncidentModel): void {
         closedCrisis.isReopen = event.checked;
     }
+
+    private departmentChangeHandler(department: KeyValue): void {
+		this.currentDepartmentId = department.Value;
+	}
 
     public GetAllClosedIncidents(): void {
         this.archiveListService.GetAllClosedIncidents()

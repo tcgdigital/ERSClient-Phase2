@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MdCheckboxModule } from '@angular2-material/checkbox';
-
+import { PeopleOnBoardWidgetService } from '../../widgets/peopleOnBoard.widget/peopleOnBoard.widget.service';
 import { GroundVictimsRouting } from './ground.victims.routing';
 import { GroundVictimsComponent } from './ground.victims.components';
 //import { CrewQueryAssignedCallsListComponent, CrewQueryRecievedCallsListComponent } from './components';
@@ -34,7 +34,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
         EnquiryService,
         DataExchangeService,
         CallCenterOnlyPageService,
-        CommunicationLogService
+        CommunicationLogService,
+        PeopleOnBoardWidgetService
     ]
 })
 export class GroundVictimsModule { }

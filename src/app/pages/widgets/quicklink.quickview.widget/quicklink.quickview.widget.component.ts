@@ -4,6 +4,7 @@ import {
     SimpleChange
 } from '@angular/core';
 import { KeyValue, ResponseModel } from '../../../shared/models';
+import { GlobalConstants } from '../../../shared';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { QuickLinkModel } from '../../masterdata/quicklink/components';
 import { QuickLinkService } from '../../masterdata/quicklink/components';
@@ -20,6 +21,9 @@ export class QuickLinkQuickViewWidgetComponent implements OnInit {
     @Input() currentIncident: number;
     public incidentId: number;
     quicklinks: QuickLinkModel[] = [];
+    public isShowPage: boolean = true;
+    public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
+
     constructor(private quicklinkService: QuickLinkService) { }
 
     ngOnInit() {
