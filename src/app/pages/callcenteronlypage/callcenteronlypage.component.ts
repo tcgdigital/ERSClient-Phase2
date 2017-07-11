@@ -25,11 +25,14 @@ export class CallCenterOnlyPageComponent implements OnInit {
     enquirytypes: any[] = GlobalConstants.ExternalInputEnquiryType;
     enquiryType: number;
     externnalInputModelToSave: ExternalInputModel = new ExternalInputModel;
-    currentIncident: number;
+    currentIncidentId: number;
+    currentDepartmentId: number;
     isSubmitted: boolean = false;
     speilEnglish : string;
     speilTagalog : string;
     public spielText: string;
+    public isShowPage: boolean = true;
+    public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
 
     constructor(formBuilder: FormBuilder, private callcenteronlypageservice: CallCenterOnlyPageService, private toastrService: ToastrService,
         private toastrConfig: ToastrConfig, private globalState: GlobalStateService, private keyValueService: KeyValueService) { }
@@ -38,8 +41,9 @@ export class CallCenterOnlyPageComponent implements OnInit {
         this.enquiryType = 0;
         this.initializeForm();
         this.initiateEnquiryForms();
-        this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
+        this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
         this.keyValueService.GetValue('SpielTextEnglish')
         .map(data=>{
            return this.speilEnglish =data.Records[0].Value;
@@ -54,7 +58,11 @@ export class CallCenterOnlyPageComponent implements OnInit {
     }
 
     incidentChangeHandler(incident: KeyValue): void {
-        this.currentIncident = incident.Value;
+        this.currentIncidentId = incident.Value;
+    }
+
+    departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
     }
 
     initializeForm(): void {
@@ -120,14 +128,14 @@ export class CallCenterOnlyPageComponent implements OnInit {
             this.externnalInputModelToSave.Caller.LastName = this.generalform.controls["CallerLastName"].value;
             this.externnalInputModelToSave.Caller.IsNok = false;
             this.externnalInputModelToSave.EnquiryType = this.enquirytypes.find(x => x.value == this.enquiryType).caption;
-            this.externnalInputModelToSave.IncidentId = this.currentIncident;
+            this.externnalInputModelToSave.IncidentId = this.currentIncidentId;
             if (this.enquiryType == 1 || this.enquiryType == 3) {
                 this.externnalInputModelToSave.PDAEnquiry = new PDAEnquiryModel();
                 UtilityService.setModelFromFormGroup<PDAEnquiryModel>(this.externnalInputModelToSave.PDAEnquiry, this.pdacrewform,
                     x => x.DepartedFrom, x => x.KINContactNumber, x => x.FinalDestination, x => x.FirstName, x => x.FlightNumber, x => x.EnquiryReason, x => x.KINFirstName,
                     x => x.KINLastName, x => x.KINRelationShip, x => x.LastName, x => x.Nationality, x => x.Age, x => x.PermanentAddress,
                     x => x.TravellingWith, x => x.TravellingTo, x => x.Query);
-                this.externnalInputModelToSave.PDAEnquiry.IncidentId = this.currentIncident;
+                this.externnalInputModelToSave.PDAEnquiry.IncidentId = this.currentIncidentId;
                 this.externnalInputModelToSave.PDAEnquiry.Age = +this.externnalInputModelToSave.PDAEnquiry.Age;
             }
             if (this.enquiryType == 2) {
@@ -135,13 +143,13 @@ export class CallCenterOnlyPageComponent implements OnInit {
                 UtilityService.setModelFromFormGroup<CargoEnquiryModel>(this.externnalInputModelToSave.CargoEnquiry, this.cargoform,
                     x => x.ConsigneesAddress, x => x.ConsigneesContactNumber, x => x.ConsigneesName, x => x.EnquiryReason,
                     x => x.ShippersAddress, x => x.ShippersContactNumber, x => x.ShippersName, x => x.Query);
-                this.externnalInputModelToSave.CargoEnquiry.IncidentId = this.currentIncident;
+                this.externnalInputModelToSave.CargoEnquiry.IncidentId = this.currentIncidentId;
             }
             if (this.enquiryType >= 4) {
                 this.externnalInputModelToSave.MediaAndOtherQuery = new MediaAndOtherQueryModel();
                 UtilityService.setModelFromFormGroup<MediaAndOtherQueryModel>(this.externnalInputModelToSave.MediaAndOtherQuery, this.otherform,
                     x => x.source, x => x.Query);
-                this.externnalInputModelToSave.MediaAndOtherQuery.IncidentId = this.currentIncident;
+                this.externnalInputModelToSave.MediaAndOtherQuery.IncidentId = this.currentIncidentId;
             }
             this.callcenteronlypageservice.Create(this.externnalInputModelToSave)
                 .subscribe((response: ExternalInputModel) => {
