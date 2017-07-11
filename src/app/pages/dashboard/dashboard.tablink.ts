@@ -398,5 +398,13 @@ export const TAB_LINKS: ITabLinkInterface[] = [
                 order: 2
             }
         ]
+    }, {
+        id: 'GroundVictims',
+        title: 'Ground Victims',
+        // icon: 'fa fa-twitter fa-2x',
+        url: '/pages/dashboard/groundmembers',
+        selected: false,
+        hidden: false,
+        order: 17
     }
 ] as ITabLinkInterface[];

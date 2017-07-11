@@ -5,7 +5,10 @@
                 <span>Demand Raised</span>
             </div>
         </div>
-        <div class="row no-gutters">
+        <div *ngIf="!(isShow | accesibility:initiatedDepartmentId:'DemandRaisedKPI')" class="row no-gutters">
+            {{accessibilityErrorMessage}}
+        </div>
+        <div *ngIf="isShow | accesibility:initiatedDepartmentId:'DemandRaisedKPI'" class="row no-gutters">
             <div class="col widget-block">
                 <span class="widget-number">
                     <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>

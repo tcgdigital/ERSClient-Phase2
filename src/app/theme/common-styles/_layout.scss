@@ -118,6 +118,10 @@ pages {
     float: left;
     width: 100%;
 }
+.widgetDefaultStyle{
+    max-height: 121px;
+    height: 121px;
+}
 
 @media screen and (max-width: $resXS-E) {
     .body-container {

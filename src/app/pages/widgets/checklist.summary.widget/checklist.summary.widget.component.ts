@@ -7,7 +7,7 @@ import { ChecklistSummaryWidgetService } from './checklist.summary.widget.servic
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Observable } from 'rxjs/Rx';
 import { ActionableModel } from '../../shared.components/actionables/components/actionable.model';
-import { ResponseModel, GlobalStateService, KeyValue } from '../../../shared';
+import { ResponseModel, GlobalStateService, KeyValue, GlobalConstants } from '../../../shared';
 import { DepartmentModel } from '../../masterdata/department/components/department.model';
 import * as Highcharts from 'highcharts';
 import { WidgetUtilityService } from '../widget.utility';
@@ -22,7 +22,7 @@ import {
     encapsulation: ViewEncapsulation.None
 })
 export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
-    @Input('initiatedDepartmentId') departmentId: number;
+    @Input('initiatedDepartmentId') initiatedDepartmentId: number;
     @Input('currentIncidentId') incidentId: number;
 
     @ViewChild('childModalViewAllChecklist') public childModalViewAllChecklist: ModalDirective;
@@ -40,7 +40,8 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
     public subdeptChecklistsLoc: ActionableModel[];
     public arrGraphData: GraphObject[];
     public showCheckListGraph: boolean = false;
-
+    public isShow: boolean = true;
+    public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
     public baseLocationURl: string = window.location.pathname;
     currentDepartmentId: number;
     currentIncidentId: number;
@@ -56,7 +57,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         this.currentIncidentId = this.incidentId;
-        this.currentDepartmentId = this.departmentId;
+        this.currentDepartmentId = this.initiatedDepartmentId;
         this.getActionableCount(this.currentIncidentId, this.currentDepartmentId);
 
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
@@ -137,7 +138,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
         const deptCheckListsLocal: DeptCheckListModel[] = [];
         const data: ActionableModel[] = [];
         const uniqueDepartments: DepartmentModel[] = [];
-        this.checklistSummaryWidgetService.GetAllSubDepartmentChecklists(this.incidentId, this.departmentId)
+        this.checklistSummaryWidgetService.GetAllSubDepartmentChecklists(this.incidentId, this.initiatedDepartmentId)
             .subscribe((result: ResponseModel<ActionableModel>) => {
                 result.Records.forEach((record) => {
                     data.push(record);

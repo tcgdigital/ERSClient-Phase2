@@ -5,36 +5,33 @@
                 <span>PDA Casualty Status</span>
             </div>
         </div>
-        <div class="row no-gutters">
-            <!--<div class="col widget-block">
-                <span class="widget-number">
-                        <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
-                        <span>{{casualtySummery.uninjuredCount | padding: '0': 2}}</span>
-                </span>
-                <span class="widget-text">Uninjured</span>
-            </div>-->
-            <div class="col widget-block">
+        <div *ngIf="!(isShow | accesibility:initiatedDepartmentId:'PDACasualtyStatusKPI')" class="row no-gutters">
+            {{accessibilityErrorMessage}}
+        </div>
+        <div *ngIf="isShow | accesibility:initiatedDepartmentId:'PDACasualtyStatusKPI'" class="row no-gutters">
+           
+            <div class="col widget-block" *ngIf="isShowInjured | accesibility:initiatedDepartmentId:'Injured'">
                 <span class="widget-number">
                         <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
                         <span>{{casualtySummery.injuredCount | padding: '0': 2}}</span>
                 </span>
                 <span class="widget-text">Injured</span>
             </div>
-            <div class="col widget-block">
+            <div class="col widget-block" *ngIf="isShowDeceased | accesibility:initiatedDepartmentId:'Deceased'">
                 <span class="widget-number">
                         <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
                         <span>{{casualtySummery.deceasedCount | padding: '0': 2}}</span>
                 </span>
                 <span class="widget-text">Deceased</span>
             </div>
-            <div class="col widget-block">
+            <div class="col widget-block" *ngIf="isShowMissing | accesibility:initiatedDepartmentId:'Missing'">
                 <span class="widget-number">
                         <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
                         <span>{{casualtySummery.missingCount | padding: '0': 2}}</span>
                 </span>
                 <span class="widget-text">Missing</span>
             </div>
-            <div class="col widget-block">
+            <div class="col widget-block" *ngIf="isShowOthers | accesibility:initiatedDepartmentId:'Others'">
                 <span class="widget-number">
                         <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
                         <span>{{casualtySummery.othersCount | padding: '0': 2}}</span>
