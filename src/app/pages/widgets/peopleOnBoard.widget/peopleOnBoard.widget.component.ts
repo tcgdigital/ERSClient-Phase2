@@ -15,7 +15,7 @@ import {
     ServiceBase, UtilityService,
     GlobalStateService, KeyValue, SearchConfigModel,
     SearchTextBox, SearchDropdown,
-    NameValue
+    NameValue,GlobalConstants
 } from '../../../shared';
 import * as _ from 'underscore';
 
@@ -58,6 +58,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
 
     public cargoList: Observable<CargoModel[]>;
     public isShow: boolean = true;
+    public accessibilityErrorMessage:string = GlobalConstants.accessibilityErrorMessage;
     currentDepartmentId: number;
     currentIncidentIdLocal: number;
 
