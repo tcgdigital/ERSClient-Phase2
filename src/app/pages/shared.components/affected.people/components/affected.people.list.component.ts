@@ -51,9 +51,11 @@ export class AffectedPeopleListComponent implements OnInit {
     credential: AuthModel;
     date: Date;
     downloadFilePath: string;
+    downloadPath: string;
     copassangers: PassengerModel[] = [];
     public globalStateProxyOpen: GlobalStateService;
     searchConfigs: Array<SearchConfigModel<any>> = new Array<SearchConfigModel<any>>();
+    downloadfilename : string;
 
     /**
      * Creates an instance of AffectedPeopleListComponent.
@@ -78,7 +80,9 @@ export class AffectedPeopleListComponent implements OnInit {
         private fileStoreService: FileStoreService,
         private passangerService: PassengerService) {
         this.downloadFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Affected People/';
+        this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/PassengerStatusInfo/' + this.currentIncident + '/';
         this.globalStateProxyOpen = injector.get(GlobalStateService);
+        this.downloadfilename ="Passenger Status Info";
     }
 
     openAffectedPersonDetail(affectedPerson: AffectedPeopleToView): void {

@@ -210,6 +210,7 @@ export class TabControlComponent implements OnInit, AfterViewInit {
     }
 
     private selectSpecificTabs(tabUrl: string): void {
+        debugger;
         this.allowedTabLinks.forEach((tab: ITabLinkInterface) => {
             tab.selected = (tabUrl.indexOf(tab.url) !== -1);
         });
