@@ -13,7 +13,6 @@ export class GroundVictimsComponent implements OnInit {
     //public subTabs: ITabLinkInterface[] = new Array<ITabLinkInterface>();
 
     public ngOnInit(): void {
-        debugger;
         //this.subTabs = _.find(GlobalConstants.TabLinks, (x) => x.id === 'CrewQuery').subtab;
     }
 }
