@@ -185,7 +185,7 @@
     "url": "https://github.com/tcgdigital/ERSClient/issues"
   },
   "engines": {
-    "node": ">= 5.4.1 < 7",
+    "node": ">= 5.4.1",
     "npm": ">= 3"
   },
   "author": "Sandip Ghosh",

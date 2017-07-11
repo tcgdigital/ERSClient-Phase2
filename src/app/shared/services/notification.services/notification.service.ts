@@ -113,7 +113,7 @@ export class NotificationService {
 
         this.hubProxy.on('onEvent', (channel: string, ev: ChannelEvent) => {
             // console.log(`onEvent - ${channel} channel`, ev);
-            let channelSub: ChannelSubject = this.findObservableByChannelName(channel);
+            const channelSub: ChannelSubject = this.findObservableByChannelName(channel);
 
             // If we found a subject then emit the event on it
             //
@@ -206,7 +206,7 @@ export class NotificationService {
         //  for the channel this came in on, and then emit the event
         //  on it. Otherwise we ignore the message.
         //
-        let channelSub: ChannelSubject = this.subjects.find((x: ChannelSubject) => {
+        const channelSub: ChannelSubject = this.subjects.find((x: ChannelSubject) => {
             return x.channel === channel;
         }) as ChannelSubject;
 

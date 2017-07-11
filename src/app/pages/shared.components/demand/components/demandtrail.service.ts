@@ -24,5 +24,4 @@ export class DemandTrailService extends ServiceBase<DemandTrailModel> implements
             .Execute();
 
     }
-
 }

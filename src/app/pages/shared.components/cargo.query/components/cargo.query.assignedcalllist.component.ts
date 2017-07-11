@@ -41,7 +41,7 @@ export class CargoQueryAssignedCallsListComponent implements OnInit {
 
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllCargoQueryCalls(this.currentIncidentId));
-
+        this.globalState.Subscribe('AssignedCargoEnquiryCreationResponse', (model: ExternalInputModel) => this.getAllCargoQueryCalls(model.IncidentId));
     }
 
     incidentChangeHandler(incident: KeyValue): void {

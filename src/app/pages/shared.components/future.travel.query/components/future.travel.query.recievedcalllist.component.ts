@@ -15,8 +15,6 @@ import {
 import { Router, NavigationEnd } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
-
-
 @Component({
     selector: 'passengerquery-assignedcalls',
     encapsulation: ViewEncapsulation.None,
@@ -51,6 +49,7 @@ export class FutureTravelQueryRecievedCallsListComponent implements OnInit {
         this.getAllFutureTravelQueryCallsRecieved(this.currentIncidentId);
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllFutureTravelQueryCallsRecieved(this.currentIncidentId));
+        this.globalState.Subscribe('ReceiveFutureTravelEnquiryCreationResponse', (model: ExternalInputModel) => this.getAllFutureTravelQueryCallsRecieved(model.IncidentId));
     }
 
     incidentChangeHandler(incident: KeyValue): void {

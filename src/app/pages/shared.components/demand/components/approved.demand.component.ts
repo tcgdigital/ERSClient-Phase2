@@ -5,8 +5,6 @@ import {
 import { Observable, Subscription } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router, NavigationEnd } from '@angular/router';
-
-
 import { InvolvePartyModel } from '../../involveparties';
 import { DemandModel, DemandModelToView, DemandRemarkLogModel } from './demand.model';
 import { CommunicationLogModel } from '../../communicationlogs';
@@ -30,7 +28,6 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentInit {
     @ViewChild('childModalRemarks') public childModalRemarks: ModalDirective;
     @ViewChild('childModal') public childModal: ModalDirective;
-
 
     demandsForApproval: DemandModelToView[] = [];
     currentDepartmentId: number;
@@ -69,7 +66,6 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         private toastrService: ToastrService,
         private dataExchange: DataExchangeService<number>,
         private toastrConfig: ToastrConfig, private _router: Router) {
-        //   this.createdByName = 'Anwesha ray';
         this.demandRemarks = [];
         this.demandForRemarks = new DemandModelToView();
         this.demandFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Demand/';
@@ -94,11 +90,11 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         Observable.interval(1000).subscribe((_) => {
             this.demandsForApproval.forEach((x) => {
                 if (x.ClosedOn === undefined || x.ClosedOn == null) {
-                    let ScheduleTime: number = (Number(x.ScheduleTime) * 60000);
-                    let CreatedOn: number = new Date(x.CreatedOn).getTime();
-                    let CurrentTime: number = new Date().getTime();
-                    let TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-                    let percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
+                    const ScheduleTime: number = (Number(x.ScheduleTime) * 60000);
+                    const CreatedOn: number = new Date(x.CreatedOn).getTime();
+                    const CurrentTime: number = new Date().getTime();
+                    const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
+                    const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
 
                     if (percentage < 50) {
                         x.RagStatus = 'statusGreen';
@@ -110,11 +106,11 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
                     }
                 }
                 else {
-                    let ScheduleTime: number = (Number(x.ScheduleTime) * 60000);
-                    let CreatedOn: number = new Date(x.CreatedOn).getTime();
-                    let CurrentTime: number = new Date().getTime();
-                    let TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-                    let percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
+                    const ScheduleTime: number = (Number(x.ScheduleTime) * 60000);
+                    const CreatedOn: number = new Date(x.CreatedOn).getTime();
+                    const CurrentTime: number = new Date().getTime();
+                    const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
+                    const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
                     if (percentage < 50) {
                         x.RagStatus = 'statusGreen';
                     } else if (percentage >= 100) {
@@ -172,8 +168,8 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.demandTrail.CreatedBy = this.createdBy;
         this.demandTrail.CreatedOn = demand.CreatedOn;
 
-        let date = new Date();
-        let answer = `<div><p> ${demand.DemandStatusDescription}   <strong>Date :</strong>  ${date.toLocaleString()}  </p><div>`;
+        const date = new Date();
+        const answer = `<div><p> ${demand.DemandStatusDescription}   <strong>Date :</strong>  ${date.toLocaleString()}  </p><div>`;
 
         this.demandTrail.Answers = answer;
         this.demandTrails.push(this.demandTrail);
@@ -185,7 +181,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     }
 
     saveRemark(remarks): void {
-        let demand: DemandModelToView = this.demandForRemarks;
+        const demand: DemandModelToView = this.demandForRemarks;
         this.RemarkToCreate = new DemandRemarkLogModel();
         this.RemarkToCreate.Remark = remarks;
         this.RemarkToCreate.DemandId = demand.DemandId;
@@ -237,8 +233,8 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
 
     submit(): void {
         if (this.demandsForApproval.length > 0) {
-            let demandCompletion: DemandModel[] = this.demandsForApproval.filter(this.isApprovedOrRejected).map((x) => {
-                let item: DemandModel = new DemandModel();
+            const demandCompletion: DemandModel[] = this.demandsForApproval.filter(this.isApprovedOrRejected).map((x) => {
+                const item: DemandModel = new DemandModel();
                 item.DemandId = x.DemandId;
                 item.Remarks = x.Remarks;
                 item.IsApproved = x.IsApproved;
