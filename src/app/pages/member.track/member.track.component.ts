@@ -16,7 +16,7 @@ import {
     KeyValue,
     IncidentStatus,
     GlobalStateService,
-    UtilityService, AuthModel
+    UtilityService, AuthModel,GlobalConstants
 } from '../../shared';
 
 import { UserProfileService, UserProfileModel } from '../masterdata/userprofile/components';
@@ -48,6 +48,8 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
     availblecount: number;
     freecount: number;
     private $toggle: JQuery;
+    public isShowPage: boolean = true;
+    public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
 
     constructor(private globalState: GlobalStateService, private userProfileService: UserProfileService,
         private userpermissionService: UserPermissionService, private membertrackService: MemberTrackService,
