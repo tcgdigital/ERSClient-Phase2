@@ -1,11 +1,17 @@
-import { Component, ViewEncapsulation, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import {
+    Component, ViewEncapsulation,
+    OnInit, OnDestroy, ViewChild
+} from '@angular/core';
 import {
     ResponseModel, GlobalConstants, KeyValue,
     GlobalStateService, UtilityService
 } from '../../../../shared';
 import { Observable, Subscription } from 'rxjs/Rx';
 
-import { CallCenterOnlyPageService, ExternalInputModel } from '../../../callcenteronlypage/component';
+import {
+    CallCenterOnlyPageService,
+    ExternalInputModel
+} from '../../../callcenteronlypage/component';
 import { Router, NavigationEnd } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
@@ -42,6 +48,7 @@ export class CrewQueryAssignedCallsListComponent implements OnInit {
         this.getAllCrewQueryCalls(this.currentIncidentId);
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllCrewQueryCalls(this.currentIncidentId));
+        this.globalState.Subscribe('AssignedCrewEnquiryCreationResponse', (model: ExternalInputModel) => this.getAllCrewQueryCalls(model.IncidentId));
     }
 
     incidentChangeHandler(incident: KeyValue): void {

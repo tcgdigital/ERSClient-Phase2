@@ -12,32 +12,32 @@ export class MediaModel extends BaseModel {
     public PublishedBy?: number;
     public PublishedOn?: Date;
 
-    
-    public OrganizationId : number;
-    public MediaReleaseType : string;
-    public MediaReleaseStatus : string; 
-    public SentForApprovalContent : string;
-    public SentForApprovalOn? : Date;
 
-    public ApprovedContent : string;
-    public ApprovedOn? : Date;    
-    public ApprovedBy? : number;
-    public RejectedBy? : number;
-    public RejectedOn? : Date;
-    public ApproverDepartmentId? : number;
+    public OrganizationId: number;
+    public MediaReleaseType: string;
+    public MediaReleaseStatus: string;
+    public SentForApprovalContent: string;
+    public SentForApprovalOn?: Date;
 
-    public PublisherDepartmentId? : number;
+    public ApprovedContent: string;
+    public ApprovedOn?: Date;
+    public ApprovedBy?: number;
+    public RejectedBy?: number;
+    public RejectedOn?: Date;
+    public ApproverDepartmentId?: number;
 
-    public InitiateDepartment? : DepartmentModel
-    public ApproverDepartment? : DepartmentModel
-    public PublisherDepartment? : DepartmentModel
+    public PublisherDepartmentId?: number;
+
+    public InitiateDepartment?: DepartmentModel;
+    public ApproverDepartment?: DepartmentModel;
+    public PublisherDepartment?: DepartmentModel;
 
     /**
      * Creates an instance of MediaQueryModel.
      * 
      * @memberOf MediaQueryModel
      */
-    constructor(){
+    constructor() {
         super();
 
         this.MediaqueryId = 0;

@@ -5,7 +5,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { HttpModule } from '@angular/http';
 
-import { GlobalStateService } from '../shared';
+import { GlobalStateService, NotificationBroadcastService, NotificationModule } from '../shared';
 import { PagesComponent } from './pages.component';
 import { SharedModule } from '../shared/shared.module';
 import { PagesRouting } from './pages.routing';
@@ -20,6 +20,7 @@ import { AuthenticationService } from './login/components/authentication.service
 import { UserPermissionService } from './masterdata/userpermission/components';
 import { QuickLinkQuickViewWidgetComponent } from '../pages/widgets/quicklink.quickview.widget';
 import { QuickLinkService } from './masterdata/quicklink/components';
+import { UserRegistrationHubConnectionResolver } from './hub.connection.resolvers';
 
 @NgModule({
     imports: [
@@ -28,6 +29,7 @@ import { QuickLinkService } from './masterdata/quicklink/components';
         ReactiveFormsModule,
         HttpModule,
         SharedModule,
+        NotificationModule,
         IncidentModule,
         MasterDateModule,
         ToastrModule,
@@ -44,7 +46,9 @@ import { QuickLinkService } from './masterdata/quicklink/components';
         GlobalStateService,
         AuthenticationService,
         UserPermissionService,
-        QuickLinkService
+        QuickLinkService,
+        UserRegistrationHubConnectionResolver
+        // NotificationBroadcastService
     ]
 })
 export class PagesModule {

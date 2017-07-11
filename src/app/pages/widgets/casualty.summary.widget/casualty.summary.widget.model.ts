@@ -17,3 +17,9 @@ export class CasualtySummeryModel {
         this.othersCount = 0;
     }
 }
+
+export class CasualtyExchangeModel {
+    public IncidentId: number;
+    public MedicalStatus: string;
+    public StatusCount: number;
+}

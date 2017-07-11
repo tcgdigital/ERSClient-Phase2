@@ -6,6 +6,11 @@ export interface IEmergencySituationEnum {
     enumtype: string;
     EmergencySituationName: string;
 }
+export interface INotificationMessage {
+    Key: string;
+    Title: string;
+    Message: string;
+}
 export interface IKeyValue {
     value: string;
     key: number;
@@ -47,11 +52,16 @@ export interface IActionableStatus {
     caption: string;
 }
 
+export enum StorageType {
+    SessionStorage,
+    LocalStorage
+}
+
 export class GlobalConstants {
     // public static EXTERNAL_URL: string = 'http://202.54.73.219/';
-    public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
-    // public static EXTERNAL_URL: string = 'http://localhost:5001/';
-
+    // public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
+    public static EXTERNAL_URL: string = 'http://localhost:5001/';
+    public static NOTIFICATION_URL: string = `${GlobalConstants.EXTERNAL_URL}Notification/Hubs`;
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
     public static GRANT_TYPE: string = 'password';
     public static ODATA: string = 'odata';
@@ -430,6 +440,154 @@ export class GlobalConstants {
             key: 3,
             value: 'Others',
             caption: 'Others'
+        }
+    ];
+
+    public static NotificationMessage: INotificationMessage[] = [
+        {
+            Key: 'ReceiveBroadcastCreationResponse',
+            Title: 'Broadcast Created',
+            Message: 'A new Broadcast has been created. Please refer to tab section "Broadcast Message"'
+        }, {
+            Key: 'ReceiveBroadcastModificationResponse',
+            Title: 'Broadcast Modified',
+            Message: 'A existing Broadcast message has been modified. Please refer to tab section "Broadcast Message"'
+        }, {
+            Key: 'ReceiveChecklistCreationResponse',
+            Title: 'Checklist Created',
+            Message: 'A Checklist has been created. Please refer to tab section "Checklist > Active"'
+        }, {
+            Key: 'ReceiveChecklistActivationResponse',
+            Title: 'Checklist Closed',
+            Message: 'A Checklist has been closed. Please refer to tab section "Checklist > Closed"'
+        }, {
+            Key: 'ReceiveChecklistClosureResponse',
+            Title: 'Checklist Reopened',
+            Message: 'A Checklist has been reopened. Please refer to tab section "Checklist > Active"'
+        }, {
+            Key: 'ReceiveCrisisClosureResponse',
+            Title: 'Crisis Closed',
+            Message: 'Current crisis has been closed by {0}, you will be redirected to login page.'
+        }, {
+            Key: 'ReceiveCrisisCreationResponse',
+            Title: 'Crisis Created',
+            Message: 'A new crisis has been initiated. Please logout and re-login to the system to see the details of the new crisis'
+        }, {
+            Key: 'ReceiveDemandCreationResponse',
+            Title: 'Demand Created',
+            Message: 'A new Demand has been created. Please refer to tab section "Demand > My Demands"'
+        }, {
+            Key: 'ReceiveDemandApprovalPendingResponse',
+            Title: 'Demand Approval Pending',
+            Message: 'A Demand has been assigned for your approval. Please refer to tab section "Demand > Approval Pending"'
+        }, {
+            Key: 'ReceiveDemandApprovedResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceiveDemandAssignedResponse',
+            Title: 'Demand Assigned to Me',
+            Message: 'A new Demand has been assigned to you. Please refer to tab section "Demand > Assigned to Me"'
+        }, {
+            Key: 'ReceiveCompletedDemandAssignedResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceiveDemandClosedResponse',
+            Title: 'Demand Completed',
+            Message: 'A Demand has been completed. Please refer to tab section "Demand > Completed"'
+        }, {
+            Key: 'ReceiveDemandStatusUpdateResponse',
+            Title: 'Demand Status Updated',
+            Message: 'A Demand\'s status has been updated. Please refer to tab section "Demand > My Demands"'
+        }, {
+            Key: 'ReceiveCompletedDemandstoCloseResponse',
+            Title: 'Demand Closed',
+            Message: 'A Demand has been closed. Please refer to tab section "Demand > Completed"'
+        }, {
+            Key: 'ReceiveRejectedDemandstoAssignResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceiveMediaMessageResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceivePresidentsMessageResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceiveCargoEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'AssignedCargoEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceiveCrewEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'AssignedCrewEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceiveMediaEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'AssignedMediaEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceiveOtherEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'AssignedOtherEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceivePassangerEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'AssignedPassangerEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceiveFutureTravelEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'AssignedFutureTravelEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceiveGeneralUpdateEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'AssignedGeneralUpdateEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceiveSituationalEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'AssignedSituationalUpdatesEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'ReceiveCustomerDissatisfactionEnquiryCreationResponse',
+            Title: '',
+            Message: ''
+        }, {
+            Key: 'AssignedCustomerDissatisfactionEnquiryCreationResponse',
+            Title: '',
+            Message: ''
         }
     ];
 

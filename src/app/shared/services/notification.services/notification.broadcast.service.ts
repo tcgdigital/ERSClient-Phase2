@@ -1,10 +1,14 @@
 import { Injectable, NgZone } from '@angular/core';
-import { IConnectionConfig, ConnectionConfig } from './notification.model';
+import { IConnectionConfig, ConnectionConfig, ConnectionStatus } from './notification.model';
 import { INotificationConnection } from './notification.connection.interface';
 import { NotificationConnection } from './notification.connection';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class NotificationBroadcastService {
+    private _configuration: ConnectionConfig;
+    private _zone: NgZone;
+    private _hubConnectionFn: any;
 
     /**
      * Creates an instance of NotificationBroadcastService.
@@ -14,64 +18,58 @@ export class NotificationBroadcastService {
      *
      * @memberOf NotificationBroadcastService
      */
-    constructor(private configuration: ConnectionConfig,
-        private zone: NgZone,
-        private hubConnectionFn: (url: string) => any) { }
+    constructor(configuration: ConnectionConfig, zone: NgZone, hubConnectionFn: (url: string) => any) {
+        this._configuration = configuration;
+        this._zone = zone;
+        this._hubConnectionFn = hubConnectionFn;
+    }
 
-    public connect(config?: IConnectionConfig): Promise<INotificationConnection> {
-        const $promise: Promise<INotificationConnection>
-            = new Promise<INotificationConnection>((resolve, reject) => {
-                const configuration: IConnectionConfig = this.merge(config ? config : {});
+    public createConnection(options?: IConnectionConfig): NotificationConnection {
+        // const status: Observable<ConnectionStatus>;
+        const configuration = this.merge(options ? options : {});
 
-                try {
-                    const serialized: string = JSON.stringify(configuration.qs);
-                    if (configuration.logging) {
-                        console.log(`Connecting with...`);
-                        console.log(`configuration:[url: '${configuration.url}'] ...`);
-                        console.log(`configuration:[hubName: '${configuration.hubName}'] ...`);
-                        console.log(`configuration:[qs: '${serialized}'] ...`);
-                    }
-                } catch (err) {
-                    console.log(`Error: ${err}`);
-                }
+        try {
+            const serializedQs = JSON.stringify(configuration.qs);
+            const serializedTransport = JSON.stringify(configuration.transport);
 
-                // create connection object
-                const connection = this.hubConnectionFn(configuration.url);
-                connection.logging = configuration.logging;
-                connection.qs = configuration.qs;
+            if (configuration.logging) {
+                console.log(`Creating connecting with...`);
+                console.log(`configuration:[url: '${configuration.url}'] ...`);
+                console.log(`configuration:[hubName: '${configuration.hubName}'] ...`);
+                console.log(`configuration:[qs: '${serializedQs}'] ...`);
+                console.log(`configuration:[transport: '${serializedTransport}'] ...`);
+            }
+        } catch (err) {
+            console.log(err);
+        }
 
-                // create a proxy
-                const hubProxy = connection.createHubProxy(configuration.hubName);
-                // !!! important. We need to register at least one on function otherwise server callbacks will not work.
-                // hubProxy.on('noOp', function () { });
+        // create connection object
+        const connection = this._hubConnectionFn(configuration.url);
+        connection.logging = configuration.logging;
+        connection.qs = configuration.qs;
 
-                const hubConnection = new NotificationConnection(connection, hubProxy, this.zone);
-                // start the connection
-                console.log('Starting SignalR connection ...');
+        // create a proxy
+        const proxy = connection.createHubProxy(configuration.hubName);
+        // !!! important. We need to register at least one function otherwise server callbacks will not work.
+        proxy.on('noOp', () => { });
 
-                connection.start({ withCredentials: configuration.withCredentials, jsonp: configuration.jsonp })
-                    .done(() => {
-                        console.log(`Connection established, ID: ${connection.id}`);
-                        console.log(`Connection established, Transport: ${connection.transport.name}`);
-                        resolve(hubConnection);
-                    })
-                    .fail((error: any) => {
-                        console.log('Could not connect');
-                        reject(`Failed to connect. Error: ${error.message}`); // ex: Error during negotiation request.
-                    });
-            });
+        const hubConnection = new NotificationConnection(connection, proxy, this._zone, configuration);
+        return hubConnection;
+    }
 
-        return $promise;
+    public connect(options?: IConnectionConfig): Promise<INotificationConnection> {
+        return this.createConnection(options).start();
     }
 
     private merge(config: IConnectionConfig): ConnectionConfig {
         const merged: ConnectionConfig = new ConnectionConfig();
-        merged.hubName = config.hubName || this.configuration.hubName;
-        merged.url = config.url || this.configuration.url;
-        merged.qs = config.qs || this.configuration.qs;
-        merged.logging = this.configuration.logging;
-        merged.jsonp = config.jsonp || this.configuration.jsonp;
-        merged.withCredentials = config.withCredentials || this.configuration.withCredentials;
+        merged.hubName = config.hubName || this._configuration.hubName;
+        merged.url = config.url || this._configuration.url;
+        merged.qs = config.qs || this._configuration.qs;
+        merged.logging = this._configuration.logging;
+        merged.jsonp = config.jsonp || this._configuration.jsonp;
+        merged.withCredentials = config.withCredentials || this._configuration.withCredentials;
+        merged.transport = config.transport || this._configuration.transport;
         return merged;
     }
 }
