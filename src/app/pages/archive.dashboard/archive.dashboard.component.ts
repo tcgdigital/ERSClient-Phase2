@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { TAB_LINKS } from './archive.dashboard.tablinks';
-import { ITabLinkInterface, GlobalStateService, UtilityService, KeyValue } from '../../shared';
+import { ITabLinkInterface, GlobalStateService, UtilityService, KeyValue, GlobalConstants } from '../../shared';
 import { IncidentService, IncidentModel } from '../incident';
 import { DepartmentService, DepartmentModel } from '../masterdata/department';
 
@@ -23,6 +23,8 @@ export class ArchiveDashboardComponent implements OnInit {
     currentDepartment: KeyValue;
     public incidentDate: Date;
     private sub: any;
+    public isShowPage: boolean = true;
+    public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
 
     /**
      * Creates an instance of ArchiveDashboardComponent.
@@ -33,7 +35,7 @@ export class ArchiveDashboardComponent implements OnInit {
      * @memberof ArchiveDashboardComponent
      */
     constructor(private router: ActivatedRoute, private incidentService: IncidentService,
-        private departmentService: DepartmentService) { 
+        private departmentService: DepartmentService,private globalState: GlobalStateService) { 
             this.incidentDate = new Date();
         }
 
@@ -47,6 +49,7 @@ export class ArchiveDashboardComponent implements OnInit {
         this.archievedIncidentId = +UtilityService.GetFromSession('ArchieveIncidentId');
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.tablinks = TAB_LINKS;
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
         this.GetIncidentAndDepartment();
     }
 
@@ -68,4 +71,8 @@ export class ArchiveDashboardComponent implements OnInit {
                 this.currentDepartment = new KeyValue(data.Description, data.DepartmentId);
             });
     }
+
+    private departmentChangeHandler(department: KeyValue): void {
+		this.currentDepartmentId = department.Value;
+	}
 }
