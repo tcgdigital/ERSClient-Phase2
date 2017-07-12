@@ -105,7 +105,7 @@ export class PagesComponent implements OnInit {
         this.ProcessData(() => {
             this.globalState.Subscribe('incidentCreate', (model: number) => this.incidentCreateHandler(model));
             this.initiateHubConnections();
-            this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
+            // this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
         }, local_incidents, local_departments);
 
         // this.getIncidents();
@@ -161,7 +161,7 @@ export class PagesComponent implements OnInit {
         UtilityService.SetToSession({ CurrentDepartmentId: selectedDepartment.Value });
         this.currentDepartmentId = selectedDepartment.Value;
         this.globalState.NotifyDataChanged('departmentChange', selectedDepartment);
-        this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
+        // this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
     }
 
     public onIncidentChange(selectedIncident: KeyValue): void {
@@ -172,7 +172,7 @@ export class PagesComponent implements OnInit {
                 .find((z) => z.Key === selectedIncident.Value.toString()).Value
         });
         this.globalState.NotifyDataChanged('incidentChange', selectedIncident);
-        this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
+        // this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
     }
 
     public onMenuClick($event): void {
@@ -386,11 +386,11 @@ export class PagesComponent implements OnInit {
             }, callbackListners<CasualtyExchangeModel>(casualtyNotificationResponse)
         ));*/
 
-        this.connectionStaters.push(new ConnectionStarter(this.checklistSubmissionNotificationHub,
-            'ChecklistSubmissionNotificationHub', {
-                departmentId: deptId, incidentId: incId
-            }, callbackListners<ActionableModel>(checklistNotificationResponse)
-        ));
+        // this.connectionStaters.push(new ConnectionStarter(this.checklistSubmissionNotificationHub,
+        //     'ChecklistSubmissionNotificationHub', {
+        //         departmentId: deptId, incidentId: incId
+        //     }, callbackListners<ActionableModel>(checklistNotificationResponse)
+        // ));
 
         /*this.connectionStaters.push(new ConnectionStarter(this.crisisClosureNotificationHub,
             'CrisisClosureNotificationHub', {

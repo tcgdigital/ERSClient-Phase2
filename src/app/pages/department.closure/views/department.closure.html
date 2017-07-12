@@ -1,4 +1,5 @@
-<div class="card">
+<span class="validationAlert" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'ArchiveListing')">{{accessibilityErrorMessage}}</span>
+<div *ngIf="isShowPage | accesibility:currentDepartmentId:'ArchiveListing'" class="card">
     <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
         <div class="card-header">
             <strong>Department Wise Closure</strong>

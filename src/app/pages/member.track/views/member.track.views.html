@@ -1,4 +1,6 @@
-<div class="row">
+<span class="validationAlert" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'MemberTracking')">{{accessibilityErrorMessage}}</span>
+
+<div *ngIf="isShowPage | accesibility:currentDepartmentId:'MemberTracking'" class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-header">

@@ -79,6 +79,7 @@ export class GlobalConstants {
     public static ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION: number = 12;
     public static currentLoggedInUser: number = 0;
     public static PagePermissionMatrix: PagesPermissionMatrixModel[] = [];
+    public static accessibilityErrorMessage:string = 'Un-authorized to display.';
     public static INTERCEPTOR_PERFORM: boolean = false;
     public static PRESERVE_DATA_FROM_CONVERSION = ['EmergencyDate'];
 
@@ -897,7 +898,7 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'TabPassengerQuery',
+            id: 'PassengerQuery',
             title: 'Passenger Query',
             // icon: 'fa fa-twitter fa-2x',
             url: '/pages/dashboard/passengerquery',
@@ -1071,7 +1072,16 @@ export class GlobalConstants {
                     order: 2
                 }
             ]
+        }, {
+            id: 'GroundVictims',
+            title: 'Ground Victims',
+            // icon: 'fa fa-twitter fa-2x',
+            url: '/pages/dashboard/groundmembers',
+            selected: false,
+            hidden: false,
+            order: 17
         }
+
     ] as ITabLinkInterface[];
 }
 

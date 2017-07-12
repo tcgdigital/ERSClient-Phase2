@@ -1,13 +1,16 @@
 <div class="row clock-container no-gutters">
-    <div class="col">
+    <div *ngIf="!(isShow | accesibility:initiatedDepartmentId:'TimerWidget')" class="row no-gutters">
+        {{accessibilityErrorMessage}}
+    </div>
+    <div *ngIf="isShow | accesibility:initiatedDepartmentId:'TimerWidget'" class="col">
         <span class="clock-text">days</span>
         <span class="clock-number">{{days | padding: '0': 2}}</span>
     </div>
-    <div class="col clock-v-border">
+    <div *ngIf="isShow | accesibility:initiatedDepartmentId:'TimerWidget'" class="col clock-v-border">
         <span class="clock-text">hours</span>
         <span class="clock-number">{{hours | padding: '0': 2}}</span>
     </div>
-    <div class="col">
+    <div *ngIf="isShow | accesibility:initiatedDepartmentId:'TimerWidget'" class="col">
         <span class="clock-text">minutes</span>
         <span class="clock-number">{{minutes | padding: '0': 2}}</span>
     </div>

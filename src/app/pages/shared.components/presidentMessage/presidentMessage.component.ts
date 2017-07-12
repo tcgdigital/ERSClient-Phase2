@@ -1,8 +1,6 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, AfterContentInit } from '@angular/core';
 import { ITabLinkInterface } from '../../../shared/components/tab.control';
-import * as _ from 'underscore';
 import { GlobalConstants } from '../../../shared/constants';
-
 
 @Component({
     selector: 'presidentMessage-main',
@@ -10,10 +8,15 @@ import { GlobalConstants } from '../../../shared/constants';
     templateUrl: './views/presidentMessage.view.html',
     styleUrls: ['./styles/presidents.message.style.scss']
 })
-export class PresidentMessageComponent implements OnInit {
+export class PresidentMessageComponent implements OnInit, AfterContentInit {
     public subTabs: ITabLinkInterface[] = new Array<ITabLinkInterface>();
 
     public ngOnInit(): void {
-        this.subTabs = _.find(GlobalConstants.TabLinks, (x) => x.id === 'PresidentMessages').subtab;
+    }
+
+    public ngAfterContentInit(): void {
+        debugger;
+        if (GlobalConstants.TabLinks.some((x) => x.id === 'PresidentMessage'))
+            this.subTabs = GlobalConstants.TabLinks.find((x) => x.id === 'PresidentMessage').subtab;
     }
 }

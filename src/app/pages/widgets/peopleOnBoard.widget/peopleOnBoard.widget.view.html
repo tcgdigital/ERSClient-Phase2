@@ -6,7 +6,7 @@
             </div>
         </div>
         <div *ngIf="!(isShow | accesibility:initiatedDepartmentId:'AffectedOnBoardKPI')" class="row no-gutters">
-            Un-authorized to display.
+            {{accessibilityErrorMessage}}
         </div>
         <div *ngIf="isShow | accesibility:initiatedDepartmentId:'AffectedOnBoardKPI'" class="row no-gutters">
             <div class="col widget-block">
@@ -505,7 +505,7 @@
                         </thead>
                         <tbody>
                             <tr *ngIf="!(groundVictimList | async)?.length>0">
-                                <td data-title="Records" colspan="6">No crew to show.</td>
+                                <td data-title="Records" colspan="6">No ground victim to show.</td>
                             </tr>
                             <tr *ngFor="let affected of groundVictimList | async">
                                 <td data-title="Ground Victim Type">{{affected.GroundVictimType}}</td>

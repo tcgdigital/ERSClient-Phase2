@@ -12,13 +12,14 @@ export class IncidentComponent implements OnInit {
     public currentDepartment: number;
     public currentUserId: number;
     public isShowPage: boolean = true;
+    public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
     public pagePermissionValidationMessage:string;
     constructor(private globalState: GlobalStateService) {
         this.currentDepartment = 0;
     }
 
     ngOnInit(): any {
-        this.pagePermissionValidationMessage='you are not authorize to view this page. Please contact system administrator.';
+        
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
         this.currentDepartment = +UtilityService.GetFromSession('CurrentDepartmentId');
     }

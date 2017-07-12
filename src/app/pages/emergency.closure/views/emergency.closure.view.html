@@ -1,4 +1,5 @@
-<div class="card">
+<span class="validationAlert" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'CloseEmergency')">{{accessibilityErrorMessage}}</span>
+<div *ngIf="isShowPage | accesibility:currentDepartmentId:'CloseEmergency'" class="card">
     <div class="card-header">
         Crisis Closure
     </div>

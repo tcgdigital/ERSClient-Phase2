@@ -7,7 +7,16 @@
         </div>
     </div>
     <div class="col-9 col-md-12 col-lg-9">
-        <text-accordion [accordionItems]="LatestBroadcasts"></text-accordion>
+        <text-accordion *ngIf="isShow | accesibility:initiatedDepartmentId:'BroadcastMessage'" [accordionItems]="LatestBroadcasts"></text-accordion>
+        <div class="row no-gutters" *ngIf="!(isShow | accesibility:initiatedDepartmentId:'BroadcastMessage')">
+            <ul class="cd-container">
+                <li>
+                    <ul class="cd-item-wrapper widgetDefaultStyle">
+                        {{accessibilityErrorMessage}}
+                    </ul>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 

@@ -15,7 +15,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
     styleUrls: ['./mediaRelease.widget.style.scss']
 })
 export class MediaReleaseWidgetComponent implements OnInit {
-    @Input('initiatedDepartmentId') departmentId: number;
+    @Input('initiatedDepartmentId') initiatedDepartmentId: number;
     @Input('currentIncidentId') incidentId: number;
     @ViewChild('childModalMediaRelease') public childModal: ModalDirective;
 
@@ -25,7 +25,8 @@ export class MediaReleaseWidgetComponent implements OnInit {
     currentIncidentId: number;
     currentMediaRelaseModel: MediaReleaseWidgetModel = new MediaReleaseWidgetModel();
     downloadPath: string;
-
+    public isShow: boolean = true;
+    public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
     /**
      * Creates an instance of MediaReleaseWidgetComponent.
      * @param {MediaReleaseWidgetService} mediaReleaseWidgetService
@@ -38,7 +39,7 @@ export class MediaReleaseWidgetComponent implements OnInit {
 
     public ngOnInit(): void {
         this.currentIncidentId = this.incidentId;
-        this.currentDepartmentId = this.departmentId;
+        this.currentDepartmentId = this.initiatedDepartmentId;
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/Media/' + this.currentIncidentId + '/';
         this.getLatestMediaReleases(this.currentIncidentId);
         this.getAllMediaReleases();

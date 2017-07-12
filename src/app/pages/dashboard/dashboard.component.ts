@@ -105,8 +105,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.getIncidentsToPickForReplication();
         this.getIncident(this.currentIncidentId);
         this.getDepartment(this.currentDepartmentId);
-
-        debugger;
         const rootTab: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
             .find((x: PagesPermissionMatrixModel) => x.ModuleName === 'Dashboard' && x.ParentPageId === null && x.Type === 'Tab');
 
@@ -115,7 +113,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 .filter((x: PagesPermissionMatrixModel) => x.ParentPageId === rootTab.PageId)
                 .map((x) => x.PageCode);
             if (tabs.length > 0) {
-               this.tablinks = GlobalConstants.TabLinks.filter((x: ITabLinkInterface) => tabs.some((y) => y === x.id));
+                this.tablinks = GlobalConstants.TabLinks.filter((x: ITabLinkInterface) => tabs.some((y) => y === x.id));
             }
         }
         // this.tablinks = TAB_LINKS;
