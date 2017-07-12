@@ -73,7 +73,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.childModal.show();
     }
 
-    getAssignedDemands(deptId, incidentId): void {
+    getAssignedDemands(deptId: number, incidentId: number): void {
         this.demandService.GetForAssignedDept(deptId, incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demands = this.demandService.DemandMapper(response.Records);
@@ -292,6 +292,12 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
 
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+
+        // Notification
+        this.globalState.Subscribe('ReceiveDemandAssignedResponse', (model: DemandModel) =>
+            this.getAssignedDemands(model.TargetDepartmentId, model.IncidentId));
+        this.globalState.Subscribe('ReceiveCompletedDemandAssignedResponse', (model: DemandModel) =>
+            this.getAssignedDemands(model.TargetDepartmentId, model.IncidentId));
     }
 
     ngOnDestroy(): void {
@@ -300,7 +306,8 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     }
 
     ngAfterContentInit(): any {
-        this.setRagStatus();
+        // this.setRagStatus();
+        UtilityService.SetRAGStatus(this.demands, 'Demand');
     }
     private incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
