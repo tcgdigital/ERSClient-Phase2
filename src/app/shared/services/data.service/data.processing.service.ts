@@ -101,11 +101,11 @@ export class DataProcessingService {
             else
                 headers = new Headers({ Authorization: `Bearer ${token}` });
             headers.set('TimeZone', jstz.determine().name());
+            if(!isNaN(incidentId) && incidentId > 0){
+                headers.set('CurrentIncidentId', incidentId.toString());
+            }
         }
-        debugger;
-        if(!isNaN(incidentId) && incidentId > 0){
-            headers.set('CurrentIncidentId', incidentId.toString());
-        }
+        
 
         // const finalHeaders: Headers = _headers;
         const finalHeaders: Headers = Object.assign<Headers, Headers>(_headers, headers);

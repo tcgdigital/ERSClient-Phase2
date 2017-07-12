@@ -9,7 +9,7 @@ import { AffectedObjectModel, AffectedObjectsToView } from './affected.objects.m
 import { AffectedObjectsService } from './affected.objects.service';
 import {
     ResponseModel, DataExchangeService,
-    GlobalStateService, UtilityService, KeyValue, AuthModel
+    GlobalStateService, UtilityService, KeyValue, AuthModel, GlobalConstants
 } from '../../../../shared';
 
 
@@ -30,6 +30,7 @@ export class AffectedObjectsVerificationComponent implements OnInit {
     allSelectVerify: boolean;
     userid: number;
     credential: AuthModel;
+    downloadPath: string;
 
     getAffectedObjects(incidentId): void {
         this.affectedObjectsService.GetFilterByIncidentId(incidentId)
@@ -67,6 +68,7 @@ export class AffectedObjectsVerificationComponent implements OnInit {
 
     incidentChangeHandler(incident: KeyValue) {
         this.currentIncident = incident.Value;
+        this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/CargoVerifiedManifest/' + this.currentIncident;
         this.getAffectedObjects(this.currentIncident);
     }
 
@@ -80,6 +82,7 @@ export class AffectedObjectsVerificationComponent implements OnInit {
         else {
             this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
         }
+        this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/CargoVerifiedManifest/' + this.currentIncident;
         this.getAffectedObjects(this.currentIncident);
         this.credential = UtilityService.getCredentialDetails();
         this.userid = +this.credential.UserId;

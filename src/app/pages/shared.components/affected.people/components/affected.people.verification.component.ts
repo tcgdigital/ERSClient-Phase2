@@ -9,7 +9,7 @@ import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.mod
 import { AffectedPeopleService } from './affected.people.service';
 import {
     ResponseModel, DataExchangeService,
-    GlobalStateService, UtilityService, KeyValue, AuthModel
+    GlobalStateService, UtilityService, KeyValue, AuthModel, GlobalConstants
 } from '../../../../shared';
 import { InvolvePartyService } from '../../involveparties';
 
@@ -32,6 +32,7 @@ export class AffectedPeopleVerificationComponent implements OnInit {
     allSelectVerify: boolean;
     userid: number;
     credential: AuthModel;
+    downloadPath: string;
 
 
     getAffectedPeople(currentIncident): void {
@@ -73,6 +74,7 @@ export class AffectedPeopleVerificationComponent implements OnInit {
 
     incidentChangeHandler(incident: KeyValue) {
         this.currentIncident = incident.Value;
+        this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/PDAVerifiedManifest/' + this.currentIncident;
         this.getAffectedPeople(this.currentIncident);
     }
 
@@ -88,6 +90,7 @@ export class AffectedPeopleVerificationComponent implements OnInit {
             this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
         }
         this.getAffectedPeople(this.currentIncident);
+        this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/PDAVerifiedManifest/' + this.currentIncident;
         this.credential = UtilityService.getCredentialDetails();
         this.userid = +this.credential.UserId;
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));

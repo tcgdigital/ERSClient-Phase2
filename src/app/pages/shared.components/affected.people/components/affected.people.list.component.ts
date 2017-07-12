@@ -52,10 +52,11 @@ export class AffectedPeopleListComponent implements OnInit {
     date: Date;
     downloadFilePath: string;
     downloadPath: string;
+    downloadRoute: string;
     copassangers: PassengerModel[] = [];
     public globalStateProxyOpen: GlobalStateService;
     searchConfigs: Array<SearchConfigModel<any>> = new Array<SearchConfigModel<any>>();
-    downloadfilename : string;
+    downloadfilename: string;
 
     /**
      * Creates an instance of AffectedPeopleListComponent.
@@ -80,9 +81,7 @@ export class AffectedPeopleListComponent implements OnInit {
         private fileStoreService: FileStoreService,
         private passangerService: PassengerService) {
         this.downloadFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Affected People/';
-        
         this.globalStateProxyOpen = injector.get(GlobalStateService);
-        this.downloadfilename ="Passenger Status Info";
     }
 
     openAffectedPersonDetail(affectedPerson: AffectedPeopleToView): void {
@@ -222,6 +221,8 @@ export class AffectedPeopleListComponent implements OnInit {
 
     incidentChangeHandler(incident: KeyValue) {
         this.currentIncident = incident.Value;
+        this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/PassengerStatusInfo/' + this.currentIncident;
+        this.downloadRoute = GlobalConstants.EXTERNAL_URL + 'api/Report/CrewStatusInfo/' + this.currentIncident;
         this.getAffectedPeople(this.currentIncident);
     }
 
@@ -231,7 +232,6 @@ export class AffectedPeopleListComponent implements OnInit {
             this.isArchive = true;
             this.currentIncident = +UtilityService.GetFromSession('ArchieveIncidentId');
             this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
-            this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/PassengerStatusInfo/' + this.currentIncident;
             this.getAffectedPeople(this.currentIncident);
         }
         else {
@@ -240,6 +240,8 @@ export class AffectedPeopleListComponent implements OnInit {
             this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
             this.getAffectedPeople(this.currentIncident);
         }
+        this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/PassengerStatusInfo/' + this.currentIncident;
+        this.downloadRoute = GlobalConstants.EXTERNAL_URL + 'api/Report/CrewStatusInfo/' + this.currentIncident;
         this.credential = UtilityService.getCredentialDetails();
 
         this.initiateSearchConfigurations();

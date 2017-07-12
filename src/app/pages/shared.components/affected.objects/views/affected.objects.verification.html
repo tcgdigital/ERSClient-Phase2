@@ -1,4 +1,12 @@
-<button class="btn btn-primary" type="button" (click)="saveVerifiedObjects()" *ngIf="!isArchive">Verify</button>
+<div class="row">
+    <div class="col-12">
+        <button class="btn btn-primary" type="button" (click)="saveVerifiedObjects()" *ngIf="!isArchive">Verify</button>
+    </div>
+    <div class="col-12">
+        <label>Verified Cargo Manifest</label>
+        <a target="_blank" href="{{downloadPath}}" download="VerifiedCargoManifest"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+    </div>
+</div>
 <div class="hidden-lg-up">
     <md-checkbox id="IsAutoApproved" [(ngModel)]="allSelectVerify" (change)="selectAllVerify($event)" aria-label="Add">Verify</md-checkbox>
 </div>
@@ -7,8 +15,7 @@
         <thead>
             <tr>
                 <th>
-                    <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="allSelectVerify" (change)="selectAllVerify($event)"
-                        aria-label="Add">Verify</md-checkbox>
+                    <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="allSelectVerify" (change)="selectAllVerify($event)" aria-label="Add">Verify</md-checkbox>
                 </th>
                 <th>Reference Number</th>
                 <th>Air Way Bill</th>

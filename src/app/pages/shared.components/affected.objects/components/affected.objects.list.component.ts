@@ -39,6 +39,7 @@ export class AffectedObjectsListComponent implements OnInit {
     affectedObjId: number;
     callers: CallerModel[] = [];
     searchConfigs: Array<SearchConfigModel<any>> = new Array<SearchConfigModel<any>>();
+    downloadPath: string;
 
     constructor(private affectedObjectService: AffectedObjectsService,
         private callerservice: CallerService,
@@ -58,6 +59,7 @@ export class AffectedObjectsListComponent implements OnInit {
 
     incidentChangeHandler(incident: KeyValue) {
         this.currentIncident = incident.Value;
+        this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/CargoStatusInfo/' + this.currentIncident;
         this.getAffectedObjects(this.currentIncident);
     }
 
@@ -65,11 +67,13 @@ export class AffectedObjectsListComponent implements OnInit {
         if (this._router.url.indexOf('archivedashboard') > -1) {
             this.isArchive = true;
             this.currentIncident = +UtilityService.GetFromSession('ArchieveIncidentId');
+           
         }
         else {
             this.isArchive = false;
             this.currentIncident = +UtilityService.GetFromSession('CurrentIncidentId');
         }
+        this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/CargoStatusInfo/' + this.currentIncident;
         this.getAffectedObjects(this.currentIncident);
 
         this.initiateSearchConfigurations();
