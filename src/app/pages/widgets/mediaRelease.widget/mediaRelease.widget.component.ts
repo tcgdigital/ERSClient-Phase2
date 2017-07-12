@@ -38,8 +38,6 @@ export class MediaReleaseWidgetComponent implements OnInit {
         private dataExchange: DataExchangeService<MediaReleaseWidgetModel>, private globalState: GlobalStateService) { }
 
     public ngOnInit(): void {
-        // this.incidentId= +UtilityService.GetFromSession("CurrentDepartmentId");
-        // this.departmentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.initiatedDepartmentId;
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/Media/' + this.currentIncidentId + '/';
@@ -47,6 +45,10 @@ export class MediaReleaseWidgetComponent implements OnInit {
         this.getAllMediaReleases();
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('MediaReleasePublished', (model) => this.onMediaReleasePublish(model));
+
+        // Signalr Notification
+        this.globalState.Subscribe('ReceiveMediaMessageResponse', (model: MediaReleaseWidgetModel) =>
+            this.getLatestMediaReleases(model.IncidentId));
     }
 
     public getLatestMediaReleases(incidentId): void {

@@ -11,8 +11,7 @@ const actionaleRoutes: Routes = [
         children: [
             {
                 path: '',
-                // component: ActionableActiveComponent
-                redirectTo: 'open', 
+                redirectTo: 'open',
                 pathMatch: 'full'
             },
             {

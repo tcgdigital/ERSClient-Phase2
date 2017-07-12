@@ -1,6 +1,5 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, AfterContentInit } from '@angular/core';
 import { ITabLinkInterface } from '../../../shared/components/tab.control';
-import * as _ from 'underscore';
 import { GlobalConstants } from '../../../shared/constants';
 
 @Component({
@@ -9,10 +8,15 @@ import { GlobalConstants } from '../../../shared/constants';
     templateUrl: './views/affected.objects.view.html',
     styleUrls: ['./styles/affected.objects.style.scss']
 })
-export class AffectedObjectsComponent implements OnInit {
+export class AffectedObjectsComponent implements OnInit, AfterContentInit {
     public subTabs: ITabLinkInterface[] = new Array<ITabLinkInterface>();
 
     public ngOnInit(): void {
-        this.subTabs = _.find(GlobalConstants.TabLinks, (x) => x.id === 'AffectedObjects').subtab;
+    }
+
+    public ngAfterContentInit(): void {
+        debugger;
+        if (GlobalConstants.TabLinks.some((x) => x.id === 'AffectedCargo'))
+            this.subTabs = GlobalConstants.TabLinks.find((x) => x.id === 'AffectedCargo').subtab;
     }
 }
