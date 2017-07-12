@@ -26,9 +26,8 @@ export class GroundVictimsComponent implements OnInit {
     public currentIncidentId: number;
     public currentDepartmentId: number;
     public groundVictimList: Observable<GroundVictimModel[]>;
-    //public subTabs: ITabLinkInterface[] = new Array<ITabLinkInterface>();
+    
     constructor(private peopleOnBoardWidgetService: PeopleOnBoardWidgetService, private globalState: GlobalStateService) { }
-
 
     public ngOnInit(): void {
         this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');

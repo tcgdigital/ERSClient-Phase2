@@ -13,16 +13,17 @@ import {
 
 @Injectable()
 export class ActionableService extends ServiceBase<ActionableModel> implements IActionableService {
-    private _batchDataService: DataService<ActionableModel>;
-    private _actionables: ResponseModel<ActionableModel>;
-    private _allActionables: ResponseModel<ActionableModel>;
     public departmentIds: number[];
     public subDepartmentProjection: string;
     public parentActionable: ActionableModel;
+    private _batchDataService: DataService<ActionableModel>;
+    private _actionables: ResponseModel<ActionableModel>;
+    private _allActionables: ResponseModel<ActionableModel>;
+
     /**
      * Creates an instance of ActionableService.
-     * @param {DataServiceFactory} dataServiceFactory 
-     * 
+     * @param {DataServiceFactory} dataServiceFactory
+     *
      * @memberOf ActionableService
      */
     constructor(private dataServiceFactory: DataServiceFactory,
@@ -39,7 +40,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
     public GetAll(): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
             .Expand('CheckList($select=CheckListId,CheckListCode)')
-            .OrderBy("CreatedOn desc")
+            .OrderBy('CreatedOn desc')
             .Execute();
     }
 
@@ -47,7 +48,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
         return this._dataService.Query()
             .Expand('CheckList($expand=TargetDepartment)')
             .Filter(`IncidentId eq ${incidentId} and ActiveFlag eq 'Active'`)
-            .OrderBy("CreatedOn desc")
+            .OrderBy('CreatedOn desc')
             .Execute();
     }
 
@@ -58,7 +59,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
                 this.subDepartmentProjection = '';
                 departmentResponse.Records.map((itemDepartment: DepartmentModel, index: number) => {
                     this.departmentIds.push(itemDepartment.DepartmentId);
-                    if (index == 0) {
+                    if (index === 0) {
                         this.subDepartmentProjection = `DepartmentId eq ${itemDepartment.DepartmentId}`;
                     }
                     else {
@@ -67,15 +68,15 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
                 });
             })
             .flatMap((x) => {
-                if (this.subDepartmentProjection == '') {
+                if (this.subDepartmentProjection === '') {
                     return Observable.of();
                 }
                 else {
                     return this._dataService.Query()
                         .Expand('CheckList($expand=TargetDepartment)')
                         .Filter(`IncidentId eq ${incidentId} and (${this.subDepartmentProjection}) and ActiveFlag eq 'Active'`)
-                        .OrderBy("CreatedOn desc")
-                        .Execute()
+                        .OrderBy('CreatedOn desc')
+                        .Execute();
                 }
             });
     }
@@ -84,15 +85,15 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
         return this._dataService.Query()
             .Expand('CheckList($select=CheckListId,CheckListCode)')
             .Filter(`CompletionStatus ne 'Closed' and IncidentId eq ${incidentId} and DepartmentId eq ${departmentId}`)
-            .OrderBy("CreatedOn desc")
+            .OrderBy('CreatedOn desc')
             .Execute()
             .map((actionables: ResponseModel<ActionableModel>) => {
                 this._actionables = actionables;
-                this._actionables.Records.forEach(element => {
-                    element.Active = (element.ActiveFlag == 'Active');
+                this._actionables.Records.forEach((element) => {
+                    element.Active = (element.ActiveFlag === 'Active');
                     element.Done = false;
                     element.show = false;
-                    element.RagColor = UtilityService.GetRAGStatus('Checklist', element.AssignedDt, element.ScheduleClose);//this.setRagColor(element.AssignedDt, element.ScheduleClose);
+                    element.RagColor = UtilityService.GetRAGStatus('Checklist', element.AssignedDt, element.ScheduleClose);
                 });
                 return actionables;
             })
@@ -172,7 +173,6 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
         return this._dataService.Query()
             .Filter(`CompletionStatus ne 'Closed' and IncidentId eq ${incidentId}`)
             .Expand('CheckList($expand=CheckListParentMapper,CheckListChildrenMapper)')
-            // .Select('ParentCheckListId')
             .Execute();
     }
 
@@ -180,50 +180,46 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
         return this._dataService.Query()
             .Filter(`ChklistId eq ${checklistId} and IncidentId eq ${incidentId}`)
             .Expand('CheckList($expand=CheckListChildrenMapper)')
-            //.Select('ActionId,Description,ScheduleClose,ActualClose,ActionId,DepartmentId,CompletionStatus')
             .Execute();
-
     }
 
     public GetAllCloseByIncidentIdandDepartmentId(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
             .Expand('CheckList($select=CheckListId,CheckListCode)')
             .Filter(`CompletionStatus eq 'Closed' and IncidentId eq ${incidentId} and DepartmentId eq ${departmentId}`)
-            .OrderBy("CreatedOn desc")
+            .OrderBy('CreatedOn desc')
             .Execute()
             .map((actionables: ResponseModel<ActionableModel>) => {
                 this._actionables = actionables;
-                this._actionables.Records.forEach(element => {
-                    element.Active = (element.ActiveFlag == 'Active');
+                this._actionables.Records.forEach((element) => {
+                    element.Active = (element.ActiveFlag === 'Active');
                 });
 
                 return actionables;
             });
     }
 
-    public GetAcionableByIncidentIdandCheckListId(incidentId: number, checkListId: number):Observable<ResponseModel<ActionableModel>>{
-         return this._dataService.Query()
+    public GetAcionableByIncidentIdandCheckListId(incidentId: number, checkListId: number): Observable<ResponseModel<ActionableModel>> {
+        return this._dataService.Query()
             .Filter(`IncidentId eq ${incidentId} and ChklistId eq ${checkListId}`)
-            //.Select('ParentCheckListId')
             .Execute();
     }
 
     public GetAllCloseByIncidentId(incidentId: number): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
             .Filter(`CompletionStatus eq 'Closed' and IncidentId eq ${incidentId}`)
-            //.Select('ParentCheckListId')
             .Execute();
     }
 
     public Update(entity: ActionableModel): Observable<ActionableModel> {
-        let key: string = entity.ActionId.toString();
+        const key: string = entity.ActionId.toString();
         return this._dataService.Patch(entity, key).Execute();
     }
 
     public setRagColor(assignDate?: Date, scheduleClose?: Date): string {
-        if (assignDate != undefined && scheduleClose != undefined) {
-            let startTime: number = (new Date(assignDate)).getTime();
-            let endTime: number = (new Date(scheduleClose)).getTime();
+        if (assignDate !== undefined && scheduleClose !== undefined) {
+            const startTime: number = (new Date(assignDate)).getTime();
+            const endTime: number = (new Date(scheduleClose)).getTime();
             let totalTimeDifferenceInMilliSeconds: number = null;
             let _Adiff: number = null;
             let _Cdiff1: number = null;
@@ -236,20 +232,20 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
 
             _Cdiff1 = ((datetimenow.getTime() - endTime) / 1000) / 60;
             if (_Cdiff1 >= _Adiff) {
-                return "statusRed";
+                return 'statusRed';
             }
             if (((_Adiff / 2) <= _Cdiff1) && _Cdiff1 < _Adiff) {
-                return "statusAmber";
+                return 'statusAmber';
             }
             else if (_Cdiff1 < _Adiff / 2) {
-                return "statusGreen";
+                return 'statusGreen';
             }
         }
     }
 
     public BatchOperation(data: any[]): Observable<ResponseModel<BaseModel>> {
-        let requests: Array<RequestModel<BaseModel>> = [];
-        data.forEach(x => {
+        const requests: Array<RequestModel<BaseModel>> = [];
+        data.forEach((x) => {
             requests.push(new RequestModel<any>
                 (`/odata/Actionables(${x.ActionId})`, WEB_METHOD.PATCH, x));
         });
@@ -281,11 +277,11 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
     }
 
     public BatchGet(incidentId: number, departmentIds: number[]): Observable<ResponseModel<ActionableModel>> {
-        let requests: Array<RequestModel<BaseModel>> = [];
-        let filterString: string = "";
+        const requests: Array<RequestModel<BaseModel>> = [];
+        let filterString: string = '';
         departmentIds.forEach((item, index) => {
             if (departmentIds.length > 1) {
-                if (index == 0) {
+                if (index === 0) {
                     filterString = `(DepartmentId eq ${item})`;
                 }
                 else {

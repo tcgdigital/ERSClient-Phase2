@@ -310,7 +310,8 @@ export class UtilityService {
                 let actualClose: number;
 
                 if (entity.constructor.name === 'AllDeptDemandRaisedSummary' ||
-                    entity.constructor.name === 'AllDeptDemandReceivedSummary') {
+                    entity.constructor.name === 'AllDeptDemandReceivedSummary' ||
+                    entity.constructor.name === 'DemandModelToView') {
                     scheduleClose = (Number(entity.ScheduleTime) * 60000);
                     actualClose = new Date(entity.CreatedOn).getTime();
                 }
