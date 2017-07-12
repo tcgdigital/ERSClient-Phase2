@@ -80,7 +80,7 @@ export class AffectedPeopleListComponent implements OnInit {
         private fileStoreService: FileStoreService,
         private passangerService: PassengerService) {
         this.downloadFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Affected People/';
-        this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/PassengerStatusInfo/' + this.currentIncident + '/';
+        
         this.globalStateProxyOpen = injector.get(GlobalStateService);
         this.downloadfilename ="Passenger Status Info";
     }
@@ -231,7 +231,7 @@ export class AffectedPeopleListComponent implements OnInit {
             this.isArchive = true;
             this.currentIncident = +UtilityService.GetFromSession('ArchieveIncidentId');
             this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
-
+            this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/PassengerStatusInfo/' + this.currentIncident;
             this.getAffectedPeople(this.currentIncident);
         }
         else {
