@@ -7,7 +7,7 @@ import { AuthModel } from '../../models';
 import * as moment from 'moment/moment';
 import { RAGScaleModel } from '../../../pages/shared.components';
 import { Observable } from 'rxjs/Rx';
-import { PagesPermissionMatrixModel } from "../../../pages/masterdata/page.functionality/components/page.functionality.model";
+import { PagesPermissionMatrixModel } from '../../../pages/masterdata/page.functionality/components/page.functionality.model';
 
 import {
     DemandRaisedModel,
@@ -391,6 +391,40 @@ export class UtilityService {
         }
     }
 
+    public static GetNecessaryPageLevelPermissionValidation(departmentId: number, pageCode: string): boolean {
+        this.isShowPage = false;
+        this.pagePermissionMatrix = GlobalConstants.PagePermissionMatrix;
+
+        const pagePermissionInitial: PagesPermissionMatrixModel[]
+            = this.pagePermissionMatrix.filter((item: PagesPermissionMatrixModel) => {
+                return ((item.IsHod === true) || (item.IsHod === false && item.OnlyHOD === false));
+            });
+        const pagePermission: PagesPermissionMatrixModel[]
+            = pagePermissionInitial.filter((item: PagesPermissionMatrixModel) => {
+                return (item.PageCode === pageCode && item.DepartmentId === departmentId);
+            });
+
+        if (pagePermission.length === 0) {
+            this.isShowPage = false;
+        }
+        else if (pagePermission.length > 0) {
+            if (pagePermission[0].CanView === false) {
+                this.isShowPage = false;
+            }
+            else {
+                this.isShowPage = true;
+            }
+        }
+        return this.isShowPage;
+    }
+
+    public static FormatString(template: string, ...values: any[]): string {
+        if (!values || !values.length || !template) {
+            return template;
+        }
+        return this.toFormattedString(false, template, values);
+    }
+
     private static pad4(num: number): string {
         let ret: string = num.toString(16);
         while (ret.length < 4) {
@@ -414,30 +448,58 @@ export class UtilityService {
         return keys;
     }
 
-    public static GetNecessaryPageLevelPermissionValidation(departmentId: number, pageCode: string): boolean {
-        this.isShowPage = false;
-        this.pagePermissionMatrix = GlobalConstants.PagePermissionMatrix;
-        //this.currentUserId = GlobalConstants.currentLoggedInUser;
-
-        let pagePermissionInitial: PagesPermissionMatrixModel[] = this.pagePermissionMatrix.filter((item: PagesPermissionMatrixModel) => {
-            return ((item.IsHod == true) || (item.IsHod == false && item.OnlyHOD == false));
-        });
-        let pagePermission: PagesPermissionMatrixModel[] = pagePermissionInitial.filter((item: PagesPermissionMatrixModel) => {
-            return (item.PageCode == pageCode && item.DepartmentId == departmentId);
-        });
-
-        if (pagePermission.length == 0) {
-            this.isShowPage = false;
-        }
-        else if (pagePermission.length > 0) {
-            if (pagePermission[0].CanView == false) {
-                this.isShowPage = false;
+    private static toFormattedString(useLocale: boolean, format: string, ...values: any[]): string {
+        let result: string = '';
+        for (let i = 0; ;) {
+            // Find the next opening or closing brace
+            const open: number = format.indexOf('{', i);
+            const close: number = format.indexOf('}', i);
+            if ((open < 0) && (close < 0)) {
+                // Not found: copy the end of the string and break
+                result += format.slice(i);
+                break;
             }
-            else {
-                this.isShowPage = true;
+            if ((close > 0) && ((close < open) || (open < 0))) {
+                if (format.charAt(close + 1) !== '}') {
+                    throw new Error('format stringFormatBraceMismatch');
+                }
+                result += format.slice(i, close + 1);
+                i = close + 2;
+                continue;
             }
+            // Copy the string before the brace
+            result += format.slice(i, open);
+            i = open + 1;
+            // Check for double braces (which display as one and are not arguments)
+            if (format.charAt(i) === '{') {
+                result += '{';
+                i++;
+                continue;
+            }
+            if (close < 0) throw new Error('format stringFormatBraceMismatch');
+            // Find the closing brace
+            // Get the string between the braces, and split it around the ':' (if any)
+            const brace: string = format.substring(i, close);
+            const colonIndex: number = brace.indexOf(':');
+            const argNumber: number = parseInt((colonIndex < 0) ? brace : brace.substring(0, colonIndex), 10);
+            if (isNaN(argNumber)) throw new Error('format stringFormatInvalid');
+            const argFormat = (colonIndex < 0) ? '' : brace.substring(colonIndex + 1);
+            let arg = values[argNumber];
+            if (typeof (arg) === 'undefined' || arg === null) {
+                arg = '';
+            }
+            // If it has a toFormattedString method, call it.  Otherwise, call toString()
+            if (arg.toFormattedString) {
+                result += arg.toFormattedString(argFormat);
+            } else if (useLocale && arg.localeFormat) {
+                result += arg.localeFormat(argFormat);
+            } else if (arg.format) {
+                result += arg.format(argFormat);
+            } else
+                result += arg.toString();
+            i = close + 1;
         }
-        return this.isShowPage;
+        return result;
     }
 }
 

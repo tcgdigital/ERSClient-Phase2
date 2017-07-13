@@ -1,4 +1,7 @@
-import { Component, ViewEncapsulation, OnInit, AfterContentInit } from '@angular/core';
+import {
+    Component, ViewEncapsulation,
+    OnInit, AfterContentInit
+} from '@angular/core';
 import { ITabLinkInterface } from '../../../shared/components/tab.control';
 import { GlobalConstants } from '../../../shared/constants';
 

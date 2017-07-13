@@ -1,11 +1,17 @@
-import { Component, ViewEncapsulation, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import {
+    Component, ViewEncapsulation,
+    OnInit, OnDestroy, ViewChild
+} from '@angular/core';
 import {
     ResponseModel, GlobalConstants, KeyValue,
     GlobalStateService, UtilityService
 } from '../../../../shared';
 import { Observable, Subscription } from 'rxjs/Rx';
 
-import { CallCenterOnlyPageService, ExternalInputModel } from '../../../callcenteronlypage/component';
+import {
+    CallCenterOnlyPageService,
+    ExternalInputModel
+} from '../../../callcenteronlypage/component';
 import { Router, NavigationEnd } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
@@ -42,6 +48,12 @@ export class CustomerDissatisfactionRecievedCallsListComponent implements OnInit
         this.getAllCustomerDissatisfactionCallsRecieved(this.currentIncidentId);
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllCustomerDissatisfactionCallsRecieved(this.currentIncidentId));
+
+        // SignalR Notification
+        this.globalState.Subscribe('ReceiveCustomerDissatisfactionEnquiryCreationResponse', (model: ExternalInputModel) => {
+            // this.getAllCustomerDissatisfactionCallsRecieved(model.IncidentId);
+            this.allAssignedCalls.unshift(model);
+        });
     }
 
     incidentChangeHandler(incident: KeyValue): void {

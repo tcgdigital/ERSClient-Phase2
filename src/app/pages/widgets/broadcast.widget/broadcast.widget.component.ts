@@ -5,7 +5,8 @@ import {
 import { Observable } from 'rxjs/Rx';
 
 import {
-    DataServiceFactory, DataExchangeService, UtilityService,GlobalConstants,
+    DataServiceFactory, DataExchangeService,
+    UtilityService, GlobalConstants,
     TextAccordionModel, GlobalStateService, KeyValue
 } from '../../../shared';
 import { BroadcastWidgetModel } from './broadcast.widget.model';
@@ -25,12 +26,15 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
     @ViewChild('childModal') public childModal: ModalDirective;
 
     LatestBroadcasts: Observable<TextAccordionModel[]>;
-    AllPublishedBroadcasts: BroadcastWidgetModel[];
+    AllPublishedBroadcasts: BroadcastWidgetModel[]= new Array<BroadcastWidgetModel>();
+    LatestBroadcastModels: BroadcastWidgetModel[] = new Array<BroadcastWidgetModel>();
+
     isHidden: boolean = true;
     currentIncidentId: number;
     currentDepartmentId: number;
     public isShow: boolean = true;
-    public accessibilityErrorMessage:string = GlobalConstants.accessibilityErrorMessage;
+    public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
+
     /**
      * Creates an instance of BroadcastWidgetComponent.
      * @param {BroadcastWidgetService} broadcastWidgetService
@@ -52,22 +56,39 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
         this.globalState.Subscribe('BroadcastPublished', (model) => this.onBroadcastPublish(model));
+
+        // SignalR Notification
+        this.globalState.Subscribe('ReceiveBroadcastCreationResponse', (model: BroadCastModel) => {
+            this.LatestBroadcastModels.unshift(model);
+            this.LatestBroadcastModels.splice(-1, 1);
+
+            this.LatestBroadcasts = Observable.of(this.LatestBroadcastModels
+                .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn, '')));
+        });
+        this.globalState.Subscribe('ReceiveBroadcastModificationResponse', (model: BroadCastModel) => {
+            const index: number = this.LatestBroadcastModels
+                .findIndex((x) => x.BroadcastId === model.BroadcastId);
+            if (index >= 0) {
+                this.LatestBroadcastModels.splice(index, 1, model);
+
+                this.LatestBroadcasts = Observable.of(this.LatestBroadcastModels
+                    .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn, '')));
+            }
+        });
     }
 
     public getLatestBroadcasts(departmentId, incidentId): void {
-        const data: BroadcastWidgetModel[] = [];
+        this.LatestBroadcastModels = new Array<BroadcastWidgetModel>();
         this.broadcastWidgetService
             .GetLatestBroadcastsByIncidentAndDepartment(departmentId, incidentId)
             .flatMap((x) => x).take(2)
             .subscribe((x) => {
-                data.push(x);
+                this.LatestBroadcastModels.push(x);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             }, () => {
-                this.LatestBroadcasts = Observable.of(data
-                    .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn,'')));
-                console.log(this.LatestBroadcasts);
-                console.log(departmentId);
+                this.LatestBroadcasts = Observable.of(this.LatestBroadcastModels
+                    .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn, '')));
             });
     }
 
