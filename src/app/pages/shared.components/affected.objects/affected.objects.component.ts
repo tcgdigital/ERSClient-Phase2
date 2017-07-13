@@ -15,7 +15,6 @@ export class AffectedObjectsComponent implements OnInit, AfterContentInit {
     }
 
     public ngAfterContentInit(): void {
-        debugger;
         if (GlobalConstants.TabLinks.some((x) => x.id === 'AffectedCargo'))
             this.subTabs = GlobalConstants.TabLinks.find((x) => x.id === 'AffectedCargo').subtab;
     }

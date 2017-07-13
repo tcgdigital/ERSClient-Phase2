@@ -15,7 +15,6 @@ export class ActionableComponent implements OnInit, AfterContentInit {
     }
 
     public ngAfterContentInit(): void {
-        debugger;
         if (GlobalConstants.TabLinks.some((x) => x.id === 'Checklist'))
             this.subTabs = GlobalConstants.TabLinks.find((x) => x.id === 'Checklist').subtab;
     }

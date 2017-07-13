@@ -14,7 +14,6 @@ export class GeneralUpdateQueryComponent implements OnInit, AfterContentInit {
     }
 
     public ngAfterContentInit(): void {
-        debugger;
         if (GlobalConstants.TabLinks.some((x) => x.id === 'GeneralUpdateQuery'))
             this.subTabs = GlobalConstants.TabLinks.find((x) => x.id === 'GeneralUpdateQuery').subtab;
     }

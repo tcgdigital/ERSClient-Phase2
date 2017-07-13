@@ -14,7 +14,6 @@ export class CustomerDissatisfactionComponent implements OnInit, AfterContentIni
     }
 
     public ngAfterContentInit(): void {
-        debugger;
         if (GlobalConstants.TabLinks.some((x) => x.id === 'CustomerDissatisfactionQuery'))
             this.subTabs = GlobalConstants.TabLinks.find((x) => x.id === 'CustomerDissatisfactionQuery').subtab;
     }

@@ -14,7 +14,6 @@ export class OtherQueryComponent implements OnInit, AfterContentInit {
     }
 
     public ngAfterContentInit(): void {
-        debugger;
         if (GlobalConstants.TabLinks.some((x) => x.id === 'OtherQuery'))
             this.subTabs = GlobalConstants.TabLinks.find((x) => x.id === 'OtherQuery').subtab;
     }

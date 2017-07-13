@@ -14,7 +14,6 @@ export class SituationalUpdateQueryComponent implements OnInit, AfterContentInit
     }
 
     public ngAfterContentInit(): void {
-        debugger;
         if (GlobalConstants.TabLinks.some((x) => x.id === 'SituationalUpdatesQuery'))
             this.subTabs = GlobalConstants.TabLinks.find((x) => x.id === 'SituationalUpdatesQuery').subtab;
     }

@@ -14,7 +14,6 @@ export class MediaQueryComponent implements OnInit, AfterContentInit {
     }
 
     public ngAfterContentInit(): void {
-        debugger;
         if (GlobalConstants.TabLinks.some((x) => x.id === 'MediaQuery'))
             this.subTabs = GlobalConstants.TabLinks.find((x) => x.id === 'MediaQuery').subtab;
     }

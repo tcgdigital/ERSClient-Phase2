@@ -14,7 +14,6 @@ export class FutureTravelQueryComponent implements OnInit, AfterContentInit {
     }
 
     public ngAfterContentInit(): void {
-        debugger;
         if (GlobalConstants.TabLinks.some((x) => x.id === 'FutureTravelQuery'))
             this.subTabs = GlobalConstants.TabLinks.find((x) => x.id === 'FutureTravelQuery').subtab;
     }

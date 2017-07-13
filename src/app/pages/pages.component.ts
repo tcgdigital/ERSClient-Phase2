@@ -262,7 +262,6 @@ export class PagesComponent implements OnInit {
     }
 
     private ProcessData(callback: () => void, ...observables: Array<Observable<any[]>>): void {
-        // debugger;
         Observable.forkJoin(observables).subscribe((res: any[]) => {
             if (res && res.length > 0) {
                 if (res[0].length > 0 && _.all(res[0], (x) => _.some(Object.keys(x), (y) => y === 'EmergencyTypeId'))) {
@@ -449,10 +448,8 @@ export class PagesComponent implements OnInit {
 
     private CloseConnection(): void {
         try {
-            // debugger;
             if (this.connectionStaters !== undefined && this.connectionStaters.length > 0) {
                 this.connectionStaters.forEach((x: ConnectionStarter) => {
-                    // debugger;
                     if (x.Connection)
                         x.Connection.stop();
                     x.Connection = null;
@@ -466,7 +463,6 @@ export class PagesComponent implements OnInit {
     }
 
     private ConnectAndListen(connectionStaters: ConnectionStarter[]): void {
-        // debugger;
         connectionStaters.forEach((x) => {
             x.HubConnection.createConnection({
                 hubName: x.HubName,
