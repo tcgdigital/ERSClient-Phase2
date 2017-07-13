@@ -42,6 +42,12 @@ export class CustomerDissatisfactionAssignedCallsListComponent implements OnInit
         this.getAllCustomerDissatisfactionCalls(this.currentIncidentId);
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllCustomerDissatisfactionCalls(this.currentIncidentId));
+
+        // SignalR Notification
+        this.globalState.Subscribe('AssignedCustomerDissatisfactionEnquiryCreationResponse', (model: ExternalInputModel) => {
+            // this.getAllCustomerDissatisfactionCalls(model.IncidentId);
+            this.allAssignedCalls.unshift(model);
+        });
     }
 
     incidentChangeHandler(incident: KeyValue): void {

@@ -16,8 +16,8 @@ export class BroadcastService
 
     /**
      * Creates an instance of BroadcastService.
-     * @param {DataServiceFactory} dataServiceFactory 
-     * 
+     * @param {DataServiceFactory} dataServiceFactory
+     *
      * @memberOf BroadcastService
      */
     constructor(private dataServiceFactory: DataServiceFactory) {
@@ -32,8 +32,8 @@ export class BroadcastService
     }
 
     GetLatest(departmentId: number, incidentId: number): Observable<ResponseModel<BroadCastModel>> {
-        let initiateDepartmentProjection: string = 'DepartmentId,DepartmentName,Description,ContactNo';
-        let boradcastProjection: string = 'BroadcastId,Message,InitiateDepartmentId,IncidentId,IsSubmitted,SubmittedBy,SubmittedOn,CreatedOn,ActiveFlag,CreatedBy,UpdatedOn,Priority';
+        const initiateDepartmentProjection: string = 'DepartmentId,DepartmentName,Description,ContactNo';
+        const boradcastProjection: string = 'BroadcastId,Message,InitiateDepartmentId,IncidentId,IsSubmitted,SubmittedBy,SubmittedOn,CreatedOn,ActiveFlag,CreatedBy,UpdatedOn,Priority';
 
         return this._dataService.Query()
             .Expand(`InitiateDepartment($select= ${initiateDepartmentProjection})`)
@@ -44,11 +44,11 @@ export class BroadcastService
     }
 
      GetPublished(incidentId: number): Observable<ResponseModel<BroadCastModel>> {
-        let initiateDepartmentProjection: string = 'DepartmentId,DepartmentName,Description,ContactNo';
-        let departmentBroadcastsProjection: string = 'DepartmentBroadcastId';
-        let departmentProjection: string = 'DepartmentId,DepartmentName,Description,ContactNo';
-        let boradcastProjection: string = 'BroadcastId,Message,InitiateDepartmentId,IncidentId,IsSubmitted,SubmittedBy,SubmittedOn,CreatedOn,Priority';
-        let expand: string = `InitiateDepartment($select= ${initiateDepartmentProjection}),DepartmentBroadcasts($select=${departmentBroadcastsProjection};$expand=Department($select=${departmentProjection}))`;
+        const initiateDepartmentProjection: string = 'DepartmentId,DepartmentName,Description,ContactNo';
+        const departmentBroadcastsProjection: string = 'DepartmentBroadcastId';
+        const departmentProjection: string = 'DepartmentId,DepartmentName,Description,ContactNo';
+        const boradcastProjection: string = 'BroadcastId,Message,InitiateDepartmentId,IncidentId,IsSubmitted,SubmittedBy,SubmittedOn,CreatedOn,Priority';
+        const expand: string = `InitiateDepartment($select= ${initiateDepartmentProjection}),DepartmentBroadcasts($select=${departmentBroadcastsProjection};$expand=Department($select=${departmentProjection}))`;
 
         return this._dataService.Query()
             .Expand(expand)

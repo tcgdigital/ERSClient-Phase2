@@ -48,7 +48,12 @@ export class CrewQueryRecievedCallsListComponent implements OnInit {
         this.getAllCrewQueryCallsRecieved(this.currentIncidentId);
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllCrewQueryCallsRecieved(this.currentIncidentId));
-        this.globalState.Subscribe('ReceiveCrewEnquiryCreationResponse', (model: ExternalInputModel) => this.getAllCrewQueryCallsRecieved(model.IncidentId));
+
+        // SignalR Notification
+        this.globalState.Subscribe('ReceiveCrewEnquiryCreationResponse', (model: ExternalInputModel) => {
+            // this.getAllCrewQueryCallsRecieved(model.IncidentId);
+            this.allAssignedCalls.unshift(model);
+        });
     }
 
     incidentChangeHandler(incident: KeyValue): void {
