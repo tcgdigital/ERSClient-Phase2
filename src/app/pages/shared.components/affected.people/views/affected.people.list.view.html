@@ -1,5 +1,20 @@
-<generic-search [filterConfigs]="searchConfigs" (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();">
-</generic-search>
+<div class="row">
+    <div class="col-12">
+        <generic-search [filterConfigs]="searchConfigs" (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();">
+        </generic-search>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <label class="lebelHeaderStyle">Passenger Status Info Report</label>
+        <a target="_blank" href="{{downloadPath}}" download="PDAStatusInfo"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+    </div>
+    <div class="col-12">
+        <label class="lebelHeaderStyle">Crew Status Info Report</label>
+        <a target="_blank" href="{{downloadRoute}}" download="CrewStatusInfo"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+    </div>
+</div>
+
 <responsive-table>
     <table responsive-table-body>
         <thead>
