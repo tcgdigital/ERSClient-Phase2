@@ -65,10 +65,14 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
 
         this.form = this.resetActionableForm();
         this.actionableModelToUpdate = new ActionableModel();
-        this.dataExchange.Subscribe('CloseActionablePageInitiate', (model) =>       this.onCloseActionablePageInitiate(model));
+        this.dataExchange.Subscribe('CloseActionablePageInitiate', (model) => this.onCloseActionablePageInitiate(model));
 
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+
+        // Signalr Notifivation
+        this.globalState.Subscribe('ReceiveChecklistClosureResponse', (model: ActionableModel) =>
+            this.getAllCloseActionable(model.DepartmentId, model.IncidentId));
     }
 
     onCloseActionablePageInitiate(isClosed: boolean): void {

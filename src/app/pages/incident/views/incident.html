@@ -1,2 +1,2 @@
-<span class="validationAlert" *ngIf="!(isShowPage | accesibility:currentDepartment:'InitiateACrisis')">{{pagePermissionValidationMessage}}</span>
+<span class="validationAlert" *ngIf="!(isShowPage | accesibility:currentDepartment:'InitiateACrisis')">{{accessibilityErrorMessage}}</span>
 <incident-entry *ngIf="isShowPage | accesibility:currentDepartment:'InitiateACrisis'"></incident-entry>

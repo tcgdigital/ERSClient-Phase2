@@ -18,7 +18,7 @@ import {
     KeyValue,
     IncidentStatus,
     GlobalStateService,
-    UtilityService
+    UtilityService, GlobalConstants
 } from '../../shared';
 
 @Component({
@@ -36,7 +36,10 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
     public departmentClosureModelSave: DepartmentClosureModel;
     public departmentClosureModelSubmit: DepartmentClosureModel;
     public submited: boolean = false;
-    public isSubmited:boolean=false;
+    public isSubmited: boolean = false;
+    public isShowPage: boolean = true;
+    public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
+
     constructor(formBuilder: FormBuilder, private globalState: GlobalStateService,
         private departmentClosureService: DepartmentClosureService, private toastrConfig: ToastrConfig,
         private toastrService: ToastrService) {
@@ -67,7 +70,7 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
         this.form = new FormGroup({
             EmergencyName: new FormControl(departmentClosureModel.EmergencyName != '' ? departmentClosureModel.EmergencyName : ''),
             EmergencyInitiationNotes: new FormControl(departmentClosureModel.EmergencyNote != '' ? departmentClosureModel.EmergencyNote : ''),
-            ClosureReport: new FormControl(departmentClosureModel.ClosureReport != '' ? departmentClosureModel.ClosureReport : '',[Validators.required]),
+            ClosureReport: new FormControl(departmentClosureModel.ClosureReport != '' ? departmentClosureModel.ClosureReport : '', [Validators.required]),
             ClosureRemarks: new FormControl(departmentClosureModel.ClosureRemark != '' ? departmentClosureModel.ClosureRemark : '')
         });
     }
@@ -184,7 +187,7 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
 
 
         }
-        
+
     }
 
 
@@ -250,10 +253,10 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
                 }
             });
         }
-        
+
     }
 
-    private formReset():void{
+    private formReset(): void {
         this.submited = false;
         this.form.controls["ClosureReport"].reset({ value: '' });
         this.form.controls["ClosureRemarks"].reset({ value: '' });

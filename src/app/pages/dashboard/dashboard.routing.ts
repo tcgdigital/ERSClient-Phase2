@@ -27,7 +27,8 @@ const dashboardRoutes: Routes = [
               { path: 'generalupdatequery', loadChildren: '../shared.components/general.update.query/general.update.query.module#GeneralUpdateQueryModule' },
               { path: 'otherQuery', loadChildren: '../shared.components/other.query/other.query.module#OtherQueryModule' },
              { path: 'situationalupdatesquery', loadChildren: '../shared.components/situational.update.query/situational.update.query.module#SituationalUpdateQueryModule' },
-             { path: 'customerdissatisfactionquery', loadChildren: '../shared.components/customer.dissatisfaction/customer.dissatisfaction.module#CustomerDissatisfactionModule' }
+             { path: 'customerdissatisfactionquery', loadChildren: '../shared.components/customer.dissatisfaction/customer.dissatisfaction.module#CustomerDissatisfactionModule' },
+             { path: 'groundmembers', loadChildren: '../shared.components/ground.members/ground.victims.module#GroundVictimsModule' }
         ]
     }
 ];

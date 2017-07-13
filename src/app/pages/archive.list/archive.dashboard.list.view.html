@@ -1,4 +1,6 @@
-<div class="card">
+<span class="validationAlert" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'DeptwiseClose')">{{accessibilityErrorMessage}}</span>
+
+<div *ngIf="isShowPage | accesibility:currentDepartmentId:'DeptwiseClose'" class="card">
     <div class="card-header">
         <strong>Closed Incident</strong>
         <div class="pull-right margin-top-21px">
@@ -38,7 +40,7 @@
                         <td data-title="Emergency Date">{{closedCrisis.EmergencyDate | date: 'dd-MMM-yyyy hh:mm a'}}</td>
                         <td data-title="Closed On">{{closedCrisis.ClosedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
                         <td data-title="Action">
-                            <a class="fa fa-edit fa-2x" href="javascript:void(0);" (click)="onViewIncidentClick(closedCrisis.IncidentId)"></a>
+                            <a class="fa fa-file-text-o fa-4x" href="javascript:void(0);" (click)="onViewIncidentClick(closedCrisis.IncidentId)"></a>
                             <!--<view-readOnly-incident-widget [currentIncidentLocal]="closedCrisis.IncidentView" [useLink]="useLink"></view-readOnly-incident-widget>-->
                         </td>
                         <td data-title="Active">

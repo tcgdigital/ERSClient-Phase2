@@ -3,6 +3,9 @@ import {
     OnDestroy, OnChanges, SimpleChange,
     ViewEncapsulation
 } from '@angular/core';
+import {
+   GlobalConstants
+} from '../../../shared';
 import { TimeCount } from './clock.widget.model';
 import { ClockWidgetService } from './clock.widget.service';
 
@@ -15,6 +18,7 @@ import { ClockWidgetService } from './clock.widget.service';
 export class ClockWidgetComponent implements OnInit, OnChanges, OnDestroy {
     @Input() initiationDateTime: Date;
     @Input() currentIncidentId: number;
+    @Input('initiatedDepartmentId') initiatedDepartmentId: number;
 
     days: number = 0;
     hours: number = 0;
@@ -23,7 +27,8 @@ export class ClockWidgetComponent implements OnInit, OnChanges, OnDestroy {
 
     styleClass: string = '';
     subscriptionId: string;
-
+    public isShow: boolean = true;
+    public accessibilityErrorMessage:string = GlobalConstants.accessibilityErrorMessage;
     /**
      * Creates an instance of ClockWidgetComponent.
      * @param {ClockWidgetService} clockWidgetService

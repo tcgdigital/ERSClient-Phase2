@@ -5,7 +5,7 @@ import {
 import { Observable } from 'rxjs/Rx';
 
 import {
-    DataServiceFactory, DataExchangeService, UtilityService,
+    DataServiceFactory, DataExchangeService, UtilityService,GlobalConstants,
     TextAccordionModel, GlobalStateService, KeyValue
 } from '../../../shared';
 import { BroadcastWidgetModel } from './broadcast.widget.model';
@@ -20,7 +20,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
     encapsulation: ViewEncapsulation.None
 })
 export class BroadcastWidgetComponent implements OnInit, OnDestroy {
-    @Input('initiatedDepartmentId') departmentId: number;
+    @Input('initiatedDepartmentId') initiatedDepartmentId: number;
     @Input('currentIncidentId') incidentId: number;
     @ViewChild('childModal') public childModal: ModalDirective;
 
@@ -29,7 +29,8 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
     isHidden: boolean = true;
     currentIncidentId: number;
     currentDepartmentId: number;
-
+    public isShow: boolean = true;
+    public accessibilityErrorMessage:string = GlobalConstants.accessibilityErrorMessage;
     /**
      * Creates an instance of BroadcastWidgetComponent.
      * @param {BroadcastWidgetService} broadcastWidgetService
@@ -44,7 +45,7 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         this.currentIncidentId = this.incidentId;
-        this.currentDepartmentId = this.departmentId;
+        this.currentDepartmentId = this.initiatedDepartmentId;
         this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
         this.getAllPublishedBroadcasts();
 

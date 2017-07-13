@@ -76,7 +76,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         this.childModal.show();
     }
 
-    getCompletedDemands(deptId, incidentId): void {
+    getCompletedDemands(deptId: number, incidentId: number): void {
         this.demandService.GetCompletedDemands(deptId, incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.completedDemands = this.demandService.DemandMapper(response.Records);
@@ -263,6 +263,14 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
 
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+
+        // Notification
+        this.globalState.Subscribe('ReceiveDemandClosedResponse', (model: DemandModel) =>
+            this.getCompletedDemands(model.RequesterDepartmentId, model.IncidentId));
+        this.globalState.Subscribe('ReceiveRejectedDemandsFromClosureResponse', (model: DemandModel) =>
+            this.getCompletedDemands(model.RequesterDepartmentId, model.IncidentId));
+        this.globalState.Subscribe('ReceiveCompletedDemandstoCloseResponse', (model: DemandModel) =>
+            this.getCompletedDemands(model.RequesterDepartmentId, model.IncidentId));
     }
 
     getCurrentDepartmentName(departmentId): void {

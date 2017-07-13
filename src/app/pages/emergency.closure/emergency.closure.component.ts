@@ -13,7 +13,7 @@ import { ActionableService } from '../shared.components/actionables/components/a
 import { DemandService } from '../shared.components/demand/components/demand.service';
 import { NotifyPeopleModel, UserDepartmentNotificationMapper, NotificationContactsWithTemplateModel } from '../notifypeople';
 import { ActionableModel, DemandModel } from '../shared.components';
-import { UtilityService, ResponseModel, BaseModel, GlobalStateService, KeyValue, AuthModel } from '../../shared';
+import { UtilityService, ResponseModel, BaseModel, GlobalStateService, KeyValue, AuthModel, GlobalConstants } from '../../shared';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { ReportPath } from './components/emergency.closure.model';
@@ -48,7 +48,8 @@ export class EmergencyClosureComponent implements OnInit {
 	credential: AuthModel;
 	public reportPath: ReportPath;
 	public UserDepartmentNotificationMappers: NotificationContactsWithTemplateModel[];
-
+	public isShowPage: boolean = true;
+    public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
 
 
 	constructor(private departmentClosureService: DepartmentClosureService,

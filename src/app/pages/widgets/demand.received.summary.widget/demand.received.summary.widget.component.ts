@@ -2,7 +2,7 @@ import {
     Component, OnInit, ElementRef, AfterViewInit,
     ViewEncapsulation, Input, ViewChild, SimpleChange
 } from '@angular/core';
-import { UtilityService, GlobalStateService } from '../../../shared';
+import { UtilityService, GlobalStateService, GlobalConstants } from '../../../shared';
 import { WidgetUtilityService } from '../widget.utility';
 import {
     DemandReceivedSummaryModel,
@@ -28,7 +28,7 @@ import * as Highcharts from 'highcharts';
 })
 export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewInit {
     @Input('currentIncidentId') incidentId: number;
-    @Input('initiatedDepartmentId') departmentId: number;
+    @Input('initiatedDepartmentId') initiatedDepartmentId: number;
 
     @ViewChild('childModalViewAllDemandReceivedSummary')
     public childModalViewAllDemandReceivedSummary: ModalDirective;
@@ -52,6 +52,8 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
     public showGraph: boolean = false;
     private $selfElement: JQuery;
     private $placeholder: JQuery;
+    public isShow: boolean = true;
+    public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
 
     constructor(private elementRef: ElementRef, private globalState: GlobalStateService,
         private demandReceivedSummaryWidgetService: DemandReceivedSummaryWidgetService, private incidentService: IncidentService) { }
@@ -61,7 +63,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
         this.arrGraphData = [];
         this.demandReceivedSummary = new DemandReceivedSummaryModel();
         this.demandReceivedSummary = this.demandReceivedSummaryWidgetService
-            .GetDemandReceivedCount(this.incidentId, this.departmentId);
+            .GetDemandReceivedCount(this.incidentId, this.initiatedDepartmentId);
         this.globalState.Subscribe('DemandAddedUpdated', () => this.onDemandAddedUpdatedSuccess());
         this.globalState.Subscribe('DemandApproved', () => this.onDemandAddedUpdatedSuccess());
         this.globalState.Subscribe('DemandAssigned', () => this.onDemandAddedUpdatedSuccess());
@@ -70,7 +72,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
 
     public onDemandAddedUpdatedSuccess(): void {
         this.demandReceivedSummary = this.demandReceivedSummaryWidgetService
-            .GetDemandReceivedCount(this.incidentId, this.departmentId);
+            .GetDemandReceivedCount(this.incidentId, this.initiatedDepartmentId);
     }
 
     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
@@ -78,12 +80,12 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
         if (changes['incidentId'] !== undefined && (changes['incidentId'].currentValue !==
             changes['incidentId'].previousValue) &&
             changes['incidentId'].previousValue !== undefined) {
-            this.demandReceivedSummary = this.demandReceivedSummaryWidgetService.GetDemandReceivedCount(this.incidentId, this.departmentId);
+            this.demandReceivedSummary = this.demandReceivedSummaryWidgetService.GetDemandReceivedCount(this.incidentId, this.initiatedDepartmentId);
         }
         if (changes['departmentId'] !== undefined && (changes['departmentId'].currentValue !==
             changes['departmentId'].previousValue) &&
             changes['departmentId'].previousValue !== undefined) {
-            this.demandReceivedSummary = this.demandReceivedSummaryWidgetService.GetDemandReceivedCount(this.incidentId, this.departmentId);
+            this.demandReceivedSummary = this.demandReceivedSummaryWidgetService.GetDemandReceivedCount(this.incidentId, this.initiatedDepartmentId);
         }
     }
 
@@ -114,7 +116,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
         this.showSubDeptSubCompleted = false;
         this.showSubDeptSubPending = false;
         this.demandReceivedSummaryWidgetService.GetSubDepartmentDemandByRequesterDepartment
-            (this.incidentId, this.departmentId, (item: DemandReceivedModel[]) => {
+            (this.incidentId, this.initiatedDepartmentId, (item: DemandReceivedModel[]) => {
                 this.subDemandReceivedList = Observable.of(item);
                 this.childModalViewAllSubDeptDemandReceivedSummary.show();
             });
@@ -243,7 +245,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
 
     public graphDataFormationForDemandReceivedSummeryWidget(entity: DemandReceivedModel[]): void {
         this.arrGraphData = [];
-         this.showGraph = false;
+        this.showGraph = false;
         if (entity.length > 0) {
             entity.map((item: DemandReceivedModel) => {
                 item.demandModelList.map((itemDemand: DemandModel) => {

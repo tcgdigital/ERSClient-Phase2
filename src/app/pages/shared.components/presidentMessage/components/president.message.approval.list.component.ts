@@ -1,7 +1,10 @@
 import { Component, OnInit, ViewEncapsulation, Input, OnDestroy } from '@angular/core';
 import { PresidentMessageModel } from './presidentMessage.model';
 import { PresidentMessageService } from './presidentMessage.service';
-import { ResponseModel, DataExchangeService, GlobalStateService, KeyValue, UtilityService } from '../../../../shared';
+import {
+    ResponseModel, DataExchangeService,
+    GlobalStateService, KeyValue, UtilityService
+} from '../../../../shared';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 
@@ -22,10 +25,10 @@ export class PresidentMessageApprovalListComponent implements OnInit, OnDestroy 
 
     /**
      * Creates an instance of PresidentMessageListComponent.
-     * @param {PresidentMessageService} presidentMessageService 
-     * @param {DataExchangeService<PresidentMessageModel>} dataExchange 
-     * @param {GlobalStateService} globalState 
-     * 
+     * @param {PresidentMessageService} presidentMessageService
+     * @param {DataExchangeService<PresidentMessageModel>} dataExchange
+     * @param {GlobalStateService} globalState
+     *
      * @memberOf PresidentMessageListComponent
      */
     constructor(private presidentMessageService: PresidentMessageService,
@@ -35,7 +38,7 @@ export class PresidentMessageApprovalListComponent implements OnInit, OnDestroy 
     getPresidentMessages(departmentId, incidentId): void {
         this.presidentMessageService.Query(departmentId, incidentId)
             .subscribe((response: ResponseModel<PresidentMessageModel>) => {
-                this.PresidentsMessages = response.Records.filter(a => a.PresidentMessageStatus === 'SentForApproval');
+                this.PresidentsMessages = response.Records.filter((a) => a.PresidentMessageStatus === 'SentForApproval');
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -46,28 +49,44 @@ export class PresidentMessageApprovalListComponent implements OnInit, OnDestroy 
     }
 
     UpdatePresidentMessage(presidentMessageModelUpdate: PresidentMessageModel): void {
-        let presidentMessageModelToSend = Object.assign({}, presidentMessageModelUpdate)
-        this.dataExchange.Publish("OnPresidentMessageApprovalUpdate", presidentMessageModelToSend);
+        const presidentMessageModelToSend = Object.assign({}, presidentMessageModelUpdate)
+        this.dataExchange.Publish('OnPresidentMessageApprovalUpdate', presidentMessageModelToSend);
     }
 
     public ngOnInit(): void {
-        this.incidentId = +UtilityService.GetFromSession("CurrentIncidentId");
-        this.initiatedDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.incidentId = +UtilityService.GetFromSession('CurrentIncidentId');
+        this.initiatedDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.currentIncidentId = +this.incidentId;
         this.currentDepartmentId = +this.initiatedDepartmentId;
-        if (this._router.url.indexOf("archivedashboard") > -1) {
+        if (this._router.url.indexOf('archivedashboard') > -1) {
             this.isArchive = true;
-            this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
+            this.currentIncidentId = +UtilityService.GetFromSession('ArchieveIncidentId');
         }
         else {
             this.isArchive = false;
-            this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+            this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
         }
         this.getPresidentMessages(this.currentDepartmentId, this.currentIncidentId);
-        this.dataExchange.Subscribe("PresidentsMessageSentForApproval", model => this.onPresidentMessageSuccess(model));
-        this.dataExchange.Subscribe("PresidentMessageApprovalUpdated", model => this.onPresidentMessageSuccess(model));
+        this.dataExchange.Subscribe('PresidentsMessageSentForApproval', (model) => this.onPresidentMessageSuccess(model));
+        this.dataExchange.Subscribe('PresidentMessageApprovalUpdated', (model) => this.onPresidentMessageSuccess(model));
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+
+        // Signalr Notification
+        this.globalState.Subscribe('ReceivePresidentsMessageSendForApprovalResponse', (model: PresidentMessageModel) =>
+            this.getPresidentMessages(model.ApproverDepartmentId, model.IncidentId));
+
+        this.globalState.Subscribe('ReceivePresidentsMessagePublishedResponse', (model: PresidentMessageModel) =>
+            this.getPresidentMessages(model.ApproverDepartmentId, model.IncidentId));
+
+        this.globalState.Subscribe('ReceivePresidentsMessageUpdateResponse', (model: PresidentMessageModel) =>
+            this.getPresidentMessages(model.ApproverDepartmentId, model.IncidentId));
+    }
+
+    public ngOnDestroy(): void {
+        this.dataExchange.Unsubscribe('PresidentMessageApprovalUpdated');
+        this.globalState.Unsubscribe('incidentChangefromDashboard');
+        this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 
     private incidentChangeHandler(incident: KeyValue): void {
@@ -78,11 +97,5 @@ export class PresidentMessageApprovalListComponent implements OnInit, OnDestroy 
     private departmentChangeHandler(department: KeyValue): void {
         this.currentDepartmentId = department.Value;
         this.getPresidentMessages(this.currentDepartmentId, this.currentIncidentId);
-    }
-
-    public ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe('PresidentMessageApprovalUpdated');
-        this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 }

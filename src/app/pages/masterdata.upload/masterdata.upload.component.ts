@@ -24,9 +24,13 @@ export class MasterDataUploadComponent{
     constructor(private globalState: GlobalStateService) { }
     @Input() DepartmentId: number;
     @Input() IncidentId: number;
+
+    public isShowPage: boolean = true;
+    public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
     
     public ngOnInit(): void {
         this.IncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        this.DepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }

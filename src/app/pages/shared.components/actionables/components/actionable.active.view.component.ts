@@ -34,7 +34,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     editActionableModel: ActionableModel = null;
     tempActionable: ActionableModel = null;
     activeActionables: ActionableModel[] = [];
-    filesToUpload: Array<File>;
+    filesToUpload: File[];
     filepathWithLinks: string = null;
     fileName: string = null;
     actionableModelToUpdate: ActionableModel = null;
@@ -83,6 +83,10 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
 
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+
+        // Signalr Notifivation
+        this.globalState.Subscribe('ReceiveChecklistActivationResponse', (model: ActionableModel) =>
+            this.getAllActiveActionable(model.DepartmentId, model.IncidentId));
     }
 
     openChildActionable(actionable: ActionableModel): void {
@@ -91,7 +95,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
             .subscribe((responseActionable: ResponseModel<ActionableModel>) => {
                 this.departmentService.GetDepartmentNameIds()
                     .subscribe((response: ResponseModel<DepartmentModel>) => {
-                        actionable["actionableChilds"]=[];
+                        actionable['actionableChilds'] = [];
                         responseActionable.Records[0].CheckList.CheckListChildrenMapper.forEach((item: ChecklistMapper) => {
                             this.GetListOfChildActionables(item.ChildCheckListId, this.currentIncident, (child: ActionableModel) => {
                                 child['DepartmentName'] = response.Records
@@ -123,7 +127,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
 
     IsDone(event: any, editedActionable: ActionableModel): void {
         editedActionable.Done = true;
-        let tempActionable = this.activeActionables.find((item: ActionableModel) => {
+        const tempActionable = this.activeActionables.find((item: ActionableModel) => {
             return (item.ActionId === editedActionable.ActionId);
         });
         tempActionable.Done = editedActionable.Done;
@@ -135,11 +139,11 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     upload(actionableClicked: ActionableModel) {
         if (this.filesToUpload.length > 0) {
             this.disableUploadButton = false;
-            let baseUrl = GlobalConstants.EXTERNAL_URL;
+            const baseUrl = GlobalConstants.EXTERNAL_URL;
             this.fileUploadService.uploadFiles<string>(baseUrl + 'api/fileUpload/upload', this.filesToUpload)
                 .subscribe((result: string) => {
                     this.filepathWithLinks = `${GlobalConstants.EXTERNAL_URL}UploadFiles/${result.replace(/^.*[\\\/]/, '')}`;
-                    let extension = result.replace(/^.*[\\\/]/, '').split('.').pop();
+                    const extension = result.replace(/^.*[\\\/]/, '').split('.').pop();
                     this.fileName = `Checklist_${actionableClicked.CheckListCode}_${actionableClicked.IncidentId}.${extension}`;
                 }, (error) => {
                     console.log(`Error: ${error}`);
@@ -149,7 +153,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
 
     fileChangeEvent(fileInput: any) {
         this.filesToUpload = [];
-        for (var i = 0; i < fileInput.target.files.length; i++) {
+        for (let i = 0; i < fileInput.target.files.length; i++) {
             const extension = fileInput.target.files[i].name.split('.').pop();
             if (extension !== 'exe' && extension !== 'dll') {
                 this.filesToUpload.push(fileInput.target.files[i]);
@@ -186,9 +190,9 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
 
     getAllActiveActionableByIncident(incidentId): void {
         this.parentChecklistIds = [];
-        let parents: number[] = [];
+        const parents: number[] = [];
         this.ChecklistMappers = [];
-        let mappers: ChecklistMapper[] = [];
+        const mappers: ChecklistMapper[] = [];
 
         this.actionableService.GetAllOpenByIncidentId(incidentId)
             .subscribe((response: ResponseModel<ActionableModel>) => {
@@ -248,7 +252,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     activeActionableClick(activeActionablesUpdate: ActionableModel[]): void {
-        let filterActionableUpdate = activeActionablesUpdate
+        const filterActionableUpdate = activeActionablesUpdate
             .filter((item: ActionableModel) => item.Done === true);
         if (filterActionableUpdate.length > 0) {
             filterActionableUpdate.forEach((x) => {
@@ -283,7 +287,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     private setRagIntervalHandler(): void {
-        Observable.interval(10000).subscribe(_ => {
+        Observable.interval(10000).subscribe((_) => {
             this.activeActionables.forEach((item: ActionableModel) => {
                 item.RagColor = UtilityService.GetRAGStatus('Checklist', item.AssignedDt, item.ScheduleClose);
                 console.log(`Schedule run RAG ststus: ${item.RagColor}`);

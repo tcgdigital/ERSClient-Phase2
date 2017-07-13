@@ -3,7 +3,7 @@ import { CasualtySummeryModel } from './casualty.summary.widget.model';
 import { CasualtySummaryWidgetService } from './casualty.summary.widget.service';
 
 import {
-    GlobalStateService
+    GlobalStateService,GlobalConstants
 } from '../../../shared';
 
 
@@ -13,9 +13,16 @@ import {
     encapsulation: ViewEncapsulation.None
 })
 export class CasualtySummaryWidgetComponent implements OnInit {
+    @Input('initiatedDepartmentId') initiatedDepartmentId: number;
     @Input('currentIncidentId') incidentId: number;
 
     public casualtySummery: CasualtySummeryModel;
+    public isShow: boolean = true;
+    public accessibilityErrorMessage:string = GlobalConstants.accessibilityErrorMessage;
+    public isShowInjured: boolean = true;
+    public isShowDeceased: boolean = true;
+    public isShowMissing: boolean = true;
+    public isShowOthers: boolean = true;
     constructor(private casualtySummaryWidgetService: CasualtySummaryWidgetService, private globalState: GlobalStateService) { }
 
     getCausaltyStatusSummery(incidentId): void {

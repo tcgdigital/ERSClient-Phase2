@@ -20,7 +20,7 @@ import {
     UtilityService,
     AutocompleteComponent,
     GlobalStateService,
-    KeyValue
+    KeyValue,GlobalConstants
 } from '../../shared';
 
 @Component({
@@ -44,6 +44,8 @@ export class NotifyPeopleComponent implements OnInit {
     public form: FormGroup;
     private $document: JQuery;
     private $tree: JQuery;
+    public isShowPage: boolean = true;
+    public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
 
     constructor(formBuilder: FormBuilder,
         private toastrService: ToastrService,

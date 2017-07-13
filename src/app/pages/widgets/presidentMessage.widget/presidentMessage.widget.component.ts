@@ -15,14 +15,15 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
     styleUrls: ['./presidentMessage.widget.style.scss']
 })
 export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
-    @Input('initiatedDepartmentId') departmentId: number;
+    @Input('initiatedDepartmentId') initiatedDepartmentId: number;
     @Input('currentIncidentId') incidentId: number;
     @ViewChild('childModalPresidentMsg') public childModal: ModalDirective;
 
     isHidden: boolean = true;
     currentDepartmentId: number;
     currentIncidentId: number;
-
+    public isShow: boolean = true;
+    public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
     presidentMessages: Observable<TextAccordionModel[]>;
     AllPresidentMessages: Observable<PresidentMessageWidgetModel[]>;
     downloadPath: string;
@@ -33,12 +34,16 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         this.currentIncidentId = this.incidentId;
-        this.currentDepartmentId = this.departmentId;
+        this.currentDepartmentId = this.initiatedDepartmentId;
         this.getLatestPresidentsMessages(this.currentIncidentId);
         this.getAllPresidentsMessages();
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/PresidentMessage/' + this.currentIncidentId + '/';
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('PresidentMessagePublished', (model) => this.onPresidentMessagePublish(model));
+
+        // Signalr Notification
+        this.globalState.Subscribe('ReceivePresidentsMessageResponse', (model: PresidentMessageWidgetModel) =>
+            this.getLatestPresidentsMessages(model.IncidentId));
     }
 
     public ngOnDestroy(): void {
@@ -46,7 +51,7 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
         this.globalState.Unsubscribe('PresidentMessagePublished');
     }
 
-    getLatestPresidentsMessages(incidentId): void {
+    getLatestPresidentsMessages(incidentId: number): void {
         let data: PresidentMessageWidgetModel[] = [];
         this.presidentMessagewidgetService
             .GetAllPresidentMessageByIncident(incidentId)
