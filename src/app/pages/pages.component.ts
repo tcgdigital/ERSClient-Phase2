@@ -344,11 +344,11 @@ export class PagesComponent implements OnInit {
         //     }, this.CallbackListners<BroadCastModel>('BroadcastNotification')
         // ));
 
-        // this.connectionStaters.push(new ConnectionStarter(this.casualtyStatusUpdateNotificationHub,
-        //     'CasualtyStatusUpdateNotificationHub', {
-        //         incidentId: incId
-        //     }, this.CallbackListners<CasualtyExchangeModel>('CasualtyNotification')
-        // ));
+        this.connectionStaters.push(new ConnectionStarter(this.casualtyStatusUpdateNotificationHub,
+            'CasualtyStatusUpdateNotificationHub', {
+                incidentId: incId
+            }, this.CallbackListners<CasualtyExchangeModel>('CasualtyNotification')
+        ));
 
         // this.connectionStaters.push(new ConnectionStarter(this.checklistSubmissionNotificationHub,
         //     'ChecklistSubmissionNotificationHub', {
@@ -356,22 +356,22 @@ export class PagesComponent implements OnInit {
         //     }, this.CallbackListners<ActionableModel>('ChecklistNotification')
         // ));
 
-        this.connectionStaters.push(new ConnectionStarter(this.crisisClosureNotificationHub,
-            'CrisisClosureNotificationHub', {
-                incidentId: incId
-            }, this.CallbackListners<IncidentModel>('CrisisClosureNotification')
-        ));
+        // this.connectionStaters.push(new ConnectionStarter(this.crisisClosureNotificationHub,
+        //     'CrisisClosureNotificationHub', {
+        //         incidentId: incId
+        //     }, this.CallbackListners<IncidentModel>('CrisisClosureNotification')
+        // ));
 
         // this.connectionStaters.push(new ConnectionStarter(this.crisisCreationNotificationHub,
         //     'CrisisCreationNotificationHub', null,
         //     this.CallbackListners<IncidentModel>('CrisisCreationNotification')
         // ));
 
-        // this.connectionStaters.push(new ConnectionStarter(this.demandSubmissionNotificationHub,
-        //     'DemandSubmissionNotificationHub', {
-        //         departmentId: deptId, incidentId: incId
-        //     }, this.CallbackListners<DemandModel>('DemandNotification')
-        // ));
+        this.connectionStaters.push(new ConnectionStarter(this.demandSubmissionNotificationHub,
+            'DemandSubmissionNotificationHub', {
+                departmentId: deptId, incidentId: incId
+            }, this.CallbackListners<DemandModel>('DemandNotification')
+        ));
 
         // this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
         //     'PresidentsMessageAndMediaReleaseNotificationHub', {
@@ -397,11 +397,11 @@ export class PagesComponent implements OnInit {
         //     }, this.CallbackListners<MediaModel>('MediaMessageWorkflowNotification')
         // ));
 
-        // this.connectionStaters.push(new ConnectionStarter(this.queryNotificationHub,
-        //     'QueryNotificationHub', {
-        //         incidentId: incId
-        //     }, this.CallbackListners<ExternalInputModel>('EnquiryNotification')
-        // ));
+        this.connectionStaters.push(new ConnectionStarter(this.queryNotificationHub,
+            'QueryNotificationHub', {
+                incidentId: incId
+            }, this.CallbackListners<ExternalInputModel>('EnquiryNotification')
+        ));
 
         this.ConnectAndListen(this.connectionStaters);
     }
