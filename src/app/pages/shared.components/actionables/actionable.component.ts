@@ -1,6 +1,6 @@
-import { Component, ViewEncapsulation, OnInit, AfterContentInit } from '@angular/core';
+import { Component, ViewEncapsulation, AfterContentInit } from '@angular/core';
 import { ITabLinkInterface } from '../../../shared/components/tab.control';
-import { GlobalConstants } from '../../../shared/constants';
+import { UtilityService } from '../../../shared/services/common.service';
 
 @Component({
     selector: 'actionable-main',
@@ -8,15 +8,10 @@ import { GlobalConstants } from '../../../shared/constants';
     templateUrl: './views/actionable.html',
     styleUrls: ['./styles/actionable.style.scss']
 })
-export class ActionableComponent implements OnInit, AfterContentInit {
+export class ActionableComponent implements AfterContentInit {
     public subTabs: ITabLinkInterface[] = new Array<ITabLinkInterface>();
 
-    public ngOnInit(): void {
-    }
-
     public ngAfterContentInit(): void {
-        debugger;
-        if (GlobalConstants.TabLinks.some((x) => x.id === 'Checklist'))
-            this.subTabs = GlobalConstants.TabLinks.find((x) => x.id === 'Checklist').subtab;
+        this.subTabs = UtilityService.GetSubTabs('Checklist');
     }
 }

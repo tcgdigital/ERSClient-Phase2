@@ -1,6 +1,6 @@
-import { Component, ViewEncapsulation, OnInit, AfterContentInit } from '@angular/core';
+import { Component, ViewEncapsulation,  AfterContentInit } from '@angular/core';
 import { ITabLinkInterface } from '../../../shared/components/tab.control';
-import { GlobalConstants } from '../../../shared/constants';
+import { UtilityService } from '../../../shared/services/common.service';
 
 @Component({
     selector: 'media-main',
@@ -8,15 +8,12 @@ import { GlobalConstants } from '../../../shared/constants';
     templateUrl: './views/media.view.html',
     styleUrls: ['./styles/media.style.scss']
 })
-export class MediaComponent implements OnInit, AfterContentInit {
+export class MediaComponent implements  AfterContentInit {
     public subTabs: ITabLinkInterface[] = new Array<ITabLinkInterface>();
 
-    public ngOnInit(): void {
+    public ngAfterContentInit(): void {
+        this.subTabs = UtilityService.GetSubTabs('MediaMessage');
     }
 
-    public ngAfterContentInit(): void {
-        debugger;
-        if (GlobalConstants.TabLinks.some((x) => x.id === 'MediaMessage'))
-            this.subTabs = GlobalConstants.TabLinks.find((x) => x.id === 'MediaMessage').subtab;
-    }
+    
 }

@@ -297,6 +297,7 @@ export class ChecklistEntryComponent implements OnInit {
     getAllActiveOrganizations(): void {
         this.organizationService.GetAllActiveOrganizations()
             .subscribe((response: ResponseModel<OrganizationModel>) => {
+                
                 this.activeOrganizations = response.Records;
             }, (error: any) => {
                 //console.log(`Error: ${error}`);
@@ -351,10 +352,10 @@ export class ChecklistEntryComponent implements OnInit {
             else {// EDIT REGION
                 delete this.checkListModel['Active'];
                 delete this.checkListModel['IsSelected'];
-                this.newparents = _.pluck(this.checkListModelEdit.CheckListParentMapper,'ParentCheckListId');
-                let diff1= _.difference(this.newparents,this.oldparents);
-                let diff2= _.difference(this.oldparents,this.newparents);
-                if (this.form.dirty || diff1.length>0 || diff2.length>0) {
+                this.newparents = _.pluck(this.checkListModelEdit.CheckListParentMapper, 'ParentCheckListId');
+                let diff1 = _.difference(this.newparents, this.oldparents);
+                let diff2 = _.difference(this.oldparents, this.newparents);
+                if (this.form.dirty || diff1.length > 0 || diff2.length > 0) {
 
                     delete this.checkListModelEdit.TargetDepartment;
                     delete this.checkListModelEdit.CheckListParentMapper;
@@ -428,7 +429,7 @@ export class ChecklistEntryComponent implements OnInit {
 
             });
             this.parentChecklists = this.addDepartmentName(this.parentChecklists);
-            this.oldparents=_.pluck(data.CheckListParentMapper,'ParentCheckListId');
+            this.oldparents = _.pluck(data.CheckListParentMapper, 'ParentCheckListId');
         }
         else {
             this.parentChecklists = this.noDtaList;

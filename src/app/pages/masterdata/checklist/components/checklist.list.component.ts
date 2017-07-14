@@ -152,10 +152,7 @@ export class ChecklistListComponent implements OnInit {
         this.getCheckLists(this.currentDepartmentId);
     }
 
-    private departmentChangeHandler(department: KeyValue): void {
-        this.currentDepartmentId = department.Value;
-        this.getCheckLists(this.currentDepartmentId);
-    }
+    
 
     private initiateSearchConfigurations(): void {
         const status: Array<NameValue<string>> = [
@@ -210,5 +207,10 @@ export class ChecklistListComponent implements OnInit {
                 ListData: Observable.of(status)
             })
         ];
+    }
+
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
+        this.getCheckLists(this.currentDepartmentId);
     }
 }
