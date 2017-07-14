@@ -20,10 +20,10 @@ export class ConnectionStarter {
 
 export class CallbackListner {
     public Listner: string;
-    public Callback: <T extends BaseModel>(input: T) => void;
+    public Callback: <T extends BaseModel>(key: string, model: T) => void;
 
     constructor(listner: string,
-        callback: <T extends BaseModel>(input: T) => void) {
+        callback: <T extends BaseModel>(key: string, model: T) => void) {
         this.Listner = listner;
         this.Callback = callback;
     }

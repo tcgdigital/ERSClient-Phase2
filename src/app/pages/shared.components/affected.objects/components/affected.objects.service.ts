@@ -77,7 +77,7 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
                     item.mftwgt = data.Cargo.mftwgt;
                     item.IsVerified = data.IsVerified;
                     item.Details = data.Cargo.Details;
-                    item.LostFoundStatus = data.LostFoundStatus != null ? data.LostFoundStatus: 'NA';;
+                    item.LostFoundStatus = data.LostFoundStatus != null ? data.LostFoundStatus : 'NA';;
                     item.ShipperName = data.Cargo.ShipperName;
                     item.ShipperAddress = data.Cargo.ShipperAddress;
                     item.ShipperContactNo = data.Cargo.ShipperContactNo;
@@ -86,8 +86,8 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
                     item.ConsigneeContactNo = data.Cargo.ConsigneeContactNo;
                     item.CargoType = data.Cargo.CargoType != null ? data.Cargo.CargoType : 'NA';
                     item.IdentificationDesc = data.IdentificationDesc;
-                    item.Remarks=data.Remarks;
-                    item.commlength = data.CommunicationLogs.length>0;
+                    item.Remarks = data.Remarks;
+                    item.commlength = data.CommunicationLogs.length > 0;
                     // item.CommunicationLogs: data.CommunicationLogs
                     return item;
                 });
@@ -101,13 +101,13 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
         return this._bulkDataService.BulkPost(entities).Execute();
     }
 
-    MapAffectedPeopleToSave(affectedObjectsForVerification): AffectedObjectModel[] {
+    MapAffectedPeopleToSave(affectedObjectsForVerification, userid: number): AffectedObjectModel[] {
         let verifiedAffectedObjects: AffectedObjectModel[] = [];
         verifiedAffectedObjects = affectedObjectsForVerification.map(function (affected) {
             let item = new AffectedObjectModel;
             item.AffectedObjectId = affected.AffectedObjectId;
             item.IsVerified = affected.IsVerified;
-            item.UpdatedBy = 1;
+            item.UpdatedBy = userid;
             item.UpdatedOn = new Date();
             item.ActiveFlag = 'Active';
             item.CreatedBy = 1;

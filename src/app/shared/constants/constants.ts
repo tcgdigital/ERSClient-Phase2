@@ -8,6 +8,7 @@ export interface IEmergencySituationEnum {
     EmergencySituationName: string;
 }
 export interface INotificationMessage {
+    Type: string;
     Key: string;
     Title: string;
     Message: string;
@@ -79,7 +80,7 @@ export class GlobalConstants {
     public static ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION: number = 12;
     public static currentLoggedInUser: number = 0;
     public static PagePermissionMatrix: PagesPermissionMatrixModel[] = [];
-    public static accessibilityErrorMessage:string = 'Un-authorized to display.';
+    public static accessibilityErrorMessage: string = 'Un-authorized to display.';
     public static INTERCEPTOR_PERFORM: boolean = false;
     public static PRESERVE_DATA_FROM_CONVERSION = ['EmergencyDate'];
 
@@ -367,7 +368,6 @@ export class GlobalConstants {
             key: 6,
             value: 'UnidentifiedPDA',
             caption: 'Unidentified PDA'
-
         }
     ];
 
@@ -448,78 +448,112 @@ export class GlobalConstants {
 
     public static NotificationMessage: INotificationMessage[] = [
         {
+            Type: 'BroadcastNotification',
             Key: 'ReceiveBroadcastCreationResponse',
             Title: 'Broadcast Created',
             Message: 'A new Broadcast has been created. Please refer to tab section "Broadcast Message"'
         }, {
+            Type: 'BroadcastNotification',
             Key: 'ReceiveBroadcastModificationResponse',
             Title: 'Broadcast Modified',
             Message: 'A existing Broadcast message has been modified. Please refer to tab section "Broadcast Message"'
-        }, {
+        },
+
+        {
+            Type: 'ChecklistNotification',
             Key: 'ReceiveChecklistCreationResponse',
             Title: 'Checklist Created',
             Message: 'A Checklist has been created. Please refer to tab section "Checklist > Active"'
         }, {
+            Type: 'ChecklistNotification',
             Key: 'ReceiveChecklistStatusChangeResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'ChecklistNotification',
             Key: 'ReceiveChecklistClosureResponse',
             Title: 'Checklist Closed',
             Message: 'A Checklist has been closed. Please refer to tab section "Checklist > Closed"'
         }, {
+            Type: 'ChecklistNotification',
             Key: 'ReceiveChecklistActivationResponse',
             Title: 'Checklist Reopened',
             Message: 'A Checklist has been reopened. Please refer to tab section "Checklist > Active"'
-        }, {
-            Key: 'ReceiveCrisisClosureResponse',
-            Title: 'Crisis Closed',
-            Message: 'Current crisis has been closed by {0}, you will be redirected to login page.'
-        }, {
+        },
+
+        {
+            Type: 'CrisisCreationNotification',
             Key: 'ReceiveCrisisCreationResponse',
             Title: 'Crisis Created',
             Message: 'A new crisis has been initiated. Please logout and re-login to the system to see the details of the new crisis'
-        }, {
+        },
+
+        {
+            Type: 'CrisisClosureNotification',
+            Key: 'ReceiveCrisisClosureResponse',
+            Title: 'Crisis Closed',
+            Message: 'Current crisis has been closed by {0:model.UserName}, you will be redirected to login page.'
+        },
+
+        {
+            Type: 'CasualtyNotification',
+            Key: 'ReceiveCasualtyCountResponse',
+            Title: 'Casualty Status',
+            Message: 'Latest casualty status update arrived.  Please refer to dashboard\'s "PDA Casualty Status Block"'
+        },
+
+        {
+            Type: 'DemandNotification',
             Key: 'ReceiveDemandCreationResponse',
             Title: 'Demand Created',
             Message: 'A new Demand has been created. Please refer to tab section "Demand > My Demands"'
         }, {
+            Type: 'DemandNotification',
             Key: 'ReceiveDemandApprovalPendingResponse',
             Title: 'Demand Approval Pending',
             Message: 'A Demand has been assigned for your approval. Please refer to tab section "Demand > Approval Pending"'
         }, {
+            Type: 'DemandNotification',
             Key: 'ReceiveDemandApprovedResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'DemandNotification',
             Key: 'ReceiveDemandAssignedResponse',
             Title: 'Demand Assigned to Me',
             Message: 'A new Demand has been assigned to you. Please refer to tab section "Demand > Assigned to Me"'
         }, {
+            Type: 'DemandNotification',
             Key: 'ReceiveCompletedDemandAssignedResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'DemandNotification',
             Key: 'ReceiveDemandRejectedFromApprovalResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'DemandNotification',
             Key: 'ReceiveDemandClosedResponse',
             Title: 'Demand Completed',
             Message: 'A Demand has been completed. Please refer to tab section "Demand > Completed"'
         }, {
+            Type: 'DemandNotification',
             Key: 'ReceiveDemandStatusUpdateResponse',
             Title: 'Demand Status Updated',
             Message: 'A Demand\'s status has been updated. Please refer to tab section "Demand > My Demands"'
         }, {
+            Type: 'DemandNotification',
             Key: 'ReceiveCompletedDemandstoCloseResponse',
             Title: 'Demand Closed',
             Message: 'A Demand has been closed. Please refer to tab section "Demand > Completed"'
         }, {
+            Type: 'DemandNotification',
             Key: 'ReceiveRejectedDemandsFromClosureResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'DemandNotification',
             Key: 'ReceiveRejectedDemandstoAssignResponse',
             Title: '',
             Message: ''
@@ -527,147 +561,172 @@ export class GlobalConstants {
 
 
         {
+            Type: 'PresidentsMessageNotification',
             Key: 'ReceivePresidentsMessageResponse',
             Title: 'Presidents Message Published',
             Message: 'A Presidents Message has been published. Please refer to dashboard\'s "Presidents Message Block"'
-        }, {
+        },
+
+        {
+            Type: 'PresidentsMessageWorkflowNotification',
             Key: 'ReceivePresidentsMessageCreatedResponse',
             Title: 'Presidents Message Created',
             Message: 'A Presidents Message has been created. Please refer to tab section "Presidents Message > Presidents Message Release"'
         }, {
+            Type: 'PresidentsMessageWorkflowNotification',
             Key: 'ReceivePresidentsMessageSendForApprovalResponse',
             Title: 'Presidents Message is Sent for Approval',
             Message: 'A Presidents Message has been sent for approval. Please refer to tab section "Presidents Message > Pending Approval"'
         }, {
+            Type: 'PresidentsMessageWorkflowNotification',
             Key: 'ReceivePresidentsMessageApprovedResponse',
             Title: 'Presidents Message Approved',
             Message: 'A Presidents Message has been approved. Please refer to tab section "Presidents Message > Presidents Message Release"'
         }, {
+            Type: 'PresidentsMessageWorkflowNotification',
             Key: 'ReceivePresidentsMessageRejectedResponse',
             Title: 'Presidents Message Rejected',
             Message: 'A Presidents Message has been rejected. Please refer to tab section "Presidents Message > Presidents Message Release"'
         }, {
+            Type: 'PresidentsMessageWorkflowNotification',
             Key: 'ReceivePresidentsMessagePublishedResponse',
             Title: 'Presidents Message Published',
             Message: 'A Presidents Message has been published. Please refer to tab section "Presidents Message > Presidents Message Release"'
         }, {
+            Type: 'PresidentsMessageWorkflowNotification',
             Key: 'ReceivePresidentsMessageUpdateResponse',
             Title: '',
             Message: ''
         },
 
 
-
         {
+            Type: 'MediaMessageNotification',
             Key: 'ReceiveMediaMessageResponse',
             Title: 'Media Release Published',
             Message: 'A Media Release has been published. Please refer to dashboard\'s "Media Release Block"'
-        }, {
+        },
+
+        {
+            Type: 'MediaMessageWorkflowNotification',
             Key: 'ReceiveMediaMessageCreatedResponse',
             Title: 'Media Release Created',
             Message: 'A Media Release has been created. Please refer to tab section "Media Management > Media Release"'
         }, {
+            Type: 'MediaMessageWorkflowNotification',
             Key: 'ReceiveMediaMessageSendForApprovalResponse',
             Title: 'Media Release is Sent for Approval',
             Message: 'A Media Release has been sent for approval. Please refer to tab section "Media Management > Pending Approval"'
         }, {
+            Type: 'MediaMessageWorkflowNotification',
             Key: 'ReceiveMediaMessageApprovedResponse',
             Title: 'Media Release Approved',
             Message: 'A Media Release has been approved. Please refer to tab section "Media Management > Media Release"'
         }, {
+            Type: 'MediaMessageWorkflowNotification',
             Key: 'ReceiveMediaMessageRejectedResponse',
             Title: 'Media Release Rejected',
             Message: 'A Media Release has been rejected. Please refer to tab section "Media Management > Media Release"'
         }, {
+            Type: 'MediaMessageWorkflowNotification',
             Key: 'ReceiveMediaMessagePublishedResponse',
             Title: 'Media Release Published',
             Message: 'A Media Release has been published. Please refer to tab section "Media Management > Media Release"'
         }, {
+            Type: 'MediaMessageWorkflowNotification',
             Key: 'ReceiveMediaMessageUpdateResponse',
             Title: '',
             Message: ''
         },
 
 
-
-
-
-
-
-
-
-
-
-
         {
+            Type: 'EnquiryNotification',
             Key: 'ReceiveCargoEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'AssignedCargoEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'ReceiveCrewEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'AssignedCrewEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'ReceiveMediaEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'AssignedMediaEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'ReceiveOtherEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'AssignedOtherEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'ReceivePassangerEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'AssignedPassangerEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'ReceiveFutureTravelEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'AssignedFutureTravelEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'ReceiveGeneralUpdateEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'AssignedGeneralUpdateEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'ReceiveSituationalEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'AssignedSituationalUpdatesEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'ReceiveCustomerDissatisfactionEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'AssignedCustomerDissatisfactionEnquiryCreationResponse',
             Title: '',
             Message: ''

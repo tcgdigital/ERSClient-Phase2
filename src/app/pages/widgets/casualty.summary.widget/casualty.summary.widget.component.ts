@@ -1,9 +1,11 @@
-import { Component, OnInit, ViewEncapsulation, Input , SimpleChange} from '@angular/core';
-import { CasualtySummeryModel } from './casualty.summary.widget.model';
-import { CasualtySummaryWidgetService } from './casualty.summary.widget.service';
-
 import {
-    GlobalStateService,GlobalConstants
+    Component, OnInit, ViewEncapsulation,
+    Input, SimpleChange
+} from '@angular/core';
+import { CasualtySummeryModel, CasualtyExchangeModel } from './casualty.summary.widget.model';
+import { CasualtySummaryWidgetService } from './casualty.summary.widget.service';
+import {
+    GlobalStateService, GlobalConstants
 } from '../../../shared';
 
 
@@ -18,7 +20,7 @@ export class CasualtySummaryWidgetComponent implements OnInit {
 
     public casualtySummery: CasualtySummeryModel;
     public isShow: boolean = true;
-    public accessibilityErrorMessage:string = GlobalConstants.accessibilityErrorMessage;
+    public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
     public isShowInjured: boolean = true;
     public isShowDeceased: boolean = true;
     public isShowMissing: boolean = true;
@@ -28,7 +30,7 @@ export class CasualtySummaryWidgetComponent implements OnInit {
     getCausaltyStatusSummery(incidentId): void {
         this.casualtySummery = new CasualtySummeryModel();
         this.casualtySummaryWidgetService.GetCasualtyCount(incidentId)
-            .subscribe(casualtySummeryObservable => {
+            .subscribe((casualtySummeryObservable) => {
                 this.casualtySummery = casualtySummeryObservable;
             }, (error: any) => {
                 console.log(`Error: ${error}`);
@@ -37,7 +39,19 @@ export class CasualtySummaryWidgetComponent implements OnInit {
 
     public ngOnInit(): void {
         this.getCausaltyStatusSummery(this.incidentId);
-        this.globalState.Subscribe('AffectedPersonStatusChanged', model => this.affectedPeopleStatusChanged());
+        this.globalState.Subscribe('AffectedPersonStatusChanged', (model) => this.affectedPeopleStatusChanged());
+
+        // SignalR Notification
+        this.globalState.Subscribe('ReceiveCasualtyCountResponse', (models: CasualtyExchangeModel[]) => {
+            if (models !== undefined && models.length > 0) {
+                this.casualtySummery = new CasualtySummeryModel();
+                this.casualtySummery.uninjuredCount = models.find((x: CasualtyExchangeModel) => x.MedicalStatus === 'Uninjured').StatusCount;
+                this.casualtySummery.injuredCount = models.find((x: CasualtyExchangeModel) => x.MedicalStatus === 'Injured').StatusCount;
+                this.casualtySummery.missingCount = models.find((x: CasualtyExchangeModel) => x.MedicalStatus === 'Missing').StatusCount;
+                this.casualtySummery.deceasedCount = models.find((x: CasualtyExchangeModel) => x.MedicalStatus === 'Deceased').StatusCount;
+                this.casualtySummery.othersCount = models.find((x: CasualtyExchangeModel) => x.MedicalStatus === 'Others').StatusCount;
+            }
+        });
     }
 
     affectedPeopleStatusChanged(): void {
@@ -52,6 +66,6 @@ export class CasualtySummaryWidgetComponent implements OnInit {
     }
 
     ngOnDestroy() {
-        this.globalState.Unsubscribe('AffectedPersonStatusChanged');        
+        this.globalState.Unsubscribe('AffectedPersonStatusChanged');
     }
 }

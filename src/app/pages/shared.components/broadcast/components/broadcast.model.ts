@@ -13,13 +13,9 @@ export class BroadCastModel extends BaseModel {
     public SubmittedBy?: number;
     public SubmittedOn?: Date;
     public Priority: string;
-
-
     public InitiateDepartment?: DepartmentModel;
     public Incident?: IncidentModel;
     public DepartmentBroadcasts: DepartmentBroadcastModel[];
-
-
 
     constructor() {
         super();
