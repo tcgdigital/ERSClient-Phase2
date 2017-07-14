@@ -20,6 +20,7 @@ import {
     AllDeptDemandReceivedSummary,
     SubDeptDemandReceivedSummary
 } from '../../../pages/widgets/demand.received.summary.widget';
+import { ITabLinkInterface } from '../../components/tab.control';
 
 export class UtilityService {
     public static RAGScaleData: RAGScaleModel[] = [];
@@ -501,5 +502,26 @@ export class UtilityService {
         }
         return result;
     }
+
+
+    public static GetSubTabs(parentTabName: string): ITabLinkInterface[] {
+        let subTabs: ITabLinkInterface[];
+        const rootTab: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
+            .find((x: PagesPermissionMatrixModel) => x.PageCode === parentTabName && x.Type === 'Tab');
+
+        if (rootTab) {
+            const tabs: string[] = GlobalConstants.PagePermissionMatrix
+                .filter((x: PagesPermissionMatrixModel) => x.ParentPageId === rootTab.PageId)
+                .map((x) => x.PageCode);
+
+            if (tabs.length > 0) {
+               subTabs = GlobalConstants.TabLinks.find((y: ITabLinkInterface) => y.id === parentTabName)
+                    .subtab.filter((x: ITabLinkInterface) => tabs.some((y) => y === x.id));
+            }
+        }
+        return subTabs;
+    }
+
+    
 }
 

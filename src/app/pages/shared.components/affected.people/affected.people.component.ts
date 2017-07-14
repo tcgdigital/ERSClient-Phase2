@@ -1,6 +1,6 @@
-import { Component, ViewEncapsulation, OnInit, AfterContentInit } from '@angular/core';
+import { Component, ViewEncapsulation, AfterContentInit } from '@angular/core';
 import { ITabLinkInterface } from '../../../shared/components/tab.control';
-import { GlobalConstants } from '../../../shared/constants';
+import { UtilityService } from '../../../shared/services/common.service';
 
 @Component({
     selector: 'affectedpeople-main',
@@ -8,15 +8,12 @@ import { GlobalConstants } from '../../../shared/constants';
     templateUrl: './views/affected.people.view.html',
     styleUrls: ['./styles/affected.people.style.scss']
 })
-export class AffectedPeopleComponent implements OnInit, AfterContentInit {
+export class AffectedPeopleComponent implements AfterContentInit {
     public subTabs: ITabLinkInterface[] = new Array<ITabLinkInterface>();
 
-    public ngOnInit(): void {
-    }
 
-    public ngAfterContentInit(): void {
-        debugger;
-        if (GlobalConstants.TabLinks.some((x) => x.id === 'AffectedPeople'))
-            this.subTabs = GlobalConstants.TabLinks.find((x) => x.id === 'AffectedPeople').subtab;
+     public ngAfterContentInit(): void {
+        this.subTabs = UtilityService.GetSubTabs('AffectedPeople');
     }
+    
 }

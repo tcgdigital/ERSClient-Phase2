@@ -1,21 +1,18 @@
-import { Component, ViewEncapsulation, OnInit, AfterContentInit } from '@angular/core';
+import { Component, ViewEncapsulation,  AfterContentInit } from '@angular/core';
 import { ITabLinkInterface } from '../../../shared/components/tab.control';
-import { GlobalConstants } from '../../../shared/constants';
+import { UtilityService } from '../../../shared/services/common.service';
 
 @Component({
     selector: 'other-query',
     encapsulation: ViewEncapsulation.None,
     templateUrl: './views/general.update.query.view.html'
 })
-export class GeneralUpdateQueryComponent implements OnInit, AfterContentInit {
+export class GeneralUpdateQueryComponent implements  AfterContentInit {
     public subTabs: ITabLinkInterface[] = new Array<ITabLinkInterface>();
 
-    public ngOnInit(): void {
+    public ngAfterContentInit(): void {
+        this.subTabs = UtilityService.GetSubTabs('GeneralUpdateQuery');
     }
 
-    public ngAfterContentInit(): void {
-        debugger;
-        if (GlobalConstants.TabLinks.some((x) => x.id === 'GeneralUpdateQuery'))
-            this.subTabs = GlobalConstants.TabLinks.find((x) => x.id === 'GeneralUpdateQuery').subtab;
-    }
+    
 }
