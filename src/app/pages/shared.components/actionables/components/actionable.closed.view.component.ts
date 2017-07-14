@@ -12,8 +12,10 @@ import { Router, NavigationEnd } from '@angular/router';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department/components';
 import { ActionableModel } from './actionable.model';
 import { ActionableService } from './actionable.service';
+import * as moment from 'moment/moment';
+import { ChecklistTrailModel, ChecklistTrailService } from "../../checklist.trail";
 import {
-    ResponseModel, DataExchangeService, KeyValue,
+    ResponseModel, DataExchangeService, KeyValue, BaseModel,
     UtilityService, GlobalConstants, GlobalStateService, AuthModel
 } from '../../../../shared';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -25,7 +27,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 })
 export class ActionableClosedComponent implements OnInit, OnDestroy {
     @ViewChild('childModal') public childModal: ModalDirective;
-
+    @ViewChild('childModalTrail') public childModalTrail: ModalDirective;
     closeActionables: ActionableModel[] = [];
     public form: FormGroup;
     actionableModelToUpdate: ActionableModel;
@@ -38,12 +40,16 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     public completionStatusTypes: any[] = GlobalConstants.CompletionStatusType;
     private currentDepartmentId: number = null;
     private currentIncident: number = null;
+    public checklistTrail: ChecklistTrailModel = null;
+    public checklistTrails: ChecklistTrailModel[] = [];
+    public allDepartments: DepartmentModel[] = [];
+    public listActionableSelected: any[] = [];
 
     constructor(formBuilder: FormBuilder, private actionableService: ActionableService,
         private dataExchange: DataExchangeService<boolean>, private globalState: GlobalStateService,
         private toastrService: ToastrService, private departmentService: DepartmentService,
         private toastrConfig: ToastrConfig, private _router: Router,
-        private injector: Injector) {
+        private injector: Injector, private checklistTrailService: ChecklistTrailService) {
         this.globalStateProxy = injector.get(GlobalStateService);
     }
 
@@ -130,6 +136,24 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
         this.childModal.show();
     }
 
+    openTrail(actionable: ActionableModel): void {
+        this.getActionableTrails(actionable.ActionId);
+    }
+
+    getActionableTrails(actionaId: number): void {
+        this.checklistTrailService.GetTrailByActionableId(actionaId)
+            .subscribe((response: ResponseModel<ChecklistTrailModel>) => {
+                this.checklistTrails = response.Records;
+                this.childModalTrail.show();
+            }, (error: any) => {
+                console.log('error:  ' + error);
+            });
+    }
+
+    cancelTrail(): void {
+        this.childModalTrail.hide();
+    }
+
     openChildActionable(actionable: ActionableModel): void {
         actionable['expanded'] = !actionable['expanded'];
         this.actionableService.GetChildActionables(actionable.ChklistId, this.currentIncident)
@@ -178,15 +202,63 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     }
 
     batchUpdate(data: any[]) {
+        this.listActionableSelected = data;
         this.actionableService.BatchOperation(data)
             .subscribe((x) => {
-                this.toastrService.success('Actionables updated successfully.', 'Success', this.toastrConfig);
-                this.getAllCloseActionable(this.currentIncident, this.currentDepartmentId);
-                this.globalStateProxy.NotifyDataChanged('checkListStatusChange', null);
+                this.SaveChecklistTrails(this.listActionableSelected);
+
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
     }
+
+    private SaveChecklistTrails(data: any[]): void {
+        this.checklistTrails = [];
+        this.departmentService.GetAllActiveDepartments()
+            .subscribe((allResultDepartments: ResponseModel<DepartmentModel>) => {
+                this.allDepartments = allResultDepartments.Records;
+                this.actionableService.GetAllByIncident(+UtilityService.GetFromSession('CurrentIncidentId'))
+                    .subscribe((resultsActionable: ResponseModel<ActionableModel>) => {
+                        data.forEach((item: ActionableModel) => {
+                            this.checklistTrail = new ChecklistTrailModel();
+                            this.checklistTrail.ChecklistTrailId = 0;
+                            this.checklistTrail.ActionId = item.ActionId;
+                            this.checklistTrail.CompletionStatus = item.CompletionStatus;
+                            this.checklistTrail.CompletionStatusChangedOn = new Date();
+                            this.checklistTrail.CompletionStatusChangedBy = +UtilityService.GetFromSession('CurrentUserId');
+                            this.checklistTrail.DepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+                            this.checklistTrail.Department = this.allDepartments.filter((itemDepartment: DepartmentModel) => {
+                                return itemDepartment.DepartmentId == this.checklistTrail.DepartmentId;
+                            })[0];
+                            this.checklistTrail.ActiveFlag = 'Active';
+                            this.checklistTrail.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
+                            this.checklistTrail.CreatedOn = new Date();
+                            this.checklistTrail.IncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
+                            const actionables: ActionableModel[] = resultsActionable.Records.filter((actionableItem: ActionableModel) => {
+                                return actionableItem.ActionId == item.ActionId;
+                            });
+                            if (actionables.length > 0) {
+                                this.checklistTrail.ChklistId = actionables[0].ChklistId;
+                            }
+                            this.checklistTrail.Query = `<div><p>Checklist completion status is <strong>${item.CompletionStatus}</strong> which is changed by department ${this.checklistTrail.Department.DepartmentName} on <strong>Date :</strong>  ${moment(this.checklistTrail.CreatedOn).format('DD-MMM-YYYY h:mm A')}  </p><div></p><div>`;
+                            this.checklistTrails.push(this.checklistTrail);
+                        });
+
+                        this.checklistTrailService.BatchOperation(this.checklistTrails)
+                            .subscribe((result: ResponseModel<BaseModel>) => {
+                                this.toastrService.success('Actionables updated successfully.', 'Success', this.toastrConfig);
+                                this.getAllCloseActionable(this.currentIncident, this.currentDepartmentId);
+                                this.globalStateProxy.NotifyDataChanged('checkListStatusChange', null);
+
+                            });
+                    });
+
+
+            });
+    }
+
+
+
 
     cancelUpdateCommentAndURL(): void {
         this.childModal.hide();

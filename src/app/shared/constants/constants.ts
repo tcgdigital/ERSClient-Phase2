@@ -685,7 +685,7 @@ export class GlobalConstants {
             order: 1,
             subtab: [
                 {
-                    id: 'ActivaChecklist',
+                    id: 'ActiveChecklist',
                     title: 'Open Checklist',
                     url: './open',
                     selected: false,
@@ -697,7 +697,7 @@ export class GlobalConstants {
                     url: './close',
                     selected: false,
                     hidden: false,
-                    order: 1
+                    order: 2
                 }
             ]
         }, {
@@ -854,7 +854,7 @@ export class GlobalConstants {
             url: '/pages/dashboard/otherQuery',
             selected: false,
             hidden: false,
-            order: 9,
+            order: 8,
             subtab: [
                 {
                     id: 'ReceivedCalls',

@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, AfterContentInit } from '@angular/core';
 import { ITabLinkInterface } from '../../../shared/components/tab.control';
 import * as _ from 'underscore';
 import { Observable } from 'rxjs/Rx';
@@ -22,11 +22,13 @@ import {
     encapsulation: ViewEncapsulation.None,
     templateUrl: './views/ground.victims.view.html'
 })
-export class GroundVictimsComponent implements OnInit {
+export class GroundVictimsComponent implements OnInit, AfterContentInit {
     public currentIncidentId: number;
     public currentDepartmentId: number;
     public groundVictimList: Observable<GroundVictimModel[]>;
     public searchConfigs: Array<SearchConfigModel<any>> = Array<SearchConfigModel<any>>();
+    public subTabs: ITabLinkInterface[] = new Array<ITabLinkInterface>();
+
     constructor(private peopleOnBoardWidgetService: PeopleOnBoardWidgetService, private globalState: GlobalStateService) { }
 
     public ngOnInit(): void {
@@ -39,7 +41,9 @@ export class GroundVictimsComponent implements OnInit {
 
         //this.subTabs = _.find(GlobalConstants.TabLinks, (x) => x.id === 'CrewQuery').subtab;
     }
-
+    public ngAfterContentInit(): void {
+        //this.subTabs = UtilityService.GetSubTabs('GroundVictims');
+    }
 
     public incidentChangeHandler(model: KeyValue): void {
         this.currentIncidentId = model.Value;
@@ -64,7 +68,7 @@ export class GroundVictimsComponent implements OnInit {
         let groundVictimListLocal: GroundVictimModel[] = [];
         if (query !== '') {
             query = `${query}`;
-            this.peopleOnBoardWidgetService.GetGroundVictimsByQuery(query,this.currentIncidentId)
+            this.peopleOnBoardWidgetService.GetGroundVictimsByQuery(query, this.currentIncidentId)
                 .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                     response.Records.forEach((x) => {
                         x.Active = (x.ActiveFlag === 'Active');
@@ -113,7 +117,7 @@ export class GroundVictimsComponent implements OnInit {
                 Description: 'Victim Name',
                 Value: ''
             }),
-             new SearchTextBox({
+            new SearchTextBox({
                 Name: 'AffectedCount',
                 Description: 'Affected Count',
                 Value: ''

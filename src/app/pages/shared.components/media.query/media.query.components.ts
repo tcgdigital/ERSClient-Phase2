@@ -1,20 +1,18 @@
-import { Component, ViewEncapsulation, OnInit, AfterContentInit } from '@angular/core';
+import { Component, ViewEncapsulation, AfterContentInit } from '@angular/core';
 import { ITabLinkInterface } from '../../../shared/components/tab.control';
-import { GlobalConstants } from '../../../shared/constants';
+import { UtilityService } from '../../../shared/services/common.service';
 
 @Component({
     selector: 'other-query',
     encapsulation: ViewEncapsulation.None,
     templateUrl: './views/media.query.view.html'
 })
-export class MediaQueryComponent implements OnInit, AfterContentInit {
+export class MediaQueryComponent implements AfterContentInit {
     public subTabs: ITabLinkInterface[] = new Array<ITabLinkInterface>();
 
-    public ngOnInit(): void {
+    public ngAfterContentInit(): void {
+        this.subTabs = UtilityService.GetSubTabs('MediaQuery');
     }
 
-    public ngAfterContentInit(): void {
-        if (GlobalConstants.TabLinks.some((x) => x.id === 'MediaQuery'))
-            this.subTabs = GlobalConstants.TabLinks.find((x) => x.id === 'MediaQuery').subtab;
-    }
+    
 }
