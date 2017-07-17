@@ -93,6 +93,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.emergencyLocationService.GetAllActiveEmergencyLocations()
             .subscribe((result: ResponseModel<EmergencyLocationModel>) => {
+                debugger;
                 result.Records.forEach((item: EmergencyLocationModel) => {
                     const emergencyLocationModel: EmergencyLocationModel = new EmergencyLocationModel();
                     emergencyLocationModel.IATA = item.IATA;

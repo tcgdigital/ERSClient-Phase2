@@ -24,7 +24,6 @@ import { UserPermissionService } from './masterdata/userpermission/components';
 import { QuickLinkQuickViewWidgetComponent } from '../pages/widgets/quicklink.quickview.widget';
 import { QuickLinkService } from './masterdata/quicklink/components';
 import { UserRegistrationHubConnectionResolver } from './hub.connection.resolvers';
-// import { NotificationProviderService } from './notification.provider.service';
 
 @NgModule({
     imports: [
@@ -52,7 +51,6 @@ import { UserRegistrationHubConnectionResolver } from './hub.connection.resolver
         UserPermissionService,
         QuickLinkService,
         UserRegistrationHubConnectionResolver
-        // NotificationProviderService
     ]
 })
 export class PagesModule {

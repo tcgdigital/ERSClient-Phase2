@@ -53,7 +53,7 @@ export class NotificationBroadcastService {
         // !!! important. We need to register at least one function otherwise server callbacks will not work.
         proxy.on('noOp', () => { });
 
-        const hubConnection = new NotificationConnection(connection, proxy, this._zone, configuration);
+        const hubConnection: NotificationConnection = new NotificationConnection(connection, proxy, this._zone, configuration);
         return hubConnection;
     }
 
