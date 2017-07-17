@@ -27,7 +27,8 @@ export class ArchiveReportWidgetComponent implements OnInit, OnDestroy {
     @ViewChild('childModalDepartmentWiseCloseReport') public childModalDepartmentWiseCloseReport: ModalDirective;
     @ViewChild('childModalOtherReport') public childModalOtherReport: ModalDirective;
 
-    public downloadUrl: string = '';
+    public downloadUrl: string;
+    public downloadPath: string;
     public otherReports: OtherReportModel[];
     public departmentWiseClosureReports: DepartmentClosureModel[];
 
@@ -41,7 +42,8 @@ export class ArchiveReportWidgetComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this.otherReports = [];
         this.departmentWiseClosureReports = [];
-        this.downloadUrl = `${GlobalConstants.EXTERNAL_URL}${GlobalConstants.API}/Report/GenerateReport/${this.incidentId}`;
+        this.downloadUrl = GlobalConstants.EXTERNAL_URL + 'api/Report/CrisisSummaryReport/' + this.incidentId;
+        this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/ActivityLogReport/' + this.incidentId;
 
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
