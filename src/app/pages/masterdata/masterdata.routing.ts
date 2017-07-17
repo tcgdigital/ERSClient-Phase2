@@ -19,7 +19,10 @@ const pageRoutes: Routes = [
             { path: 'userpermission', loadChildren: './userpermission/userpermission.module#UserPermissionModule' },
             { path: 'pagefunctionality', loadChildren: './page.functionality/page.functionality.module#PageFunctionalityModule' },
             { path: 'userprofile', loadChildren: './userprofile/userprofile.module#UserProfileModule' },
-            { path: 'affectedstation', loadChildren: './emergencylocation/emergencylocation.module#EmergencyLocationModule' }
+            { path: 'affectedstation', loadChildren: './emergencylocation/emergencylocation.module#EmergencyLocationModule' },
+            { path: 'broadcastdepartment', loadChildren: './broadcastdepartment/boradcastdepartment.module#BroadcastDepartmentMappingModule' }
+
+            
         ]
     }
 ];

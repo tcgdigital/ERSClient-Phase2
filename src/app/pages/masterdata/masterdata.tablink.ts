@@ -88,5 +88,14 @@ export const TAB_LINKS: ITabLinkInterface[] = [
         selected: false,
         hidden: false,
         order: 11
+    },
+     {
+        id: 'broadcastdepartment',
+        title: 'Broadcast Department Mapping',
+        // icon: 'fa fa-windows fa-2x',
+        url: '/pages/masterdata/broadcastdepartment',
+        selected: false,
+        hidden: false,
+        order: 12
     }
 ] as ITabLinkInterface[];
