@@ -1,21 +1,17 @@
-import { Component, ViewEncapsulation, OnInit, AfterContentInit } from '@angular/core';
+import { Component, ViewEncapsulation,  AfterContentInit } from '@angular/core';
 import { ITabLinkInterface } from '../../../shared/components/tab.control';
-import { GlobalConstants } from '../../../shared/constants';
+import { UtilityService } from '../../../shared/services/common.service';
 
 @Component({
     selector: 'other-query',
     encapsulation: ViewEncapsulation.None,
     templateUrl: './views/future.travel.query.view.html'
 })
-export class FutureTravelQueryComponent implements OnInit, AfterContentInit {
+export class FutureTravelQueryComponent implements  AfterContentInit {
     public subTabs: ITabLinkInterface[] = new Array<ITabLinkInterface>();
 
-    public ngOnInit(): void {
-    }
-
     public ngAfterContentInit(): void {
-        debugger;
-        if (GlobalConstants.TabLinks.some((x) => x.id === 'FutureTravelQuery'))
-            this.subTabs = GlobalConstants.TabLinks.find((x) => x.id === 'FutureTravelQuery').subtab;
+        this.subTabs = UtilityService.GetSubTabs('FutureTravelQuery');
     }
+    
 }

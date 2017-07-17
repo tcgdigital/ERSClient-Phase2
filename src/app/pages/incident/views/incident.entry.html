@@ -164,6 +164,18 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="form-group col-lg-6 col-sm-12 col-md-6">
+                            <label for="Latitude">Latitude</label>
+                            <input id="Latitude" class="form-control" type="text" name="Latitude" formControlName="Latitude"
+                                placeholder="Latitude" />
+                        </div>
+                        <div class="form-group col-lg-6 col-sm-12 col-md-6">
+                            <label for="Longitude">Longitude</label>
+                            <input id="Longitude" class="form-control" type="text" name="Longitude" formControlName="Longitude"
+                                placeholder="Longitude" />
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="ReportedDate">Date Time Reported<span class="required">*</span>&nbsp;&nbsp;(UTC)</label>
                             <input id="ReportedDate" readonly class="form-control" type="text" name="ReportedDate" formControlName="ReportedDate" placeholder="Reported Date"
@@ -188,7 +200,7 @@
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6" *ngIf="isBorrowed">
                             <label for="IncidentsToPickForReplication">Incidents To Pick For Replication</label>
-                            <select id="BorrowedIncident" [(ngModel)]="incidentModel.BorrowedIncident" class="form-control" formControlName="BorrowedIncident" disabled
+                            <select id="BorrowedIncident" [(ngModel)]="incidentModel.BorrowedIncident" class="form-control" formControlName="BorrowedIncident"
                                 name="BorrowedIncident" (change)="incidentsToPickForReplicationChange($event.target.value,incidentsToPickForReplication)">
                                     <option value=0>Select Incident To Pick</option>
                                     <option *ngFor="let incidentToPickForReplication of incidentsToPickForReplication" [value]="incidentToPickForReplication.IncidentId" >
@@ -477,6 +489,18 @@
                                     formControlName="SenderOfCrisisInformationPopup" disabled placeholder="Sender Of Crisis Information"
                                 />
                             </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-6 col-sm-12 col-md-6">
+                            <label for="LatitudePopup">Latitude</label>
+                            <input id="LatitudePopup" class="form-control" type="text" name="LatitudePopup" formControlName="LatitudePopup"
+                                placeholder="Latitude" />
+                        </div>
+                        <div class="form-group col-lg-6 col-sm-12 col-md-6">
+                            <label for="LongitudePopup">Longitude</label>
+                            <input id="LongitudePopup" class="form-control" type="text" name="LongitudePopup" formControlName="LongitudePopup"
+                                placeholder="Longitude" />
                         </div>
                     </div>
                     <div class="row">

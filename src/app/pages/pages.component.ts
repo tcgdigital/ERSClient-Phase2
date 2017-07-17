@@ -31,12 +31,13 @@ import { ExternalInputModel } from './callcenteronlypage';
 import { PresidentMessageModel } from './shared.components/presidentMessage';
 import { PresidentMessageWidgetModel } from './widgets/presidentMessage.widget';
 import { MediaReleaseWidgetModel } from './widgets/mediaRelease.widget';
+import { NotificationProviderService } from './notification.provider.service';
 
 @Component({
     selector: 'pages',
     encapsulation: ViewEncapsulation.None,
     templateUrl: './pages.view.html',
-    providers: []
+    providers: [NotificationProviderService]
 })
 export class PagesComponent implements OnInit {
     @ViewChild('changePasswordModel') public changePasswordModel: ModalDirective;
@@ -80,6 +81,8 @@ export class PagesComponent implements OnInit {
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig,
         private route: ActivatedRoute,
+
+        // private notificationProviderService: NotificationProviderService
         private broadcastMessageNotificationHub: NotificationBroadcastService,
         private casualtyStatusUpdateNotificationHub: NotificationBroadcastService,
         private checklistSubmissionNotificationHub: NotificationBroadcastService,
@@ -105,7 +108,9 @@ export class PagesComponent implements OnInit {
         this.ProcessData(() => {
             this.globalState.Subscribe('incidentCreate', (model: number) => this.incidentCreateHandler(model));
             this.initiateHubConnections();
-            // this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
+
+            // this.notificationProviderService.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
+            this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
         }, local_incidents, local_departments);
 
         // this.getIncidents();
@@ -161,7 +166,9 @@ export class PagesComponent implements OnInit {
         UtilityService.SetToSession({ CurrentDepartmentId: selectedDepartment.Value });
         this.currentDepartmentId = selectedDepartment.Value;
         this.globalState.NotifyDataChanged('departmentChange', selectedDepartment);
-        // this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
+
+        this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
+        // this.notificationProviderService.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
     }
 
     public onIncidentChange(selectedIncident: KeyValue): void {
@@ -172,7 +179,9 @@ export class PagesComponent implements OnInit {
                 .find((z) => z.Key === selectedIncident.Value.toString()).Value
         });
         this.globalState.NotifyDataChanged('incidentChange', selectedIncident);
-        // this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
+
+        this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
+        // this.notificationProviderService.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
     }
 
     public onMenuClick($event): void {
@@ -262,7 +271,6 @@ export class PagesComponent implements OnInit {
     }
 
     private ProcessData(callback: () => void, ...observables: Array<Observable<any[]>>): void {
-        // debugger;
         Observable.forkJoin(observables).subscribe((res: any[]) => {
             if (res && res.length > 0) {
                 if (res[0].length > 0 && _.all(res[0], (x) => _.some(Object.keys(x), (y) => y === 'EmergencyTypeId'))) {
@@ -329,130 +337,78 @@ export class PagesComponent implements OnInit {
         this.CloseConnection();
         this.connectionStaters = new Array<ConnectionStarter>();
 
-        const broadcastNotificationResponse: string[] = ['ReceiveBroadcastCreationResponse', 'ReceiveBroadcastModificationResponse'];
-        const presidentMessageNotificationResponse: string[] = ['ReceivePresidentsMessageResponse'];
-        const presidentMessageWorkflowResponse: string[] = ['ReceivePresidentsMessageCreatedResponse',
-            'ReceivePresidentsMessageSendForApprovalResponse', 'ReceivePresidentsMessageApprovedResponse',
-            'ReceivePresidentsMessageRejectedResponse', 'ReceivePresidentsMessagePublishedResponse', 'ReceivePresidentsMessageUpdateResponse'];
+        // this.connectionStaters.push(new ConnectionStarter(this.broadcastMessageNotificationHub,
+        //     'BroadcastMessageNotificationHub', {
+        //         departmentId: deptId, incidentId: incId
+        //     }, this.CallbackListners<BroadCastModel>('BroadcastNotification')
+        // ));
 
-        const mediaMessageNotificationResponse: string[] = ['ReceiveMediaMessageResponse'];
-        const mediaMessageWorkflowResponse: string[] = ['ReceiveMediaMessageCreatedResponse',
-            'ReceiveMediaMessageSendForApprovalResponse', 'ReceiveMediaMessageApprovedResponse',
-            'ReceiveMediaMessageRejectedResponse', 'ReceiveMediaMessagePublishedResponse', 'ReceiveMediaMessageUpdateResponse'];
-
-        const casualtyNotificationResponse: string[] = ['ReceiveCasualtyCountResponse'];
-        const checklistNotificationResponse: string[] = ['ReceiveChecklistCreationResponse',
-            'ReceiveChecklistActivationResponse', 'ReceiveChecklistClosureResponse', 'ReceiveChecklistStatusChangeResponse'];
-        const crisisCreationNotificationResponse: string[] = ['ReceiveCrisisCreationResponse'];
-        const crisisClosureNotificationResponse: string[] = ['ReceiveCrisisClosureResponse'];
-        const mediaNotificationResponse: string[] = ['ReceiveMediaMessageResponse', 'ReceivePresidentsMessageResponse'];
-        const dimandNotificationResponse: string[] = ['ReceiveDemandCreationResponse', 'ReceiveDemandAssignedResponse',
-            'ReceiveCompletedDemandAssignedResponse', 'ReceiveDemandApprovalPendingResponse', 'ReceiveDemandApprovedResponse',
-            'ReceiveDemandClosedResponse', 'ReceiveDemandStatusUpdateResponse', 'ReceiveCompletedDemandstoCloseResponse',
-            'ReceiveRejectedDemandstoAssignResponse'];
-        const queryNotificationResponse: string[] = ['ReceiveCargoEnquiryCreationResponse', 'ReceiveCrewEnquiryCreationResponse',
-            'ReceiveMediaEnquiryCreationResponse', 'ReceiveOtherEnquiryCreationResponse', 'ReceivePassangerEnquiryCreationResponse',
-            'ReceiveFutureTravelEnquiryCreationResponse', 'ReceiveGeneralUpdateEnquiryCreationResponse',
-            'ReceiveSituationalEnquiryCreationResponse', 'ReceiveCustomerDissatisfactionEnquiryCreationResponse',
-            'AssignedCargoEnquiryCreationResponse', 'AssignedCrewEnquiryCreationResponse',
-            'AssignedMediaEnquiryCreationResponse', 'AssignedOtherEnquiryCreationResponse', 'AssignedPassangerEnquiryCreationResponse',
-            'AssignedFutureTravelEnquiryCreationResponse', 'AssignedGeneralUpdateEnquiryCreationResponse',
-            'AssignedSituationalEnquiryCreationResponse', 'AssignedCustomerDissatisfactionEnquiryCreationResponse'];
-
-        const callbackListners: <T extends BaseModel>(keys: string[]) => CallbackListner[] =
-            <T extends BaseModel>(keys: string[]) => {
-                return GlobalConstants.NotificationMessage
-                    .filter((x) => keys.some((y) => y === x.Key))
-                    .map((z) => new CallbackListner(z.Key, (data: T) => { showMessage(z.Key, data); }));
-            };
-
-        const showMessage: <T extends BaseModel>(key: string, model: T) => void =
-            <T extends BaseModel>(key: string, model: T) => {
-                const message = GlobalConstants.NotificationMessage.find((x) => x.Key === key);
-                if (message.Title !== '' && message.Message !== '')
-                    this.toastrService.info(message.Message, message.Title);
-                this.globalState.NotifyDataChanged(key, model);
-            };
-
-        /*this.connectionStaters.push(new ConnectionStarter(this.broadcastMessageNotificationHub,
-            'BroadcastMessageNotificationHub', {
-                departmentId: deptId, incidentId: incId
-            }, callbackListners<BroadCastModel>(broadcastNotificationResponse)
-        ));
-
-        this.connectionStaters.push(new ConnectionStarter(this.casualtyStatusUpdateNotificationHub,
-            'CasualtyStatusUpdateNotificationHub', {
-                incidentId: incId
-            }, callbackListners<CasualtyExchangeModel>(casualtyNotificationResponse)
-        ));*/
+        // this.connectionStaters.push(new ConnectionStarter(this.casualtyStatusUpdateNotificationHub,
+        //     'CasualtyStatusUpdateNotificationHub', {
+        //         incidentId: incId
+        //     }, this.CallbackListners<CasualtyExchangeModel>('CasualtyNotification')
+        // ));
 
         // this.connectionStaters.push(new ConnectionStarter(this.checklistSubmissionNotificationHub,
         //     'ChecklistSubmissionNotificationHub', {
         //         departmentId: deptId, incidentId: incId
-        //     }, callbackListners<ActionableModel>(checklistNotificationResponse)
+        //     }, this.CallbackListners<ActionableModel>('ChecklistNotification')
         // ));
 
-        /*this.connectionStaters.push(new ConnectionStarter(this.crisisClosureNotificationHub,
+        this.connectionStaters.push(new ConnectionStarter(this.crisisClosureNotificationHub,
             'CrisisClosureNotificationHub', {
                 incidentId: incId
-            }, callbackListners<IncidentModel>(crisisClosureNotificationResponse)
+            }, this.CallbackListners<IncidentModel>('CrisisClosureNotification')
         ));
 
-        this.connectionStaters.push(new ConnectionStarter(this.crisisCreationNotificationHub,
-            'CrisisCreationNotificationHub', null, callbackListners<IncidentModel>(crisisCreationNotificationResponse)
-        ));*/
+        // this.connectionStaters.push(new ConnectionStarter(this.crisisCreationNotificationHub,
+        //     'CrisisCreationNotificationHub', null,
+        //     this.CallbackListners<IncidentModel>('CrisisCreationNotification')
+        // ));
 
-        this.connectionStaters.push(new ConnectionStarter(this.demandSubmissionNotificationHub,
-            'DemandSubmissionNotificationHub', {
-                departmentId: deptId, incidentId: incId
-            }, callbackListners<DemandModel>(dimandNotificationResponse)
-        ));
+        // this.connectionStaters.push(new ConnectionStarter(this.demandSubmissionNotificationHub,
+        //     'DemandSubmissionNotificationHub', {
+        //         departmentId: deptId, incidentId: incId
+        //     }, this.CallbackListners<DemandModel>('DemandNotification')
+        // ));
 
-        /*this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
-            'PresidentsMessageAndMediaReleaseNotificationHub', {
-                incidentId: incId
-            }, callbackListners<MediaModel>(mediaNotificationResponse)
-        ));*/
+        // this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
+        //     'PresidentsMessageAndMediaReleaseNotificationHub', {
+        //         incidentId: incId
+        //     }, this.CallbackListners<PresidentMessageWidgetModel>('PresidentsMessageNotification')
+        // ));
 
-        this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
-            'PresidentsMessageAndMediaReleaseNotificationHub', {
-                incidentId: incId
-            }, callbackListners<PresidentMessageWidgetModel>(presidentMessageNotificationResponse)
-        ));
+        // this.connectionStaters.push(new ConnectionStarter(this.presidentAndMediaWorkflowNotificationHub,
+        //     'PresidentAndMediaWorkflowNotificationHub', {
+        //         departmentId: deptId, incidentId: incId
+        //     }, this.CallbackListners<PresidentMessageModel>('PresidentsMessageWorkflowNotification')
+        // ));
 
-        this.connectionStaters.push(new ConnectionStarter(this.presidentAndMediaWorkflowNotificationHub,
-            'PresidentAndMediaWorkflowNotificationHub', {
-                departmentId: deptId, incidentId: incId
-            }, callbackListners<PresidentMessageModel>(presidentMessageWorkflowResponse)
-        ));
+        // this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
+        //     'PresidentsMessageAndMediaReleaseNotificationHub', {
+        //         incidentId: incId
+        //     }, this.CallbackListners<MediaReleaseWidgetModel>('MediaMessageNotification')
+        // ));
 
-        this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
-            'PresidentsMessageAndMediaReleaseNotificationHub', {
-                incidentId: incId
-            }, callbackListners<MediaReleaseWidgetModel>(mediaMessageNotificationResponse)
-        ));
+        // this.connectionStaters.push(new ConnectionStarter(this.presidentAndMediaWorkflowNotificationHub,
+        //     'PresidentAndMediaWorkflowNotificationHub', {
+        //         departmentId: deptId, incidentId: incId
+        //     }, this.CallbackListners<MediaModel>('MediaMessageWorkflowNotification')
+        // ));
 
-        this.connectionStaters.push(new ConnectionStarter(this.presidentAndMediaWorkflowNotificationHub,
-            'PresidentAndMediaWorkflowNotificationHub', {
-                departmentId: deptId, incidentId: incId
-            }, callbackListners<MediaModel>(mediaMessageWorkflowResponse)
-        ));
-
-        this.connectionStaters.push(new ConnectionStarter(this.queryNotificationHub,
-            'QueryNotificationHub', {
-                incidentId: incId
-            }, callbackListners<ExternalInputModel>(queryNotificationResponse)
-        ));
+        // this.connectionStaters.push(new ConnectionStarter(this.queryNotificationHub,
+        //     'QueryNotificationHub', {
+        //         incidentId: incId
+        //     }, this.CallbackListners<ExternalInputModel>('EnquiryNotification')
+        // ));
 
         this.ConnectAndListen(this.connectionStaters);
     }
 
     private CloseConnection(): void {
         try {
-            // debugger;
             if (this.connectionStaters !== undefined && this.connectionStaters.length > 0) {
                 this.connectionStaters.forEach((x: ConnectionStarter) => {
-                    // debugger;
                     if (x.Connection)
                         x.Connection.stop();
                     x.Connection = null;
@@ -466,7 +422,7 @@ export class PagesComponent implements OnInit {
     }
 
     private ConnectAndListen(connectionStaters: ConnectionStarter[]): void {
-        // debugger;
+        debugger;
         connectionStaters.forEach((x) => {
             x.HubConnection.createConnection({
                 hubName: x.HubName,
@@ -475,10 +431,50 @@ export class PagesComponent implements OnInit {
                 x.Connection = c;
                 x.Callbacks.forEach((y) => {
                     c.listenFor<any>(y.Listner).subscribe((s) => {
-                        y.Callback(s);
+                        y.Callback(y.Listner, s);
                     });
                 });
             });
         });
+    }
+
+    private CallbackListners<T extends BaseModel>(keyType: string): CallbackListner[] {
+        return GlobalConstants.NotificationMessage
+            .filter((x) => x.Type === keyType)
+            .map((z) => new CallbackListner(z.Key, this.ExecuteOperation));
+    }
+
+    private ExecuteOperation<T extends BaseModel>(key: string, model: T): void {
+        debugger;
+        const message = GlobalConstants.NotificationMessage.find((x) => x.Key === key);
+        if (message.Title !== '' && message.Message !== '')
+            this.toastrService.info(this.PrepareMessage<T>(message.Message, model), message.Title);
+        this.globalState.NotifyDataChanged(key, model);
+    }
+
+    private PrepareMessage<T extends BaseModel>(message: string, model: T): string {
+        debugger;
+        const regexp: RegExp = new RegExp(/{([^}]*)}/ig);
+        if (regexp.test(message)) {
+            const props: string[] = [];
+            let values: any[] = [];
+
+            message = message.replace(regexp, (match: string, contents: string, offset: number, fullStr: string) => {
+                const args: string[] = contents.split(/:|\./ig);
+                if (args.length > 2) {
+                    props.push(args[2]);
+                    return `{${args[0]}}`;
+                }
+                else
+                    return '';
+            });
+
+            if (props.length > 0) {
+                values = props.map((x) => model[x]);
+                message = UtilityService.FormatString(message, values);
+            }
+            return message;
+        }
+        else return message;
     }
 }

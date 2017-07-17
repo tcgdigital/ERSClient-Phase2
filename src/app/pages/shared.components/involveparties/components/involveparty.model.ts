@@ -18,6 +18,8 @@ export class InvolvePartyModel extends BaseModel {
     public GroundVictims? : GroundVictimModel[];
     public InvalidGroundVictims? : InvalidGroundVictimModel[];
 
+    public Active: boolean;
+
     constructor() {
         super();
         this.InvolvedPartyId = 0;

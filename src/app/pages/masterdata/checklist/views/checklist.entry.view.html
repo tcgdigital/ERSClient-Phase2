@@ -119,6 +119,7 @@
                             <label for="OrganizationId">Organization<span class="required">*</span></label>
                             <select id="OrganizationId" class="form-control" formControlName="OrganizationId" name="OrganizationId">
                         <option value=''>Select Organization</option>
+                        <!-- <option value=4>All Organization</option> -->
                         <option *ngFor="let organization of activeOrganizations" [value]="organization.OrganizationId" >
                             {{organization.OrganizationCode}}
                         </option>

@@ -51,9 +51,12 @@ export class AffectedPeopleListComponent implements OnInit {
     credential: AuthModel;
     date: Date;
     downloadFilePath: string;
+    downloadPath: string;
+    downloadRoute: string;
     copassangers: PassengerModel[] = [];
     public globalStateProxyOpen: GlobalStateService;
     searchConfigs: Array<SearchConfigModel<any>> = new Array<SearchConfigModel<any>>();
+    downloadfilename: string;
 
     /**
      * Creates an instance of AffectedPeopleListComponent.
@@ -218,6 +221,8 @@ export class AffectedPeopleListComponent implements OnInit {
 
     incidentChangeHandler(incident: KeyValue) {
         this.currentIncident = incident.Value;
+        this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/PassengerStatusInfo/' + this.currentIncident;
+        this.downloadRoute = GlobalConstants.EXTERNAL_URL + 'api/Report/CrewStatusInfo/' + this.currentIncident;
         this.getAffectedPeople(this.currentIncident);
     }
 
@@ -227,7 +232,6 @@ export class AffectedPeopleListComponent implements OnInit {
             this.isArchive = true;
             this.currentIncident = +UtilityService.GetFromSession('ArchieveIncidentId');
             this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
-
             this.getAffectedPeople(this.currentIncident);
         }
         else {
@@ -236,6 +240,8 @@ export class AffectedPeopleListComponent implements OnInit {
             this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
             this.getAffectedPeople(this.currentIncident);
         }
+        this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/PassengerStatusInfo/' + this.currentIncident;
+        this.downloadRoute = GlobalConstants.EXTERNAL_URL + 'api/Report/CrewStatusInfo/' + this.currentIncident;
         this.credential = UtilityService.getCredentialDetails();
 
         this.initiateSearchConfigurations();

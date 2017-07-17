@@ -17,10 +17,14 @@ import {
     BroadcastDepartmentService
 } from '../../../masterdata/broadcastdepartment';
 import { BroadcastService } from './broadcast.service';
-import { DepartmentModel, DepartmentService } from '../../../masterdata/department';
+import {
+    DepartmentModel,
+    DepartmentService
+} from '../../../masterdata/department';
 import {
     ResponseModel, DataExchangeService, KeyValue,
-    GlobalConstants, UtilityService, GlobalStateService, AuthModel
+    GlobalConstants, UtilityService,
+    GlobalStateService, AuthModel
 } from '../../../../shared';
 
 @Component({
@@ -42,7 +46,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     priorities: any[] = GlobalConstants.Priority;
     currentIncidentId: number;
     currentDepartmentId: number;
-    buttonValue: String = "";
+    buttonValue: string = '';
     showAdd: boolean;
     listSelected: boolean;
     selectedcount: number;
@@ -53,15 +57,13 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     hideMessageError: boolean = true;
     hideDeptError: boolean = true;
 
-
-
     /**
      * Creates an instance of BroadcastEntryComponent.
-     * @param {BroadcastDepartmentService} broadcastDepartmentMappingService 
-     * @param {BroadcastService} broadcastService 
-     * @param {DataExchangeService<BroadCastModel>} dataExchange 
-     * @param {FormBuilder} builder 
-     * 
+     * @param {BroadcastDepartmentService} broadcastDepartmentMappingService
+     * @param {BroadcastService} broadcastService
+     * @param {DataExchangeService<BroadCastModel>} dataExchange
+     * @param {FormBuilder} builder
+     *
      * @memberOf BroadcastEntryComponent
      */
     constructor(private broadcastDepartmentMappingService: BroadcastDepartmentService,
@@ -70,68 +72,38 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         private builder: FormBuilder, private globalState: GlobalStateService, private toastrService: ToastrService,
         private toastrConfig: ToastrConfig, private _router: Router) {
         this.deptBrodCastModels = [];
-        this.buttonValue = "Add New Broadcast Message";
+        this.buttonValue = 'Add New Broadcast Message';
         this.showAdd = false;
         this.listSelected = false;
         this.selectedcount = 0;
     }
 
     ngOnInit(): void {
-        this.initiatedDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-        this.incidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        this.initiatedDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+        this.incidentId = +UtilityService.GetFromSession('CurrentIncidentId');
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.initiatedDepartmentId;
         this.initiateForm();
-        if (this._router.url.indexOf("archivedashboard") > -1) {
+        if (this._router.url.indexOf('archivedashboard') > -1) {
             this.isArchive = true;
-            this.currentIncidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
+            this.currentIncidentId = +UtilityService.GetFromSession('ArchieveIncidentId');
         }
         else {
             this.isArchive = false;
-            this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+            this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
         }
 
         this.getBroadcastDepartmentMappings(this.currentDepartmentId);
         this.credential = UtilityService.getCredentialDetails();
 
         this.broadcast.IsSubmitted = false;
-        this.broadcast.Priority = this.priorities.find(x => x.value == '1').caption;
+        this.broadcast.Priority = this.priorities.find((x) => x.value === '1').caption;
         this.broadcast.DepartmentBroadcasts = [];
         this.Action = 'Save';
 
-        this.dataExchange.Subscribe('OnBroadcastUpdate', model => this.onBroadcastUpdate(model));
+        this.dataExchange.Subscribe('OnBroadcastUpdate', (model) => this.onBroadcastUpdate(model));
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
-    }
-
-    private incidentChangeHandler(incident: KeyValue): void {
-        this.currentIncidentId = incident.Value;
-    }
-
-    private departmentChangeHandler(department: KeyValue): void {
-        this.currentDepartmentId = department.Value;
-        this.getBroadcastDepartmentMappings(this.currentDepartmentId);
-    }
-
-    private getBroadcastDepartmentMappings(departmentId): void {
-        this.broadcastDepartmentMappingService.Query(departmentId)
-            .subscribe((response: ResponseModel<BroadCastDepartmentModel>) => {
-                let broadcastmappingIds: number[] = this.BroadCastDepartmentMappings.map(item => item.BroadcastDepartmentMappingId);
-                this.BroadCastDepartmentMappings = response.Records;
-                this.BroadCastDepartmentMappings.forEach(element => {
-                    element.IsSelected = false;
-                });
-                this.currentDepartment.TargetDepartmentId = departmentId;
-                this.currentDepartment.BroadcastDepartmentMappingId = Math.max.apply(Math, broadcastmappingIds) + 1;
-                this.currentDepartment.TargetDepartment = new DepartmentModel();
-                this.currentDepartment.TargetDepartment.DepartmentId = departmentId;
-                this.departmentService.Get(departmentId)
-                    .subscribe((response1: DepartmentModel) => {
-                        this.currentDepartment.TargetDepartment.DepartmentName = response1.DepartmentName;
-                    });
-
-                this.BroadCastDepartmentMappings.push(this.currentDepartment);
-            });
     }
 
     ngOnDestroy(): void {
@@ -148,11 +120,11 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
             BroadCastDepartmentMappings: new FormControl(0),
             Priority: new FormControl('', [Validators.required])
         });
-    };
+    }
 
     selectAllDepartment(IsAllSelected: boolean): void {
         this.broadcast.DepartmentBroadcasts = [];
-        this.BroadCastDepartmentMappings.forEach(element => {
+        this.BroadCastDepartmentMappings.forEach((element) => {
             element.IsSelected = IsAllSelected;
             if (IsAllSelected) {
                 this.deptBroadcast = new DepartmentBroadcastModel();
@@ -168,12 +140,12 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     }
 
     selectDepartment(event, department: BroadCastDepartmentModel): void {
-        this.BroadCastDepartmentMappings.forEach(item => {
+        this.BroadCastDepartmentMappings.forEach((item) => {
             if (item.TargetDepartmentId === department.TargetDepartmentId) {
                 item.IsSelected = event.target.checked;
             }
         });
-        this.selectedcount = this.BroadCastDepartmentMappings.filter(x => { return x.IsSelected == true; }).length;
+        this.selectedcount = this.BroadCastDepartmentMappings.filter((x) => x.IsSelected === true).length;
         if (this.selectedcount === this.BroadCastDepartmentMappings.length) {
             this.IsAllSelected = true;
         }
@@ -184,7 +156,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
 
     save(isSubmitted: boolean): void {
         if (this.form.valid) {
-            if (this.broadcast.Message == null || this.broadcast.Message == "" || this.broadcast.Message == undefined) {
+            if (this.broadcast.Message == null || this.broadcast.Message === '' || this.broadcast.Message === undefined) {
                 this.hideMessageError = false;
             }
             else if (this.selectedcount <= 0) {
@@ -199,9 +171,9 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
                 if (isSubmitted) {
                     this.broadcast.SubmittedOn = new Date();
                 }
-                this.broadcast.DepartmentBroadcasts = []
+                this.broadcast.DepartmentBroadcasts = [];
 
-                this.BroadCastDepartmentMappings.forEach(item => {
+                this.BroadCastDepartmentMappings.forEach((item) => {
                     if (item.IsSelected) {
                         this.deptBroadcast = new DepartmentBroadcastModel();
                         if (this.broadcast.BroadcastId !== 0) {
@@ -219,10 +191,11 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     CreateOrUpdateBroadcast(): void {
         if (this.form.valid) {
             UtilityService.setModelFromFormGroup<BroadCastModel>(this.broadcast, this.form,
-                x => x.BroadcastId, x => x.Message, x => x.Priority);
+                (x) => x.BroadcastId, (x) => x.Message, (x) => x.Priority);
             this.broadcast.IncidentId = this.currentIncidentId;
             this.broadcast.InitiateDepartmentId = this.currentDepartmentId;
-            if (this.broadcast.BroadcastId == 0) {
+
+            if (this.broadcast.BroadcastId === 0) {
                 this.broadcast.CreatedBy = +this.credential.UserId;
                 this.broadcastService.Create(this.broadcast)
                     .subscribe((response: BroadCastModel) => {
@@ -263,18 +236,17 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         this.broadcast.IsUpdated = true;
         this.showAdd = true;
 
-        this.BroadCastDepartmentMappings.forEach(item => {
+        this.BroadCastDepartmentMappings.forEach((item) => {
             item.IsSelected = this.broadcast.DepartmentBroadcasts
-                .some(x => x.DepartmentId === item.TargetDepartmentId);
+                .some((x) => x.DepartmentId === item.TargetDepartmentId);
         });
-        this.selectedcount = this.BroadCastDepartmentMappings.filter(x => { return x.IsSelected == true; }).length;
+        this.selectedcount = this.BroadCastDepartmentMappings.filter((x) => x.IsSelected === true).length;
         if (this.selectedcount === this.BroadCastDepartmentMappings.length) {
             this.IsAllSelected = true;
         }
         else {
             this.IsAllSelected = false;
         }
-
     }
 
     cancel(): void {
@@ -284,18 +256,18 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         this.broadcast.DepartmentBroadcasts = [];
         this.showAdd = false;
         this.initiateForm();
-        this.BroadCastDepartmentMappings.forEach(a => {
+        this.BroadCastDepartmentMappings.forEach((a) => {
             a.IsSelected = false;
         });
-        this.broadcast.Priority = this.priorities.find(x => x.value == '1').caption;
+        this.broadcast.Priority = this.priorities.find((x) => x.value === '1').caption;
     }
 
-    showAddRegion(ShowAdd: Boolean): void {
+    showAddRegion(ShowAdd: boolean): void {
         this.showAdd = true;
         this.listSelected = false;
         this.IsAllSelected = false;
         this.selectedcount = 0;
-    };
+    }
 
     showList = function (e) {
         if (this.listSelected)
@@ -307,4 +279,35 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     showList1 = function (e) {
         this.listSelected = false;
     };
+
+    private incidentChangeHandler(incident: KeyValue): void {
+        this.currentIncidentId = incident.Value;
+    }
+
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
+        this.getBroadcastDepartmentMappings(this.currentDepartmentId);
+    }
+
+    private getBroadcastDepartmentMappings(departmentId): void {
+        this.broadcastDepartmentMappingService.Query(departmentId)
+            .subscribe((response: ResponseModel<BroadCastDepartmentModel>) => {
+                const broadcastmappingIds: number[] = this.BroadCastDepartmentMappings
+                    .map((item) => item.BroadcastDepartmentMappingId);
+                this.BroadCastDepartmentMappings = response.Records;
+                this.BroadCastDepartmentMappings.forEach((element) => {
+                    element.IsSelected = false;
+                });
+                this.currentDepartment.TargetDepartmentId = departmentId;
+                this.currentDepartment.BroadcastDepartmentMappingId = Math.max.apply(Math, broadcastmappingIds) + 1;
+                this.currentDepartment.TargetDepartment = new DepartmentModel();
+                this.currentDepartment.TargetDepartment.DepartmentId = departmentId;
+                this.departmentService.Get(departmentId)
+                    .subscribe((response1: DepartmentModel) => {
+                        this.currentDepartment.TargetDepartment.DepartmentName = response1.DepartmentName;
+                    });
+
+                this.BroadCastDepartmentMappings.push(this.currentDepartment);
+            });
+    }
 }

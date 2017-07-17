@@ -149,13 +149,15 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
             .Execute();
     }
 
-    public MapAffectedPeople(affectedPeopleForVerification): AffectedPeopleModel[] {
+    public MapAffectedPeople(affectedPeopleForVerification,userid : number): AffectedPeopleModel[] {
         let verifiedAffectedPeople: AffectedPeopleModel[] = [];
         if (affectedPeopleForVerification != null) {
             verifiedAffectedPeople = affectedPeopleForVerification.map(function (affected) {
                 let item = new AffectedPeopleModel();
                 item.AffectedPersonId = affected.AffectedPersonId;
                 item.IsVerified = affected.IsVerified;
+                item.UpdatedBy=userid;
+                item.UpdatedOn = new Date();
                 return item;
             });
         }
