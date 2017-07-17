@@ -47,6 +47,7 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
     credential: AuthModel;
     availblecount: number;
     freecount: number;
+    downloadPath: string;
     private $toggle: JQuery;
     public isShowPage: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
@@ -65,6 +66,7 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
         this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
         this.credential = UtilityService.getCredentialDetails();
         this.createdBy = +this.credential.UserId;
+        this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/MemberEngagementReport/' +this.currentIncidentId;
     }
 
     ngAfterViewChecked() {
@@ -172,6 +174,7 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
 
     incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
+        this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/MemberEngagementReport/' +this.currentIncidentId;
         //  this.isChecked = false;
         this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
     }
