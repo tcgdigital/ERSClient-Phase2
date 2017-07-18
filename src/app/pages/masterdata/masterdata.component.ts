@@ -22,7 +22,6 @@ export class MasterDateComponent {
 
 
     getPagePermission(): void {
-        debugger;
         const rootTab: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
             .find((x: PagesPermissionMatrixModel) => {
                 return x.ModuleName === 'Master Data Management' &&
