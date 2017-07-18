@@ -16,12 +16,8 @@ import { GenericSearchComponent } from '../../../../shared/components/generic.se
 import { AccountResponse } from '../../../../shared/models';
 
 import {
-    ResponseModel, DataExchangeService,
-<<<<<<< HEAD
-    GlobalConstants, EmailValidator, UtilityService, AuthModel, NameValidator, UserIdValidator, FileData, FileUploadService
-=======
-    GlobalConstants, EmailValidator, UtilityService, AuthModel, UserIdValidator
->>>>>>> master
+    ResponseModel, DataExchangeService, GlobalConstants, EmailValidator, 
+    UtilityService, AuthModel, NameValidator, UserIdValidator, FileData, FileUploadService
 } from '../../../../shared';
 
 @Component({
