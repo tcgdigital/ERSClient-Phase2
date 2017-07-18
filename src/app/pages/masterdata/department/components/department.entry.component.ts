@@ -183,7 +183,7 @@ export class DepartmentEntryComponent implements OnInit {
         return new FormGroup({
             DepartmentId: new FormControl(department ? department.DepartmentId : 0),
             DepartmentName: new FormControl(department ? department.DepartmentName : '', [Validators.required]),
-            Description: new FormControl(department ? department.Description : '', [Validators.required, NameValidator.validate]),
+            Description: new FormControl(department ? department.Description : '', [Validators.required]),
             ContactNo: new FormControl(department ? department.ContactNo : '', [Validators.required]),
             DepartmentSpoc: new FormControl(department ? department.DepartmentSpoc : '', [Validators.required]),
             ParentDepartmentId: new FormControl((department && department.ParentDepartmentId) ? department.ParentDepartmentId : ''),

@@ -33,6 +33,7 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
     currentIncidentId: number;
     currentDepartmentId: number;
     public isShow: boolean = true;
+    public isShowViewAll: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
 
     /**

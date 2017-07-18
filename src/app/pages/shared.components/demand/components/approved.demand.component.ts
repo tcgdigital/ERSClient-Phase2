@@ -289,12 +289,18 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
 
         // SignalR Notification
-        this.globalState.Subscribe('ReceiveDemandApprovalPendingResponse', (model: DemandModel) =>
-            this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId));
-        this.globalState.Subscribe('ReceiveDemandApprovedResponse', (model: DemandModel) =>
-            this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId));
-        this.globalState.Subscribe('ReceiveDemandRejectedFromApprovalResponse', (model: DemandModel) =>
-            this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId));
+        this.globalState.Subscribe('ReceiveDemandApprovalPendingResponse', (model: DemandModel) => {
+            debugger;
+            this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId);
+        });
+        this.globalState.Subscribe('ReceiveDemandApprovedResponse', (model: DemandModel) => {
+            debugger;
+            this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId);
+        });
+        this.globalState.Subscribe('ReceiveDemandRejectedFromApprovalResponse', (model: DemandModel) => {
+            debugger;
+            this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId);
+        });
     }
 
     getCurrentDepartmentName(departmentId): void {

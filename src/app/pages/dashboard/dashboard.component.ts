@@ -3,7 +3,7 @@ import {
     OnInit, SimpleChange, OnDestroy, ViewChild
 } from '@angular/core';
 import * as moment from 'moment/moment';
-import { TAB_LINKS } from './dashboard.tablink';
+//import { TAB_LINKS } from './dashboard.tablink';
 import {
     IncidentModel, IncidentService,
     IncidentDataExchangeModel
@@ -41,6 +41,7 @@ import {
 } from '@angular/forms';
 import { EmergencyTypeModel, EmergencyTypeService, PagesPermissionMatrixModel } from '../masterdata';
 import { ModalDirective } from 'ngx-bootstrap/modal';
+import { Router } from "@angular/router";
 
 @Component({
     selector: 'dashboard',
@@ -80,7 +81,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         private flightService: FlightService,
         private incidentService: IncidentService,
         private organizationService: OrganizationService,
-        private aircraftTypeService: AircraftTypeService) {
+        private aircraftTypeService: AircraftTypeService,
+        private router: Router) {
         this.incidentDate = new Date();
         this.severities = UtilityService.GetKeyValues(Severity);
     }
@@ -93,6 +95,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.emergencyLocationService.GetAllActiveEmergencyLocations()
             .subscribe((result: ResponseModel<EmergencyLocationModel>) => {
+                debugger;
                 result.Records.forEach((item: EmergencyLocationModel) => {
                     const emergencyLocationModel: EmergencyLocationModel = new EmergencyLocationModel();
                     emergencyLocationModel.IATA = item.IATA;
@@ -105,24 +108,41 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.getIncidentsToPickForReplication();
         this.getIncident(this.currentIncidentId);
         this.getDepartment(this.currentDepartmentId);
-        const rootTab: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
-            .find((x: PagesPermissionMatrixModel) => x.ModuleName === 'Dashboard' && x.ParentPageId === null && x.Type === 'Tab');
-
-        if (rootTab) {
-            const tabs: string[] = GlobalConstants.PagePermissionMatrix
-                .filter((x: PagesPermissionMatrixModel) => x.ParentPageId === rootTab.PageId)
-                .map((x) => x.PageCode);
-            if (tabs.length > 0) {
-                this.tablinks = GlobalConstants.TabLinks.filter((x: ITabLinkInterface) => tabs.some((y) => y === x.id));
-            }
-        }
-        // this.tablinks = TAB_LINKS;
+        this.getPagePermission();
 
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
+    getPagePermission(): void {
+        const rootTab: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
+            .find((x: PagesPermissionMatrixModel) => {
+                return x.ModuleName === 'Dashboard' &&
+                    x.ParentPageId === null && x.Type === 'Tab' &&
+                    x.DepartmentId === this.currentDepartmentId
+            });
 
+        if (rootTab) {
+            const accessibleTabs: string[] = GlobalConstants.PagePermissionMatrix
+                .filter((x: PagesPermissionMatrixModel) => {
+                    return x.ParentPageId === rootTab.PageId &&
+                        x.DepartmentId === this.currentDepartmentId
+                })
+                .map((x) => x.PageCode);
+            if (accessibleTabs.length > 0) {
+                this.tablinks = GlobalConstants.TabLinks.filter((x: ITabLinkInterface) => accessibleTabs.some((y) => y === x.id));
+                UtilityService.SelectFirstTab(this.tablinks, this.router);
+
+            }
+        }
+        else {
+            this.tablinks = [];
+        }
+        // this.tablinks = TAB_LINKS;
+    }
+
+    public ngAfterContentInit(): void {
+    }
 
     getAllActiveOrganizations(): void {
         this.organizationService.GetAllActiveOrganizations()
@@ -196,6 +216,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private departmentChangeHandler(department: KeyValue): void {
         this.currentDepartment = department;
         this.currentDepartmentId = department.Value;
+        this.getPagePermission();
         this.globalState.NotifyDataChanged('departmentChangeFromDashboard', department);
     }
 }
