@@ -199,7 +199,7 @@
                             </select>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6" *ngIf="isBorrowed">
-                            <label for="IncidentsToPickForReplication">Incidents To Pick For Replication</label>
+                            <label for="IncidentsToPickForReplication">Incident To Replicate</label>
                             <select id="BorrowedIncident" [(ngModel)]="incidentModel.BorrowedIncident" class="form-control" formControlName="BorrowedIncident"
                                 name="BorrowedIncident" (change)="incidentsToPickForReplicationChange($event.target.value,incidentsToPickForReplication)">
                                     <option value=0>Select Incident To Pick</option>
@@ -521,7 +521,7 @@
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6" *ngIf="isBorrowedIncidentPopup">
 
-                            <label for="IncidentsToPickForReplication">Incidents To Pick For Replication</label>
+                            <label for="IncidentsToPickForReplication">Incident To Replicate</label>
 
                             <input id="BorrowedIncidentPopup" disabled formControlName="BorrowedIncidentPopup" class="form-control" type="text" name="BorrowedIncidentPopup" readonly
                                 placeholder="Enter Borrowed Incident" />
