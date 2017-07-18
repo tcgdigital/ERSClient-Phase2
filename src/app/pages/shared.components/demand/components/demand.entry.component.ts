@@ -145,18 +145,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         }
     }
 
-    getPageSpecifiedDepartments(): void {
-        this.pageService.GetDepartmentsByPageCode('ViewDepartmentSpecificDemands')
-            .subscribe((response: ResponseModel<PageModel>) => {
-                const pagePermissions = UtilityService.pluck(response.Records[0], ['PagePermissions'])[0];
-                pagePermissions.forEach((x) => {
-                    this.departments.push(UtilityService.pluck(x, ['Department'])[0]);
-                });
-                this.demandModel.TargetDepartmentId = (this.demandModel.TargetDepartmentId === 0)
-                    ? this.departments[0].DepartmentId
-                    : this.demandModel.TargetDepartmentId;
-            });
-    }
+    
 
     getAllDepartments(): void {
         this.departmentService.GetAll()
@@ -445,7 +434,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.datepickerOption.minDate = new Date();
 
         this.getDemandType();
-        this.getPageSpecifiedDepartments();
         this.getAllDepartments();
 
         this.initializeForm();

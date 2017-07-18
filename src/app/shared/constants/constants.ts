@@ -1231,6 +1231,14 @@ export class GlobalConstants {
         selected: false,
         hidden: false,
         order: 11
+    }, {
+        id: 'broadcastdepartment',
+        title: 'Broadcast Department Mapping',
+        // icon: 'fa fa-medium fa-2x',
+        url: '/pages/masterdata/broadcastdepartment',
+        selected: false,
+        hidden: false,
+        order: 12
     }
 ] as ITabLinkInterface[];
 }

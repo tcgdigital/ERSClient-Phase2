@@ -5,12 +5,12 @@ import { HttpModule } from '@angular/http';
 
 import { BroadcastDepartmentRouting } from './boradcast.department.routing';
 import { BroadcastDepartmentComponent } from './boradcast.department.component';
-import {
-    BroadcastDepartmentEntryComponent,
-    BroadCastDepartmentListComponent, BroadcastDepartmentService
-} from './components';
+// import {
+//     BroadcastDepartmentEntryComponent,
+//     BroadCastDepartmentListComponent, BroadcastDepartmentService
+// } from './components';
 import { BrowserModule } from '@angular/platform-browser';
-import { DataExchangeService } from '../../../shared';
+import { DataExchangeService, SharedModule } from '../../../shared';
 
 
 @NgModule({
@@ -18,17 +18,18 @@ import { DataExchangeService } from '../../../shared';
         CommonModule,
         FormsModule,
         HttpModule,
+        SharedModule,
         ReactiveFormsModule,
         BroadcastDepartmentRouting
     ],
     declarations: [
-        BroadcastDepartmentComponent,
-        BroadcastDepartmentEntryComponent,
-        BroadCastDepartmentListComponent
+        BroadcastDepartmentComponent
+       // BroadcastDepartmentEntryComponent,
+       // BroadCastDepartmentListComponent
     ],
     providers: [
-        BroadcastDepartmentService,
+        //BroadcastDepartmentService,
         DataExchangeService
     ]
 })
-export default class BroadcastDepartmentMappingModule { }
+export class BroadcastDepartmentMappingModule { }

@@ -30,4 +30,6 @@ export class BroadcastDepartmentService
             .Expand('TargetDepartment($select=DepartmentId,DepartmentName)')
             .Filter(`InitiationDepartmentId eq ${departmentId}`).Execute();
     }
+
+    //GetBroadcastDepartmentsByDepartmentId () 
 }
