@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
 import { UserProfileModel } from './userProfile.model';
-import { ServiceBase, DataServiceFactory, ResponseModel } from '../../../../shared';
+import { InvalidUserProfileModel } from './invalid.userprofile.model'
+import { ServiceBase, DataServiceFactory, ResponseModel, DataService, DataProcessingService } from '../../../../shared';
 import { IUserProfileService } from './IUserProfileService';
 
 @Injectable()
@@ -15,8 +16,14 @@ export class UserProfileService extends ServiceBase<UserProfileModel>
     * 
     * @memberOf UserProfileService
     */
-    constructor(dataServiceFactory: DataServiceFactory) {
+    private _dataServiceInvalidRecords: DataService<InvalidUserProfileModel>;
+
+    constructor(private dataServiceFactory: DataServiceFactory) {
         super(dataServiceFactory, 'UserProfiles');
+
+        let option: DataProcessingService = new DataProcessingService();
+        this._dataServiceInvalidRecords = this.dataServiceFactory
+            .CreateServiceWithOptions<InvalidUserProfileModel>('InvalidUserProfileRecords', option);
     }
 
     GetQuery(query: string): Observable<ResponseModel<UserProfileModel>> {
@@ -25,7 +32,7 @@ export class UserProfileService extends ServiceBase<UserProfileModel>
     }
 
 
-       GetAllActiveWithContact(): Observable<ResponseModel<UserProfileModel>> {
+    GetAllActiveWithContact(): Observable<ResponseModel<UserProfileModel>> {
         return this._dataService.Query()
             .Filter(`MainContact ne null and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
             .Execute();
@@ -44,5 +51,16 @@ export class UserProfileService extends ServiceBase<UserProfileModel>
             .Expand('UserPermissions($select=DepartmentId,UserId;$expand=Department($select=DepartmentId;$expand=Permissions($select=DepartmentId,PageId)))')
             .Filter(`UserProfileId eq ${userprofileId}`)
             .Execute();
+    }
+
+    GetAll(): Observable<ResponseModel<UserProfileModel>>{
+        return this._dataService.Query()
+        .Expand('VisaDetails, VolunterPreferences, TrainingRecords, NextOfKins')
+        .Execute();
+    }
+
+    GetAllInvalidRecords(): Observable<ResponseModel<InvalidUserProfileModel>> {
+        return this._dataServiceInvalidRecords.Query()
+        .Execute();
     }
 }

@@ -1,7 +1,12 @@
 import { BaseModel } from '../../../../shared';
 import { NotificationModel } from '../../../shared.components/notification';
+import { NextOfKinModel } from '../../../shared.components/nextofkins';
 import { DepartmentModel } from '../../department';
 import { UserPermissionModel } from '../../userpermission';
+import { VisaDetailsModel } from './visa.details.model';
+import { VolunterPreferenceModel } from './volunter.preference.nodel';
+import { TrainingRecordModel } from './training.record.model';
+
 
 export class UserProfileModel extends BaseModel {
     public UserProfileId: number;
@@ -37,9 +42,18 @@ export class UserProfileModel extends BaseModel {
     public isActive: boolean;
     public isVolunteered: boolean;
 
+    public EmployeeId : string;
+    public Nationality : string;
+    public PassportNumber : string;
+    public PassportValidity? : Date;
+
     public UserPermissions?: UserPermissionModel[];
     public Notifications?: NotificationModel[];
     public Departments?: DepartmentModel[];
+    public VisaDetails?: VisaDetailsModel[] = [];
+    public VolunterPreferences?: VolunterPreferenceModel[] = [];
+    public TrainingRecords?: TrainingRecordModel[] = [];
+    public NextOfKins?: NextOfKinModel[] = [];
 
     constructor() {
         super();
@@ -58,3 +72,5 @@ export class UserAuthenticationModel {
     public LockoutEndDateUtc?: Date;
     public AccessFailedCount: number;
 }
+
+

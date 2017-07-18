@@ -3,3 +3,7 @@ export * from './userprofile.service';
 export * from './user.auth.service';
 export * from './userprofile.entry.component';
 export * from './userprofile.list.component';
+export * from './training.record.model';
+export * from './volunter.preference.nodel';
+export * from './visa.details.model';
+export * from './invalid.userprofile.model';
