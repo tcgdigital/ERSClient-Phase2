@@ -21,6 +21,7 @@ import {
     SubDeptDemandReceivedSummary
 } from '../../../pages/widgets/demand.received.summary.widget';
 import { ITabLinkInterface } from '../../components/tab.control';
+import { Router } from "@angular/router/router";
 
 export class UtilityService {
     public static RAGScaleData: RAGScaleModel[] = [];
@@ -396,12 +397,9 @@ export class UtilityService {
         this.isShowPage = false;
         this.pagePermissionMatrix = GlobalConstants.PagePermissionMatrix;
 
-        const pagePermissionInitial: PagesPermissionMatrixModel[]
-            = this.pagePermissionMatrix.filter((item: PagesPermissionMatrixModel) => {
-                return ((item.IsHod === true) || (item.IsHod === false && item.OnlyHOD === false));
-            });
+
         const pagePermission: PagesPermissionMatrixModel[]
-            = pagePermissionInitial.filter((item: PagesPermissionMatrixModel) => {
+            = this.pagePermissionMatrix.filter((item: PagesPermissionMatrixModel) => {
                 return (item.PageCode === pageCode && item.DepartmentId === departmentId);
             });
 
@@ -424,6 +422,54 @@ export class UtilityService {
             return template;
         }
         return this.toFormattedString(false, template, values);
+    }
+
+    
+    public static SelectFirstTab(tabs: ITabLinkInterface[], router: Router): void {
+        if (tabs.length > 0) {
+            tabs.map((item: ITabLinkInterface, index: number) => {
+                item.selected = (index === 0);
+                // item.selected=false;
+            });
+            const firstTab = tabs[0];
+            // firstTab.selected = true;
+            if (firstTab.subtab != undefined) {
+                if (firstTab.subtab.length > 0) {
+
+                    firstTab.subtab[0].selected = true;
+                    router.navigate([`${firstTab.url}${firstTab.subtab[0].url.replace('./', '/')}`]);
+                }
+                else {
+                    router.navigate([`${firstTab.url}`]);
+                }
+            }
+            else {
+                router.navigate([`${firstTab.url}`]);
+            }
+        }
+    }
+    public static GetSubTabs(parentTabName: string): ITabLinkInterface[] {
+        const departmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+        let subTabs: ITabLinkInterface[];
+        const rootTab: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
+            .find((x: PagesPermissionMatrixModel) => x.PageCode === parentTabName
+                && x.Type === 'Tab' && x.DepartmentId === departmentId && x.CanView);
+
+        if (rootTab) {
+            const tabs: string[] = GlobalConstants.PagePermissionMatrix
+                .filter((x: PagesPermissionMatrixModel) => x.ParentPageId === rootTab.PageId 
+                && x.DepartmentId === departmentId && x.CanView)
+                .map((x) => x.PageCode);
+
+            if (tabs.length > 0) {
+                subTabs = GlobalConstants.TabLinks.find((y: ITabLinkInterface) => y.id === parentTabName)
+                    .subtab.filter((x: ITabLinkInterface) => tabs.some((y) => y === x.id));
+            }
+        }
+        else {
+            subTabs = [];
+        }
+        return subTabs;
     }
 
     private static pad4(num: number): string {
@@ -504,24 +550,7 @@ export class UtilityService {
     }
 
 
-    public static GetSubTabs(parentTabName: string): ITabLinkInterface[] {
-        let subTabs: ITabLinkInterface[];
-        const rootTab: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
-            .find((x: PagesPermissionMatrixModel) => x.PageCode === parentTabName && x.Type === 'Tab');
 
-        if (rootTab) {
-            const tabs: string[] = GlobalConstants.PagePermissionMatrix
-                .filter((x: PagesPermissionMatrixModel) => x.ParentPageId === rootTab.PageId)
-                .map((x) => x.PageCode);
 
-            if (tabs.length > 0) {
-               subTabs = GlobalConstants.TabLinks.find((y: ITabLinkInterface) => y.id === parentTabName)
-                    .subtab.filter((x: ITabLinkInterface) => tabs.some((y) => y === x.id));
-            }
-        }
-        return subTabs;
-    }
-
-    
 }
 

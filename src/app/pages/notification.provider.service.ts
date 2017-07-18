@@ -113,10 +113,8 @@ export class NotificationProviderService {
 
     private CloseConnection(): void {
         try {
-            debugger;
             if (this.connectionStaters !== undefined && this.connectionStaters.length > 0) {
                 this.connectionStaters.forEach((x: ConnectionStarter) => {
-                    debugger;
                     if (x.Connection)
                         x.Connection.stop();
                     x.Connection = null;
@@ -130,7 +128,6 @@ export class NotificationProviderService {
     }
 
     private ConnectAndListen(connectionStaters: ConnectionStarter[]): void {
-        debugger;
         connectionStaters.forEach((x) => {
             x.HubConnection.createConnection({
                 hubName: x.HubName,
@@ -153,7 +150,6 @@ export class NotificationProviderService {
     }
 
     private ExecuteOperation<T extends BaseModel>(key: string, model: T): void {
-        debugger;
         const message = GlobalConstants.NotificationMessage.find((x) => x.Key === key);
         if (message.Title !== '' && message.Message !== '')
             this.toastrService.info(message.Message, message.Title);

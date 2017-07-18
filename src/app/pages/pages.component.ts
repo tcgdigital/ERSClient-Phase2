@@ -422,7 +422,6 @@ export class PagesComponent implements OnInit {
     }
 
     private ConnectAndListen(connectionStaters: ConnectionStarter[]): void {
-        debugger;
         connectionStaters.forEach((x) => {
             x.HubConnection.createConnection({
                 hubName: x.HubName,
@@ -445,7 +444,6 @@ export class PagesComponent implements OnInit {
     }
 
     private ExecuteOperation<T extends BaseModel>(key: string, model: T): void {
-        debugger;
         const message = GlobalConstants.NotificationMessage.find((x) => x.Key === key);
         if (message.Title !== '' && message.Message !== '')
             this.toastrService.info(this.PrepareMessage<T>(message.Message, model), message.Title);
@@ -453,7 +451,6 @@ export class PagesComponent implements OnInit {
     }
 
     private PrepareMessage<T extends BaseModel>(message: string, model: T): string {
-        debugger;
         const regexp: RegExp = new RegExp(/{([^}]*)}/ig);
         if (regexp.test(message)) {
             const props: string[] = [];
