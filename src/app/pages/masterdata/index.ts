@@ -1,4 +1,4 @@
-export * from './broadcast.department';
+export * from './broadcastdepartment';
 export * from './checklist';
 export * from './demandtype';
 export * from './department';
