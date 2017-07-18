@@ -5,12 +5,12 @@ export class ConnectionStarter {
     public Connection: INotificationConnection;
     public HubName: string;
     public QuesyString: any;
-    public Callbacks: CallbackListner[];
+    public Callbacks: CallbackHandler[];
 
     constructor(hubConnection: NotificationBroadcastService,
         hubName: string,
         quesyString: any,
-        callbacks: CallbackListner[]) {
+        callbacks: CallbackHandler[]) {
         this.HubConnection = hubConnection;
         this.HubName = hubName;
         this.QuesyString = quesyString;
@@ -18,13 +18,13 @@ export class ConnectionStarter {
     }
 }
 
-export class CallbackListner {
-    public Listner: string;
-    public Callback: <T extends BaseModel>(input: T) => void;
+export class CallbackHandler {
+    public ListenTo: string;
+    public Handler: <T extends BaseModel>(key: string, model: T) => void;
 
-    constructor(listner: string,
-        callback: <T extends BaseModel>(input: T) => void) {
-        this.Listner = listner;
-        this.Callback = callback;
+    constructor(listenTo: string,
+        handler: <T extends BaseModel>(key: string, model: T) => void) {
+        this.ListenTo = listenTo;
+        this.Handler = handler;
     }
 }

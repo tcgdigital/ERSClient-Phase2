@@ -35,7 +35,7 @@ export class ForgotPasswordComponent implements OnInit, AfterViewInit {
         this.forgotPasswordService.GetEecurityQuestion(value)
             .subscribe((x) => {
                 this.SecurityQuestion = x;
-                if (x == null || x == undefined) {
+                if (x == null || x === undefined) {
                     this.toastrService.error('The UserId or Email does not exist');
                 }
                 else if (x.trim().length <= 0) {

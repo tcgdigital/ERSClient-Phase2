@@ -8,7 +8,7 @@ export interface IAffectedObjectsService extends IServiceInretface<InvolvePartyM
 
     FlattenAffactedObjects(involvedParty: InvolvePartyModel): AffectedObjectsToView[];
 
-    MapAffectedPeopleToSave(affectedObjectsForVerification):AffectedObjectModel[];
+    MapAffectedPeopleToSave(affectedObjectsForVerification, userid: number): AffectedObjectModel[];
 
     CreateBulkObjects(entities: AffectedObjectModel[]): Observable<AffectedObjectModel[]>;
 

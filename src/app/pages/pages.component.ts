@@ -3,7 +3,7 @@ import { Routes, Router, ActivatedRoute } from '@angular/router';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import * as _ from 'underscore';
 import { Observable } from 'rxjs/Observable';
-import { ConnectionStarter, CallbackListner } from './page.model';
+import { ConnectionStarter, CallbackHandler } from './page.model';
 import {
     SideMenuService, KeyValue,
     ResponseModel, GlobalStateService, StorageType, GlobalConstants, BaseModel
@@ -28,7 +28,9 @@ import { DemandModel } from './shared.components/demand';
 import { MediaModel } from './shared.components/media';
 import { EnquiryModel } from './shared.components/call.centre';
 import { ExternalInputModel } from './callcenteronlypage';
-
+import { PresidentMessageModel } from './shared.components/presidentMessage';
+import { PresidentMessageWidgetModel } from './widgets/presidentMessage.widget';
+import { MediaReleaseWidgetModel } from './widgets/mediaRelease.widget';
 
 @Component({
     selector: 'pages',
@@ -78,6 +80,8 @@ export class PagesComponent implements OnInit {
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig,
         private route: ActivatedRoute,
+
+        // private notificationProviderService: NotificationProviderService
         private broadcastMessageNotificationHub: NotificationBroadcastService,
         private casualtyStatusUpdateNotificationHub: NotificationBroadcastService,
         private checklistSubmissionNotificationHub: NotificationBroadcastService,
@@ -85,10 +89,12 @@ export class PagesComponent implements OnInit {
         private crisisCreationNotificationHub: NotificationBroadcastService,
         private demandSubmissionNotificationHub: NotificationBroadcastService,
         private presidentsMessageAndMediaReleaseNotificationHub: NotificationBroadcastService,
+        private presidentAndMediaWorkflowNotificationHub: NotificationBroadcastService,
         private queryNotificationHub: NotificationBroadcastService) {
         toastrConfig.closeButton = true;
         toastrConfig.progressBar = true;
         toastrConfig.enableHtml = true;
+        // this.connectionStaters = new Array<ConnectionStarter>();
     }
 
     ngOnInit(): void {
@@ -102,6 +108,8 @@ export class PagesComponent implements OnInit {
         this.ProcessData(() => {
             this.globalState.Subscribe('incidentCreate', (model: number) => this.incidentCreateHandler(model));
             this.initiateHubConnections();
+
+            // this.notificationProviderService.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
             this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
         }, local_incidents, local_departments);
 
@@ -158,7 +166,9 @@ export class PagesComponent implements OnInit {
         UtilityService.SetToSession({ CurrentDepartmentId: selectedDepartment.Value });
         this.currentDepartmentId = selectedDepartment.Value;
         this.globalState.NotifyDataChanged('departmentChange', selectedDepartment);
+
         this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
+        // this.notificationProviderService.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
     }
 
     public onIncidentChange(selectedIncident: KeyValue): void {
@@ -169,7 +179,9 @@ export class PagesComponent implements OnInit {
                 .find((z) => z.Key === selectedIncident.Value.toString()).Value
         });
         this.globalState.NotifyDataChanged('incidentChange', selectedIncident);
+
         this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
+        // this.notificationProviderService.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
     }
 
     public onMenuClick($event): void {
@@ -321,121 +333,218 @@ export class PagesComponent implements OnInit {
         this._userRegistrationHubConnection = this.route.snapshot.data['UserRegistrationHubConnection'];
     }
 
+    /**
+     * Prepare notification objects with hub name and callback server events
+     *
+     * @private
+     * @param {number} incId
+     * @param {number} deptId
+     * @memberof PagesComponent
+     */
     private PrepareConnectionAndCall(incId: number, deptId: number) {
-        this.CloseConnection(this.connectionStaters);
-        this.connectionStaters = new Array<ConnectionStarter>();
+        if (this.connectionStaters === undefined || this.connectionStaters.length === 0) {
+            this.connectionStaters = new Array<ConnectionStarter>();
 
-        const broadcastNotificationResponse: string[] = ['ReceiveBroadcastCreationResponse', 'ReceiveBroadcastModificationResponse'];
-        const casualtyNotificationResponse: string[] = ['ReceiveCasualtyCountResponse'];
-        const checklistNotificationResponse: string[] = ['ReceiveChecklistCreationResponse',
-            'ReceiveChecklistActivationResponse', 'ReceiveChecklistClosureResponse'];
-        const crisisCreationNotificationResponse: string[] = ['ReceiveCrisisCreationResponse'];
-        const crisisClosureNotificationResponse: string[] = ['ReceiveCrisisClosureResponse'];
-        const mediaNotificationResponse: string[] = ['ReceiveMediaMessageResponse', 'ReceivePresidentsMessageResponse'];
-        const dimandNotificationResponse: string[] = ['ReceiveDemandCreationResponse', 'ReceiveDemandAssignedResponse',
-            'ReceiveCompletedDemandAssignedResponse', 'ReceiveDemandApprovalPendingResponse', 'ReceiveDemandApprovedResponse',
-            'ReceiveDemandClosedResponse', 'ReceiveDemandStatusUpdateResponse', 'ReceiveCompletedDemandstoCloseResponse',
-            'ReceiveRejectedDemandstoAssignResponse'];
-        const queryNotificationResponse: string[] = ['ReceiveCargoEnquiryCreationResponse', 'ReceiveCrewEnquiryCreationResponse',
-            'ReceiveMediaEnquiryCreationResponse', 'ReceiveOtherEnquiryCreationResponse', 'ReceivePassangerEnquiryCreationResponse',
-            'ReceiveFutureTravelEnquiryCreationResponse', 'ReceiveGeneralUpdateEnquiryCreationResponse',
-            'ReceiveSituationalEnquiryCreationResponse', 'ReceiveCustomerDissatisfactionEnquiryCreationResponse',
-            'AssignedCargoEnquiryCreationResponse', 'AssignedCrewEnquiryCreationResponse',
-            'AssignedMediaEnquiryCreationResponse', 'AssignedOtherEnquiryCreationResponse', 'AssignedPassangerEnquiryCreationResponse',
-            'AssignedFutureTravelEnquiryCreationResponse', 'AssignedGeneralUpdateEnquiryCreationResponse',
-            'AssignedSituationalEnquiryCreationResponse', 'AssignedCustomerDissatisfactionEnquiryCreationResponse'];
+            // this.connectionStaters.push(new ConnectionStarter(this.broadcastMessageNotificationHub,
+            //     'BroadcastMessageNotificationHub', {
+            //         departmentId: deptId, incidentId: incId
+            //     }, this.GenerateCallbackHandler<BroadCastModel>('BroadcastNotification')
+            // ));
 
-        const callbackListners: <T extends BaseModel>(keys: string[]) => CallbackListner[] =
-            <T extends BaseModel>(keys: string[]) => {
-                return GlobalConstants.NotificationMessage
-                    .filter((x) => keys.some((y) => y === x.Key))
-                    .map((z) => new CallbackListner(z.Key, (data: T) => { showMessage(z.Key, data); }));
-            };
+            // this.connectionStaters.push(new ConnectionStarter(this.casualtyStatusUpdateNotificationHub,
+            //     'CasualtyStatusUpdateNotificationHub', {
+            //         incidentId: incId
+            //     }, this.GenerateCallbackHandler<CasualtyExchangeModel>('CasualtyNotification')
+            // ));
 
-        const showMessage: <T extends BaseModel>(key: string, model: T) => void =
-            <T extends BaseModel>(key: string, model: T) => {
-                const message = GlobalConstants.NotificationMessage.find((x) => x.Key === key);
-                if (message.Title !== '' && message.Message !== '')
-                    this.toastrService.info(message.Message, message.Title);
-                this.globalState.NotifyDataChanged(key, model);
-            };
+            // this.connectionStaters.push(new ConnectionStarter(this.checklistSubmissionNotificationHub,
+            //     'ChecklistSubmissionNotificationHub', {
+            //         departmentId: deptId, incidentId: incId
+            //     }, this.GenerateCallbackHandler<ActionableModel>('ChecklistNotification')
+            // ));
 
-        /*this.connectionStaters.push(new ConnectionStarter(this.broadcastMessageNotificationHub,
-            'BroadcastMessageNotificationHub', {
-                departmentId: deptId, incidentId: incId
-            }, callbackListners<BroadCastModel>(broadcastNotificationResponse)
-        ));
+            // this.connectionStaters.push(new ConnectionStarter(this.crisisClosureNotificationHub,
+            //     'CrisisClosureNotificationHub', {
+            //         incidentId: incId
+            //     }, this.GenerateCallbackHandler<IncidentModel>('CrisisClosureNotification')
+            // ));
 
-        this.connectionStaters.push(new ConnectionStarter(this.casualtyStatusUpdateNotificationHub,
-            'CasualtyStatusUpdateNotificationHub', {
-                incidentId: incId
-            }, callbackListners<CasualtyExchangeModel>(casualtyNotificationResponse)
-        ));
+            // this.connectionStaters.push(new ConnectionStarter(this.crisisCreationNotificationHub,
+            //     'CrisisCreationNotificationHub', null,
+            //     this.GenerateCallbackHandler<IncidentModel>('CrisisCreationNotification')
+            // ));
 
-        this.connectionStaters.push(new ConnectionStarter(this.checklistSubmissionNotificationHub,
-            'ChecklistSubmissionNotificationHub', {
-                departmentId: deptId, incidentId: incId
-            }, callbackListners<ActionableModel>(checklistNotificationResponse)
-        ));
+            this.connectionStaters.push(new ConnectionStarter(this.demandSubmissionNotificationHub,
+                'DemandSubmissionNotificationHub', {
+                    departmentId: deptId, incidentId: incId
+                }, this.GenerateCallbackHandler<DemandModel>('DemandNotification')
+            ));
 
-        this.connectionStaters.push(new ConnectionStarter(this.crisisClosureNotificationHub,
-            'CrisisClosureNotificationHub', {
-                incidentId: incId
-            }, callbackListners<IncidentModel>(crisisClosureNotificationResponse)
-        ));
+            // this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
+            //     'PresidentsMessageAndMediaReleaseNotificationHub', {
+            //         incidentId: incId
+            //     }, this.GenerateCallbackHandler<PresidentMessageWidgetModel>('PresidentsMessageNotification')
+            // ));
 
-        this.connectionStaters.push(new ConnectionStarter(this.crisisCreationNotificationHub,
-            'CrisisCreationNotificationHub', null, callbackListners<IncidentModel>(crisisCreationNotificationResponse)
-        ));*/
+            // this.connectionStaters.push(new ConnectionStarter(this.presidentAndMediaWorkflowNotificationHub,
+            //     'PresidentAndMediaWorkflowNotificationHub', {
+            //         departmentId: deptId, incidentId: incId
+            //     }, this.GenerateCallbackHandler<PresidentMessageModel>('PresidentsMessageWorkflowNotification')
+            // ));
 
-        this.connectionStaters.push(new ConnectionStarter(this.demandSubmissionNotificationHub,
-            'DemandSubmissionNotificationHub', {
-                departmentId: deptId, incidentId: incId
-            }, callbackListners<DemandModel>(dimandNotificationResponse)
-        ));
+            // this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
+            //     'PresidentsMessageAndMediaReleaseNotificationHub', {
+            //         incidentId: incId
+            //     }, this.GenerateCallbackHandler<MediaReleaseWidgetModel>('MediaMessageNotification')
+            // ));
 
-        /*this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
-            'PresidentsMessageAndMediaReleaseNotificationHub', {
-                incidentId: incId
-            }, callbackListners<MediaModel>(mediaNotificationResponse)
-        ));*/
+            // this.connectionStaters.push(new ConnectionStarter(this.presidentAndMediaWorkflowNotificationHub,
+            //     'PresidentAndMediaWorkflowNotificationHub', {
+            //         departmentId: deptId, incidentId: incId
+            //     }, this.GenerateCallbackHandler<MediaModel>('MediaMessageWorkflowNotification')
+            // ));
 
-        this.connectionStaters.push(new ConnectionStarter(this.queryNotificationHub,
-            'QueryNotificationHub', {
-                incidentId: incId
-            }, callbackListners<ExternalInputModel>(queryNotificationResponse)
-        ));
+            // this.connectionStaters.push(new ConnectionStarter(this.queryNotificationHub,
+            //     'QueryNotificationHub', {
+            //         incidentId: incId
+            //     }, this.GenerateCallbackHandler<ExternalInputModel>('EnquiryNotification')
+            // ));
 
-        this.ConnectAndListen(this.connectionStaters);
+            this.ConnectAndListen(this.connectionStaters);
+        }
+        else {
+            this.connectionStaters.forEach((store: ConnectionStarter) => {
+                if (store.Connection) {
+                    Object.getOwnPropertyNames(store.QuesyString).forEach((x: string) => {
+                        if (x === 'departmentId')
+                            store.QuesyString[x] = deptId;
+                        else if (x === 'incidentId')
+                            store.QuesyString[x] = incId;
+                    });
+
+                    store.Connection.reconnect(store, this.ListenCallbacks);
+                }
+            });
+        }
     }
 
-    private CloseConnection(connectionStaters: ConnectionStarter[]): void {
+    private CloseConnection(): void {
         try {
-            if (connectionStaters.length > 0) {
-                connectionStaters.forEach((x: ConnectionStarter) => {
+            if (this.connectionStaters !== undefined && this.connectionStaters.length > 0) {
+                this.connectionStaters.forEach((x: ConnectionStarter) => {
                     if (x.Connection)
                         x.Connection.stop();
                     x.Connection = null;
+                    x.Callbacks = null;
                 });
+                this.connectionStaters = null;
             }
         } catch (ex) {
             console.log(ex);
         }
     }
 
+    /**
+     * Connect notification hub and call listner to listen server event
+     * This function will call first time to for registered hub connections
+     * @private
+     * @param {ConnectionStarter[]} connectionStaters
+     * @memberof PagesComponent
+     */
     private ConnectAndListen(connectionStaters: ConnectionStarter[]): void {
-        connectionStaters.forEach((x) => {
+        connectionStaters.forEach((x: ConnectionStarter) => {
             x.HubConnection.createConnection({
                 hubName: x.HubName,
                 qs: x.QuesyString
             }).start().then((c: INotificationConnection) => {
-                x.Connection = c;
-                x.Callbacks.forEach((y) => {
-                    c.listenFor<any>(y.Listner).subscribe((s) => {
-                        y.Callback(s);
-                    });
-                });
+                this.ListenCallbacks(c, x);
             });
         });
+    }
+
+    /**
+     * Listning server callback events on every SignalR connection start event
+     *
+     * @private
+     * @param {INotificationConnection} c
+     * @param {ConnectionStarter} x
+     * @memberof PagesComponent
+     */
+    private ListenCallbacks(notificationConnection: INotificationConnection, connectionStore: ConnectionStarter): void {
+        connectionStore.Connection = notificationConnection;
+        if (connectionStore.Callbacks.length > 0) {
+            connectionStore.Callbacks.forEach((cl: CallbackHandler) => {
+                notificationConnection.listenFor<any>(cl.ListenTo).subscribe((s) => {
+                    cl.Handler(cl.ListenTo, s);
+                });
+            });
+        }
+    }
+
+    /**
+     * Generating callback handler to handle execution of each server callback event
+     *
+     * @private
+     * @template T
+     * @param {string} keyType
+     * @returns {CallbackHandler[]}
+     * @memberof PagesComponent
+     */
+    private GenerateCallbackHandler<T extends BaseModel>(keyType: string): CallbackHandler[] {
+        return GlobalConstants.NotificationMessage
+            .filter((x) => x.Type === keyType)
+            .map((z) => new CallbackHandler(z.Key, this.ExecuteOperation));
+    }
+
+    /**
+     * Executes on every server callback event calling.
+     * 1. This function will display toast message if available
+     * 2. Raised a NotifyDataChanged for respective module to react on the event
+     * @private
+     * @template T
+     * @param {string} key
+     * @param {T} model
+     * @memberof PagesComponent
+     */
+    private ExecuteOperation<T extends BaseModel>(key: string, model: T): void {
+        const message = GlobalConstants.NotificationMessage.find((x) => x.Key === key);
+        if (message.Title !== '' && message.Message !== '')
+            this.toastrService.info(this.PrepareMessage<T>(message.Message, model), message.Title);
+        this.globalState.NotifyDataChanged(key, model);
+    }
+
+    /**
+     * Preparing the toast message content if it content placeholder of model property
+     *
+     * @private
+     * @template T
+     * @param {string} message
+     * @param {T} model
+     * @returns {string}
+     * @memberof PagesComponent
+     */
+    private PrepareMessage<T extends BaseModel>(message: string, model: T): string {
+        const regexp: RegExp = new RegExp(/{([^}]*)}/ig);
+        if (regexp.test(message)) {
+            const props: string[] = [];
+            let values: any[] = [];
+
+            message = message.replace(regexp, (match: string, contents: string, offset: number, fullStr: string) => {
+                const args: string[] = contents.split(/:|\./ig);
+                if (args.length > 2) {
+                    props.push(args[2]);
+                    return `{${args[0]}}`;
+                }
+                else
+                    return '';
+            });
+
+            if (props.length > 0) {
+                values = props.map((x) => model[x]);
+                message = UtilityService.FormatString(message, values);
+            }
+            return message;
+        }
+        else return message;
     }
 }

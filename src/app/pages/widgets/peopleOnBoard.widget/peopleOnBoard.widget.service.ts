@@ -175,6 +175,10 @@ export class PeopleOnBoardWidgetService implements OnInit {
         return this.involvedPartyService.GetAllGroundVictimsByIncident(incidentId);
     }
 
+     GetGroundVictimsByQuery(query: string, incidentid:number): Observable<ResponseModel<InvolvePartyModel>> {
+        return this.involvedPartyService.GetGroundVictimsByQuery(query,incidentid);
+    }
+
     GetEnquiredAffectedPeople(incidentId: number): Observable<ResponseModel<EnquiryModel>> {
         return this.enquiryService.GetEnquiredAffectedPeople(incidentId);
     }

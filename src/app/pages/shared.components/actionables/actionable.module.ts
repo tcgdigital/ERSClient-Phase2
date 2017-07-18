@@ -6,6 +6,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { MdCheckboxModule } from '@angular2-material/checkbox';
 import { ActionableRouting } from './actionable.routing';
 import { ActionableComponent } from './actionable.component';
+import { ChecklistTrailService } from "../checklist.trail";
 import {
     ActionableActiveComponent,
     ActionableClosedComponent, ActionableService
@@ -41,7 +42,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
         FlightService,
         EmergencyTypeService,
         DataExchangeService,
-        FileUploadService
+        FileUploadService,
+        ChecklistTrailService
     ]
 })
 export class ActionableModule { }

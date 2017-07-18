@@ -35,8 +35,8 @@
 
                     <small *ngIf="form.controls.Name.hasError('required')" [hidden]="form.controls.Name.valid || (form.controls.Name.pristine && !submitted)"
                         class="text-danger">Required</small>
-                    <small *ngIf="form.controls.Name.hasError('validateName')" [hidden]="form.controls.Name.valid || (form.controls.Name.pristine && !submitted)"
-                        class="text-danger">Invalid Input</small>
+                     <!-- <small *ngIf="form.controls.Name.hasError('validateName')" [hidden]="form.controls.Name.valid || (form.controls.Name.pristine && !submitted)"
+                        class="text-danger">Invalid Input</small>  -->
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-12">

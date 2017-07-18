@@ -4,8 +4,6 @@ import { UtilityService } from '../../../shared/services';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 
-
-
 @Component({
     selector: 'broadcast-main',
     encapsulation: ViewEncapsulation.None,
@@ -19,22 +17,22 @@ export class BroadcastComponent {
     protected _onRouteChange: Subscription;
     isArchive: boolean = false;
 
-
     constructor(private _router: Router) { }
+
     getNotification(evt: BroadCastModel) {
         this.evtBroadcast = evt;
     }
+
     ngOnInit(): any {
-        this.incidentId = +UtilityService.GetFromSession("CurrentIncidentId");
-        this.initiatedDepartment = +UtilityService.GetFromSession("CurrentDepartmentId");
-        if (this._router.url.indexOf("archivedashboard") > -1) {
-            this.incidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
+        this.incidentId = +UtilityService.GetFromSession('CurrentIncidentId');
+        this.initiatedDepartment = +UtilityService.GetFromSession('CurrentDepartmentId');
+        if (this._router.url.indexOf('archivedashboard') > -1) {
+            this.incidentId = +UtilityService.GetFromSession('ArchieveIncidentId');
             this.isArchive = true;
         }
         else {
-            this.incidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+            this.incidentId = +UtilityService.GetFromSession('CurrentIncidentId');
             this.isArchive = false;
         }
-
     }
 }

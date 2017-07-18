@@ -9,12 +9,13 @@
                 <th>Completion Status</th>
                 <th>RAG</th>
                 <th>Download</th>
+                <th>Trail</th>
                 <th>Details</th>
             </tr>
         </thead>
         <tbody>
             <tr [hidden]="activeActionables.length != 0">
-                <td colspan="7">No records found.</td>
+                <td colspan="8">No records found.</td>
             </tr>
             <ng-container *ngFor="let actionable of activeActionables; let i = index;">
                 <tr>
@@ -42,6 +43,7 @@
                     <td data-title="Download">
                         <a class="fa fa-download fa-2x" target="_self" *ngIf="actionable.UploadLinks!=null" href="{{actionable.UploadLinks}}" download="{{actionable.FileName}}"></a>
                     </td>
+                    <td data-title="Trail"><i class="fa fa-info-circle fa-2x" (click)="openTrail(actionable)"></i> </td>
                     <td data-title="Details"><i class="fa fa-edit fa-2x" (click)="openActionableDetail(actionable)"></i>
                     </td>
                 </tr>
@@ -115,6 +117,40 @@
                             </div>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div bsModal #childModalTrail="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">Checklist Completion status Trail</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="cancelTrail()">
+                  <span aria-hidden="true">&times;</span>
+                   </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <responsive-table>
+                            <table responsive-table-body>
+                                <tbody>
+                                    <tr *ngIf="!checklistTrails.length>0">
+                                        <td> No Records to display.
+                                        </td>
+                                    </tr>
+                                    <tr *ngFor="let trail of checklistTrails">
+                                        <td [innerHTML]="trail.Query" type="text">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </responsive-table>
+                    </div>
                 </div>
             </div>
         </div>

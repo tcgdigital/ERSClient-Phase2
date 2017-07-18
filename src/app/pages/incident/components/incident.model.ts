@@ -30,7 +30,8 @@ export class IncidentModel extends BaseModel {
     //public AirportInCharge: string;
     public OrganizationId: number;
     //public CrisisReporterIdentity: string;
-
+    public Latitude: string;
+    public Longitude: string;
     public SourceInformation: string;
     public ReportedByName: string;
     public ReportedByAddress: string;

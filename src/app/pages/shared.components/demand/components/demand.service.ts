@@ -112,7 +112,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
             item.DemandId = demand.DemandId;
             item.DemandTypeName = demand.DemandType.DemandTypeName;
             item.DemandDesc = demand.DemandDesc;
-            item.RequesterDepartmentName = (!demand.RequesterDepartment) ?  ' ' : demand.RequesterDepartment.DepartmentName;
+            item.RequesterDepartmentName = (!demand.RequesterDepartment) ? ' ' : demand.RequesterDepartment.DepartmentName;
             item.RequesterParentDepartmentName = (!demand.RequesterParentDepartment) ? '' : demand.RequesterParentDepartment.DepartmentName;
             item.Priority = demand.Priority;
             item.RequiredLocation = demand.RequiredLocation;
@@ -182,7 +182,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
 
     public GetDepartmentIdProjection(departmentId: number): Observable<ResponseModel<DepartmentAccessOwnerModel>> {
         const departmentIdProjection: string = '';
-        const departmentIds: number[]=[];
+        const departmentIds: number[] = [];
         return this.departmentAccessOwnerService.GetDependentDepartmentAccessOwners(departmentId);
     }
 
@@ -256,7 +256,6 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
             }
         });
         requests.push(new RequestModel<BaseModel>(`/odata/Demands?$filter=IncidentId eq ${incidentId} and (${filterString}) and ActiveFlag eq 'Active'`, WEB_METHOD.GET));
-        return this._batchDataService.BatchPost<BaseModel>(requests)
-            .Execute();
+        return this._batchDataService.BatchPost<BaseModel>(requests).Execute();
     }
 }

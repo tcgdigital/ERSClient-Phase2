@@ -9,7 +9,7 @@ import { CasualtySummeryModel } from '../../../widgets/casualty.summary.widget';
 export interface IAffectedPeopleService extends IServiceInretface<AffectedPeopleModel> {
     FlattenAffectedPeople(involvedParty: InvolvePartyModel): AffectedPeopleToView[];
 
-    MapAffectedPeople(affectedPeopleForVerification): AffectedPeopleModel[];
+    MapAffectedPeople(affectedPeopleForVerification, userid: number): AffectedPeopleModel[];
 
     GetAffectedPeopleCount(incidentId: number): Observable<number>;
 

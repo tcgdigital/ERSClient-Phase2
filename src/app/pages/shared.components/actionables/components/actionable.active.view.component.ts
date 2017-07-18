@@ -14,14 +14,15 @@ import { ChecklistModel, ChecklistMapper } from '../../../masterdata/checklist/c
 import { ActionableModel } from './actionable.model';
 import { ActionableService } from './actionable.service';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department/components';
+import * as moment from 'moment/moment';
 import {
     ResponseModel, DataExchangeService,
-    UtilityService, GlobalConstants, KeyValue,
+    UtilityService, GlobalConstants, KeyValue, BaseModel,
     FileUploadService, GlobalStateService, SharedModule, AuthModel
 } from '../../../../shared';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import * as _ from 'underscore';
-
+import { ChecklistTrailModel, ChecklistTrailService } from "../../checklist.trail";
 @Component({
     selector: 'actionable-active',
     encapsulation: ViewEncapsulation.None,
@@ -30,11 +31,12 @@ import * as _ from 'underscore';
 export class ActionableActiveComponent implements OnInit, OnDestroy, AfterContentInit {
     @ViewChild('myFileInput') myInputVariable: any;
     @ViewChild('childModal') public childModal: ModalDirective;
+    @ViewChild('childModalTrail') public childModalTrail: ModalDirective;
 
     editActionableModel: ActionableModel = null;
     tempActionable: ActionableModel = null;
     activeActionables: ActionableModel[] = [];
-    filesToUpload: Array<File>;
+    filesToUpload: File[];
     filepathWithLinks: string = null;
     fileName: string = null;
     actionableModelToUpdate: ActionableModel = null;
@@ -50,13 +52,16 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     disableUploadButton: boolean;
     private currentDepartmentId: number = null;
     private currentIncident: number = null;
-
+    public checklistTrail: ChecklistTrailModel = null;
+    public checklistTrails: ChecklistTrailModel[] = [];
+    public allDepartments:DepartmentModel[]=[];
+    public listActionableSelected: any[] = [];
     constructor(formBuilder: FormBuilder, private actionableService: ActionableService,
         private fileUploadService: FileUploadService, private departmentService: DepartmentService,
         private dataExchange: DataExchangeService<boolean>, private globalState: GlobalStateService,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig, private _router: Router,
-        private injector: Injector) {
+        private injector: Injector, private checklistTrailService: ChecklistTrailService) {
         this.filesToUpload = [];
         this.globalStateProxyOpen = injector.get(GlobalStateService);
     }
@@ -83,6 +88,10 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
 
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+
+        // Signalr Notifivation
+        this.globalState.Subscribe('ReceiveChecklistActivationResponse', (model: ActionableModel) =>
+            this.getAllActiveActionable(model.DepartmentId, model.IncidentId));
     }
 
     openChildActionable(actionable: ActionableModel): void {
@@ -91,7 +100,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
             .subscribe((responseActionable: ResponseModel<ActionableModel>) => {
                 this.departmentService.GetDepartmentNameIds()
                     .subscribe((response: ResponseModel<DepartmentModel>) => {
-                        actionable["actionableChilds"]=[];
+                        actionable['actionableChilds'] = [];
                         responseActionable.Records[0].CheckList.CheckListChildrenMapper.forEach((item: ChecklistMapper) => {
                             this.GetListOfChildActionables(item.ChildCheckListId, this.currentIncident, (child: ActionableModel) => {
                                 child['DepartmentName'] = response.Records
@@ -120,10 +129,27 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     ngAfterContentInit(): void {
         this.setRagIntervalHandler();
     }
+    openTrail(actionable: ActionableModel): void {
+        this.getActionableTrails(actionable.ActionId);
+    }
+
+    getActionableTrails(actionaId: number): void {
+        this.checklistTrailService.GetTrailByActionableId(actionaId)
+            .subscribe((response: ResponseModel<ChecklistTrailModel>) => {
+                this.checklistTrails = response.Records;
+                this.childModalTrail.show();
+            }, (error: any) => {
+                console.log('error:  ' + error);
+            });
+    }
+
+    cancelTrail(): void {
+        this.childModalTrail.hide();
+    }
 
     IsDone(event: any, editedActionable: ActionableModel): void {
         editedActionable.Done = true;
-        let tempActionable = this.activeActionables.find((item: ActionableModel) => {
+        const tempActionable = this.activeActionables.find((item: ActionableModel) => {
             return (item.ActionId === editedActionable.ActionId);
         });
         tempActionable.Done = editedActionable.Done;
@@ -135,11 +161,11 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     upload(actionableClicked: ActionableModel) {
         if (this.filesToUpload.length > 0) {
             this.disableUploadButton = false;
-            let baseUrl = GlobalConstants.EXTERNAL_URL;
+            const baseUrl = GlobalConstants.EXTERNAL_URL;
             this.fileUploadService.uploadFiles<string>(baseUrl + 'api/fileUpload/upload', this.filesToUpload)
                 .subscribe((result: string) => {
                     this.filepathWithLinks = `${GlobalConstants.EXTERNAL_URL}UploadFiles/${result.replace(/^.*[\\\/]/, '')}`;
-                    let extension = result.replace(/^.*[\\\/]/, '').split('.').pop();
+                    const extension = result.replace(/^.*[\\\/]/, '').split('.').pop();
                     this.fileName = `Checklist_${actionableClicked.CheckListCode}_${actionableClicked.IncidentId}.${extension}`;
                 }, (error) => {
                     console.log(`Error: ${error}`);
@@ -149,7 +175,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
 
     fileChangeEvent(fileInput: any) {
         this.filesToUpload = [];
-        for (var i = 0; i < fileInput.target.files.length; i++) {
+        for (let i = 0; i < fileInput.target.files.length; i++) {
             const extension = fileInput.target.files[i].name.split('.').pop();
             if (extension !== 'exe' && extension !== 'dll') {
                 this.filesToUpload.push(fileInput.target.files[i]);
@@ -186,9 +212,9 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
 
     getAllActiveActionableByIncident(incidentId): void {
         this.parentChecklistIds = [];
-        let parents: number[] = [];
+        const parents: number[] = [];
         this.ChecklistMappers = [];
-        let mappers: ChecklistMapper[] = [];
+        const mappers: ChecklistMapper[] = [];
 
         this.actionableService.GetAllOpenByIncidentId(incidentId)
             .subscribe((response: ResponseModel<ActionableModel>) => {
@@ -248,7 +274,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     activeActionableClick(activeActionablesUpdate: ActionableModel[]): void {
-        let filterActionableUpdate = activeActionablesUpdate
+        const filterActionableUpdate = activeActionablesUpdate
             .filter((item: ActionableModel) => item.Done === true);
         if (filterActionableUpdate.length > 0) {
             filterActionableUpdate.forEach((x) => {
@@ -272,18 +298,62 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     private batchUpdate(data: any[]) {
+        this.listActionableSelected = data;
         this.actionableService.BatchOperation(data)
             .subscribe((x) => {
-                this.toastrService.success('Actionables updated successfully.', 'Success', this.toastrConfig);
-                this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
-                this.globalStateProxyOpen.NotifyDataChanged('checkListStatusChange', null);
+                this.SaveChecklistTrails(this.listActionableSelected);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
     }
 
-    private setRagIntervalHandler(): void {
-        Observable.interval(10000).subscribe(_ => {
+    private SaveChecklistTrails(data: any[]): void {
+        this.checklistTrails = [];
+        this.departmentService.GetAllActiveDepartments()
+        .subscribe((allResultDepartments:ResponseModel<DepartmentModel>)=>{
+            this.allDepartments=allResultDepartments.Records;
+            this.actionableService.GetAllByIncident(+UtilityService.GetFromSession('CurrentIncidentId'))
+            .subscribe((resultsActionable: ResponseModel<ActionableModel>) => {
+                data.forEach((item: ActionableModel) => {
+                    this.checklistTrail = new ChecklistTrailModel();
+                    this.checklistTrail.ChecklistTrailId = 0;
+                    this.checklistTrail.ActionId = item.ActionId;
+                    this.checklistTrail.CompletionStatus = item.CompletionStatus;
+                    this.checklistTrail.CompletionStatusChangedOn = new Date();
+                    this.checklistTrail.CompletionStatusChangedBy = +UtilityService.GetFromSession('CurrentUserId');
+                    this.checklistTrail.DepartmentId =  +UtilityService.GetFromSession("CurrentDepartmentId");
+                    this.checklistTrail.Department = this.allDepartments.filter((itemDepartment:DepartmentModel)=>{
+                        return itemDepartment.DepartmentId==this.checklistTrail.DepartmentId;
+                    })[0];
+                    this.checklistTrail.ActiveFlag = 'Active';
+                    this.checklistTrail.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
+                    this.checklistTrail.CreatedOn = new Date();
+                    this.checklistTrail.IncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
+                    const actionables: ActionableModel[] = resultsActionable.Records.filter((actionableItem: ActionableModel) => {
+                        return actionableItem.ActionId == item.ActionId;
+                    });
+                    if (actionables.length > 0) {
+                        this.checklistTrail.ChklistId = actionables[0].ChklistId;
+                    }
+                    this.checklistTrail.Query = `<div><p>Checklist completion status is <strong>${item.CompletionStatus}</strong> which is changed by department ${this.checklistTrail.Department.DepartmentName} on <strong>Date :</strong>  ${moment(this.checklistTrail.CreatedOn).format('DD-MMM-YYYY h:mm A')}  </p><div></p><div>`;
+                    this.checklistTrails.push(this.checklistTrail);
+                });
+
+                this.checklistTrailService.BatchOperation(this.checklistTrails)
+                    .subscribe((result: ResponseModel<BaseModel>) => {
+                        this.toastrService.success('Actionables updated successfully.', 'Success', this.toastrConfig);
+                        this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
+                        this.globalStateProxyOpen.NotifyDataChanged('checkListStatusChange', null);
+                    });
+            });
+
+    
+        });
+        }
+
+    
+        private setRagIntervalHandler(): void {
+        Observable.interval(10000).subscribe((_) => {
             this.activeActionables.forEach((item: ActionableModel) => {
                 item.RagColor = UtilityService.GetRAGStatus('Checklist', item.AssignedDt, item.ScheduleClose);
                 console.log(`Schedule run RAG ststus: ${item.RagColor}`);

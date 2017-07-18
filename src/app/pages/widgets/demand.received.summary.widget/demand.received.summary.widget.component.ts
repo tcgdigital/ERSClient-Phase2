@@ -53,6 +53,8 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
     private $selfElement: JQuery;
     private $placeholder: JQuery;
     public isShow: boolean = true;
+    public isShowViewAll: boolean = true;
+    public isShowViewSub: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
 
     constructor(private elementRef: ElementRef, private globalState: GlobalStateService,
@@ -64,10 +66,18 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
         this.demandReceivedSummary = new DemandReceivedSummaryModel();
         this.demandReceivedSummary = this.demandReceivedSummaryWidgetService
             .GetDemandReceivedCount(this.incidentId, this.initiatedDepartmentId);
+
         this.globalState.Subscribe('DemandAddedUpdated', () => this.onDemandAddedUpdatedSuccess());
         this.globalState.Subscribe('DemandApproved', () => this.onDemandAddedUpdatedSuccess());
         this.globalState.Subscribe('DemandAssigned', () => this.onDemandAddedUpdatedSuccess());
         this.globalState.Subscribe('DemandCompleted', () => this.onDemandAddedUpdatedSuccess());
+
+        // SignalR Notification
+        this.globalState.Subscribe('ReceiveDemandCreationResponse', () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe('ReceiveDemandApprovedResponse', () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe('ReceiveDemandAssignedResponse', () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe('ReceiveDemandClosedResponse', () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe('ReceiveCompletedDemandstoCloseResponse', () => this.onDemandAddedUpdatedSuccess());
     }
 
     public onDemandAddedUpdatedSuccess(): void {
@@ -143,7 +153,6 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
                 allDeptDemandReceivedSummary.CreatedOn = item.CreatedOn;
                 this.allDeptDemandReceivedSummaries.push(allDeptDemandReceivedSummary);
             }
-
         });
 
         UtilityService.SetRAGStatus(this.allDeptDemandReceivedSummaries, 'Demand');
@@ -208,7 +217,6 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
     public hideSubDeptSubCompleted(): void {
         this.showSubDeptSubCompleted = false;
         this.showSubDeptSubPending = false;
-
     }
 
     // TODO: Need to refactor
@@ -226,7 +234,6 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
                 subDeptDemandReceivedSummary.CreatedOn = item.CreatedOn;
                 this.subDeptDemandReceivedSummaries.push(subDeptDemandReceivedSummary);
             }
-
         });
 
         UtilityService.SetRAGStatus(this.subDeptDemandReceivedSummaries, 'Demand');
@@ -249,7 +256,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
         if (entity.length > 0) {
             entity.map((item: DemandReceivedModel) => {
                 item.demandModelList.map((itemDemand: DemandModel) => {
-                    let graphObject: GraphObject = new GraphObject();
+                    const graphObject: GraphObject = new GraphObject();
                     graphObject.requesterDepartmentName = item.targetDepartmentName;
                     graphObject.requesterDepartmentId = item.departmentId;
                     graphObject.isAssigned = true;

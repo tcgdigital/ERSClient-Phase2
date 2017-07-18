@@ -219,10 +219,19 @@ export class MyDemandComponent implements OnInit, OnDestroy {
         this.globalState.Subscribe('DemandAddedUpdated', (model) => this.demandUpdated(model));
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+
+        // SignalR Notification
+        this.globalState.Subscribe('ReceiveDemandCreationResponse', (model: DemandModel) => {
+            this.getMyDemands(model.RequesterDepartmentId, model.IncidentId);
+        });
+        this.globalState.Subscribe('ReceiveDemandStatusUpdateResponse', (model: DemandModel) => {
+            this.getMyDemands(model.RequesterDepartmentId, model.IncidentId);
+        });
     }
 
     ngAfterContentInit(): any {
-        this.setRagStatus();
+        // this.setRagStatus();
+        UtilityService.SetRAGStatus(this.mydemands, 'Demand');
     }
 
     ngOnDestroy(): void {

@@ -3,11 +3,11 @@ import {
     OnInit, SimpleChange, OnDestroy
 } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
-import { TAB_LINKS } from './archive.dashboard.tablinks';
-import { ITabLinkInterface, GlobalStateService, UtilityService, KeyValue } from '../../shared';
+//import { TAB_LINKS } from './archive.dashboard.tablinks';
+import { ITabLinkInterface, GlobalStateService, UtilityService, KeyValue, GlobalConstants } from '../../shared';
 import { IncidentService, IncidentModel } from '../incident';
 import { DepartmentService, DepartmentModel } from '../masterdata/department';
-
+import { PagesPermissionMatrixModel } from '../masterdata';
 @Component({
     selector: 'archive-dashboard',
     templateUrl: './archive.dashboard.view.html',
@@ -23,6 +23,8 @@ export class ArchiveDashboardComponent implements OnInit {
     currentDepartment: KeyValue;
     public incidentDate: Date;
     private sub: any;
+    public isShowPage: boolean = true;
+    public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
 
     /**
      * Creates an instance of ArchiveDashboardComponent.
@@ -33,9 +35,10 @@ export class ArchiveDashboardComponent implements OnInit {
      * @memberof ArchiveDashboardComponent
      */
     constructor(private router: ActivatedRoute, private incidentService: IncidentService,
-        private departmentService: DepartmentService) { 
-            this.incidentDate = new Date();
-        }
+        private departmentService: DepartmentService, private globalState: GlobalStateService,
+        private routerObj: Router) {
+        this.incidentDate = new Date();
+    }
 
     /**
      * ngOnInit
@@ -46,8 +49,35 @@ export class ArchiveDashboardComponent implements OnInit {
     public ngOnInit(): void {
         this.archievedIncidentId = +UtilityService.GetFromSession('ArchieveIncidentId');
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
-        this.tablinks = TAB_LINKS;
+        this.getPagePermission();
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
         this.GetIncidentAndDepartment();
+    }
+
+    getPagePermission(): void {
+        const rootTab: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
+            .find((x: PagesPermissionMatrixModel) => {
+                return x.ModuleName === 'Dashboard' &&
+                    x.ParentPageId === null && x.Type === 'Tab' &&
+                    x.DepartmentId === this.currentDepartmentId
+            });
+
+        if (rootTab) {
+            const accessibleTabs: string[] = GlobalConstants.PagePermissionMatrix
+                .filter((x: PagesPermissionMatrixModel) => {
+                    return x.ParentPageId === rootTab.PageId &&
+                        x.DepartmentId === this.currentDepartmentId
+                })
+                .map((x) => x.PageCode);
+            if (accessibleTabs.length > 0) {
+                this.tablinks = GlobalConstants.TabLinks.filter((x: ITabLinkInterface) => accessibleTabs.some((y) => y === x.id));
+                UtilityService.SelectFirstTab(this.tablinks, this.routerObj);
+            }
+        }
+        else {
+            this.tablinks = [];
+        }
+        // this.tablinks = TAB_LINKS;
     }
 
     /**
@@ -61,11 +91,16 @@ export class ArchiveDashboardComponent implements OnInit {
         this.incidentService.Get(this.archievedIncidentId)
             .map((record: IncidentModel) => {
                 this.currentIncident = new KeyValue(record.Description, record.IncidentId);
-                 this.incidentDate = new Date(record.EmergencyDate);
+                this.incidentDate = new Date(record.EmergencyDate);
             })
             .flatMap((_) => this.departmentService.Get(this.currentDepartmentId))
             .subscribe((data: DepartmentModel) => {
                 this.currentDepartment = new KeyValue(data.Description, data.DepartmentId);
             });
+    }
+
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
+        this.getPagePermission();
     }
 }

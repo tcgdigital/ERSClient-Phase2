@@ -15,7 +15,7 @@
                     <span>{{checkListSummery.assignActionableCount | padding: '0': 2}}</span>
                 </span>
                 <span class="widget-text">Assigned</span>
-                <span (click)="openViewAllChecklist()" class="widget-text view-all-style">View All</span>
+                <span *ngIf="isShowViewAll | accesibility:initiatedDepartmentId:'ChecklistKPIViewAll'" (click)="openViewAllChecklist()" class="widget-text view-all-style">View All</span>
             </div>
             <div class="col widget-block">
                 <span class="widget-number">
@@ -23,7 +23,7 @@
                     <span>{{checkListSummery.closeActionableCount | padding: '0': 2}}</span>
                 </span>
                 <span class="widget-text">Completed</span>
-                <span (click)="openViewSubDeptChecklist()" class="widget-text view-all-style">Sub-Dept</span>
+                <span *ngIf="isShowViewAll | accesibility:initiatedDepartmentId:'ChecklistKPISubDept'" (click)="openViewSubDeptChecklist()" class="widget-text view-all-style">Sub-Dept</span>
             </div>
         </div>
     </div>

@@ -270,7 +270,6 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     }
 
     ngOnInit(): any {
-
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         if (this._router.url.indexOf('archivedashboard') > -1) {
             this.isArchive = true;
@@ -288,6 +287,17 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.getCurrentDepartmentName(this.currentDepartmentId);
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+
+        // SignalR Notification
+        this.globalState.Subscribe('ReceiveDemandApprovalPendingResponse', (model: DemandModel) => {
+            this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId);
+        });
+        this.globalState.Subscribe('ReceiveDemandApprovedResponse', (model: DemandModel) => {
+            this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId);
+        });
+        this.globalState.Subscribe('ReceiveDemandRejectedFromApprovalResponse', (model: DemandModel) => {
+            this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId);
+        });
     }
 
     getCurrentDepartmentName(departmentId): void {
@@ -300,7 +310,8 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     }
 
     ngAfterContentInit(): any {
-        this.setRagStatus();
+        // this.setRagStatus();
+        UtilityService.SetRAGStatus(this.demandsForApproval, 'Demand');
     }
 
     ngOnDestroy(): void {

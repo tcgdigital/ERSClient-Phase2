@@ -18,7 +18,7 @@ export class CasualtySummeryModel {
     }
 }
 
-export class CasualtyExchangeModel {
+export class CasualtyExchangeModel extends BaseModel {
     public IncidentId: number;
     public MedicalStatus: string;
     public StatusCount: number;

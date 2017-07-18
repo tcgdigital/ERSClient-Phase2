@@ -17,7 +17,7 @@
                     </span>
                 </span>
                 <span class="widget-text">Raised</span>
-                <span (click)="openViewAllDemandRaisedSummary()" class="widget-text view-all-style">View All</span>
+                <span *ngIf="isShowViewAll | accesibility:initiatedDepartmentId:'DemandRaisedViewAll'"  (click)="openViewAllDemandRaisedSummary()" class="widget-text view-all-style">View All</span>
             </div>
             <div class="col widget-block">
                 <span class="widget-number">
@@ -25,7 +25,7 @@
                     <span>{{demandRaisedSummary.demandClosedCount | padding: '0': 2}}</span>
                 </span>
                 <span class="widget-text">Closed</span>
-                <span (click)="openViewAllSubDeptDemandRaisedSummary()" class="widget-text view-all-style">Sub-Dept</span>
+                <span *ngIf="isShowViewSub | accesibility:initiatedDepartmentId:'DemandRaisedSubdept'"  (click)="openViewAllSubDeptDemandRaisedSummary()" class="widget-text view-all-style">Sub-Dept</span>
             </div>
         </div>
     </div>
