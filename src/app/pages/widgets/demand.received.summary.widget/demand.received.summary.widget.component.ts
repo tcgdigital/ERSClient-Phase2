@@ -53,6 +53,8 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
     private $selfElement: JQuery;
     private $placeholder: JQuery;
     public isShow: boolean = true;
+    public isShowViewAll: boolean = true;
+    public isShowViewSub: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
 
     constructor(private elementRef: ElementRef, private globalState: GlobalStateService,
