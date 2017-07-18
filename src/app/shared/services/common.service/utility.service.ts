@@ -515,13 +515,13 @@ export class UtilityService {
                 .map((x) => x.PageCode);
 
             if (tabs.length > 0) {
-               subTabs = GlobalConstants.TabLinks.find((y: ITabLinkInterface) => y.id === parentTabName)
+                subTabs = GlobalConstants.TabLinks.find((y: ITabLinkInterface) => y.id === parentTabName)
                     .subtab.filter((x: ITabLinkInterface) => tabs.some((y) => y === x.id));
             }
         }
         return subTabs;
     }
 
-    
+
 }
 
