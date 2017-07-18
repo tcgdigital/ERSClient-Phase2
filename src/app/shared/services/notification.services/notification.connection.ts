@@ -41,6 +41,14 @@ export class NotificationConnection implements INotificationConnection {
         return this._connection.id;
     }
 
+    public get connection(): any {
+        return this._connection;
+    }
+
+    public get hubProxy(): any {
+        return this._proxy;
+    }
+
     public start(): Promise<INotificationConnection> {
         const transports = this.convertTransports(this._config.transport);
 
@@ -62,6 +70,23 @@ export class NotificationConnection implements INotificationConnection {
                 });
         });
         return $promise;
+    }
+
+    // public reconnect(queryString: any, connectionStore: any,
+    //     callbackFunc: (connection: any, store: any) => void): void {
+    public reconnect(connectionStore: any,
+        callbackFunc: (connection: any, store: any) => void): void {
+        try {
+            debugger;
+            this.stop();
+            // this._connection.qs = queryString;
+            this._connection.qs = connectionStore.QuesyString;
+            this.start().then((connection: INotificationConnection) => {
+                callbackFunc(connection, connectionStore);
+            });
+        } catch (ex) {
+            console.log(ex);
+        }
     }
 
     public invoke(method: string, ...parameters: any[]): Promise<any> {

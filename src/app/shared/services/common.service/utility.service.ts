@@ -548,9 +548,5 @@ export class UtilityService {
         }
         return result;
     }
-
-
-
-
 }
 

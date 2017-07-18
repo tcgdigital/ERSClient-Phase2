@@ -116,8 +116,10 @@
                             <tr *ngFor="let otherReport of otherReports">
                                 <td data-title="Document Type" *ngIf="otherReport.DocumentType=='1'">Lessons Learnt</td>
                                 <td data-title="Document Type" *ngIf="otherReport.DocumentType=='2'">Audit Report</td>
+                                <!-- <td>Activity Log Report</td> -->
                                 <td data-title="Download">
                                     <a class="glyphicon glyphicon-download-alt" target="_self" href="{{otherReport.FilePathWithName}}" download="{{otherReport.FileName}}">download</a>
+                                    <!-- <a target="_blank" href="{{downloadPath}}" download="ActivityLogReport"><i class="fa fa-download fa" aria-hidden="true"></i></a> -->
                                 </td>
                             </tr>
                         </tbody>
