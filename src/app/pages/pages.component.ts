@@ -414,7 +414,6 @@ export class PagesComponent implements OnInit {
         }
         else {
             this.connectionStaters.forEach((store: ConnectionStarter) => {
-                debugger;
                 if (store.Connection) {
                     Object.getOwnPropertyNames(store.QuesyString).forEach((x: string) => {
                         if (x === 'departmentId')
@@ -472,7 +471,6 @@ export class PagesComponent implements OnInit {
      * @memberof PagesComponent
      */
     private ListenCallbacks(notificationConnection: INotificationConnection, connectionStore: ConnectionStarter): void {
-        debugger;
         connectionStore.Connection = notificationConnection;
         if (connectionStore.Callbacks.length > 0) {
             connectionStore.Callbacks.forEach((cl: CallbackHandler) => {

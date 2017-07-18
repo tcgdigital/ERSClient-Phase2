@@ -295,11 +295,9 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
 
         // SignalR Notification
         this.globalState.Subscribe('ReceiveDemandAssignedResponse', (model: DemandModel) => {
-            debugger;
             this.getAssignedDemands(model.TargetDepartmentId, model.IncidentId);
         });
         this.globalState.Subscribe('ReceiveCompletedDemandAssignedResponse', (model: DemandModel) => {
-            debugger;
             this.getAssignedDemands(model.TargetDepartmentId, model.IncidentId);
         });
     }
