@@ -15,7 +15,7 @@ import { DepartmentBroadcastModel } from './departmentBroadcast.mode';
 import {
     BroadCastDepartmentModel,
     BroadcastDepartmentService
-} from '../../../masterdata/broadcast.department';
+} from '../../../masterdata/broadcastdepartment';
 import { BroadcastService } from './broadcast.service';
 import {
     DepartmentModel,

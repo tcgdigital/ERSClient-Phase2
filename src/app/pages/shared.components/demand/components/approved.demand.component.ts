@@ -290,15 +290,12 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
 
         // SignalR Notification
         this.globalState.Subscribe('ReceiveDemandApprovalPendingResponse', (model: DemandModel) => {
-            debugger;
             this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId);
         });
         this.globalState.Subscribe('ReceiveDemandApprovedResponse', (model: DemandModel) => {
-            debugger;
             this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId);
         });
         this.globalState.Subscribe('ReceiveDemandRejectedFromApprovalResponse', (model: DemandModel) => {
-            debugger;
             this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId);
         });
     }
