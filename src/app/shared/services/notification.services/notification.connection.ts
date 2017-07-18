@@ -77,7 +77,6 @@ export class NotificationConnection implements INotificationConnection {
     public reconnect(connectionStore: any,
         callbackFunc: (connection: any, store: any) => void): void {
         try {
-            debugger;
             this.stop();
             // this._connection.qs = queryString;
             this._connection.qs = connectionStore.QuesyString;
