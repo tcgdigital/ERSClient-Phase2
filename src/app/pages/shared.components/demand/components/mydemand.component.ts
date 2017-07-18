@@ -222,11 +222,9 @@ export class MyDemandComponent implements OnInit, OnDestroy {
 
         // SignalR Notification
         this.globalState.Subscribe('ReceiveDemandCreationResponse', (model: DemandModel) => {
-            debugger;
             this.getMyDemands(model.RequesterDepartmentId, model.IncidentId);
         });
         this.globalState.Subscribe('ReceiveDemandStatusUpdateResponse', (model: DemandModel) => {
-            debugger;
             this.getMyDemands(model.RequesterDepartmentId, model.IncidentId);
         });
     }
