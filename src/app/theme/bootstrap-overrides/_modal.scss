@@ -1,3 +1,5 @@
+@import '../config/config';
+
 .fade.in {
   opacity: 1.0;
 }
@@ -14,8 +16,8 @@
 }
 
 .modal-backdrop.in {
-opacity: 0.5;
-filter: alpha(opacity=50);
+    opacity: 0.5;
+    filter: alpha(opacity=50);
 }
 
 .modal-open{
@@ -28,6 +30,26 @@ filter: alpha(opacity=50);
     top: 0;
     /*left: 18%;*/
     max-height: 460px;
-    
 }
 
+@media screen and (max-width: $resXS-E) {
+    .modal-dialog {
+    margin: 0 auto !important;
+    }
+}
+@media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {
+.modal-dialog {
+    margin: 0 auto !important;
+    }
+}
+@media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
+    .modal-dialog {
+    margin: 0 auto !important;
+    }
+}
+@media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {
+    .modal-lg {
+        margin-left:6%;
+    }
+}
+@media screen and (min-width: $resXL-S) {}
