@@ -41,7 +41,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
     public subDeptPendingCheckLists: SubDeptCheckListModel[];
     public subdeptChecklistsLoc: ActionableModel[];
     public arrGraphData: GraphObject[];
-
+    public currentTarget:any;
     public showCheckListGraph: boolean = false;
     public isShow: boolean = true;
     public isShowViewAll: boolean = true;
@@ -203,17 +203,21 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
     }
 
     public graphDataFormationForChecklistWidget(departmentId: number, $event: any): void {
+        this.currentTarget=null;
+        if($event){
+            this.currentTarget = $event.currentTarget;
+        }
         
         this.checklistTrailService.GetChecklistTrailByDepartmentIdandIncidentId(departmentId, this.currentIncidentId)
             .subscribe((resultSet: ResponseModel<ChecklistTrailModel>) => {
                 this.showGraph = true;
-                this.GetChecklistGraph(resultSet.Records,$event);
+                this.GetChecklistGraph(resultSet.Records,this.currentTarget);
             });
     }
 
-    public GetChecklistGraph(resultSet: ChecklistTrailModel[], $event: any) {
-        if ($event !== null) {
-            const $currentRow: JQuery = jQuery($event.currentTarget);
+    public GetChecklistGraph(resultSet: ChecklistTrailModel[], currentTarget: any) {
+        if (currentTarget !== null) {
+            const $currentRow: JQuery = jQuery(currentTarget);
             $currentRow.closest('tbody').find('tr').removeClass('bg-blue-color');
             $currentRow.closest('tr').addClass('bg-blue-color');
         }
