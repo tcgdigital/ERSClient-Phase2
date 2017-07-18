@@ -3,7 +3,7 @@
         <div class="message-icon">
             <i class="fa fa-envelope-o fa-3x" aria-hidden="true"></i>
             <span>president message</span>
-            <a href="javascript: void(0)" (click) = "openPresidentMessages()">view all</a>
+            <a *ngIf="isShowViewAll | accesibility:initiatedDepartmentId:'PresidentMessageViewAll'" href="javascript: void(0)" (click) = "openPresidentMessages()">view all</a>
         </div>
     </div>
     <div class="col-9 col-md-12 col-lg-9">

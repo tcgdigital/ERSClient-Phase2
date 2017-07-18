@@ -41,6 +41,8 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
     public arrGraphData: GraphObject[];
     public showCheckListGraph: boolean = false;
     public isShow: boolean = true;
+    public isShowViewAll: boolean = true;
+    public isShowViewSub: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
     public baseLocationURl: string = window.location.pathname;
     currentDepartmentId: number;

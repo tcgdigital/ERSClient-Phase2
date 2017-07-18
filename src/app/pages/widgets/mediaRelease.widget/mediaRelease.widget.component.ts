@@ -26,6 +26,7 @@ export class MediaReleaseWidgetComponent implements OnInit {
     currentMediaRelaseModel: MediaReleaseWidgetModel = new MediaReleaseWidgetModel();
     downloadPath: string;
     public isShow: boolean = true;
+    public isShowViewAll: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
     /**
      * Creates an instance of MediaReleaseWidgetComponent.

@@ -59,6 +59,8 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
     public arrGraphData: GraphObject[];
     public showGraph: boolean = false;
     public isShow: boolean = true;
+    public isShowViewAll: boolean = true;
+    public isShowViewSub: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
     public graphCategories: string[] = [];
 
