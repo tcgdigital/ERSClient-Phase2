@@ -1,12 +1,14 @@
-import { Component, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, OnDestroy, ViewChild } from '@angular/core';
 import { UserProfileService } from './userprofile.service';
 import { UserProfileModel } from './userprofile.model';
+import { InvalidUserProfileModel } from './invalid.userprofile.model'
 import {
     ResponseModel, DataExchangeService, SearchConfigModel,
     SearchTextBox, SearchDropdown,
     NameValue
 } from '../../../../shared';
 import { Observable } from 'rxjs/Rx';
+import { ModalDirective } from "ngx-bootstrap";
 
 
 @Component({
@@ -16,8 +18,10 @@ import { Observable } from 'rxjs/Rx';
 })
 export class UserProfileListComponent implements OnInit, OnDestroy {
     userProfiles: UserProfileModel[] = [];
+    invalidUserProfiles: InvalidUserProfileModel[] = [];
     searchConfigs: SearchConfigModel<any>[] = [];
     userProfilePatch: UserProfileModel = null;
+    @ViewChild('invalidUserProfileModal') public invalidUserProfileModal: ModalDirective;
 
     constructor(private userProfileService: UserProfileService,
         private dataExchange: DataExchangeService<UserProfileModel>) { }
@@ -26,10 +30,18 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
         this.userProfileService.GetAll()
             .subscribe((response: ResponseModel<UserProfileModel>) => {
                 this.userProfiles = response.Records;
+                console.log(response.Records);
                 this.userProfiles.map((item: UserProfileModel) => {
                     item.isActive = (item.ActiveFlag == 'Active');
                 });
             });
+    }
+
+    getInvalidUserProfiles(): void {
+        this.userProfileService.GetAllInvalidRecords()
+        .subscribe((response: ResponseModel<InvalidUserProfileModel>) => {
+            this.invalidUserProfiles = response.Records;
+        })
     }
 
     onUserProfileSuccess(data: UserProfileModel): void {
@@ -43,14 +55,20 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
 
     ngOnInit(): any {
         this.getUserProfiles();
+        this.getInvalidUserProfiles();
         this.initiateSearchConfigurations();
         this.dataExchange.Subscribe("UserProfileModelCreated", model => this.onUserProfileSuccess(model));
         this.dataExchange.Subscribe("UserProfileModelModified", model => this.onUserProfileSuccess(model));
+        this.dataExchange.Subscribe('UserProfileLoadedFromFile',()=>{
+            this.getUserProfiles();
+            this.getInvalidUserProfiles();
+        })
     }
 
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe('UserProfileModelCreated');
         this.dataExchange.Unsubscribe('UserProfileModelModified');
+        this.dataExchange.Unsubscribe('UserProfileLoadedFromFile');
     }
 
     checkChange(event: any, editedUderProfile: UserProfileModel): void {
@@ -106,6 +124,14 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
 
     invokeReset(): void {
         this.getUserProfiles();
+    }
+
+    openInvalidRecords() : void {
+        this.invalidUserProfileModal.show();
+    }
+
+    closeInvalidProfile() : void {
+        this.invalidUserProfileModal.hide();
     }
 
     private initiateSearchConfigurations(): void {

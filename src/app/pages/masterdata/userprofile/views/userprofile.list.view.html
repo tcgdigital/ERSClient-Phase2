@@ -1,18 +1,27 @@
 <generic-search [filterConfigs] = "searchConfigs" 
         (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();"></generic-search>
 
+<button class="btn btn-primary" type="button" (click)="openInvalidRecords()">View Invalid Records</button>
 <responsive-table>
     <table responsive-table-body>
         <thead>
             <tr>
-                 <th>User Id</th>
+                <th>User Id</th>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Employee Id</th>
                 <th>Main Contact</th>
                 <th>Alternate Contact</th>
-                <th>Location</th>
                 <th>Active Indicator</th>
                 <th>Volunteer Indicator</th>
+                <th>Passport Number</th>
+                <th>Passport Date</th>                
+                <th>Nationality</th>
+                <th>Gender</th>
+                <th>Visa Details</th>
+                <th>Volunter Preferences</th>
+                <th>Training Records</th>
+                <th>Next Of Kins</th>
                 <th>Edit</th>
             </tr>
         </thead>
@@ -24,10 +33,10 @@
                 <td data-title="User Id">{{userprofile.UserId}}</td>
                 <td data-title="Name">{{userprofile.Name}}</td>
                 <td data-title="Email">{{userprofile.Email }}</td>
+                <td data-title="Employee Id">{{userprofile.EmployeeId}}</td>                
                 <td data-title="Main Contact">{{userprofile.MainContact}}</td>
                 <td data-title="Alternate Contact">{{userprofile.AlternateContact}}</td>
-                <td data-title="Location">{{userprofile.Location}}</td>
-                 <td data-title="IsActive">
+                <td data-title="IsActive">
                     <md-checkbox class="Marght" id="IsActive" name="IsActive" [(ngModel)]="userprofile.isActive" (change)="checkChange($event,userprofile)"
                         aria-label="ActiveFlag">
                     </md-checkbox>
@@ -37,7 +46,45 @@
                         aria-label="ActiveFlag">
                     </md-checkbox>
                 </td>
-                <td data-title="Action">
+                <td data-title="Passport Number">
+                    {{userprofile.PassportNumber}}
+                </td>
+                <td data-title="Passport Number">
+                    {{userprofile.PassportValidity | date: 'dd-MMM-yyyy hh:mm a'}}
+                </td>
+                <td data-title="Nationality">{{userprofile.Nationality}}</td>
+                <td data-title="Gender">{{userprofile.Gender}}</td>
+                <td data-title="Visa Details">
+                    <ul *ngIf="userprofile.VisaDetails.length > 0">
+                        <li *ngFor="let visa of userprofile.VisaDetails">
+                            {{visa.VisaNumber}} / {{visa.VisaValidity | date: 'dd-MMM-yyyy hh:mm a'}}
+                        </li>
+                    </ul>
+                </td>
+                <td data-title="Volunter Preferences">
+                    <ul *ngIf="userprofile.VolunterPreferences.length > 0">
+                        <li *ngFor="let vol of userprofile.VolunterPreferences">
+                            {{vol.VoluterPreferenceName}} 
+                        </li>
+                    </ul>
+                </td>
+                <td data-title="Training Records">
+                    <ul *ngIf="userprofile.TrainingRecords.length > 0">
+                        <li *ngFor="let train of userprofile.TrainingRecords">
+                            {{train.VoluterPreferenceName}} / {{train.CourseStartDate | date: 'dd-MMM-yyyy hh:mm a'}}  
+                            &nbsp;/&nbsp; {{train.CourseEndDate | date: 'dd-MMM-yyyy hh:mm a'}}
+                        </li>
+                    </ul>
+                </td>
+                <td data-title="Next Of Kins">
+                     <ul *ngIf="userprofile.NextOfKins.length > 0">
+                        <li *ngFor="let NOK of userprofile.NextOfKins">
+                            {{NOK.NextOfKinName}} / {{NOK.ContactNumber}}  
+                            
+                        </li>
+                    </ul> 
+                </td>
+                <td data-title="Edit">
                     <i class="fa fa-edit fa-2x" (click)="UpdateUserProfile(userprofile)"></i>
                 </td>
             </tr>
@@ -45,6 +92,75 @@
         </tbody>
     </table>
 </responsive-table>
+
+<div bsModal #invalidUserProfileModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left">View Invalid User Profile Record</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="closeInvalidProfile()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+            </div>
+            <div class="modal-body">
+                <responsive-table>
+    <table responsive-table-body>
+        <thead>
+            <tr>
+                <th>User Id</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Employee Id</th>
+                <th>Main Contact</th>
+                <th>Alternate Contact</th>
+                <th>Passport Details</th>
+                <th>Nationality</th>
+                <th>Gender</th>
+                <th>Visa Details</th>
+                <th>Training Details</th>
+                <th>Next Of Kins</th>
+                <th>Error Reason</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr [hidden]="invalidUserProfiles.length != 0">
+                <td colspan="6">No records found.</td>
+            </tr>
+            <tr *ngFor="let userprofile of invalidUserProfiles">
+                <td data-title="User Id">{{userprofile.UserId}}</td>
+                <td data-title="Name">{{userprofile.Name}}</td>
+                <td data-title="Email">{{userprofile.Email }}</td>
+                <td data-title="Employee Id">{{userprofile.EmployeeId}}</td>                
+                <td data-title="Main Contact">{{userprofile.MainContact}}</td>
+                <td data-title="Alternate Contact">{{userprofile.AlternateContact}}</td>
+                
+                <td data-title="Passport Details">
+                    {{userprofile.PassportDetails}}
+                </td>
+                <td data-title="Nationality">{{userprofile.Nationality}}</td>
+                <td data-title="Gender">{{userprofile.Gender}}</td>
+                <td data-title="Visa Details">
+                   {{userprofile.VisaDetails}}
+                </td>
+                <td data-title="Training Details">
+                    {{userprofile.TrainingDetails}}
+                </td>
+                <td data-title="Next Of Kins">
+                     {{userprofile.NOKDetails}}
+                </td>
+                <td data-title="Error Reason">
+                    {{userprofile.ErrorReason}}
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</responsive-table>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 

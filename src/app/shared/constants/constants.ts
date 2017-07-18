@@ -84,7 +84,7 @@ export class GlobalConstants {
     public static ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION: number = 12;
     public static currentLoggedInUser: number = 0;
     public static PagePermissionMatrix: PagesPermissionMatrixModel[] = [];
-    public static accessibilityErrorMessage: string = 'Un-authorized to display.';
+    public static accessibilityErrorMessage: string = 'You are not authorize to view this.';
     public static INTERCEPTOR_PERFORM: boolean = false;
     public static PRESERVE_DATA_FROM_CONVERSION = ['EmergencyDate'];
 
