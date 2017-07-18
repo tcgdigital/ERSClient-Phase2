@@ -77,9 +77,10 @@ export class NotificationConnection implements INotificationConnection {
         try {
             this.stop();
             this._connection.qs = connectionStore.QuesyString;
-            this.start().then((connection: INotificationConnection) => {
-                callbackFunc(connection, connectionStore);
-            });
+            this._connection.start();
+            // this.start().then((connection: INotificationConnection) => {
+            //     callbackFunc(connection, connectionStore);
+            // });
         } catch (ex) {
             console.log(ex);
         }
