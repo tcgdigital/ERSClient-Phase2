@@ -1231,6 +1231,15 @@ export class GlobalConstants {
         selected: false,
         hidden: false,
         order: 11
+    },
+    {
+        id: 'broadcastdepartment',
+        title: 'Notification Template',
+        // icon: 'fa fa-medium fa-2x',
+        url: '/pages/masterdata/template',
+        selected: false,
+        hidden: false,
+        order: 11
     }
 ] as ITabLinkInterface[];
 }
