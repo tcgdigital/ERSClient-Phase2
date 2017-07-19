@@ -12,7 +12,7 @@ import {
 @Injectable()
 export class ChecklistTrailService
     extends ServiceBase<ChecklistTrailModel> {
-        private _batchDataService: DataService<ChecklistTrailModel>;
+    private _batchDataService: DataService<ChecklistTrailModel>;
     /**
      * Creates an instance of BroadcastService.
      * @param {DataServiceFactory} dataServiceFactory 
@@ -21,7 +21,7 @@ export class ChecklistTrailService
      */
     constructor(private dataServiceFactory: DataServiceFactory) {
         super(dataServiceFactory, 'ChecklistTrails');
-         let option: DataProcessingService = new DataProcessingService();
+        let option: DataProcessingService = new DataProcessingService();
 
         option = new DataProcessingService();
         option.EndPoint = GlobalConstants.BATCH;
@@ -29,7 +29,7 @@ export class ChecklistTrailService
             .CreateServiceWithOptions<ChecklistTrailModel>('', option);
     }
 
-    CreateChecklistTrail(checklistTrailModel:ChecklistTrailModel): Observable<ChecklistTrailModel> {
+    CreateChecklistTrail(checklistTrailModel: ChecklistTrailModel): Observable<ChecklistTrailModel> {
         return this._dataService.Post(checklistTrailModel)
             .Execute()
             .map((data: ChecklistTrailModel) => {
@@ -37,7 +37,7 @@ export class ChecklistTrailService
             });
     }
 
-     public BatchOperation(data: any[]): Observable<ResponseModel<BaseModel>> {
+    public BatchOperation(data: any[]): Observable<ResponseModel<BaseModel>> {
         const requests: Array<RequestModel<BaseModel>> = [];
         data.forEach((x) => {
             requests.push(new RequestModel<any>
@@ -49,6 +49,13 @@ export class ChecklistTrailService
     public GetTrailByActionableId(actionId: number): Observable<ResponseModel<ChecklistTrailModel>> {
         return this._dataService.Query()
             .Filter(`ActionId eq ${actionId}`)
+            .Execute();
+    }
+
+    public GetChecklistTrailByDepartmentIdandIncidentId(departmentId: number, incidentId: number): Observable<ResponseModel<ChecklistTrailModel>> {
+        return this._dataService.Query()
+            .Filter(`IncidentId eq ${incidentId} and DepartmentId eq ${departmentId}`)
+            .Expand('Department')
             .Execute();
     }
 

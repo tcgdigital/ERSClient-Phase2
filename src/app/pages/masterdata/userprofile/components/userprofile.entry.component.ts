@@ -1,6 +1,6 @@
 import {
     Component, ViewEncapsulation,
-    Output, EventEmitter, OnInit, OnDestroy
+    Output, EventEmitter, OnInit, OnDestroy, ViewChild
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import {
@@ -16,8 +16,8 @@ import { GenericSearchComponent } from '../../../../shared/components/generic.se
 import { AccountResponse } from '../../../../shared/models';
 
 import {
-    ResponseModel, DataExchangeService,
-    GlobalConstants, EmailValidator, UtilityService, AuthModel, UserIdValidator
+    ResponseModel, DataExchangeService, GlobalConstants, EmailValidator, 
+    UtilityService, AuthModel, NameValidator, UserIdValidator, FileData, FileUploadService
 } from '../../../../shared';
 
 @Component({
@@ -37,10 +37,15 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
     showAdd: boolean;
     credential: AuthModel;
     userProfileModeltoUpdate: UserProfileModel;
+    @ViewChild('inputFileUserProfile') inputFileUserProfile: any;
+    filesToUpload: FileData[] = [];
+    objFileData : FileData;
+    disableUploadButton: boolean = true;
 
     constructor(private userProfileService: UserProfileService,
         private dataExchange: DataExchangeService<UserProfileModel>,
         private userAuthService: UserAuthService,
+        private fileUploadService: FileUploadService,
         private builder: FormBuilder,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig) {
@@ -162,6 +167,33 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
         this.initiateForm();
     }
 
+    uploadFiles(): void {
+        if (this.inputFileUserProfile.nativeElement.value !== '') {
+            this.disableUploadButton = false;
+            const baseUrl = GlobalConstants.EXTERNAL_URL;
+            const param = 'IncidentId=' + '0' + '&CreatedBy=' + this.credential.UserId;
+
+            this.fileUploadService.uploadFiles<string>(baseUrl + './api/MasterDataUploadBatch?' + param, this.filesToUpload)
+                .subscribe((result: any) => {
+                    console.log('success');
+                    this.filesToUpload = [];
+                    this.toastrService.success('Uploaded Data is processed successfully.' + '\n'
+                        + 'To check any invalid records, please refer \'View Invalid Records\' link for the current timestamp.', 'Success', this.toastrConfig);
+
+                    this.form.reset();
+                    this.disableUploadButton = true;
+                    this.dataExchange.Publish('UserProfileLoadedFromFile', result);
+                    this.showAdd = false;
+
+                }, (error) => {
+                    console.log(`Error: ${error}`);
+                });
+        }
+        else {
+            this.disableUploadButton = true;
+        }
+    }
+
     private initiateForm(): void {
         this.userProfileModel = new UserProfileModel();
         this.Action = 'Save';
@@ -175,7 +207,8 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
             AlternateContact: new FormControl('', [Validators.minLength(14), Validators.maxLength(15), Validators.pattern(GlobalConstants.NUMBER_PATTERN)]),
             Location: new FormControl('', Validators.required),
             isActive: new FormControl(true),
-            isVolunteered: new FormControl(false)
+            isVolunteered: new FormControl(false),
+            fileUserProfile : new FormControl()
         });
     }
 
@@ -189,5 +222,33 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
         userAuthenticationModel.ConfirmPassword = 'P@ssw0rd';
 
         return userAuthenticationModel;
+    }
+
+    private getFileDetails(e: any, type: string): void {
+        this.disableUploadButton = false;
+
+        for (let i = 0; i < e.target.files.length; i++) {
+            const extension = e.target.files[i].name.split('.').pop();
+
+            if (extension.toLowerCase() === 'xls' || extension.toLowerCase() === 'xlsx' || extension.toLowerCase() === 'csv') {
+                this.objFileData = new FileData();
+                this.objFileData.field = type;
+                this.objFileData.file = e.target.files[i];
+                this.filesToUpload.push(this.objFileData);
+            }
+            else {
+                this.toastrService.error('Invalid File Format!', 'Error', this.toastrConfig);
+                
+                this.reset();
+                this.disableUploadButton = true;
+            }
+        }
+    }
+
+
+
+    private reset(): void {
+        this.inputFileUserProfile.nativeElement.value = '';
+        this.disableUploadButton = true;
     }
 }
