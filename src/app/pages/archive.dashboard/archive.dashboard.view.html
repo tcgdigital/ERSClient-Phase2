@@ -1,5 +1,6 @@
-<span class="validationAlert" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'Archive')">{{accessibilityErrorMessage}}</span>
-
+<span class="validationAlert" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'Archive')">
+    <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
+</span>
 
 <div *ngIf="isShowPage | accesibility:currentDepartmentId:'Archive'" class="row">
     <incident-header-widget 

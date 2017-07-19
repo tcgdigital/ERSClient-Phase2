@@ -72,17 +72,15 @@ export class NotificationConnection implements INotificationConnection {
         return $promise;
     }
 
-    // public reconnect(queryString: any, connectionStore: any,
-    //     callbackFunc: (connection: any, store: any) => void): void {
     public reconnect(connectionStore: any,
         callbackFunc: (connection: any, store: any) => void): void {
         try {
             this.stop();
-            // this._connection.qs = queryString;
             this._connection.qs = connectionStore.QuesyString;
-            this.start().then((connection: INotificationConnection) => {
-                callbackFunc(connection, connectionStore);
-            });
+            this._connection.start();
+            // this.start().then((connection: INotificationConnection) => {
+            //     callbackFunc(connection, connectionStore);
+            // });
         } catch (ex) {
             console.log(ex);
         }
