@@ -6,7 +6,7 @@
             </div>
         </div>
         <div *ngIf="!(isShow | accesibility:initiatedDepartmentId:'AffectedOnBoardKPI')" class="row no-gutters">
-            {{accessibilityErrorMessage}}
+            <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
         </div>
         <div *ngIf="isShow | accesibility:initiatedDepartmentId:'AffectedOnBoardKPI'" class="row no-gutters">
             <div class="col widget-block">

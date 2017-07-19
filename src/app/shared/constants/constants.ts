@@ -61,7 +61,11 @@ export enum StorageType {
 
 export class GlobalConstants {
     // public static EXTERNAL_URL: string = 'http://202.54.73.219/';
+<<<<<<< HEAD
+    // public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
+=======
     //public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
+>>>>>>> master
     public static EXTERNAL_URL: string = 'http://localhost:5001/';
     public static NOTIFICATION_URL: string = `${GlobalConstants.EXTERNAL_URL}Notification/Hubs`;
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
@@ -506,7 +510,7 @@ export class GlobalConstants {
             Type: 'DemandNotification',
             Key: 'ReceiveDemandCreationResponse',
             Title: 'Demand Created',
-            Message: 'A new Demand has been created. Please refer to tab section "Demand > My Demands"'
+            Message: 'A new {0:model.DemandCode} Demand has been created. Please refer to tab section "Demand > My Demands"'
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveDemandApprovalPendingResponse',
