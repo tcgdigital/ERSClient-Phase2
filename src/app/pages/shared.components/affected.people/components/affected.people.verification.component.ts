@@ -33,7 +33,7 @@ export class AffectedPeopleVerificationComponent implements OnInit {
     userid: number;
     credential: AuthModel;
     downloadPath: string;
-
+    downloadURL: string;
 
     getAffectedPeople(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
@@ -75,6 +75,7 @@ export class AffectedPeopleVerificationComponent implements OnInit {
     incidentChangeHandler(incident: KeyValue) {
         this.currentIncident = incident.Value;
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/PDAVerifiedManifest/' + this.currentIncident;
+        this.downloadURL = GlobalConstants.EXTERNAL_URL + 'api/Report/CrewVerifiedManifest' + this.currentIncident;
         this.getAffectedPeople(this.currentIncident);
     }
 
@@ -91,6 +92,7 @@ export class AffectedPeopleVerificationComponent implements OnInit {
         }
         this.getAffectedPeople(this.currentIncident);
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/PDAVerifiedManifest/' + this.currentIncident;
+        this.downloadURL = GlobalConstants.EXTERNAL_URL + 'api/Report/CrewVerifiedManifest/' + this.currentIncident;
         this.credential = UtilityService.getCredentialDetails();
         this.userid = +this.credential.UserId;
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));

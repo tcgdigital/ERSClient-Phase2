@@ -266,15 +266,12 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
 
         // SignalR Notification
         this.globalState.Subscribe('ReceiveDemandClosedResponse', (model: DemandModel) => {
-            debugger;
             this.getCompletedDemands(model.RequesterDepartmentId, model.IncidentId);
         });
         this.globalState.Subscribe('ReceiveRejectedDemandsFromClosureResponse', (model: DemandModel) => {
-            debugger;
             this.getCompletedDemands(model.RequesterDepartmentId, model.IncidentId);
         });
         this.globalState.Subscribe('ReceiveCompletedDemandstoCloseResponse', (model: DemandModel) => {
-            debugger;
             this.getCompletedDemands(model.RequesterDepartmentId, model.IncidentId);
         });
     }

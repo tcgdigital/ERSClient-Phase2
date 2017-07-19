@@ -13,9 +13,10 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
     ResponseModel, DataExchangeService,
     UtilityService, GlobalConstants,
-    FileUploadService, KeyValue, GlobalStateService
+    FileUploadService, KeyValue, GlobalStateService, AuthModel
 } from '../../../shared';
 import { FileData } from '../../../shared/models';
+
 
 @Component({
     selector: 'masterdatauploadlist-main',
@@ -50,6 +51,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
     objFileData: FileData;
     form: FormGroup;
     disableUploadButton: boolean;
+    credential: AuthModel
 
 
     constructor(formBuilder: FormBuilder,
@@ -65,6 +67,8 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
         this.disableUploadButton = true;
         this.filesToUpload = [];
         this.initiateForm();
+        this.credential = UtilityService.getCredentialDetails();
+        this.CreatedBy = this.credential.UserId;
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }

@@ -61,8 +61,8 @@ export enum StorageType {
 
 export class GlobalConstants {
     // public static EXTERNAL_URL: string = 'http://202.54.73.219/';
-    public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
-    //public static EXTERNAL_URL: string = 'http://localhost:5001/';
+    //public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
+    public static EXTERNAL_URL: string = 'http://localhost:5001/';
     public static NOTIFICATION_URL: string = `${GlobalConstants.EXTERNAL_URL}Notification/Hubs`;
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
     public static GRANT_TYPE: string = 'password';
@@ -80,7 +80,7 @@ export class GlobalConstants {
     public static ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION: number = 12;
     public static currentLoggedInUser: number = 0;
     public static PagePermissionMatrix: PagesPermissionMatrixModel[] = [];
-    public static accessibilityErrorMessage: string = 'Un-authorized to display.';
+    public static accessibilityErrorMessage: string = 'You are not authorize to view this.';
     public static INTERCEPTOR_PERFORM: boolean = false;
     public static PRESERVE_DATA_FROM_CONVERSION = ['EmergencyDate'];
 
@@ -1231,15 +1231,14 @@ export class GlobalConstants {
         selected: false,
         hidden: false,
         order: 11
-    },
-    {
+    }, {
         id: 'broadcastdepartment',
-        title: 'Notification Template',
+        title: 'Broadcast Department Mapping',
         // icon: 'fa fa-medium fa-2x',
-        url: '/pages/masterdata/template',
+        url: '/pages/masterdata/broadcastdepartment',
         selected: false,
         hidden: false,
-        order: 11
+        order: 12
     }
 ] as ITabLinkInterface[];
 }
