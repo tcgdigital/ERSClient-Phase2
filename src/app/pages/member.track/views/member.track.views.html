@@ -1,4 +1,6 @@
-<span class="validationAlert" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'MemberTracking')">{{accessibilityErrorMessage}}</span>
+<span class="validationAlert" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'MemberTracking')">
+    <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
+</span>
 
 <div *ngIf="isShowPage | accesibility:currentDepartmentId:'MemberTracking'" class="row">
     <div class="col-12">

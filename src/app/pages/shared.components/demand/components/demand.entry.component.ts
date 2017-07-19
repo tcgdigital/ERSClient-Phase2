@@ -274,11 +274,12 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
     ChangeAffectedPeople(): void {
+        debugger;
         this.demandModel.AffectedPersonId = this.form.controls['AffectedPersonId'].value;
-        if (this.demandModel.AffectedPersonId !== 0) {
+        if (this.demandModel.AffectedPersonId != 0) {
             this.form.controls['AffectedObjectId'].reset({ value: '', disabled: true });
             this.demandModel.PDATicketNumber = this.affectedPeople
-                .find((x) => x.AffectedPersonId === this.demandModel.AffectedPersonId).TicketNumber;
+                .find((x) => x.AffectedPersonId == this.demandModel.AffectedPersonId).TicketNumber;
             this.form.controls['PDATicketNumber'].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
         }
         else {
@@ -288,11 +289,12 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
     ChangeAffectedObjects(): void {
+        debugger;
         this.demandModel.AffectedObjectId = this.form.controls['AffectedObjectId'].value;
-        if (this.demandModel.AffectedObjectId !== 0) {
+        if (this.demandModel.AffectedObjectId != 0) {
             this.form.controls['AffectedPersonId'].reset({ value: '', disabled: true });
             this.demandModel.PDATicketNumber = this.affectedObjects
-                .find((x) => x.AffectedObjectId === this.demandModel.AffectedObjectId).TicketNumber;
+                .find((x) => x.AffectedObjectId == this.demandModel.AffectedObjectId).TicketNumber;
             this.form.controls['PDATicketNumber'].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
         }
         else {
