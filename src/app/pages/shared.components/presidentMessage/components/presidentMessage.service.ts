@@ -28,16 +28,17 @@ export class PresidentMessageService
 
     /**
      * Get President Messages of selected department and incident
-     * 
-     * @param {number} departmentId 
-     * @param {number} incidentId 
-     * @returns {Observable<ResponseModel<PresidentMessageModel>>} 
-     * 
+     *
+     * @param {number} departmentId
+     * @param {number} incidentId
+     * @returns {Observable<ResponseModel<PresidentMessageModel>>}
+     *
      * @memberOf PresidentMessageService
      */
     Query(departmentId: number, incidentId: number): Observable<ResponseModel<PresidentMessageModel>> {
         return this._dataService.Query()
-            .Filter(`InitiateDepartmentId eq ${departmentId} and IncidentId eq ${incidentId}`)
+            // .Filter(`InitiateDepartmentId eq ${departmentId} and IncidentId eq ${incidentId}`)
+            .Filter(`IncidentId eq ${incidentId}`)
             .Execute();
     }
 

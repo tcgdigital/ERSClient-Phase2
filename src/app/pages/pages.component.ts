@@ -397,11 +397,11 @@ export class PagesComponent implements OnInit {
             //     }, this.GenerateCallbackHandler<PresidentMessageModel>('PresidentsMessageWorkflowNotification')
             // ));
 
-            // this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
-            //     'PresidentsMessageAndMediaReleaseNotificationHub', {
-            //         incidentId: incId
-            //     }, this.GenerateCallbackHandler<MediaReleaseWidgetModel>('MediaMessageNotification')
-            // ));
+            this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
+                'PresidentsMessageAndMediaReleaseNotificationHub', {
+                    incidentId: incId
+                }, this.GenerateCallbackHandler<MediaReleaseWidgetModel>('MediaMessageNotification')
+            ));
 
             // this.connectionStaters.push(new ConnectionStarter(this.presidentAndMediaWorkflowNotificationHub,
             //     'PresidentAndMediaWorkflowNotificationHub', {
@@ -409,11 +409,11 @@ export class PagesComponent implements OnInit {
             //     }, this.GenerateCallbackHandler<MediaModel>('MediaMessageWorkflowNotification')
             // ));
 
-            this.connectionStaters.push(new ConnectionStarter(this.queryNotificationHub,
-                'QueryNotificationHub', {
-                    incidentId: incId
-                }, this.GenerateCallbackHandler<ExternalInputModel>('EnquiryNotification')
-            ));
+            // this.connectionStaters.push(new ConnectionStarter(this.queryNotificationHub,
+            //     'QueryNotificationHub', {
+            //         incidentId: incId
+            //     }, this.GenerateCallbackHandler<ExternalInputModel>('EnquiryNotification')
+            // ));
 
             this.ConnectAndListen(this.connectionStaters);
         }
