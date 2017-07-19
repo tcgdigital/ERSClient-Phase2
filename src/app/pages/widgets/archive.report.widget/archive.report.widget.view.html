@@ -110,8 +110,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngIf="!(otherReports)?.length>0">
-                                <td data-title="Records" colspan="5">No reports to show.</td>
+                            <tr >
+                                <td data-title="Records" colspan="5">Activity Log Report</td>
+                                <td data-title="Download">
+                                     <a target="_blank" href="{{downloadPath}}" download="ActivityLogReport"><i class="fa fa-download fa" aria-hidden="true"></i></a> 
+                                </td>
                             </tr>
                             <tr *ngFor="let otherReport of otherReports">
                                 <td data-title="Document Type" *ngIf="otherReport.DocumentType=='1'">Lessons Learnt</td>
