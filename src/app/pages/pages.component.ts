@@ -530,7 +530,6 @@ export class PagesComponent implements OnInit {
      * @memberof PagesComponent
      */
     private PrepareMessage<T extends BaseModel>(message: string, model: T): string {
-        debugger;
         const regexp: RegExp = new RegExp(/{([^}]*)}/ig);
         if (regexp.test(message)) {
             const props: string[] = [];

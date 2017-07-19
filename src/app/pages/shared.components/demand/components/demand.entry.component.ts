@@ -274,7 +274,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
     ChangeAffectedPeople(): void {
-        debugger;
         this.demandModel.AffectedPersonId = this.form.controls['AffectedPersonId'].value;
         if (this.demandModel.AffectedPersonId != 0) {
             this.form.controls['AffectedObjectId'].reset({ value: '', disabled: true });
@@ -289,7 +288,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
     ChangeAffectedObjects(): void {
-        debugger;
         this.demandModel.AffectedObjectId = this.form.controls['AffectedObjectId'].value;
         if (this.demandModel.AffectedObjectId != 0) {
             this.form.controls['AffectedPersonId'].reset({ value: '', disabled: true });
