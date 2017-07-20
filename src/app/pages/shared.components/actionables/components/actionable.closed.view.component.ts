@@ -78,7 +78,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
 
         // Signalr Notifivation
         this.globalState.Subscribe('ReceiveChecklistStatusChangeResponse', (model: ActionableModel) => {
-            this.getAllCloseActionable(model.DepartmentId, model.IncidentId);
+            this.getAllCloseActionable(model.IncidentId, model.DepartmentId);
         });
     }
 
