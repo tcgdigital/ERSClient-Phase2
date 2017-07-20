@@ -55,20 +55,34 @@ export class PagesComponent implements OnInit {
     showQuicklink: boolean = false;
     connectionStaters: ConnectionStarter[];
 
+    ExecuteOperationProxy: () => void;
     private sub: any;
 
     private _userRegistrationHubConnection: NotificationConnection;
 
+
     /**
      * Creates an instance of PagesComponent.
+     * @param {Router} router
      * @param {SideMenuService} sideMenuService
      * @param {IncidentService} incidentService
      * @param {DepartmentService} departmentService
+     * @param {UserPermissionService} userPermissionService
+     * @param {AuthenticationService} authenticationService
      * @param {GlobalStateService} globalState
      * @param {ToastrService} toastrService
      * @param {ToastrConfig} toastrConfig
-     *
-     * @memberOf PagesComponent
+     * @param {ActivatedRoute} route
+     * @param {NotificationBroadcastService} broadcastMessageNotificationHub
+     * @param {NotificationBroadcastService} casualtyStatusUpdateNotificationHub
+     * @param {NotificationBroadcastService} checklistSubmissionNotificationHub
+     * @param {NotificationBroadcastService} crisisClosureNotificationHub
+     * @param {NotificationBroadcastService} crisisCreationNotificationHub
+     * @param {NotificationBroadcastService} demandSubmissionNotificationHub
+     * @param {NotificationBroadcastService} presidentsMessageAndMediaReleaseNotificationHub
+     * @param {NotificationBroadcastService} presidentAndMediaWorkflowNotificationHub
+     * @param {NotificationBroadcastService} queryNotificationHub
+     * @memberof PagesComponent
      */
     constructor(private router: Router,
         private sideMenuService: SideMenuService,
@@ -80,8 +94,6 @@ export class PagesComponent implements OnInit {
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig,
         private route: ActivatedRoute,
-
-        // private notificationProviderService: NotificationProviderService
         private broadcastMessageNotificationHub: NotificationBroadcastService,
         private casualtyStatusUpdateNotificationHub: NotificationBroadcastService,
         private checklistSubmissionNotificationHub: NotificationBroadcastService,
@@ -91,10 +103,10 @@ export class PagesComponent implements OnInit {
         private presidentsMessageAndMediaReleaseNotificationHub: NotificationBroadcastService,
         private presidentAndMediaWorkflowNotificationHub: NotificationBroadcastService,
         private queryNotificationHub: NotificationBroadcastService) {
-        toastrConfig.closeButton = true;
-        toastrConfig.progressBar = true;
-        toastrConfig.enableHtml = true;
-        // this.connectionStaters = new Array<ConnectionStarter>();
+        this.ConfigureToster();
+        this.ExecuteOperationProxy = () => {
+            this.ExecuteOperation.apply(this, arguments);
+        };
     }
 
     ngOnInit(): void {
@@ -108,8 +120,6 @@ export class PagesComponent implements OnInit {
         this.ProcessData(() => {
             this.globalState.Subscribe('incidentCreate', (model: number) => this.incidentCreateHandler(model));
             this.initiateHubConnections();
-
-            // this.notificationProviderService.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
             this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
         }, local_incidents, local_departments);
 
@@ -166,9 +176,7 @@ export class PagesComponent implements OnInit {
         UtilityService.SetToSession({ CurrentDepartmentId: selectedDepartment.Value });
         this.currentDepartmentId = selectedDepartment.Value;
         this.globalState.NotifyDataChanged('departmentChange', selectedDepartment);
-
         this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
-        // this.notificationProviderService.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
     }
 
     public onIncidentChange(selectedIncident: KeyValue): void {
@@ -179,9 +187,7 @@ export class PagesComponent implements OnInit {
                 .find((z) => z.Key === selectedIncident.Value.toString()).Value
         });
         this.globalState.NotifyDataChanged('incidentChange', selectedIncident);
-
         this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
-        // this.notificationProviderService.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
     }
 
     public onMenuClick($event): void {
@@ -250,7 +256,6 @@ export class PagesComponent implements OnInit {
                 }
             });
     }
-
 
     private GetIncidents(): Observable<IncidentModel[]> {
         return this.incidentService.GetAllActiveIncidents()
@@ -374,11 +379,11 @@ export class PagesComponent implements OnInit {
             //     this.GenerateCallbackHandler<IncidentModel>('CrisisCreationNotification')
             // ));
 
-            this.connectionStaters.push(new ConnectionStarter(this.demandSubmissionNotificationHub,
-                'DemandSubmissionNotificationHub', {
-                    departmentId: deptId, incidentId: incId
-                }, this.GenerateCallbackHandler<DemandModel>('DemandNotification')
-            ));
+            // this.connectionStaters.push(new ConnectionStarter(this.demandSubmissionNotificationHub,
+            //     'DemandSubmissionNotificationHub', {
+            //         departmentId: deptId, incidentId: incId
+            //     }, this.GenerateCallbackHandler<DemandModel>('DemandNotification')
+            // ));
 
             // this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
             //     'PresidentsMessageAndMediaReleaseNotificationHub', {
@@ -392,11 +397,11 @@ export class PagesComponent implements OnInit {
             //     }, this.GenerateCallbackHandler<PresidentMessageModel>('PresidentsMessageWorkflowNotification')
             // ));
 
-            // this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
-            //     'PresidentsMessageAndMediaReleaseNotificationHub', {
-            //         incidentId: incId
-            //     }, this.GenerateCallbackHandler<MediaReleaseWidgetModel>('MediaMessageNotification')
-            // ));
+            this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
+                'PresidentsMessageAndMediaReleaseNotificationHub', {
+                    incidentId: incId
+                }, this.GenerateCallbackHandler<MediaReleaseWidgetModel>('MediaMessageNotification')
+            ));
 
             // this.connectionStaters.push(new ConnectionStarter(this.presidentAndMediaWorkflowNotificationHub,
             //     'PresidentAndMediaWorkflowNotificationHub', {
@@ -421,7 +426,6 @@ export class PagesComponent implements OnInit {
                         else if (x === 'incidentId')
                             store.QuesyString[x] = incId;
                     });
-
                     store.Connection.reconnect(store, this.ListenCallbacks);
                 }
             });
@@ -493,7 +497,7 @@ export class PagesComponent implements OnInit {
     private GenerateCallbackHandler<T extends BaseModel>(keyType: string): CallbackHandler[] {
         return GlobalConstants.NotificationMessage
             .filter((x) => x.Type === keyType)
-            .map((z) => new CallbackHandler(z.Key, this.ExecuteOperation));
+            .map((z) => new CallbackHandler(z.Key, this.ExecuteOperationProxy));
     }
 
     /**
@@ -508,8 +512,10 @@ export class PagesComponent implements OnInit {
      */
     private ExecuteOperation<T extends BaseModel>(key: string, model: T): void {
         const message = GlobalConstants.NotificationMessage.find((x) => x.Key === key);
-        if (message.Title !== '' && message.Message !== '')
-            this.toastrService.info(this.PrepareMessage<T>(message.Message, model), message.Title);
+        if (message.Title !== '' && message.Message !== '') {
+            const msg: string = this.PrepareMessage<T>(message.Message, model);
+            this.toastrService.info(msg, message.Title);
+        }
         this.globalState.NotifyDataChanged(key, model);
     }
 
@@ -524,6 +530,7 @@ export class PagesComponent implements OnInit {
      * @memberof PagesComponent
      */
     private PrepareMessage<T extends BaseModel>(message: string, model: T): string {
+        debugger;
         const regexp: RegExp = new RegExp(/{([^}]*)}/ig);
         if (regexp.test(message)) {
             const props: string[] = [];
@@ -546,5 +553,12 @@ export class PagesComponent implements OnInit {
             return message;
         }
         else return message;
+    }
+
+    private ConfigureToster(): void {
+        this.toastrConfig.closeButton = true;
+        this.toastrConfig.progressBar = true;
+        this.toastrConfig.enableHtml = true;
+        this.toastrConfig.preventDuplicates = true;
     }
 }

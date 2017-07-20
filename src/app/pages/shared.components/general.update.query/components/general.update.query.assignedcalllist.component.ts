@@ -50,8 +50,8 @@ export class GeneralUpdateQueryAssignedCallsListComponent implements OnInit {
         this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllGeneralUpdatesCalls(this.currentIncidentId));
 
         // SignalR Notification
-        this.globalState.Subscribe('AssignedGeneralUpdateEnquiryCreationResponse', (model: ExternalInputModel) => {
-            // this.getAllGeneralUpdatesCalls(model.IncidentId);
+        this.globalState.Subscribe('ReceiveGeneralUpdateEnquiryCreationResponse', (model: ExternalInputModel) => {
+            // this.getAllGeneralUpdatesCallsRecieved(model.IncidentId);
             this.allAssignedCalls.unshift(model);
         });
     }
