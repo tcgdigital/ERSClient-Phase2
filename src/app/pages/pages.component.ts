@@ -350,11 +350,11 @@ export class PagesComponent implements OnInit {
         if (this.connectionStaters === undefined || this.connectionStaters.length === 0) {
             this.connectionStaters = new Array<ConnectionStarter>();
 
-            // this.connectionStaters.push(new ConnectionStarter(this.broadcastMessageNotificationHub,
-            //     'BroadcastMessageNotificationHub', {
-            //         departmentId: deptId, incidentId: incId
-            //     }, this.GenerateCallbackHandler<BroadCastModel>('BroadcastNotification')
-            // ));
+            this.connectionStaters.push(new ConnectionStarter(this.broadcastMessageNotificationHub,
+                'BroadcastMessageNotificationHub', {
+                    departmentId: deptId, incidentId: incId
+                }, this.GenerateCallbackHandler<BroadCastModel>('BroadcastNotification')
+            ));
 
             // this.connectionStaters.push(new ConnectionStarter(this.casualtyStatusUpdateNotificationHub,
             //     'CasualtyStatusUpdateNotificationHub', {
@@ -362,11 +362,11 @@ export class PagesComponent implements OnInit {
             //     }, this.GenerateCallbackHandler<CasualtyExchangeModel>('CasualtyNotification')
             // ));
 
-            this.connectionStaters.push(new ConnectionStarter(this.checklistSubmissionNotificationHub,
-                'ChecklistSubmissionNotificationHub', {
-                    departmentId: deptId, incidentId: incId
-                }, this.GenerateCallbackHandler<ActionableModel>('ChecklistNotification')
-            ));
+            // this.connectionStaters.push(new ConnectionStarter(this.checklistSubmissionNotificationHub,
+            //     'ChecklistSubmissionNotificationHub', {
+            //         departmentId: deptId, incidentId: incId
+            //     }, this.GenerateCallbackHandler<ActionableModel>('ChecklistNotification')
+            // ));
 
             // this.connectionStaters.push(new ConnectionStarter(this.crisisClosureNotificationHub,
             //     'CrisisClosureNotificationHub', {
@@ -397,11 +397,11 @@ export class PagesComponent implements OnInit {
             //     }, this.GenerateCallbackHandler<PresidentMessageModel>('PresidentsMessageWorkflowNotification')
             // ));
 
-            this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
-                'PresidentsMessageAndMediaReleaseNotificationHub', {
-                    incidentId: incId
-                }, this.GenerateCallbackHandler<MediaReleaseWidgetModel>('MediaMessageNotification')
-            ));
+            // this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
+            //     'PresidentsMessageAndMediaReleaseNotificationHub', {
+            //         incidentId: incId
+            //     }, this.GenerateCallbackHandler<MediaReleaseWidgetModel>('MediaMessageNotification')
+            // ));
 
             // this.connectionStaters.push(new ConnectionStarter(this.presidentAndMediaWorkflowNotificationHub,
             //     'PresidentAndMediaWorkflowNotificationHub', {
