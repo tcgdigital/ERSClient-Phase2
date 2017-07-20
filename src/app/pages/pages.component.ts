@@ -362,11 +362,11 @@ export class PagesComponent implements OnInit {
             //     }, this.GenerateCallbackHandler<CasualtyExchangeModel>('CasualtyNotification')
             // ));
 
-            // this.connectionStaters.push(new ConnectionStarter(this.checklistSubmissionNotificationHub,
-            //     'ChecklistSubmissionNotificationHub', {
-            //         departmentId: deptId, incidentId: incId
-            //     }, this.GenerateCallbackHandler<ActionableModel>('ChecklistNotification')
-            // ));
+            this.connectionStaters.push(new ConnectionStarter(this.checklistSubmissionNotificationHub,
+                'ChecklistSubmissionNotificationHub', {
+                    departmentId: deptId, incidentId: incId
+                }, this.GenerateCallbackHandler<ActionableModel>('ChecklistNotification')
+            ));
 
             // this.connectionStaters.push(new ConnectionStarter(this.crisisClosureNotificationHub,
             //     'CrisisClosureNotificationHub', {
