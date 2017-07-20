@@ -512,7 +512,8 @@ export class PagesComponent implements OnInit {
      */
     private ExecuteOperation<T extends BaseModel>(key: string, model: T): void {
         const message = GlobalConstants.NotificationMessage.find((x) => x.Key === key);
-        if (message.Title !== '' && message.Message !== '') {
+        if (message.Title !== '' && message.Message !== ''
+            && model.CreatedBy !== +UtilityService.GetFromSession('CurrentUserId')) {
             const msg: string = this.PrepareMessage<T>(message.Message, model);
             this.toastrService.info(msg, message.Title);
         }

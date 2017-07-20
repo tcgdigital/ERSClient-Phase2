@@ -19,3 +19,4 @@ export * from './responsive.table';
 export * from './dropdown';
 export * from './map.widget';
 export * from './weather.widget';
+export * from './progressbar';
