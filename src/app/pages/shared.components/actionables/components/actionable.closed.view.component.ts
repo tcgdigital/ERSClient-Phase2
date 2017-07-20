@@ -77,8 +77,9 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
 
         // Signalr Notifivation
-        this.globalState.Subscribe('ReceiveChecklistClosureResponse', (model: ActionableModel) =>
-            this.getAllCloseActionable(model.DepartmentId, model.IncidentId));
+        this.globalState.Subscribe('ReceiveChecklistStatusChangeResponse', (model: ActionableModel) => {
+            this.getAllCloseActionable(model.DepartmentId, model.IncidentId);
+        });
     }
 
     onCloseActionablePageInitiate(isClosed: boolean): void {

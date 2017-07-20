@@ -459,12 +459,12 @@ export class GlobalConstants {
             Message: 'A existing Broadcast message has been modified. Please refer to tab section "Broadcast Message"'
         },
 
-        {
+        /*{
             Type: 'ChecklistNotification',
             Key: 'ReceiveChecklistCreationResponse',
             Title: 'Checklist Created',
             Message: 'A Checklist has been created. Please refer to tab section "Checklist > Active"'
-        }, {
+        },*/ {
             Type: 'ChecklistNotification',
             Key: 'ReceiveChecklistStatusChangeResponse',
             Title: '',
@@ -474,12 +474,12 @@ export class GlobalConstants {
             Key: 'ReceiveChecklistClosureResponse',
             Title: 'Checklist Closed',
             Message: 'A Checklist has been closed. Please refer to tab section "Checklist > Closed"'
-        }, {
+        }, /*{
             Type: 'ChecklistNotification',
             Key: 'ReceiveChecklistActivationResponse',
             Title: 'Checklist Reopened',
             Message: 'A Checklist has been reopened. Please refer to tab section "Checklist > Active"'
-        },
+        },*/
 
         {
             Type: 'CrisisCreationNotification',

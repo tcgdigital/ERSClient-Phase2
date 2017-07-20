@@ -29,8 +29,23 @@
                     </small>
                 </div>
             </div>
-
-            <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="row">
+                     <div class="col-sm-4">
+                        <input #myFileInput type="file" (change)="fileChangeEvent($event)" placeholder="Upload file..." />
+                    </div>
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-primary" (click)="upload()">Upload</button>
+                        <button type="button" class="btn btn-primary" (click)="clearFileUpload($event)">Clear</button>
+                    </div>
+                    <div class="col-sm-4"><br/><br/>
+                         <a class="glyphicon glyphicon-download-alt" target="_self" *ngIf="fileName!=null"
+                          href="{{filepathWithLinks}}" download="{{fileName}}">download</a>
+                         
+                    </div>
+                </div>
+            </div>    
+            <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="buttonholder">
                     <button class="btn btn-primary" type="submit">Submit</button>
                     <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>

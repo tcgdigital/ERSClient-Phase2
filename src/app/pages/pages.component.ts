@@ -357,11 +357,11 @@ export class PagesComponent implements OnInit {
             //     }, this.GenerateCallbackHandler<CasualtyExchangeModel>('CasualtyNotification')
             // ));
 
-            // this.connectionStaters.push(new ConnectionStarter(this.checklistSubmissionNotificationHub,
-            //     'ChecklistSubmissionNotificationHub', {
-            //         departmentId: deptId, incidentId: incId
-            //     }, this.GenerateCallbackHandler<ActionableModel>('ChecklistNotification')
-            // ));
+            this.connectionStaters.push(new ConnectionStarter(this.checklistSubmissionNotificationHub,
+                'ChecklistSubmissionNotificationHub', {
+                    departmentId: deptId, incidentId: incId
+                }, this.GenerateCallbackHandler<ActionableModel>('ChecklistNotification')
+            ));
 
             // this.connectionStaters.push(new ConnectionStarter(this.crisisClosureNotificationHub,
             //     'CrisisClosureNotificationHub', {
@@ -374,11 +374,11 @@ export class PagesComponent implements OnInit {
             //     this.GenerateCallbackHandler<IncidentModel>('CrisisCreationNotification')
             // ));
 
-            this.connectionStaters.push(new ConnectionStarter(this.demandSubmissionNotificationHub,
-                'DemandSubmissionNotificationHub', {
-                    departmentId: deptId, incidentId: incId
-                }, this.GenerateCallbackHandler<DemandModel>('DemandNotification')
-            ));
+            // this.connectionStaters.push(new ConnectionStarter(this.demandSubmissionNotificationHub,
+            //     'DemandSubmissionNotificationHub', {
+            //         departmentId: deptId, incidentId: incId
+            //     }, this.GenerateCallbackHandler<DemandModel>('DemandNotification')
+            // ));
 
             // this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
             //     'PresidentsMessageAndMediaReleaseNotificationHub', {
