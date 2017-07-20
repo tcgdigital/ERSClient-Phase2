@@ -49,19 +49,24 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     public form: FormGroup;
     public completionStatusTypes: any[] = GlobalConstants.CompletionStatusType;
     public ChecklistMappers: ChecklistMapper[] = [];
-    disableUploadButton: boolean;
-    private currentDepartmentId: number = null;
-    private currentIncident: number = null;
     public checklistTrail: ChecklistTrailModel = null;
     public checklistTrails: ChecklistTrailModel[] = [];
     public allDepartments: DepartmentModel[] = [];
     public listActionableSelected: any[] = [];
+    disableUploadButton: boolean;
+    private currentDepartmentId: number = null;
+    private currentIncident: number = null;
+
     constructor(formBuilder: FormBuilder, private actionableService: ActionableService,
-        private fileUploadService: FileUploadService, private departmentService: DepartmentService,
-        private dataExchange: DataExchangeService<boolean>, private globalState: GlobalStateService,
+        private fileUploadService: FileUploadService,
+        private departmentService: DepartmentService,
+        private dataExchange: DataExchangeService<boolean>,
+        private globalState: GlobalStateService,
         private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig, private _router: Router,
-        private injector: Injector, private checklistTrailService: ChecklistTrailService) {
+        private toastrConfig: ToastrConfig,
+        private _router: Router,
+        private injector: Injector,
+        private checklistTrailService: ChecklistTrailService) {
         this.filesToUpload = [];
         this.globalStateProxyOpen = injector.get(GlobalStateService);
     }

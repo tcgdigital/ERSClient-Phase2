@@ -26,7 +26,7 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
     @ViewChild('childModal') public childModal: ModalDirective;
 
     LatestBroadcasts: Observable<TextAccordionModel[]>;
-    AllPublishedBroadcasts: BroadcastWidgetModel[]= new Array<BroadcastWidgetModel>();
+    AllPublishedBroadcasts: BroadcastWidgetModel[] = new Array<BroadcastWidgetModel>();
     LatestBroadcastModels: BroadcastWidgetModel[] = new Array<BroadcastWidgetModel>();
 
     isHidden: boolean = true;
@@ -66,6 +66,7 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
             this.LatestBroadcasts = Observable.of(this.LatestBroadcastModels
                 .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn, '')));
         });
+
         this.globalState.Subscribe('ReceiveBroadcastModificationResponse', (model: BroadCastModel) => {
             const index: number = this.LatestBroadcastModels
                 .findIndex((x) => x.BroadcastId === model.BroadcastId);
