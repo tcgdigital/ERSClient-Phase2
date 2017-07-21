@@ -82,7 +82,7 @@
                         <div class="col-lg-3 col-sm-12 col-md-6">
                             <div class="row">
                                 <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                                    <label for="EmergencyDate">Date of Crisis<span class="required">*</span>&nbsp;&nbsp;(UTC)</label>
+                                    <label for="EmergencyDate">Date of Crisis<span class="required">*</span>&nbsp;&nbsp;(LOCAL)</label>
                                     <input id="EmergencyDate" readonly class="form-control" type="text" name="EmergencyDate" formControlName="EmergencyDate"
                                         placeholder="Crisis Date" datetime-picker [options]="datepickerOptionED" (selectHandler)="dateTimeSet($event,'EmergencyDate');"
                                     />
@@ -92,7 +92,7 @@
                             </div>
                             <div class="row">
                                 <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                                    <label for="EmergencyDateLocal">Date of Crisis (LOCAL)</label>
+                                    <label for="EmergencyDateLocal">Date of Crisis (UTC)</label>
                                     <input id="EmergencyDateLocal" disabled formControlName="EmergencyDateLocal" class="form-control" type="text" name="EmergencyDateLocal"
                                         placeholder="Crisis Date" />
                                 </div>
@@ -162,33 +162,6 @@
                                 class="text-danger">
                             </small>
                         </div> -->
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-lg-6 col-sm-12 col-md-6">
-                            <label for="Latitude">Latitude</label>
-                            <input id="Latitude" class="form-control" type="text" name="Latitude" formControlName="Latitude"
-                                placeholder="Latitude" />
-                        </div>
-                        <div class="form-group col-lg-6 col-sm-12 col-md-6">
-                            <label for="Longitude">Longitude</label>
-                            <input id="Longitude" class="form-control" type="text" name="Longitude" formControlName="Longitude"
-                                placeholder="Longitude" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="ReportedDate">Date Time Reported<span class="required">*</span>&nbsp;&nbsp;(UTC)</label>
-                            <input id="ReportedDate" readonly class="form-control" type="text" name="ReportedDate" formControlName="ReportedDate" placeholder="Reported Date"
-                                datetime-picker [options]="datepickerOptionFLT" (selectHandler)="dateTimeSet($event,'ReportedDate');"
-                            />
-                            <small *ngIf="form.controls.ReportedDate.hasError('required')" [hidden]="form.controls.ReportedDate.valid || (form.controls.ReportedDate.pristine && !submitted)"
-                                class="text-danger">Required</small>
-                        </div>
-                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="ReportedDateLocal">Date Time Reported &nbsp;&nbsp;(LOCAL)</label>
-                            <input id="ReportedDateLocal" disabled formControlName="ReportedDateLocal" class="form-control" type="text" name="ReportedDateLocal"
-                                placeholder="Reported Date" />
-                        </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="Severity">Severity</label>
                             <select id="selectApprover" class="form-control" formControlName="Severity" name="Severity">
@@ -198,6 +171,41 @@
                                     </option>
                             </select>
                         </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-6 col-sm-12 col-md-6">
+                            <label for="Latitude">Latitude</label>
+                            <input id="Latitude" class="form-control" type="text" name="Latitude" formControlName="Latitude" placeholder="Latitude" />
+                        </div>
+                        <div class="form-group col-lg-6 col-sm-12 col-md-6">
+                            <label for="Longitude">Longitude</label>
+                            <input id="Longitude" class="form-control" type="text" name="Longitude" formControlName="Longitude" placeholder="Longitude"
+                            />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <label for="ReportedDate">Date Time Reported<span class="required">*</span>&nbsp;&nbsp;(LOCAL)</label>
+                            <input id="ReportedDate" readonly class="form-control" type="text" name="ReportedDate" formControlName="ReportedDate" placeholder="Reported Date"
+                                datetime-picker [options]="datepickerOptionFLT" (selectHandler)="dateTimeSet($event,'ReportedDate');"
+                            />
+                            <small *ngIf="form.controls.ReportedDate.hasError('required')" [hidden]="form.controls.ReportedDate.valid || (form.controls.ReportedDate.pristine && !submitted)"
+                                class="text-danger">Required</small>
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <label for="ReportedDateLocal">Date Time Reported &nbsp;&nbsp;(UTC)</label>
+                            <input id="ReportedDateLocal" disabled formControlName="ReportedDateLocal" class="form-control" type="text" name="ReportedDateLocal"
+                                placeholder="Reported Date" />
+                        </div>
+                        <!-- <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <label for="Severity">Severity</label>
+                            <select id="selectApprover" class="form-control" formControlName="Severity" name="Severity">
+                                    <option value='' >Select Severity</option>
+                                    <option *ngFor="let severity of severities" [value]="severity.Key" >
+                                        {{severity.Key}}
+                                    </option>
+                            </select>
+                        </div> -->
                         <div class="form-group col-lg-3 col-sm-12 col-md-6" *ngIf="isBorrowed">
                             <label for="IncidentsToPickForReplication">Event To Replicate</label>
                             <select id="BorrowedIncident" [(ngModel)]="incidentModel.BorrowedIncident" class="form-control" formControlName="BorrowedIncident"
@@ -249,7 +257,7 @@
                             </small>
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="Scheduleddeparture(UTC)">Scheduled Departure (UTC)<span class="required">*</span></label>
+                                <label for="Scheduleddeparture(UTC)">Scheduled Departure (LOCAL)<span class="required">*</span></label>
                                 <input id="Scheduleddeparture" #departuredatepicker="datetimepicker" readonly class="form-control" [ngClass]="flightClass"
                                     type="text" name="Scheduleddeparture" formControlName="Scheduleddeparture" placeholder="Scheduled Departure"
                                     datetime-picker [options]="datepickerOptionDeparture" (selectHandler)="dateTimeSet($event,'Scheduleddeparture');"
@@ -261,12 +269,12 @@
                         <div class="row">
 
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="ScheduledDeparture(LOCAL)">Scheduled Departure (LOCAL)<span class="required">*</span></label>
+                                <label for="ScheduledDeparture(LOCAL)">Scheduled Departure (UTC)<span class="required">*</span></label>
                                 <input id="ScheduleddepartureLOC" disabled class="form-control" [ngClass]="flightClass" type="text" name="ScheduleddepartureLOC"
                                     formControlName="ScheduleddepartureLOC" placeholder="Scheduled Departure" />
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="Scheduledarrival(UTC)">Scheduled Arrival (UTC)<span class="required">*</span></label>
+                                <label for="Scheduledarrival(UTC)">Scheduled Arrival (LOCAL)<span class="required">*</span></label>
                                 <input #arrivaldatepicker="datetimepicker" id="Scheduledarrival" readonly class="form-control" [ngClass]="flightClass" type="text"
                                     name="Scheduledarrival" formControlName="Scheduledarrival" placeholder="Scheduled Arrival"
                                     datetime-picker [options]="datepickerOptionArrival" (selectHandler)="dateTimeSet($event,'Scheduledarrival');"
@@ -275,7 +283,7 @@
                                     class="text-danger">Required</small>
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="ScheduledArrival(LOCAL)">Scheduled Arrival (LOCAL)<span class="required">*</span></label>
+                                <label for="ScheduledArrival(LOCAL)">Scheduled Arrival (UTC)<span class="required">*</span></label>
                                 <input id="ScheduledarrivalLOC" disabled class="form-control" [ngClass]="flightClass" type="text" name="ScheduledarrivalLOC"
                                     formControlName="ScheduledarrivalLOC" placeholder="Scheduled Arrival" />
                             </div>
@@ -402,14 +410,14 @@
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <div class="row">
                                 <div class="form-group col-lg-12 col-sm-12 col-md-6">
-                                    <label for="EmergencyDate">Date of Crisis (UTC)</label>
+                                    <label for="EmergencyDate">Date of Crisis (LOCAL)</label>
                                     <input id="EmergencyDatePopup" disabled formControlName="EmergencyDatePopup" class="form-control" type="text" name="EmergencyDatePopup"
                                         placeholder="Enter EmergencyDate" />
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-lg-12 col-sm-12 col-md-6">
-                                    <label for="EmergencyDateLocal">Date of Crisis (LOCAL)</label>
+                                    <label for="EmergencyDateLocal">Date of Crisis (UTC)</label>
                                     <input id="EmergencyDateLocalPopup" disabled formControlName="EmergencyDateLocalPopup" class="form-control" type="text" name="EmergencyDateLocalPopup"
                                         placeholder="Enter EmergencyDate" />
                                 </div>
@@ -490,41 +498,46 @@
                                 />
                             </div>
                         </div> -->
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-lg-6 col-sm-12 col-md-6">
-                            <label for="LatitudePopup">Latitude</label>
-                            <input id="LatitudePopup" class="form-control" type="text" name="LatitudePopup" formControlName="LatitudePopup"
-                                placeholder="Latitude" />
-                        </div>
-                        <div class="form-group col-lg-6 col-sm-12 col-md-6">
-                            <label for="LongitudePopup">Longitude</label>
-                            <input id="LongitudePopup" class="form-control" type="text" name="LongitudePopup" formControlName="LongitudePopup"
-                                placeholder="Longitude" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="ReportedDatePopup">Date Time Reported (UTC)</label>
-                            <input id="ReportedDatePopup" disabled formControlName="ReportedDatePopup" class="form-control" type="text" name="ReportedDatePopup"
-                                placeholder="Reported Date" />
-                        </div>
-                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="ReportedDateLocalPopup">Date Time Reported (LOCAL)</label>
-                            <input id="ReportedDateLocalPopup" disabled formControlName="ReportedDateLocalPopup" class="form-control" type="text" name="ReportedDateLocalPopup"
-                                placeholder="Reported Date" />
-                        </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="Severity">Severity</label>
                             <input id="SeverityPopup" class="form-control" type="text" name="SeverityPopup" formControlName="SeverityPopup" disabled
                                 placeholder="Severity" />
                         </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-6 col-sm-12 col-md-6">
+                            <label for="LatitudePopup">Latitude</label>
+                            <input id="LatitudePopup" class="form-control" type="text" name="LatitudePopup" formControlName="LatitudePopup" placeholder="Latitude"
+                            />
+                        </div>
+                        <div class="form-group col-lg-6 col-sm-12 col-md-6">
+                            <label for="LongitudePopup">Longitude</label>
+                            <input id="LongitudePopup" class="form-control" type="text" name="LongitudePopup" formControlName="LongitudePopup" placeholder="Longitude"
+                            />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <label for="ReportedDatePopup">Date Time Reported (LOCAL)</label>
+                            <input id="ReportedDatePopup" disabled formControlName="ReportedDatePopup" class="form-control" type="text" name="ReportedDatePopup"
+                                placeholder="Reported Date" />
+                        </div>
+                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <label for="ReportedDateLocalPopup">Date Time Reported (UTC)</label>
+                            <input id="ReportedDateLocalPopup" disabled formControlName="ReportedDateLocalPopup" class="form-control" type="text" name="ReportedDateLocalPopup"
+                                placeholder="Reported Date" />
+                        </div>
+                        <!-- <div class="form-group col-lg-3 col-sm-12 col-md-6">
+                            <label for="Severity">Severity</label>
+                            <input id="SeverityPopup" class="form-control" type="text" name="SeverityPopup" formControlName="SeverityPopup" disabled
+                                placeholder="Severity" />
+                        </div> -->
                         <div class="form-group col-lg-3 col-sm-12 col-md-6" *ngIf="isBorrowedIncidentPopup">
 
                             <label for="IncidentsToPickForReplication">Event To Replicate</label>
 
-                            <input id="BorrowedIncidentPopup" disabled formControlName="BorrowedIncidentPopup" class="form-control" type="text" name="BorrowedIncidentPopup" readonly
-                                placeholder="Enter Borrowed Event" />
+                            <input id="BorrowedIncidentPopup" disabled formControlName="BorrowedIncidentPopup" class="form-control" type="text" name="BorrowedIncidentPopup"
+                                readonly placeholder="Enter Borrowed Event" />
 
                         </div>
                     </div>
@@ -552,7 +565,7 @@
                                         placeholder="Destination" />
                                 </div>
                                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                    <label for="Scheduleddeparture(UTC)">Scheduled departure (UTC)</label>
+                                    <label for="Scheduleddeparture(UTC)">Scheduled departure (LOCAL)</label>
                                     <input id="ScheduleddeparturePopup" disabled formControlName="ScheduleddeparturePopup" class="form-control" type="text" name="ScheduleddeparturePopup"
                                         placeholder="Scheduled Departure" />
                                 </div>
@@ -560,19 +573,19 @@
                             <div class="row">
 
                                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                    <label for="Scheduleddeparture(LOCAL)">Scheduled Departure (LOCAL)</label>
+                                    <label for="Scheduleddeparture(LOCAL)">Scheduled Departure (UTC)</label>
                                     <input id="ScheduleddepartureLOCPopup" disabled class="form-control" [ngClass]="flightClass" type="text" name="ScheduleddepartureLOCPopup"
                                         formControlName="ScheduleddepartureLOCPopup" placeholder="Scheduled Departure" />
 
                                 </div>
                                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                    <label for="Scheduledarrival(UTC)">Scheduled arrival (UTC)</label>
+                                    <label for="Scheduledarrival(UTC)">Scheduled arrival (LOCAL)</label>
                                     <input id="ScheduledarrivalPopup" disabled formControlName="ScheduledarrivalPopup" class="form-control" type="text" name="ScheduledarrivalPopup"
                                         placeholder="Scheduled Arrival" />
 
                                 </div>
                                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                    <label for="Scheduledarrival(LOCAL)">Scheduled Arrival (LOCAL)</label>
+                                    <label for="Scheduledarrival(LOCAL)">Scheduled Arrival (UTC)</label>
                                     <input id="ScheduledarrivalLOCPopup" disabled class="form-control" [ngClass]="flightClass" type="text" name="ScheduledarrivalLOCPopup"
                                         formControlName="ScheduledarrivalLOCPopup" placeholder="Scheduled Arrival" />
 

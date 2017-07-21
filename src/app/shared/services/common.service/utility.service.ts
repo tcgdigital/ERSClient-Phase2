@@ -397,7 +397,7 @@ export class UtilityService {
         this.isShowPage = false;
         this.pagePermissionMatrix = GlobalConstants.PagePermissionMatrix;
 
-
+        
         const pagePermission: PagesPermissionMatrixModel[]
             = this.pagePermissionMatrix.filter((item: PagesPermissionMatrixModel) => {
                 return (item.PageCode === pageCode && item.DepartmentId === departmentId);
@@ -448,7 +448,7 @@ export class UtilityService {
             }
         }
     }
-    public static GetSubTabs(parentTabName: string): ITabLinkInterface[] {
+    public static GetDashboardSubTabs(parentTabName: string): ITabLinkInterface[] {
         const departmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         let subTabs: ITabLinkInterface[];
         const rootTab: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
@@ -462,7 +462,30 @@ export class UtilityService {
                 .map((x) => x.PageCode);
 
             if (tabs.length > 0) {
-                subTabs = GlobalConstants.TabLinks.find((y: ITabLinkInterface) => y.id === parentTabName)
+                subTabs = GlobalConstants.DashboardTabLinks.find((y: ITabLinkInterface) => y.id === parentTabName)
+                    .subtab.filter((x: ITabLinkInterface) => tabs.some((y) => y === x.id));
+            }
+        }
+        else {
+            subTabs = [];
+        }
+        return subTabs;
+    }
+    public static GetArchieveDashboardSubTabs(parentTabName: string): ITabLinkInterface[] {
+        const departmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+        let subTabs: ITabLinkInterface[];
+        const rootTab: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
+            .find((x: PagesPermissionMatrixModel) => x.PageCode === parentTabName
+                && x.Type === 'Tab' && x.DepartmentId === departmentId && x.CanView);
+
+        if (rootTab) {
+            const tabs: string[] = GlobalConstants.PagePermissionMatrix
+                .filter((x: PagesPermissionMatrixModel) => x.ParentPageId === rootTab.PageId 
+                && x.DepartmentId === departmentId && x.CanView)
+                .map((x) => x.PageCode);
+
+            if (tabs.length > 0) {
+                subTabs = GlobalConstants.ArchieveDashboardTabLinks.find((y: ITabLinkInterface) => y.id === parentTabName)
                     .subtab.filter((x: ITabLinkInterface) => tabs.some((y) => y === x.id));
             }
         }
