@@ -1,9 +1,17 @@
 <div class="card">
     <div class="card-content">
+        <div class="row">
+            <div class="col-12">
+                <input type="button" class="btn btn-primary" (click)="expandSearchPanel(expandSearch)" [ngModel]="searchValue" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12" *ngIf="expandSearch">
+                <generic-search [filterConfigs]="searchConfigs" (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();">
+                </generic-search>
+            </div>
+        </div>
         <div class="card-block">
-              <generic-search [filterConfigs]="searchConfigs" 
-              (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();">
-            </generic-search>  
             <responsive-table>
                 <table responsive-table-body>
                     <thead>
