@@ -1,17 +1,20 @@
 <div class="row">
-    <div class="col-12">
-        <generic-search [filterConfigs]="searchConfigs" (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();">
-        </generic-search>
+    <div class="col-md-7 butt-rightalign">
+        <label class="lebelHeaderStyle">Crew Status Info Report</label>
+        <a target="_blank" href="{{downloadRoute}}" download="CrewStatusInfo"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
     </div>
-</div>
-<div class="row">
-    <div class="col-12">
+    <div class="col-md-3 butt-rightalign">
         <label class="lebelHeaderStyle">Passenger Status Info Report</label>
         <a target="_blank" href="{{downloadPath}}" download="PDAStatusInfo"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
     </div>
-    <div class="col-12">
-        <label class="lebelHeaderStyle">Crew Status Info Report</label>
-        <a target="_blank" href="{{downloadRoute}}" download="CrewStatusInfo"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+    <div class="col-md-2 butt-rightalign">
+        <input type="button" class="btn btn-primary" (click)="expandSearchPanel(expandSearch)" [ngModel]="searchValue" />
+    </div>
+</div>
+<div class="row">
+    <div class="col-12" *ngIf="expandSearch">
+        <generic-search [filterConfigs]="searchConfigs" (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();">
+        </generic-search>
     </div>
 </div>
 

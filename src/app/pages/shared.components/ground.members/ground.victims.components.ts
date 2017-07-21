@@ -28,6 +28,8 @@ export class GroundVictimsComponent implements OnInit, AfterContentInit {
     public groundVictimList: Observable<GroundVictimModel[]>;
     public searchConfigs: Array<SearchConfigModel<any>> = Array<SearchConfigModel<any>>();
     public subTabs: ITabLinkInterface[] = new Array<ITabLinkInterface>();
+    expandSearch: boolean = false;
+    searchValue: string = "Expand Search";
 
     constructor(private peopleOnBoardWidgetService: PeopleOnBoardWidgetService, private globalState: GlobalStateService) { }
 
@@ -62,6 +64,17 @@ export class GroundVictimsComponent implements OnInit, AfterContentInit {
                 groundVictimListLocal = result.Records[0].GroundVictims;
                 this.groundVictimList = Observable.of(groundVictimListLocal);
             });
+    }
+
+    expandSearchPanel(value): void {
+        if (!value) {
+            this.searchValue = "Hide Search Panel";
+        }
+        else {
+            this.searchValue = "Expand Search Panel";
+        }
+        this.expandSearch = !this.expandSearch;
+
     }
 
     invokeSearch(query: string): void {

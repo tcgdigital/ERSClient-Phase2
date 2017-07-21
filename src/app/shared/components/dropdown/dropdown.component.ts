@@ -42,7 +42,7 @@ export class CustomDropdownComponent implements AfterContentInit, OnChanges, OnI
         // Add 'implements OnInit' to the class.
         this._onRouteChange = this._router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
-                if (((event.url.indexOf('archivedashboard') > -1) && (this.placeholder.indexOf('Incident') > -1)) || ((event.url.indexOf('landing') > -1) && (this.placeholder.indexOf('Incident') > -1))) {
+                if (((event.url.indexOf('archivedashboard') > -1) && (this.placeholder.indexOf('Event') > -1)) || ((event.url.indexOf('landing') > -1) && (this.placeholder.indexOf('Event') > -1))) {
 
                     this.showdropdown = true;
                 }
