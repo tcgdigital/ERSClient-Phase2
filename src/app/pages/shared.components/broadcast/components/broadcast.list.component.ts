@@ -71,15 +71,17 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
 
         // SignalR Notification
         this.globalState.Subscribe('ReceiveBroadcastCreationResponse', (model: BroadCastModel) => {
-            this.broadcastMessages.unshift(model);
+            // this.broadcastMessages.unshift(model);
+            this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
         });
 
         this.globalState.Subscribe('ReceiveBroadcastModificationResponse', (model: BroadCastModel) => {
-            const index: number = this.broadcastMessages
-                .findIndex((x) => x.BroadcastId === model.BroadcastId);
-            if (index >= 0) {
-                this.broadcastMessages.splice(index, 1, model);
-            }
+            this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
+            // const index: number = this.broadcastMessages
+            //     .findIndex((x) => x.BroadcastId === model.BroadcastId);
+            // if (index >= 0) {
+            //     this.broadcastMessages.splice(index, 1, model);
+            // }
         });
     }
 

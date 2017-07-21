@@ -137,7 +137,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.incidentStatuses = UtilityService.GetKeyValues(IncidentStatus);
         this.affectedStations = [];
 
-
         this.datepickerOptionED = new DateTimePickerOptions();
         this.datepickerOptionFLT = new DateTimePickerOptions();
 
@@ -191,10 +190,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                     this.affectedStations.push(emergencyLocationModel);
                 });
             });
-
     }
-
-
 
     initiateIncidentModel(): void {
         this.incidentModel = new IncidentModel();
@@ -236,7 +232,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.incidentService.GetLastConfiguredCountIncidents()
             .subscribe((response: ResponseModel<IncidentModel>) => {
                 this.incidentsToPickForReplication = [];
-                response.Records.sort(function (a, b) {
+                response.Records.sort((a, b) => {
                     if (new Date(a.CreatedOn) < new Date(b.CreatedOn)) return 1;
                     if (new Date(b.CreatedOn) < new Date(a.CreatedOn)) return -1;
                     return 0;
@@ -726,7 +722,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.incidentModel.Latitude = this.form.controls['Latitude'].value;
         this.incidentModel.Longitude = this.form.controls['Longitude'].value;
 
-        
+
         this.incidentModel.ReportedDate = new Date(this.form.controls['ReportedDate'].value);
 
         this.incidentModel.Description = this.form.controls['Description'].value;
