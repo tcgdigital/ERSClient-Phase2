@@ -125,6 +125,10 @@ export class PagesComponent implements OnInit {
 
         // this.getIncidents();
         // this.getDepartments();
+
+        this.globalState.Subscribe('ReceiveCrisisClosureResponse', (model) => {
+            this.router.navigate(['login']);
+        });
     }
 
     ngOnDestroy(): void {
