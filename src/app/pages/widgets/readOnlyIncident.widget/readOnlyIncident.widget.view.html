@@ -1,4 +1,4 @@
-<a *ngIf="useLink" href="javascript:void(0);" (click)="onViewIncidentClick()">View Incident</a>
+<a *ngIf="useLink" href="javascript:void(0);" (click)="onViewIncidentClick()">View Event</a>
 <a class="fa fa-edit fa-2x" *ngIf="!useLink" href="javascript:void(0);" (click)="onViewIncidentClick()"></a>
 
 <div bsModal #childModalViewIncident="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
@@ -7,7 +7,7 @@
         <form [formGroup]="formPopup">
             <div class="modal-content">
                 <div class="modal-header">
-                    <span class="mod-head"><strong>Incident View</strong></span>
+                    <span class="mod-head"><strong>Event View</strong></span>
                     <div *ngIf="IsDrillPopup" class="dilld pull-left">DRILL</div>
                     <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideIncidentView()"></i>
                 </div>
@@ -46,7 +46,7 @@
                                 placeholder="Enter Responsible Station" />
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="AffectedCountry">Responsible Country</label>
+                            <label for="AffectedCountry">State Of Occurence</label>
                             <input id="AffectedCountryPopup" class="form-control" type="text" name="AffectedCountry" disabled formControlName="AffectedCountryPopup" 
                             placeholder="Enter Country"/>
                         </div>
@@ -77,57 +77,57 @@
                     <div class="row">
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <div class="form-group">
-                                <label for="WhatHappend">What Happened</label>
+                                <label for="WhatHappend">Event</label>
                                 <input id="WhatHappendPopup" disabled class="form-control" type="text" name="WhatHappendPopup" formControlName="WhatHappendPopup"
-                                    placeholder="What Happend" />
+                                    placeholder="Event" />
 
                             </div>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <div class="form-group">
-                                <label for="WhereHappend">Where Happened</label>
+                                <label for="WhereHappend">Location</label>
                                 <input id="WhereHappendPopup" disabled class="form-control" type="text" name="WhereHappendPopup" formControlName="WhereHappendPopup"
-                                    placeholder="Where Happend" />
+                                    placeholder="Location" />
 
                             </div>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <div class="form-group">
-                                <label for="OtherConfirmationInformation">Other Confirmation Information</label>
+                                <label for="OtherConfirmationInformation">Other Information</label>
                                 <input id="OtherConfirmationInformationPopup" disabled class="form-control" type="text" name="OtherConfirmationInformationPopup"
-                                    formControlName="OtherConfirmationInformationPopup" placeholder="Other Confirmation Information"
+                                    formControlName="OtherConfirmationInformationPopup" placeholder="Other Information"
                                 />
                             </div>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <div class="form-group">
-                                <label for="SourceInformation">Source Information</label>
+                                <label for="SourceInformation">Source Of Information</label>
                                 <input id="SourceInformationPopup" disabled class="form-control" type="text" name="SourceInformationPopup" formControlName="SourceInformationPopup"
-                                    placeholder="Source Information" />
+                                    placeholder="Source Of Information" />
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <div class="form-group">
-                                <label for="ReportedByName">ReportedBy Name</label>
+                                <label for="ReportedByName">Reporter</label>
                                 <input id="ReportedByNamePopup" disabled class="form-control" type="text" name="ReportedByNamePopup" formControlName="ReportedByNamePopup"
-                                    placeholder="ReportedBy Name" />
+                                    placeholder="Reporter" />
 
                             </div>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <div class="form-group">
-                                <label for="ReportedByAddress">ReportedBy Address</label>
+                                <label for="ReportedByAddress">Reporter Address</label>
                                 <input id="ReportedByAddressPopup" disabled class="form-control" type="text" name="ReportedByAddressPopup" formControlName="ReportedByAddressPopup"
-                                    placeholder="ReportedBy Address" />
+                                    placeholder="Reporter Address" />
                             </div>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <div class="form-group">
-                                <label for="ContactOfWitness">Contact Of Witness</label>
+                                <label for="ContactOfWitness">Contact Details</label>
                                 <input id="ContactOfWitnessPopup" disabled class="form-control" type="text" name="ContactOfWitnessPopup" formControlName="ContactOfWitnessPopup"
-                                    placeholder="Contact Of Witness" />
+                                    placeholder="Contact Details" />
                             </div>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
@@ -159,7 +159,7 @@
                             <div class="form-group">
                                 <label for="IncidentsToPickForReplication">Incidents To Pick For Replication</label>
                                 <input id="BorrowedIncidentPopup" disabled formControlName="BorrowedIncidentPopup" class="form-control" type="text" name="BorrowedIncidentPopup"
-                                    placeholder="Enter Borrowed Incident" />
+                                    placeholder="Enter Borrowed Event" />
                             </div>
                         </div>
                     </div>

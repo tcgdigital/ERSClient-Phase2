@@ -57,6 +57,8 @@ export class AffectedPeopleListComponent implements OnInit {
     public globalStateProxyOpen: GlobalStateService;
     searchConfigs: Array<SearchConfigModel<any>> = new Array<SearchConfigModel<any>>();
     downloadfilename: string;
+    expandSearch: boolean = false;
+    searchValue: string = "Expand Search";
 
     /**
      * Creates an instance of AffectedPeopleListComponent.
@@ -217,6 +219,17 @@ export class AffectedPeopleListComponent implements OnInit {
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
+    }
+
+    expandSearchPanel(value): void {
+        if (!value) {
+            this.searchValue = "Hide Search Panel";
+        }
+        else {
+            this.searchValue = "Expand Search Panel";
+        }
+        this.expandSearch = !this.expandSearch;
+
     }
 
     incidentChangeHandler(incident: KeyValue) {
