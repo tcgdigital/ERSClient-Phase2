@@ -21,7 +21,7 @@
     margin-top: 1.2em;
     >li {
         position: relative;
-        span.accessibility-error {
+        span {
             width: 100%;
             display: block;
             height: 120px;
@@ -30,17 +30,8 @@
             text-align: justify;
              padding: 20px 0 13px 43px;
             background: $widget-accordion-bg;
-            line-height: 1.6em; border:#ccc solid 1px;
-            &:before {
-                content: "\f06a";
-                font-family: FontAwesome;
-                height: 17px;
-                position: absolute;
-                margin-top: -1px;
-                left: 20px;
-                font-size: 22px;
-                color: red;
-            }
+            line-height: 1.6em;
+            border:#ccc solid 1px;
             >i {
                 position: absolute;
                 top: 0;
