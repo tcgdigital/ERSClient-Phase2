@@ -82,7 +82,7 @@ export class CustomDropdownComponent implements AfterContentInit, OnChanges, OnI
     }
 
     @HostListener('document:click', ['$event'])
-    onDocunentClick(event) {
+    public onDocunentClick(event): void {
         let clickedComponent = event.target;
         let inside = false;
         do {
@@ -93,8 +93,8 @@ export class CustomDropdownComponent implements AfterContentInit, OnChanges, OnI
             clickedComponent = clickedComponent.parentNode;
         } while (clickedComponent);
         if (inside === false) {
-            // console.log("clicked outside");
-            // jQuery(this.elementRef.nativeElement).removeClass('active');
+            const $container: JQuery = jQuery(this.elementRef.nativeElement).find('[class^="wrapper-dropdown"]');
+            $container.removeClass('active');
         }
     }
 }

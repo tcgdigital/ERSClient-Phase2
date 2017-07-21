@@ -73,6 +73,7 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
         this.globalState.Subscribe('ReceiveBroadcastCreationResponse', (model: BroadCastModel) => {
             this.broadcastMessages.unshift(model);
         });
+
         this.globalState.Subscribe('ReceiveBroadcastModificationResponse', (model: BroadCastModel) => {
             const index: number = this.broadcastMessages
                 .findIndex((x) => x.BroadcastId === model.BroadcastId);
