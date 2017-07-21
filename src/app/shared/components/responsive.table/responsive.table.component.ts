@@ -50,14 +50,35 @@ export class ResponsiveTableComponent implements AfterContentInit, AfterViewInit
         this.$currentElement = jQuery(this.elementRef.nativeElement);
         const $table: JQuery = this.$currentElement.find('table.table');
 
-        this.$currentElement.closest('[bsmodal]')
-            .scroll((event) => {
-                // const $scrollableElm: JQuery = jQuery(event.currentTarget);
-                // const $navs: JQuery = this.$currentElement.find('a.scroll-nav.prev');
-                // let top: number = +$navs.css('top').replace('px', '');
-                // top += $scrollableElm.scrollTop();
-                // $navs.css('top', `${top}px`);
-            });
+        // jQuery(window).unbind('scroll').scroll(() => {
+        //     const $wrapper: JQuery = jQuery(this.elementRef.nativeElement)
+        //         .find('[class*="table-responsive-vertical"]');
+
+        //     const wrapperTop = $wrapper.offset().top;
+        //     const fullHeight = $wrapper.height();
+        //     const windowScroll = jQuery(window).scrollTop();
+
+        //     const $navPrev: JQuery = $wrapper.find('a.scroll-nav.prev');
+        //     const $navNext: JQuery = $wrapper.find('a.scroll-nav.next');
+        //     if ((windowScroll > (wrapperTop + 50)) && (windowScroll < (fullHeight + (wrapperTop - 150)))) {
+        //         $navPrev.css('top', ((windowScroll - wrapperTop) + 50) + 'px');
+        //         $navNext.css('top', ((windowScroll - wrapperTop) + 50) + 'px');
+        //     }
+        //     else {
+        //         $navPrev.css('top', '50px');
+        //         $navNext.css('top', '50px');
+        //     }
+        // });
+
+
+        // this.$currentElement.closest('[bsmodal]')
+        //     .scroll((event) => {
+        // const $scrollableElm: JQuery = jQuery(event.currentTarget);
+        // const $navs: JQuery = this.$currentElement.find('a.scroll-nav.prev');
+        // let top: number = +$navs.css('top').replace('px', '');
+        // top += $scrollableElm.scrollTop();
+        // $navs.css('top', `${top}px`);
+        // });
     }
 
     public onHover($event): void {

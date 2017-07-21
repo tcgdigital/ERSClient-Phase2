@@ -49,7 +49,6 @@ export class MediaReleaseWidgetComponent implements OnInit {
 
         // Signalr Notification
         this.globalState.Subscribe('ReceiveMediaMessageResponse', (model: MediaReleaseWidgetModel) => {
-            debugger;
             this.getLatestMediaReleases(model.IncidentId);
         });
     }
