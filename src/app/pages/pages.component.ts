@@ -360,64 +360,64 @@ export class PagesComponent implements OnInit {
                 }, this.GenerateCallbackHandler<BroadCastModel>('BroadcastNotification')
             ));
 
-            // this.connectionStaters.push(new ConnectionStarter(this.casualtyStatusUpdateNotificationHub,
-            //     'CasualtyStatusUpdateNotificationHub', {
-            //         incidentId: incId
-            //     }, this.GenerateCallbackHandler<CasualtyExchangeModel>('CasualtyNotification')
-            // ));
+            this.connectionStaters.push(new ConnectionStarter(this.casualtyStatusUpdateNotificationHub,
+                'CasualtyStatusUpdateNotificationHub', {
+                    incidentId: incId
+                }, this.GenerateCallbackHandler<CasualtyExchangeModel>('CasualtyNotification')
+            ));
 
-            // this.connectionStaters.push(new ConnectionStarter(this.checklistSubmissionNotificationHub,
-            //     'ChecklistSubmissionNotificationHub', {
-            //         departmentId: deptId, incidentId: incId
-            //     }, this.GenerateCallbackHandler<ActionableModel>('ChecklistNotification')
-            // ));
+            this.connectionStaters.push(new ConnectionStarter(this.checklistSubmissionNotificationHub,
+                'ChecklistSubmissionNotificationHub', {
+                    departmentId: deptId, incidentId: incId
+                }, this.GenerateCallbackHandler<ActionableModel>('ChecklistNotification')
+            ));
 
-            // this.connectionStaters.push(new ConnectionStarter(this.crisisClosureNotificationHub,
-            //     'CrisisClosureNotificationHub', {
-            //         incidentId: incId
-            //     }, this.GenerateCallbackHandler<IncidentModel>('CrisisClosureNotification')
-            // ));
+            this.connectionStaters.push(new ConnectionStarter(this.crisisClosureNotificationHub,
+                'CrisisClosureNotificationHub', {
+                    incidentId: incId
+                }, this.GenerateCallbackHandler<IncidentModel>('CrisisClosureNotification')
+            ));
 
-            // this.connectionStaters.push(new ConnectionStarter(this.crisisCreationNotificationHub,
-            //     'CrisisCreationNotificationHub', null,
-            //     this.GenerateCallbackHandler<IncidentModel>('CrisisCreationNotification')
-            // ));
+            this.connectionStaters.push(new ConnectionStarter(this.crisisCreationNotificationHub,
+                'CrisisCreationNotificationHub', null,
+                this.GenerateCallbackHandler<IncidentModel>('CrisisCreationNotification')
+            ));
 
-            // this.connectionStaters.push(new ConnectionStarter(this.demandSubmissionNotificationHub,
-            //     'DemandSubmissionNotificationHub', {
-            //         departmentId: deptId, incidentId: incId
-            //     }, this.GenerateCallbackHandler<DemandModel>('DemandNotification')
-            // ));
+            this.connectionStaters.push(new ConnectionStarter(this.demandSubmissionNotificationHub,
+                'DemandSubmissionNotificationHub', {
+                    departmentId: deptId, incidentId: incId
+                }, this.GenerateCallbackHandler<DemandModel>('DemandNotification')
+            ));
 
-            // this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
-            //     'PresidentsMessageAndMediaReleaseNotificationHub', {
-            //         incidentId: incId
-            //     }, this.GenerateCallbackHandler<PresidentMessageWidgetModel>('PresidentsMessageNotification')
-            // ));
+            this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
+                'PresidentsMessageAndMediaReleaseNotificationHub', {
+                    incidentId: incId
+                }, this.GenerateCallbackHandler<PresidentMessageWidgetModel>('PresidentsMessageNotification')
+            ));
 
-            // this.connectionStaters.push(new ConnectionStarter(this.presidentAndMediaWorkflowNotificationHub,
-            //     'PresidentAndMediaWorkflowNotificationHub', {
-            //         departmentId: deptId, incidentId: incId
-            //     }, this.GenerateCallbackHandler<PresidentMessageModel>('PresidentsMessageWorkflowNotification')
-            // ));
+            this.connectionStaters.push(new ConnectionStarter(this.presidentAndMediaWorkflowNotificationHub,
+                'PresidentAndMediaWorkflowNotificationHub', {
+                    departmentId: deptId, incidentId: incId
+                }, this.GenerateCallbackHandler<PresidentMessageModel>('PresidentsMessageWorkflowNotification')
+            ));
 
-            // this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
-            //     'PresidentsMessageAndMediaReleaseNotificationHub', {
-            //         incidentId: incId
-            //     }, this.GenerateCallbackHandler<MediaReleaseWidgetModel>('MediaMessageNotification')
-            // ));
+            this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
+                'PresidentsMessageAndMediaReleaseNotificationHub', {
+                    incidentId: incId
+                }, this.GenerateCallbackHandler<MediaReleaseWidgetModel>('MediaMessageNotification')
+            ));
 
-            // this.connectionStaters.push(new ConnectionStarter(this.presidentAndMediaWorkflowNotificationHub,
-            //     'PresidentAndMediaWorkflowNotificationHub', {
-            //         departmentId: deptId, incidentId: incId
-            //     }, this.GenerateCallbackHandler<MediaModel>('MediaMessageWorkflowNotification')
-            // ));
+            this.connectionStaters.push(new ConnectionStarter(this.presidentAndMediaWorkflowNotificationHub,
+                'PresidentAndMediaWorkflowNotificationHub', {
+                    departmentId: deptId, incidentId: incId
+                }, this.GenerateCallbackHandler<MediaModel>('MediaMessageWorkflowNotification')
+            ));
 
-            // this.connectionStaters.push(new ConnectionStarter(this.queryNotificationHub,
-            //     'QueryNotificationHub', {
-            //         incidentId: incId
-            //     }, this.GenerateCallbackHandler<ExternalInputModel>('EnquiryNotification')
-            // ));
+            this.connectionStaters.push(new ConnectionStarter(this.queryNotificationHub,
+                'QueryNotificationHub', {
+                    incidentId: incId
+                }, this.GenerateCallbackHandler<ExternalInputModel>('EnquiryNotification')
+            ));
 
             this.ConnectAndListen(this.connectionStaters);
         }
