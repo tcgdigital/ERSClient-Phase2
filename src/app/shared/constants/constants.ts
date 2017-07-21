@@ -63,6 +63,7 @@ export class GlobalConstants {
     // public static EXTERNAL_URL: string = 'http://202.54.73.219/';
     // public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
     public static EXTERNAL_URL: string = 'http://localhost:5001/';
+    // public static EXTERNAL_URL: string = 'http://172.20.25.23/';
     public static NOTIFICATION_URL: string = `${GlobalConstants.EXTERNAL_URL}Notification/Hubs`;
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
     public static GRANT_TYPE: string = 'password';
@@ -459,12 +460,12 @@ export class GlobalConstants {
             Message: 'A existing Broadcast message has been modified. Please refer to tab section "Broadcast Message"'
         },
 
-        {
+        /*{
             Type: 'ChecklistNotification',
             Key: 'ReceiveChecklistCreationResponse',
             Title: 'Checklist Created',
             Message: 'A Checklist has been created. Please refer to tab section "Checklist > Active"'
-        }, {
+        },*/ {
             Type: 'ChecklistNotification',
             Key: 'ReceiveChecklistStatusChangeResponse',
             Title: '',
@@ -474,12 +475,12 @@ export class GlobalConstants {
             Key: 'ReceiveChecklistClosureResponse',
             Title: 'Checklist Closed',
             Message: 'A Checklist has been closed. Please refer to tab section "Checklist > Closed"'
-        }, {
+        }, /*{
             Type: 'ChecklistNotification',
             Key: 'ReceiveChecklistActivationResponse',
             Title: 'Checklist Reopened',
             Message: 'A Checklist has been reopened. Please refer to tab section "Checklist > Active"'
-        },
+        },*/
 
         {
             Type: 'CrisisCreationNotification',
