@@ -6,7 +6,7 @@ import * as jwtDecode from 'jwt-decode';
 import { RAGScaleService, RAGScaleModel } from '../../../pages/shared.components/ragscale';
 import { AuthenticationService } from './authentication.service';
 import { UtilityService } from '../../../shared/services';
-import { GlobalStateService, ResponseModel, KeyValue, GlobalConstants } from '../../../shared';
+import { GlobalStateService, ResponseModel, KeyValue, GlobalConstants, StorageType } from '../../../shared';
 import { AuthRequestModel, AuthResponseModel } from './auth.model';
 import { IncidentModel, IncidentService } from '../../incident';
 import { UserProfileService, UserProfileModel } from '../../masterdata/userprofile/index';
@@ -87,6 +87,8 @@ export class LoginComponent implements OnInit {
                 this.pagePermissionService.GetPagePermissionMatrix(loginCredentialBasic.UserId)
                     .subscribe((item: PagesPermissionMatrixModel[]) => {
                         GlobalConstants.PagePermissionMatrix = [];
+                        UtilityService.SetToSession({ PagePermissionMatrix: item },
+                            StorageType.SessionStorage, true);
                         GlobalConstants.PagePermissionMatrix = item;
                         if (loginCredentialBasic) {
                             // This is to check that whether the user has department associated with him. From UserPermission table.
@@ -165,8 +167,6 @@ export class LoginComponent implements OnInit {
 
             });
     }
-
-
 
     private getRAGScaleData() {
         this.ragScaleService.GetAllActive()
