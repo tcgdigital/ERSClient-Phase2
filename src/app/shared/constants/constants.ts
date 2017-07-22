@@ -61,8 +61,8 @@ export enum StorageType {
 
 export class GlobalConstants {
     // public static EXTERNAL_URL: string = 'http://202.54.73.219/';
-     //public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
-     public static EXTERNAL_URL: string = 'http://localhost:5001/';
+    //public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
+    public static EXTERNAL_URL: string = 'http://localhost:5001/';
     //public static EXTERNAL_URL: string = 'http://172.20.23.110/';
     public static NOTIFICATION_URL: string = `${GlobalConstants.EXTERNAL_URL}Notification/Hubs`;
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
@@ -83,7 +83,8 @@ export class GlobalConstants {
     public static PagePermissionMatrix: PagesPermissionMatrixModel[] = [];
     public static accessibilityErrorMessage: string = 'Access Restricted';
     public static INTERCEPTOR_PERFORM: boolean = false;
-    public static PRESERVE_DATA_FROM_CONVERSION = ['EmergencyDate'];
+    public static PRESERVE_DATA_FROM_CONVERSION: string[] = ['EmergencyDate'];
+    public static SIGNAL_CONNECTION_DELAY: number = 10000;
 
     public static EditorToolbarConfig: any = {
         // uiColor: '#99000',
@@ -1556,103 +1557,103 @@ export class GlobalConstants {
 
 
     public static MasterDataTAB_LINKS: ITabLinkInterface[] = [
-    {
-        id: 'userprofile',
-        title: 'Userprofile',
-        // icon: 'fa fa-twitter fa-2x',
-        url: '/pages/masterdata/userprofile',
-        selected: false,
-        hidden: false,
-        order: 1
-    }, {
-        id: 'checklist',
-        title: 'Checklist',
-        // icon: 'fa fa-chrome fa-2x',
-        url: '/pages/masterdata/checklist',
-        selected: false,
-        hidden: false,
-        order: 2
-    }, {
-        id: 'userpermission',
-        title: 'User Department Mapping',
-        // icon: 'fa fa-linux fa-2x',
-        url: '/pages/masterdata/userpermission',
-        selected: false,
-        hidden: false,
-        order: 3
-    }, {
-        id: 'department',
-        title: 'Department',
-        // icon: 'fa fa-apple fa-2x',
-        url: '/pages/masterdata/department',
-        selected: true,
-        hidden: false,
-        order: 4
-    }, {
-        id: 'emergencytype',
-        title: 'Crisis Type',
-        // icon: 'fa fa-drupal fa-2x',
-        url: '/pages/masterdata/emergencytype',
-        selected: false,
-        hidden: false,
-        order: 5
-    }, {
-        id: 'emergencydepartment',
-        title: 'Crisis Department Mapping',
-        // icon: 'fa fa-firefox fa-2x',
-        url: '/pages/masterdata/emergencydepartment',
-        selected: false,
-        hidden: false,
-        order: 6
-    }, {
+        {
+            id: 'userprofile',
+            title: 'Userprofile',
+            // icon: 'fa fa-twitter fa-2x',
+            url: '/pages/masterdata/userprofile',
+            selected: false,
+            hidden: false,
+            order: 1
+        }, {
+            id: 'checklist',
+            title: 'Checklist',
+            // icon: 'fa fa-chrome fa-2x',
+            url: '/pages/masterdata/checklist',
+            selected: false,
+            hidden: false,
+            order: 2
+        }, {
+            id: 'userpermission',
+            title: 'User Department Mapping',
+            // icon: 'fa fa-linux fa-2x',
+            url: '/pages/masterdata/userpermission',
+            selected: false,
+            hidden: false,
+            order: 3
+        }, {
+            id: 'department',
+            title: 'Department',
+            // icon: 'fa fa-apple fa-2x',
+            url: '/pages/masterdata/department',
+            selected: true,
+            hidden: false,
+            order: 4
+        }, {
+            id: 'emergencytype',
+            title: 'Crisis Type',
+            // icon: 'fa fa-drupal fa-2x',
+            url: '/pages/masterdata/emergencytype',
+            selected: false,
+            hidden: false,
+            order: 5
+        }, {
+            id: 'emergencydepartment',
+            title: 'Crisis Department Mapping',
+            // icon: 'fa fa-firefox fa-2x',
+            url: '/pages/masterdata/emergencydepartment',
+            selected: false,
+            hidden: false,
+            order: 6
+        }, {
 
-        id: 'emergencylocation',
-        title: 'Responsible Station',
-        // icon: 'fa fa-twitter fa-2x',
-        url: '/pages/masterdata/affectedstation',
-        selected: false,
-        hidden: false,
-        order: 7
-    }, {
-        id: 'demandtype',
-        title: 'Demand Type',
-        // icon: 'fa fa-edge fa-2x',
-        url: '/pages/masterdata/demandtype',
-        order: 8
-    }, {
-        id: 'pagefunctionality',
-        title: 'Department Functionality Mapping',
-        // icon: 'fa fa-windows fa-2x',
-        url: '/pages/masterdata/pagefunctionality',
-        selected: false,
-        hidden: false,
-        order: 9
-    }, {
-        id: 'quicklink',
-        title: 'Quicklinks',
-        // icon: 'fa fa-envira fa-2x',
-        url: '/pages/masterdata/quicklink',
-        selected: false,
-        hidden: false,
-        order: 10
-    }, {
-        id: 'template',
-        title: 'Notification Template',
-        // icon: 'fa fa-medium fa-2x',
-        url: '/pages/masterdata/template',
-        selected: false,
-        hidden: false,
-        order: 11
-    }, {
-        id: 'broadcastdepartment',
-        title: 'Broadcast Department Mapping',
-        // icon: 'fa fa-medium fa-2x',
-        url: '/pages/masterdata/broadcastdepartment',
-        selected: false,
-        hidden: false,
-        order: 12
-    }
-] as ITabLinkInterface[];
+            id: 'emergencylocation',
+            title: 'Responsible Station',
+            // icon: 'fa fa-twitter fa-2x',
+            url: '/pages/masterdata/affectedstation',
+            selected: false,
+            hidden: false,
+            order: 7
+        }, {
+            id: 'demandtype',
+            title: 'Demand Type',
+            // icon: 'fa fa-edge fa-2x',
+            url: '/pages/masterdata/demandtype',
+            order: 8
+        }, {
+            id: 'pagefunctionality',
+            title: 'Department Functionality Mapping',
+            // icon: 'fa fa-windows fa-2x',
+            url: '/pages/masterdata/pagefunctionality',
+            selected: false,
+            hidden: false,
+            order: 9
+        }, {
+            id: 'quicklink',
+            title: 'Quicklinks',
+            // icon: 'fa fa-envira fa-2x',
+            url: '/pages/masterdata/quicklink',
+            selected: false,
+            hidden: false,
+            order: 10
+        }, {
+            id: 'template',
+            title: 'Notification Template',
+            // icon: 'fa fa-medium fa-2x',
+            url: '/pages/masterdata/template',
+            selected: false,
+            hidden: false,
+            order: 11
+        }, {
+            id: 'broadcastdepartment',
+            title: 'Broadcast Department Mapping',
+            // icon: 'fa fa-medium fa-2x',
+            url: '/pages/masterdata/broadcastdepartment',
+            selected: false,
+            hidden: false,
+            order: 12
+        }
+    ] as ITabLinkInterface[];
 }
 
 export enum DataModels {
