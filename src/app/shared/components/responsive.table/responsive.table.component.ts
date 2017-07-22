@@ -50,25 +50,26 @@ export class ResponsiveTableComponent implements AfterContentInit, AfterViewInit
         this.$currentElement = jQuery(this.elementRef.nativeElement);
         const $table: JQuery = this.$currentElement.find('table.table');
 
-        // jQuery(window).unbind('scroll').scroll(() => {
-        //     const $wrapper: JQuery = jQuery(this.elementRef.nativeElement)
-        //         .find('[class*="table-responsive-vertical"]');
+        jQuery(window).unbind('scroll').scroll(() => {
+            const $wrappers: JQuery = jQuery('[class*="table-responsive-vertical"]:visible');
 
-        //     const wrapperTop = $wrapper.offset().top;
-        //     const fullHeight = $wrapper.height();
-        //     const windowScroll = jQuery(window).scrollTop();
+            $.each($wrappers, (index, $wrapper: JQuery) => {
+                const wrapperTop = jQuery($wrapper).offset().top;
+                const fullHeight = jQuery($wrapper).height();
+                const windowScroll = jQuery(window).scrollTop();
 
-        //     const $navPrev: JQuery = $wrapper.find('a.scroll-nav.prev');
-        //     const $navNext: JQuery = $wrapper.find('a.scroll-nav.next');
-        //     if ((windowScroll > (wrapperTop + 50)) && (windowScroll < (fullHeight + (wrapperTop - 150)))) {
-        //         $navPrev.css('top', ((windowScroll - wrapperTop) + 50) + 'px');
-        //         $navNext.css('top', ((windowScroll - wrapperTop) + 50) + 'px');
-        //     }
-        //     else {
-        //         $navPrev.css('top', '50px');
-        //         $navNext.css('top', '50px');
-        //     }
-        // });
+                const $navPrev: JQuery = jQuery($wrapper).find('a.scroll-nav.prev');
+                const $navNext: JQuery = jQuery($wrapper).find('a.scroll-nav.next');
+                if ((windowScroll > (wrapperTop + 100)) && (windowScroll < (fullHeight + (wrapperTop - 150)))) {
+                    $navPrev.css('top', ((windowScroll - wrapperTop) + 100) + 'px');
+                    $navNext.css('top', ((windowScroll - wrapperTop) + 100) + 'px');
+                }
+                else {
+                    $navPrev.css('top', '50px');
+                    $navNext.css('top', '50px');
+                }
+            });
+        });
 
 
         // this.$currentElement.closest('[bsmodal]')
@@ -98,6 +99,12 @@ export class ResponsiveTableComponent implements AfterContentInit, AfterViewInit
     public onNextNevClick($event): void {
         this.updateSlider('N');
     }
+
+    // @HostListener('window:scroll', ['$event'])
+    // public onWindowScroll(event): void {
+    //     const $wrapper: JQuery = this.$currentElement
+    //         .find('[class*="table-responsive-vertical"]');
+    // }
 
     // @HostListener('window:scroll', ['$event'])
     // public onDocumentScroll($event): void {
