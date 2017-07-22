@@ -61,9 +61,9 @@ export enum StorageType {
 
 export class GlobalConstants {
     // public static EXTERNAL_URL: string = 'http://202.54.73.219/';
-    // public static EXTERNAL_URL: string = 'http://172.20.23.110/';
-    public static EXTERNAL_URL: string = 'http://localhost:5001/';
-    // public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
+     //public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
+     public static EXTERNAL_URL: string = 'http://localhost:5001/';
+    //public static EXTERNAL_URL: string = 'http://172.20.23.110/';
     public static NOTIFICATION_URL: string = `${GlobalConstants.EXTERNAL_URL}Notification/Hubs`;
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
     public static GRANT_TYPE: string = 'password';
@@ -81,7 +81,7 @@ export class GlobalConstants {
     public static ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION: number = 12;
     public static currentLoggedInUser: number = 0;
     public static PagePermissionMatrix: PagesPermissionMatrixModel[] = [];
-    public static accessibilityErrorMessage: string = 'You are not authorize to view this.';
+    public static accessibilityErrorMessage: string = 'Access Restricted';
     public static INTERCEPTOR_PERFORM: boolean = false;
     public static PRESERVE_DATA_FROM_CONVERSION = ['EmergencyDate'];
 
@@ -734,7 +734,7 @@ export class GlobalConstants {
         }
     ];
 
-    public static TabLinks: ITabLinkInterface[] = [
+    public static DashboardTabLinks: ITabLinkInterface[] = [
         {
             id: 'Checklist',
             title: 'Checklists',
@@ -1143,6 +1143,417 @@ export class GlobalConstants {
         }
 
     ] as ITabLinkInterface[];
+
+    public static ArchieveDashboardTabLinks: ITabLinkInterface[] = [
+        {
+            id: 'Checklist',
+            title: 'Checklists',
+            // icon: 'fa fa-edge fa-2x',
+            url: '/pages/archivedashboard/actionable',
+            selected: false,
+            hidden: false,
+            order: 1,
+            subtab: [
+                {
+                    id: 'ActiveChecklist',
+                    title: 'Open Checklist',
+                    url: './open',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'ClosedChecklist',
+                    title: 'Close Checklist',
+                    url: './close',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'Demand',
+            title: 'Demand',
+            // icon: 'fa fa-linux fa-2x',
+            url: '/pages/archivedashboard/demand',
+            selected: false,
+            hidden: false,
+            order: 2,
+            subtab: [
+                {
+                    id: 'AssignedToMeDemand',
+                    title: 'Assigned To Me',
+                    url: './assigned',
+                    selected: true,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'MyDemand',
+                    title: 'My Demands',
+                    url: './own',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }, {
+                    id: 'PendingDemand',
+                    title: 'Approval Pending',
+                    url: './approval',
+                    selected: false,
+                    hidden: false,
+                    order: 3
+                }, {
+                    id: 'CompleteDemand',
+                    title: 'Completed',
+                    url: './completed',
+                    selected: false,
+                    hidden: false,
+                    order: 4
+                }
+            ]
+        }, {
+            id: 'AffectedPeople',
+            title: 'Affected People',
+            // icon: 'fa fa-apple fa-2x',
+            url: '/pages/archivedashboard/people',
+            selected: false,
+            hidden: false,
+            order: 3,
+            subtab: [
+                {
+                    id: 'AffectedPeople',
+                    title: 'Affected People',
+                    url: './detail',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'VerifyAffectedPeople',
+                    title: 'Verify Affected People',
+                    url: './verify',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'AffectedCargo',
+            title: 'Affected Cargo',
+            // icon: 'fa fa-chrome fa-2x',
+            url: '/pages/archivedashboard/cargo',
+            selected: false,
+            hidden: false,
+            order: 4,
+            subtab: [
+                {
+                    id: 'Cargo',
+                    title: 'Cargo',
+                    url: './detail',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'VerifyCargo',
+                    title: 'Verify Cargo',
+                    url: './verify',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'BroadcastMessage',
+            title: 'Broadcast Messages',
+            // icon: 'fa fa-envira fa-2x',
+            url: '/pages/archivedashboard/broadcast',
+            selected: false,
+            hidden: false,
+            order: 5
+        }, {
+            id: 'PresidentMessage',
+            title: 'President Messages',
+            // icon: 'fa fa-firefox fa-2x',
+            url: '/pages/archivedashboard/presidentMessage',
+            selected: false,
+            hidden: false,
+            order: 6,
+            subtab: [
+                {
+                    id: 'PresidentMessageRelease',
+                    title: 'President Message Release',
+                    url: './release',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'PresidentMessagePendingApprovals',
+                    title: 'Pending Approvals',
+                    url: './approvalpending',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'MediaMessage',
+            title: 'Media Messages',
+            // icon: 'fa fa-medium fa-2x',
+            url: '/pages/archivedashboard/media',
+            selected: false,
+            hidden: false,
+            order: 7,
+            subtab: [
+                {
+                    id: 'MediaMessageRelease',
+                    title: 'Media Release',
+                    url: './release',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'MediaMessagePendingApprovals',
+                    title: 'Pending Approvals',
+                    url: './approvalpending',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'OtherQuery',
+            title: 'Other Query',
+            // icon: 'fa fa-windows fa-2x',
+            url: '/pages/archivedashboard/otherQuery',
+            selected: false,
+            hidden: false,
+            order: 8,
+            subtab: [
+                {
+                    id: 'ReceivedCalls',
+                    title: 'Received Calls',
+                    url: './receivedCalls',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'AssignedCalls',
+                    title: 'Assigned Calls',
+                    url: './assignedcalls',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'CrewQuery',
+            title: 'Crew Query',
+            // icon: 'fa fa-twitter fa-2x',
+            url: '/pages/archivedashboard/crewQuery',
+            selected: false,
+            hidden: false,
+            order: 9,
+            subtab: [
+                {
+                    id: 'ReceivedCalls',
+                    title: 'Received Calls',
+                    url: './receivedCalls',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'AssignedCalls',
+                    title: 'Assigned Calls',
+                    url: './assignedcalls',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'PassengerQuery',
+            title: 'Passenger Query',
+            // icon: 'fa fa-twitter fa-2x',
+            url: '/pages/archivedashboard/passengerquery',
+            selected: false,
+            hidden: false,
+            order: 10,
+            subtab: [
+                {
+                    id: 'ReceivedCalls',
+                    title: 'Received Calls',
+                    url: './receivedCalls',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'AssignedCalls',
+                    title: 'Assigned Calls',
+                    url: './assignedcalls',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'CargoQuery',
+            title: 'Cargo Query',
+            // icon: 'fa fa-twitter fa-2x',
+            url: '/pages/archivedashboard/cargoquery',
+            selected: false,
+            hidden: false,
+            order: 11,
+            subtab: [
+                {
+                    id: 'ReceivedCalls',
+                    title: 'Received Calls',
+                    url: './receivedCalls',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'AssignedCalls',
+                    title: 'Assigned Calls',
+                    url: './assignedcalls',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'MediaQuery',
+            title: 'Media Query',
+            // icon: 'fa fa-twitter fa-2x',
+            url: '/pages/archivedashboard/mediaquery',
+            selected: false,
+            hidden: false,
+            order: 12,
+            subtab: [
+                {
+                    id: 'ReceivedCalls',
+                    title: 'Received Calls',
+                    url: './receivedCalls',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'AssignedCalls',
+                    title: 'Assigned Calls',
+                    url: './assignedcalls',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'FutureTravelQuery',
+            title: 'Future Travel Query',
+            // icon: 'fa fa-twitter fa-2x',
+            url: '/pages/archivedashboard/futuretravelquery',
+            selected: false,
+            hidden: false,
+            order: 13,
+            subtab: [
+                {
+                    id: 'ReceivedCalls',
+                    title: 'Received Calls',
+                    url: './receivedCalls',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'AssignedCalls',
+                    title: 'Assigned Calls',
+                    url: './assignedcalls',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'GeneralUpdateQuery',
+            title: 'General Update Query',
+            // icon: 'fa fa-twitter fa-2x',
+            url: '/pages/archivedashboard/generalupdatequery',
+            selected: false,
+            hidden: false,
+            order: 14,
+            subtab: [
+                {
+                    id: 'ReceivedCalls',
+                    title: 'Received Calls',
+                    url: './receivedCalls',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'AssignedCalls',
+                    title: 'Assigned Calls',
+                    url: './assignedcalls',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'SituationalUpdatesQuery',
+            title: 'Situational Updates Query',
+            // icon: 'fa fa-twitter fa-2x',
+            url: '/pages/archivedashboard/situationalupdatesquery',
+            selected: false,
+            hidden: false,
+            order: 15,
+            subtab: [
+                {
+                    id: 'ReceivedCalls',
+                    title: 'Received Calls',
+                    url: './receivedCalls',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'AssignedCalls',
+                    title: 'Assigned Calls',
+                    url: './assignedcalls',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'CustomerDissatisfactionQuery',
+            title: 'Customer Dissatisfaction Query',
+            // icon: 'fa fa-twitter fa-2x',
+            url: '/pages/archivedashboard/customerdissatisfactionquery',
+            selected: false,
+            hidden: false,
+            order: 16,
+            subtab: [
+                {
+                    id: 'ReceivedCalls',
+                    title: 'Received Calls',
+                    url: './receivedCalls',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'AssignedCalls',
+                    title: 'Assigned Calls',
+                    url: './assignedcalls',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'GroundVictims',
+            title: 'Ground Victims',
+            // icon: 'fa fa-twitter fa-2x',
+            url: '/pages/archivedashboard/groundmembers',
+            selected: false,
+            hidden: false,
+            order: 17
+        }
+
+    ] as ITabLinkInterface[];
+
 
     public static MasterDataTAB_LINKS: ITabLinkInterface[] = [
     {

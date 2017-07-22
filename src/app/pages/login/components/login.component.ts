@@ -86,6 +86,7 @@ export class LoginComponent implements OnInit {
                 const loginCredentialBasic: any = jwtDecode(data.access_token);
                 this.pagePermissionService.GetPagePermissionMatrix(loginCredentialBasic.UserId)
                     .subscribe((item: PagesPermissionMatrixModel[]) => {
+                        GlobalConstants.PagePermissionMatrix = [];
                         GlobalConstants.PagePermissionMatrix = item;
                         if (loginCredentialBasic) {
                             // This is to check that whether the user has department associated with him. From UserPermission table.

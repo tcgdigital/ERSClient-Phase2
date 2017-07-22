@@ -131,11 +131,6 @@ export class GroundVictimsComponent implements OnInit, AfterContentInit {
                 Value: ''
             }),
             new SearchTextBox({
-                Name: 'AffectedCount',
-                Description: 'Affected Count',
-                Value: ''
-            }),
-            new SearchTextBox({
                 Name: 'NOKName',
                 Description: 'NOK Name',
                 Value: ''
