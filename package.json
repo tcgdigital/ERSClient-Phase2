@@ -83,6 +83,7 @@
     "jwt-decode": "^2.2.0",
     "load-google-maps-api-2": "^1.0.2",
     "lodash": "^4.17.4",
+    "lz-string": "^1.4.4",
     "moment": "^2.18.1",
     "ng-selectize": "^1.0.9",
     "ng2-ckeditor": "^1.1.8",
