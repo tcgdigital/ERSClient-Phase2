@@ -59,7 +59,7 @@
         /*Disallows bitwise operators.*/
         "no-bitwise": false,
         /*Disallows any type of assignment in conditionals.*/
-        "no-conditional-assignment": true,
+        "no-conditional-assignment": false,
         /*Bans the use of specified console methods.*/
         "no-console": [
             true,

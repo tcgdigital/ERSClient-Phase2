@@ -13,6 +13,12 @@
     color: $dropdown-item-text;
 }
 
+.modalBodyHearStydele-bg{
+    background: #e8e5e5;
+    width: 100%;
+    margin: 0 5px;
+}
+
 .modalBodyHeaderStyle {
     background-color: #e8e5e5;
     padding: 5px;
@@ -59,8 +65,12 @@
     padding-bottom: 5px;
 }
 
-affectedpeople-verify {
-    div.row {
-        padding-bottom: 10px;
-    }
+// affectedpeople-verify {
+//     div.row {
+//         padding-bottom: 10px;
+//     }
+//}
+
+.butt-rightalign {
+    text-align:right;
 }

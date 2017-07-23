@@ -20,7 +20,7 @@ export class CommandHeaderComponent implements OnInit {
     @Output() departmentChange: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
     @Output() incidentChange: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
 
-    incidentPlaceholder: string = 'Incident';
+    incidentPlaceholder: string = 'Event';
     departmentPlaceholder: string = 'Department';
     clientName: string;
 

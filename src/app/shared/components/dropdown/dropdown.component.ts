@@ -42,7 +42,7 @@ export class CustomDropdownComponent implements AfterContentInit, OnChanges, OnI
         // Add 'implements OnInit' to the class.
         this._onRouteChange = this._router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
-                if (((event.url.indexOf('archivedashboard') > -1) && (this.placeholder.indexOf('Incident') > -1)) || ((event.url.indexOf('landing') > -1) && (this.placeholder.indexOf('Incident') > -1))) {
+                if (((event.url.indexOf('archivedashboard') > -1) && (this.placeholder.indexOf('Event') > -1)) || ((event.url.indexOf('landing') > -1) && (this.placeholder.indexOf('Event') > -1))) {
 
                     this.showdropdown = true;
                 }
@@ -82,7 +82,7 @@ export class CustomDropdownComponent implements AfterContentInit, OnChanges, OnI
     }
 
     @HostListener('document:click', ['$event'])
-    onDocunentClick(event) {
+    public onDocunentClick(event): void {
         let clickedComponent = event.target;
         let inside = false;
         do {
@@ -93,8 +93,8 @@ export class CustomDropdownComponent implements AfterContentInit, OnChanges, OnI
             clickedComponent = clickedComponent.parentNode;
         } while (clickedComponent);
         if (inside === false) {
-            // console.log("clicked outside");
-            // jQuery(this.elementRef.nativeElement).removeClass('active');
+            const $container: JQuery = jQuery(this.elementRef.nativeElement).find('[class^="wrapper-dropdown"]');
+            $container.removeClass('active');
         }
     }
 }

@@ -26,7 +26,7 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
     @ViewChild('childModal') public childModal: ModalDirective;
 
     LatestBroadcasts: Observable<TextAccordionModel[]>;
-    AllPublishedBroadcasts: BroadcastWidgetModel[]= new Array<BroadcastWidgetModel>();
+    AllPublishedBroadcasts: BroadcastWidgetModel[] = new Array<BroadcastWidgetModel>();
     LatestBroadcastModels: BroadcastWidgetModel[] = new Array<BroadcastWidgetModel>();
 
     isHidden: boolean = true;
@@ -60,21 +60,24 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
 
         // SignalR Notification
         this.globalState.Subscribe('ReceiveBroadcastCreationResponse', (model: BroadCastModel) => {
-            this.LatestBroadcastModels.unshift(model);
-            this.LatestBroadcastModels.splice(-1, 1);
+            this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
+            // this.LatestBroadcastModels.unshift(model);
+            // this.LatestBroadcastModels.splice(-1, 1);
 
-            this.LatestBroadcasts = Observable.of(this.LatestBroadcastModels
-                .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn, '')));
+            // this.LatestBroadcasts = Observable.of(this.LatestBroadcastModels
+            //     .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn, '')));
         });
-        this.globalState.Subscribe('ReceiveBroadcastModificationResponse', (model: BroadCastModel) => {
-            const index: number = this.LatestBroadcastModels
-                .findIndex((x) => x.BroadcastId === model.BroadcastId);
-            if (index >= 0) {
-                this.LatestBroadcastModels.splice(index, 1, model);
 
-                this.LatestBroadcasts = Observable.of(this.LatestBroadcastModels
-                    .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn, '')));
-            }
+        this.globalState.Subscribe('ReceiveBroadcastModificationResponse', (model: BroadCastModel) => {
+            this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
+            // const index: number = this.LatestBroadcastModels
+            //     .findIndex((x) => x.BroadcastId === model.BroadcastId);
+            // if (index >= 0) {
+            //     this.LatestBroadcastModels.splice(index, 1, model);
+
+            //     this.LatestBroadcasts = Observable.of(this.LatestBroadcastModels
+            //         .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn, '')));
+            // }
         });
     }
 

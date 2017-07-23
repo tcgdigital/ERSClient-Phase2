@@ -23,6 +23,8 @@ export class TemplateListComponent implements OnInit, OnDestroy {
     templateModelPatch: TemplateModel = null;
     date: Date = new Date();
     templateMediaTypes: any[] = GlobalConstants.TemplateMediaType;
+    expandSearch: boolean = false;
+    searchValue: string = "Expand Search";
 
     constructor(private templateService: TemplateService,
         private emergencySituationService: EmergencySituationService,
@@ -45,6 +47,17 @@ export class TemplateListComponent implements OnInit, OnDestroy {
 
     onTemplateSaveSuccess(data: TemplateModel): void {
         this.templates.unshift(data);
+    }
+
+    expandSearchPanel(value): void {
+        if (!value) {
+            this.searchValue = "Hide Search Panel";
+        }
+        else {
+            this.searchValue = "Expand Search Panel";
+        }
+        this.expandSearch = !this.expandSearch;
+
     }
 
     ngOnInit(): void {

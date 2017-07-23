@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import {
     FormGroup,
     FormControl,
@@ -12,7 +12,12 @@ import { ToastrService, ToastrConfig } from 'ngx-toastr';
 
 import { QuickLinkModel } from './quicklink.model';
 import { QuickLinkService } from './quicklink.service';
-import { ResponseModel, DataExchangeService, AuthModel, UtilityService, URLValidator } from '../../../../shared';
+import {
+    ResponseModel, DataExchangeService,
+    AuthModel, UtilityService, FileUploadService,
+    URLValidator, GlobalConstants,
+    IUploadDocuments
+} from '../../../../shared';
 
 @Component({
     selector: 'quicklink-entry',
@@ -20,9 +25,14 @@ import { ResponseModel, DataExchangeService, AuthModel, UtilityService, URLValid
     templateUrl: '../views/quicklink.entry.view.html'
 })
 export class QuickLinkEntryComponent implements OnInit, OnDestroy {
+    @ViewChild('myFileInput') myInputVariable: any;
+
     public form: FormGroup;
     public submitted: boolean;
-
+    filesToUpload: File[];
+    filepathWithLinks: string = null;
+    fileName: string = null;
+    uploadDocuments: IUploadDocuments[];
     quickLinkModel: QuickLinkModel = null;
     quickLinkModelEdit: QuickLinkModel = null;
     date: Date = new Date();
@@ -32,13 +42,15 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
     credential: AuthModel;
 
     constructor(formBuilder: FormBuilder, private quickLinkService: QuickLinkService,
-        private dataExchange: DataExchangeService<QuickLinkModel>, private toastrService: ToastrService,
+        private dataExchange: DataExchangeService<QuickLinkModel>,
+        private fileUploadService: FileUploadService, private toastrService: ToastrService,
         private toastrConfig: ToastrConfig) {
         this.showAdd = false;
         this.buttonValue = "Add QuickLink";
     }
 
     ngOnInit(): void {
+        this.fileName = null;
         this.submitted = false;
         this.credential = UtilityService.getCredentialDetails();
         this.initializeInputForm();
@@ -52,6 +64,41 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
             QuickLinkName: new FormControl('', [Validators.required]),
             QuickLinkURL: new FormControl('', [Validators.required, URLValidator.validate])
         });
+    }
+
+    public fileChangeEvent(fileInput: any) {
+        this.filesToUpload = <Array<File>>fileInput.target.files;
+    }
+
+    public clearFileUpload(event: any): void {
+        this.myInputVariable.nativeElement.value = '';
+        this.filepathWithLinks = null;
+        this.fileName = null;
+    }
+
+    public upload() {
+        if (this.filesToUpload !== undefined) {
+            const baseUrl = GlobalConstants.EXTERNAL_URL;
+            this.fileUploadService.uploadFiles<string>(baseUrl + 'api/fileUpload/upload', this.filesToUpload)
+                .subscribe((result: string) => {
+                    this.filepathWithLinks = `${GlobalConstants.EXTERNAL_URL}UploadFiles/${result.replace(/^.*[\\\/]/, '')}`;
+                    const extension = result.replace(/^.*[\\\/]/, '').split('.').pop();
+                    // if (dropdownselected === '1') {
+                    this.fileName = 'Quicklink' + `.${extension}`;
+                    // }
+                    // else if (dropdownselected === '2') {
+                    //     this.fileName = 'View_Audit_Report' + `.${extension}`;
+                    // }
+                    // this.OnDocumentUploaded(dropdownselected);
+
+                }, (error) => {
+                    console.log(`Error: ${error}`);
+                });
+        }
+        else {
+            this.toastrService.error('Please select alteast one file to upload.', 'Document Upload', this.toastrConfig);
+            return false;
+        }
     }
 
     ngOnDestroy(): void {
@@ -72,6 +119,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
                 delete this.quickLinkModel.Active;
                 this.quickLinkModel.QuickLinkName = this.form.controls['QuickLinkName'].value;
                 this.quickLinkModel.QuickLinkURL = this.form.controls['QuickLinkURL'].value;
+                this.quickLinkModel.UploadURL = this.filepathWithLinks;
                 this.quickLinkService.Create(this.quickLinkModel)
                     .subscribe((response: QuickLinkModel) => {
                         this.initializeInputForm();
@@ -126,7 +174,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
         this.quickLinkModelEdit = new QuickLinkModel();
         this.quickLinkModelEdit.QuickLinkId = this.form.controls['QuickLinkId'].value;
         this.quickLinkModel.QuickLinkId = this.form.controls['QuickLinkId'].value;
-
+        this.quickLinkModel.UploadURL = this.filepathWithLinks;
         if (this.form.controls['QuickLinkName'].touched) {
             this.quickLinkModelEdit.QuickLinkName = this.form.controls['QuickLinkName'].value;
             this.quickLinkModel.QuickLinkName = this.form.controls['QuickLinkName'].value;
@@ -138,6 +186,8 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
     }
 
     onQuickLinkEditSuccess(data: QuickLinkModel): void {
+        this.filepathWithLinks = null;
+        this.fileName = null;
         this.showAddRegion();
         this.showAdd = true;
         this.initiateQuickLinkModel();
@@ -150,6 +200,14 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
             QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL,
                 [Validators.required, URLValidator.validate])
         });
+        this.filepathWithLinks = this.quickLinkModel.UploadURL;
+        if (this.filepathWithLinks != null) {
+            const extension = this.filepathWithLinks.replace(/^.*[\\\/]/, '').split('.').pop();
+            // if (dropdownselected === '1') {
+            this.fileName = 'Quicklink' + `.${extension}`;
+        }
+
+
     }
 
     showAddRegion(): void {

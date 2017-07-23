@@ -30,6 +30,8 @@ export class ChecklistListComponent implements OnInit {
     searchConfigs: Array<SearchConfigModel<any>> = new Array<SearchConfigModel<any>>();
     parentChecklistListForSearch: Array<NameValue<number>> = Array<NameValue<number>>();
     emergencyTypesForSearch: Array<NameValue<number>> = Array<NameValue<number>>();
+    expandSearch: boolean = false;
+    searchValue: string = "Expand Search";
 
     constructor(private checkListService: ChecklistService, private emergencytypeService: EmergencyTypeService,
         private dataExchange: DataExchangeService<ChecklistModel>, private globalState: GlobalStateService) { }
@@ -88,6 +90,17 @@ export class ChecklistListComponent implements OnInit {
 
     onCheckListModelSavedSuccess(data: ChecklistModel): void {
         this.checkLists.unshift(data);
+    }
+
+    expandSearchPanel(value): void {
+        if (!value) {
+            this.searchValue = "Hide Search Panel";
+        }
+        else {
+            this.searchValue = "Expand Search Panel";
+        }
+        this.expandSearch = !this.expandSearch;
+
     }
 
     ngOnInit(): void {
@@ -152,7 +165,7 @@ export class ChecklistListComponent implements OnInit {
         this.getCheckLists(this.currentDepartmentId);
     }
 
-    
+
 
     private initiateSearchConfigurations(): void {
         const status: Array<NameValue<string>> = [
