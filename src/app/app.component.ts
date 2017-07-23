@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Routes, Router,ActivatedRoute  } from '@angular/router';
-//import { RAGScaleService,RAGScaleModel } from "./pages/shared.components/ragscale";
-import { ResponseModel } from "./shared";
+import { Routes, Router, ActivatedRoute } from '@angular/router';
+import { ResponseModel, GlobalConstants, StorageType } from './shared';
 
 import {
     GlobalStateService,
@@ -13,11 +12,11 @@ import {
 } from './shared/services';
 import { MENU } from './app.memu';
 import { LayoutPaths } from './shared/constants';
+import { PagesPermissionMatrixModel } from './pages/masterdata';
 
 @Component({
     selector: 'app',
     encapsulation: ViewEncapsulation.None,
-
     templateUrl: './app.view.html',
     styleUrls: ['./app.style.scss']
 })
@@ -38,12 +37,19 @@ export class AppComponent implements OnInit {
         });
     }
 
-    
-
     public ngOnInit(): void {
         console.log('Initial App State');
-        let id = this.route.snapshot.paramMap.get('id');
+        const id = this.route.snapshot.paramMap.get('id');
 
+        debugger;
+        if (GlobalConstants.PagePermissionMatrix.length === 0) {
+            const pagePermissionMatrix = UtilityService.GetFromSession
+                ('PagePermissionMatrix', StorageType.SessionStorage, true);
+            if (pagePermissionMatrix) {
+                GlobalConstants.PagePermissionMatrix
+                    = JSON.parse(pagePermissionMatrix) as PagesPermissionMatrixModel[];
+            }
+        }
     }
 
     public ngAfterViewInit(): void {
@@ -62,6 +68,4 @@ export class AppComponent implements OnInit {
         ThemePreloaderService.RegisterLoader(this.imageLoader
             .Load(LayoutPaths.images.root + 'sky-bg.jpg'));
     }
-
-
 }

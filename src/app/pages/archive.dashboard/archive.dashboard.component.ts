@@ -70,7 +70,7 @@ export class ArchiveDashboardComponent implements OnInit {
                 })
                 .map((x) => x.PageCode);
             if (accessibleTabs.length > 0) {
-                this.tablinks = GlobalConstants.TabLinks.filter((x: ITabLinkInterface) => accessibleTabs.some((y) => y === x.id));
+                this.tablinks = GlobalConstants.ArchieveDashboardTabLinks.filter((x: ITabLinkInterface) => accessibleTabs.some((y) => y === x.id));
                 UtilityService.SelectFirstTab(this.tablinks, this.routerObj);
             }
         }

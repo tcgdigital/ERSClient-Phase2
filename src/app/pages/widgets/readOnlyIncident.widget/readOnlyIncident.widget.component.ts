@@ -137,7 +137,7 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
             AffectedStationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyLocation),
             AffectedCountryPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyCountry),
             EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD-MM-YYYY h:mm a')),
-            EmergencyDateLocalPopup: new FormControl(moment(this.EmergencyDateLocal).format('DD-MM-YYYY h:mm a')),
+            EmergencyDateLocalPopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).utc().format('DD-MM-YYYY h:mm a')),
             EmergencyNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyName),
             DescriptionPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Description),
             WhatHappendPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.WhatHappend),
@@ -149,7 +149,7 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
             ContactOfWitnessPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ContactOfWitness),
             SenderOfCrisisInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.SenderOfCrisisInformation),
             ReportedDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.ReportedDate).format('DD-MM-YYYY h:mm a')),
-            ReportedDateLocalPopup: new FormControl(moment(this.ReportedDateLocal).format('DD-MM-YYYY h:mm a')),
+            ReportedDateLocalPopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.ReportedDate).utc().format('DD-MM-YYYY h:mm a')),
             SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity),
             BorrowedIncidentPopup: new FormControl(this.BorrowedIncidentName),
         });
@@ -169,7 +169,7 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
                 AffectedStationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyLocation),
                 AffectedCountryPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyCountry),
                 EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD-MM-YYYY h:mm a')),
-                EmergencyDateLocalPopup: new FormControl(moment(this.EmergencyDateLocal).format('DD-MM-YYYY h:mm a')),
+                EmergencyDateLocalPopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).utc().format('DD-MM-YYYY h:mm a')),
                 EmergencyNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyName),
                 DescriptionPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Description),
                 WhatHappendPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.WhatHappend),
@@ -181,7 +181,7 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
                 ContactOfWitnessPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ContactOfWitness),
                 SenderOfCrisisInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.SenderOfCrisisInformation),
                 ReportedDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.ReportedDate).format('DD-MM-YYYY h:mm a')),
-                ReportedDateLocalPopup: new FormControl(moment(this.ReportedDateLocal).format('DD-MM-YYYY h:mm a')),
+                ReportedDateLocalPopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.ReportedDate).utc().format('DD-MM-YYYY h:mm a')),
                 SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity),
                 BorrowedIncidentPopup: new FormControl(this.BorrowedIncidentName),
 
@@ -191,9 +191,9 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
                 OriginPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.OriginCode),
                 DestinationPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.DestinationCode),
                 ScheduleddeparturePopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.DepartureDate).format('DD-MM-YYYY h:mm a')),
-                ScheduleddepartureLOCPopup: new FormControl(moment(this.ScheduleDepartureLocal).format('DD-MM-YYYY h:mm a')),
+                ScheduleddepartureLOCPopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.DepartureDate).utc().format('DD-MM-YYYY h:mm a')),
                 ScheduledarrivalPopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.ArrivalDate).format('DD-MM-YYYY h:mm a')),
-                ScheduledarrivalLOCPopup: new FormControl(moment(this.ScheduleArrivalLocal).format('DD-MM-YYYY h:mm a')),
+                ScheduledarrivalLOCPopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.ArrivalDate).utc().format('DD-MM-YYYY h:mm a')),
                 FlightTailNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightTaleNumber),
                 AircraftTypeIdPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.AircraftTypeId)
             });

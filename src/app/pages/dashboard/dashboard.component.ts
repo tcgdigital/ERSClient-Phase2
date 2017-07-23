@@ -3,7 +3,6 @@ import {
     OnInit, SimpleChange, OnDestroy, ViewChild
 } from '@angular/core';
 import * as moment from 'moment/moment';
-//import { TAB_LINKS } from './dashboard.tablink';
 import {
     IncidentModel, IncidentService,
     IncidentDataExchangeModel
@@ -41,7 +40,7 @@ import {
 } from '@angular/forms';
 import { EmergencyTypeModel, EmergencyTypeService, PagesPermissionMatrixModel } from '../masterdata';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { Router } from "@angular/router";
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'dashboard',
@@ -118,18 +117,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
             .find((x: PagesPermissionMatrixModel) => {
                 return x.ModuleName === 'Dashboard' &&
                     x.ParentPageId === null && x.Type === 'Tab' &&
-                    x.DepartmentId === this.currentDepartmentId
+                    x.DepartmentId === this.currentDepartmentId;
             });
 
         if (rootTab) {
             const accessibleTabs: string[] = GlobalConstants.PagePermissionMatrix
                 .filter((x: PagesPermissionMatrixModel) => {
                     return x.ParentPageId === rootTab.PageId &&
-                        x.DepartmentId === this.currentDepartmentId
+                        x.DepartmentId === this.currentDepartmentId;
                 })
                 .map((x) => x.PageCode);
             if (accessibleTabs.length > 0) {
-                this.tablinks = GlobalConstants.TabLinks.filter((x: ITabLinkInterface) => accessibleTabs.some((y) => y === x.id));
+                this.tablinks = GlobalConstants.DashboardTabLinks.filter((x: ITabLinkInterface) => accessibleTabs.some((y) => y === x.id));
                 UtilityService.SelectFirstTab(this.tablinks, this.router);
 
             }
