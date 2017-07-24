@@ -6,11 +6,13 @@ import { CheckListSummeryModel, DeptCheckListModel, SubDeptCheckListModel } from
 import { ChecklistSummaryWidgetService } from './checklist.summary.widget.service';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Observable } from 'rxjs/Rx';
+import { ChecklistTrailModel, ChecklistTrailService } from '../../shared.components/checklist.trail';
 import { ActionableModel } from '../../shared.components/actionables/components/actionable.model';
 import { ResponseModel, GlobalStateService, KeyValue, GlobalConstants } from '../../../shared';
 import { DepartmentModel } from '../../masterdata/department/components/department.model';
 import * as Highcharts from 'highcharts';
 import { WidgetUtilityService } from '../widget.utility';
+import { IncidentModel, IncidentService } from '../../incident';
 import {
     GraphObject
 } from '../demand.raised.summary.widget/demand.raised.summary.widget.model';
@@ -39,10 +41,14 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
     public subDeptPendingCheckLists: SubDeptCheckListModel[];
     public subdeptChecklistsLoc: ActionableModel[];
     public arrGraphData: GraphObject[];
+    public currentTarget: any;
     public showCheckListGraph: boolean = false;
     public isShow: boolean = true;
+    public isShowViewAll: boolean = true;
+    public isShowViewSub: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
     public baseLocationURl: string = window.location.pathname;
+    public showGraph: boolean = false;
     currentDepartmentId: number;
     currentIncidentId: number;
 
@@ -53,21 +59,28 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
      * @memberOf ChecklistSummaryWidgetComponent
      */
     constructor(private checklistSummaryWidgetService: ChecklistSummaryWidgetService,
-        private globalState: GlobalStateService) { }
+        private globalState: GlobalStateService, private incidentService: IncidentService,
+        private checklistTrailService: ChecklistTrailService) { }
 
     public ngOnInit(): void {
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.initiatedDepartmentId;
         this.getActionableCount(this.currentIncidentId, this.currentDepartmentId);
-
+        this.showGraph = false;
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
         this.globalState.Subscribe('checkListStatusChange', () => this.checkListStatusChangeHandler());
         this.showAllDeptSubChecklistCompleted = false;
         this.showAllDeptSubChecklistPending = false;
+
+        // SignalR Notification
+        this.globalState.Subscribe('ReceiveChecklistStatusChangeResponse', (model: ActionableModel) => {
+            this.getActionableCount(model.IncidentId, model.DepartmentId);
+        });
     }
 
     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
+        this.showGraph = false;
         if (changes['departmentId'] !== undefined && (changes['departmentId'].currentValue !==
             changes['departmentId'].previousValue) &&
             changes['departmentId'].previousValue !== undefined) {
@@ -127,7 +140,13 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
                     deptCheckListsLocal.push(depCM);
                 });
                 this.deptCheckListsAll = Observable.of(deptCheckListsLocal);
-                //this.graphDataFormationForCheckListWidget(deptCheckListsLocal);
+                this.showGraph = false;
+                if (deptCheckListsLocal.length > 0) {
+                    const departmentLocal: DepartmentModel = new DepartmentModel();
+                    departmentLocal.DepartmentId = deptCheckListsLocal[0].departmentId;
+                    departmentLocal.DepartmentName = deptCheckListsLocal[0].departmentName;
+                    this.graphDataFormationForChecklistWidget(departmentLocal.DepartmentId, null);
+                }
                 if (callback) {
                     callback();
                 }
@@ -184,6 +203,34 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
         this.ViewAllChecklist(() => {
             this.childModalViewAllChecklist.show();
         });
+    }
+
+    public graphDataFormationForChecklistWidget(departmentId: number, $event: any): void {
+        this.currentTarget = null;
+        if ($event) {
+            this.currentTarget = $event.currentTarget;
+        }
+
+        this.checklistTrailService.GetChecklistTrailByDepartmentIdandIncidentId(departmentId, this.currentIncidentId)
+            .subscribe((resultSet: ResponseModel<ChecklistTrailModel>) => {
+                this.showGraph = true;
+                this.GetChecklistGraph(resultSet.Records, this.currentTarget);
+            });
+    }
+
+    public GetChecklistGraph(resultSet: ChecklistTrailModel[], currentTarget: any) {
+        if (currentTarget !== null) {
+            const $currentRow: JQuery = jQuery(currentTarget);
+            $currentRow.closest('tbody').find('tr').removeClass('bg-blue-color');
+            $currentRow.closest('tr').addClass('bg-blue-color');
+        }
+        const requesterDepartmentId: number = resultSet[0].DepartmentId;
+        this.incidentService.GetIncidentById(this.incidentId)
+            .subscribe((incidentModel: IncidentModel) => {
+                WidgetUtilityService.GetGraphCheckList(requesterDepartmentId, Highcharts, resultSet,
+                    'checklist-graph-container', 'Status', incidentModel.CreatedOn);
+                this.showCheckListGraph = true;
+            });
     }
 
     public onViewAllCheckListShown($event: ModalDirective): void {

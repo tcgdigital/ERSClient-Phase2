@@ -11,5 +11,8 @@ export interface INotificationConnection {
     listen<T>(listener: BroadcastEventListener<T>): void;
     listenFor<T>(listener: string): BroadcastEventListener<T>;
     stop(): void;
+    // reconnect(queryString: any, connectionStore: any,
+    //     callbackFunc: (connection: any, store: any) => void): void;
+    reconnect(connectionStore: any, callbackFunc: (connection: any, store: any) => void): void;
     start(): Promise<any>;
 }

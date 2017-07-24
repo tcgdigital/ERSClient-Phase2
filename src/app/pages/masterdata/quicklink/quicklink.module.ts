@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QuickLinkRouting } from './quicklink.routing';
 import { QuickLinkComponent } from './quicklink.component';
 import { QuickLinkEntryComponent, QuickLinkListComponent, QuickLinkService } from './components';
-import { DataExchangeService , SharedModule } from '../../../shared';
+import { DataExchangeService , SharedModule,FileUploadService } from '../../../shared';
 import { MdCheckboxModule } from '@angular2-material/checkbox';
 
 @NgModule({
@@ -27,7 +27,8 @@ import { MdCheckboxModule } from '@angular2-material/checkbox';
     ],
     providers: [
         QuickLinkService,
-        DataExchangeService
+        DataExchangeService,
+        FileUploadService,
     ]
 })
 export class QuickLinkModule { }

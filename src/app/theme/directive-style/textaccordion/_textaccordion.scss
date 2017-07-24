@@ -24,17 +24,17 @@
     margin-top: 1.2em;
     >li {
         position: relative;
-        span {
-            width: 100%;
-            display: block;
-            height: 120px;
-            overflow-x: hidden;
-            overflow-y: auto;
-            font-size: 12px;
-            text-align: justify;
-            padding: 20px 13px 5px 30px;
-            background: $text-accordion-bg;
-            line-height: 18px;
+        span {		 
+        width: 100%;		             
+        display: block;		            
+        height: 120px;		             
+        overflow-x: hidden;		
+        overflow-y: auto;		
+        font-size: 12px;		            
+        text-align: justify;		              
+        padding: 20px 13px 5px 30px;		 
+        background: $text-accordion-bg;		             
+        line-height: 18px;
         }
         i.publish-date {
             position: absolute;
@@ -45,6 +45,53 @@
         }
     }
 }
+
+ .accessibility-error {		              
+        padding: 50px 13px 5px 42px !important;
+        height: 118px !important;
+            &.accessibility-error:before {
+                content: "\f071";
+                font-family: FontAwesome;
+                height: 17px;
+                position: absolute;
+                margin-top: -3px;
+                left: 20px;
+                font-size: 18px;
+                color: #ff0000;
+            }
+        }
+
+.clock-container > div > span.accessibility-error {
+            font-size: 12px;
+            padding: 20px 13px 5px 35px !important;
+            color:#fff;
+            &.accessibility-error:before {
+                content: "\f071";
+                font-family: FontAwesome;
+                height: 17px;
+                position: absolute;
+                margin-top: -6px;
+                left: 27px;
+                font-size: 16px;
+                color: #fff;
+            }
+        }
+
+.widget-container > div > div:nth-child(2) > .accessibility-error {
+            font-size: 12px;
+            padding: 20px 13px 5px 42px !important;
+            color:#fff;
+            &.accessibility-error:before {
+                content: "\f071";
+                font-family: FontAwesome;
+                height: 17px;
+                position: absolute;
+                margin-top: -6px;
+                left: 20px;
+                font-size: 16px;
+                color: #fff;
+            }
+        }
 
 .cd-item-wrapper {
     @include perspective(500px);

@@ -7,7 +7,7 @@ import { BroadcastRouting } from './broadcast.routing';
 import { BroadcastComponent } from './broadcast.component';
 import { BroadcastEntryComponent, BroadcastListComponent, BroadcastService } from './components';
 import { MdCheckboxModule } from '@angular2-material/checkbox';
-import { BroadcastDepartmentService } from '../../masterdata/broadcast.department';
+import { BroadcastDepartmentService } from '../../masterdata/broadcastdepartment';
 import { DepartmentService } from '../../masterdata/department';
 import { BrowserModule } from '@angular/platform-browser';
 import { DataExchangeService , SharedModule } from '../../../shared';

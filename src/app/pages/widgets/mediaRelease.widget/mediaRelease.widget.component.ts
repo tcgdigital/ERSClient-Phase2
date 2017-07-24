@@ -26,6 +26,7 @@ export class MediaReleaseWidgetComponent implements OnInit {
     currentMediaRelaseModel: MediaReleaseWidgetModel = new MediaReleaseWidgetModel();
     downloadPath: string;
     public isShow: boolean = true;
+    public isShowViewAll: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
     /**
      * Creates an instance of MediaReleaseWidgetComponent.
@@ -47,8 +48,9 @@ export class MediaReleaseWidgetComponent implements OnInit {
         this.globalState.Subscribe('MediaReleasePublished', (model) => this.onMediaReleasePublish(model));
 
         // Signalr Notification
-        this.globalState.Subscribe('ReceiveMediaMessageResponse', (model: MediaReleaseWidgetModel) =>
-            this.getLatestMediaReleases(model.IncidentId));
+        this.globalState.Subscribe('ReceiveMediaMessageResponse', (model: MediaReleaseWidgetModel) => {
+            this.getLatestMediaReleases(model.IncidentId);
+        });
     }
 
     public getLatestMediaReleases(incidentId): void {

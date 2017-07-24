@@ -1,0 +1,45 @@
+<div class="card-block">
+    <div class="row">
+        <div class="form-group col-lg-6 col-sm-12 col-md-12">
+            <label for="Passengers">Department:<span class="required">*</span></label>
+            <autocomplete [items]="items" (notify)='onNotify($event)' (InvokeAutoCompleteReset)="invokeReset();"></autocomplete>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 buttonholder">
+            <button class="btn btn-primary" type="button" (click)="save()">Submit</button>
+        </div>
+    </div>
+    <div>
+        <md-checkbox class="hidden-lg-up" id="IsAutoApproved" [(ngModel)]="allselect" (change)="slectAllDept($event)" aria-label="Add">Select Department</md-checkbox>
+    </div>
+    <responsive-table>
+        <table responsive-table-body>
+            <thead>
+                <tr>
+                    <th>Department Name</th>
+                    <th>
+                        <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="allselect" (change)="slectAllDept($event)" aria-label="Add">Select Department</md-checkbox>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr [hidden]="departmentsToBroadcastToShow.length != 0">
+                    <td colspan="6">No records found.</td>
+                </tr>
+                <tr *ngFor="let department of departmentsToBroadcastToShow">
+                    <td data-title="Department Code">{{department.DepartmentName}}</td>
+                    <td data-title="Select Department">
+                        <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="department.Isselected" (change)="onestatuschanged($event)" aria-label="Add" ></md-checkbox>
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
+    </responsive-table>
+    <div class="row">
+        <div class="col-12 buttonholder">
+            <button class="btn btn-primary" type="button" (click)="save()">Submit</button>
+        </div>
+    </div>
+</div>

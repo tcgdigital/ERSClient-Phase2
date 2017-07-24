@@ -48,7 +48,12 @@ export class FutureTravelQueryAssignedCallsListComponent implements OnInit {
         this.getAllFutureTravelQueryCalls(this.currentIncidentId);
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllFutureTravelQueryCalls(this.currentIncidentId));
-        this.globalState.Subscribe('AssignedFutureTravelEnquiryCreationResponse', (model: ExternalInputModel) => this.getAllFutureTravelQueryCalls(model.IncidentId));
+
+        // SignalR Notification
+        this.globalState.Subscribe('ReceiveFutureTravelEnquiryCreationResponse', (model: ExternalInputModel) => {
+            // this.getAllFutureTravelQueryCallsRecieved(model.IncidentId);
+            this.allAssignedCalls.unshift(model);
+        });
     }
 
     incidentChangeHandler(incident: KeyValue): void {

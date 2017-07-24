@@ -1,4 +1,8 @@
-<div class="row">
+<span class="validationAlert" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'Archive')">
+    <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
+</span>
+
+<div *ngIf="isShowPage | accesibility:currentDepartmentId:'Archive'" class="row">
     <incident-header-widget 
         [currentIncident]="currentIncident" 
         [currentDepartment]="currentDepartment" 
@@ -8,7 +12,7 @@
 </div>
 
 <!-- KPI Section Starts-->
-<div class="row">
+<div *ngIf="isShowPage | accesibility:currentDepartmentId:'Archive'" class="row">
     <clock-widget 
         [initiationDateTime]="incidentDate" 
         [currentIncidentId]="archievedIncidentId"
@@ -47,7 +51,7 @@
 <!-- KPI Section Ends-->
 
 <!-- Report and upload Section starts-->
-<div class="row">
+<div *ngIf="isShowPage | accesibility:currentDepartmentId:'Archive'" class="row">
     <archive-report-widget 
         [initiatedDepartmentId]="currentDepartmentId" 
         [currentIncidentId]="archievedIncidentId" 
@@ -63,7 +67,7 @@
 <!-- Report and upload Section Ends-->
 
 <!-- Messaging Section Starts-->
-<div class="row">
+<div *ngIf="isShowPage | accesibility:currentDepartmentId:'Archive'" class="row">
     <broadcast-widget 
         [initiatedDepartmentId]="currentDepartmentId" 
         [currentIncidentId]="archievedIncidentId" 
@@ -85,7 +89,7 @@
 <!-- Messaging Section Ends-->
 
 <!-- Tab Section Starts-->
-<div class="row">
+<div *ngIf="isShowPage | accesibility:currentDepartmentId:'Archive'" class="row">
     <div class="col-12 widget-layout-fix">
         <div class="row tab-root-container no-gutters">
             <div class="col-12">

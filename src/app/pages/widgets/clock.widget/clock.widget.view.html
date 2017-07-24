@@ -1,6 +1,6 @@
 <div class="row clock-container no-gutters">
     <div *ngIf="!(isShow | accesibility:initiatedDepartmentId:'TimerWidget')" class="row no-gutters">
-        {{accessibilityErrorMessage}}
+        <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
     </div>
     <div *ngIf="isShow | accesibility:initiatedDepartmentId:'TimerWidget'" class="col">
         <span class="clock-text">days</span>

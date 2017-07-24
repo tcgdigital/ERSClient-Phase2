@@ -293,11 +293,13 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
 
-        // Notification
-        this.globalState.Subscribe('ReceiveDemandAssignedResponse', (model: DemandModel) =>
-            this.getAssignedDemands(model.TargetDepartmentId, model.IncidentId));
-        this.globalState.Subscribe('ReceiveCompletedDemandAssignedResponse', (model: DemandModel) =>
-            this.getAssignedDemands(model.TargetDepartmentId, model.IncidentId));
+        // SignalR Notification
+        this.globalState.Subscribe('ReceiveDemandAssignedResponse', (model: DemandModel) => {
+            this.getAssignedDemands(model.TargetDepartmentId, model.IncidentId);
+        });
+        this.globalState.Subscribe('ReceiveCompletedDemandAssignedResponse', (model: DemandModel) => {
+            this.getAssignedDemands(model.TargetDepartmentId, model.IncidentId);
+        });
     }
 
     ngOnDestroy(): void {
@@ -319,6 +321,4 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
         this.currentDepartmentName = department.Key;
     }
-
-
 }

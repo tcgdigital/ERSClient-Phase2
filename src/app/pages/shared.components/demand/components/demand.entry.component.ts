@@ -145,18 +145,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         }
     }
 
-    getPageSpecifiedDepartments(): void {
-        this.pageService.GetDepartmentsByPageCode('ViewDepartmentSpecificDemands')
-            .subscribe((response: ResponseModel<PageModel>) => {
-                const pagePermissions = UtilityService.pluck(response.Records[0], ['PagePermissions'])[0];
-                pagePermissions.forEach((x) => {
-                    this.departments.push(UtilityService.pluck(x, ['Department'])[0]);
-                });
-                this.demandModel.TargetDepartmentId = (this.demandModel.TargetDepartmentId === 0)
-                    ? this.departments[0].DepartmentId
-                    : this.demandModel.TargetDepartmentId;
-            });
-    }
+    
 
     getAllDepartments(): void {
         this.departmentService.GetAll()
@@ -286,10 +275,10 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     ChangeAffectedPeople(): void {
         this.demandModel.AffectedPersonId = this.form.controls['AffectedPersonId'].value;
-        if (this.demandModel.AffectedPersonId !== 0) {
+        if (this.demandModel.AffectedPersonId != 0) {
             this.form.controls['AffectedObjectId'].reset({ value: '', disabled: true });
             this.demandModel.PDATicketNumber = this.affectedPeople
-                .find((x) => x.AffectedPersonId === this.demandModel.AffectedPersonId).TicketNumber;
+                .find((x) => x.AffectedPersonId == this.demandModel.AffectedPersonId).TicketNumber;
             this.form.controls['PDATicketNumber'].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
         }
         else {
@@ -300,10 +289,10 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     ChangeAffectedObjects(): void {
         this.demandModel.AffectedObjectId = this.form.controls['AffectedObjectId'].value;
-        if (this.demandModel.AffectedObjectId !== 0) {
+        if (this.demandModel.AffectedObjectId != 0) {
             this.form.controls['AffectedPersonId'].reset({ value: '', disabled: true });
             this.demandModel.PDATicketNumber = this.affectedObjects
-                .find((x) => x.AffectedObjectId === this.demandModel.AffectedObjectId).TicketNumber;
+                .find((x) => x.AffectedObjectId == this.demandModel.AffectedObjectId).TicketNumber;
             this.form.controls['PDATicketNumber'].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
         }
         else {
@@ -445,7 +434,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.datepickerOption.minDate = new Date();
 
         this.getDemandType();
-        this.getPageSpecifiedDepartments();
         this.getAllDepartments();
 
         this.initializeForm();

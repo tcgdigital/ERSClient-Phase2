@@ -23,6 +23,7 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
     currentDepartmentId: number;
     currentIncidentId: number;
     public isShow: boolean = true;
+    public isShowViewAll: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
     presidentMessages: Observable<TextAccordionModel[]>;
     AllPresidentMessages: Observable<PresidentMessageWidgetModel[]>;

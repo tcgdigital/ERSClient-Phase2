@@ -1,7 +1,7 @@
 import {
     Component, OnInit, Input,
     ViewEncapsulation, AfterViewInit,
-    ElementRef
+    ElementRef, SimpleChange
 } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
@@ -14,7 +14,7 @@ import { ITabLinkInterface } from './tab.control.interface';
     encapsulation: ViewEncapsulation.None
 })
 export class TabControlComponent implements OnInit, AfterViewInit {
-    @Input() tabLinks: ITabLinkInterface[];
+    @Input('tabLinks') tabLinks: ITabLinkInterface[];
 
     protected allowedTabLinks: ITabLinkInterface[];
     protected _onRouteChange: Subscription;
@@ -41,22 +41,33 @@ export class TabControlComponent implements OnInit, AfterViewInit {
                 this.selectSpecificTabs(event.url);
             }
         });
+        this.processDOM();
+        
     }
 
-    public ngAfterViewInit(): void {
+    public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
+        if (changes['tabLinks'] !== undefined
+            && (changes['tabLinks'].currentValue !== changes['tabLinks'].previousValue)
+            && changes['tabLinks'].previousValue !== undefined) {
+            this.allowedTabLinks = this.tabLinks;
+            this.processDOM();
+        }
+    }
+
+    public processDOM(): void {
         this.$rootContainer = jQuery(this.elementRef.nativeElement);
         this.$rootItems = this.$rootContainer.find('ul.tab-column');
         this.$tabItems = this.$rootItems.children('li.tab-item');
         this.$slider = this.$rootItems.find('li.slider');
 
-        this.$rootItems.css('width', `${this.$tabItems.eq(0).width() * this.$tabItems.length}px`);
-
+        // this.$rootItems.css('width', `${this.$tabItems.eq(0).width() * this.$tabItems.length}px`);
         this.$rootContainer.hover(
             ($event: JQueryEventObject) => {
                 const $itemWrapper: JQuery = jQuery($event.currentTarget);
                 const $navigation = $itemWrapper.find('.tab-nav');
                 const $tabColumns = $itemWrapper.find('.tab-column');
 
+                $tabColumns.css('width', `${$tabColumns.find('li.tab-item').eq(0).width() * $tabColumns.find('li.tab-item').length}px`);
                 this.updateNavigation($navigation, $itemWrapper, $tabColumns);
                 this.$slider.show();
             },
@@ -67,6 +78,13 @@ export class TabControlComponent implements OnInit, AfterViewInit {
                 this.$slider.hide();
             }
         );
+
+        ////
+    }
+
+
+    public ngAfterViewInit(): void {
+        this.processDOM();
     }
 
     public onTabLinkClick($event, index: number): void {
@@ -143,9 +161,9 @@ export class TabControlComponent implements OnInit, AfterViewInit {
             scrollLeftPos = $tabColumns.outerWidth(true) - $itemWrapper.width();
 
         $itemWrapper.animate({ scrollLeft: scrollLeftPos }, {
-                duration: 'slow',
-                easing: 'easeInSine'
-            });
+            duration: 'slow',
+            easing: 'easeInSine'
+        });
         this.updateNavigation($navigation, $itemWrapper, $tabColumns);
     }
 

@@ -19,6 +19,8 @@ export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
     emergencyTypes: EmergencyTypeModel[] = [];
     searchConfigs: SearchConfigModel<any>[] = [];
     emergencyTypePatch: EmergencyTypeModel = null;
+    expandSearch: boolean = false;
+    searchValue: string = "Expand Search";
 
     /**
      * Creates an instance of EmergencyTypeDetailComponent.
@@ -56,6 +58,16 @@ export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
         this.dataExchange.Publish("OnEmergencyTypeUpdate", emergencyModelToSend);
     }
 
+    expandSearchPanel(value): void {
+        if (!value) {
+            this.searchValue = "Hide Search Panel";
+        }
+        else {
+            this.searchValue = "Expand Search Panel";
+        }
+        this.expandSearch = !this.expandSearch;
+
+    }
 
     ngOnInit(): void {
         this.getEmergencyTypes();

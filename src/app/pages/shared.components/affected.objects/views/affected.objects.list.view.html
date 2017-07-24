@@ -1,5 +1,18 @@
-<generic-search [filterConfigs]="searchConfigs" (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();">
-</generic-search>
+<div class="row">
+    <div class="col-6">
+        <label class="lebelHeaderStyle">Cargo Status Info Report</label>
+        <a target="_blank" href="{{downloadPath}}" download="CargoStatusInfo"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+    </div>
+    <div class="col-6">
+        <input type="button" class="btn btn-primary" (click)="expandSearchPanel(expandSearch)" [ngModel]="searchValue" />
+    </div>
+</div>
+<div class="row">
+    <div class="col-12" *ngIf="expandSearch">
+        <generic-search [filterConfigs]="searchConfigs" (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();">
+        </generic-search>
+    </div>
+</div>
 <responsive-table>
     <table responsive-table-body>
         <thead>

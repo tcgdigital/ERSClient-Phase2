@@ -10,6 +10,7 @@ import { DepartmentAccessOwnerService } from '../shared.components/departmentacc
 import { ModalModule, ModalDirective } from 'ngx-bootstrap';
 import { SharedModule, FileUploadService } from '../../shared';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ChecklistTrailService } from "../shared.components/checklist.trail";
 import { UtilityService } from '../../shared';
 import {
     BroadcastWidgetComponent,
@@ -78,7 +79,8 @@ const WIDGET_SERVICE: any[] = [
     ArchiveDocumentTypeService,
     DepartmentClosureService,
     FileUploadService,
-    UtilityService
+    UtilityService,
+    ChecklistTrailService
 ];
 
 @NgModule({

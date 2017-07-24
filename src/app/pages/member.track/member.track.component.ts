@@ -16,7 +16,7 @@ import {
     KeyValue,
     IncidentStatus,
     GlobalStateService,
-    UtilityService, AuthModel,GlobalConstants
+    UtilityService, AuthModel, GlobalConstants
 } from '../../shared';
 
 import { UserProfileService, UserProfileModel } from '../masterdata/userprofile/components';
@@ -47,6 +47,7 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
     credential: AuthModel;
     availblecount: number;
     freecount: number;
+    downloadPath: string;
     private $toggle: JQuery;
     public isShowPage: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
@@ -65,6 +66,7 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
         this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
         this.credential = UtilityService.getCredentialDetails();
         this.createdBy = +this.credential.UserId;
+        this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/MemberEngagementReport/' + this.currentIncidentId;
     }
 
     ngAfterViewChecked() {
@@ -94,7 +96,7 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
         const $element: JQuery = jQuery($event.currentTarget);
         const userId = $element.data('userid');
         const obj: MemberCurrentEngagementModelToView = this.memberEngagementsToView
-            .find((x) => x.UserId.toString() === userId);
+            .find((x) => x.UserId.toString() == userId);
         if ($element.prop('checked')) {
 
             obj.isRemarksSubmitted = true;
@@ -108,7 +110,7 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
                 memberTrackModel.Remarks = obj.Remarks;
                 memberTrackModel.UnDeploy = false;
                 memberTrackModel.CreatedBy = this.createdBy;
-                if (obj.MemberEngagementTrackId == null || obj.MemberEngagementTrackId === 0 || obj.MemberEngagementTrackId === undefined) {
+                if (obj.MemberEngagementTrackId == null || obj.MemberEngagementTrackId == 0 || obj.MemberEngagementTrackId == undefined) {
                     const memberCurrentEngagementToSave: MemberCurrentEngagementModel = new MemberCurrentEngagementModel();
                     memberCurrentEngagementToSave.DepartmentId = this.currentDepartmentId;
                     memberCurrentEngagementToSave.IncidentId = this.currentIncidentId;
@@ -172,6 +174,7 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
 
     incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
+        this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/MemberEngagementReport/' + this.currentIncidentId;
         //  this.isChecked = false;
         this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
     }

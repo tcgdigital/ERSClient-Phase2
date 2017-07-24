@@ -59,9 +59,11 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
     public arrGraphData: GraphObject[];
     public showGraph: boolean = false;
     public isShow: boolean = true;
+    public isShowViewAll: boolean = true;
+    public isShowViewSub: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
-    //public elapsedHourForGraph: number = GlobalConstants.ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION;
     public graphCategories: string[] = [];
+
     constructor(private demandRaisedSummaryWidgetService: DemandRaisedSummaryWidgetService,
         private incidentService: IncidentService, private globalState: GlobalStateService,
         private dataExchange: DataExchangeService<DemandModel>) { }
@@ -81,6 +83,13 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         this.globalState.Subscribe('DemandApproved', () => this.onDemandAddedUpdatedSuccess());
         this.globalState.Subscribe('DemandAssigned', () => this.onDemandAddedUpdatedSuccess());
         this.globalState.Subscribe('DemandCompleted', () => this.onDemandAddedUpdatedSuccess());
+
+        // SignalR Notification
+        this.globalState.Subscribe('ReceiveDemandCreationResponse', () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe('ReceiveDemandApprovedResponse', () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe('ReceiveDemandAssignedResponse', () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe('ReceiveDemandClosedResponse', () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe('ReceiveCompletedDemandstoCloseResponse', () => this.onDemandAddedUpdatedSuccess());
     }
 
     public onDemandAddedUpdatedSuccess(): void {
@@ -140,9 +149,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         this.demandRaisedSummaryWidgetService.GetAllDepartmentDemandByIncident
             (this.incidentId, (item: DemandRaisedModel[]) => {
                 this.allDemandRaisedList = Observable.of(item);
-
                 this.childModalViewAllDemandRaisedSummary.show();
-                //if (item.length > 0)
                 this.graphDataFormationForDemandRaisedSummeryWidget(item);
             });
     }
@@ -288,7 +295,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         if (entity.length > 0) {
             entity.map((item: DemandRaisedModel) => {
                 item.demandModelList.map((itemDemand: DemandModel) => {
-                    let graphObject: GraphObject = new GraphObject();
+                    const graphObject: GraphObject = new GraphObject();
                     graphObject.requesterDepartmentName = item.requesterDepartmentName;
                     graphObject.requesterDepartmentId = item.departmentId;
                     graphObject.isAssigned = true;
@@ -306,7 +313,6 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
             this.showGraph = true;
             this.GetDemandRaisedGraph(entity[0].departmentId, null);
         }
-
     }
 
     public GetDemandRaisedGraph(requesterDepartmentId: number, $event: any) {
@@ -320,13 +326,13 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
                 WidgetUtilityService.GetGraphDemand(requesterDepartmentId, Highcharts, this.arrGraphData, 'demand-raised-graph-container', 'Raised', incidentModel.CreatedOn);
                 this.showDemandRaisedGraph = true;
             });
-
     }
 
     ngOnDestroy(): void {
-        //this.dataExchange.Unsubscribe('DemandAddedUpdated');
+        // this.dataExchange.Unsubscribe('DemandAddedUpdated');
     }
-    private activator<T>(type: { new (): T; }): T {
+
+    private activator<T>(type: { new(): T; }): T {
         return new type();
     }
 }

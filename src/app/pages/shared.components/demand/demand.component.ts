@@ -1,13 +1,10 @@
-import { Component, ViewEncapsulation, OnInit, AfterContentInit } from '@angular/core';
-import { Route, ActivatedRoute } from '@angular/router';
+import { Component, ViewEncapsulation, AfterContentInit, OnInit } from '@angular/core';
 import { ITabLinkInterface } from '../../../shared/components/tab.control';
-import { GlobalConstants } from '../../../shared/constants';
-
+import { UtilityService } from '../../../shared/services/common.service';
+import { Router } from '@angular/router';
 import {
-    ApprovedDemandComponent, AssignedDemandComponent,
-    CompletedDemandComponent, MyDemandComponent
-} from './components';
-import { PagesPermissionMatrixModel } from '../../masterdata/page.functionality';
+    KeyValue, GlobalStateService
+} from '../../../shared';
 
 @Component({
     selector: 'demand-main',
@@ -17,23 +14,36 @@ import { PagesPermissionMatrixModel } from '../../masterdata/page.functionality'
 })
 export class DemandComponent implements OnInit, AfterContentInit {
     public subTabs: ITabLinkInterface[] = new Array<ITabLinkInterface>();
+    /**
+     *
+     */
+    constructor(private globalState: GlobalStateService, private router: Router) {
 
+    }
     public ngOnInit(): void {
+        if (this.router.url.indexOf('Archieve') > 0) {
+            //Archieve Dashboard
+            this.globalState.Subscribe('departmentChange', (model: KeyValue) => {
+                this.subTabs = UtilityService.GetArchieveDashboardSubTabs('Demand');
+            });
+        }
+        else {
+            //Dashboard
+            this.globalState.Subscribe('departmentChange', (model: KeyValue) => {
+                this.subTabs = UtilityService.GetDashboardSubTabs('Demand');
+            });
+        }
     }
 
     public ngAfterContentInit(): void {
-        const rootTab: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
-            .find((x: PagesPermissionMatrixModel) => x.PageCode === 'Demand' && x.Type === 'Tab');
-
-        if (rootTab) {
-            const tabs: string[] = GlobalConstants.PagePermissionMatrix
-                .filter((x: PagesPermissionMatrixModel) => x.ParentPageId === rootTab.PageId)
-                .map((x) => x.PageCode);
-
-            if (tabs.length > 0) {
-               this.subTabs = GlobalConstants.TabLinks.find((y: ITabLinkInterface) => y.id === 'Demand')
-                    .subtab.filter((x: ITabLinkInterface) => tabs.some((y) => y === x.id));
-            }
+        if (this.router.url.indexOf('Archieve') > 0) {
+            //Archieve Dashboard
+            this.subTabs = UtilityService.GetArchieveDashboardSubTabs('Demand');
+        }
+        else {
+            //Dashboard
+            this.subTabs = UtilityService.GetDashboardSubTabs('Demand');
         }
     }
+
 }

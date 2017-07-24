@@ -5,7 +5,10 @@ import { ToastrModule } from 'ngx-toastr';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { HttpModule } from '@angular/http';
 
-import { GlobalStateService, NotificationBroadcastService, NotificationModule } from '../shared';
+import {
+    GlobalStateService, NotificationBroadcastService,
+    NotificationModule
+} from '../shared';
 import { PagesComponent } from './pages.component';
 import { SharedModule } from '../shared/shared.module';
 import { PagesRouting } from './pages.routing';
@@ -48,7 +51,6 @@ import { UserRegistrationHubConnectionResolver } from './hub.connection.resolver
         UserPermissionService,
         QuickLinkService,
         UserRegistrationHubConnectionResolver
-        // NotificationBroadcastService
     ]
 })
 export class PagesModule {

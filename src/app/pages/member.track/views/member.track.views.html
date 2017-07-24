@@ -1,4 +1,6 @@
-<span class="validationAlert" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'MemberTracking')">{{accessibilityErrorMessage}}</span>
+<span class="validationAlert" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'MemberTracking')">
+    <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
+</span>
 
 <div *ngIf="isShowPage | accesibility:currentDepartmentId:'MemberTracking'" class="row">
     <div class="col-12">
@@ -10,11 +12,15 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="col-lg-4 col-md-6 col-sm-12">
                                 <i class="fa fa-circle"></i>&nbsp;&nbsp; <strong>Available Resources(number)  : {{availblecount}}</strong>
                             </div>
-                            <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="col-lg-4 col-md-6 col-sm-12">
                                 <i class="fa fa-circle"></i>&nbsp;&nbsp;<strong>Busy Resources(number) :  {{freecount}}</strong>
+                            </div>
+                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                <i class="fa fa-circle"></i>&nbsp;&nbsp;<label><strong>Member Tracking Report</strong></label>
+                                <a target="_blank" href="{{downloadPath}}" download="MemberTrackReport"><i class="fa fa-download fa" aria-hidden="true"></i></a>
                             </div>
                         </div>
                         <br/>

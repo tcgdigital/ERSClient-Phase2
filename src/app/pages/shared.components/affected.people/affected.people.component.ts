@@ -1,7 +1,10 @@
-import { Component, ViewEncapsulation, OnInit, AfterContentInit } from '@angular/core';
+import { Component, ViewEncapsulation, AfterContentInit, OnInit } from '@angular/core';
 import { ITabLinkInterface } from '../../../shared/components/tab.control';
-import { GlobalConstants } from '../../../shared/constants';
-
+import { UtilityService } from '../../../shared/services/common.service';
+import { Router } from '@angular/router';
+import {
+    KeyValue, GlobalStateService
+} from '../../../shared';
 @Component({
     selector: 'affectedpeople-main',
     encapsulation: ViewEncapsulation.None,
@@ -10,13 +13,33 @@ import { GlobalConstants } from '../../../shared/constants';
 })
 export class AffectedPeopleComponent implements OnInit, AfterContentInit {
     public subTabs: ITabLinkInterface[] = new Array<ITabLinkInterface>();
+    constructor(private globalState: GlobalStateService, private router: Router) {
 
+    }
     public ngOnInit(): void {
+        if (this.router.url.indexOf('Archieve') > 0) {
+            //Archieve Dashboard
+            this.globalState.Subscribe('departmentChange', (model: KeyValue) => {
+                this.subTabs = UtilityService.GetArchieveDashboardSubTabs('AffectedPeople');
+            });
+        }
+        else {
+            //Dashboard
+            this.globalState.Subscribe('departmentChange', (model: KeyValue) => {
+                this.subTabs = UtilityService.GetDashboardSubTabs('AffectedPeople');
+            });
+        }
     }
 
     public ngAfterContentInit(): void {
-        debugger;
-        if (GlobalConstants.TabLinks.some((x) => x.id === 'AffectedPeople'))
-            this.subTabs = GlobalConstants.TabLinks.find((x) => x.id === 'AffectedPeople').subtab;
+        if (this.router.url.indexOf('Archieve') > 0) {
+            //Archieve Dashboard
+            this.subTabs = UtilityService.GetArchieveDashboardSubTabs('AffectedPeople');
+        }
+        else {
+            //Dashboard
+            this.subTabs = UtilityService.GetDashboardSubTabs('AffectedPeople');
+        }
     }
+
 }

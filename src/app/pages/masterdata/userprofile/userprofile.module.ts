@@ -12,7 +12,8 @@ import {
     UserProfileService, UserAuthService
 } from './components';
 
-import { DataExchangeService, SharedModule } from '../../../shared';
+import { DataExchangeService, SharedModule, FileUploadService } from '../../../shared';
+import { ModalModule } from "ngx-bootstrap";
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { DataExchangeService, SharedModule } from '../../../shared';
         HttpModule,
         ReactiveFormsModule,
         SharedModule,
+        ModalModule.forRoot(),
         MdCheckboxModule,
         UserProfileRouting
     ],
@@ -33,7 +35,8 @@ import { DataExchangeService, SharedModule } from '../../../shared';
     providers: [
         UserProfileService,
         UserAuthService,
-        DataExchangeService
+        DataExchangeService,
+        FileUploadService
     ]
 })
 export class UserProfileModule { }

@@ -5,6 +5,14 @@
             <md-checkbox id="IsAutoApproved" [(ngModel)]="allSelectVerify" (change)="selectAllVerify($event)" aria-label="Add">Verify</md-checkbox>
         </div>
     </div>
+    <div class="col-12">
+        <label>Verified PDA Manifest</label>
+        <a target="_blank" href="{{downloadPath}}" download="PDAVerifiedManifest"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+    </div>
+    <div class="col-12">
+        <label>Verified Crew Manifest</label>
+        <a target="_blank" href="{{downloadURL}}" download="CrewVerifiedManifest"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+    </div>
 </div>
 <div class="row">
     <div class="col-12">

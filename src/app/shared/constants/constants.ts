@@ -8,6 +8,7 @@ export interface IEmergencySituationEnum {
     EmergencySituationName: string;
 }
 export interface INotificationMessage {
+    Type: string;
     Key: string;
     Title: string;
     Message: string;
@@ -60,8 +61,9 @@ export enum StorageType {
 
 export class GlobalConstants {
     // public static EXTERNAL_URL: string = 'http://202.54.73.219/';
-    // public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
+    //public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
     public static EXTERNAL_URL: string = 'http://localhost:5001/';
+    //public static EXTERNAL_URL: string = 'http://172.20.23.110/';
     public static NOTIFICATION_URL: string = `${GlobalConstants.EXTERNAL_URL}Notification/Hubs`;
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
     public static GRANT_TYPE: string = 'password';
@@ -79,9 +81,10 @@ export class GlobalConstants {
     public static ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION: number = 12;
     public static currentLoggedInUser: number = 0;
     public static PagePermissionMatrix: PagesPermissionMatrixModel[] = [];
-    public static accessibilityErrorMessage:string = 'Un-authorized to display.';
+    public static accessibilityErrorMessage: string = 'Access Restricted';
     public static INTERCEPTOR_PERFORM: boolean = false;
-    public static PRESERVE_DATA_FROM_CONVERSION = ['EmergencyDate'];
+    public static PRESERVE_DATA_FROM_CONVERSION: string[] = ['EmergencyDate'];
+    public static SIGNAL_CONNECTION_DELAY: number = 10000;
 
     public static EditorToolbarConfig: any = {
         // uiColor: '#99000',
@@ -367,7 +370,6 @@ export class GlobalConstants {
             key: 6,
             value: 'UnidentifiedPDA',
             caption: 'Unidentified PDA'
-
         }
     ];
 
@@ -448,78 +450,112 @@ export class GlobalConstants {
 
     public static NotificationMessage: INotificationMessage[] = [
         {
+            Type: 'BroadcastNotification',
             Key: 'ReceiveBroadcastCreationResponse',
             Title: 'Broadcast Created',
             Message: 'A new Broadcast has been created. Please refer to tab section "Broadcast Message"'
         }, {
+            Type: 'BroadcastNotification',
             Key: 'ReceiveBroadcastModificationResponse',
             Title: 'Broadcast Modified',
             Message: 'A existing Broadcast message has been modified. Please refer to tab section "Broadcast Message"'
-        }, {
+        },
+
+        /*{
+            Type: 'ChecklistNotification',
             Key: 'ReceiveChecklistCreationResponse',
             Title: 'Checklist Created',
             Message: 'A Checklist has been created. Please refer to tab section "Checklist > Active"'
-        }, {
+        },*/ {
+            Type: 'ChecklistNotification',
             Key: 'ReceiveChecklistStatusChangeResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'ChecklistNotification',
             Key: 'ReceiveChecklistClosureResponse',
             Title: 'Checklist Closed',
             Message: 'A Checklist has been closed. Please refer to tab section "Checklist > Closed"'
-        }, {
+        }, /*{
+            Type: 'ChecklistNotification',
             Key: 'ReceiveChecklistActivationResponse',
             Title: 'Checklist Reopened',
             Message: 'A Checklist has been reopened. Please refer to tab section "Checklist > Active"'
-        }, {
-            Key: 'ReceiveCrisisClosureResponse',
-            Title: 'Crisis Closed',
-            Message: 'Current crisis has been closed by {0}, you will be redirected to login page.'
-        }, {
+        },*/
+
+        {
+            Type: 'CrisisCreationNotification',
             Key: 'ReceiveCrisisCreationResponse',
             Title: 'Crisis Created',
             Message: 'A new crisis has been initiated. Please logout and re-login to the system to see the details of the new crisis'
-        }, {
+        },
+
+        {
+            Type: 'CrisisClosureNotification',
+            Key: 'ReceiveCrisisClosureResponse',
+            Title: 'Crisis Closed',
+            Message: 'Current crisis has been closed by {0:model.UserName}, you will be redirected to login page.'
+        },
+
+        {
+            Type: 'CasualtyNotification',
+            Key: 'ReceiveCasualtyCountResponse',
+            Title: 'Casualty Status',
+            Message: 'Latest casualty status update arrived.  Please refer to dashboard\'s "PDA Casualty Status Block"'
+        },
+
+        {
+            Type: 'DemandNotification',
             Key: 'ReceiveDemandCreationResponse',
             Title: 'Demand Created',
-            Message: 'A new Demand has been created. Please refer to tab section "Demand > My Demands"'
+            Message: 'A new {0:model.DemandCode} Demand has been created. Please refer to tab section "Demand > My Demands"'
         }, {
+            Type: 'DemandNotification',
             Key: 'ReceiveDemandApprovalPendingResponse',
             Title: 'Demand Approval Pending',
             Message: 'A Demand has been assigned for your approval. Please refer to tab section "Demand > Approval Pending"'
         }, {
+            Type: 'DemandNotification',
             Key: 'ReceiveDemandApprovedResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'DemandNotification',
             Key: 'ReceiveDemandAssignedResponse',
             Title: 'Demand Assigned to Me',
             Message: 'A new Demand has been assigned to you. Please refer to tab section "Demand > Assigned to Me"'
         }, {
+            Type: 'DemandNotification',
             Key: 'ReceiveCompletedDemandAssignedResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'DemandNotification',
             Key: 'ReceiveDemandRejectedFromApprovalResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'DemandNotification',
             Key: 'ReceiveDemandClosedResponse',
             Title: 'Demand Completed',
             Message: 'A Demand has been completed. Please refer to tab section "Demand > Completed"'
         }, {
+            Type: 'DemandNotification',
             Key: 'ReceiveDemandStatusUpdateResponse',
             Title: 'Demand Status Updated',
             Message: 'A Demand\'s status has been updated. Please refer to tab section "Demand > My Demands"'
         }, {
+            Type: 'DemandNotification',
             Key: 'ReceiveCompletedDemandstoCloseResponse',
             Title: 'Demand Closed',
             Message: 'A Demand has been closed. Please refer to tab section "Demand > Completed"'
         }, {
+            Type: 'DemandNotification',
             Key: 'ReceiveRejectedDemandsFromClosureResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'DemandNotification',
             Key: 'ReceiveRejectedDemandstoAssignResponse',
             Title: '',
             Message: ''
@@ -527,154 +563,179 @@ export class GlobalConstants {
 
 
         {
+            Type: 'PresidentsMessageNotification',
             Key: 'ReceivePresidentsMessageResponse',
             Title: 'Presidents Message Published',
             Message: 'A Presidents Message has been published. Please refer to dashboard\'s "Presidents Message Block"'
-        }, {
+        },
+
+        {
+            Type: 'PresidentsMessageWorkflowNotification',
             Key: 'ReceivePresidentsMessageCreatedResponse',
             Title: 'Presidents Message Created',
             Message: 'A Presidents Message has been created. Please refer to tab section "Presidents Message > Presidents Message Release"'
         }, {
+            Type: 'PresidentsMessageWorkflowNotification',
             Key: 'ReceivePresidentsMessageSendForApprovalResponse',
             Title: 'Presidents Message is Sent for Approval',
             Message: 'A Presidents Message has been sent for approval. Please refer to tab section "Presidents Message > Pending Approval"'
         }, {
+            Type: 'PresidentsMessageWorkflowNotification',
             Key: 'ReceivePresidentsMessageApprovedResponse',
             Title: 'Presidents Message Approved',
             Message: 'A Presidents Message has been approved. Please refer to tab section "Presidents Message > Presidents Message Release"'
         }, {
+            Type: 'PresidentsMessageWorkflowNotification',
             Key: 'ReceivePresidentsMessageRejectedResponse',
             Title: 'Presidents Message Rejected',
             Message: 'A Presidents Message has been rejected. Please refer to tab section "Presidents Message > Presidents Message Release"'
         }, {
+            Type: 'PresidentsMessageWorkflowNotification',
             Key: 'ReceivePresidentsMessagePublishedResponse',
             Title: 'Presidents Message Published',
             Message: 'A Presidents Message has been published. Please refer to tab section "Presidents Message > Presidents Message Release"'
         }, {
+            Type: 'PresidentsMessageWorkflowNotification',
             Key: 'ReceivePresidentsMessageUpdateResponse',
             Title: '',
             Message: ''
         },
 
 
-
         {
+            Type: 'MediaMessageNotification',
             Key: 'ReceiveMediaMessageResponse',
             Title: 'Media Release Published',
             Message: 'A Media Release has been published. Please refer to dashboard\'s "Media Release Block"'
-        }, {
+        },
+
+        {
+            Type: 'MediaMessageWorkflowNotification',
             Key: 'ReceiveMediaMessageCreatedResponse',
             Title: 'Media Release Created',
             Message: 'A Media Release has been created. Please refer to tab section "Media Management > Media Release"'
         }, {
+            Type: 'MediaMessageWorkflowNotification',
             Key: 'ReceiveMediaMessageSendForApprovalResponse',
             Title: 'Media Release is Sent for Approval',
             Message: 'A Media Release has been sent for approval. Please refer to tab section "Media Management > Pending Approval"'
         }, {
+            Type: 'MediaMessageWorkflowNotification',
             Key: 'ReceiveMediaMessageApprovedResponse',
             Title: 'Media Release Approved',
             Message: 'A Media Release has been approved. Please refer to tab section "Media Management > Media Release"'
         }, {
+            Type: 'MediaMessageWorkflowNotification',
             Key: 'ReceiveMediaMessageRejectedResponse',
             Title: 'Media Release Rejected',
             Message: 'A Media Release has been rejected. Please refer to tab section "Media Management > Media Release"'
         }, {
+            Type: 'MediaMessageWorkflowNotification',
             Key: 'ReceiveMediaMessagePublishedResponse',
             Title: 'Media Release Published',
             Message: 'A Media Release has been published. Please refer to tab section "Media Management > Media Release"'
         }, {
+            Type: 'MediaMessageWorkflowNotification',
             Key: 'ReceiveMediaMessageUpdateResponse',
             Title: '',
             Message: ''
         },
 
 
-
-
-
-
-
-
-
-
-
-
         {
+            Type: 'EnquiryNotification',
             Key: 'ReceiveCargoEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'AssignedCargoEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'ReceiveCrewEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'AssignedCrewEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'ReceiveMediaEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'AssignedMediaEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'ReceiveOtherEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'AssignedOtherEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'ReceivePassangerEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'AssignedPassangerEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'ReceiveFutureTravelEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'AssignedFutureTravelEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'ReceiveGeneralUpdateEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'AssignedGeneralUpdateEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'ReceiveSituationalEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'AssignedSituationalUpdatesEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'ReceiveCustomerDissatisfactionEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {
+            Type: 'EnquiryNotification',
             Key: 'AssignedCustomerDissatisfactionEnquiryCreationResponse',
             Title: '',
             Message: ''
         }
     ];
 
-    public static TabLinks: ITabLinkInterface[] = [
+    public static DashboardTabLinks: ITabLinkInterface[] = [
         {
             id: 'Checklist',
             title: 'Checklists',
@@ -685,7 +746,7 @@ export class GlobalConstants {
             order: 1,
             subtab: [
                 {
-                    id: 'ActivaChecklist',
+                    id: 'ActiveChecklist',
                     title: 'Open Checklist',
                     url: './open',
                     selected: false,
@@ -697,7 +758,7 @@ export class GlobalConstants {
                     url: './close',
                     selected: false,
                     hidden: false,
-                    order: 1
+                    order: 2
                 }
             ]
         }, {
@@ -744,7 +805,7 @@ export class GlobalConstants {
             title: 'Affected People',
             // icon: 'fa fa-apple fa-2x',
             url: '/pages/dashboard/people',
-            selected: true,
+            selected: false,
             hidden: false,
             order: 3,
             subtab: [
@@ -854,7 +915,7 @@ export class GlobalConstants {
             url: '/pages/dashboard/otherQuery',
             selected: false,
             hidden: false,
-            order: 9,
+            order: 8,
             subtab: [
                 {
                     id: 'ReceivedCalls',
@@ -1082,6 +1143,516 @@ export class GlobalConstants {
             order: 17
         }
 
+    ] as ITabLinkInterface[];
+
+    public static ArchieveDashboardTabLinks: ITabLinkInterface[] = [
+        {
+            id: 'Checklist',
+            title: 'Checklists',
+            // icon: 'fa fa-edge fa-2x',
+            url: '/pages/archivedashboard/actionable',
+            selected: false,
+            hidden: false,
+            order: 1,
+            subtab: [
+                {
+                    id: 'ActiveChecklist',
+                    title: 'Open Checklist',
+                    url: './open',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'ClosedChecklist',
+                    title: 'Close Checklist',
+                    url: './close',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'Demand',
+            title: 'Demand',
+            // icon: 'fa fa-linux fa-2x',
+            url: '/pages/archivedashboard/demand',
+            selected: false,
+            hidden: false,
+            order: 2,
+            subtab: [
+                {
+                    id: 'AssignedToMeDemand',
+                    title: 'Assigned To Me',
+                    url: './assigned',
+                    selected: true,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'MyDemand',
+                    title: 'My Demands',
+                    url: './own',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }, {
+                    id: 'PendingDemand',
+                    title: 'Approval Pending',
+                    url: './approval',
+                    selected: false,
+                    hidden: false,
+                    order: 3
+                }, {
+                    id: 'CompleteDemand',
+                    title: 'Completed',
+                    url: './completed',
+                    selected: false,
+                    hidden: false,
+                    order: 4
+                }
+            ]
+        }, {
+            id: 'AffectedPeople',
+            title: 'Affected People',
+            // icon: 'fa fa-apple fa-2x',
+            url: '/pages/archivedashboard/people',
+            selected: false,
+            hidden: false,
+            order: 3,
+            subtab: [
+                {
+                    id: 'AffectedPeople',
+                    title: 'Affected People',
+                    url: './detail',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'VerifyAffectedPeople',
+                    title: 'Verify Affected People',
+                    url: './verify',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'AffectedCargo',
+            title: 'Affected Cargo',
+            // icon: 'fa fa-chrome fa-2x',
+            url: '/pages/archivedashboard/cargo',
+            selected: false,
+            hidden: false,
+            order: 4,
+            subtab: [
+                {
+                    id: 'Cargo',
+                    title: 'Cargo',
+                    url: './detail',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'VerifyCargo',
+                    title: 'Verify Cargo',
+                    url: './verify',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'BroadcastMessage',
+            title: 'Broadcast Messages',
+            // icon: 'fa fa-envira fa-2x',
+            url: '/pages/archivedashboard/broadcast',
+            selected: false,
+            hidden: false,
+            order: 5
+        }, {
+            id: 'PresidentMessage',
+            title: 'President Messages',
+            // icon: 'fa fa-firefox fa-2x',
+            url: '/pages/archivedashboard/presidentMessage',
+            selected: false,
+            hidden: false,
+            order: 6,
+            subtab: [
+                {
+                    id: 'PresidentMessageRelease',
+                    title: 'President Message Release',
+                    url: './release',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'PresidentMessagePendingApprovals',
+                    title: 'Pending Approvals',
+                    url: './approvalpending',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'MediaMessage',
+            title: 'Media Messages',
+            // icon: 'fa fa-medium fa-2x',
+            url: '/pages/archivedashboard/media',
+            selected: false,
+            hidden: false,
+            order: 7,
+            subtab: [
+                {
+                    id: 'MediaMessageRelease',
+                    title: 'Media Release',
+                    url: './release',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'MediaMessagePendingApprovals',
+                    title: 'Pending Approvals',
+                    url: './approvalpending',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'OtherQuery',
+            title: 'Other Query',
+            // icon: 'fa fa-windows fa-2x',
+            url: '/pages/archivedashboard/otherQuery',
+            selected: false,
+            hidden: false,
+            order: 8,
+            subtab: [
+                {
+                    id: 'ReceivedCalls',
+                    title: 'Received Calls',
+                    url: './receivedCalls',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'AssignedCalls',
+                    title: 'Assigned Calls',
+                    url: './assignedcalls',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'CrewQuery',
+            title: 'Crew Query',
+            // icon: 'fa fa-twitter fa-2x',
+            url: '/pages/archivedashboard/crewQuery',
+            selected: false,
+            hidden: false,
+            order: 9,
+            subtab: [
+                {
+                    id: 'ReceivedCalls',
+                    title: 'Received Calls',
+                    url: './receivedCalls',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'AssignedCalls',
+                    title: 'Assigned Calls',
+                    url: './assignedcalls',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'PassengerQuery',
+            title: 'Passenger Query',
+            // icon: 'fa fa-twitter fa-2x',
+            url: '/pages/archivedashboard/passengerquery',
+            selected: false,
+            hidden: false,
+            order: 10,
+            subtab: [
+                {
+                    id: 'ReceivedCalls',
+                    title: 'Received Calls',
+                    url: './receivedCalls',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'AssignedCalls',
+                    title: 'Assigned Calls',
+                    url: './assignedcalls',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'CargoQuery',
+            title: 'Cargo Query',
+            // icon: 'fa fa-twitter fa-2x',
+            url: '/pages/archivedashboard/cargoquery',
+            selected: false,
+            hidden: false,
+            order: 11,
+            subtab: [
+                {
+                    id: 'ReceivedCalls',
+                    title: 'Received Calls',
+                    url: './receivedCalls',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'AssignedCalls',
+                    title: 'Assigned Calls',
+                    url: './assignedcalls',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'MediaQuery',
+            title: 'Media Query',
+            // icon: 'fa fa-twitter fa-2x',
+            url: '/pages/archivedashboard/mediaquery',
+            selected: false,
+            hidden: false,
+            order: 12,
+            subtab: [
+                {
+                    id: 'ReceivedCalls',
+                    title: 'Received Calls',
+                    url: './receivedCalls',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'AssignedCalls',
+                    title: 'Assigned Calls',
+                    url: './assignedcalls',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'FutureTravelQuery',
+            title: 'Future Travel Query',
+            // icon: 'fa fa-twitter fa-2x',
+            url: '/pages/archivedashboard/futuretravelquery',
+            selected: false,
+            hidden: false,
+            order: 13,
+            subtab: [
+                {
+                    id: 'ReceivedCalls',
+                    title: 'Received Calls',
+                    url: './receivedCalls',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'AssignedCalls',
+                    title: 'Assigned Calls',
+                    url: './assignedcalls',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'GeneralUpdateQuery',
+            title: 'General Update Query',
+            // icon: 'fa fa-twitter fa-2x',
+            url: '/pages/archivedashboard/generalupdatequery',
+            selected: false,
+            hidden: false,
+            order: 14,
+            subtab: [
+                {
+                    id: 'ReceivedCalls',
+                    title: 'Received Calls',
+                    url: './receivedCalls',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'AssignedCalls',
+                    title: 'Assigned Calls',
+                    url: './assignedcalls',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'SituationalUpdatesQuery',
+            title: 'Situational Updates Query',
+            // icon: 'fa fa-twitter fa-2x',
+            url: '/pages/archivedashboard/situationalupdatesquery',
+            selected: false,
+            hidden: false,
+            order: 15,
+            subtab: [
+                {
+                    id: 'ReceivedCalls',
+                    title: 'Received Calls',
+                    url: './receivedCalls',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'AssignedCalls',
+                    title: 'Assigned Calls',
+                    url: './assignedcalls',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'CustomerDissatisfactionQuery',
+            title: 'Customer Dissatisfaction Query',
+            // icon: 'fa fa-twitter fa-2x',
+            url: '/pages/archivedashboard/customerdissatisfactionquery',
+            selected: false,
+            hidden: false,
+            order: 16,
+            subtab: [
+                {
+                    id: 'ReceivedCalls',
+                    title: 'Received Calls',
+                    url: './receivedCalls',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'AssignedCalls',
+                    title: 'Assigned Calls',
+                    url: './assignedcalls',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'GroundVictims',
+            title: 'Ground Victims',
+            // icon: 'fa fa-twitter fa-2x',
+            url: '/pages/archivedashboard/groundmembers',
+            selected: false,
+            hidden: false,
+            order: 17
+        }
+
+    ] as ITabLinkInterface[];
+
+
+    public static MasterDataTAB_LINKS: ITabLinkInterface[] = [
+        {
+            id: 'userprofile',
+            title: 'Userprofile',
+            // icon: 'fa fa-twitter fa-2x',
+            url: '/pages/masterdata/userprofile',
+            selected: false,
+            hidden: false,
+            order: 1
+        }, {
+            id: 'checklist',
+            title: 'Checklist',
+            // icon: 'fa fa-chrome fa-2x',
+            url: '/pages/masterdata/checklist',
+            selected: false,
+            hidden: false,
+            order: 2
+        }, {
+            id: 'userpermission',
+            title: 'User Department Mapping',
+            // icon: 'fa fa-linux fa-2x',
+            url: '/pages/masterdata/userpermission',
+            selected: false,
+            hidden: false,
+            order: 3
+        }, {
+            id: 'department',
+            title: 'Department',
+            // icon: 'fa fa-apple fa-2x',
+            url: '/pages/masterdata/department',
+            selected: true,
+            hidden: false,
+            order: 4
+        }, {
+            id: 'emergencytype',
+            title: 'Crisis Type',
+            // icon: 'fa fa-drupal fa-2x',
+            url: '/pages/masterdata/emergencytype',
+            selected: false,
+            hidden: false,
+            order: 5
+        }, {
+            id: 'emergencydepartment',
+            title: 'Crisis Department Mapping',
+            // icon: 'fa fa-firefox fa-2x',
+            url: '/pages/masterdata/emergencydepartment',
+            selected: false,
+            hidden: false,
+            order: 6
+        }, {
+
+            id: 'emergencylocation',
+            title: 'Responsible Station',
+            // icon: 'fa fa-twitter fa-2x',
+            url: '/pages/masterdata/affectedstation',
+            selected: false,
+            hidden: false,
+            order: 7
+        }, {
+            id: 'demandtype',
+            title: 'Demand Type',
+            // icon: 'fa fa-edge fa-2x',
+            url: '/pages/masterdata/demandtype',
+            order: 8
+        }, {
+            id: 'pagefunctionality',
+            title: 'Department Functionality Mapping',
+            // icon: 'fa fa-windows fa-2x',
+            url: '/pages/masterdata/pagefunctionality',
+            selected: false,
+            hidden: false,
+            order: 9
+        }, {
+            id: 'quicklink',
+            title: 'Quicklinks',
+            // icon: 'fa fa-envira fa-2x',
+            url: '/pages/masterdata/quicklink',
+            selected: false,
+            hidden: false,
+            order: 10
+        }, {
+            id: 'template',
+            title: 'Notification Template',
+            // icon: 'fa fa-medium fa-2x',
+            url: '/pages/masterdata/template',
+            selected: false,
+            hidden: false,
+            order: 11
+        }, {
+            id: 'broadcastdepartment',
+            title: 'Broadcast Department Mapping',
+            // icon: 'fa fa-medium fa-2x',
+            url: '/pages/masterdata/broadcastdepartment',
+            selected: false,
+            hidden: false,
+            order: 12
+        }
     ] as ITabLinkInterface[];
 }
 

@@ -6,7 +6,7 @@
             </div>
         </div>
         <div *ngIf="!(isShow | accesibility:initiatedDepartmentId:'ChecklistKPI')" class="row no-gutters">
-            {{accessibilityErrorMessage}}
+            <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
         </div>
         <div *ngIf="isShow | accesibility:initiatedDepartmentId:'ChecklistKPI'" class="row no-gutters">
             <div class="col widget-block">
@@ -15,7 +15,7 @@
                     <span>{{checkListSummery.assignActionableCount | padding: '0': 2}}</span>
                 </span>
                 <span class="widget-text">Assigned</span>
-                <span (click)="openViewAllChecklist()" class="widget-text view-all-style">View All</span>
+                <span *ngIf="isShowViewAll | accesibility:initiatedDepartmentId:'ChecklistKPIViewAll'" (click)="openViewAllChecklist()" class="widget-text view-all-style">View All</span>
             </div>
             <div class="col widget-block">
                 <span class="widget-number">
@@ -23,7 +23,7 @@
                     <span>{{checkListSummery.closeActionableCount | padding: '0': 2}}</span>
                 </span>
                 <span class="widget-text">Completed</span>
-                <span (click)="openViewSubDeptChecklist()" class="widget-text view-all-style">Sub-Dept</span>
+                <span *ngIf="isShowViewAll | accesibility:initiatedDepartmentId:'ChecklistKPISubDept'" (click)="openViewSubDeptChecklist()" class="widget-text view-all-style">Sub-Dept</span>
             </div>
         </div>
     </div>
@@ -40,7 +40,7 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="summary-container col-lg-12 col-md-12 col-lg-6">
+                    <div class="summary-container col-lg-6 col-md-12 col-lg-6">
                         <responsive-table>
                             <table id="checklist-table" responsive-table-body>
                                 <thead>
@@ -57,17 +57,19 @@
                                     </tr>
                                     <tr *ngFor="let deptCheckList of deptCheckListsAll | async">
                                         <td data-title="Department">
-                                            <a href="javascript:void(0);" (click)="GetCheckListGraph(deptCheckList.departmentId, $event)">
+                                            <a href="javascript:void(0);" (click)="graphDataFormationForChecklistWidget(deptCheckList.departmentId, $event)">
                                             {{deptCheckList.departmentName}}
                                             </a>
                                         </td>
                                         <td data-title="Assigned">{{deptCheckList.assigned}}</td>
                                         <td data-title="Completed" *ngIf="deptCheckList.completed>0">
-                                            <a href="{{baseLocationURl}}#showAllCompleted" (click)="showAllDeptSubTableCompleted(deptCheckList)">{{deptCheckList.completed}}</a>
+                                            <!-- <a href="{{baseLocationURl}}#showAllCompleted" (click)="showAllDeptSubTableCompleted(deptCheckList)">{{deptCheckList.completed}}</a> -->
+                                             <a (click)="showAllDeptSubTableCompleted(deptCheckList)">{{deptCheckList.completed}}</a>
                                         </td>
                                         <td data-title="Completed" *ngIf="deptCheckList.completed==0">{{deptCheckList.completed}}</td>
                                         <td data-title="Pending" *ngIf="deptCheckList.pending>0">
-                                            <a href="{{baseLocationURl}}#showAllPending" (click)="showAllDeptSubTablePending(deptCheckList)">{{deptCheckList.pending}}</a>
+                                            <!-- <a href="{{baseLocationURl}}#showAllPending" (click)="showAllDeptSubTablePending(deptCheckList)">{{deptCheckList.pending}}</a> -->
+                                            <a (click)="showAllDeptSubTablePending(deptCheckList)">{{deptCheckList.pending}}</a>
                                         </td>
                                         <td data-title="Pending" *ngIf="deptCheckList.pending==0">{{deptCheckList.pending}}</td>
                                     </tr>
@@ -75,7 +77,7 @@
                             </table>
                         </responsive-table>
                     </div>
-                    <div class="col-md-12 col-lg-6">
+                    <div *ngIf="showGraph" class="col-md-6 col-lg-6">
                         <div id="checklist-graph-container">
                         </div>
                     </div>
