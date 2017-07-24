@@ -47,6 +47,10 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     isArchive: boolean = false;
     public globalStateProxyOpen: GlobalStateService;
     public form: FormGroup;
+    public isShowViewAdditionalInfo: boolean = true;
+    public isShowUpdateAdditionalInfo: boolean = true;
+    public isShowCommentTrail: boolean = true;
+    public isShowUpdateOpenChecklist: boolean = true;
     public completionStatusTypes: any[] = GlobalConstants.CompletionStatusType;
     public ChecklistMappers: ChecklistMapper[] = [];
     public checklistTrail: ChecklistTrailModel = null;
@@ -75,6 +79,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         this.ChecklistMappers = [];
         this.disableUploadButton = true;
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+        //this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
 
         if (this._router.url.indexOf('archivedashboard') > -1) {
             this.isArchive = true;
@@ -99,6 +104,8 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
             this.getAllActiveActionable(model.IncidentId, model.DepartmentId);
         });
     }
+
+    
 
     openChildActionable(actionable: ActionableModel): void {
         actionable['expanded'] = !actionable['expanded'];

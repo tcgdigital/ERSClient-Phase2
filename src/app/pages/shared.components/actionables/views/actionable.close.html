@@ -1,4 +1,4 @@
-<button class="btn btn-primary" type="submit" (click)="closedActionableClick(closeActionables)" *ngIf="!isArchive">Submit</button><br/><br/>
+<button class="btn btn-primary" type="submit" (click)="closedActionableClick(closeActionables)"  *ngIf="(!isArchive && isShowUpdateCloseChecklist | accesibility:currentDepartmentId:'UpdateCloseChecklist')">Submit</button><br/><br/>
 
 <responsive-table>
     <table responsive-table-body>

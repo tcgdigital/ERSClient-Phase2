@@ -1,4 +1,4 @@
-<button class="btn btn-primary" type="submit" (click)="activeActionableClick(activeActionables)" *ngIf="!isArchive">Submit</button><br/><br/>
+<button class="btn btn-primary" type="submit" (click)="activeActionableClick(activeActionables)" *ngIf="(!isArchive && isShowUpdateOpenChecklist | accesibility:currentDepartmentId:'UpdateOpenChecklist')">Submit</button><br/><br/>
 <responsive-table>
     <table responsive-table-body>
         <thead>
@@ -43,8 +43,9 @@
                     <td data-title="Download">
                         <a class="fa fa-download fa-2x" target="_self" *ngIf="actionable.UploadLinks!=null" href="{{actionable.UploadLinks}}" download="{{actionable.FileName}}"></a>
                     </td>
-                    <td data-title="Trail"><i class="fa fa-info-circle fa-2x" (click)="openTrail(actionable)"></i> </td>
-                    <td data-title="Details"><i class="fa fa-edit fa-2x" (click)="openActionableDetail(actionable)"></i>
+                    <td data-title="Trail"><i *ngIf="isShowCommentTrail | accesibility:currentDepartmentId:'ViewChecklistTrail'" class="fa fa-info-circle fa-2x" (click)="openTrail(actionable)"></i> </td>
+                    <td data-title="Details">
+                        <i *ngIf="isShowViewAdditionalInfo | accesibility:currentDepartmentId:'ViewChecklistAdditionalInfo'" class="fa fa-edit fa-2x" (click)="openActionableDetail(actionable)"></i>
                     </td>
                 </tr>
                 <tr *ngIf="actionable.expanded == true">
@@ -112,7 +113,7 @@
                             </div>
                             <div class="col-sm-2">
                                 <div class="row buttonholder" *ngIf="!isArchive">
-                                    <button class="btn btn-primary" type="submit">Submit</button>&nbsp;
+                                    <button *ngIf="isShowUpdateAdditionalInfo | accesibility:currentDepartmentId:'UpdateChecklistAdditionalInfo'" class="btn btn-primary" type="submit">Submit</button>&nbsp;
                                 </div>
                             </div>
                         </div>
