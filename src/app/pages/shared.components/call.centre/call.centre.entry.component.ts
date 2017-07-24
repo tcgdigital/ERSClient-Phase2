@@ -300,7 +300,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         this.copassengerlistpnr = _.without(this.copassengerlistpnr, _.findWhere(this.copassengerlistpnr, { AffectedPersonId: obj.AffectedPersonId }));
         this.copassengerlistPassenger.map(x => this.copassengerlistPassengerForMappedPerson.push(Object.assign({}, x)));
         this.copassengerlistpnr.forEach(x => {
-            x.IsSelected = false;
+            // x.IsSelected = false;
             this.copassengerlistPassengerForMappedPerson = _.without(this.copassengerlistPassengerForMappedPerson, _.findWhere(this.copassengerlistPassengerForMappedPerson, { AffectedPersonId: x.AffectedPersonId }));
         });
         this.copassengerlistPassengerForMappedPerson = _.without(this.copassengerlistPassengerForMappedPerson, _.findWhere(this.copassengerlistPassengerForMappedPerson, { AffectedPersonId: obj.AffectedPersonId }));
@@ -311,7 +311,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         this.consolidatedCopassengers=[];
         this.copassengerlistpnr.filter(x => x.IsSelected == true).map(x => {
             let obj = Object.assign({}, x);
-            obj.IsSelected = false;
+            // obj.IsSelected = false;
             this.consolidatedCopassengers.push(obj);
         });
         this.copassengerlistPassengerForMappedPerson.filter(x => x.IsSelected == true).map(x => {
@@ -625,7 +625,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
 
     createDemands(affectedId: number, affectedPersonIds?: number[]): void {
         //   if (affectedPersonIds.length > 0)
-        debugger;
+        // debugger;
         if (this.enquiry.IsCallBack) {
             this.callSetDemands(true, false, false, false, affectedId, affectedPersonIds);
         }
