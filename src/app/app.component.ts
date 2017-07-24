@@ -41,10 +41,8 @@ export class AppComponent implements OnInit {
         console.log('Initial App State');
         const id = this.route.snapshot.paramMap.get('id');
 
-        debugger;
         if (GlobalConstants.PagePermissionMatrix.length === 0) {
-            const pagePermissionMatrix = UtilityService.GetFromSession
-                ('PagePermissionMatrix', StorageType.SessionStorage, true);
+            const pagePermissionMatrix = UtilityService.GetFromSession('PagePermissionMatrix', StorageType.SessionStorage, true);
             if (pagePermissionMatrix) {
                 GlobalConstants.PagePermissionMatrix
                     = JSON.parse(pagePermissionMatrix) as PagesPermissionMatrixModel[];

@@ -60,7 +60,6 @@ export class BroadcastDepartmentComponent {
         this.broadcastdepartmentmappingservice.Query(departmentId)
             .subscribe((response: ResponseModel<BroadCastDepartmentModel>) => {
                 this.setinitialdepartmentstobroadcast();
-                debugger;
                 this.departmentsToBroadcastToShow = _.without(this.departmentsToBroadcastToShow, _.findWhere(this.departmentsToBroadcastToShow, { DepartmentId: departmentId }));
                 if (response.Records.length > 0) {
                     response.Records.forEach(x => {
@@ -93,7 +92,6 @@ export class BroadcastDepartmentComponent {
     // };
 
     slectAllDept(value: any): void {
-        debugger;
         this.departmentsToBroadcastToShow.forEach(x => {
             x["Isselected"] = value.checked;
         });
