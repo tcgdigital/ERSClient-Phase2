@@ -30,7 +30,7 @@
                 <tr *ngFor="let department of departmentsToBroadcastToShow">
                     <td data-title="Department Code">{{department.DepartmentName}}</td>
                     <td data-title="Select Department">
-                        <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="department.IsSelected" aria-label="Add" (change)="checkAllStatus($event)"></md-checkbox>
+                        <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="department.Isselected" (change)="onestatuschanged($event)" aria-label="Add" ></md-checkbox>
                     </td>
 
                 </tr>
