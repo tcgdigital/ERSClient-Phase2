@@ -20,7 +20,7 @@ export class PutOperation<T extends BaseModel> extends DataOperation<BaseModel> 
         private entity: T,
         private key: string,
         private actionSuffix?: string) {
-        super(dataProcessingService, httpService,httpInterceptor, typeName, entity, key);
+        super(dataProcessingService, httpService, httpInterceptor, typeName, entity, key);
     }
 
     /**
@@ -31,12 +31,13 @@ export class PutOperation<T extends BaseModel> extends DataOperation<BaseModel> 
      * @memberOf PutOperation
      */
     public Execute(): Observable<T> {
-        let body = JSON.stringify(this.entity);
-        let uri: string = this.DataProcessingService
+        const body = JSON.stringify(this.entity);
+        const uri: string = this.DataProcessingService
             .GetUri(this.TypeName, this.Key, this.actionSuffix);
-        let requestOps = this.DataProcessingService
+
+        const requestOps = this.DataProcessingService
             .SetRequestOptions(WEB_METHOD.PUT, this.RequestHeaders);
 
-        return super.HandleResponse(this.HttpService.put(uri, body, requestOps));
+        return super.HandleResponse(this.HttpService.put(uri, body, requestOps)) as Observable<T>;
     }
 }

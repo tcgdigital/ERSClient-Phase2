@@ -3,10 +3,10 @@ import { Observable } from 'rxjs/Rx';
 import { HttpInterceptorService } from '../../interceptor';
 import { BaseModel, ResponseModel } from '../../models';
 import { DataProcessingService } from './data.processing.service';
-import { LocalizationService } from "../../services/common.service";
-import { GlobalConstants } from "../../../shared";
-export abstract class DataOperation<T> {
+import { LocalizationService } from '../../services/common.service';
+import { GlobalConstants } from '../../../shared';
 
+export abstract class DataOperation<T> {
     protected DataProcessingService: DataProcessingService;
     protected HttpService: Http;
     protected RequestHeaders: Headers;
@@ -127,11 +127,9 @@ export abstract class DataOperation<T> {
             // if (GlobalConstants.INTERCEPTOR_PERFORM) {
             //     request = LocalizationService.PreserveDateFromConversion(GlobalConstants.PRESERVE_DATA_FROM_CONVERSION,
             //         request, LocalizationService.transformRequestBody);
-
             // }
 
             // httpInterceptorService.request().removeInterceptor((a,b)=>{return a;});
-
             return request;
         });
 
@@ -147,9 +145,6 @@ export abstract class DataOperation<T> {
             // }
         });
     }
-
-
-
 
     /**
      * Handle response for single entity

@@ -22,26 +22,26 @@ export class CountOperation<T extends BaseModel> extends DataOperation<T> {
 
     /**
      * Creates an instance of CountOperation.
-     * @param {DataProcessingService} dataProcessingService 
-     * @param {Http} httpService 
-     * @param {string} typeName 
-     * 
+     * @param {DataProcessingService} dataProcessingService
+     * @param {Http} httpService
+     * @param {string} typeName
+     *
      * @memberOf CountOperation
      */
     constructor(private dataProcessingService: DataProcessingService,
         private httpService: Http,
         private httpInterceptor: HttpInterceptorService,
         private typeName: string) {
-        super(dataProcessingService, httpService,httpInterceptor, typeName);
+        super(dataProcessingService, httpService, httpInterceptor, typeName);
         this.dataProcessingService.EndPoint = GlobalConstants.ODATA;
     }
 
     /**
      * Filter operation
-     * 
-     * @param {string} filter 
-     * @returns {CountOperation<T>} 
-     * 
+     *
+     * @param {string} filter
+     * @returns {CountOperation<T>}
+     *
      * @memberOf CountOperation
      */
     public Filter(filter: string): CountOperation<T> {
@@ -51,46 +51,47 @@ export class CountOperation<T extends BaseModel> extends DataOperation<T> {
 
     /**
      * Returns the count of Operation.
-     * 
-     * @param {string} count 
-     * @returns {CountOperation<T>} 
-     * 
+     *
+     * @param {string} count
+     * @returns {CountOperation<T>}
+     *
      * @memberOf CountOperation
      */
-    // public Count(count: string): CountOperation<T> {
-    //     this._count = count;
-    //     return this;
-    // }
+    /*public Count(count: string): CountOperation<T> {
+        this._count = count;
+        return this;
+    }*/
 
     /**
      * Execute the count operation
-     * 
-     * @returns {Observable<number>} 
-     * 
+     *
+     * @returns {Observable<number>}
+     *
      * @memberOf CountOperation
      */
     public Execute(): Observable<number> {
-        let params: URLSearchParams = this.GetQueryParams();
-        let uri: string = this.DataProcessingService
+        const params: URLSearchParams = this.GetQueryParams();
+        const uri: string = this.DataProcessingService
             .GetUri(this.TypeName, this.Key, this.ActionSuffix);
 
-        let requestOps = this.DataProcessingService
+        const requestOps = this.DataProcessingService
             .SetRequestOptions(WEB_METHOD.GET, this.RequestHeaders, params);
+
         return super.HandleResponseCount(this.HttpService.get(uri, requestOps));
     }
 
 
     /**
      * Query operation builder.
-     * 
+     *
      * @private
-     * @param {string} [externalFilter=''] 
-     * @returns {URLSearchParams} 
-     * 
+     * @param {string} [externalFilter='']
+     * @returns {URLSearchParams}
+     *
      * @memberOf CountOperation
      */
     private GetQueryParams(externalFilter: string = ''): URLSearchParams {
-        let params = new URLSearchParams();
+        const params = new URLSearchParams();
         if (this._filter) { params.set(this.DataProcessingService.Key.filter, this._filter); }
         if (this._count) { params.set(this.DataProcessingService.Key.count, this._count); }
         if (this._top) { params.set(this.DataProcessingService.Key.top, this._top); }

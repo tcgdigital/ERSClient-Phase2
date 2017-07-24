@@ -2,7 +2,6 @@ import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuardService } from '../shared/services';
 import { PagesComponent } from './pages.component';
-import { UserRegistrationHubConnectionResolver } from './hub.connection.resolvers';
 
 const pageRoutes: Routes = [
     {
