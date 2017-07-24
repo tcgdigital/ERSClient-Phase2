@@ -36,7 +36,7 @@ export class QueryOperation<T extends BaseModel> extends DataOperation<T> {
         private httpService: Http,
         private httpInterceptor: HttpInterceptorService,
         private typeName: string) {
-        super(dataProcessingService, httpService,httpInterceptor, typeName);
+        super(dataProcessingService, httpService, httpInterceptor, typeName);
         this.dataProcessingService.EndPoint = GlobalConstants.ODATA;
     }
 

@@ -225,7 +225,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 editedFields = editedFields + `<strong>Requester Contact Number</strong> : ${demandForAnswer.ContactNumber} `;
             }
             if (demandForAnswer.ScheduleTime) {
-                const minutesInt = parseInt(demandForAnswer.ScheduleTime);
+                const minutesInt = +demandForAnswer.ScheduleTime;
                 const d = new Date(demand.CreatedOn);
                 d.setMinutes(d.getMinutes() + minutesInt);
                 const editedDate = new Date(d);
@@ -757,13 +757,13 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                     demandTrail.DemandId = this.demandModel.DemandId;
                     this.freshDemand = false;
                     this.demandTrailService.Create(demandTrail)
-                        .subscribe((response: DemandTrailModel) => { },
+                        .subscribe((resp: DemandTrailModel) => { },
                         (error: any) => {
                             console.log('Error in demandTrail');
                         });
                     if (this.caller.CallerId !== 0) {
                         this.callerService.Update(this.caller)
-                            .subscribe((response: CallerModel) => { },
+                            .subscribe((resp: CallerModel) => { },
                             (error: any) => {
                                 console.log('Error in demandTrail');
                             });

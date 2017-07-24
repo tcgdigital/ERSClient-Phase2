@@ -171,7 +171,7 @@ module.exports = function (options) {
                  */
                 {
                     test: /bootstrap\/dist\/js\/umd\//,
-                    use: 'imports-loader?jQuery=jquery'
+                    use: 'imports-loader?jQuery=jquery,Tether=tether'
                 },
                 /**Raw loader support for *.html
                  * Returns file content as string

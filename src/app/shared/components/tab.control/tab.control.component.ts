@@ -42,7 +42,6 @@ export class TabControlComponent implements OnInit, AfterViewInit {
             }
         });
         this.processDOM();
-        
     }
 
     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
@@ -61,25 +60,22 @@ export class TabControlComponent implements OnInit, AfterViewInit {
         this.$slider = this.$rootItems.find('li.slider');
 
         // this.$rootItems.css('width', `${this.$tabItems.eq(0).width() * this.$tabItems.length}px`);
-        this.$rootContainer.hover(
-            ($event: JQueryEventObject) => {
-                const $itemWrapper: JQuery = jQuery($event.currentTarget);
-                const $navigation = $itemWrapper.find('.tab-nav');
-                const $tabColumns = $itemWrapper.find('.tab-column');
+        this.$rootContainer.hover(($event) => {
+            const $itemWrapper: JQuery = jQuery($event.currentTarget);
+            const $navigation = $itemWrapper.find('.tab-nav');
+            const $tabColumns = $itemWrapper.find('.tab-column');
 
-                $tabColumns.css('width', `${$tabColumns.find('li.tab-item').eq(0).width() * $tabColumns.find('li.tab-item').length}px`);
-                this.updateNavigation($navigation, $itemWrapper, $tabColumns);
-                this.$slider.show();
-            },
-            ($event: JQueryEventObject) => {
+            $tabColumns.css('width', `${$tabColumns.find('li.tab-item').eq(0).width() * $tabColumns.find('li.tab-item').length}px`);
+            this.updateNavigation($navigation, $itemWrapper, $tabColumns);
+            this.$slider.show();
+        },
+            ($event) => {
                 const $itemWrapper: JQuery = jQuery($event.currentTarget);
                 const $navigation = $itemWrapper.find('.tab-nav');
                 this.hideNavigation($navigation);
                 this.$slider.hide();
             }
         );
-
-        ////
     }
 
 
