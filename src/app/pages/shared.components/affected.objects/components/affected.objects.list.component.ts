@@ -113,6 +113,7 @@ export class AffectedObjectsListComponent implements OnInit {
     }
 
     openAffectedObjectDetail(affectedObject: AffectedObjectsToView): void {
+        debugger;
         this.affectedObjectDetails = affectedObject;
         if (this.affectedObjectDetails.LostFoundStatus !== 'NA') {
             this.affectedObjectDetails['MedicalStatusToshow'] = this.allcargostatus

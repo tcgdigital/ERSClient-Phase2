@@ -14,7 +14,6 @@ export class PassangerQueryComponent implements OnInit, AfterContentInit {
     }
 
     public ngAfterContentInit(): void {
-        debugger;
         if (GlobalConstants.TabLinks.some((x) => x.id === 'PassengerQuery'))
             this.subTabs = GlobalConstants.TabLinks.find((x) => x.id === 'PassengerQuery').subtab;
     }
