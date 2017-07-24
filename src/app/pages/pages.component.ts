@@ -113,7 +113,6 @@ export class PagesComponent implements OnInit {
         //     this.ExecuteOperation.apply(this, arguments);
         // };
         this.ExecuteOperationProxy = (...args: any[]) => {
-            debugger;
             this.ExecuteOperation.apply(this, args);
         };
     }
