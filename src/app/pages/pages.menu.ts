@@ -32,7 +32,7 @@ export const PAGES_MENU: IMenuItem[] = [
                 path: 'incident',
                 data: {
                     menu: {
-                        title: 'Incident',
+                        title: 'Event',
                         icon: 'fa fa-bell fa-lg',
                         // icon: 'cmsicon-initiate-emergency cmsicon-5x',
                         selected: false,
