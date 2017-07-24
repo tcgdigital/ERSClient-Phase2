@@ -30,6 +30,10 @@ export class PassangerQueryComponent implements OnInit, AfterContentInit {
         }
     }
     public ngAfterContentInit(): void {
+// <<<<<<< HEAD
+//         if (GlobalConstants.TabLinks.some((x) => x.id === 'PassengerQuery'))
+//             this.subTabs = GlobalConstants.TabLinks.find((x) => x.id === 'PassengerQuery').subtab;
+// =======
         if (this.router.url.indexOf('Archieve') > 0) {
             //Archieve Dashboard
             this.subTabs = UtilityService.GetArchieveDashboardSubTabs('PassengerQuery');
@@ -38,6 +42,7 @@ export class PassangerQueryComponent implements OnInit, AfterContentInit {
             //Dashboard
             this.subTabs = UtilityService.GetDashboardSubTabs('PassengerQuery');
         }
+// >>>>>>> master
     }
 
 

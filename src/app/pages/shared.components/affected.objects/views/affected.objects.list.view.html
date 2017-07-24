@@ -1,9 +1,9 @@
 <div class="row">
-    <div class="col-6">
+    <div class="col-md-10 butt-rightalign">
         <label class="lebelHeaderStyle">Cargo Status Info Report</label>
         <a target="_blank" href="{{downloadPath}}" download="CargoStatusInfo"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
     </div>
-    <div class="col-6">
+    <div class="col-md-2 butt-rightalign">
         <input type="button" class="btn btn-primary" (click)="expandSearchPanel(expandSearch)" [ngModel]="searchValue" />
     </div>
 </div>
@@ -77,7 +77,7 @@
                     </div>
                     <div class="col-sm-6 form-group">
                         <label class="lebelHeaderStyle"><strong>Reference Number</strong></label>
-                        <label class="form-control">ticketNumber</label>
+                        <label class="form-control">{{ticketNumber}}</label>
                     </div>
                 </div>
                 <div class="row">
