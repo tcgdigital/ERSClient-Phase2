@@ -15,7 +15,7 @@ export class MediaQueryListComponent implements OnInit, OnDestroy {
     mediaQueries: QueryModel[] = [];
     currentincidentId: number;
     constructor(private enquiryService: EnquiryService, private globalState: GlobalStateService) {
-    };
+    }
 
     getMediaQueries(incidentId): void {
         this.enquiryService.getMediaQueryByIncident(incidentId)
@@ -24,10 +24,10 @@ export class MediaQueryListComponent implements OnInit, OnDestroy {
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
-    };
+    }
 
     ngOnInit(): any {
-        this.currentincidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        this.currentincidentId = +UtilityService.GetFromSession('CurrentIncidentId');
         this.getMediaQueries(this.currentincidentId);
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
     }
