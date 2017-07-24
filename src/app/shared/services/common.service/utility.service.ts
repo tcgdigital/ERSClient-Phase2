@@ -8,6 +8,7 @@ import * as moment from 'moment/moment';
 import { RAGScaleModel } from '../../../pages/shared.components';
 import { Observable } from 'rxjs/Rx';
 import { PagesPermissionMatrixModel } from '../../../pages/masterdata/page.functionality/components/page.functionality.model';
+import * as LZString from 'lz-string';
 
 import {
     DemandRaisedModel,
@@ -87,24 +88,32 @@ export class UtilityService {
     }
 
     public static SetToSession(data: {},
-        storage: StorageType = StorageType.SessionStorage): void {
+        storage: StorageType = StorageType.SessionStorage,
+        doCompression: boolean = false): void {
         for (const key in data) {
             if (data.hasOwnProperty(key) && typeof key !== 'function') {
+                const storageValue = doCompression ?
+                    LZString.compressToUTF16(JSON.stringify(data[key] as string)) : data[key] as string;
                 if (storage === StorageType.SessionStorage)
-                    sessionStorage.setItem(key, data[key] as string);
+                    sessionStorage.setItem(key, storageValue);
                 else
-                    localStorage.setItem(key, data[key] as string);
+                    localStorage.setItem(key, storageValue);
             }
         }
     }
 
     public static GetFromSession(key: string, storage:
-        StorageType = StorageType.SessionStorage): string {
+        StorageType = StorageType.SessionStorage,
+        doDeCompression: boolean = false): string {
         if (this.IsSessionKeyExists(key, storage)) {
             if (storage === StorageType.SessionStorage)
-                return sessionStorage.getItem(key);
+                return doDeCompression ?
+                    LZString.decompressFromUTF16(sessionStorage.getItem(key)) :
+                    sessionStorage.getItem(key);
             else
-                return localStorage.getItem(key);
+                return doDeCompression ?
+                    LZString.decompressFromUTF16(localStorage.getItem(key)) :
+                    localStorage.getItem(key);
         }
         return '';
     }
@@ -124,6 +133,24 @@ export class UtilityService {
         const keys: string[] = this.listAllSessionItems(storage);
         return (keys.some((x: string) => x === key));
     }
+
+    // public static JsonToStorate(key: string, data: any): void {
+    //     if (data) {
+    //         const stringJson = JSON.stringify(data);
+    //         const compressedJson = LZString.compressToUTF16(stringJson);
+    //         this.SetToSession({ key: compressedJson });
+    //     }
+    // }
+
+    // public static StorateToJson(key: string): any {
+    //     const compressedJson = this.GetFromSession(key);
+    //     if (compressedJson !== '') {
+    //         const decompressedJson = LZString.decompressFromUTF16(compressedJson);
+    //         return JSON.parse(decompressedJson);
+    //     } else {
+    //         return null;
+    //     }
+    // }
 
     public static shade(color, weight) {
         return UtilityService.mix('#000000', color, weight);
@@ -424,7 +451,7 @@ export class UtilityService {
         return this.toFormattedString(false, template, values);
     }
 
-    
+
     public static SelectFirstTab(tabs: ITabLinkInterface[], router: Router): void {
         if (tabs.length > 0) {
             tabs.map((item: ITabLinkInterface, index: number) => {
@@ -448,7 +475,7 @@ export class UtilityService {
             }
         }
     }
-    public static GetSubTabs(parentTabName: string): ITabLinkInterface[] {
+    public static GetDashboardSubTabs(parentTabName: string): ITabLinkInterface[] {
         const departmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         let subTabs: ITabLinkInterface[];
         const rootTab: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
@@ -457,12 +484,35 @@ export class UtilityService {
 
         if (rootTab) {
             const tabs: string[] = GlobalConstants.PagePermissionMatrix
-                .filter((x: PagesPermissionMatrixModel) => x.ParentPageId === rootTab.PageId 
-                && x.DepartmentId === departmentId && x.CanView)
+                .filter((x: PagesPermissionMatrixModel) => x.ParentPageId === rootTab.PageId
+                    && x.DepartmentId === departmentId && x.CanView)
                 .map((x) => x.PageCode);
 
             if (tabs.length > 0) {
-                subTabs = GlobalConstants.TabLinks.find((y: ITabLinkInterface) => y.id === parentTabName)
+                subTabs = GlobalConstants.DashboardTabLinks.find((y: ITabLinkInterface) => y.id === parentTabName)
+                    .subtab.filter((x: ITabLinkInterface) => tabs.some((y) => y === x.id));
+            }
+        }
+        else {
+            subTabs = [];
+        }
+        return subTabs;
+    }
+    public static GetArchieveDashboardSubTabs(parentTabName: string): ITabLinkInterface[] {
+        const departmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+        let subTabs: ITabLinkInterface[];
+        const rootTab: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
+            .find((x: PagesPermissionMatrixModel) => x.PageCode === parentTabName
+                && x.Type === 'Tab' && x.DepartmentId === departmentId && x.CanView);
+
+        if (rootTab) {
+            const tabs: string[] = GlobalConstants.PagePermissionMatrix
+                .filter((x: PagesPermissionMatrixModel) => x.ParentPageId === rootTab.PageId
+                    && x.DepartmentId === departmentId && x.CanView)
+                .map((x) => x.PageCode);
+
+            if (tabs.length > 0) {
+                subTabs = GlobalConstants.ArchieveDashboardTabLinks.find((y: ITabLinkInterface) => y.id === parentTabName)
                     .subtab.filter((x: ITabLinkInterface) => tabs.some((y) => y === x.id));
             }
         }

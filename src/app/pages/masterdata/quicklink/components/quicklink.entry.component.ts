@@ -77,12 +77,10 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
     }
 
     public upload() {
-        debugger;
         if (this.filesToUpload !== undefined) {
             const baseUrl = GlobalConstants.EXTERNAL_URL;
             this.fileUploadService.uploadFiles<string>(baseUrl + 'api/fileUpload/upload', this.filesToUpload)
                 .subscribe((result: string) => {
-                    debugger;
                     this.filepathWithLinks = `${GlobalConstants.EXTERNAL_URL}UploadFiles/${result.replace(/^.*[\\\/]/, '')}`;
                     const extension = result.replace(/^.*[\\\/]/, '').split('.').pop();
                     // if (dropdownselected === '1') {
@@ -188,7 +186,6 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
     }
 
     onQuickLinkEditSuccess(data: QuickLinkModel): void {
-        debugger;
         this.filepathWithLinks = null;
         this.fileName = null;
         this.showAddRegion();
