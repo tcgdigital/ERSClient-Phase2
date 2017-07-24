@@ -107,7 +107,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     demands: DemandModel[] = new Array<DemandModel>();
     affectedObjects: AffectedObjectsToView[];
     currentDepartmentId: number;
-    currentDepartmentName: string = 'Command Centre';
+    currentDepartmentName: string = '';
     currentIncident: number;
     departments: DepartmentModel[];
     selctedEnquiredPerson: AffectedPeopleToView;
@@ -196,6 +196,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
             }, (error: any) => {
+                this.currentDepartmentName = this.departments.find(x=>x.DepartmentId==this.currentDepartmentId).DepartmentName;
                 console.log(`Error: ${error}`);
             });
     }
