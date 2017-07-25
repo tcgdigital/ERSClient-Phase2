@@ -41,6 +41,11 @@ export class EmergencyTypeEntryComponent implements OnInit {
         this.emergencyTypeModel.EmergencyTypeId = model.EmergencyTypeId;
         this.Action = "Edit";
         this.showAdd = true;
+        this.form = new FormGroup({
+            EmergencyTypeName: new FormControl(model.EmergencyTypeName),
+            EmergencyCategory: new FormControl(model.EmergencyCategory),
+            ActiveFlag: new FormControl(model.ActiveFlag)
+        });
     }
 
     ngOnInit(): void {

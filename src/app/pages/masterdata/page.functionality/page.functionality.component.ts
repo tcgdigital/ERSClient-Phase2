@@ -181,6 +181,19 @@ export class PageFunctionalityComponent implements OnInit {
         }).length == this.pagesForDepartment.length;
         this.checkAllStatusOnlyHOD();
         this.disableChildIfNotParentAllowView(this.pagesForDepartment);
+        this.CheckUncheckChildPages(event.checked, elm, this.pagesForDepartment);
+
+    }
+
+    CheckUncheckChildPages(isChecked: boolean, selectedPage: PagesForDepartmentModel, pagesForDepartment: PagesForDepartmentModel[]): void {
+        const selectedChilds = pagesForDepartment.filter((item: PagesForDepartmentModel) => {
+            return (item.ParentPageId === selectedPage.PageId);
+        });
+
+        selectedChilds.forEach((item: PagesForDepartmentModel) => {
+            item.AllowView = isChecked;
+            item.isOnlyHOD = isChecked;
+        });
     }
 
     checkAllStatusOnlyHOD(): void {
@@ -221,7 +234,7 @@ export class PageFunctionalityComponent implements OnInit {
                     pageForDepartment.isDisabled = false;
                     this.pagesForDepartmentConstant.push(pageForDepartment);
                 });
-                
+
             });
     }
 }

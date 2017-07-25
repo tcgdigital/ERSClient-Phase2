@@ -15,7 +15,7 @@ export class MediaReleaseComponent {
     evtMediaRelease: MediaModel;
     initiatedDepartment: number;
     incidentId: number;
-    public isShowAddMediaRelease:boolean=true;
+    public isShowAddEditMediaRelease:boolean=true;
     
     constructor(private globalState: GlobalStateService) { }
 

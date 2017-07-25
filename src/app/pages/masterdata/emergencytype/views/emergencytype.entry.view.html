@@ -1,7 +1,7 @@
 <div *ngIf="showAdd" class="formStyle card-block entryHolder">
     <form (ngSubmit)="onSubmit()" #demandTypeForm="ngForm" [formGroup]="form">
-        <input type="hidden" *ngIf="emergencyTypeModel.EmergencyTypeId != undefined" [(ngModel)]="emergencyTypeModel.EmergencyTypeId"
-            formControlName="EmergencyTypeId" />
+        <!-- <input type="hidden" *ngIf="emergencyTypeModel.EmergencyTypeId != undefined" [(ngModel)]="emergencyTypeModel.EmergencyTypeId"
+            formControlName="EmergencyTypeId" /> -->
         <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="form-group">
