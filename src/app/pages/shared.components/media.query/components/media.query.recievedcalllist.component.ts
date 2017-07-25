@@ -51,8 +51,7 @@ export class MediaQueryRecievedCallsListComponent implements OnInit {
 
         // SignalR Notification
         this.globalState.Subscribe('AssignedMediaEnquiryCreationResponse', (model: ExternalInputModel) => {
-            // this.getAllMediaQueryCalls(model.IncidentId);
-            this.allAssignedCalls.unshift(model);
+            this.getAllMediaQueryCallsRecieved(model.IncidentId);
         });
     }
 
