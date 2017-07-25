@@ -33,6 +33,10 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
     fileName: string = null;
     uploadDocuments: IUploadDocuments[];
     archiveDocumentType: ArchiveDocumentTypeModel;
+    public isShowUploadOtherReport: boolean = true;
+
+
+
     constructor(private formBuilder: FormBuilder,
         private UtilityService: UtilityService,
         private fileUploadService: FileUploadService,

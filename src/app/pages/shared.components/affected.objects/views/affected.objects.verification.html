@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-12">
-        <button class="btn btn-primary" type="button" (click)="saveVerifiedObjects()" *ngIf="!isArchive">Verify</button>
+        <button class="btn btn-primary" type="button" (click)="saveVerifiedObjects()" *ngIf="(!isArchive && isShowVerifyAffectedCargo | accesibility:currentDepartmentId:'VerifyAffectedCargo')">Verify</button>
     </div>
     <div class="col-12">
         <label>Verified Cargo Manifest</label>

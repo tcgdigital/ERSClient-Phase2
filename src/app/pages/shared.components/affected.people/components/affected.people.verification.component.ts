@@ -19,6 +19,10 @@ import { InvolvePartyService } from '../../involveparties';
     templateUrl: '../views/affected.people.verification.html'
 })
 export class AffectedPeopleVerificationComponent implements OnInit {
+
+    public isShowVerifyAffectedPeople: boolean = true;
+    public currentDepartmentId:number=0;
+
     constructor(private affectedPeopleService: AffectedPeopleService,
         private involvedPartyService: InvolvePartyService, private globalState: GlobalStateService, private toastrService: ToastrService,
         private toastrConfig: ToastrConfig, private _router: Router) { }
@@ -81,6 +85,9 @@ export class AffectedPeopleVerificationComponent implements OnInit {
 
     ngOnInit(): any {
         this.allSelectVerify = false;
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+
         if (this._router.url.indexOf("archivedashboard") > -1) {
             this.isArchive = true;
             this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
@@ -100,5 +107,9 @@ export class AffectedPeopleVerificationComponent implements OnInit {
 
     ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChangefromDashboard');
+    }
+
+    departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
     }
 }

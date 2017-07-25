@@ -22,6 +22,7 @@ export class PresidentMessageApprovalListComponent implements OnInit, OnDestroy 
     currentDepartmentId: number;
     isArchive: boolean = false;
     protected _onRouteChange: Subscription;
+    public isShowEditPresidentMessagePending:boolean=true;
 
     /**
      * Creates an instance of PresidentMessageListComponent.
