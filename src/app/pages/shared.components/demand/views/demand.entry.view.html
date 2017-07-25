@@ -1,5 +1,5 @@
 <div class="addbuttonHolder">
-        <button class="btn btn-primary" type="submit" (click)="showAddRegion(showAdd)">{{buttonValue}}</button>
+        <button *ngIf="isShowAddDemand | accesibility:currentDepartmentId:'CreateDemand'" class="btn btn-primary" type="submit" (click)="showAddRegion(showAdd)">{{buttonValue}}</button>
 </div>
 
 

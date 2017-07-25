@@ -202,7 +202,6 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     }
 
     getExternalInput(enquirytype): void {
-        // debugger;
         let queryDetailService: Observable<ExternalInputModel[]>
         if (enquirytype == 1 || enquirytype == 3)
             queryDetailService = this.callcenteronlypageservice.GetPassengerQueryByIncident(this.currentIncident, this.callid).map(x => x.Records);
@@ -625,7 +624,6 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
 
     createDemands(affectedId: number, affectedPersonIds?: number[]): void {
         //   if (affectedPersonIds.length > 0)
-        // debugger;
         if (this.enquiry.IsCallBack) {
             this.callSetDemands(true, false, false, false, affectedId, affectedPersonIds);
         }
@@ -732,7 +730,6 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     }
 
     saveEnquiryDemandCaller(): void {
-    // debugger;
         this.submitted = true;
         if (this.form.valid && (((this.enquiryType == 1 || this.enquiryType == 3) && this.nullorwhitecheck(this.enquiry.AffectedPersonId)) ||
             (this.enquiryType == 2 && this.nullorwhitecheck(this.enquiry.AffectedObjectId) || (this.enquiryType >= 4)))) {
@@ -867,7 +864,6 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                         x.EnquiryType = this.enquiryType;
                         x.CallerId = this.caller.CallerId;
                     });
-                    // debugger;
                     this.enquiryService.UpdateBulkToDeactivateFromExternalId(this.callid)
                         .flatMap(_ => this.demandService.UpdateBulkToDeactivateFromCallId(this.caller.CallerId))
                         .flatMap(_ => this.enquiryService.CreateBulk(enquiryModelsToSave))
@@ -983,7 +979,6 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         this.list1Selected = !this.list1Selected;
     }
     selectCopassengerfrompassenger($event: any, copassenger: AffectedPeopleToView): void {
-        // debugger;
         copassenger.IsSelected = !copassenger.IsSelected;
         this.selectedcountpassenger = this.copassengerlistPassengerForMappedPerson.filter(x => x.IsSelected == true).length;
         this.consolidatedCopassengers = [];
