@@ -30,9 +30,10 @@ export class CallCenterOnlyPageService extends ServiceBase<ExternalInputModel> i
     }
 
     public GetPassengerQueryByIncident(IncidentId: number, CallId: number): Observable<ResponseModel<ExternalInputModel>> {
-        const enquiryprojection = 'Queries,AffectedPersonId,AffectedObjectId,IsCallBack,IsTravelRequest,IsAdminRequest,EnquiryId';
-        return this._dataService.Query().Filter(`IncidentId eq  ${IncidentId}  and ExternalInputId eq ${CallId}`)
-            .Expand(`Caller,PDAEnquiry,Enquiries($select=${enquiryprojection};$expand=CommunicationLogs($select=InteractionDetailsId;$filter=ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and DemandId eq null))`).Execute();
+        let enquiryprojection = 'Queries,AffectedPersonId,AffectedObjectId,IsCallBack,IsTravelRequest,IsAdminRequest,EnquiryId';
+        return this._dataService.Query().Filter(`IncidentId eq  ${IncidentId}  and ExternalInputId eq ${CallId} `)
+        .Expand(`Caller,PDAEnquiry,Enquiries($select=${enquiryprojection};$filter=ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active';$expand=CommunicationLogs($select=InteractionDetailsId;$filter=ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and DemandId eq null))`).Execute();
+
     }
 
     public GetPassengerQueryCallsRecievedByIncident(IncidentId: number): Observable<ResponseModel<ExternalInputModel>> {

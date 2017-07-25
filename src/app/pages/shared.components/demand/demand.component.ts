@@ -22,13 +22,13 @@ export class DemandComponent implements OnInit, AfterContentInit {
     }
     public ngOnInit(): void {
         if (this.router.url.indexOf('Archieve') > 0) {
-            //Archieve Dashboard
+            // Archieve Dashboard
             this.globalState.Subscribe('departmentChange', (model: KeyValue) => {
                 this.subTabs = UtilityService.GetArchieveDashboardSubTabs('Demand');
             });
         }
         else {
-            //Dashboard
+            // Dashboard
             this.globalState.Subscribe('departmentChange', (model: KeyValue) => {
                 this.subTabs = UtilityService.GetDashboardSubTabs('Demand');
             });
@@ -37,13 +37,12 @@ export class DemandComponent implements OnInit, AfterContentInit {
 
     public ngAfterContentInit(): void {
         if (this.router.url.indexOf('Archieve') > 0) {
-            //Archieve Dashboard
+            // Archieve Dashboard
             this.subTabs = UtilityService.GetArchieveDashboardSubTabs('Demand');
         }
         else {
-            //Dashboard
+            // Dashboard
             this.subTabs = UtilityService.GetDashboardSubTabs('Demand');
         }
     }
-
 }

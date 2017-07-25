@@ -2,13 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { MdCheckboxModule } from '@angular2-material/checkbox';
+
 
 import { BroadcastDepartmentRouting } from './boradcast.department.routing';
 import { BroadcastDepartmentComponent } from './boradcast.department.component';
-// import {
-//     BroadcastDepartmentEntryComponent,
-//     BroadCastDepartmentListComponent, BroadcastDepartmentService
-// } from './components';
+import {
+    BroadcastDepartmentService
+} from './components';
 import { BrowserModule } from '@angular/platform-browser';
 import { DataExchangeService, SharedModule } from '../../../shared';
 
@@ -18,17 +19,18 @@ import { DataExchangeService, SharedModule } from '../../../shared';
         CommonModule,
         FormsModule,
         HttpModule,
+        MdCheckboxModule,
         SharedModule,
         ReactiveFormsModule,
         BroadcastDepartmentRouting
     ],
     declarations: [
         BroadcastDepartmentComponent
-       // BroadcastDepartmentEntryComponent,
-       // BroadCastDepartmentListComponent
+        // BroadcastDepartmentEntryComponent,
+        // BroadCastDepartmentListComponent
     ],
     providers: [
-        //BroadcastDepartmentService,
+        BroadcastDepartmentService,
         DataExchangeService
     ]
 })

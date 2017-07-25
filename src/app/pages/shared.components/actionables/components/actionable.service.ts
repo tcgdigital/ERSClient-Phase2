@@ -277,24 +277,22 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
     }
 
     public BatchGet(incidentId: number, departmentIds: number[]): Observable<ResponseModel<ActionableModel>> {
-        const requests: Array<RequestModel<BaseModel>> = [];
+        const requests: Array<RequestModel<ActionableModel>> = [];
         let filterString: string = '';
         departmentIds.forEach((item, index) => {
             if (departmentIds.length > 1) {
-                if (index === 0) {
+                if (index === 0)
                     filterString = `(DepartmentId eq ${item})`;
-                }
-                else {
-                    filterString = filterString +
-                        ` or (DepartmentId eq ${item})`;
-                }
+                else
+                    filterString = filterString + ` or (DepartmentId eq ${item})`;
             }
-            else {
+            else
                 filterString = `filterString eq ${item}`;
-            }
         });
-        requests.push(new RequestModel<BaseModel>(`/odata/Actionables?$filter=IncidentId eq ${incidentId} and (${filterString})`, WEB_METHOD.GET));
-        return this._batchDataService.BatchPost<BaseModel>(requests)
-            .Execute();
+        requests.push(new RequestModel<ActionableModel>
+            (`/odata/Actionables?$filter=IncidentId eq ${incidentId} and (${filterString})`, WEB_METHOD.GET));
+
+        return this._batchDataService.BatchPost<ActionableModel>(requests)
+            .Execute() as Observable<ResponseModel<ActionableModel>>;
     }
 }

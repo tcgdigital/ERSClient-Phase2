@@ -117,7 +117,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
             item.Priority = demand.Priority;
             item.RequiredLocation = demand.RequiredLocation;
             item.ScheduleTime = demand.ScheduleTime;
-            item.EndTime = new Date(new Date(demand.CreatedOn).getTime() + parseInt(demand.ScheduleTime) * 60000);
+            item.EndTime = new Date(new Date(demand.CreatedOn).getTime() + (+demand.ScheduleTime) * 60000);
             item.ElapseTime = new Date().getTime() - new Date(demand.CreatedOn).getTime();
             item.RagStatus = 'statusGreen';
             item.IsRejected = demand.IsRejected;
@@ -239,23 +239,22 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
     }
 
     public BatchGet(incidentId: number, departmentIds: number[]): Observable<ResponseModel<DemandModel>> {
-        const requests: Array<RequestModel<BaseModel>> = [];
+        const requests: Array<RequestModel<DemandModel>> = [];
         let filterString: string = '';
         departmentIds.forEach((item, index) => {
             if (departmentIds.length > 1) {
-                if (index === 0) {
+                if (index === 0)
                     filterString = `(RequesterDepartmentId eq ${item})`;
-                }
-                else {
-                    filterString = filterString +
-                        ` or (RequesterDepartmentId eq ${item})`;
-                }
+                else
+                    filterString = filterString + ` or (RequesterDepartmentId eq ${item})`;
             }
-            else {
+            else
                 filterString = `RequesterDepartmentId eq ${item}`;
-            }
         });
-        requests.push(new RequestModel<BaseModel>(`/odata/Demands?$filter=IncidentId eq ${incidentId} and (${filterString}) and ActiveFlag eq 'Active'`, WEB_METHOD.GET));
-        return this._batchDataService.BatchPost<BaseModel>(requests).Execute();
+        requests.push(new RequestModel<DemandModel>
+            (`/odata/Demands?$filter=IncidentId eq ${incidentId} and (${filterString}) and ActiveFlag eq 'Active'`, WEB_METHOD.GET));
+
+        return this._batchDataService.BatchPost<DemandModel>(requests)
+            .Execute() as Observable<ResponseModel<DemandModel>>;
     }
 }

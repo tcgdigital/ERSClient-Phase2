@@ -76,8 +76,6 @@ export class DateTimePickerSelectEventArgs {
     SelectedDate: Date | Date[];
 }
 
-
-
 export class DateTimePickerChangeMonthEventArgs {
     Month: number;
     Year: number;

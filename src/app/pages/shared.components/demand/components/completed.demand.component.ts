@@ -132,8 +132,12 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         this.demandTrail.CreatedBy = demand.CreatedBy;
         this.demandTrail.CreatedOn = demand.CreatedOn;
 
-        const date = new Date();
-        const answer = '<div><p>' + demand.DemandStatusDescription + '   <strong>Date :</strong>  ' + date.toLocaleString() + '  </p><div>';
+        let date = new Date();
+        let rej = "";
+        if (!flag) {
+            rej = "Rejected and status changed to: ";
+        }
+        let answer = '<div><p>' + rej + demand.DemandStatusDescription + '   <strong>Date :</strong>  ' + date.toLocaleString() + '  </p><div>';
         this.demandTrail.Answers = answer;
         this.demandTrails.push(this.demandTrail);
         return this.demandTrails;
