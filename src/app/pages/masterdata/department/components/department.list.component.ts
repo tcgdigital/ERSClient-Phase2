@@ -20,6 +20,8 @@ export class DepartmentListComponent implements OnInit {
     searchConfigs: Array<SearchConfigModel<any>> = Array<SearchConfigModel<any>>();
     departmentIds: number[] = [];
     departmentModelPatch: DepartmentModel = null;
+    expandSearch: boolean = false;
+    searchValue: string = "Expand Search";
 
     constructor(private departmentService: DepartmentService, private dataExchange: DataExchangeService<DepartmentModel>,
         private userProfileService: UserProfileService) {
@@ -36,6 +38,17 @@ export class DepartmentListComponent implements OnInit {
             }, ((error: any) => {
                 console.log(`Error: ${error}`);
             }));
+    }
+
+    expandSearchPanel(value): void {
+        if (!value) {
+            this.searchValue = "Hide Search Panel";
+        }
+        else {
+            this.searchValue = "Expand Search Panel";
+        }
+        this.expandSearch = !this.expandSearch;
+
     }
 
     ngOnInit(): any {

@@ -210,11 +210,11 @@ export class ChecklistListComponent implements OnInit {
                 Description: 'URL',
                 Value: ''
             }),
-            new SearchTextBox({
-                Name: 'Duration',
-                Description: 'Duration',
-                Value: ''
-            }),
+            // new SearchTextBox({
+            //     Name: 'Duration',
+            //     Description: 'Duration',
+            //     Value: ''
+            // }),
             new SearchDropdown({
                 Name: 'ActiveFlag',
                 Description: 'Status',

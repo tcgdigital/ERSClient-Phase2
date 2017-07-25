@@ -419,16 +419,16 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
                 Description: 'POU',
                 Value: ''
             }),
-            new SearchTextBox({
-                Name: 'mftpcs',
-                Description: 'Cargo Pieces',
-                Value: ''
-            }),
-            new SearchTextBox({
-                Name: 'mftwgt',
-                Description: 'Cargo Weight',
-                Value: ''
-            }),
+            // new SearchTextBox({
+            //     Name: 'mftpcs',
+            //     Description: 'Cargo Pieces',
+            //     Value: ''
+            // }),
+            // new SearchTextBox({
+            //     Name: 'mftwgt',
+            //     Description: 'Cargo Weight',
+            //     Value: ''
+            // }),
             new SearchTextBox({
                 Name: 'CargoType',
                 Description: 'Cargo Type',
