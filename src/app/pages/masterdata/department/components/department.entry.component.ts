@@ -16,7 +16,7 @@ import { DepartmentModel } from './department.model';
 import { UserProfileService, UserProfileModel } from '../../userprofile';
 import {
     ResponseModel, UtilityService,
-    DataExchangeService, BaseModel, AuthModel, NameValidator
+    DataExchangeService, BaseModel, AuthModel
 } from '../../../../shared';
 
 @Component({
