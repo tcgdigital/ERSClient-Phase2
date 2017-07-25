@@ -148,7 +148,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        //this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
         this.submitted = false;
         this.EmergencyDateLocal = new Date();
         this.submittedFlight = false;
@@ -475,20 +474,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.loadDataIncidentViewPopup();
     }
 
-    // proceed() {
-    //     this.isFlightRelatedPopup = false;
-    //     this.isFlightRelatedPopup = this.isFlightRelated;
-    //     this.createIncidentModel();
-    //     if (this.isFlightRelated) {
-    //     this.createInvolvepartyAndFlight();
-    //     }
-
-    //     this.fillIncidentDataExchangeModelData(this.incidentModel, this.involvePartyModel,
-    //     this.flightModel, this.affectedModel);
-    //     this.childModalViewIncident.show();
-    //     this.loadDataIncidentViewPopup();
-    // }
-
     createInvolvepartyAndFlight(isFlightRelated: boolean) {
         this.createInvolvePartyModel(this.isFlightRelated);
         this.createFlightModel(isFlightRelated);
@@ -575,8 +560,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         if (this.incidentDataExchangeModel.IncidentModel.EmergencyLocation === 'Offsite') {
             this.isOffSitePopup = true;
         }
-        var tt =moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).utc().format('DD-MMM-YYYY hh:mm a');
-        var _utc = moment(new Date(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).toISOString()).format('DD-MMM-YYYY hh:mm a');
+        const tt = moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).utc().format('DD-MMM-YYYY hh:mm a');
+        const _utc = moment(new Date(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).toISOString()).format('DD-MMM-YYYY hh:mm a');
 
         this.formPopup = new FormGroup({
             IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
@@ -774,34 +759,30 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     public dateTimeSet(date: DateTimePickerSelectEventArgs, controlName: string): void {
         if (controlName === 'EmergencyDate') {
             this.form.get('EmergencyDate')
-                .setValue(moment(date.SelectedDate).format('DD-MMM-YYYY hh:mm A'));
-            //this.EmergencyDateLocal = new Date(date.SelectedDate.toLocaleString() + ' UTC');
+                .setValue(moment(date.SelectedDate as Date).format('DD-MMM-YYYY hh:mm A'));
             this.form.get('EmergencyDateLocal')
-                .setValue(moment(date.SelectedDate).utc().format('DD-MMM-YYYY hh:mm A'));
+                .setValue(moment(date.SelectedDate as Date).utc().format('DD-MMM-YYYY hh:mm A'));
         }
         else if (controlName === 'ReportedDate') {
             this.form.get('ReportedDate')
-                .setValue(moment(date.SelectedDate).format('DD-MMM-YYYY hh:mm A'));
-            //this.ReportedDateLocal = new Date(date.SelectedDate.toLocaleString() + ' UTC');
+                .setValue(moment(date.SelectedDate as Date).format('DD-MMM-YYYY hh:mm A'));
             this.form.get('ReportedDateLocal')
-                .setValue(moment(date.SelectedDate).utc().format('DD-MMM-YYYY hh:mm A'));
+                .setValue(moment(date.SelectedDate as Date).utc().format('DD-MMM-YYYY hh:mm A'));
         }
         else if (controlName === 'Scheduleddeparture') {
             this.formFlight.get('Scheduleddeparture')
-                .setValue(moment(date.SelectedDate).format('DD-MMM-YYYY hh:mm A'));
-            //this.ScheduleDepartureLocal = new Date(date.SelectedDate.toLocaleString() + ' UTC');
+                .setValue(moment(date.SelectedDate as Date).format('DD-MMM-YYYY hh:mm A'));
             this.formFlight.get('ScheduleddepartureLOC')
-                .setValue(moment(date.SelectedDate).utc().format('DD-MMM-YYYY hh:mm A'));
+                .setValue(moment(date.SelectedDate as Date).utc().format('DD-MMM-YYYY hh:mm A'));
             this.arrivaldatepicker.updateConfig({
                 minDate: new Date(date.SelectedDate.toLocaleString())
             });
         }
         else if (controlName === 'Scheduledarrival') {
             this.formFlight.get('Scheduledarrival')
-                .setValue(moment(date.SelectedDate).format('DD-MMM-YYYY hh:mm A'));
-            //this.ScheduleArrivalLocal = new Date(date.SelectedDate.toLocaleString() + ' UTC');
+                .setValue(moment(date.SelectedDate as Date).format('DD-MMM-YYYY hh:mm A'));
             this.formFlight.get('ScheduledarrivalLOC')
-                .setValue(moment(date.SelectedDate).utc().format('DD-MMM-YYYY hh:mm A'));
+                .setValue(moment(date.SelectedDate as Date).utc().format('DD-MMM-YYYY hh:mm A'));
         }
     }
 }

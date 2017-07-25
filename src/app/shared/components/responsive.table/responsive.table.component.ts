@@ -53,7 +53,7 @@ export class ResponsiveTableComponent implements AfterContentInit, AfterViewInit
         jQuery(window).unbind('scroll').scroll(() => {
             const $wrappers: JQuery = jQuery('[class*="table-responsive-vertical"]:visible');
 
-            $.each($wrappers, (index, $wrapper: JQuery) => {
+            jQuery.each($wrappers, (index, $wrapper) => {
                 const wrapperTop = jQuery($wrapper).offset().top;
                 const fullHeight = jQuery($wrapper).height();
                 const windowScroll = jQuery(window).scrollTop();
@@ -154,7 +154,7 @@ export class ResponsiveTableComponent implements AfterContentInit, AfterViewInit
             if (elem.nodeType === 1 && elem.className) {
                 const classNames = elem.className.split(/\s+/);
 
-                for (let n = classNames.length; n--;) {
+                for (let n = classNames.length; n--; ) {
                     if (value.match(classNames[n])) {
                         classNames.splice(n, 1);
                     }

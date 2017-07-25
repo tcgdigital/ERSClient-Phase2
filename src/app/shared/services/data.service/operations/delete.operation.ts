@@ -19,7 +19,7 @@ export class DeleteOperation<T extends BaseModel> extends DataOperation<BaseMode
         private httpInterceptor: HttpInterceptorService,
         private typeName: string,
         private key: string) {
-        super(dataProcessingService, httpService,httpInterceptor, typeName, key);
+        super(dataProcessingService, httpService, httpInterceptor, typeName, key);
     }
 
     /**
@@ -30,11 +30,11 @@ export class DeleteOperation<T extends BaseModel> extends DataOperation<BaseMode
      * @memberOf DeleteOperation
      */
     public Execute(): Observable<T> {
-        let uri: string = this.DataProcessingService
+        const uri: string = this.DataProcessingService
             .GetUri(this.TypeName, this.Key, this.ActionSuffix);
-        let requestOps = this.DataProcessingService
+        const requestOps = this.DataProcessingService
             .SetRequestOptions(WEB_METHOD.DELETE, this.RequestHeaders);
 
-        return super.HandleResponse(this.HttpService.delete(uri, requestOps));
+        return super.HandleResponse(this.HttpService.delete(uri, requestOps)) as Observable<T>;
     }
 }

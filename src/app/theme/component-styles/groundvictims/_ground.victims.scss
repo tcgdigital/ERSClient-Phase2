@@ -1,0 +1,36 @@
+@import '../../config/config';
+
+@media screen and (max-width: $resXS-E) {
+.victims-butt {
+    text-align: right;
+    padding: 10px 17px;
+}
+}
+
+@media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {
+.victims-butt {
+    text-align: right;
+    padding: 10px 17px;
+}
+}
+
+@media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
+.victims-butt {
+    text-align: right;
+    padding: 10px 17px;
+}
+}
+
+@media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {
+.victims-butt {
+    text-align: right;
+    padding: 10px 17px;
+}
+}
+
+@media screen and (min-width: $resXL-S) {
+.victims-butt {
+    text-align: right;
+    padding: 10px 35px;
+}
+}

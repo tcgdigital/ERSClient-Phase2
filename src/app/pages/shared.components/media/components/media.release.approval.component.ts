@@ -8,10 +8,10 @@ import { UtilityService } from '../../../../shared/services';
     encapsulation: ViewEncapsulation.None,
     templateUrl: '../views/media.release.approval.view.html'
 })
-export class MediaReleaseApprovalComponent {    
+export class MediaReleaseApprovalComponent {
     initiatedDepartment: number;
     incidentId: number;
-    
+
     ngOnInit(): any {
         this.incidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.initiatedDepartment = +UtilityService.GetFromSession("CurrentDepartmentId");        

@@ -20,7 +20,8 @@ import {
 @Component({
     selector: 'crew-query',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './views/ground.victims.view.html'
+    templateUrl: './views/ground.victims.view.html',
+    styleUrls: ['./styles/ground.victims.scss']
 })
 export class GroundVictimsComponent implements OnInit, AfterContentInit {
     public currentIncidentId: number;
