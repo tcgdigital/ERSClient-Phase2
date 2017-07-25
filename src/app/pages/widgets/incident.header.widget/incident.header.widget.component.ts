@@ -3,7 +3,7 @@ import {
     Output, EventEmitter, ViewEncapsulation,
     OnChanges, SimpleChange
 } from '@angular/core';
-import { KeyValue } from '../../../shared/models';
+import { KeyValue, UtilityService, GlobalStateService } from '../../../shared';
 
 @Component({
     selector: 'incident-header-widget',
@@ -15,19 +15,23 @@ import { KeyValue } from '../../../shared/models';
 export class IncidentHeaderWidgetComponent implements OnInit, OnChanges {
     @Input() currentIncident: KeyValue;
     @Input() currentDepartment: KeyValue;
-
+    @Input() isShowViewReadonlyCrisis: KeyValue;
 
     @Output() viewIncidentHandler: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
 
     incidentName: string = '';
     departmentName: string = '';
-    public useLink:boolean;
+    public useLink: boolean;
+    //public isShowViewReadonlyCrisis: boolean = true;
+    public currentDepartmentId: number = 0;
 
-    constructor() { }
+    constructor(private globalState: GlobalStateService) { }
 
-    ngOnInit() { 
+    ngOnInit() {
 
-        this.useLink=true;
+        this.useLink = true;
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
     }
 
     // public onViewIncidentClick(): void {
@@ -35,11 +39,16 @@ export class IncidentHeaderWidgetComponent implements OnInit, OnChanges {
     // }
 
     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
-        if(this.currentIncident !== undefined){
+        if (this.currentIncident !== undefined) {
             this.incidentName = this.currentIncident.Key;
         }
-        if(this.currentDepartment !== undefined){
+        if (this.currentDepartment !== undefined) {
             this.departmentName = this.currentDepartment.Key;
         }
+    }
+
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
+
     }
 }

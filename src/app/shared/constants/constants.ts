@@ -61,8 +61,8 @@ export enum StorageType {
 
 export class GlobalConstants {
     // public static EXTERNAL_URL: string = 'http://202.54.73.219/';
-    public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
-    // public static EXTERNAL_URL: string = 'http://localhost:5001/';
+    //public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
+    public static EXTERNAL_URL: string = 'http://localhost:5001/';
     //public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
 
     public static NOTIFICATION_URL: string = `${GlobalConstants.EXTERNAL_URL}Notification/Hubs`;
@@ -85,7 +85,7 @@ export class GlobalConstants {
     public static accessibilityErrorMessage: string = 'Access Restricted';
     public static INTERCEPTOR_PERFORM: boolean = false;
     public static PRESERVE_DATA_FROM_CONVERSION: string[] = ['EmergencyDate'];
-    public static SIGNAL_CONNECTION_DELAY: number = 10000;
+    public static SIGNAL_CONNECTION_DELAY: number = 1000;
 
     public static EditorToolbarConfig: any = {
         // uiColor: '#99000',

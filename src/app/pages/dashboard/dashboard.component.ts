@@ -71,6 +71,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     incidentsToPickForReplication: IncidentModel[] = [];
     showQuicklink: boolean = false;
     private sub: any;
+    public isShowViewReadonlyCrisis: boolean = false;
+
+
 
     constructor(private globalState: GlobalStateService,
         private departmentService: DepartmentService,
@@ -92,6 +95,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.disableIsDrillPopup = true;
         this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+
+
+        this.isShowViewReadonlyCrisis = UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'ViewReadonlyCrisis');
+
+
         this.emergencyLocationService.GetAllActiveEmergencyLocations()
             .subscribe((result: ResponseModel<EmergencyLocationModel>) => {
                 result.Records.forEach((item: EmergencyLocationModel) => {
@@ -215,6 +223,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.currentDepartment = department;
         this.currentDepartmentId = department.Value;
         this.getPagePermission();
+        this.isShowViewReadonlyCrisis = UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'ViewReadonlyCrisis');
+
         this.globalState.NotifyDataChanged('departmentChangeFromDashboard', department);
     }
 }
