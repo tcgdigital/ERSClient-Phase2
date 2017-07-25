@@ -18,6 +18,8 @@ export class DemandTypeListComponent implements OnInit {
     demandTypes: DemandTypeModel[] = [];
     demandTypeModelToUpdate: DemandTypeModel = new DemandTypeModel();
     searchConfigs: Array<SearchConfigModel<any>> = new Array<SearchConfigModel<any>>();
+    expandSearch: boolean = false;
+    searchValue: string = "Expand Search";
 
     constructor(private demandTypeService: DemandTypeService,
         private dataExchange: DataExchangeService<DemandTypeModel>) { }
@@ -55,6 +57,17 @@ export class DemandTypeListComponent implements OnInit {
     edit(demandTypeModelToUpdate: DemandTypeModel): void {
         const demandTypeModelToSend = Object.assign({}, demandTypeModelToUpdate);
         this.dataExchange.Publish('OnDemandUpdate', demandTypeModelToSend);
+    }
+
+    expandSearchPanel(value): void {
+        if (!value) {
+            this.searchValue = "Hide Search Panel";
+        }
+        else {
+            this.searchValue = "Expand Search Panel";
+        }
+        this.expandSearch = !this.expandSearch;
+
     }
 
     ngOnInit(): any {
