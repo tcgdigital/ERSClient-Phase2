@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { PresidentMessageModel } from './presidentMessage.model';
 import { UtilityService } from '../../../../shared/services';
+import { GlobalStateService, KeyValue } from '../../../../shared';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 
@@ -16,8 +17,9 @@ export class PresidentMessageApprovalComponent {
     incidentId: number;
     isArchive: boolean = false;
     protected _onRouteChange: Subscription;
+    public isShowAddPresidentMessage:boolean=true;
 
-    constructor(private _router: Router) { }
+    constructor(private _router: Router,private globalState: GlobalStateService) { }
 
     getNotification(evt: PresidentMessageModel) {
 
@@ -26,6 +28,8 @@ export class PresidentMessageApprovalComponent {
     ngOnInit(): any {
         this.incidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         this.initiatedDepartment = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+
         if (this._router.url.indexOf("archivedashboard") > -1) {
             this.isArchive = true;
             this.incidentId = +UtilityService.GetFromSession("ArchieveIncidentId");
@@ -35,5 +39,9 @@ export class PresidentMessageApprovalComponent {
             this.incidentId = +UtilityService.GetFromSession("CurrentIncidentId");
         }
 
+    }
+
+    private departmentChangeHandler(department: KeyValue): void {
+        this.initiatedDepartment = department.Value;
     }
 }

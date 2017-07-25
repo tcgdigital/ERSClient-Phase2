@@ -31,7 +31,9 @@ export class ArchiveReportWidgetComponent implements OnInit, OnDestroy {
     public downloadPath: string;
     public otherReports: OtherReportModel[];
     public departmentWiseClosureReports: DepartmentClosureModel[];
-
+    public isShowClosureReport: boolean = true;
+    public isShowDepartwiseReport: boolean = true;
+    public isShowOtherReport: boolean = true;
 
     constructor(private archiveReportWidgetService: ArchiveReportWidgetService,
         private archiveDocumentTypeService: ArchiveDocumentTypeService,
