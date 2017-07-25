@@ -44,8 +44,7 @@ export class CargoQueryAssignedCallsListComponent implements OnInit {
 
         // SignalR Notification
         this.globalState.Subscribe('ReceiveCargoEnquiryCreationResponse', (model: ExternalInputModel) => {
-            // this.getAllCargoQueryCallsRecieved(model.IncidentId);
-            this.allAssignedCalls.unshift(model);
+            this.getAllCargoQueryCalls(model.IncidentId);
         });
     }
 

@@ -51,8 +51,7 @@ export class OtherQueryAssignedCallsListComponent implements OnInit {
 
         // SignalR Notification
         this.globalState.Subscribe('ReceiveOtherEnquiryCreationResponse', (model: ExternalInputModel) => {
-            // this.getAllOtherQueryCallsRecieved(model.IncidentId);
-            this.allAssignedCalls.unshift(model);
+            this.getAllOtherQueryCalls(model.IncidentId);
         });
     }
 
