@@ -46,7 +46,6 @@ export class ChecklistListComponent implements OnInit {
     getCheckLists(departmentId): void {
         this.checkListService.GetAllByDepartment(departmentId)
             .subscribe((response: ResponseModel<ChecklistModel>) => {
-                debugger;
                 response.Records.forEach((x) => {
                     x.Active = (x.ActiveFlag === 'Active');
                 });

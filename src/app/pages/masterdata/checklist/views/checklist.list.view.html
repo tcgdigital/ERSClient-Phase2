@@ -36,7 +36,12 @@
             <tr *ngFor="let checklist of checkLists">
                 <td data-title="CheckList Code">{{checklist.CheckListCode}}</td>
                 <td data-title="CheckList Detail">{{checklist.CheckListDetails}}</td>
-                <td data-title="Parent CheckList Code">{{ (checklist.ParentCheckList == null) ?  "NA" : checklist.ParentCheckList.CheckListCode }}</td>
+                <td data-title="Parent CheckList Code">
+                    <p *ngFor="let parent of checklist.CheckListParentMapper">
+                        {{ parent.ParentCheckList.CheckListCode }}
+                    </p>
+                    
+                </td>
                 <td data-title="Duration">{{checklist.Duration}}</td>
                 <td data-title="Target DepartmentName">{{checklist.TargetDepartment.DepartmentName}}</td>
                 <td data-title="URL">{{checklist.URL}}</td>
@@ -54,7 +59,7 @@
                     </md-checkbox>
                 </td>
                 <td data-title="Action">
-                     <i *ngIf="isShowAddEditChecklist | accesibility:currentDepartmentId:'AddEditChecklist'" class="fa fa-edit fa-2x" (click)="editChecklist(checklist)"></i>
+                    <i *ngIf="isShowAddEditChecklist | accesibility:currentDepartmentId:'AddEditChecklist'" class="fa fa-edit fa-2x" (click)="editChecklist(checklist)"></i>
                 </td>
             </tr>
 

@@ -212,12 +212,12 @@ export class WidgetUtilityService {
             series: [{
                 name: 'Closed',
                 data: arrGraphCompleted,
-                color: '#119272'
+                color: '#1E90FF'
 
             }, {
                 name: 'Pending',
                 data: arrGraphPending,
-                color: '#f8a920'
+                color: '#00008B'
             }]
         });
     }

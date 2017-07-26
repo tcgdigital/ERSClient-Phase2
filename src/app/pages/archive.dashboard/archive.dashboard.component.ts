@@ -26,6 +26,7 @@ export class ArchiveDashboardComponent implements OnInit {
     public isShowPage: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
     public isShowViewReadonlyCrisis: boolean = false;
+    public isReopened: boolean = false;
     /**
      * Creates an instance of ArchiveDashboardComponent.
      * @param {ActivatedRoute} router
@@ -90,6 +91,7 @@ export class ArchiveDashboardComponent implements OnInit {
      * @memberof ArchiveDashboardComponent
      */
     private GetIncidentAndDepartment(): void {
+        debugger;
         this.incidentService.Get(this.archievedIncidentId)
             .map((record: IncidentModel) => {
                 this.currentIncident = new KeyValue(record.Description, record.IncidentId);
@@ -97,6 +99,7 @@ export class ArchiveDashboardComponent implements OnInit {
             })
             .flatMap((_) => this.departmentService.Get(this.currentDepartmentId))
             .subscribe((data: DepartmentModel) => {
+                debugger;
                 this.currentDepartment = new KeyValue(data.Description, data.DepartmentId);
             });
     }

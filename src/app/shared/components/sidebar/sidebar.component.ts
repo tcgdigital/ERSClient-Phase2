@@ -5,6 +5,11 @@ import {
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import { SideMenuService, GlobalStateService } from '../../services';
+import { IncidentModel, IncidentService } from "../../../pages/incident";
+import {
+    ResponseModel
+
+} from '../../../shared';
 
 @Component({
     selector: 'side-bar',
@@ -21,14 +26,20 @@ export class SidebarComponent implements OnInit, OnChanges, OnDestroy {
     protected _onRouteChange: Subscription;
     public hideSideMenu: boolean = false;
 
+
     constructor(private _router: Router,
         private _service: SideMenuService,
         private _state: GlobalStateService,
-        private _elementRef: ElementRef) {
+        private _elementRef: ElementRef// ,
+        // private incidentService: IncidentService
+    ) {
     }
 
     public ngOnInit() {
         this._onRouteChange = this._router.events.subscribe((event) => {
+            // this.incidentService.GetAllActiveIncidents()
+            // .subscribe((result:ResponseModel<IncidentModel>)=>{
+            // });
             if (event instanceof NavigationEnd) {
                 if (event.url.indexOf('landing') < 0) {
                     this.hideSideMenu = false;
@@ -90,10 +101,10 @@ export class SidebarComponent implements OnInit, OnChanges, OnDestroy {
         this._menuItemsSub.unsubscribe();
     }
 
-    public onMenuClick($event):void{
+    public onMenuClick($event): void {
         this.menuClick.emit($event);
     }
-    
+
     private toggleSideMenuDock(): void {
         const $self = $(this._elementRef.nativeElement).find('.side-menu');
         console.log($self);

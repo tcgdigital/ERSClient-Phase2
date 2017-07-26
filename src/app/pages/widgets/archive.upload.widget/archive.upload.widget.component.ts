@@ -25,6 +25,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
     @Input('initiatedDepartmentId') departmentId: number;
     @Input('currentIncidentId') incidentId: number;
+    @Input('reopened') isReopened: boolean;
 
     @ViewChild('myFileInput') myInputVariable: any;
     public form: FormGroup;

@@ -36,6 +36,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
         private toastrConfig: ToastrConfig) { }
 
     onEmergencyTypeUpdate(model: EmergencyTypeModel): void {
+        debugger;
         this.emergencyTypeModel = new EmergencyTypeModel();
         this.emergencyTypeModel = model;
         this.emergencyTypeModel.EmergencyTypeId = model.EmergencyTypeId;
@@ -59,6 +60,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
     }
 
     onSubmit(): void {
+        
         this.submitted = true;
         if (this.form.controls['EmergencyTypeName'].value == '') {
             this.toastrService.error('Please provide Crisis type name.', 'Error', this.toastrConfig);
@@ -72,7 +74,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
             this.toastrService.error('Please provide status.', 'Error', this.toastrConfig);
             return null;
         }
-        this.emergencyTypeModel.EmergencyTypeId = this.form.controls["EmergencyTypeId"].value;
+        //this.emergencyTypeModel.EmergencyTypeId = this.form.controls["EmergencyTypeId"].value;
         this.emergencyTypeModel.EmergencyTypeName = this.form.controls["EmergencyTypeName"].value;
         this.emergencyTypeModel.EmergencyCategory = this.form.controls["EmergencyCategory"].value;
         this.emergencyTypeModel.ActiveFlag = this.form.controls["ActiveFlag"].value;
@@ -90,6 +92,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
                 });
         }
         else {
+            
             this.emergencyTypeModelWithoutActive = this.emergencyTypeModel;
             delete this.emergencyTypeModelWithoutActive.Active;
             this.emergencyTypeService.Update(this.emergencyTypeModelWithoutActive)
@@ -117,7 +120,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
     private initiateForm(): void {
         this.emergencyTypeModel.EmergencyTypeId = 0;
         this.form = new FormGroup({
-            EmergencyTypeId: new FormControl(0),
+            //EmergencyTypeId: new FormControl(0),
             EmergencyTypeName: new FormControl('', [Validators.required, NameValidator.validate]),
             EmergencyCategory: new FormControl('', [Validators.required]),
             ActiveFlag: new FormControl('', [Validators.required])
@@ -127,7 +130,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
     private resetForm(): void {
         this.emergencyTypeModel.EmergencyTypeId = 0;
         this.form = new FormGroup({
-            EmergencyTypeId: new FormControl(0),
+            //EmergencyTypeId: new FormControl(0),
             EmergencyTypeName: new FormControl('', [Validators.required]),
             EmergencyCategory: new FormControl('', [Validators.required]),
             ActiveFlag: new FormControl('', [Validators.required])
