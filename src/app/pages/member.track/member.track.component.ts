@@ -124,8 +124,8 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
                     memberCurrentEngagementToSave.MemberEngagementTrack = memberTrackModel;
                     this.membertrackService.Create(memberCurrentEngagementToSave)
                         .subscribe((response: MemberCurrentEngagementModel) => {
-                            // this.toastrService.success('Member is engaged now.');
-                            alert('Member is engaged now.');
+                            this.toastrService.success('Member is engaged now.');
+                            //alert('Member is engaged now.');
 
                             this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
                         });
@@ -139,14 +139,20 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
                             memberCurrentEngagementToedit.deleteAttributes();
                             this.membertrackService.Update(memberCurrentEngagementToedit, obj.MemberCurrentEngagementId)
                                 .subscribe((response1: MemberCurrentEngagementModel) => {
-                                    // this.toastrService.success('Member is engaged now.');
-                                    alert('Member is engaged now.');
+                                    this.toastrService.success('Member is engaged now.');
+                                    //alert('Member is engaged now.');
                                     this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
                                 });
                         });
                 }
             }
+            if (obj.Remarks.length == 0) {
+                this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
+                this.toastrService.error('Please Enter Work Details');
+            }
             this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
+            //alert('Work Details Required');
+            //this.toastrService.success('Work Details Required');
         }
         else {
             const memberTrackModel: MemberEngagementTrackModel = new MemberEngagementTrackModel();
@@ -161,8 +167,8 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
             this.membertrackService.Update(memberCurrentEngagementToEdit, memberCurrentEngagementToEdit.MemberCurrentEngagementId)
                 .flatMap(() => this.membertrackService.UpdateMemberTrack(memberTrackModel, memberTrackModel.MemberEngagementTrackId))
                 .subscribe(() => {
-                    // this.toastrService.success('Member is free now.');
-                    alert('Member is available now.');
+                    this.toastrService.success('Member is available now.');
+                    //alert('Member is available now.');
                     this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
                     // obj.isRemarksSubmitted=false;
                 });
