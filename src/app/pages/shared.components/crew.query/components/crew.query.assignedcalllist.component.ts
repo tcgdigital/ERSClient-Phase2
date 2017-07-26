@@ -51,8 +51,7 @@ export class CrewQueryAssignedCallsListComponent implements OnInit {
 
         // SignalR Notification
         this.globalState.Subscribe('ReceiveCrewEnquiryCreationResponse', (model: ExternalInputModel) => {
-            // this.getAllCrewQueryCallsRecieved(model.IncidentId);
-            this.allAssignedCalls.unshift(model);
+            this.getAllCrewQueryCalls(model.IncidentId);
         });
     }
 

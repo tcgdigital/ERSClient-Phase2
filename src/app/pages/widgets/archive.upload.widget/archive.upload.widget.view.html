@@ -7,8 +7,8 @@
         </div>
         <div class="row no-gutters">
             <div *ngIf="!(isShowUploadOtherReport | accesibility:departmentId:'UploadOtherReport')" class="row no-gutters">
-                    <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
-                </div>
+                <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
+            </div>
             <div class="col widget-block reportform" *ngIf="isShowUploadOtherReport | accesibility:departmentId:'UploadOtherReport'">
                 <form [formGroup]="form">
                     <div class="col-sm-4">
@@ -20,15 +20,16 @@
                         </select>
                     </div>
                     <div class="col-sm-4">
-                        <input #myFileInput type="file" (change)="fileChangeEvent($event)" placeholder="Upload file..." />
+                        <input #myFileInput type="file" (change)="fileChangeEvent($event)" [disabled]="!isReopened" placeholder="Upload file..." />
                     </div>
                     <div class="col-sm-4">
-                        <button type="button" class="btn btn-primary" (click)="upload()">Upload</button>
+                        <button type="button" class="btn btn-primary" (click)="upload()" [disabled]="!isReopened">Upload</button>
                         <button type="button" class="btn btn-primary" (click)="clearFileUpload($event)">Clear</button>
                     </div>
-                    
+
                 </form>
             </div>
+            
         </div>
     </div>
 </div>

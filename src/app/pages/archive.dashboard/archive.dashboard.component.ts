@@ -49,6 +49,7 @@ export class ArchiveDashboardComponent implements OnInit {
      */
     public ngOnInit(): void {
         this.archievedIncidentId = +UtilityService.GetFromSession('ArchieveIncidentId');
+        this.isReopened = (UtilityService.GetFromSession('IsReopened')=='true');
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.getPagePermission();
         this.isShowViewReadonlyCrisis = UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'ViewReadonlyCrisisInformationforArchive');
@@ -91,7 +92,6 @@ export class ArchiveDashboardComponent implements OnInit {
      * @memberof ArchiveDashboardComponent
      */
     private GetIncidentAndDepartment(): void {
-        debugger;
         this.incidentService.Get(this.archievedIncidentId)
             .map((record: IncidentModel) => {
                 this.currentIncident = new KeyValue(record.Description, record.IncidentId);
@@ -99,7 +99,6 @@ export class ArchiveDashboardComponent implements OnInit {
             })
             .flatMap((_) => this.departmentService.Get(this.currentDepartmentId))
             .subscribe((data: DepartmentModel) => {
-                debugger;
                 this.currentDepartment = new KeyValue(data.Description, data.DepartmentId);
             });
     }

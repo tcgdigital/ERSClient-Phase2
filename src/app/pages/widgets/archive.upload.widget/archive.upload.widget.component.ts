@@ -47,6 +47,7 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
         private archiveDocumentTypeService: ArchiveDocumentTypeService) { }
 
     public ngOnInit(): void {
+        const vv:boolean = this.isReopened;
         this.uploadDocuments = GlobalConstants.UploadDocuments;
         this.form = new FormGroup({
             uploadDocumentControl: new FormControl(0)

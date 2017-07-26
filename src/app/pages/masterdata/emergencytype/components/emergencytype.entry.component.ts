@@ -36,7 +36,6 @@ export class EmergencyTypeEntryComponent implements OnInit {
         private toastrConfig: ToastrConfig) { }
 
     onEmergencyTypeUpdate(model: EmergencyTypeModel): void {
-        debugger;
         this.emergencyTypeModel = new EmergencyTypeModel();
         this.emergencyTypeModel = model;
         this.emergencyTypeModel.EmergencyTypeId = model.EmergencyTypeId;

@@ -31,7 +31,7 @@
                     </tr>
                     <tr *ngFor="let closedCrisis of closedCrisises">
                         <td data-title="Emergency Name">
-                            <a class="nav-link" href="javascript:void(0)" (click)="onArchivedIncidentClick(closedCrisis.IncidentId)">
+                            <a class="nav-link" href="javascript:void(0)" (click)="onArchivedIncidentClick(closedCrisis.IncidentId,closedCrisis.isReopen)">
                                 {{closedCrisis.EmergencyName}}
                             </a>
                         </td>
