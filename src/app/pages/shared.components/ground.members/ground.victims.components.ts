@@ -2,7 +2,7 @@ import { Component, ViewEncapsulation, OnInit, AfterContentInit } from '@angular
 import { ITabLinkInterface } from '../../../shared/components/tab.control';
 import * as _ from 'underscore';
 import { Observable } from 'rxjs/Rx';
-import { GroundVictimModel } from "../ground.victim/components/ground.victim.model";
+import { GroundVictimModel } from '../ground.victim/components/ground.victim.model';
 import { PeopleOnBoardWidgetService } from '../../widgets/peopleOnBoard.widget/peopleOnBoard.widget.service';
 import { PeopleOnBoardModel } from '../../widgets/peopleOnBoard.widget/peopleOnBoard.widget.model';
 import { InvolvePartyModel } from '../../shared.components/involveparties';
@@ -30,9 +30,10 @@ export class GroundVictimsComponent implements OnInit, AfterContentInit {
     public searchConfigs: Array<SearchConfigModel<any>> = Array<SearchConfigModel<any>>();
     public subTabs: ITabLinkInterface[] = new Array<ITabLinkInterface>();
     expandSearch: boolean = false;
-    searchValue: string = "Expand Search";
+    searchValue: string = 'Expand Search';
 
-    constructor(private peopleOnBoardWidgetService: PeopleOnBoardWidgetService, private globalState: GlobalStateService) { }
+    constructor(private peopleOnBoardWidgetService: PeopleOnBoardWidgetService,
+        private globalState: GlobalStateService) { }
 
     public ngOnInit(): void {
         this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
@@ -42,10 +43,14 @@ export class GroundVictimsComponent implements OnInit, AfterContentInit {
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
 
-        //this.subTabs = _.find(GlobalConstants.TabLinks, (x) => x.id === 'CrewQuery').subtab;
+        // this.subTabs = _.find(GlobalConstants.TabLinks, (x) => x.id === 'CrewQuery').subtab;
+        // Signal Notification
+        this.globalState.Subscribe('ReceiveIncidentBorrowingCompletionResponse', () => {
+            this.openAllGroundVictims();
+        });
     }
     public ngAfterContentInit(): void {
-        //this.subTabs = UtilityService.GetSubTabs('GroundVictims');
+        // this.subTabs = UtilityService.GetSubTabs('GroundVictims');
     }
 
     public incidentChangeHandler(model: KeyValue): void {
@@ -69,10 +74,10 @@ export class GroundVictimsComponent implements OnInit, AfterContentInit {
 
     expandSearchPanel(value): void {
         if (!value) {
-            this.searchValue = "Hide Search Panel";
+            this.searchValue = 'Hide Search Panel';
         }
         else {
-            this.searchValue = "Expand Search Panel";
+            this.searchValue = 'Expand Search Panel';
         }
         this.expandSearch = !this.expandSearch;
 
