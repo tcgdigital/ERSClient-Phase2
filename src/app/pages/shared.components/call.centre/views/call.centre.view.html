@@ -136,17 +136,17 @@
                         <small [hidden]="form.controls.Queries.valid || (form.controls.Queries.pristine && !submitted)" class="text-danger">Required or invalid</small>
                     </div>
                     <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=1">
-                        <label for="Passengers">PDA Name:<span class="red">*</span></label>
+                        <label for="Passengers">PDA Name:<span class="required">*</span></label>
                         <autocomplete [items]="passengers" (notify)="onNotifyPassenger($event)" [actionLinks]="actionLinks" [initialvalue]="initialvalue"
                             (actionClickHandler)="onActionClick($event)">
                         </autocomplete>
                     </div>
                     <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=3">
-                        <label for="Passengers">PDA Name:<span class="red">*</span></label>
+                        <label for="Passengers">PDA Name:<span class="required">*</span></label>
                         <autocomplete [items]="crews" (notify)='onNotifyCrew($event)' [initialvalue]="initialvalue"></autocomplete>
                     </div>
                     <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=2">
-                        <label for="awb">AWB:<span class="red">*</span></label>
+                        <label for="awb">AWB:<span class="required">*</span></label>
                         <autocomplete [items]="awbs" (notify)='onNotifyCargo($event)' [initialvalue]="initialvalue"></autocomplete>
                     </div>
                     <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=1">
@@ -158,15 +158,15 @@
                             </div>
                             <ul class="multiselect-list1 dropdown-menu-down" [hidden]="!list1Selected" (click)="$event.stopPropagation();">
                                 <li *ngFor="let copassenger of copassengerlistpnr">
-                                    <input type="checkbox" aria-label="Callback" [checked]="copassenger.IsSelected" (change)="selectCopassengerpnr($event,copassenger)"
-                                    />
+                                    <!-- <input type="checkbox" aria-label="Callback" [checked]="copassenger.IsSelected" (change)="selectCopassengerpnr($event,copassenger)"
+                                    /> -->
                                     <span>{{copassenger.PassengerName}}</span>
                                 </li>
                             </ul>
                         </div>
                     </div>
                     <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=1">
-                        <label for="LastName">All Passengers</label>
+                        <label for="LastName">Select Co-passengers from All Passengers</label>
                         <div class="multiselect-container">
                             <div class="multiselect-selector" (click)="showListPassengers(); $event.stopPropagation();">
                                 <i class="fa fa-caret-down fa-pull-right fa-fw" aria-hidden="true"></i> {{selectedcountpassenger>0?
@@ -174,27 +174,27 @@
                             </div>
                             <ul class="multiselect-list1 dropdown-menu-down" [hidden]="!list2Selected" (click)="$event.stopPropagation();">
                                 <li *ngFor="let copassenger of copassengerlistPassengerForMappedPerson">
-                                    <input type="checkbox" aria-label="Callback" [checked]="copassenger.IsSelected" (change)="selectCopassengerfrompassenger($event,copassenger)"
+                                    <input type="checkbox" disabled="{{copassenger.PNRdisabled}}" aria-label="Callback" [checked]="copassenger.IsSelected" (change)="selectCopassengerfrompassenger($event,copassenger)"                                   
                                     />
                                     <span>{{copassenger.PassengerName}}</span>
                                 </li>
                             </ul>
                         </div>
                     </div>
-                    <div class="col-md-6 col-sm-12" [hidden]="enquiryType!=1  && enquiryType!=2 && enquiryType!=3">
+                    <div class="col-md-12 col-sm-12" [hidden]="enquiryType!=1  && enquiryType!=2 && enquiryType!=3">
+                        <strong><label for="LastName">Select type of demands to be raised</label></strong>
+                        <br>
                         <md-checkbox id="IsCallBack" formControlName="IsCallBack" aria-label="Add">
-                            Callback:
+                            Callback &nbsp;
                         </md-checkbox>
-                        <br>
                         <md-checkbox id="IsTravelRequest" formControlName="IsTravelRequest" aria-label="Add">
-                            Travel Request:
+                            Travel Request &nbsp;
                         </md-checkbox>
-                        <br>
                         <md-checkbox id="IsAdminRequest" formControlName="IsAdminRequest" aria-label="Add">
-                            Admin Request:
+                            Admin Request &nbsp;
                         </md-checkbox>
                     </div>
-                    <div class="form-group col-md-6 col-sm-12">
+                    <div class="form-group col-md-12 col-sm-12">
                         <button class="btn btn-primary" type="button" (click)="saveEnquiryDemandCaller()">Submit</button>
                     </div>
                 </form>
@@ -202,6 +202,7 @@
         </div>
 
         <div class="form-group col-lg-4 col-md-6 col-sm-12" [hidden]="enquiryType!=1">
+            <label for="LastName">Select PDA to raise demands </label>
             <responsive-table [scrollableclass]="true">
                 <table responsive-table-body>
                     <thead>

@@ -93,5 +93,6 @@ export class AffectedPeopleToView extends BaseModel {
 	public IsSelected: boolean;
 	public GroupId: number;
 	public commlength : boolean;
+	public PNRdisabled : string;
 }
 
