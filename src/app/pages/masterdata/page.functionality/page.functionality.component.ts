@@ -170,6 +170,7 @@ export class PageFunctionalityComponent implements OnInit {
     }
 
     checkStatusView(event: any, elm: PagesForDepartmentModel): void {
+
         elm.isOnlyHOD = event.checked;
         if (event.checked == false) {
             elm.OnlyForHod = false;
@@ -193,8 +194,12 @@ export class PageFunctionalityComponent implements OnInit {
         selectedChilds.forEach((item: PagesForDepartmentModel) => {
             item.AllowView = isChecked;
             item.isOnlyHOD = isChecked;
+            item.isDisabled = !isChecked;
+            this.CheckUncheckChildPages(isChecked, item, pagesForDepartment);
         });
     }
+
+
 
     checkAllStatusOnlyHOD(): void {
         this.allSelectOnlyHOD = this.pagesForDepartment.length != 0 && this.pagesForDepartment.filter(x => {

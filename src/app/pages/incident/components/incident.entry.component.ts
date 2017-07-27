@@ -408,8 +408,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             WhatHappened: new FormControl('', [Validators.required]),
             WhereHappened: new FormControl(''),
             OtherConfirmationInformation: new FormControl(''),
-            Latitude: new FormControl(''),
-            Longitude: new FormControl(''),
+            // Latitude: new FormControl(''),
+            // Longitude: new FormControl(''),
             ReportedDate: new FormControl('', [Validators.required]),
             ReportedDateLocal: new FormControl(''),
             Description: new FormControl('', [Validators.required]),
@@ -487,6 +487,10 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             this.incidentDataExchangeModel.IncidentModel.EmergencyLocation = this.incidentDataExchangeModel.IncidentModel.OffSetLocation;
             delete this.incidentDataExchangeModel.IncidentModel.OffSetLocation;
         }
+        this.incidentDataExchangeModel.IncidentModel.CreatedOn=new Date();
+        this.incidentDataExchangeModel.InvolvedPartyModel.CreatedOn=new Date();
+        this.incidentDataExchangeModel.FLightModel.CreatedOn=new Date();
+        this.incidentDataExchangeModel.AffectedModel.CreatedOn=new Date();
         this.incidentService.CreateIncident(this.incidentDataExchangeModel.IncidentModel,
             this.incidentDataExchangeModel.IsFlightRelated,
             this.incidentDataExchangeModel.InvolvedPartyModel, this.incidentDataExchangeModel.FLightModel,
@@ -525,8 +529,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             WhatHappenedPopup: new FormControl(''),
             WhereHappenedPopup: new FormControl(''),
             OtherConfirmationInformationPopup: new FormControl(''),
-            LatitudePopup: new FormControl(''),
-            LongitudePopup: new FormControl(''),
+            // LatitudePopup: new FormControl(''),
+            // LongitudePopup: new FormControl(''),
             ReportedDatePopup: new FormControl(''),
             ReportedDateLocalPopup: new FormControl(''),
             DescriptionPopup: new FormControl(''),
@@ -573,8 +577,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             WhatHappenedPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.WhatHappend),
             WhereHappenedPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.WhereHappend),
             OtherConfirmationInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OtherConfirmationInformation),
-            LatitudePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Latitude),
-            LongitudePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Longitude),
+            // LatitudePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Latitude),
+            // LongitudePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Longitude),
             ReportedDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.ReportedDate).format('DD-MMM-YYYY hh:mm a')),
             ReportedDateLocalPopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.ReportedDate).utc().format('DD-MMM-YYYY hh:mm a')),
             DescriptionPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Description),
@@ -603,8 +607,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                 WhatHappenedPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.WhatHappend),
                 WhereHappenedPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.WhereHappend),
                 OtherConfirmationInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OtherConfirmationInformation),
-                LatitudePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Latitude),
-                LongitudePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Longitude),
+                // LatitudePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Latitude),
+                // LongitudePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Longitude),
                 ReportedDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.ReportedDate).format('DD-MMM-YYYY hh:mm a')),
                 ReportedDateLocalPopup: new FormControl(moment(this.ReportedDateLocal).utc().format('DD-MMM-YYYY hh:mm a')),
                 DescriptionPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Description),
@@ -704,8 +708,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.incidentModel.WhatHappend = this.form.controls['WhatHappened'].value;
         this.incidentModel.WhereHappend = this.form.controls['WhereHappened'].value;
         this.incidentModel.OtherConfirmationInformation = this.form.controls['OtherConfirmationInformation'].value;
-        this.incidentModel.Latitude = this.form.controls['Latitude'].value;
-        this.incidentModel.Longitude = this.form.controls['Longitude'].value;
+        // this.incidentModel.Latitude = this.form.controls['Latitude'].value;
+        // this.incidentModel.Longitude = this.form.controls['Longitude'].value;
 
 
         this.incidentModel.ReportedDate = new Date(this.form.controls['ReportedDate'].value);

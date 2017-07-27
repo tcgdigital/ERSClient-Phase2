@@ -71,7 +71,7 @@ export class DepartmentClosureService extends ServiceBase<DepartmentClosureModel
                 this.IsDepartmentClosureSubmit = (actionables.Count > 0);
             })
             .flatMap((x) => this._dataServiceForDemand.Query()
-                .Filter(`IncidentId eq ${incidentId} and TargetDepartmentId eq ${departmentId} and IsCompleted eq true`)
+                .Filter(`IncidentId eq ${incidentId} and TargetDepartmentId eq ${departmentId} and IsCompleted ne true`)
                 .Execute())
             .subscribe((demands: ResponseModel<DemandModel>) => {
                 if (this.IsDepartmentClosureSubmit == false) {
