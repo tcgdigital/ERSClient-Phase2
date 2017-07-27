@@ -63,7 +63,7 @@ export class GlobalConstants {
     // public static EXTERNAL_URL: string = 'http://202.54.73.219/';
     // public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
     public static EXTERNAL_URL: string = 'http://localhost:5001/';
-    //public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
+    // public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
 
     public static NOTIFICATION_URL: string = `${GlobalConstants.EXTERNAL_URL}Notification/Hubs`;
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
@@ -450,6 +450,20 @@ export class GlobalConstants {
     ];
 
     public static NotificationMessage: INotificationMessage[] = [
+        {
+            Type: 'PassengerImportNotification',
+            Key: 'ReceivePassengerImportCompletionResponse',
+            Title: 'Passenger Imported',
+            Message: 'Passengers has been imported. Please refer to tab section "Affected People"'
+        },
+
+        {
+            Type: 'IncidentBorrowNotification',
+            Key: 'ReceiveIncidentBorrowingCompletionResponse',
+            Title: 'Incident Borrowed',
+            Message: 'Incident has been borrowed successfully'
+        },
+
         {
             Type: 'BroadcastNotification',
             Key: 'ReceiveBroadcastCreationResponse',

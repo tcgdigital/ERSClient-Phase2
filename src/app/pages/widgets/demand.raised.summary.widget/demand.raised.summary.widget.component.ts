@@ -90,6 +90,8 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         this.globalState.Subscribe('ReceiveDemandAssignedResponse', () => this.onDemandAddedUpdatedSuccess());
         this.globalState.Subscribe('ReceiveDemandClosedResponse', () => this.onDemandAddedUpdatedSuccess());
         this.globalState.Subscribe('ReceiveCompletedDemandstoCloseResponse', () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe('ReceiveDemandRejectedFromApprovalResponse', () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe('ReceiveRejectedDemandsFromClosureResponse', () => this.onDemandAddedUpdatedSuccess());
     }
 
     public onDemandAddedUpdatedSuccess(): void {
