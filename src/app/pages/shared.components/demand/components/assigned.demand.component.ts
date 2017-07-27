@@ -45,7 +45,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     isArchive: boolean = false;
     demandFilePath: string;
     public globalStateProxyOpen: GlobalStateService;
-
+    public isShowAssignToMeDemand: boolean = true;
     /**
      * Creates an instance of AssignedDemandComponent.
      * @param {DemandService} demandService

@@ -49,6 +49,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
     demandFilePath: string;
     public globalStateProxyOpen: GlobalStateService;
     demand: DemandModelToView = new DemandModelToView();
+    public isShowCompletedDemand: boolean = true;
     /**
      * Creates an instance of CompletedDemandComponent.
      * @param {DemandService} demandService

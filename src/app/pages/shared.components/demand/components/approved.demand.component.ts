@@ -49,7 +49,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     demandFilePath: string;
     public globalStateProxyOpen: GlobalStateService;
     demand: DemandModelToView = new DemandModelToView();
-
+    public isShowApprovedDemand: boolean = true;
     /**
      * Creates an instance of ApprovedDemandComponent.
      * @param {DemandService} demandService

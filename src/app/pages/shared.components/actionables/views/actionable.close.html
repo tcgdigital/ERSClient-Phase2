@@ -1,17 +1,22 @@
-<button class="btn btn-primary pull-right" type="submit" (click)="closedActionableClick(closeActionables)" *ngIf="!isArchive">Submit</button><br/><br/>
-
+<div class="row">
+    <div class="col-sm-12">
+        <div class="button-align">
+            <button class="btn btn-primary" type="submit" (click)="closedActionableClick(closeActionables)" *ngIf="(!isArchive && isShowUpdateCloseChecklist | accesibility:currentDepartmentId:'UpdateCloseChecklist')">Submit</button>
+        </div>
+    </div>
+</div>
 <responsive-table>
     <table responsive-table-body>
         <thead>
             <tr>
-                <th> Serial Number</th>
-                <th> Description</th>
-                <th> Schedule Close Time</th>
-                <th> Actual Close Time</th>
-                <th> Completion Status</th>
-                <th> Download</th>
+                <th>Serial Number</th>
+                <th>Description</th>
+                <th>Schedule Close Time</th>
+                <th>Actual Close Time</th>
+                <th>Completion Status</th>
+                <th>Download</th>
                 <th>Trail</th>
-                <th> View</th>
+                <th>View</th>
             </tr>
         </thead>
         <tbody>
@@ -49,7 +54,7 @@
                     <td data-title="View"><i class="fa fa-edit fa-2x" (click)="openActionableDetail(actionable)"></i></td>
                 </tr>
                 <tr *ngIf="actionable.expanded">
-                    <td colspan="7">
+                    <td colspan="8">
                         <responsive-table>
                             <table responsive-table-body>
                                 <thead>
@@ -77,16 +82,11 @@
     </table>
 </responsive-table>
 
-
-
-
-
-
 <div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title pull-left">Additional Information</h4>
+                <h4 class="modal-title">Additional Information</h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="cancelUpdateCommentAndURL()">
                   <span aria-hidden="true">&times;</span>
                    </button>
@@ -121,7 +121,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title pull-left">Checklist Completion status Trail</h4>
+                <h4 class="modal-title">Checklist Completion status Trail</h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="cancelTrail()">
                   <span aria-hidden="true">&times;</span>
                    </button>

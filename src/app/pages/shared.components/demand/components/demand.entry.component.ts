@@ -84,7 +84,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     public globalStateProxyOpen: GlobalStateService;
     public freshDemand: boolean = true;
     public isrejected: boolean = false;
-
+    public isShowAddDemand: boolean = true;
     /**
      * Creates an instance of DemandEntryComponent.
      * @param {DemandService} demandService

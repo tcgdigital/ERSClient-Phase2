@@ -1,5 +1,5 @@
 <div class="card card-without-top-border">
-        <checklist-entry></checklist-entry>
+        <checklist-entry *ngIf="isShowAddChecklist | accesibility:currentDepartmentId:'AddChecklist'"></checklist-entry>
     <div class="card-block">
         <checklist-list></checklist-list>
     </div>

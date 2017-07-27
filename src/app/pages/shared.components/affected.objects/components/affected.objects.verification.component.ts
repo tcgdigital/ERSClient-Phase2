@@ -19,6 +19,10 @@ import {
     templateUrl: '../views/affected.objects.verification.html'
 })
 export class AffectedObjectsVerificationComponent implements OnInit {
+
+    public isShowVerifyAffectedCargo: boolean = true;
+    public currentDepartmentId:number=0;
+
     constructor(private affectedObjectsService: AffectedObjectsService, private globalState: GlobalStateService,
         private toastrService: ToastrService, private toastrConfig: ToastrConfig, private _router: Router) { }
     affectedObjectsForVerification: AffectedObjectsToView[] = [];
@@ -75,6 +79,9 @@ export class AffectedObjectsVerificationComponent implements OnInit {
     ngOnInit(): any {
         this.isArchive = false;
         this.allSelectVerify = false;
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+
         if (this._router.url.indexOf("archivedashboard") > -1) {
             this.isArchive = true;
             this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
@@ -90,5 +97,9 @@ export class AffectedObjectsVerificationComponent implements OnInit {
     }
     ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChangefromDashboard');
+    }
+
+    departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
     }
 }

@@ -1,5 +1,5 @@
 <div class="addbuttonHolder">
-        <button class="btn btn-primary" type="submit" (click)="showAddRegion(showAdd)">{{buttonValue}}</button>
+        <button *ngIf="isShowAddDemand | accesibility:currentDepartmentId:'CreateDemand'" class="btn btn-primary" type="submit" (click)="showAddRegion(showAdd)">{{buttonValue}}</button>
 </div>
 
 
@@ -10,7 +10,7 @@
         <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                         <div class="modal-header">
-                                <h4 class="modal-title pull-left">Create Demand</h4>
+                                <h4 class="modal-title">Create Demand</h4>
                                 <button type="button" class="close pull-right" aria-label="Close" (click)="cancelModal()">
                   <span aria-hidden="true">&times;</span>
                    </button>

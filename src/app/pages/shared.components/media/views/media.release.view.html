@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-12">
         <div *ngIf="!isArchive">
-            <mediaRelease-entry [initiatedDepartmentId]="initiatedDepartment" [incidentId]="incidentId"></mediaRelease-entry>
+            <mediaRelease-entry *ngIf="isShowAddMediaRelease | accesibility:initiatedDepartment:'AddNewMediaRelease'" [initiatedDepartmentId]="initiatedDepartment" [incidentId]="incidentId"></mediaRelease-entry>
         </div>
     </div>
 </div>

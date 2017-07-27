@@ -6,7 +6,10 @@
             </div>
         </div>
         <div class="row no-gutters">
-            <div class="col widget-block reportform">
+            <div *ngIf="!(isShowUploadOtherReport | accesibility:departmentId:'UploadOtherReport')" class="row no-gutters">
+                    <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
+                </div>
+            <div class="col widget-block reportform" *ngIf="isShowUploadOtherReport | accesibility:departmentId:'UploadOtherReport'">
                 <form [formGroup]="form">
                     <div class="col-sm-4">
                         <select id="selectApprover" class="form-control" formControlName="uploadDocumentControl" name="uploadDocumentControl">

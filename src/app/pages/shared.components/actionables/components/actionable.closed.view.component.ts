@@ -40,6 +40,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     public completionStatusTypes: any[] = GlobalConstants.CompletionStatusType;
     private currentDepartmentId: number = null;
     private currentIncident: number = null;
+    public isShowUpdateCloseChecklist: boolean = true;
     public checklistTrail: ChecklistTrailModel = null;
     public checklistTrails: ChecklistTrailModel[] = [];
     public allDepartments: DepartmentModel[] = [];
