@@ -146,12 +146,12 @@ export class GroundVictimsComponent implements OnInit, AfterContentInit {
                 Description: 'NOK Contact Number',
                 Value: ''
             }),
-            new SearchDropdown({
+            new SearchTextBox({
                 Name: 'Status',
                 Description: 'Status',
-                PlaceHolder: 'Select Status',
-                Value: '',
-                ListData: Observable.of(status)
+                // PlaceHolder: 'Select Status',
+                Value: ''
+                // ListData: Observable.of(status)
             })
         ];
     }
