@@ -25,7 +25,8 @@ export class ArchiveDashboardComponent implements OnInit {
     private sub: any;
     public isShowPage: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
-
+    public isShowViewReadonlyCrisis: boolean = false;
+    public isReopened: boolean = false;
     /**
      * Creates an instance of ArchiveDashboardComponent.
      * @param {ActivatedRoute} router
@@ -48,8 +49,11 @@ export class ArchiveDashboardComponent implements OnInit {
      */
     public ngOnInit(): void {
         this.archievedIncidentId = +UtilityService.GetFromSession('ArchieveIncidentId');
+        this.isReopened = (UtilityService.GetFromSession('IsReopened')=='true');
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.getPagePermission();
+        this.isShowViewReadonlyCrisis = UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'ViewReadonlyCrisisInformationforArchive');
+
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
         this.GetIncidentAndDepartment();
     }
@@ -101,6 +105,8 @@ export class ArchiveDashboardComponent implements OnInit {
 
     private departmentChangeHandler(department: KeyValue): void {
         this.currentDepartmentId = department.Value;
+        this.isShowViewReadonlyCrisis = UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'ViewReadonlyCrisisInformationforArchive');
+
         this.getPagePermission();
     }
 }

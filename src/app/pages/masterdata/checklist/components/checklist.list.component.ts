@@ -28,7 +28,7 @@ export class ChecklistListComponent implements OnInit {
     StationList: string[] = [];
     currentDepartmentId: number;
     
-    public isShowEditChecklist: boolean = true;
+    public isShowAddEditChecklist: boolean = true;
     searchConfigs: Array<SearchConfigModel<any>> = new Array<SearchConfigModel<any>>();
     parentChecklistListForSearch: Array<NameValue<number>> = Array<NameValue<number>>();
     emergencyTypesForSearch: Array<NameValue<number>> = Array<NameValue<number>>();

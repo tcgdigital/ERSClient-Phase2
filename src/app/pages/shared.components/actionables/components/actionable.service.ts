@@ -202,6 +202,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
     public GetAcionableByIncidentIdandCheckListId(incidentId: number, checkListId: number): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq ${incidentId} and ChklistId eq ${checkListId}`)
+            //.Filter(`ChklistId eq ${checkListId}`)
             .Execute();
     }
 

@@ -28,7 +28,7 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
     currentDepartmentId: number;
     protected _onRouteChange: Subscription;
     isArchive: boolean = false;
-    public isShowEditBroadcast:boolean=true;
+    public isShowAddEditBroadcast:boolean=true;
 
     constructor(private broadCastService: BroadcastService,
         private dataExchange: DataExchangeService<BroadCastModel>,

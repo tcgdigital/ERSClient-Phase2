@@ -12,7 +12,7 @@ import {
     styleUrls: ['./styles/checklist.style.scss']
 })
 export class ChecklistComponent implements OnInit {
-    public isShowAddChecklist: boolean = true;
+    public isShowAddEditChecklist: boolean = true;
     public checkList: ChecklistModel;
     public currentDepartmentId: number;
     /**

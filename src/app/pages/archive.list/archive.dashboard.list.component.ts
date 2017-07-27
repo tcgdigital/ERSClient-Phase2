@@ -336,8 +336,9 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
         }
     }
 
-    private onArchivedIncidentClick(incidentId: number): void {
+    private onArchivedIncidentClick(incidentId: number,isReopened:boolean): void {
         UtilityService.SetToSession({ ArchieveIncidentId: incidentId });
+        UtilityService.SetToSession({ IsReopened: isReopened });
         this.router.navigate(['pages/archivedashboard']);
     }
 }

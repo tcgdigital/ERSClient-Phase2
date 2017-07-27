@@ -43,9 +43,12 @@ export class WidgetUtilityService {
             this.elapsedHourForGraph = this.elapsedHourForGraph;
         }
 
+        let closedTotal: number = 0;
+        let pendingTotal: number = 0;
+        let pendingInter: number = 0;
         for (let i: number = 1; i <= this.elapsedHourForGraph; i++) {
-            let pendingTotal: number = 0;
-            let closedTotal: number = 0;
+
+
             let pendingOld: number = 0;
 
             ///////This is for demands which are created after crisis initiation and closed in this hour.
@@ -61,14 +64,22 @@ export class WidgetUtilityService {
             let pendingList: ChecklistTrailModel[] = arrGraphData.filter((x: ChecklistTrailModel) => {
                 return ((x.CompletionStatus != 'Closed') && (temp <= new Date(x.CompletionStatusChangedOn)) && (new Date(x.CompletionStatusChangedOn) <= end));
             });
+
             pendingTotal = pendingList.length;
+
             if (i == 1) {
+                pendingInter = pendingTotal;
                 pendingTotal = pendingTotal - closedTotal;
             }
             else {
-                pendingOld = pendingTotal + arrGraphPending[i - 2] - closedTotal;
+                pendingOld = pendingInter - closedTotal;
                 pendingTotal = pendingOld;
             }
+
+            if (pendingTotal < 0) {
+                pendingTotal = 0;
+            }
+            
             arrGraphPending.push(pendingTotal);
 
             temp.setMinutes(temp.getMinutes() + 60);
@@ -123,10 +134,11 @@ export class WidgetUtilityService {
         else {
             this.elapsedHourForGraph = this.elapsedHourForGraph;
         }
-
+        let closedTotal: number = 0;
+        let pendingInter: number = 0;
         for (let i: number = 1; i <= this.elapsedHourForGraph; i++) {
             let pendingTotal: number = 0;
-            let closedTotal: number = 0;
+
             let pendingOld: number = 0;
 
             ///////This is for demands which are created after crisis initiation and closed in this hour.
@@ -142,13 +154,20 @@ export class WidgetUtilityService {
             let pendingList: GraphObject[] = filterDepartments.filter((x) => {
                 return ((temp <= x.CreatedOn) && (x.CreatedOn <= end));
             });
-            pendingTotal = pendingList.length;
+            pendingTotal = filterDepartments.length;
             if (i == 1) {
+                pendingInter=pendingTotal;
                 pendingTotal = pendingTotal - closedTotal;
+                
             }
             else {
-                pendingOld = pendingTotal + arrGraphPending[i - 2] - closedTotal;
+                pendingOld = pendingInter - closedTotal;
                 pendingTotal = pendingOld;
+
+            }
+
+            if (pendingTotal < 0) {
+                pendingTotal = 0;
             }
             arrGraphPending.push(pendingTotal);
 
@@ -212,12 +231,12 @@ export class WidgetUtilityService {
             series: [{
                 name: 'Closed',
                 data: arrGraphCompleted,
-                color: '#119272'
+                color: '#1E90FF'
 
             }, {
                 name: 'Pending',
                 data: arrGraphPending,
-                color: '#f8a920'
+                color: '#00008B'
             }]
         });
     }

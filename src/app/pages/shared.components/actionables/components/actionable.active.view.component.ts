@@ -359,8 +359,6 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                                 this.globalStateProxyOpen.NotifyDataChanged('checkListStatusChange', null);
                             });
                     });
-
-
             });
     }
 

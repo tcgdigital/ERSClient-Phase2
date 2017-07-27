@@ -512,7 +512,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             PDATicketNumber: new FormControl({ value: '', disabled: true }),
             TargetDepartmentId: new FormControl({ value: '', disabled: false }, [Validators.required]),
             ContactNumber: new FormControl({ value: '', disabled: false }, [Validators.required]),
-            ScheduleTime: new FormControl({ value: '', disabled: false }),
+            ScheduleTime: new FormControl({ value: '', disabled: false }, [Validators.required]),
             RequiredLocation: new FormControl({ value: '', disabled: false }, [Validators.required]),
             AffectedPersonId: new FormControl({ value: '', disabled: false }),
             AffectedObjectId: new FormControl({ value: '', disabled: false }),

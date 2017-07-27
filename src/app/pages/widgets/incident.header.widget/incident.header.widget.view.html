@@ -9,7 +9,7 @@
                 <div class="view-inc">
 
 
-                    <view-readOnly-incident-widget [currentIncidentLocal]="currentIncident" [useLink]="useLink"></view-readOnly-incident-widget>
+                    <view-readOnly-incident-widget *ngIf="isShowViewReadonlyCrisis" [currentIncidentLocal]="currentIncident" [useLink]="useLink"></view-readOnly-incident-widget>
 
                 </div>
 

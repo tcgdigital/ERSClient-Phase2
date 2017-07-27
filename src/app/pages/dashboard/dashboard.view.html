@@ -1,5 +1,7 @@
 <div class="row">
-    <incident-header-widget [currentIncident]="currentIncident" [currentDepartment]="currentDepartment" (viewIncidentHandler)="onViewIncidentClick(currentIncident.Value)"
+    <incident-header-widget [currentIncident]="currentIncident"
+     [currentDepartment]="currentDepartment" 
+     [isShowViewReadonlyCrisis]="isShowViewReadonlyCrisis" (viewIncidentHandler)="onViewIncidentClick(currentIncident.Value)"
         class="col-12 widget-layout-fix">
     </incident-header-widget>
 </div>

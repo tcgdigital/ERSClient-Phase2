@@ -20,7 +20,7 @@ export class BroadcastComponent {
     protected _onRouteChange: Subscription;
     isArchive: boolean = false;
     //public currentDepartmentId:number=0;
-    public isShowAddBroadcast: boolean = true;
+    public isShowAddEditBroadcast: boolean = true;
 
     constructor(private _router: Router,private globalState: GlobalStateService) { }
 

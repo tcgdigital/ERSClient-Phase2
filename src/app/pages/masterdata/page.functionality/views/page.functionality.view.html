@@ -21,8 +21,9 @@
             <thead>
                 <tr>
                     <th>Module Name</th>
-                    <th>Page Name</th>
                     <th>Parent Page</th>
+                    <th>Page Name</th>
+
                     <!--<th>Sort Order</th>-->
                     <th>
                         <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="allSelectView" (change)="selectAllDeptView($event)" aria-label="Add">Can View</md-checkbox>
@@ -38,14 +39,16 @@
                 </tr>
                 <tr *ngFor="let pageFordepartment of pagesForDepartment">
                     <td data-title="Module Name" title="{{pageFordepartment.ModuleName}}"><span class="trimString">{{pageFordepartment.ModuleName}}</span></td>
-                    <td data-title="Page Name" title="{{pageFordepartment.PageName}}"><span class="trimString">{{pageFordepartment.PageName}}</span></td>
                     <td data-title="Parent Page" title="{{pageFordepartment.ParentPageName}}"><span class="trimString">{{pageFordepartment.ParentPageName}}</span></td>
+                    <td data-title="Page Name" title="{{pageFordepartment.PageName}}"><span class="trimString">{{pageFordepartment.PageName}}</span></td>
                     <!--<td data-title="Sort Order"><span>{{pageFordepartment.SortOrder}}</span></td>-->
                     <td data-title="Can View">
-                        <md-checkbox [disabled]="pageFordepartment.isDisabled" id="IsAutoApproved" class="allowView" [(ngModel)]="pageFordepartment.AllowView" aria-label="Add" (change)="checkStatusView($event,pageFordepartment)"></md-checkbox>
+                        <md-checkbox [disabled]="pageFordepartment.isDisabled" id="IsAutoApproved" class="allowView" [(ngModel)]="pageFordepartment.AllowView"
+                            aria-label="Add" (change)="checkStatusView($event,pageFordepartment)"></md-checkbox>
                     </td>
                     <td data-title="Is HOD">
-                        <md-checkbox id="IsAutoApproved" [disabled]="!pageFordepartment.isOnlyHOD" class="onlyHod" [(ngModel)]="pageFordepartment.OnlyForHod" aria-label="Add" (change)="checkAllStatusOnlyHOD($event)"></md-checkbox>
+                        <md-checkbox id="IsAutoApproved" [disabled]="!pageFordepartment.isOnlyHOD" class="onlyHod" [(ngModel)]="pageFordepartment.OnlyForHod"
+                            aria-label="Add" (change)="checkAllStatusOnlyHOD($event)"></md-checkbox>
                     </td>
                 </tr>
             </tbody>
