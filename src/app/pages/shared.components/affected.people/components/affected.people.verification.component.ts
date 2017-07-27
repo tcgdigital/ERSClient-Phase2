@@ -3,7 +3,6 @@ import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 
-
 import { InvolvePartyModel } from '../../../shared.components';
 import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';
 import { AffectedPeopleService } from './affected.people.service';
@@ -21,23 +20,25 @@ import { InvolvePartyService } from '../../involveparties';
 export class AffectedPeopleVerificationComponent implements OnInit {
 
     public isShowVerifyAffectedPeople: boolean = true;
-    public currentDepartmentId:number=0;
-
-    constructor(private affectedPeopleService: AffectedPeopleService,
-        private involvedPartyService: InvolvePartyService, private globalState: GlobalStateService, private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig, private _router: Router) { }
-
+    public currentDepartmentId: number = 0;
+    protected _onRouteChange: Subscription;
     affectedPeopleForVerification: AffectedPeopleToView[] = [];
     verifiedAffectedPeople: AffectedPeopleModel[];
     date: Date = new Date();
     currentIncident: number;
-    protected _onRouteChange: Subscription;
     isArchive: boolean = false;
     allSelectVerify: boolean;
     userid: number;
     credential: AuthModel;
     downloadPath: string;
     downloadURL: string;
+
+    constructor(private affectedPeopleService: AffectedPeopleService,
+        private involvedPartyService: InvolvePartyService,
+        private globalState: GlobalStateService,
+        private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig,
+        private _router: Router) { }
 
     getAffectedPeople(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
@@ -50,7 +51,7 @@ export class AffectedPeopleVerificationComponent implements OnInit {
     }
 
     saveVerifiedAffectedPeople(): void {
-        let datenow = this.date;
+        const datenow = this.date;
         this.verifiedAffectedPeople = this.affectedPeopleService.MapAffectedPeople(this.affectedPeopleForVerification, this.userid);
         this.affectedPeopleService.CreateBulk(this.verifiedAffectedPeople)
             .subscribe((response: AffectedPeopleModel[]) => {
@@ -60,20 +61,23 @@ export class AffectedPeopleVerificationComponent implements OnInit {
             }, (error: any) => {
                 alert(error);
             });
-    };
+    }
+
     selectAllVerify(value: any): void {
         this.affectedPeopleForVerification.forEach((x: AffectedPeopleToView) => {
             x.IsVerified = value.checked;
         });
     }
+
     isValidView(item: AffectedPeopleToView) {
         return (item.IsVerified == true);
-    };
+    }
 
     isVerfiedChange(): void {
-        this.allSelectVerify = this.affectedPeopleForVerification.length != 0 && this.affectedPeopleForVerification.filter(x => {
-            return x.IsVerified == true;
-        }).length == this.affectedPeopleForVerification.length;
+        this.allSelectVerify = this.affectedPeopleForVerification.length != 0
+            && this.affectedPeopleForVerification.filter((x) => {
+                return x.IsVerified == true;
+            }).length == this.affectedPeopleForVerification.length;
     }
 
     incidentChangeHandler(incident: KeyValue) {
@@ -88,14 +92,14 @@ export class AffectedPeopleVerificationComponent implements OnInit {
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
 
-        if (this._router.url.indexOf("archivedashboard") > -1) {
+        if (this._router.url.indexOf('archivedashboard') > -1) {
             this.isArchive = true;
-            this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
+            this.currentIncident = +UtilityService.GetFromSession('ArchieveIncidentId');
 
         }
         else {
             this.isArchive = false;
-            this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
+            this.currentIncident = +UtilityService.GetFromSession('CurrentIncidentId');
         }
         this.getAffectedPeople(this.currentIncident);
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/PDAVerifiedManifest/' + this.currentIncident;
@@ -103,6 +107,14 @@ export class AffectedPeopleVerificationComponent implements OnInit {
         this.credential = UtilityService.getCredentialDetails();
         this.userid = +this.credential.UserId;
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
+
+        // Signal Notification
+        this.globalState.Subscribe('ReceiveIncidentBorrowingCompletionResponse', () => {
+            this.getAffectedPeople(this.currentIncident);
+        });
+        this.globalState.Subscribe('ReceivePassengerImportCompletionResponse', () => {
+            this.getAffectedPeople(this.currentIncident);
+        });
     }
 
     ngOnDestroy(): void {

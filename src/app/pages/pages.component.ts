@@ -32,6 +32,7 @@ import { ExternalInputModel } from './callcenteronlypage';
 import { PresidentMessageModel } from './shared.components/presidentMessage';
 import { PresidentMessageWidgetModel } from './widgets/presidentMessage.widget';
 import { MediaReleaseWidgetModel } from './widgets/mediaRelease.widget';
+import { AffectedPeopleModel } from './shared.components/affected.people';
 
 @Component({
     selector: 'pages',
@@ -72,6 +73,8 @@ export class PagesComponent implements OnInit {
      * @param {ToastrService} toastrService
      * @param {ToastrConfig} toastrConfig
      * @param {ActivatedRoute} route
+     * @param {NotificationBroadcastService} passengerImportCompletedNotificationHub
+     * @param {NotificationBroadcastService} incidentBorrowingNotificationHub
      * @param {NotificationBroadcastService} broadcastMessageNotificationHub
      * @param {NotificationBroadcastService} casualtyStatusUpdateNotificationHub
      * @param {NotificationBroadcastService} checklistSubmissionNotificationHub
@@ -95,6 +98,8 @@ export class PagesComponent implements OnInit {
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig,
         private route: ActivatedRoute,
+        private passengerImportCompletedNotificationHub: NotificationBroadcastService,
+        private incidentBorrowingNotificationHub: NotificationBroadcastService,
         private broadcastMessageNotificationHub: NotificationBroadcastService,
         private casualtyStatusUpdateNotificationHub: NotificationBroadcastService,
         private checklistSubmissionNotificationHub: NotificationBroadcastService,
@@ -105,13 +110,8 @@ export class PagesComponent implements OnInit {
         private mediaReleaseWorkflowNotificationHub: NotificationBroadcastService,
         private presidentsMessageNotificationHub: NotificationBroadcastService,
         private presidentMessageWorkflowNotificationHub: NotificationBroadcastService,
-        // private presidentsMessageAndMediaReleaseNotificationHub: NotificationBroadcastService,
-        // private presidentAndMediaWorkflowNotificationHub: NotificationBroadcastService,
         private queryNotificationHub: NotificationBroadcastService) {
         this.ConfigureToster();
-        // this.ExecuteOperationProxy = () => {
-        //     this.ExecuteOperation.apply(this, arguments);
-        // };
         this.ExecuteOperationProxy = (...args: any[]) => {
             this.ExecuteOperation.apply(this, args);
         };
@@ -362,6 +362,18 @@ export class PagesComponent implements OnInit {
         if (this.connectionStaters === undefined || this.connectionStaters.length === 0) {
             this.connectionStaters = new Array<ConnectionStarter>();
             if (window.location.href.indexOf('localhost') == -1) {
+                this.connectionStaters.push(new ConnectionStarter(this.incidentBorrowingNotificationHub,
+                    'IncidentBorrowingNotificationHub', {
+                        incidentId: incId
+                    }, this.GenerateCallbackHandler<AffectedPeopleModel>('IncidentBorrowNotification')
+                ));
+
+                this.connectionStaters.push(new ConnectionStarter(this.passengerImportCompletedNotificationHub,
+                    'PassengerImportCompletedNotificationHub', {
+                        incidentId: incId
+                    }, this.GenerateCallbackHandler<AffectedPeopleModel>('PassengerImportNotification')
+                ));
+
                 this.connectionStaters.push(new ConnectionStarter(this.broadcastMessageNotificationHub,
                     'BroadcastMessageNotificationHub', {
                         departmentId: deptId, incidentId: incId
@@ -465,15 +477,6 @@ export class PagesComponent implements OnInit {
                     this.ListenCallbacks(c, x);
                 });
             });
-
-        // connectionStaters.forEach((x: ConnectionStarter) => {
-        //     x.HubConnection.createConnection({
-        //         hubName: x.HubName,
-        //         qs: x.QuesyString
-        //     }).start().then((c: INotificationConnection) => {
-        //         this.ListenCallbacks(c, x);
-        //     });
-        // });
     }
 
     /**
