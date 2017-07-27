@@ -260,6 +260,15 @@ export class AffectedPeopleListComponent implements OnInit {
         this.initiateSearchConfigurations();
         this.IsDestroyed = false;
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
+
+        // Signal Notification
+        this.globalState.Subscribe('ReceiveIncidentBorrowingCompletionResponse', () => {
+            this.getAffectedPeople(this.currentIncident);
+        });
+
+        this.globalState.Subscribe('ReceivePassengerImportCompletionResponse', () => {
+            this.getAffectedPeople(this.currentIncident);
+        });
     }
 
     IsNokInformed(event: any, id: number, name: string) {

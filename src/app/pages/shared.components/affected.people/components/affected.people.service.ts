@@ -20,6 +20,7 @@ import { CountOperation } from '../../../../shared/services/data.service/operati
 export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     implements IAffectedPeopleService {
 
+    public affectedPeoples: ResponseModel<AffectedPeopleModel>;
     private _dataServiceAffectedPeople: DataService<AffectedPeopleModel>;
     private _bulkDataService: DataService<AffectedPeopleModel>;
     private _casualtySummery: CasualtySummeryModel;
@@ -27,16 +28,16 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     private _nokService: DataService<NextOfKinModel>;
     private _passengerService: DataService<PassengerModel>;
 
-    public affectedPeoples: ResponseModel<AffectedPeopleModel>;
+
     /**
      * Creates an instance of AffectedPeopleService.
-     * @param {DataServiceFactory} dataServiceFactory 
-     * 
+     * @param {DataServiceFactory} dataServiceFactory
+     *
      * @memberOf AffectedPeopleService
      */
     constructor(private dataServiceFactory: DataServiceFactory) {
         super(dataServiceFactory, 'AffectedPeople');
-        let option: DataProcessingService = new DataProcessingService();
+        const option: DataProcessingService = new DataProcessingService();
 
         this._bulkDataService = this.dataServiceFactory
             .CreateServiceWithOptions<AffectedPeopleModel>('AffectedPersonBatch', option);
@@ -60,8 +61,8 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
 
             if (affected != null) {
                 affectedPeople = UtilityService.pluck(affected, ['AffectedPeople'])[0];
-                affectedPeopleForView = affectedPeople.map(function (dataItem) {
-                    let item = new AffectedPeopleToView();
+                affectedPeopleForView = affectedPeople.map((dataItem) => {
+                    const item = new AffectedPeopleToView();
                     item.AffectedId = dataItem.AffectedId;
                     item.AffectedPersonId = dataItem.AffectedPersonId;
                     item.PassengerName = dataItem.Passenger != null ? dataItem.Passenger.PassengerName : '';
@@ -73,14 +74,14 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
                         : (dataItem.Crew == null ? 'NA' : dataItem.Crew.CrewGender);
                     item.Nationality = dataItem.Passenger != null ? (dataItem.Passenger.PassengerNationality == null ? 'NA' : dataItem.Passenger.PassengerNationality)
                         : (dataItem.Crew == null ? 'NA' : dataItem.Crew.CrewNationality);
-                    var now = moment(new Date());
-                    var dob = dataItem.Passenger != null ? moment(dataItem.Passenger.PassengerDob) : moment(dataItem.Crew.CrewDob);
+                    const now = moment(new Date());
+                    const dob = dataItem.Passenger != null ? moment(dataItem.Passenger.PassengerDob) : moment(dataItem.Crew.CrewDob);
                     if (dob == null || dob == undefined) {
-                        item.Age = "";
+                        item.Age = '';
                     }
                     else {
-                        var duration = moment.duration(now.diff(dob));
-                        var age = duration.asYears();
+                        const duration = moment.duration(now.diff(dob));
+                        const age = duration.asYears();
                         item.Age = Math.floor(age).toString();
                     }
                     item.TicketNumber = dataItem.TicketNumber;
@@ -88,7 +89,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
                     item.IsCrew = dataItem.IsCrew;
                     item.BaggageCount = dataItem.Passenger != null ? (dataItem.Passenger.BaggageCount == null ? 0 : dataItem.Passenger.BaggageCount) : 0;
                     item.BaggageWeight = dataItem.Passenger != null ? (dataItem.Passenger.BaggageWeight == null ? 0 : dataItem.Passenger.BaggageWeight) : 0;
-                    item.PassengerSpecialServiceRequestCode = dataItem.Passenger != null ? (dataItem.Passenger.SpecialServiceRequestCode.trim() == null ? 'NA' : dataItem.Passenger.SpecialServiceRequestCode) : 'NA';
+                    item.PassengerSpecialServiceRequestCode = dataItem.Passenger != null ? (dataItem.Passenger.SpecialServiceRequestCode == null ? 'NA' : dataItem.Passenger.SpecialServiceRequestCode) : 'NA';
                     item.PassengerEmployeeId = dataItem.Passenger != null ? (dataItem.Passenger.EmployeeId == null ? 'NA' : dataItem.Passenger.EmployeeId) : 'NA';
                     //   item.CoTravellerInformation = dataItem.Passenger != null ? (dataItem.Passenger.CoTravellerInformation == null ? 'NA' : dataItem.Passenger.CoTravellerInformation) : 'NA';
                     item.CrewIdCode = dataItem.Crew != null ? (dataItem.Crew.EmployeeNumber == null ? 'NA' : dataItem.Crew.EmployeeNumber) : 'NA';
@@ -116,14 +117,13 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
                         item.PassengerId = 0;
                     }
                     item.IsNokInformed = dataItem.IsNokInformed;
-                    item.commlength = dataItem.CommunicationLogs.length>0;
+                    item.commlength = dataItem.CommunicationLogs.length > 0;
 
                     return item;
                 });
             }
         }
         return affectedPeopleForView;
-
     }
 
     public GetCoPassangers(AffectedPersonId): Observable<ResponseModel<AffectedPeopleModel>> {
@@ -149,14 +149,14 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
             .Execute();
     }
 
-    public MapAffectedPeople(affectedPeopleForVerification,userid : number): AffectedPeopleModel[] {
+    public MapAffectedPeople(affectedPeopleForVerification, userid: number): AffectedPeopleModel[] {
         let verifiedAffectedPeople: AffectedPeopleModel[] = [];
         if (affectedPeopleForVerification != null) {
-            verifiedAffectedPeople = affectedPeopleForVerification.map(function (affected) {
-                let item = new AffectedPeopleModel();
+            verifiedAffectedPeople = affectedPeopleForVerification.map((affected) => {
+                const item = new AffectedPeopleModel();
                 item.AffectedPersonId = affected.AffectedPersonId;
                 item.IsVerified = affected.IsVerified;
-                item.UpdatedBy=userid;
+                item.UpdatedBy = userid;
                 item.UpdatedOn = new Date();
                 return item;
             });
@@ -199,42 +199,34 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
             .Execute();
     }
 
-
     public GetCasualtyStatus(incidentId: number): Observable<CasualtySummeryModel> {
         this._casualtySummery = new CasualtySummeryModel();
         return this.GetDeceasedPeopleCount(incidentId)
             .map((dataDeceasedPeopleCount: number) => {
                 this._casualtySummery.deceasedCount = dataDeceasedPeopleCount;
-                //this._casualtySummery.deceasedCasualtyCount = 0;
                 return this._casualtySummery;
             })
             .flatMap(() => this.GetMissingPeopleCount(incidentId))
             .map((dataMissingPeopleCount: number) => {
                 this._casualtySummery.missingCount = dataMissingPeopleCount;
-                //this._casualtySummery.reunitedCasualtyCount = 0;
                 return this._casualtySummery;
             })
             .flatMap(() => this.GetInjuredPeopleCount(incidentId))
             .map((dataInjuredPeople: number) => {
                 this._casualtySummery.injuredCount = dataInjuredPeople;
-                //this._casualtySummery.minorCasualtyCount = 0;
                 return this._casualtySummery;
             })
             .flatMap(() => this.GetUninjuredPeopleCount(incidentId))
             .map((dataUninjuredPeopleCount: number) => {
                 this._casualtySummery.uninjuredCount = dataUninjuredPeopleCount;
-                //this._casualtySummery.criticalCasualtyCount = 0;
                 return this._casualtySummery;
             })
             .flatMap(() => this.GetOtherPeopleCount(incidentId))
             .map((dataOtherPeopleCount: number) => {
                 this._casualtySummery.othersCount = dataOtherPeopleCount;
-                //this._casualtySummery.criticalCasualtyCount = 0;
                 return this._casualtySummery;
             });
-
     }
-
 
     public GetCommunicationByPDA(id: number): Observable<ResponseModel<AffectedPeopleModel>> {
         return this._dataService.Query()
@@ -242,7 +234,6 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
             .Expand("Passenger , Crew, CommunicationLogs($filter=ActiveFlag eq 'Active';$orderby=CreatedOn desc)")
             .Execute();
     }
-
 
     public GetCallerListForAffectedPerson(affectedPersonId: number): Observable<ResponseModel<EnquiryModel>> {
         return this._enquiryService.Query()
@@ -254,11 +245,9 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
         return this._nokService.Post(noks).Execute();
     }
 
-
     public updatePassanger(passenger: PassengerModel, key?: number): Observable<PassengerModel> {
         return this._passengerService.Patch(passenger, key.toString()).Execute();
     }
-
 
     getGroupId(affectedPersonId: number): Observable<ResponseModel<AffectedPeopleModel>> {
         return this._dataService.Query()

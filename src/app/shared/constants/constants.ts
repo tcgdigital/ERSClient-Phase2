@@ -451,6 +451,20 @@ export class GlobalConstants {
 
     public static NotificationMessage: INotificationMessage[] = [
         {
+            Type: 'PassengerImportNotification',
+            Key: 'ReceivePassengerImportCompletionResponse',
+            Title: 'Passenger Imported',
+            Message: 'Passengers has been imported. Please refer to tab section "Affected People"'
+        },
+
+        {
+            Type: 'IncidentBorrowNotification',
+            Key: 'ReceiveIncidentBorrowingCompletionResponse',
+            Title: 'Incident Borrowed',
+            Message: 'Incident has been borrowed successfully'
+        },
+
+        {
             Type: 'BroadcastNotification',
             Key: 'ReceiveBroadcastCreationResponse',
             Title: 'Broadcast Created',

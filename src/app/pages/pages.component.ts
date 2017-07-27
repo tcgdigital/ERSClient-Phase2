@@ -32,6 +32,7 @@ import { ExternalInputModel } from './callcenteronlypage';
 import { PresidentMessageModel } from './shared.components/presidentMessage';
 import { PresidentMessageWidgetModel } from './widgets/presidentMessage.widget';
 import { MediaReleaseWidgetModel } from './widgets/mediaRelease.widget';
+import { AffectedPeopleModel } from './shared.components/affected.people';
 
 @Component({
     selector: 'pages',
@@ -72,6 +73,8 @@ export class PagesComponent implements OnInit {
      * @param {ToastrService} toastrService
      * @param {ToastrConfig} toastrConfig
      * @param {ActivatedRoute} route
+     * @param {NotificationBroadcastService} passengerImportCompletedNotificationHub
+     * @param {NotificationBroadcastService} incidentBorrowingNotificationHub
      * @param {NotificationBroadcastService} broadcastMessageNotificationHub
      * @param {NotificationBroadcastService} casualtyStatusUpdateNotificationHub
      * @param {NotificationBroadcastService} checklistSubmissionNotificationHub
@@ -95,6 +98,8 @@ export class PagesComponent implements OnInit {
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig,
         private route: ActivatedRoute,
+        private passengerImportCompletedNotificationHub: NotificationBroadcastService,
+        private incidentBorrowingNotificationHub: NotificationBroadcastService,
         private broadcastMessageNotificationHub: NotificationBroadcastService,
         private casualtyStatusUpdateNotificationHub: NotificationBroadcastService,
         private checklistSubmissionNotificationHub: NotificationBroadcastService,
@@ -105,13 +110,8 @@ export class PagesComponent implements OnInit {
         private mediaReleaseWorkflowNotificationHub: NotificationBroadcastService,
         private presidentsMessageNotificationHub: NotificationBroadcastService,
         private presidentMessageWorkflowNotificationHub: NotificationBroadcastService,
-        // private presidentsMessageAndMediaReleaseNotificationHub: NotificationBroadcastService,
-        // private presidentAndMediaWorkflowNotificationHub: NotificationBroadcastService,
         private queryNotificationHub: NotificationBroadcastService) {
         this.ConfigureToster();
-        // this.ExecuteOperationProxy = () => {
-        //     this.ExecuteOperation.apply(this, arguments);
-        // };
         this.ExecuteOperationProxy = (...args: any[]) => {
             this.ExecuteOperation.apply(this, args);
         };
@@ -361,73 +361,85 @@ export class PagesComponent implements OnInit {
     private PrepareConnectionAndCall(incId: number, deptId: number) {
         if (this.connectionStaters === undefined || this.connectionStaters.length === 0) {
             this.connectionStaters = new Array<ConnectionStarter>();
-            // if (window.location.href.indexOf('localhost') == -1) {
-            //     this.connectionStaters.push(new ConnectionStarter(this.broadcastMessageNotificationHub,
-            //         'BroadcastMessageNotificationHub', {
-            //             departmentId: deptId, incidentId: incId
-            //         }, this.GenerateCallbackHandler<BroadCastModel>('BroadcastNotification')
-            //     ));
+            if (window.location.href.indexOf('localhost') == -1) {
+                this.connectionStaters.push(new ConnectionStarter(this.incidentBorrowingNotificationHub,
+                    'IncidentBorrowingNotificationHub', {
+                        incidentId: incId
+                    }, this.GenerateCallbackHandler<AffectedPeopleModel>('IncidentBorrowNotification')
+                ));
 
-            //     this.connectionStaters.push(new ConnectionStarter(this.casualtyStatusUpdateNotificationHub,
-            //         'CasualtyStatusUpdateNotificationHub', {
-            //             incidentId: incId
-            //         }, this.GenerateCallbackHandler<CasualtyExchangeModel>('CasualtyNotification')
-            //     ));
+                this.connectionStaters.push(new ConnectionStarter(this.passengerImportCompletedNotificationHub,
+                    'PassengerImportCompletedNotificationHub', {
+                        incidentId: incId
+                    }, this.GenerateCallbackHandler<AffectedPeopleModel>('PassengerImportNotification')
+                ));
 
-            //     this.connectionStaters.push(new ConnectionStarter(this.checklistSubmissionNotificationHub,
-            //         'ChecklistSubmissionNotificationHub', {
-            //             departmentId: deptId, incidentId: incId
-            //         }, this.GenerateCallbackHandler<ActionableModel>('ChecklistNotification')
-            //     ));
+                this.connectionStaters.push(new ConnectionStarter(this.broadcastMessageNotificationHub,
+                    'BroadcastMessageNotificationHub', {
+                        departmentId: deptId, incidentId: incId
+                    }, this.GenerateCallbackHandler<BroadCastModel>('BroadcastNotification')
+                ));
 
-            //     this.connectionStaters.push(new ConnectionStarter(this.crisisClosureNotificationHub,
-            //         'CrisisClosureNotificationHub', {
-            //             incidentId: incId
-            //         }, this.GenerateCallbackHandler<IncidentModel>('CrisisClosureNotification')
-            //     ));
+                this.connectionStaters.push(new ConnectionStarter(this.casualtyStatusUpdateNotificationHub,
+                    'CasualtyStatusUpdateNotificationHub', {
+                        incidentId: incId
+                    }, this.GenerateCallbackHandler<CasualtyExchangeModel>('CasualtyNotification')
+                ));
 
-            //     this.connectionStaters.push(new ConnectionStarter(this.crisisCreationNotificationHub,
-            //         'CrisisCreationNotificationHub', null,
-            //         this.GenerateCallbackHandler<IncidentModel>('CrisisCreationNotification')
-            //     ));
+                this.connectionStaters.push(new ConnectionStarter(this.checklistSubmissionNotificationHub,
+                    'ChecklistSubmissionNotificationHub', {
+                        departmentId: deptId, incidentId: incId
+                    }, this.GenerateCallbackHandler<ActionableModel>('ChecklistNotification')
+                ));
 
-            //     this.connectionStaters.push(new ConnectionStarter(this.demandSubmissionNotificationHub,
-            //         'DemandSubmissionNotificationHub', {
-            //             departmentId: deptId, incidentId: incId
-            //         }, this.GenerateCallbackHandler<DemandModel>('DemandNotification')
-            //     ));
+                this.connectionStaters.push(new ConnectionStarter(this.crisisClosureNotificationHub,
+                    'CrisisClosureNotificationHub', {
+                        incidentId: incId
+                    }, this.GenerateCallbackHandler<IncidentModel>('CrisisClosureNotification')
+                ));
 
-            //     this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageNotificationHub,
-            //         'PresidentsMessageNotificationHub', {
-            //             incidentId: incId
-            //         }, this.GenerateCallbackHandler<PresidentMessageWidgetModel>('PresidentsMessageNotification')
-            //     ));
+                this.connectionStaters.push(new ConnectionStarter(this.crisisCreationNotificationHub,
+                    'CrisisCreationNotificationHub', null,
+                    this.GenerateCallbackHandler<IncidentModel>('CrisisCreationNotification')
+                ));
 
-            //     this.connectionStaters.push(new ConnectionStarter(this.presidentMessageWorkflowNotificationHub,
-            //         'PresidentMessageWorkflowNotificationHub', {
-            //             departmentId: deptId, incidentId: incId
-            //         }, this.GenerateCallbackHandler<PresidentMessageModel>('PresidentsMessageWorkflowNotification')
-            //     ));
+                this.connectionStaters.push(new ConnectionStarter(this.demandSubmissionNotificationHub,
+                    'DemandSubmissionNotificationHub', {
+                        departmentId: deptId, incidentId: incId
+                    }, this.GenerateCallbackHandler<DemandModel>('DemandNotification')
+                ));
 
-            //     this.connectionStaters.push(new ConnectionStarter(this.mediaReleaseNotificationHub,
-            //         'MediaReleaseNotificationHub', {
-            //             incidentId: incId
-            //         }, this.GenerateCallbackHandler<MediaReleaseWidgetModel>('MediaMessageNotification')
-            //     ));
+                this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageNotificationHub,
+                    'PresidentsMessageNotificationHub', {
+                        incidentId: incId
+                    }, this.GenerateCallbackHandler<PresidentMessageWidgetModel>('PresidentsMessageNotification')
+                ));
 
-            //     this.connectionStaters.push(new ConnectionStarter(this.mediaReleaseWorkflowNotificationHub,
-            //         'MediaReleaseWorkflowNotificationHub', {
-            //             departmentId: deptId, incidentId: incId
-            //         }, this.GenerateCallbackHandler<MediaModel>('MediaMessageWorkflowNotification')
-            //     ));
+                this.connectionStaters.push(new ConnectionStarter(this.presidentMessageWorkflowNotificationHub,
+                    'PresidentMessageWorkflowNotificationHub', {
+                        departmentId: deptId, incidentId: incId
+                    }, this.GenerateCallbackHandler<PresidentMessageModel>('PresidentsMessageWorkflowNotification')
+                ));
 
-            //     this.connectionStaters.push(new ConnectionStarter(this.queryNotificationHub,
-            //         'QueryNotificationHub', {
-            //             incidentId: incId
-            //         }, this.GenerateCallbackHandler<ExternalInputModel>('EnquiryNotification')
-            //     ));
-            //     this.ConnectAndListen(this.connectionStaters);
-            // }
+                this.connectionStaters.push(new ConnectionStarter(this.mediaReleaseNotificationHub,
+                    'MediaReleaseNotificationHub', {
+                        incidentId: incId
+                    }, this.GenerateCallbackHandler<MediaReleaseWidgetModel>('MediaMessageNotification')
+                ));
+
+                this.connectionStaters.push(new ConnectionStarter(this.mediaReleaseWorkflowNotificationHub,
+                    'MediaReleaseWorkflowNotificationHub', {
+                        departmentId: deptId, incidentId: incId
+                    }, this.GenerateCallbackHandler<MediaModel>('MediaMessageWorkflowNotification')
+                ));
+
+                this.connectionStaters.push(new ConnectionStarter(this.queryNotificationHub,
+                    'QueryNotificationHub', {
+                        incidentId: incId
+                    }, this.GenerateCallbackHandler<ExternalInputModel>('EnquiryNotification')
+                ));
+                this.ConnectAndListen(this.connectionStaters);
+            }
         }
         else {
             this.connectionStaters.forEach((store: ConnectionStarter) => {
@@ -465,15 +477,6 @@ export class PagesComponent implements OnInit {
                     this.ListenCallbacks(c, x);
                 });
             });
-
-        // connectionStaters.forEach((x: ConnectionStarter) => {
-        //     x.HubConnection.createConnection({
-        //         hubName: x.HubName,
-        //         qs: x.QuesyString
-        //     }).start().then((c: INotificationConnection) => {
-        //         this.ListenCallbacks(c, x);
-        //     });
-        // });
     }
 
     /**
