@@ -160,7 +160,9 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
                 const passengerModels = this.affectedPeople.filter(x => x.IsCrew === false);
+                passengerModels.sort(function(a,b) {return (a.PassengerName.toUpperCase() > b.PassengerName.toUpperCase()) ? 1 : ((b.PassengerName.toUpperCase() > a.PassengerName.toUpperCase()) ? -1 : 0);} );
                 const crewModels = this.affectedPeople.filter(x => x.IsCrew == true);
+                crewModels.sort(function(a,b) {return (a.CrewName.toUpperCase() > b.CrewName.toUpperCase()) ? 1 : ((b.CrewName.toUpperCase() > a.CrewName.toUpperCase()) ? -1 : 0);} );
                 for (const affectedPerson of passengerModels) {
                     this.passengers.push(new KeyValue((affectedPerson.PassengerName || affectedPerson.CrewName), affectedPerson.AffectedPersonId));
                     this.copassengerlistPassenger.push(Object.assign({}, affectedPerson));
