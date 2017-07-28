@@ -109,7 +109,7 @@ export class DepartmentEntryComponent implements OnInit {
                     (x) => x.DepartmentSpoc,
                     (x) => x.ParentDepartmentId);
 
-                this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString();
+                this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString().replace( /^\D+/g, '');
                 this.departmentModel.CreatedBy = +this.credential.UserId;
                 if (this.form.controls['ParentDepartmentId'].value == '') {
                     this.departmentModel.ParentDepartmentId = null;
@@ -143,7 +143,7 @@ export class DepartmentEntryComponent implements OnInit {
 
                 this.departmentModel.deleteAttributes();
                 if (this.departmentModel.ContactNo) {
-                    this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString();
+                    this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString().replace( /^\D+/g, '');
                 }
                 this.departmentService.Update(this.departmentModel, this.departmentModel.DepartmentId)
                     .subscribe((response: DepartmentModel) => {

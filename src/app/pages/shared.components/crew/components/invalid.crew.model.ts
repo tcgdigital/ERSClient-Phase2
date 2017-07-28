@@ -23,5 +23,9 @@ export class InvalidCrewModel extends BaseModel{
     public AlternateContactNumber : string;
     public ErrorReason : string;
 
+    public VisaDetails : string;
+    public QualificationRecords : string;
+    public LicenseRecords : string;
+
     public Flight : FlightModel;   
 }
