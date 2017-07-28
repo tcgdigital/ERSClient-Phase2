@@ -10,7 +10,8 @@ import * as _ from 'underscore';
 @Component({
     selector: 'broadcastDepartment-main',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './views/broadcast.department.view.html'
+    templateUrl: './views/broadcast.department.view.html',
+    styleUrls: ['./styles/broadcastdepartment.scss']
 })
 export class BroadcastDepartmentComponent {
     departments: DepartmentModel[] = [];

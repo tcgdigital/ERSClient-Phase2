@@ -156,7 +156,7 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
         this.IsDrillPopup = this.incidentDataExchangeModel.IncidentModel.IsDrill;
 
         this.isFlightRelatedPopup = false;
-        if (this.incidentDataExchangeModel.FLightModel !== undefined) {
+        if (this.incidentDataExchangeModel.FLightModel.FlightNo !== 'DUMMY_FLIGHT') {
 
             this.ScheduleDepartureLocal = new Date(new Date(this.incidentDataExchangeModel.FLightModel.DepartureDate).toLocaleString() + ' UTC');
             this.ScheduleArrivalLocal = new Date(new Date(this.incidentDataExchangeModel.FLightModel.ArrivalDate).toLocaleString() + ' UTC');
