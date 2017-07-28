@@ -297,7 +297,7 @@ export class ChecklistEntryComponent implements OnInit {
     getAllActiveOrganizations(): void {
         this.organizationService.GetAllActiveOrganizations()
             .subscribe((response: ResponseModel<OrganizationModel>) => {
-                
+
                 this.activeOrganizations = response.Records;
             }, (error: any) => {
                 //console.log(`Error: ${error}`);
@@ -310,6 +310,15 @@ export class ChecklistEntryComponent implements OnInit {
         this.checkListModel.CheckListParentMapper = [];
         if (this.form.valid) {
             this.submitted = false;
+            const org: ChecklistModel = this.parentChecklists.find((item: ChecklistModel) => {
+                return item.CheckListCode == 'No Checklist Selected.';
+            });
+            if (org) {
+                const index: number = this.parentChecklists.indexOf(org);
+                if (index >= -1) {
+                    this.parentChecklists.splice(index, 1);
+                }
+            }
 
             this.parentChecklists.forEach(x => {
                 let item: ChecklistMapper = new ChecklistMapper();

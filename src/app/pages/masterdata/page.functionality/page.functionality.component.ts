@@ -9,7 +9,7 @@ import {
     PagesForDepartmentModel
 } from './components/page.functionality.model';
 import {
-    DataExchangeService, ResponseModel,
+    DataExchangeService, ResponseModel,GlobalConstants,
     AutocompleteComponent, KeyValue, AuthModel, UtilityService
 } from '../../../shared';
 
@@ -93,7 +93,7 @@ export class PageFunctionalityComponent implements OnInit {
 
         this.pagePermissionService.CreateBulk(this.pagePermissionModelToSave)
             .subscribe((response: PagePermissionModel[]) => {
-                this.toastrService.success('Department Funtionality saved Successfully.', 'Success', this.toastrConfig);
+                this.toastrService.success(`Department Funtionality saved Successfully. ${GlobalConstants.departmentAndFunctionalityReloginMessage}`, 'Success', this.toastrConfig);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
