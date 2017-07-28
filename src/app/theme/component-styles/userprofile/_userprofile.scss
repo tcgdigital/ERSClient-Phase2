@@ -36,7 +36,14 @@ margin: 15px 1.5%;
     margin-bottom:10px;
 }
 
-@media screen and (max-width: $resXS-E) {}
+@media screen and (max-width: $resXS-E) {
+.butt-align{
+    margin-top: 5px;
+}
+.butt-des{
+    margin-top: 5px;
+}
+}
 
 @media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {
 .btn-pos {
@@ -50,8 +57,19 @@ margin: 15px 1.5%;
     margin-right:15px;
     margin-bottom:10px;
 }
+.butt-align{
+    padding-left: 76px;
+}
 }
 
-@media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {}
+@media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {
+.butt-align{
+    margin-left: 0px;
+    margin-top: 1px;
+}
+.butt-des{
+    margin-top: 6px;
+}
+}
 
 @media screen and (min-width: $resXL-S) {}
