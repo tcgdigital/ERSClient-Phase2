@@ -47,7 +47,7 @@
                         <div [class]="actionable.RagColor"></div>
                     </td>
                     <td data-title="Download">
-                        <a class="fa fa-download fa-2x" target="_self" *ngIf="actionable.UploadLinks!=null" href="{{actionable.UploadLinks}}" download="{{actionable.FileName}}"></a>
+                        <a class="down-icon" target="_self" *ngIf="actionable.UploadLinks!=null" href="{{actionable.UploadLinks}}" download="{{actionable.FileName}}"><i class="fa fa-download fa" aria-hidden="true"></i></a>
                     </td>
                     <td data-title="Trail"><i *ngIf="isShowCommentTrail | accesibility:currentDepartmentId:'ViewChecklistTrail'" class="fa fa-info-circle fa-2x"
                             (click)="openTrail(actionable)"></i> </td>
@@ -119,7 +119,7 @@
                                 <input #myFileInput type="file" (change)="fileChangeEvent($event)" placeholder="Upload file..." />
                                 <button type="button" class="btn btn-primary" (click)="upload(actionableModelToUpdate)" [disabled]="disableUploadButton">Upload</button>
                                 <button type="button" class="btn btn-primary" (click)="clearFileUpload($event)">Clear</button>
-                                <a *ngIf="filepathWithLinks!=null" class="glyphicon glyphicon-download-alt" target="_self" href="{{filepathWithLinks}}" download="{{fileName}}">Download</a>
+                                <a *ngIf="filepathWithLinks!=null" class="down-icon" target="_self" href="{{filepathWithLinks}}" download="{{fileName}}"><i class="fa fa-download fa" aria-hidden="true"></i></a>
                             </div>
                             <div class="col-sm-2">
                                 <div class="row buttonholder" *ngIf="!isArchive">
