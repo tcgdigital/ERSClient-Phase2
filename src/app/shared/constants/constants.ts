@@ -85,7 +85,7 @@ export class GlobalConstants {
     public static accessibilityErrorMessage: string = 'Access Restricted';
     public static INTERCEPTOR_PERFORM: boolean = false;
     public static PRESERVE_DATA_FROM_CONVERSION: string[] = ['EmergencyDate'];
-    public static SIGNAL_CONNECTION_DELAY: number = 1000;
+    public static SIGNAL_CONNECTION_DELAY: number = 100;
 
     public static EditorToolbarConfig: any = {
         // uiColor: '#99000',
