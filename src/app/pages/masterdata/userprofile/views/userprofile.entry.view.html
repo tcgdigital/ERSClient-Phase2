@@ -116,6 +116,16 @@
                 <input type="file" #inputFileUserProfile id="file" formControlName="fileUserProfile" (change)="getFileDetails($event,'UserProfile')" />
                 <button class="btn btn-primary" type="button" (click)="uploadFiles()" [disabled] = "disableUploadButton">Upload</button>
             </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <a target="_self" href="{{HRInfoTemplatePath}}">
+                    <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;HR Record Template
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <a target="_self" href="{{HRTrainingTemplatePath}}">
+                    <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;HR Training Record Template
+                </a>
+            </div>
         </div>
     </form>
 </div>

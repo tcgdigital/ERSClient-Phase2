@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { UserProfileService } from './userprofile.service';
 import { UserProfileModel } from './userprofile.model';
 import { InvalidUserProfileModel } from './invalid.userprofile.model'
@@ -30,8 +30,9 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
         private dataExchange: DataExchangeService<UserProfileModel>) { }
 
     getUserProfiles(): void {
-        this.userProfileService.GetAll()
+        this.userProfileService.GetAllUsers()
             .subscribe((response: ResponseModel<UserProfileModel>) => {
+                debugger;
                 this.userProfiles = response.Records;
                 console.log(response.Records);
                 this.userProfiles.map((item: UserProfileModel) => {

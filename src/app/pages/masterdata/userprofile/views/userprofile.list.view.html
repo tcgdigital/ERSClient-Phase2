@@ -67,34 +67,38 @@
                 <td data-title="Nationality">{{userprofile.Nationality}}</td>
                 <td data-title="Gender">{{userprofile.Gender}}</td>
                 <td data-title="Visa Details">
-                    <ul *ngIf="userprofile.VisaDetails.length > 0">
+                    <!-- <ul *ngIf="userprofile.VisaDetails.length > 0">
                         <li *ngFor="let visa of userprofile.VisaDetails">
                             {{visa.VisaNumber}} / {{visa.VisaValidity | date: 'dd-MMM-yyyy hh:mm a'}}
                         </li>
-                    </ul>
+                    </ul> -->
+                    {{userprofile.VisaRecords}}
                 </td>
                 <td data-title="Volunter Preferences">
-                    <ul *ngIf="userprofile.VolunterPreferences.length > 0">
+                    <!-- <ul *ngIf="userprofile.VolunterPreferences.length > 0">
                         <li *ngFor="let vol of userprofile.VolunterPreferences">
                             {{vol.VoluterPreferenceName}}
                         </li>
-                    </ul>
+                    </ul> -->
+                    {{userprofile.VoluterPreferenceRecords}}
                 </td>
                 <td data-title="Training Records">
-                    <ul *ngIf="userprofile.TrainingRecords.length > 0">
+                    <!-- <ul *ngIf="userprofile.TrainingRecords.length > 0">
                         <li *ngFor="let train of userprofile.TrainingRecords">
                             {{train.VoluterPreferenceName}} / {{train.CourseStartDate | date: 'dd-MMM-yyyy hh:mm a'}} &nbsp;/&nbsp; {{train.CourseEndDate
                             | date: 'dd-MMM-yyyy hh:mm a'}}
                         </li>
-                    </ul>
+                    </ul> -->
+                    {{userprofile.TrainingDetails}}
                 </td>
                 <td data-title="Next Of Kins">
-                    <ul *ngIf="userprofile.NextOfKins.length > 0">
+                    <!-- <ul *ngIf="userprofile.NextOfKins.length > 0">
                         <li *ngFor="let NOK of userprofile.NextOfKins">
                             {{NOK.NextOfKinName}} / {{NOK.ContactNumber}}
 
                         </li>
-                    </ul>
+                    </ul> -->
+                    {{userprofile.NOKDetails}}
                 </td>
                 <td data-title="Edit">
                     <i class="fa fa-edit fa-2x" (click)="UpdateUserProfile(userprofile)"></i>

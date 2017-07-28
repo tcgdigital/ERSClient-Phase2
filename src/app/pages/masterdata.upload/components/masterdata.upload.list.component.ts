@@ -15,9 +15,8 @@ import {
     UtilityService, GlobalConstants,
     FileUploadService, KeyValue, GlobalStateService, AuthModel
 } from '../../../shared';
-import { FileData } from '../../../shared/models';
+import { FileData, ValidationResultModel } from '../../../shared/models';
 
-import { ValidationResultModel } from '../components/valid/validation.result.model';
 import { OrganizationService, OrganizationModel } from "../../shared.components/organization";
 
 
