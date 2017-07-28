@@ -50,9 +50,8 @@ export class SituationalUpdateQueryAssignedCallsListComponent implements OnInit 
         this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllSituationalUpdatesCalls(this.currentIncidentId));
 
         // SignalR Notification
-        this.globalState.Subscribe('AssignedSituationalUpdatesEnquiryCreationResponse', (model: ExternalInputModel) => {
-            this.allAssignedCalls.unshift(model);
-            // this.getAllSituationalUpdatesCalls(model.IncidentId);
+        this.globalState.Subscribe('ReceiveSituationalUpdatesEnquiryCreationResponse', (model: ExternalInputModel) => {
+            this.getAllSituationalUpdatesCalls(model.IncidentId);
         });
     }
 

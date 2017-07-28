@@ -1,10 +1,12 @@
-<span class="validationAlert" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'Archive')">{{accessibilityErrorMessage}}</span>
-
+<span class="validationAlert" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'Archive')">
+    <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
+</span>
 
 <div *ngIf="isShowPage | accesibility:currentDepartmentId:'Archive'" class="row">
     <incident-header-widget 
         [currentIncident]="currentIncident" 
         [currentDepartment]="currentDepartment" 
+        [isShowViewReadonlyCrisis]="isShowViewReadonlyCrisis"
         (viewIncidentHandler)="onViewIncidentClick($event)"
         class="col-12 widget-layout-fix">
     </incident-header-widget>
@@ -59,7 +61,8 @@
 
     <archive-upload-widget 
         [initiatedDepartmentId]="currentDepartmentId" 
-        [currentIncidentId]="archievedIncidentId" 
+        [currentIncidentId]="archievedIncidentId"
+        [reopened]="isReopened" 
         class="col-sm-5 widget-right-margin">
     </archive-upload-widget>
 </div>

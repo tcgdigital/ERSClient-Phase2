@@ -84,7 +84,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     public globalStateProxyOpen: GlobalStateService;
     public freshDemand: boolean = true;
     public isrejected: boolean = false;
-
+    public isShowAddDemand: boolean = true;
     /**
      * Creates an instance of DemandEntryComponent.
      * @param {DemandService} demandService
@@ -225,7 +225,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 editedFields = editedFields + `<strong>Requester Contact Number</strong> : ${demandForAnswer.ContactNumber} `;
             }
             if (demandForAnswer.ScheduleTime) {
-                const minutesInt = parseInt(demandForAnswer.ScheduleTime);
+                const minutesInt = +demandForAnswer.ScheduleTime;
                 const d = new Date(demand.CreatedOn);
                 d.setMinutes(d.getMinutes() + minutesInt);
                 const editedDate = new Date(d);
@@ -275,10 +275,10 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     ChangeAffectedPeople(): void {
         this.demandModel.AffectedPersonId = this.form.controls['AffectedPersonId'].value;
-        if (this.demandModel.AffectedPersonId !== 0) {
+        if (this.demandModel.AffectedPersonId != 0) {
             this.form.controls['AffectedObjectId'].reset({ value: '', disabled: true });
             this.demandModel.PDATicketNumber = this.affectedPeople
-                .find((x) => x.AffectedPersonId === this.demandModel.AffectedPersonId).TicketNumber;
+                .find((x) => x.AffectedPersonId == this.demandModel.AffectedPersonId).TicketNumber;
             this.form.controls['PDATicketNumber'].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
         }
         else {
@@ -289,10 +289,10 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     ChangeAffectedObjects(): void {
         this.demandModel.AffectedObjectId = this.form.controls['AffectedObjectId'].value;
-        if (this.demandModel.AffectedObjectId !== 0) {
+        if (this.demandModel.AffectedObjectId != 0) {
             this.form.controls['AffectedPersonId'].reset({ value: '', disabled: true });
             this.demandModel.PDATicketNumber = this.affectedObjects
-                .find((x) => x.AffectedObjectId === this.demandModel.AffectedObjectId).TicketNumber;
+                .find((x) => x.AffectedObjectId == this.demandModel.AffectedObjectId).TicketNumber;
             this.form.controls['PDATicketNumber'].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
         }
         else {
@@ -512,7 +512,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             PDATicketNumber: new FormControl({ value: '', disabled: true }),
             TargetDepartmentId: new FormControl({ value: '', disabled: false }, [Validators.required]),
             ContactNumber: new FormControl({ value: '', disabled: false }, [Validators.required]),
-            ScheduleTime: new FormControl({ value: '', disabled: false }),
+            ScheduleTime: new FormControl({ value: '', disabled: false }, [Validators.required]),
             RequiredLocation: new FormControl({ value: '', disabled: false }, [Validators.required]),
             AffectedPersonId: new FormControl({ value: '', disabled: false }),
             AffectedObjectId: new FormControl({ value: '', disabled: false }),
@@ -757,13 +757,13 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                     demandTrail.DemandId = this.demandModel.DemandId;
                     this.freshDemand = false;
                     this.demandTrailService.Create(demandTrail)
-                        .subscribe((response: DemandTrailModel) => { },
+                        .subscribe((resp: DemandTrailModel) => { },
                         (error: any) => {
                             console.log('Error in demandTrail');
                         });
                     if (this.caller.CallerId !== 0) {
                         this.callerService.Update(this.caller)
-                            .subscribe((response: CallerModel) => { },
+                            .subscribe((resp: CallerModel) => { },
                             (error: any) => {
                                 console.log('Error in demandTrail');
                             });

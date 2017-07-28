@@ -81,17 +81,21 @@ export class PresidentMessageListComponent implements OnInit, OnDestroy {
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
 
         // Signalr Notification
-        this.globalState.Subscribe('ReceivePresidentsMessageCreatedResponse', (model: PresidentMessageModel) =>
-            this.getPresidentMessages(model.InitiateDepartmentId, model.IncidentId));
+        this.globalState.Subscribe('ReceivePresidentsMessageCreatedResponse', (model: PresidentMessageModel) => {
+            this.getPresidentMessages(this.currentDepartmentId, this.currentIncidentId);
+        });
 
-        this.globalState.Subscribe('ReceivePresidentsMessageUpdateResponse', (model: PresidentMessageModel) =>
-            this.getPresidentMessages(model.InitiateDepartmentId, model.IncidentId));
+        this.globalState.Subscribe('ReceivePresidentsMessageUpdateResponse', (model: PresidentMessageModel) => {
+            this.getPresidentMessages(this.currentDepartmentId, this.currentIncidentId);
+        });
 
-        this.globalState.Subscribe('ReceivePresidentsMessageApprovedResponse', (model: PresidentMessageModel) =>
-            this.getPresidentMessages(model.InitiateDepartmentId, model.IncidentId));
+        this.globalState.Subscribe('ReceivePresidentsMessageApprovedResponse', (model: PresidentMessageModel) => {
+            this.getPresidentMessages(this.currentDepartmentId, this.currentIncidentId);
+        });
 
-        this.globalState.Subscribe('ReceivePresidentsMessageRejectedResponse', (model: PresidentMessageModel) =>
-            this.getPresidentMessages(model.InitiateDepartmentId, model.IncidentId));
+        this.globalState.Subscribe('ReceivePresidentsMessageRejectedResponse', (model: PresidentMessageModel) => {
+            this.getPresidentMessages(this.currentDepartmentId, this.currentIncidentId);
+        });
     }
 
     private incidentChangeHandler(incident: KeyValue): void {

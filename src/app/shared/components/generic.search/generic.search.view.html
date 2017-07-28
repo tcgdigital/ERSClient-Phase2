@@ -1,8 +1,8 @@
-<div class="search-block form-group">
+<!-- <div class="search-block form-group">
     <input type="button" class="btn btn-primary" (click)="expandSearchPanel(expandSearch)" [ngModel]="searchValue" />
-</div>
+</div> -->
 
-<div class="search-container" *ngIf="expandSearch">
+<div class="search-container">
     <div class="search-title"><i class="fa fa-search" aria-hidden="true"></i> Search Criteria</div>
     <form (ngSubmit)="onSubmit()" [formGroup]="form">
         <div class="search-block form-group" *ngFor="let filterConfig of filterConfigs; let i = index; trackBy: Name">
@@ -19,7 +19,7 @@
                         </select>
             </div>
         </div>
-        <div class="search-block form-group">
+        <div class="search-block form-group button-align">
             <input type="button" class="btn btn-primary" (click)="doSearch()" value="Search" />
             <input *ngIf="showReset" type="button" class="btn btn-primary" (click)="doReset()" value="Reset" />
         </div>

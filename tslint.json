@@ -59,7 +59,7 @@
         /*Disallows bitwise operators.*/
         "no-bitwise": false,
         /*Disallows any type of assignment in conditionals.*/
-        "no-conditional-assignment": true,
+        "no-conditional-assignment": false,
         /*Bans the use of specified console methods.*/
         "no-console": [
             true,
@@ -102,10 +102,11 @@
         /*Require a default case in all switch statements.*/
         "switch-default": true,
         /*Requires === and !== in place of == and !=*/
-        "triple-equals": [
-            true,
-            "allow-null-check"
-        ],
+        "triple-equals": false,
+        // "triple-equals": [
+        //     true,
+        //     "allow-null-check"
+        // ],
         /*Ensures the file ends with a newline.*/
         "eofline": false,
         "max-classes-per-file": [

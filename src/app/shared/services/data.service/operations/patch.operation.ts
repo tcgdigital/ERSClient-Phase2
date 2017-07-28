@@ -19,7 +19,7 @@ export class PatchOperation<T extends BaseModel | any> extends DataOperation<Bas
         private typeName: string,
         private entity: T,
         private key: string) {
-        super(dataProcessingService, httpService,httpInterceptor, typeName, entity);
+        super(dataProcessingService, httpService, httpInterceptor, typeName, entity);
         this.Key = key;
         this.RequestHeaders = new Headers({
             'Content-Type': 'application/json; charset=utf-8; odata.metadata=none',
@@ -35,11 +35,11 @@ export class PatchOperation<T extends BaseModel | any> extends DataOperation<Bas
      * @memberOf PatchOperation
      */
     public Execute(): Observable<T | any> {
-        let body = JSON.stringify(this.entity);
-        let uri: string = this.DataProcessingService
+        const body = JSON.stringify(this.entity);
+        const uri: string = this.DataProcessingService
             .GetUri(this.TypeName, this.Key, this.ActionSuffix);
-            console.log(`Patch key: ${this.Key}`);
-        let requestOps = this.DataProcessingService
+
+        const requestOps = this.DataProcessingService
             .SetRequestOptions(WEB_METHOD.PATCH, this.RequestHeaders);
 
         return super.HandleResponse(this.HttpService.patch(uri, body, requestOps));

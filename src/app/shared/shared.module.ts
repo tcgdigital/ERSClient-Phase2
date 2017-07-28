@@ -35,7 +35,11 @@ import {
     ResponsiveTableComponent,
     CustomDropdownComponent,
     MapWidgetComponent,
-    WeatherWidgetComponent
+    WeatherWidgetComponent,
+    ProgressComponent,
+    ProgressBarComponent,
+    ProgressService,
+    ProgressBrowserXhr
 } from './components';
 
 import {
@@ -65,7 +69,7 @@ import {
     LocationService,
     FileStoreService,
     LicensingService,
-    KeyValueService
+    KeyValueService,
 } from './services';
 
 import {
@@ -90,7 +94,8 @@ const SHARED_COMPONENTS: any[] = [
     ResponsiveTableComponent,
     CustomDropdownComponent,
     MapWidgetComponent,
-    WeatherWidgetComponent
+    WeatherWidgetComponent,
+    ProgressComponent
 ];
 
 const SHARED_DIRECTIVES: any[] = [
@@ -115,6 +120,8 @@ const SHARED_SERVICES: any[] = [
     FileStoreService,
     LicensingService,
     KeyValueService,
+    ProgressService,
+    ProgressBrowserXhr,
     ENV_PROVIDERS,
     HTTP_INTERCEPTOR_PROVIDER,
     HTTP_INTERCEPTOR_NO_OVERRIDE_PROVIDER
@@ -139,8 +146,6 @@ const SHARED_PIPES: any[] = [
 
 export function createConfig(): ConnectionConfig {
     const config = new ConnectionConfig();
-    // config.hubName = 'Ng2SignalRHub';
-    // config.qs = { user: 'donald' };
     config.url = GlobalConstants.NOTIFICATION_URL;
     config.logging = true;
     return config;
@@ -150,6 +155,7 @@ export function createConfig(): ConnectionConfig {
     declarations: [
         BrandHeaderComponent,
         CommandHeaderComponent,
+        ProgressBarComponent,
         ...SHARED_COMPONENTS,
         ...SHARED_DIRECTIVES,
         ...SHARED_PIPES

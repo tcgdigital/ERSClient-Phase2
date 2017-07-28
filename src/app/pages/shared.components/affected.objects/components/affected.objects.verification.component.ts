@@ -3,7 +3,6 @@ import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 
-
 import { InvolvePartyModel } from '../../../shared.components';
 import { AffectedObjectModel, AffectedObjectsToView } from './affected.objects.model';
 import { AffectedObjectsService } from './affected.objects.service';
@@ -12,25 +11,31 @@ import {
     GlobalStateService, UtilityService, KeyValue, AuthModel, GlobalConstants
 } from '../../../../shared';
 
-
 @Component({
     selector: 'affectedpeople-verify',
     encapsulation: ViewEncapsulation.None,
     templateUrl: '../views/affected.objects.verification.html'
 })
 export class AffectedObjectsVerificationComponent implements OnInit {
-    constructor(private affectedObjectsService: AffectedObjectsService, private globalState: GlobalStateService,
-        private toastrService: ToastrService, private toastrConfig: ToastrConfig, private _router: Router) { }
+    public isShowVerifyAffectedCargo: boolean = true;
+    public currentDepartmentId: number = 0;
+    protected _onRouteChange: Subscription;
     affectedObjectsForVerification: AffectedObjectsToView[] = [];
     verifiedAffectedObjects: AffectedObjectModel[];
     date: Date = new Date();
     currentIncident: number;
     isArchive: boolean = false;
-    protected _onRouteChange: Subscription;
     allSelectVerify: boolean;
     userid: number;
     credential: AuthModel;
     downloadPath: string;
+
+    constructor(private affectedObjectsService: AffectedObjectsService,
+        private globalState: GlobalStateService,
+        private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig,
+        private _router: Router) { }
+
 
     getAffectedObjects(incidentId): void {
         this.affectedObjectsService.GetFilterByIncidentId(incidentId)
@@ -45,17 +50,20 @@ export class AffectedObjectsVerificationComponent implements OnInit {
     }
 
     selectAllVerify(value: any): void {
-        this.affectedObjectsForVerification.forEach(x => {
+        this.affectedObjectsForVerification.forEach((x) => {
             x.IsVerified = value.checked;
         });
     }
+
     isVerifiedStatusChange(): void {
-        this.allSelectVerify = this.affectedObjectsForVerification.length != 0 && this.affectedObjectsForVerification.filter(x => {
-            return x.IsVerified == true;
-        }).length == this.affectedObjectsForVerification.length;
+        this.allSelectVerify = this.affectedObjectsForVerification.length != 0
+            && this.affectedObjectsForVerification.filter((x) => {
+                return x.IsVerified == true;
+            }).length == this.affectedObjectsForVerification.length;
     }
+
     saveVerifiedObjects(): void {
-        let datenow = this.date;
+        const datenow = this.date;
         this.verifiedAffectedObjects = this.affectedObjectsService.MapAffectedPeopleToSave(this.affectedObjectsForVerification, this.userid);
         this.affectedObjectsService.CreateBulkObjects(this.verifiedAffectedObjects)
             .subscribe((response: AffectedObjectModel[]) => {
@@ -64,7 +72,7 @@ export class AffectedObjectsVerificationComponent implements OnInit {
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
-    };
+    }
 
     incidentChangeHandler(incident: KeyValue) {
         this.currentIncident = incident.Value;
@@ -75,20 +83,32 @@ export class AffectedObjectsVerificationComponent implements OnInit {
     ngOnInit(): any {
         this.isArchive = false;
         this.allSelectVerify = false;
-        if (this._router.url.indexOf("archivedashboard") > -1) {
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+
+        if (this._router.url.indexOf('archivedashboard') > -1) {
             this.isArchive = true;
-            this.currentIncident = +UtilityService.GetFromSession("ArchieveIncidentId");
+            this.currentIncident = +UtilityService.GetFromSession('ArchieveIncidentId');
         }
         else {
-            this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
+            this.currentIncident = +UtilityService.GetFromSession('CurrentIncidentId');
         }
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/CargoVerifiedManifest/' + this.currentIncident;
         this.getAffectedObjects(this.currentIncident);
         this.credential = UtilityService.getCredentialDetails();
         this.userid = +this.credential.UserId;
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
+
+        // SignalR Notification
+        this.globalState.Subscribe('ReceiveIncidentBorrowingCompletionResponse', () => {
+            this.getAffectedObjects(this.currentIncident);
+        });
     }
     ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChangefromDashboard');
+    }
+
+    departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
     }
 }

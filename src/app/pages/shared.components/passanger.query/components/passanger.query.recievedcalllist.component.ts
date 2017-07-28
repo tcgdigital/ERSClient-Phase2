@@ -51,9 +51,8 @@ export class PassangerQueryRecievedCallsListComponent implements OnInit {
         this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllPassengerQueryCallsRecieved(this.currentIncidentId));
 
         // SignalR Notification
-        this.globalState.Subscribe('ReceivePassangerEnquiryCreationResponse', (model: ExternalInputModel) => {
-            // this.getAllPassengerQueryCallsRecieved(model.IncidentId);
-            this.allAssignedCalls.unshift(model);
+        this.globalState.Subscribe('AssignedPassangerEnquiryCreationResponse', (model: ExternalInputModel) => {
+            this.getAllPassengerQueryCallsRecieved(model.IncidentId);
         });
     }
 

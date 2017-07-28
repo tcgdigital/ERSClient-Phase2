@@ -45,7 +45,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     isArchive: boolean = false;
     demandFilePath: string;
     public globalStateProxyOpen: GlobalStateService;
-
+    public isShowAssignToMeDemand: boolean = true;
     /**
      * Creates an instance of AssignedDemandComponent.
      * @param {DemandService} demandService
@@ -176,7 +176,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.demandTrail.CreatedOn = demand.CreatedOn;
 
         const date = new Date();
-        let answer = `<div><p>Request ${this.demandTrail.DemandStatusDescription} <strong>Date :</strong>  ${date.toLocaleString()} </p><div>`;
+        let answer = `<div><p>Demand ${this.demandTrail.DemandStatusDescription} <strong>Date :</strong>  ${date.toLocaleString()} </p><div>`;
         if (!flag && (OriginalDemand != null)) {
             this.demandTrail.IncidentId = OriginalDemand.IncidentId;
             this.demandTrail.DemandTypeId = OriginalDemand.DemandTypeId;
@@ -189,7 +189,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
             this.demandTrail.ScheduledClose = null;
             this.demandTrail.IsRejected = false;
             this.demandTrail.RejectedDate = null;
-            answer = `<div><p> Request Edited By ${this.currentDepartmentName}  <strong>Date :</strong> ${date}  </p><div>`;
+            answer = `<div><p> Demand Edited By ${this.currentDepartmentName}  <strong>Date :</strong> ${date}  </p><div>`;
 
             if (OriginalDemand.ScheduleTime) {
                 const minutesInt = parseInt(OriginalDemand.ScheduleTime);

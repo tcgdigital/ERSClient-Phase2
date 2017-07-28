@@ -2,7 +2,7 @@ import { NgModule, ApplicationRef, ComponentRef, APP_INITIALIZER } from '@angula
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { HttpModule, BrowserXhr } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import {
     removeNgStyles, createNewHosts,
@@ -22,10 +22,12 @@ import { AppStateService } from './app.state.service';
 
 // App is our top level component
 import { AppComponent } from './app.component';
+import { ProgressBrowserXhr } from './shared/components';
 
 // Application wide providers
 const APP_PROVIDERS = [
-    AppStateService
+    AppStateService,
+    { provide: BrowserXhr, useClass: ProgressBrowserXhr } ,
 ];
 
 type StoreType = {

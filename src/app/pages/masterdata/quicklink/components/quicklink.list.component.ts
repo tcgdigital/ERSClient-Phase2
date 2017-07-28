@@ -21,6 +21,8 @@ export class QuickLinkListComponent implements OnInit, OnDestroy {
     quickLinkModelPatch: QuickLinkModel = null;
     date: Date = new Date();
     searchConfigs: SearchConfigModel<any>[] = [];
+    expandSearch: boolean = false;
+    searchValue: string = "Expand Search";
 
     constructor(private quicklinkService: QuickLinkService,
         private dataExchange: DataExchangeService<QuickLinkModel>) { }
@@ -41,6 +43,17 @@ export class QuickLinkListComponent implements OnInit, OnDestroy {
 
     onQuickLinkSaveSuccess(data: QuickLinkModel): void {
         this.quicklinks.unshift(data);
+    }
+
+    expandSearchPanel(value): void {
+        if (!value) {
+            this.searchValue = "Hide Search Panel";
+        }
+        else {
+            this.searchValue = "Expand Search Panel";
+        }
+        this.expandSearch = !this.expandSearch;
+
     }
 
     ngOnInit(): void {

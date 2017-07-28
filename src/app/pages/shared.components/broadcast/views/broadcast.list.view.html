@@ -19,9 +19,7 @@
                 <td data-title="Submitted On">{{broadcastMessage.SubmittedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
                 <td data-title="Priority">{{broadcastMessage.Priority}}</td>
                 <td data-title="Edit">
-                    <button class="md-icon-button" aria-label="Edit" type="button" (click)="UpdateBroadcast(broadcastMessage)">
-                        <span class="fa fa-edit fa-2x"></span>
-                    </button>
+                    <i *ngIf="isShowAddEditBroadcast | accesibility:currentDepartmentId:'AddEditBroadcastMessage'" class="fa fa-edit fa-2x" (click)="UpdateBroadcast(broadcastMessage)"></i>
                 </td>
             </tr>
         </tbody>

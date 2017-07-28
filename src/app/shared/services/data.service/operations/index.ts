@@ -1,5 +1,5 @@
 export * from './get.operation';
-export * from './post.operation'
+export * from './post.operation';
 export * from './put.operation';
 export * from './patch.operation';
 export * from './delete.operation';

@@ -6,7 +6,7 @@
             </div>
         </div>
         <div *ngIf="!(isShow | accesibility:initiatedDepartmentId:'DemandRaisedKPI')" class="row no-gutters">
-            {{accessibilityErrorMessage}}
+            <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
         </div>
         <div *ngIf="isShow | accesibility:initiatedDepartmentId:'DemandRaisedKPI'" class="row no-gutters">
             <div class="col widget-block">
@@ -37,7 +37,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title pull-left">Allocated Demands</h4>
+                <h4 class="modal-title">Allocated Demands</h4>
                 <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideAllocatedActionableDetails()"></i>
             </div>
             <div class="modal-body">
@@ -76,7 +76,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title pull-left"><strong>View All Raised Demands</strong></h4>
+                <h4 class="modal-title"><strong>View All Raised Demands</strong></h4>
                 <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideViewAllDemandRaisedSummary()"></i>
             </div>
             <div class="modal-body">
@@ -89,7 +89,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Requester Department</th>
-                                                <th>Allocated</th>
+                                                <th>Raised</th>
                                                 <th>Closed</th>
                                                 <th>Pending</th>
                                             </tr>
@@ -234,7 +234,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title pull-left"><strong>View All Sub Department Raised Demands</strong></h4>
+                <h4 class="modal-title"><strong>View All Sub Department Raised Demands</strong></h4>
                 <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideViewAllSubDeptDemandRaisedSummary()"></i>
             </div>
             <div class="modal-body">

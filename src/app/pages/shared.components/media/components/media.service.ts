@@ -37,7 +37,8 @@ export class MediaService
      */
     Query(departmentId: number, incidentId: number): Observable<ResponseModel<MediaModel>> {
         return this._dataService.Query()
-            .Filter(`InitiateDepartmentId eq ${departmentId} and IncidentId eq ${incidentId}`)
+            // .Filter(`InitiateDepartmentId eq ${departmentId} and IncidentId eq ${incidentId}`)
+            .Filter(`IncidentId eq ${incidentId}`)
             .Execute();
     }
 

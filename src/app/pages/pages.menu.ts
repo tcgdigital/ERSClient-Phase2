@@ -32,7 +32,7 @@ export const PAGES_MENU: IMenuItem[] = [
                 path: 'incident',
                 data: {
                     menu: {
-                        title: 'Incident',
+                        title: 'Event',
                         icon: 'fa fa-bell fa-lg',
                         // icon: 'cmsicon-initiate-emergency cmsicon-5x',
                         selected: false,
@@ -97,7 +97,7 @@ export const PAGES_MENU: IMenuItem[] = [
                 path: 'quickviewquicklink',
                 data: {
                     menu: {
-                        title: 'Quick View',
+                        title: 'Quick Link',
                         icon: 'fa fa-link fa-lg',
                         selected: false,
                         expanded: false,

@@ -6,7 +6,7 @@
             </div>
         </div>
         <div *ngIf="!(isShow | accesibility:initiatedDepartmentId:'AffectedOnBoardKPI')" class="row no-gutters">
-            {{accessibilityErrorMessage}}
+            <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
         </div>
         <div *ngIf="isShow | accesibility:initiatedDepartmentId:'AffectedOnBoardKPI'" class="row no-gutters">
             <div class="col widget-block">
@@ -47,7 +47,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title pull-left"><strong>All Passengers</strong></h4>
+                <h4 class="modal-title"><strong>All Passengers</strong></h4>
                 <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideAllPassengers()"></i>
             </div>
             <div class="modal-body">
@@ -176,7 +176,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title pull-left"><strong>All Cargos</strong></h4>
+                <h4 class="modal-title"><strong>All Cargos</strong></h4>
                 <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideAllCargoDetails()"></i>
             </div>
             <div class="modal-body">
@@ -252,7 +252,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title pull-left"><strong>All Affected Details</strong></h4>
+                <h4 class="modal-title"><strong>All Affected Details</strong></h4>
                 <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideAllPassengersDetails()"></i>
             </div>
             <div class="modal-body">
@@ -338,7 +338,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title pull-left">Enquired Passengers</h4>
+                <h4 class="modal-title">Enquired Passengers</h4>
                 <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideEnquiredPassengers()"></i>
             </div>
             <div class="modal-body">
@@ -382,7 +382,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title pull-left"><strong>All Crews</strong></h4>
+                <h4 class="modal-title"><strong>All Crews</strong></h4>
                 <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideAllCrews()"></i>
             </div>
             <div class="modal-body">
@@ -434,7 +434,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title pull-left"><strong>Enquired Crews</strong></h4>
+                <h4 class="modal-title"><strong>Enquired Crews</strong></h4>
                 <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideEnquiredCrews()"></i>
             </div>
             <div class="modal-body">
@@ -486,7 +486,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title pull-left"><strong>All Ground Members</strong></h4>
+                <h4 class="modal-title"><strong>All Ground Members</strong></h4>
 
                 <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideAllGroundVictims()"></i>
             </div>
@@ -497,7 +497,7 @@
                             <tr>
                                 <th>Ground Victim Type</th>
                                 <th>Victim Name</th>
-                                <th>Affected Count</th>
+                                <!-- <th>Affected Count</th> -->
                                 <th>Status</th>
                                 <th>NOK Name</th>
                                 <th>NOK Contact Number</th>
@@ -510,7 +510,7 @@
                             <tr *ngFor="let affected of groundVictimList | async">
                                 <td data-title="Ground Victim Type">{{affected.GroundVictimType}}</td>
                                 <td data-title="Victim Name">{{affected.GroundVictimName}}</td>
-                                <td data-title="Affected Count">{{affected.AffectedCount}}</td>
+                                <!-- <td data-title="Affected Count">{{affected.AffectedCount}}</td> -->
                                 <td data-title="Status">{{affected.Status}}</td>
                                 <td data-title="NOK Name">{{affected.NOKName}}</td>
                                 <td data-title="NOK Contact Number">{{affected.NOKContactNumber}}</td>

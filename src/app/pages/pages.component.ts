@@ -6,7 +6,8 @@ import { Observable } from 'rxjs/Observable';
 import { ConnectionStarter, CallbackHandler } from './page.model';
 import {
     SideMenuService, KeyValue,
-    ResponseModel, GlobalStateService, StorageType, GlobalConstants, BaseModel
+    ResponseModel, GlobalStateService,
+    StorageType, GlobalConstants, BaseModel
 } from '../shared';
 import { DepartmentService, DepartmentModel } from './masterdata';
 import { IncidentService, IncidentModel } from './incident';
@@ -31,6 +32,7 @@ import { ExternalInputModel } from './callcenteronlypage';
 import { PresidentMessageModel } from './shared.components/presidentMessage';
 import { PresidentMessageWidgetModel } from './widgets/presidentMessage.widget';
 import { MediaReleaseWidgetModel } from './widgets/mediaRelease.widget';
+import { AffectedPeopleModel } from './shared.components/affected.people';
 
 @Component({
     selector: 'pages',
@@ -42,33 +44,49 @@ export class PagesComponent implements OnInit {
     @ViewChild('changePasswordModel') public changePasswordModel: ModalDirective;
     @ViewChild('quickLinkModel') public quickLinkModel: ModalDirective;
 
-    sideMenuState: boolean = false;
-    departments: KeyValue[] = [];
-    incidents: KeyValue[] = [];
-    incidentOrganizations: KeyValue[] = [];
-    currentDepartmentId: number = 0;
-    currentIncidentId: number = 0;
-    userName: string;
-    lastLogin: Date;
-    userId: number;
-    isLanding: boolean = false;
-    showQuicklink: boolean = false;
-    connectionStaters: ConnectionStarter[];
-
+    public sideMenuState: boolean = false;
+    public departments: KeyValue[] = [];
+    public incidents: KeyValue[] = [];
+    public incidentOrganizations: KeyValue[] = [];
+    public currentDepartmentId: number = 0;
+    public currentIncidentId: number = 0;
+    public userName: string;
+    public lastLogin: Date;
+    public userId: number;
+    public isLanding: boolean = false;
+    public showQuicklink: boolean = false;
+    public connectionStaters: ConnectionStarter[];
+    // public ExecuteOperationProxy: () => void;
+    public ExecuteOperationProxy: (...args: any[]) => void;
     private sub: any;
-
     private _userRegistrationHubConnection: NotificationConnection;
 
     /**
      * Creates an instance of PagesComponent.
+     * @param {Router} router
      * @param {SideMenuService} sideMenuService
      * @param {IncidentService} incidentService
      * @param {DepartmentService} departmentService
+     * @param {UserPermissionService} userPermissionService
+     * @param {AuthenticationService} authenticationService
      * @param {GlobalStateService} globalState
      * @param {ToastrService} toastrService
      * @param {ToastrConfig} toastrConfig
-     *
-     * @memberOf PagesComponent
+     * @param {ActivatedRoute} route
+     * @param {NotificationBroadcastService} passengerImportCompletedNotificationHub
+     * @param {NotificationBroadcastService} incidentBorrowingNotificationHub
+     * @param {NotificationBroadcastService} broadcastMessageNotificationHub
+     * @param {NotificationBroadcastService} casualtyStatusUpdateNotificationHub
+     * @param {NotificationBroadcastService} checklistSubmissionNotificationHub
+     * @param {NotificationBroadcastService} crisisClosureNotificationHub
+     * @param {NotificationBroadcastService} crisisCreationNotificationHub
+     * @param {NotificationBroadcastService} demandSubmissionNotificationHub
+     * @param {NotificationBroadcastService} mediaReleaseNotificationHub
+     * @param {NotificationBroadcastService} mediaReleaseWorkflowNotificationHub
+     * @param {NotificationBroadcastService} presidentsMessageNotificationHub
+     * @param {NotificationBroadcastService} presidentMessageWorkflowNotificationHub
+     * @param {NotificationBroadcastService} queryNotificationHub
+     * @memberof PagesComponent
      */
     constructor(private router: Router,
         private sideMenuService: SideMenuService,
@@ -80,24 +98,26 @@ export class PagesComponent implements OnInit {
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig,
         private route: ActivatedRoute,
-
-        // private notificationProviderService: NotificationProviderService
+        private passengerImportCompletedNotificationHub: NotificationBroadcastService,
+        private incidentBorrowingNotificationHub: NotificationBroadcastService,
         private broadcastMessageNotificationHub: NotificationBroadcastService,
         private casualtyStatusUpdateNotificationHub: NotificationBroadcastService,
         private checklistSubmissionNotificationHub: NotificationBroadcastService,
         private crisisClosureNotificationHub: NotificationBroadcastService,
         private crisisCreationNotificationHub: NotificationBroadcastService,
         private demandSubmissionNotificationHub: NotificationBroadcastService,
-        private presidentsMessageAndMediaReleaseNotificationHub: NotificationBroadcastService,
-        private presidentAndMediaWorkflowNotificationHub: NotificationBroadcastService,
+        private mediaReleaseNotificationHub: NotificationBroadcastService,
+        private mediaReleaseWorkflowNotificationHub: NotificationBroadcastService,
+        private presidentsMessageNotificationHub: NotificationBroadcastService,
+        private presidentMessageWorkflowNotificationHub: NotificationBroadcastService,
         private queryNotificationHub: NotificationBroadcastService) {
-        toastrConfig.closeButton = true;
-        toastrConfig.progressBar = true;
-        toastrConfig.enableHtml = true;
-        // this.connectionStaters = new Array<ConnectionStarter>();
+        this.ConfigureToster();
+        this.ExecuteOperationProxy = (...args: any[]) => {
+            this.ExecuteOperation.apply(this, args);
+        };
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.sideMenuService.updateMenuByRoutes(PAGES_MENU as Routes);
         this.userName = UtilityService.GetFromSession('CurrentLoggedInUserName', StorageType.LocalStorage);
         this.userId = +UtilityService.GetFromSession('CurrentUserId');
@@ -108,16 +128,18 @@ export class PagesComponent implements OnInit {
         this.ProcessData(() => {
             this.globalState.Subscribe('incidentCreate', (model: number) => this.incidentCreateHandler(model));
             this.initiateHubConnections();
-
-            // this.notificationProviderService.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
             this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
+
+            this.globalState.Subscribe('ReceiveCrisisClosureResponse', (model) => {
+                this.router.navigate(['login']);
+            });
         }, local_incidents, local_departments);
 
         // this.getIncidents();
         // this.getDepartments();
     }
 
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         //  this.globalState.Unsubscribe('incidentCreate');
     }
 
@@ -166,9 +188,7 @@ export class PagesComponent implements OnInit {
         UtilityService.SetToSession({ CurrentDepartmentId: selectedDepartment.Value });
         this.currentDepartmentId = selectedDepartment.Value;
         this.globalState.NotifyDataChanged('departmentChange', selectedDepartment);
-
         this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
-        // this.notificationProviderService.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
     }
 
     public onIncidentChange(selectedIncident: KeyValue): void {
@@ -179,9 +199,7 @@ export class PagesComponent implements OnInit {
                 .find((z) => z.Key === selectedIncident.Value.toString()).Value
         });
         this.globalState.NotifyDataChanged('incidentChange', selectedIncident);
-
         this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
-        // this.notificationProviderService.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
     }
 
     public onMenuClick($event): void {
@@ -250,7 +268,6 @@ export class PagesComponent implements OnInit {
                 }
             });
     }
-
 
     private GetIncidents(): Observable<IncidentModel[]> {
         return this.incidentService.GetAllActiveIncidents()
@@ -344,103 +361,99 @@ export class PagesComponent implements OnInit {
     private PrepareConnectionAndCall(incId: number, deptId: number) {
         if (this.connectionStaters === undefined || this.connectionStaters.length === 0) {
             this.connectionStaters = new Array<ConnectionStarter>();
+            if (window.location.href.indexOf('localhost') == -1) {
+                this.connectionStaters.push(new ConnectionStarter(this.incidentBorrowingNotificationHub,
+                    'IncidentBorrowingNotificationHub', {
+                        incidentId: incId
+                    }, this.GenerateCallbackHandler<AffectedPeopleModel>('IncidentBorrowNotification')
+                ));
 
-            // this.connectionStaters.push(new ConnectionStarter(this.broadcastMessageNotificationHub,
-            //     'BroadcastMessageNotificationHub', {
-            //         departmentId: deptId, incidentId: incId
-            //     }, this.GenerateCallbackHandler<BroadCastModel>('BroadcastNotification')
-            // ));
+                this.connectionStaters.push(new ConnectionStarter(this.passengerImportCompletedNotificationHub,
+                    'PassengerImportCompletedNotificationHub', {
+                        incidentId: incId
+                    }, this.GenerateCallbackHandler<AffectedPeopleModel>('PassengerImportNotification')
+                ));
 
-            // this.connectionStaters.push(new ConnectionStarter(this.casualtyStatusUpdateNotificationHub,
-            //     'CasualtyStatusUpdateNotificationHub', {
-            //         incidentId: incId
-            //     }, this.GenerateCallbackHandler<CasualtyExchangeModel>('CasualtyNotification')
-            // ));
+                this.connectionStaters.push(new ConnectionStarter(this.broadcastMessageNotificationHub,
+                    'BroadcastMessageNotificationHub', {
+                        departmentId: deptId, incidentId: incId
+                    }, this.GenerateCallbackHandler<BroadCastModel>('BroadcastNotification')
+                ));
 
-            // this.connectionStaters.push(new ConnectionStarter(this.checklistSubmissionNotificationHub,
-            //     'ChecklistSubmissionNotificationHub', {
-            //         departmentId: deptId, incidentId: incId
-            //     }, this.GenerateCallbackHandler<ActionableModel>('ChecklistNotification')
-            // ));
+                this.connectionStaters.push(new ConnectionStarter(this.casualtyStatusUpdateNotificationHub,
+                    'CasualtyStatusUpdateNotificationHub', {
+                        incidentId: incId
+                    }, this.GenerateCallbackHandler<CasualtyExchangeModel>('CasualtyNotification')
+                ));
 
-            // this.connectionStaters.push(new ConnectionStarter(this.crisisClosureNotificationHub,
-            //     'CrisisClosureNotificationHub', {
-            //         incidentId: incId
-            //     }, this.GenerateCallbackHandler<IncidentModel>('CrisisClosureNotification')
-            // ));
+                this.connectionStaters.push(new ConnectionStarter(this.checklistSubmissionNotificationHub,
+                    'ChecklistSubmissionNotificationHub', {
+                        departmentId: deptId, incidentId: incId
+                    }, this.GenerateCallbackHandler<ActionableModel>('ChecklistNotification')
+                ));
 
-            // this.connectionStaters.push(new ConnectionStarter(this.crisisCreationNotificationHub,
-            //     'CrisisCreationNotificationHub', null,
-            //     this.GenerateCallbackHandler<IncidentModel>('CrisisCreationNotification')
-            // ));
+                this.connectionStaters.push(new ConnectionStarter(this.crisisClosureNotificationHub,
+                    'CrisisClosureNotificationHub', {
+                        incidentId: incId
+                    }, this.GenerateCallbackHandler<IncidentModel>('CrisisClosureNotification')
+                ));
 
-            this.connectionStaters.push(new ConnectionStarter(this.demandSubmissionNotificationHub,
-                'DemandSubmissionNotificationHub', {
-                    departmentId: deptId, incidentId: incId
-                }, this.GenerateCallbackHandler<DemandModel>('DemandNotification')
-            ));
+                this.connectionStaters.push(new ConnectionStarter(this.crisisCreationNotificationHub,
+                    'CrisisCreationNotificationHub', null,
+                    this.GenerateCallbackHandler<IncidentModel>('CrisisCreationNotification')
+                ));
 
-            // this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
-            //     'PresidentsMessageAndMediaReleaseNotificationHub', {
-            //         incidentId: incId
-            //     }, this.GenerateCallbackHandler<PresidentMessageWidgetModel>('PresidentsMessageNotification')
-            // ));
+                this.connectionStaters.push(new ConnectionStarter(this.demandSubmissionNotificationHub,
+                    'DemandSubmissionNotificationHub', {
+                        departmentId: deptId, incidentId: incId
+                    }, this.GenerateCallbackHandler<DemandModel>('DemandNotification')
+                ));
 
-            // this.connectionStaters.push(new ConnectionStarter(this.presidentAndMediaWorkflowNotificationHub,
-            //     'PresidentAndMediaWorkflowNotificationHub', {
-            //         departmentId: deptId, incidentId: incId
-            //     }, this.GenerateCallbackHandler<PresidentMessageModel>('PresidentsMessageWorkflowNotification')
-            // ));
+                this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageNotificationHub,
+                    'PresidentsMessageNotificationHub', {
+                        incidentId: incId
+                    }, this.GenerateCallbackHandler<PresidentMessageWidgetModel>('PresidentsMessageNotification')
+                ));
 
-            // this.connectionStaters.push(new ConnectionStarter(this.presidentsMessageAndMediaReleaseNotificationHub,
-            //     'PresidentsMessageAndMediaReleaseNotificationHub', {
-            //         incidentId: incId
-            //     }, this.GenerateCallbackHandler<MediaReleaseWidgetModel>('MediaMessageNotification')
-            // ));
+                this.connectionStaters.push(new ConnectionStarter(this.presidentMessageWorkflowNotificationHub,
+                    'PresidentMessageWorkflowNotificationHub', {
+                        departmentId: deptId, incidentId: incId
+                    }, this.GenerateCallbackHandler<PresidentMessageModel>('PresidentsMessageWorkflowNotification')
+                ));
 
-            // this.connectionStaters.push(new ConnectionStarter(this.presidentAndMediaWorkflowNotificationHub,
-            //     'PresidentAndMediaWorkflowNotificationHub', {
-            //         departmentId: deptId, incidentId: incId
-            //     }, this.GenerateCallbackHandler<MediaModel>('MediaMessageWorkflowNotification')
-            // ));
+                this.connectionStaters.push(new ConnectionStarter(this.mediaReleaseNotificationHub,
+                    'MediaReleaseNotificationHub', {
+                        incidentId: incId
+                    }, this.GenerateCallbackHandler<MediaReleaseWidgetModel>('MediaMessageNotification')
+                ));
 
-            // this.connectionStaters.push(new ConnectionStarter(this.queryNotificationHub,
-            //     'QueryNotificationHub', {
-            //         incidentId: incId
-            //     }, this.GenerateCallbackHandler<ExternalInputModel>('EnquiryNotification')
-            // ));
+                this.connectionStaters.push(new ConnectionStarter(this.mediaReleaseWorkflowNotificationHub,
+                    'MediaReleaseWorkflowNotificationHub', {
+                        departmentId: deptId, incidentId: incId
+                    }, this.GenerateCallbackHandler<MediaModel>('MediaMessageWorkflowNotification')
+                ));
 
-            this.ConnectAndListen(this.connectionStaters);
+                this.connectionStaters.push(new ConnectionStarter(this.queryNotificationHub,
+                    'QueryNotificationHub', {
+                        incidentId: incId
+                    }, this.GenerateCallbackHandler<ExternalInputModel>('EnquiryNotification')
+                ));
+                this.ConnectAndListen(this.connectionStaters);
+            }
         }
         else {
             this.connectionStaters.forEach((store: ConnectionStarter) => {
                 if (store.Connection) {
-                    Object.getOwnPropertyNames(store.QuesyString).forEach((x: string) => {
-                        if (x === 'departmentId')
-                            store.QuesyString[x] = deptId;
-                        else if (x === 'incidentId')
-                            store.QuesyString[x] = incId;
-                    });
-
+                    if (store.QuesyString !== null)
+                        Object.getOwnPropertyNames(store.QuesyString).forEach((x: string) => {
+                            if (x === 'departmentId')
+                                store.QuesyString[x] = deptId;
+                            else if (x === 'incidentId')
+                                store.QuesyString[x] = incId;
+                        });
                     store.Connection.reconnect(store, this.ListenCallbacks);
                 }
             });
-        }
-    }
-
-    private CloseConnection(): void {
-        try {
-            if (this.connectionStaters !== undefined && this.connectionStaters.length > 0) {
-                this.connectionStaters.forEach((x: ConnectionStarter) => {
-                    if (x.Connection)
-                        x.Connection.stop();
-                    x.Connection = null;
-                    x.Callbacks = null;
-                });
-                this.connectionStaters = null;
-            }
-        } catch (ex) {
-            console.log(ex);
         }
     }
 
@@ -452,14 +465,18 @@ export class PagesComponent implements OnInit {
      * @memberof PagesComponent
      */
     private ConnectAndListen(connectionStaters: ConnectionStarter[]): void {
-        connectionStaters.forEach((x: ConnectionStarter) => {
-            x.HubConnection.createConnection({
-                hubName: x.HubName,
-                qs: x.QuesyString
-            }).start().then((c: INotificationConnection) => {
-                this.ListenCallbacks(c, x);
+        Observable.interval(GlobalConstants.SIGNAL_CONNECTION_DELAY)
+            .take(connectionStaters.length) // end the observable after it pulses N times
+            .map((i: number) => connectionStaters[i])
+            .subscribe((x: ConnectionStarter) => {
+                console.log(`Connecting: ${x.HubName}`);
+                x.HubConnection.createConnection({
+                    hubName: x.HubName,
+                    qs: x.QuesyString
+                }).start().then((c: INotificationConnection) => {
+                    this.ListenCallbacks(c, x);
+                });
             });
-        });
     }
 
     /**
@@ -493,7 +510,7 @@ export class PagesComponent implements OnInit {
     private GenerateCallbackHandler<T extends BaseModel>(keyType: string): CallbackHandler[] {
         return GlobalConstants.NotificationMessage
             .filter((x) => x.Type === keyType)
-            .map((z) => new CallbackHandler(z.Key, this.ExecuteOperation));
+            .map((z) => new CallbackHandler(z.Key, this.ExecuteOperationProxy));
     }
 
     /**
@@ -508,8 +525,11 @@ export class PagesComponent implements OnInit {
      */
     private ExecuteOperation<T extends BaseModel>(key: string, model: T): void {
         const message = GlobalConstants.NotificationMessage.find((x) => x.Key === key);
-        if (message.Title !== '' && message.Message !== '')
-            this.toastrService.info(this.PrepareMessage<T>(message.Message, model), message.Title);
+        if (message.Title !== '' && message.Message !== ''
+            && model.CreatedBy !== +UtilityService.GetFromSession('CurrentUserId')) {
+            const msg: string = this.PrepareMessage<T>(message.Message, model);
+            this.toastrService.info(msg, message.Title);
+        }
         this.globalState.NotifyDataChanged(key, model);
     }
 
@@ -546,5 +566,12 @@ export class PagesComponent implements OnInit {
             return message;
         }
         else return message;
+    }
+
+    private ConfigureToster(): void {
+        this.toastrConfig.closeButton = true;
+        this.toastrConfig.progressBar = true;
+        this.toastrConfig.enableHtml = true;
+        this.toastrConfig.preventDuplicates = true;
     }
 }

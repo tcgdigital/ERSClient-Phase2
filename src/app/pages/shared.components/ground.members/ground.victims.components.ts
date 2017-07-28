@@ -2,7 +2,7 @@ import { Component, ViewEncapsulation, OnInit, AfterContentInit } from '@angular
 import { ITabLinkInterface } from '../../../shared/components/tab.control';
 import * as _ from 'underscore';
 import { Observable } from 'rxjs/Rx';
-import { GroundVictimModel } from "../ground.victim/components/ground.victim.model";
+import { GroundVictimModel } from '../ground.victim/components/ground.victim.model';
 import { PeopleOnBoardWidgetService } from '../../widgets/peopleOnBoard.widget/peopleOnBoard.widget.service';
 import { PeopleOnBoardModel } from '../../widgets/peopleOnBoard.widget/peopleOnBoard.widget.model';
 import { InvolvePartyModel } from '../../shared.components/involveparties';
@@ -20,7 +20,8 @@ import {
 @Component({
     selector: 'crew-query',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './views/ground.victims.view.html'
+    templateUrl: './views/ground.victims.view.html',
+    styleUrls: ['./styles/ground.victims.scss']
 })
 export class GroundVictimsComponent implements OnInit, AfterContentInit {
     public currentIncidentId: number;
@@ -28,8 +29,11 @@ export class GroundVictimsComponent implements OnInit, AfterContentInit {
     public groundVictimList: Observable<GroundVictimModel[]>;
     public searchConfigs: Array<SearchConfigModel<any>> = Array<SearchConfigModel<any>>();
     public subTabs: ITabLinkInterface[] = new Array<ITabLinkInterface>();
+    expandSearch: boolean = false;
+    searchValue: string = 'Expand Search';
 
-    constructor(private peopleOnBoardWidgetService: PeopleOnBoardWidgetService, private globalState: GlobalStateService) { }
+    constructor(private peopleOnBoardWidgetService: PeopleOnBoardWidgetService,
+        private globalState: GlobalStateService) { }
 
     public ngOnInit(): void {
         this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
@@ -39,10 +43,14 @@ export class GroundVictimsComponent implements OnInit, AfterContentInit {
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
 
-        //this.subTabs = _.find(GlobalConstants.TabLinks, (x) => x.id === 'CrewQuery').subtab;
+        // this.subTabs = _.find(GlobalConstants.TabLinks, (x) => x.id === 'CrewQuery').subtab;
+        // Signal Notification
+        this.globalState.Subscribe('ReceiveIncidentBorrowingCompletionResponse', () => {
+            this.openAllGroundVictims();
+        });
     }
     public ngAfterContentInit(): void {
-        //this.subTabs = UtilityService.GetSubTabs('GroundVictims');
+        // this.subTabs = UtilityService.GetSubTabs('GroundVictims');
     }
 
     public incidentChangeHandler(model: KeyValue): void {
@@ -62,6 +70,17 @@ export class GroundVictimsComponent implements OnInit, AfterContentInit {
                 groundVictimListLocal = result.Records[0].GroundVictims;
                 this.groundVictimList = Observable.of(groundVictimListLocal);
             });
+    }
+
+    expandSearchPanel(value): void {
+        if (!value) {
+            this.searchValue = 'Hide Search Panel';
+        }
+        else {
+            this.searchValue = 'Expand Search Panel';
+        }
+        this.expandSearch = !this.expandSearch;
+
     }
 
     invokeSearch(query: string): void {
@@ -118,11 +137,6 @@ export class GroundVictimsComponent implements OnInit, AfterContentInit {
                 Value: ''
             }),
             new SearchTextBox({
-                Name: 'AffectedCount',
-                Description: 'Affected Count',
-                Value: ''
-            }),
-            new SearchTextBox({
                 Name: 'NOKName',
                 Description: 'NOK Name',
                 Value: ''
@@ -132,12 +146,12 @@ export class GroundVictimsComponent implements OnInit, AfterContentInit {
                 Description: 'NOK Contact Number',
                 Value: ''
             }),
-            new SearchDropdown({
+            new SearchTextBox({
                 Name: 'Status',
                 Description: 'Status',
-                PlaceHolder: 'Select Status',
-                Value: '',
-                ListData: Observable.of(status)
+                // PlaceHolder: 'Select Status',
+                Value: ''
+                // ListData: Observable.of(status)
             })
         ];
     }

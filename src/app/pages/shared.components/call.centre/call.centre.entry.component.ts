@@ -107,7 +107,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     demands: DemandModel[] = new Array<DemandModel>();
     affectedObjects: AffectedObjectsToView[];
     currentDepartmentId: number;
-    currentDepartmentName: string = 'Command Centre';
+    currentDepartmentName: string = '';
     currentIncident: number;
     departments: DepartmentModel[];
     selctedEnquiredPerson: AffectedPeopleToView;
@@ -125,7 +125,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     communications: CommunicationLogModel[] = [];
     showCallcenterModal: boolean = false;
     hideModal: boolean = true;
-    initialgroupId: number;
+    initialgroupId: number = 0;
 
     protected _onRouteChange: Subscription;
     externalInput: ExternalInputModel = new ExternalInputModel();
@@ -192,9 +192,16 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     }
 
     getDepartments(): void {
+        // this.departmentService.Get(this.currentDepartmentId)
+        //     .subscribe((response: DepartmentModel) => {
+        //         if (response)
+        //             this.currentDepartmentName = response.DepartmentName
+        //     })
         this.departmentService.GetAll()
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
+                if (response)
+                    this.currentDepartmentName = this.departments.find(x => x.DepartmentId == this.currentDepartmentId).DepartmentName;
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -210,6 +217,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             queryDetailService = this.callcenteronlypageservice.GetMediaAndOtherQueryByIncident(this.currentIncident, this.callid).map(x => x.Records);
 
         queryDetailService.subscribe((response: ExternalInputModel[]) => {
+
             if (response[0].PDAEnquiry != null) {
                 this.pdaenquery = response[0].PDAEnquiry;
                 this.form.controls["Queries"].reset({ value: this.pdaenquery.Query, disabled: false });
@@ -278,15 +286,16 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
 
     //co-passenger selection
     selectpeoplewithsamegroupid(groupid: number, isselected: boolean, ismappedersonchanged: boolean): void {
-        this.copassengerlistpnr.forEach(x => {
-            if (x.GroupId == groupid) {
-                x.IsSelected = isselected || (x.IsSelected && ismappedersonchanged);
-            }
-        });
+        // this.copassengerlistpnr.forEach(x => {
+        //     if (x.GroupId == groupid) {
+        //         x.IsSelected = isselected || (x.IsSelected && ismappedersonchanged);
+        //     }
+        // });
 
         this.copassengerlistPassengerForMappedPerson.forEach(x => {
             if (x.GroupId == groupid) {
                 x.IsSelected = isselected || (x.IsSelected && ismappedersonchanged);
+                // console.log(x.GroupId);
             }
         });
     }
@@ -296,39 +305,39 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         this.affectedPeople.filter(x => x.Pnr == obj.Pnr).map(y => this.copassengerlistpnr.push(Object.assign({}, y)));
         this.copassengerlistpnr = _.without(this.copassengerlistpnr, _.findWhere(this.copassengerlistpnr, { AffectedPersonId: obj.AffectedPersonId }));
         this.copassengerlistPassenger.map(x => this.copassengerlistPassengerForMappedPerson.push(Object.assign({}, x)));
-        this.copassengerlistpnr.forEach(x => {
-            x.IsSelected = false;
-            this.copassengerlistPassengerForMappedPerson = _.without(this.copassengerlistPassengerForMappedPerson, _.findWhere(this.copassengerlistPassengerForMappedPerson, { AffectedPersonId: x.AffectedPersonId }));
-        });
-        this.copassengerlistPassengerForMappedPerson = _.without(this.copassengerlistPassengerForMappedPerson, _.findWhere(this.copassengerlistPassengerForMappedPerson, { AffectedPersonId: obj.AffectedPersonId }));
+        // this.copassengerlistpnr.forEach(x => {
+        //     // x.IsSelected = false;
+        //     this.copassengerlistPassengerForMappedPerson = _.without(this.copassengerlistPassengerForMappedPerson, _.findWhere(this.copassengerlistPassengerForMappedPerson, { AffectedPersonId: x.AffectedPersonId }));
+        // });
 
+        this.copassengerlistPassengerForMappedPerson.forEach(x => {
+            this.copassengerlistpnr.forEach(y => {
+                if(x.AffectedPersonId == y.AffectedPersonId)
+                    {
+                        x.IsSelected = true;
+                        x.PNRdisabled = "disabled";
+                        console.log(y.AffectedPersonId);
+                    }
+            });
+        });
+
+        this.copassengerlistPassengerForMappedPerson = _.without(this.copassengerlistPassengerForMappedPerson, _.findWhere(this.copassengerlistPassengerForMappedPerson, { AffectedPersonId: obj.AffectedPersonId }));
+        this.copassengerlistPassengerForMappedPerson = this.copassengerlistPassengerForMappedPerson.sort(function(a,b) {return (a.PassengerName.toUpperCase() > b.PassengerName.toUpperCase()) ? 1 : ((b.PassengerName.toUpperCase() > a.PassengerName.toUpperCase()) ? -1 : 0);} ); 
     }
 
     populateconsolidatedcopassangers(): void {
-        this.copassengerlistpnr.filter(x => x.IsSelected == true).map(x => {
-            let obj = Object.assign({}, x);
-            obj.IsSelected = false;
-            this.consolidatedCopassengers.push(obj);
-        });
+        this.consolidatedCopassengers = [];
+        // this.copassengerlistpnr.filter(x => x.IsSelected == true).map(x => {
+        //     let obj = Object.assign({}, x);
+        //     // obj.IsSelected = false;
+        //     this.consolidatedCopassengers.push(obj);
+        // });
         this.copassengerlistPassengerForMappedPerson.filter(x => x.IsSelected == true).map(x => {
             let obj = Object.assign({}, x);
-            obj.IsSelected = false;
+            // obj.IsSelected = false;
             this.consolidatedCopassengers.push(obj);
         });
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     onNotifyPassenger(message: KeyValue): void {
@@ -339,6 +348,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         delete this.enquiry.AffectedObjectId;
         let obj = this.affectedPeople.find(x => x.AffectedPersonId == message.Value);
         this.affectedId = obj.AffectedId;
+        this.copassengerlistPassengerForMappedPerson.length = 0;
         this.copassangerlistpopulation(obj);
         // this.copassengerlistPassenger = _.without(this.copassengerlistPassenger, _.findWhere(this.copassengerlistPassenger, { AffectedPersonId: message.Value }));
         this.showCoPassangerPannel = true;
@@ -350,12 +360,11 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     }
 
 
-
     resetallcopassangers(): void {
         // this.copassengerlistPassenger.forEach(x => x.IsSelected = false);
-        this.consolidatedCopassengers = [];
+        //this.consolidatedCopassengers = [];
         this.selectedCoPassangers = [];
-         this.demands=[];
+        this.demands = [];
         this.selectedcountpnr = 0;
         this.selectedcountpassenger = 0;
         this.totalcount = 0;
@@ -377,12 +386,6 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         this.communicationLog.AffectedObjectId = message.Value;
         delete this.communicationLog.AffectedPersonId;
     }
-
-
-
-
-
-
 
 
     //set models to save or update
@@ -456,11 +459,15 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     }
 
     SetDemands(isCallback, isTravelRequest, isAdmin, isCrew, affectedId, affectedPersonId?: number): void {
+       
         if (isCallback || isCrew || isTravelRequest || isAdmin) {
+            
             let demand: DemandModel = new DemandModel();
+
             const type = isCallback ? 'Call Back' : (isTravelRequest ? 'Travel' : (isAdmin ? 'Admin' : 'Crew'));
             const scheduleTime = isCallback ? GlobalConstants.ScheduleTimeForCallback : (isTravelRequest ? GlobalConstants.ScheduleTimeForTravel
                 : (isAdmin ? GlobalConstants.ScheduleTimeForAdmin : GlobalConstants.ScheduleTimeForDemandForCrew));
+            
             demand.AffectedPersonId = (this.enquiryType == 1 || this.enquiryType == 3) ?
                 this.enquiry.AffectedPersonId : 0;
             demand.AffectedObjectId = (this.enquiryType == 2) ?
@@ -469,24 +476,34 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                 this.affectedPeople.find((x) => x.AffectedPersonId === demand.AffectedPersonId) : null;
             this.selctedEnquiredObject = (demand.AffectedObjectId !== 0) ?
                 this.affectedObjects.find((x) => x.AffectedObjectId === demand.AffectedObjectId) : null;
-            const personName = (this.selctedEnquiredPerson !== null) ? (this.enquiryType == 1 ?
-                this.selctedEnquiredPerson.PassengerName : this.selctedEnquiredPerson.CrewName) : '';
+
+            // let personName = (this.selctedEnquiredPerson !== null) ? (this.enquiryType == 1 ?
+            //     this.selctedEnquiredPerson.PassengerName : this.selctedEnquiredPerson.CrewName) : '';
+            let personName = "";
+            let obj = this.affectedPeople.find(x => x.AffectedPersonId == affectedId);
+            if(this.enquiryType == 1)
+            {
+                personName = obj.PassengerName;
+            }
+            else if(this.enquiryType == 5)
+            {
+                personName = obj.CrewName;
+            }
+
             demand = new DemandModel();
             if (affectedPersonId > 0) {
                 demand.AffectedPersonId = affectedPersonId;
             }
-            //demand.AffectedPersonId = (this.enquiryType == 1 || this.enquiryType == 3) ?
-            //     this.enquiry.AffectedPersonId : null;
+            demand.AffectedPersonId = affectedId;
+
             demand.AffectedObjectId = (this.enquiryType == 2) ?
                 this.enquiry.AffectedObjectId : null;
-            // demand.AffectedId = (this.enquiryType == 1 || this.enquiryType == 3) ?
-            //     this.affectedPeople.find((x) => x.AffectedPersonId === demand.AffectedPersonId).AffectedId :
-            //     ((this.enquiryType == 2) ? this.affectedObjects.find((x) => x.AffectedObjectId === demand.AffectedObjectId).AffectedId : 0);
-            demand.AffectedId  =  (this.enquiryType  ==  3)  ?
-                this.affectedPeople.find((x)  =>  x.AffectedPersonId  ===  demand.AffectedPersonId).AffectedId  :
-                ((this.enquiryType  ==  2)  ?  this.affectedObjects.find((x)  =>  x.AffectedObjectId  ===  demand.AffectedObjectId).AffectedId  :  0);
-            if  (demand.AffectedId  ==  0) {
-                delete  demand.AffectedId;
+            
+            demand.AffectedId = (this.enquiryType == 3) ?
+                this.affectedPeople.find((x) => x.AffectedPersonId === demand.AffectedPersonId).AffectedId :
+                ((this.enquiryType == 2) ? this.affectedObjects.find((x) => x.AffectedObjectId === demand.AffectedObjectId).AffectedId : 0);
+            if (demand.AffectedId == 0) {
+                delete demand.AffectedId;
             }
             demand.AWB = (this.enquiryType == 2) ?
                 this.affectedObjects.find((x) => x.AffectedObjectId === demand.AffectedObjectId).AWB : null;
@@ -522,6 +539,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     }
 
     setenquiryModelforCopassangers(enquiryModel: EnquiryModel): EnquiryModel[] {
+
         let enquirymodels: EnquiryModel[] = [];
         this.consolidatedCopassengers.map(x => {
             let enquiry: EnquiryModel = new EnquiryModel();
@@ -547,9 +565,39 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         return enquirymodels;
     }
 
-
-
     returncopassangerservice(affectedpersonId): Observable<CoPassengerMappingModel[]> {
+
+        let copassangerModels: CoPassengerMappingModel[] = [];
+        this.consolidatedCopassengers.map(x => {
+            let copssanger: CoPassengerMappingModel = new CoPassengerMappingModel();
+            copssanger.PassengerId = x.PassengerId;
+            copssanger.GroupId = x.GroupId;
+            copssanger.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
+            copssanger.CreatedOn = new Date();
+            copssanger.ActiveFlag = 'Active';
+            copassangerModels.push(copssanger);
+        });
+        let copssanger: CoPassengerMappingModel = new CoPassengerMappingModel();
+        let obj = this.affectedPeople.find(x => x.AffectedPersonId == affectedpersonId);
+        copssanger.PassengerId = obj.PassengerId;
+        copssanger.GroupId = obj.GroupId;
+        copssanger.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
+        copssanger.CreatedOn = new Date();
+        copssanger.ActiveFlag = 'Active';
+        copassangerModels.push(copssanger);
+        let groupids: number[] = [];
+        copassangerModels.map(x => groupids.push(x.GroupId));
+        groupids = _.unique(groupids);
+
+        let copassangergroup: CoPassangerModelsGroupIdsModel = new CoPassangerModelsGroupIdsModel();
+        copassangergroup.copassangers = copassangerModels;
+        copassangergroup.groupIds = groupids;
+        return this.passangerService.deleteoldgroupsandaddcopassanger(copassangergroup)
+
+    }
+
+
+    returncopassangerservice1(affectedpersonId): Observable<CoPassengerMappingModel[]> {
         let copassangerModels: CoPassengerMappingModel[] = [];
         this.consolidatedCopassengers.map(x => {
             let copssanger: CoPassengerMappingModel = new CoPassengerMappingModel();
@@ -619,6 +667,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
 
 
     createDemands(affectedId: number, affectedPersonIds?: number[]): void {
+
         //   if (affectedPersonIds.length > 0)
         if (this.enquiry.IsCallBack) {
             this.callSetDemands(true, false, false, false, affectedId, affectedPersonIds);
@@ -632,6 +681,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         // if (this.enquiryType === 3) {
         //     this.callSetDemands(false, false, false, true, affectedId, affectedPersonIds);
         // }
+
         if (this.demands.length !== 0)
             this.demandService.CreateBulk(this.demands)
                 .subscribe(() => {
@@ -645,6 +695,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     }
 
     callSetDemands(isCallback, isTravelRequest, isAdmin, isCrew, affectedId, affectedPersonIds?: number[]) {
+     
         if (affectedPersonIds != undefined && affectedPersonIds.length > 0) {
             affectedPersonIds.map(x => this.SetDemands(isCallback, isTravelRequest, isAdmin, isCrew, x));
         }
@@ -659,7 +710,6 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
 
     ngOnInit(): any {
         this.form = this.formInitialization();
-
         this.currentIncident = +UtilityService.GetFromSession('CurrentIncidentId');
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.credential = UtilityService.getCredentialDetails();
@@ -841,10 +891,10 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                             this.globalState.NotifyDataChanged('CallRecieved', num);
                             this.createDemands(this.affectedId);
 
-                        })
+                        });
                 }
                 else if ((this.enquiryType == 1)) {
-                    this.consolidatedCopassengers.length == 0;
+                    // this.consolidatedCopassengers.length = 0;
                     let enquiryModelsToSave: EnquiryModel[] = [];
                     enquiryModelsToSave = this.setenquiryModelforCopassangers(this.enquiry);
                     this.enquiry.CommunicationLogs = communicationlogs;
@@ -852,6 +902,15 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                     let pdaenquirytoupdate: PDAEnquiryModel = new PDAEnquiryModel();
                     pdaenquirytoupdate.deleteAttributes();
                     pdaenquirytoupdate.AffectedPersonId = this.enquiry.AffectedPersonId;
+                    enquiryModelsToSave.forEach(x => {
+                        x.EnquiryId = 0;
+                        x.ExternalInputId = this.callid;
+                        x.ActiveFlag = 'Active';
+                        x.CreatedOn = new Date();
+                        x.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
+                        x.EnquiryType = this.enquiryType;
+                        x.CallerId = this.caller.CallerId;
+                    });
                     this.enquiryService.UpdateBulkToDeactivateFromExternalId(this.callid)
                         .flatMap(_ => this.demandService.UpdateBulkToDeactivateFromCallId(this.caller.CallerId))
                         .flatMap(_ => this.enquiryService.CreateBulk(enquiryModelsToSave))
@@ -876,10 +935,13 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                         })
                         .subscribe(() => {
                             this.toastrService.success('Enquiry Saved successfully.', 'Success', this.toastrConfig);
+                            this.selectedCoPassangers = this.consolidatedCopassengers.filter(x => x.IsSelected == true);
+                            let obj = this.affectedPeople.find(x => x.AffectedPersonId == this.initialvalue.Value);
+                            this.selectedCoPassangers.push(obj);
+                            
                             if (this.selectedCoPassangers.length > 0) {
                                 let afftedIdstocreateDemand: number[] = [];
                                 this.selectedCoPassangers.map(x => afftedIdstocreateDemand.push(x.AffectedPersonId));
-                                //   afftedIdstocreateDemand.push(this.) 
                                 this.createDemands(this.affectedId, afftedIdstocreateDemand);
                             }
                             else {
@@ -966,14 +1028,15 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     showListsamepnr(): void {
         this.list1Selected = !this.list1Selected;
     }
-    selectCopassengerfrompassenger($event: any, copassenger: AffectedPeopleToView): void {
 
+    selectCopassengerfrompassenger($event: any, copassenger: AffectedPeopleToView): void {
+        
         copassenger.IsSelected = !copassenger.IsSelected;
+
         this.selectedcountpassenger = this.copassengerlistPassengerForMappedPerson.filter(x => x.IsSelected == true).length;
         this.consolidatedCopassengers = [];
-        if (copassenger.GroupId > 0) {
+        if (copassenger.GroupId > 0 && copassenger.IsSelected) {
             this.selectpeoplewithsamegroupid(copassenger.GroupId, copassenger.IsSelected, false);
-
         }
         this.populateconsolidatedcopassangers();
 
@@ -985,8 +1048,8 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
 
     selectCopassengerAll($event: any, copassenger: AffectedPeopleToView): void {
         copassenger.IsSelected = !copassenger.IsSelected;
-        this.selectedCoPassangers.push(copassenger);
-        this.totalcount = this.consolidatedCopassengers.filter(x => x.IsSelected == true).length;
+        // this.selectedCoPassangers.push(copassenger);
+        // this.totalcount = this.consolidatedCopassengers.filter(x => x.IsSelected == true).length;
     }
 
     showListall(): void {

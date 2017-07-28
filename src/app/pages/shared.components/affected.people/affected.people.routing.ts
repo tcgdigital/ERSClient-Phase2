@@ -13,7 +13,7 @@ const affectedPeopleRoutes: Routes = [
             {
                 path: '',
                 // component: AffectedPeopleListComponent
-                redirectTo: 'detail', 
+                redirectTo: 'detail',
                 pathMatch: 'full'
             },
             {

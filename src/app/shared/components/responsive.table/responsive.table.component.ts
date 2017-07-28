@@ -50,14 +50,36 @@ export class ResponsiveTableComponent implements AfterContentInit, AfterViewInit
         this.$currentElement = jQuery(this.elementRef.nativeElement);
         const $table: JQuery = this.$currentElement.find('table.table');
 
-        this.$currentElement.closest('[bsmodal]')
-            .scroll((event) => {
-                // const $scrollableElm: JQuery = jQuery(event.currentTarget);
-                // const $navs: JQuery = this.$currentElement.find('a.scroll-nav.prev');
-                // let top: number = +$navs.css('top').replace('px', '');
-                // top += $scrollableElm.scrollTop();
-                // $navs.css('top', `${top}px`);
+        jQuery(window).unbind('scroll').scroll(() => {
+            const $wrappers: JQuery = jQuery('[class*="table-responsive-vertical"]:visible');
+
+            jQuery.each($wrappers, (index, $wrapper) => {
+                const wrapperTop = jQuery($wrapper).offset().top;
+                const fullHeight = jQuery($wrapper).height();
+                const windowScroll = jQuery(window).scrollTop();
+
+                const $navPrev: JQuery = jQuery($wrapper).find('a.scroll-nav.prev');
+                const $navNext: JQuery = jQuery($wrapper).find('a.scroll-nav.next');
+                if ((windowScroll > (wrapperTop + 100)) && (windowScroll < (fullHeight + (wrapperTop - 150)))) {
+                    $navPrev.css('top', ((windowScroll - wrapperTop) + 100) + 'px');
+                    $navNext.css('top', ((windowScroll - wrapperTop) + 100) + 'px');
+                }
+                else {
+                    $navPrev.css('top', '50px');
+                    $navNext.css('top', '50px');
+                }
             });
+        });
+
+
+        // this.$currentElement.closest('[bsmodal]')
+        //     .scroll((event) => {
+        // const $scrollableElm: JQuery = jQuery(event.currentTarget);
+        // const $navs: JQuery = this.$currentElement.find('a.scroll-nav.prev');
+        // let top: number = +$navs.css('top').replace('px', '');
+        // top += $scrollableElm.scrollTop();
+        // $navs.css('top', `${top}px`);
+        // });
     }
 
     public onHover($event): void {
@@ -77,6 +99,12 @@ export class ResponsiveTableComponent implements AfterContentInit, AfterViewInit
     public onNextNevClick($event): void {
         this.updateSlider('N');
     }
+
+    // @HostListener('window:scroll', ['$event'])
+    // public onWindowScroll(event): void {
+    //     const $wrapper: JQuery = this.$currentElement
+    //         .find('[class*="table-responsive-vertical"]');
+    // }
 
     // @HostListener('window:scroll', ['$event'])
     // public onDocumentScroll($event): void {
@@ -126,7 +154,7 @@ export class ResponsiveTableComponent implements AfterContentInit, AfterViewInit
             if (elem.nodeType === 1 && elem.className) {
                 const classNames = elem.className.split(/\s+/);
 
-                for (let n = classNames.length; n--;) {
+                for (let n = classNames.length; n--; ) {
                     if (value.match(classNames[n])) {
                         classNames.splice(n, 1);
                     }

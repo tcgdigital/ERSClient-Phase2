@@ -22,6 +22,7 @@ export class PresidentMessageApprovalListComponent implements OnInit, OnDestroy 
     currentDepartmentId: number;
     isArchive: boolean = false;
     protected _onRouteChange: Subscription;
+    public isShowEditPresidentMessagePending:boolean=true;
 
     /**
      * Creates an instance of PresidentMessageListComponent.
@@ -73,14 +74,17 @@ export class PresidentMessageApprovalListComponent implements OnInit, OnDestroy 
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
 
         // Signalr Notification
-        this.globalState.Subscribe('ReceivePresidentsMessageSendForApprovalResponse', (model: PresidentMessageModel) =>
-            this.getPresidentMessages(model.ApproverDepartmentId, model.IncidentId));
+        this.globalState.Subscribe('ReceivePresidentsMessageSendForApprovalResponse', (model: PresidentMessageModel) => {
+            this.getPresidentMessages(this.currentDepartmentId, this.currentIncidentId);
+        });
 
-        this.globalState.Subscribe('ReceivePresidentsMessagePublishedResponse', (model: PresidentMessageModel) =>
-            this.getPresidentMessages(model.ApproverDepartmentId, model.IncidentId));
+        this.globalState.Subscribe('ReceivePresidentsMessagePublishedResponse', (model: PresidentMessageModel) => {
+            this.getPresidentMessages(this.currentDepartmentId, this.currentIncidentId);
+        });
 
-        this.globalState.Subscribe('ReceivePresidentsMessageUpdateResponse', (model: PresidentMessageModel) =>
-            this.getPresidentMessages(model.ApproverDepartmentId, model.IncidentId));
+        this.globalState.Subscribe('ReceivePresidentsMessageUpdateResponse', (model: PresidentMessageModel) => {
+            this.getPresidentMessages(this.currentDepartmentId, this.currentIncidentId);
+        });
     }
 
     public ngOnDestroy(): void {

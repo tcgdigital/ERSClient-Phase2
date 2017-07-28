@@ -21,6 +21,9 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
     invalidUserProfiles: InvalidUserProfileModel[] = [];
     searchConfigs: SearchConfigModel<any>[] = [];
     userProfilePatch: UserProfileModel = null;
+    expandSearch: boolean = false;
+    searchValue: string = "Expand Search";
+
     @ViewChild('invalidUserProfileModal') public invalidUserProfileModal: ModalDirective;
 
     constructor(private userProfileService: UserProfileService,
@@ -39,9 +42,9 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
 
     getInvalidUserProfiles(): void {
         this.userProfileService.GetAllInvalidRecords()
-        .subscribe((response: ResponseModel<InvalidUserProfileModel>) => {
-            this.invalidUserProfiles = response.Records;
-        })
+            .subscribe((response: ResponseModel<InvalidUserProfileModel>) => {
+                this.invalidUserProfiles = response.Records;
+            })
     }
 
     onUserProfileSuccess(data: UserProfileModel): void {
@@ -53,15 +56,26 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
         this.dataExchange.Publish("UserProfileModelToBeModified", userProfileModelToSend);
     }
 
+    expandSearchPanel(value): void {
+        if (!value) {
+            this.searchValue = "Hide Search Panel";
+        }
+        else {
+            this.searchValue = "Expand Search Panel";
+        }
+        this.expandSearch = !this.expandSearch;
+
+    }
+
     ngOnInit(): any {
-        this.getUserProfiles();
-        this.getInvalidUserProfiles();
+        //this.getUserProfiles();
+        //this.getInvalidUserProfiles();
         this.initiateSearchConfigurations();
         this.dataExchange.Subscribe("UserProfileModelCreated", model => this.onUserProfileSuccess(model));
         this.dataExchange.Subscribe("UserProfileModelModified", model => this.onUserProfileSuccess(model));
-        this.dataExchange.Subscribe('UserProfileLoadedFromFile',()=>{
-            this.getUserProfiles();
-            this.getInvalidUserProfiles();
+        this.dataExchange.Subscribe('UserProfileLoadedFromFile', () => {
+            //this.getUserProfiles();
+            //this.getInvalidUserProfiles();
         })
     }
 
@@ -126,11 +140,11 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
         this.getUserProfiles();
     }
 
-    openInvalidRecords() : void {
+    openInvalidRecords(): void {
         this.invalidUserProfileModal.show();
     }
 
-    closeInvalidProfile() : void {
+    closeInvalidProfile(): void {
         this.invalidUserProfileModal.hide();
     }
 

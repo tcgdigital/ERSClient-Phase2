@@ -28,7 +28,7 @@ export class PageService implements IServiceInretface<PageModel>{
         return this._dataServiceForPage
         .Query()
         .Expand('ParentPage($select=PageName)')
-        .OrderBy('ModuleName,SortOrder')
+        .OrderBy('ModuleName,ParentPageId,PageName,SortOrder')
         .Execute();
     }
 

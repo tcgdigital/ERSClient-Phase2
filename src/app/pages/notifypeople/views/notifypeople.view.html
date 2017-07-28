@@ -1,4 +1,6 @@
-<span class="validationAlert" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'NotifyPeople')">{{accessibilityErrorMessage}}</span>
+<span class="validationAlert" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'NotifyPeople')">
+    <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
+</span>
 
 <div *ngIf="isShowPage | accesibility:currentDepartmentId:'NotifyPeople'" class="card">
     <div class="card-header">
@@ -27,7 +29,7 @@
         <form [formGroup]="form" (ngSubmit)="saveNotificationMessage(form.value)">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title pull-left"><strong>Notification Message Preview</strong></h4>
+                    <h4 class="modal-title"><strong>Notification Message Preview</strong></h4>
                     <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideNoificationMessage()"></i>
                 </div>
                 <div class="modal-body">

@@ -2,7 +2,6 @@ import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuardService } from '../shared/services';
 import { PagesComponent } from './pages.component';
-import { UserRegistrationHubConnectionResolver } from './hub.connection.resolvers';
 
 const pageRoutes: Routes = [
     {
@@ -18,9 +17,6 @@ const pageRoutes: Routes = [
         component: PagesComponent,
         canActivate: [AuthGuardService],
         canActivateChild: [AuthGuardService],
-        // resolve: {
-        //     UserRegistrationHubConnection: UserRegistrationHubConnectionResolver
-        // },
         children: [
             { path: '', redirectTo: 'pages/dashboard/people/detail', pathMatch: 'full' },
             { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' },

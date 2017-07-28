@@ -49,7 +49,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
     demandFilePath: string;
     public globalStateProxyOpen: GlobalStateService;
     demand: DemandModelToView = new DemandModelToView();
-
+    public isShowCompletedDemand: boolean = true;
     /**
      * Creates an instance of CompletedDemandComponent.
      * @param {DemandService} demandService
@@ -132,8 +132,12 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         this.demandTrail.CreatedBy = demand.CreatedBy;
         this.demandTrail.CreatedOn = demand.CreatedOn;
 
-        const date = new Date();
-        const answer = '<div><p>' + demand.DemandStatusDescription + '   <strong>Date :</strong>  ' + date.toLocaleString() + '  </p><div>';
+        let date = new Date();
+        let rej = "";
+        if (!flag) {
+            rej = "Rejected and status changed to: ";
+        }
+        let answer = '<div><p>' + rej + demand.DemandStatusDescription + '   <strong>Date :</strong>  ' + date.toLocaleString() + '  </p><div>';
         this.demandTrail.Answers = answer;
         this.demandTrails.push(this.demandTrail);
         return this.demandTrails;
@@ -179,7 +183,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         this.communicationLog.Answers = `Closed by ${this.currentDepartmentName}, ${demand.DemandTypeName} request for ${demand.TargetDepartmentName}. Request Details : ${demand.DemandDesc}. Request Code ${demand.DemandCode}`;
         this.communicationLog.RequesterName = demand.RequestedBy;
         this.communicationLog.RequesterDepartment = demand.TargetDepartmentName;
-        this.communicationLog.RequesterType = 'Request';
+        this.communicationLog.RequesterType = 'Demand';
         this.communicationLog.DemandId = demand.DemandId;
         this.communicationLog.InteractionDetailsType = GlobalConstants.InteractionDetailsTypeDemand;
         if (demand.AffectedPersonId != null)

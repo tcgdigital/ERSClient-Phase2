@@ -57,6 +57,8 @@ export class AffectedPeopleListComponent implements OnInit {
     public globalStateProxyOpen: GlobalStateService;
     searchConfigs: Array<SearchConfigModel<any>> = new Array<SearchConfigModel<any>>();
     downloadfilename: string;
+    expandSearch: boolean = false;
+    searchValue: string = "Expand Search";
 
     /**
      * Creates an instance of AffectedPeopleListComponent.
@@ -219,6 +221,17 @@ export class AffectedPeopleListComponent implements OnInit {
             });
     }
 
+    expandSearchPanel(value): void {
+        if (!value) {
+            this.searchValue = "Hide Search Panel";
+        }
+        else {
+            this.searchValue = "Expand Search Panel";
+        }
+        this.expandSearch = !this.expandSearch;
+
+    }
+
     incidentChangeHandler(incident: KeyValue) {
         this.currentIncident = incident.Value;
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/PassengerStatusInfo/' + this.currentIncident;
@@ -247,6 +260,15 @@ export class AffectedPeopleListComponent implements OnInit {
         this.initiateSearchConfigurations();
         this.IsDestroyed = false;
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
+
+        // Signal Notification
+        this.globalState.Subscribe('ReceiveIncidentBorrowingCompletionResponse', () => {
+            this.getAffectedPeople(this.currentIncident);
+        });
+
+        this.globalState.Subscribe('ReceivePassengerImportCompletionResponse', () => {
+            this.getAffectedPeople(this.currentIncident);
+        });
     }
 
     IsNokInformed(event: any, id: number, name: string) {
@@ -255,7 +277,7 @@ export class AffectedPeopleListComponent implements OnInit {
         affectedpersonToUpdate.AffectedPersonId = id;
         this.affectedPeopleService.Update(affectedpersonToUpdate, id)
             .subscribe((response: AffectedPeopleModel) => {
-                this.toastrService.success(`NOK information status updated for ${name}`)
+                this.toastrService.success(`NOK information status updated`)
                 this.getAffectedPeople(this.currentIncident);
             }, (error: any) => {
                 alert(error);

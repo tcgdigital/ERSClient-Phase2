@@ -1,7 +1,6 @@
 import { Http } from '@angular/http';
 import { HttpInterceptorService } from '../../../interceptor';
 import { Observable } from 'rxjs/Rx';
-
 import { BaseModel, WEB_METHOD } from '../../../models';
 import { DataProcessingService, DataOperation } from '../index';
 import { GlobalConstants } from '../../../constants';
@@ -26,9 +25,6 @@ export class GetOperation<T extends BaseModel> extends DataOperation<BaseModel> 
             this.ActionSuffix = actionSuffix;
             this.dataProcessingService.EndPoint = GlobalConstants.API;
         }
-
-
-
     }
 
 
@@ -46,7 +42,7 @@ export class GetOperation<T extends BaseModel> extends DataOperation<BaseModel> 
         const requestOps = this.DataProcessingService
             .SetRequestOptions(WEB_METHOD.GET, this.RequestHeaders);
 
-        return super.HandleResponse(this.HttpService.get(uri, requestOps));
+        return super.HandleResponse(this.HttpService.get(uri, requestOps))  as Observable<T>;
     }
 }
 

@@ -40,6 +40,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     public completionStatusTypes: any[] = GlobalConstants.CompletionStatusType;
     private currentDepartmentId: number = null;
     private currentIncident: number = null;
+    public isShowUpdateCloseChecklist: boolean = true;
     public checklistTrail: ChecklistTrailModel = null;
     public checklistTrails: ChecklistTrailModel[] = [];
     public allDepartments: DepartmentModel[] = [];
@@ -77,8 +78,9 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
 
         // Signalr Notifivation
-        this.globalState.Subscribe('ReceiveChecklistClosureResponse', (model: ActionableModel) =>
-            this.getAllCloseActionable(model.DepartmentId, model.IncidentId));
+        this.globalState.Subscribe('ReceiveChecklistStatusChangeResponse', (model: ActionableModel) => {
+            this.getAllCloseActionable(model.IncidentId, model.DepartmentId);
+        });
     }
 
     onCloseActionablePageInitiate(isClosed: boolean): void {

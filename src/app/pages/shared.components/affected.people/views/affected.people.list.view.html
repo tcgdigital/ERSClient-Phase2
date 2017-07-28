@@ -1,17 +1,20 @@
 <div class="row">
-    <div class="col-12">
-        <generic-search [filterConfigs]="searchConfigs" (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();">
-        </generic-search>
+    <div class="col-md-4 col-lg-5 butt-rightalign">
+        <label class="lebelHeaderStyle">Crew Status Info Report</label>
+        <a target="_blank" href="{{downloadRoute}}" download="CrewStatusInfo"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
     </div>
-</div>
-<div class="row">
-    <div class="col-12">
+    <div class="col-md-5 col-lg-4 butt-rightalign">
         <label class="lebelHeaderStyle">Passenger Status Info Report</label>
         <a target="_blank" href="{{downloadPath}}" download="PDAStatusInfo"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
     </div>
-    <div class="col-12">
-        <label class="lebelHeaderStyle">Crew Status Info Report</label>
-        <a target="_blank" href="{{downloadRoute}}" download="CrewStatusInfo"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+    <div class="col-md-3 col-lg-3 butt-rightalign">
+        <input type="button" class="btn btn-primary" (click)="expandSearchPanel(expandSearch)" [ngModel]="searchValue" />
+    </div>
+</div>
+<div class="row">
+    <div class="col-12" *ngIf="expandSearch">
+        <generic-search [filterConfigs]="searchConfigs" (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();">
+        </generic-search>
     </div>
 </div>
 
@@ -71,14 +74,14 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title pull-left">Additional Information</h4>
+                <h4 class="modal-title">Additional Information</h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="cancelModal(actionableModelToUpdate)">
                   <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="holderStyle">
-                    <div class="row modalBodyHeaderStyle">
+                <div class="row">
+                    <div class="modalBodyHearStydele-bg">
                         <div class="col-sm-6 form-group">
                             <label class="lebelHeaderStyle"><strong>PDA Name</strong></label>
                             <!--<br>-->
@@ -158,7 +161,7 @@
                     <div class="row">
                         <div class="form-group col-lg-4 col-sm-12 col-md-4">
                             <label for="Identification Details">Identification Details:</label>
-                            <input value="{{affectedPersonModelForStatus.Identification}}" type="text" class="form-control" />
+                            <input value="{{affectedPersonModelForStatus.Identification}}" [(ngModel)]="affectedPersonModelForStatus.Identification" type="text" class="form-control" />
                         </div>
 
                         <div class="form-group col-lg-4 col-sm-12 col-md-4">
@@ -254,11 +257,11 @@
                                 <table responsive-table-body>
                                     <thead>
                                         <tr>
-                                            <th> Co Passangers</th>
+                                            <th> Co Passengers</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr [hidden]="copassangers.length>1">No copassangers mapped yet</tr>
+                                        <tr [hidden]="copassangers.length>1">No copassengers mapped yet</tr>
                                         <tr *ngFor="let copassenger of copassangers">
                                             <td>{{copassenger.PassengerName}}</td>
                                         </tr>
@@ -270,7 +273,7 @@
                     <div class="row">
                         <div class="form-group col-lg-4 col-sm-12 col-md-4">
                             <label for="Identification Details">Identification Details:</label>
-                            <input value="{{affectedPersonModelForStatus.Identification}}" type="text" class="form-control" />
+                            <input value="{{affectedPersonModelForStatus.Identification}}" [(ngModel)]="affectedPersonModelForStatus.Identification" type="text" class="form-control" />
                         </div>
 
                         <div class="form-group col-lg-4 col-sm-12 col-md-4">
@@ -303,7 +306,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title pull-left">Communication Trail</h4>
+                <h4 class="modal-title">Communication Trail</h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="cancelTrailModal()">
                   <span aria-hidden="true">&times;</span>
                    </button>

@@ -1,16 +1,24 @@
 <div class="card">
     <div class="card-content">
+        <div class="row">
+            <div class="col-12 victims-butt">
+                <input type="button" class="btn btn-primary" (click)="expandSearchPanel(expandSearch)" [ngModel]="searchValue" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12" *ngIf="expandSearch">
+                <generic-search [filterConfigs]="searchConfigs" (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();">
+                </generic-search>
+            </div>
+        </div>
         <div class="card-block">
-              <generic-search [filterConfigs]="searchConfigs" 
-              (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();">
-            </generic-search>  
             <responsive-table>
                 <table responsive-table-body>
                     <thead>
                         <tr>
                             <th>Ground Victim Type</th>
                             <th>Victim Name</th>
-                            <th>Affected Count</th>
+                            <!-- <th>Affected Count</th> -->
                             <th>Status</th>
                             <th>NOK Name</th>
                             <th>NOK Contact Number</th>
@@ -23,7 +31,7 @@
                         <tr *ngFor="let affected of groundVictimList | async">
                             <td data-title="Ground Victim Type">{{affected.GroundVictimType}}</td>
                             <td data-title="Victim Name">{{affected.GroundVictimName}}</td>
-                            <td data-title="Affected Count">{{affected.AffectedCount}}</td>
+                            <!-- <td data-title="Affected Count">{{affected.AffectedCount}}</td> -->
                             <td data-title="Status">{{affected.Status}}</td>
                             <td data-title="NOK Name">{{affected.NOKName}}</td>
                             <td data-title="NOK Contact Number">{{affected.NOKContactNumber}}</td>

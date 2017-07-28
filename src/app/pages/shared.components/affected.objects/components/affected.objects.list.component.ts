@@ -40,6 +40,8 @@ export class AffectedObjectsListComponent implements OnInit {
     callers: CallerModel[] = [];
     searchConfigs: Array<SearchConfigModel<any>> = new Array<SearchConfigModel<any>>();
     downloadPath: string;
+    expandSearch: boolean = false;
+    searchValue: string = 'Expand Search';
 
     constructor(private affectedObjectService: AffectedObjectsService,
         private callerservice: CallerService,
@@ -57,6 +59,17 @@ export class AffectedObjectsListComponent implements OnInit {
             });
     }
 
+    expandSearchPanel(value): void {
+        if (!value) {
+            this.searchValue = 'Hide Search Panel';
+        }
+        else {
+            this.searchValue = 'Expand Search Panel';
+        }
+        this.expandSearch = !this.expandSearch;
+
+    }
+
     incidentChangeHandler(incident: KeyValue) {
         this.currentIncident = incident.Value;
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/CargoStatusInfo/' + this.currentIncident;
@@ -67,7 +80,7 @@ export class AffectedObjectsListComponent implements OnInit {
         if (this._router.url.indexOf('archivedashboard') > -1) {
             this.isArchive = true;
             this.currentIncident = +UtilityService.GetFromSession('ArchieveIncidentId');
-           
+
         }
         else {
             this.isArchive = false;
@@ -78,6 +91,11 @@ export class AffectedObjectsListComponent implements OnInit {
 
         this.initiateSearchConfigurations();
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
+
+        // SignalR Notification
+        this.globalState.Subscribe('ReceiveIncidentBorrowingCompletionResponse', () => {
+            this.getAffectedObjects(this.currentIncident);
+        });
     }
 
     ngOnDestroy(): void {
@@ -106,7 +124,7 @@ export class AffectedObjectsListComponent implements OnInit {
     }
 
     updateStatus(statusId): void {
-        let affectedObjectStatus = new AffectedObjectModel();
+        const affectedObjectStatus = new AffectedObjectModel();
         affectedObjectStatus.deleteAttributes();
         affectedObjectStatus.LostFoundStatus = this.allcargostatus.find((x) => x.key === statusId).value;
         affectedObjectStatus.AffectedObjectId = this.affectedObjId;
@@ -133,7 +151,7 @@ export class AffectedObjectsListComponent implements OnInit {
     }
     saveNok(affectedObjectId, caller: CallerModel, event: any): void {
         if (event.checked) {
-            let nok = new NextOfKinModel();
+            const nok = new NextOfKinModel();
             nok.AffectedObjectId = affectedObjectId;
             nok.AlternateContactNumber = caller.AlternateContactNumber;
             nok.CallerId = caller.CallerId;
@@ -142,7 +160,7 @@ export class AffectedObjectsListComponent implements OnInit {
             nok.NextOfKinName = caller.FirstName + '  ' + caller.LastName;
             nok.Relationship = caller.Relationship;
             nok.Location = caller.Location;
-            let callertoupdate = new CallerModel();
+            const callertoupdate = new CallerModel();
             callertoupdate.IsNok = true;
             callertoupdate.deleteAttributes();
             this.affectedObjectService.CreateNok(nok)
@@ -152,12 +170,12 @@ export class AffectedObjectsListComponent implements OnInit {
                 });
         }
         else {
-            let callertoupdate = new CallerModel();
+            const callertoupdate = new CallerModel();
             callertoupdate.IsNok = false;
             callertoupdate.deleteAttributes();
             this.callerservice.Update(callertoupdate, caller.CallerId)
                 .subscribe(() => {
-                    this.toastrService.success('NOK updated.')
+                    this.toastrService.success('NOK updated.');
                 });
         }
     }
@@ -175,9 +193,9 @@ export class AffectedObjectsListComponent implements OnInit {
         if (query !== '') {
             if (query.indexOf('IsVerified') >= 0) {
                 if (query.indexOf("'true'") >= 0)
-                    query = query.replace("'true'", "true");
+                    query = query.replace("'true'", 'true');
                 if (query.indexOf("'false'") >= 0)
-                    query = query.replace("'false'", "false");
+                    query = query.replace("'false'", 'false');
             }
             this.searchAffectedObject(query, this.currentIncident);
         }
@@ -191,13 +209,13 @@ export class AffectedObjectsListComponent implements OnInit {
     }
 
     saveUpdateAffectedObject(affectedObject: AffectedObjectsToView) {
-        let affectedObjectUpdate = new AffectedObjectModel();
+        const affectedObjectUpdate = new AffectedObjectModel();
         affectedObjectUpdate.Remarks = affectedObject.Remarks;
         affectedObjectUpdate.IdentificationDesc = affectedObject.IdentificationDesc;
         affectedObjectUpdate.LostFoundStatus = affectedObject.LostFoundStatus;
         this.affectedObjectService.UpdateStatus(affectedObjectUpdate, affectedObject.AffectedObjectId)
             .subscribe((response: AffectedObjectModel) => {
-                this.toastrService.success('Adiitional Information updated.')
+                this.toastrService.success('Adiitional Information updated.');
                 this.getAffectedObjects(this.currentIncident);
                 this.childAffectedObjectDetailsModal.hide();
             }, (error: any) => {
@@ -209,7 +227,7 @@ export class AffectedObjectsListComponent implements OnInit {
         this.childAffectedObjectDetailsModal.hide();
     }
     private initiateSearchConfigurations(): void {
-        let cargostatus: Array<NameValue<string>> = GlobalConstants.CargoStatus.map((x) => new NameValue<string>(x.caption, x.caption));
+        const cargostatus: Array<NameValue<string>> = GlobalConstants.CargoStatus.map((x) => new NameValue<string>(x.caption, x.caption));
         const status: Array<NameValue<string>> = [
             new NameValue<string>('Active', 'true'),
             new NameValue<string>('InActive', 'false'),

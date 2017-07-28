@@ -3,16 +3,16 @@
         <div class="message-icon">
             <i class="fa fa-bullhorn fa-3x" aria-hidden="true"></i>
             <span>broadcast message</span>
-            <a *ngIf="isShowViewAll | accesibility:initiatedDepartmentId:'BroadcastMessageViewAll'" href="javascript:void(0);" (click)="openBroadcastMessages()">view all</a>
+            <a *ngIf="isShowViewAll | accesibility:initiatedDepartmentId:'BroadcastMessageWidgetViewAll'" href="javascript:void(0);" (click)="openBroadcastMessages()">view all</a>
         </div>
     </div>
     <div class="col-9 col-md-12 col-lg-9">
-        <text-accordion *ngIf="isShow | accesibility:initiatedDepartmentId:'BroadcastMessage'" [accordionItems]="LatestBroadcasts"></text-accordion>
-        <div class="row no-gutters" *ngIf="!(isShow | accesibility:initiatedDepartmentId:'BroadcastMessage')">
+        <text-accordion *ngIf="isShow | accesibility:initiatedDepartmentId:'BroadcastMessageWidget'" [accordionItems]="LatestBroadcasts"></text-accordion>
+        <div class="row no-gutters" *ngIf="!(isShow | accesibility:initiatedDepartmentId:'BroadcastMessageWidget')">
             <ul class="cd-container">
                 <li>
                     <ul class="cd-item-wrapper widgetDefaultStyle">
-                        {{accessibilityErrorMessage}}
+                        <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
                     </ul>
                 </li>
             </ul>
@@ -24,7 +24,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title pull-left">Broadcast Messages</h4>
+                <h4 class="modal-title">Broadcast Messages</h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="hideAllBroadcastMessages()">
           <span aria-hidden="true">&times;</span>
         </button>

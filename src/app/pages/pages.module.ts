@@ -4,7 +4,6 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { HttpModule } from '@angular/http';
-
 import {
     GlobalStateService, NotificationBroadcastService,
     NotificationModule
@@ -23,7 +22,6 @@ import { AuthenticationService } from './login/components/authentication.service
 import { UserPermissionService } from './masterdata/userpermission/components';
 import { QuickLinkQuickViewWidgetComponent } from '../pages/widgets/quicklink.quickview.widget';
 import { QuickLinkService } from './masterdata/quicklink/components';
-import { UserRegistrationHubConnectionResolver } from './hub.connection.resolvers';
 
 @NgModule({
     imports: [
@@ -49,8 +47,7 @@ import { UserRegistrationHubConnectionResolver } from './hub.connection.resolver
         GlobalStateService,
         AuthenticationService,
         UserPermissionService,
-        QuickLinkService,
-        UserRegistrationHubConnectionResolver
+        QuickLinkService
     ]
 })
 export class PagesModule {
