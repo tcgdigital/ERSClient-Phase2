@@ -28,3 +28,38 @@
 3. Setting up base tag in index.html. It should be immediately after <head> tag
 
 <base href="/"/>
+
+/*Optimizing SignalR request and response*/
+Referance URL: http://www.niceonecode.com/Q-A/DotNet/SignalR/How-to-improve-Signalr-performance/20303
+IIS configuration settings:
+1.Max concurrent requests per application: Increasing the number of concurrent IIS requests will increase server 
+resources available for serving requests. The default value is 5000; to increase this setting, execute the following 
+commands in an elevated command prompt:
+
+cd %windir%\System32\inetsrv\ appcmd.exe set config /section:system.webserver/serverRuntime /appConcurrentRequestLimit:10000 
+
+2. ApplicationPool QueueLength: This is the maximum number of requests that Http.sys queues for the application pool. When the queue is full, 
+new requests receive a 503 “Service Unavailable” response. The default value is 1000.
+Shortening the queue length for the worker process in the application pool hosting your application will conserve memory resources.
+
+ASP.NET configuration settings:
+1. Maximum concurrent requests per CPU: Increasing this setting may alleviate performance bottlenecks. 
+To increase this setting, add the following configuration setting to the aspnet.config file:
+
+%windir%\Microsoft.NET\Framework\v4.0.30319\aspnet.config
+%windir%\Microsoft.NET\Framework64\v4.0.30319\aspnet.config
+
+<configuration>  
+  <system.web>  
+    <applicationPool   
+        maxConcurrentRequestsPerCPU="5000"  
+        maxConcurrentThreadsPerCPU="0"   
+        requestQueueLimit="5000" />  
+  </system.web>  
+</configuration>
+
+2. Request Queue Limit: When the total number of connections exceeds the maxConcurrentRequestsPerCPU setting, 
+ASP.NET will start throttling requests using a queue. To increase the size of the queue, you can increase the requestQueueLimit setting. 
+To do this, add the following configuration setting to the processModel node in config/machine.config (rather than aspnet.config):
+
+<processModel autoConfig="false" requestQueueLimit="250000" />

@@ -361,7 +361,7 @@ export class PagesComponent implements OnInit {
     private PrepareConnectionAndCall(incId: number, deptId: number) {
         if (this.connectionStaters === undefined || this.connectionStaters.length === 0) {
             this.connectionStaters = new Array<ConnectionStarter>();
-            if (window.location.href.indexOf('localhost') == -1) {
+            //if (window.location.href.indexOf('localhost') == -1) {
                 this.connectionStaters.push(new ConnectionStarter(this.incidentBorrowingNotificationHub,
                     'IncidentBorrowingNotificationHub', {
                         incidentId: incId
@@ -439,7 +439,7 @@ export class PagesComponent implements OnInit {
                     }, this.GenerateCallbackHandler<ExternalInputModel>('EnquiryNotification')
                 ));
                 this.ConnectAndListen(this.connectionStaters);
-            }
+            //}
         }
         else {
             this.connectionStaters.forEach((store: ConnectionStarter) => {
