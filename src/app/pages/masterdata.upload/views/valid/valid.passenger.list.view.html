@@ -4,9 +4,10 @@
     <table responsive-table-body>
         <thead>
             <tr>
-                <th>Flight Number</th>
+                <!-- <th>Flight Number</th> -->
                 <th>Passenge Name</th>                
                 <th>PNR</th>
+                <th>Date Of Birth</th>
                 <th>Seat Number</th>
                 <th>Gender</th>
                 <th>Nationality</th>
@@ -30,9 +31,10 @@
                 <td data-title="Records" colspan="7">No records to show.</td>
             </tr>
             <tr *ngFor="let affected of passengers">
-                <td data-title="Flight Number">{{affected.FlightNumber}}</td>
+                <!-- <td data-title="Flight Number">{{affected.FlightNumber}}</td> -->
                 <td data-title="Passenge Name">{{affected.PassengerName}}</td>
                 <td data-title="PNR">{{affected.Pnr}}</td>
+                <td data-title="Date Of Birth">{{affected.PassengerDob | date: 'dd-MMM-yyyy'}}</td>
                 <td data-title="Seat Number">{{affected.Seatno}}</td>
                 <td data-title="Gender">{{affected.PassengerGender}}</td>
                 <td data-title="Nationality">{{affected.PassengerNationality}}</td>
