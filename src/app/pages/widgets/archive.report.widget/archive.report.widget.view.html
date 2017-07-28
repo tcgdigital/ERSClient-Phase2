@@ -89,7 +89,7 @@
                             </tr>
                             <tr *ngFor="let departmentWiseClosureReport of departmentWiseClosureReports">
                                 <td data-title="Department">{{departmentWiseClosureReport.Department.DepartmentName}}</td>
-                                <td data-title="Closure Report">{{departmentWiseClosureReport.ClosureRemark}}</td>
+                                <td data-title="Closure Report">{{departmentWiseClosureReport.ClosureReport}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -130,7 +130,7 @@
                                 <td data-title="Document Type" *ngIf="otherReport.DocumentType=='2'">Audit Report</td>
                                 <!-- <td>Activity Log Report</td> -->
                                 <td data-title="Download">
-                                    <a class="glyphicon glyphicon-download-alt" target="_self" href="{{otherReport.FilePathWithName}}" download="{{otherReport.FileName}}">download</a>
+                                    <a class="download-icon" target="_self" href="{{otherReport.FilePathWithName}}" download="{{otherReport.FileName}}"><i class="fa fa-download fa" aria-hidden="true"></i></a>
                                     <!-- <a target="_blank" href="{{downloadPath}}" download="ActivityLogReport"><i class="fa fa-download fa" aria-hidden="true"></i></a> -->
                                 </td>
                             </tr>
