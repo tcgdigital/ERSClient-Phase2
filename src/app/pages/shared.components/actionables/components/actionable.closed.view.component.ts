@@ -10,6 +10,8 @@ import { Observable, Subscription } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router, NavigationEnd } from '@angular/router';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department/components';
+import { ChecklistModel, ChecklistMapper } from '../../../masterdata/checklist/components/checklist.model';
+
 import { ActionableModel } from './actionable.model';
 import { ActionableService } from './actionable.service';
 import * as moment from 'moment/moment';
@@ -45,6 +47,8 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     public checklistTrails: ChecklistTrailModel[] = [];
     public allDepartments: DepartmentModel[] = [];
     public listActionableSelected: any[] = [];
+    public ChecklistMappers: ChecklistMapper[] = [];
+    //actionableWithParentsChilds: ActionableModel[] = [];
 
     constructor(formBuilder: FormBuilder, private actionableService: ActionableService,
         private dataExchange: DataExchangeService<boolean>, private globalState: GlobalStateService,
@@ -66,6 +70,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
             this.isArchive = false;
             this.currentIncident = +UtilityService.GetFromSession('CurrentIncidentId');
         }
+        //this.getAllActiveActionableByIncident(this.currentIncident);
         this.getAllCloseActionable(this.currentIncident, this.currentDepartmentId);
         this.credential = UtilityService.getCredentialDetails();
 
@@ -277,10 +282,13 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     }
 
     private hasChildChecklist(checkListId): boolean {
-        if (this.parentChecklistIds.length !== 0)
-            return this.parentChecklistIds.some((x) => x === checkListId);
-        else
+        try {
+            return this.closeActionables.find(
+                (item: ActionableModel) => item.DepartmentId === this.currentDepartmentId && item.ChklistId === checkListId)
+                .CheckList.CheckListChildrenMapper.length > 0;
+        } catch (x) {
             return false;
+        }
     }
 
     private resetActionableForm(actionable?: ActionableModel): FormGroup {
@@ -289,4 +297,27 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
             URL: new FormControl('')
         });
     }
+
+    // getAllActiveActionableByIncident(incidentId): void {
+    //     this.parentChecklistIds = [];
+    //     const parents: number[] = [];
+    //     this.ChecklistMappers = [];
+    //     const mappers: ChecklistMapper[] = [];
+
+    //     this.actionableService.GetAllOpenByIncidentId(incidentId)
+    //         .subscribe((response: ResponseModel<ActionableModel>) => {
+    //             this.actionableWithParentsChilds = response.Records;
+    //             this.actionableWithParentsChilds.forEach((actionable: ActionableModel) => {
+    //                 if (actionable.CheckList.CheckListParentMapper.length > 0) {
+    //                     actionable.CheckList.CheckListParentMapper.forEach((item: ChecklistMapper) => {
+    //                         parents.push(item.ParentCheckListId);
+    //                         mappers.push(item);
+    //                     });
+    //                 }
+    //             });
+                
+    //         }, (error: any) => {
+    //             console.log(`Error: ${error}`);
+    //         });
+    // }
 }

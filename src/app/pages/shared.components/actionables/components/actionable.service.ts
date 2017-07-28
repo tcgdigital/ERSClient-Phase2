@@ -185,7 +185,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
 
     public GetAllCloseByIncidentIdandDepartmentId(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
-            .Expand('CheckList($select=CheckListId,CheckListCode)')
+            .Expand('CheckList($expand=CheckListChildrenMapper)')
             .Filter(`CompletionStatus eq 'Closed' and IncidentId eq ${incidentId} and DepartmentId eq ${departmentId}`)
             .OrderBy('CreatedOn desc')
             .Execute()

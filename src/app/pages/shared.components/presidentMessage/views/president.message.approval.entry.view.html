@@ -29,9 +29,9 @@
                     <div class ="row">
                         <div class="col-sm-12 col-lg-12 col-md-12">
                             <div class="buttonholder">                               
-                                <button class="btn btn-primary" (click)="approve()" [disabled] = "PresidentsMessage.IsPublished">Approve</button>
+                                <button *ngIf="isShowApproveRejectPresidentMessage | accesibility:currentDepartmentId:'ApproveRejectPresidentMessage'" class="btn btn-primary" (click)="approve()" [disabled] = "PresidentsMessage.IsPublished">Approve</button>
                                 <button class="btn btn-warning" (click)="cancel()">Cancel</button>
-                                <button class="btn btn-primary" (click)="reject()" [disabled] = "PresidentsMessage.IsPublished">Reject</button>
+                                <button *ngIf="isShowApproveRejectPresidentMessage | accesibility:currentDepartmentId:'ApproveRejectPresidentMessage'" class="btn btn-primary" (click)="reject()" [disabled] = "PresidentsMessage.IsPublished">Reject</button>
                             </div>
                         </div>
                     </div>

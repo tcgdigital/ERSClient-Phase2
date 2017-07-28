@@ -15,7 +15,7 @@ import { DepartmentService } from './department.service';
 import { DepartmentModel } from './department.model';
 import { UserProfileService, UserProfileModel } from '../../userprofile';
 import {
-    ResponseModel, UtilityService,
+    ResponseModel, UtilityService, GlobalConstants,
     DataExchangeService, BaseModel, AuthModel
 } from '../../../../shared';
 
@@ -111,19 +111,19 @@ export class DepartmentEntryComponent implements OnInit {
 
                 this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString();
                 this.departmentModel.CreatedBy = +this.credential.UserId;
-                if(this.form.controls['ParentDepartmentId'].value==''){
-                    this.departmentModel.ParentDepartmentId=null;
+                if (this.form.controls['ParentDepartmentId'].value == '') {
+                    this.departmentModel.ParentDepartmentId = null;
                 }
-                else{
-                    this.departmentModel.ParentDepartmentId=+this.form.controls['ParentDepartmentId'].value;
+                else {
+                    this.departmentModel.ParentDepartmentId = +this.form.controls['ParentDepartmentId'].value;
                 }
                 this.departmentService.Create(this.departmentModel)
                     .subscribe((response: DepartmentModel) => {
-                        this.toastrService.success('Department Saved Successfully.', 'Success', this.toastrConfig);
+                        this.toastrService.success(`Department Saved Successfully. ${GlobalConstants.departmentAndFunctionalityReloginMessage}`, 'Success', this.toastrConfig);
                         this.dataExchange.Publish('departmentSavedOrEdited', response);
                         this.setDepartmentForm();
                         this.showAdd = false;
-                        this.submitted=false;
+                        this.submitted = false;
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                     });
@@ -146,12 +146,12 @@ export class DepartmentEntryComponent implements OnInit {
                     this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString();
                 }
                 this.departmentService.Update(this.departmentModel, this.departmentModel.DepartmentId)
-                .subscribe((response: DepartmentModel) => {
-                        this.toastrService.success('Department updated Successfully.', 'Success', this.toastrConfig);
+                    .subscribe((response: DepartmentModel) => {
+                        this.toastrService.success(`Department updated Successfully.  ${GlobalConstants.departmentAndFunctionalityReloginMessage}`, 'Success', this.toastrConfig);
                         this.dataExchange.Publish('departmentSavedOrEdited', response);
                         this.setDepartmentForm();
                         this.showAdd = false;
-                        this.submitted=false;
+                        this.submitted = false;
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                     });
@@ -161,7 +161,7 @@ export class DepartmentEntryComponent implements OnInit {
 
     showAddRegion(): void {
         this.showAdd = true;
-        this.submitted=false;
+        this.submitted = false;
         this.departmentModel = new DepartmentModel();
         this.departmentModel.CreatedBy = +this.credential.UserId;
         this.departmentModel.DepartmentId = 0;
@@ -170,7 +170,7 @@ export class DepartmentEntryComponent implements OnInit {
 
     cancel(): void {
         this.showAdd = false;
-        this.submitted=false;
+        this.submitted = false;
     }
 
     private onDepartmentEdit(model: DepartmentModel): void {
