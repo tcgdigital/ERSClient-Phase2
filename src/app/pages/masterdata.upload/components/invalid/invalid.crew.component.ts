@@ -53,11 +53,20 @@ export class InvalidCrewListComponent implements OnInit, OnDestroy{
         this._invalidRecordService.GetAllInvalidCrewsByIncident(+this.IncidentId)
         .flatMap(x=>x)
         .subscribe(a=>{
-            this.invalidCrews.push(a);              
+            this.invalidCrews.push(a);  
+            console.log(this.invalidCrews);                        
         }), 
         (error: any) => {
             console.log(`Error: ${error}`);
         };
+        // ()=>{
+        //      this.invalidCrews.forEach(a=>{
+        //         if(a.LicenseRecords.indexOf(';') > 0)
+        //             a.LicenseRecords.replace(';','; ');
+        //         if(a.QualificationRecords.indexOf(';') > 0)
+        //             a.QualificationRecords.replace(';','; ');
+        //     })
+        // };
     }
 
     cancel(): void {

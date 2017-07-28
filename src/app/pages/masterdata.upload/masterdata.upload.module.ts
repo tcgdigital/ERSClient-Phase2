@@ -22,6 +22,7 @@ import {
     InvalidCargoListComponent, InvalidGroundVictimListComponent
 } from './components/invalid';
 import { DataExchangeService, FileUploadService, SharedModule } from '../../shared';
+import { OrganizationService } from '../shared.components/organization'
 
 @NgModule({
     imports: [
@@ -49,7 +50,8 @@ import { DataExchangeService, FileUploadService, SharedModule } from '../../shar
         DataExchangeService,
         FileUploadService,
         MasterDataUploadForValidService,
-        MasterDataUploadForInvalidService
+        MasterDataUploadForInvalidService,
+        OrganizationService
     ]
 })
 export class MasterDataUploadModule { }
