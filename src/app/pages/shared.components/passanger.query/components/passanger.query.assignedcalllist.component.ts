@@ -14,6 +14,7 @@ import {
 } from '../../../callcenteronlypage/component';
 import { Router, NavigationEnd } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
+// import {EnquiryEntryComponent} from '../../call.centre';
 
 @Component({
     selector: 'passengerquery-assignedcalls',
@@ -53,6 +54,11 @@ export class PassangerQueryAssignedCallsListComponent implements OnInit {
         this.globalState.Subscribe('ReceivePassangerEnquiryCreationResponse', (model: ExternalInputModel) => {
             this.getAllPassengerQueryCalls(model.IncidentId);
         });
+
+        this.globalState.Subscribe('closePDAEnqNotAssigned', (model: string) => {
+            //debugger;
+            this.cancelCallcenter();
+        });
     }
 
     incidentChangeHandler(incident: KeyValue): void {
@@ -72,6 +78,7 @@ export class PassangerQueryAssignedCallsListComponent implements OnInit {
     openCallcenter(externalInputId): void {
         this.callId = externalInputId;
         this.callcenterload = true;
+        //this.globalState.NotifyDataChanged("closePDAEnq",this.childModalcallcenter);
         this.childModalcallcenter.show();
     }
 
