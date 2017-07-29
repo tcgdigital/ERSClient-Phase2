@@ -50,6 +50,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
     public globalStateProxyOpen: GlobalStateService;
     demand: DemandModelToView = new DemandModelToView();
     public isShowCompletedDemand: boolean = true;
+    public isShowAcceptRejectDemand: boolean = true;
     /**
      * Creates an instance of CompletedDemandComponent.
      * @param {DemandService} demandService

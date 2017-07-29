@@ -83,9 +83,10 @@ export class GlobalConstants {
     public static currentLoggedInUser: number = 0;
     public static PagePermissionMatrix: PagesPermissionMatrixModel[] = [];
     public static accessibilityErrorMessage: string = 'Access Restricted';
+    public static departmentAndFunctionalityReloginMessage: string = 'Please log out and relogin to take effect.';
     public static INTERCEPTOR_PERFORM: boolean = false;
     public static PRESERVE_DATA_FROM_CONVERSION: string[] = ['EmergencyDate'];
-    public static SIGNAL_CONNECTION_DELAY: number = 1000;
+    public static SIGNAL_CONNECTION_DELAY: number = 100;
 
     public static EditorToolbarConfig: any = {
         // uiColor: '#99000',
@@ -1581,7 +1582,7 @@ export class GlobalConstants {
             hidden: false,
             order: 1
         }, {
-            id: 'checklist',
+            id: 'masterdatachecklist',
             title: 'Checklist',
             // icon: 'fa fa-chrome fa-2x',
             url: '/pages/masterdata/checklist',
@@ -1589,7 +1590,7 @@ export class GlobalConstants {
             hidden: false,
             order: 2
         }, {
-            id: 'userpermission',
+            id: 'User-DeptMapping',
             title: 'User Department Mapping',
             // icon: 'fa fa-linux fa-2x',
             url: '/pages/masterdata/userpermission',
@@ -1636,7 +1637,7 @@ export class GlobalConstants {
             url: '/pages/masterdata/demandtype',
             order: 8
         }, {
-            id: 'pagefunctionality',
+            id: 'Dept-FunctionalityMapping',
             title: 'Department Functionality Mapping',
             // icon: 'fa fa-windows fa-2x',
             url: '/pages/masterdata/pagefunctionality',

@@ -47,6 +47,11 @@ export class UserProfileModel extends BaseModel {
     public PassportNumber : string;
     public PassportValidity? : Date;
 
+    public VisaRecords : string;
+    public VoluterPreferenceRecords : string;
+    public TrainingDetails : string; 
+    public NOKDetails : string;
+
     public UserPermissions?: UserPermissionModel[];
     public Notifications?: NotificationModel[];
     public Departments?: DepartmentModel[];

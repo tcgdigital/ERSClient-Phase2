@@ -41,7 +41,7 @@ export class MediaReleaseApprovalEntryComponent implements OnInit, OnDestroy {
     isInvalidForm: boolean = false;
     
     toolbarConfig: any = GlobalConstants.EditorToolbarConfig;
-
+    public isShowApproveRejectMediaMessage: boolean = true;
     /**
      * Creates an instance of MediaQueryEntryComponent.
      * @param {MediaQueryService} mediaQueryService 

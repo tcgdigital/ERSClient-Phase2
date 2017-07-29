@@ -48,7 +48,7 @@ export class PresidentMessageApprovalEntryComponent implements OnInit, OnDestroy
     isSavedContent: boolean = true;
 
     toolbarConfig: any = GlobalConstants.EditorToolbarConfig;
-
+    public isShowApproveRejectPresidentMessage: boolean = true;
     /**
      * Creates an instance of PresidentMessageEntryComponent.
      * @param {PresidentMessageService} presidentMessageService 

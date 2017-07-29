@@ -53,9 +53,10 @@ export class UserProfileService extends ServiceBase<UserProfileModel>
             .Execute();
     }
 
-    GetAll(): Observable<ResponseModel<UserProfileModel>>{
+    GetAllUsers(): Observable<ResponseModel<UserProfileModel>>{
         return this._dataService.Query()
-        .Expand('VisaDetails, VolunterPreferences, TrainingRecords, NextOfKins')
+        .Select('UserId,Name,Email,EmployeeId,MainContact,AlternateContact,isActive,isVolunteered,PassportNumber,PassportValidity,Nationality,Gender,VisaRecords,VoluterPreferenceRecords,TrainingDetails,NOKDetails')
+        //.Expand('VisaDetails, VolunterPreferences, TrainingRecords, NextOfKins')
         .Execute();
     }
 

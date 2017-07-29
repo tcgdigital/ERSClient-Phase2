@@ -13,7 +13,7 @@ import { UserProfileService } from './userprofile.service';
 import { UserProfileModel, UserAuthenticationModel } from './userprofile.model';
 import { UserAuthService } from './user.auth.service';
 import { GenericSearchComponent } from '../../../../shared/components/generic.search/generic.search.component';
-import { AccountResponse } from '../../../../shared/models';
+import { AccountResponse, ValidationResultModel } from '../../../../shared/models';
 
 import {
     ResponseModel, DataExchangeService, GlobalConstants, EmailValidator, 
@@ -41,6 +41,8 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
     filesToUpload: FileData[] = [];
     objFileData : FileData;
     disableUploadButton: boolean = true;
+    HRInfoTemplatePath: string = './assets/static-content/PRHR_YYYYMMDD.csv';
+    HRTrainingTemplatePath: string = './assets/static-content/PRHR_Training_YYYYMMDD.csv';
 
     constructor(private userProfileService: UserProfileService,
         private dataExchange: DataExchangeService<UserProfileModel>,
@@ -68,8 +70,8 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
             Email: new FormControl(userProfileModel.Email, [Validators.required, Validators.pattern(GlobalConstants.EMAIL_PATTERN)]),
             UserId: new FormControl(userProfileModel.UserId, [Validators.required, UserIdValidator.validate]),
             Name: new FormControl(userProfileModel.Name, [Validators.required]),
-            MainContact: new FormControl(userProfileModel.MainContact, [Validators.required, Validators.minLength(14), Validators.maxLength(15), Validators.pattern(GlobalConstants.NUMBER_PATTERN)]),
-            AlternateContact: new FormControl(userProfileModel.AlternateContact, [Validators.minLength(14), Validators.maxLength(15), Validators.pattern(GlobalConstants.NUMBER_PATTERN)]),
+            MainContact: new FormControl(userProfileModel.MainContact, [Validators.required]),
+            AlternateContact: new FormControl(userProfileModel.AlternateContact, [Validators.required]),
             Location: new FormControl(userProfileModel.Location, Validators.required),
             isActive: new FormControl(userProfileModel.isActive),
             isVolunteered: new FormControl(userProfileModel.isVolunteered)
@@ -173,16 +175,27 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
             const baseUrl = GlobalConstants.EXTERNAL_URL;
             const param = 'IncidentId=' + '0' + '&CreatedBy=' + this.credential.UserId;
 
-            this.fileUploadService.uploadFiles<string>(baseUrl + './api/MasterDataUploadBatch?' + param, this.filesToUpload)
-                .subscribe((result: any) => {
+            this.fileUploadService.uploadFiles<ValidationResultModel[]>(baseUrl + './api/MasterDataUploadBatch?' + param, this.filesToUpload)
+                .subscribe((result: ValidationResultModel[]) => {
                     console.log('success');
                     this.filesToUpload = [];
-                    this.toastrService.success('Uploaded Data is processed successfully.' + '\n'
-                        + 'To check any invalid records, please refer \'View Invalid Records\' link for the current timestamp.', 'Success', this.toastrConfig);
+                    // this.toastrService.success('Uploaded Data is processed successfully.' + '\n'
+                    //     + 'To check any invalid records, please refer \'View Invalid Records\' link for the current timestamp.', 'Success', this.toastrConfig);
 
+                     result.forEach(item=>{
+                        if(item.ResultType == 1)
+                        {
+                            this.toastrService.error(item.Message, 'Error', this.toastrConfig);
+                        }
+                        else if(item.ResultType == 3)
+                        {
+                            this.toastrService.success(item.Message, 'Success', this.toastrConfig);
+                        }                            
+                    }); 
+                    
                     this.form.reset();
                     this.disableUploadButton = true;
-                    this.dataExchange.Publish('UserProfileLoadedFromFile', result);
+                    this.dataExchange.Publish('UserProfileLoadedFromFile',this.userProfileModel);
                     this.showAdd = false;
 
                 }, (error) => {
@@ -203,8 +216,8 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
             Email: new FormControl('', [Validators.required, Validators.pattern(GlobalConstants.EMAIL_PATTERN)]),
             UserId: new FormControl('', [Validators.required, UserIdValidator.validate]),
             Name: new FormControl('', [Validators.required]),
-            MainContact: new FormControl('', [Validators.required, Validators.minLength(14), Validators.maxLength(15), Validators.pattern(GlobalConstants.NUMBER_PATTERN)]),
-            AlternateContact: new FormControl('', [Validators.minLength(14), Validators.maxLength(15), Validators.pattern(GlobalConstants.NUMBER_PATTERN)]),
+            MainContact: new FormControl('', [Validators.required]),
+            AlternateContact: new FormControl('', [Validators.required]),
             Location: new FormControl('', Validators.required),
             isActive: new FormControl(true),
             isVolunteered: new FormControl(false),

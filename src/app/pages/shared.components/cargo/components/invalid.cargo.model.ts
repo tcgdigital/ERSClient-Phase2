@@ -11,6 +11,19 @@ export class InvalidCargoModel extends BaseModel{
     public AWB : string;
     public mftpcs : string;
     public mftwgt : string;
+
+    public ShipperName : string;
+	public ShipperAddress : string;
+	public ShipperContactNo : string;
+	public ConsigneeName : string;
+	public ConsigneeAddress : string;
+	public ConsigneeContactNo : string;
+	public Origin : string;
+	public Destination : string;
+	public CargoType : string;
+	public AdvisoryToConsignee : string;
+    public AWBDocPath : string;
+    
     public ErrorReason : string;
 
     public Flight : FlightModel;

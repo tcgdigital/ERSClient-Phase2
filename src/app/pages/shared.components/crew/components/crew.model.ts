@@ -23,15 +23,16 @@ export class CrewModel extends BaseModel {
 	public ContactNumber: string;
 	public AlternateContactNumber: string;
 	public PersonalInformationFile: string;
-	public TrainingRecords: string;
-	public LicenseRecords: string;
 
 	public Age : string;
 	public PassportNumber : string;
 	public PassportValidity : string;
-	public NOKName : string;
-	public NOKContactNumber : string;
+	public NOKDetails : string;
 	public MedicalClearance : string;
+
+	public VisaDetails : string;
+    public QualificationRecords : string;
+    public LicenseRecords : string;
 
 	public Flight?: FlightModel;
 	public AffectedPeople?: AffectedPeopleModel[];
