@@ -54,6 +54,10 @@ export class PassangerQueryRecievedCallsListComponent implements OnInit {
         this.globalState.Subscribe('AssignedPassangerEnquiryCreationResponse', (model: ExternalInputModel) => {
             this.getAllPassengerQueryCallsRecieved(model.IncidentId);
         });
+
+        this.globalState.Subscribe('closePDAEnqReceived', (model: string) => {
+            this.cancelCallcenter();
+        });
     }
 
     incidentChangeHandler(incident: KeyValue): void {
