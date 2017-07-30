@@ -52,7 +52,15 @@ export class PassangerQueryRecievedCallsListComponent implements OnInit {
 
         // SignalR Notification
         this.globalState.Subscribe('AssignedPassangerEnquiryCreationResponse', (model: ExternalInputModel) => {
-            this.getAllPassengerQueryCallsRecieved(model.IncidentId);
+            // this.getAllPassengerQueryCallsRecieved(model.IncidentId);
+            const index: number = this.allAssignedCalls
+                .findIndex((x: ExternalInputModel) => x.ExternalInputId === model.ExternalInputId);
+
+            if (index > -1) {
+                this.allAssignedCalls.splice(index, 1, model);
+            } else {
+                this.allAssignedCalls.unshift(model)
+            }
         });
     }
 

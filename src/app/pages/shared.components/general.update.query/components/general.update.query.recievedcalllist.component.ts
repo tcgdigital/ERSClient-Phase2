@@ -52,7 +52,14 @@ export class GeneralUpdateQueryRecievedCallsListComponent implements OnInit {
         // SignalR Notification
         this.globalState.Subscribe('AssignedGeneralUpdateEnquiryCreationResponse', (model: ExternalInputModel) => {
             // this.getAllGeneralUpdatesCalls(model.IncidentId);
-            this.allAssignedCalls.unshift(model);
+            const index: number = this.allAssignedCalls
+                .findIndex((x: ExternalInputModel) => x.ExternalInputId === model.ExternalInputId);
+
+            if (index > -1) {
+                this.allAssignedCalls.splice(index, 1, model);
+            } else {
+                this.allAssignedCalls.unshift(model)
+            }
         });
     }
 

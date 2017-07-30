@@ -71,7 +71,43 @@ export class MyDemandComponent implements OnInit, OnDestroy {
         this.demandFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Demand/';
     }
 
-    getMyDemands(deptId, incidentId): void {
+    public ngOnInit(): void {
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+        if (this._router.url.indexOf('archivedashboard') > -1) {
+            this.isArchive = true;
+            this.currentIncidentId = +UtilityService.GetFromSession('ArchieveIncidentId');
+        }
+        else {
+            this.isArchive = false;
+            this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
+        }
+        this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
+        this.credential = UtilityService.getCredentialDetails();
+        this.createdBy = +this.credential.UserId;
+        this.createdByName = this.credential.UserName;
+        this.Remarks = '';
+
+        this.globalState.Subscribe('DemandAddedUpdated', (model) => this.demandUpdated(model));
+        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+
+        // SignalR Notification
+        this.globalState.Subscribe('ReceiveDemandCreationResponse', (model: DemandModel) => {
+            // this.getMyDemands(model.RequesterDepartmentId, model.IncidentId);
+            this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
+        });
+        this.globalState.Subscribe('ReceiveDemandStatusUpdateResponse', (model: DemandModel) => {
+            // this.getMyDemands(model.RequesterDepartmentId, model.IncidentId);
+            this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
+        });
+    }
+
+    public ngAfterContentInit(): any {
+        // this.setRagStatus();
+        UtilityService.SetRAGStatus(this.mydemands, 'Demand');
+    }
+
+    public getMyDemands(deptId, incidentId): void {
         this.demandService.GetByRequesterDepartment(deptId, incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 console.log(response);
@@ -90,7 +126,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
             });
     }
 
-    setRagStatus(): void {
+    public setRagStatus(): void {
         Observable.interval(1000).subscribe((_) => {
             if (this.mydemands && this.mydemands.length > 0) {
                 this.mydemands.forEach((x) => {
@@ -129,11 +165,11 @@ export class MyDemandComponent implements OnInit, OnDestroy {
         });
     }
 
-    open(demandId) {
+    public open(demandId): void {
         this.dataExchange.Publish('OnDemandUpdate', demandId);
     }
 
-    getDemandRemarks(demandId): void {
+    public getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
                 this.demandRemarks = response.Records;
@@ -143,7 +179,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
             });
     }
 
-    getDemandTrails(demandId): void {
+    public getDemandTrails(demandId): void {
         this.demandTrailService.getDemandTrailByDemandId(demandId)
             .subscribe((response: ResponseModel<DemandTrailModel>) => {
                 this.demandTrails = response.Records;
@@ -153,20 +189,20 @@ export class MyDemandComponent implements OnInit, OnDestroy {
             });
     }
 
-    cancelTrail(): void {
+    public cancelTrail(): void {
         this.childModalTrail.hide();
     }
 
-    openDemandRemarks(demand) {
+    public openDemandRemarks(demand): void {
         this.demandForRemarks = demand;
         this.getDemandRemarks(demand.DemandId);
     }
 
-    cancelRemarkUpdate(demand): void {
+    public cancelRemarkUpdate(demand): void {
         this.childModalRemarks.hide();
     }
 
-    saveRemark(remarks): void {
+    public saveRemark(remarks): void {
         const demand = this.demandForRemarks;
 
         this.RemarkToCreate = new DemandRemarkLogModel();
@@ -186,55 +222,21 @@ export class MyDemandComponent implements OnInit, OnDestroy {
             });
     }
 
-    openTrail(demand: DemandModelToView): void {
+    public openTrail(demand: DemandModelToView): void {
         this.demandTypeName = demand.DemandTypeName;
         this.requesterDepartmentName = demand.RequesterDepartmentName;
         this.getDemandTrails(demand.DemandId);
     }
 
-    openDemandDetails(demandId: number): void {
+    public openDemandDetails(demandId: number): void {
         this.dataExchange.Publish('OnDemandDetailClick', demandId);
     }
 
-    canceltrail(demand) {
+    public canceltrail(demand): void {
         demand['showTrails'] = false;
     }
 
-    ngOnInit() {
-        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
-        if (this._router.url.indexOf('archivedashboard') > -1) {
-            this.isArchive = true;
-            this.currentIncidentId = +UtilityService.GetFromSession('ArchieveIncidentId');
-        }
-        else {
-            this.isArchive = false;
-            this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
-        }
-        this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
-        this.credential = UtilityService.getCredentialDetails();
-        this.createdBy = +this.credential.UserId;
-        this.createdByName = this.credential.UserName;
-        this.Remarks = '';
-
-        this.globalState.Subscribe('DemandAddedUpdated', (model) => this.demandUpdated(model));
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
-
-        // SignalR Notification
-        this.globalState.Subscribe('ReceiveDemandCreationResponse', (model: DemandModel) => {
-            this.getMyDemands(model.RequesterDepartmentId, model.IncidentId);
-        });
-        this.globalState.Subscribe('ReceiveDemandStatusUpdateResponse', (model: DemandModel) => {
-            this.getMyDemands(model.RequesterDepartmentId, model.IncidentId);
-        });
-    }
-
-    ngAfterContentInit(): any {
-        // this.setRagStatus();
-        UtilityService.SetRAGStatus(this.mydemands, 'Demand');
-    }
-
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChangefromDashboard');
         this.globalState.Unsubscribe('departmentChangeFromDashboard');
         this.globalState.Unsubscribe('DemandAddedUpdated');
