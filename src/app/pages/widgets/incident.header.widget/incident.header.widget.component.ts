@@ -37,7 +37,7 @@ export class IncidentHeaderWidgetComponent implements OnInit, OnChanges {
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.incidentId = +UtilityService.GetFromSession('CurrentIncidentId');
-        this.getIncident(this.currentIncident.Value);
+        // this.getIncident(this.currentIncident.Value);
     }
 
     getIncident(incidentId: number): void {
