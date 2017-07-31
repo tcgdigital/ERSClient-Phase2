@@ -26,20 +26,19 @@ export class SidebarComponent implements OnInit, OnChanges, OnDestroy {
     protected _onRouteChange: Subscription;
     public hideSideMenu: boolean = false;
 
-
     constructor(private _router: Router,
         private _service: SideMenuService,
         private _state: GlobalStateService,
-        private _elementRef: ElementRef// ,
-        // private incidentService: IncidentService
+        private _elementRef: ElementRef
     ) {
     }
 
     public ngOnInit() {
+        if (this._router.url.indexOf('landing') >-1) {
+            this.hideSideMenu = true;
+        }
+            
         this._onRouteChange = this._router.events.subscribe((event) => {
-            // this.incidentService.GetAllActiveIncidents()
-            // .subscribe((result:ResponseModel<IncidentModel>)=>{
-            // });
             if (event instanceof NavigationEnd) {
                 if (event.url.indexOf('landing') < 0) {
                     this.hideSideMenu = false;
