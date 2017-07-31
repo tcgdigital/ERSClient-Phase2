@@ -1,6 +1,6 @@
 import {
     Component, ViewEncapsulation, OnInit,
-    AfterContentInit, ViewChild, OnDestroy
+    AfterContentInit, ViewChild, OnDestroy, Injector
 } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
@@ -49,6 +49,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     protected _onRouteChange: Subscription;
     isArchive: boolean = false;
     demandFilePath: string;
+    public globalStateProxy: GlobalStateService;
 
     /**
      * Creates an instance of MyDemandComponent.
@@ -66,9 +67,11 @@ export class MyDemandComponent implements OnInit, OnDestroy {
         private demandTrailService: DemandTrailService,
         private globalState: GlobalStateService,
         private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig, private _router: Router) {
+        private toastrConfig: ToastrConfig, private _router: Router,
+        private injector: Injector) {
         this.demandForRemarks = new DemandModelToView();
         this.demandFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Demand/';
+        this.globalStateProxy = injector.get(GlobalStateService);
     }
 
     public ngOnInit(): void {
@@ -229,7 +232,9 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     }
 
     public openDemandDetails(demandId: number): void {
-        this.dataExchange.Publish('OnDemandDetailClick', demandId);
+        //this.dataExchange.Publish('OnDemandDetailClick', demandId);
+        const num = UtilityService.UUID();
+        this.globalStateProxy.NotifyDataChanged('OnDemandDetailClick', demandId + '!' + num);
     }
 
     public canceltrail(demand): void {

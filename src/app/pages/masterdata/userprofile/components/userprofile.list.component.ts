@@ -32,7 +32,6 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
     getUserProfiles(): void {
         this.userProfileService.GetAllUsers()
             .subscribe((response: ResponseModel<UserProfileModel>) => {
-                debugger;
                 this.userProfiles = response.Records;
                 console.log(response.Records);
                 this.userProfiles.map((item: UserProfileModel) => {
