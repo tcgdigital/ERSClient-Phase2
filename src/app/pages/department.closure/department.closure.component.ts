@@ -210,6 +210,7 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
                                 this.departmentClosureModelSubmit.IncidentId = this.currentIncidentId;
                                 this.departmentClosureModelSubmit.DepartmentId = this.currentDepartmentId;
                                 this.departmentClosureModelSubmit.IsSaved = true;
+                        
                                 this.departmentClosureModelSubmit.SavedBy = +UtilityService.GetFromSession('CurrentUserId');
                                 this.departmentClosureModelSubmit.SavedOn = new Date();
                                 this.departmentClosureModelSubmit.IsSubmitted = true;

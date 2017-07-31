@@ -392,8 +392,9 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
 
-    showDemandDetails(id) {
-        this.demandService.GetByDemandId(id)
+    showDemandDetails(id:string) {
+        const idNum:number = +(id.split('!')[0]);
+        this.demandService.GetByDemandId(idNum)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demandModel = response.Records[0];
 
@@ -475,8 +476,9 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.Action = 'Submit';
         this.isReadonly = false;
 
+        ;
         this.dataExchange.Subscribe('OnDemandUpdate', (model) => this.setModelForUpdate(model));
-        this.dataExchange.Subscribe('OnDemandDetailClick', (model) => this.showDemandDetails(model));
+        this.globalState.Subscribe('OnDemandDetailClick', (model) => this.showDemandDetails(model));
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
     }
@@ -813,6 +815,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe('OnDemandUpdate');
+        this.globalState.Unsubscribe('OnDemandDetailClick');
         this.globalState.Unsubscribe('incidentChangefromDashboard');
         this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }

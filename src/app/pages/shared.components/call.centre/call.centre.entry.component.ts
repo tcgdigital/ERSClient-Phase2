@@ -725,7 +725,6 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         this.createdByName = this.credential.UserName;
 
         //  this.globalState.Subscribe('closePDAEnq', (model: ModalDirective) => {
-        //     debugger;
         //     this.thisChild = model;
         // });
 
@@ -823,7 +822,6 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                                 this.createDemands(this.affectedId);
                             }
                         });
-                        //debugger;
                         this.globalState.NotifyDataChanged("closePDAEnqNotAssigned"," ");
                 }
                 else {
@@ -950,7 +948,6 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                             else {
                                 this.createDemands(this.affectedId);
                             }
-
                             this.globalState.NotifyDataChanged("closePDAEnqReceived"," ");
 
                         });
