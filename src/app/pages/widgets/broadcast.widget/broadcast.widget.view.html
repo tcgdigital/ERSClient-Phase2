@@ -1,14 +1,16 @@
 <div class="row messaging-widget-container no-gutters">
     <div class="col-3 col-md-12 col-lg-3 border-seperator">
         <div class="message-icon">
-            <i class="fa fa-bullhorn fa-3x" aria-hidden="true"></i>
-            <span>broadcast message</span>
-            <a *ngIf="isShowViewAll | accesibility:initiatedDepartmentId:'BroadcastMessageWidgetViewAll'" href="javascript:void(0);" (click)="openBroadcastMessages()">view all</a>
+            <!-- <a href="javascript:void(0);" (click)="openBroadcastMessages()"> -->
+                <i class="fa fa-bullhorn fa-3x" aria-hidden="true" (click)="openBroadcastMessages()"></i>
+                <span (click)="openBroadcastMessages()">broadcast message</span>
+            <!-- </a> -->
+            <a *ngIf="isShowViewAll | accesibility:currentDepartmentId:'BroadcastMessageWidgetViewAll'" href="javascript:void(0);" (click)="openBroadcastMessagesByDepartment()">view all</a>
         </div>
     </div>
     <div class="col-9 col-md-12 col-lg-9">
-        <text-accordion *ngIf="isShow | accesibility:initiatedDepartmentId:'BroadcastMessageWidget'" [accordionItems]="LatestBroadcasts"></text-accordion>
-        <div class="row no-gutters" *ngIf="!(isShow | accesibility:initiatedDepartmentId:'BroadcastMessageWidget')">
+        <text-accordion *ngIf="isShow | accesibility:currentDepartmentId:'BroadcastMessageWidget'" [accordionItems]="LatestBroadcasts"></text-accordion>
+        <div class="row no-gutters" *ngIf="!(isShow | accesibility:currentDepartmentId:'BroadcastMessageWidget')">
             <ul class="cd-container">
                 <li>
                     <ul class="cd-item-wrapper widgetDefaultStyle">
@@ -42,9 +44,42 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let broadcast of AllPublishedBroadcasts">
-                                <td data-title="Broadcast Messages" width="60%">{{broadcast.Message}}</td>
+                                <td data-title="Broadcast Messages" width="50%">{{broadcast.Message}}</td>
                                 <td data-title="Priority">{{broadcast.Priority}}</td>
                                 <td data-title="Initiated Department">{{broadcast.InitiateDepartment.DepartmentName}}</td>
+                                <td data-title="Published On">{{broadcast.SubmittedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </responsive-table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div bsModal #childBroadcastByDept="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Broadcast Messages</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="hideAllBroadcastMessageByDept()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+                <responsive-table>
+                    <table responsive-table-body>
+                        <thead>
+                            <tr>
+                                <th>Broadcast Messages</th>
+                                <th>Priority</th>
+                                <th>Published On</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let broadcast of AllBroadCastByIncidentAndDepartment">
+                                <td data-title="Broadcast Messages" width="50%">{{broadcast.Message}}</td>
+                                <td data-title="Priority">{{broadcast.Priority}}</td>
                                 <td data-title="Published On">{{broadcast.SubmittedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
                             </tr>
                         </tbody>
