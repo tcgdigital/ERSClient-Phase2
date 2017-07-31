@@ -61,25 +61,29 @@ export class WidgetUtilityService {
 
 
             //This is for demands which are created after crisis initiation but not yet closed.
-            let pendingList: ChecklistTrailModel[] = arrGraphData.filter((x: ChecklistTrailModel) => {
-                return ((x.CompletionStatus != 'Closed') && (temp <= new Date(x.CompletionStatusChangedOn)) && (new Date(x.CompletionStatusChangedOn) <= end));
+            // let pendingList: ChecklistTrailModel[] = arrGraphData.filter((x: ChecklistTrailModel) => {
+            //     return ((x.CompletionStatus != 'Closed') && (temp <= new Date(x.CompletionStatusChangedOn)) && (new Date(x.CompletionStatusChangedOn) <= end));
+            // });
+
+            let totalCount = _.uniq(arrGraphData, function (x:ChecklistTrailModel) {
+                return x.ChklistId;
             });
 
-            pendingTotal = pendingList.length;
+            pendingTotal = totalCount.length - closedTotal;
 
-            if (i == 1) {
-                pendingInter = pendingTotal;
-                pendingTotal = pendingTotal - closedTotal;
-            }
-            else {
-                pendingOld = pendingInter - closedTotal;
-                pendingTotal = pendingOld;
-            }
+            // if (i == 1) {
+            //     pendingInter = pendingTotal;
+            //     pendingTotal = pendingTotal - closedTotal;
+            // }
+            // else {
+            //     pendingOld = pendingInter - closedTotal;
+            //     pendingTotal = pendingOld;
+            // }
 
-            if (pendingTotal < 0) {
-                pendingTotal = 0;
-            }
-            
+            // if (pendingTotal < 0) {
+            //     pendingTotal = 0;
+            // }
+
             arrGraphPending.push(pendingTotal);
 
             temp.setMinutes(temp.getMinutes() + 60);
@@ -156,9 +160,9 @@ export class WidgetUtilityService {
             });
             pendingTotal = filterDepartments.length;
             if (i == 1) {
-                pendingInter=pendingTotal;
+                pendingInter = pendingTotal;
                 pendingTotal = pendingTotal - closedTotal;
-                
+
             }
             else {
                 pendingOld = pendingInter - closedTotal;

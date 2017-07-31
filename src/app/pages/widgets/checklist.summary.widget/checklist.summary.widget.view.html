@@ -64,14 +64,16 @@
                                         <td data-title="Assigned">{{deptCheckList.assigned}}</td>
                                         <td data-title="Completed" *ngIf="deptCheckList.completed>0">
                                             <!-- <a href="{{baseLocationURl}}#showAllCompleted" (click)="showAllDeptSubTableCompleted(deptCheckList)">{{deptCheckList.completed}}</a> -->
-                                             <a (click)="showAllDeptSubTableCompleted(deptCheckList)">{{deptCheckList.completed}}</a>
+                                             <a href="javascript:void(0);" (click)="showAllDeptSubTableCompleted(deptCheckList)">{{deptCheckList.completed}}</a>
                                         </td>
-                                        <td data-title="Completed" *ngIf="deptCheckList.completed==0">{{deptCheckList.completed}}</td>
+                                        <td data-title="Completed" *ngIf="deptCheckList.completed==0">
+                                            <a href="javascript:void(0);">{{deptCheckList.completed}}</a></td>
                                         <td data-title="Pending" *ngIf="deptCheckList.pending>0">
                                             <!-- <a href="{{baseLocationURl}}#showAllPending" (click)="showAllDeptSubTablePending(deptCheckList)">{{deptCheckList.pending}}</a> -->
-                                            <a (click)="showAllDeptSubTablePending(deptCheckList)">{{deptCheckList.pending}}</a>
+                                            <a href="javascript:void(0);" (click)="showAllDeptSubTablePending(deptCheckList)">{{deptCheckList.pending}}</a>
                                         </td>
-                                        <td data-title="Pending" *ngIf="deptCheckList.pending==0">{{deptCheckList.pending}}</td>
+                                        <td data-title="Pending" *ngIf="deptCheckList.pending==0">
+                                            <a href="javascript:void(0);">{{deptCheckList.pending}}</a></td>
                                     </tr>
                                 </tbody>
                             </table>

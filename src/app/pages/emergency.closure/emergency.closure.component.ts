@@ -196,9 +196,25 @@ export class EmergencyClosureComponent implements OnInit {
 								x.InitialNotify = this.initialNotificationSend.some(z => x.DepartmentId == z);
 								x.SeperateNotify = this.notificationSeperatelySend.some(z => x.DepartmentId == z);
 							});
+							this.getIsSubmittedFlagValue(this.closuresToShow);
 						}
 					});
 			});
+	}
+
+	getIsSubmittedFlagValue(departmentClosureModels:DepartmentClosureModel[]):void{
+		this.departmentClosureService.GetAllByIncident(this.currentIncident)
+		.subscribe((departmentClosures:ResponseModel<DepartmentClosureModel>)=>{
+			departmentClosureModels.forEach((item:DepartmentClosureModel)=>{
+				const filtered:DepartmentClosureModel[] = departmentClosures.Records.filter((dc:DepartmentClosureModel)=>{
+					return dc.DepartmentId==item.Department.DepartmentId;
+				});
+				if(filtered.length>0){
+					item.IsSubmitted = filtered[0].IsSubmitted;
+					item.SubmittedOn = new Date(filtered[0].SubmittedOn);
+				}
+			});
+		});
 	}
 
 	openCurrentDepartmentClosureReadonlyDetail(incidentId, departmentId): void {

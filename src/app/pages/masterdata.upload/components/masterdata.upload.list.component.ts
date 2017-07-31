@@ -127,7 +127,6 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
 
             this.fileUploadService.uploadFiles<ValidationResultModel[]>(baseUrl + './api/MasterDataUploadBatch?' + param, this.filesToUpload)
                 .subscribe((result: ValidationResultModel[]) => {
-                    debugger;
                     console.log('success');
                     this.filesToUpload = [];
                     //this.toastrService.success('Uploaded Data is processed successfully.' + '\n'
