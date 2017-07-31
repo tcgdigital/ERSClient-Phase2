@@ -130,8 +130,11 @@ export class PagesComponent implements OnInit {
             this.initiateHubConnections();
             this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
 
+            // SignalR Notification
             this.globalState.Subscribe('ReceiveCrisisClosureResponse', (model) => {
-                this.router.navigate(['login']);
+                Observable.timer(1000).subscribe((x)=>{
+                    this.router.navigate(['login']);
+                });
             });
         }, local_incidents, local_departments);
 
@@ -526,7 +529,7 @@ export class PagesComponent implements OnInit {
     private ExecuteOperation<T extends BaseModel>(key: string, model: T): void {
         const message = GlobalConstants.NotificationMessage.find((x) => x.Key === key);
         if (message.Title !== '' && message.Message !== ''
-            && model.CreatedBy !== +UtilityService.GetFromSession('CurrentUserId')) {
+            /*&& model.CreatedBy !== +UtilityService.GetFromSession('CurrentUserId')*/) {
             const msg: string = this.PrepareMessage<T>(message.Message, model);
             this.toastrService.info(msg, message.Title);
         }
@@ -573,5 +576,7 @@ export class PagesComponent implements OnInit {
         this.toastrConfig.progressBar = true;
         this.toastrConfig.enableHtml = true;
         this.toastrConfig.preventDuplicates = true;
+        this.toastrConfig.timeOut = 10000;
+        this.toastrConfig.extendedTimeOut = 5000;
     }
 }
