@@ -46,7 +46,9 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     public form: FormGroup;
     datepickerOption: DateTimePickerOptions = new DateTimePickerOptions();
     demandModel: DemandModel = new DemandModel();
+    demandTypesAll: DemandTypeModel[];
     demandTypes: DemandTypeModel[];
+    demandTypePreapproved: DemandTypeModel = new DemandTypeModel();
     date: Date = new Date();
     Action: string;
     priorities: any[] = GlobalConstants.Priority;
@@ -125,6 +127,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     getDemandType(): void {
         this.demandTypeService.GetAll()
             .subscribe((response: ResponseModel<DemandTypeModel>) => {
+                this.demandTypesAll = response.Records; //.filter((x) => x.DemandTypeId == 1)[0];
                 this.demandTypes = response.Records.filter((x) => x.ActiveFlag === 'Active');
                 this.demandModel.DemandTypeId = (this.demandModel.DemandTypeId === 0)
                     ? this.demandTypes[0].DemandTypeId
@@ -299,10 +302,24 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         }
     }
 
+    RemoveDemandTypeId(): void
+    {
+        let index: number = this.demandTypes.indexOf(this.demandTypePreapproved);
+        if (index != -1) {
+            this.demandTypes.splice(index, 1);
+        }            
+    }
+
+    AddDemandTypeId(): void
+    {
+        this.demandTypes.push(this.demandTypePreapproved);
+    }
+
     showAddRegion(ShowAdd: boolean): void {
         this.showAdd = true;
         this.buttonValue = 'Create Demand';
         this.resetForm();
+        this.RemoveDemandTypeId();
         this.demandModel.DemandId = 0;
         this.demandModel.RequesterDepartmentId = this.currentDepartmentId;
         this.demandModel.AffectedObjectId = 0;
@@ -360,6 +377,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.caller = this.demandModel.Caller || new CallerModel();
                 this.showAdd = true;
                 this.buttonValue = 'Create Demand';
+                this.RemoveDemandTypeId();
                 this.isReadonly = false;
                 this.childModal.show();
 
@@ -378,6 +396,11 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.demandService.GetByDemandId(id)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demandModel = response.Records[0];
+
+                this.RemoveDemandTypeId();
+                this.demandTypePreapproved = this.demandTypesAll.filter((x) => x.DemandTypeId == this.demandModel.DemandTypeId)[0];
+                this.AddDemandTypeId();
+
                 this.setModelFormGroup(response.Records[0], true, (x) => x.DemandId, (x) => x.DemandTypeId,
                     (x) => x.Priority, (x) => x.DemandDesc, (x) => x.RequestedBy, (x) => x.RequesterType,
                     (x) => x.PDATicketNumber, (x) => x.TargetDepartmentId, (x) => x.ContactNumber, (x) => x.RequiredLocation);
