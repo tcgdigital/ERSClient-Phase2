@@ -1577,7 +1577,7 @@ export class GlobalConstants {
     public static MasterDataTAB_LINKS: ITabLinkInterface[] = [
         {
             id: 'userprofile',
-            title: 'Userprofile',
+            title: 'User Profile',
             // icon: 'fa fa-twitter fa-2x',
             url: '/pages/masterdata/userprofile',
             selected: false,
