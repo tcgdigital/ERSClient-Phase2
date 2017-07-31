@@ -59,7 +59,7 @@ export class AffectedPeopleListComponent implements OnInit {
     downloadfilename: string;
     expandSearch: boolean = false;
     searchValue: string = "Expand Search";
-    public isShowIsNOKInvolved:boolean=true;
+    public isShowIsNOKInvolved: boolean = true;
 
     /**
      * Creates an instance of AffectedPeopleListComponent.
@@ -198,7 +198,16 @@ export class AffectedPeopleListComponent implements OnInit {
     getAffectedPeople(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
-                this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
+                this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0])
+                    .sort((a, b) => {
+                        if (x => x.PassengerType) {
+                            if (a.PassengerName < b.PassengerName) return -1;
+                            if (a.PassengerName > b.PassengerName) return 1;
+                            if (a.CrewName < b.CrewName) return -1;
+                            if (a.CrewName > b.CrewName) return 1;
+                            return 0;
+                        }
+                    });
                 this.affectedPeople.forEach((x) => {
                     x['MedicalStatusToshow'] = x.MedicalStatus;
                     x['showDiv'] = false;

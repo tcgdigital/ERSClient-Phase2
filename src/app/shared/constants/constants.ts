@@ -533,8 +533,8 @@ export class GlobalConstants {
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveDemandApprovedResponse',
-            Title: '',
-            Message: ''
+            Title: 'Demand Approved',
+            Message: 'Corresponding demand has been approved.'
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveDemandAssignedResponse',
@@ -543,13 +543,13 @@ export class GlobalConstants {
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveCompletedDemandAssignedResponse',
-            Title: '',
-            Message: ''
+            Title: 'Demand Completed',
+            Message: 'Corresponding demand has been completed.'
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveDemandRejectedFromApprovalResponse',
-            Title: '',
-            Message: ''
+            Title: 'Demand Rejected',
+            Message: 'Corresponding demand has been rejected by Approver Department.'
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveDemandClosedResponse',
@@ -558,8 +558,10 @@ export class GlobalConstants {
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveDemandStatusUpdateResponse',
-            Title: 'Demand Status Updated',
-            Message: 'A Demand\'s status has been updated. Please refer to tab section "Demand > My Demands"'
+            Title: '',
+            Message: ''
+            // Title: 'Demand Status Updated',
+            // Message: 'A Demand\'s status has been updated. Please refer to tab section "Demand > My Demands"'
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveCompletedDemandstoCloseResponse',
@@ -568,8 +570,8 @@ export class GlobalConstants {
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveRejectedDemandsFromClosureResponse',
-            Title: '',
-            Message: ''
+            Title: 'Demand Rejected',
+            Message: 'Corresponding demand has been rejected by Initiator Department after completion.'
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveRejectedDemandstoAssignResponse',
