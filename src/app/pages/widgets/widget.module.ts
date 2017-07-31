@@ -12,6 +12,7 @@ import { SharedModule, FileUploadService } from '../../shared';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChecklistTrailService } from "../shared.components/checklist.trail";
 import { UtilityService } from '../../shared';
+import { IncidentService } from '../incident/components';
 import {
     BroadcastWidgetComponent,
     CasualtySummaryWidgetComponent,
@@ -80,7 +81,8 @@ const WIDGET_SERVICE: any[] = [
     DepartmentClosureService,
     FileUploadService,
     UtilityService,
-    ChecklistTrailService
+    ChecklistTrailService,
+    IncidentService
 ];
 
 @NgModule({
