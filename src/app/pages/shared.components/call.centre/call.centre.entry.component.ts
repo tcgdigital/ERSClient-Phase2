@@ -150,8 +150,8 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     affectedId: number;
     createdBy: number;
     createdByName: string;
+    //thisChild: ModalDirective;
     // grouidlistselected: number[] = [];
-
 
     //get data
 
@@ -730,6 +730,12 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         this.enquiry.ExternalInputId = this.callid;
         this.createdBy = +this.credential.UserId;
         this.createdByName = this.credential.UserName;
+
+        //  this.globalState.Subscribe('closePDAEnq', (model: ModalDirective) => {
+        //     debugger;
+        //     this.thisChild = model;
+        // });
+
     }
 
     onActionClick(eventArgs: any) {
@@ -823,7 +829,8 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                                 this.createDemands(this.affectedId);
                             }
                         });
-
+                        //debugger;
+                        this.globalState.NotifyDataChanged("closePDAEnqNotAssigned"," ");
                 }
                 else {
                     let pdaenquirytoupdate: PDAEnquiryModel = new PDAEnquiryModel();
@@ -856,7 +863,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                             console.log(`Error: ${error}`);
                         });
                 }
-
+                
             }
             else {
                 this.enquiryToUpdate.Queries = this.enquiry.Queries;
@@ -949,6 +956,9 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                             else {
                                 this.createDemands(this.affectedId);
                             }
+                            // debugger;
+                            this.globalState.NotifyDataChanged("closePDAEnqReceived"," ");
+
                         });
                 }
                 //  else if (this.enquiryType == 1 && this.consolidatedCopassengers.length > 0) {

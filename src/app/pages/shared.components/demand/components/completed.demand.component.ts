@@ -73,12 +73,47 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         this.globalStateProxyOpen = injector.get(GlobalStateService);
     }
 
-    openDemandDetails(demandId: number): void {
+    public ngOnInit(): void {
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+        if (this._router.url.indexOf('archivedashboard') > -1) {
+            this.isArchive = true;
+            this.currentIncidentId = +UtilityService.GetFromSession('ArchieveIncidentId');
+        }
+        else {
+            this.isArchive = false;
+            this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
+        }
+        this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
+        this.credential = UtilityService.getCredentialDetails();
+        this.createdBy = +this.credential.UserId;
+        this.createdByName = this.credential.UserName;
+        this.getDepartmentName(this.currentDepartmentId);
+        this.getCurrentDepartmentName(this.currentDepartmentId);
+
+        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+
+        // SignalR Notification
+        this.globalState.Subscribe('ReceiveDemandClosedResponse', (model: DemandModel) => {
+            this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
+            // this.getCompletedDemands(model.RequesterDepartmentId, model.IncidentId);
+        });
+        this.globalState.Subscribe('ReceiveRejectedDemandsFromClosureResponse', (model: DemandModel) => {
+            this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
+            // this.getCompletedDemands(model.RequesterDepartmentId, model.IncidentId);
+        });
+        this.globalState.Subscribe('ReceiveCompletedDemandstoCloseResponse', (model: DemandModel) => {
+            this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
+            // this.getCompletedDemands(model.RequesterDepartmentId, model.IncidentId);
+        });
+    }
+
+    public openDemandDetails(demandId: number): void {
         this.demand = this.completedDemands.find((x) => x.DemandId === demandId);
         this.childModal.show();
     }
 
-    getCompletedDemands(deptId: number, incidentId: number): void {
+    public getCompletedDemands(deptId: number, incidentId: number): void {
         this.demandService.GetCompletedDemands(deptId, incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.completedDemands = this.demandService.DemandMapper(response.Records);
@@ -87,12 +122,12 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
             });
     }
 
-    cancelModal(): any {
+    public cancelModal(): any {
         this.demand = new DemandModelToView();
         this.childModal.hide();
     }
 
-    getDemandRemarks(demandId): void {
+    public getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
                 this.demandRemarks = response.Records;
@@ -102,7 +137,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
             });
     }
 
-    createDemandTrailModel(demand: DemandModelToView, flag): DemandTrailModel[] {
+    public createDemandTrailModel(demand: DemandModelToView, flag): DemandTrailModel[] {
         this.demandTrails = [];
         this.demandTrail = new DemandTrailModel();
         const createdOn = new Date(demand.CreatedOn);
@@ -144,16 +179,16 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         return this.demandTrails;
     }
 
-    openDemandRemarks(demand) {
+    public openDemandRemarks(demand) {
         this.demandForRemarks = demand;
         this.getDemandRemarks(demand.DemandId);
     }
 
-    cancelRemarkUpdate(): void {
+    public cancelRemarkUpdate(): void {
         this.childModalRemarks.hide();
     }
 
-    saveRemark(remarks): void {
+    public saveRemark(remarks): void {
         const demand: DemandModelToView = this.demandForRemarks;
         this.RemarkToCreate = new DemandRemarkLogModel();
         this.RemarkToCreate.Remark = remarks;
@@ -172,11 +207,11 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
             });
     }
 
-    isClosedOrRejected(item: DemandModelToView): any {
+    public isClosedOrRejected(item: DemandModelToView): any {
         return (item.IsClosed === true || item.IsRejected === true);
     }
 
-    SetCommunicationLog(demand: DemandModelToView): CommunicationLogModel[] {
+    public SetCommunicationLog(demand: DemandModelToView): CommunicationLogModel[] {
         this.communicationLogs = new Array<CommunicationLogModel>();
         this.communicationLog = new CommunicationLogModel();
         this.communicationLog.InteractionDetailsId = 0;
@@ -201,7 +236,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         return this.communicationLogs;
     }
 
-    submit(): void {
+    public submit(): void {
         if (this.completedDemands.length > 0) {
             const demandCompletion: DemandModel[] = this.completedDemands
                 .filter(this.isClosedOrRejected).map((x) => {
@@ -246,39 +281,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         }
     }
 
-    ngOnInit() {
-        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
-        if (this._router.url.indexOf('archivedashboard') > -1) {
-            this.isArchive = true;
-            this.currentIncidentId = +UtilityService.GetFromSession('ArchieveIncidentId');
-        }
-        else {
-            this.isArchive = false;
-            this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
-        }
-        this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
-        this.credential = UtilityService.getCredentialDetails();
-        this.createdBy = +this.credential.UserId;
-        this.createdByName = this.credential.UserName;
-        this.getDepartmentName(this.currentDepartmentId);
-        this.getCurrentDepartmentName(this.currentDepartmentId);
-
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
-
-        // SignalR Notification
-        this.globalState.Subscribe('ReceiveDemandClosedResponse', (model: DemandModel) => {
-            this.getCompletedDemands(model.RequesterDepartmentId, model.IncidentId);
-        });
-        this.globalState.Subscribe('ReceiveRejectedDemandsFromClosureResponse', (model: DemandModel) => {
-            this.getCompletedDemands(model.RequesterDepartmentId, model.IncidentId);
-        });
-        this.globalState.Subscribe('ReceiveCompletedDemandstoCloseResponse', (model: DemandModel) => {
-            this.getCompletedDemands(model.RequesterDepartmentId, model.IncidentId);
-        });
-    }
-
-    getCurrentDepartmentName(departmentId): void {
+    public getCurrentDepartmentName(departmentId): void {
         this.departmentService.Get(departmentId)
             .subscribe((response: DepartmentModel) => {
                 this.currentDepartmentName = response.DepartmentName;
@@ -287,7 +290,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
             });
     }
 
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChangefromDashboard');
         this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }

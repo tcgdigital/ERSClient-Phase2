@@ -46,6 +46,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     demandFilePath: string;
     public globalStateProxyOpen: GlobalStateService;
     public isShowAssignToMeDemand: boolean = true;
+
     /**
      * Creates an instance of AssignedDemandComponent.
      * @param {DemandService} demandService
@@ -68,12 +69,42 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.globalStateProxyOpen = injector.get(GlobalStateService);
     }
 
-    openDemandDetails(demandId: number): void {
+    public ngOnInit(): void {
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+
+        if (this._router.url.indexOf('archivedashboard') > -1) {
+            this.isArchive = true;
+            this.currentIncidentId = +UtilityService.GetFromSession('ArchieveIncidentId');
+        }
+        else {
+            this.isArchive = false;
+            this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
+        }
+        this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
+        this.credential = UtilityService.getCredentialDetails();
+        this.createdByName = this.credential.UserName;
+        this.getAllDepartments();
+
+        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+
+        // SignalR Notification
+        this.globalState.Subscribe('ReceiveDemandAssignedResponse', (model: DemandModel) => {
+            // this.getAssignedDemands(model.TargetDepartmentId, model.IncidentId);
+            this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
+        });
+        this.globalState.Subscribe('ReceiveCompletedDemandAssignedResponse', (model: DemandModel) => {
+            // this.getAssignedDemands(model.TargetDepartmentId, model.IncidentId);
+            this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
+        });
+    }
+
+    public openDemandDetails(demandId: number): void {
         this.demand = this.demands.find((x) => x.DemandId === demandId);
         this.childModal.show();
     }
 
-    getAssignedDemands(deptId: number, incidentId: number): void {
+    public getAssignedDemands(deptId: number, incidentId: number): void {
         this.demandService.GetForAssignedDept(deptId, incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demands = this.demandService.DemandMapper(response.Records);
@@ -82,12 +113,12 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
             });
     }
 
-    cancelModal(): any {
+    public cancelModal(): any {
         this.demand = new DemandModelToView();
         this.childModal.hide();
     }
 
-    setRagStatus(): void {
+    public setRagStatus(): void {
         Observable.interval(1000).subscribe((_) => {
             if (this.demands && this.demands.length > 0) {
                 this.demands.forEach((x) => {
@@ -126,7 +157,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         });
     }
 
-    getDemandRemarks(demandId): void {
+    public getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
                 this.demandRemarks = response.Records;
@@ -136,11 +167,11 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
             });
     }
 
-    getCurrentDepartmentName(departmentId): string {
+    public getCurrentDepartmentName(departmentId): string {
         return this.departments.find((x) => x.DepartmentId === departmentId).DepartmentName;
     }
 
-    getAllDepartments() {
+    public getAllDepartments() {
         this.departmentService.GetAll()
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
@@ -150,7 +181,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
             });
     }
 
-    createDemandTrailModel(demand: DemandModelToView, flag, OriginalDemand?: DemandModel): DemandTrailModel[] {
+    public createDemandTrailModel(demand: DemandModelToView, flag, OriginalDemand?: DemandModel): DemandTrailModel[] {
         this.demandTrails = [];
         this.demandTrail = new DemandTrailModel();
         const description = flag ? `Completed by ${this.createdByName}( ${this.currentDepartmentName})` : demand.DemandStatusDescription;
@@ -205,16 +236,16 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         return this.demandTrails;
     }
 
-    openDemandRemarks(demand) {
+    public openDemandRemarks(demand) {
         this.demandForRemarks = demand;
         this.getDemandRemarks(demand.DemandId);
     }
 
-    cancelRemarkUpdate(): void {
+    public cancelRemarkUpdate(): void {
         this.childModalRemarks.hide();
     }
 
-    saveRemark(remarks): void {
+    public saveRemark(remarks): void {
         const demand: DemandModelToView = this.demandForRemarks;
         this.RemarkToCreate = new DemandRemarkLogModel();
         this.RemarkToCreate.Remark = remarks;
@@ -233,11 +264,11 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
             });
     }
 
-    isCompleted(item: DemandModelToView): any {
+    public isCompleted(item: DemandModelToView): any {
         return item.IsCompleted === true;
     }
 
-    submit(): void {
+    public submit(): void {
         if (this.demands.length > 0) {
             const demandCompletion: DemandModel[] = this.demands
                 .filter(this.isCompleted).map((x) => {
@@ -274,40 +305,12 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         }
     }
 
-    ngOnInit(): any {
-        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
-
-        if (this._router.url.indexOf('archivedashboard') > -1) {
-            this.isArchive = true;
-            this.currentIncidentId = +UtilityService.GetFromSession('ArchieveIncidentId');
-        }
-        else {
-            this.isArchive = false;
-            this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
-        }
-        this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
-        this.credential = UtilityService.getCredentialDetails();
-        this.createdByName = this.credential.UserName;
-        this.getAllDepartments();
-
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
-
-        // SignalR Notification
-        this.globalState.Subscribe('ReceiveDemandAssignedResponse', (model: DemandModel) => {
-            this.getAssignedDemands(model.TargetDepartmentId, model.IncidentId);
-        });
-        this.globalState.Subscribe('ReceiveCompletedDemandAssignedResponse', (model: DemandModel) => {
-            this.getAssignedDemands(model.TargetDepartmentId, model.IncidentId);
-        });
-    }
-
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChangefromDashboard');
         this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 
-    ngAfterContentInit(): any {
+    public ngAfterContentInit(): any {
         // this.setRagStatus();
         UtilityService.SetRAGStatus(this.demands, 'Demand');
     }

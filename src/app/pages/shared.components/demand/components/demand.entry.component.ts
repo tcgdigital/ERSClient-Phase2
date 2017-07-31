@@ -145,8 +145,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         }
     }
 
-    
-
     getAllDepartments(): void {
         this.departmentService.GetAll()
             .subscribe((response: ResponseModel<DepartmentModel>) => {

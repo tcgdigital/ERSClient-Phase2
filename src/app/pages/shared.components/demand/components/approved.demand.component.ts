@@ -72,7 +72,46 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.globalStateProxyOpen = injector.get(GlobalStateService);
     }
 
-    getDemandsForApproval(deptId, incidentId): void {
+    public ngOnInit(): void {
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+        if (this._router.url.indexOf('archivedashboard') > -1) {
+            this.isArchive = true;
+            this.currentIncidentId = +UtilityService.GetFromSession('ArchieveIncidentId');
+        }
+        else {
+            this.isArchive = false;
+            this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
+        }
+        this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
+        this.credential = UtilityService.getCredentialDetails();
+        this.createdBy = +this.credential.UserId;
+        this.createdByName = this.credential.UserName;
+
+        this.getCurrentDepartmentName(this.currentDepartmentId);
+        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+
+        // SignalR Notification
+        this.globalState.Subscribe('ReceiveDemandApprovalPendingResponse', (model: DemandModel) => {
+            // this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId);
+            this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
+        });
+        this.globalState.Subscribe('ReceiveDemandApprovedResponse', (model: DemandModel) => {
+            // this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId);
+            this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
+        });
+        this.globalState.Subscribe('ReceiveDemandRejectedFromApprovalResponse', (model: DemandModel) => {
+            // this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId);
+            this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
+        });
+    }
+
+    public ngAfterContentInit(): any {
+        // this.setRagStatus();
+        UtilityService.SetRAGStatus(this.demandsForApproval, 'Demand');
+    }
+    
+    public getDemandsForApproval(deptId, incidentId): void {
         this.demandService.GetByApproverDepartment(deptId, incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demandsForApproval = this.demandService.DemandMapper(response.Records);
@@ -81,12 +120,12 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
             });
     }
 
-    cancelModal(): any {
+    public cancelModal(): any {
         this.demand = new DemandModelToView();
         this.childModal.hide();
     }
 
-    setRagStatus(): void {
+    public setRagStatus(): void {
         Observable.interval(1000).subscribe((_) => {
             this.demandsForApproval.forEach((x) => {
                 if (x.ClosedOn === undefined || x.ClosedOn == null) {
@@ -124,7 +163,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         });
     }
 
-    getDemandRemarks(demandId): void {
+    public getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
                 this.demandRemarks = response.Records;
@@ -134,12 +173,12 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
             });
     }
 
-    openDemandRemarks(demand: DemandModelToView): void {
+    public openDemandRemarks(demand: DemandModelToView): void {
         this.demandForRemarks = demand;
         this.getDemandRemarks(demand.DemandId);
     }
 
-    createDemandTrailModel(demand: DemandModelToView, flag, originalDemand?: DemandModel): DemandTrailModel[] {
+    public createDemandTrailModel(demand: DemandModelToView, flag, originalDemand?: DemandModel): DemandTrailModel[] {
         this.demandTrails = [];
         this.demandTrail = new DemandTrailModel();
         this.demandTrail.Answers = '';
@@ -176,11 +215,11 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         return this.demandTrails;
     }
 
-    cancelRemarkUpdate(): void {
+    public cancelRemarkUpdate(): void {
         this.childModalRemarks.hide();
     }
 
-    saveRemark(remarks): void {
+    public saveRemark(remarks): void {
         const demand: DemandModelToView = this.demandForRemarks;
         this.RemarkToCreate = new DemandRemarkLogModel();
         this.RemarkToCreate.Remark = remarks;
@@ -199,11 +238,11 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
             });
     }
 
-    isApprovedOrRejected(item: DemandModelToView): any {
+    public isApprovedOrRejected(item: DemandModelToView): any {
         return (item.IsApproved === true || item.IsRejected === true);
     }
 
-    SetCommunicationLog(demand: DemandModelToView): CommunicationLogModel[] {
+    public SetCommunicationLog(demand: DemandModelToView): CommunicationLogModel[] {
         this.communicationLogs = new Array<CommunicationLogModel>();
         this.communicationLog = new CommunicationLogModel();
         this.communicationLog.InteractionDetailsId = 0;
@@ -231,7 +270,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         return this.communicationLogs;
     }
 
-    submit(): void {
+    public submit(): void {
         if (this.demandsForApproval.length > 0) {
             const demandCompletion: DemandModel[] = this.demandsForApproval.filter(this.isApprovedOrRejected).map((x) => {
                 const item: DemandModel = new DemandModel();
@@ -269,38 +308,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         }
     }
 
-    ngOnInit(): any {
-        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
-        if (this._router.url.indexOf('archivedashboard') > -1) {
-            this.isArchive = true;
-            this.currentIncidentId = +UtilityService.GetFromSession('ArchieveIncidentId');
-        }
-        else {
-            this.isArchive = false;
-            this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
-        }
-        this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
-        this.credential = UtilityService.getCredentialDetails();
-        this.createdBy = +this.credential.UserId;
-        this.createdByName = this.credential.UserName;
-
-        this.getCurrentDepartmentName(this.currentDepartmentId);
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
-
-        // SignalR Notification
-        this.globalState.Subscribe('ReceiveDemandApprovalPendingResponse', (model: DemandModel) => {
-            this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId);
-        });
-        this.globalState.Subscribe('ReceiveDemandApprovedResponse', (model: DemandModel) => {
-            this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId);
-        });
-        this.globalState.Subscribe('ReceiveDemandRejectedFromApprovalResponse', (model: DemandModel) => {
-            this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId);
-        });
-    }
-
-    getCurrentDepartmentName(departmentId): void {
+    public getCurrentDepartmentName(departmentId): void {
         this.departmentService.Get(departmentId)
             .subscribe((response: DepartmentModel) => {
                 this.currentDepartmentName = response.DepartmentName;
@@ -309,17 +317,12 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
             });
     }
 
-    ngAfterContentInit(): any {
-        // this.setRagStatus();
-        UtilityService.SetRAGStatus(this.demandsForApproval, 'Demand');
-    }
-
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         this.globalState.Unsubscribe('incidentChangefromDashboard');
         this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 
-    openDemandDetails(demandId: number): void {
+    public openDemandDetails(demandId: number): void {
         this.demand = this.demandsForApproval.find((x) => x.DemandId === demandId);
         this.childModal.show();
     }
