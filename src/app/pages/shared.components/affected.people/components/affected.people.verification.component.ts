@@ -43,7 +43,16 @@ export class AffectedPeopleVerificationComponent implements OnInit {
     getAffectedPeople(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
-                this.affectedPeopleForVerification = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
+                this.affectedPeopleForVerification = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0])
+                    .sort((a, b) => {
+                        if (x => x.PassengerType) {
+                            if (a.PassengerName < b.PassengerName) return -1;
+                            if (a.PassengerName > b.PassengerName) return 1;
+                            if (a.CrewName < b.CrewName) return -1;
+                            if (a.CrewName > b.CrewName) return 1;
+                            return 0;
+                        }
+                    });
                 this.isVerfiedChange();
             }, (error: any) => {
                 console.log(`Error: ${error}`);
