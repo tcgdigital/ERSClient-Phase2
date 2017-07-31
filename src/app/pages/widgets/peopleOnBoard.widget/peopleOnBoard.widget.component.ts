@@ -105,7 +105,12 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
             .subscribe((result: ResponseModel<InvolvePartyModel>) => {
                 let affectedPeoples: AffectedPeopleModel[];
                 if (result.Records[0].Affecteds.length > 0) {
-                    affectedPeoples = result.Records[0].Affecteds[0].AffectedPeople;
+                    affectedPeoples = result.Records[0].Affecteds[0].AffectedPeople.sort((a, b) => {
+                        if (a.Passenger.PassengerName < b.Passenger.PassengerName) return -1;
+                        if (a.Passenger.PassengerName > b.Passenger.PassengerName) return 1;
+
+                        return 0;
+                    });
                     affectedPeoples.forEach((item: AffectedPeopleModel) => {
                         passengerListLocal.push(UtilityService.pluck(item, ['Passenger'])[0]);
                     });
@@ -134,7 +139,10 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
         let groundVictimListLocal: GroundVictimModel[] = [];
         this.peopleOnBoardWidgetService.GetAllGroundVictimsByIncident(this.currentIncidentId)
             .subscribe((result: ResponseModel<InvolvePartyModel>) => {
-                groundVictimListLocal = result.Records[0].GroundVictims;
+                groundVictimListLocal = result.Records[0].GroundVictims.sort((a,b)=>{
+                    if(a.GroundVictimName < b.GroundVictimName) return -1;
+                    if(a.GroundVictimName > b.GroundVictimName) return 1;
+                });
                 this.groundVictimList = Observable.of(groundVictimListLocal);
                 this.childModalGroundVictims.show();
             });
@@ -236,7 +244,10 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
             .subscribe((result: ResponseModel<InvolvePartyModel>) => {
                 let affectedPeoples: AffectedPeopleModel[];
                 if (result.Records[0].Affecteds.length > 0) {
-                    affectedPeoples = result.Records[0].Affecteds[0].AffectedPeople;
+                    affectedPeoples = result.Records[0].Affecteds[0].AffectedPeople.sort((a, b) => {
+                        if (a.Crew.CrewName < b.Crew.CrewName) return -1;
+                        if (a.Crew.CrewName > b.Crew.CrewName) return 1;
+                    });
                     affectedPeoples.forEach((item: AffectedPeopleModel) => {
                         crewListLocal.push(UtilityService.pluck(item, ['Crew'])[0]);
                     });
