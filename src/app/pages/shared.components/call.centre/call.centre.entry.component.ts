@@ -478,26 +478,19 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                 this.affectedPeople.find((x) => x.AffectedPersonId === demand.AffectedPersonId) : null;
             this.selctedEnquiredObject = (demand.AffectedObjectId !== 0) ?
                 this.affectedObjects.find((x) => x.AffectedObjectId === demand.AffectedObjectId) : null;
+            
+            let personName = (this.selctedEnquiredPerson !== null) ? (this.enquiryType == 1 ?
+                this.selctedEnquiredPerson.PassengerName : this.selctedEnquiredPerson.CrewName) : '';
+           
+                demand.IncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
 
-            // let personName = (this.selctedEnquiredPerson !== null) ? (this.enquiryType == 1 ?
-            //     this.selctedEnquiredPerson.PassengerName : this.selctedEnquiredPerson.CrewName) : '';
-            let personName = "";
-            let obj = this.affectedPeople.find(x => x.AffectedPersonId == affectedId);
             if(this.enquiryType == 1)
             {
+                let obj = this.affectedPeople.find(x => x.AffectedPersonId == affectedId);
                 personName = obj.PassengerName;
+                demand.AffectedPersonId = affectedId;
             }
-            else if(this.enquiryType == 5)
-            {
-                personName = obj.CrewName;
-            }
-
-            demand = new DemandModel();
-            if (affectedPersonId > 0) {
-                demand.AffectedPersonId = affectedPersonId;
-            }
-            demand.AffectedPersonId = affectedId;
-
+            
             demand.AffectedObjectId = (this.enquiryType == 2) ?
                 this.enquiry.AffectedObjectId : null;
             
@@ -784,6 +777,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     }
 
     saveEnquiryDemandCaller(): void {
+        // debugger;
         this.submitted = true;
         if (this.form.valid && (((this.enquiryType == 1 || this.enquiryType == 3) && this.nullorwhitecheck(this.enquiry.AffectedPersonId)) ||
             (this.enquiryType == 2 && this.nullorwhitecheck(this.enquiry.AffectedObjectId) || (this.enquiryType >= 4)))) {
@@ -945,7 +939,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                         .subscribe(() => {
                             this.toastrService.success('Enquiry Saved successfully.', 'Success', this.toastrConfig);
                             this.selectedCoPassangers = this.consolidatedCopassengers.filter(x => x.IsSelected == true);
-                            let obj = this.affectedPeople.find(x => x.AffectedPersonId == this.initialvalue.Value);
+                            let obj = this.affectedPeople.find(x => x.AffectedPersonId == this.enquiry.AffectedPersonId); // this.initialvalue.Value
                             this.selectedCoPassangers.push(obj);
                             
                             if (this.selectedCoPassangers.length > 0) {
@@ -956,7 +950,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                             else {
                                 this.createDemands(this.affectedId);
                             }
-                            // debugger;
+
                             this.globalState.NotifyDataChanged("closePDAEnqReceived"," ");
 
                         });
