@@ -130,8 +130,11 @@ export class PagesComponent implements OnInit {
             this.initiateHubConnections();
             this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
 
+            // SignalR Notification
             this.globalState.Subscribe('ReceiveCrisisClosureResponse', (model) => {
-                this.router.navigate(['login']);
+                Observable.timer(1000).subscribe((x)=>{
+                    this.router.navigate(['login']);
+                });
             });
         }, local_incidents, local_departments);
 
