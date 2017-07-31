@@ -14,6 +14,7 @@ import {
 } from '../../../callcenteronlypage/component';
 import { Router, NavigationEnd } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
+// import {EnquiryEntryComponent} from '../../call.centre';
 
 @Component({
     selector: 'passengerquery-assignedcalls',
@@ -51,7 +52,20 @@ export class PassangerQueryAssignedCallsListComponent implements OnInit {
 
         // SignalR Notification
         this.globalState.Subscribe('ReceivePassangerEnquiryCreationResponse', (model: ExternalInputModel) => {
-            this.getAllPassengerQueryCalls(model.IncidentId);
+            // this.getAllPassengerQueryCalls(model.IncidentId);
+            const index: number = this.allAssignedCalls
+                .findIndex((x: ExternalInputModel) => x.ExternalInputId === model.ExternalInputId);
+
+            if (index > -1) {
+                this.allAssignedCalls.splice(index, 1, model);
+            } else {
+                this.allAssignedCalls.unshift(model)
+            }
+        });
+
+        this.globalState.Subscribe('closePDAEnqNotAssigned', (model: string) => {
+            //debugger;
+            this.cancelCallcenter();
         });
     }
 
@@ -72,6 +86,7 @@ export class PassangerQueryAssignedCallsListComponent implements OnInit {
     openCallcenter(externalInputId): void {
         this.callId = externalInputId;
         this.callcenterload = true;
+        //this.globalState.NotifyDataChanged("closePDAEnq",this.childModalcallcenter);
         this.childModalcallcenter.show();
     }
 

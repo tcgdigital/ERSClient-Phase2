@@ -59,6 +59,7 @@ export class AffectedPeopleListComponent implements OnInit {
     downloadfilename: string;
     expandSearch: boolean = false;
     searchValue: string = "Expand Search";
+    public isShowIsNOKInvolved:boolean=true;
 
     /**
      * Creates an instance of AffectedPeopleListComponent.
@@ -260,6 +261,7 @@ export class AffectedPeopleListComponent implements OnInit {
         this.initiateSearchConfigurations();
         this.IsDestroyed = false;
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
 
         // Signal Notification
         this.globalState.Subscribe('ReceiveIncidentBorrowingCompletionResponse', () => {

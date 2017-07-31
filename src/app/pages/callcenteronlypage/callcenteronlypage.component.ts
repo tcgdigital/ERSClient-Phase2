@@ -42,6 +42,7 @@ export class CallCenterOnlyPageComponent implements OnInit {
         this.initializeForm();
         this.initiateEnquiryForms();
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
          this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
         this.keyValueService.GetValue('SpielTextEnglish')

@@ -90,6 +90,7 @@ export class NotifyPeopleComponent implements OnInit {
                 primaryKey: 'id',
                 uiLibrary: 'bootstrap',
                 iconsLibrary: 'fontawesome',
+                dataSource: jQuery.parseJSON(this.allDepartmentUserPermissionString),//this.allDepartmentUserPermissionString,
                 checkboxes: true
             });
             const node = this.tree.getNodeByText(result[0].text);
@@ -111,7 +112,7 @@ export class NotifyPeopleComponent implements OnInit {
             this.appendedTemplate.ActiveFlag = 'Active';
             this.appendedTemplate.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
             this.appendedTemplate.CreatedOn = new Date();
-            this.childModalNoificationMessage.hide();
+            this.childModalNoificationMessage.show();
         });
     }
 
@@ -125,6 +126,7 @@ export class NotifyPeopleComponent implements OnInit {
         this.notifyPeopleService.CreateAppendedTemplate(this.appendedTemplate,
             this.currentIncidentId, this.currentDepartmentId, (item: boolean) => {
                 if (item) {
+                    this.hideNoificationMessage();
                     this.toastrService.success('The respective user has been notified.', 'Notify User', this.toastrConfig);
                     console.log('Notify User Clicked');
                 }
