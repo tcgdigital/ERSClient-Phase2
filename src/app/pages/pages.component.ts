@@ -361,7 +361,7 @@ export class PagesComponent implements OnInit {
     private PrepareConnectionAndCall(incId: number, deptId: number) {
         if (this.connectionStaters === undefined || this.connectionStaters.length === 0) {
             this.connectionStaters = new Array<ConnectionStarter>();
-            //if (window.location.href.indexOf('localhost') == -1) {
+            if (window.location.href.indexOf('localhost') == -1) {
                 this.connectionStaters.push(new ConnectionStarter(this.incidentBorrowingNotificationHub,
                     'IncidentBorrowingNotificationHub', {
                         incidentId: incId
@@ -439,7 +439,7 @@ export class PagesComponent implements OnInit {
                     }, this.GenerateCallbackHandler<ExternalInputModel>('EnquiryNotification')
                 ));
                 this.ConnectAndListen(this.connectionStaters);
-            //}
+            }
         }
         else {
             this.connectionStaters.forEach((store: ConnectionStarter) => {
@@ -526,7 +526,7 @@ export class PagesComponent implements OnInit {
     private ExecuteOperation<T extends BaseModel>(key: string, model: T): void {
         const message = GlobalConstants.NotificationMessage.find((x) => x.Key === key);
         if (message.Title !== '' && message.Message !== ''
-            && model.CreatedBy !== +UtilityService.GetFromSession('CurrentUserId')) {
+            /*&& model.CreatedBy !== +UtilityService.GetFromSession('CurrentUserId')*/) {
             const msg: string = this.PrepareMessage<T>(message.Message, model);
             this.toastrService.info(msg, message.Title);
         }
@@ -573,5 +573,7 @@ export class PagesComponent implements OnInit {
         this.toastrConfig.progressBar = true;
         this.toastrConfig.enableHtml = true;
         this.toastrConfig.preventDuplicates = true;
+        this.toastrConfig.timeOut = 10000;
+        this.toastrConfig.extendedTimeOut = 5000;
     }
 }
