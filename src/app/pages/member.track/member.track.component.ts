@@ -52,7 +52,8 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
     public downloadPath: string;
     public isShowPage: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
-
+    public isShowHistory: boolean = true;
+    public isShowAllocationDeallocation: boolean = true;
     private $toggle: JQuery;
 
 
