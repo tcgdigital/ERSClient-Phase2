@@ -3,6 +3,7 @@ import { Headers } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { ChecklistModel } from './checklist.model';
+import { InvalidChecklistModel } from './invalid.checklist.model'
 import { IChecklistService } from './IChecklistService';
 import {
     IServiceInretface,
@@ -25,11 +26,18 @@ export class ChecklistService extends ServiceBase<ChecklistModel> implements ICh
      * @param {EmergencyTypeService} emergencyTypeService
      *
      * @memberOf ChecklistService
+     * 
      */
+    private _dataServiceInvalidRecords: DataService<InvalidChecklistModel>;
+
     constructor(private dataServiceFactory: DataServiceFactory,
         private departmentService: DepartmentService,
         private emergencyTypeService: EmergencyTypeService) {
         super(dataServiceFactory, 'CheckLists');
+
+        let option: DataProcessingService = new DataProcessingService();
+        this._dataServiceInvalidRecords = this.dataServiceFactory
+            .CreateServiceWithOptions<InvalidChecklistModel>('InvalidChecklists', option);
     }
 
     GetAllByDepartment(departmentId): Observable<ResponseModel<ChecklistModel>> {
@@ -152,5 +160,9 @@ export class ChecklistService extends ServiceBase<ChecklistModel> implements ICh
             .Select('CheckListCode')
             .Filter(`CheckListId eq ${parentchecklistId}`)
             .Execute();
+    }
+
+    GetInvalidChecklists(): Observable<ResponseModel<InvalidChecklistModel>>{
+        return this._dataServiceInvalidRecords.Query().Execute();
     }
 }

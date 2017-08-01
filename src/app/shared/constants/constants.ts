@@ -732,7 +732,7 @@ export class GlobalConstants {
             Message: ''
         }, {
             Type: 'EnquiryNotification',
-            Key: 'ReceiveSituationalEnquiryCreationResponse',
+            Key: 'ReceiveSituationalUpdatesEnquiryCreationResponse',
             Title: '',
             Message: ''
         }, {

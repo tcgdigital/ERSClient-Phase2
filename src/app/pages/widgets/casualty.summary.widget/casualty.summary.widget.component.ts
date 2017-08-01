@@ -62,6 +62,11 @@ export class CasualtySummaryWidgetComponent implements OnInit {
                     models.find((x: CasualtyExchangeModel) => x.MedicalStatus === 'Others').StatusCount : 0;
             }
         });
+
+        // SignalR Notification
+        this.globalState.Subscribe('ReceiveIncidentBorrowingCompletionResponse', () => {
+            this.getCausaltyStatusSummery(this.incidentId);
+        });
     }
 
     affectedPeopleStatusChanged(): void {
