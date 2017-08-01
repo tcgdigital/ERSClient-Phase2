@@ -11,6 +11,7 @@ export class WidgetUtilityService {
 
     public static GetGraphCheckList(requesterDepartmentId: number, Highcharts: any, arrGraphData: ChecklistTrailModel[],
         containerName: string, graphSubjectType: string, emergencyDate: Date): void {
+        debugger;
         this.elapsedHourForGraph = GlobalConstants.ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION;
 
         let DepartmentName = arrGraphData[0].Department.DepartmentName;
@@ -65,7 +66,7 @@ export class WidgetUtilityService {
             //     return ((x.CompletionStatus != 'Closed') && (temp <= new Date(x.CompletionStatusChangedOn)) && (new Date(x.CompletionStatusChangedOn) <= end));
             // });
 
-            let totalCount = _.uniq(arrGraphData, function (x:ChecklistTrailModel) {
+            let totalCount = _.uniq(arrGraphData, function (x: ChecklistTrailModel) {
                 return x.ChklistId;
             });
 

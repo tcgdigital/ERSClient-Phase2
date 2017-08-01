@@ -776,7 +776,6 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     }
 
     saveEnquiryDemandCaller(): void {
-        // debugger;
         this.submitted = true;
         if (this.form.valid && (((this.enquiryType == 1 || this.enquiryType == 3) && this.nullorwhitecheck(this.enquiry.AffectedPersonId)) ||
             (this.enquiryType == 2 && this.nullorwhitecheck(this.enquiry.AffectedObjectId) || (this.enquiryType >= 4)))) {
