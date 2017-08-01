@@ -829,7 +829,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                                 this.createDemands(this.affectedId, afftedIdstocreateDemand);
                             }
                             else {
-                                this.createDemands(this.affectedId);
+                                this.createDemands(this.enquiry.AffectedPersonId);
                             }
                         });
                         this.globalState.NotifyDataChanged("closePDAEnqNotAssigned"," ");
