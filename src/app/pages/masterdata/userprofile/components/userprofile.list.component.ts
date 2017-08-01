@@ -48,7 +48,7 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
     }
 
     onUserProfileSuccess(data: UserProfileModel): void {
-        this.getUserProfiles();
+        //this.getUserProfiles();
     }
 
     UpdateUserProfile(userProfileModelUpdate: UserProfileModel): void {

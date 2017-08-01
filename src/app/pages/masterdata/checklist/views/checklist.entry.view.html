@@ -160,9 +160,23 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-12 butt-des">
+                    <input type="file" #inputFileChecklist id="file" (change)="getFileDetails($event,'UserProfile')" />
+                    <!-- formControlName="fileChecklist" -->
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-12 butt-align">
+                    <button class="btn btn-primary" type="button" (click)="Upload()" [disabled] ="disableUploadButton">Upload</button>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    <a target="_self" href="{{ChecklistTemplatePath}}">
+                        <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp; Checklist Template
+                    </a>
+                </div>                
+            </div>
         </form>
     </div>
 
     <div class="addbuttonHolder">
-        <a href="javascript:void(0);" (click)="showAddRegion()"><strong>ADD CHECKLIST</strong></a>
+        <a href="javascript:void(0);" (click)="showAddRegion(showAdd)"><strong>{{showAddText}}</strong></a>
 </div>

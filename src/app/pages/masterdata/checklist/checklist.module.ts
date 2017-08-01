@@ -13,8 +13,9 @@ import {
 } from './components';
 import { DepartmentService } from '../department';
 import { EmergencyTypeService } from '../emergencytype';
-import { DataExchangeService, SharedModule } from '../../../shared';
+import { DataExchangeService, SharedModule, FileUploadService } from '../../../shared';
 import { OrganizationService } from "../../shared.components/organization";
+import { ModalModule } from "ngx-bootstrap";
 
 @NgModule({
     imports: [
@@ -23,6 +24,7 @@ import { OrganizationService } from "../../shared.components/organization";
         HttpModule,
         ReactiveFormsModule,
         MdCheckboxModule,
+        ModalModule.forRoot(),
         ChecklistRouting,
         SharedModule
     ],
@@ -36,7 +38,8 @@ import { OrganizationService } from "../../shared.components/organization";
         DepartmentService,
         EmergencyTypeService,
         OrganizationService,
-        DataExchangeService
+        DataExchangeService,
+        FileUploadService
     ]
 })
 export class ChecklistModule { }
