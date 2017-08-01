@@ -320,7 +320,9 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                         x.PNRdisabled = "disabled";
                         console.log(y.AffectedPersonId);
                     }
+
             });
+                x.PassengerName = x.PassengerName + " (" + x.Pnr + ")";
         });
 
         this.copassengerlistPassengerForMappedPerson = _.without(this.copassengerlistPassengerForMappedPerson, _.findWhere(this.copassengerlistPassengerForMappedPerson, { AffectedPersonId: obj.AffectedPersonId }));
@@ -776,7 +778,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     }
 
     saveEnquiryDemandCaller(): void {
-        // debugger;
+        
         this.submitted = true;
         if (this.form.valid && (((this.enquiryType == 1 || this.enquiryType == 3) && this.nullorwhitecheck(this.enquiry.AffectedPersonId)) ||
             (this.enquiryType == 2 && this.nullorwhitecheck(this.enquiry.AffectedObjectId) || (this.enquiryType >= 4)))) {
@@ -812,6 +814,14 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                             this.toastrService.success('Enquiry Saved successfully.', 'Success', this.toastrConfig);
                             let num = UtilityService.UUID();
                             this.globalState.NotifyDataChanged('CallRecieved', num);
+                            
+                            this.selectedCoPassangers = this.consolidatedCopassengers.filter(x => x.IsSelected == true);
+                            if(this.selectedCoPassangers.filter(x => x.AffectedPersonId == this.enquiry.AffectedPersonId).length == 0)
+                            {
+                                let obj = this.affectedPeople.find(x => x.AffectedPersonId == this.enquiry.AffectedPersonId); // this.initialvalue.Value
+                                this.selectedCoPassangers.push(obj);
+                            }
+
                             if (this.selectedCoPassangers.length > 0) {
                                 let afftedIdstocreateDemand: number[] = [];
                                 this.selectedCoPassangers.map(x => afftedIdstocreateDemand.push(x.AffectedPersonId));
@@ -850,7 +860,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                             let num = UtilityService.UUID();
                             this.globalState.NotifyDataChanged('CallRecieved', num);
                             this.dataExchange.Publish('clearAutoCompleteInput', '');
-                            this.createDemands(this.affectedId);
+                            this.createDemands(this.enquiry.AffectedPersonId); // this.affectedId
                         }, (error: any) => {
                             console.log(`Error: ${error}`);
                         });
@@ -937,8 +947,11 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                         .subscribe(() => {
                             this.toastrService.success('Enquiry Saved successfully.', 'Success', this.toastrConfig);
                             this.selectedCoPassangers = this.consolidatedCopassengers.filter(x => x.IsSelected == true);
-                            let obj = this.affectedPeople.find(x => x.AffectedPersonId == this.enquiry.AffectedPersonId); // this.initialvalue.Value
-                            this.selectedCoPassangers.push(obj);
+                            if(this.selectedCoPassangers.filter(x => x.AffectedPersonId == this.enquiry.AffectedPersonId).length == 0)
+                            {
+                                let obj = this.affectedPeople.find(x => x.AffectedPersonId == this.enquiry.AffectedPersonId); // this.initialvalue.Value
+                                this.selectedCoPassangers.push(obj);
+                            }
                             
                             if (this.selectedCoPassangers.length > 0) {
                                 let afftedIdstocreateDemand: number[] = [];
@@ -946,7 +959,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                                 this.createDemands(this.affectedId, afftedIdstocreateDemand);
                             }
                             else {
-                                this.createDemands(this.affectedId);
+                                this.createDemands(this.enquiry.AffectedPersonId); // this.affectedId
                             }
                             this.globalState.NotifyDataChanged("closePDAEnqReceived"," ");
 
