@@ -2,8 +2,8 @@
     <div class="col-3 col-md-12 col-lg-3 border-seperator">
         <div class="message-icon">
             <!-- <a href="javascript:void(0);" (click)="openBroadcastMessages()"> -->
-                <i class="fa fa-bullhorn fa-3x" aria-hidden="true" (click)="openBroadcastMessages()"></i>
-                <span (click)="openBroadcastMessages()">broadcast message</span>
+                <i *ngIf="isShowViewAll | accesibility:currentDepartmentId:'BroadcastMessageWidgetViewAll'" class="fa fa-bullhorn fa-3x hover" aria-hidden="true" (click)="openBroadcastMessages()"></i>
+                <span class="hover" *ngIf="isShowViewAll | accesibility:currentDepartmentId:'BroadcastMessageWidgetViewAll'" (click)="openBroadcastMessages()">broadcast message</span>
             <!-- </a> -->
             <a *ngIf="isShowViewAll | accesibility:currentDepartmentId:'BroadcastMessageWidgetViewAll'" href="javascript:void(0);" (click)="openBroadcastMessagesByDepartment()">view all</a>
         </div>
