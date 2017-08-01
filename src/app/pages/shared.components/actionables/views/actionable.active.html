@@ -47,7 +47,7 @@
                         <div [class]="actionable.RagColor"></div>
                     </td>
                     <td data-title="Download">
-                        <a class="down-icon" target="_self" *ngIf="actionable.UploadLinks!=null" href="{{actionable.UploadLinks}}" download="{{actionable.FileName}}"><i class="fa fa-download fa" aria-hidden="true"></i></a>
+                        <a class="down-icon" target="_self" *ngIf="actionable.UploadLinks!=null" href="{{actionable.UploadLinks}}" download="{{actionable.FileName}}"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
                     </td>
                     <td data-title="Trail"><i *ngIf="isShowCommentTrail | accesibility:currentDepartmentId:'ViewChecklistTrail'" class="fa fa-info-circle fa-2x"
                             (click)="openTrail(actionable)"></i> </td>

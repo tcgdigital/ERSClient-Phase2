@@ -16,7 +16,7 @@ import { GenericSearchComponent } from '../../../../shared/components/generic.se
 import { AccountResponse, ValidationResultModel } from '../../../../shared/models';
 
 import {
-    ResponseModel, DataExchangeService, GlobalConstants, EmailValidator, 
+    ResponseModel, DataExchangeService, GlobalConstants, EmailValidator,
     UtilityService, AuthModel, NameValidator, UserIdValidator, FileData, FileUploadService
 } from '../../../../shared';
 
@@ -34,16 +34,16 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
     userProfiles: UserProfileModel[] = [];
     Action: string;
     numaricRegex = '/^[0-9]{10,10}$/';
-    showAdd: boolean;
+    showAdd: boolean = false;
     credential: AuthModel;
     userProfileModeltoUpdate: UserProfileModel;
     @ViewChild('inputFileUserProfile') inputFileUserProfile: any;
     filesToUpload: FileData[] = [];
-    objFileData : FileData;
+    objFileData: FileData;
     disableUploadButton: boolean = true;
     HRInfoTemplatePath: string = './assets/static-content/PRHR_YYYYMMDD.csv';
     HRTrainingTemplatePath: string = './assets/static-content/PRHR_Training_YYYYMMDD.csv';
-    
+    public showAddText: string = 'ADD USER';
 
     constructor(private userProfileService: UserProfileService,
         private dataExchange: DataExchangeService<UserProfileModel>,
@@ -165,9 +165,16 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
         this.dataExchange.Unsubscribe('UserProfileModelModified');
     }
 
-    showAddRegion() {
-        this.showAdd = true;
-        this.initiateForm();
+    showAddRegion(value): void {
+        // this.showAdd = true;
+        // this.initiateForm();
+        if (!value) {
+            this.showAddText = "CLICK TO COLLAPSE";
+        }
+        else {
+            this.showAddText = "ADD USER";
+        }
+        this.showAdd = !value;
     }
 
     uploadFiles(): void {
@@ -183,20 +190,18 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
                     // this.toastrService.success('Uploaded Data is processed successfully.' + '\n'
                     //     + 'To check any invalid records, please refer \'View Invalid Records\' link for the current timestamp.', 'Success', this.toastrConfig);
 
-                     result.forEach(item=>{
-                        if(item.ResultType == 1)
-                        {
+                    result.forEach(item => {
+                        if (item.ResultType == 1) {
                             this.toastrService.error(item.Message, 'Error', this.toastrConfig);
                         }
-                        else if(item.ResultType == 3)
-                        {
+                        else if (item.ResultType == 3) {
                             this.toastrService.success(item.Message, 'Success', this.toastrConfig);
-                        }                            
-                    }); 
-                    
+                        }
+                    });
+
                     this.form.reset();
                     this.disableUploadButton = true;
-                    this.dataExchange.Publish('UserProfileLoadedFromFile',this.userProfileModel);
+                    this.dataExchange.Publish('UserProfileLoadedFromFile', this.userProfileModel);
                     this.showAdd = false;
 
                 }, (error) => {
@@ -222,7 +227,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
             Location: new FormControl('', Validators.required),
             isActive: new FormControl(true),
             isVolunteered: new FormControl(false),
-            fileUserProfile : new FormControl()
+            fileUserProfile: new FormControl()
         });
     }
 
@@ -252,7 +257,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
             }
             else {
                 this.toastrService.error('Invalid File Format!', 'Error', this.toastrConfig);
-                
+
                 this.reset();
                 this.disableUploadButton = true;
             }

@@ -106,12 +106,12 @@
                                                 </td>
                                                 <td data-title="Allocated">{{demand.assigned}}</td>
                                                 <td data-title="Completed">
-                                                    <a href="{{baseLocationURl}}#showAllDeptSubCompleted" (click)="showAllDeptSubCompletedFunc(demand.demandModelList)">
+                                                    <a href="javascript:void(0);" (click)="showAllDeptSubCompletedFunc(demand.demandModelList)">
                                                         {{demand.completed}}
                                                     </a>
                                                 </td>
                                                 <td data-title="Pending">
-                                                    <a href="{{baseLocationURl}}#showAllDeptSubPending" (click)="showAllDeptSubPendingFunc(demand.demandModelList)">
+                                                    <a href="javascript:void(0);" (click)="showAllDeptSubPendingFunc(demand.demandModelList)">
                                                         {{demand.pending}}
                                                     </a>
                                                 </td>
@@ -255,8 +255,8 @@
                             <tr *ngFor="let demand of allSubDeptDemandRaisedList | async">
                                 <td data-title="Requester Department">{{demand.requesterDepartmentName}}</td>
                                 <td data-title="Allocated">{{demand.assigned}}</td>
-                                <td data-title="Completed"><a href="{{baseLocationURl}}#showSubDeptSubCompleted" (click)="showSubDeptSubCompletedFunc(demand.demandModelList)">{{demand.completed}}</a></td>
-                                <td data-title="Pending"><a href="{{baseLocationURl}}#showSubDeptSubPending" (click)="showSubDeptSubPendingFunc(demand.demandModelList)">{{demand.pending}}</a></td>
+                                <td data-title="Completed"><a href="javascript:void(0)" (click)="showSubDeptSubCompletedFunc(demand.demandModelList)">{{demand.completed}}</a></td>
+                                <td data-title="Pending"><a href="javascript:void(0)" (click)="showSubDeptSubPendingFunc(demand.demandModelList)">{{demand.pending}}</a></td>
                             </tr>
                         </tbody>
                     </table>

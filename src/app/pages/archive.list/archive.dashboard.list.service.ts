@@ -21,6 +21,7 @@ export class ArchiveListService extends ServiceBase<IncidentModel> implements IA
         return this._dataService.Query()
             .Expand('EmergencyType')
             .Filter(`ClosedOn ne null`)
+            .OrderBy('ClosedOn desc')
             .Execute();
     }
 

@@ -3,7 +3,7 @@
 </span>
 <div *ngIf="isShowPage | accesibility:currentDepartmentId:'CloseEmergency'" class="card">
     <div class="card-header">
-        Crisis Closure
+      <strong>  Crisis Closure </strong>
     </div>
     <div class="card-block">
         <div class="row">
@@ -63,7 +63,7 @@
                                 <td data-title="Check List Completed" [hidden]="crisis.Checklistnumber===0">{{crisis.ChecklistClosednumber}} Out Of {{crisis.Checklistnumber}} Completed&nbsp;</td>
                                 <td data-title="Demand Completed" [hidden]="crisis.demandnumber!==0">No Demand(s) were found for this department&nbsp;</td>
                                 <td data-title="Demand Completed" [hidden]="crisis.demandnumber===0">{{crisis.demandClosednumber}} Out Of {{crisis.demandnumber}} Closed&nbsp;</td>
-                                <td data-title="Closure Report Submitted" [hidden]="crisis.IsSubmitted==false">{{crisis.SubmittedOn}}&nbsp;</td>
+                                <td data-title="Closure Report Submitted" [hidden]="crisis.IsSubmitted==false">{{crisis.SubmittedOn | date: 'dd-MMM-yyyy hh:mm a'}}&nbsp;</td>
                                 <td data-title="Closure Report Submitted" [hidden]="crisis.IsSubmitted==true"> <i class="fa fa-question fa-2x fontAmber" aria-hidden="true" title="Closure report not submitted by this department"></i></td>
                                 <td data-title="System Notified"> <i class="fa fa-check fa-2x fontGreen" aria-hidden="true" [hidden]="crisis.InitialNotify == false"></i>&nbsp;</td>
                                 <td data-title="Notified by SPOC"> <i class="fa fa-check fa-2x fontGreen" aria-hidden="true" [hidden]="crisis.SeperateNotify == false"></i>&nbsp;</td>

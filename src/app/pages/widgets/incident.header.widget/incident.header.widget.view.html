@@ -5,7 +5,7 @@
             <div class="col-lg-8 col-md-7">
 
                 <div class="header-incident truncate" title="{{incidentName}}"> <strong>Event: </strong> {{incidentName}}</div>
-                <div class="header-drill"> Drill</div>
+                <div *ngIf="IsDrillIndicator" class="header-drill"> Drill</div>
                 <div class="view-inc">
 
 

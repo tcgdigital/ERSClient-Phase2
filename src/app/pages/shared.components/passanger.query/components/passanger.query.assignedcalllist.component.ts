@@ -64,7 +64,6 @@ export class PassangerQueryAssignedCallsListComponent implements OnInit {
         });
 
         this.globalState.Subscribe('closePDAEnqNotAssigned', (model: string) => {
-            //debugger;
             this.cancelCallcenter();
         });
     }
