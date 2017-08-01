@@ -115,7 +115,8 @@
          <hr>
         <div class="row">
             <div class="col-lg-3 col-md-3 col-sm-12 butt-des">
-                <input type="file" #inputFileUserProfile id="file" formControlName="fileUserProfile" (change)="getFileDetails($event,'UserProfile')" />
+                <input type="file" #inputFileUserProfile id="file" (change)="getFileDetails($event,'UserProfile')" />
+                
             </div>
             <div class="col-lg-3 col-md-3 col-sm-12">
                 <button class="btn btn-primary" type="button" (click)="uploadFiles()" [disabled] = "disableUploadButton">Upload</button>
