@@ -1,6 +1,7 @@
-import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewEncapsulation, ViewChild } from '@angular/core';
 
 import { ChecklistModel } from './checklist.model';
+import { InvalidChecklistModel } from './invalid.checklist.model'
 import { ChecklistService } from './checklist.service';
 import { Observable } from 'rxjs/Rx';
 import {
@@ -11,6 +12,7 @@ import {
 } from '../../../../shared';
 import { DepartmentModel, DepartmentService } from '../../department';
 import { EmergencyTypeModel, EmergencyTypeService } from '../../emergencytype';
+import { ModalDirective } from "ngx-bootstrap";
 
 @Component({
     selector: 'checklist-list',
@@ -34,6 +36,9 @@ export class ChecklistListComponent implements OnInit {
     emergencyTypesForSearch: Array<NameValue<number>> = Array<NameValue<number>>();
     expandSearch: boolean = false;
     searchValue: string = "Expand Search";
+    invalidChecklists: InvalidChecklistModel[] = [];
+
+    @ViewChild('invalidChecklistModal') public invalidChecklistModal: ModalDirective;
 
     constructor(private checkListService: ChecklistService, private emergencytypeService: EmergencyTypeService,
         private dataExchange: DataExchangeService<ChecklistModel>, private globalState: GlobalStateService) { }
@@ -64,6 +69,13 @@ export class ChecklistListComponent implements OnInit {
                 console.log(this.checkLists);
                 this.initiateSearchConfigurations();
             });
+    }
+
+    getInvalidChecklists(): void{
+        this.checkListService.GetInvalidChecklists()
+        .subscribe((response : ResponseModel<InvalidChecklistModel>) => {
+            this.invalidChecklists = response.Records;
+        })
     }
 
     getEmergencyTypes(): void {
@@ -114,6 +126,7 @@ export class ChecklistListComponent implements OnInit {
             (model) => this.onCheckListModelReloadSuccess(model));
         this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
         this.initiateSearchConfigurations();
+        this.getInvalidChecklists();
         this.dataExchange.Subscribe('FileUploadedSuccessfullyCheckList',()=>{
             this.getCheckLists(this.currentDepartmentId);
         })
@@ -146,6 +159,14 @@ export class ChecklistListComponent implements OnInit {
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
+    }
+
+    openInvalidRecords(): void {
+        this.invalidChecklistModal.show();
+    }
+
+    closeInvalidChecklist(): void {
+        this.invalidChecklistModal.hide();
     }
 
     invokeSearch(query: string): void {

@@ -509,8 +509,7 @@ export class ChecklistEntryComponent implements OnInit {
             Stations: new FormControl(checkList ? checkList.Stations : ''),
             isSelected: new FormControl(false),
             selectedchecklistdetails: new FormControl(''),
-            checklistparentselected: new FormControl(''),
-            fileChecklist: new FormControl()
+            checklistparentselected: new FormControl('')
         });
     }
 

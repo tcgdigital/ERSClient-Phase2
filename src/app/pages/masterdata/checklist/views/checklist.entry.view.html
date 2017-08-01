@@ -162,7 +162,8 @@
             </div>
             <div class="row">
                 <div class="col-lg-3 col-md-3 col-sm-12 butt-des">
-                    <input type="file" #inputFileChecklist id="file" formControlName="fileChecklist" (change)="getFileDetails($event,'UserProfile')" />
+                    <input type="file" #inputFileChecklist id="file" (change)="getFileDetails($event,'UserProfile')" />
+                    <!-- formControlName="fileChecklist" -->
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-12 butt-align">
                     <button class="btn btn-primary" type="button" (click)="Upload()" [disabled] ="disableUploadButton">Upload</button>
