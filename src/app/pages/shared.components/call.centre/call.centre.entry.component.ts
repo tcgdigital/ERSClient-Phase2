@@ -755,7 +755,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     formInitialization(): any {
         return new FormGroup({
             EnquiryId: new FormControl(0),
-            Queries: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+            Queries: new FormControl('', [Validators.required, Validators.maxLength(1000)]),
             IsAdminRequest: new FormControl(false),
             IsCallBack: new FormControl(false),
             IsTravelRequest: new FormControl(false)
@@ -860,7 +860,15 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                             let num = UtilityService.UUID();
                             this.globalState.NotifyDataChanged('CallRecieved', num);
                             this.dataExchange.Publish('clearAutoCompleteInput', '');
-                            this.createDemands(this.enquiry.AffectedPersonId); // this.affectedId
+                            let affId:number;
+                            if(this.enquiry.AffectedPersonId > 0)
+                                {
+                                    affId = this.enquiry.AffectedPersonId;
+                                }
+                                else{
+                                    affId = this.affectedId;
+                                }
+                            this.createDemands(affId); // this.affectedId
                         }, (error: any) => {
                             console.log(`Error: ${error}`);
                         });
