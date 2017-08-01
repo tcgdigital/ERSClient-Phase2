@@ -43,6 +43,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
     disableUploadButton: boolean = true;
     HRInfoTemplatePath: string = './assets/static-content/PRHR_YYYYMMDD.csv';
     HRTrainingTemplatePath: string = './assets/static-content/PRHR_Training_YYYYMMDD.csv';
+    
 
     constructor(private userProfileService: UserProfileService,
         private dataExchange: DataExchangeService<UserProfileModel>,

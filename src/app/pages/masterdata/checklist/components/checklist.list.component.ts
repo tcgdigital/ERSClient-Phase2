@@ -114,6 +114,9 @@ export class ChecklistListComponent implements OnInit {
             (model) => this.onCheckListModelReloadSuccess(model));
         this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
         this.initiateSearchConfigurations();
+        this.dataExchange.Subscribe('FileUploadedSuccessfullyCheckList',()=>{
+            this.getCheckLists(this.currentDepartmentId);
+        })
     }
 
     ngOnDestroy(): void {

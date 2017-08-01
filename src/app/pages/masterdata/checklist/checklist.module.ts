@@ -13,7 +13,7 @@ import {
 } from './components';
 import { DepartmentService } from '../department';
 import { EmergencyTypeService } from '../emergencytype';
-import { DataExchangeService, SharedModule } from '../../../shared';
+import { DataExchangeService, SharedModule, FileUploadService } from '../../../shared';
 import { OrganizationService } from "../../shared.components/organization";
 
 @NgModule({
@@ -36,7 +36,8 @@ import { OrganizationService } from "../../shared.components/organization";
         DepartmentService,
         EmergencyTypeService,
         OrganizationService,
-        DataExchangeService
+        DataExchangeService,
+        FileUploadService
     ]
 })
 export class ChecklistModule { }

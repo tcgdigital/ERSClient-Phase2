@@ -49,9 +49,10 @@
                 <td data-title="Sequence">{{checklist.Sequence}}</td>
                 <td data-title="Organization">{{checklist.Organization.OrganizationCode}}</td>
                 <td data-title="Stations">
-                    <ul *ngIf="checklist.StationList != undefind">
+                     <ul *ngIf="checklist.StationList != undefind">
                         <li *ngFor="let station of checklist.StationList">{{station}}</li>
-                    </ul>
+                    </ul> 
+                    <!-- {{checklist.Stations}} -->
                 </td>
                 <td data-title="Active">
                     <md-checkbox class="Marght" id="IsActive" name="IsActive" [ngModel]="checklist.Active" (change)="IsActive($event,checklist)"

@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import {
     FormGroup,
     FormControl,
@@ -15,8 +15,8 @@ import { DepartmentModel, DepartmentService } from '../../department';
 import { EmergencyTypeModel, EmergencyTypeService } from '../../emergencytype';
 import { ChecklistService } from './checklist.service';
 import {
-    ResponseModel, DataExchangeService, BaseModel,
-    UtilityService, GlobalStateService, KeyValue, AuthModel, URLValidator
+    ResponseModel, DataExchangeService, BaseModel, ValidationResultModel,
+    UtilityService, GlobalStateService, KeyValue, AuthModel, URLValidator, GlobalConstants, FileUploadService
 } from '../../../../shared';
 
 import {
@@ -61,7 +61,11 @@ export class ChecklistEntryComponent implements OnInit {
     isSelected: boolean = false;
     oldparents: number[] = [];
     newparents: number[] = [];
+    filesToUpload: File[] = [];
+    disableUploadButton = true;
     //AllStations: EmergencyLocationModel[] = [];
+    ChecklistTemplatePath: string = './assets/static-content/ChecklistTemplate.xlsx';
+    @ViewChild('inputFileChecklist') inputFileChecklist: any
 
     constructor(formBuilder: FormBuilder,
         private departmentService: DepartmentService,
@@ -71,7 +75,8 @@ export class ChecklistEntryComponent implements OnInit {
         private globalState: GlobalStateService,
         private organizationService: OrganizationService,
         private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig) {
+        private toastrConfig: ToastrConfig,
+        private fileUploadService: FileUploadService) {
         this.showAdd = false;
         this.listSelected = false;
         this.buttonValue = 'Add Checklist';
@@ -220,6 +225,8 @@ export class ChecklistEntryComponent implements OnInit {
                 // this.getCheckListByDepartment(this.currentDepartmentId);
             });
     }
+
+    
 
     // private getCheckListByDepartment(departmentId): void {
     //     this.checkListService.GetAllWithParentsByDepartment(departmentId)
@@ -454,7 +461,38 @@ export class ChecklistEntryComponent implements OnInit {
         this.parentChecklists = this.noDtaList;
     }
 
+    Upload(): void{
+        if(this.filesToUpload.length)
+        {
+            let baseUrl = GlobalConstants.EXTERNAL_URL;
+            let param = this.credential.UserId;
+            let errorMsg: string;
+            this.date = new Date();
+            this.fileUploadService.uploadFiles<ValidationResultModel>(baseUrl + "./api/MasterDataExportImport/ChecklistUpload/" + param, 
+            this.filesToUpload, this.date.toString()).subscribe((result: ValidationResultModel) => {
+                if(result.ResultType == 1)
+                {                   
+                    this.toastrService.error(result.Message,"Error",this.toastrConfig);
+                }
+                else
+                {
+                    this.toastrService.success(result.Message, "Success", this.toastrConfig);
+                }
+                this.dataExchange.Publish("FileUploadedSuccessfullyCheckList", new ChecklistModel());
+                this.inputFileChecklist.nativeElement.value = "";
+                this.disableUploadButton = true;
+                this.showAdd = false;
+            });
 
+        }
+
+        else
+        {
+            this.toastrService.error("Invalid File Format!", "Error", this.toastrConfig);     
+            this.inputFileChecklist.nativeElement.value = "";
+            this.disableUploadButton = true; 
+        }
+    }
 
     private resetCheckListForm(checkList?: ChecklistModel): FormGroup {
 
@@ -471,8 +509,26 @@ export class ChecklistEntryComponent implements OnInit {
             Stations: new FormControl(checkList ? checkList.Stations : ''),
             isSelected: new FormControl(false),
             selectedchecklistdetails: new FormControl(''),
-            checklistparentselected: new FormControl('')
+            checklistparentselected: new FormControl(''),
+            fileChecklist: new FormControl()
         });
+    }
+
+    private getFileDetails(e: any, type: string): void {
+        this.disableUploadButton = false;
+
+        for (let i = 0; i < e.target.files.length; i++) {
+            const extension = e.target.files[i].name.split('.').pop();
+
+            if (extension.toLowerCase() === 'xlsx') {
+                 this.filesToUpload.push(e.target.files[i]);
+            }
+            else {
+                this.toastrService.error('Invalid File Format! Please select a file having extension: .xlsx', 'Error', this.toastrConfig);                
+                this.inputFileChecklist.nativeElement.value = "";
+                this.disableUploadButton = true;
+            }
+        }
     }
 
     private departmentChangeHandler(department: KeyValue): void {
