@@ -154,7 +154,7 @@
                         <div class="multiselect-container">
                             <div class="multiselect-selector" (click)="showListsamepnr(); $event.stopPropagation();">
                                 <i class="fa fa-caret-down fa-pull-right fa-fw" aria-hidden="true"></i> {{selectedcountpnr>0?
-                                selectedcountpnr + ' Passengers(s) selected' : 'Select Co-Passenger'}}
+                                selectedcountpnr + ' Passengers(s) selected' : 'View Co-Passenger'}}
                             </div>
                             <ul class="multiselect-list1 dropdown-menu-down" [hidden]="!list1Selected" (click)="$event.stopPropagation();">
                                 <li *ngFor="let copassenger of copassengerlistpnr">
@@ -184,13 +184,13 @@
                     <div class="col-md-12 col-sm-12" [hidden]="enquiryType!=1  && enquiryType!=2 && enquiryType!=3">
                         <strong><label for="LastName">Select type of demands to be raised</label></strong>
                         <br>
-                        <md-checkbox id="IsCallBack" formControlName="IsCallBack" aria-label="Add">
+                        <md-checkbox id="IsCallBack" formControlName="IsCallBack" aria-label="Add" disabled="{{DemandCheckDisabled}}">
                             Callback &nbsp;
                         </md-checkbox>
-                        <md-checkbox id="IsTravelRequest" formControlName="IsTravelRequest" aria-label="Add">
+                        <md-checkbox id="IsTravelRequest" formControlName="IsTravelRequest" aria-label="Add" disabled="{{DemandCheckDisabled}}">
                             Travel Request &nbsp;
                         </md-checkbox>
-                        <md-checkbox id="IsAdminRequest" formControlName="IsAdminRequest" aria-label="Add">
+                        <md-checkbox id="IsAdminRequest" formControlName="IsAdminRequest" aria-label="Add" disabled="{{DemandCheckDisabled}}">
                             Admin Request &nbsp;
                         </md-checkbox>
                     </div>
