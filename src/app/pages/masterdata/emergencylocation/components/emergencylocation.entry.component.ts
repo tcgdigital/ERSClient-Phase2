@@ -34,7 +34,7 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
         private dataExchange: DataExchangeService<EmergencyLocationModel>,
         private builder: FormBuilder, private toastrService: ToastrService,
         private toastrConfig: ToastrConfig,
-        private fileUploadService: FileUploadService,) {
+        private fileUploadService: FileUploadService) {
     }
 
     ngOnInit(): void{
@@ -64,7 +64,7 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
         for (var i = 0; i < e.target.files.length; i++) {
             var extension = e.target.files[i].name.split('.').pop();
 
-            if (extension.toLowerCase() == "xls" || extension.toLowerCase() == "xlsx") {                                           
+            if (extension.toLowerCase() == "xlsx") {                                           
                 this.filesToUpload.push(e.target.files[i]);
             }
             else{
