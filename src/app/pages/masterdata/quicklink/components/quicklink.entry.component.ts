@@ -14,8 +14,7 @@ import { QuickLinkModel } from './quicklink.model';
 import { QuickLinkService } from './quicklink.service';
 import {
     ResponseModel, DataExchangeService,
-    AuthModel, UtilityService, FileUploadService,
-    URLValidator, GlobalConstants,
+    AuthModel, UtilityService, FileUploadService, GlobalConstants,
     IUploadDocuments
 } from '../../../../shared';
 
@@ -41,6 +40,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
     buttonValue: String = "";
     credential: AuthModel;
     public showAddText: string = 'ADD QUICKLINK';
+    isValidUrl: boolean;
 
     constructor(formBuilder: FormBuilder, private quickLinkService: QuickLinkService,
         private dataExchange: DataExchangeService<QuickLinkModel>,
@@ -63,7 +63,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
         this.form = new FormGroup({
             QuickLinkId: new FormControl(0),
             QuickLinkName: new FormControl('', [Validators.required]),
-            QuickLinkURL: new FormControl('', [URLValidator.validate])
+            QuickLinkURL: new FormControl('')
         });
     }
 
@@ -115,6 +115,17 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
 
     onSubmit(values: Object): void {
         this.submitted = true;
+        if (this.form.controls['URL'].value != '') {
+            const bolValid = /^(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:\~\+#]*[\w\-\@?^=%&amp;\~\+#])?$/.test(this.form.controls['URL'].value);
+            if (!bolValid) {
+                this.isValidUrl = true;
+                return;
+            }
+            else {
+                this.isValidUrl = false;
+            }
+        }
+
         if (this.form.valid) {
             if (this.quickLinkModel.QuickLinkId == 0) {//ADD REGION
                 delete this.quickLinkModel.Active;
@@ -126,6 +137,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
                         this.initializeInputForm();
                         this.toastrService.success('Quick link saved Successfully.', 'Success', this.toastrConfig);
                         this.dataExchange.Publish("quickLinkModelSaved", response);
+                        this.showAddRegion(this.showAdd);
                         this.showAdd = false;
                         this.initiateQuickLinkModel();
                     }, (error: any) => {
@@ -147,8 +159,9 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
                                 QuickLinkName: new FormControl(this.quickLinkModel.QuickLinkName,
                                     [Validators.required, Validators.minLength(5)]),
                                 QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL,
-                                    [Validators.minLength(12), URLValidator.validate])
+                                    [Validators.minLength(12)])
                             });
+                            this.showAddRegion(this.showAdd);
                             this.showAdd = false;
                         }, (error: any) => {
                             console.log(`Error: ${error}`);
@@ -167,8 +180,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
             QuickLinkId: new FormControl(0),
             QuickLinkName: new FormControl(this.quickLinkModel.QuickLinkName,
                 [Validators.required]),
-            QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL,
-                [URLValidator.validate])
+            QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL)
         });
     }
 
@@ -199,8 +211,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
             QuickLinkId: new FormControl(this.quickLinkModel.QuickLinkId),
             QuickLinkName: new FormControl(this.quickLinkModel.QuickLinkName,
                 [Validators.required]),
-            QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL,
-                [URLValidator.validate])
+            QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL)
         });
         this.filepathWithLinks = this.quickLinkModel.UploadURL;
         if (this.filepathWithLinks != null) {

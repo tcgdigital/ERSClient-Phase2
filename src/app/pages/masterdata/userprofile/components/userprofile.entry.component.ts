@@ -123,6 +123,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
                 this.formControlDirtyCheck();
                 this.userProfileService.Update(this.userProfileModeltoUpdate, this.userProfileModeltoUpdate.UserProfileId)
                     .subscribe((response: UserProfileModel) => {
+                        this.showAddRegion(this.showAdd);
                         this.showAdd = false;
                         this.toastrService.success('User profile edited Successfully.', 'Success', this.toastrConfig);
                         this.dataExchange.Publish('UserProfileModelModified', response);
