@@ -303,7 +303,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         this.copassengerlistPassengerForMappedPerson.forEach(x => {
             if (x.GroupId == groupid) {
                 x.IsSelected = isselected; // || (x.IsSelected && ismappedersonchanged);
-                console.log(x.GroupId);
+                //console.log(x.GroupId);
             }
         });
     }
@@ -324,7 +324,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                     {
                         x.IsSelected = true;
                         x.PNRdisabled = "disabled";
-                        console.log(y.AffectedPersonId);
+                        //console.log(y.AffectedPersonId);
                     }
 
             });
@@ -740,7 +740,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     }
 
     onActionClick(eventArgs: any) {
-        console.log(eventArgs);
+        //console.log(eventArgs);
         let affectedPersonid = eventArgs.selectedItem.Value;
         this.affectedPeopleService.GetCommunicationByPDA(affectedPersonid)
             .subscribe((response: ResponseModel<AffectedPeopleModel>) => {
