@@ -2,6 +2,7 @@ import { UtilityService, GlobalConstants } from '../../shared';
 import * as _ from 'underscore';
 import { ChecklistTrailModel } from "../shared.components/checklist.trail";
 import { DeptCheckListModel } from './checklist.summary.widget/checklist.summary.widget.model';
+import { ActionableStatusLogModel } from "../shared.components/actionablestatuslog";
 import {
     GraphObject
 } from './demand.raised.summary.widget/demand.raised.summary.widget.model';
@@ -9,12 +10,10 @@ import {
 export class WidgetUtilityService {
     public static elapsedHourForGraph: number = GlobalConstants.ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION;
 
-    public static GetGraphCheckList(requesterDepartmentId: number, Highcharts: any, arrGraphData: ChecklistTrailModel[],
-        containerName: string, graphSubjectType: string, emergencyDate: Date): void {
-        debugger;
+    public static GetGraphCheckList(requesterDepartmentId: number, Highcharts: any, arrGraphData: ActionableStatusLogModel[],
+        containerName: string, graphSubjectType: string, emergencyDate: Date, departmentName: string): void {
         this.elapsedHourForGraph = GlobalConstants.ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION;
-
-        let DepartmentName = arrGraphData[0].Department.DepartmentName;
+        let DepartmentName = departmentName;
         let arrGraphPending: number[] = [];
         let arrGraphCompleted: number[] = [];
 
@@ -53,7 +52,7 @@ export class WidgetUtilityService {
             let pendingOld: number = 0;
 
             ///////This is for demands which are created after crisis initiation and closed in this hour.
-            let closeList: ChecklistTrailModel[] = arrGraphData.filter((x: ChecklistTrailModel) => x.CompletionStatus == 'Closed')
+            let closeList: ActionableStatusLogModel[] = arrGraphData.filter((x: ActionableStatusLogModel) => x.CompletionStatus == 6)
                 .filter((x) => {
                     return ((temp <= new Date(x.CompletionStatusChangedOn) && new Date(x.CompletionStatusChangedOn) <= end));
                 });
@@ -62,15 +61,15 @@ export class WidgetUtilityService {
 
 
             //This is for demands which are created after crisis initiation but not yet closed.
-            // let pendingList: ChecklistTrailModel[] = arrGraphData.filter((x: ChecklistTrailModel) => {
-            //     return ((x.CompletionStatus != 'Closed') && (temp <= new Date(x.CompletionStatusChangedOn)) && (new Date(x.CompletionStatusChangedOn) <= end));
-            // });
-
-            let totalCount = _.uniq(arrGraphData, function (x: ChecklistTrailModel) {
-                return x.ChklistId;
+            let pendingList: ActionableStatusLogModel[] = arrGraphData.filter((x: ActionableStatusLogModel) => {
+                return ((x.CompletionStatus != 6) && (temp <= new Date(x.CompletionStatusChangedOn)) && (new Date(x.CompletionStatusChangedOn) <= end));
             });
 
-            pendingTotal = totalCount.length - closedTotal;
+            // let totalCount = _.uniq(arrGraphData, function (x: ChecklistTrailModel) {
+            //     return x.ChklistId;
+            // });
+            pendingTotal = pendingTotal + pendingList.length;
+            //pendingTotal = totalCount.length - closedTotal;
 
             // if (i == 1) {
             //     pendingInter = pendingTotal;
