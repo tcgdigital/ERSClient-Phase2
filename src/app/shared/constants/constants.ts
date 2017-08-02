@@ -504,6 +504,11 @@ export class GlobalConstants {
             Key: 'ReceiveCrisisCreationResponse',
             Title: 'Crisis Created',
             Message: 'A new crisis has been initiated. Please logout and re-login to the system to see the details of the new crisis.'
+        }, {
+            Type: 'CrisisCreationNotification',
+            Key: 'ReceiveDepartmentCreationResponse',
+            Title: 'Department Created',
+            Message: 'A new department has been created. Please logout and re-login to the system to see the new department.'
         },
 
         {
