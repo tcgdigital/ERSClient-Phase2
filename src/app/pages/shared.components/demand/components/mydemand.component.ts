@@ -50,6 +50,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     isArchive: boolean = false;
     demandFilePath: string;
     public globalStateProxy: GlobalStateService;
+    public isInvalidRemarks: boolean = false;
 
     /**
      * Creates an instance of MyDemandComponent.
@@ -204,10 +205,15 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     }
 
     public cancelRemarkUpdate(demand): void {
+        this.isInvalidRemarks = false;
         this.childModalRemarks.hide();
     }
 
     public saveRemark(remarks): void {
+        if (remarks == '' || remarks == undefined) {
+            this.isInvalidRemarks = true;
+            return;
+        }
         const demand = this.demandForRemarks;
 
         this.RemarkToCreate = new DemandRemarkLogModel();

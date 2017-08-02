@@ -37,7 +37,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <quick-link-widget [currentIncident]="CurrentIncidentId" *ngIf="showQuicklink"></quick-link-widget>
+                <quick-link-widget [currentIncident]="CurrentIncidentId" [initiatedDepartmentId]="currentDepartmentId" *ngIf="showQuicklink"></quick-link-widget>
             </div>
         </div>
     </div>

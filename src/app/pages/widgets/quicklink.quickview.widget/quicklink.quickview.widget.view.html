@@ -1,19 +1,24 @@
-<responsive-table>
-    <table responsive-table-body>
-        <thead>
-            <tr>
-                <th>Quick Link Name</th>
-                <th>Quick Link URL</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr [hidden]="quicklinks.length != 0">
-                <td colspan="6">No records found.</td>
-            </tr>
-            <tr *ngFor="let quicklink of quicklinks">
-                <td data-title="Quick Link Name">{{quicklink.QuickLinkName}}</td>
-                <td data-title="Quick Link URL"><a href="{{quicklink.QuickLinkURL}}" target="_blank">{{ quicklink.QuickLinkURL }}</a></td>
-            </tr>
-        </tbody>
-    </table>
-</responsive-table>
+<span class="validationAlert" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'ViewQuicklinks')">
+    <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
+</span>
+<div *ngIf="isShowPage | accesibility:currentDepartmentId:'ViewQuicklinks'">
+    <responsive-table>
+        <table responsive-table-body>
+            <thead>
+                <tr>
+                    <th>Quick Link Name</th>
+                    <th>Quick Link URL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr [hidden]="quicklinks.length != 0">
+                    <td colspan="6">No records found.</td>
+                </tr>
+                <tr *ngFor="let quicklink of quicklinks">
+                    <td data-title="Quick Link Name">{{quicklink.QuickLinkName}}</td>
+                    <td data-title="Quick Link URL"><a href="{{quicklink.QuickLinkURL}}" target="_blank">{{ quicklink.QuickLinkURL }}</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </responsive-table>
+</div>

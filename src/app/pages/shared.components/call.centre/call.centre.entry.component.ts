@@ -211,6 +211,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     }
 
     getExternalInput(enquirytype): void {
+        //debugger;
         let queryDetailService: Observable<ExternalInputModel[]>
         if (enquirytype == 1 || enquirytype == 3)
             queryDetailService = this.callcenteronlypageservice.GetPassengerQueryByIncident(this.currentIncident, this.callid).map(x => x.Records);
@@ -224,7 +225,6 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             if (response[0].PDAEnquiry != null) {
                 this.pdaenquery = response[0].PDAEnquiry;
                 this.form.controls["Queries"].reset({ value: this.pdaenquery.Query, disabled: false });
-
             }
             if (response[0].CargoEnquiry != null) {
                 this.cargoquery = response[0].CargoEnquiry;
@@ -481,7 +481,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             demand.AffectedPersonId = (this.enquiryType == 1 || this.enquiryType == 3) ?
                 this.enquiry.AffectedPersonId : 0;
             demand.AffectedObjectId = (this.enquiryType == 2) ?
-                this.enquiry.AffectedObjectId : 0;
+                this.enquiry.AffectedObjectId : null;
             this.selctedEnquiredPerson = (demand.AffectedPersonId !== 0) ?
                 this.affectedPeople.find((x) => x.AffectedPersonId === demand.AffectedPersonId) : null;
             this.selctedEnquiredObject = (demand.AffectedObjectId !== 0) ?
@@ -498,9 +498,13 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                 personName = obj.PassengerName;
                 demand.AffectedPersonId = affectedId;
             }
+            else if(this.enquiryType == 2)
+            {
+                demand.AffectedPersonId = null;
+            }
             
-            demand.AffectedObjectId = (this.enquiryType == 2) ?
-                this.enquiry.AffectedObjectId : null;
+            // demand.AffectedObjectId = (this.enquiryType == 2) ?
+            //     this.enquiry.AffectedObjectId : null;
             
             demand.AffectedId = (this.enquiryType == 3) ?
                 this.affectedPeople.find((x) => x.AffectedPersonId === demand.AffectedPersonId).AffectedId :
@@ -543,8 +547,8 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     }
 
     setenquiryModelforCopassangers(enquiryModel: EnquiryModel): EnquiryModel[] {
-
         let enquirymodels: EnquiryModel[] = [];
+        
         this.consolidatedCopassengers.map(x => {
             let enquiry: EnquiryModel = new EnquiryModel();
             enquiry.AffectedPersonId = x.AffectedPersonId;
@@ -785,7 +789,6 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     }
 
     saveEnquiryDemandCaller(): void {
-        
         this.submitted = true;
         if (this.form.valid && (((this.enquiryType == 1 || this.enquiryType == 3) && this.nullorwhitecheck(this.enquiry.AffectedPersonId)) ||
             (this.enquiryType == 2 && this.nullorwhitecheck(this.enquiry.AffectedObjectId) || (this.enquiryType >= 4)))) {
@@ -923,25 +926,28 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                 }
                 else if ((this.enquiryType == 1)) {
                     // this.consolidatedCopassengers.length = 0;
-                    let enquiryModelsToSave: EnquiryModel[] = [];
-                    enquiryModelsToSave = this.setenquiryModelforCopassangers(this.enquiry);
+                    let enquiryModelsToSaveEdit: EnquiryModel[] = [];
+                    enquiryModelsToSaveEdit = this.setenquiryModelforCopassangers(this.enquiry);
                     this.enquiry.CommunicationLogs = communicationlogs;
-                    enquiryModelsToSave.push(this.enquiry);
-                    let pdaenquirytoupdate: PDAEnquiryModel = new PDAEnquiryModel();
-                    pdaenquirytoupdate.deleteAttributes();
-                    pdaenquirytoupdate.AffectedPersonId = this.enquiry.AffectedPersonId;
-                    enquiryModelsToSave.forEach(x => {
+                    this.enquiry.CommunicationLogs[0].Queries = this.enquiry.Queries;
+                    enquiryModelsToSaveEdit.push(this.enquiry);
+                    let pdaenquirytoupdateEdit: PDAEnquiryModel = new PDAEnquiryModel();
+                    pdaenquirytoupdateEdit.deleteAttributes();
+                    pdaenquirytoupdateEdit.AffectedPersonId = this.enquiry.AffectedPersonId;
+                    enquiryModelsToSaveEdit.forEach(x => {
                         x.EnquiryId = 0;
                         x.ExternalInputId = this.callid;
-                        x.ActiveFlag = 'Active';
-                        x.CreatedOn = new Date();
-                        x.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
+                        // x.ActiveFlag = 'Active';
+                        // x.CreatedOn = new Date();
+                        // x.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
                         x.EnquiryType = this.enquiryType;
                         x.CallerId = this.caller.CallerId;
                     });
+                    // .flatMap(_ => this.demandService.UpdateBulkToDeactivateFromCallId(this.caller.CallerId)) // At the time of edit demand will not be created
                     this.enquiryService.UpdateBulkToDeactivateFromExternalId(this.callid)
-                        //.flatMap(_ => this.demandService.UpdateBulkToDeactivateFromCallId(this.caller.CallerId)) // At the time of edit demand will not be created
-                        .flatMap(_ => this.enquiryService.CreateBulk(enquiryModelsToSave))
+                        .flatMap(_ => {
+                            return this.enquiryService.CreateBulk(enquiryModelsToSaveEdit);
+                        })
                         .flatMap(_ => {
                             if (this.consolidatedCopassengers.length > 0) {
                                 return this.returncopassangerservice(this.enquiry.AffectedPersonId);
@@ -955,7 +961,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                         })
                         .flatMap(_ => {
                             if (this.pdaenquery.AffectedPersonId != null && this.pdaenquery.AffectedPersonId != this.enquiry.AffectedPersonId) {
-                                return this.callcenteronlypageservice.updatepdaenquiry(pdaenquirytoupdate, this.pdaenquiryid);
+                                return this.callcenteronlypageservice.updatepdaenquiry(pdaenquirytoupdateEdit, this.pdaenquiryid);
                             }
                             else {
                                 return Observable.of(new PDAEnquiryModel());
@@ -979,7 +985,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                             // else {
                             //     this.createDemands(this.enquiry.AffectedPersonId); // this.affectedId
                             // }
-                            // this.globalState.NotifyDataChanged("closePDAEnqReceived"," ");
+                            this.globalState.NotifyDataChanged("closePDAEnqReceived"," ");
 
                         });
                 }
