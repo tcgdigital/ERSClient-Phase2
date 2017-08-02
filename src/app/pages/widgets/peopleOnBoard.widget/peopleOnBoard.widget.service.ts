@@ -205,6 +205,10 @@ export class PeopleOnBoardWidgetService implements OnInit {
         return this.involvedPartyService.GetQueryForPassenger(query, incidentId);            
     } 
 
+    GetQueryForCrew(query: string, incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
+        return this.involvedPartyService.GetQueryForCrew(query, incidentId);            
+    } 
+
      GetQueryForCargo(query: string, incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
         return this.involvedPartyService.GetQueryCargosByIncident(query, incidentId);            
     }  

@@ -4,6 +4,7 @@
             <tr>
                 <th>Quick Link Name</th>
                 <th>Quick Link URL</th>
+                <th>File Download</th>
             </tr>
         </thead>
         <tbody>
@@ -13,6 +14,9 @@
             <tr *ngFor="let quicklink of quicklinks">
                 <td data-title="Quick Link Name">{{quicklink.QuickLinkName}}</td>
                 <td data-title="Quick Link URL"><a href="{{quicklink.QuickLinkURL}}" target="_blank">{{ quicklink.QuickLinkURL }}</a></td>
+                <td data-title="File">
+                    <a target="_self" *ngIf="quicklink.UploadURL!=null" href="{{quicklink.UploadURL}}" download="QuicklinkFile"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+                </td>
             </tr>
         </tbody>
     </table>
