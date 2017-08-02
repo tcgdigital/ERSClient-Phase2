@@ -110,6 +110,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
                         this.form.reset();
                         this.toastrService.success('User profile created Successfully.', 'Success', this.toastrConfig);
                         this.dataExchange.Publish('UserProfileModelCreated', response);
+                        this.showAddRegion(this.showAdd);
                         this.showAdd = false;
 
                     }, (error: any) => {
@@ -224,7 +225,8 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
             UserId: new FormControl('', [Validators.required, UserIdValidator.validate]),
             Name: new FormControl('', [Validators.required]),
             MainContact: new FormControl('', [Validators.required]),
-            AlternateContact: new FormControl('', [Validators.required]),
+            //AlternateContact: new FormControl('', [Validators.required]),
+            AlternateContact: new FormControl(''),
             Location: new FormControl('', Validators.required),
             isActive: new FormControl(true),
             isVolunteered: new FormControl(false)

@@ -48,7 +48,7 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
     }
 
     onUserProfileSuccess(data: UserProfileModel): void {
-        //this.getUserProfiles();
+        this.getUserProfiles();
     }
 
     UpdateUserProfile(userProfileModelUpdate: UserProfileModel): void {
@@ -68,15 +68,19 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): any {
-        //this.getUserProfiles();
+        this.getUserProfiles();
         //this.getInvalidUserProfiles();
         this.initiateSearchConfigurations();
         this.dataExchange.Subscribe("UserProfileModelCreated", model => this.onUserProfileSuccess(model));
         this.dataExchange.Subscribe("UserProfileModelModified", model => this.onUserProfileSuccess(model));
         this.dataExchange.Subscribe('UserProfileLoadedFromFile', () => {
-            //this.getUserProfiles();
+            this.getUserProfiles();
             //this.getInvalidUserProfiles();
         })
+    }
+
+    trackByIndex(index) {
+        return index;
     }
 
     ngOnDestroy(): void {
