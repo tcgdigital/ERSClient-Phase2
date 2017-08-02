@@ -25,13 +25,13 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
     departments: DepartmentModel[] = [];
     date: Date = new Date();
     Action: string;
-    showAdd: boolean;
+    showAdd: boolean = false;
     demandTypeModelToEdit: DemandTypeModel = new DemandTypeModel();
     credential: AuthModel;
     public showApproverDept: boolean;
     public autoApproved: boolean;
     public submitted: boolean;
-
+    public showAddText: string = 'ADD DEMAND TYPE';
 
     constructor(private demandTypeService: DemandTypeService,
         private departmentService: DepartmentService,
@@ -70,6 +70,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         this.submitted = false;
         this.demandTypeModel = new DemandTypeModel();
         this.Action = 'Submit';
+        this.showAddRegion(this.showAdd);
         this.showAdd = false;
         this.demandTypeModel.ActiveFlag = 'Active';
         this.demandTypeModel.CreatedBy = +this.credential.UserId;
@@ -201,8 +202,15 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         this.dataExchange.Unsubscribe('OnDemandUpdate');
     }
 
-    showAddRegion(ShowAdd: boolean): void {
-        this.showAdd = true;
+    showAddRegion(value): void {
+        // this.showAdd = true;
+        if (!value) {
+            this.showAddText = "CLICK TO COLLAPSE";
+        }
+        else {
+            this.showAddText = "ADD DEMAND TYPE";
+        }
+        this.showAdd = !value;
         this.form = new FormGroup({
             DemandTypeId: new FormControl(0),
             DemandTypeName: new FormControl('', [Validators.required, Validators.maxLength(50)]),

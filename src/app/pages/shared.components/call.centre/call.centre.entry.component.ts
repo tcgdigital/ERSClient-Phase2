@@ -150,6 +150,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     affectedId: number;
     createdBy: number;
     createdByName: string;
+    DemandCheckDisabled: string = "";
     //thisChild: ModalDirective;
     // grouidlistselected: number[] = [];
 
@@ -240,15 +241,19 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             if (enquirytype == 1) {
                 this.pdaenquiryid = this.pdaenquery.PDAEnquiryId;
             }
+
+            this.DemandCheckDisabled = "";
             if (this.isCallrecieved) {
+
+                this.DemandCheckDisabled = "disabled";
                 this.enquiryToUpdate = this.enquiryType != 1 ? response[0].Enquiries[0] :
                     response[0].Enquiries.find(x => x.AffectedPersonId == this.pdaenquery.AffectedPersonId);
                 this.enquiry = this.enquiryToUpdate;
                 this.form.controls["Queries"].reset({ value: this.enquiryToUpdate.Queries, disabled: false });
                 if (this.enquiryType == 1 || this.enquiryType == 2 || this.enquiryType == 3) {
-                    this.form.controls["IsCallBack"].reset({ value: this.enquiryToUpdate.IsCallBack, disabled: false });
-                    this.form.controls["IsAdminRequest"].reset({ value: this.enquiryToUpdate.IsAdminRequest, disabled: false });
-                    this.form.controls["IsTravelRequest"].reset({ value: this.enquiryToUpdate.IsTravelRequest, disabled: false });
+                    this.form.controls["IsCallBack"].reset({ value: this.enquiryToUpdate.IsCallBack });
+                    this.form.controls["IsAdminRequest"].reset({ value: this.enquiryToUpdate.IsAdminRequest });
+                    this.form.controls["IsTravelRequest"].reset({ value: this.enquiryToUpdate.IsTravelRequest });
                     this.initialvalue = (this.enquiryType == 1) ? this.passengers.find(x => x.Value == this.enquiryToUpdate.AffectedPersonId)
                         : (this.enquiryType == 3 ? this.crews.find(x => x.Value == this.enquiry.AffectedPersonId) :
                             (this.enquiryType == 2 ? this.awbs.find(x => x.Value == this.enquiry.AffectedObjectId) : new KeyValue("", 0)));
@@ -288,6 +293,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
 
     //co-passenger selection
     selectpeoplewithsamegroupid(groupid: number, isselected: boolean, ismappedersonchanged: boolean): void {
+        
         // this.copassengerlistpnr.forEach(x => {
         //     if (x.GroupId == groupid) {
         //         x.IsSelected = isselected || (x.IsSelected && ismappedersonchanged);
@@ -296,8 +302,8 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
 
         this.copassengerlistPassengerForMappedPerson.forEach(x => {
             if (x.GroupId == groupid) {
-                x.IsSelected = isselected || (x.IsSelected && ismappedersonchanged);
-                // console.log(x.GroupId);
+                x.IsSelected = isselected; // || (x.IsSelected && ismappedersonchanged);
+                //console.log(x.GroupId);
             }
         });
     }
@@ -318,9 +324,11 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                     {
                         x.IsSelected = true;
                         x.PNRdisabled = "disabled";
-                        console.log(y.AffectedPersonId);
+                        //console.log(y.AffectedPersonId);
                     }
+
             });
+                x.PassengerName = x.PassengerName + " (" + x.Pnr + ")";
         });
 
         this.copassengerlistPassengerForMappedPerson = _.without(this.copassengerlistPassengerForMappedPerson, _.findWhere(this.copassengerlistPassengerForMappedPerson, { AffectedPersonId: obj.AffectedPersonId }));
@@ -461,7 +469,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     }
 
     SetDemands(isCallback, isTravelRequest, isAdmin, isCrew, affectedId, affectedPersonId?: number): void {
-       
+     
         if (isCallback || isCrew || isTravelRequest || isAdmin) {
             
             let demand: DemandModel = new DemandModel();
@@ -527,8 +535,9 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             demand.ScheduleTime = scheduleTime.toString();
             demand.RequesterType = "Others";
             demand.DemandTrails = this.createDemandTrail(demand);
-            demand.CommunicationLogs = this.SetCommunicationLog("Demand", GlobalConstants.InteractionDetailsTypeDemand);
+            demand.CommunicationLogs = this.SetCommunicationLog("Demand", GlobalConstants.InteractionDetailsTypeDemand, demand.AffectedPersonId);
             demand.CommunicationLogs[0].Queries = demand.CommunicationLogs[0].Queries + ' Demand Code: ' + demand.DemandCode;
+
             this.demands.push(demand);
         }
     }
@@ -731,7 +740,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     }
 
     onActionClick(eventArgs: any) {
-        console.log(eventArgs);
+        //console.log(eventArgs);
         let affectedPersonid = eventArgs.selectedItem.Value;
         this.affectedPeopleService.GetCommunicationByPDA(affectedPersonid)
             .subscribe((response: ResponseModel<AffectedPeopleModel>) => {
@@ -753,7 +762,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     formInitialization(): any {
         return new FormGroup({
             EnquiryId: new FormControl(0),
-            Queries: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+            Queries: new FormControl('', [Validators.required, Validators.maxLength(1000)]),
             IsAdminRequest: new FormControl(false),
             IsCallBack: new FormControl(false),
             IsTravelRequest: new FormControl(false)
@@ -776,6 +785,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     }
 
     saveEnquiryDemandCaller(): void {
+        
         this.submitted = true;
         if (this.form.valid && (((this.enquiryType == 1 || this.enquiryType == 3) && this.nullorwhitecheck(this.enquiry.AffectedPersonId)) ||
             (this.enquiryType == 2 && this.nullorwhitecheck(this.enquiry.AffectedObjectId) || (this.enquiryType >= 4)))) {
@@ -811,6 +821,14 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                             this.toastrService.success('Enquiry Saved successfully.', 'Success', this.toastrConfig);
                             let num = UtilityService.UUID();
                             this.globalState.NotifyDataChanged('CallRecieved', num);
+                            
+                            this.selectedCoPassangers = this.consolidatedCopassengers.filter(x => x.IsSelected == true);
+                            if(this.selectedCoPassangers.filter(x => x.AffectedPersonId == this.enquiry.AffectedPersonId).length == 0)
+                            {
+                                let obj = this.affectedPeople.find(x => x.AffectedPersonId == this.enquiry.AffectedPersonId); // this.initialvalue.Value
+                                this.selectedCoPassangers.push(obj);
+                            }
+
                             if (this.selectedCoPassangers.length > 0) {
                                 let afftedIdstocreateDemand: number[] = [];
                                 this.selectedCoPassangers.map(x => afftedIdstocreateDemand.push(x.AffectedPersonId));
@@ -818,7 +836,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                                 this.createDemands(this.affectedId, afftedIdstocreateDemand);
                             }
                             else {
-                                this.createDemands(this.affectedId);
+                                this.createDemands(this.enquiry.AffectedPersonId);
                             }
                         });
                         this.globalState.NotifyDataChanged("closePDAEnqNotAssigned"," ");
@@ -849,7 +867,15 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                             let num = UtilityService.UUID();
                             this.globalState.NotifyDataChanged('CallRecieved', num);
                             this.dataExchange.Publish('clearAutoCompleteInput', '');
-                            this.createDemands(this.affectedId);
+                            let affId:number;
+                            if(this.enquiry.AffectedPersonId > 0)
+                                {
+                                    affId = this.enquiry.AffectedPersonId;
+                                }
+                                else{
+                                    affId = this.affectedId;
+                                }
+                            this.createDemands(affId); // this.affectedId
                         }, (error: any) => {
                             console.log(`Error: ${error}`);
                         });
@@ -883,13 +909,15 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                     this.enquiryService.Update(this.enquiryToUpdate, this.enquiryToUpdate.EnquiryId)
                         .flatMap(() => this.communicationlogservice.Update(communicationlogToDeactivate, this.communicationlogstoupdateId[0]))
                         .flatMap(() => this.communicationlogservice.Create(communicationlogs[0]))
-                        .flatMap(() => this.demandService.UpdateBulkToDeactivateFromCallId(this.caller.CallerId))
+                        //.flatMap(() => this.demandService.UpdateBulkToDeactivateFromCallId(this.caller.CallerId)) // At the time of edit demand will not be created
                         .subscribe(() => {
                             this.form = this.formInitialization();
                             this.toastrService.success('Enquiry updated successfully.', 'Success', this.toastrConfig);
                             let num = UtilityService.UUID();
                             this.globalState.NotifyDataChanged('CallRecieved', num);
-                            this.createDemands(this.affectedId);
+
+                            // At the time of edit demand will not be created
+                            // this.createDemands(this.affectedId);
 
                         });
                 }
@@ -912,7 +940,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                         x.CallerId = this.caller.CallerId;
                     });
                     this.enquiryService.UpdateBulkToDeactivateFromExternalId(this.callid)
-                        .flatMap(_ => this.demandService.UpdateBulkToDeactivateFromCallId(this.caller.CallerId))
+                        //.flatMap(_ => this.demandService.UpdateBulkToDeactivateFromCallId(this.caller.CallerId)) // At the time of edit demand will not be created
                         .flatMap(_ => this.enquiryService.CreateBulk(enquiryModelsToSave))
                         .flatMap(_ => {
                             if (this.consolidatedCopassengers.length > 0) {
@@ -935,19 +963,23 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                         })
                         .subscribe(() => {
                             this.toastrService.success('Enquiry Saved successfully.', 'Success', this.toastrConfig);
-                            this.selectedCoPassangers = this.consolidatedCopassengers.filter(x => x.IsSelected == true);
-                            let obj = this.affectedPeople.find(x => x.AffectedPersonId == this.enquiry.AffectedPersonId); // this.initialvalue.Value
-                            this.selectedCoPassangers.push(obj);
+                            // At the time of edit demand will not be created
+                            // this.selectedCoPassangers = this.consolidatedCopassengers.filter(x => x.IsSelected == true);
+                            // if(this.selectedCoPassangers.filter(x => x.AffectedPersonId == this.enquiry.AffectedPersonId).length == 0)
+                            // {
+                            //     let obj = this.affectedPeople.find(x => x.AffectedPersonId == this.enquiry.AffectedPersonId); // this.initialvalue.Value
+                            //     this.selectedCoPassangers.push(obj);
+                            // }
                             
-                            if (this.selectedCoPassangers.length > 0) {
-                                let afftedIdstocreateDemand: number[] = [];
-                                this.selectedCoPassangers.map(x => afftedIdstocreateDemand.push(x.AffectedPersonId));
-                                this.createDemands(this.affectedId, afftedIdstocreateDemand);
-                            }
-                            else {
-                                this.createDemands(this.affectedId);
-                            }
-                            this.globalState.NotifyDataChanged("closePDAEnqReceived"," ");
+                            // if (this.selectedCoPassangers.length > 0) {
+                            //     let afftedIdstocreateDemand: number[] = [];
+                            //     this.selectedCoPassangers.map(x => afftedIdstocreateDemand.push(x.AffectedPersonId));
+                            //     this.createDemands(this.affectedId, afftedIdstocreateDemand);
+                            // }
+                            // else {
+                            //     this.createDemands(this.enquiry.AffectedPersonId); // this.affectedId
+                            // }
+                            // this.globalState.NotifyDataChanged("closePDAEnqReceived"," ");
 
                         });
                 }

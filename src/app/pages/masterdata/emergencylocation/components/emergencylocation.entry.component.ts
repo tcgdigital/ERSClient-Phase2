@@ -6,8 +6,10 @@ import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { EmergencyLocationService } from './emergencylocation.service';
 import { EmergencyLocationModel } from './emergencylocation.model';
 
-import { ResponseModel, DataExchangeService, FileUploadService,
-    GlobalConstants, UtilityService, AuthModel } from '../../../../shared';
+import {
+    ResponseModel, DataExchangeService, FileUploadService,
+    GlobalConstants, UtilityService, AuthModel
+} from '../../../../shared';
 
 @Component({
     selector: 'emergencylocation-entry',
@@ -22,13 +24,14 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
     emergencyLocations: EmergencyLocationModel[] = [];
     Action: string;
     numaricRegex = "/^[0-9]{10,10}$/";
-    showAdd: boolean;
+    showAdd: boolean = false;
     credential: AuthModel;
     filesToUpload: File[];
     isDisabledUpload = true;
     isInvalidForm: boolean = false;
     airportStationTemplatePath: string = './assets/static-content/AirportStation.xlsx';
     @ViewChild('inputFileStations') inputFileStations: any
+    public showAddText: string = 'ADD RESPONSIBLE STATION';
 
     constructor(private emergencyLocationService: EmergencyLocationService,
         private dataExchange: DataExchangeService<EmergencyLocationModel>,
@@ -37,7 +40,7 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
         private fileUploadService: FileUploadService) {
     }
 
-    ngOnInit(): void{
+    ngOnInit(): void {
         this.emergencyLocation.Active = true;
         this.showAdd = false;
         this.isInvalidForm = false;
@@ -45,7 +48,7 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
         this.credential = UtilityService.getCredentialDetails();
         this.dataExchange.Subscribe("OnEmergencyLocationUpdate", model => {
             this.emergencyLocation = model;
-            if(model.ActiveFlag === 'Active')
+            if (model.ActiveFlag === 'Active')
                 this.emergencyLocation.Active = true;
             else
                 this.emergencyLocation.Active = false;
@@ -53,21 +56,21 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
             this.showAdd = true;
         });
     }
-    
-    ngOnDestroy(): void{
+
+    ngOnDestroy(): void {
         this.dataExchange.Unsubscribe("OnEmergencyLocationUpdate");
     }
 
-     getFileDetails(e: any): void {
-        this.filesToUpload = []; 
-        this.isDisabledUpload = false;       
+    getFileDetails(e: any): void {
+        this.filesToUpload = [];
+        this.isDisabledUpload = false;
         for (var i = 0; i < e.target.files.length; i++) {
             var extension = e.target.files[i].name.split('.').pop();
 
             if (extension.toLowerCase() == "xlsx") {                                           
                 this.filesToUpload.push(e.target.files[i]);
             }
-            else{
+            else {
                 this.toastrService.error('Invalid File Format!', 'Error', this.toastrConfig);
                 this.inputFileStations.nativeElement.value = "";
                 this.isDisabledUpload = true;
@@ -75,47 +78,43 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
         }
     }
 
-    Upload(): void{
-        if(this.filesToUpload.length)
-        {
+    Upload(): void {
+        if (this.filesToUpload.length) {
             let baseUrl = GlobalConstants.EXTERNAL_URL;
             let param = this.credential.UserId;
             let errorMsg: string;
             this.date = new Date();
-            this.fileUploadService.uploadFiles<string>(baseUrl + "./api/MasterDataExportImport/AirportStationUpload/" + param, 
-            this.filesToUpload, this.date.toString()).subscribe((result: string) => {
-                if(result.startsWith("Error:"))
-                {                   
-                    this.toastrService.error(result,"Error",this.toastrConfig);
-                }
-                else
-                {
-                    this.toastrService.success("File Uploaded successfully.\n" + result, "Success", this.toastrConfig);
-                }
-                this.dataExchange.Publish("FileUploadedSuccessfully", new EmergencyLocationModel());
-                this.initiateForm();
-                this.isDisabledUpload = true;
-            });
+            this.fileUploadService.uploadFiles<string>(baseUrl + "./api/MasterDataExportImport/AirportStationUpload/" + param,
+                this.filesToUpload, this.date.toString()).subscribe((result: string) => {
+                    if (result.startsWith("Error:")) {
+                        this.toastrService.error(result, "Error", this.toastrConfig);
+                    }
+                    else {
+                        this.toastrService.success("File Uploaded successfully.\n" + result, "Success", this.toastrConfig);
+                    }
+                    this.dataExchange.Publish("FileUploadedSuccessfully", new EmergencyLocationModel());
+                    this.initiateForm();
+                    this.isDisabledUpload = true;
+                });
 
         }
 
-        else
-        {
-            this.toastrService.error("Invalid File Format!", "Error", this.toastrConfig);     
-            this.initiateForm();    
-            this.isDisabledUpload = true;   
+        else {
+            this.toastrService.error("Invalid File Format!", "Error", this.toastrConfig);
+            this.initiateForm();
+            this.isDisabledUpload = true;
         }
     }
 
     onSubmit() {
-        delete this.emergencyLocation.Active;        
+        delete this.emergencyLocation.Active;
         if (this.form.valid) {
             this.isInvalidForm = false;
             if (this.emergencyLocation.EmergencyLocationId == 0) {
                 this.emergencyLocation.CreatedBy = +this.credential.UserId;
                 UtilityService.setModelFromFormGroup<EmergencyLocationModel>(this.emergencyLocation, this.form,
                     x => x.EmergencyLocationId, x => x.IATA, x => x.AirportName, x => x.City);
-                   
+
                 if (this.form.controls["isActive"].value != false)
                     this.emergencyLocation.ActiveFlag = "Active";
                 else
@@ -147,12 +146,12 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
                     });
             }
         }
-        else{
+        else {
             this.isInvalidForm = true
         }
     }
 
-     private initiateForm(): void {
+    private initiateForm(): void {
         this.emergencyLocation = new EmergencyLocationModel();
         this.Action = "Save";
 
@@ -161,18 +160,29 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
             IATA: new FormControl('', [Validators.required]),
             AirportName: new FormControl('', Validators.required),
             City: new FormControl('', Validators.required),
-            fileStation: new FormControl(),           
+            fileStation: new FormControl(),
             isActive: new FormControl(false)
         })
     }
 
-    showAddRegion() {
-        this.showAdd = true;
-        this.initiateForm();
+    // showAddRegion() {
+    //     this.showAdd = true;
+    //     this.initiateForm();
 
+    // }
+    showAddRegion(value): void {
+        if (!value) {
+            this.showAddText = "CLICK TO COLLAPSE";
+        }
+        else {
+            this.showAddText = "ADD RESPONSIBLE STATION";
+        }
+        this.showAdd = !value;
     }
+
     cancel(): void {
         this.initiateForm();
+        this.showAddRegion(this.showAdd);
         this.showAdd = false;
         this.isInvalidForm = false;
     }

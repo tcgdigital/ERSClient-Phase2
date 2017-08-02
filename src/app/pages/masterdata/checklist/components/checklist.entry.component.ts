@@ -42,7 +42,7 @@ export class ChecklistEntryComponent implements OnInit {
     activeCheckLists: ChecklistModel[] = [];
     activeDepartments: DepartmentModel[] = [];
     activeEmergencyTypes: EmergencyTypeModel[] = [];
-    showAdd: boolean = true;
+    showAdd: boolean = false;
     listSelected: boolean;
     buttonValue: string = '';
     currentDepartmentId: number;
@@ -64,6 +64,7 @@ export class ChecklistEntryComponent implements OnInit {
     filesToUpload: File[] = [];
     disableUploadButton = true;
     //AllStations: EmergencyLocationModel[] = [];
+    public showAddText: string = 'ADD CHECKLIST';
     ChecklistTemplatePath: string = './assets/static-content/ChecklistTemplate.xlsx';
     @ViewChild('inputFileChecklist') inputFileChecklist: any
 
@@ -404,6 +405,7 @@ export class ChecklistEntryComponent implements OnInit {
     cancel(): void {
         this.selectedcount = 0;
         this.resetCheckListForm();
+        this.showAddRegion(this.showAdd);
         this.showAdd = false;
         this.submitted = false;
         this.CheckListParents.forEach(x => x.IsSelected = false);
@@ -452,13 +454,23 @@ export class ChecklistEntryComponent implements OnInit {
         }
     }
 
-    showAddRegion(): void {
-        this.form = this.resetCheckListForm();
-        this.showAdd = true;
-        this.CheckListParents.forEach(element => {
-            element.IsSelected = false;
-        });
-        this.parentChecklists = this.noDtaList;
+    // showAddRegion(): void {
+    //     this.form = this.resetCheckListForm();
+    //     this.showAdd = true;
+    //     this.CheckListParents.forEach(element => {
+    //         element.IsSelected = false;
+    //     });
+    //     this.parentChecklists = this.noDtaList;
+    // }
+
+    showAddRegion(value): void {
+        if (!value) {
+            this.showAddText = "CLICK TO COLLAPSE";
+        }
+        else {
+            this.showAddText = "ADD CHECKLIST";
+        }
+        this.showAdd = !value;
     }
 
     Upload(): void{

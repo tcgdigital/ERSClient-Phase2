@@ -89,7 +89,7 @@
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="form-group">
-                    <md-checkbox id="IsTravelRequest" formControlName="isActive">
+                    <md-checkbox class="Marght" id="IsTravelRequest" formControlName="isActive">
                         Active
                     </md-checkbox>
                 </div>
@@ -118,7 +118,7 @@
                 <input type="file" #inputFileUserProfile id="file" (change)="getFileDetails($event,'UserProfile')" />
                 
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-12 butt-align">
+            <div class="col-lg-3 col-md-3 col-sm-12">
                 <button class="btn btn-primary" type="button" (click)="uploadFiles()" [disabled] = "disableUploadButton">Upload</button>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-12">
