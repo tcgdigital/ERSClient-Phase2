@@ -16,6 +16,7 @@ import { IncidentModel, IncidentService } from '../../incident';
 import {
     GraphObject
 } from '../demand.raised.summary.widget/demand.raised.summary.widget.model';
+import { ActionableStatusLogModel,ActionableStatusLogService } from "../../shared.components/actionablestatuslog";
 
 @Component({
     selector: 'checklist-summary-widget',
@@ -60,7 +61,8 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
      */
     constructor(private checklistSummaryWidgetService: ChecklistSummaryWidgetService,
         private globalState: GlobalStateService, private incidentService: IncidentService,
-        private checklistTrailService: ChecklistTrailService) { }
+        private checklistTrailService: ChecklistTrailService,
+        private actionableStatusLogService: ActionableStatusLogService) { }
 
     public ngOnInit(): void {
         this.currentIncidentId = this.incidentId;
@@ -225,12 +227,17 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
             $currentRow.closest('tr').addClass('bg-blue-color');
         }
         const requesterDepartmentId: number = resultSet[0].DepartmentId;
-        this.incidentService.GetIncidentById(this.incidentId)
+        
+        this.actionableStatusLogService.GetAllByIncidentDepartment(this.incidentId,requesterDepartmentId)
+        .subscribe((actionableStatusLogModels:ResponseModel<ActionableStatusLogModel>)=>{
+            this.incidentService.GetIncidentById(this.incidentId)
             .subscribe((incidentModel: IncidentModel) => {
-                WidgetUtilityService.GetGraphCheckList(requesterDepartmentId, Highcharts, resultSet,
-                    'checklist-graph-container', 'Status', incidentModel.CreatedOn);
+                WidgetUtilityService.GetGraphCheckList(requesterDepartmentId, Highcharts, actionableStatusLogModels.Records,
+                    'checklist-graph-container', 'Status', incidentModel.CreatedOn,resultSet[0].Department.DepartmentName);
                 this.showCheckListGraph = true;
             });
+        });
+        
     }
 
     public onViewAllCheckListShown($event: ModalDirective): void {

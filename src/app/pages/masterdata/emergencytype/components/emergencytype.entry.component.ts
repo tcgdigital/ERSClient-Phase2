@@ -25,9 +25,10 @@ export class EmergencyTypeEntryComponent implements OnInit {
     date: Date = new Date();
     emergencyTypes: EmergencyTypeModel[] = [];
     Action: string;
-    showAdd: boolean;
+    showAdd: boolean = false;
     credential: AuthModel;
     public submitted: boolean;
+    public showAddText: string = 'ADD CRISIS TYPE';
 
     emergencyCategory: Object = GlobalConstants.EmergencyCategories;
 
@@ -112,6 +113,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
         this.emergencyTypeModel = new EmergencyTypeModel();
         this.Action = "Save";
         this.initiateForm();
+        this.showAddRegion(this.showAdd);
         this.showAdd = false;
         this.emergencyTypeModel.EmergencyCategory = "FlightRelated";
     }
@@ -135,7 +137,17 @@ export class EmergencyTypeEntryComponent implements OnInit {
             ActiveFlag: new FormControl('', [Validators.required])
         });
     }
-    showAddRegion(ShowAdd: Boolean): void {
-        this.showAdd = true;
+    // showAddRegion(ShowAdd: Boolean): void {
+    //     this.showAdd = true;
+    // }
+
+    showAddRegion(value): void {
+        if (!value) {
+            this.showAddText = "CLICK TO COLLAPSE";
+        }
+        else {
+            this.showAddText = "ADD CRISIS TYPE";
+        }
+        this.showAdd = !value;
     }
 }

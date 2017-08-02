@@ -169,7 +169,9 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     }
 
     public open(demandId): void {
-        this.dataExchange.Publish('OnDemandUpdate', demandId);
+        const num = UtilityService.UUID();
+        this.globalStateProxy.NotifyDataChanged('OnDemandUpdate', demandId + '!' + num);
+        //this.dataExchange.Publish('OnDemandUpdate', demandId + '!' + num);
     }
 
     public getDemandRemarks(demandId): void {

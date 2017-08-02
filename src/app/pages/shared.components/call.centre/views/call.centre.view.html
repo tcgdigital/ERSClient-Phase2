@@ -105,7 +105,7 @@
                 <label class="form-control grey-input">{{cargoquery.EnquiryReason}}&nbsp;</label>
             </div>
             <div class="form-group col-lg-3 col-md-6 col-sm-12">
-                <label for="Query">Query </label>
+                <label for="Query">Discussion Notes </label>
                 <label class="form-control grey-input">{{cargoquery.Query}}</label>
             </div>
         </div>
@@ -131,9 +131,9 @@
                 <form [formGroup]="form">
                     <input type="hidden" formControlName="EnquiryId" name="EnquiryId" />
                     <div class="form-group col-md-6 col-sm-12">
-                        <label for="Query">Query<span class="required">*</span></label>
-                        <input id="Query" class="form-control" type="text" name="Query" formControlName="Queries" placeholder="Enter Query" />
-                        <small [hidden]="form.controls.Queries.valid || (form.controls.Queries.pristine && !submitted)" class="text-danger">Required or invalid</small>
+                        <label for="Query">Discussion Notes<span class="required">*</span></label>
+                        <input id="Query" class="form-control" type="text" name="Query" formControlName="Queries" placeholder="Enter Discussion Notes" />
+                        <small [hidden]="form.controls.Queries.valid || (form.controls.Queries.pristine && !submitted)" class="text-danger">Required (Max. Char 1000)</small>
                     </div>
                     <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=1">
                         <label for="Passengers">PDA Name:<span class="required">*</span></label>
@@ -150,11 +150,11 @@
                         <autocomplete [items]="awbs" (notify)='onNotifyCargo($event)' [initialvalue]="initialvalue"></autocomplete>
                     </div>
                     <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=1">
-                        <label for="LastName">Passengers with same PNR </label>
+                        <label for="LastName">View Passengers with same PNR </label>
                         <div class="multiselect-container">
                             <div class="multiselect-selector" (click)="showListsamepnr(); $event.stopPropagation();">
                                 <i class="fa fa-caret-down fa-pull-right fa-fw" aria-hidden="true"></i> {{selectedcountpnr>0?
-                                selectedcountpnr + ' Passengers(s) selected' : 'Select Co-Passenger'}}
+                                selectedcountpnr + ' Passengers(s) selected' : 'View Co-Passenger'}}
                             </div>
                             <ul class="multiselect-list1 dropdown-menu-down" [hidden]="!list1Selected" (click)="$event.stopPropagation();">
                                 <li *ngFor="let copassenger of copassengerlistpnr">
@@ -184,13 +184,13 @@
                     <div class="col-md-12 col-sm-12" [hidden]="enquiryType!=1  && enquiryType!=2 && enquiryType!=3">
                         <strong><label for="LastName">Select type of demands to be raised</label></strong>
                         <br>
-                        <md-checkbox id="IsCallBack" formControlName="IsCallBack" aria-label="Add">
+                        <md-checkbox id="IsCallBack" formControlName="IsCallBack" aria-label="Add" disabled="{{DemandCheckDisabled}}">
                             Callback &nbsp;
                         </md-checkbox>
-                        <md-checkbox id="IsTravelRequest" formControlName="IsTravelRequest" aria-label="Add">
+                        <md-checkbox id="IsTravelRequest" formControlName="IsTravelRequest" aria-label="Add" disabled="{{DemandCheckDisabled}}">
                             Travel Request &nbsp;
                         </md-checkbox>
-                        <md-checkbox id="IsAdminRequest" formControlName="IsAdminRequest" aria-label="Add">
+                        <md-checkbox id="IsAdminRequest" formControlName="IsAdminRequest" aria-label="Add" disabled="{{DemandCheckDisabled}}">
                             Admin Request &nbsp;
                         </md-checkbox>
                     </div>
@@ -210,7 +210,7 @@
                         <th>Co-Passengers</th>
                     </thead>
                     <tbody>
-                        <tr [hidden]="consolidatedCopassengers.length>1">
+                        <tr [hidden]="consolidatedCopassengers.length > 0">
                             <td colspan="2">No Co-Passengers mapped yet</td>
                         </tr>
                         <tr *ngFor="let copassenger of consolidatedCopassengers">

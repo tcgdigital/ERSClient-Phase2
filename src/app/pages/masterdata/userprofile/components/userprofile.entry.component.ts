@@ -83,6 +83,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
 
     cancel(): void {
         this.initiateForm();
+        this.showAddRegion(this.showAdd);
         this.showAdd = false;
         this.submitted = false;
     }

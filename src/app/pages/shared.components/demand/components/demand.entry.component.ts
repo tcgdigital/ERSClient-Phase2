@@ -40,7 +40,7 @@ import { FileStoreService } from '../../../../shared/services/common.service';
     templateUrl: '../views/demand.entry.view.html'
 })
 export class DemandEntryComponent implements OnInit, OnDestroy {
-    @ViewChild('childModal') public childModal: ModalDirective;
+    @ViewChild('childModal') public childModalEntry: ModalDirective;
     @ViewChild('inputFileDemand') inputFileDemand: any;
 
     public form: FormGroup;
@@ -335,7 +335,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.Action = 'Submit';
         this.freshDemand = true;
         this.isReadonly = false;
-        this.childModal.show();
+        this.childModalEntry.show();
     }
 
     setModelFormGroup(model: DemandModel, isDisable: boolean, ...params: Array<(entity: DemandModel) => any>): void {
@@ -353,10 +353,12 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         }
     }
 
-    setModelForUpdate(id) {
-        this.demandService.GetByDemandId(id)
+    setModelForUpdate(id:string) {
+        this.childModalEntry.hide();
+        const idNum:number = +(id.split('!')[0]);
+        this.demandService.GetByDemandId(idNum)
             .subscribe((response: ResponseModel<DemandModel>) => {
-
+                
                 this.freshDemand = false;
                 this.demandModel = response.Records[0];
                 this.isrejected = this.demandModel.IsRejected;
@@ -379,7 +381,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.buttonValue = 'Create Demand';
                 this.RemoveDemandTypeId();
                 this.isReadonly = false;
-                this.childModal.show();
+                this.childModalEntry.show();
 
                 this.form.controls['PDATicketNumber'].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
                 this.form.controls['AffectedPersonId'].reset({ value: this.demandModel.AffectedPersonId, disabled: true });
@@ -393,6 +395,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
 
     showDemandDetails(id:string) {
+        
         const idNum:number = +(id.split('!')[0]);
         this.demandService.GetByDemandId(idNum)
             .subscribe((response: ResponseModel<DemandModel>) => {
@@ -414,7 +417,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.caller = this.demandModel.Caller || new CallerModel();
                 this.showAdd = true;
                 this.isReadonly = true;
-                this.childModal.show();
+                this.childModalEntry.show();
                 this.submitted = false;
                 this.form.controls['PDATicketNumber'].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
                 this.form.controls['AffectedPersonId'].reset({ value: this.demandModel.AffectedPersonId, disabled: true });
@@ -427,7 +430,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
     cancelModal(): void {
-        this.childModal.hide();
+        this.childModalEntry.hide();
         this.resetForm();
     }
 
@@ -476,8 +479,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.Action = 'Submit';
         this.isReadonly = false;
 
-        ;
-        this.dataExchange.Subscribe('OnDemandUpdate', (model) => this.setModelForUpdate(model));
+        
+        this.globalState.Subscribe('OnDemandUpdate', (model) => this.setModelForUpdate(model));
         this.globalState.Subscribe('OnDemandDetailClick', (model) => this.showDemandDetails(model));
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
@@ -641,7 +644,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                                     this.demandModel = new DemandModel();
                                     this.showAdd = false;
                                     this.buttonValue = 'Create Demand';
-                                    this.childModal.hide();
+                                    this.childModalEntry.hide();
                                     this.filesToUpload = [];
                                 }
                             });
@@ -757,7 +760,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.showAdd = false;
                 this.buttonValue = 'Create Demand';
                 this.submitted = false;
-                this.childModal.hide();
+                this.childModalEntry.hide();
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -796,14 +799,14 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                     this.showAdd = false;
                     this.buttonValue = 'Create Demand';
                     this.submitted = false;
-                    this.childModal.hide();
+                    this.childModalEntry.hide();
                 }, (error: any) => {
                     console.log('Error');
                 });
         }
         else {
             this.submitted = false;
-            this.childModal.hide();
+            this.childModalEntry.hide();
         }
     }
 
@@ -814,7 +817,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe('OnDemandUpdate');
+        this.globalState.Unsubscribe('OnDemandUpdate');
         this.globalState.Unsubscribe('OnDemandDetailClick');
         this.globalState.Unsubscribe('incidentChangefromDashboard');
         this.globalState.Unsubscribe('departmentChangeFromDashboard');

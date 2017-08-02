@@ -59,7 +59,6 @@ export class PagesComponent implements OnInit {
     // public ExecuteOperationProxy: () => void;
     public ExecuteOperationProxy: (...args: any[]) => void;
     private sub: any;
-    private _userRegistrationHubConnection: NotificationConnection;
 
     /**
      * Creates an instance of PagesComponent.
@@ -125,21 +124,22 @@ export class PagesComponent implements OnInit {
 
         const local_incidents: Observable<IncidentModel[]> = this.GetIncidents();
         const local_departments: Observable<UserPermissionModel[]> = this.GetUserDepartments();
+
         this.ProcessData(() => {
-            this.globalState.Subscribe('incidentCreate', (model: number) => this.incidentCreateHandler(model));
-            this.initiateHubConnections();
             this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
+            this.globalState.Subscribe('incidentCreate', (model: number) => {
+                this.getIncidents(() => {
+                    this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
+                });
+            });
 
             // SignalR Notification
             this.globalState.Subscribe('ReceiveCrisisClosureResponse', (model) => {
-                Observable.timer(5000).subscribe((x)=>{
+                Observable.timer(5000).subscribe((x) => {
                     this.router.navigate(['login']);
                 });
             });
         }, local_incidents, local_departments);
-
-        // this.getIncidents();
-        // this.getDepartments();
     }
 
     public ngOnDestroy(): void {
@@ -156,7 +156,6 @@ export class PagesComponent implements OnInit {
 
     public onHelpClicked($event): void {
         this.toastrService.info('Help command has been clicked', 'Help', this.toastrConfig);
-        console.log('Help Clicked');
     }
 
     public onLogoutClicked($event): void {
@@ -212,63 +211,21 @@ export class PagesComponent implements OnInit {
         }
     }
 
-    private getDepartments(): void {
-        this.userPermissionService.GetAllDepartmentsAssignedToUser(this.userId)
-            .map((x: ResponseModel<UserPermissionModel>) => x.Records.sort((a, b) => {
-                if (a.Department.DepartmentName < b.Department.DepartmentName) return -1;
-                if (a.Department.DepartmentName > b.Department.DepartmentName) return 1;
-                return 0;
-            })
-            ).subscribe((x: UserPermissionModel[]) => {
-                this.departments = x.map((y: UserPermissionModel) =>
-                    new KeyValue(y.Department.DepartmentName, y.Department.DepartmentId));
-                if (this.departments.length > 0) {
-                    const departmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
-                    if (departmentId > 0) {
-                        this.currentDepartmentId = departmentId;
-                    }
-                    else {
-                        this.currentDepartmentId = this.departments[0].Value;
-                        UtilityService.SetToSession({ CurrentDepartmentId: this.currentDepartmentId });
-                    }
-                    console.log(this.currentDepartmentId);
-                }
-                else {
-                    // this.isLanding = true;
-                }
+    private getDepartments(callback: () => void = null): void {
+        this.GetUserDepartments()
+            .subscribe((userDepartments: UserPermissionModel[]) => {
+                this.ProcessUserDepartments(userDepartments);
+                if (callback != null)
+                    callback();
             });
     }
 
-    private getIncidents(): void {
-        this.incidentService.GetAllActiveIncidents()
-            .map((x: ResponseModel<IncidentModel>) => x.Records.sort((a, b) => {
-                const dateA = new Date(a.CreatedOn).getTime();
-                const dateB = new Date(b.CreatedOn).getTime();
-                return dateA > dateB ? -1 : 1;
-            })).subscribe((x: IncidentModel[]) => {
-                this.incidents = x.map((y: IncidentModel) => new KeyValue(y.EmergencyName, y.IncidentId));
-                this.incidentOrganizations = x.map((y: IncidentModel) => new KeyValue(y.IncidentId.toString(), y.OrganizationId));
-                if (this.incidents.length > 0) {
-                    const incidentId = +UtilityService.GetFromSession('CurrentIncidentId');
-
-                    if (incidentId > 0) {
-                        this.currentIncidentId = incidentId;
-                    }
-                    else {
-                        this.currentIncidentId = this.incidents[0].Value;
-                        UtilityService.SetToSession({ CurrentIncidentId: this.currentIncidentId });
-                    }
-                    UtilityService.SetToSession({
-                        CurrentOrganizationId: this.incidentOrganizations
-                            .find((z) => z.Key === this.currentIncidentId.toString()).Value
-                    });
-                    console.log(this.currentIncidentId);
-
-                    this.isLanding = false;
-                }
-                else {
-                    this.isLanding = true;
-                }
+    private getIncidents(callback: () => void = null): void {
+        this.GetIncidents()
+            .subscribe((incidents: IncidentModel[]) => {
+                this.ProcessIncidents(incidents);
+                if (callback != null)
+                    callback();
             });
     }
 
@@ -341,16 +298,7 @@ export class PagesComponent implements OnInit {
                 this.currentDepartmentId = this.departments[0].Value;
                 UtilityService.SetToSession({ CurrentDepartmentId: this.currentDepartmentId });
             }
-            console.log(this.currentDepartmentId);
         }
-    }
-
-    private incidentCreateHandler(incident: number) {
-        this.getIncidents();
-    }
-
-    private initiateHubConnections(): void {
-        this._userRegistrationHubConnection = this.route.snapshot.data['UserRegistrationHubConnection'];
     }
 
     /**
@@ -368,13 +316,13 @@ export class PagesComponent implements OnInit {
                 this.connectionStaters.push(new ConnectionStarter(this.incidentBorrowingNotificationHub,
                     'IncidentBorrowingNotificationHub', {
                         incidentId: incId
-                    }, this.GenerateCallbackHandler<AffectedPeopleModel>('IncidentBorrowNotification')
+                    }, this.GenerateCallbackHandler<IncidentModel>('IncidentBorrowNotification')
                 ));
 
                 this.connectionStaters.push(new ConnectionStarter(this.passengerImportCompletedNotificationHub,
                     'PassengerImportCompletedNotificationHub', {
                         incidentId: incId
-                    }, this.GenerateCallbackHandler<AffectedPeopleModel>('PassengerImportNotification')
+                    }, this.GenerateCallbackHandler<IncidentModel>('PassengerImportNotification')
                 ));
 
                 this.connectionStaters.push(new ConnectionStarter(this.broadcastMessageNotificationHub,

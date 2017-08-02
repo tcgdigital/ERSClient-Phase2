@@ -48,7 +48,7 @@
                         </md-checkbox>-->
                     </td>
                     <td data-title="Download">
-                        <a class="fa fa-download fa-2x" target="_self" *ngIf="actionable.UploadLinks!=null" href="{{actionable.UploadLinks}}" download="{{actionable.FileName}}">Download</a>
+                        <a target="_self" *ngIf="actionable.UploadLinks!=null" href="{{actionable.UploadLinks}}" download="{{actionable.FileName}}"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
                     </td>
                     <td data-title="Trail"><i class="fa fa-info-circle fa-2x" (click)="openTrail(actionable)"></i> </td>
                     <td data-title="View"><i class="fa fa-edit fa-2x" (click)="openActionableDetail(actionable)"></i></td>
