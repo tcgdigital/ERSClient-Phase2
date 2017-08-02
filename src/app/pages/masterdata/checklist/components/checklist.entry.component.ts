@@ -63,6 +63,7 @@ export class ChecklistEntryComponent implements OnInit {
     newparents: number[] = [];
     filesToUpload: File[] = [];
     disableUploadButton = true;
+    public isURLInvalid: boolean = false;
     //AllStations: EmergencyLocationModel[] = [];
     public showAddText: string = 'ADD CHECKLIST';
     ChecklistTemplatePath: string = './assets/static-content/ChecklistTemplate.xlsx';
@@ -227,7 +228,7 @@ export class ChecklistEntryComponent implements OnInit {
             });
     }
 
-    
+
 
     // private getCheckListByDepartment(departmentId): void {
     //     this.checkListService.GetAllWithParentsByDepartment(departmentId)
@@ -336,6 +337,16 @@ export class ChecklistEntryComponent implements OnInit {
                 intermediate.push(item);
             });
             this.checkListModel.CheckListParentMapper = _.unique(intermediate);
+            if (this.form.controls['URL'].value != '') {
+                const bolValid = /^(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:\~\+#]*[\w\-\@?^=%&amp;\~\+#])?$/.test(this.form.controls['URL'].value);
+                if (!bolValid) {
+                    this.isURLInvalid = true;
+                    return;
+                }
+                else {
+                    this.isURLInvalid = false;
+                }
+            }
             if (this.checkListModel.CheckListId === 0) {// ADD REGION
 
 
@@ -473,36 +484,32 @@ export class ChecklistEntryComponent implements OnInit {
         this.showAdd = !value;
     }
 
-    Upload(): void{
-        if(this.filesToUpload.length)
-        {
+    Upload(): void {
+        if (this.filesToUpload.length) {
             let baseUrl = GlobalConstants.EXTERNAL_URL;
             let param = this.credential.UserId;
             let errorMsg: string;
             this.date = new Date();
-            this.fileUploadService.uploadFiles<ValidationResultModel>(baseUrl + "./api/MasterDataExportImport/ChecklistUpload/" + param, 
-            this.filesToUpload, this.date.toString()).subscribe((result: ValidationResultModel) => {
-                if(result.ResultType == 1)
-                {                   
-                    this.toastrService.error(result.Message,"Error",this.toastrConfig);
-                }
-                else
-                {
-                    this.toastrService.success(result.Message, "Success", this.toastrConfig);
-                }
-                this.dataExchange.Publish("FileUploadedSuccessfullyCheckList", new ChecklistModel());
-                this.inputFileChecklist.nativeElement.value = "";
-                this.disableUploadButton = true;
-                this.showAdd = false;
-            });
+            this.fileUploadService.uploadFiles<ValidationResultModel>(baseUrl + "./api/MasterDataExportImport/ChecklistUpload/" + param,
+                this.filesToUpload, this.date.toString()).subscribe((result: ValidationResultModel) => {
+                    if (result.ResultType == 1) {
+                        this.toastrService.error(result.Message, "Error", this.toastrConfig);
+                    }
+                    else {
+                        this.toastrService.success(result.Message, "Success", this.toastrConfig);
+                    }
+                    this.dataExchange.Publish("FileUploadedSuccessfullyCheckList", new ChecklistModel());
+                    this.inputFileChecklist.nativeElement.value = "";
+                    this.disableUploadButton = true;
+                    this.showAdd = false;
+                });
 
         }
 
-        else
-        {
-            this.toastrService.error("Invalid File Format!", "Error", this.toastrConfig);     
+        else {
+            this.toastrService.error("Invalid File Format!", "Error", this.toastrConfig);
             this.inputFileChecklist.nativeElement.value = "";
-            this.disableUploadButton = true; 
+            this.disableUploadButton = true;
         }
     }
 
@@ -514,7 +521,7 @@ export class ChecklistEntryComponent implements OnInit {
             ParentDepartmentId: new FormControl(''),
             Duration: new FormControl(checkList ? checkList.Duration : '', [Validators.required]),
             DepartmentId: new FormControl(checkList ? checkList.DepartmentId : '', [Validators.required]),
-            URL: new FormControl(checkList ? checkList.URL : '', [Validators.required, URLValidator.validate]),
+            URL: new FormControl(checkList ? checkList.URL : ''),
             EmergencyTypeId: new FormControl(checkList ? checkList.EmergencyTypeId : '', [Validators.required]),
             Sequence: new FormControl(checkList ? checkList.Sequence : '', [Validators.required]),
             OrganizationId: new FormControl(checkList ? checkList.OrganizationId : '', [Validators.required]),
@@ -532,10 +539,10 @@ export class ChecklistEntryComponent implements OnInit {
             const extension = e.target.files[i].name.split('.').pop();
 
             if (extension.toLowerCase() === 'xlsx') {
-                 this.filesToUpload.push(e.target.files[i]);
+                this.filesToUpload.push(e.target.files[i]);
             }
             else {
-                this.toastrService.error('Invalid File Format! Please select a file having extension: .xlsx', 'Error', this.toastrConfig);                
+                this.toastrService.error('Invalid File Format! Please select a file having extension: .xlsx', 'Error', this.toastrConfig);
                 this.inputFileChecklist.nativeElement.value = "";
                 this.disableUploadButton = true;
             }
