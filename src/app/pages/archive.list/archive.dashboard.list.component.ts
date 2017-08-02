@@ -317,6 +317,26 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
         const reopenedCrisis = closedCrisisList.filter((item: IncidentModel) => {
             return item.isReopen === true;
         });
+        const closedCrisis = closedCrisisList.filter((item: IncidentModel) => {
+            return item.isReopen === false;
+        });
+        if (closedCrisis.length > 0) {
+            const objectLiteral1: string = JSON.stringify(closedCrisis);
+            const deepCopyIncident1: IncidentModel[] = JSON.parse(objectLiteral1);
+            const totalClosedCrisis: IncidentModel[] = deepCopyIncident1.map((item: IncidentModel) => {
+                item.ReOpenBy = null
+                item.ReOpenOn = null;
+                item.EmergencyType = null;
+                item.ReClosedBy = +UtilityService.GetFromSession('CurrentUserId');;
+                item.ReClosedOn = new Date();
+                return item;
+            });
+            // Again call to the database for update the reopened one.
+            this.archiveListService.CreateBulkInsertClosedIncident(totalClosedCrisis)
+                .subscribe((result: IncidentModel[]) => {
+                    //this.toastrService.success('Incident status updated successfully.', 'Archive Crisis', this.toastrConfig);
+                });
+        }
         if (reopenedCrisis.length > 0) {
             const objectLiteral: string = JSON.stringify(reopenedCrisis);
             const deepCopyIncident: IncidentModel[] = JSON.parse(objectLiteral);
@@ -331,7 +351,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
             // Again call to the database for update the reopened one.
             this.archiveListService.CreateBulkInsertClosedIncident(totalReopendCrisis)
                 .subscribe((result: IncidentModel[]) => {
-                    this.toastrService.success('Incident status updated successfully.', 'Archieve Crisis', this.toastrConfig);
+                    this.toastrService.success('Incident status updated successfully.', 'Archive Crisis', this.toastrConfig);
                 });
         }
     }

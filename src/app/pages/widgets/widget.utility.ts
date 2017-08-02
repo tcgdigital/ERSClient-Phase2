@@ -46,6 +46,8 @@ export class WidgetUtilityService {
         let closedTotal: number = 0;
         let pendingTotal: number = 0;
         let pendingInter: number = 0;
+        let tempInter: Date = new Date(emergencyDate);
+        tempInter=temp;
         for (let i: number = 1; i <= this.elapsedHourForGraph; i++) {
 
 
@@ -56,37 +58,20 @@ export class WidgetUtilityService {
                 .filter((x) => {
                     return ((temp <= new Date(x.CompletionStatusChangedOn) && new Date(x.CompletionStatusChangedOn) <= end));
                 });
-            closedTotal = closedTotal + closeList.length;
-            arrGraphCompleted.push(closedTotal);
+            //closedTotal = closedTotal + closeList.length;
+            arrGraphCompleted.push(closeList.length);
 
 
             //This is for demands which are created after crisis initiation but not yet closed.
             let pendingList: ActionableStatusLogModel[] = arrGraphData.filter((x: ActionableStatusLogModel) => {
-                return ((x.CompletionStatus != 6) && (temp <= new Date(x.CompletionStatusChangedOn)) && (new Date(x.CompletionStatusChangedOn) <= end));
+                return ((x.CompletionStatus != 6) && (tempInter <= new Date(x.CompletionStatusChangedOn)) && (new Date(x.CompletionStatusChangedOn) <= end));
             });
 
-            // let totalCount = _.uniq(arrGraphData, function (x: ChecklistTrailModel) {
-            //     return x.ChklistId;
-            // });
-            pendingTotal = pendingTotal + pendingList.length;
-            //pendingTotal = totalCount.length - closedTotal;
+           
 
-            // if (i == 1) {
-            //     pendingInter = pendingTotal;
-            //     pendingTotal = pendingTotal - closedTotal;
-            // }
-            // else {
-            //     pendingOld = pendingInter - closedTotal;
-            //     pendingTotal = pendingOld;
-            // }
+            arrGraphPending.push(pendingList.length);
 
-            // if (pendingTotal < 0) {
-            //     pendingTotal = 0;
-            // }
-
-            arrGraphPending.push(pendingTotal);
-
-            temp.setMinutes(temp.getMinutes() + 60);
+            tempInter.setMinutes(tempInter.getMinutes() + 60);
             end.setMinutes(end.getMinutes() + 60);
         }
         this.setGraphData(Highcharts, DepartmentName, arrGraphCompleted, arrGraphPending, containerName, 'Checklist', graphSubjectType);

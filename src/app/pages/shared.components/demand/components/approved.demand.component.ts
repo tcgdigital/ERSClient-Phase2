@@ -50,6 +50,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     public globalStateProxyOpen: GlobalStateService;
     demand: DemandModelToView = new DemandModelToView();
     public isShowApprovedDemand: boolean = true;
+    public isInvalidRemarks: boolean = false;
     /**
      * Creates an instance of ApprovedDemandComponent.
      * @param {DemandService} demandService
@@ -216,10 +217,15 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     }
 
     public cancelRemarkUpdate(): void {
+        this.isInvalidRemarks = false;
         this.childModalRemarks.hide();
     }
 
     public saveRemark(remarks): void {
+        if (remarks == '' || remarks == undefined) {
+            this.isInvalidRemarks = true;
+            return;
+        }
         const demand: DemandModelToView = this.demandForRemarks;
         this.RemarkToCreate = new DemandRemarkLogModel();
         this.RemarkToCreate.Remark = remarks;
