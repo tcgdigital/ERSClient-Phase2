@@ -72,8 +72,9 @@
             <div class="modal-body">
                 <div class="row holderRemark" *ngIf="!isArchive">
                     <div class="col-lg-8 col-sm-12 col-md-6 form-group">
-                        <label>Remarks</label>
+                        <label>Remarks</label><span class="required">*</span>
                         <input [(ngModel)]="Remarks" class="form-control" type="text" />
+                        <small *ngIf="isInvalidRemarks" class="text-danger">Required</small>
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-12 form-group">
                         <div class="buttonholderRemark">

@@ -71,9 +71,21 @@ export class DepartmentEntryComponent implements OnInit {
         this.mergeResponses();
         this.departmentModel = new DepartmentModel();
         this.credential = UtilityService.getCredentialDetails();
+        this.resetDepartmentForm();
         this.departmentModel.CreatedBy = +this.credential.UserId;
         this.departmentModel.DepartmentId = 0;
         this.showAdd = false;
+    }
+
+    resetDepartmentForm(): void {
+        
+        this.form = new FormGroup({
+            DepartmentCode: new FormControl('', [Validators.required]),
+            Description: new FormControl('', [Validators.required]),
+            ContactNo: new FormControl('', [Validators.required]),
+            DepartmentSpoc: new FormControl('', [Validators.required]),
+            ParentDepartmentId: new FormControl('')
+        });
     }
 
     onSubmit(values: DepartmentModel): void {
