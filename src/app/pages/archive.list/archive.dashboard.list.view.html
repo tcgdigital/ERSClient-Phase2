@@ -1,8 +1,8 @@
-<span class="validationAlert" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'DeptwiseClose')">
+<span class="validationAlert" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'ArchiveListing')">
     <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
 </span>
 
-<div *ngIf="isShowPage | accesibility:currentDepartmentId:'DeptwiseClose'" class="card">
+<div *ngIf="isShowPage | accesibility:currentDepartmentId:'ArchiveListing'" class="card">
     <div class="card-header">
         <strong>Closed Event</strong>
         <div class="pull-right margin-top-21px">

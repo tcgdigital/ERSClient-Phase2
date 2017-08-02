@@ -128,9 +128,7 @@ export class PagesComponent implements OnInit {
         this.ProcessData(() => {
             this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
             this.globalState.Subscribe('incidentCreate', (model: number) => {
-                debugger;
                 this.getIncidents(() => {
-                    debugger;
                     this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
                 });
             });

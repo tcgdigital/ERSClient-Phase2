@@ -167,14 +167,14 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
             .subscribe((responseActionable: ResponseModel<ActionableModel>) => {
                 this.departmentService.GetDepartmentNameIds()
                     .subscribe((response: ResponseModel<DepartmentModel>) => {
-                        let childActionables: ActionableModel[] = [];
-                        childActionables = responseActionable.Records;
-                        childActionables.forEach((x) => {
-                            x['DepartmentName'] = response.Records
-                                .find((y) => y.DepartmentId === x.DepartmentId).DepartmentName;
+                        actionable['actionableChilds'] = [];
+                        responseActionable.Records[0].CheckList.CheckListChildrenMapper.forEach((item: ChecklistMapper) => {
+                            this.GetListOfChildActionables(item.ChildCheckListId, this.currentIncident, (child: ActionableModel) => {
+                                child['DepartmentName'] = response.Records
+                                    .find((y) => y.DepartmentId === child.DepartmentId).DepartmentName;
+                                actionable['actionableChilds'].push(child);
+                            });
                         });
-                        actionable['actionableChilds'] = childActionables;
-
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                     });
@@ -296,6 +296,15 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
             Comments: new FormControl(''),
             URL: new FormControl('')
         });
+    }
+
+    private GetListOfChildActionables(checkListId: number, incidentId: number, callback?: Function): void {
+        this.actionableService.GetAcionableByIncidentIdandCheckListId(incidentId, checkListId)
+            .subscribe((res: ResponseModel<ActionableModel>) => {
+                if (callback) {
+                    callback(res.Records[0]);
+                }
+            });
     }
 
     // getAllActiveActionableByIncident(incidentId): void {
