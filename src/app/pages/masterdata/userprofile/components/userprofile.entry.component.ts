@@ -72,7 +72,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
             UserId: new FormControl(userProfileModel.UserId, [Validators.required, UserIdValidator.validate]),
             Name: new FormControl(userProfileModel.Name, [Validators.required]),
             MainContact: new FormControl(userProfileModel.MainContact, [Validators.required]),
-            AlternateContact: new FormControl(userProfileModel.AlternateContact, [Validators.required]),
+            AlternateContact: new FormControl(userProfileModel.AlternateContact),
             Location: new FormControl(userProfileModel.Location, Validators.required),
             isActive: new FormControl(userProfileModel.isActive),
             isVolunteered: new FormControl(userProfileModel.isVolunteered)
@@ -207,7 +207,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
                     this.disableUploadButton = true;
                     this.dataExchange.Publish('UserProfileLoadedFromFile', this.userProfileModel);
                     this.showAddRegion(this.showAdd);
-                    this.showAdd = false;
+                    this.showAdd = false;                    
 
                 }, (error) => {
                     console.log(`Error: ${error}`);
@@ -228,7 +228,8 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
             UserId: new FormControl('', [Validators.required, UserIdValidator.validate]),
             Name: new FormControl('', [Validators.required]),
             MainContact: new FormControl('', [Validators.required]),
-            AlternateContact: new FormControl('', [Validators.required]),
+            //AlternateContact: new FormControl('', [Validators.required]),
+            AlternateContact: new FormControl(''),
             Location: new FormControl('', Validators.required),
             isActive: new FormControl(true),
             isVolunteered: new FormControl(false)
