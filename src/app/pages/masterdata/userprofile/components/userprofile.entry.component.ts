@@ -83,6 +83,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
 
     cancel(): void {
         this.initiateForm();
+        this.showAddRegion(this.showAdd);
         this.showAdd = false;
         this.submitted = false;
     }
@@ -95,6 +96,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
             //     this.toastrService.error('User name should consist number or special character.', 'Error', this.toastrConfig);
             //     return null;
             // }
+            
             this.submitted = false;
             if (this.userProfileModel.UserProfileId === 0) {
                 this.userProfileModel.CreatedBy = +this.credential.UserId;
@@ -199,7 +201,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
                         }
                     });
 
-                    this.form.reset();
+                    this.inputFileUserProfile.nativeElement.value = "";
                     this.disableUploadButton = true;
                     this.dataExchange.Publish('UserProfileLoadedFromFile', this.userProfileModel);
                     this.showAdd = false;
@@ -226,8 +228,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
             AlternateContact: new FormControl('', [Validators.required]),
             Location: new FormControl('', Validators.required),
             isActive: new FormControl(true),
-            isVolunteered: new FormControl(false),
-            fileUserProfile: new FormControl()
+            isVolunteered: new FormControl(false)
         });
     }
 
