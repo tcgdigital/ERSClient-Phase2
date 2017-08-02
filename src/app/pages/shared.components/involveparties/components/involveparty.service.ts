@@ -134,6 +134,18 @@ export class InvolvePartyService
             .Execute();
     }
 
+    public GetQueryForCrew(query: string, incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
+        let involvePartyProjection: string = 'InvolvedPartyType,InvolvedPartyDesc';
+        let affectedProjection: string = 'Severity';
+        let affectedPeopleProjection: string = 'AffectedPersonId,TicketNumber,IsStaff,IsCrew,IsVerified,Identification';
+        let crewPrjection: string = 'EmployeeNumber,CrewName,ContactNumber,AsgCat,DeadheadCrew,BaseLocation,DepartureStationCode,ArrivalStationCode,WorkPosition,Email';
+        return this._dataService.Query()
+            .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=CrewId ne null and ${query};$select=${affectedPeopleProjection};$expand=Crew($select=${crewPrjection})))`)
+            .Filter(`IncidentId eq ${incidentId}`)
+            .Select(`${involvePartyProjection}`)
+            .Execute();
+    }
+
     public GetAllCargosByIncident(incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
             .Expand(`Flights($expand=Cargoes)`)

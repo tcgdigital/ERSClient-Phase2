@@ -16,15 +16,14 @@
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="form-group">
-                    <label for="QuickLinkURL">Quick Link URL:<span class="required">*</span></label>
+                    <label for="QuickLinkURL">Quick Link URL:</label>
                     <input id="QuickLinkURL" class="form-control" type="text" name="QuickLinkURL" formControlName="QuickLinkURL" placeholder="Enter QuickLink URL"
                     />
-                    <small *ngIf="form.controls.QuickLinkURL.hasError('required')" [hidden]="form.controls.QuickLinkURL.valid || (form.controls.QuickLinkURL.pristine && !submitted)"
+                    <!-- <small *ngIf="form.controls.QuickLinkURL.hasError('required')" [hidden]="form.controls.QuickLinkURL.valid || (form.controls.QuickLinkURL.pristine && !submitted)"
                         class="text-danger">
                     Required.
-                    </small>
-                    <small *ngIf="form.controls.QuickLinkURL.hasError('validateURL') && !form.controls.QuickLinkURL.hasError('required')" [hidden]="form.controls.QuickLinkURL.valid || (form.controls.QuickLinkURL.pristine && !submitted)"
-                        class="text-danger">
+                    </small> -->
+                    <small *ngIf="isValidUrl" class="text-danger">
                     Invalid Input.
                     </small>
                 </div>

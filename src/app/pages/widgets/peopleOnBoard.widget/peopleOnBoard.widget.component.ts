@@ -48,6 +48,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
     public passengerListByNationality: PassengerModel[] = [];
     public passengerListByPaxType: PassengerModel[] = [];
     public searchConfigsPax: Array<SearchConfigModel<any>> = [];
+    public searchConfigsCrew: Array<SearchConfigModel<any>> = [];
     public searchConfigsCargo: Array<SearchConfigModel<any>> = [];
 
     public crewList: Observable<CrewModel[]>;
@@ -88,6 +89,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
         this.currentDepartmentId = this.currentDepartmentId;
         this.getPeopleOnboardCounts(this.currentIncidentId);
         this.initiateSearchConfigurationsPassenger();
+        this.initiateSearchConfigurationsCrew();
         this.initiateSearchConfigurationsCargo();
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
 
@@ -139,9 +141,9 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
         let groundVictimListLocal: GroundVictimModel[] = [];
         this.peopleOnBoardWidgetService.GetAllGroundVictimsByIncident(this.currentIncidentId)
             .subscribe((result: ResponseModel<InvolvePartyModel>) => {
-                groundVictimListLocal = result.Records[0].GroundVictims.sort((a,b)=>{
-                    if(a.GroundVictimName < b.GroundVictimName) return -1;
-                    if(a.GroundVictimName > b.GroundVictimName) return 1;
+                groundVictimListLocal = result.Records[0].GroundVictims.sort((a, b) => {
+                    if (a.GroundVictimName < b.GroundVictimName) return -1;
+                    if (a.GroundVictimName > b.GroundVictimName) return 1;
                 });
                 this.groundVictimList = Observable.of(groundVictimListLocal);
                 this.childModalGroundVictims.show();
@@ -314,34 +316,71 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
     invokeSearchPassenger(query: string): void {
         const involvedParties: InvolvePartyModel[] = [];
         const passengerListLocal: PassengerModel[] = [];
-        this.peopleOnBoardWidgetService.GetQueryForPassenger(query, this.currentIncidentId)
-            .subscribe((result: ResponseModel<InvolvePartyModel>) => {
-                let affectedPeoples: AffectedPeopleModel[];
-                if (result.Records[0].Affecteds.length > 0) {
-                    affectedPeoples = result.Records[0].Affecteds[0].AffectedPeople;
-                    affectedPeoples.forEach((item: AffectedPeopleModel) => {
-                        passengerListLocal.push(UtilityService.pluck(item, ['Passenger'])[0]);
-                    });
-                    this.passengerList = Observable.of(passengerListLocal);
-                }
-            }, ((error: any) => {
-                console.log(`Error: ${error}`);
-            }));
+        if (query !== '') {
+            this.peopleOnBoardWidgetService.GetQueryForPassenger(query, this.currentIncidentId)
+                .subscribe((result: ResponseModel<InvolvePartyModel>) => {
+                    let affectedPeoples: AffectedPeopleModel[];
+                    if (result.Records[0].Affecteds.length > 0) {
+                        affectedPeoples = result.Records[0].Affecteds[0].AffectedPeople;
+                        affectedPeoples.forEach((item: AffectedPeopleModel) => {
+                            passengerListLocal.push(UtilityService.pluck(item, ['Passenger'])[0]);
+                        });
+                        this.passengerList = Observable.of(passengerListLocal);
+                    }
+                }, ((error: any) => {
+                    console.log(`Error: ${error}`);
+                }));
+        }
+        else {
+            this.openAllPassengersDetails();
+        }
     }
 
     invokeResetPassenger(): void {
         this.openAllPassengersDetails();
     }
 
+    invokeSearchCrew(query: string): void {
+        const involvedParties: InvolvePartyModel[] = [];
+        const crewListLocal: CrewModel[] = [];
+        if (query !== '') {
+            this.peopleOnBoardWidgetService.GetQueryForCrew(query, this.currentIncidentId)
+                .subscribe((result: ResponseModel<InvolvePartyModel>) => {
+                    let affectedPeoples: AffectedPeopleModel[];
+                    if (result.Records[0].Affecteds.length > 0) {
+                        affectedPeoples = result.Records[0].Affecteds[0].AffectedPeople;
+                        affectedPeoples.forEach((item: AffectedPeopleModel) => {
+                            crewListLocal.push(UtilityService.pluck(item, ['Crew'])[0]);
+                        });
+                        this.crewList = Observable.of(crewListLocal);
+                    }
+                }, ((error: any) => {
+                    console.log(`Error: ${error}`);
+                }));
+        }
+        else {
+            this.openAllCrewsDetails();
+        }
+    }
+
+    invokeResetCrew(): void {
+        this.openAllCrewsDetails();
+    }
+
     invokeSearchCargo(query: string): void {
         let cargoListLocal: CargoModel[] = [];
-        this.peopleOnBoardWidgetService.GetQueryForCargo(query, this.currentIncidentId)
-            .subscribe((result: ResponseModel<InvolvePartyModel>) => {
-                cargoListLocal = result.Records[0].Flights[0].Cargoes;
-                this.cargoList = Observable.of(cargoListLocal);
-            }, ((error: any) => {
-                console.log(`Error: ${error}`);
-            }));
+        if (query !== '') {
+            this.peopleOnBoardWidgetService.GetQueryForCargo(query, this.currentIncidentId)
+                .subscribe((result: ResponseModel<InvolvePartyModel>) => {
+                    cargoListLocal = result.Records[0].Flights[0].Cargoes;
+                    this.cargoList = Observable.of(cargoListLocal);
+                }, ((error: any) => {
+                    console.log(`Error: ${error}`);
+                }));
+        }
+        else {
+            this.openAllCargoDetails();
+        }
     }
 
     invokeResetCargo(): void {
@@ -415,6 +454,61 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
                 Description: 'Passenger Type',
                 Value: ''
             }),
+        ];
+    }
+
+    private initiateSearchConfigurationsCrew(): void {
+        this.searchConfigsCrew = [
+            new SearchTextBox({
+                Name: 'Crew/EmployeeNumber',
+                Description: 'Employee Number',
+                Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'Crew/CrewName',
+                Description: 'Employee Name',
+                Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'Crew/ContactNumber',
+                Description: 'Contact Number',
+                Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'Crew/AsgCat',
+                Description: 'Assigned Category',
+                Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'Crew/DeadheadCrew',
+                Description: 'Operating Crew',
+                Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'Crew/BaseLocation',
+                Description: 'Base Location',
+                Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'Crew/DepartureStationCode',
+                Description: 'Departure Station',
+                Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'Crew/ArrivalStationCode',
+                Description: 'Arrival Station',
+                Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'Crew/WorkPosition',
+                Description: 'Work Position',
+                Value: ''
+            }),
+            new SearchTextBox({
+                Name: 'Crew/Email',
+                Description: 'Email Id',
+                Value: ''
+            })
         ];
     }
 

@@ -111,6 +111,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
                         this.form.reset();
                         this.toastrService.success('User profile created Successfully.', 'Success', this.toastrConfig);
                         this.dataExchange.Publish('UserProfileModelCreated', response);
+                        this.showAddRegion(this.showAdd);
                         this.showAdd = false;
 
                     }, (error: any) => {
@@ -122,6 +123,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
                 this.formControlDirtyCheck();
                 this.userProfileService.Update(this.userProfileModeltoUpdate, this.userProfileModeltoUpdate.UserProfileId)
                     .subscribe((response: UserProfileModel) => {
+                        this.showAddRegion(this.showAdd);
                         this.showAdd = false;
                         this.toastrService.success('User profile edited Successfully.', 'Success', this.toastrConfig);
                         this.dataExchange.Publish('UserProfileModelModified', response);
@@ -204,6 +206,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
                     this.inputFileUserProfile.nativeElement.value = "";
                     this.disableUploadButton = true;
                     this.dataExchange.Publish('UserProfileLoadedFromFile', this.userProfileModel);
+                    this.showAddRegion(this.showAdd);
                     this.showAdd = false;
 
                 }, (error) => {

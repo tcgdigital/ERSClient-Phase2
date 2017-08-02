@@ -104,7 +104,7 @@ export class EmergencyDepartmentComponent {
         });
         this.emergencyDepartmentService.CreateBulk(this.emergencyDepartmentModelToSave)
             .subscribe((response: EmergencyDepartmentModel[]) => {
-                this.toastrService.success('Emergency wise department saved Successfully.', 'Success', this.toastrConfig);
+                this.toastrService.success('Crisis wise department saved Successfully.', 'Success', this.toastrConfig);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             }); 
