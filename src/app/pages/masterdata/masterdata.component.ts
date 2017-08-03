@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, ElementRef } from '@angular/core';
 import { Router } from "@angular/router";
 import { ITabLinkInterface, GlobalConstants, UtilityService, KeyValue, GlobalStateService } from '../../shared';
 import { PagesPermissionMatrixModel } from '../masterdata';
@@ -11,7 +11,9 @@ import { PagesPermissionMatrixModel } from '../masterdata';
 export class MasterDateComponent {
     public tablinks: ITabLinkInterface[];
     public currentDepartmentId: number;
-    constructor(private router: Router, private globalState: GlobalStateService) {
+    public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
+
+    constructor(private router: Router, private elementRef: ElementRef, private globalState: GlobalStateService) {
     }
 
     public ngOnInit(): void {
@@ -29,6 +31,9 @@ export class MasterDateComponent {
                     x.DepartmentId === this.currentDepartmentId
             });
         if (rootTab) {
+            const $self: JQuery = jQuery(this.elementRef.nativeElement);
+            $self.find('.error').hide();
+            $self.find('.tab-root-container').show();
             const accessibleTabs: string[] = GlobalConstants.PagePermissionMatrix
                 .filter((x: PagesPermissionMatrixModel) => {
                     return x.ParentPageId === rootTab.PageId &&
@@ -43,6 +48,9 @@ export class MasterDateComponent {
         }
         else {
             this.tablinks = [];
+            const $self: JQuery = jQuery(this.elementRef.nativeElement);
+            $self.find('.error').show();
+            $self.find('.tab-root-container').hide();
         }
         // this.tablinks = TAB_LINKS;
     }

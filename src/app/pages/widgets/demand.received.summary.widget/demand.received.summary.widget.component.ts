@@ -2,7 +2,7 @@ import {
     Component, OnInit, ElementRef, AfterViewInit,
     ViewEncapsulation, Input, ViewChild, SimpleChange
 } from '@angular/core';
-import { UtilityService, GlobalStateService, GlobalConstants } from '../../../shared';
+import { ResponseModel, UtilityService, GlobalStateService, GlobalConstants } from '../../../shared';
 import { WidgetUtilityService } from '../widget.utility';
 import {
     DemandReceivedSummaryModel,
@@ -19,6 +19,8 @@ import { DemandReceivedSummaryWidgetService } from './demand.received.summary.wi
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Observable } from 'rxjs/Rx';
 import * as Highcharts from 'highcharts';
+import { DemandStatusLogModel,DemandStatusLogService } from "../../shared.components/demandstatuslog";
+
 
 @Component({
     selector: 'demand-received-summary-widget',
@@ -58,7 +60,9 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
 
     constructor(private elementRef: ElementRef, private globalState: GlobalStateService,
-        private demandReceivedSummaryWidgetService: DemandReceivedSummaryWidgetService, private incidentService: IncidentService) { }
+        private demandReceivedSummaryWidgetService: DemandReceivedSummaryWidgetService,
+         private incidentService: IncidentService,
+        private demandStatusLogService: DemandStatusLogService) { }
 
     public ngOnInit(): void {
         this.showGraph = false;
@@ -284,10 +288,15 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
             $currentRow.closest('tbody').find('tr').removeClass('bg-blue-color');
             $currentRow.closest('tr').addClass('bg-blue-color');
         }
-        this.incidentService.GetIncidentById(this.incidentId)
-            .subscribe((incidentModel: IncidentModel) => {
-                WidgetUtilityService.GetGraphDemand(targetDepartmentId, Highcharts, this.arrGraphData, 'demand-received-graph-container', 'Received', incidentModel.CreatedOn);
-                this.showDemandReceivedGraph = true;
+        this.demandStatusLogService.GetAllByIncidentTargetDepartment(this.incidentId, targetDepartmentId)
+            .subscribe((demandStatusLogModels: ResponseModel<DemandStatusLogModel>) => {
+                this.incidentService.GetIncidentById(this.incidentId)
+                    .subscribe((incidentModel: IncidentModel) => {
+                        WidgetUtilityService.GetGraphDemand(targetDepartmentId, Highcharts,
+                             demandStatusLogModels.Records, 'demand-received-graph-container',
+                              'Received', incidentModel.CreatedOn,'TargetDepartment');
+                        this.showDemandReceivedGraph = true;
+                    });
             });
     }
 }

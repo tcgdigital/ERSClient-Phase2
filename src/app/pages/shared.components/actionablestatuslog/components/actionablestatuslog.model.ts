@@ -8,7 +8,7 @@ export class ActionableStatusLogModel extends BaseModel {
 	public ChklistId: number;
 	public IncidentId: number;
 	public ActionId: number;
-	public CompletionStatus: number;
+	public CompletionStatus: string;
     public CompletionStatusChangedOn: Date;
     
     public Incident: IncidentModel;
@@ -26,7 +26,7 @@ export class ActionableStatusLogModel extends BaseModel {
 		this.ChklistId = 0;
 		this.IncidentId = 0;
 		this.ActionId = 0;
-		this.CompletionStatus = 0;
+		this.CompletionStatus = '';
 		this.CompletionStatusChangedOn = new Date();
 	}
 }
