@@ -136,7 +136,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     copassengerlistPassenger: AffectedPeopleToView[] = [];
     copassengerlistPassengerForMappedPerson: AffectedPeopleToView[] = [];
     selectedcountpnr: number;
-    selectedcountpassenger: number;
+    // selectedcountpassenger: number;
     list1Selected: boolean = false;
     list2Selected: boolean = false;
     totallistselected: boolean = false;
