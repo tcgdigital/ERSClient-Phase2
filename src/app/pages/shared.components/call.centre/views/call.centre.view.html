@@ -169,8 +169,8 @@
                         <label for="LastName">Select Co-passengers from All Passengers</label>
                         <div class="multiselect-container">
                             <div class="multiselect-selector" (click)="showListPassengers(); $event.stopPropagation();">
-                                <i class="fa fa-caret-down fa-pull-right fa-fw" aria-hidden="true"></i> {{selectedcountpassenger>0?
-                                selectedcountpassenger + ' Passengers(s) selected' : 'Select Co-passenger'}}
+                                <i class="fa fa-caret-down fa-pull-right fa-fw" aria-hidden="true"></i>
+                                  {{consolidatedCopassengers.length > 0 ? consolidatedCopassengers.length + ' Passengers(s) selected' : 'Select Co-passenger'}}
                             </div>
                             <ul class="multiselect-list1 dropdown-menu-down" [hidden]="!list2Selected" (click)="$event.stopPropagation();">
                                 <li *ngFor="let copassenger of copassengerlistPassengerForMappedPerson">
