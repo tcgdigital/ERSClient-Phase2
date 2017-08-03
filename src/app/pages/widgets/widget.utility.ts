@@ -3,6 +3,7 @@ import * as _ from 'underscore';
 import { ChecklistTrailModel } from "../shared.components/checklist.trail";
 import { DeptCheckListModel } from './checklist.summary.widget/checklist.summary.widget.model';
 import { ActionableStatusLogModel } from "../shared.components/actionablestatuslog";
+import { DemandStatusLogModel } from "../shared.components/demandstatuslog";
 import {
     GraphObject
 } from './demand.raised.summary.widget/demand.raised.summary.widget.model';
@@ -46,35 +47,51 @@ export class WidgetUtilityService {
         let closedTotal: number = 0;
         let pendingTotal: number = 0;
         let pendingInter: number = 0;
-        let tempInter: Date = new Date(emergencyDate);
-        tempInter=temp;
-        for (let i: number = 1; i <= this.elapsedHourForGraph; i++) {
+        const array: ActionableStatusLogModel[] = _.unique(arrGraphData, (item: ActionableStatusLogModel) => {
+            return item.CompletionStatusChangedOn;
+        });
 
+
+        const dates: string[] = _.pluck(array, 'CompletionStatusChangedOn');
+        const dateDate: Date[] = _.map(dates, (item) => {
+            return new Date(item);
+        });
+
+        const dateDateSorted = _.sortBy(dateDate, (item) => {
+            return item;
+        });
+
+        this.elapsedHourForGraph = dateDateSorted.length;
+        let totalCount: number = 0;
+        for (let i: number = 1; i <= this.elapsedHourForGraph - 1; i++) {
 
             let pendingOld: number = 0;
 
-            ///////This is for demands which are created after crisis initiation and closed in this hour.
-            let closeList: ActionableStatusLogModel[] = arrGraphData.filter((x: ActionableStatusLogModel) => x.CompletionStatus == 6)
-                .filter((x) => {
-                    return ((temp <= new Date(x.CompletionStatusChangedOn) && new Date(x.CompletionStatusChangedOn) <= end));
+            let filteredTotal: ActionableStatusLogModel[] = arrGraphData
+                .filter((item: ActionableStatusLogModel) => {
+                    return new Date(item.CompletionStatusChangedOn).getFullYear() == new Date(dateDateSorted[i]).getFullYear() &&
+                        new Date(item.CompletionStatusChangedOn).getMonth() == new Date(dateDateSorted[i]).getMonth() &&
+                        new Date(item.CompletionStatusChangedOn).getDay() == new Date(dateDateSorted[i]).getDay() &&
+                        new Date(item.CompletionStatusChangedOn).getHours() == new Date(dateDateSorted[i]).getHours() &&
+                        new Date(item.CompletionStatusChangedOn).getMinutes() == new Date(dateDateSorted[i]).getMinutes() &&
+                        new Date(item.CompletionStatusChangedOn).getSeconds() == new Date(dateDateSorted[i]).getSeconds();
                 });
-            //closedTotal = closedTotal + closeList.length;
-            arrGraphCompleted.push(closeList.length);
 
+            totalCount = filteredTotal.length;
 
-            //This is for demands which are created after crisis initiation but not yet closed.
-            let pendingList: ActionableStatusLogModel[] = arrGraphData.filter((x: ActionableStatusLogModel) => {
-                return ((x.CompletionStatus != 6) && (tempInter <= new Date(x.CompletionStatusChangedOn)) && (new Date(x.CompletionStatusChangedOn) <= end));
-            });
+            let closed: ActionableStatusLogModel[] = filteredTotal
+                .filter((x: ActionableStatusLogModel) => {
+                    return x.CompletionStatus == 'Closed';
+                });
+            arrGraphCompleted.push(closed.length);
 
-           
-
-            arrGraphPending.push(pendingList.length);
-
-            tempInter.setMinutes(tempInter.getMinutes() + 60);
-            end.setMinutes(end.getMinutes() + 60);
+            let pending: ActionableStatusLogModel[] = filteredTotal
+                .filter((x: ActionableStatusLogModel) => {
+                    return x.CompletionStatus != 'Closed';
+                });
+            arrGraphPending.push(pending.length);
         }
-        this.setGraphData(Highcharts, DepartmentName, arrGraphCompleted, arrGraphPending, containerName, 'Checklist', graphSubjectType);
+        this.setGraphData(Highcharts, DepartmentName, arrGraphCompleted, arrGraphPending, containerName, 'Checklist', graphSubjectType, dateDateSorted);
     }
 
     public static diff_minutes(dt2: Date, dt1: Date): number {
@@ -85,19 +102,20 @@ export class WidgetUtilityService {
 
     }
 
-    public static GetGraphDemand(requesterDepartmentId: number, Highcharts: any, arrGraphData: GraphObject[],
-        containerName: string, graphSubjectType: string, emergencyDate: Date): void {
+    public static GetGraphDemand(requesterDepartmentId: number, Highcharts: any, arrGraphData: DemandStatusLogModel[],
+        containerName: string, graphSubjectType: string, emergencyDate: Date, departmentType: string): void {
+        let DepartmentName: string = '';
         console.log(requesterDepartmentId);
+        if (departmentType == 'TargetDepartment') {
+            DepartmentName = arrGraphData[0].TargetDepartment.Description;
+        }
+        else {
+            DepartmentName = arrGraphData[0].RequesterDepartment.Description;
+        }
+
         this.elapsedHourForGraph = GlobalConstants.ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION;
-        let filterDepartments = arrGraphData.filter((item: GraphObject) => {
-            return item.requesterDepartmentId == requesterDepartmentId;
-        });
-
-        let DepartmentName = filterDepartments[0].requesterDepartmentName;
-
         let arrGraphPending: number[] = [];
         let arrGraphCompleted: number[] = [];
-
         let start: Date = new Date(emergencyDate);
         let temp: Date = new Date(emergencyDate);
         let inter: string = JSON.stringify(start);
@@ -123,55 +141,70 @@ export class WidgetUtilityService {
         else {
             this.elapsedHourForGraph = this.elapsedHourForGraph;
         }
-        let closedTotal: number = 0;
-        let pendingInter: number = 0;
-        for (let i: number = 1; i <= this.elapsedHourForGraph; i++) {
-            let pendingTotal: number = 0;
 
+        let closedTotal: number = 0;
+        let pendingTotal: number = 0;
+        let pendingInter: number = 0;
+       
+        
+
+        const array: DemandStatusLogModel[] = _.unique(arrGraphData, (item: DemandStatusLogModel) => {
+            return item.DemandStatusDescriptionChangedOn;
+        });
+
+
+        const dates: string[] = _.pluck(array, 'DemandStatusDescriptionChangedOn');
+        const dateDate: Date[] = _.map(dates, (item) => {
+            return new Date(item);
+        });
+
+        const dateDateSorted = _.sortBy(dateDate, (item) => {
+            return item;
+        });
+
+        
+        this.elapsedHourForGraph = dateDateSorted.length;
+        
+        let totalCount: number = 0;
+        for (let i: number = 1; i <= this.elapsedHourForGraph - 1; i++) {
             let pendingOld: number = 0;
 
-            ///////This is for demands which are created after crisis initiation and closed in this hour.
-            let closeList: GraphObject[] = filterDepartments.filter((x) => x.closedOn != null)
-                .filter((x) => {
-                    return ((temp <= x.closedOn && x.closedOn <= end));
+            let filteredTotal: DemandStatusLogModel[] = arrGraphData
+                .filter((item: DemandStatusLogModel) => {
+                    return new Date(item.DemandStatusDescriptionChangedOn).getFullYear() == new Date(dateDateSorted[i]).getFullYear() &&
+                        new Date(item.DemandStatusDescriptionChangedOn).getMonth() == new Date(dateDateSorted[i]).getMonth() &&
+                        new Date(item.DemandStatusDescriptionChangedOn).getDay() == new Date(dateDateSorted[i]).getDay() &&
+                        new Date(item.DemandStatusDescriptionChangedOn).getHours() == new Date(dateDateSorted[i]).getHours() &&
+                        new Date(item.DemandStatusDescriptionChangedOn).getMinutes() == new Date(dateDateSorted[i]).getMinutes() &&
+                        new Date(item.DemandStatusDescriptionChangedOn).getSeconds() == new Date(dateDateSorted[i]).getSeconds();
                 });
-            closedTotal = closedTotal + closeList.length;
-            arrGraphCompleted.push(closedTotal);
+
+            totalCount = filteredTotal.length;
+
+            let closed: DemandStatusLogModel[] = filteredTotal
+                .filter((x: DemandStatusLogModel) => {
+                    return x.DemandStatusDescription == 'Closed';
+                });
+            arrGraphCompleted.push(closed.length);
+
+            let pending: DemandStatusLogModel[] = filteredTotal
+                .filter((x: DemandStatusLogModel) => {
+                    return x.DemandStatusDescription != 'Closed';
+                });
+            arrGraphPending.push(pending.length);
 
 
-            //This is for demands which are created after crisis initiation but not yet closed.
-            let pendingList: GraphObject[] = filterDepartments.filter((x) => {
-                return ((temp <= x.CreatedOn) && (x.CreatedOn <= end));
-            });
-            pendingTotal = filterDepartments.length;
-            if (i == 1) {
-                pendingInter = pendingTotal;
-                pendingTotal = pendingTotal - closedTotal;
 
-            }
-            else {
-                pendingOld = pendingInter - closedTotal;
-                pendingTotal = pendingOld;
 
-            }
-
-            if (pendingTotal < 0) {
-                pendingTotal = 0;
-            }
-            arrGraphPending.push(pendingTotal);
-
-            temp.setMinutes(temp.getMinutes() + 60);
-            end.setMinutes(end.getMinutes() + 60);
         }
-        this.setGraphData(Highcharts, DepartmentName, arrGraphCompleted, arrGraphPending, containerName, 'Demand', graphSubjectType);
+        this.setGraphData(Highcharts, DepartmentName, arrGraphCompleted, arrGraphPending, containerName, 'Checklist', graphSubjectType, dateDateSorted);
     }
 
 
 
     public static setGraphData(Highcharts: any, departmentName: string, arrGraphCompleted: number[],
-        arrGraphPending: number[], containerName: string, moduleName: string, graphSubjectType: string): void {
-        let x_axis_points: string[] = _.range(1, this.elapsedHourForGraph + 1).map((item) => item.toString());
-
+        arrGraphPending: number[], containerName: string, moduleName: string, graphSubjectType: string, graphXAxis: Date[]): void {
+        let x_axis_points: string[] = graphXAxis.map((item) => item.toLocaleDateString() + ' ' + item.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
         let y_axis_points: number[] = _.range(1, _.max(_.union(arrGraphPending, arrGraphCompleted)));
 
 

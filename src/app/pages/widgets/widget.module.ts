@@ -14,6 +14,7 @@ import { ChecklistTrailService } from "../shared.components/checklist.trail";
 import { UtilityService } from '../../shared';
 import { IncidentService } from '../incident/components';
 import { ActionableStatusLogService } from "../shared.components/actionablestatuslog";
+import { DemandStatusLogService } from "../shared.components/demandstatuslog";
 
 import {
     BroadcastWidgetComponent,
@@ -85,7 +86,8 @@ const WIDGET_SERVICE: any[] = [
     UtilityService,
     ChecklistTrailService,
     IncidentService,
-    ActionableStatusLogService
+    ActionableStatusLogService,
+    DemandStatusLogService
 ];
 
 @NgModule({
