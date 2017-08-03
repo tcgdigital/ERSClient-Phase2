@@ -54,6 +54,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         this.demandTypeModel.DepartmentId = model.DepartmentId;
         let approverDept = this.demandTypeModel.IsAutoApproved ? '' : model.DepartmentId.toString();
         this.Action = 'Submit';
+        this.showAddRegion(this.showAdd);
         this.showAdd = true;
         this.showApproverDept = !this.demandTypeModel.IsAutoApproved;
         this.autoApproved = this.demandTypeModel.IsAutoApproved;
@@ -143,6 +144,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
                     this.toastrService.success('Demand Saved Successfully.', 'Success', this.toastrConfig);
                     this.resetDemandTypeForm();
                     this.showApproverDept = true;
+                    this.showAddRegion(this.showAdd);
                     this.showAdd = false;
                     this.dataExchange.Publish('demandTypeModelSaved', response);
 
@@ -170,6 +172,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
                     this.toastrService.success('Demand Edited Successfully.', 'Success', this.toastrConfig);
                     this.resetDemandTypeForm();
                     this.showApproverDept = true;
+                    this.showAddRegion(this.showAdd);
                     this.showAdd = false;
                     this.dataExchange.Publish('demandTypeModelUpdated', response);
                 }, (error: any) => {
