@@ -41,6 +41,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
         this.emergencyTypeModel = model;
         this.emergencyTypeModel.EmergencyTypeId = model.EmergencyTypeId;
         this.Action = "Edit";
+        this.showAddRegion(this.showAdd);
         this.showAdd = true;
         this.form = new FormGroup({
             EmergencyTypeName: new FormControl(model.EmergencyTypeName),
@@ -84,6 +85,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
             this.emergencyTypeService.Create(this.emergencyTypeModel)
                 .subscribe((response: EmergencyTypeModel) => {
                     this.resetForm();
+                    this.showAddRegion(this.showAdd);
                     this.showAdd = false;
                     this.toastrService.success('Crisis Type saved Successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("EmergencyTypeModelSaved", response);
@@ -98,6 +100,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
             this.emergencyTypeService.Update(this.emergencyTypeModelWithoutActive)
                 .subscribe((response: EmergencyTypeModel) => {
                     this.resetForm();
+                    this.showAddRegion(this.showAdd);
                     this.showAdd = false;
                     this.toastrService.success('Crisis Type edited Successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish("EmergencyTypeModelUpdated", response);

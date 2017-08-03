@@ -15,7 +15,8 @@ import {
 } from './services/notification.services';
 import {
     PaddingFormatterPipe,
-    AccessibilityPipe
+    AccessibilityPipe,
+    DateFormatterPipe
 } from './pipes';
 
 import {
@@ -141,7 +142,8 @@ const SHARED_CONSTANTS: any[] = [
 
 const SHARED_PIPES: any[] = [
     PaddingFormatterPipe,
-    AccessibilityPipe
+    AccessibilityPipe,
+    DateFormatterPipe
 ];
 
 export function createConfig(): ConnectionConfig {

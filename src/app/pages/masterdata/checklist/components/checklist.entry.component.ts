@@ -401,6 +401,7 @@ export class ChecklistEntryComponent implements OnInit {
                             this.toastrService.success('Checklist Edited Successfully.', 'Success', this.toastrConfig);
                             this.initiateCheckListModel();
                             this.form = this.resetCheckListForm();
+                            this.showAddRegion(this.showAdd);
                             this.showAdd = false;
                             this.CheckListParents.forEach(x => x.IsSelected = false);
                             this.dataExchange.Publish('checkListListReload', response1);
@@ -440,6 +441,7 @@ export class ChecklistEntryComponent implements OnInit {
     }
 
     onCheckListEditSuccess(data: ChecklistModel): void {
+        this.showAddRegion(this.showAdd);
         this.showAdd = true;
         this.initiateCheckListModel();
         this.checkListModel = data;
