@@ -14,8 +14,7 @@ import { QuickLinkModel } from './quicklink.model';
 import { QuickLinkService } from './quicklink.service';
 import {
     ResponseModel, DataExchangeService,
-    AuthModel, UtilityService, FileUploadService,
-    URLValidator, GlobalConstants,
+    AuthModel, UtilityService, FileUploadService, GlobalConstants,
     IUploadDocuments
 } from '../../../../shared';
 
@@ -37,9 +36,11 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
     quickLinkModelEdit: QuickLinkModel = null;
     date: Date = new Date();
     quickLinks: QuickLinkModel[] = [];
-    showAdd: Boolean = true;
+    showAdd: Boolean = false;
     buttonValue: String = "";
     credential: AuthModel;
+    public showAddText: string = 'ADD QUICKLINK';
+    isValidUrl: boolean;
 
     constructor(formBuilder: FormBuilder, private quickLinkService: QuickLinkService,
         private dataExchange: DataExchangeService<QuickLinkModel>,
@@ -62,7 +63,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
         this.form = new FormGroup({
             QuickLinkId: new FormControl(0),
             QuickLinkName: new FormControl('', [Validators.required]),
-            QuickLinkURL: new FormControl('', [Validators.required, URLValidator.validate])
+            QuickLinkURL: new FormControl('')
         });
     }
 
@@ -114,6 +115,17 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
 
     onSubmit(values: Object): void {
         this.submitted = true;
+        if (this.form.controls['URL'].value != '') {
+            const bolValid = /^(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:\~\+#]*[\w\-\@?^=%&amp;\~\+#])?$/.test(this.form.controls['URL'].value);
+            if (!bolValid) {
+                this.isValidUrl = true;
+                return;
+            }
+            else {
+                this.isValidUrl = false;
+            }
+        }
+
         if (this.form.valid) {
             if (this.quickLinkModel.QuickLinkId == 0) {//ADD REGION
                 delete this.quickLinkModel.Active;
@@ -125,6 +137,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
                         this.initializeInputForm();
                         this.toastrService.success('Quick link saved Successfully.', 'Success', this.toastrConfig);
                         this.dataExchange.Publish("quickLinkModelSaved", response);
+                        this.showAddRegion(this.showAdd);
                         this.showAdd = false;
                         this.initiateQuickLinkModel();
                     }, (error: any) => {
@@ -146,8 +159,9 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
                                 QuickLinkName: new FormControl(this.quickLinkModel.QuickLinkName,
                                     [Validators.required, Validators.minLength(5)]),
                                 QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL,
-                                    [Validators.required, Validators.minLength(12)])
+                                    [Validators.minLength(12)])
                             });
+                            this.showAddRegion(this.showAdd);
                             this.showAdd = false;
                         }, (error: any) => {
                             console.log(`Error: ${error}`);
@@ -160,13 +174,13 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
     cancel(): void {
         this.submitted = false;
         this.initiateQuickLinkModel();
+        this.showAddRegion(this.showAdd);
         this.showAdd = false;
         this.form = new FormGroup({
             QuickLinkId: new FormControl(0),
             QuickLinkName: new FormControl(this.quickLinkModel.QuickLinkName,
                 [Validators.required]),
-            QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL,
-                [Validators.required, URLValidator.validate])
+            QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL)
         });
     }
 
@@ -188,7 +202,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
     onQuickLinkEditSuccess(data: QuickLinkModel): void {
         this.filepathWithLinks = null;
         this.fileName = null;
-        this.showAddRegion();
+        this.showAddRegion(this.showAdd);
         this.showAdd = true;
         this.initiateQuickLinkModel();
         this.quickLinkModel = data;
@@ -197,8 +211,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
             QuickLinkId: new FormControl(this.quickLinkModel.QuickLinkId),
             QuickLinkName: new FormControl(this.quickLinkModel.QuickLinkName,
                 [Validators.required]),
-            QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL,
-                [Validators.required, URLValidator.validate])
+            QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL)
         });
         this.filepathWithLinks = this.quickLinkModel.UploadURL;
         if (this.filepathWithLinks != null) {
@@ -210,7 +223,14 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
 
     }
 
-    showAddRegion(): void {
-        this.showAdd = true;
+    showAddRegion(value): void {
+        // this.showAdd = true;
+        if (!value) {
+            this.showAddText = "CLICK TO COLLAPSE";
+        }
+        else {
+            this.showAddText = "ADD QUICKLINK";
+        }
+        this.showAdd = !value;
     }
 }

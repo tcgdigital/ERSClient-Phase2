@@ -122,6 +122,13 @@ export class DepartmentService
             .Execute();
     }
 
+    GetDepartmentById(departmentId:number): Observable<ResponseModel<DepartmentModel>> {
+        return this._dataService.Query()
+            .Select('DepartmentId,DepartmentName,Description')
+            .Filter(`ActiveFlag eq 'Active' and DepartmentId eq ${departmentId}`)
+            .Execute();
+    }
+
     GetDepartmentIds(): Observable<ResponseModel<DepartmentModel>> {
         return this._dataService.Query()
             .Select('DepartmentId')

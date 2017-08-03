@@ -57,7 +57,7 @@
             />
             <div class="row">
                 <div class="form-group col-lg-2 col-md-6 col-sm-6">
-                    <label for="Duration">Duration:<span class="required">*</span></label>
+                    <label for="Duration">Duration:<span class="required">*</span>(Minutes)</label>
                     <input id="Duration" class="form-control" type="number" name="Duration" formControlName="Duration" placeholder="Enter Duration"
                     />
 
@@ -105,12 +105,12 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-12 col-sm-12">
                             <div class="form-group">
-                                <label for="URL">URL:<span class="required">*</span></label>
+                                <label for="URL">URL:</label>
                                 <input id="URL" class="form-control" type="text" name="URL" formControlName="URL" placeholder="Enter URL" />
 
-                                <small *ngIf="form.controls.URL.hasError('required')" [hidden]="form.controls.URL.valid || (form.controls.URL.pristine && !submitted)"
-                                    class="text-danger">Required</small>
-                                <small *ngIf="form.controls.URL.hasError('validateURL') && !form.controls.URL.hasError('required')" [hidden]="form.controls.URL.valid || (form.controls.URL.pristine && !submitted)"
+                                <!-- <small *ngIf="form.controls.URL.hasError('required')" [hidden]="form.controls.URL.valid || (form.controls.URL.pristine && !submitted)"
+                                    class="text-danger">Required</small> -->
+                                <small *ngIf="isURLInvalid"
                                     class="text-danger">Invalid Input</small>
                             </div>
                         </div>
@@ -178,5 +178,5 @@
     </div>
 
     <div class="addbuttonHolder">
-        <a href="javascript:void(0);" (click)="showAddRegion()"><strong>ADD CHECKLIST</strong></a>
+        <a href="javascript:void(0);" (click)="showAddRegion(showAdd)"><strong>{{showAddText}}</strong></a>
 </div>

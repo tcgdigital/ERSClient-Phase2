@@ -28,10 +28,11 @@ export class DepartmentEntryComponent implements OnInit {
     form: FormGroup;
     users: UserProfileModel[] = [];
     parentDepartments: DepartmentModel[] = [];
-    showAdd: boolean;
+    showAdd: boolean = false;
     departmentModel: DepartmentModel;
     credential: AuthModel;
     submitted: boolean = false;
+    public showAddText: string = 'ADD DEPARTMENT';
 
     constructor(private departmentService: DepartmentService,
         private userService: UserProfileService,
@@ -70,9 +71,21 @@ export class DepartmentEntryComponent implements OnInit {
         this.mergeResponses();
         this.departmentModel = new DepartmentModel();
         this.credential = UtilityService.getCredentialDetails();
+        this.resetDepartmentForm();
         this.departmentModel.CreatedBy = +this.credential.UserId;
         this.departmentModel.DepartmentId = 0;
         this.showAdd = false;
+    }
+
+    resetDepartmentForm(): void {
+        
+        this.form = new FormGroup({
+            DepartmentCode: new FormControl('', [Validators.required]),
+            Description: new FormControl('', [Validators.required]),
+            ContactNo: new FormControl('', [Validators.required]),
+            DepartmentSpoc: new FormControl('', [Validators.required]),
+            ParentDepartmentId: new FormControl('')
+        });
     }
 
     onSubmit(values: DepartmentModel): void {
@@ -109,7 +122,7 @@ export class DepartmentEntryComponent implements OnInit {
                     (x) => x.DepartmentSpoc,
                     (x) => x.ParentDepartmentId);
 
-                this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString().replace( /^\D+/g, '');
+                this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString().replace(/^\D+/g, '');
                 this.departmentModel.CreatedBy = +this.credential.UserId;
                 if (this.form.controls['ParentDepartmentId'].value == '') {
                     this.departmentModel.ParentDepartmentId = null;
@@ -143,7 +156,7 @@ export class DepartmentEntryComponent implements OnInit {
 
                 this.departmentModel.deleteAttributes();
                 if (this.departmentModel.ContactNo) {
-                    this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString().replace( /^\D+/g, '');
+                    this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString().replace(/^\D+/g, '');
                 }
                 this.departmentService.Update(this.departmentModel, this.departmentModel.DepartmentId)
                     .subscribe((response: DepartmentModel) => {
@@ -159,16 +172,27 @@ export class DepartmentEntryComponent implements OnInit {
         }
     }
 
-    showAddRegion(): void {
-        this.showAdd = true;
-        this.submitted = false;
-        this.departmentModel = new DepartmentModel();
-        this.departmentModel.CreatedBy = +this.credential.UserId;
-        this.departmentModel.DepartmentId = 0;
-        this.form = this.setDepartmentForm();
+    // showAddRegion(): void {
+    //     this.showAdd = true;
+    //     this.submitted = false;
+    //     this.departmentModel = new DepartmentModel();
+    //     this.departmentModel.CreatedBy = +this.credential.UserId;
+    //     this.departmentModel.DepartmentId = 0;
+    //     this.form = this.setDepartmentForm();
+    // }
+
+    showAddRegion(value): void {
+        if (!value) {
+            this.showAddText = "CLICK TO COLLAPSE";
+        }
+        else {
+            this.showAddText = "ADD DEPARTMENT";
+        }
+        this.showAdd = !value;
     }
 
     cancel(): void {
+        this.showAddRegion(this.showAdd);
         this.showAdd = false;
         this.submitted = false;
     }

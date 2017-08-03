@@ -2,8 +2,9 @@ import {
     Component, ViewEncapsulation,
     Output, EventEmitter, Input, OnInit
 } from '@angular/core';
-import { GlobalStateService } from '../../services';
+import { GlobalStateService, UtilityService } from '../../services';
 import { Router } from '@angular/router';
+import * as jwtDecode from 'jwt-decode';
 import { AuthenticationService } from '../../../pages/login/components/authentication.service';
 import { GlobalConstants } from '../../constants/constants';
 
@@ -16,7 +17,7 @@ import { GlobalConstants } from '../../constants/constants';
 export class BrandHeaderComponent implements OnInit {
     @Input() userName: string;
     @Input() lastLogin: Date;
-    @Input() isLanding : boolean;
+    @Input() isLanding: boolean;
 
     @Output() hambargerClicked: EventEmitter<any> = new EventEmitter<any>();
     @Output() contactClicked: EventEmitter<any> = new EventEmitter<any>();
@@ -29,7 +30,6 @@ export class BrandHeaderComponent implements OnInit {
     public logoImage: string = 'assets/images/logo_pal1.png';
     public logoUrl: string = '#';
     public enabledPassword: boolean = !GlobalConstants.AD_AUTH_ENABLED;
-
     constructor(private router: Router, private authenticationService: AuthenticationService) {
     }
 
@@ -38,6 +38,12 @@ export class BrandHeaderComponent implements OnInit {
         this.HelpFileFath = './assets/static-content/' + DocumentFilePath.replace(/^.*[\\\/]/, '');
         const Extension = DocumentFilePath.replace(/^.*[\\\/]/, '').split('.').pop();
         this.FileName = 'HelpFile.' + Extension;
+        const token = UtilityService.GetFromSession('access_token');
+        if(token){
+            const tokenData = jwtDecode(token);
+            if(tokenData && tokenData.UserName)
+                this.userName = tokenData.UserName;
+        }
     }
 
     public onHambargerClicked($event): void {

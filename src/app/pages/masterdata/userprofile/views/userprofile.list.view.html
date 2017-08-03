@@ -26,14 +26,14 @@
                 <th>Alternate Contact</th>
                 <th>Active Indicator</th>
                 <th>Volunteer Indicator</th>
-                <th>Passport Number</th>
-                <th>Passport Validity</th>               
+                <th>Passport Details</th>
+                 <!-- <th>Passport Validity</th>                 -->
                 <th>Nationality</th>
                 <th>Gender</th>
                 <th>Visa Details</th>
                 <th>Volunter Preferences</th>
                 <th>Training Records</th>
-                <th>Next Of Kins</th>
+                <th>NOK Details</th>
                 <th>Edit</th>
             </tr>
         </thead>
@@ -58,12 +58,12 @@
                         aria-label="ActiveFlag">
                     </md-checkbox>
                 </td>
-                <td data-title="Passport Number">
+                <td data-title="Passport Details">
                     {{userprofile.PassportNumber}}
                 </td>
-                <td data-title="Passport Validity">
+                <!-- <td data-title="Passport Validity">
                     {{userprofile.PassportValidity | date: 'dd-MMM-yyyy hh:mm a'}}
-                </td>
+                </td> -->
                 <td data-title="Nationality">{{userprofile.Nationality}}</td>
                 <td data-title="Gender">{{userprofile.Gender}}</td>
                 <td data-title="Visa Details">
@@ -91,7 +91,7 @@
                     </ul> -->
                     {{userprofile.TrainingDetails}}
                 </td>
-                <td data-title="Next Of Kins">
+                <td data-title="NOK Details">
                     <!-- <ul *ngIf="userprofile.NextOfKins.length > 0">
                         <li *ngFor="let NOK of userprofile.NextOfKins">
                             {{NOK.NextOfKinName}} / {{NOK.ContactNumber}}
@@ -128,6 +128,7 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Employee Id</th>
+                                <th>Department Name</th>
                                 <th>Main Contact</th>
                                 <th>Alternate Contact</th>
                                 <th>Passport Details</th>
@@ -148,6 +149,7 @@
                                 <td data-title="Name">{{userprofile.Name}}</td>
                                 <td data-title="Email">{{userprofile.Email }}</td>
                                 <td data-title="Employee Id">{{userprofile.EmployeeId}}</td>
+                                <td data-title="Department Name">{{userprofile.DepartmentName}}</td>
                                 <td data-title="Main Contact">{{userprofile.MainContact}}</td>
                                 <td data-title="Alternate Contact">{{userprofile.AlternateContact}}</td>
 

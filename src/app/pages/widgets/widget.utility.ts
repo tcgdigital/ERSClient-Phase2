@@ -2,6 +2,7 @@ import { UtilityService, GlobalConstants } from '../../shared';
 import * as _ from 'underscore';
 import { ChecklistTrailModel } from "../shared.components/checklist.trail";
 import { DeptCheckListModel } from './checklist.summary.widget/checklist.summary.widget.model';
+import { ActionableStatusLogModel } from "../shared.components/actionablestatuslog";
 import {
     GraphObject
 } from './demand.raised.summary.widget/demand.raised.summary.widget.model';
@@ -9,11 +10,10 @@ import {
 export class WidgetUtilityService {
     public static elapsedHourForGraph: number = GlobalConstants.ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION;
 
-    public static GetGraphCheckList(requesterDepartmentId: number, Highcharts: any, arrGraphData: ChecklistTrailModel[],
-        containerName: string, graphSubjectType: string, emergencyDate: Date): void {
+    public static GetGraphCheckList(requesterDepartmentId: number, Highcharts: any, arrGraphData: ActionableStatusLogModel[],
+        containerName: string, graphSubjectType: string, emergencyDate: Date, departmentName: string): void {
         this.elapsedHourForGraph = GlobalConstants.ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION;
-
-        let DepartmentName = arrGraphData[0].Department.DepartmentName;
+        let DepartmentName = departmentName;
         let arrGraphPending: number[] = [];
         let arrGraphCompleted: number[] = [];
 
@@ -46,47 +46,32 @@ export class WidgetUtilityService {
         let closedTotal: number = 0;
         let pendingTotal: number = 0;
         let pendingInter: number = 0;
+        let tempInter: Date = new Date(emergencyDate);
+        tempInter=temp;
         for (let i: number = 1; i <= this.elapsedHourForGraph; i++) {
 
 
             let pendingOld: number = 0;
 
             ///////This is for demands which are created after crisis initiation and closed in this hour.
-            let closeList: ChecklistTrailModel[] = arrGraphData.filter((x: ChecklistTrailModel) => x.CompletionStatus == 'Closed')
+            let closeList: ActionableStatusLogModel[] = arrGraphData.filter((x: ActionableStatusLogModel) => x.CompletionStatus == 6)
                 .filter((x) => {
                     return ((temp <= new Date(x.CompletionStatusChangedOn) && new Date(x.CompletionStatusChangedOn) <= end));
                 });
-            closedTotal = closedTotal + closeList.length;
-            arrGraphCompleted.push(closedTotal);
+            //closedTotal = closedTotal + closeList.length;
+            arrGraphCompleted.push(closeList.length);
 
 
             //This is for demands which are created after crisis initiation but not yet closed.
-            // let pendingList: ChecklistTrailModel[] = arrGraphData.filter((x: ChecklistTrailModel) => {
-            //     return ((x.CompletionStatus != 'Closed') && (temp <= new Date(x.CompletionStatusChangedOn)) && (new Date(x.CompletionStatusChangedOn) <= end));
-            // });
-
-            let totalCount = _.uniq(arrGraphData, function (x:ChecklistTrailModel) {
-                return x.ChklistId;
+            let pendingList: ActionableStatusLogModel[] = arrGraphData.filter((x: ActionableStatusLogModel) => {
+                return ((x.CompletionStatus != 6) && (tempInter <= new Date(x.CompletionStatusChangedOn)) && (new Date(x.CompletionStatusChangedOn) <= end));
             });
 
-            pendingTotal = totalCount.length - closedTotal;
+           
 
-            // if (i == 1) {
-            //     pendingInter = pendingTotal;
-            //     pendingTotal = pendingTotal - closedTotal;
-            // }
-            // else {
-            //     pendingOld = pendingInter - closedTotal;
-            //     pendingTotal = pendingOld;
-            // }
+            arrGraphPending.push(pendingList.length);
 
-            // if (pendingTotal < 0) {
-            //     pendingTotal = 0;
-            // }
-
-            arrGraphPending.push(pendingTotal);
-
-            temp.setMinutes(temp.getMinutes() + 60);
+            tempInter.setMinutes(tempInter.getMinutes() + 60);
             end.setMinutes(end.getMinutes() + 60);
         }
         this.setGraphData(Highcharts, DepartmentName, arrGraphCompleted, arrGraphPending, containerName, 'Checklist', graphSubjectType);

@@ -46,7 +46,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     demandFilePath: string;
     public globalStateProxyOpen: GlobalStateService;
     public isShowAssignToMeDemand: boolean = true;
-
+    public isInvalidRemarks: boolean = false;
     /**
      * Creates an instance of AssignedDemandComponent.
      * @param {DemandService} demandService
@@ -242,10 +242,15 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     }
 
     public cancelRemarkUpdate(): void {
+        this.isInvalidRemarks = false;
         this.childModalRemarks.hide();
     }
 
     public saveRemark(remarks): void {
+        if (remarks == '' || remarks == undefined) {
+            this.isInvalidRemarks = true;
+            return;
+        }
         const demand: DemandModelToView = this.demandForRemarks;
         this.RemarkToCreate = new DemandRemarkLogModel();
         this.RemarkToCreate.Remark = remarks;

@@ -61,8 +61,8 @@ export enum StorageType {
 
 export class GlobalConstants {
     // public static EXTERNAL_URL: string = 'http://202.54.73.219/';
-    // public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
-    public static EXTERNAL_URL: string = 'http://localhost:5001/';
+    //public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
+     public static EXTERNAL_URL: string = 'http://localhost:5001/';
     //public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
 
     public static NOTIFICATION_URL: string = `${GlobalConstants.EXTERNAL_URL}Notification/Hubs`;
@@ -455,26 +455,26 @@ export class GlobalConstants {
             Type: 'PassengerImportNotification',
             Key: 'ReceivePassengerImportCompletionResponse',
             Title: 'Passenger Imported',
-            Message: 'Passengers has been imported. Please refer to tab section "Affected People"'
+            Message: 'Passengers has been imported. Please refer to tab section "Affected People".'
         },
 
         {
             Type: 'IncidentBorrowNotification',
             Key: 'ReceiveIncidentBorrowingCompletionResponse',
             Title: 'Incident Borrowed',
-            Message: 'Incident has been borrowed successfully'
+            Message: 'Incident has been borrowed successfully.'
         },
 
         {
             Type: 'BroadcastNotification',
             Key: 'ReceiveBroadcastCreationResponse',
             Title: 'Broadcast Created',
-            Message: 'A new Broadcast has been created. Please refer to tab section "Broadcast Message"'
+            Message: 'A new Broadcast has been created. Please refer to tab section "Broadcast Message".'
         }, {
             Type: 'BroadcastNotification',
             Key: 'ReceiveBroadcastModificationResponse',
             Title: 'Broadcast Modified',
-            Message: 'A existing Broadcast message has been modified. Please refer to tab section "Broadcast Message"'
+            Message: 'A existing Broadcast message has been modified. Please refer to tab section "Broadcast Message".'
         },
 
         /*{
@@ -491,7 +491,7 @@ export class GlobalConstants {
             Type: 'ChecklistNotification',
             Key: 'ReceiveChecklistClosureResponse',
             Title: 'Checklist Closed',
-            Message: 'A Checklist has been closed. Please refer to tab section "Checklist > Closed"'
+            Message: 'A Checklist has been closed. Please refer to tab section "Checklist > Closed".'
         }, /*{
             Type: 'ChecklistNotification',
             Key: 'ReceiveChecklistActivationResponse',
@@ -503,7 +503,12 @@ export class GlobalConstants {
             Type: 'CrisisCreationNotification',
             Key: 'ReceiveCrisisCreationResponse',
             Title: 'Crisis Created',
-            Message: 'A new crisis has been initiated. Please logout and re-login to the system to see the details of the new crisis'
+            Message: 'A new crisis has been initiated. Please logout and re-login to the system to see the details of the new crisis.'
+        }, {
+            Type: 'CrisisCreationNotification',
+            Key: 'ReceiveDepartmentCreationResponse',
+            Title: 'Department Created',
+            Message: 'A new department has been created. Please logout and re-login to the system to see the new department.'
         },
 
         {
@@ -517,19 +522,19 @@ export class GlobalConstants {
             Type: 'CasualtyNotification',
             Key: 'ReceiveCasualtyCountResponse',
             Title: 'Casualty Status',
-            Message: 'Latest casualty status update arrived.  Please refer to dashboard\'s "PDA Casualty Status Block"'
+            Message: 'Latest casualty status update arrived.  Please refer to dashboard\'s "PDA Casualty Status Block".'
         },
 
         {
             Type: 'DemandNotification',
             Key: 'ReceiveDemandCreationResponse',
             Title: 'Demand Created',
-            Message: 'A new {0:model.DemandCode} Demand has been created. Please refer to tab section "Demand > My Demands"'
+            Message: 'A new {0:model.DemandCode} Demand has been created. Please refer to tab section "Demand > My Demands".'
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveDemandApprovalPendingResponse',
             Title: 'Demand Approval Pending',
-            Message: 'A Demand has been assigned for your approval. Please refer to tab section "Demand > Approval Pending"'
+            Message: 'A Demand has been assigned for your approval. Please refer to tab section "Demand > Approval Pending".'
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveDemandApprovedResponse',
@@ -539,7 +544,7 @@ export class GlobalConstants {
             Type: 'DemandNotification',
             Key: 'ReceiveDemandAssignedResponse',
             Title: 'Demand Assigned to Me',
-            Message: 'A new Demand has been assigned to you. Please refer to tab section "Demand > Assigned to Me"'
+            Message: 'A new Demand has been assigned to you. Please refer to tab section "Demand > Assigned to Me".'
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveCompletedDemandAssignedResponse',
@@ -554,7 +559,7 @@ export class GlobalConstants {
             Type: 'DemandNotification',
             Key: 'ReceiveDemandClosedResponse',
             Title: 'Demand Completed',
-            Message: 'A Demand has been completed. Please refer to tab section "Demand > Completed"'
+            Message: 'A Demand has been completed. Please refer to tab section "Demand > Completed".'
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveDemandStatusUpdateResponse',
@@ -566,7 +571,7 @@ export class GlobalConstants {
             Type: 'DemandNotification',
             Key: 'ReceiveCompletedDemandstoCloseResponse',
             Title: 'Demand Closed',
-            Message: 'A Demand has been closed. Please refer to tab section "Demand > Completed"'
+            Message: 'A Demand has been closed. Please refer to tab section "Demand > Completed".'
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveRejectedDemandsFromClosureResponse',
@@ -584,34 +589,34 @@ export class GlobalConstants {
             Type: 'PresidentsMessageNotification',
             Key: 'ReceivePresidentsMessageResponse',
             Title: 'Presidents Message Published',
-            Message: 'A Presidents Message has been published. Please refer to dashboard\'s "Presidents Message Block"'
+            Message: 'A Presidents Message has been published. Please refer to dashboard\'s "Presidents Message Block".'
         },
 
         {
             Type: 'PresidentsMessageWorkflowNotification',
             Key: 'ReceivePresidentsMessageCreatedResponse',
             Title: 'Presidents Message Created',
-            Message: 'A Presidents Message has been created. Please refer to tab section "Presidents Message > Presidents Message Release"'
+            Message: 'A Presidents Message has been created. Please refer to tab section "Presidents Message > Presidents Message Release".'
         }, {
             Type: 'PresidentsMessageWorkflowNotification',
             Key: 'ReceivePresidentsMessageSendForApprovalResponse',
             Title: 'Presidents Message is Sent for Approval',
-            Message: 'A Presidents Message has been sent for approval. Please refer to tab section "Presidents Message > Pending Approval"'
+            Message: 'A Presidents Message has been sent for approval. Please refer to tab section "Presidents Message > Pending Approval".'
         }, {
             Type: 'PresidentsMessageWorkflowNotification',
             Key: 'ReceivePresidentsMessageApprovedResponse',
             Title: 'Presidents Message Approved',
-            Message: 'A Presidents Message has been approved. Please refer to tab section "Presidents Message > Presidents Message Release"'
+            Message: 'A Presidents Message has been approved. Please refer to tab section "Presidents Message > Presidents Message Release".'
         }, {
             Type: 'PresidentsMessageWorkflowNotification',
             Key: 'ReceivePresidentsMessageRejectedResponse',
             Title: 'Presidents Message Rejected',
-            Message: 'A Presidents Message has been rejected. Please refer to tab section "Presidents Message > Presidents Message Release"'
+            Message: 'A Presidents Message has been rejected. Please refer to tab section "Presidents Message > Presidents Message Release".'
         }, {
             Type: 'PresidentsMessageWorkflowNotification',
             Key: 'ReceivePresidentsMessagePublishedResponse',
             Title: 'Presidents Message Published',
-            Message: 'A Presidents Message has been published. Please refer to tab section "Presidents Message > Presidents Message Release"'
+            Message: 'A Presidents Message has been published. Please refer to tab section "Presidents Message > Presidents Message Release".'
         }, {
             Type: 'PresidentsMessageWorkflowNotification',
             Key: 'ReceivePresidentsMessageUpdateResponse',
@@ -624,34 +629,34 @@ export class GlobalConstants {
             Type: 'MediaMessageNotification',
             Key: 'ReceiveMediaMessageResponse',
             Title: 'Media Release Published',
-            Message: 'A Media Release has been published. Please refer to dashboard\'s "Media Release Block"'
+            Message: 'A Media Release has been published. Please refer to dashboard\'s "Media Release Block".'
         },
 
         {
             Type: 'MediaMessageWorkflowNotification',
             Key: 'ReceiveMediaMessageCreatedResponse',
             Title: 'Media Release Created',
-            Message: 'A Media Release has been created. Please refer to tab section "Media Management > Media Release"'
+            Message: 'A Media Release has been created. Please refer to tab section "Media Management > Media Release".'
         }, {
             Type: 'MediaMessageWorkflowNotification',
             Key: 'ReceiveMediaMessageSendForApprovalResponse',
             Title: 'Media Release is Sent for Approval',
-            Message: 'A Media Release has been sent for approval. Please refer to tab section "Media Management > Pending Approval"'
+            Message: 'A Media Release has been sent for approval. Please refer to tab section "Media Management > Pending Approval".'
         }, {
             Type: 'MediaMessageWorkflowNotification',
             Key: 'ReceiveMediaMessageApprovedResponse',
             Title: 'Media Release Approved',
-            Message: 'A Media Release has been approved. Please refer to tab section "Media Management > Media Release"'
+            Message: 'A Media Release has been approved. Please refer to tab section "Media Management > Media Release".'
         }, {
             Type: 'MediaMessageWorkflowNotification',
             Key: 'ReceiveMediaMessageRejectedResponse',
             Title: 'Media Release Rejected',
-            Message: 'A Media Release has been rejected. Please refer to tab section "Media Management > Media Release"'
+            Message: 'A Media Release has been rejected. Please refer to tab section "Media Management > Media Release".'
         }, {
             Type: 'MediaMessageWorkflowNotification',
             Key: 'ReceiveMediaMessagePublishedResponse',
             Title: 'Media Release Published',
-            Message: 'A Media Release has been published. Please refer to tab section "Media Management > Media Release"'
+            Message: 'A Media Release has been published. Please refer to tab section "Media Management > Media Release".'
         }, {
             Type: 'MediaMessageWorkflowNotification',
             Key: 'ReceiveMediaMessageUpdateResponse',

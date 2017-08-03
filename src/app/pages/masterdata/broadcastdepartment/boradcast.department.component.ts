@@ -135,7 +135,7 @@ export class BroadcastDepartmentComponent {
             this.broadcastdepartmentmappingservice.CreateBulk(modeltosave)
             .subscribe((response: BroadCastDepartmentModel[]) => {
                 this.toastrService.success('Departments mapped successfully to broadcast.', 'Success', this.toastrConfig);
-                this.invokeReset();
+                // this.invokeReset();
             }, (error: any) => {
                 console.log(`Error: ${error}`);
                 this.invokeReset();
