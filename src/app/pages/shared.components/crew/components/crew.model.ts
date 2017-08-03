@@ -28,7 +28,7 @@ export class CrewModel extends BaseModel {
 	public PassportNumber : string;
 	public PassportValidity : string;
 	public NOKDetails : string;
-	public MedicalClearance : string;
+	public MedicalClearance? : Date;
 
 	public VisaDetails : string;
     public QualificationRecords : string;

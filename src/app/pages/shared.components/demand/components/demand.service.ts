@@ -63,7 +63,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
     public GetForAssignedDept(targetDeptId: number, incidentId: number): Observable<ResponseModel<DemandModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq ${incidentId} and TargetDepartmentId eq ${targetDeptId}  and IsClosed eq false and IsApproved eq true and IsCompleted eq false and ActiveFlag eq 'Active'`)
-            .Expand('TargetDepartment($select=DepartmentName),RequesterDepartment($select=DepartmentName) , DemandType($select=DemandTypeName), RequesterParentDepartment($select=DepartmentName),AffectedPerson($select=TicketNumber;$expand=Passenger($select = PassengerName),Crew($select=CrewName)),AffectedObject($select=AWB,TicketNumber), FileStores($select=UploadedFileName,FilePath)')
+            .Expand('TargetDepartment($select=DepartmentName),RequesterDepartment($select=DepartmentName) , DemandType($select=DemandTypeName), RequesterParentDepartment($select=DepartmentName),AffectedPerson($select=TicketNumber;$expand=Passenger($select = PassengerName),Crew($select=CrewName)),AffectedObject($select=AWB,TicketNumber), FileStores')
             .Execute();
     }
 
@@ -77,7 +77,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
     public GetByRequesterDepartment(requesterDeptId: number, incidentId: number): Observable<ResponseModel<DemandModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq  ${incidentId} and RequesterDepartmentId eq ${requesterDeptId} and ActiveFlag eq 'Active'`)
-            .Expand('TargetDepartment($select=DepartmentName) , DemandType($select=DemandTypeName) ,RequesterDepartment($select=DepartmentName),AffectedPerson($select=TicketNumber;$expand=Passenger($select = PassengerName),Crew($select=CrewName)),AffectedObject($select=AWB,TicketNumber), FileStores($select=UploadedFileName,FilePath)')
+            .Expand('TargetDepartment($select=DepartmentName) , DemandType($select=DemandTypeName) ,RequesterDepartment($select=DepartmentName),AffectedPerson($select=TicketNumber;$expand=Passenger($select = PassengerName),Crew($select=CrewName)),AffectedObject($select=AWB,TicketNumber), FileStores')
             .Execute();
     }
 
@@ -85,14 +85,14 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
         return this._dataService.Query()
             .Filter(`ApproverDepartmentId eq ${approverDeptId} and IncidentId eq ${incidentId} and
              IsClosed eq false and IsApproved eq false and IsRejected eq false and IsCompleted eq false and ActiveFlag eq 'Active'`)
-            .Expand('TargetDepartment($select=DepartmentName), RequesterDepartment($select=DepartmentName) , DemandType($select=DemandTypeName), RequesterParentDepartment($select=DepartmentName),AffectedPerson($select=TicketNumber;$expand=Passenger($select = PassengerName),Crew($select=CrewName)),AffectedObject($select=AWB,TicketNumber), FileStores($select=UploadedFileName,FilePath)')
+            .Expand('TargetDepartment($select=DepartmentName), RequesterDepartment($select=DepartmentName) , DemandType($select=DemandTypeName), RequesterParentDepartment($select=DepartmentName),AffectedPerson($select=TicketNumber;$expand=Passenger($select = PassengerName),Crew($select=CrewName)),AffectedObject($select=AWB,TicketNumber), FileStores')
             .Execute();
     }
 
     public GetCompletedDemands(deptId: number, incidentId: number): Observable<ResponseModel<DemandModel>> {
         return this._dataService.Query()
             .Filter(`RequesterDepartmentId eq ${deptId} and IncidentId eq ${incidentId} and IsClosed eq false and IsCompleted eq true and IsApproved eq true and ActiveFlag eq 'Active'`)
-            .Expand('TargetDepartment($select=DepartmentName), RequesterDepartment($select=DepartmentName) ,RequesterParentDepartment($select=DepartmentName), DemandType($select=DemandTypeName),AffectedPerson($select=TicketNumber;$expand=Passenger($select = PassengerName),Crew($select=CrewName)),AffectedObject($select=AWB,TicketNumber), FileStores($select=UploadedFileName,FilePath)')
+            .Expand('TargetDepartment($select=DepartmentName), RequesterDepartment($select=DepartmentName) ,RequesterParentDepartment($select=DepartmentName), DemandType($select=DemandTypeName),AffectedPerson($select=TicketNumber;$expand=Passenger($select = PassengerName),Crew($select=CrewName)),AffectedObject($select=AWB,TicketNumber), FileStores')
             .Execute();
     }
 
