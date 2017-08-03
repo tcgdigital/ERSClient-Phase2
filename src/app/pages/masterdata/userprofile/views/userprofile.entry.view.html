@@ -48,14 +48,14 @@
                     <small *ngIf="form.controls.MainContact.hasError('required')" [hidden]="form.controls.MainContact.valid || (form.controls.MainContact.pristine && !submitted)"
                         class="text-danger">Required</small>
 
-                    <small *ngIf="form.controls.MainContact.hasError('minlength')" [hidden]="form.controls.MainContact.valid || (form.controls.MainContact.pristine && !submitted)"
+                    <!-- <small *ngIf="form.controls.MainContact.hasError('minlength')" [hidden]="form.controls.MainContact.valid || (form.controls.MainContact.pristine && !submitted)"
                         class="text-danger">Minimum contact lenght 10 is required</small>
 
                     <small *ngIf="form.controls.MainContact.hasError('maxlength')" [hidden]="form.controls.MainContact.valid || (form.controls.MainContact.pristine && !submitted)"
                         class="text-danger">Maximum contact lenght 10 is allowed</small>
 
                     <small *ngIf="form.controls.MainContact.hasError('pattern')" [hidden]="form.controls.MainContact.valid || (form.controls.MainContact.pristine && !submitted)"
-                        class="text-danger">Only number allowed.</small>
+                        class="text-danger">Only number allowed.</small> -->
 
                 </div>
             </div>
@@ -64,18 +64,7 @@
             <div class="col-lg-3 col-md-6 col-12">
                 <div class="form-group">
                     <label for="AlternateContact">Alternate Contact:</label>
-                    <input class="form-control" id="txtAlternateContact" type="text" formControlName="AlternateContact" placeholder="Enter AlternateContact"
-                    />
-
-
-                    <small *ngIf="form.controls.AlternateContact.hasError('minlength')" [hidden]="form.controls.AlternateContact.valid || (form.controls.AlternateContact.pristine && !submitted)"
-                        class="text-danger">Minimum contact lenght 10 is required</small>
-
-                    <small *ngIf="form.controls.AlternateContact.hasError('maxlength')" [hidden]="form.controls.AlternateContact.valid || (form.controls.AlternateContact.pristine && !submitted)"
-                        class="text-danger">Maximum contact lenght 10 is allowed</small>
-
-                    <small *ngIf="form.controls.AlternateContact.hasError('pattern')" [hidden]="form.controls.AlternateContact.valid || (form.controls.AlternateContact.pristine && !submitted)"
-                        class="text-danger">Only number allowed.</small>
+                    <input class="form-control" id="txtAlternateContact" type="text" formControlName="AlternateContact" placeholder="Enter AlternateContact"/>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-12">
@@ -103,7 +92,7 @@
                 </div>
             </div>
             <div class="row">
-                 
+                
             </div>
         </div>
         <div class="row">
@@ -116,7 +105,7 @@
         <div class="row">
             <div class="col-lg-3 col-md-3 col-sm-12 butt-des">
                 <input type="file" #inputFileUserProfile id="file" (change)="getFileDetails($event,'UserProfile')" />
-                
+
             </div>
             <div class="col-lg-3 col-md-3 col-sm-12">
                 <button class="btn btn-primary" type="button" (click)="uploadFiles()" [disabled] = "disableUploadButton">Upload</button>

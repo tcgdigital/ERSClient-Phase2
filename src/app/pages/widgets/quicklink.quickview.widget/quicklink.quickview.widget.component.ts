@@ -4,7 +4,7 @@ import {
     SimpleChange
 } from '@angular/core';
 import { KeyValue, ResponseModel } from '../../../shared/models';
-import { GlobalConstants } from '../../../shared';
+import { GlobalConstants,GlobalStateService } from '../../../shared';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { QuickLinkModel } from '../../masterdata/quicklink/components';
 import { QuickLinkService } from '../../masterdata/quicklink/components';
@@ -18,16 +18,23 @@ import { Observable } from 'rxjs/Rx';
 })
 
 export class QuickLinkQuickViewWidgetComponent implements OnInit {
-    @Input() currentIncident: number;
+    @Input('currentIncident') currentIncident: number;
+    @Input('initiatedDepartmentId') initiatedDepartmentId: number;
+
     public incidentId: number;
     quicklinks: QuickLinkModel[] = [];
     public isShowPage: boolean = true;
+    public currentDepartmentId: number;
+    public currentIncidentIdLocal: number;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
 
-    constructor(private quicklinkService: QuickLinkService) { }
+    constructor(private quicklinkService: QuickLinkService,private globalState: GlobalStateService) { }
 
     ngOnInit() {
         this.incidentId = 0;
+        this.currentDepartmentId = this.initiatedDepartmentId;
+        this.currentIncidentIdLocal = this.currentIncident;
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
         this.getQuickLinks();
     }
 
@@ -36,5 +43,10 @@ export class QuickLinkQuickViewWidgetComponent implements OnInit {
             .subscribe((response: ResponseModel<QuickLinkModel>) => {
                 this.quicklinks = response.Records;
             });
+    }
+
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
+
     }
 }

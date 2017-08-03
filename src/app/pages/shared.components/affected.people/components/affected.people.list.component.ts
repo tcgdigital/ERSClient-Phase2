@@ -89,8 +89,14 @@ export class AffectedPeopleListComponent implements OnInit {
 
     openAffectedPersonDetail(affectedPerson: AffectedPeopleToView): void {
         this.copassangers = [];
+        if (affectedPerson.Crew) {
+            affectedPerson.Crew.FileStores = [];
+            //this.inputFileCrew.nativeElement.value = '';
+        }
+        if(this.inputFileCrew){
+            this.inputFileCrew.nativeElement.value = '';
+        }
         this.affectedPersonModelForStatus = affectedPerson;
-
 
         if (affectedPerson.MedicalStatus !== 'NA') {
             this.affectedPersonModelForStatus['MedicalStatusToshow'] = this.medicalStatus

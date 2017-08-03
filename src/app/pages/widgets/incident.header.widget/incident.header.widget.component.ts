@@ -3,8 +3,9 @@ import {
     Output, EventEmitter, ViewEncapsulation,
     OnChanges, SimpleChange
 } from '@angular/core';
-import { KeyValue, UtilityService, GlobalStateService } from '../../../shared';
+import { KeyValue, UtilityService, GlobalStateService,ResponseModel } from '../../../shared';
 import { IncidentModel, IncidentService } from '../../incident/components';
+import { DepartmentService, DepartmentModel } from "../../masterdata/department";
 
 @Component({
     selector: 'incident-header-widget',
@@ -29,7 +30,8 @@ export class IncidentHeaderWidgetComponent implements OnInit, OnChanges {
     private incidentId: number;
 
     constructor(private globalState: GlobalStateService,
-        private incidentService: IncidentService) { }
+        private incidentService: IncidentService,
+        private departmentService: DepartmentService) { }
 
     ngOnInit() {
 
@@ -47,6 +49,14 @@ export class IncidentHeaderWidgetComponent implements OnInit, OnChanges {
             });
     }
 
+    getDepartment(departmentId: number): void{
+        this.departmentService.GetDepartmentById(departmentId)
+        .subscribe((item: ResponseModel<DepartmentModel>) => {
+            this.currentDepartment.Key=item.Records[0].Description;
+            this.departmentName = this.currentDepartment.Key;
+        });
+    }
+
     // public onViewIncidentClick(): void {
     //     this.viewIncidentHandler.emit(this.currentIncident);
     // }
@@ -57,7 +67,7 @@ export class IncidentHeaderWidgetComponent implements OnInit, OnChanges {
             this.getIncident(this.currentIncident.Value);
         }
         if (this.currentDepartment !== undefined) {
-            this.departmentName = this.currentDepartment.Key;
+            this.getDepartment(this.currentDepartment.Value);
         }
     }
 
