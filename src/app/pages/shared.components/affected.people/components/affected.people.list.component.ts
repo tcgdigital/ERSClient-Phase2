@@ -91,6 +91,7 @@ export class AffectedPeopleListComponent implements OnInit {
         this.copassangers = [];
         if (affectedPerson.Crew) {
             affectedPerson.Crew.FileStores = [];
+            affectedPerson.Identification = "";
             //this.inputFileCrew.nativeElement.value = '';
         }
         if(this.inputFileCrew){
