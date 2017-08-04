@@ -18,7 +18,7 @@
                 <th>Nationality</th>
                 <th>Passport Details</th>
                 <th>NOK Details</th>
-                <th>Medical Clearances</th>
+                <th>Sick Leave Release</th>
                 <th>License Records</th>
                 <th>Qualification Records</th>
             </tr>
@@ -44,7 +44,7 @@
                 <td data-title="Nationality">{{affected.CrewNationality}}</td>
                 <td data-title="Passport Details">{{affected.PassportNumber}}</td>
                 <td data-title="NOK Details">{{affected.NOKDetails}}</td>
-                <td data-title="Medical Clearances">{{affected.MedicalClearance}}</td>
+                <td data-title="Medical Clearances">{{affected.MedicalClearance | date: 'dd-MMM-yyyy'}}</td>
                 <td data-title="License Records">{{affected.LicenseRecords}}</td>
                 <td data-title="Qualification Records">{{affected.QualificationRecords}}</td>
             </tr>

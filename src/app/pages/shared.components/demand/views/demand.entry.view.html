@@ -2,10 +2,6 @@
         <button *ngIf="isShowAddDemand | accesibility:currentDepartmentId:'CreateDemand'" class="btn btn-primary" type="submit" (click)="showAddRegion(showAdd)">{{buttonValue}}</button>
 </div>
 
-
-
-
-
 <div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -152,18 +148,18 @@
                                                                         <label for="ExpectedResolutionTime">Expected Resolution Time:<span class="required">*</span></label>
                                                                         <div *ngIf="!isReadonly"> <input id="EmergencyDate" class="form-control" type="text"
                                                                                         formControlName="ScheduleTime" placeholder="Enter Resolution Time"
-                                                                                        datetime-picker [options]="datepickerOption" readonly
-                                                                                        (selectHandler)="dateTimeSet($event,'EmergencyDate');"
+                                                                                        datetime-picker [options]="datepickerOption"
+                                                                                        readonly (selectHandler)="dateTimeSet($event,'EmergencyDate');"
                                                                                 />
-                                                                                 <small *ngIf="form.controls.ScheduleTime.hasError('required')" [hidden]="form.controls.ScheduleTime.valid || (form.controls.ScheduleTime.pristine && !submitted)"
-                                                                                class="text-danger">Required</small>
+                                                                                <small *ngIf="form.controls.ScheduleTime.hasError('required')" [hidden]="form.controls.ScheduleTime.valid || (form.controls.ScheduleTime.pristine && !submitted)"
+                                                                                        class="text-danger">Required</small>
                                                                         </div>
                                                                         <input id="ExpectedResolutionTime" type="text" formControlName="ScheduleTime" class="form-control" placeholder="Enter Resolution Time"
                                                                                 *ngIf="isReadonly" />
                                                                         <!-- <small *ngIf="(!form.controls.ScheduleTime.valid && submitted)" class="text-danger">
                                                                                 Required.
                                                                                 </small>  -->
-                                                                        
+
                                                                 </div>
                                                         </div>
                                                         <div class="row">

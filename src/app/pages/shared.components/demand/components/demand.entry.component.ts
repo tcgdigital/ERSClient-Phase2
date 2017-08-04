@@ -302,16 +302,14 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         }
     }
 
-    RemoveDemandTypeId(): void
-    {
+    RemoveDemandTypeId(): void {
         let index: number = this.demandTypes.indexOf(this.demandTypePreapproved);
         if (index != -1) {
             this.demandTypes.splice(index, 1);
-        }            
+        }
     }
 
-    AddDemandTypeId(): void
-    {
+    AddDemandTypeId(): void {
         this.demandTypes.push(this.demandTypePreapproved);
     }
 
@@ -353,12 +351,12 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         }
     }
 
-    setModelForUpdate(id:string) {
+    setModelForUpdate(id: string) {
         this.childModalEntry.hide();
-        const idNum:number = +(id.split('!')[0]);
+        const idNum: number = +(id.split('!')[0]);
         this.demandService.GetByDemandId(idNum)
             .subscribe((response: ResponseModel<DemandModel>) => {
-                
+
                 this.freshDemand = false;
                 this.demandModel = response.Records[0];
                 this.isrejected = this.demandModel.IsRejected;
@@ -394,9 +392,9 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
 
-    showDemandDetails(id:string) {
-        
-        const idNum:number = +(id.split('!')[0]);
+    showDemandDetails(id: string) {
+
+        const idNum: number = +(id.split('!')[0]);
         this.demandService.GetByDemandId(idNum)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demandModel = response.Records[0];
@@ -479,7 +477,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.Action = 'Submit';
         this.isReadonly = false;
 
-        
+
         this.globalState.Subscribe('OnDemandUpdate', (model) => this.setModelForUpdate(model));
         this.globalState.Subscribe('OnDemandDetailClick', (model) => this.showDemandDetails(model));
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));

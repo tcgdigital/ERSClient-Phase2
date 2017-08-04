@@ -53,6 +53,7 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
             else
                 this.emergencyLocation.Active = false;
             this.Action = "Edit";
+            this.showAddRegion(this.showAdd);
             this.showAdd = true;
         });
     }
@@ -125,6 +126,7 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
                         this.toastrService.success('Crisis Location is created Successfully.', 'Success', this.toastrConfig);
                         this.dataExchange.Publish("EmergencyLocationModelSaved", response);
                         this.initiateForm();
+                        this.showAddRegion(this.showAdd);
                         this.showAdd = false;
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
@@ -140,6 +142,7 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
                         this.toastrService.success('Crisis Location is updated Successfully.', 'Success', this.toastrConfig);
                         this.dataExchange.Publish("EmergencyLocationModelUpdated", response);
                         this.initiateForm();
+                        this.showAddRegion(this.showAdd);
                         this.showAdd = false;
                     }, (error: any) => {
                         console.log(`Error: ${error}`);

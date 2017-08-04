@@ -10,7 +10,7 @@
         <div class="row">
             <div class="col-12 pull-right">
                 <button type="button" class="btn btn-primary" aria-label="Expand or Collapse All" (click)="ExpandCollapseAll()">Expand or Collapse All</button>
-                <button type="button" class="btn btn-primary" aria-label="Notify" (click)="notify()">Notify</button>
+                <button type="button" class="pull-right btn btn-primary" aria-label="Notify" (click)="notify()">Notify</button>
             </div>
             <div class="col-12">
                 <div id="tree">
@@ -34,7 +34,7 @@
                 </div>
                 <div class="modal-body">
                     <label for="AdditionalData">Email message content</label><br/>
-                    <textarea rows="5" cols="135" disabled>{{appendedTemplate.Description}}</textarea><br/>
+                    <textarea class="area" disabled>{{appendedTemplate.Description}}</textarea><br/>
                     <label for="AdditionalData">Enter additional text for email notification</label><br/>
                     <input id="AdditionalData" class="form-control" type="text" name="AdditionalData" formControlName="AdditionalData" placeholder="Additional Data"
                     /><br/>
