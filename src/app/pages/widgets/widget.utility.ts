@@ -197,7 +197,7 @@ export class WidgetUtilityService {
 
 
         }
-        this.setGraphData(Highcharts, DepartmentName, arrGraphCompleted, arrGraphPending, containerName, 'Checklist', graphSubjectType, dateDateSorted);
+        this.setGraphData(Highcharts, DepartmentName, arrGraphCompleted, arrGraphPending, containerName, 'Demand', graphSubjectType, dateDateSorted);
     }
 
 
@@ -222,7 +222,7 @@ export class WidgetUtilityService {
                 categories: x_axis_points,
                 crosshair: true,
                 title: {
-                    text: 'Time elapse (Hourly)'
+                    text: 'Time'
                 }
             },
             yAxis: {
