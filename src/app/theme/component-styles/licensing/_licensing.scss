@@ -1,21 +1,21 @@
 @import '../../config/config';
 
-.container-fluid{
-    background-color: #1a82f7;
-    background-image: url(images/linear_bg_1.png);
-    background-repeat: repeat-y;
-    /* Safari 4-5, Chrome 1-9 */
-    background: -webkit-gradient(linear, left top, right top, from(#c13a3a), to(#2d3d88));
-    /* Safari 5.1, Chrome 10+ */
-    background: -webkit-linear-gradient(left, #c13a3a, #2d3d88);
-    /* Firefox 3.6+ */
-    background: -moz-linear-gradient(left, #c13a3a, #2d3d88);
-    /* IE 10 */
-    background: -ms-linear-gradient(left, #c13a3a, #2d3d88);
-    /* Opera 11.10+ */
-    background: -o-linear-gradient(left, #c13a3a, #2d3d88);
-    padding: 0;
-}
+// .container-fluid{
+//     background-color: #1a82f7;
+//     background-image: url(images/linear_bg_1.png);
+//     background-repeat: repeat-y;
+//     /* Safari 4-5, Chrome 1-9 */
+//     background: -webkit-gradient(linear, left top, right top, from(#c13a3a), to(#2d3d88));
+//     /* Safari 5.1, Chrome 10+ */
+//     background: -webkit-linear-gradient(left, #c13a3a, #2d3d88);
+//     /* Firefox 3.6+ */
+//     background: -moz-linear-gradient(left, #c13a3a, #2d3d88);
+//     /* IE 10 */
+//     background: -ms-linear-gradient(left, #c13a3a, #2d3d88);
+//     /* Opera 11.10+ */
+//     background: -o-linear-gradient(left, #c13a3a, #2d3d88);
+//     padding: 0;
+// }
 .btn {
      display: block;
      z-index: 1;
@@ -41,4 +41,85 @@ p{
     width: 50%;
     margin: 0 auto;
     padding: 10% 0;
+}
+
+.container-fluid{
+    background-image: url(./assets/images/background_image.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    @include background-size(100%, 100%);
+    display: block;
+    float: left;
+    width: 100%;
+    position: fixed;
+    height: 100%;
+}
+
+@media screen and (max-width: $resXS-E) {
+.container-fluid {
+    background-image: url(./assets/images/login_smalldevice_image.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    @include background-size(100%, 100%);
+    display: block;
+    float: left;
+    width: 100%;
+    position: fixed;
+    height: 100%;
+}
+
+.license-alignment > p {
+    font-size: 16px;
+}
+}
+
+@media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {
+.container-fluid {
+    background-image: url(./assets/images/background_device_image.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    @include background-size(100%, 100%);
+    display: block;
+    float: left;
+    width: 100%;
+    position: fixed;
+    height: 100%;
+}
+
+.license-alignment > p {
+    font-size: 18px;
+}
+}
+
+@media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
+.container-fluid {
+    background-image: url(./assets/images/login_smalldesktop_image.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    @include background-size(100%, 100%);
+    display: block;
+    float: left;
+    width: 100%;
+    position: fixed;
+    height: 100%;
+}
+
+.license-alignment > p {
+    font-size: 18px;
+}
+}
+
+@media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {}
+
+@media screen and (min-width: $resXL-S) {
+
+}
+
+.input-align{
+    text-align: center;
+}
+.sub-align{
+    text-align: center;
+    height: 22px;
+    padding: 0 24%;
 }

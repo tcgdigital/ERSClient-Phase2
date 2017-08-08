@@ -110,7 +110,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
                     affectedPeoples = result.Records[0].Affecteds[0].AffectedPeople.sort((a, b) => {
                         if (a.Passenger.PassengerName < b.Passenger.PassengerName) return -1;
                         if (a.Passenger.PassengerName > b.Passenger.PassengerName) return 1;
-
+                        
                         return 0;
                     });
                     affectedPeoples.forEach((item: AffectedPeopleModel) => {
