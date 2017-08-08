@@ -211,7 +211,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     }
 
     getExternalInput(enquirytype): void {
-        
+        //debugger;
         let queryDetailService: Observable<ExternalInputModel[]>
         if (enquirytype == 1 || enquirytype == 3)
             queryDetailService = this.callcenteronlypageservice.GetPassengerQueryByIncident(this.currentIncident, this.callid).map(x => x.Records);
@@ -221,7 +221,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             queryDetailService = this.callcenteronlypageservice.GetMediaAndOtherQueryByIncident(this.currentIncident, this.callid).map(x => x.Records);
 
         queryDetailService.subscribe((response: ExternalInputModel[]) => {
-
+            //debugger;
             if (response[0].PDAEnquiry != null) {
                 this.pdaenquery = response[0].PDAEnquiry;
                 this.form.controls["Queries"].reset({ value: this.pdaenquery.Query, disabled: false });
@@ -281,7 +281,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                 if (this.enquiriesToUpdate.length > 0) {
                     this.communicationlogstoupdateId = _.pluck(_.flatten(_.pluck(this.enquiriesToUpdate, 'CommunicationLogs')), 'InteractionDetailsId');
                 }
-                else
+                else if(this.enquiry.CommunicationLogs !== undefined)
                     this.communicationlogstoupdateId.push(this.enquiry.CommunicationLogs[0].InteractionDetailsId);
 
             }
@@ -402,6 +402,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
 
     //set models to save or update
     SetCommunicationLog(requestertype, interactionType, affectedPersonId?: number): CommunicationLogModel[] {
+        //debugger;
         let communicationLogs = new Array<CommunicationLogModel>();
         let comm: CommunicationLogModel = new CommunicationLogModel();
         comm.InteractionDetailsId = 0;
@@ -791,13 +792,25 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     }
 
     saveEnquiryDemandCaller(): void {
-
+        //debugger;
         //this.DemandCheckDisabled = "";
         this.submitted = true;
         if (this.form.valid && (((this.enquiryType == 1 || this.enquiryType == 3) && this.nullorwhitecheck(this.enquiry.AffectedPersonId)) ||
             (this.enquiryType == 2 && this.nullorwhitecheck(this.enquiry.AffectedObjectId) || (this.enquiryType >= 4)))) {
-            UtilityService.setModelFromFormGroup<EnquiryModel>(this.enquiry, this.form,
+            
+            if(this.enquiryType < 4)
+            {
+                UtilityService.setModelFromFormGroup<EnquiryModel>(this.enquiry, this.form,
                 (x) => x.IsAdminRequest, (x) => x.IsCallBack, (x) => x.IsTravelRequest, (x) => x.Queries);
+            }
+            else
+            {
+                UtilityService.setModelFromFormGroup<EnquiryModel>(this.enquiry, this.form, (x) => x.Queries);
+                this.enquiry.IsCallBack = false;
+                this.enquiry.IsAdminRequest = false;
+                this.enquiry.IsTravelRequest = false;
+
+            }
             this.enquiry.IncidentId = this.currentIncident;
             this.enquiry.Remarks = '';
             this.enquiry.CreatedBy = +this.credential.UserId;
@@ -871,6 +884,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                             }
                         })
                         .subscribe(() => {
+                            //debugger;
                             this.form = this.formInitialization();
                             this.toastrService.success('Enquiry Saved successfully.', 'Success', this.toastrConfig);
                             let num = UtilityService.UUID();
@@ -892,11 +906,12 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                 
             }
             else {
+                //debugger;
                 this.enquiryToUpdate.Queries = this.enquiry.Queries;
                 if (this.enquiry.AffectedPersonId == null) {
                     this.enquiry.AffectedPersonId = this.initialvalue.Value;
                 }
-                if (this.enquiryType == 2 || this.enquiryType == 3) {
+                if (this.enquiryType != 1) { // (this.enquiryType == 2 || this.enquiryType == 3)
                     let communicationlogToDeactivate = new CommunicationLogModel();
                     communicationlogToDeactivate.deleteAttributes();
                     communicationlogToDeactivate.InteractionDetailsId = this.communicationlogstoupdateId[0];
@@ -912,23 +927,59 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                         delete communicationlogs[0].AffectedPersonId;
                     }
                     delete this.enquiryToUpdate.CommunicationLogs;
-                    communicationlogs[0].Queries = this.enquiryToUpdate.Queries;
-                    communicationlogs[0].EnquiryId = this.enquiryToUpdate.EnquiryId;
-                    this.pdaenquery.AffectedPersonId
+                    if(this.enquiryType < 4)
+                    {
+                        communicationlogs[0].Queries = this.enquiryToUpdate.Queries;
+                        communicationlogs[0].EnquiryId = this.enquiryToUpdate.EnquiryId;
+                    }
+                    else
+                    {
+                        this.enquiryToUpdate.AffectedPersonId = null;
+                        this.enquiryToUpdate.AffectedObjectId = null;
+                    }
+                    //this.pdaenquery.AffectedPersonId
                     this.enquiryService.Update(this.enquiryToUpdate, this.enquiryToUpdate.EnquiryId)
-                        .flatMap(() => this.communicationlogservice.Update(communicationlogToDeactivate, this.communicationlogstoupdateId[0]))
-                        .flatMap(() => this.communicationlogservice.Create(communicationlogs[0]))
+                        // .flatMap(() => {
+                        //     if(this.enquiryType < 4)
+                        //     {
+                        //         return this.communicationlogservice.Update(communicationlogToDeactivate, this.communicationlogstoupdateId[0]);
+                        //     }
+                        // })
+                        // .flatMap(() => {
+                        //     if(this.enquiryType < 4)
+                        //     {
+                        //         return this.communicationlogservice.Create(communicationlogs[0])
+                        //     }
+                        // })
                         //.flatMap(() => this.demandService.UpdateBulkToDeactivateFromCallId(this.caller.CallerId)) // At the time of edit demand will not be created
-                        .subscribe(() => {
+                        .subscribe((item) => {
+                            //debugger;
+                            if(this.enquiryType < 4)
+                            {
+                                this.communicationlogservice.Update(communicationlogToDeactivate, this.communicationlogstoupdateId[0])
+                                .subscribe(()=> {
+                                    this.communicationlogservice.Create(communicationlogs[0])
+                                    .subscribe(() => { });
+                                });
+                            }
                             this.form = this.formInitialization();
                             this.toastrService.success('Enquiry updated successfully.', 'Success', this.toastrConfig);
                             let num = UtilityService.UUID();
                             this.globalState.NotifyDataChanged('CallRecieved', num);
+                            this.dataExchange.Publish('clearAutoCompleteInput', '');
 
                             // At the time of edit demand will not be created
                             // this.createDemands(this.affectedId);
 
-                        });
+                        }
+                        // ,(error: any) => {
+
+                        // console.log(`Error: ${error}`);
+
+                        // this.toastrService.error(`${error.message}`, 'Error', this.toastrConfig);
+
+                    //}
+                );
                 }
                 else if ((this.enquiryType == 1)) {
 
