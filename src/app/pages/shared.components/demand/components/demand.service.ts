@@ -41,7 +41,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
         const option: DataProcessingService = new DataProcessingService();
         this._bulkDataService = this.dataServiceFactory
             .CreateServiceWithOptionsAndActionSuffix<DemandModel>
-            ('DemandBatch', 'BatchPostAsync', option);
+            ('DemandBatch', 'BatchPost', option); // BatchPostAsync
         this._bulkDataServiceForCompletion = this.dataServiceFactory
             .CreateServiceWithOptionsAndActionSuffix<DemandModel>
             ('DemandCompletionBatch', '', option);

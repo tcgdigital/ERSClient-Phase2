@@ -22,6 +22,7 @@ import { AuthenticationService } from './login/components/authentication.service
 import { UserPermissionService } from './masterdata/userpermission/components';
 import { QuickLinkQuickViewWidgetComponent } from '../pages/widgets/quicklink.quickview.widget';
 import { QuickLinkService } from './masterdata/quicklink/components';
+import { WidgetModule } from './widgets';
 
 @NgModule({
     imports: [
@@ -35,6 +36,7 @@ import { QuickLinkService } from './masterdata/quicklink/components';
         MasterDateModule,
         ToastrModule,
         ModalModule,
+        WidgetModule,
         PagesRouting
     ],
     declarations: [

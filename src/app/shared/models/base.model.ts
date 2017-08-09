@@ -91,7 +91,7 @@ export class LicenseVerificationResponse {
     public Description: string;
 }
 
-export class LicenseInformationModel{
+export class LicenseInformationModel {
     public ClientCode: string;
     public ClientName: string;
     public MaxUsers: number;
@@ -100,4 +100,11 @@ export class LicenseInformationModel{
     public MacAddress: string;
     public Key: string;
     public IsValid: boolean;
+}
+
+export interface TimeZone {
+    abbr: string;
+    zonename: string;
+    utcoffset: string;
+    decimaloffset: string;
 }
