@@ -82,6 +82,7 @@
                                                         <th>Undeployed On</th>
                                                         <th>Work Details</th>
                                                         <th>Assigned by</th>
+                                                        <th>Department</th>
                                                     </thead>
                                                     <tbody>
                                                         <tr [hidden]="memberHistory.length != 0">
@@ -92,6 +93,7 @@
                                                             <td data-title="UndeployedOn">{{work.UnDeployedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
                                                             <td data-title="Work Details">{{work.Remarks}}</td>
                                                             <td data-title="Assigned by">{{work.createdby}}</td>
+                                                            <td data-title="Deaprtment">{{work.Department}}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
