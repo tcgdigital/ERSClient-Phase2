@@ -44,6 +44,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
         this.showAddRegion(this.showAdd);
         this.showAdd = true;
         this.form = new FormGroup({
+            EmergencyTypeId: new FormControl(model.EmergencyTypeId),
             EmergencyTypeName: new FormControl(model.EmergencyTypeName),
             EmergencyCategory: new FormControl(model.EmergencyCategory),
             ActiveFlag: new FormControl(model.ActiveFlag)
