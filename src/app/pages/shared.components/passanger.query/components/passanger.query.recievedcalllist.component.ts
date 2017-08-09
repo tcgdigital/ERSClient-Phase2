@@ -62,10 +62,11 @@ export class PassangerQueryRecievedCallsListComponent implements OnInit {
                 this.allAssignedCalls.unshift(model)
             }
         });
-
+        /*
         this.globalState.Subscribe('closePDAEnqReceived', (model: string) => {
             this.cancelCallcenter();
         });
+        */
     }
 
     incidentChangeHandler(incident: KeyValue): void {

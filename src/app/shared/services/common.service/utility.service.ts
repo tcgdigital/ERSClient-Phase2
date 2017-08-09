@@ -264,6 +264,7 @@ export class UtilityService {
 
     public static setModelFromFormGroup<T extends BaseModel>
         (entity: T, fromGroup: FormGroup, ...params: Array<(entity: T) => any>): void {
+            //debugger;
         const paramNames: string[] = [];
         if (params.length > 0) {
             params.forEach((x: Function) => {

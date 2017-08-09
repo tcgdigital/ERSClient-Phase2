@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ViewEncapsulation } from '@angular/core';
 import * as moment from 'moment/moment';
 import { EmergencyTypeModel, EmergencyTypeService } from '../../masterdata';
 import {
@@ -31,6 +31,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
     selector: 'view-readOnly-incident-widget',
     templateUrl: './readOnlyIncident.widget.view.html',
     styleUrls: ['./readOnlyIncident.widget.style.scss'],
+    encapsulation: ViewEncapsulation.None,
     providers: [ReadOnlyIncidentWidgetService, OrganizationService, AircraftTypeService]
 })
 export class ReadOnlyIncidentWidgetComponent implements OnInit {
