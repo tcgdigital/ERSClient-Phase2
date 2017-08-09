@@ -1038,7 +1038,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                             }
                         })
                         .subscribe(() => {
-                            debugger;
+                            
                             this.toastrService.success('Enquiry Saved successfully.', 'Success', this.toastrConfig);
                             /*
                             // At the time of edit demand will not be created
