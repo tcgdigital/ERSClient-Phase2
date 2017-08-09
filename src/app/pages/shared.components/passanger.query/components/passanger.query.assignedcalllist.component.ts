@@ -62,10 +62,11 @@ export class PassangerQueryAssignedCallsListComponent implements OnInit {
                 this.allAssignedCalls.unshift(model)
             }
         });
-
+        /*
         this.globalState.Subscribe('closePDAEnqNotAssigned', (model: string) => {
             this.cancelCallcenter();
         });
+        */
     }
 
     incidentChangeHandler(incident: KeyValue): void {
