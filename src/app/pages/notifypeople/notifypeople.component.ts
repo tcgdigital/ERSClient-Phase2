@@ -20,7 +20,7 @@ import {
     UtilityService,
     AutocompleteComponent,
     GlobalStateService,
-    KeyValue,GlobalConstants
+    KeyValue, GlobalConstants
 } from '../../shared';
 
 @Component({
@@ -102,18 +102,24 @@ export class NotifyPeopleComponent implements OnInit {
 
     public notify(): void {
         const checkedIds: number[] = this.tree.getCheckedNodes();
-        this.notifyPeopleService.NotifyPeopleCall(checkedIds, this.currentDepartmentId, this.currentIncidentId, (item: TemplateModel) => {
-            this.appendedTemplate.AppendedTemplateId = 0;
-            this.appendedTemplate.TemplateId = item.TemplateId;
-            this.appendedTemplate.EmergencySituationId = item.EmergencySituationId;
-            this.appendedTemplate.TemplateMediaId = item.TemplateMediaId;
-            this.appendedTemplate.Description = item.Description;
-            this.appendedTemplate.Subject = item.Subject;
-            this.appendedTemplate.ActiveFlag = 'Active';
-            this.appendedTemplate.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
-            this.appendedTemplate.CreatedOn = new Date();
-            this.childModalNoificationMessage.show();
-        });
+        if (checkedIds.length > 0) {
+            this.notifyPeopleService.NotifyPeopleCall(checkedIds, this.currentDepartmentId, this.currentIncidentId, (item: TemplateModel) => {
+                this.appendedTemplate.AppendedTemplateId = 0;
+                this.appendedTemplate.TemplateId = item.TemplateId;
+                this.appendedTemplate.EmergencySituationId = item.EmergencySituationId;
+                this.appendedTemplate.TemplateMediaId = item.TemplateMediaId;
+                this.appendedTemplate.Description = item.Description;
+                this.appendedTemplate.Subject = item.Subject;
+                this.appendedTemplate.ActiveFlag = 'Active';
+                this.appendedTemplate.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
+                this.appendedTemplate.CreatedOn = new Date();
+                this.childModalNoificationMessage.show();
+            });
+        }
+        else{
+            this.toastrService.error('Select atleast one user before click notify.', 'Notify User', this.toastrConfig);
+        }
+
     }
 
     public hideNoificationMessage(): void {
