@@ -696,13 +696,17 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         if (this.demands.length !== 0)
             this.demandService.CreateBulk(this.demands)
                 .subscribe(() => {
+                    // debugger;
                     this.demands = [];
                     this.communicationLogs = [];
                     this.toastrService.success('Demands Saved successfully.', 'Success', this.toastrConfig);
                     let num = UtilityService.UUID();
-                }, (error: any) => {
+                }
+                , (error: any) => {
+                    // debugger;
                     console.log(`Error: ${error}`);
-                });
+                }
+            );
     }
 
     callSetDemands(isCallback, isTravelRequest, isAdmin, isCrew, affectedId, affectedPersonIds?: number[]) {
