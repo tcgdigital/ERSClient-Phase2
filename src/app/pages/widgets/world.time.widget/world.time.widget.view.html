@@ -1,0 +1,16 @@
+<div class="rows world-clock-container">
+    <div class="world-clock-opner">
+        <i class="fa fa-clock-o" aria-hidden="true"></i> World Clock
+    </div>
+    <div class="world-clocks">
+        <select name="timeZone" id="timeZone" (change)="OnZoneChange($event)">
+            <option value='0'>Select time zone</option>
+            <option *ngFor="let timeZone of timeZones" [value]="timeZone.decimaloffset" >
+                {{timeZone.zonename}}
+            </option>
+        </select>
+        <div class="col" id="clock_1"></div>
+        <div class="col" id="clock_2"></div>
+        <div class="col" id="clock_3"></div>
+    </div>
+</div>
