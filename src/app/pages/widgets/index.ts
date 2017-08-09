@@ -14,3 +14,4 @@ export * from './archive.upload.widget';
 export * from './quicklink.quickview.widget';
 export * from './widget.module';
 export * from './widget.utility';
+export * from './world.time.widget';

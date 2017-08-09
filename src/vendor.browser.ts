@@ -41,6 +41,9 @@ import '../node_modules/sweet-dropdown/dist/min/jquery.sweet-dropdown.min';
 import 'highcharts';
 import 'lz-string';
 
+import './assets/scripts/jquery.rotate';
+import './assets/scripts/jClocksGMT';
+
 if ('production' === ENV) {
     // Production
 } else {

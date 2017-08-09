@@ -14,22 +14,23 @@
         @include transform(translateY(-50%));
         width: 22px;
         height: 46px;
-        background-color: $text-accordion-nav-bg;
+        // background-color: $text-accordion-nav-bg;
+        background-color: rgba(37, 31, 31, 0.4);
         background-repeat: no-repeat;
         background-position: center center;
         z-index: 4;
         display: none;
         border-radius: 0.25em;
         &:hover {
-            background-color: rgba(216, 216, 216, 0.9);
+            background-color: rgba(0, 0, 0, 0.4);
         }
         &.visible {
             display: block;
             @include animation(cd-fade-in, 0.4s)
         }
         i {
-            margin-top: 5px;
-            margin-left: 5px;
+            margin-top: 3px;
+            margin-left: 4px;
             color: #fff;
         }
         &.prev {
