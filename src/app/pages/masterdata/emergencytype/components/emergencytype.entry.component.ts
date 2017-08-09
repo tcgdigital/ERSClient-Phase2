@@ -125,7 +125,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
         this.emergencyTypeModel.EmergencyTypeId = 0;
         this.form = new FormGroup({
             EmergencyTypeId: new FormControl(0),
-            EmergencyTypeName: new FormControl('', [Validators.required, NameValidator.validate]),
+            EmergencyTypeName: new FormControl('', [Validators.required]),
             EmergencyCategory: new FormControl('', [Validators.required]),
             ActiveFlag: new FormControl('', [Validators.required])
         });
