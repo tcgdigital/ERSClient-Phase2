@@ -9,3 +9,40 @@ ul.gj-tree-bootstrap-list li [data-role=display]{
     position: relative;
     left: -48px;
 }
+
+.area{
+    columns: 135;
+}
+
+@media screen and (max-width: $resXS-E) {
+.area{
+    columns: 31;
+    width: 240px;
+    height: 96px;
+}
+}
+
+@media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {}
+
+@media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
+.area{
+    columns: 88;
+    width: 642px;
+    height: 51px;
+}
+}
+
+@media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {
+.area{
+    columns: 121;
+    width: 874px;
+    height: 51px;
+}
+}
+
+@media screen and (min-width: $resXL-S) {
+.area{   
+    width: 874px;
+    height: 51px;
+}
+}

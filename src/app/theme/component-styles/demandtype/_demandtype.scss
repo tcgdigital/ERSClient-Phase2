@@ -41,3 +41,25 @@ margin: 15px 1.5%;
     text-align: right;
     padding-bottom: 8px
 }
+
+.checkbox-bottom-align {
+    margin-top: 24px;
+}
+
+@media screen and (max-width: $resXS-E) {
+.checkbox-bottom-align {
+    margin-top: 0;
+}
+}
+
+@media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {
+.checkbox-bottom-align {
+    margin-top: 0;
+}
+}
+
+@media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
+.checkbox-bottom-align {
+    margin-top: 0;
+}
+}

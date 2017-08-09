@@ -5,6 +5,7 @@
     font-family: $font-family-prod;
     float: left;
     margin-right: 10px;
+    line-height:20px;
 }
 
 .client-name {
@@ -16,6 +17,10 @@
 
 .hambarger-menu {
     margin-top: 6px;
+}
+
+.login-name {
+    font-size:13px;
 }
 
 @media screen and (max-width: $resXXS-S) {

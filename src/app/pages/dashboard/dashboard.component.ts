@@ -1,5 +1,5 @@
 import {
-    Component, ViewEncapsulation,
+    Component, ViewEncapsulation, ElementRef,
     OnInit, SimpleChange, OnDestroy, ViewChild
 } from '@angular/core';
 import * as moment from 'moment/moment';
@@ -72,11 +72,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
     showQuicklink: boolean = false;
     private sub: any;
     public isShowViewReadonlyCrisis: boolean = false;
-
+    public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
 
 
     constructor(private globalState: GlobalStateService,
         private departmentService: DepartmentService,
+        private elementRef: ElementRef,
         private involvePartyService: InvolvePartyService,
         private emergencyLocationService: EmergencyLocationService,
         private emergencyTypeService: EmergencyTypeService,
@@ -129,6 +130,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
             });
 
         if (rootTab) {
+             const $self: JQuery = jQuery(this.elementRef.nativeElement);
+            $self.find('.error').hide();
+            $self.find('.tab-root-container').show();
             const accessibleTabs: string[] = GlobalConstants.PagePermissionMatrix
                 .filter((x: PagesPermissionMatrixModel) => {
                     return x.ParentPageId === rootTab.PageId &&
@@ -143,6 +147,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
         else {
             this.tablinks = [];
+            const $self: JQuery = jQuery(this.elementRef.nativeElement);
+            $self.find('.error').show();
+            $self.find('.tab-root-container').hide();
         }
         // this.tablinks = TAB_LINKS;
     }

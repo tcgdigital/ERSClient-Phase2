@@ -14,6 +14,8 @@ import { ChecklistTrailService } from "../shared.components/checklist.trail";
 import { UtilityService } from '../../shared';
 import { IncidentService } from '../incident/components';
 import { ActionableStatusLogService } from "../shared.components/actionablestatuslog";
+import { DemandStatusLogService } from "../shared.components/demandstatuslog";
+import {WorldTimeWidgetComponent} from './world.time.widget/world.time.widget.component';
 
 import {
     BroadcastWidgetComponent,
@@ -28,7 +30,8 @@ import {
     IncidentHeaderWidgetComponent,
     ReadOnlyIncidentWidgetComponent,
     ArchiveReportWidgetComponent,
-    ArchiveUploadWidgetComponent
+    ArchiveUploadWidgetComponent,
+    // WorldTimeWidgetComponent
 } from './index';
 
 import {
@@ -59,8 +62,8 @@ const WIDGET_COMPONENTS: any[] = [
     IncidentHeaderWidgetComponent,
     ReadOnlyIncidentWidgetComponent,
     ArchiveReportWidgetComponent,
-    ArchiveUploadWidgetComponent
-
+    ArchiveUploadWidgetComponent,
+    WorldTimeWidgetComponent
 ];
 
 const WIDGET_SERVICE: any[] = [
@@ -85,7 +88,8 @@ const WIDGET_SERVICE: any[] = [
     UtilityService,
     ChecklistTrailService,
     IncidentService,
-    ActionableStatusLogService
+    ActionableStatusLogService,
+    DemandStatusLogService
 ];
 
 @NgModule({

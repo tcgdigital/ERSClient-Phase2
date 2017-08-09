@@ -1,4 +1,4 @@
-<div class="row report_widget-container no-gutters">
+<div class="row report_widget-container no-gutters report_widget-container-device">
     <div class="col-12">
         <div class="row no-gutters">
             <div class="col-12 widget-title">
@@ -11,7 +11,7 @@
             </div>
             <div class="col widget-block reportform" *ngIf="isShowUploadOtherReport | accesibility:departmentId:'UploadOtherReport'">
                 <form [formGroup]="form">
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         <select id="selectApprover" class="form-control" formControlName="uploadDocumentControl" name="uploadDocumentControl">
                             <option value="0">Select Document Type</option>
                             <option *ngFor="let uploadDocument of uploadDocuments" [value]="uploadDocument.value" >
@@ -19,10 +19,10 @@
                             </option>
                         </select>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-3 no-gutters upload-padding">
                         <input #myFileInput type="file" (change)="fileChangeEvent($event)" [disabled]="!isReopened" placeholder="Upload file..." />
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-6">
                         <button type="button" class="btn btn-primary" (click)="upload()" [disabled]="!isReopened">Upload</button>
                         <button type="button" class="btn btn-primary" (click)="clearFileUpload($event)">Clear</button>
                     </div>

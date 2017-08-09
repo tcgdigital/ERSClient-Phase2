@@ -40,7 +40,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
     buttonValue: String = "";
     credential: AuthModel;
     public showAddText: string = 'ADD QUICKLINK';
-    isValidUrl: boolean;
+    isValidUrl: boolean = false;
 
     constructor(formBuilder: FormBuilder, private quickLinkService: QuickLinkService,
         private dataExchange: DataExchangeService<QuickLinkModel>,
@@ -115,16 +115,6 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
 
     onSubmit(values: Object): void {
         this.submitted = true;
-        if (this.form.controls['URL'].value != '') {
-            const bolValid = /^(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:\~\+#]*[\w\-\@?^=%&amp;\~\+#])?$/.test(this.form.controls['URL'].value);
-            if (!bolValid) {
-                this.isValidUrl = true;
-                return;
-            }
-            else {
-                this.isValidUrl = false;
-            }
-        }
 
         if (this.form.valid) {
             if (this.quickLinkModel.QuickLinkId == 0) {//ADD REGION
@@ -143,6 +133,16 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                     });
+            }
+            if (this.form.controls['QuickLinkURL'].value != '') {
+                const bolValid = /^(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:\~\+#]*[\w\-\@?^=%&amp;\~\+#])?$/.test(this.form.controls['QuickLinkURL'].value);
+                if (!bolValid) {
+                    this.isValidUrl = true;
+                    return;
+                }
+                else {
+                    this.isValidUrl = false;
+                }
             }
             else {//EDIT REGION
                 if (this.form.dirty) {

@@ -108,5 +108,4 @@ export class EnquiryService extends ServiceBase<EnquiryModel>
         return bulkDataServiceToDeactivate.JsonPost(externalInputId).Execute();
     };
 
-
 }

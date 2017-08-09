@@ -36,6 +36,22 @@ margin: 15px 1.5%;
     margin-bottom:10px;
 }
 
+.checkbox-bottom-align {
+    margin-top: 24px;
+}
+
+@media screen and (max-width: $resXXS-S) {
+.btn-pos {
+    margin-right:6px;
+    margin-bottom:10px;
+}
+
+.btn {
+    padding: 5px 8px !important;
+    font-size: 12px;
+}
+}
+
 @media screen and (max-width: $resXS-E) {
 .butt-align{
     margin-top: 5px;
@@ -43,12 +59,20 @@ margin: 15px 1.5%;
 .butt-des{
     margin-top: 5px;
 }
+
+.checkbox-bottom-align {
+    margin-top: 0;
+}
 }
 
 @media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {
 .btn-pos {
     margin-right:40px;
     margin-bottom:10px;
+}
+
+.checkbox-bottom-align {
+    margin-top: 0;
 }
 }
 
@@ -59,6 +83,10 @@ margin: 15px 1.5%;
 }
 .butt-align{
     padding-left: 76px;
+}
+
+.checkbox-bottom-align {
+    margin-top: 0;
 }
 }
 

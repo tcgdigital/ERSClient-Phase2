@@ -13,7 +13,7 @@ import {
 } from './demand.raised.summary.widget.model';
 import { WidgetUtilityService } from '../widget.utility';
 import {
-    UtilityService, GlobalConstants,
+    ResponseModel, UtilityService, GlobalConstants,
     DataExchangeService, GlobalStateService
 } from '../../../shared';
 import { DemandRaisedSummaryWidgetService } from './demand.raised.summary.widget.service';
@@ -22,6 +22,7 @@ import { IncidentModel, IncidentService } from '../../incident';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Observable } from 'rxjs/Rx';
 import * as Highcharts from 'highcharts';
+import { DemandStatusLogModel,DemandStatusLogService } from "../../shared.components/demandstatuslog";
 
 @Component({
     selector: 'demand-raised-summary-widget',
@@ -66,7 +67,8 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
 
     constructor(private demandRaisedSummaryWidgetService: DemandRaisedSummaryWidgetService,
         private incidentService: IncidentService, private globalState: GlobalStateService,
-        private dataExchange: DataExchangeService<DemandModel>) { }
+        private dataExchange: DataExchangeService<DemandModel>,
+        private demandStatusLogService: DemandStatusLogService) { }
 
     public ngOnInit(): void {
         this.showGraph = false;
@@ -323,10 +325,15 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
             $currentRow.closest('tbody').find('tr').removeClass('bg-blue-color');
             $currentRow.closest('tr').addClass('bg-blue-color');
         }
-        this.incidentService.GetIncidentById(this.incidentId)
-            .subscribe((incidentModel: IncidentModel) => {
-                WidgetUtilityService.GetGraphDemand(requesterDepartmentId, Highcharts, this.arrGraphData, 'demand-raised-graph-container', 'Raised', incidentModel.CreatedOn);
-                this.showDemandRaisedGraph = true;
+
+        this.demandStatusLogService.GetAllByIncidentRequesterDepartment(this.incidentId, requesterDepartmentId)
+            .subscribe((demandStatusLogModels: ResponseModel<DemandStatusLogModel>) => {
+                this.incidentService.GetIncidentById(this.incidentId)
+                    .subscribe((incidentModel: IncidentModel) => {
+                        WidgetUtilityService.GetGraphDemand(requesterDepartmentId, Highcharts, demandStatusLogModels.Records,
+                             'demand-raised-graph-container', 'Raised', incidentModel.CreatedOn,'RequesterDepartment');
+                        this.showDemandRaisedGraph = true;
+                    });
             });
     }
 

@@ -135,6 +135,7 @@ export class DepartmentEntryComponent implements OnInit {
                         this.toastrService.success(`Department Saved Successfully. ${GlobalConstants.departmentAndFunctionalityReloginMessage}`, 'Success', this.toastrConfig);
                         this.dataExchange.Publish('departmentSavedOrEdited', response);
                         this.setDepartmentForm();
+                        this.showAddRegion(this.showAdd);
                         this.showAdd = false;
                         this.submitted = false;
                     }, (error: any) => {
@@ -163,6 +164,7 @@ export class DepartmentEntryComponent implements OnInit {
                         this.toastrService.success(`Department updated Successfully.  ${GlobalConstants.departmentAndFunctionalityReloginMessage}`, 'Success', this.toastrConfig);
                         this.dataExchange.Publish('departmentSavedOrEdited', response);
                         this.setDepartmentForm();
+                        this.showAddRegion(this.showAdd);
                         this.showAdd = false;
                         this.submitted = false;
                     }, (error: any) => {
@@ -200,6 +202,7 @@ export class DepartmentEntryComponent implements OnInit {
     private onDepartmentEdit(model: DepartmentModel): void {
         this.form = this.setDepartmentForm(model);
         this.departmentModel = model;
+        this.showAddRegion(this.showAdd);
         this.showAdd = true;
     }
 

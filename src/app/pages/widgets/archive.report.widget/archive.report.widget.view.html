@@ -1,11 +1,11 @@
-<div class="col-sm-4 col-lg-4 no-gutters">
+<div class="col-sm-4 col-lg-4 no-gutters-archive no-gutters-archive-panelfirst no-gutters-archive-first no-gutters-archive-left">
     <div class="row report_widget-container no-gutters">
         <div class="col-12">
             <div class="row no-gutters">
                 <div *ngIf="!(isShowClosureReport | accesibility:departmentId:'ViewCrisisClosureReport')" class="row no-gutters">
                     <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
                 </div>
-                <div class="reportbox" *ngIf="isShowClosureReport | accesibility:departmentId:'ViewCrisisClosureReport'">
+                <div class="reportbox widget-layout-fix-halign" *ngIf="isShowClosureReport | accesibility:departmentId:'ViewCrisisClosureReport'">
                     <div class="col-sm-2">
                         <i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i>
                     </div>
@@ -20,14 +20,14 @@
     </div>
 </div>
 
-<div class="col-sm-5 col-lg-4">
+<div class="col-sm-5 col-lg-4 no-gutters-archive no-gutters-archive-panelfirst">
     <div class="row report_widget-container no-gutters">
         <div class="col-12">
             <div class="row no-gutters">
                 <div *ngIf="!(isShowDepartwiseReport | accesibility:departmentId:'ViewDepartmentWiseClosureReport')" class="row no-gutters">
                     <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
                 </div>
-                <div class="reportbox" *ngIf="isShowDepartwiseReport | accesibility:departmentId:'ViewDepartmentWiseClosureReport'">
+                <div class="reportbox widget-layout-fix-halign" *ngIf="isShowDepartwiseReport | accesibility:departmentId:'ViewDepartmentWiseClosureReport'">
                     <div class="col-sm-2">
                         <i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i>
                     </div>
@@ -42,14 +42,14 @@
     </div>
 </div>
 
-<div class="col-sm-3 col-lg-4 no-gutters">
+<div class="col-sm-3 col-lg-4 no-gutters-archive no-gutters-archive-panelfirst">
     <div class="row report_widget-container no-gutters">
         <div class="col-12">
             <div class="row no-gutters">
                 <div *ngIf="!(isShowOtherReport | accesibility:departmentId:'ViewOtherReport')" class="row no-gutters">
                     <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
                 </div>
-                <div class="reportbox" *ngIf="isShowOtherReport | accesibility:departmentId:'ViewOtherReport'">
+                <div class="reportbox widget-layout-fix-halign" *ngIf="isShowOtherReport | accesibility:departmentId:'ViewOtherReport'">
                     <div class="col-sm-2">
                         <i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i>
                     </div>

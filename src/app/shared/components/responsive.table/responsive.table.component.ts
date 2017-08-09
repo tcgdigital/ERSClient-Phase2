@@ -50,6 +50,27 @@ export class ResponsiveTableComponent implements AfterContentInit, AfterViewInit
         this.$currentElement = jQuery(this.elementRef.nativeElement);
         const $table: JQuery = this.$currentElement.find('table.table');
 
+        jQuery('div[bsmodal]').unbind('scroll').scroll(() => {
+            const $wrappers: JQuery = jQuery('div[bsmodal]:visible [class*="table-responsive-vertical"]:visible');
+
+            jQuery.each($wrappers, (index, $wrapper) => {
+                const wrapperTop = jQuery($wrapper).offset().top;
+                const fullHeight = jQuery($wrapper).height();
+                const windowScroll = jQuery(window).scrollTop();
+
+                const $navPrev: JQuery = jQuery($wrapper).find('a.scroll-nav.prev');
+                const $navNext: JQuery = jQuery($wrapper).find('a.scroll-nav.next');
+                if ((windowScroll > (wrapperTop + 100)) && (windowScroll < (fullHeight + (wrapperTop - 150)))) {
+                    $navPrev.css({'top': ((windowScroll - wrapperTop) + 100) + 'px', 'z-index': 999});
+                    $navNext.css({'top': ((windowScroll - wrapperTop) + 100) + 'px', 'z-index': 999});
+                }
+                else {
+                    $navPrev.css('top', '50px');
+                    $navNext.css('top', '50px');
+                }
+            });
+        });
+
         jQuery(window).unbind('scroll').scroll(() => {
             const $wrappers: JQuery = jQuery('[class*="table-responsive-vertical"]:visible');
 
@@ -61,25 +82,15 @@ export class ResponsiveTableComponent implements AfterContentInit, AfterViewInit
                 const $navPrev: JQuery = jQuery($wrapper).find('a.scroll-nav.prev');
                 const $navNext: JQuery = jQuery($wrapper).find('a.scroll-nav.next');
                 if ((windowScroll > (wrapperTop + 100)) && (windowScroll < (fullHeight + (wrapperTop - 150)))) {
-                    $navPrev.css('top', ((windowScroll - wrapperTop) + 100) + 'px');
-                    $navNext.css('top', ((windowScroll - wrapperTop) + 100) + 'px');
+                    $navPrev.css({'top': ((windowScroll - wrapperTop) + 150) + 'px', 'z-index': 99});
+                    $navNext.css({'top': ((windowScroll - wrapperTop) + 150) + 'px', 'z-index': 99});
                 }
                 else {
-                    $navPrev.css('top', '50px');
-                    $navNext.css('top', '50px');
+                    $navPrev.css('top', '150px');
+                    $navNext.css('top', '150px');
                 }
             });
         });
-
-
-        // this.$currentElement.closest('[bsmodal]')
-        //     .scroll((event) => {
-        // const $scrollableElm: JQuery = jQuery(event.currentTarget);
-        // const $navs: JQuery = this.$currentElement.find('a.scroll-nav.prev');
-        // let top: number = +$navs.css('top').replace('px', '');
-        // top += $scrollableElm.scrollTop();
-        // $navs.css('top', `${top}px`);
-        // });
     }
 
     public onHover($event): void {
