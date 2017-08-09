@@ -18,6 +18,8 @@
                 <th>IATA Station Code</th>
                 <th>Airport Station Name</th>
                 <th>City</th>
+                <th>Country</th>
+                <th>Time Zone<th>
                 <th>IsActive</th>                
                 <th>Edit</th>
                 <th>Delete</th>
@@ -30,7 +32,9 @@
             <tr *ngFor="let emergencyLocation of emergencyLocations">
                 <td data-title="IATA Station Code">{{emergencyLocation.IATA}}</td>
                 <td data-title="Airport Station Name">{{emergencyLocation.AirportName}}</td>
-                <td data-title="City">{{emergencyLocation.City}}</td>               
+                <td data-title="City">{{emergencyLocation.City}}</td>  
+                <td data-title="Country">{{emergencyLocation.Country}}</td>      
+                <td data-title="Time Zone">{{emergencyLocation.TimeZone}}</td>           
                  <td data-title="IsActive">
                     <md-checkbox class="Marght" id="IsActive" name="IsActive" [ngModel]="emergencyLocation.ActiveFlag === 'Active'" 
                         aria-label="ActiveFlag" (change)="IsActive($event,emergencyLocation)">
