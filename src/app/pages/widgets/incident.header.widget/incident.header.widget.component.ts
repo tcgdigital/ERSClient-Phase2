@@ -52,8 +52,8 @@ export class IncidentHeaderWidgetComponent implements OnInit, OnChanges {
     getDepartment(departmentId: number): void{
         this.departmentService.GetDepartmentById(departmentId)
         .subscribe((item: ResponseModel<DepartmentModel>) => {
-            this.currentDepartment.Key=item.Records[0].Description;
-            this.departmentName = this.currentDepartment.Key;
+            this.currentDepartment.Key=item.Records[0].DepartmentName;
+            this.departmentName = item.Records[0].Description;
         });
     }
 

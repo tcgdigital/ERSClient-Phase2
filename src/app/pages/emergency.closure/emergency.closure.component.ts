@@ -49,7 +49,7 @@ export class EmergencyClosureComponent implements OnInit {
 	public reportPath: ReportPath;
 	public UserDepartmentNotificationMappers: NotificationContactsWithTemplateModel[];
 	public isShowPage: boolean = true;
-    public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
+	public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
 
 
 	constructor(private departmentClosureService: DepartmentClosureService,
@@ -202,24 +202,26 @@ export class EmergencyClosureComponent implements OnInit {
 			});
 	}
 
-	getIsSubmittedFlagValue(departmentClosureModels:DepartmentClosureModel[]):void{
+	getIsSubmittedFlagValue(departmentClosureModels: DepartmentClosureModel[]): void {
 		this.departmentClosureService.GetAllByIncident(this.currentIncident)
-		.subscribe((departmentClosures:ResponseModel<DepartmentClosureModel>)=>{
-			departmentClosureModels.forEach((item:DepartmentClosureModel)=>{
-				const filtered:DepartmentClosureModel[] = departmentClosures.Records.filter((dc:DepartmentClosureModel)=>{
-					return dc.DepartmentId==item.Department.DepartmentId;
+			.subscribe((departmentClosures: ResponseModel<DepartmentClosureModel>) => {
+				departmentClosureModels.forEach((item: DepartmentClosureModel) => {
+					const filtered: DepartmentClosureModel[] = departmentClosures.Records.filter((dc: DepartmentClosureModel) => {
+						return dc.DepartmentId == item.Department.DepartmentId;
+					});
+					if (filtered.length > 0) {
+						item.IsSubmitted = filtered[0].IsSubmitted;
+						item.SubmittedOn = new Date(filtered[0].SubmittedOn);
+					}
 				});
-				if(filtered.length>0){
-					item.IsSubmitted = filtered[0].IsSubmitted;
-					item.SubmittedOn = new Date(filtered[0].SubmittedOn);
-				}
 			});
-		});
 	}
 
-	openCurrentDepartmentClosureReadonlyDetail(incidentId, departmentId): void {
-		this.departmentClosureService.getAllbyIncidentandDepartment(incidentId, departmentId)
+	openCurrentDepartmentClosureReadonlyDetail(departmentId): void {
+		this.departmentClosureService.getAllbyIncidentandDepartment(this.currentIncident, departmentId)
 			.subscribe((response: ResponseModel<DepartmentClosureModel>) => {
+				this.report = '';
+				this.remarks = '';
 				if (response.Records.length > 0) {
 					this.report = response.Records[0].ClosureReport;
 					this.remarks = response.Records[0].ClosureRemark;
