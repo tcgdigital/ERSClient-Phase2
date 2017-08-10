@@ -1,0 +1,44 @@
+@import '../../../../assets/css/jClocksGMT';
+@import '../../config/config';
+
+.world-clock-container{
+    padding: 20px 14px;
+    z-index: 999;
+    position: fixed;
+    top: 10%;
+    background: #fff;
+    right: 0;
+    width: 13%;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    @include box-shadow(-1px, 2px, 7px, 2px, $header-shadow);
+    .world-clocks{
+        display: block;
+    }
+    .world-clock-opner{
+        cursor: pointer;
+        padding: 19px 0;
+        text-align: center;
+        font-size: 14px;
+        text-transform: uppercase;
+        position: absolute;
+        background: #df7160;
+        border: 1px solid #fff;
+        left: -85px;
+        top: 47%;
+        color: #fff;
+        padding: 4px 9px;
+        transform: rotate(270deg);
+        border-top-left-radius: 5px;
+        border-top-right-radius: 6px;
+        @include box-shadow(-3px, -1px, 3px, 0px, $header-shadow);
+        :hover{
+            background: rgb(203, 103, 88);
+        }
+    }
+    select{
+        width: 100%;
+        padding: 4px;
+        font-size: 11px;
+    }
+}

@@ -16,6 +16,7 @@
 <div *ngIf="isShowPage | accesibility:currentDepartmentId:'Archive'" class="row">
     <clock-widget 
         [initiationDateTime]="incidentDate" 
+        [initiatedDepartmentId]="currentDepartmentId" 
         [currentIncidentId]="archievedIncidentId"
         class="col-12 col-md-4 col-lg-4 col-xl-2 clock-layout widget-layout-fix">
     </clock-widget>
@@ -27,7 +28,7 @@
     </peopleOnBoard-widget>
 
     <casualty-summary-widget 
-        [currentIncidentId]="archievedIncidentId" 
+        [currentIncidentId]="archievedIncidentId" [initiatedDepartmentId]="currentDepartmentId"
         class="col-12 col-md-6 col-lg-4 col-xl-3 casualty-layout widget-layout-fix">
     </casualty-summary-widget>
 

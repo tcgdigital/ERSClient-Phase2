@@ -13,6 +13,7 @@ import { SharedModule } from '../shared/shared.module';
 import { PagesRouting } from './pages.routing';
 import { MasterDateModule } from './masterdata';
 import { IncidentModule } from './incident';
+import { RouteGuardService } from '../shared/services';
 import {
     ChangePasswordService,
     ChangePasswordComponent
@@ -22,6 +23,7 @@ import { AuthenticationService } from './login/components/authentication.service
 import { UserPermissionService } from './masterdata/userpermission/components';
 import { QuickLinkQuickViewWidgetComponent } from '../pages/widgets/quicklink.quickview.widget';
 import { QuickLinkService } from './masterdata/quicklink/components';
+import { WidgetModule } from './widgets';
 
 @NgModule({
     imports: [
@@ -35,6 +37,7 @@ import { QuickLinkService } from './masterdata/quicklink/components';
         MasterDateModule,
         ToastrModule,
         ModalModule,
+        WidgetModule,
         PagesRouting
     ],
     declarations: [
@@ -47,7 +50,8 @@ import { QuickLinkService } from './masterdata/quicklink/components';
         GlobalStateService,
         AuthenticationService,
         UserPermissionService,
-        QuickLinkService
+        QuickLinkService,
+        RouteGuardService
     ]
 })
 export class PagesModule {
