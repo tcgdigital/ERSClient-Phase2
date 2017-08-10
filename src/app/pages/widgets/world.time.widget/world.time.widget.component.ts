@@ -29,11 +29,29 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
     public ngAfterViewInit(): void {
         const $currentElement = jQuery(this.elementRef.nativeElement);
         let self = this;
+        let rightMergin = '';
+
+        if (window.screen.availWidth >= 1200)
+            rightMergin = '-133px';
+        else if (window.screen.availWidth >= 992 && window.screen.availWidth <= 1199)
+            rightMergin = '-133px';
+        else if (window.screen.availWidth >= 768 && window.screen.availWidth <= 991)
+            rightMergin = '-133px';
+        else if (window.screen.availWidth >= 576 && window.screen.availWidth <= 767)
+            rightMergin = '-133px';
+        else if (window.screen.availWidth >= 425 && window.screen.availWidth <= 575)
+            rightMergin = '-133px';
+        else if (window.screen.availWidth >= 375 && window.screen.availWidth <= 424)
+            rightMergin = '-133px';
+        else if (window.screen.availWidth >= 321 && window.screen.availWidth <= 374)
+            rightMergin = '-133px';
+        else if (window.screen.availWidth <= 320)
+            rightMergin = '-133px';
 
         $currentElement.find('.world-clock-opner').click(function () {
             if (!self.isOn) {
                 $currentElement.find('.world-clock-container').animate({
-                    right: '-175px'
+                    right: rightMergin
                 }, 500, () => {
                     self.isOn = !self.isOn;
                 });
