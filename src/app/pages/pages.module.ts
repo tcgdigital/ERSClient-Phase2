@@ -13,6 +13,7 @@ import { SharedModule } from '../shared/shared.module';
 import { PagesRouting } from './pages.routing';
 import { MasterDateModule } from './masterdata';
 import { IncidentModule } from './incident';
+import { RouteGuardService } from '../shared/services';
 import {
     ChangePasswordService,
     ChangePasswordComponent
@@ -49,7 +50,8 @@ import { WidgetModule } from './widgets';
         GlobalStateService,
         AuthenticationService,
         UserPermissionService,
-        QuickLinkService
+        QuickLinkService,
+        RouteGuardService
     ]
 })
 export class PagesModule {
