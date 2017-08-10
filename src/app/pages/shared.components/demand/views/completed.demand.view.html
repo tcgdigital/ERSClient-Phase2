@@ -97,7 +97,7 @@
                                     <tr *ngFor="let remark of demandRemarks">
                                         <td data-title="Requester Department">{{remark.RequesterDepartmentName}}</td>
                                         <td data-title="Remarks added by">{{remark.CreatedByName}}</td>
-                                        <td data-title="Remarks added on">{{remark.CreatedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
+                                        <td data-title="Remarks added on">{{remark.CreatedOn | customDate: 'DD-MMM-YYYY hh:mm a'}}</td>
                                         <td data-title="Remarks">{{remark.Remark}}</td>
                                     </tr>
                                 </tbody>
