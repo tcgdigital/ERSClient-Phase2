@@ -127,8 +127,9 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
         this.getAllEmergencyLocations();
     }
 
-    UpdateEmergencyLocation(emergencyLocationModel: EmergencyLocationModel) {
-        this.dataExchange.Publish("OnEmergencyLocationUpdate", emergencyLocationModel);
+    UpdateEmergencyLocation(emergencyLocationModelUpdate: EmergencyLocationModel) {
+        let emergencyModelToSend = Object.assign({}, emergencyLocationModelUpdate)
+        this.dataExchange.Publish("OnEmergencyLocationUpdate", emergencyModelToSend);
     }
 
     private initiateSearchConfigurations(): void {
