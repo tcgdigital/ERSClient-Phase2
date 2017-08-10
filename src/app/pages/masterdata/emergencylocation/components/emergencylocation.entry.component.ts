@@ -6,6 +6,9 @@ import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { EmergencyLocationService } from './emergencylocation.service';
 import { EmergencyLocationModel } from './emergencylocation.model';
 
+import { TimeZone } from '../../../../shared/models/base.model';
+import { GlobalTimeZone } from '../../../../shared/constants/timezone';
+
 import {
     ResponseModel, DataExchangeService, FileUploadService,
     GlobalConstants, UtilityService, AuthModel
@@ -19,7 +22,7 @@ import {
 export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
     public form: FormGroup;
     mailAddress: FormControl;
-    emergencyLocation: EmergencyLocationModel = new EmergencyLocationModel();
+    emergencyLocation: EmergencyLocationModel;
     date: Date = new Date();
     emergencyLocations: EmergencyLocationModel[] = [];
     Action: string;
@@ -32,13 +35,18 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
     airportStationTemplatePath: string = './assets/static-content/AirportStation.xlsx';
     @ViewChild('inputFileStations') inputFileStations: any
     public showAddText: string = 'ADD RESPONSIBLE STATION';
+     public timeZones: TimeZone[];
 
     constructor(private emergencyLocationService: EmergencyLocationService,
         private dataExchange: DataExchangeService<EmergencyLocationModel>,
         private builder: FormBuilder, private toastrService: ToastrService,
         private toastrConfig: ToastrConfig,
-        private fileUploadService: FileUploadService) {
-    }
+        private fileUploadService: FileUploadService) 
+        {
+            this.timeZones = GlobalTimeZone.TimeZones;
+            console.log(this.timeZones);
+            this.emergencyLocation = new EmergencyLocationModel();
+        }
 
     ngOnInit(): void {
         this.emergencyLocation.Active = true;
@@ -46,15 +54,29 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
         this.isInvalidForm = false;
         this.initiateForm();
         this.credential = UtilityService.getCredentialDetails();
-        this.dataExchange.Subscribe("OnEmergencyLocationUpdate", model => {
-            this.emergencyLocation = model;
-            if (model.ActiveFlag === 'Active')
-                this.emergencyLocation.Active = true;
-            else
-                this.emergencyLocation.Active = false;
-            this.Action = "Edit";
-            this.showAddRegion(this.showAdd);
-            this.showAdd = true;
+        this.dataExchange.Subscribe("OnEmergencyLocationUpdate", model => this.onEmergencyLocationUpdate(model));
+    }
+
+    onEmergencyLocationUpdate(model: EmergencyLocationModel){
+        this.emergencyLocation = new EmergencyLocationModel();
+        this.emergencyLocation = model;
+        if (model.ActiveFlag === 'Active')
+            this.emergencyLocation.Active = true;
+        else
+            this.emergencyLocation.Active = false;
+        this.Action = "Edit";
+        this.showAddRegion(this.showAdd);
+        this.showAdd = true;
+
+        this.form = new FormGroup({
+            EmergencyLocationId: new FormControl(model.EmergencyLocationId),
+            IATA: new FormControl(model.IATA),
+            AirportName: new FormControl(model.AirportName),
+            City: new FormControl(model.City),
+            Country: new FormControl(model.Country),
+            fileStation: new FormControl(),
+            TimeZone: new FormControl(model.TimeZone),
+            isActive: new FormControl(this.emergencyLocation.Active)
         });
     }
 
@@ -111,11 +133,16 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
         delete this.emergencyLocation.Active;
         if (this.form.valid) {
             this.isInvalidForm = false;
+             UtilityService.setModelFromFormGroup<EmergencyLocationModel>(this.emergencyLocation, this.form,
+                    x => x.EmergencyLocationId, x => x.IATA, x => x.AirportName, x=>x.Country , x => x.City);
+            let timeZone: string = this.form.controls['TimeZone'].value;
+            let utcOffset: string = this.timeZones.filter(a=>a.zonename == timeZone)[0].decimaloffset;
+            let utcOffsetInMS: string = (+utcOffset * 3600 * 1000).toString();
+            this.emergencyLocation.TimeZone = timeZone;
+            this.emergencyLocation.UTCOffset = utcOffsetInMS;
             if (this.emergencyLocation.EmergencyLocationId == 0) {
                 this.emergencyLocation.CreatedBy = +this.credential.UserId;
-                UtilityService.setModelFromFormGroup<EmergencyLocationModel>(this.emergencyLocation, this.form,
-                    x => x.EmergencyLocationId, x => x.IATA, x => x.AirportName, x => x.City);
-
+               
                 if (this.form.controls["isActive"].value != false)
                     this.emergencyLocation.ActiveFlag = "Active";
                 else
@@ -163,7 +190,9 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
             IATA: new FormControl('', [Validators.required]),
             AirportName: new FormControl('', Validators.required),
             City: new FormControl('', Validators.required),
+            Country: new FormControl('', Validators.required),
             fileStation: new FormControl(),
+            TimeZone: new FormControl('', Validators.required),
             isActive: new FormControl(false)
         })
     }
