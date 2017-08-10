@@ -1,4 +1,4 @@
-import { TimeZone } from '../models/base.model';
+import { ITimeZone } from '../models/base.model';
 
 export const GlobalTimeZone =
     {
@@ -204,5 +204,5 @@ export const GlobalTimeZone =
             { decimaloffset: "+08", abbr: "WST", zonename: "Western Standard Time", utcoffset: "UTC+08" },
             { decimaloffset: "+09", abbr: "YAKT", zonename: "Yakutsk Time", utcoffset: "UTC+09" },
             { decimaloffset: "+05", abbr: "YEKT", zonename: "Yekaterinburg Time", utcoffset: "UTC+05" }
-        ] as TimeZone[]
+        ] as ITimeZone[]
     };
