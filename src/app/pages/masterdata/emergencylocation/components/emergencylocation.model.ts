@@ -8,6 +8,8 @@ export class EmergencyLocationModel extends BaseModel {
     public IATA: string;
     public AirportName: string;
     public Country: string;
+    public TimeZone: string;
+    public UTCOffset: string;
     public Active?: boolean;
 
     constructor() {
