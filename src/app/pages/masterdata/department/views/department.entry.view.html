@@ -40,17 +40,17 @@
         <div class="row">
 
             <div class="form-group col-lg-4 cl-md-6 col-sm-12">
-                <label for="DepartmentSpoc">Department Spoc:<span class="required">*</span></label>
+                <label for="DepartmentSpoc">Department Spoc:</label>
                 <select id="DepartmentSpoc" formControlName="DepartmentSpoc" name="DepartmentSpoc" class="form-control">
-                    <option value=''>Select Department Spoc</option>
+                    <option value=null>Select Department Spoc</option>
                     <option *ngFor="let user of users" [value]="user.UserProfileId" >
                         {{user.caption}}
                     </option>
                     
                 </select>
-                <small *ngIf="form.controls.DepartmentSpoc.hasError('required')" 
+                <!-- <small *ngIf="form.controls.DepartmentSpoc.hasError('required')" 
                         [hidden]="form.controls.DepartmentSpoc.valid || (form.controls.DepartmentSpoc.pristine && !submitted)"
-                                class="text-danger">Required</small>
+                                class="text-danger">Required</small> -->
             </div>
             <div class="col-lg-4 cl-md-6 col-sm-12">
                 <div class="form-group">

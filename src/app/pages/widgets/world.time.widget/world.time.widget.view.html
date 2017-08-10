@@ -3,13 +3,15 @@
         <i class="fa fa-clock-o" aria-hidden="true"></i> World Clock
     </div>
     <div class="world-clocks">
-        <select name="timeZone" id="timeZone" (change)="OnZoneChange($event)">
+        <select name="timeZone" id="timeZone" (change)="OnZoneChange($event)" [hidden]="currentTimezone==null">
             <option value='0'>Select time zone</option>
-            <option *ngFor="let timeZone of timeZones" [value]="timeZone.decimaloffset" >
+            <option *ngFor="let timeZone of timeZones" [value]="timeZone.decimaloffset" 
+                [selected]="timeZone.abbr === currentTimezone.abbr"
+                attr.data-location="{{timeZone.city + ', ' + timeZone.country}}">
                 {{timeZone.zonename}}
             </option>
         </select>
-        <div class="col" id="clock_1"></div>
+        <div class="col" id="clock_1" [hidden]="currentTimezone==null"></div>
         <div class="col" id="clock_2"></div>
         <div class="col" id="clock_3"></div>
     </div>
