@@ -21,7 +21,8 @@ export class MemberTrackService extends ServiceBase<MemberCurrentEngagementModel
     public GetAllByIncidentDepartment(departmentId: number, incidentId: number): Observable<ResponseModel<MemberCurrentEngagementModel>> {
         return this._dataService.Query()
             .Expand("MemberEngagementTrack")
-            .Filter(`IncidentId eq ${incidentId} and DepartmentId eq ${departmentId}`)
+            // .Filter(`IncidentId eq ${incidentId} and DepartmentId eq ${departmentId}`)  //commented to remove departmentId from filter
+            .Filter(`IncidentId eq ${incidentId}`)
             .Execute();
     }
 
@@ -35,7 +36,8 @@ export class MemberTrackService extends ServiceBase<MemberCurrentEngagementModel
 
     public GetAllHistory(userId: number, departmentId: number, incidentId: number): Observable<ResponseModel<MemberEngagementTrackModel>> {
         return this._membertrackService.Query()
-            .Filter(`IncidentId eq ${incidentId} and DepartmentId eq ${departmentId} and UserId eq ${userId}`)
+            // .Filter(`IncidentId eq ${incidentId} and DepartmentId eq ${departmentId} and UserId eq ${userId}`) //commented to remove departmentId from filter
+            .Filter(`IncidentId eq ${incidentId} and UserId eq ${userId}`)
             .Execute();
     }
 }
