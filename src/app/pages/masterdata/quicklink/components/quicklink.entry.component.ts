@@ -234,6 +234,11 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
         else {
             this.showAddText = "ADD QUICKLINK";
         }
+
+        window.setInterval(()=>{
+            jQuery(window).scroll();
+        }, 100);
+        
         this.showAdd = !value;
     }
 }

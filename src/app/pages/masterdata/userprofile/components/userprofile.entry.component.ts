@@ -133,8 +133,6 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
                     });
             }
         }
-
-
     }
 
     formControlDirtyCheck(): void {
@@ -170,14 +168,16 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
     }
 
     showAddRegion(value): void {
-        // this.showAdd = true;
-        // this.initiateForm();
         if (!value) {
             this.showAddText = "CLICK TO COLLAPSE";
         }
         else {
             this.showAddText = "ADD USER";
         }
+        window.setInterval(()=>{
+            jQuery(window).scroll();
+        }, 100);
+        
         this.showAdd = !value;
     }
 

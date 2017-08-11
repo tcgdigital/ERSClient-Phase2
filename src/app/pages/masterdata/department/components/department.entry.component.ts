@@ -189,6 +189,11 @@ export class DepartmentEntryComponent implements OnInit {
         else {
             this.showAddText = "ADD DEPARTMENT";
         }
+
+        window.setInterval(()=>{
+            jQuery(window).scroll();
+        }, 100);
+        
         this.showAdd = !value;
     }
 
