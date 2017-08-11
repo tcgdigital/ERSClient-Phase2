@@ -347,8 +347,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.flightClass = { 'is-disabled': false };
         this.formFlight = new FormGroup({
             FlightNumber: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-            Origin: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-            Destination: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+            Origin: new FormControl('', [Validators.required]),
+            Destination: new FormControl('', [Validators.required]),
             Scheduleddeparture: new FormControl('', [Validators.required]),
             Scheduledarrival: new FormControl('', [Validators.required]),
             FlightTailNumber: new FormControl('', [Validators.required, Validators.maxLength(50)]),
@@ -430,8 +430,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     resetFlightForm(): void {
         this.formFlight = new FormGroup({
             FlightNumber: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-            Origin: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-            Destination: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+            Origin: new FormControl('', [Validators.required]),
+            Destination: new FormControl('', [Validators.required]),
             Scheduleddeparture: new FormControl('', [Validators.required]),
             Scheduledarrival: new FormControl('', [Validators.required]),
             FlightTailNumber: new FormControl('', [Validators.required, Validators.maxLength(50)]),
@@ -481,16 +481,21 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     onPOPUPSubmit(values: object): void {
+        debugger;
         console.log('Incident Created.');
         console.log(this.incidentDataExchangeModel);
         if (this.incidentDataExchangeModel.IncidentModel.EmergencyLocation === 'Offsite') {
             this.incidentDataExchangeModel.IncidentModel.EmergencyLocation = this.incidentDataExchangeModel.IncidentModel.OffSetLocation;
             delete this.incidentDataExchangeModel.IncidentModel.OffSetLocation;
         }
-        this.incidentDataExchangeModel.IncidentModel.CreatedOn=new Date();
-        this.incidentDataExchangeModel.InvolvedPartyModel.CreatedOn=new Date();
-        this.incidentDataExchangeModel.FLightModel.CreatedOn=new Date();
-        this.incidentDataExchangeModel.AffectedModel.CreatedOn=new Date();
+        this.incidentDataExchangeModel.IncidentModel.CreatedOn = new Date();
+        this.incidentDataExchangeModel.InvolvedPartyModel.CreatedOn = new Date();
+        this.incidentDataExchangeModel.FLightModel.CreatedOn = new Date();
+
+        delete this.incidentDataExchangeModel.FLightModel.OriginCode_Extended;
+        delete this.incidentDataExchangeModel.FLightModel.DestinationCode_Extended;
+
+        this.incidentDataExchangeModel.AffectedModel.CreatedOn = new Date();
         this.incidentService.CreateIncident(this.incidentDataExchangeModel.IncidentModel,
             this.incidentDataExchangeModel.IsFlightRelated,
             this.incidentDataExchangeModel.InvolvedPartyModel, this.incidentDataExchangeModel.FLightModel,
@@ -623,8 +628,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                 SenderOfCrisisInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.SenderOfCrisisInformation),
                 BorrowedIncidentPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.BorrowedIncident),
                 FlightNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightNo),
-                OriginPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.OriginCode),
-                DestinationPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.DestinationCode),
+                OriginPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.OriginCode_Extended),
+                DestinationPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.DestinationCode_Extended),
                 ScheduleddeparturePopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.DepartureDate).format('DD-MMM-YYYY hh:mm a')),
                 ScheduledarrivalPopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.ArrivalDate).format('DD-MMM-YYYY hh:mm a')),
                 FlightTailNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightTaleNumber),
@@ -676,6 +681,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     createFlightModel(isFlightRelated: boolean): void {
+        debugger;
         this.flightModel = new FlightModel();
         this.flightModel.FlightId = 0;
         this.flightModel.InvolvedPartyId = 0;
@@ -683,8 +689,24 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             this.formFlight.controls['FlightNumber'].value : 'DUMMY_FLIGHT';
         this.flightModel.OriginCode = (isFlightRelated === true) ?
             this.formFlight.controls['Origin'].value : 'DUMMY_ORG';
+        if (this.flightModel.OriginCode != 'DUMMY_ORG') {
+            this.flightModel.OriginCode_Extended = this.affectedStations.filter((item: EmergencyLocationModel) => {
+                return item.IATA == this.flightModel.OriginCode;
+            })[0].AirportName;
+        }
+        else {
+            this.flightModel.OriginCode_Extended = this.flightModel.OriginCode;
+        }
         this.flightModel.DestinationCode = (isFlightRelated === true) ?
             this.formFlight.controls['Destination'].value : 'DUMMY_DES';
+        if (this.flightModel.DestinationCode != 'DUMMY_ORG') {
+            this.flightModel.DestinationCode_Extended = this.affectedStations.filter((item: EmergencyLocationModel) => {
+                return item.IATA == this.flightModel.DestinationCode;
+            })[0].AirportName;
+        }
+        else {
+            this.flightModel.DestinationCode_Extended = this.flightModel.DestinationCode;
+        }
         this.flightModel.DepartureDate = (isFlightRelated === true) ?
             new Date(this.formFlight.controls['Scheduleddeparture'].value) : new Date('01/01/2001');
         this.flightModel.ArrivalDate = (isFlightRelated === true) ?
