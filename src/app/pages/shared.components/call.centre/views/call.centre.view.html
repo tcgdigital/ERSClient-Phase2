@@ -132,7 +132,7 @@
                 </div>
         
                 <div class="form-group col-md-6 col-sm-12">
-                    <label for="Query">Discussion Notes<span class="required">*</span></label>
+                    <label for="Query">Discussion Notes <span class="required">*</span></label>
                     <small [hidden]="form.controls.Queries.valid || (form.controls.Queries.pristine && !submitted)" class="text-danger pull-right">Required (Max. Char 1000)</small>
                     <input id="Query" class="form-control" type="text" name="Query" formControlName="Queries" placeholder="Enter Discussion Notes" />
                 </div>
@@ -151,22 +151,22 @@
                 <form [formGroup]="form">
                     <input type="hidden" formControlName="EnquiryId" name="EnquiryId" />
                     <div class="form-group col-md-6 col-sm-12">
-                        <label for="Query">Discussion Notes<span class="required">*</span></label>
+                        <label for="Query">Discussion Notes <span class="required">*</span></label>
                         <small [hidden]="form.controls.Queries.valid || (form.controls.Queries.pristine && !submitted)" class="text-danger pull-right">Required (Max. Char 1000)</small>
                         <input id="Query" class="form-control" type="text" name="Query" formControlName="Queries" placeholder="Enter Discussion Notes" />
                     </div>
                     <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=1">
-                        <label for="Passengers">PDA Name:<span class="required">*</span></label>
+                        <label for="Passengers">PDA Name <span class="required">*</span></label>
                         <autocomplete [items]="passengers" (notify)="onNotifyPassenger($event)" [actionLinks]="actionLinks" [initialvalue]="initialvalue"
                             (actionClickHandler)="onActionClick($event)">
                         </autocomplete>
                     </div>
                     <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=3">
-                        <label for="Passengers">PDA Name:<span class="required">*</span></label>
+                        <label for="Passengers">PDA Name <span class="required">*</span></label>
                         <autocomplete [items]="crews" (notify)='onNotifyCrew($event)' [initialvalue]="initialvalue"></autocomplete>
                     </div>
                     <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=2">
-                        <label for="awb">AWB:<span class="required">*</span></label>
+                        <label for="awb">AWB <span class="required">*</span></label>
                         <autocomplete [items]="awbs" (notify)='onNotifyCargo($event)' [initialvalue]="initialvalue"></autocomplete>
                     </div>
                     <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=1">
