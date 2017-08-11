@@ -105,6 +105,6 @@ export const GlobalTimeZone =
             { decimaloffset: "+12.00", abbr: "IRDT", zonename: "(UTC+13:00) Nuku'alofa", utcoffset: "UTC+13:30" },
             { decimaloffset: "+13.00", abbr: "IRKT", zonename: "(UTC+13:00) Samoa", utcoffset: "UTC+13:00" }
 
-        ]
+        ] as ITimeZone[]
 };
      
