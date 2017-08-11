@@ -31,7 +31,7 @@
                 <td data-title="Department Code">{{department.DepartmentName}}</td>
                 <td data-title="Department Name">{{department.Description}}</td>
                 <td data-title="Parent Department">{{department.ParentDepartment?.DepartmentName}}</td>
-                <td data-title="Department Spoc">{{department.UserProfile.Name}}</td>
+                <td data-title="Department Spoc">{{department.UserProfile?.Name}}</td>
                 <td data-title="Contact Number">{{department.ContactNo}}</td>
                 <td data-title="Active">
                     <md-checkbox class="Marght" id="IsActive" name="IsActive" [ngModel]="department.Active" (change)="IsActive($event,department)"

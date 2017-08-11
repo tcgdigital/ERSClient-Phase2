@@ -102,8 +102,10 @@ export class LicenseInformationModel {
     public IsValid: boolean;
 }
 
-export interface TimeZone {
+export interface ITimeZone {
     abbr: string;
+    city: string;
+    country: string;
     zonename: string;
     utcoffset: string;
     decimaloffset: string;
