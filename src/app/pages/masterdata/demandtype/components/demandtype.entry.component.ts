@@ -41,7 +41,8 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
     getAllDepartments(): void {
         this.departmentService.GetAll()
             .subscribe((response: ResponseModel<DepartmentModel>) => {
-                this.departments = response.Records;
+                this.departments = response.Records;                
+                console.log(this.departments);
                 this.demandTypeModel.DepartmentId = (this.demandTypeModel.DemandTypeId === 0)
                     ? this.departments[0].DepartmentId
                     : this.demandTypeModel.DepartmentId;
@@ -139,12 +140,19 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
             else {
               this.demandTypeModel.DepartmentId= null;
             }
+            
+            this.demandTypeModel.ActiveFlag = 'Active';
+            this.demandTypeModel.CreatedBy = +this.credential.UserId;
+            this.demandTypeModel.CreatedOn = this.date;
+
             this.demandTypeService.Create(this.demandTypeModel)
                 .subscribe((response: DemandTypeModel) => {
                     this.toastrService.success('Demand Saved Successfully.', 'Success', this.toastrConfig);
                     this.resetDemandTypeForm();
                     this.showApproverDept = true;
                     this.showAddRegion(this.showAdd);
+                    this.demandTypeModel = new DemandTypeModel();
+                    
                     this.showAdd = false;
                     this.dataExchange.Publish('demandTypeModelSaved', response);
 
@@ -173,6 +181,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
                     this.resetDemandTypeForm();
                     this.showApproverDept = true;
                     this.showAddRegion(this.showAdd);
+                    this.demandTypeModel = new DemandTypeModel();
                     this.showAdd = false;
                     this.dataExchange.Publish('demandTypeModelUpdated', response);
                 }, (error: any) => {
@@ -214,16 +223,16 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
             this.showAddText = "ADD DEMAND TYPE";
         }
         this.showAdd = !value;
-        this.form = new FormGroup({
-            DemandTypeId: new FormControl(0),
-            DemandTypeName: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-            IsAutoApproved: new FormControl(false),
-            ApproverDept: new FormControl('', [Validators.required])
-        });
-        this.demandTypeModel.ActiveFlag = 'Active';
-        this.demandTypeModel.CreatedBy = +this.credential.UserId;
-        this.demandTypeModel.CreatedOn = this.date;
-        this.demandTypeModel.DemandTypeId = 0;
+        // this.form = new FormGroup({
+        //     DemandTypeId: new FormControl(0),
+        //     DemandTypeName: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+        //     IsAutoApproved: new FormControl(false),
+        //     ApproverDept: new FormControl('', [Validators.required])
+        // });
+        // this.demandTypeModel.ActiveFlag = 'Active';
+        // this.demandTypeModel.CreatedBy = +this.credential.UserId;
+        // this.demandTypeModel.CreatedOn = this.date;
+        // this.demandTypeModel.DemandTypeId = 0;
         this.Action = 'Submit';
     }
 

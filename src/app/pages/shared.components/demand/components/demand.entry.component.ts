@@ -151,7 +151,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     getAllDepartments(): void {
         this.departmentService.GetAll()
             .subscribe((response: ResponseModel<DepartmentModel>) => {
-                this.departments = response.Records;
+                this.departments = response.Records.filter(a=>a.ActiveFlag == 'Active');
             }, (error: any) => {
                 console.log('error:  ' + error);
             });
