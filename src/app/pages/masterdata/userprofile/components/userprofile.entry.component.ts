@@ -73,7 +73,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
             Name: new FormControl(userProfileModel.Name, [Validators.required]),
             MainContact: new FormControl(userProfileModel.MainContact, [Validators.required]),
             AlternateContact: new FormControl(userProfileModel.AlternateContact),
-            Location: new FormControl(userProfileModel.Location, Validators.required),
+            EmployeeId: new FormControl(userProfileModel.EmployeeId),
             isActive: new FormControl(userProfileModel.isActive),
             isVolunteered: new FormControl(userProfileModel.isVolunteered)
         });
@@ -103,9 +103,10 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
 
                 UtilityService.setModelFromFormGroup<UserProfileModel>(this.userProfileModel, this.form,
                     (x) => x.UserProfileId, (x) => x.Email, (x) => x.UserId, (x) => x.Name,
-                    (x) => x.MainContact, (x) => x.AlternateContact, (x) => x.Location);
+                    (x) => x.MainContact, (x) => x.AlternateContact, (x) => x.EmployeeId);
                 this.userProfileModel.isActive = this.form.controls['isActive'].value;
                 this.userProfileModel.isVolunteered = this.form.controls['isVolunteered'].value;
+                this.userProfileModel.Location = 'Not Available';
                 this.userProfileService.Create(this.userProfileModel)
                     .subscribe((response: UserProfileModel) => {
                         this.form.reset();
@@ -154,8 +155,8 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
         if (this.form.controls['AlternateContact'].touched) {
             this.userProfileModeltoUpdate.AlternateContact = this.form.controls['AlternateContact'].value;
         }
-        if (this.form.controls['Location'].touched) {
-            this.userProfileModeltoUpdate.Location = this.form.controls['Location'].value;
+        if (this.form.controls['EmployeeId'].touched) {
+            this.userProfileModeltoUpdate.EmployeeId = this.form.controls['EmployeeId'].value;
         }
         if (this.form.controls['isActive'].touched) {
             this.userProfileModeltoUpdate.isActive = this.form.controls['isActive'].value;
@@ -163,6 +164,8 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
         if (this.form.controls['isVolunteered'].touched) {
             this.userProfileModeltoUpdate.isVolunteered = this.form.controls['isVolunteered'].value;
         }
+
+        this.userProfileModeltoUpdate.Location = 'Not Available';
     }
 
     ngOnDestroy(): void {
@@ -230,7 +233,8 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
             MainContact: new FormControl('', [Validators.required]),
             //AlternateContact: new FormControl('', [Validators.required]),
             AlternateContact: new FormControl(''),
-            Location: new FormControl('', Validators.required),
+            //Location: new FormControl('', Validators.required),
+            EmployeeId: new FormControl(''),
             isActive: new FormControl(true),
             isVolunteered: new FormControl(false)
         });

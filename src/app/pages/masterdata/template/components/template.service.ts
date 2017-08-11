@@ -36,6 +36,19 @@ export class TemplateService
             });
     }
 
+    GeAllEmailTemplates(): Observable<ResponseModel<TemplateModel>> {
+        let templates: ResponseModel<TemplateModel>;
+        return this._dataService.Query()
+            .Filter(`TemplateMediaId eq CMS.DataModel.Enum.TemplateMediaType'Email'`)
+            .Expand("EmergencySituation")
+            .OrderBy("CreatedOn desc")
+            .Execute().map((data: ResponseModel<TemplateModel>) => {
+                templates = data;
+                templates.Records.forEach(x => x.Active = (x.ActiveFlag == 'Active'));
+                return templates;
+            });
+    }   
+
     GetQuery(query: string): Observable<ResponseModel<TemplateModel>> {
         return this._dataService.Query()
             .Expand('EmergencySituation')
