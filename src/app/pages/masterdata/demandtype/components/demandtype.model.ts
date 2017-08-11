@@ -7,6 +7,11 @@ export class DemandTypeModel extends BaseModel {
     public IsAutoApproved: boolean;
     public DepartmentId?: number;
     public ApproverDepartment?: DepartmentModel;
+
+    constructor() {
+        super();
+        this.DemandTypeId = 0;
+    }
 }
 
 export class DemandTypeEntryModel extends BaseModel {
