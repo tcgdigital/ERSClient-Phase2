@@ -49,6 +49,12 @@ export class WorldTimeWidgetService {
             });
     }
 
+    /**
+     * Get all emergency locations
+     * 
+     * @returns {Observable<ITimeZone[]>} 
+     * @memberof WorldTimeWidgetService
+     */
     public GetEmergencyLications(): Observable<ITimeZone[]> {
         return this._emergencyLocationService.Query()
             .Filter(`ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
@@ -58,16 +64,32 @@ export class WorldTimeWidgetService {
             });
     }
 
+    /**
+     * Get timezone
+     * 
+     * @private
+     * @param {EmergencyLocationModel[]} locations 
+     * @returns {ITimeZone[]} 
+     * @memberof WorldTimeWidgetService
+     */
     private GetTimeZones(locations: EmergencyLocationModel[]): ITimeZone[] {
+        debugger;
         return locations.map((x: EmergencyLocationModel) => {
-            return {
-                abbr: x.IATA,
-                city: x.City,
-                country: x.Country,
-                zonename: x.TimeZone.indexOf(x.City) > -1 ? x.TimeZone : `${x.TimeZone} - (${x.City})`,
-                utcoffset: /\(([^)]+)\)/gi.exec(x.TimeZone)[1],
-                decimaloffset: (+(x.UTCOffset)) > 3600000 ? (+(x.UTCOffset) / 3600000).toString() : '0'
-            } as ITimeZone;
+            try {
+                return {
+                    abbr: x.IATA,
+                    city: x.City,
+                    country: x.Country,
+                    zonename: (x.TimeZone == null || x.TimeZone == '') ? '(UTC) Greenwich, England' :
+                        x.TimeZone.indexOf(x.City) > -1 ? x.TimeZone : `${x.TimeZone} - (${x.City})`,
+                    utcoffset: (x.TimeZone == null || x.TimeZone == '' || !(/\(([^)]+)\)/gi.test(x.TimeZone))) ? '(UTC)' :
+                        /\(([^)]+)\)/gi.exec(x.TimeZone)[1],
+                    decimaloffset: (x.UTCOffset == null || x.UTCOffset == '') ? '0' :
+                        (+(x.UTCOffset)) > 3600000 ? (+(x.UTCOffset) / 3600000).toString() : '0'
+                } as ITimeZone;
+            } catch (ex) {
+                console.log(ex);
+            }
         });
     }
 }
