@@ -186,6 +186,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                     emergencyLocationModel.IATA = item.IATA;
                     emergencyLocationModel.AirportName = item.AirportName;
                     emergencyLocationModel.Country = item.Country;
+                    emergencyLocationModel.TimeZone = item.TimeZone;
+                    emergencyLocationModel.UTCOffset = item.UTCOffset;
                     this.affectedStations.push(emergencyLocationModel);
                 });
             });
@@ -783,6 +785,9 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     public dateTimeSet(date: DateTimePickerSelectEventArgs, controlName: string): void {
+        let departurearrivalDate: string = this.DateFormat(date.SelectedDate as Date);
+        let utc = (date.SelectedDate as Date).getTime();
+        let localDepartureArrivalDate: string = '';
         if (controlName === 'EmergencyDate') {
             this.form.get('EmergencyDate')
                 .setValue(moment(date.SelectedDate as Date).format('DD-MMM-YYYY hh:mm A'));
@@ -796,19 +801,46 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                 .setValue(moment(date.SelectedDate as Date).utc().format('DD-MMM-YYYY hh:mm A'));
         }
         else if (controlName === 'Scheduleddeparture') {
-            this.formFlight.get('Scheduleddeparture')
-                .setValue(moment(date.SelectedDate as Date).format('DD-MMM-YYYY hh:mm A'));
-            this.formFlight.get('ScheduleddepartureLOC')
-                .setValue(moment(date.SelectedDate as Date).utc().format('DD-MMM-YYYY hh:mm A'));
+            localDepartureArrivalDate = this.DateFormat(new Date(utc + (this.GetUTCOffsetHours(true))));
+            this.formFlight.get('Scheduleddeparture').setValue(departurearrivalDate);
+            this.formFlight.get('ScheduleddepartureLOC').setValue(localDepartureArrivalDate);
+
             this.arrivaldatepicker.updateConfig({
                 minDate: new Date(date.SelectedDate.toLocaleString())
             });
         }
         else if (controlName === 'Scheduledarrival') {
-            this.formFlight.get('Scheduledarrival')
-                .setValue(moment(date.SelectedDate as Date).format('DD-MMM-YYYY hh:mm A'));
-            this.formFlight.get('ScheduledarrivalLOC')
-                .setValue(moment(date.SelectedDate as Date).utc().format('DD-MMM-YYYY hh:mm A'));
+            localDepartureArrivalDate = this.DateFormat(new Date(utc + (this.GetUTCOffsetHours(false))));
+            this.formFlight.get('Scheduledarrival').setValue(departurearrivalDate);
+            this.formFlight.get('ScheduledarrivalLOC').setValue(localDepartureArrivalDate);
         }
     }
+
+    public GetUTCOffsetHours(isOrigin: boolean): number {
+        let originOrDestinationIATA: string = '';
+        let UTC_Offset: string = '';
+        let UTC_OffsetNumber: number = 0.0;
+        let isNegative: boolean = false;
+        if (isOrigin) {
+            originOrDestinationIATA = this.formFlight.get('Origin').value;
+        }
+        else {
+            originOrDestinationIATA = this.formFlight.get('Destination').value;
+        }
+        UTC_Offset = this.affectedStations.find((item: EmergencyLocationModel) =>
+            item.IATA == originOrDestinationIATA
+        ).UTCOffset;
+        return +UTC_Offset;
+    }
+
+
+
+    private DateFormat(date: Date): string {
+        let hours = (date.getHours() + 24 - 2) % 24;
+        let mid = (hours > 12) ? 'PM' : 'AM';
+        const months: string[] = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+        return `${date.getDate()}-${months[date.getMonth()]}-${date.getFullYear()} ${((date.getHours() % 12) < 10) ? ("0" + (date.getHours() % 12)) : (date.getHours() % 12)}:${((date.getMinutes()) < 10) ? ("0" + (date.getMinutes())) : (date.getMinutes())} ${mid}`;
+    }
+
+
 }
