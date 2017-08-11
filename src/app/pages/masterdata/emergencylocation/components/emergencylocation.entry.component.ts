@@ -6,7 +6,7 @@ import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { EmergencyLocationService } from './emergencylocation.service';
 import { EmergencyLocationModel } from './emergencylocation.model';
 
-import { TimeZone } from '../../../../shared/models/base.model';
+import { ITimeZone } from '../../../../shared/models/base.model';
 import { GlobalTimeZone } from '../../../../shared/constants/timezone';
 
 import {
@@ -35,7 +35,7 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
     airportStationTemplatePath: string = './assets/static-content/AirportStation.xlsx';
     @ViewChild('inputFileStations') inputFileStations: any
     public showAddText: string = 'ADD RESPONSIBLE STATION';
-     public timeZones: TimeZone[];
+     public timeZones: ITimeZone[];
 
     constructor(private emergencyLocationService: EmergencyLocationService,
         private dataExchange: DataExchangeService<EmergencyLocationModel>,
