@@ -39,7 +39,7 @@ export class TemplateListComponent implements OnInit, OnDestroy {
     }
 
     getTemplates(): void {
-        this.templateService.GetAll()
+        this.templateService.GeAllEmailTemplates()
             .subscribe((response: ResponseModel<TemplateModel>) => {
                 this.templates = response.Records;
             });

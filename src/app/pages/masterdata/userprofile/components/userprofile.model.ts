@@ -55,10 +55,10 @@ export class UserProfileModel extends BaseModel {
     public UserPermissions?: UserPermissionModel[];
     public Notifications?: NotificationModel[];
     public Departments?: DepartmentModel[];
-    public VisaDetails?: VisaDetailsModel[] = [];
-    public VolunterPreferences?: VolunterPreferenceModel[] = [];
-    public TrainingRecords?: TrainingRecordModel[] = [];
-    public NextOfKins?: NextOfKinModel[] = [];
+    public VisaDetails?: VisaDetailsModel[];
+    public VolunterPreferences?: VolunterPreferenceModel[];
+    public TrainingRecords?: TrainingRecordModel[];
+    public NextOfKins?: NextOfKinModel[];
 
     constructor() {
         super();
