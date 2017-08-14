@@ -103,7 +103,6 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
         const obj: MemberCurrentEngagementModelToView = this.memberEngagementsToView
             .find((x) => x.UserId.toString() == userId);
         if ($element.prop('checked')) {
-            debugger;
             obj.isRemarksSubmitted = true;
             if (obj && obj.Remarks.length > 0) {
                 const memberTrackModel: MemberEngagementTrackModel = new MemberEngagementTrackModel();
@@ -199,7 +198,6 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
                     const member: MemberCurrentEngagementModelToView = new MemberCurrentEngagementModelToView();
                     member.UserId = x.UserId;
                     member.MemberName = x.User.Name;
-                    // member.DepartmentId = x.Department.DepartmentId;
                     member.MemberContactNumber = x.User.MainContact;
                     member.IsNotyfied = (x.User.Notifications.length > 0) ? true : false;
                     member.IsAcknowledged = (x.User.Notifications.length > 0) ?
