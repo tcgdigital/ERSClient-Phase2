@@ -82,12 +82,15 @@ export class ResponsiveTableComponent implements AfterContentInit, AfterViewInit
                 const $navPrev: JQuery = jQuery($wrapper).find('a.scroll-nav.prev');
                 const $navNext: JQuery = jQuery($wrapper).find('a.scroll-nav.next');
                 if ((windowScroll > (wrapperTop + 100)) && (windowScroll < (fullHeight + (wrapperTop - 150)))) {
-                    $navPrev.css({'top': ((windowScroll - wrapperTop) + 150) + 'px', 'z-index': 99});
-                    $navNext.css({'top': ((windowScroll - wrapperTop) + 150) + 'px', 'z-index': 99});
+                    // $navPrev.css({'top': ((windowScroll - wrapperTop) + 150) + 'px', 'z-index': 99});
+                    // $navNext.css({'top': ((windowScroll - wrapperTop) + 150) + 'px', 'z-index': 99});
+
+                    $navPrev.css({'top': (windowScroll) + 'px', 'z-index': 99});
+                    $navNext.css({'top': (windowScroll) + 'px', 'z-index': 99});
                 }
                 else {
-                    $navPrev.css('top', '150px');
-                    $navNext.css('top', '150px');
+                    $navPrev.css('top', wrapperTop + 'px');
+                    $navNext.css('top', wrapperTop + 'px');
                 }
             });
         });

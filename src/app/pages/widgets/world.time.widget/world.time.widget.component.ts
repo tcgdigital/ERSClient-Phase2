@@ -42,22 +42,22 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
         let self = this;
         let rightMergin = '-130px';
 
-        // if (window.screen.availWidth >= 1200)
-        //     rightMergin = '-133px';
-        // else if (window.screen.availWidth >= 992 && window.screen.availWidth <= 1199)
-        //     rightMergin = '-133px';
-        // else if (window.screen.availWidth >= 768 && window.screen.availWidth <= 991)
-        //     rightMergin = '-133px';
-        // else if (window.screen.availWidth >= 576 && window.screen.availWidth <= 767)
-        //     rightMergin = '-133px';
-        // else if (window.screen.availWidth >= 425 && window.screen.availWidth <= 575)
-        //     rightMergin = '-133px';
-        // else if (window.screen.availWidth >= 375 && window.screen.availWidth <= 424)
-        //     rightMergin = '-133px';
-        // else if (window.screen.availWidth >= 321 && window.screen.availWidth <= 374)
-        //     rightMergin = '-133px';
-        // else if (window.screen.availWidth <= 320)
-        //     rightMergin = '-133px';
+        /*if (window.screen.availWidth >= 1200)
+            rightMergin = '-133px';
+        else if (window.screen.availWidth >= 992 && window.screen.availWidth <= 1199)
+            rightMergin = '-133px';
+        else if (window.screen.availWidth >= 768 && window.screen.availWidth <= 991)
+            rightMergin = '-133px';
+        else if (window.screen.availWidth >= 576 && window.screen.availWidth <= 767)
+            rightMergin = '-133px';
+        else if (window.screen.availWidth >= 425 && window.screen.availWidth <= 575)
+            rightMergin = '-133px';
+        else if (window.screen.availWidth >= 375 && window.screen.availWidth <= 424)
+            rightMergin = '-133px';
+        else if (window.screen.availWidth >= 321 && window.screen.availWidth <= 374)
+            rightMergin = '-133px';
+        else if (window.screen.availWidth <= 320)
+            rightMergin = '-133px';*/
 
         $currentElement.find('.world-clock-opner').click(function () {
             if (!self.isOn) {
@@ -75,16 +75,20 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
             }
         });
 
-        $currentElement.find('#clock_2').empty().jClocksGMT(
+        $currentElement.find('#gmt_clock').empty().jClocksGMT(
             {
                 offset: '0',
+                date: true,
+                dateformat: 'DD-MMM-YYYY',
                 skin: 3
             });
 
-        $currentElement.find('#clock_3').empty().jClocksGMT(
+        $currentElement.find('#manila_clock').empty().jClocksGMT(
             {
                 title: ' Manila, Philippines',
                 offset: '8',
+                date: true,
+                dateformat: 'DD-MMM-YYYY',
                 skin: 3
             });
     }
@@ -92,11 +96,14 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
     public OnZoneChange($event): void {
         const $currentElement = jQuery(this.elementRef.nativeElement);
         const $selectedElement = jQuery($event.target);
-        $currentElement.find('#clock_1')
+        $currentElement.find('#incident_clock')
             .empty().jClocksGMT(
             {
                 title: $selectedElement.find('option:selected').data('location'),
                 offset: $selectedElement.find('option:selected').val(),
+                date: true,
+                dst: true,
+                dateformat: 'DD-MMM-YYYY',
                 skin: 3
             });
     }
@@ -117,10 +124,13 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
             this.currentTimezone = res[1] as ITimeZone;
 
             jQuery(this.elementRef.nativeElement)
-                .find('#clock_1').empty().jClocksGMT(
+                .find('#incident_clock').empty().jClocksGMT(
                 {
                     title: `${(res[1] as ITimeZone).city}, ${(res[1] as ITimeZone).country}`,
                     offset: (res[1] as ITimeZone).decimaloffset,
+                    date: true,
+                    dst: true,
+                    dateformat: 'DD-MMM-YYYY',
                     skin: 3
                 });
         });
