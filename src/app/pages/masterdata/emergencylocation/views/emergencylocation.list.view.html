@@ -18,9 +18,9 @@
                 <th>IATA Station Code</th>
                 <th>Airport Station Name</th>
                 <th>City</th>
-                <th>Country</th>
-                <th>Time Zone<th>
-                <th>IsActive</th>                
+                <th>Country</th> 
+                <th>Time Zone</th>  
+                <th>IsActive</th>                               
                 <th>Edit</th>
                 <th>Delete</th>
             </tr>
@@ -29,22 +29,22 @@
             <tr [hidden]="emergencyLocations.length != 0">
                 <td colspan="6">No records found.</td>
             </tr>
-            <tr *ngFor="let emergencyLocation of emergencyLocations">
-                <td data-title="IATA Station Code">{{emergencyLocation.IATA}}</td>
-                <td data-title="Airport Station Name">{{emergencyLocation.AirportName}}</td>
-                <td data-title="City">{{emergencyLocation.City}}</td>  
-                <td data-title="Country">{{emergencyLocation.Country}}</td>      
-                <td data-title="Time Zone">{{emergencyLocation.TimeZone}}</td>           
-                 <td data-title="IsActive">
-                    <md-checkbox class="Marght" id="IsActive" name="IsActive" [ngModel]="emergencyLocation.ActiveFlag === 'Active'" 
-                        aria-label="ActiveFlag" (change)="IsActive($event,emergencyLocation)">
+            <tr *ngFor="let emergencyloc of emergencyLocations">
+                <td data-title="IATA Station Code">{{emergencyloc.IATA}}</td>
+                <td data-title="Airport Station Name">{{emergencyloc.AirportName}}</td>
+                <td data-title="City">{{emergencyloc.City}}</td>  
+                <td data-title="Country">{{emergencyloc.Country}}</td>       
+                <td data-title="Time Zone">{{emergencyloc.TimeZone}}</td>             
+                <td data-title="IsActive">
+                    <md-checkbox class="Marght" id="IsActive" name="IsActive" [ngModel]="emergencyloc.ActiveFlag === 'Active'" 
+                        aria-label="ActiveFlag" (change)="IsActive($event,emergencyloc)">
                     </md-checkbox>
-                </td>
+                </td>                
                 <td data-title="Edit">
-                    <i class="fa fa-edit fa-2x" (click)="UpdateEmergencyLocation(emergencyLocation)"></i>
+                    <i class="fa fa-edit fa-2x" (click)="UpdateEmergencyLocation(emergencyloc)"></i>
                 </td>
                 <td data-title="Delete">
-                    <i class="fa fa-trash-o fa-2x" aria-hidden="true" (click)="deleteStation(emergencyLocation)"></i>
+                    <i class="fa fa-trash-o fa-2x" aria-hidden="true" (click)="deleteStation(emergencyloc)"></i>
                 </td>
             </tr>
 

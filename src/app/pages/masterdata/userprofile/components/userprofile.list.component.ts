@@ -175,19 +175,19 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
             }),
             new SearchTextBox({
                 Name: 'MainContact',
-                Description: 'Main Contact',
+                Description: 'Contact',
                 Value: ''
             }),
-            new SearchTextBox({
-                Name: 'AlternateContact',
-                Description: 'Alternate Contact',
-                Value: ''
-            }),
-            new SearchTextBox({
-                Name: 'Location',
-                Description: 'Location',
-                Value: ''
-            }),
+            // new SearchTextBox({
+            //     Name: 'AlternateContact',
+            //     Description: 'Alternate Contact',
+            //     Value: ''
+            // }),
+            // new SearchTextBox({
+            //     Name: 'Location',
+            //     Description: 'Location',
+            //     Value: ''
+            // }),
             new SearchDropdown({
                 Name: 'isActive',
                 Description: 'Status',

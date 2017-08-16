@@ -48,6 +48,7 @@ export class DepartmentService
     GetAll(): Observable<ResponseModel<DepartmentModel>> {
         return this._dataService.Query()
             .Expand('ParentDepartment($select=DepartmentName)', 'UserProfile($select=Name)')
+            .OrderBy(`DepartmentName`)
             .Execute();
     }
 

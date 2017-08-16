@@ -65,6 +65,8 @@ export class GlobalConstants {
     //  public statkic EXTERNAL_URL: string = 'http://localhost:5001/';
     //public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
 
+    // public static EXTERNAL_URL: string = 'http://cmgtest.pal.com.ph:8080/';
+
     public static NOTIFICATION_URL: string = `${GlobalConstants.EXTERNAL_URL}Notification/Hubs`;
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
     public static GRANT_TYPE: string = 'password';
@@ -456,6 +458,20 @@ export class GlobalConstants {
             Key: 'ReceivePassengerImportCompletionResponse',
             Title: 'Passenger Imported',
             Message: 'Passengers has been imported. Please refer to tab section "Affected People".'
+        },
+
+        {
+            Type: 'CargoImportNotification',
+            Key: 'ReceiveCargoImportCompletionResponse',
+            Title: 'Cargo Imported',
+            Message: 'Cargo has been imported. Please refer to tab section "Affected People".'
+        },
+
+        {
+            Type: 'CrewImportNotification',
+            Key: 'ReceiveCrewImportCompletionResponse',
+            Title: 'Crew Imported',
+            Message: 'Crew has been imported. Please refer to tab section "Affected People".'
         },
 
         {

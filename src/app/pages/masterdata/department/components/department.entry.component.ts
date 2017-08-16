@@ -83,7 +83,7 @@ export class DepartmentEntryComponent implements OnInit {
             DepartmentCode: new FormControl('', [Validators.required]),
             Description: new FormControl('', [Validators.required]),
             ContactNo: new FormControl('', [Validators.required]),
-            DepartmentSpoc: new FormControl('', [Validators.required]),
+            DepartmentSpoc: new FormControl(null),
             ParentDepartmentId: new FormControl('')
         });
     }
@@ -113,7 +113,6 @@ export class DepartmentEntryComponent implements OnInit {
         if (this.form.valid) {
             if (values.DepartmentId === 0) {
                 // ADD REGION
-
                 UtilityService.setModelFromFormGroup<DepartmentModel>(this.departmentModel, this.form,
                     (x) => x.DepartmentId,
                     (x) => x.DepartmentName,
@@ -190,6 +189,11 @@ export class DepartmentEntryComponent implements OnInit {
         else {
             this.showAddText = "ADD DEPARTMENT";
         }
+
+        window.setInterval(()=>{
+            jQuery(window).scroll();
+        }, 100);
+        
         this.showAdd = !value;
     }
 
@@ -212,7 +216,7 @@ export class DepartmentEntryComponent implements OnInit {
             DepartmentName: new FormControl(department ? department.DepartmentName : '', [Validators.required]),
             Description: new FormControl(department ? department.Description : '', [Validators.required]),
             ContactNo: new FormControl(department ? department.ContactNo : '', [Validators.required]),
-            DepartmentSpoc: new FormControl(department ? department.DepartmentSpoc : '', [Validators.required]),
+            DepartmentSpoc: new FormControl(department ? department.DepartmentSpoc : null),
             ParentDepartmentId: new FormControl((department && department.ParentDepartmentId) ? department.ParentDepartmentId : ''),
         });
     }

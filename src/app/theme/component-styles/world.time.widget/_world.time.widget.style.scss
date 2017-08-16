@@ -1,21 +1,21 @@
 @import '../../../../assets/css/jClocksGMT';
 @import '../../config/config';
 
-.world-clock-container{
+.world-clock-container {
     padding: 20px 14px;
-    z-index: 999;
+    z-index: 9;
     position: fixed;
-    top: 10%;
+    top: 9%;
     background: #fff;
-    right: 0;
+    right: -130px;
     width: 13%;
     border-top-left-radius: 15px;
     border-bottom-left-radius: 15px;
     @include box-shadow(-1px, 2px, 7px, 2px, $header-shadow);
-    .world-clocks{
+    .world-clocks {
         display: block;
     }
-    .world-clock-opner{
+    .world-clock-opner {
         cursor: pointer;
         padding: 19px 0;
         text-align: center;
@@ -32,7 +32,7 @@
         border-top-left-radius: 5px;
         border-top-right-radius: 6px;
         @include box-shadow(-3px, -1px, 3px, 0px, $header-shadow);
-        :hover{
+        :hover {
             background: rgb(203, 103, 88);
         }
     }
@@ -40,5 +40,126 @@
         width: 100%;
         padding: 4px;
         font-size: 11px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .world-clock-container {
+        width: 44%;
+        padding: 10px 9px;
+        select {
+            width: 80%;
+            margin-left: 3px;
+        }
+        .jcgmt-container {
+            .jcgmt-lbl, .jcgmt-clockHolder {
+                margin: 0;
+            }
+            .jcgmt-digital, .jcgmt-date{
+                margin-left: -30px;
+            }
+        }
+    }
+}
+@media screen and (min-width: 321px) and (max-width: 374px) {
+    .world-clock-container {
+        width: 44%;
+        padding: 10px 9px;
+        select {
+            width: 80%;
+            margin-left: 3px;
+        }
+        .jcgmt-container {
+            .jcgmt-lbl, .jcgmt-clockHolder {
+                margin: 0;
+            }
+            .jcgmt-digital, .jcgmt-date{
+                margin-left: -30px;
+            }
+        }
+    }
+}
+@media screen and (min-width: 375px) and (max-width: 424px) {
+    .world-clock-container {
+        width: 35%;
+        padding: 10px 9px;
+        select {
+            width: 96%;
+            margin-left: 3px;
+        }
+        .jcgmt-container {
+            .jcgmt-lbl, .jcgmt-clockHolder {
+                margin: 0;
+            }
+            .jcgmt-digital, .jcgmt-date{
+                margin-left: -30px;
+            }
+        }
+    }
+}
+@media screen and (min-width: 425px) and (max-width: 575px) {
+    .world-clock-container {
+        width: 31%;
+        padding: 10px 9px;
+        select {
+            width: 94%;
+            margin-left: 3px;
+        }
+        .jcgmt-container {
+            .jcgmt-lbl, .jcgmt-clockHolder {
+                margin: 0;
+            }
+            .jcgmt-digital, .jcgmt-date{
+                margin-left: -30px;
+            }
+        }
+    }
+}
+@media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
+    .world-clock-container {
+        width: 17%;
+        padding: 10px 9px;
+        select {
+            width: 96%;
+            margin-left: 3px;
+        }
+        .jcgmt-container {
+            .jcgmt-lbl, .jcgmt-clockHolder {
+                margin: 0;
+            }
+            .jcgmt-digital, .jcgmt-date{
+                margin-left: -30px;
+            }
+        }
+    }
+}
+@media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {
+    .world-clock-container {
+        width: 13%;
+        padding: 10px 9px;
+        select {
+            width: 96%;
+            margin-left: 3px;
+        }
+        .jcgmt-container {
+            .jcgmt-lbl, .jcgmt-clockHolder, .jcgmt-digital, .jcgmt-date {
+                margin: 0;
+            }
+        }
+    }
+}
+@media screen and (min-width: $resXL-S) {
+    .world-clock-container {
+        width: 9.2%;
+        padding: 10px 9px;
+        select {
+            width: 100%;
+            margin-left: 3px;
+        }
+        .jcgmt-container {
+            .jcgmt-lbl, .jcgmt-clockHolder, .jcgmt-digital, .jcgmt-date {
+                margin: 0;
+            }
+        }
     }
 }

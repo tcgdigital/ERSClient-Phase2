@@ -707,7 +707,14 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                     let num = UtilityService.UUID();
                 }
                 , (error: any) => {
-                    
+
+                    if(error == "TypeError: error.json is not a function" || error == "TypeError: error.Server error")
+                    {
+                        this.demands = [];
+                        this.communicationLogs = [];
+                        this.toastrService.success('Demands Saved successfully.', 'Success', this.toastrConfig);
+                        let num = UtilityService.UUID();
+                    }
                     console.log(`Error: ${error}`);
                 }
             );
@@ -1119,7 +1126,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         }
 
         else {
-            this.toastrService.info('Form not valid.');
+            this.toastrService.info("* marked fields are mandatory.");
 
         }
 
