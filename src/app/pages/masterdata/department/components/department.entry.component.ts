@@ -155,6 +155,12 @@ export class DepartmentEntryComponent implements OnInit {
                     (x) => x.ParentDepartmentId);
 
                 this.departmentModel.deleteAttributes();
+                if (this.form.controls['ParentDepartmentId'].value == '') {
+                    this.departmentModel.ParentDepartmentId = null;
+                }
+                else {
+                    this.departmentModel.ParentDepartmentId = +this.form.controls['ParentDepartmentId'].value;
+                }
                 if (this.departmentModel.ContactNo) {
                     this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString().replace(/^\D+/g, '');
                 }
