@@ -459,6 +459,20 @@ export class GlobalConstants {
         },
 
         {
+            Type: 'CargoImportNotification',
+            Key: 'ReceiveCargoImportCompletionResponse',
+            Title: 'Cargo Imported',
+            Message: 'Cargo has been imported. Please refer to tab section "Affected People".'
+        },
+
+        {
+            Type: 'CrewImportNotification',
+            Key: 'ReceiveCrewImportCompletionResponse',
+            Title: 'Crew Imported',
+            Message: 'Crew has been imported. Please refer to tab section "Affected People".'
+        },
+
+        {
             Type: 'IncidentBorrowNotification',
             Key: 'ReceiveIncidentBorrowingCompletionResponse',
             Title: 'Incident Borrowed',
