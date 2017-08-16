@@ -16,6 +16,7 @@
     font-size: 30px;
     padding-top: 0;
     padding-bottom: 0; color:$font-colori-white;
+    border-top: 1px solid $clock-widget-border;
 }
 
 .clock-text {
@@ -24,9 +25,8 @@
     font-size: 12px;
     font-weight: bold;
     background-color: none;
-    padding: 5px;
-    border-top: 1px solid $clock-widget-border;
-    // border-bottom: 1px solid $clock-widget-border;
+   // padding: 5px;
+    //np border-bottom: 1px solid $clock-widget-border;
 }
 
 .clock-v-border {
@@ -50,6 +50,7 @@
     padding-top: 0;
     padding-bottom: 0; color:$font-colori-white;
     line-height:30px;
+    border-top: 1px solid $clock-widget-border;
 }
 
 .clock-text {
@@ -59,7 +60,6 @@
     font-weight: bold;
     background-color: none;
     padding: 0;
-    border-top: 1px solid $clock-widget-border;
     /*border-bottom: 1px solid $clock-widget-border;*/
 }
 }
@@ -86,4 +86,6 @@
     margin-left: 5px;
     color: #fff;
     font-size: 12px;
+    margin-top: 2px;
+    margin-bottom: -5px;
 }
