@@ -483,7 +483,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     onPOPUPSubmit(values: object): void {
-        debugger;
         console.log('Incident Created.');
         console.log(this.incidentDataExchangeModel);
         if (this.incidentDataExchangeModel.IncidentModel.EmergencyLocation === 'Offsite') {
@@ -683,7 +682,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     createFlightModel(isFlightRelated: boolean): void {
-        debugger;
         this.flightModel = new FlightModel();
         this.flightModel.FlightId = 0;
         this.flightModel.InvolvedPartyId = 0;

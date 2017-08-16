@@ -18,6 +18,7 @@ export class WidgetUtilityService {
         let arrGraphPending: number[] = [];
         let arrGraphCompleted: number[] = [];
 
+
         let start: Date = new Date(emergencyDate);
         let temp: Date = new Date(emergencyDate);
         let inter: string = JSON.stringify(start);
@@ -61,7 +62,7 @@ export class WidgetUtilityService {
             return item;
         });
 
-        this.elapsedHourForGraph = dateDateSorted.length;
+        this.elapsedHourForGraph++;
         let totalCount: number = 0;
         for (let i: number = 1; i <= this.elapsedHourForGraph - 1; i++) {
 
@@ -106,6 +107,8 @@ export class WidgetUtilityService {
         containerName: string, graphSubjectType: string, emergencyDate: Date, departmentType: string): void {
         let DepartmentName: string = '';
         console.log(requesterDepartmentId);
+
+
         if (departmentType == 'TargetDepartment') {
             DepartmentName = arrGraphData[0].TargetDepartment.Description;
         }
@@ -114,6 +117,7 @@ export class WidgetUtilityService {
         }
 
         this.elapsedHourForGraph = GlobalConstants.ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION;
+
         let arrGraphPending: number[] = [];
         let arrGraphCompleted: number[] = [];
         let start: Date = new Date(emergencyDate);
@@ -145,8 +149,8 @@ export class WidgetUtilityService {
         let closedTotal: number = 0;
         let pendingTotal: number = 0;
         let pendingInter: number = 0;
-       
-        
+
+
 
         const array: DemandStatusLogModel[] = _.unique(arrGraphData, (item: DemandStatusLogModel) => {
             return item.DemandStatusDescriptionChangedOn;
@@ -162,9 +166,9 @@ export class WidgetUtilityService {
             return item;
         });
 
-        
-        this.elapsedHourForGraph = dateDateSorted.length;
-        
+
+        this.elapsedHourForGraph++;
+
         let totalCount: number = 0;
         for (let i: number = 1; i <= this.elapsedHourForGraph - 1; i++) {
             let pendingOld: number = 0;

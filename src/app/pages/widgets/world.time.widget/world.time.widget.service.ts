@@ -73,7 +73,6 @@ export class WorldTimeWidgetService {
      * @memberof WorldTimeWidgetService
      */
     private GetTimeZones(locations: EmergencyLocationModel[]): ITimeZone[] {
-        debugger;
         return locations.map((x: EmergencyLocationModel) => {
             try {
                 return {
