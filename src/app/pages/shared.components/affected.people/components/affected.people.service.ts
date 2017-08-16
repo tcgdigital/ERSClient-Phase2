@@ -237,7 +237,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
 
     public GetCallerListForAffectedPerson(affectedPersonId: number): Observable<ResponseModel<EnquiryModel>> {
         return this._enquiryService.Query()
-            .Filter(`AffectedPersonId eq ${affectedPersonId}`)
+            .Filter(`AffectedPersonId eq ${affectedPersonId} and ActiveFlag  eq 'Active'`)
             .Expand(`Caller`)
             .Execute();
     }

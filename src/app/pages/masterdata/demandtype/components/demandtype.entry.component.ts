@@ -222,6 +222,11 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         else {
             this.showAddText = "ADD DEMAND TYPE";
         }
+        
+        window.setInterval(()=>{
+            jQuery(window).scroll();
+        }, 100);
+
         this.showAdd = !value;
         // this.form = new FormGroup({
         //     DemandTypeId: new FormControl(0),

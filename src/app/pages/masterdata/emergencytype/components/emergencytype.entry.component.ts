@@ -151,6 +151,11 @@ export class EmergencyTypeEntryComponent implements OnInit {
         else {
             this.showAddText = "ADD CRISIS TYPE";
         }
+
+        window.setInterval(()=>{
+            jQuery(window).scroll();
+        }, 100);
+        
         this.showAdd = !value;
     }
 }

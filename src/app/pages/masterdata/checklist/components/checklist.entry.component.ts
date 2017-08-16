@@ -483,6 +483,11 @@ export class ChecklistEntryComponent implements OnInit {
         else {
             this.showAddText = "ADD CHECKLIST";
         }
+        
+        window.setInterval(()=>{
+            jQuery(window).scroll();
+        }, 100);
+
         this.showAdd = !value;
     }
 

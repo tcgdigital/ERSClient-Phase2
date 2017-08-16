@@ -209,6 +209,11 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
         else {
             this.showAddText = "ADD RESPONSIBLE STATION";
         }
+
+        window.setInterval(()=>{
+            jQuery(window).scroll();
+        }, 100);
+        
         this.showAdd = !value;
     }
 
