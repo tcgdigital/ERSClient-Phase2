@@ -11,9 +11,9 @@ export class QuickLinkModel extends BaseModel {
     constructor() {
         super();
         this.QuickLinkId = 0;
-        this.QuickLinkName = '';
-        this.QuickLinkURL = '';
+        // this.QuickLinkName = '';
+        // this.QuickLinkURL = '';
         this.UploadURL = '';
-        this.Active = false;
+        // this.Active = false;
     }
 }

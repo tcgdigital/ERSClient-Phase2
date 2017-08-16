@@ -94,8 +94,25 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
 
         // SignalR Notification
-        this.globalState.Subscribe('ReceiveIncidentBorrowingCompletionResponse', () => {
-            this.getPeopleOnboardCounts(this.currentIncidentId);
+        this.globalState.Subscribe('ReceiveIncidentBorrowingCompletionResponse', (incidentId: number) => {
+            Observable.timer(1000).subscribe(() => {
+                this.getPeopleOnboardCounts(incidentId);
+            });
+        });
+        this.globalState.Subscribe('ReceivePassengerImportCompletionResponse', (incidentId: number) => {
+            Observable.timer(1000).subscribe(() => {
+                this.getPeopleOnboardCounts(incidentId);
+            });
+        });
+        this.globalState.Subscribe('ReceiveCargoImportCompletionResponse', (incidentId: number) => {
+            Observable.timer(1000).subscribe(() => {
+                this.getPeopleOnboardCounts(incidentId);
+            });
+        });
+        this.globalState.Subscribe('ReceiveCrewImportCompletionResponse', (incidentId: number) => {
+            Observable.timer(1000).subscribe(() => {
+                this.getPeopleOnboardCounts(incidentId);
+            });
         });
     }
 
@@ -110,7 +127,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
                     affectedPeoples = result.Records[0].Affecteds[0].AffectedPeople.sort((a, b) => {
                         if (a.Passenger.PassengerName < b.Passenger.PassengerName) return -1;
                         if (a.Passenger.PassengerName > b.Passenger.PassengerName) return 1;
-                        
+
                         return 0;
                     });
                     affectedPeoples.forEach((item: AffectedPeopleModel) => {

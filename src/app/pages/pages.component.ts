@@ -58,6 +58,7 @@ export class PagesComponent implements OnInit {
     public connectionStaters: ConnectionStarter[];
     // public ExecuteOperationProxy: () => void;
     public ExecuteOperationProxy: (...args: any[]) => void;
+    public ExecuteOperationProxySimple: (...args: any[]) => void;
     private sub: any;
 
     /**
@@ -98,6 +99,8 @@ export class PagesComponent implements OnInit {
         private toastrConfig: ToastrConfig,
         private route: ActivatedRoute,
         private passengerImportCompletedNotificationHub: NotificationBroadcastService,
+        private cargoImportCompletedNotificationHub: NotificationBroadcastService,
+        private crewImportCompletedNotificationHub: NotificationBroadcastService,
         private incidentBorrowingNotificationHub: NotificationBroadcastService,
         private broadcastMessageNotificationHub: NotificationBroadcastService,
         private casualtyStatusUpdateNotificationHub: NotificationBroadcastService,
@@ -113,6 +116,9 @@ export class PagesComponent implements OnInit {
         this.ConfigureToster();
         this.ExecuteOperationProxy = (...args: any[]) => {
             this.ExecuteOperation.apply(this, args);
+        };
+        this.ExecuteOperationProxySimple = (...args: any[]) => {
+            this.ExecuteOperationSimple.apply(this, args);
         };
     }
 
@@ -312,17 +318,30 @@ export class PagesComponent implements OnInit {
     private PrepareConnectionAndCall(incId: number, deptId: number) {
         if (this.connectionStaters === undefined || this.connectionStaters.length === 0) {
             this.connectionStaters = new Array<ConnectionStarter>();
-            if (window.location.href.indexOf('localhost') == -1) {
-                this.connectionStaters.push(new ConnectionStarter(this.incidentBorrowingNotificationHub,
-                    'IncidentBorrowingNotificationHub', {
-                        incidentId: incId
-                    }, this.GenerateCallbackHandler<IncidentModel>('IncidentBorrowNotification')
-                ));
 
+            if (window.location.href.indexOf('localhost') == -1) {
                 this.connectionStaters.push(new ConnectionStarter(this.passengerImportCompletedNotificationHub,
                     'PassengerImportCompletedNotificationHub', {
                         incidentId: incId
-                    }, this.GenerateCallbackHandler<IncidentModel>('PassengerImportNotification')
+                    }, this.GenerateCallbackSimpleHandler('PassengerImportNotification')
+                ));
+
+                this.connectionStaters.push(new ConnectionStarter(this.cargoImportCompletedNotificationHub,
+                    'CargoImportCompletedNotificationHub', {
+                        incidentId: incId
+                    }, this.GenerateCallbackSimpleHandler('CargoImportNotification')
+                ));
+
+                this.connectionStaters.push(new ConnectionStarter(this.crewImportCompletedNotificationHub,
+                    'CrewImportCompletedNotificationHub', {
+                        incidentId: incId
+                    }, this.GenerateCallbackSimpleHandler('CrewImportNotification')
+                ));
+
+                this.connectionStaters.push(new ConnectionStarter(this.incidentBorrowingNotificationHub,
+                    'IncidentBorrowingNotificationHub', {
+                        incidentId: incId
+                    }, this.GenerateCallbackSimpleHandler('IncidentBorrowNotification')
                 ));
 
                 this.connectionStaters.push(new ConnectionStarter(this.broadcastMessageNotificationHub,
@@ -389,6 +408,7 @@ export class PagesComponent implements OnInit {
                         incidentId: incId
                     }, this.GenerateCallbackHandler<ExternalInputModel>('EnquiryNotification')
                 ));
+
                 this.ConnectAndListen(this.connectionStaters);
             }
         }
@@ -451,7 +471,7 @@ export class PagesComponent implements OnInit {
 
     /**
      * Generating callback handler to handle execution of each server callback event
-     *
+     * (Generic function)
      * @private
      * @template T
      * @param {string} keyType
@@ -464,6 +484,19 @@ export class PagesComponent implements OnInit {
             .map((z) => new CallbackHandler(z.Key, this.ExecuteOperationProxy));
     }
 
+    /**
+     * Generating callback handler to handle execution of each server callback event
+     * (Non-Generic function)
+     * @private
+     * @param {string} keyType 
+     * @returns {CallbackHandler[]} 
+     * @memberof PagesComponent
+     */
+    private GenerateCallbackSimpleHandler(keyType: string): CallbackHandler[] {
+        return GlobalConstants.NotificationMessage
+            .filter((x) => x.Type === keyType)
+            .map((z) => new CallbackHandler(z.Key, this.ExecuteOperationProxySimple));
+    }
     /**
      * Executes on every server callback event calling.
      * 1. This function will display toast message if available
@@ -480,6 +513,24 @@ export class PagesComponent implements OnInit {
             /*&& model.CreatedBy !== +UtilityService.GetFromSession('CurrentUserId')*/) {
             const msg: string = this.PrepareMessage<T>(message.Message, model);
             this.toastrService.info(msg, message.Title);
+        }
+        this.globalState.NotifyDataChanged(key, model);
+    }
+
+    /**
+     * Executes on every server callback event calling.
+     * 1. This function will display toast message if available
+     * 2. Raised a NotifyDataChanged for respective module to react on the event
+     * (Non-Generic Function)
+     * @private
+     * @param {string} key 
+     * @param {*} model 
+     * @memberof PagesComponent
+     */
+    private ExecuteOperationSimple(key: string, model: any): void {
+        const message = GlobalConstants.NotificationMessage.find((x) => x.Key === key);
+        if (message.Title !== '' && message.Message !== '') {
+            this.toastrService.info(message.Message, message.Title);
         }
         this.globalState.NotifyDataChanged(key, model);
     }
