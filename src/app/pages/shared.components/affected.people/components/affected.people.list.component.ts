@@ -104,7 +104,6 @@ export class AffectedPeopleListComponent implements OnInit {
         }
         this.affectedPeopleService.GetCallerListForAffectedPerson(affectedPerson.AffectedPersonId)
             .subscribe((response: ResponseModel<EnquiryModel>) => {
-                debugger;
                 this.callers = response.Records.map((x) => {
                     return x.Caller;
                 });
