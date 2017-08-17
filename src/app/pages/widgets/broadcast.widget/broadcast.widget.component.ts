@@ -53,9 +53,14 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.initiatedDepartmentId;
-        this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
-        this.getAllPublishedBroadcasts();
-        this.getAllBroadcastByIncidentAndDepartment();
+        
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'BroadcastMessageWidgetViewAll')) {
+            this.getAllPublishedBroadcasts();
+        }
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'BroadcastMessageWidget')) {
+            this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
+            this.getAllBroadcastByIncidentAndDepartment();
+        }
 
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
@@ -64,23 +69,10 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
         // SignalR Notification
         this.globalState.Subscribe('ReceiveBroadcastCreationResponse', (model: BroadCastModel) => {
             this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
-            // this.LatestBroadcastModels.unshift(model);
-            // this.LatestBroadcastModels.splice(-1, 1);
-
-            // this.LatestBroadcasts = Observable.of(this.LatestBroadcastModels
-            //     .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn, '')));
         });
 
         this.globalState.Subscribe('ReceiveBroadcastModificationResponse', (model: BroadCastModel) => {
             this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
-            // const index: number = this.LatestBroadcastModels
-            //     .findIndex((x) => x.BroadcastId === model.BroadcastId);
-            // if (index >= 0) {
-            //     this.LatestBroadcastModels.splice(index, 1, model);
-
-            //     this.LatestBroadcasts = Observable.of(this.LatestBroadcastModels
-            //         .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn, '')));
-            // }
         });
     }
 
@@ -88,7 +80,8 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
         this.LatestBroadcastModels = new Array<BroadcastWidgetModel>();
         this.broadcastWidgetService
             .GetLatestBroadcastsByIncidentAndDepartment(departmentId, incidentId)
-            .flatMap((x) => x).take(2)
+            .flatMap((x) => x)
+            .take(3)
             .subscribe((x) => {
                 this.LatestBroadcastModels.push(x);
             }, (error: any) => {
@@ -116,10 +109,10 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
             });
     }
 
-    getAllBroadcastByIncidentAndDepartment(callback?: Function) : void {
+    getAllBroadcastByIncidentAndDepartment(callback?: Function): void {
         const data: BroadcastWidgetModel[] = [];
         this.broadcastWidgetService
-            .GetAllBroadcastsByIncidentAndDepartment(this.currentDepartmentId,this.currentIncidentId)
+            .GetAllBroadcastsByIncidentAndDepartment(this.currentDepartmentId, this.currentIncidentId)
             .flatMap((x) => x)
             .subscribe((x) => {
                 data.push(x);
@@ -138,7 +131,7 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
         // this.getAllPublishedBroadcasts(() => {
         //     this.childModal.show();
         // });
-        this.getAllBroadcastByIncidentAndDepartment(()=>{
+        this.getAllBroadcastByIncidentAndDepartment(() => {
             this.childBroadcastByDept.show();
         })
     }
@@ -165,9 +158,14 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
 
     private incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
-        this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
-        this.getAllPublishedBroadcasts();
-        this.getAllBroadcastByIncidentAndDepartment();
+
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'BroadcastMessageWidgetViewAll')) {
+            this.getAllPublishedBroadcasts();
+        }
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'BroadcastMessageWidget')) {
+            this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
+            this.getAllBroadcastByIncidentAndDepartment();
+        }
     }
 
     private onBroadcastPublish(broadcast: BroadCastModel): void {
@@ -178,8 +176,13 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
 
     private departmentChangeHandler(department: KeyValue): void {
         this.currentDepartmentId = department.Value;
-        this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
-        this.getAllPublishedBroadcasts();
-        this.getAllBroadcastByIncidentAndDepartment();
+
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'BroadcastMessageWidgetViewAll')) {
+            this.getAllPublishedBroadcasts();
+        }
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'BroadcastMessageWidget')) {
+            this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
+            this.getAllBroadcastByIncidentAndDepartment();
+        }
     }
 }

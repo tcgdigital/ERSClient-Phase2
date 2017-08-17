@@ -1,9 +1,21 @@
-<span class="validationAlert" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'CloseEmergency')">
-    <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
-</span>
+<div class="row" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'CloseEmergency')">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>Crisis Closure</strong>
+            </div>
+            <div class="card-block">
+                <span class="validationAlert">
+                    <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div *ngIf="isShowPage | accesibility:currentDepartmentId:'CloseEmergency'" class="card">
     <div class="card-header">
-      <strong>  Crisis Closure </strong>
+        <strong>Crisis Closure</strong>
     </div>
     <div class="card-block">
         <div class="row">
@@ -77,9 +89,8 @@
             </div>
         </div>
     </div>
-
-
 </div>
+
 <div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -106,7 +117,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

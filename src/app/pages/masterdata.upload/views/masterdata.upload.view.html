@@ -1,4 +1,16 @@
-<span class="validationAlert" *ngIf="!(isShowPage | accesibility:DepartmentId:'ManifestUploadFile')">
-    <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
-</span>
+<div class="row" *ngIf="!(isShowPage | accesibility:DepartmentId:'ManifestUploadFile')">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>Manifest Data Upload</strong>
+            </div>
+            <div class="card-block">
+                <span class="validationAlert">
+                    <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
 <masterdatauploadlist-main *ngIf="isShowPage | accesibility:DepartmentId:'ManifestUploadFile'" [DepartmentId]="DepartmentId" [IncidentId]="IncidentId" [CreatedBy]="2"></masterdatauploadlist-main>
