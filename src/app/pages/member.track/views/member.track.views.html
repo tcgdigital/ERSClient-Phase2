@@ -63,8 +63,7 @@
                             </table>
                         </responsive-table>
 
-                        <div bsModal #childModalHistory="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-                            aria-hidden="true">
+                        <div bsModal #childModalHistory="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -93,7 +92,7 @@
                                                             <td data-title="UndeployedOn">{{work.UnDeployedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
                                                             <td data-title="Work Details">{{work.Remarks}}</td>
                                                             <td data-title="Assigned by">{{work.createdby}}</td>
-                                                            <td data-title="Deaprtment">{{work.Department}}</td>
+                                                            <td data-title="Deaprtment">{{work.Department.DepartmentName}}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
