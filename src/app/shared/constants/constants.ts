@@ -536,7 +536,7 @@ export class GlobalConstants {
             Type: 'CasualtyNotification',
             Key: 'ReceiveCasualtyCountResponse',
             Title: 'Casualty Status',
-            Message: 'Latest casualty status update arrived.  Please refer to dashboard\'s "PDA Casualty Status Block".'
+            Message: 'Additional information has been changed. Please refer to dashboard\'s "PDA Casualty Status Block".'
         },
 
         {
