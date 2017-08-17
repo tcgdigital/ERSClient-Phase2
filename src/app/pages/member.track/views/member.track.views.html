@@ -49,9 +49,9 @@
                                         <!-- <td data-title="Is Notification Acknowledged"><i class="fa fa-check fa-2x" aria-hidden="true" [hidden]="memberengagement.IsAcknowledged == false"></i>&nbsp;</td> -->
                                         <td data-title="Is Volunteered"><i class="fa fa-check fa-2x" aria-hidden="true" [hidden]="memberengagement.isVolunteered == false"></i>&nbsp;</td>
                                         <td data-title="Busy">
-                                            {{memberengagement | json}}
                                             <input *ngIf="isShowAllocationDeallocation | accesibility:currentDepartmentId:'AllocationDeallocationMember'" type="checkbox" 
-                                                [checked]="memberengagement.IsBusy" 
+                                                (checked)="checked(memberengagement)"
+                                                [attr.data-busy]="memberengagement.IsBusy"
                                                 [attr.data-userid]="memberengagement.UserId" 
                                                 [attr.data-departmentid]="memberengagement.DepartmentId"
                                                 data-toggle="toggle" data-id="{{i}}" data-style="ios" data-onstyle="success"

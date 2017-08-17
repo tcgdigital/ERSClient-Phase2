@@ -598,7 +598,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
     uploadFile(resolutionTimeChanged: boolean): void {
-        debugger;
         if (this.filesToUpload.length > 0) {
             const baseUrl = GlobalConstants.EXTERNAL_URL;
             const organizationId = +UtilityService.GetFromSession('CurrentOrganizationId'); // To be changed by Dropdown when Demand table will change
@@ -607,7 +606,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             this.date = new Date();
             this.fileUploadService.uploadFiles<string>(baseUrl + './api/fileUpload/UploadFilesModuleWise/' + param,
                 this.filesToUpload, this.date.toString()).subscribe((result: string) => {
-                    debugger;
                     const fileStore: FileStoreModel = new FileStoreModel();
                     if(this.demandModel.FileStores != null){
                         fileStore.FileStoreID = this.demandModel.FileStores[0].FileStoreID;
@@ -672,7 +670,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(): void {
-        debugger;
         this.submitted = true;
         if (this.form.valid) {
             if (this.demandModel.DemandId === 0) {

@@ -81,16 +81,31 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
         }
     }
 
-    public checkBusy(): void{
-        // // const changedByDepartmentId = this.memberEngagementsToView.filter();
-        // const currentDepartmentId = UtilityService.GetFromSession('CurrentDepartmentId');
-        // if(changedByDepartmentId.toString() != currentDepartmentId){}
+    public onChecked(data: MemberCurrentEngagementModelToView, event: any): void {
+        const currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+        if (data.DepartmentId == currentDepartmentId) {
+
+        }
+        else {
+            this.toastrService.error('Member cannot be disengaged.');
+        }
+
+        //     let obj: MemberCurrentEngagementModel = new MemberCurrentEngagementModel();
+        // const member: MemberCurrentEngagementModelToView = new MemberCurrentEngagementModelToView();
+        // member.DepartmentId = obj.MemberEngagementTrack.DepartmentId;
+        // if (member.DepartmentId.toString() != currentDepartmentId) {
+        //     this.toastrService.error('Member cannot be disengaged');
+        // }
+        // else {
+        //     this.GenerateToggle();
+        // }
     }
 
     public GenerateToggle(): void {
         const self = this;
         const $selfElement = jQuery(this.elementRef.nativeElement);
         const $inputs = $selfElement.find('input[data-userid]');
+
 
         jQuery.each($inputs, (index, element) => {
             jQuery(element).bootstrapToggle({
@@ -109,7 +124,7 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
 
                 //         // jQuery($event.currentTarget).bootstrapToggle('off');
                 //     } else
-                        self.datachanged($event);
+                self.datachanged($event);
                 // } else {
                 //     $event.preventDefault();
                 //     $event.stopPropagation();
@@ -118,10 +133,20 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
         });
     }
 
+    public checked(value:any):void{
+    }
+
     public datachanged($event: any): void {
-        debugger;
         const $element: JQuery = jQuery($event.currentTarget);
         const userId = $element.data('userid');
+        const departmentId = $element.data('departmentid');
+        const isBusy = $element.data('busy');
+        if (isBusy) {
+            if (this.currentDepartmentId != departmentId) {
+                this.toastrService.error('Not Allow');
+                return;
+            }
+        }
         const obj: MemberCurrentEngagementModelToView = this.memberEngagementsToView
             .find((x) => x.UserId.toString() == userId);
         if ($element.prop('checked')) {
