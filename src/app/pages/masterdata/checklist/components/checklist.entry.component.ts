@@ -306,7 +306,6 @@ export class ChecklistEntryComponent implements OnInit {
     getAllActiveOrganizations(): void {
         this.organizationService.GetAllActiveOrganizations()
             .subscribe((response: ResponseModel<OrganizationModel>) => {
-
                 this.activeOrganizations = response.Records;
             }, (error: any) => {
                 //console.log(`Error: ${error}`);

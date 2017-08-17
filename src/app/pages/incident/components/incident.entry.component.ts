@@ -186,6 +186,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                     emergencyLocationModel.IATA = item.IATA;
                     emergencyLocationModel.AirportName = item.AirportName;
                     emergencyLocationModel.Country = item.Country;
+                    emergencyLocationModel.TimeZone = item.TimeZone;
+                    emergencyLocationModel.UTCOffset = item.UTCOffset;
                     this.affectedStations.push(emergencyLocationModel);
                 });
             });
@@ -347,8 +349,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.flightClass = { 'is-disabled': false };
         this.formFlight = new FormGroup({
             FlightNumber: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-            Origin: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-            Destination: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+            Origin: new FormControl('', [Validators.required]),
+            Destination: new FormControl('', [Validators.required]),
             Scheduleddeparture: new FormControl('', [Validators.required]),
             Scheduledarrival: new FormControl('', [Validators.required]),
             FlightTailNumber: new FormControl('', [Validators.required, Validators.maxLength(50)]),
@@ -430,8 +432,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     resetFlightForm(): void {
         this.formFlight = new FormGroup({
             FlightNumber: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-            Origin: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-            Destination: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+            Origin: new FormControl('', [Validators.required]),
+            Destination: new FormControl('', [Validators.required]),
             Scheduleddeparture: new FormControl('', [Validators.required]),
             Scheduledarrival: new FormControl('', [Validators.required]),
             FlightTailNumber: new FormControl('', [Validators.required, Validators.maxLength(50)]),
@@ -487,10 +489,14 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             this.incidentDataExchangeModel.IncidentModel.EmergencyLocation = this.incidentDataExchangeModel.IncidentModel.OffSetLocation;
             delete this.incidentDataExchangeModel.IncidentModel.OffSetLocation;
         }
-        this.incidentDataExchangeModel.IncidentModel.CreatedOn=new Date();
-        this.incidentDataExchangeModel.InvolvedPartyModel.CreatedOn=new Date();
-        this.incidentDataExchangeModel.FLightModel.CreatedOn=new Date();
-        this.incidentDataExchangeModel.AffectedModel.CreatedOn=new Date();
+        this.incidentDataExchangeModel.IncidentModel.CreatedOn = new Date();
+        this.incidentDataExchangeModel.InvolvedPartyModel.CreatedOn = new Date();
+        this.incidentDataExchangeModel.FLightModel.CreatedOn = new Date();
+
+        delete this.incidentDataExchangeModel.FLightModel.OriginCode_Extended;
+        delete this.incidentDataExchangeModel.FLightModel.DestinationCode_Extended;
+
+        this.incidentDataExchangeModel.AffectedModel.CreatedOn = new Date();
         this.incidentService.CreateIncident(this.incidentDataExchangeModel.IncidentModel,
             this.incidentDataExchangeModel.IsFlightRelated,
             this.incidentDataExchangeModel.InvolvedPartyModel, this.incidentDataExchangeModel.FLightModel,
@@ -623,8 +629,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                 SenderOfCrisisInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.SenderOfCrisisInformation),
                 BorrowedIncidentPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.BorrowedIncident),
                 FlightNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightNo),
-                OriginPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.OriginCode),
-                DestinationPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.DestinationCode),
+                OriginPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.OriginCode_Extended),
+                DestinationPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.DestinationCode_Extended),
                 ScheduleddeparturePopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.DepartureDate).format('DD-MMM-YYYY hh:mm a')),
                 ScheduledarrivalPopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.ArrivalDate).format('DD-MMM-YYYY hh:mm a')),
                 FlightTailNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightTaleNumber),
@@ -683,8 +689,24 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             this.formFlight.controls['FlightNumber'].value : 'DUMMY_FLIGHT';
         this.flightModel.OriginCode = (isFlightRelated === true) ?
             this.formFlight.controls['Origin'].value : 'DUMMY_ORG';
+        if (this.flightModel.OriginCode != 'DUMMY_ORG') {
+            this.flightModel.OriginCode_Extended = this.affectedStations.filter((item: EmergencyLocationModel) => {
+                return item.IATA == this.flightModel.OriginCode;
+            })[0].AirportName;
+        }
+        else {
+            this.flightModel.OriginCode_Extended = this.flightModel.OriginCode;
+        }
         this.flightModel.DestinationCode = (isFlightRelated === true) ?
             this.formFlight.controls['Destination'].value : 'DUMMY_DES';
+        if (this.flightModel.DestinationCode != 'DUMMY_ORG') {
+            this.flightModel.DestinationCode_Extended = this.affectedStations.filter((item: EmergencyLocationModel) => {
+                return item.IATA == this.flightModel.DestinationCode;
+            })[0].AirportName;
+        }
+        else {
+            this.flightModel.DestinationCode_Extended = this.flightModel.DestinationCode;
+        }
         this.flightModel.DepartureDate = (isFlightRelated === true) ?
             new Date(this.formFlight.controls['Scheduleddeparture'].value) : new Date('01/01/2001');
         this.flightModel.ArrivalDate = (isFlightRelated === true) ?
@@ -761,6 +783,9 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     public dateTimeSet(date: DateTimePickerSelectEventArgs, controlName: string): void {
+        let departurearrivalDate: string = this.DateFormat(date.SelectedDate as Date);
+        let utc = (date.SelectedDate as Date).getTime();
+        let localDepartureArrivalDate: string = '';
         if (controlName === 'EmergencyDate') {
             this.form.get('EmergencyDate')
                 .setValue(moment(date.SelectedDate as Date).format('DD-MMM-YYYY hh:mm A'));
@@ -774,19 +799,46 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                 .setValue(moment(date.SelectedDate as Date).utc().format('DD-MMM-YYYY hh:mm A'));
         }
         else if (controlName === 'Scheduleddeparture') {
-            this.formFlight.get('Scheduleddeparture')
-                .setValue(moment(date.SelectedDate as Date).format('DD-MMM-YYYY hh:mm A'));
-            this.formFlight.get('ScheduleddepartureLOC')
-                .setValue(moment(date.SelectedDate as Date).utc().format('DD-MMM-YYYY hh:mm A'));
+            localDepartureArrivalDate = this.DateFormat(new Date(utc + (this.GetUTCOffsetHours(true))));
+            this.formFlight.get('Scheduleddeparture').setValue(departurearrivalDate);
+            this.formFlight.get('ScheduleddepartureLOC').setValue(localDepartureArrivalDate);
+
             this.arrivaldatepicker.updateConfig({
                 minDate: new Date(date.SelectedDate.toLocaleString())
             });
         }
         else if (controlName === 'Scheduledarrival') {
-            this.formFlight.get('Scheduledarrival')
-                .setValue(moment(date.SelectedDate as Date).format('DD-MMM-YYYY hh:mm A'));
-            this.formFlight.get('ScheduledarrivalLOC')
-                .setValue(moment(date.SelectedDate as Date).utc().format('DD-MMM-YYYY hh:mm A'));
+            localDepartureArrivalDate = this.DateFormat(new Date(utc + (this.GetUTCOffsetHours(false))));
+            this.formFlight.get('Scheduledarrival').setValue(departurearrivalDate);
+            this.formFlight.get('ScheduledarrivalLOC').setValue(localDepartureArrivalDate);
         }
     }
+
+    public GetUTCOffsetHours(isOrigin: boolean): number {
+        let originOrDestinationIATA: string = '';
+        let UTC_Offset: string = '';
+        let UTC_OffsetNumber: number = 0.0;
+        let isNegative: boolean = false;
+        if (isOrigin) {
+            originOrDestinationIATA = this.formFlight.get('Origin').value;
+        }
+        else {
+            originOrDestinationIATA = this.formFlight.get('Destination').value;
+        }
+        UTC_Offset = this.affectedStations.find((item: EmergencyLocationModel) =>
+            item.IATA == originOrDestinationIATA
+        ).UTCOffset;
+        return +UTC_Offset;
+    }
+
+
+
+    private DateFormat(date: Date): string {
+        let hours = (date.getHours() + 24 - 2) % 24;
+        let mid = (hours > 12) ? 'PM' : 'AM';
+        const months: string[] = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+        return `${date.getDate()}-${months[date.getMonth()]}-${date.getFullYear()} ${((date.getHours() % 12) < 10) ? ("0" + (date.getHours() % 12)) : (date.getHours() % 12)}:${((date.getMinutes()) < 10) ? ("0" + (date.getMinutes())) : (date.getMinutes())} ${mid}`;
+    }
+
+
 }

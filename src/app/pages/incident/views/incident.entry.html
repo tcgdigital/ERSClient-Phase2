@@ -238,8 +238,14 @@
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
                                 <label for="Origin">Origin<span class="required">*</span></label>
-                                <input id="Origin" class="form-control" [ngClass]="flightClass" type="text" name="Origin" formControlName="Origin" placeholder="Origin"
-                                />
+                                <!-- <input id="Origin" class="form-control" [ngClass]="flightClass" type="text" name="Origin" formControlName="Origin" placeholder="Origin"
+                                /> -->
+                                <select id="Origin" class="form-control" [ngClass]="flightClass" formControlName="Origin" name="Origin">
+                                    <option value=''>Select Origin Station</option>
+                                    <option *ngFor="let affectedStation of affectedStations" [value]="affectedStation.IATA" >
+                                        {{affectedStation.AirportName}}
+                                    </option>
+                                </select>
                                 <small *ngIf="formFlight.controls.Origin.hasError('required')" [hidden]="formFlight.controls.Origin.valid || (formFlight.controls.Origin.pristine && !submittedFlight)"
                                     class="text-danger">Required</small>
                                 <small *ngIf="formFlight.controls.Origin.hasError('maxlength')" [hidden]="formFlight.controls.Origin.valid || (formFlight.controls.Origin.pristine && !submitted)"
@@ -248,8 +254,14 @@
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
                                 <label for="Destination">Destination<span class="required">*</span></label>
-                                <input id="Destination" class="form-control" [ngClass]="flightClass" type="text" name="Destination" formControlName="Destination"
-                                    placeholder="Destination" />
+                                <!-- <input id="Destination" class="form-control" [ngClass]="flightClass" type="text" name="Destination" formControlName="Destination"
+                                    placeholder="Destination" /> -->
+                                <select id="Destination" class="form-control" [ngClass]="flightClass" formControlName="Destination" name="Destination">
+                                    <option value=''>Select Destination Station</option>
+                                    <option *ngFor="let affectedStation of affectedStations" [value]="affectedStation.IATA" >
+                                        {{affectedStation.AirportName}}
+                                    </option>
+                                </select>
                                 <small *ngIf="formFlight.controls.Destination.hasError('required')" [hidden]="formFlight.controls.Destination.valid || (formFlight.controls.Destination.pristine && !submittedFlight)"
                                     class="text-danger">Required</small>
                                 <small *ngIf="formFlight.controls.Destination.hasError('maxlength')" [hidden]="formFlight.controls.Destination.valid || (formFlight.controls.Destination.pristine && !submitted)"
@@ -257,7 +269,7 @@
                             </small>
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="Scheduleddeparture(UTC)">Scheduled Departure (LOC)<span class="required">*</span></label>
+                                <label for="Scheduleddeparture(UTC)">Scheduled Departure (UTC)<span class="required">*</span></label>
                                 <input id="Scheduleddeparture" #departuredatepicker="datetimepicker" readonly class="form-control" [ngClass]="flightClass"
                                     type="text" name="Scheduleddeparture" formControlName="Scheduleddeparture" placeholder="Scheduled Departure"
                                     datetime-picker [options]="datepickerOptionDeparture" (selectHandler)="dateTimeSet($event,'Scheduleddeparture');"
@@ -269,12 +281,12 @@
                         <div class="row">
 
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="ScheduledDeparture(LOCAL)">Scheduled Departure (UTC)<span class="required">*</span></label>
+                                <label for="ScheduledDeparture(LOCAL)">Scheduled Departure (LOCAL)<span class="required">*</span></label>
                                 <input id="ScheduleddepartureLOC" disabled class="form-control" [ngClass]="flightClass" type="text" name="ScheduleddepartureLOC"
                                     formControlName="ScheduleddepartureLOC" placeholder="Scheduled Departure" />
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="Scheduledarrival(UTC)">Scheduled Arrival (LOC)<span class="required">*</span></label>
+                                <label for="Scheduledarrival(UTC)">Scheduled Arrival (UTC)<span class="required">*</span></label>
                                 <input #arrivaldatepicker="datetimepicker" id="Scheduledarrival" readonly class="form-control" [ngClass]="flightClass" type="text"
                                     name="Scheduledarrival" formControlName="Scheduledarrival" placeholder="Scheduled Arrival"
                                     datetime-picker [options]="datepickerOptionArrival" (selectHandler)="dateTimeSet($event,'Scheduledarrival');"
@@ -283,7 +295,7 @@
                                     class="text-danger">Required</small>
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="ScheduledArrival(LOCAL)">Scheduled Arrival (UTC)<span class="required">*</span></label>
+                                <label for="ScheduledArrival(LOCAL)">Scheduled Arrival (LOCAL)<span class="required">*</span></label>
                                 <input id="ScheduledarrivalLOC" disabled class="form-control" [ngClass]="flightClass" type="text" name="ScheduledarrivalLOC"
                                     formControlName="ScheduledarrivalLOC" placeholder="Scheduled Arrival" />
                             </div>
@@ -450,8 +462,7 @@
                             <div class="form-group">
                                 <label for="OtherConfirmationInformation">Other Information</label>
                                 <input id="OtherConfirmationInformationPopup" disabled class="form-control" type="text" name="OtherConfirmationInformationPopup"
-                                    formControlName="OtherConfirmationInformationPopup" disabled placeholder=""
-                                />
+                                    formControlName="OtherConfirmationInformationPopup" disabled placeholder="" />
 
                             </div>
                         </div>
@@ -565,7 +576,7 @@
                                         placeholder="" />
                                 </div>
                                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                    <label for="Scheduleddeparture(UTC)">Scheduled departure (LOC)</label>
+                                    <label for="Scheduleddeparture(UTC)">Scheduled departure (UTC)</label>
                                     <input id="ScheduleddeparturePopup" disabled formControlName="ScheduleddeparturePopup" class="form-control" type="text" name="ScheduleddeparturePopup"
                                         placeholder="" />
                                 </div>
@@ -573,19 +584,19 @@
                             <div class="row">
 
                                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                    <label for="Scheduleddeparture(LOCAL)">Scheduled Departure (UTC)</label>
+                                    <label for="Scheduleddeparture(LOCAL)">Scheduled Departure (LOCAL)</label>
                                     <input id="ScheduleddepartureLOCPopup" disabled class="form-control" [ngClass]="flightClass" type="text" name="ScheduleddepartureLOCPopup"
                                         formControlName="ScheduleddepartureLOCPopup" placeholder="" />
 
                                 </div>
                                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                    <label for="Scheduledarrival(UTC)">Scheduled arrival (LOC)</label>
+                                    <label for="Scheduledarrival(UTC)">Scheduled arrival (UTC)</label>
                                     <input id="ScheduledarrivalPopup" disabled formControlName="ScheduledarrivalPopup" class="form-control" type="text" name="ScheduledarrivalPopup"
                                         placeholder="" />
 
                                 </div>
                                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                    <label for="Scheduledarrival(LOCAL)">Scheduled Arrival (UTC)</label>
+                                    <label for="Scheduledarrival(LOCAL)">Scheduled Arrival (LOCAL)</label>
                                     <input id="ScheduledarrivalLOCPopup" disabled class="form-control" [ngClass]="flightClass" type="text" name="ScheduledarrivalLOCPopup"
                                         formControlName="ScheduledarrivalLOCPopup" placeholder="" />
 
@@ -615,11 +626,11 @@
                         </div>
                     </div>
                     <div class="row">
-                    <div class="col-sm-3">
-                        <div class="fromtop1">
-                            <button class="btn btn-primary" [disabled]="!formPopup.valid " type="submit">Submit</button>
-                            <button class="btn btn-warning" type="button" (click)="hideIncidentView()">Cancel</button>
-                        </div>
+                        <div class="col-sm-3">
+                            <div class="fromtop1">
+                                <button class="btn btn-primary" [disabled]="!formPopup.valid " type="submit">Submit</button>
+                                <button class="btn btn-warning" type="button" (click)="hideIncidentView()">Cancel</button>
+                            </div>
                         </div>
                     </div>
                 </div>

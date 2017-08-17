@@ -327,9 +327,9 @@ export class GlobalConstants {
         { value: 'NonFlight', key: 2 }
     ];
 
-    public static TargetDepartmentTravel: number = 10;
-    public static TargetDepartmentAdmin: number = 13;
-    public static TargetDepartmentCrew: number = 9;
+    public static TargetDepartmentTravel: number = 1138;
+    public static TargetDepartmentAdmin: number = 1138;
+    public static TargetDepartmentCrew: number = 1138;
     public static DemandTypeId: number = 1;
     public static RequiredLocation: string = 'Office';
     public static ScheduleTimeForCallback: number = 75;
