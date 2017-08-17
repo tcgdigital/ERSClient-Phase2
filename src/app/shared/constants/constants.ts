@@ -459,6 +459,20 @@ export class GlobalConstants {
         },
 
         {
+            Type: 'CargoImportNotification',
+            Key: 'ReceiveCargoImportCompletionResponse',
+            Title: 'Cargo Imported',
+            Message: 'Cargo has been imported. Please refer to tab section "Affected People".'
+        },
+
+        {
+            Type: 'CrewImportNotification',
+            Key: 'ReceiveCrewImportCompletionResponse',
+            Title: 'Crew Imported',
+            Message: 'Crew has been imported. Please refer to tab section "Affected People".'
+        },
+
+        {
             Type: 'IncidentBorrowNotification',
             Key: 'ReceiveIncidentBorrowingCompletionResponse',
             Title: 'Incident Borrowed',
@@ -522,7 +536,7 @@ export class GlobalConstants {
             Type: 'CasualtyNotification',
             Key: 'ReceiveCasualtyCountResponse',
             Title: 'Casualty Status',
-            Message: 'Latest casualty status update arrived.  Please refer to dashboard\'s "PDA Casualty Status Block".'
+            Message: 'Additional information has been changed. Please refer to dashboard\'s "PDA Casualty Status Block".'
         },
 
         {

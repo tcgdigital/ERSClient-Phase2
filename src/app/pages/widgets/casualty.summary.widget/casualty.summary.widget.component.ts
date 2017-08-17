@@ -48,15 +48,19 @@ export class CasualtySummaryWidgetComponent implements OnInit {
                 // Populate Uninjured PDA count
                 this.casualtySummery.uninjuredCount = models.some((x: CasualtyExchangeModel) => x.MedicalStatus === 'Uninjured') ?
                     models.find((x: CasualtyExchangeModel) => x.MedicalStatus === 'Uninjured').StatusCount : 0;
+
                 // Populate Injured PDA count
                 this.casualtySummery.injuredCount = models.some((x: CasualtyExchangeModel) => x.MedicalStatus === 'Injured') ?
                     models.find((x: CasualtyExchangeModel) => x.MedicalStatus === 'Injured').StatusCount : 0;
+
                 // Populate Missing PDA count
                 this.casualtySummery.missingCount = models.some((x: CasualtyExchangeModel) => x.MedicalStatus === 'Missing') ?
                     models.find((x: CasualtyExchangeModel) => x.MedicalStatus === 'Missing').StatusCount : 0;
+
                 // Populate Deceased PDA count
                 this.casualtySummery.deceasedCount = models.some((x: CasualtyExchangeModel) => x.MedicalStatus === 'Deceased') ?
                     models.find((x: CasualtyExchangeModel) => x.MedicalStatus === 'Deceased').StatusCount : 0;
+                    
                 // Populate Others PDA count
                 this.casualtySummery.othersCount = models.some((x: CasualtyExchangeModel) => x.MedicalStatus === 'Others') ?
                     models.find((x: CasualtyExchangeModel) => x.MedicalStatus === 'Others').StatusCount : 0;
