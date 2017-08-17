@@ -4,20 +4,22 @@
             <table responsive-table-body>
                 <thead>
                     <tr>
-                        <th>Caller Name</th>
+                        <th>Caller Name A</th>
                         <th>Contact Number</th>
+                        <th>Crew Name</th>
                         <th>Relationship</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr [hidden]="allAssignedCalls.length != 0">
-                        <td colspan="4">No queries to show.</td>
+                        <td colspan="5">No queries to show.</td>
                     </tr>
                     <tr *ngFor="let call of allAssignedCalls">
                         <td data-title="Caller Name">{{call.Caller.FirstName + " "+ call.Caller.LastName}}&nbsp;</td>
-                        <td data-title="PDA Name">{{call.Caller.ContactNumber}}</td>
-                        <td data-title="PDA Age">{{call.Caller.Relationship}}&nbsp;</td>
+                        <td data-title="Crew Number">{{call.Caller.ContactNumber}}</td>
+                        <td data-title="Crew Name">{{getCrewName(call.Enquiries[0].AffectedPersonId)}}</td>
+                        <td data-title="PDA Relation">{{call.Caller.Relationship}}&nbsp;</td>
                         <td data-title="Action"><i class="fa fa-edit fa-2x" (click)="openCallcenter(call.ExternalInputId)"></i>&nbsp;</td>
                     </tr>
                 </tbody>

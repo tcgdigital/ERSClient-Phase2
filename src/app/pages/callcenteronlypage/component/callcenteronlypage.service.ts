@@ -39,7 +39,7 @@ export class CallCenterOnlyPageService extends ServiceBase<ExternalInputModel> i
     public GetPassengerQueryCallsRecievedByIncident(IncidentId: number): Observable<ResponseModel<ExternalInputModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq  ${IncidentId}  and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Passenger' and IsCallRecieved eq true`)
-            .Expand('Caller').Execute();
+            .Expand(`Caller,PDAEnquiry($select=AffectedPersonId)`).Execute();
     }
 
     public GetCrewQueryCallsByIncident(IncidentId: number): Observable<ResponseModel<ExternalInputModel>> {
@@ -51,7 +51,7 @@ export class CallCenterOnlyPageService extends ServiceBase<ExternalInputModel> i
     public GetCrewQueryCallsRecievedByIncident(IncidentId: number): Observable<ResponseModel<ExternalInputModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq  ${IncidentId}  and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Crew' and IsCallRecieved eq true`)
-            .Expand('Caller').Execute();
+            .Expand('Caller,Enquiries($select=AffectedPersonId)').Execute();
     }
 
     public GetCargoQueryByIncident(IncidentId: number, CallId: number): Observable<ResponseModel<ExternalInputModel>> {
@@ -71,7 +71,7 @@ export class CallCenterOnlyPageService extends ServiceBase<ExternalInputModel> i
     public GetCargoQueryCallsRecievedByIncident(IncidentId: number): Observable<ResponseModel<ExternalInputModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq  ${IncidentId} and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Cargo' and IsCallRecieved eq true`)
-            .Expand('Caller')
+            .Expand('Caller,Enquiries($select=AffectedObjectId)')
             .Execute();
     }
 

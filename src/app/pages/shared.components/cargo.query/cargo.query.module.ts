@@ -9,7 +9,6 @@ import { CargoQueryComponent } from './cargo.query.components';
 import { CargoQueryAssignedCallsListComponent, CargoQueryRecievedCallsListComponent } from './components';
 import { CallCentreModule, EnquiryService } from '../call.centre';
 import { CommunicationLogService } from '../communicationlogs';
-
 import { CallCenterOnlyPageModule, CallCenterOnlyPageService } from '../../callcenteronlypage';
 import { DataExchangeService, SharedModule } from '../../../shared';
 import { ModalModule } from 'ngx-bootstrap/modal';

@@ -79,7 +79,10 @@ export class PassangerQueryAssignedCallsListComponent implements OnInit {
         this.callcenterload = false;
         this.callcenteronlypageservice.GetPassengerQueryCallsByIncident(incidentId)
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
+                //debugger; // R
                 this.allAssignedCalls = response.Records;
+                // this.allAssignedCalls[0].PDAEnquiry.FirstName;
+                // this.allAssignedCalls[0].PDAEnquiry.LastName;
             });
     }
 
