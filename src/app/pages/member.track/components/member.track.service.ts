@@ -34,9 +34,11 @@ export class MemberTrackService extends ServiceBase<MemberCurrentEngagementModel
     }
 
     public GetAllHistory(userId: number, departmentId: number, incidentId: number): Observable<ResponseModel<MemberEngagementTrackModel>> {
+        
         return this._membertrackService.Query()
             .Filter(`IncidentId eq ${incidentId} and DepartmentId eq ${departmentId} and UserId eq ${userId}`)
             .Expand('Department($select=DepartmentName)')
             .Execute();
+            
     }
 }
