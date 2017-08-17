@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MdCheckboxModule } from '@angular2-material/checkbox';
-
 import { CargoQueryRouting } from './cargo.query.routing';
 import { CargoQueryComponent } from './cargo.query.components';
 import { CargoQueryAssignedCallsListComponent, CargoQueryRecievedCallsListComponent } from './components';
