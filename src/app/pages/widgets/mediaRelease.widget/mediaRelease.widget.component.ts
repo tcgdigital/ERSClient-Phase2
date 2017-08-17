@@ -42,9 +42,16 @@ export class MediaReleaseWidgetComponent implements OnInit {
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.initiatedDepartmentId;
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/Media/' + this.currentIncidentId + '/';
-        this.getLatestMediaReleases(this.currentIncidentId);
-        this.getAllMediaReleases();
+
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'MediaMessageViewAll')) {
+            this.getAllMediaReleases();
+        }
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'MediaMessage')) {
+            this.getLatestMediaReleases(this.currentIncidentId);
+        }
+
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
         this.globalState.Subscribe('MediaReleasePublished', (model) => this.onMediaReleasePublish(model));
 
         // Signalr Notification
@@ -108,8 +115,24 @@ export class MediaReleaseWidgetComponent implements OnInit {
     private incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/Media/' + this.currentIncidentId + '/';
-        this.getLatestMediaReleases(this.currentIncidentId);
-        this.getAllMediaReleases();
+
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'MediaMessageViewAll')) {
+            this.getAllMediaReleases();
+        }
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'MediaMessage')) {
+            this.getLatestMediaReleases(this.currentIncidentId);
+        }
+    }
+
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
+
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'MediaMessageViewAll')) {
+            this.getAllMediaReleases();
+        }
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'MediaMessage')) {
+            this.getLatestMediaReleases(this.currentIncidentId);
+        }
     }
 
     private onMediaReleasePublish(mediaRelease: MediaModel): void {

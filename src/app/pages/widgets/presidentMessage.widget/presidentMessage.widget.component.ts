@@ -36,10 +36,17 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.initiatedDepartmentId;
-        this.getLatestPresidentsMessages(this.currentIncidentId);
-        this.getAllPresidentsMessages();
+
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'PresidentMessageViewAll')) {
+            this.getAllPresidentsMessages();
+        }
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'PresidentMessage')) {
+            this.getLatestPresidentsMessages(this.currentIncidentId);
+        }
+
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/PresidentMessage/' + this.currentIncidentId + '/';
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
         this.globalState.Subscribe('PresidentMessagePublished', (model) => this.onPresidentMessagePublish(model));
 
         // Signalr Notification
@@ -104,7 +111,23 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
     private incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/PresidentMessage/' + this.currentIncidentId + '/';
-        this.getLatestPresidentsMessages(this.currentIncidentId);
-        this.getAllPresidentsMessages();
+
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'PresidentMessageViewAll')) {
+            this.getAllPresidentsMessages();
+        }
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'PresidentMessage')) {
+            this.getLatestPresidentsMessages(this.currentIncidentId);
+        }
+    }
+
+    private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartmentId = department.Value;
+
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'PresidentMessageViewAll')) {
+            this.getAllPresidentsMessages();
+        }
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'PresidentMessage')) {
+            this.getLatestPresidentsMessages(this.currentIncidentId);
+        }
     }
 }

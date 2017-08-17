@@ -231,7 +231,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.currentDepartmentId = department.Value;
         this.getPagePermission();
         this.isShowViewReadonlyCrisis = UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'ViewReadonlyCrisis');
-
         this.globalState.NotifyDataChanged('departmentChangeFromDashboard', department);
     }
 }
