@@ -14,11 +14,14 @@ import {
 } from '../../../callcenteronlypage/component';
 import { Router, NavigationEnd } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
+import { InvolvePartyModel, AffectedObjectsToView, AffectedObjectsService
+} from '../../../shared.components';
 
 @Component({
     selector: 'cargoquery-assignedcalls',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: '../views/cargo.query.assignedcallslist.view.html'
+    templateUrl: '../views/cargo.query.recievedcallslist.view.html',
+    providers: [AffectedObjectsService]
 })
 export class CargoQueryRecievedCallsListComponent implements OnInit {
     @ViewChild('childModalcallcenter') public childModalcallcenter: ModalDirective;
@@ -29,8 +32,11 @@ export class CargoQueryRecievedCallsListComponent implements OnInit {
     callId: number;
     callcenterload: boolean = false;
     public isArchive: boolean = false;
+    awbs: KeyValue[] = [];
+    affectedObjects: AffectedObjectsToView[];
 
     constructor(private callcenteronlypageservice: CallCenterOnlyPageService,
+        private affectedObjectsService: AffectedObjectsService,
         private _router: Router,
         private globalState: GlobalStateService) {
     }
@@ -45,7 +51,8 @@ export class CargoQueryRecievedCallsListComponent implements OnInit {
             this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
         }
 
-        this.getAllCargoQueryCallsRecieved(this.currentIncidentId);
+        //this.getAllCargoQueryCallsRecieved(this.currentIncidentId);
+        this.getCargo();
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllCargoQueryCallsRecieved(this.currentIncidentId));
 
@@ -87,5 +94,26 @@ export class CargoQueryRecievedCallsListComponent implements OnInit {
         this.callcenterload = false;
         this.childModalcallcenter.hide();
     }
+
+    getCargo(): void {
+        this.affectedObjectsService.GetFilterByIncidentId(this.currentIncidentId)
+            .subscribe((response: ResponseModel<InvolvePartyModel>) => {
+                this.affectedObjects = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
+                for (const affectedObject of this.affectedObjects) {
+                    this.awbs.push(new KeyValue(affectedObject.AWB, affectedObject.AffectedObjectId));
+                }
+
+                this.getAllCargoQueryCallsRecieved(this.currentIncidentId);
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
+    }
+
+    getAWBS(AffectedObjectId): string {
+        let Nm: string = "";
+        Nm = this.awbs.find(x => x.Value == AffectedObjectId).Key;
+        return Nm;
+    }
+
 }
 

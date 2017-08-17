@@ -31,7 +31,7 @@
                                         <th>Member Name </th>
                                         <th>Member's Contact Number</th>
                                         <th>Notification Indicator </th>
-                                        <th>Acknowledgment Indicator</th>
+                                        <!-- <th>Acknowledgment Indicator</th> -->
                                         <th>Volunteer Indicator</th>
                                         <th>Busy</th>
                                         <th>Work Details</th>
@@ -46,7 +46,7 @@
                                         <td data-title="Member Name">{{memberengagement.MemberName}}</td>
                                         <td data-title="Member's Contact Number">{{memberengagement.MemberContactNumber}} </td>
                                         <td data-title="Is Notified"><i class="fa fa-check fa-2x" aria-hidden="true" [hidden]="memberengagement.IsNotyfied == false"></i>&nbsp;</td>
-                                        <td data-title="Is Notification Acknowledged"><i class="fa fa-check fa-2x" aria-hidden="true" [hidden]="memberengagement.IsAcknowledged == false"></i>&nbsp;</td>
+                                        <!-- <td data-title="Is Notification Acknowledged"><i class="fa fa-check fa-2x" aria-hidden="true" [hidden]="memberengagement.IsAcknowledged == false"></i>&nbsp;</td> -->
                                         <td data-title="Is Volunteered"><i class="fa fa-check fa-2x" aria-hidden="true" [hidden]="memberengagement.isVolunteered == false"></i>&nbsp;</td>
                                         <td data-title="Busy"><input *ngIf="isShowAllocationDeallocation | accesibility:currentDepartmentId:'AllocationDeallocationMember'" type="checkbox" [checked]="memberengagement.IsBusy" [attr.data-userid]="memberengagement.UserId"
                                                 data-toggle="toggle" data-id="{{i}}" data-style="ios" data-onstyle="success"
@@ -63,8 +63,7 @@
                             </table>
                         </responsive-table>
 
-                        <div bsModal #childModalHistory="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-                            aria-hidden="true">
+                        <div bsModal #childModalHistory="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -93,7 +92,7 @@
                                                             <td data-title="UndeployedOn">{{work.UnDeployedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
                                                             <td data-title="Work Details">{{work.Remarks}}</td>
                                                             <td data-title="Assigned by">{{work.createdby}}</td>
-                                                            <td data-title="Deaprtment">{{work.Department}}</td>
+                                                            <td data-title="Deaprtment">{{work.Department.DepartmentName}}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
