@@ -194,7 +194,7 @@ export class ChecklistEntryComponent implements OnInit {
                 this.currentDepartmentName = this.activeDepartments.find((x) => {
                     return x.DepartmentId === this.currentDepartmentId;
                 }).DepartmentName;
-                this.form = this.resetCheckListForm();
+                this.resetCheckListForm();
                 this.initiateCheckListModel();
                 this.dataExchange.Subscribe('checklistModelEdited', (model) => this.onCheckListEditSuccess(model));
             }
@@ -271,7 +271,6 @@ export class ChecklistEntryComponent implements OnInit {
     }
 
     formControlDirtyCheck() {
-
         //  this.checkListModelEdit = new ChecklistModel();
         this.checkListModelEdit.CheckListId = this.form.controls['CheckListId'].value;
 
@@ -306,7 +305,6 @@ export class ChecklistEntryComponent implements OnInit {
     getAllActiveOrganizations(): void {
         this.organizationService.GetAllActiveOrganizations()
             .subscribe((response: ResponseModel<OrganizationModel>) => {
-
                 this.activeOrganizations = response.Records;
             }, (error: any) => {
                 //console.log(`Error: ${error}`);
@@ -380,6 +378,7 @@ export class ChecklistEntryComponent implements OnInit {
             else {// EDIT REGION
                 delete this.checkListModel['Active'];
                 delete this.checkListModel['IsSelected'];
+                this.checkListModelEdit.CheckListParentMapper=this.checkListModel.CheckListParentMapper;
                 this.newparents = _.pluck(this.checkListModelEdit.CheckListParentMapper, 'ParentCheckListId');
                 let diff1 = _.difference(this.newparents, this.oldparents);
                 let diff2 = _.difference(this.oldparents, this.newparents);
@@ -391,6 +390,7 @@ export class ChecklistEntryComponent implements OnInit {
                     delete this.checkListModelEdit.Organization;
                     delete this.checkListModelEdit.StationList;
                     delete this.checkListModelEdit.EmergencyType;
+                    delete this.checkListModelEdit.Active;
                     //  this.checkListModelEdit= this.deleteattributeschecklist(this.checkListModelEdit);
                     this.formControlDirtyCheck();
                     this.checkListModelEdit.CheckListParentMapper = _.unique(intermediate);
@@ -400,7 +400,7 @@ export class ChecklistEntryComponent implements OnInit {
                             this.selectedcount = 0;
                             this.toastrService.success('Checklist Edited Successfully.', 'Success', this.toastrConfig);
                             this.initiateCheckListModel();
-                            this.form = this.resetCheckListForm();
+                            this.resetCheckListForm();
                             this.showAddRegion(this.showAdd);
                             this.showAdd = false;
                             this.CheckListParents.forEach(x => x.IsSelected = false);
@@ -431,7 +431,7 @@ export class ChecklistEntryComponent implements OnInit {
                 this.toastrService.success('Checklist Created Successfully.', 'Success', this.toastrConfig);
                 response.Organization = this.checkListModel.Organization;
                 this.dataExchange.Publish('checkListListReload', response);
-                this.form = this.resetCheckListForm();
+                this.resetCheckListForm();
                 this.showAdd = false;
                 this.initiateCheckListModel();
                 this.CheckListParents.forEach(x => x.IsSelected = false);
@@ -444,9 +444,13 @@ export class ChecklistEntryComponent implements OnInit {
         this.showAddRegion(this.showAdd);
         this.showAdd = true;
         this.initiateCheckListModel();
-        this.checkListModel = data;
-        this.checkListModelEdit = data;
-        this.form = this.resetCheckListForm(this.checkListModel);
+        let inter: string = JSON.stringify(data);
+        this.checkListModel = JSON.parse(inter);
+        //this.checkListModel = data;
+        inter = JSON.stringify(data);
+        this.checkListModelEdit = JSON.parse(inter);
+        //this.checkListModelEdit = data;
+        this.resetCheckListForm(this.checkListModel);
         if (data.CheckListParentMapper.length > 0) {
             this.parentChecklists = [];
             data.CheckListParentMapper.forEach(y => {
@@ -478,6 +482,7 @@ export class ChecklistEntryComponent implements OnInit {
 
     showAddRegion(value): void {
         if (!value) {
+            this.resetCheckListForm();
             this.showAddText = "CLICK TO COLLAPSE";
         }
         else {
@@ -520,9 +525,8 @@ export class ChecklistEntryComponent implements OnInit {
         }
     }
 
-    private resetCheckListForm(checkList?: ChecklistModel): FormGroup {
-
-        return new FormGroup({
+    private resetCheckListForm(checkList?: ChecklistModel): void {
+        this.form= new FormGroup({
             CheckListId: new FormControl(checkList ? checkList.CheckListId : 0),
             CheckListDetails: new FormControl(checkList ? checkList.CheckListDetails : '', [Validators.required]),
             ParentDepartmentId: new FormControl(''),
