@@ -49,7 +49,7 @@ export class MediaReleaseWidgetComponent implements OnInit {
 
         // Signalr Notification
         this.globalState.Subscribe('ReceiveMediaMessageResponse', (model: MediaReleaseWidgetModel) => {
-            this.getLatestMediaReleases(model.IncidentId);
+            this.getLatestMediaReleases(this.currentIncidentId);
         });
     }
 
@@ -58,7 +58,7 @@ export class MediaReleaseWidgetComponent implements OnInit {
         this.mediaReleaseWidgetService
             .GetAllMediaReleaseByIncident(incidentId)
             .flatMap((x) => x)
-            .take(2)
+            .take(3)
             .subscribe((x: MediaReleaseWidgetModel) => {
                 data.push(x);
             }, (error: any) => {

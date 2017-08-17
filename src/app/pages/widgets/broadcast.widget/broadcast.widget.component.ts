@@ -64,23 +64,10 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
         // SignalR Notification
         this.globalState.Subscribe('ReceiveBroadcastCreationResponse', (model: BroadCastModel) => {
             this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
-            // this.LatestBroadcastModels.unshift(model);
-            // this.LatestBroadcastModels.splice(-1, 1);
-
-            // this.LatestBroadcasts = Observable.of(this.LatestBroadcastModels
-            //     .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn, '')));
         });
 
         this.globalState.Subscribe('ReceiveBroadcastModificationResponse', (model: BroadCastModel) => {
             this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
-            // const index: number = this.LatestBroadcastModels
-            //     .findIndex((x) => x.BroadcastId === model.BroadcastId);
-            // if (index >= 0) {
-            //     this.LatestBroadcastModels.splice(index, 1, model);
-
-            //     this.LatestBroadcasts = Observable.of(this.LatestBroadcastModels
-            //         .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn, '')));
-            // }
         });
     }
 
@@ -88,7 +75,8 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
         this.LatestBroadcastModels = new Array<BroadcastWidgetModel>();
         this.broadcastWidgetService
             .GetLatestBroadcastsByIncidentAndDepartment(departmentId, incidentId)
-            .flatMap((x) => x).take(2)
+            .flatMap((x) => x)
+            .take(3)
             .subscribe((x) => {
                 this.LatestBroadcastModels.push(x);
             }, (error: any) => {

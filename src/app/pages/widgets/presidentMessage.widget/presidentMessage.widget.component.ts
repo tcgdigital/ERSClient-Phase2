@@ -44,7 +44,7 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
 
         // Signalr Notification
         this.globalState.Subscribe('ReceivePresidentsMessageResponse', (model: PresidentMessageWidgetModel) =>
-            this.getLatestPresidentsMessages(model.IncidentId));
+            this.getLatestPresidentsMessages(this.currentIncidentId));
     }
 
     public ngOnDestroy(): void {
@@ -57,7 +57,7 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
         this.presidentMessagewidgetService
             .GetAllPresidentMessageByIncident(incidentId)
             .flatMap((x) => x)
-            .take(2)
+            .take(3)
             .subscribe((x) => {
                 data.push(x);
             }, (error: any) => {

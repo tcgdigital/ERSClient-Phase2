@@ -130,9 +130,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
             });
 
         if (rootTab) {
-             const $self: JQuery = jQuery(this.elementRef.nativeElement);
-            $self.find('.error').hide();
-            $self.find('.tab-root-container').show();
+            const $self: JQuery = jQuery(this.elementRef.nativeElement);
+            $self.find('#tab-container').show();
+            $self.find('#error-container').hide();
             const accessibleTabs: string[] = GlobalConstants.PagePermissionMatrix
                 .filter((x: PagesPermissionMatrixModel) => {
                     return x.ParentPageId === rootTab.PageId &&
@@ -148,8 +148,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         else {
             this.tablinks = [];
             const $self: JQuery = jQuery(this.elementRef.nativeElement);
-            $self.find('.error').show();
-            $self.find('.tab-root-container').hide();
+            $self.find('#tab-container').hide();
+            $self.find('#error-container').show();
         }
         // this.tablinks = TAB_LINKS;
     }
