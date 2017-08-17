@@ -26,7 +26,7 @@ export class CustomDropdownComponent implements AfterContentInit, OnChanges, OnI
     private $options: JQuery;
     private value: KeyValue;
     private index: number = -1;
-    private showdropdown: boolean = false;
+    public showdropdown: boolean = false;
 
     /**
      * Creates an instance of CustomDropdownComponent.
@@ -42,15 +42,33 @@ export class CustomDropdownComponent implements AfterContentInit, OnChanges, OnI
         // Add 'implements OnInit' to the class.
         this._onRouteChange = this._router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
-                if (((event.url.indexOf('archivedashboard') > -1) && (this.placeholder.indexOf('Event') > -1)) || ((event.url.indexOf('landing') > -1) && (this.placeholder.indexOf('Event') > -1))) {
-
+                if (((event.url.indexOf('archivedashboard') > -1) &&
+                    (this.placeholder.indexOf('Event') > -1))) {
                     this.showdropdown = true;
                 }
                 else {
-                    this.showdropdown = false;
+                    if ((event.url.indexOf('landing') > -1) &&
+                        (this.placeholder.indexOf('Event') > -1)) {
+                        this.showdropdown = true;
+                    }
+                    else if ((event.url.indexOf('landing') > -1) &&
+                        (this.placeholder.indexOf('Department') > -1)) {
+                        this.showdropdown = true;
+                    }
+                    else {
+                        this.showdropdown = false;
+                    }
                 }
             }
         });
+
+        if((this._router.url.indexOf('landing') > -1) &&
+            (this.placeholder.indexOf('Event') > -1)){
+            this.showdropdown = true;
+        }
+        else{
+            this.showdropdown = false;
+        }
     }
 
     public ngAfterContentInit(): void {

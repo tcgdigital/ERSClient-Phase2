@@ -393,7 +393,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
 
     showDemandDetails(id: string) {
-
         const idNum: number = +(id.split('!')[0]);
         this.demandService.GetByDemandId(idNum)
             .subscribe((response: ResponseModel<DemandModel>) => {
@@ -421,7 +420,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.form.controls['AffectedPersonId'].reset({ value: this.demandModel.AffectedPersonId, disabled: true });
                 this.form.controls['AffectedObjectId'].reset({ value: this.demandModel.AffectedObjectId, disabled: true });
                 this.form.controls['DemandTypeId'].reset({ value: this.demandModel.DemandTypeId, disabled: true });
-
+                this.form.controls['RequestedBy'].reset({ value: this.demandModel.RequestedBy, disabled: true });
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -578,6 +577,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         }
         if (this.form.controls['RequestedBy'].touched) {
             this.caller.FirstName = this.form.controls['RequestedBy'].value;
+            this.demandModelEdit.RequestedBy = this.form.controls['RequestedBy'].value;
         }
         if (this.form.controls['RequesterType'].touched) {
             this.demandModelEdit.RequesterType = this.form.controls['RequesterType'].value;
@@ -675,6 +675,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.demandModel.ScheduleTime = timediffMin.toString();
                 this.demandModel.DemandTypeId = +this.demandModel.DemandTypeId;
                 this.demandModel.TargetDepartmentId = +this.demandModel.TargetDepartmentId;
+                this.demandModel.RequestedBy = this.form.controls['RequestedBy'].value;
                 this.demandModel.Caller.FirstName = this.form.controls['RequestedBy'].value;
                 this.demandModel.Caller.LastName = '';
                 this.demandModel.Caller.ContactNumber = this.form.controls['ContactNumber'].value;
