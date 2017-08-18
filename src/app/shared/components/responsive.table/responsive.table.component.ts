@@ -51,28 +51,31 @@ export class ResponsiveTableComponent implements AfterContentInit, AfterViewInit
         const $table: JQuery = this.$currentElement.find('table.table');
 
         jQuery('div[bsmodal]').unbind('scroll').scroll(() => {
-            const $wrappers: JQuery = jQuery('div[bsmodal]:visible [class*="table-responsive-vertical"]:visible');
+            const $wrappers: JQuery = jQuery('div[bsmodal]:visible [class*="table-responsive-vertical"]:visible a:visible')
+                .parent('[class*="table-responsive-vertical"]:visible');
 
             jQuery.each($wrappers, (index, $wrapper) => {
                 const wrapperTop = jQuery($wrapper).offset().top;
                 const fullHeight = jQuery($wrapper).height();
-                const windowScroll = jQuery(window).scrollTop();
+                const windowScroll = jQuery($wrapper).closest('div[bsmodal]:visible').scrollTop();
 
                 const $navPrev: JQuery = jQuery($wrapper).find('a.scroll-nav.prev');
                 const $navNext: JQuery = jQuery($wrapper).find('a.scroll-nav.next');
+
                 if ((windowScroll > (wrapperTop + 100)) && (windowScroll < (fullHeight + (wrapperTop - 150)))) {
-                    $navPrev.css({'top': ((windowScroll - wrapperTop) + 100) + 'px', 'z-index': 999});
-                    $navNext.css({'top': ((windowScroll - wrapperTop) + 100) + 'px', 'z-index': 999});
+                    $navPrev.css({'top': (windowScroll) + 'px', 'z-index': 99});
+                    $navNext.css({'top': (windowScroll) + 'px', 'z-index': 99});
                 }
                 else {
-                    $navPrev.css('top', '50px');
-                    $navNext.css('top', '50px');
+                    $navPrev.css('top', wrapperTop + 'px');
+                    $navNext.css('top', wrapperTop + 'px');
                 }
             });
         });
 
         jQuery(window).unbind('scroll').scroll(() => {
-            const $wrappers: JQuery = jQuery('[class*="table-responsive-vertical"]:visible');
+            const $wrappers: JQuery = jQuery('[class*="table-responsive-vertical"]:visible a:visible')
+                .parent('[class*="table-responsive-vertical"]:visible');
 
             jQuery.each($wrappers, (index, $wrapper) => {
                 const wrapperTop = jQuery($wrapper).offset().top;
@@ -81,10 +84,8 @@ export class ResponsiveTableComponent implements AfterContentInit, AfterViewInit
 
                 const $navPrev: JQuery = jQuery($wrapper).find('a.scroll-nav.prev');
                 const $navNext: JQuery = jQuery($wrapper).find('a.scroll-nav.next');
-                if ((windowScroll > (wrapperTop + 100)) && (windowScroll < (fullHeight + (wrapperTop - 150)))) {
-                    // $navPrev.css({'top': ((windowScroll - wrapperTop) + 150) + 'px', 'z-index': 99});
-                    // $navNext.css({'top': ((windowScroll - wrapperTop) + 150) + 'px', 'z-index': 99});
 
+                if ((windowScroll > (wrapperTop + 100)) && (windowScroll < (fullHeight + (wrapperTop - 150)))) {
                     $navPrev.css({'top': (windowScroll) + 'px', 'z-index': 99});
                     $navNext.css({'top': (windowScroll) + 'px', 'z-index': 99});
                 }
@@ -113,16 +114,6 @@ export class ResponsiveTableComponent implements AfterContentInit, AfterViewInit
     public onNextNevClick($event): void {
         this.updateSlider('N');
     }
-
-    // @HostListener('window:scroll', ['$event'])
-    // public onWindowScroll(event): void {
-    //     const $wrapper: JQuery = this.$currentElement
-    //         .find('[class*="table-responsive-vertical"]');
-    // }
-
-    // @HostListener('window:scroll', ['$event'])
-    // public onDocumentScroll($event): void {
-    // }
 
     private updateSlider(position: string): void {
         const $wrapperElm: JQuery = this.$currentElement.find('.table-responsive-vertical');
