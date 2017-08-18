@@ -201,7 +201,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         const TargetDepartmentName = this.departments.some((x) => x.DepartmentId === demandForAnswer.TargetDepartmentId) ?
             this.departments.find((x) => x.DepartmentId === demandForAnswer.TargetDepartmentId).DepartmentName : undefined;
         const date = new Date();
-        debugger;
         if (flag) {
             
             answer = `<p>${demand.DemandStatusDescription} <strong>Date :</strong>  ${moment(date).format('DD-MMM-YYYY h:mm A')} `;
