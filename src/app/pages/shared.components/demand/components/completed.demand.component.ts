@@ -13,6 +13,7 @@ import { DemandRemarkLogService } from './demand.remarklogs.service';
 import { DemandTrailService } from './demandtrail.service';
 import { DemandTrailModel } from './demand.trail.model';
 import { DepartmentService } from '../../../masterdata/department/components';
+import * as moment from 'moment/moment';
 import {
     ResponseModel, DataExchangeService, KeyValue,
     GlobalConstants, GlobalStateService, UtilityService, AuthModel
@@ -174,7 +175,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         if (!flag) {
             rej = "Rejected and status changed to: ";
         }
-        let answer = '<div><p>' + rej + demand.DemandStatusDescription + '   <strong>Date :</strong>  ' + date.toLocaleString() + '  </p><div>';
+        let answer = `<div><p>` + rej + demand.DemandStatusDescription + ` <strong>Date :</strong>  ${moment(date).format('DD-MMM-YYYY h:mm A')}  </p><div>`;
         this.demandTrail.Answers = answer;
         this.demandTrails.push(this.demandTrail);
         return this.demandTrails;

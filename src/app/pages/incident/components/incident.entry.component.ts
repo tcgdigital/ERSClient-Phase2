@@ -699,7 +699,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         }
         this.flightModel.DestinationCode = (isFlightRelated === true) ?
             this.formFlight.controls['Destination'].value : 'DUMMY_DES';
-        if (this.flightModel.DestinationCode != 'DUMMY_ORG') {
+        if (this.flightModel.DestinationCode != 'DUMMY_DES') {
             this.flightModel.DestinationCode_Extended = this.affectedStations.filter((item: EmergencyLocationModel) => {
                 return item.IATA == this.flightModel.DestinationCode;
             })[0].AirportName;

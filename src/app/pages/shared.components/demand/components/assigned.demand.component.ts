@@ -12,6 +12,7 @@ import { DemandTrailService } from './demandtrail.service';
 import { DemandTrailModel } from './demand.trail.model';
 import { DemandRemarkLogService } from './demand.remarklogs.service';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
+import * as moment from 'moment/moment';
 import {
     ResponseModel, DataExchangeService, KeyValue,
     GlobalConstants, GlobalStateService, UtilityService, AuthModel
@@ -207,7 +208,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.demandTrail.CreatedOn = demand.CreatedOn;
 
         const date = new Date();
-        let answer = `<div><p>Demand ${this.demandTrail.DemandStatusDescription} <strong>Date :</strong>  ${date.toLocaleString()} </p><div>`;
+        let answer = `<div><p>Demand ${this.demandTrail.DemandStatusDescription} <strong>Date :</strong>  ${moment(date).format('DD-MMM-YYYY h:mm A')} </p><div>`;
         if (!flag && (OriginalDemand != null)) {
             this.demandTrail.IncidentId = OriginalDemand.IncidentId;
             this.demandTrail.DemandTypeId = OriginalDemand.DemandTypeId;
@@ -220,7 +221,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
             this.demandTrail.ScheduledClose = null;
             this.demandTrail.IsRejected = false;
             this.demandTrail.RejectedDate = null;
-            answer = `<div><p> Demand Edited By ${this.currentDepartmentName}  <strong>Date :</strong> ${date}  </p><div>`;
+            answer = `<div><p> Demand Edited By ${this.currentDepartmentName}  <strong>Date :</strong> ${moment(date).format('DD-MMM-YYYY h:mm A')}  </p><div>`;
 
             if (OriginalDemand.ScheduleTime) {
                 const minutesInt = parseInt(OriginalDemand.ScheduleTime);
