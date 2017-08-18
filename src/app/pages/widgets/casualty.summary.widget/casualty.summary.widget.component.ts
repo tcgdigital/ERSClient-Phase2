@@ -18,6 +18,7 @@ export class CasualtySummaryWidgetComponent implements OnInit {
     @Input('initiatedDepartmentId') initiatedDepartmentId: number;
     @Input('currentIncidentId') incidentId: number;
 
+    public currentDepartmentId: number;
     public casualtySummery: CasualtySummeryModel;
     public isShow: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
@@ -38,6 +39,7 @@ export class CasualtySummaryWidgetComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        this.currentDepartmentId = this.initiatedDepartmentId;
         this.getCausaltyStatusSummery(this.incidentId);
         this.globalState.Subscribe('AffectedPersonStatusChanged', (model) => this.affectedPeopleStatusChanged());
 
@@ -76,6 +78,7 @@ export class CasualtySummaryWidgetComponent implements OnInit {
     affectedPeopleStatusChanged(): void {
         this.getCausaltyStatusSummery(this.incidentId);
     }
+
     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
         if (changes['incidentId'] !== undefined && (changes['incidentId'].currentValue !==
             changes['incidentId'].previousValue) &&

@@ -51,28 +51,51 @@ export class EmergencyClosureComponent implements OnInit {
 	public isShowPage: boolean = true;
 	public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
 
-
+	/**
+	 * Creates an instance of EmergencyClosureComponent.
+	 * @param {DepartmentClosureService} departmentClosureService 
+	 * @param {IncidentService} incidentService 
+	 * @param {DepartmentService} departmentService 
+	 * @param {EmergencyTypeDepartmentService} emergencyTypeDepartmentService 
+	 * @param {NotifyPeopleService} notifyService 
+	 * @param {ActionableService} actionableService 
+	 * @param {DemandService} demandService 
+	 * @param {GlobalStateService} globalState 
+	 * @param {ToastrService} toastrService 
+	 * @param {ToastrConfig} toastrConfig 
+	 * @param {EmergencyClosureService} emergencyClosureService 
+	 * @param {UserPermissionService} userPermissionService 
+	 * @param {AuthenticationService} authService 
+	 * @param {Router} router 
+	 * @memberof EmergencyClosureComponent
+	 */
 	constructor(private departmentClosureService: DepartmentClosureService,
 		private incidentService: IncidentService,
-		private departmentService: DepartmentService, private emergencyTypeDepartmentService: EmergencyTypeDepartmentService,
-		private notifyService: NotifyPeopleService, private actionableService: ActionableService,
-		private demandService: DemandService, private globalState: GlobalStateService, private toastrService: ToastrService,
-		private toastrConfig: ToastrConfig, private emergencyClosureService: EmergencyClosureService,
-		private userPermissionService: UserPermissionService, private authService: AuthenticationService, private router: Router) {
+		private departmentService: DepartmentService,
+		private emergencyTypeDepartmentService: EmergencyTypeDepartmentService,
+		private notifyService: NotifyPeopleService,
+		private actionableService: ActionableService,
+		private demandService: DemandService,
+		private globalState: GlobalStateService,
+		private toastrService: ToastrService,
+		private toastrConfig: ToastrConfig,
+		private emergencyClosureService: EmergencyClosureService,
+		private userPermissionService: UserPermissionService,
+		private authService: AuthenticationService,
+		private router: Router) {
 		this.incident.deleteAttributes();
-
 	}
 
 	ngOnInit(): void {
-
 		this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
 		this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-		this.GetIncident(this.currentIncident);
+		
+		if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'CloseEmergency'))
+			this.GetIncident(this.currentIncident);
+
 		this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
 		this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
 		this.credential = UtilityService.getCredentialDetails();
-
-
 	}
 
 	incidentChangeHandler(incident: KeyValue): void {
@@ -85,13 +108,14 @@ export class EmergencyClosureComponent implements OnInit {
 		this.initialNotificationSend = [];
 		this.notificationSeperatelySend = [];
 		this.GetIncident(this.currentIncident);
-
 	}
-
 
 	private departmentChangeHandler(department: KeyValue): void {
 		this.currentDepartmentId = department.Value;
+		if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'CloseEmergency'))
+			this.GetIncident(this.currentIncident);
 	}
+
 	ngOnDestroy(): void {
 		this.globalState.Unsubscribe('incidentChange');
 		//this.globalState.Unsubscribe('departmentChange');
@@ -103,11 +127,7 @@ export class EmergencyClosureComponent implements OnInit {
 				this.incident = response;
 				this.getAllDepartmentsToNotify();
 			});
-
-
-
 	}
-
 
 	getAllDepartmentsToNotify(): void {
 		let allActiveDepartments: Observable<DepartmentModel[]>

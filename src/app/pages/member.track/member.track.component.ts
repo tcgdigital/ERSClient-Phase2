@@ -65,10 +65,14 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
 
     ngOnInit() {
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
         this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
+
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
+
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'MemberTracking'))
+            this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
+
         this.credential = UtilityService.getCredentialDetails();
         this.createdBy = +this.credential.UserId;
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/MemberEngagementReport/' + this.currentIncidentId;
@@ -223,13 +227,15 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
 
     departmentChangeHandler(department: KeyValue): void {
         this.currentDepartmentId = department.Value;
-        this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'MemberTracking'))
+            this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
     }
 
     incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/MemberEngagementReport/' + this.currentIncidentId;
-        this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'MemberTracking'))
+            this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
     }
 
     getMembarCurrentEngagementList(departmentId, incidentId): void {
