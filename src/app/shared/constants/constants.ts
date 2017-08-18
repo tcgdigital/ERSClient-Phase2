@@ -62,10 +62,10 @@ export enum StorageType {
 export class GlobalConstants {
     // public static EXTERNAL_URL: string = 'http://202.54.73.219/';
     // public static EXTERNAL_URL: string = 'http://172.20.23.110:99/';
-    //  public statkic EXTERNAL_URL: string = 'http://localhost:5001/';
+     public static EXTERNAL_URL: string = 'http://localhost:5001/';
     //public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
 
-    public static EXTERNAL_URL: string = 'http://cmgtest.pal.com.ph:8080/';
+    // public static EXTERNAL_URL: string = 'http://cmgtest.pal.com.ph:8080/';
 
     public static NOTIFICATION_URL: string = `${GlobalConstants.EXTERNAL_URL}Notification/Hubs`;
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
@@ -329,9 +329,9 @@ export class GlobalConstants {
         { value: 'NonFlight', key: 2 }
     ];
 
-    public static TargetDepartmentTravel: number = 10;
-    public static TargetDepartmentAdmin: number = 13;
-    public static TargetDepartmentCrew: number = 9;
+    public static TargetDepartmentTravel: number = 1138;
+    public static TargetDepartmentAdmin: number = 1138;
+    public static TargetDepartmentCrew: number = 1138;
     public static DemandTypeId: number = 1;
     public static RequiredLocation: string = 'Office';
     public static ScheduleTimeForCallback: number = 75;

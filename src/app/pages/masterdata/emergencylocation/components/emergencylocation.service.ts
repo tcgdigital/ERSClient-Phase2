@@ -38,7 +38,7 @@ export class EmergencyLocationService extends ServiceBase<EmergencyLocationModel
 
     GetAllActiveEmergencyLocations(): Observable<ResponseModel<EmergencyLocationModel>> {
         return this._dataService.Query()
-            .Select('EmergencyLocationId', 'City', 'IATA','AirportName','Country', 'CreatedBy', 'CreatedOn')
+            .Select('EmergencyLocationId', 'City', 'IATA','AirportName','Country','TimeZone','UTCOffset', 'CreatedBy', 'CreatedOn')
             .Filter("ActiveFlag eq 'Active'")
             .OrderBy("CreatedOn desc")
             .Execute();

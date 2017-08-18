@@ -57,12 +57,16 @@ export class NotifyPeopleComponent implements OnInit {
     ngOnInit(): any {
         this.treeExpanded = false;
         this.resetAdditionalForm();
-        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
         this.appendedTemplate = new AppendedTemplateModel();
+
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
+
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.PopulateNotifyDepartmentUsers(this.currentDepartmentId, this.currentIncidentId);
+
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'NotifyPeople'))
+            this.PopulateNotifyDepartmentUsers(this.currentDepartmentId, this.currentIncidentId);
     }
 
     public ExpandCollapseAll(): void {
@@ -116,7 +120,7 @@ export class NotifyPeopleComponent implements OnInit {
                 this.childModalNoificationMessage.show();
             });
         }
-        else{
+        else {
             this.toastrService.error('Select atleast one user before click notify.', 'Notify User', this.toastrConfig);
         }
 
@@ -148,9 +152,11 @@ export class NotifyPeopleComponent implements OnInit {
             AdditionalData: new FormControl('')
         });
     }
+    
     private departmentChangeHandler(department: KeyValue): void {
         this.currentDepartmentId = department.Value;
-        this.PopulateNotifyDepartmentUsers(this.currentDepartmentId, this.currentIncidentId);
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'NotifyPeople'))
+            this.PopulateNotifyDepartmentUsers(this.currentDepartmentId, this.currentIncidentId);
     }
 
     private incidentChangeHandler(incident: KeyValue): void {

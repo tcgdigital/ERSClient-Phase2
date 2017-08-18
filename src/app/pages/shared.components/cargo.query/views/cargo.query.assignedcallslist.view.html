@@ -12,7 +12,7 @@
                 </thead>
                 <tbody>
                     <tr [hidden]="allAssignedCalls.length != 0">
-                        <td colspan="8">No queries to show.</td>
+                        <td colspan="4">No queries to show.</td>
                     </tr>
                     <tr *ngFor="let call of allAssignedCalls">
                         <td data-title="Caller Name">{{call.Caller.FirstName + " "+ call.Caller.LastName}}&nbsp;</td>

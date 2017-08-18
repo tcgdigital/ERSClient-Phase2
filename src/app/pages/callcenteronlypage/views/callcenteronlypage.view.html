@@ -1,6 +1,17 @@
-<span class="validationAlert" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'CallCenter')">
-    <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
-</span>
+<div class="row" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'CallCenter')">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>Call Centre</strong>
+            </div>
+            <div class="card-block">
+                <span class="validationAlert">
+                    <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div *ngIf="isShowPage | accesibility:currentDepartmentId:'CallCenter'" class="card card-without-top-border noBorder">
     <div class="card-header">
@@ -9,6 +20,18 @@
     <div class="card-block">
         <form [formGroup]="generalform">
             <div class="row">
+                <div class="form-group col-lg-2 col-sm-6 col-md-4">
+                    <label for="EnquiryType">Enquiry Type<span class="required">*</span></label>
+                    <select id="EnquiryType" class="form-control" formControlName="EnquiryType" name="EnquiryType" (change)="enquiryChanged()">
+                                    <option value='' >Select Enquiry Type</option>
+                                    <option *ngFor="let enquiry of enquirytypes" [value]="enquiry.value" >
+                                        {{enquiry.text}}
+                                    </option>
+                            </select>
+                    <small *ngIf="!generalform.controls.EnquiryType.valid && isSubmitted" class="text-danger">
+                            Required.
+                            </small>
+                </div>
                 <div class="form-group col-lg-2 col-sm-6 col-md-4">
                     <label for="CallerFirstName">Caller First Name<span class="required">*</span></label>
                     <input id="CallerFirstName" class="form-control" type="text" name="CallerFirstName" formControlName="CallerFirstName" placeholder="Enter Caller First Name"
@@ -48,18 +71,6 @@
                     <!--<small *ngIf="!generalform.controls.Relationship.valid && isSubmitted" class="text-danger">
                             Required.
                             </small>-->
-                </div>
-                <div class="form-group col-lg-2 col-sm-6 col-md-4">
-                    <label for="EnquiryType">Enquiry Type<span class="required">*</span></label>
-                    <select id="EnquiryType" class="form-control" formControlName="EnquiryType" name="EnquiryType" (change)="enquiryChanged()">
-                                    <option value='' >Select Enquiry Type</option>
-                                    <option *ngFor="let enquiry of enquirytypes" [value]="enquiry.value" >
-                                        {{enquiry.text}}
-                                    </option>
-                            </select>
-                    <small *ngIf="!generalform.controls.EnquiryType.valid && isSubmitted" class="text-danger">
-                            Required.
-                            </small>
                 </div>
             </div>
 
