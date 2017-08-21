@@ -164,6 +164,9 @@ export class DepartmentEntryComponent implements OnInit {
                 if (this.departmentModel.ContactNo) {
                     this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString().replace(/^\D+/g, '');
                 }
+                if(this.departmentModel.DepartmentSpoc.toString()=='null'){
+                    this.departmentModel.DepartmentSpoc=null;
+                }
                 this.departmentService.Update(this.departmentModel, this.departmentModel.DepartmentId)
                     .subscribe((response: DepartmentModel) => {
                         this.toastrService.success(`Department updated Successfully.  ${GlobalConstants.departmentAndFunctionalityReloginMessage}`, 'Success', this.toastrConfig);

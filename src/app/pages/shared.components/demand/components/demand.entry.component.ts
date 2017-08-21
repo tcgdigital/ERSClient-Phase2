@@ -357,12 +357,12 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.demandService.GetByDemandId(idNum)
             .subscribe((response: ResponseModel<DemandModel>) => {
 
-                this.freshDemand = false;
+                this.freshDemand = true;
                 this.demandModel = response.Records[0];
                 this.isrejected = this.demandModel.IsRejected;
                 // if (this.demandModel.DemandStatusDescription.indexOf('New Request by') > -1) {
                 if ((this.demandModel.ApprovedBy == null && this.demandModel.IsCompleted === false) || this.demandModel.IsRejected === true) {
-                    this.freshDemand = true;
+                    this.freshDemand = false;
                 }
                 this.setModelFormGroup(response.Records[0], false, (x) => x.DemandId, (x) => x.DemandTypeId,
                     (x) => x.Priority, (x) => x.DemandDesc, (x) => x.RequesterType,
@@ -718,6 +718,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             else {
                 this.formControlDirtyCheck();
                 let resolutionTimeChanged = false;
+                this.resolutionTime = new Date(this.form.controls['ScheduleTime'].value);
                 if (this.resolutionTime) {
                     this.demandService.GetByDemandId(this.demandModelEdit.DemandId)
                         .subscribe((response: ResponseModel<DemandModel>) => {
