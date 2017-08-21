@@ -141,6 +141,34 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 .map((x) => x.PageCode);
             if (accessibleTabs.length > 0) {
                 this.tablinks = GlobalConstants.DashboardTabLinks.filter((x: ITabLinkInterface) => accessibleTabs.some((y) => y === x.id));
+                if (this.tablinks) {
+                    this.tablinks.forEach((item: ITabLinkInterface) => {
+                        const parent:PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
+                        .find((itemPagePermission:PagesPermissionMatrixModel)=>{
+                            return (itemPagePermission.PageCode==item.id &&
+                                 itemPagePermission.DepartmentId === this.currentDepartmentId);
+                        });
+                        if (item.subtab) {
+                            item.subtab.forEach((itemSubTab: ITabLinkInterface, index: number) => {
+                                const subPageModel: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
+                                    .find((x: PagesPermissionMatrixModel) => {
+                                        return (x.PageCode == itemSubTab.id && x.ParentPageId==parent.PageId &&
+                                            x.DepartmentId === this.currentDepartmentId);
+                                    });
+                                if (subPageModel==undefined) {
+                                    itemSubTab.selected=false;
+                                    //item.subtab.splice(index,1);
+                                    //item.subtab
+                                }
+                                else{
+                                    itemSubTab.selected=true;
+                                }
+                            });
+                        }
+
+                    });
+                }
+
                 UtilityService.SelectFirstTab(this.tablinks, this.router);
 
             }
