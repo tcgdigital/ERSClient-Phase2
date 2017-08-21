@@ -20,6 +20,11 @@
 
     <!-- base url -->
     <script>
+        if (!window.location.origin || window.location.origin == undefined) {
+            window.location.origin = window.location.protocol + "//" 
+                + window.location.hostname 
+                + (window.location.port ? ':' + window.location.port : '');
+        }
         window.CKEDITOR_BASEPATH = window.location.origin + '/assets/scripts/ckeditor/';
         history.pushState(null, null, 'index');
         window.addEventListener('popstate', function (event) {

@@ -133,7 +133,8 @@ export class DepartmentEntryComponent implements OnInit {
                     .subscribe((response: DepartmentModel) => {
                         this.toastrService.success(`Department Saved Successfully. ${GlobalConstants.departmentAndFunctionalityReloginMessage}`, 'Success', this.toastrConfig);
                         this.dataExchange.Publish('departmentSavedOrEdited', response);
-                        this.setDepartmentForm();
+                        this.resetDepartmentForm();
+                        this.mergeResponses();
                         this.showAddRegion(this.showAdd);
                         this.showAdd = false;
                         this.submitted = false;
@@ -171,7 +172,8 @@ export class DepartmentEntryComponent implements OnInit {
                     .subscribe((response: DepartmentModel) => {
                         this.toastrService.success(`Department updated Successfully.  ${GlobalConstants.departmentAndFunctionalityReloginMessage}`, 'Success', this.toastrConfig);
                         this.dataExchange.Publish('departmentSavedOrEdited', response);
-                        this.setDepartmentForm();
+                        this.resetDepartmentForm();
+                        this.mergeResponses();
                         this.showAddRegion(this.showAdd);
                         this.showAdd = false;
                         this.submitted = false;
@@ -208,6 +210,7 @@ export class DepartmentEntryComponent implements OnInit {
 
     cancel(): void {
         this.showAddRegion(this.showAdd);
+        this.resetDepartmentForm();
         this.showAdd = false;
         this.submitted = false;
     }
@@ -229,4 +232,5 @@ export class DepartmentEntryComponent implements OnInit {
             ParentDepartmentId: new FormControl((department && department.ParentDepartmentId) ? department.ParentDepartmentId : ''),
         });
     }
+
 }
