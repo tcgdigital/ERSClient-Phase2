@@ -113,13 +113,13 @@ export class TemplateListComponent implements OnInit, OnDestroy {
             .map(x => new NameValue<string>(x.value, `|CMS.DataModel.Enum.TemplateMediaType'${x.value}'|`));
 
         this.searchConfigs = [
-            new SearchDropdown({
-                Name: 'TemplateMediaId',
-                Description: 'Template Media',
-                PlaceHolder: 'Select Template Media',
-                Value: '',
-                ListData: Observable.of(mediatype)
-            }),
+            // new SearchDropdown({
+            //     Name: 'TemplateMediaId',
+            //     Description: 'Template Media',
+            //     PlaceHolder: 'Select Template Media',
+            //     Value: '',
+            //     ListData: Observable.of(mediatype)
+            // }),
             new SearchDropdown({
                 Name: 'EmergencySituationId',
                 Description: 'Situation',
