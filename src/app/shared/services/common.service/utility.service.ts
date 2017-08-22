@@ -462,9 +462,11 @@ export class UtilityService {
             // firstTab.selected = true;
             if (firstTab.subtab != undefined) {
                 if (firstTab.subtab.length > 0) {
-
-                    firstTab.subtab[0].selected = true;
-                    router.navigate([`${firstTab.url}${firstTab.subtab[0].url.replace('./', '/')}`]);
+                    const selectedTab:ITabLinkInterface = firstTab.subtab.find((item:ITabLinkInterface)=>{
+                        return item.selected==true;
+                    });
+                    //firstTab.subtab[0].selected = true;
+                    router.navigate([`${firstTab.url}${selectedTab.url.replace('./', '/')}`]);
                 }
                 else {
                     router.navigate([`${firstTab.url}`]);
