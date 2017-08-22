@@ -6,8 +6,8 @@
         <select name="timeZone" id="timeZone" (change)="OnZoneChange($event)" [hidden]="currentTimezone==null">
             <option value='0'>Select time zone</option>
             <option *ngFor="let timeZone of timeZones" [value]="timeZone.decimaloffset" 
-                [selected]="currentTimezone != null && timeZone.abbr === currentTimezone.abbr"
-                attr.data-location="{{timeZone.city + ', ' + timeZone.country}}">
+                [selected]="currentTimezone != null && timeZone != null && timeZone.abbr === currentTimezone.abbr"
+                attr.data-location="{{timeZone!=null || timeZone!=undefined? timeZone.city + ', ' + timeZone.country: ''}}">
                 {{timeZone.zonename}}
             </option>
         </select>

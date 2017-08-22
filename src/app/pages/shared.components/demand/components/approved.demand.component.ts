@@ -3,6 +3,7 @@ import {
     OnInit, AfterContentInit, ViewChild
 } from '@angular/core';
 import { Observable, Subscription } from 'rxjs/Rx';
+import * as moment from 'moment/moment';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router, NavigationEnd } from '@angular/router';
 import { InvolvePartyModel } from '../../involveparties';
@@ -209,7 +210,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.demandTrail.CreatedOn = demand.CreatedOn;
 
         const date = new Date();
-        const answer = `<div><p> ${demand.DemandStatusDescription}   <strong>Date :</strong>  ${date.toLocaleString()}  </p><div>`;
+        const answer = `<div><p> ${demand.DemandStatusDescription}   <strong>Date :</strong>  ${moment(date).format('DD-MMM-YYYY h:mm A')}  </p><div>`;
 
         this.demandTrail.Answers = answer;
         this.demandTrails.push(this.demandTrail);

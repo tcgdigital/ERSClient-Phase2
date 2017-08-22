@@ -356,13 +356,12 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         const idNum: number = +(id.split('!')[0]);
         this.demandService.GetByDemandId(idNum)
             .subscribe((response: ResponseModel<DemandModel>) => {
-
-                this.freshDemand = true;
+                this.freshDemand = false;
                 this.demandModel = response.Records[0];
                 this.isrejected = this.demandModel.IsRejected;
                 // if (this.demandModel.DemandStatusDescription.indexOf('New Request by') > -1) {
                 if ((this.demandModel.ApprovedBy == null && this.demandModel.IsCompleted === false) || this.demandModel.IsRejected === true) {
-                    this.freshDemand = false;
+                    this.freshDemand = true;
                 }
                 this.setModelFormGroup(response.Records[0], false, (x) => x.DemandId, (x) => x.DemandTypeId,
                     (x) => x.Priority, (x) => x.DemandDesc, (x) => x.RequesterType,

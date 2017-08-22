@@ -458,25 +458,39 @@ export class UtilityService {
                 item.selected = (index === 0);
                 // item.selected=false;
             });
-            const firstTab = tabs[0];
+            const count: number = 0;
+            const firstTab = tabs[count];
             // firstTab.selected = true;
-            if (firstTab.subtab != undefined) {
-                if (firstTab.subtab.length > 0) {
-                    const selectedTab:ITabLinkInterface = firstTab.subtab.find((item:ITabLinkInterface)=>{
-                        return item.selected==true;
-                    });
-                    //firstTab.subtab[0].selected = true;
-                    router.navigate([`${firstTab.url}${selectedTab.url.replace('./', '/')}`]);
-                }
-                else {
-                    router.navigate([`${firstTab.url}`]);
-                }
-            }
-            else {
-                router.navigate([`${firstTab.url}`]);
-            }
+            this.SelectDefaultFirstTab(tabs, firstTab, router, count);
+
         }
     }
+
+    public static SelectDefaultFirstTab(tabs: ITabLinkInterface[], tab: ITabLinkInterface, router: Router, count: number): void {
+        if (tab.subtab != undefined) {
+            if (tab.subtab.length > 0) {
+                const selectedTab: ITabLinkInterface = tab.subtab.find((item: ITabLinkInterface) => {
+                    return item.selected == true;
+                });
+                //firstTab.subtab[0].selected = true;
+                if (selectedTab) {
+                    router.navigate([`${tab.url}${selectedTab.url.replace('./', '/')}`]);
+                }
+                else {
+                    this.SelectDefaultFirstTab(tabs, tabs[count++], router, count);
+                }
+
+            }
+            else {
+                router.navigate([`${tab.url}`]);
+            }
+        }
+        else {
+            router.navigate([`${tab.url}`]);
+        }
+    }
+
+
     public static GetDashboardSubTabs(parentTabName: string): ITabLinkInterface[] {
         const departmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         let subTabs: ITabLinkInterface[];
