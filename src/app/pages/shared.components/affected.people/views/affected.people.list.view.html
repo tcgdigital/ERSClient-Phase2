@@ -52,7 +52,7 @@
                     <i class="fa fa-edit fa-2x" (click)="openAffectedPersonDetail(affectedperson)"></i>
                 </td>
                 <td data-title="Active">
-                    <md-checkbox *ngIf="isShowIsNOKInvolved | accesibility:currentDepartmentId:'ShowIsNOKInformed'" class="Marght" id="IsNokInformed" name="IsNokInformed" [ngModel]="affectedperson.IsNokInformed" (change)="IsNokInformed($event,affectedperson.AffectedPersonId,affectedperson.CrewName || affectedperson.PassengerName)"
+                    <md-checkbox [disabled] ="isArchive" *ngIf="isShowIsNOKInvolved | accesibility:currentDepartmentId:'ShowIsNOKInformed'" class="Marght" id="IsNokInformed" name="IsNokInformed" [ngModel]="affectedperson.IsNokInformed" (change)="IsNokInformed($event,affectedperson.AffectedPersonId,affectedperson.CrewName || affectedperson.PassengerName)"
                         aria-label="ActiveFlag">
                     </md-checkbox>
                 </td>

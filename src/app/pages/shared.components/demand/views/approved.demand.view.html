@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-sm-12 pull-right">
 <div class="addbuttonHolder">
-<button class="btn btn-primary" type="button" (click)="submit()" *ngIf="(!isArchive && isShowApprovedDemand | accesibility:currentDepartmentId:'UpdateApprovedDemand')">Submit</button>
+<button class="btn btn-primary" type="button" (click)="submit()" [hidden] ="isArchive" *ngIf="(isShowApprovedDemand | accesibility:currentDepartmentId:'UpdateApprovedDemand')">Submit</button>
 </div>
     </div>
 </div>
@@ -26,7 +26,7 @@
         </thead>
         <tbody>
             <tr [hidden]="demandsForApproval.length != 0">
-                <td colspan="9">No Demand is pending for Approval.</td>
+                <td colspan="13">No Demand is pending for Approval.</td>
             </tr>
             <tr *ngFor="let demand of demandsForApproval">
                 <td data-title="Demand Type">{{demand.DemandTypeName}}&nbsp;</td>
@@ -46,12 +46,12 @@
                         </li>
                     </ul>
                 </td>
-                <td data-title="Approve">
-                    <md-checkbox class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsApproved" [disabled]="demand.IsRejected" aria-label="Done">
+                <td data-title="Approve" >
+                    <md-checkbox *ngIf ="!isArchive" class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsApproved" [disabled]="demand.IsRejected" aria-label="Done">
                     </md-checkbox>
                 </td>
                 <td data-title="Reject">
-                    <md-checkbox class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsRejected" [disabled]="demand.IsApproved" aria-label="Done">
+                    <md-checkbox *ngIf ="!isArchive" class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsRejected" [disabled]="demand.IsApproved" aria-label="Done">
                     </md-checkbox>
                 </td>
             </tr>
@@ -79,7 +79,7 @@
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-12 form-group">
                         <div class="buttonholderRemark">
-                            <button class="btn btn-primary" type="button" (click)="saveRemark(Remarks)" *ngIf="!isArchive">Submit</button>
+                            <button class="btn btn-primary" type="button" (click)="saveRemark(Remarks)" [hidden] ="isArchive">Submit</button>
                         </div>
                     </div>
                 </div>
