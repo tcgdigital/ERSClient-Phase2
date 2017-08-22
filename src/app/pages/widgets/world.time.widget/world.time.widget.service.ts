@@ -60,7 +60,15 @@ export class WorldTimeWidgetService {
             .Filter(`ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
             .Execute()
             .map((location: ResponseModel<EmergencyLocationModel>) => {
-                return this.GetTimeZones(location.Records);
+                let timeZones: ITimeZone[] = this.GetTimeZones(location.Records);
+                if (timeZones.length > 0) {
+                    return timeZones.sort((a: ITimeZone, b: ITimeZone) => {
+                        return ((+a.decimaloffset < +b.decimaloffset) ? -1 
+                            : ((+a.decimaloffset > +b.decimaloffset) ? 1 : 0));
+                    });
+                } else {
+                    return new Array<ITimeZone>();
+                }
             });
     }
 
