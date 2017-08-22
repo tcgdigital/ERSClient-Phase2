@@ -543,7 +543,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             demand.ScheduleTime = scheduleTime.toString();
             demand.RequesterType = "Others";
             demand.DemandTrails = this.createDemandTrail(demand);
-            demand.CommunicationLogs = this.SetCommunicationLog("Demand", GlobalConstants.InteractionDetailsTypeDemand, demand.AffectedPersonId);
+            demand.CommunicationLogs = this.SetCommunicationLog(type + " Demand", GlobalConstants.InteractionDetailsTypeDemand, demand.AffectedPersonId);
             demand.CommunicationLogs[0].Queries = demand.CommunicationLogs[0].Queries + ' Demand Code: ' + demand.DemandCode;
 
             this.demands.push(demand);
