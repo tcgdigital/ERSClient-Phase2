@@ -84,9 +84,9 @@ export class CallCenterOnlyPageComponent implements OnInit {
         this.pdacrewform = new FormGroup({
             LastName: new FormControl('', [Validators.required]),
             FirstName: new FormControl('', [Validators.required]),
-            Age: new FormControl('', [Validators.required, NumberValidator.validate]),
+            Age: new FormControl(''), // new FormControl('', [Validators.required, NumberValidator.validate]),
             Nationality: new FormControl('', [Validators.required]),
-            PermanentAddress: new FormControl('', [Validators.required]),
+            PermanentAddress: new FormControl(''), // new FormControl('', [Validators.required]),
             FlightNumber: new FormControl('', [Validators.required]),
             DepartedFrom: new FormControl('', [Validators.required]),
             TravellingTo: new FormControl('', [Validators.required]),

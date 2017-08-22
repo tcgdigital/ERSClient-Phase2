@@ -103,19 +103,19 @@
                 </div>
 
                 <div class="form-group col-lg-2 col-sm-6 col-md-4">
-                    <label for="Age">Age<span class="required">*</span></label>
+                    <label for="Age">Age<!-- <span class="required">*</span> --></label>
                     <input id="Age" class="form-control" type="text" name="Age" formControlName="Age" placeholder="Enter Age" />
-                    <small *ngIf="!pdacrewform.controls.Age.valid && isSubmitted" class="text-danger">
+                    <!-- <small *ngIf="!pdacrewform.controls.Age.valid && isSubmitted" class="text-danger">
                             Required or Invalid.
-                            </small>
+                            </small> -->
                 </div>
                 <div class="form-group col-lg-4 col-sm-12 col-md-8">
-                    <label for="PermanentAddress">Permanent Address<span class="required">*</span></label>
+                    <label for="PermanentAddress">Permanent Address<!-- <span class="required">*</span> --></label>
                     <input id="PermanentAddress" class="form-control" type="text" name="PermanentAddress" formControlName="PermanentAddress"
                         placeholder="Enter Permanent Address" />
-                    <small *ngIf="!pdacrewform.controls.PermanentAddress.valid && isSubmitted" class="text-danger">
+                    <!-- <small *ngIf="!pdacrewform.controls.PermanentAddress.valid && isSubmitted" class="text-danger">
                             Required.
-                            </small>
+                            </small> -->
                 </div>
 
             </div>
@@ -147,7 +147,7 @@
                 </div>
                 <div class="form-group col-lg-2 col-sm-6 col-md-4" [hidden]="enquiryType!=1 && enquiryType!=3">
                     <label for="FinalDestination">Final Destination<span class="required">*</span></label>
-                    <input id="FinalDestination" class="form-control" type="text" name="Age" formControlName="FinalDestination" placeholder="Enter Final Destination"
+                    <input id="FinalDestination" class="form-control" type="text" name="FinalDestination" formControlName="FinalDestination" placeholder="Enter Final Destination"
                     />
                     <small *ngIf="!pdacrewform.controls.FinalDestination.valid && isSubmitted" class="text-danger">
                             Required or Invalid.
