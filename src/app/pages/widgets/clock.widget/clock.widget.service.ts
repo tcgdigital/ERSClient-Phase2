@@ -55,6 +55,31 @@ export class ClockWidgetService {
         return true;
     }
 
+    initiateTimerStatic(sub_name: string, initialDate: Date): boolean {
+        if (sub_name === undefined || initialDate === undefined) {
+            return false;
+        }
+        // const o: Observable<TimeCount> = Observable.interval(1000)
+        //     .map((x: number) => {
+                this.timePassed = Math.floor((new Date().getTime() - initialDate.getTime()) / 1000);
+
+                this.counter.Days = Math.floor(this.timePassed / this.days);
+                this.timePassed -= this.counter.Days * this.days;
+
+                this.counter.Hours = Math.floor(this.timePassed / this.hours);
+                this.timePassed -= this.counter.Hours * this.hours;
+
+                this.counter.Minutes = Math.floor(this.timePassed / this.minutes);
+                this.timePassed -= this.counter.Minutes * this.minutes;
+
+                this.counter.Seconds = this.timePassed;
+                //return this.counter;
+           // });
+
+        this.timer[sub_name] = { name: sub_name, observable: Observable.of(this.counter) };
+        return true;
+    }
+
     subscribe(sub_name: string, incidentId: string, callback: (value) => void): string {
         if (!this.timer[sub_name]) {
             return '';

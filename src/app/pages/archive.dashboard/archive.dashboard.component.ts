@@ -22,6 +22,7 @@ export class ArchiveDashboardComponent implements OnInit {
     currentIncident: KeyValue;
     currentDepartment: KeyValue;
     public incidentDate: Date;
+    public isArchive:boolean=true;
     private sub: any;
     public isShowPage: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
