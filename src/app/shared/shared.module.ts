@@ -5,6 +5,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Ng2BootstrapModule } from 'ngx-bootstrap';
 import { NgSelectizeModule } from 'ng-selectize';
+
 import {
     HTTP_INTERCEPTOR_PROVIDER,
     HTTP_INTERCEPTOR_NO_OVERRIDE_PROVIDER
@@ -71,6 +72,7 @@ import {
     FileStoreService,
     LicensingService,
     KeyValueService,
+    IncidentClosureIndicationService
 } from './services';
 
 import {
@@ -122,6 +124,7 @@ const SHARED_SERVICES: any[] = [
     LicensingService,
     KeyValueService,
     ProgressService,
+    IncidentClosureIndicationService,
     ProgressBrowserXhr,
     ENV_PROVIDERS,
     HTTP_INTERCEPTOR_PROVIDER,

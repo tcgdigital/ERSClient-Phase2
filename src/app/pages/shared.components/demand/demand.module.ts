@@ -21,6 +21,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { FileUploadService } from '../../../shared';
 import { FileStoreService } from '../../../shared/services/common.service';
 import { DataExchangeService, SharedModule } from '../../../shared';
+import { CanLoadSubTabs } from "../../../shared/services/common.service/canLoadSubTabs.service";
 
 @NgModule({
     imports: [
@@ -53,7 +54,8 @@ import { DataExchangeService, SharedModule } from '../../../shared';
         DemandTrailService,
         InvolvePartyService,
         FileUploadService,
-        FileStoreService
+        FileStoreService,
+        CanLoadSubTabs
     ]
 })
 export class DemandModule { }

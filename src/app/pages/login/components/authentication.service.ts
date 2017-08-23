@@ -45,8 +45,7 @@ export class AuthenticationService {
     }
 
     public Logout() {
-        UtilityService.RemoveFromSession(GlobalConstants.ACCESS_TOKEN);
-        localStorage.clear();
+        sessionStorage.clear();
         this._isLoggedIn = false;
     }
 
