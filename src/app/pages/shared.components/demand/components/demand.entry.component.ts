@@ -636,7 +636,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                                 }
                                 else {
                                     this.toastrService.success('Demand successfully updated.', 'Success', this.toastrConfig);
-                                    this.dataExchange.Publish('DemandAddedUpdated', this.demandModelEdit.DemandId);
+                                    const num = UtilityService.UUID();
+                                    this.globalStateProxyOpen.NotifyDataChanged('DemandAddedUpdated', num);
                                     this.initializeForm();
                                     this.demandModel = new DemandModel();
                                     this.showAdd = false;
@@ -646,6 +647,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                                 }
                             });
                     }
+
+                    this.filesToUpload.length = null;
                 });
         }
     }
