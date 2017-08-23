@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Rx';
 import { UserPermissionModel } from "../../masterdata/userpermission/components/userpermission.model";
 import {
     NotifyPeopleModel,
-    NotificationContactsWithTemplateModel,UserDepartmentNotificationMapper
+    NotificationContactsWithTemplateModel, UserDepartmentNotificationMapper
 } from "./notifypeople.model";
 import {
     AppendedTemplateModel,
@@ -26,7 +26,7 @@ import { TemplateModel, TemplateService } from "../../masterdata/template";
 import { IncidentModel, IncidentService } from "../../incident";
 import { DepartmentModel, DepartmentService } from "../../masterdata/department";
 @Injectable()
-export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationMapperModel>  implements INotifyPeopleService{
+export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationMapperModel> implements INotifyPeopleService {
     private _bulkDataService: DataService<NotificationContactsWithTemplateModel>;
     public allDepartmentUserPermission: NotifyPeopleModel[] = [];
     public arrayMatrix: any[];
@@ -67,7 +67,7 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
             });
     }
 
-    
+
 
     public GetAllDepartmentMatrix(departmentId: number, incidentId: number, callback?: ((_: NotifyPeopleModel[]) => void)): void {
         this.userPermissionService.GetAllDepartmentMatrix()
@@ -149,17 +149,17 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
                         notifyModel.DepartmentId = departmentLocal[0].DepartmentId;
                         notifyModel.children = [];
                         userPermissionsLocal.forEach((eachUserPermission: UserPermissionModel, index: number) => {
-                            
+
                             let notifyModelInner: NotifyPeopleModel = new NotifyPeopleModel();
                             count = count + 1;
                             notifyModelInner.id = count;
                             notifyModelInner.text = eachUserPermission.User.Email;
                             notifyModelInner.population = '';
                             notifyModelInner.checked = false;
-                            let filterItems = resultUserdepartmentNotificationMapper.filter((itemFind:UserdepartmentNotificationMapperModel)=>{
-                                return (itemFind.UserId==eachUserPermission.User.UserProfileId && itemFind.DepartmentId==departmentLocal[0].DepartmentId);
+                            let filterItems = resultUserdepartmentNotificationMapper.filter((itemFind: UserdepartmentNotificationMapperModel) => {
+                                return (itemFind.UserId == eachUserPermission.User.UserProfileId && itemFind.DepartmentId == departmentLocal[0].DepartmentId);
                             });
-                            if(filterItems.length>0){
+                            if (filterItems.length > 0) {
                                 notifyModelInner.checked = true;
                             }
                             notifyModelInner.User = eachUserPermission.User;
@@ -204,6 +204,7 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
     public NotifyPeopleCall(checkedIds: number[], departmentId: number,
         incidentId: number, callback?: ((_: TemplateModel) => void)): void {
         this.notifyPeopleModels = [];
+        var currentIncidentModel:IncidentModel=new IncidentModel();
         checkedIds.forEach((itemId: number) => {
             this.FindIdRecursively(this.allDepartmentUserPermission, itemId);
             console.log(this.notifyPeopleModels);
@@ -218,7 +219,10 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
 
         this.incidentService.Get(incidentId)
             .map((incidentResponse: IncidentModel) => {
-                this.currentIncident = incidentResponse;
+                this.currentIncident=new IncidentModel();
+                this.currentIncident.IncidentId = incidentResponse.IncidentId;
+                this.currentIncident.EmergencyName = incidentResponse.EmergencyName;
+                currentIncidentModel = incidentResponse;
             })
             .flatMap((x) => this.departmentService.Get(departmentId))
             .map((departmentResponse: DepartmentModel) => {
@@ -244,8 +248,9 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
                 }
                 description = description.replace('(space)', ' ');
                 description = description.replace('(space)', ' ');
-                description = description.replace('{{EMERGENCY_ID}}', `${this.currentIncident.IncidentId}`);
-                subject = subject.replace('{{EMERGENCY_NAME}}', `${this.currentIncident.EmergencyName}`);
+                description = description.replace('{{EMERGENCY_ID}}', `${currentIncidentModel.IncidentId}`);
+                description = description.replace('{{EMERGENCY_NAME}}', `${currentIncidentModel.EmergencyName}`);
+                subject = subject.replace('{{EMERGENCY_NAME}}', `${currentIncidentModel.EmergencyName}`);
                 template.Description = description;
                 template.Subject = subject;
 
@@ -271,7 +276,7 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
                     notificationContactsWithTemplate.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
                     notificationContactsWithTemplate.UserName = item.User.Name;
                     notificationContactsWithTemplate.SituationId = GlobalConstants.EmergencySituationEnum
-                        .find(x=>x.EmergencySituationId === appendedTemplate.EmergencySituationId).enumtype;
+                        .find(x => x.EmergencySituationId === appendedTemplate.EmergencySituationId).enumtype;
                     notificationContactsWithTemplate.AttachmentSingle = '';
                     notificationContactsWithTemplate.ContactNumber = item.User.MainContact;
                     notificationContactsWithTemplate.AlternetContactNumber = item.User.AlternateContact;

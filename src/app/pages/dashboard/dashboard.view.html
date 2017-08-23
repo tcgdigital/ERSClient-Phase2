@@ -5,7 +5,10 @@
 </div>
 <!-- KPI Section Starts-->
 <div class="row row-fix">
-    <clock-widget [initiationDateTime]="incidentDate" [initiatedDepartmentId]="currentDepartmentId" [currentIncidentId]="currentIncidentId"
+    <clock-widget [initiationDateTime]="incidentDate" 
+    [initiatedDepartmentId]="currentDepartmentId" 
+    [currentIncidentId]="currentIncidentId"
+    [isArchive]="isArchive"
         class="col-12 col-md-4 col-lg-4 col-xl-2 clock-layout widget-layout-fix">
     </clock-widget>
 

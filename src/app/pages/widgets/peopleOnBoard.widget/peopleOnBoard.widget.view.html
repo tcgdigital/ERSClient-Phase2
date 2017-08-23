@@ -57,7 +57,7 @@
                             <table responsive-table-body>
                                 <tbody>
                                     <tr>
-                                        <td data-title="Total Passengers:" width="25%"><strong>Total Passengers:</strong></td>
+                                        <td data-title="" width="25%"><strong>Total Passengers:</strong></td>
                                         <td data-title="">{{peopleOnBoard.totalAffectedPassengerCount | padding: '0': 2}}</td>
                                     </tr>
                                     <!-- <tr>
@@ -65,7 +65,7 @@
                                         <td data-title="">{{peopleOnBoard.enquiredAffectedPassengerCount | padding: '0': 2}}</td>
                                     </tr> -->
                                     <tr>
-                                        <td data-title="Gender Wise Passengers:"><strong>Gender Wise Passengers:</strong></td>
+                                        <td data-title=""><strong>Gender Wise Passengers:</strong></td>
                                         <td data-title="">
                                             <span *ngFor="let gender of peopleOnBoard.totalGenderTypeCount">
                                         {{gender.Key}}: {{gender.Value}}
@@ -73,7 +73,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td data-title="Nationality Wise Passengers:"><strong>Nationality Wise Passengers:</strong></td>
+                                        <td data-title=""><strong>Nationality Wise Passengers:</strong></td>
                                         <td data-title="">
                                             <span *ngFor="let nationality of peopleOnBoard.totalNationalityTypeCount">
                                             <span *ngIf="nationality.Key != '' && nationality.Key != 'null'">{{nationality.Key}}: {{nationality.Value}}</span>
@@ -82,7 +82,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td data-title="Passenger Type:"><strong>Passenger Type:</strong></td>
+                                        <td data-title=""><strong>Passenger Type:</strong></td>
                                         <td data-title="">
                                             <span *ngFor="let paxType of peopleOnBoard.totalPaxTypeCount">
                                         {{paxType.Key}}: {{paxType.Value}}
