@@ -4,9 +4,11 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { UtilityService, GlobalStateService } from '../../../shared/services';
+import { IncidentModel, IncidentService } from '../../incident/components';
 import { ITimeZone, KeyValue } from '../../../shared/models/base.model';
 import { GlobalTimeZone } from '../../../shared/constants/timezone';
 import { WorldTimeWidgetService } from './world.time.widget.service';
+import { ResponseModel } from '../../../shared/models/response.model';
 
 @Component({
     selector: 'world-time-widget',
@@ -26,12 +28,19 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
 
     constructor(private elementRef: ElementRef,
         private worldTimeWidgetService: WorldTimeWidgetService,
+        private incidentService: IncidentService,
         private globalState: GlobalStateService) {
     }
 
     public ngOnInit(): void {
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => {
             this.SetCrisisLocationClock(model.Value);
+        });
+        this.globalState.Subscribe('ReceiveCrisisClosureResponse', (model) => {
+            this.CheckOpnedIncidentIfAny();
+        });
+        this.globalState.Subscribe('incidentCreate', (model: number) => {
+            this.SetCrisisLocationClock(model);
         });
     }
 
@@ -123,16 +132,35 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
             this.timeZones = res[0] as ITimeZone[];
             this.currentTimezone = res[1] as ITimeZone;
 
-            jQuery(this.elementRef.nativeElement)
-                .find('#incident_clock').empty().jClocksGMT(
-                {
-                    title: `${(res[1] as ITimeZone).city}, ${(res[1] as ITimeZone).country}`,
-                    offset: (res[1] as ITimeZone).decimaloffset,
-                    date: true,
-                    dst: true,
-                    dateformat: 'DD-MMM-YYYY',
-                    skin: 3
-                });
+            if (this.currentTimezone != undefined) {
+                jQuery(this.elementRef.nativeElement)
+                    .find('#incident_clock').empty().jClocksGMT(
+                    {
+                        title: `${this.currentTimezone.city}, ${this.currentTimezone.country}`,
+                        offset: this.currentTimezone.decimaloffset,
+                        date: true,
+                        dst: true,
+                        dateformat: 'DD-MMM-YYYY',
+                        skin: 3
+                    });
+            }
+        });
+    }
+
+    private CheckOpnedIncidentIfAny() {
+        const observables: Array<Observable<any>> = new Array<Observable<any>>();
+        observables.push(this.incidentService.IsAnyOpenIncidents());
+        observables.push(this.incidentService.GetOpenIncidents());
+
+        Observable.forkJoin(observables).subscribe((res) => {
+            debugger;
+            const isAnyIncidentOpen: boolean = res[0] as boolean;
+            const openIncidents: Array<IncidentModel> = (res[1] as ResponseModel<IncidentModel>).Records;
+
+            if (isAnyIncidentOpen != undefined && isAnyIncidentOpen == true
+                && openIncidents != undefined && openIncidents.length > 0) {
+                this.SetCrisisLocationClock(openIncidents[0].IncidentId);
+            }
         });
     }
 }

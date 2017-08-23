@@ -22,4 +22,5 @@ export interface IIncidentService extends IServiceInretface<IncidentModel> {
 
     GetFlightInfoFromIncident(incidentId: number): Observable<FlightModel>;
 
+    IsAnyOpenIncidents(): Observable<boolean>;
 }
