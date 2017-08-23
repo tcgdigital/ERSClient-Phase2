@@ -112,6 +112,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     }
 
     public getMyDemands(deptId, incidentId): void {
+
         this.demandService.GetByRequesterDepartment(deptId, incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 console.log(response);
@@ -128,6 +129,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
+            
     }
 
     public setRagStatus(): void {
