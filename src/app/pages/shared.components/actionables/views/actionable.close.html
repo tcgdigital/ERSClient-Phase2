@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="button-align">
-            <button class="btn btn-primary" type="submit" (click)="closedActionableClick(closeActionables)" *ngIf="(!isArchive && isShowUpdateCloseChecklist | accesibility:currentDepartmentId:'UpdateCloseChecklist')">Submit</button>
+            <button class="btn btn-primary" type="submit" (click)="closedActionableClick(closeActionables)" [hidden] ="isArchive" *ngIf="(isShowUpdateCloseChecklist | accesibility:currentDepartmentId:'UpdateCloseChecklist')">Submit</button>
         </div>
     </div>
 </div>
@@ -36,7 +36,7 @@
                     <td data-title="Actual Close Time">{{actionable.ActualClose | date: 'dd-MMM-yyyy hh:mm a'}}</td>
                     <td data-title="Completion Status">
                         <span *ngIf="hasChildChecklist(actionable.ChklistId)==true">{{actionable.CompletionStatus}}</span>
-                        <select id="selectCompletionStatus" class="form-control" *ngIf="hasChildChecklist(actionable.ChklistId)==false" [(ngModel)]="actionable.CompletionStatus"
+                        <select id="selectCompletionStatus" disabled="isArchive" class="form-control" *ngIf="hasChildChecklist(actionable.ChklistId)==false" [(ngModel)]="actionable.CompletionStatus"
                             (change)="IsReopen($event,actionable)">
                             <option value=''>Select Completion Status</option>
                             <option *ngFor="let completionStatusType of completionStatusTypes" [value]="completionStatusType.caption">
