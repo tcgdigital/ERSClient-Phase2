@@ -102,7 +102,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
     }
 
     public ViewAllChecklist(callback?: () => void): void {
-        const deptCheckListsLocal: DeptCheckListModel[] = [];
+        let deptCheckListsLocal: DeptCheckListModel[] = [];
         const data: ActionableModel[] = [];
         const uniqueDepartments: DepartmentModel[] = [];
         this.checklistSummaryWidgetService.GetAllDepartmentChecklists(this.incidentId)
@@ -141,6 +141,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
                     }).length;
                     deptCheckListsLocal.push(depCM);
                 });
+                deptCheckListsLocal = deptCheckListsLocal.sort(function (a, b) { return (a.departmentName.toUpperCase() > b.departmentName.toUpperCase()) ? 1 : ((b.departmentName.toUpperCase() > a.departmentName.toUpperCase()) ? -1 : 0); });
                 this.deptCheckListsAll = Observable.of(deptCheckListsLocal);
                 this.showGraph = false;
                 if (deptCheckListsLocal.length > 0) {
@@ -156,7 +157,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
     }
 
     public ViewSubDeptChecklist(callback?: () => void): void {
-        const deptCheckListsLocal: DeptCheckListModel[] = [];
+        let deptCheckListsLocal: DeptCheckListModel[] = [];
         const data: ActionableModel[] = [];
         const uniqueDepartments: DepartmentModel[] = [];
         this.checklistSummaryWidgetService.GetAllSubDepartmentChecklists(this.incidentId, this.initiatedDepartmentId)
@@ -194,6 +195,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
                     }).length;
                     deptCheckListsLocal.push(depCM);
                 });
+                deptCheckListsLocal = deptCheckListsLocal.sort(function (a, b) { return (a.departmentName.toUpperCase() > b.departmentName.toUpperCase()) ? 1 : ((b.departmentName.toUpperCase() > a.departmentName.toUpperCase()) ? -1 : 0); });
                 this.deptCheckListsSubDept = Observable.of(deptCheckListsLocal);
                 if (callback) {
                     callback();

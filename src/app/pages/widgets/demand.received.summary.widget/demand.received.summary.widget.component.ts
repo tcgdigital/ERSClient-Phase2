@@ -114,6 +114,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
         this.showAllDeptSubPending = false;
         this.demandReceivedSummaryWidgetService.GetAllDepartmentDemandByIncident
             (this.incidentId, (item: DemandReceivedModel[]) => {
+                item = item.sort(function (a, b) { return (a.targetDepartmentName.toUpperCase() > b.targetDepartmentName.toUpperCase()) ? 1 : ((b.targetDepartmentName.toUpperCase() > a.targetDepartmentName.toUpperCase()) ? -1 : 0); });
                 this.allDemandReceivedList = Observable.of(item);
                 this.childModalViewAllDemandReceivedSummary.show();
                 if (item.length > 0)
@@ -133,6 +134,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
         this.showSubDeptSubPending = false;
         this.demandReceivedSummaryWidgetService.GetSubDepartmentDemandByRequesterDepartment
             (this.incidentId, this.initiatedDepartmentId, (item: DemandReceivedModel[]) => {
+                item = item.sort(function (a, b) { return (a.targetDepartmentName.toUpperCase() > b.targetDepartmentName.toUpperCase()) ? 1 : ((b.targetDepartmentName.toUpperCase() > a.targetDepartmentName.toUpperCase()) ? -1 : 0); });
                 this.subDemandReceivedList = Observable.of(item);
                 this.childModalViewAllSubDeptDemandReceivedSummary.show();
             });
