@@ -6,18 +6,16 @@
             </div>
             <div class="card-block">
                 <div class="row tab-root-container no-gutters tab-root-width-fix">
-                    <!--<div class="col-12 widget-layout-fix">
-                        <div class="row tab-root-container no-gutters">-->
-                            <div class="col-12">
-                                <div tab-control [tabLinks]="tablinks" class="tab-control"></div>
-                                <div class="tab-container">
-                                    <router-outlet></router-outlet>
-                                </div>
-                            </div>
-                        <!--</div>
-                    </div>-->
+                    <div class="col-12">
+                        <div tab-control [tabLinks]="tablinks" class="tab-control"></div>
+                        <div class="tab-container">
+                            <router-outlet></router-outlet>
+                        </div>
+                    </div>
                 </div>
-                <div class="error">{{accessibilityErrorMessage}}</div>
+                <span class="error validationAlert">
+                    <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
+                </span>
             </div>
         </div>
     </div>

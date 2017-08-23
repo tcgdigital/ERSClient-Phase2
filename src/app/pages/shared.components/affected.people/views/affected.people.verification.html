@@ -21,7 +21,7 @@
                 <thead>
                     <tr>
                         <th>
-                            <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="allSelectVerify" (change)="selectAllVerify($event)" aria-label="Add">Verify</md-checkbox>
+                            <md-checkbox [disabled] ="isArchive" class="Marght" id="IsAutoApproved" [(ngModel)]="allSelectVerify" (change)="selectAllVerify($event)" aria-label="Add">Verify</md-checkbox>
                         </th>
                         <th>Reference Number</th>
                         <th>PDA Name</th>
@@ -36,7 +36,7 @@
                     </tr>
                     <tr *ngFor="let affectedperson of affectedPeopleForVerification">
                         <td data-title="Verify">
-                            <md-checkbox class="Marght" id="IsVerified" [(ngModel)]="affectedperson.IsVerified" aria-label="Add" (change)="isVerfiedChange()"
+                            <md-checkbox [disabled] ="isArchive" class="Marght" id="IsVerified" [(ngModel)]="affectedperson.IsVerified" aria-label="Add" (change)="isVerfiedChange()"
                                 [disabled]="isArchive">
                             </md-checkbox>
                         </td>

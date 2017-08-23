@@ -170,7 +170,6 @@ export class PageFunctionalityComponent implements OnInit {
     }
 
     checkStatusView(event: any, elm: PagesForDepartmentModel): void {
-
         elm.isOnlyHOD = event.checked;
         if (event.checked == false) {
             elm.OnlyForHod = false;
@@ -183,7 +182,31 @@ export class PageFunctionalityComponent implements OnInit {
         this.checkAllStatusOnlyHOD();
         this.disableChildIfNotParentAllowView(this.pagesForDepartment);
         this.CheckUncheckChildPages(event.checked, elm, this.pagesForDepartment);
+        this.CheckUncheckParentIfAllChildChange(event.checked, elm, this.pagesForDepartment);
+    }
 
+    CheckUncheckParentIfAllChildChange(isChecked: boolean, selectedPage: PagesForDepartmentModel, pagesForDepartment: PagesForDepartmentModel[]):void{
+        const parentPageId:number = selectedPage.ParentPageId;
+        const parentPage:PagesForDepartmentModel = pagesForDepartment.find((item:PagesForDepartmentModel)=>{
+            return item.PageId==parentPageId;
+        });
+
+        const childPages:PagesForDepartmentModel[] = pagesForDepartment.filter((item:PagesForDepartmentModel)=>{
+            return item.ParentPageId==parentPage.PageId;
+        });
+
+        const filterAllowView:PagesForDepartmentModel[] = childPages.filter((item:PagesForDepartmentModel)=>{
+            return item.AllowView==isChecked;
+        });
+        if(filterAllowView.length==childPages.length){
+            parentPage.AllowView=isChecked;
+            if(!isChecked){
+                childPages.map((item:PagesForDepartmentModel)=>{
+                    return item.isDisabled=true;
+                });
+            }
+            this.CheckUncheckParentIfAllChildChange(isChecked,parentPage,pagesForDepartment);
+        }
     }
 
     CheckUncheckChildPages(isChecked: boolean, selectedPage: PagesForDepartmentModel, pagesForDepartment: PagesForDepartmentModel[]): void {

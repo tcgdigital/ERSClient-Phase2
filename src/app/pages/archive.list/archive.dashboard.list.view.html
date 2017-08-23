@@ -1,6 +1,17 @@
-<span class="validationAlert" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'ArchiveListing')">
-    <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
-</span>
+<div class="row" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'ArchiveListing')">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>Closed Event</strong>
+            </div>
+            <div class="card-block">
+                <span class="validationAlert">
+                    <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div *ngIf="isShowPage | accesibility:currentDepartmentId:'ArchiveListing'" class="card">
     <div class="card-header">
@@ -60,229 +71,6 @@
     </div>
 </div>
 
-<!--<div bsModal #childModalViewClosedIncident="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <form [formGroup]="formPopup">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="mod-head"><strong>Incident View</strong></span>
-                    <div *ngIf="IsDrillPopup" class="dilld pull-left">DRILL</div>
-                    <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideClosedIncidentView()"></i>
-
-                </div>
-                <div class="modal-body card">
-                    <div class="card-block">
-                        <div class="row">
-                            <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="EmergencyType">CrisisType:<span class="red">*</span></label>
-                                <select id="EmergencyTypeIdPopup" disabled class="form-control" formControlName="EmergencyTypeIdPopup" name="EmergencyTypeIdPopup">
-                                    <option value="0" >Select Crisis Type</option>
-                                    <option *ngFor="let emergencyType of activeEmergencyTypes" [value]="emergencyType.EmergencyTypeId" >
-                                        {{emergencyType.EmergencyTypeName}}
-                                    </option>
-                            </select>
-                            </div>
-                            <div class="form-group col-lg-2 col-sm-12 col-md-6">
-                                <label for="AffectedStation">Affected Station:<span class="red">*</span></label>
-                                <select id="AffectedStationIdPopup" disabled class="form-control" name="AffectedStationIdPopup" formControlName="AffectedStationIdPopup">
-                                    <option value="0" >Select Affected Station</option>
-                                    <option value="Offset">Offset</option>
-                                    <option *ngFor="let affectedStation of affectedStations" [value]="affectedStation.IATA" >
-                                        {{affectedStation.AirportName}}
-                                    </option>
-                            </select>
-                            </div>
-                            <div *ngIf="isOffSetPopup" class="form-group col-lg-2 col-sm-12 col-md-6">
-                                <label for="OffsiteDetails">Offsite Details:<span class="red">*</span></label>
-                                <input id="OffsiteDetailsPopup" disabled formControlName="OffsiteDetailsPopup" class="form-control" type="text" name="OffsiteDetailsPopup"
-                                    placeholder="Enter Offsite Details" />
-                            </div>
-                            <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="EmergencyDate">Date of Crisis:<span class="red">*</span>(UTC)</label>
-                                <input id="EmergencyDatePopup" disabled formControlName="EmergencyDatePopup" class="form-control" type="text" name="EmergencyDatePopup"
-                                    placeholder="Enter EmergencyDate" />
-                            </div>
-                            <div class="form-group col-lg-2 col-sm-12 col-md-6">
-                                <label for="Severity">Severity:<span class="red">*</span></label>
-                                <select id="SeverityPopup" disabled class="form-control" formControlName="SeverityPopup" name="SeverityPopup">
-                                    <option value="0" >Select Severity</option>
-                                    <option *ngFor="let severity of severities" [value]="severity.Key" >
-                                        {{severity.Key}}
-                                    </option>
-                            </select>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="EmergencyName">Crisis Name:<span class="red">*</span></label>
-                                    <input id="EmergencyNamePopup" disabled formControlName="EmergencyNamePopup" class="form-control" type="text" name="EmergencyNamePopup"
-                                        placeholder="Enter Crisis Name" />
-                                </div>
-                                
-                            </div>
-                            <div class="form-group col-lg-9 col-sm-12 col-md-6">
-                                <label for="Description">Note:<span class="red">*</span></label>
-                                <textarea id="DescriptionPopup" disabled formControlName="DescriptionPopup" class="form-control textarea" type="text" name="DescriptionPopup"
-                                    placeholder="Enter Description"></textarea>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-lg-4 col-sm-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="WhatHappened">What Happened</label>
-                                    <input id="WhatHappenedPopup" class="form-control" type="text" name="WhatHappenedPopup" formControlName="WhatHappenedPopup"
-                                        placeholder="What Happened" />
-                                    
-                                </div>
-                            </div>
-                            <div class="form-group col-lg-4 col-sm-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="WhereHappened">Where Happened</label>
-                                    <input id="WhereHappenedPopup" class="form-control" type="text" name="WhereHappenedPopup" formControlName="WhereHappenedPopup"
-                                        placeholder="Where Happened" />
-                                    
-                                </div>
-                            </div>
-                            <div class="form-group col-lg-4 col-sm-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="OtherConfirmationInformation">Other Confirmation Information</label>
-                                    <input id="OtherConfirmationInformationPopup" class="form-control" type="text" name="OtherConfirmationInformationPopup" formControlName="OtherConfirmationInformationPopup"
-                                        placeholder="Other Confirmation Information" />
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-lg-4 col-sm-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="SourceInformation">Source Information</label>
-                                    <input id="SourceInformationPopup" class="form-control" type="text" name="SourceInformationPopup" formControlName="SourceInformationPopup"
-                                        placeholder="Source Information" />
-                                    
-                                </div>
-                            </div>
-                            <div class="form-group col-lg-4 col-sm-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="ReportedByName">ReportedBy Name</label>
-                                    <input id="ReportedByNamePopup" class="form-control" type="text" name="ReportedByNamePopup" formControlName="ReportedByNamePopup"
-                                        placeholder="ReportedBy Name" />
-                                    
-                                </div>
-                            </div>
-                            <div class="form-group col-lg-4 col-sm-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="ReportedByAddress">ReportedBy Address</label>
-                                    <input id="ReportedByAddressPopup" class="form-control" type="text" name="ReportedByAddressPopup" formControlName="ReportedByAddressPopup"
-                                        placeholder="ReportedBy Address" />
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-lg-4 col-sm-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="ContactOfWitness">Contact Of Witness</label>
-                                    <input id="ContactOfWitnessPopup" class="form-control" type="text" name="ContactOfWitnessPopup" formControlName="ContactOfWitnessPopup"
-                                        placeholder="Contact Of Witness" />
-                                    
-                                </div>
-                            </div>
-                            <div class="form-group col-lg-4 col-sm-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="SenderOfCrisisInformation">Sender Of Crisis Information</label>
-                                    <input id="SenderOfCrisisInformationPopup" class="form-control" type="text" name="SenderOfCrisisInformationPopup" formControlName="SenderOfCrisisInformationPopup"
-                                        placeholder="Sender Of Crisis Information" />
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-lg-4 col-sm-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="OrganizationId">Organization<span class="required">*</span></label>
-                                    <select id="OrganizationIdPopup" class="form-control" formControlName="OrganizationIdPopup" name="OrganizationIdPopup">
-                                    <option value=''>Select Organization</option>
-                                    <option *ngFor="let organization of activeOrganizations" [value]="organization.OrganizationId" >
-                                        {{organization.OrganizationCode}}
-                                    </option>
-                            </select>
-
-                                </div>
-                            </div>
-                            <div class="form-group col-lg-4 col-sm-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="IncidentsToPickForReplication">Incidents To Pick For Replication</label>
-                                    <select id="BorrowedIncidentPopup" class="form-control" formControlName="BorrowedIncidentPopup"
-                                        name="BorrowedIncidentPopup">
-                                    <option value=''>Select Incident To Pick</option>
-                                    <option *ngFor="let incidentToPickForReplication of incidentsToPickForReplication" [value]="incidentToPickForReplication.IncidentId" >
-                                        {{incidentToPickForReplication.EmergencyName}}
-                                    </option>
-                            </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="card" *ngIf="isFlightRelatedPopup">
-                                <div class="card-header ">
-                                    <strong>Flight Information:</strong>
-                                </div>
-                                <div class="card-block">
-                                    <div class="row">
-                                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                            <label for="FlightNumber">Flight Number:<span class="red">*</span></label>
-                                            <input id="FlightNumberPopup" disabled formControlName="FlightNumberPopup" class="form-control" type="text" name="FlightNumberPopup"
-                                                placeholder="FlightNumber" />
-                                        </div>
-                                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                            <label for="Origin">Origin:<span class="red">*</span></label>
-                                            <input id="Origin" disabled formControlName="OriginPopup" class="form-control" type="text" name="OriginPopup" placeholder="Origin"
-                                            />
-                                        </div>
-                                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                            <label for="Destination">Destination:<span class="red">*</span></label>
-                                            <input id="DestinationPopup" disabled formControlName="DestinationPopup" class="form-control" type="text" name="DestinationPopup"
-                                                placeholder="Destination" />
-                                        </div>
-                                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                            <label for="Scheduleddeparture(UTC)">Scheduled departure:<span class="red">*</span></label>
-                                            <input id="ScheduleddeparturePopup" disabled formControlName="ScheduleddeparturePopup" class="form-control" type="text" name="ScheduleddeparturePopup"
-                                                placeholder="Scheduled Departure" />
-                                        </div>
-                                        
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                            <label for="Scheduledarrival(UTC)">Scheduled arrival:<span class="red">*</span></label>
-                                            <input id="ScheduledarrivalPopup" disabled formControlName="ScheduledarrivalPopup" class="form-control" type="text" name="ScheduledarrivalPopup"
-                                                placeholder="Scheduled Arrival" />
-                                        </div>
-                                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                            <label for="FlightTailNumber">FlightTailNumber:<span class="red">*</span></label>
-                                            <input id="FlightTailNumberPopup" disabled formControlName="FlightTailNumberPopup" class="form-control" type="text" name="FlightTailNumberPopup"
-                                                placeholder="Flight Tail Number" />
-                                        </div>
-                                        <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                            <label for="AircraftTypeId">Aircraft Type<span class="required">*</span></label>
-                                            <select id="AircraftTypeIdPopup" class="form-control" formControlName="AircraftTypeIdPopup" name="AircraftTypeIdPopup">
-                                                <option value=''>Select Aircraft Type</option>
-                                                <option *ngFor="let activeAircraftType of activeAircraftTypes" [value]="activeAircraftType.AircraftTypeId" >
-                                                    {{activeAircraftType.AircraftTypeCode}}
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>-->
 <div bsModal #childModalViewClosedIncident="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -292,28 +80,27 @@
                     <span class="mod-head"><strong>Event View</strong></span>
                     <div *ngIf="IsDrillPopup" class="dilld pull-left">DRILL</div>
                     <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideIncidentView()"></i>
-
                 </div>
                 <div class="modal-body card">
                     <div class="row">
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="OrganizationId">Organization</label>
                             <select id="OrganizationIdPopup" disabled class="form-control" formControlName="OrganizationIdPopup" name="OrganizationIdPopup">
-                                        <option value=''>Select Organization</option>
-                                        <option *ngFor="let organization of activeOrganizations" [value]="organization.OrganizationId" >
-                                            {{organization.OrganizationCode}}
-                                        </option>
-                                    </select>
+                                <option value=''>Select Organization</option>
+                                <option *ngFor="let organization of activeOrganizations" [value]="organization.OrganizationId" >
+                                    {{organization.OrganizationCode}}
+                                </option>
+                            </select>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="EmergencyType">Crisis Type</label>
                             <select id="EmergencyTypeIdPopup" disabled class="form-control" formControlName="EmergencyTypeIdPopup" name="EmergencyTypeIdPopup">
-                                    <option value="0" >Select Crisis Type</option>
-                                    <option *ngFor="let emergencyType of activeEmergencyTypes" [value]="emergencyType.EmergencyTypeId" >
-                                        {{emergencyType.EmergencyTypeName}}
-                                    </option>
+                                <option value="0" >Select Crisis Type</option>
+                                <option *ngFor="let emergencyType of activeEmergencyTypes" [value]="emergencyType.EmergencyTypeId" >
+                                    {{emergencyType.EmergencyTypeName}}
+                                </option>
                             </select>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
@@ -352,7 +139,6 @@
                                 <label for="WhatHappend">Event</label>
                                 <input id="WhatHappendPopup" disabled class="form-control" type="text" name="WhatHappendPopup" formControlName="WhatHappendPopup"
                                     placeholder="" />
-
                             </div>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
@@ -360,16 +146,13 @@
                                 <label for="WhereHappend">Location</label>
                                 <input id="WhereHappendPopup" disabled class="form-control" type="text" name="WhereHappendPopup" formControlName="WhereHappendPopup"
                                     placeholder="" />
-
                             </div>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <div class="form-group">
                                 <label for="OtherConfirmationInformation">Other Information</label>
                                 <input id="OtherConfirmationInformationPopup" disabled class="form-control" type="text" name="OtherConfirmationInformationPopup"
-                                    formControlName="OtherConfirmationInformationPopup" placeholder=""
-                                />
-
+                                    formControlName="OtherConfirmationInformationPopup" placeholder="" />
                             </div>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
@@ -381,13 +164,11 @@
                         </div>
                     </div>
                     <div class="row">
-
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <div class="form-group">
                                 <label for="ReportedByName">Reporter</label>
                                 <input id="ReportedByNamePopup" disabled class="form-control" type="text" name="ReportedByNamePopup" formControlName="ReportedByNamePopup"
                                     placeholder="" />
-
                             </div>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
@@ -395,7 +176,6 @@
                                 <label for="ReportedByAddress">Reporter Address</label>
                                 <input id="ReportedByAddressPopup" disabled class="form-control" type="text" name="ReportedByAddressPopup" formControlName="ReportedByAddressPopup"
                                     placeholder="" />
-
                             </div>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
@@ -409,20 +189,18 @@
                             <div class="form-group">
                                 <label for="SenderOfCrisisInformation">Sender Of Crisis Information</label>
                                 <input id="SenderOfCrisisInformationPopup" disabled class="form-control" type="text" name="SenderOfCrisisInformationPopup"
-                                    formControlName="SenderOfCrisisInformationPopup" placeholder=""
-                                />
-
+                                    formControlName="SenderOfCrisisInformationPopup" placeholder="" />
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="ReportedDatePopup">Date Time Reported (LOC)</label>
+                            <label for="ReportedDatePopup">Reported Date Time (Manila)</label>
                             <input id="ReportedDatePopup" disabled formControlName="ReportedDatePopup" class="form-control" type="text" name="ReportedDatePopup"
                                 placeholder="" />
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="ReportedDateLocalPopup">Date Time Reported (UTC)</label>
+                            <label for="ReportedDateLocalPopup">Reported Date Time (UTC)</label>
                             <input id="ReportedDateLocalPopup" disabled formControlName="ReportedDateLocalPopup" class="form-control" type="text" name="ReportedDateLocalPopup"
                                 placeholder="" />
                         </div>
@@ -462,19 +240,19 @@
                                         placeholder="" />
                                 </div>
                                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                    <label for="Scheduleddeparture(UTC)">Scheduled departure (LOC)<span class="red">*</span></label>
+                                    <label for="Scheduleddeparture(UTC)">Scheduled Departure Org (LOC)</label>
                                     <input id="ScheduleddeparturePopup" disabled formControlName="ScheduleddeparturePopup" class="form-control" type="text" name="ScheduleddeparturePopup"
                                         placeholder="" />
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                    <label for="Scheduleddeparture(LOCAL)">Scheduled Departure (UTC)<span class="red">*</span></label>
+                                    <label for="Scheduleddeparture(LOCAL)">Scheduled Departure (UTC)</label>
                                     <input id="ScheduleddepartureLOCPopup" disabled formControlName="ScheduleddepartureLOCPopup" class="form-control" type="text"
                                         name="ScheduleddepartureLOCPopup" placeholder="" />
                                 </div>
                                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                    <label for="Scheduledarrival(UTC)">Scheduled arrival (LOC)<span class="red">*</span></label>
+                                    <label for="Scheduledarrival(UTC)">Scheduled Arrival Dest (LOC)</label>
                                     <input id="ScheduledarrivalPopup" disabled formControlName="ScheduledarrivalPopup" class="form-control" type="text" name="ScheduledarrivalPopup"
                                         placeholder="" />
                                 </div>
@@ -491,18 +269,17 @@
                             </div>
                             <div class="row">
                                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                    <label for="AircraftTypeId">Aircraft Type<span class="required">*</span></label>
+                                    <label for="AircraftTypeId">Aircraft Type</label>
                                     <select id="AircraftTypeIdPopup" disabled class="form-control" formControlName="AircraftTypeIdPopup" name="AircraftTypeIdPopup">
-                                                <option value=''>Select Aircraft Type</option>
-                                                <option *ngFor="let activeAircraftType of activeAircraftTypes" [value]="activeAircraftType.AircraftTypeId" >
-                                                    {{activeAircraftType.AircraftTypeCode}}
-                                                </option>
-                                            </select>
+                                        <option value=''>Select Aircraft Type</option>
+                                        <option *ngFor="let activeAircraftType of activeAircraftTypes" [value]="activeAircraftType.AircraftTypeId" >
+                                            {{activeAircraftType.AircraftTypeCode}}
+                                        </option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </form>

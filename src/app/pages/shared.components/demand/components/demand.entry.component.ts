@@ -201,12 +201,12 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         const TargetDepartmentName = this.departments.some((x) => x.DepartmentId === demandForAnswer.TargetDepartmentId) ?
             this.departments.find((x) => x.DepartmentId === demandForAnswer.TargetDepartmentId).DepartmentName : undefined;
         const date = new Date();
-
         if (flag) {
-            answer = `<p>${demand.DemandStatusDescription} <strong>Date :</strong>  ${date.toLocaleString()} `;
+            
+            answer = `<p>${demand.DemandStatusDescription} <strong>Date :</strong>  ${moment(date).format('DD-MMM-YYYY h:mm A')} `;
         }
         else {
-            answer = `<p>Demand Edited By ${demandTrail.RequesterName} ( ${demandTrail.RequesterDepartmentName} ) <strong>Date :</strong>  ${date.toLocaleString()} `;
+            answer = `<p>Demand Edited By ${demandTrail.RequesterName} ( ${demandTrail.RequesterDepartmentName} ) <strong>Date :</strong>  ${moment(date).format('DD-MMM-YYYY h:mm A')} `;
         }
         if (!flag && (demandForAnswer !== undefined)) {
 
@@ -356,7 +356,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         const idNum: number = +(id.split('!')[0]);
         this.demandService.GetByDemandId(idNum)
             .subscribe((response: ResponseModel<DemandModel>) => {
-
                 this.freshDemand = false;
                 this.demandModel = response.Records[0];
                 this.isrejected = this.demandModel.IsRejected;
@@ -393,7 +392,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
 
     showDemandDetails(id: string) {
-
         const idNum: number = +(id.split('!')[0]);
         this.demandService.GetByDemandId(idNum)
             .subscribe((response: ResponseModel<DemandModel>) => {
@@ -421,7 +419,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.form.controls['AffectedPersonId'].reset({ value: this.demandModel.AffectedPersonId, disabled: true });
                 this.form.controls['AffectedObjectId'].reset({ value: this.demandModel.AffectedObjectId, disabled: true });
                 this.form.controls['DemandTypeId'].reset({ value: this.demandModel.DemandTypeId, disabled: true });
-
+                this.form.controls['RequestedBy'].reset({ value: this.demandModel.RequestedBy, disabled: true });
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -578,6 +576,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         }
         if (this.form.controls['RequestedBy'].touched) {
             this.caller.FirstName = this.form.controls['RequestedBy'].value;
+            this.demandModelEdit.RequestedBy = this.form.controls['RequestedBy'].value;
         }
         if (this.form.controls['RequesterType'].touched) {
             this.demandModelEdit.RequesterType = this.form.controls['RequesterType'].value;
@@ -598,7 +597,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
     uploadFile(resolutionTimeChanged: boolean): void {
-        if (this.filesToUpload.length) {
+        if (this.filesToUpload.length > 0) {
             const baseUrl = GlobalConstants.EXTERNAL_URL;
             const organizationId = +UtilityService.GetFromSession('CurrentOrganizationId'); // To be changed by Dropdown when Demand table will change
             const moduleName = 'Demand';
@@ -607,17 +606,25 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             this.fileUploadService.uploadFiles<string>(baseUrl + './api/fileUpload/UploadFilesModuleWise/' + param,
                 this.filesToUpload, this.date.toString()).subscribe((result: string) => {
                     const fileStore: FileStoreModel = new FileStoreModel();
-                    fileStore.FileStoreID = 0;
+                    if(this.demandModel.FileStores != null){
+                        fileStore.FileStoreID = this.demandModel.FileStores[0].FileStoreID;
+                    }
+                    else
+                    {
+                        fileStore.FileStoreID = 0;
+                    }
                     fileStore.IncidentId = this.currentIncidentId;
                     fileStore.DepartmentId = this.currentDepartmentId;
                     fileStore.OrganizationId = organizationId;
                     fileStore.FilePath = result;
                     fileStore.UploadedFileName = this.filesToUpload[0].name;
+                    
                     if (this.demandModel.DemandId === 0) {
                         fileStore.DemandId = this.demandModel.DemandId;
                     }
                     else {
-                        fileStore.DemandId = this.demandModelEdit.DemandId;
+                        // fileStore.DemandId = this.demandModelEdit.DemandId;
+                        fileStore.DemandId = this.demandModel.DemandId;
                     }
                     fileStore.ModuleName = moduleName;
                     fileStore.CreatedBy = +this.credential.UserId;
@@ -637,7 +644,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                                 }
                                 else {
                                     this.toastrService.success('Demand successfully updated.', 'Success', this.toastrConfig);
-                                    this.dataExchange.Publish('DemandAddedUpdated', this.demandModelEdit.DemandId);
+                                    this.dataExchange.Publish('DemandAddedUpdated', this.demandModel.DemandId);
                                     this.initializeForm();
                                     this.demandModel = new DemandModel();
                                     this.showAdd = false;
@@ -648,6 +655,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                             });
                     }
                 });
+        }
+        else {
         }
     }
 
@@ -675,6 +684,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.demandModel.ScheduleTime = timediffMin.toString();
                 this.demandModel.DemandTypeId = +this.demandModel.DemandTypeId;
                 this.demandModel.TargetDepartmentId = +this.demandModel.TargetDepartmentId;
+                this.demandModel.RequestedBy = this.form.controls['RequestedBy'].value;
                 this.demandModel.Caller.FirstName = this.form.controls['RequestedBy'].value;
                 this.demandModel.Caller.LastName = '';
                 this.demandModel.Caller.ContactNumber = this.form.controls['ContactNumber'].value;
@@ -717,6 +727,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             else {
                 this.formControlDirtyCheck();
                 let resolutionTimeChanged = false;
+                this.resolutionTime = new Date(this.form.controls['ScheduleTime'].value);
                 if (this.resolutionTime) {
                     this.demandService.GetByDemandId(this.demandModelEdit.DemandId)
                         .subscribe((response: ResponseModel<DemandModel>) => {

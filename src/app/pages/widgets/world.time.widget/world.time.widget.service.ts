@@ -60,7 +60,15 @@ export class WorldTimeWidgetService {
             .Filter(`ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
             .Execute()
             .map((location: ResponseModel<EmergencyLocationModel>) => {
-                return this.GetTimeZones(location.Records);
+                let timeZones: ITimeZone[] = this.GetTimeZones(location.Records);
+                if (timeZones.length > 0) {
+                    return timeZones.sort((a: ITimeZone, b: ITimeZone) => {
+                        return ((+a.decimaloffset < +b.decimaloffset) ? -1 
+                            : ((+a.decimaloffset > +b.decimaloffset) ? 1 : 0));
+                    });
+                } else {
+                    return new Array<ITimeZone>();
+                }
             });
     }
 
@@ -84,7 +92,7 @@ export class WorldTimeWidgetService {
                     utcoffset: (x.TimeZone == null || x.TimeZone == '' || !(/\(([^)]+)\)/gi.test(x.TimeZone))) ? '(UTC)' :
                         /\(([^)]+)\)/gi.exec(x.TimeZone)[1],
                     decimaloffset: (x.UTCOffset == null || x.UTCOffset == '') ? '0' :
-                        (+(x.UTCOffset)) > 3600000 ? (+(x.UTCOffset) / 3600000).toString() : '0'
+                        Math.abs(+(x.UTCOffset)) > 3600000 ? (+(x.UTCOffset) / 3600000).toString() : '0'
                 } as ITimeZone;
             } catch (ex) {
                 console.log(ex);

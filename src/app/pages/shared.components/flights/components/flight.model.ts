@@ -16,7 +16,9 @@ export class FlightModel extends BaseModel {
     public FlightNo: string;
     public FlightTaleNumber: string;
     public OriginCode: string;
+    public OriginCode_Extended: string;
     public DestinationCode: string;
+    public DestinationCode_Extended: string;
     public DepartureDate: Date;
     public ArrivalDate: Date;
     public LoadAndTrimInfo?: string;

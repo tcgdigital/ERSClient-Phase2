@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { DemandComponent } from './demand.component';
 import { ApprovedDemandComponent, AssignedDemandComponent, 
     CompletedDemandComponent, MyDemandComponent } from './components';
+import { CanLoadSubTabs } from "../../../shared/services/common.service/canLoadSubTabs.service";
 
 const demandRoutes: Routes = [
     {
@@ -14,7 +15,8 @@ const demandRoutes: Routes = [
                 path: '',
                 // component: AssignedDemandComponent
                 redirectTo: 'assigned', 
-                pathMatch: 'full'
+                pathMatch: 'full',
+                //canLoad:[CanLoadSubTabs]
             },
             {
                 path: 'assigned',

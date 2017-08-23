@@ -91,18 +91,19 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         this.useLink = false;
-        this.getAllActiveEmergencyTypes();
-        this.getAllActiveOrganizations();
-        this.getAllActiveAircraftTypes();
         this.isFlightRelated = false;
         this.disableIsDrillPopup = true;
         this.isOffSetPopup = false;
+
+        this.getAllActiveEmergencyTypes();
+        this.getAllActiveOrganizations();
+        this.getAllActiveAircraftTypes();
         this.resetIncidentViewForm();
         this.GetAllClosedIncidents();
+        
         this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
-		
     }
 
     public IsReopenCheckedChange(event: any, closedCrisis: IncidentModel): void {

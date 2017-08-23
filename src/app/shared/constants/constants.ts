@@ -60,11 +60,9 @@ export enum StorageType {
 }
 
 export class GlobalConstants {
-    // public static EXTERNAL_URL: string = 'http://202.54.73.219/';
-    public static EXTERNAL_URL: string = 'http://172.20.23.110:99/';
-    //  public statkic EXTERNAL_URL: string = 'http://localhost:5001/';
-    //public static EXTERNAL_URL: string = 'http://172.20.23.110:84/';
-
+    // public static EXTERNAL_URL: string = 'http://10.168.33.194:8080/';
+    public static EXTERNAL_URL: string = 'http://localhost:5001/';
+    // public static EXTERNAL_URL: string = 'http://172.20.23.110:99/';
     // public static EXTERNAL_URL: string = 'http://cmgtest.pal.com.ph:8080/';
 
     public static NOTIFICATION_URL: string = `${GlobalConstants.EXTERNAL_URL}Notification/Hubs`;
@@ -538,7 +536,7 @@ export class GlobalConstants {
             Type: 'CasualtyNotification',
             Key: 'ReceiveCasualtyCountResponse',
             Title: 'Casualty Status',
-            Message: 'Latest casualty status update arrived.  Please refer to dashboard\'s "PDA Casualty Status Block".'
+            Message: 'Additional information has been changed. Please refer to dashboard\'s "PDA Casualty Status Block".'
         },
 
         {

@@ -21,7 +21,8 @@ import { PagesPermissionMatrixModel } from './pages/masterdata';
     styleUrls: ['./app.style.scss']
 })
 export class AppComponent implements OnInit {
-    isMenuCollapsed: boolean = false;
+    public isMenuCollapsed: boolean = false;
+    public documentHeight: number;
 
     constructor(private globalState: GlobalStateService,
         private route: ActivatedRoute,
@@ -39,6 +40,12 @@ export class AppComponent implements OnInit {
 
     public ngOnInit(): void {
         console.log('Initial App State');
+        let self = this;
+        this.documentHeight = jQuery(document).height();
+
+        jQuery(window).resize(() => {
+            self.documentHeight = jQuery(document).height();
+        });
         const id = this.route.snapshot.paramMap.get('id');
 
         if (GlobalConstants.PagePermissionMatrix.length === 0) {

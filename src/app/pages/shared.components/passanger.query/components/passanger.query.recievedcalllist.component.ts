@@ -14,11 +14,16 @@ import {
 } from '../../../callcenteronlypage/component';
 import { Router, NavigationEnd } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
+import { InvolvePartyService } from '../../involveparties';
+import { InvolvePartyModel,
+    AffectedPeopleService, AffectedPeopleToView
+} from '../../../shared.components';
 
 @Component({
     selector: 'passengerquery-assignedcalls',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: '../views/passenger.query.assignedcallslist.view.html'
+    templateUrl: '../views/passanger.query.recievedcallslist.view.html',
+    providers: [InvolvePartyService, AffectedPeopleService]
 })
 export class PassangerQueryRecievedCallsListComponent implements OnInit {
     @ViewChild('childModalcallcenter') public childModalcallcenter: ModalDirective;
@@ -30,8 +35,12 @@ export class PassangerQueryRecievedCallsListComponent implements OnInit {
     callId: number;
     callcenterload: boolean = false;
     public isArchive: boolean = false;
+    affectedPeople: AffectedPeopleToView[];
+    passengers: KeyValue[] = [];
 
     constructor(private callcenteronlypageservice: CallCenterOnlyPageService,
+        private involvedPartyService: InvolvePartyService,
+        private affectedPeopleService: AffectedPeopleService,
         private _router: Router,
         private globalState: GlobalStateService) {
     }
@@ -46,7 +55,8 @@ export class PassangerQueryRecievedCallsListComponent implements OnInit {
             this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
         }
 
-        this.getAllPassengerQueryCallsRecieved(this.currentIncidentId);
+        this.getPassengersCrews();
+        // this.getAllPassengerQueryCallsRecieved(this.currentIncidentId);
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllPassengerQueryCallsRecieved(this.currentIncidentId));
 
@@ -93,5 +103,27 @@ export class PassangerQueryRecievedCallsListComponent implements OnInit {
         this.callcenterload = false;
         this.childModalcallcenter.hide();
     }
+
+    getPassengersCrews(): void {
+        this.involvedPartyService.GetFilterByIncidentId(this.currentIncidentId)
+            .subscribe((response: ResponseModel<InvolvePartyModel>) => {
+                this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
+                const passengerModels = this.affectedPeople.filter(x => x.IsCrew === false);
+                for (const affectedPerson of passengerModels) {
+                    this.passengers.push(new KeyValue((affectedPerson.PassengerName || affectedPerson.CrewName), affectedPerson.AffectedPersonId));
+                }
+
+                this.getAllPassengerQueryCallsRecieved(this.currentIncidentId);
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
+    }
+
+    getPDAName(AffectedPersonId): string {
+        let Nm: string = "";
+        Nm = this.passengers.find(x => x.Value == AffectedPersonId).Key;
+        return Nm;
+    }
+
 }
 

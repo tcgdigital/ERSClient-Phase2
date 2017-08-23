@@ -105,7 +105,7 @@
                                                     </a>
                                                 </td>
                                                 <td data-title="Allocated">{{demand.assigned}}</td>
-                                                <td data-title="Completed">
+                                                <td data-title="Closed">
                                                     <a href="javascript:void(0);" (click)="showAllDeptSubCompletedFunc(demand.demandModelList)">
                                                         {{demand.completed}}
                                                     </a>
@@ -129,7 +129,7 @@
                     <div class="col-12">
                         <div class="card" id="showSubDeptSubCompleted" *ngIf="showSubDeptSubCompleted">
                             <div class="card-header">
-                                <strong>Completed Demand</strong>
+                                <strong>Closed Demand</strong>
                                 <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideSubDeptSubCompleted()"></i>
                             </div>
                             <div class="card-block">
@@ -162,7 +162,7 @@
                         </div>
                         <div id="showAllDeptSubCompleted" class="card" *ngIf="showAllDeptSubCompleted">
                             <div class="card-header">
-                                <strong>Completed Demand</strong>
+                                <strong>Closed Demand</strong>
                                 <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideAllDeptSubCompleted()"></i>
                             </div>
                             <div class="card-block">
@@ -244,7 +244,7 @@
                             <tr>
                                 <th>Requester Department</th>
                                 <th>Allocated</th>
-                                <th>Completed</th>
+                                <th>Closed</th>
                                 <th>Pending</th>
                             </tr>
                         </thead>
@@ -255,7 +255,7 @@
                             <tr *ngFor="let demand of allSubDeptDemandRaisedList | async">
                                 <td data-title="Requester Department">{{demand.requesterDepartmentName}}</td>
                                 <td data-title="Allocated">{{demand.assigned}}</td>
-                                <td data-title="Completed"><a href="javascript:void(0)" (click)="showSubDeptSubCompletedFunc(demand.demandModelList)">{{demand.completed}}</a></td>
+                                <td data-title="Closed"><a href="javascript:void(0)" (click)="showSubDeptSubCompletedFunc(demand.demandModelList)">{{demand.completed}}</a></td>
                                 <td data-title="Pending"><a href="javascript:void(0)" (click)="showSubDeptSubPendingFunc(demand.demandModelList)">{{demand.pending}}</a></td>
                             </tr>
                         </tbody>
@@ -263,7 +263,7 @@
                 </responsive-table>
                 <div id="showSubDeptSubCompleted" class="card" *ngIf="showSubDeptSubCompleted">
                     <div class="card-header">
-                        <strong>Completed Demand</strong>
+                        <strong>Closed Demand</strong>
                         <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideSubDeptSubCompleted()"></i>
                     </div>
                     <div class="card-block">

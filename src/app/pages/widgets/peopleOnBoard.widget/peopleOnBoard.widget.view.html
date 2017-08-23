@@ -76,8 +76,8 @@
                                         <td data-title=""><strong>Nationality Wise Passengers:</strong></td>
                                         <td data-title="">
                                             <span *ngFor="let nationality of peopleOnBoard.totalNationalityTypeCount">
-                                            <span *ngIf="nationality.Key!=''">{{nationality.Key}}: {{nationality.Value}}</span>
-                                            <span *ngIf="nationality.Key==''">Not Mentioned: {{nationality.Value}}</span>
+                                            <span *ngIf="nationality.Key != '' && nationality.Key != 'null'">{{nationality.Key}}: {{nationality.Value}}</span>
+                                            <span *ngIf="nationality.Key == '' || nationality.Key == 'null'">Not Mentioned: {{nationality.Value}}</span>
                                             </span>
                                         </td>
                                     </tr>
