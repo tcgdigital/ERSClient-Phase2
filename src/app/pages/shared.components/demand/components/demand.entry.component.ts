@@ -597,7 +597,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
     uploadFile(resolutionTimeChanged: boolean): void {
-        if (this.filesToUpload.length) {
+        if (this.filesToUpload.length > 0) {
             const baseUrl = GlobalConstants.EXTERNAL_URL;
             const organizationId = +UtilityService.GetFromSession('CurrentOrganizationId'); // To be changed by Dropdown when Demand table will change
             const moduleName = 'Demand';
@@ -606,17 +606,25 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             this.fileUploadService.uploadFiles<string>(baseUrl + './api/fileUpload/UploadFilesModuleWise/' + param,
                 this.filesToUpload, this.date.toString()).subscribe((result: string) => {
                     const fileStore: FileStoreModel = new FileStoreModel();
-                    fileStore.FileStoreID = 0;
+                    if(this.demandModel.FileStores != null){
+                        fileStore.FileStoreID = this.demandModel.FileStores[0].FileStoreID;
+                    }
+                    else
+                    {
+                        fileStore.FileStoreID = 0;
+                    }
                     fileStore.IncidentId = this.currentIncidentId;
                     fileStore.DepartmentId = this.currentDepartmentId;
                     fileStore.OrganizationId = organizationId;
                     fileStore.FilePath = result;
                     fileStore.UploadedFileName = this.filesToUpload[0].name;
+                    
                     if (this.demandModel.DemandId === 0) {
                         fileStore.DemandId = this.demandModel.DemandId;
                     }
                     else {
-                        fileStore.DemandId = this.demandModelEdit.DemandId;
+                        // fileStore.DemandId = this.demandModelEdit.DemandId;
+                        fileStore.DemandId = this.demandModel.DemandId;
                     }
                     fileStore.ModuleName = moduleName;
                     fileStore.CreatedBy = +this.credential.UserId;
@@ -650,6 +658,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
                     this.filesToUpload.length = null;
                 });
+        }
+        else {
         }
     }
 

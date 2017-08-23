@@ -15,7 +15,7 @@
         <thead>
             <tr>
                 <th>
-                    <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="allSelectVerify" (change)="selectAllVerify($event)" aria-label="Add">Verify</md-checkbox>
+                    <md-checkbox  [disabled] ="isArchive" class="Marght" id="IsAutoApproved" [(ngModel)]="allSelectVerify" (change)="selectAllVerify($event)" aria-label="Add">Verify</md-checkbox>
                 </th>
                 <th>Reference Number</th>
                 <th>Air Way Bill</th>
