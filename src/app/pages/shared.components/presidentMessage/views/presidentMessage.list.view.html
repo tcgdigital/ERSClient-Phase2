@@ -24,7 +24,7 @@
                 <td data-title="Approved On">{{message.ApprovedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
                 <td data-title="Published On">{{message.PublishedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
                 <td data-title="Edit">
-                   <i class="fa fa-edit fa-2x" (click)="UpdatePresidentMessage(message)"></i>
+                   <i disabled="isArchive" class="fa fa-edit fa-2x" (click)="UpdatePresidentMessage(message)"></i>
                 </td>
                 <td data-title= "Download Report">
                     <a *ngIf="message.PresidentMessageStatus === 'Published'" target="_blank" href="{{downloadPath + message.PresidentsMessageId}}">

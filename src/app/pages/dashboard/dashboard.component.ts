@@ -61,6 +61,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     currentUserId: number;
     isFlightRelatedPopup: boolean = false;
     userId: number;
+    public isArchive:boolean=false;
     severities: KeyValue[] = [];
     isOffSetPopup: boolean = false;
     public IsDrillPopup: boolean;
