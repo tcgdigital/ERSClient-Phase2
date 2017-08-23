@@ -20,20 +20,20 @@ const pageRoutes: Routes = [
         canActivateChild: [AuthGuardService],
         children: [
             { path: '', redirectTo: 'pages/dashboard/people/detail', pathMatch: 'full' },
-            { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule',canActivate:[RouteGuardService] },
+            { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule', canActivate: [RouteGuardService] },
             { path: 'landing', loadChildren: './landing/landing.module#LandingModule' },
             { path: 'archivelist', loadChildren: './archive.list/archive.dashboard.list.module#ArchiveDashboardListModule' },
             { path: 'archivedashboard', loadChildren: './archive.dashboard/archive.dashboard.module#ArchiveDashboardModule' },
             { path: 'masterdata', loadChildren: './masterdata/masterdata.module#MasterDateModule' },
             { path: 'incident', loadChildren: './incident/incident.module#IncidentModule' },
-            { path: 'uploaddata', loadChildren: './masterdata.upload/masterdata.upload.module#MasterDataUploadModule',canActivate:[RouteGuardService]  },
-            { path: 'notifypeople', loadChildren: './notifypeople/notifypeople.module#NotifyPeopleModule',canActivate:[RouteGuardService]  },
-            { path: 'departmentclosure', loadChildren: './department.closure/department.closure.module#DepartmentClosureModule',canActivate:[RouteGuardService]  },
-            { path: 'emergencyclosure', loadChildren: './emergency.closure/emergency.closure.module#EmergencyClosureModule' ,canActivate:[RouteGuardService] },
+            { path: 'uploaddata', loadChildren: './masterdata.upload/masterdata.upload.module#MasterDataUploadModule', canActivate: [RouteGuardService] },
+            { path: 'notifypeople', loadChildren: './notifypeople/notifypeople.module#NotifyPeopleModule', canActivate: [RouteGuardService] },
+            { path: 'departmentclosure', loadChildren: './department.closure/department.closure.module#DepartmentClosureModule', canActivate: [RouteGuardService] },
+            { path: 'emergencyclosure', loadChildren: './emergency.closure/emergency.closure.module#EmergencyClosureModule', canActivate: [RouteGuardService] },
             //{ path: 'notifypeople', loadChildren: './notifypeople/notifypeople.module#NotifyPeopleModule',canActivate:[RouteGuardService]  },
             //{ path: 'archivedashboard', loadChildren: './archive.dashboard/archive.dashboard.module#ArchiveDashboardModule' },
-            { path: 'callcenteronlypage', loadChildren: './callcenteronlypage/callcenteronlypage.module#CallCenterOnlyPageModule',canActivate:[RouteGuardService]  },
-            { path: 'membertrack', loadChildren: './member.track/member.track.module#MemberTrackModule',canActivate:[RouteGuardService]  },
+            { path: 'callcenteronlypage', loadChildren: './callcenteronlypage/callcenteronlypage.module#CallCenterOnlyPageModule', canActivate: [RouteGuardService] },
+            { path: 'membertrack', loadChildren: './member.track/member.track.module#MemberTrackModule', canActivate: [RouteGuardService] },
             { path: 'javascript:alert("Hello");', loadChildren: '' }
         ]
     }

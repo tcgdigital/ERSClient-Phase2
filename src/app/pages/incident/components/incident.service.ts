@@ -52,7 +52,7 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
     GetAllActiveIncidents(): Observable<ResponseModel<IncidentModel>> {
         return this._dataService.Query()
             .Expand(`Organization($select=OrganizationId,OrganizationCode,OrganizationName)`)
-            .Filter("ActiveFlag eq 'Active' and ClosedOn eq null and IncidentId ne 0")
+            .Filter("ActiveFlag eq 'Active' and ClosedBy eq null and ClosedOn eq null and IncidentId ne 0")
             .OrderBy('CreatedOn desc')
             .Execute();
     }
@@ -63,34 +63,15 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
             .Execute();
     }
 
+    IsAnyOpenIncidents(): Observable<boolean> {
+        return this._dataService.Count()
+            .Filter("ClosedBy eq null and ClosedOn eq null and IncidentId ne 0")
+            .Execute().map((x) => x > 0);
+    }
+
     Get(id: string | number): Observable<IncidentModel> {
         return this._dataService.Get(id.toString()).Execute();
     }
-
-    // CreateIncident(incidentModel: IncidentModel, isFlightRelated: boolean, involvedParty?: InvolvePartyModel,
-    //     flight?: FlightModel, affected?: AffectedModel): Observable<IncidentModel> {
-    //     let incident: IncidentModel;
-    //     if (isFlightRelated) {
-    //         involvedParty.Affecteds = [];
-    //         delete affected.Active;
-    //         involvedParty.Affecteds.push(affected);
-    //         involvedParty.Flights = [];
-    //         involvedParty.Flights.push(flight);
-    //         incidentModel.InvolvedParties = [];
-    //         incidentModel.InvolvedParties.push(involvedParty);
-    //         return this._dataService.Post(incidentModel)
-    //             .Execute()
-    //             .map((data: IncidentModel) => {
-    //                 incident = data;
-    //                 involvedParty.IncidentId = incident.IncidentId;
-    //                 return data;
-    //             });
-    //     }
-    //     else {
-    //         return this._dataService.Post(incidentModel)
-    //             .Execute();
-    //     }
-    // }
 
      /**
       * Create Incident for both
