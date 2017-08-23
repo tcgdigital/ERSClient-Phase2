@@ -18,7 +18,7 @@ import {
     GlobalStateService,
     UtilityService, AuthModel, GlobalConstants
 } from '../../shared';
-import * as _ from 'underscore';
+
 import { UserProfileService, UserProfileModel } from '../masterdata/userprofile/components';
 import { UserPermissionService, UserPermissionModel } from '../masterdata/userpermission/components';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -85,31 +85,10 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
         }
     }
 
-    public onChecked(data: MemberCurrentEngagementModelToView, event: any): void {
-        const currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
-        if (data.DepartmentId == currentDepartmentId) {
-
-        }
-        else {
-            this.toastrService.error('Member cannot be disengaged.');
-        }
-
-        //     let obj: MemberCurrentEngagementModel = new MemberCurrentEngagementModel();
-        // const member: MemberCurrentEngagementModelToView = new MemberCurrentEngagementModelToView();
-        // member.DepartmentId = obj.MemberEngagementTrack.DepartmentId;
-        // if (member.DepartmentId.toString() != currentDepartmentId) {
-        //     this.toastrService.error('Member cannot be disengaged');
-        // }
-        // else {
-        //     this.GenerateToggle();
-        // }
-    }
-
     public GenerateToggle(): void {
         const self = this;
         const $selfElement = jQuery(this.elementRef.nativeElement);
         const $inputs = $selfElement.find('input[data-userid]');
-
 
         jQuery.each($inputs, (index, element) => {
             jQuery(element).bootstrapToggle({
@@ -117,43 +96,18 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
                 off: 'Available'
             }, 'disable');
             jQuery(element).change(($event) => {
-                // if (!data || data.length == 0 || !data.preventChange) {
-                //     const changedByDepartmentId = jQuery($event.currentTarget).data('departmentid');
-                //     const currentDepartmentId = UtilityService.GetFromSession('CurrentDepartmentId');
-                //     if (changedByDepartmentId && changedByDepartmentId.toString() != currentDepartmentId) {
-                //         // const previousState = jQuery($event.currentTarget).prop('checked');
-                //         jQuery($event.currentTarget).prop('checked', false)
-                //             // .trigger('change', [{ preventChange: true }]);
-                //             $event.preventDefault();
-
-                //         // jQuery($event.currentTarget).bootstrapToggle('off');
-                //     } else
                 self.datachanged($event);
-                // } else {
-                //     $event.preventDefault();
-                //     $event.stopPropagation();
-                // }
             });
         });
-    }
-
-    public checked(value:any):void{
     }
 
     public datachanged($event: any): void {
         const $element: JQuery = jQuery($event.currentTarget);
         const userId = $element.data('userid');
-        const departmentId = $element.data('departmentid');
-        const isBusy = $element.data('busy');
-        if (isBusy) {
-            if (this.currentDepartmentId != departmentId) {
-                this.toastrService.error('Not Allow');
-                return;
-            }
-        }
         const obj: MemberCurrentEngagementModelToView = this.memberEngagementsToView
             .find((x) => x.UserId.toString() == userId);
         if ($element.prop('checked')) {
+
             obj.isRemarksSubmitted = true;
             if (obj && obj.Remarks.length > 0) {
                 const memberTrackModel: MemberEngagementTrackModel = new MemberEngagementTrackModel();
@@ -176,6 +130,8 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
                     this.membertrackService.Create(memberCurrentEngagementToSave)
                         .subscribe((response: MemberCurrentEngagementModel) => {
                             this.toastrService.success('Member is engaged now.');
+                            //alert('Member is engaged now.');
+
                             this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
                         });
                 }
@@ -189,6 +145,7 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
                             this.membertrackService.Update(memberCurrentEngagementToedit, obj.MemberCurrentEngagementId)
                                 .subscribe((response1: MemberCurrentEngagementModel) => {
                                     this.toastrService.success('Member is engaged now.');
+                                    //alert('Member is engaged now.');
                                     this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
                                 });
                         });
@@ -199,12 +156,10 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
                 this.toastrService.error('Please Enter Work Details');
             }
             this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
+            //alert('Work Details Required');
+            //this.toastrService.success('Work Details Required');
         }
         else {
-            // if (_.all(this.memberEngagementsToView,x=>x.DepartmentId != +UtilityService.GetFromSession('CurrentDepartmentId')) && _.all(this.memberEngagementsToView,x=>x.MemberCurrentEngagementId != null)){
-            //     this.toastrService.error('Member cannot be disengaged.');
-            // }
-            // else {
             const memberTrackModel: MemberEngagementTrackModel = new MemberEngagementTrackModel();
             memberTrackModel.deleteAttributes();
             memberTrackModel.MemberEngagementTrackId = obj.MemberEngagementTrackId;
@@ -218,9 +173,10 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
                 .flatMap(() => this.membertrackService.UpdateMemberTrack(memberTrackModel, memberTrackModel.MemberEngagementTrackId))
                 .subscribe(() => {
                     this.toastrService.success('Member is available now.');
+                    //alert('Member is available now.');
                     this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
+                    // obj.isRemarksSubmitted=false;
                 });
-            // }
         }
     }
 
@@ -266,9 +222,8 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
                         member.Remarks = member.IsBusy ? obj.MemberEngagementTrack.Remarks : '';
                         member.MemberCurrentEngagementId = obj.MemberCurrentEngagementId;
                         member.MemberEngagementTrackId = obj.MemberEngagementTrackId;
-                        if (member.IsBusy && obj.MemberEngagementTrack.UnDeploy != true)
-                            member.DepartmentId = obj.MemberEngagementTrack.DepartmentId;
                     }
+
                     return member;
                 });
                 this.availblecount = this.memberEngagementsToView.filter((x) => x.IsBusy === false).length;
