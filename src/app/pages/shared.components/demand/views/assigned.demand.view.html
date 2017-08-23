@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-12">
         <div class="addbuttonHolder">
-            <button class="btn btn-primary" type="button" (click)="submit()" [hidden] ="isArchive" *ngIf="(isShowAssignToMeDemand | accesibility:currentDepartmentId:'UpdateAssignToMeDemand')">Submit</button>
+            <button class="btn btn-primary" type="button" (click)="submit()" [disabled] ="isArchive" *ngIf="(isShowAssignToMeDemand | accesibility:currentDepartmentId:'UpdateAssignToMeDemand')">Submit</button>
         </div>
     </div>
 </div>
@@ -46,7 +46,7 @@
                             </ul>
                         </td>
                         <td>
-                            <md-checkbox [hidden] ="isArchive" class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsCompleted" aria-label="Done">
+                            <md-checkbox [disabled] ="isArchive" class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsCompleted" aria-label="Done">
                             </md-checkbox>
                         </td>
                     </tr>

@@ -325,7 +325,6 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
             $currentRow.closest('tbody').find('tr').removeClass('bg-blue-color');
             $currentRow.closest('tr').addClass('bg-blue-color');
         }
-
         this.demandStatusLogService.GetAllByIncidentRequesterDepartment(this.incidentId, requesterDepartmentId)
             .subscribe((demandStatusLogModels: ResponseModel<DemandStatusLogModel>) => {
                 this.incidentService.GetIncidentById(this.incidentId)
