@@ -19,6 +19,8 @@ export class ClockWidgetComponent implements OnInit, OnChanges, OnDestroy {
     @Input() initiationDateTime: Date;
     @Input() currentIncidentId: number;
     @Input('initiatedDepartmentId') initiatedDepartmentId: number;
+    @Input('isArchive') isArchive: boolean;
+    
 
     days: number = 0;
     hours: number = 0;
@@ -66,7 +68,14 @@ export class ClockWidgetComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private initiateTimer(): void {
-        if (this.clockWidgetService.initiateTimer(`Counter`, this.initiationDateTime))
-            this.counterSubscription();
+        if(this.isArchive){
+            if (this.clockWidgetService.initiateTimerStatic(`Counter`, this.initiationDateTime))
+                this.counterSubscription();
+        }
+        else{
+            if (this.clockWidgetService.initiateTimer(`Counter`, this.initiationDateTime))
+                this.counterSubscription();
+        }
+       
     }
 }
