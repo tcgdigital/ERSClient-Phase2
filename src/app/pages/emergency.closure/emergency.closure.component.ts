@@ -117,7 +117,7 @@ export class EmergencyClosureComponent implements OnInit {
 	}
 
 	ngOnDestroy(): void {
-		this.globalState.Unsubscribe('incidentChange');
+		// this.globalState.Unsubscribe('incidentChange');
 		//this.globalState.Unsubscribe('departmentChange');
 	}
 

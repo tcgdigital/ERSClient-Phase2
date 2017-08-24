@@ -55,7 +55,7 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
     }
 
     public ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChange');
+        // this.globalState.Unsubscribe('incidentChange');
         this.globalState.Unsubscribe('PresidentMessagePublished');
     }
 

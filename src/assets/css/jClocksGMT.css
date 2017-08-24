@@ -1,6 +1,6 @@
 .jcgmt-container {
     float:left;
-    padding: 3px;
+    padding: 0 3px;
 }
 .jcgmt-container .jcgmt-lbl {
     font-size:10px;
@@ -11,6 +11,11 @@
     padding-bottom: 5px;
     width: 108px;
     margin: 0 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap;
+    width: 109px;
+    padding: 0 5px;
 }
 .jcgmt-clockHolder {
     width:100px; 
@@ -33,8 +38,9 @@
 .jcgmt-digital,
 .jcgmt-date {
     font-weight:bold;
-    font-size: 12px;
+    font-size: 10px;
     color: #444444;
     text-align:center;
-    margin-left:8px;
+    margin-left:6px;
+    display: inline-block;
 }

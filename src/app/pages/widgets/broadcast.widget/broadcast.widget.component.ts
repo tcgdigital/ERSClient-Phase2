@@ -151,8 +151,8 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChange');
-        this.globalState.Unsubscribe('departmentChange');
+        // this.globalState.Unsubscribe('incidentChange');
+        // this.globalState.Unsubscribe('departmentChange');
         this.globalState.Unsubscribe('BroadcastPublished');
     }
 

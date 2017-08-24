@@ -62,4 +62,7 @@ To increase this setting, add the following configuration setting to the aspnet.
 ASP.NET will start throttling requests using a queue. To increase the size of the queue, you can increase the requestQueueLimit setting. 
 To do this, add the following configuration setting to the processModel node in config/machine.config (rather than aspnet.config):
 
+%windir%\Microsoft.NET\Framework\v4.0.30319\config\machine.config
+%windir%\Microsoft.NET\Framework64\v4.0.30319\config\machine.config
+
 <processModel autoConfig="false" requestQueueLimit="250000" />

@@ -49,7 +49,7 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
 
         const $currentElement = jQuery(this.elementRef.nativeElement);
         let self = this;
-        let rightMergin = '-130px';
+        let rightMergin = '-135px';
 
         /*if (window.screen.availWidth >= 1200)
             rightMergin = '-133px';
@@ -88,7 +88,8 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
             {
                 offset: '0',
                 date: true,
-                dateformat: 'DD-MMM-YYYY',
+                dateformat: 'DD-MM-YY',
+                timeformat:'HH:mm',
                 skin: 3
             });
 
@@ -97,7 +98,8 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
                 title: ' Manila, Philippines',
                 offset: '8',
                 date: true,
-                dateformat: 'DD-MMM-YYYY',
+                dateformat: 'DD-MM-YY',
+                timeformat:'HH:mm',
                 skin: 3
             });
     }
@@ -112,7 +114,8 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
                 offset: $selectedElement.find('option:selected').val(),
                 date: true,
                 dst: true,
-                dateformat: 'DD-MMM-YYYY',
+                dateformat: 'DD-MM-YY',
+                timeformat:'HH:mm',
                 skin: 3
             });
     }
@@ -140,7 +143,8 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
                         offset: this.currentTimezone.decimaloffset,
                         date: true,
                         dst: true,
-                        dateformat: 'DD-MMM-YYYY',
+                        dateformat: 'DD-MM-YY',
+                        timeformat:'HH:mm',
                         skin: 3
                     });
             }

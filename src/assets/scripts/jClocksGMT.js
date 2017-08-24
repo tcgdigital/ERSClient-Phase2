@@ -182,9 +182,6 @@ var timer = {};
                     $("<img />", { class: "jcgmt-clock", src: options.imgpath + 'assets/images/jcgmt-' + options.skin + '-clock_face.png' }).appendTo("#" + id + ' .jcgmt-clockHolder');
                 }
 
-                // create digital clock container
-                $("<div />", { class: "jcgmt-digital" }).appendTo("#" + id);
-
                 //create date container
                 $("<div />", { class: "jcgmt-date" }).appendTo("#" + id);
                 
@@ -192,6 +189,9 @@ var timer = {};
                 $('#' + id + ' .jcgmt-sec').rotate( options.angleSec );
                 $('#' + id + ' .jcgmt-min').rotate( options.angleMin );
                 $('#' + id + ' .jcgmt-hour').rotate( options.angleHour );
+
+                // create digital clock container
+                $("<div />", { class: "jcgmt-digital" }).appendTo("#" + id);
 
                 // get timezone by gmt offset
                 Date.prototype.getTimezoneByOffset = function( offset, y, m, d ) 
