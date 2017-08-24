@@ -465,7 +465,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         demandTrail.CreatedOn = demand.CreatedOn ? demand.CreatedOn : new Date();
 
         let date = new Date();
-        answer = `<div><p> ${demand.DemandStatusDescription} <strong>Date :</strong>  ${moment(date).format('DD-MMM-YYYY h:mm A')}   </p><div>`;
+        answer = `<div><p> ${demand.DemandStatusDescription} <strong>Date :</strong>  ${moment(date).format('DD-MMM-YYYY HH:mm')}   </p><div>`;
         answer = answer + '</p><div>';
         demandTrail.Answers = answer;
         demandTrails.push(demandTrail);

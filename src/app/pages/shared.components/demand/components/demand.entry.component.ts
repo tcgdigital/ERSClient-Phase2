@@ -203,10 +203,10 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         const date = new Date();
         if (flag) {
             
-            answer = `<p>${demand.DemandStatusDescription} <strong>Date :</strong>  ${moment(date).format('DD-MMM-YYYY h:mm A')} `;
+            answer = `<p>${demand.DemandStatusDescription} <strong>Date :</strong>  ${moment(date).format('DD-MMM-YYYY HH:mm')} `;
         }
         else {
-            answer = `<p>Demand Edited By ${demandTrail.RequesterName} ( ${demandTrail.RequesterDepartmentName} ) <strong>Date :</strong>  ${moment(date).format('DD-MMM-YYYY h:mm A')} `;
+            answer = `<p>Demand Edited By ${demandTrail.RequesterName} ( ${demandTrail.RequesterDepartmentName} ) <strong>Date :</strong>  ${moment(date).format('DD-MMM-YYYY HH:mm')} `;
         }
         if (!flag && (demandForAnswer !== undefined)) {
 
@@ -229,7 +229,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 const minutesInt = +demandForAnswer.ScheduleTime;
                 const d = new Date(demand.CreatedOn);
                 d.setMinutes(d.getMinutes() + minutesInt);
-                const editedDate = new Date(d);
+                const editedDate = moment(d).format('DD-MMM-YYYY HH:mm');
                 editedFields = editedFields + `<strong>Expected Resolution Time</strong> : ${editedDate} `;
             }
             if (demandForAnswer.RequiredLocation) {
@@ -372,7 +372,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 const timediff = createdOn.getTime() + (+scheduleTime) * 60000;
 
                 const resolutiontime = new Date(timediff);
-                this.form.controls['ScheduleTime'].reset({ value: moment(resolutiontime).format('DD-MMM-YYYY h:mm A'), disabled: false });
+                this.form.controls['ScheduleTime'].reset({ value: moment(resolutiontime).format('DD-MMM-YYYY HH:mm'), disabled: false });
                 this.caller = this.demandModel.Caller || new CallerModel();
                 this.showAdd = true;
                 this.buttonValue = 'Create Demand';
@@ -409,7 +409,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 const createdOn = new Date(response.Records[0].CreatedOn);
                 const timediff = createdOn.getTime() + (+scheduleTime) * 60000;
                 const resolutiontime = new Date(timediff);
-                this.form.controls['ScheduleTime'].reset({ value: moment(resolutiontime).format('DD-MMM-YYYY h:mm A'), disabled: true });
+                this.form.controls['ScheduleTime'].reset({ value: moment(resolutiontime).format('DD-MMM-YYYY HH:mm'), disabled: true });
                 this.caller = this.demandModel.Caller || new CallerModel();
                 this.showAdd = true;
                 this.isReadonly = true;
@@ -825,7 +825,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     public dateTimeSet(date: DateTimePickerSelectEventArgs, controlName: string): void {
         this.resolutionTime = new Date(date.SelectedDate.toString());
         this.form.get('ScheduleTime')
-            .setValue(moment(this.resolutionTime).format('DD-MMM-YYYY hh:mm A'));
+            .setValue(moment(this.resolutionTime).format('DD-MMM-YYYY HH:mm'));
     }
 
     ngOnDestroy(): void {

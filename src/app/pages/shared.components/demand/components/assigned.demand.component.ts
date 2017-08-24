@@ -208,7 +208,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.demandTrail.CreatedOn = demand.CreatedOn;
 
         const date = new Date();
-        let answer = `<div><p>Demand ${this.demandTrail.DemandStatusDescription} <strong>Date :</strong>  ${moment(date).format('DD-MMM-YYYY h:mm A')} </p><div>`;
+        let answer = `<div><p>Demand ${this.demandTrail.DemandStatusDescription} <strong>Date :</strong>  ${moment(date).format('DD-MMM-YYYY HH:mm')} </p><div>`;
         if (!flag && (OriginalDemand != null)) {
             this.demandTrail.IncidentId = OriginalDemand.IncidentId;
             this.demandTrail.DemandTypeId = OriginalDemand.DemandTypeId;
@@ -221,13 +221,13 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
             this.demandTrail.ScheduledClose = null;
             this.demandTrail.IsRejected = false;
             this.demandTrail.RejectedDate = null;
-            answer = `<div><p> Demand Edited By ${this.currentDepartmentName}  <strong>Date :</strong> ${moment(date).format('DD-MMM-YYYY h:mm A')}  </p><div>`;
+            answer = `<div><p> Demand Edited By ${this.currentDepartmentName}  <strong>Date :</strong> ${moment(date).format('DD-MMM-YYYY HH:mm')}  </p><div>`;
 
             if (OriginalDemand.ScheduleTime) {
                 const minutesInt = parseInt(OriginalDemand.ScheduleTime);
                 const d = new Date(OriginalDemand.CreatedOn);
                 d.setMinutes(d.getMinutes() + minutesInt);
-                const editedDate = new Date(d);
+                const editedDate = moment(d).format('DD-MMM-YYYY HH:mm');
                 answer = answer + '<strong>Expected Resolution Time</strong> : ' + editedDate + '  ';
             }
         }

@@ -99,8 +99,8 @@
                                                             <td colspan="9">No history to show.</td>
                                                         </tr>
                                                         <tr *ngFor="let work of memberHistory">
-                                                            <td data-title="Deployed On">{{work.DeployedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
-                                                            <td data-title="UndeployedOn">{{work.UnDeployedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
+                                                            <td data-title="Deployed On">{{work.DeployedOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                                                            <td data-title="UndeployedOn">{{work.UnDeployedOn | date: 'dd-MMM-yyyy HH:mm '}}</td>
                                                             <td data-title="Work Details">{{work.Remarks}}</td>
                                                             <td data-title="Assigned by">{{work.createdby}}</td>
                                                             <td data-title="Deaprtment">{{work.Department.DepartmentName}}</td>
