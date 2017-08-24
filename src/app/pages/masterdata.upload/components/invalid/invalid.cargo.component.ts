@@ -37,7 +37,7 @@ export class InvalidCargoListComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe('OpenInvalidCargoes');
-        this.globalState.Unsubscribe('incidentChange');
+        // this.globalState.Unsubscribe('incidentChange');
     }
 
     OpenInvalidCargoes(invalidCargo: InvalidCargoModel) {

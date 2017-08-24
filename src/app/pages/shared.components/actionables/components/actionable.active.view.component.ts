@@ -135,7 +135,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
 
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe('OpenActionablePageInitiate');
-        this.globalState.Unsubscribe('incidentChange');
+        // this.globalState.Unsubscribe('incidentChange');
         this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 
