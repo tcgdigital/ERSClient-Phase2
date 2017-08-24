@@ -47,7 +47,7 @@
                                 <td data-title="Broadcast Messages" width="50%">{{broadcast.Message}}</td>
                                 <td data-title="Priority">{{broadcast.Priority}}</td>
                                 <td data-title="Initiated Department">{{broadcast.InitiateDepartment.DepartmentName}}</td>
-                                <td data-title="Published On">{{broadcast.SubmittedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
+                                <td data-title="Published On">{{broadcast.SubmittedOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -80,7 +80,7 @@
                             <tr *ngFor="let broadcast of AllBroadCastByIncidentAndDepartment">
                                 <td data-title="Broadcast Messages" width="50%">{{broadcast.Message}}</td>
                                 <td data-title="Priority">{{broadcast.Priority}}</td>
-                                <td data-title="Published On">{{broadcast.SubmittedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
+                                <td data-title="Published On">{{broadcast.SubmittedOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
                             </tr>
                         </tbody>
                     </table>
