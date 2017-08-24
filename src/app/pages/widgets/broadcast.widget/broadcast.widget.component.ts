@@ -76,21 +76,37 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
         });
     }
 
-    public getLatestBroadcasts(departmentId, incidentId): void {
+    // public getLatestBroadcasts(departmentId, incidentId): void {
+    //     this.LatestBroadcastModels = new Array<BroadcastWidgetModel>();
+    //     this.broadcastWidgetService
+    //         .GetLatestBroadcastsByIncidentAndDepartment(departmentId, incidentId)
+    //         .flatMap((x) => x)           
+    //         .subscribe((x) => {
+    //             this.LatestBroadcastModels.push(x);
+    //         }, (error: any) => {
+    //             console.log(`Error: ${error}`);
+    //         }, () => {                
+    //             this.LatestBroadcasts = Observable.of(this.LatestBroadcastModels
+    //                 .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn, '')));
+    //         });
+    // }
+
+     public getLatestBroadcasts(departmentId, incidentId): void {
         this.LatestBroadcastModels = new Array<BroadcastWidgetModel>();
         this.broadcastWidgetService
             .GetLatestBroadcastsByIncidentAndDepartment(departmentId, incidentId)
-            .flatMap((x) => x)
-            .take(3)
-            .subscribe((x) => {
-                this.LatestBroadcastModels.push(x);
+            .flatMap(x=>x)
+            .subscribe(a => {
+                let existingIndex = this.LatestBroadcastModels.findIndex(b=>b.BroadcastId == a.BroadcastId);
+                if(existingIndex == -1)
+                    this.LatestBroadcastModels.push(a);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                    console.log(`Error: ${error}`);
             }, () => {
-                this.LatestBroadcasts = Observable.of(this.LatestBroadcastModels
+                    this.LatestBroadcasts = Observable.of(this.LatestBroadcastModels
                     .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn, '')));
             });
-    }
+     }
 
     public getAllPublishedBroadcasts(callback?: Function): void {
         const data: BroadcastWidgetModel[] = [];
@@ -170,6 +186,7 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
 
     private onBroadcastPublish(broadcast: BroadCastModel): void {
         if (broadcast.IsSubmitted) {
+            this.LatestBroadcastModels = [];            
             this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
         }
     }

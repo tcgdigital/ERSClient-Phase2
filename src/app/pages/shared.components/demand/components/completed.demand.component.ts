@@ -175,7 +175,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         if (!flag) {
             rej = "Rejected and status changed to: ";
         }
-        let answer = `<div><p>` + rej + demand.DemandStatusDescription + ` <strong>Date :</strong>  ${moment(date).format('DD-MMM-YYYY h:mm A')}  </p><div>`;
+        let answer = `<div><p>` + rej + demand.DemandStatusDescription + ` <strong>Date :</strong>  ${moment(date).format('DD-MMM-YYYY HH:mm')}  </p><div>`;
         this.demandTrail.Answers = answer;
         this.demandTrails.push(this.demandTrail);
         return this.demandTrails;

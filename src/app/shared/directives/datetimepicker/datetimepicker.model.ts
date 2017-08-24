@@ -67,7 +67,7 @@ export class DateTimePickerOptions {
         this.clearButton = true;
         this.autoClose = true;
         this.timepicker = true;
-        this.timeFormat = 'hh:ii AA';
+        this.timeFormat = 'hh:ii';
     }
 }
 
