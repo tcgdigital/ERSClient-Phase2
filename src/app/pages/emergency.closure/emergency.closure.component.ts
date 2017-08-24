@@ -193,6 +193,7 @@ export class EmergencyClosureComponent implements OnInit {
 					(error) => { console.log(error); },
 					() => {
 						if (unique.length > 0) {
+							unique = unique.sort(function (a, b) { return (a.DepartmentName.toUpperCase() > b.DepartmentName.toUpperCase()) ? 1 : ((b.DepartmentName.toUpperCase() > a.DepartmentName.toUpperCase()) ? -1 : 0); });
 							this.closuresToShow = unique.map((x: DepartmentModel) => {
 								let item: DepartmentClosureModel = new DepartmentClosureModel();
 								let closureItem = this.departmentClosures.find(y => {
@@ -210,6 +211,7 @@ export class EmergencyClosureComponent implements OnInit {
 							});
 						}
 						if (this.closuresToShow.length > 0) {
+							this.closuresToShow = this.closuresToShow.sort(function (a, b) { return (a.Department.DepartmentName.toUpperCase() > b.Department.DepartmentName.toUpperCase()) ? 1 : ((b.Department.DepartmentName.toUpperCase() > a.Department.DepartmentName.toUpperCase()) ? -1 : 0); });
 							this.closuresToShow.forEach(x => {
 								x.InitialNotify = false;
 								x.SeperateNotify = false;

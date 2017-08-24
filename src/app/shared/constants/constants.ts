@@ -93,6 +93,7 @@ export class GlobalConstants {
         enterMode: CKEDITOR.ENTER_BR,
         allowedContent: true,
         extraAllowedContent: 'br',
+        removePlugins: 'elementspath',
         toolbar: [
             { name: 'clipboard', items: ['Cut', 'Copy', 'Paste', '-', 'Undo', 'Redo'] },
             { name: 'links', items: ['Link', 'Unlink'] },
