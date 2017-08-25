@@ -326,7 +326,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
         this.childModalEnquiredCrew.hide();
     }
     ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChange');
+        // this.globalState.Unsubscribe('incidentChange');
         this.globalState.Unsubscribe('AffectedPersonStatusChanged');
     }
 

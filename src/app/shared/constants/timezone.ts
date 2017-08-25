@@ -80,9 +80,9 @@ export const GlobalTimeZone =
             { decimaloffset: "+07.00", abbr: "FET", zonename: "(UTC+07:00) Bangkok, Hanoi, Jakarta", utcoffset: "UTC+07:00" },
             { decimaloffset: "+07.00", abbr: "FJT", zonename: "(UTC+07:00) Novosibirsk", utcoffset: "UTC+07:00" },
             { decimaloffset: "+08.00", abbr: "FKST", zonename: "(UTC+08:00) Beijing, Chongqing, Hong Kong, Urumqi", utcoffset: "UTC+08:00" },
-            { decimaloffset: "+08:00", abbr: "FKT", zonename: "(UTC+08:00) Krasnoyarsk", utcoffset: "UTC+08:00" },
-            { decimaloffset: "+08:00", abbr: "FNT", zonename: "(UTC+08:00) Kuala Lumpur, Singapore", utcoffset: "UTC+08:00" },
-            { decimaloffset: "+08:00", abbr: "GALT", zonename: "(UTC+08:00) Perth", utcoffset: "UTC+08:00" },
+            { decimaloffset: "+08.00", abbr: "FKT", zonename: "(UTC+08:00) Krasnoyarsk", utcoffset: "UTC+08:00" },
+            { decimaloffset: "+08.00", abbr: "FNT", zonename: "(UTC+08:00) Kuala Lumpur, Singapore", utcoffset: "UTC+08:00" },
+            { decimaloffset: "+08.00", abbr: "GALT", zonename: "(UTC+08:00) Perth", utcoffset: "UTC+08:00" },
             { decimaloffset: "+08.00", abbr: "GAMT", zonename: "(UTC+08:00) Taipei", utcoffset: "UTC+08:00" },
             { decimaloffset: "+08.00", abbr: "GET", zonename: "(UTC+08:00) Ulaanbaatar", utcoffset: "UTC+09:00" },
             { decimaloffset: "+09.00", abbr: "GFT", zonename: "(UTC+09:00) Irkutsk", utcoffset: "UTC+09:00" },
@@ -102,7 +102,7 @@ export const GlobalTimeZone =
             { decimaloffset: "+12.00", abbr: "ICT", zonename: "(UTC+12:00) Fiji", utcoffset: "UTC+12:00" },
             { decimaloffset: "+12.00", abbr: "IDT", zonename: "(UTC+12:00) Magadan", utcoffset: "UTC+12:00" },
             { decimaloffset: "+12.00", abbr: "IOT", zonename: "(UTC+12:00) Petropavlovsk-Kamchatsky - Old", utcoffset: "UTC+12:00" },
-            { decimaloffset: "+12.00", abbr: "IRDT", zonename: "(UTC+13:00) Nuku'alofa", utcoffset: "UTC+13:30" },
+            { decimaloffset: "+13.00", abbr: "IRDT", zonename: "(UTC+13:00) Nuku'alofa", utcoffset: "UTC+13:30" },
             { decimaloffset: "+13.00", abbr: "IRKT", zonename: "(UTC+13:00) Samoa", utcoffset: "UTC+13:00" }
 
         ] as ITimeZone[]
