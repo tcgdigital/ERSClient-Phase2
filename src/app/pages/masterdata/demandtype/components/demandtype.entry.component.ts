@@ -66,6 +66,8 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
             IsAutoApproved: new FormControl(this.demandTypeModel.IsAutoApproved),
             ApproverDept: new FormControl(approverDept, [Validators.required])
         });
+
+        window.scrollTo(0,0);
     }
 
     cancel(): void {

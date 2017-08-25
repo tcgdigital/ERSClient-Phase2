@@ -93,11 +93,11 @@ export class TemplateListComponent implements OnInit, OnDestroy {
         if (query !== '') {
             this.templateService.GetQuery(query.replace(/(\'\|)/ig, ''))
                 .subscribe((response: ResponseModel<TemplateModel>) => {
-                    this.templates = response.Records;
+                    this.templates = response.Records.filter(a=>a.ActiveFlag == 'Active');
                 }, ((error: any) => {
                     console.log(`Error: ${error}`);
                 }));
-        }
+        }      
     }
     invokeReset(): void {
         this.getTemplates();
@@ -111,7 +111,6 @@ export class TemplateListComponent implements OnInit, OnDestroy {
     private initiateSearchConfigurations(): void {
         let mediatype: NameValue<string>[] = GlobalConstants.TemplateMediaType
             .map(x => new NameValue<string>(x.value, `|CMS.DataModel.Enum.TemplateMediaType'${x.value}'|`));
-
         this.searchConfigs = [
             // new SearchDropdown({
             //     Name: 'TemplateMediaId',
