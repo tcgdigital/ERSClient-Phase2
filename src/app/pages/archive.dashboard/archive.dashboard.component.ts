@@ -105,6 +105,7 @@ export class ArchiveDashboardComponent implements OnInit {
     }
 
     private departmentChangeHandler(department: KeyValue): void {
+        this.currentDepartment = department;
         this.currentDepartmentId = department.Value;
         this.isShowViewReadonlyCrisis = UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'ViewReadonlyCrisisInformationforArchive');
 

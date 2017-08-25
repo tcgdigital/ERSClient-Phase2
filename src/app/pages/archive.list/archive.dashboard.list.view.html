@@ -50,8 +50,8 @@
                         <td data-title="Drill Indicator">{{closedCrisis.IsDrill}}</td>
                         <td data-title="Emergency Type Name">{{closedCrisis.EmergencyType.EmergencyTypeName}}</td>
                         <td data-title="Emergency Location">{{closedCrisis.EmergencyLocation}}</td>
-                        <td data-title="Emergency Date">{{closedCrisis.EmergencyDate | date: 'dd-MMM-yyyy hh:mm a'}}</td>
-                        <td data-title="Closed On">{{closedCrisis.ClosedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
+                        <td data-title="Emergency Date">{{closedCrisis.EmergencyDate | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                        <td data-title="Closed On">{{closedCrisis.ClosedOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
                         <td data-title="Action">
                             <a class="fa fa-file-text-o fa-4x" href="javascript:void(0);" (click)="onViewIncidentClick(closedCrisis.IncidentId)"></a>
                             <!--<view-readOnly-incident-widget [currentIncidentLocal]="closedCrisis.IncidentView" [useLink]="useLink"></view-readOnly-incident-widget>-->
