@@ -2,7 +2,7 @@
     <div class="col-md-12 col-lg-6 current-weather">
         <div class="row">
             <div class="col-12 current-location">{{currentWeather.name}}, {{currentWeather.sys.country}}</div>
-            <div class="col-12 current-date">{{currentWeather.localDate | date: 'dd-MMM-yyyy hh:mm a'}}</div>
+            <div class="col-12 current-date">{{currentWeather.localDate | date: 'dd-MMM-yyyy HH:mm'}}</div>
         </div>
         <div class="row">
             <div class="col-6 current-logo">
@@ -24,7 +24,7 @@
     </div>
     <div class="col-md-12 col-lg-6 weather-forecast">
         <div class="row" *ngFor="let item of weatherForecast.list; let i = index;">
-            <div class="col-4">{{item.localDate | date: 'dd-MMM-yyyy hh:mm a'}}</div>
+            <div class="col-4">{{item.localDate | date: 'dd-MMM-yyyy HH:mm'}}</div>
             <div class="col-4">
                 <i [ngClass]="item.icon"></i>
                 <p>{{item.weather[0].main}}</p>

@@ -55,13 +55,13 @@ export class ClockWidgetService {
         return true;
     }
 
-    initiateTimerStatic(sub_name: string, initialDate: Date): boolean {
+    initiateTimerStatic(sub_name: string, initialDate: Date, closedDate:Date): boolean {
         if (sub_name === undefined || initialDate === undefined) {
             return false;
         }
         // const o: Observable<TimeCount> = Observable.interval(1000)
         //     .map((x: number) => {
-                this.timePassed = Math.floor((new Date().getTime() - initialDate.getTime()) / 1000);
+                this.timePassed = Math.floor((new Date(closedDate).getTime() - initialDate.getTime()) / 1000);
 
                 this.counter.Days = Math.floor(this.timePassed / this.days);
                 this.timePassed -= this.counter.Days * this.days;

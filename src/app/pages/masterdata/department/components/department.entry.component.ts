@@ -220,7 +220,8 @@ export class DepartmentEntryComponent implements OnInit {
         this.form = this.setDepartmentForm(model);
         this.departmentModel = model;
         this.showAddRegion(this.showAdd);
-        this.showAdd = true;
+        window.scrollTo(0,0);
+        this.showAdd = true;       
     }
 
     private setDepartmentForm(department?: DepartmentModel): FormGroup {

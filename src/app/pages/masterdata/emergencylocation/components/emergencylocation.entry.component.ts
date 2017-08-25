@@ -78,6 +78,8 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
             TimeZone: new FormControl(model.TimeZone),
             isActive: new FormControl(this.emergencyLocation.Active)
         });
+
+        window.scrollTo(0,0);
     }
 
     ngOnDestroy(): void {

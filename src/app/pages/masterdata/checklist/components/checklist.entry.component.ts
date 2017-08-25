@@ -469,6 +469,8 @@ export class ChecklistEntryComponent implements OnInit {
         else {
             this.parentChecklists = this.noDtaList;
         }
+
+        window.scrollTo(0,0);
     }
 
     // showAddRegion(): void {
