@@ -204,13 +204,13 @@
                     <div class="col-md-12 col-sm-12" [hidden]="enquiryType!=1  && enquiryType!=2 && enquiryType!=3">
                         <strong><label for="LastName">Select type of demands to be raised</label></strong>
                         <br>
-                        <md-checkbox id="IsCallBack" formControlName="IsCallBack" aria-label="Add" disabled="{{DemandCheckDisabled}}">
+                        <md-checkbox [disabled]="isArchive" id="IsCallBack" formControlName="IsCallBack" aria-label="Add" disabled="{{DemandCheckDisabled}}">
                             Callback &nbsp;
                         </md-checkbox>
-                        <md-checkbox id="IsTravelRequest" formControlName="IsTravelRequest" aria-label="Add" disabled="{{DemandCheckDisabled}}">
+                        <md-checkbox [disabled]="isArchive" id="IsTravelRequest" formControlName="IsTravelRequest" aria-label="Add" disabled="{{DemandCheckDisabled}}">
                             Travel Request &nbsp;
                         </md-checkbox>
-                        <md-checkbox id="IsAdminRequest" formControlName="IsAdminRequest" aria-label="Add" disabled="{{DemandCheckDisabled}}">
+                        <md-checkbox [disabled]="isArchive" id="IsAdminRequest" formControlName="IsAdminRequest" aria-label="Add" disabled="{{DemandCheckDisabled}}">
                             Admin Request &nbsp;
                         </md-checkbox>
                     </div>

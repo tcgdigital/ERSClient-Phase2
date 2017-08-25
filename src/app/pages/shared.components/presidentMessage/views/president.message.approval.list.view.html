@@ -19,7 +19,7 @@
                 <td data-title="Created On">{{message.CreatedOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
                 <td data-title="Sent For Approval On">{{message.SentForApprovalOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
                 <td data-title="Edit">
-                   <i [disabled]="isArchive" *ngIf="isShowEditPresidentMessagePending | accesibility:currentDepartmentId:'EditPendingPresidentMessage'" class="fa fa-edit fa-2x" (click)="UpdatePresidentMessage(message)"></i>
+                   <i *ngIf="!isArchive" *ngIf="isShowEditPresidentMessagePending | accesibility:currentDepartmentId:'EditPendingPresidentMessage'" class="fa fa-edit fa-2x" (click)="UpdatePresidentMessage(message)"></i>
                 </td>
             </tr>
         </tbody>
