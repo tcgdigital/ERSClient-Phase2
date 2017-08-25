@@ -108,7 +108,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
             const createdOn = new Date(demand.CreatedOn);
             const timediff = createdOn.getTime() + (+scheduleTime) * 60000;
             const resolutiontime = new Date(timediff);
-            item.ScheduleTimeToShow = moment(resolutiontime).format('DD-MMM-YYYY hh:mm A');
+            item.ScheduleTimeToShow = moment(resolutiontime).format('DD-MMM-YYYY HH:mm');
             item.DemandId = demand.DemandId;
             item.DemandTypeName = demand.DemandType.DemandTypeName;
             item.DemandDesc = demand.DemandDesc;
