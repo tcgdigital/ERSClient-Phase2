@@ -693,7 +693,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.demandModel.Caller.ContactNumber = this.form.controls['ContactNumber'].value;
                 this.demandModel.IncidentId = this.currentIncidentId;
                 this.demandModel.RequesterDepartmentId = this.currentDepartmentId;
-                this.demandModel.DemandCode = 'DEM-' + this.addzero(now.getSeconds()) + this.addzero(now.getMinutes()) + this.addzero(now.getHours()) +
+                this.demandModel.DemandCode = 'DEMR-' + this.addzero(now.getSeconds()) + this.addzero(now.getMinutes()) + this.addzero(now.getHours()) +
                     this.addzero(now.getDate()) + this.addzero(now.getMonth() + 1) + now.getFullYear().toString();
 
                 if (this.demandTypes.find((x) => x.DemandTypeId === this.demandModel.DemandTypeId).IsAutoApproved) {

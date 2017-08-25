@@ -61,8 +61,8 @@ export enum StorageType {
 
 export class GlobalConstants {
     // public static EXTERNAL_URL: string = 'http://10.168.33.194:8080/';
-     public static EXTERNAL_URL: string = 'http://localhost:5001/';
-    //public static EXTERNAL_URL: string = 'http://172.20.23.110:99/';
+    // public static EXTERNAL_URL: string = 'http://localhost:5001/';
+    public static EXTERNAL_URL: string = 'http://172.20.23.110:99/';
     // public static EXTERNAL_URL: string = 'http://cmgtest.pal.com.ph:8080/';
 
     public static NOTIFICATION_URL: string = `${GlobalConstants.EXTERNAL_URL}Notification/Hubs`;
