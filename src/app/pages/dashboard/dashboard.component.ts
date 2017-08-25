@@ -74,7 +74,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private sub: any;
     public isShowViewReadonlyCrisis: boolean = false;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
-
+    public closedDate:Date=new Date();
 
     constructor(private globalState: GlobalStateService,
         private departmentService: DepartmentService,
