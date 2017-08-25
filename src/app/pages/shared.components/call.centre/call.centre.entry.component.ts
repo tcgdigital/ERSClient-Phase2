@@ -481,6 +481,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             let demand: DemandModel = new DemandModel();
 
             const type = isCallback ? 'Call Back' : (isTravelRequest ? 'Travel' : (isAdmin ? 'Admin' : 'Crew'));
+            const typeSuffix = isCallback ? 'C' : (isTravelRequest ? 'T' : (isAdmin ? 'A' : 'Crw'));
             const scheduleTime = isCallback ? GlobalConstants.ScheduleTimeForCallback : (isTravelRequest ? GlobalConstants.ScheduleTimeForTravel
                 : (isAdmin ? GlobalConstants.ScheduleTimeForAdmin : GlobalConstants.ScheduleTimeForDemandForCrew));
 
@@ -523,7 +524,11 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                 : (isAdmin ? GlobalConstants.TargetDepartmentAdmin : GlobalConstants.TargetDepartmentCrew));
             demand.RequesterDepartmentId = this.currentDepartmentId;
             demand.RequesterParentDepartmentId = this.departments.find((x) => x.DepartmentId === this.currentDepartmentId).ParentDepartmentId;
-            demand.DemandCode = 'DEM-' + UtilityService.UUID();
+
+            const now = new Date();
+            demand.DemandCode = 'DEM' + typeSuffix + '-' + this.addzero(now.getSeconds()) + this.addzero(now.getMinutes()) + this.addzero(now.getHours()) +
+            this.addzero(now.getDate()) + this.addzero(now.getMonth() + 1) + now.getFullYear().toString(); //'DEM-' + UtilityService.UUID(); 
+
             demand.DemandDesc = (this.enquiryType == 1 || this.enquiryType == 3) ?
                 (type + ' Requested for ' + personName + ' (' + this.selctedEnquiredPerson.TicketNumber + ')') : (type + ' Requested for ' + this.selctedEnquiredObject.AWB + ' (' + this.selctedEnquiredObject.TicketNumber + ')');
             demand.DemandStatusDescription = `New demand by ${this.createdByName} (${this.currentDepartmentName})`;
@@ -1176,6 +1181,14 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
 
     showListall(): void {
         this.totallistselected = !this.totallistselected;
+    }
+
+    addzero(num: number): string {
+        let str: string = num.toString();
+        if (num < 10) {
+            str = '0' + str;
+        }
+        return str;
     }
 
 }
