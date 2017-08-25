@@ -79,6 +79,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
         });
         this.form.controls["UserId"].reset({ value: userProfileModel.UserId, disabled: true });
         this.showAdd = true;
+        window.scrollTo(0,0);
     }
 
     cancel(): void {

@@ -223,7 +223,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
             this.fileName = 'Quicklink' + `.${extension}`;
         }
 
-
+        window.scrollTo(0,0);
     }
 
     showAddRegion(value): void {
