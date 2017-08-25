@@ -37,19 +37,19 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
             this.SetCrisisLocationClock(model.Value);
         });
         this.globalState.Subscribe('ReceiveCrisisClosureResponse', (model) => {
-            this.CheckOpnedIncidentIfAny();
+            // this.CheckOpnedIncidentIfAny();
         });
         this.globalState.Subscribe('incidentCreate', (model: number) => {
-            this.SetCrisisLocationClock(model);
+            // this.SetCrisisLocationClock(model);
         });
     }
 
     public ngAfterViewInit(): void {
         this.SetCrisisLocationClock();
 
-        if(/Android/i.test(navigator.userAgent) ) {
+        if (/Android/i.test(navigator.userAgent)) {
             jQuery('.world-clock-opner').css('left', '-80px');
-        }else{
+        } else {
             jQuery('.world-clock-opner').css('left', '-86px');
         }
 
@@ -95,7 +95,7 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
                 offset: '0',
                 date: true,
                 dateformat: 'DD-MM-YY',
-                timeformat:'HH:mm',
+                timeformat: 'HH:mm',
                 skin: 3
             });
 
@@ -105,7 +105,7 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
                 offset: '8',
                 date: true,
                 dateformat: 'DD-MM-YY',
-                timeformat:'HH:mm',
+                timeformat: 'HH:mm',
                 skin: 3
             });
     }
@@ -121,7 +121,7 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
                 date: true,
                 dst: true,
                 dateformat: 'DD-MM-YY',
-                timeformat:'HH:mm',
+                timeformat: 'HH:mm',
                 skin: 3
             });
     }
@@ -150,7 +150,7 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
                         date: true,
                         dst: true,
                         dateformat: 'DD-MM-YY',
-                        timeformat:'HH:mm',
+                        timeformat: 'HH:mm',
                         skin: 3
                     });
             }
@@ -170,6 +170,8 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
             if (isAnyIncidentOpen != undefined && isAnyIncidentOpen == true
                 && openIncidents != undefined && openIncidents.length > 0) {
                 this.SetCrisisLocationClock(openIncidents[0].IncidentId);
+            } else {
+                this.currentTimezone = null;
             }
         });
     }

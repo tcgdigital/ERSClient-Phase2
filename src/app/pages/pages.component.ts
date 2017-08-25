@@ -142,6 +142,7 @@ export class PagesComponent implements OnInit {
             // SignalR Notification
             this.globalState.Subscribe('ReceiveCrisisClosureResponse', (model) => {
                 Observable.timer(5000).subscribe((x) => {
+                    this.authenticationService.Logout();
                     this.router.navigate(['login']);
                 });
             });
