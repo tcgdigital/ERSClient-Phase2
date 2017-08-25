@@ -47,6 +47,12 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
     public ngAfterViewInit(): void {
         this.SetCrisisLocationClock();
 
+        if(/Android/i.test(navigator.userAgent) ) {
+            jQuery('.world-clock-opner').css('left', '-80px');
+        }else{
+            jQuery('.world-clock-opner').css('left', '-86px');
+        }
+
         const $currentElement = jQuery(this.elementRef.nativeElement);
         let self = this;
         let rightMergin = '-135px';
