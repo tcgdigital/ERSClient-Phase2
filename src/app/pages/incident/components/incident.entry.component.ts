@@ -831,13 +831,29 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         return +UTC_Offset;
     }
 
+    private GetLocalDateTime(utc: number, isOrigin: boolean): Date {
+        let localDate = new Date(utc + this.GetUTCOffsetHours(isOrigin));
+        if (this.isDst(localDate)) {
+            return new Date(localDate.getTime() + (1 * 60 * 60 * 1000))
+        }
+        return localDate;
+    }
 
+    private stdTimezoneOffset(dt: Date): number {
+        var jan = new Date(dt.getFullYear(), 0, 1);
+        var jul = new Date(dt.getFullYear(), 6, 1);
+        return Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
+    }
+
+    private isDst(dt: Date): boolean {
+        return dt.getTimezoneOffset() < this.stdTimezoneOffset(dt);
+    }
 
     private DateFormat(date: Date): string {
         let hours = (date.getHours());
         // let mid = (hours > 12) ? 'PM' : 'AM';
         const months: string[] = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-       // return `${date.getDate()}-${months[date.getMonth()]}-${date.getFullYear()} ${((date.getHours() % 12) < 10) ? ("0" + (date.getHours() % 12)) : (date.getHours() % 12)}:${((date.getMinutes()) < 10) ? ("0" + (date.getMinutes())) : (date.getMinutes())} ${mid}`;
+        // return `${date.getDate()}-${months[date.getMonth()]}-${date.getFullYear()} ${((date.getHours() % 12) < 10) ? ("0" + (date.getHours() % 12)) : (date.getHours() % 12)}:${((date.getMinutes()) < 10) ? ("0" + (date.getMinutes())) : (date.getMinutes())} ${mid}`;
         return `${date.getDate()}-${months[date.getMonth()]}-${date.getFullYear()} ${((date.getHours()) < 10) ? ("0" + (date.getHours())) : (date.getHours())}:${(date.getMinutes() < 10) ? ("0" + (date.getMinutes())) : (date.getMinutes())}`;
     }
 
