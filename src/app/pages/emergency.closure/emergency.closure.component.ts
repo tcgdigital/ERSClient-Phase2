@@ -218,6 +218,11 @@ export class EmergencyClosureComponent implements OnInit {
 								x.InitialNotify = this.initialNotificationSend.some(z => x.DepartmentId == z);
 								x.SeperateNotify = this.notificationSeperatelySend.some(z => x.DepartmentId == z);
 							});
+							this.closuresToShow.sort((a: DepartmentClosureModel, b: DepartmentClosureModel) => {
+								if (a.Department.DepartmentName < b.Department.DepartmentName) return -1;
+								if (a.Department.DepartmentName > b.Department.DepartmentName) return 1;
+								return 0;
+							});
 							this.getIsSubmittedFlagValue(this.closuresToShow);
 							this.closuresToShow.sort((a, b) => {
 								if (a.Department.DepartmentName < b.Department.DepartmentName) return -1;
