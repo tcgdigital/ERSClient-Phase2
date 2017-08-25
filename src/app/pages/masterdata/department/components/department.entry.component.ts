@@ -49,7 +49,6 @@ export class DepartmentEntryComponent implements OnInit {
         Observable.merge(activeUsers, parentDepts)
             .subscribe(
             (response: ResponseModel<BaseModel>) => {
-                debugger;
                 if (response.Records.length > 0
                     && Object.keys(response.Records[0]).some((x) => x === 'UserProfileId')) {
                     this.users = response.Records as UserProfileModel[];
