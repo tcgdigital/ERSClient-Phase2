@@ -14,16 +14,12 @@ import { ResponseModel } from '../../../shared/models/response.model';
     selector: 'world-time-widget',
     templateUrl: './world.time.widget.view.html',
     styleUrls: ['./world.time.widget.style.scss'],
+    exportAs: 'worldclock',
     encapsulation: ViewEncapsulation.None
 })
 export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
-    @Input() Clock1TimeZoneOffset: string = '';
-    @Input() Clock2TimeZoneOffset: string = '';
-    @Input() Clock3TimeZoneOffset: string = '';
-
     public timeZones: ITimeZone[] = new Array<ITimeZone>();
     public currentTimezone: ITimeZone = null;
-
     private isOn: boolean = false;
 
     constructor(private elementRef: ElementRef,
@@ -39,9 +35,6 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
         this.globalState.Subscribe('ReceiveCrisisClosureResponse', (model) => {
             // this.CheckOpnedIncidentIfAny();
         });
-        this.globalState.Subscribe('incidentCreate', (model: number) => {
-            // this.SetCrisisLocationClock(model);
-        });
     }
 
     public ngAfterViewInit(): void {
@@ -56,23 +49,6 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
         const $currentElement = jQuery(this.elementRef.nativeElement);
         let self = this;
         let rightMergin = '-135px';
-
-        /*if (window.screen.availWidth >= 1200)
-            rightMergin = '-133px';
-        else if (window.screen.availWidth >= 992 && window.screen.availWidth <= 1199)
-            rightMergin = '-133px';
-        else if (window.screen.availWidth >= 768 && window.screen.availWidth <= 991)
-            rightMergin = '-133px';
-        else if (window.screen.availWidth >= 576 && window.screen.availWidth <= 767)
-            rightMergin = '-133px';
-        else if (window.screen.availWidth >= 425 && window.screen.availWidth <= 575)
-            rightMergin = '-133px';
-        else if (window.screen.availWidth >= 375 && window.screen.availWidth <= 424)
-            rightMergin = '-133px';
-        else if (window.screen.availWidth >= 321 && window.screen.availWidth <= 374)
-            rightMergin = '-133px';
-        else if (window.screen.availWidth <= 320)
-            rightMergin = '-133px';*/
 
         $currentElement.find('.world-clock-opner').click(function () {
             if (!self.isOn) {
@@ -126,7 +102,7 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
             });
     }
 
-    private SetCrisisLocationClock(incidentId: number = 0): void {
+    public SetCrisisLocationClock(incidentId: number = 0): void {
         const observables: Array<Observable<any>> = new Array<Observable<any>>();
         observables.push(this.worldTimeWidgetService.GetEmergencyLications());
 
@@ -142,6 +118,7 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
             this.currentTimezone = res[1] as ITimeZone;
 
             if (this.currentTimezone != undefined) {
+                //Observable.timer(100).subscribe((x)=>{
                 jQuery(this.elementRef.nativeElement)
                     .find('#incident_clock').empty().jClocksGMT(
                     {
@@ -153,6 +130,7 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
                         timeformat: 'HH:mm',
                         skin: 3
                     });
+                //});
             }
         });
     }

@@ -93,7 +93,7 @@ export class AffectedPeopleListComponent implements OnInit {
             affectedPerson.Crew.FileStores = [];
             //this.inputFileCrew.nativeElement.value = '';
         }
-        if(this.inputFileCrew){
+        if (this.inputFileCrew) {
             this.inputFileCrew.nativeElement.value = '';
         }
         this.affectedPersonModelForStatus = affectedPerson;
@@ -283,8 +283,9 @@ export class AffectedPeopleListComponent implements OnInit {
             this.getAffectedPeople(this.currentIncident);
         });
 
-        this.globalState.Subscribe('ReceivePassengerImportCompletionResponse', () => {
-            this.getAffectedPeople(this.currentIncident);
+        this.globalState.Subscribe('ReceivePassengerImportCompletionResponse', (count: number) => {
+            if (count > 0)
+                this.getAffectedPeople(this.currentIncident);
         });
     }
 
