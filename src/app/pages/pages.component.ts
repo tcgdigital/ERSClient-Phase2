@@ -33,6 +33,7 @@ import { PresidentMessageModel } from './shared.components/presidentMessage';
 import { PresidentMessageWidgetModel } from './widgets/presidentMessage.widget';
 import { MediaReleaseWidgetModel } from './widgets/mediaRelease.widget';
 import { AffectedPeopleModel } from './shared.components/affected.people';
+import { WorldTimeWidgetComponent } from './widgets/world.time.widget'
 
 @Component({
     selector: 'pages',
@@ -43,6 +44,7 @@ import { AffectedPeopleModel } from './shared.components/affected.people';
 export class PagesComponent implements OnInit {
     @ViewChild('changePasswordModel') public changePasswordModel: ModalDirective;
     @ViewChild('quickLinkModel') public quickLinkModel: ModalDirective;
+    @ViewChild('worldClockComponent') public worldClockComponent: WorldTimeWidgetComponent;
 
     public sideMenuState: boolean = false;
     public departments: KeyValue[] = [];
@@ -137,6 +139,8 @@ export class PagesComponent implements OnInit {
                 this.getIncidents(() => {
                     this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
                 });
+                this.worldClockComponent.SetCrisisLocationClock(model);
+                this.globalState.Unsubscribe('incidentCreate');
             });
 
             // SignalR Notification
@@ -530,8 +534,16 @@ export class PagesComponent implements OnInit {
      */
     private ExecuteOperationSimple(key: string, model: any): void {
         const message = GlobalConstants.NotificationMessage.find((x) => x.Key === key);
+        debugger;
         if (message.Title !== '' && message.Message !== '') {
-            this.toastrService.info(message.Message, message.Title);
+            if (key == 'ReceivePassengerImportCompletionResponse' && model.toString() == '0')
+                console.log('Default message omitted');
+            else if (key == 'ReceiveCargoImportCompletionResponse' && model.toString() == '0')
+                console.log('Default message omitted');
+            else if (key == 'ReceiveCrewImportCompletionResponse' && model.toString() == '0')
+                console.log('Default message omitted');
+            else
+                this.toastrService.info(message.Message, message.Title);
         }
         this.globalState.NotifyDataChanged(key, model);
     }
