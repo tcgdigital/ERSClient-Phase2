@@ -49,6 +49,8 @@ export class EmergencyTypeEntryComponent implements OnInit {
             EmergencyCategory: new FormControl(model.EmergencyCategory),
             ActiveFlag: new FormControl(model.ActiveFlag)
         });
+
+        window.scrollTo(0,0);
     }
 
     ngOnInit(): void {
