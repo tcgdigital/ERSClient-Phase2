@@ -446,7 +446,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChange');
+        // this.globalState.Unsubscribe('incidentChange');
         this.globalState.Unsubscribe('departmentChangeFromDashboard');
         this.globalState.Unsubscribe('checkListStatusChange');
     }

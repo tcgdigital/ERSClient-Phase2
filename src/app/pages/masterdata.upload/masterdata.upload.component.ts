@@ -36,8 +36,8 @@ export class MasterDataUploadComponent{
     }
 
     public ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChange');
-        this.globalState.Unsubscribe('departmentChange');
+        // this.globalState.Unsubscribe('incidentChange');
+        // this.globalState.Unsubscribe('departmentChange');
     }
 
      private incidentChangeHandler(incident: KeyValue): void {

@@ -117,7 +117,7 @@ export class EmergencyClosureComponent implements OnInit {
 	}
 
 	ngOnDestroy(): void {
-		this.globalState.Unsubscribe('incidentChange');
+		// this.globalState.Unsubscribe('incidentChange');
 		//this.globalState.Unsubscribe('departmentChange');
 	}
 
@@ -219,6 +219,12 @@ export class EmergencyClosureComponent implements OnInit {
 								x.SeperateNotify = this.notificationSeperatelySend.some(z => x.DepartmentId == z);
 							});
 							this.getIsSubmittedFlagValue(this.closuresToShow);
+							this.closuresToShow.sort((a, b) => {
+								if (a.Department.DepartmentName < b.Department.DepartmentName) return -1;
+								if (a.Department.DepartmentName > b.Department.DepartmentName) return 1;
+		
+								return 0;
+							});
 						}
 					});
 			});

@@ -107,7 +107,6 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
         const obj: MemberCurrentEngagementModelToView = this.memberEngagementsToView
             .find((x) => x.UserId.toString() == userId);
         if ($element.prop('checked')) {
-
             obj.isRemarksSubmitted = true;
             if (obj && obj.Remarks.length > 0) {
                 const memberTrackModel: MemberEngagementTrackModel = new MemberEngagementTrackModel();
@@ -163,20 +162,25 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
             const memberTrackModel: MemberEngagementTrackModel = new MemberEngagementTrackModel();
             memberTrackModel.deleteAttributes();
             memberTrackModel.MemberEngagementTrackId = obj.MemberEngagementTrackId;
-            memberTrackModel.UnDeploy = true;
-            memberTrackModel.UnDeployedOn = new Date();
-            const memberCurrentEngagementToEdit: MemberCurrentEngagementModel = new MemberCurrentEngagementModel();
-            memberCurrentEngagementToEdit.deleteAttributes();
-            memberCurrentEngagementToEdit.MemberCurrentEngagementId = obj.MemberCurrentEngagementId;
-            memberCurrentEngagementToEdit.IsBusy = false;
-            this.membertrackService.Update(memberCurrentEngagementToEdit, memberCurrentEngagementToEdit.MemberCurrentEngagementId)
-                .flatMap(() => this.membertrackService.UpdateMemberTrack(memberTrackModel, memberTrackModel.MemberEngagementTrackId))
-                .subscribe(() => {
-                    this.toastrService.success('Member is available now.');
-                    //alert('Member is available now.');
-                    this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
-                    // obj.isRemarksSubmitted=false;
-                });
+            // if (this.currentDepartmentId != memberTrackModel.DepartmentId) {
+            //     this.toastrService.error('hahaha');
+            // }
+            // else {
+                memberTrackModel.UnDeploy = true;
+                memberTrackModel.UnDeployedOn = new Date();
+                const memberCurrentEngagementToEdit: MemberCurrentEngagementModel = new MemberCurrentEngagementModel();
+                memberCurrentEngagementToEdit.deleteAttributes();
+                memberCurrentEngagementToEdit.MemberCurrentEngagementId = obj.MemberCurrentEngagementId;
+                memberCurrentEngagementToEdit.IsBusy = false;
+                this.membertrackService.Update(memberCurrentEngagementToEdit, memberCurrentEngagementToEdit.MemberCurrentEngagementId)
+                    .flatMap(() => this.membertrackService.UpdateMemberTrack(memberTrackModel, memberTrackModel.MemberEngagementTrackId))
+                    .subscribe(() => {
+                        this.toastrService.success('Member is available now.');
+                        //alert('Member is available now.');
+                        this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
+                        // obj.isRemarksSubmitted=false;
+                    });
+            //}
         }
     }
 

@@ -119,7 +119,7 @@ export class IncidentViewComponent {
             OffsiteDetailsPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OffSetLocation),
             EmergencyNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyName),
             DescriptionPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Description),
-            EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD/MM/YYYY h:mm a')),
+            EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD-MM-YYYY HH:mm')),
             SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity)
         });
 
@@ -133,13 +133,13 @@ export class IncidentViewComponent {
                 OffsiteDetailsPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OffSetLocation),
                 EmergencyNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyName),
                 DescriptionPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Description),
-                EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD/MM/YYYY h:mm a')),
+                EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD-MM-YYYY HH:mm')),
                 SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity),
                 FlightNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightNo),
                 OriginPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.OriginCode),
                 DestinationPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.DestinationCode),
-                ScheduleddeparturePopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.DepartureDate).format('DD/MM/YYYY h:mm a')),
-                ScheduledarrivalPopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.ArrivalDate).format('DD/MM/YYYY h:mm a')),
+                ScheduleddeparturePopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.DepartureDate).format('DD-MM-YYYY HH:mm')),
+                ScheduledarrivalPopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.ArrivalDate).format('DD-MM-YYYY HH:mm')),
                 FlightTailNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightTaleNumber)
             });
             this.IsDrillPopup = this.incidentDataExchangeModel.IncidentModel.IsDrill;

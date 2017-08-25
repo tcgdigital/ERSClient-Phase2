@@ -105,7 +105,7 @@
                                     </tr>
                                     <tr *ngFor="let subDeptCheckList of subDeptCompletedCheckLists | async">
                                         <td data-title="Description">{{subDeptCheckList.checkListDesc}}</td>
-                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date: 'dd-MMM-yyyy hh:mm a'}}</td>
+                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date: 'dd-MMM-yyyy HH:mm'}}</td>
                                         <td data-title="RAG"><span [ngClass]="subDeptCheckList.RAG"></span></td>
                                     </tr>
                                 </tbody>
@@ -134,7 +134,7 @@
                                     </tr>
                                     <tr *ngFor="let subDeptCheckList of subDeptPendingCheckLists">
                                         <td data-title="Description">{{subDeptCheckList.checkListDesc}}</td>
-                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date: 'dd-MMM-yyyy hh:mm a'}}</td>
+                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date: 'dd-MMM-yyyy HH:mm'}}</td>
                                         <td data-title="RAG"><span [ngClass]="subDeptCheckList.RAG"></span></td>
                                     </tr>
                                 </tbody>
@@ -208,7 +208,7 @@
                                     </tr>
                                     <tr *ngFor="let subDeptCheckList of subDeptCompletedCheckLists | async">
                                         <td data-title="Description">{{subDeptCheckList.checkListDesc}}</td>
-                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date: 'dd-MMM-yyyy hh:mm a'}}</td>
+                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date: 'dd-MMM-yyyy HH:mm'}}</td>
                                         <td data-title="RAG"><span [ngClass]="subDeptCheckList.RAG"></span></td>
                                     </tr>
                                 </tbody>
@@ -237,7 +237,7 @@
                                     </tr>
                                     <tr *ngFor="let subDeptCheckList of subDeptPendingCheckLists">
                                         <td data-title="Description">{{subDeptCheckList.checkListDesc}}</td>
-                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date: 'dd-MMM-yyyy hh:mm a'}}</td>
+                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date: 'dd-MMM-yyyy HH:mm'}}</td>
                                         <td data-title="RAG"><span [ngClass]="subDeptCheckList.RAG"></span></td>
                                     </tr>
                                 </tbody>
