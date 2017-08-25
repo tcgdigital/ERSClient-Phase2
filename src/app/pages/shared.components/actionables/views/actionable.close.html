@@ -32,8 +32,8 @@
                         <i class="fa fa-minus" aria-hidden="true" [hidden]="hasChildChecklist(actionable.ChklistId)==false || actionable.expanded == false "
                             (click)="openChildActionable(actionable); $event.stopPropagation();"></i>                        {{actionable.Description}}
                     </td>
-                    <td data-title="Schedule Close Time">{{actionable.ScheduleClose | date: 'dd-MMM-yyyy hh:mm a'}}</td>
-                    <td data-title="Actual Close Time">{{actionable.ActualClose | date: 'dd-MMM-yyyy hh:mm a'}}</td>
+                    <td data-title="Schedule Close Time">{{actionable.ScheduleClose | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                    <td data-title="Actual Close Time">{{actionable.ActualClose | date: 'dd-MMM-yyyy HH:mm'}}</td>
                     <td data-title="Completion Status">
                         <span *ngIf="hasChildChecklist(actionable.ChklistId)==true">{{actionable.CompletionStatus}}</span>
                         <select id="selectCompletionStatus" disabled="isArchive" class="form-control" *ngIf="hasChildChecklist(actionable.ChklistId)==false" [(ngModel)]="actionable.CompletionStatus"
@@ -66,7 +66,7 @@
                                 <tbody>
                                     <tr *ngFor="let actionableChild of actionable.actionableChilds; let i = index;">
                                         <td data-title="Description">{{actionableChild.Description}}</td>
-                                        <td data-title="Scheduled End Time">{{actionableChild.ScheduleClose | date: 'dd-MMM-yyyy hh:mm a'}}</td>
+                                        <td data-title="Scheduled End Time">{{actionableChild.ScheduleClose | date: 'dd-MMM-yyyy HH:mm'}}</td>
                                         <td data-title="Completion Status">
                                             {{actionableChild.CompletionStatus}}
                                         </td>

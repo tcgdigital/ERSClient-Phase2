@@ -19,10 +19,10 @@
             <tr *ngFor="let message of PresidentsMessages">
                 <td data-title="President's Message Releases" width="30%">{{message.PresidentMessageType}}</td>
                 <td data-title="Status">{{message.PresidentMessageStatus=== 'SentForApproval' ? 'Sent For Approval': message.PresidentMessageStatus}}</td>
-                <td data-title="Created On">{{message.CreatedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
-                <td data-title="Sent For Approval On">{{message.SentForApprovalOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
-                <td data-title="Approved On">{{message.ApprovedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
-                <td data-title="Published On">{{message.PublishedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
+                <td data-title="Created On">{{message.CreatedOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                <td data-title="Sent For Approval On">{{message.SentForApprovalOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                <td data-title="Approved On">{{message.ApprovedOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                <td data-title="Published On">{{message.PublishedOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
                 <td data-title="Edit">
                    <i disabled="isArchive" class="fa fa-edit fa-2x" (click)="UpdatePresidentMessage(message)"></i>
                 </td>

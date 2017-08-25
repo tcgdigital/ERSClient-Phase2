@@ -16,8 +16,8 @@
             <tr *ngFor="let query of mediaReleases">
                 <td data-title="Releases" width="30%">{{query.MediaReleaseType}}</td>
                 <td data-title="Status">{{query.MediaReleaseStatus === 'SentForApproval' ? 'Approval Pending': query.MediaReleaseStatus}}</td>
-                <td data-title="Created On">{{query.CreatedOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
-                <td data-title="Sent For Approval On">{{query.SentForApprovalOn | date: 'dd-MMM-yyyy hh:mm a'}}</td>
+                <td data-title="Created On">{{query.CreatedOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                <td data-title="Sent For Approval On">{{query.SentForApprovalOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
                 <td data-title="Edit">
                     <i class="fa fa-edit fa-2x" (click)="UpdateMediaRelease(query)"></i>
                 </td>
