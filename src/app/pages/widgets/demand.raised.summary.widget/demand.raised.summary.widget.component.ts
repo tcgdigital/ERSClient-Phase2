@@ -152,6 +152,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         this.showAllDeptSubPending = false;
         this.demandRaisedSummaryWidgetService.GetAllDepartmentDemandByIncident
             (this.incidentId, (item: DemandRaisedModel[]) => {
+                item = item.sort(function (a, b) { return (a.requesterDepartmentName.toUpperCase() > b.requesterDepartmentName.toUpperCase()) ? 1 : ((b.requesterDepartmentName.toUpperCase() > a.requesterDepartmentName.toUpperCase()) ? -1 : 0); });
                 this.allDemandRaisedList = Observable.of(item);
                 this.childModalViewAllDemandRaisedSummary.show();
                 this.graphDataFormationForDemandRaisedSummeryWidget(item);
@@ -169,6 +170,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         this.demandRaisedSummaryWidgetService.GetSubDepartmentDemandByRaisedDepartment
             (this.incidentId, this.initiatedDepartmentId, (item: DemandRaisedModel[]) => {
                 this.allSubDeptDemandRaisedList = Observable.of([]);
+                item = item.sort(function (a, b) { return (a.requesterDepartmentName.toUpperCase() > b.requesterDepartmentName.toUpperCase()) ? 1 : ((b.requesterDepartmentName.toUpperCase() > a.requesterDepartmentName.toUpperCase()) ? -1 : 0); });
                 this.allSubDeptDemandRaisedList = Observable.of(item);
                 this.childModalViewAllSubDeptDemandRaisedSummary.show();
             });

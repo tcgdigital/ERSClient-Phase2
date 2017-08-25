@@ -63,7 +63,7 @@ export class WorldTimeWidgetService {
                 let timeZones: ITimeZone[] = this.GetTimeZones(location.Records);
                 if (timeZones.length > 0) {
                     return timeZones.sort((a: ITimeZone, b: ITimeZone) => {
-                        return ((+a.decimaloffset < +b.decimaloffset) ? -1 
+                        return ((+a.decimaloffset < +b.decimaloffset) ? -1
                             : ((+a.decimaloffset > +b.decimaloffset) ? 1 : 0));
                     });
                 } else {
@@ -88,7 +88,8 @@ export class WorldTimeWidgetService {
                     city: x.City,
                     country: x.Country,
                     zonename: (x.TimeZone == null || x.TimeZone == '') ? '(UTC) Greenwich, England' :
-                        x.TimeZone.indexOf(x.City) > -1 ? x.TimeZone : `${x.TimeZone} - (${x.City})`,
+                        x.TimeZone.indexOf((x.City != undefined) ? x.City : '') > -1 ? 
+                            x.TimeZone : `${x.TimeZone} - (${(x.City != undefined) ? x.City : ''})`,
                     utcoffset: (x.TimeZone == null || x.TimeZone == '' || !(/\(([^)]+)\)/gi.test(x.TimeZone))) ? '(UTC)' :
                         /\(([^)]+)\)/gi.exec(x.TimeZone)[1],
                     decimaloffset: (x.UTCOffset == null || x.UTCOffset == '') ? '0' :
