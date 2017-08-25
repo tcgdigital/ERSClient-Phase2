@@ -55,7 +55,7 @@ export class DepartmentEntryComponent implements OnInit {
                     this.users.forEach((x) => {
                         x['caption'] = `${x.Name} (${x.MainContact})`;
                     });
-                this.users = this.users.sort(function (a, b) { return (a.Name.toUpperCase() > b.Name.toUpperCase()) ? 1 : ((b.Name.toUpperCase() > a.Name.toUpperCase()) ? -1 : 0); });
+                this.users = this.users.sort(function (a, b) { return (a.Name.trim().toUpperCase() > b.Name.trim().toUpperCase()) ? 1 : ((b.Name.trim().toUpperCase() > a.Name.trim().toUpperCase()) ? -1 : 0); });
                 } else if (response.Records.length > 0
                     && Object.keys(response.Records[0]).some((x) => x === 'DepartmentId')) {
                     this.parentDepartments = response.Records as DepartmentModel[];
