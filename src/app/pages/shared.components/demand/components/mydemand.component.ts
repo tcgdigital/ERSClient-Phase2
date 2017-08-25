@@ -123,7 +123,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
                     const createdOn = new Date(x.CreatedOn);
                     const timediff = createdOn.getTime() + (+scheduleTime) * 60000;
                     const resolutiontime = new Date(timediff);
-                    x.ScheduleTimeToShow = moment(resolutiontime).format('DD-MMM-YYYY hh:mm A');
+                    x.ScheduleTimeToShow = moment(resolutiontime).format('DD-MMM-YYYY HH:mm');
                     x['showRemarks'] = false;
                 });
             }, (error: any) => {

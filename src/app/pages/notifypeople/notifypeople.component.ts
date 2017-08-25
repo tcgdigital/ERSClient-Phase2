@@ -84,6 +84,23 @@ export class NotifyPeopleComponent implements OnInit {
 
     public PopulateNotifyDepartmentUsers(departmentId: number, incidentId: number): void {
         this.notifyPeopleService.GetAllDepartmentMatrix(departmentId, incidentId, (result: NotifyPeopleModel[]) => {
+            let CurrentDeptItem: NotifyPeopleModel;
+            CurrentDeptItem = result.find(x => x.DepartmentId == departmentId);
+            result = result.filter(x => x.DepartmentId != departmentId);
+            result.sort(function (a, b) { return (a.text.toUpperCase() > b.text.toUpperCase()) ? 1 : ((b.text.toUpperCase() > a.text.toUpperCase()) ? -1 : 0); });
+            result.unshift(CurrentDeptItem);
+
+            result.forEach(x => {
+                if(x.children.length > 0)
+                {
+                    x.children.forEach(y => {
+                        y.text = y.User.Name + " (" + y.text + ")";
+                    });
+
+                    x.children.sort(function (a, b) { return (a.text.toUpperCase() > b.text.toUpperCase()) ? 1 : ((b.text.toUpperCase() > a.text.toUpperCase()) ? -1 : 0); });
+                }
+            })
+
             this.allDepartmentUserPermission = result;
             this.allDepartmentUserPermissionString = JSON.stringify(this.allDepartmentUserPermission);
             this.$tree = jQuery(this.elementRef.nativeElement).find('#tree');
@@ -98,7 +115,7 @@ export class NotifyPeopleComponent implements OnInit {
                 checkboxes: true
             });
             const node = this.tree.getNodeByText(result[0].text);
-            jQuery('#tree ul.gj-tree-bootstrap-list li div[data-role="wrapper"]:eq(0)').hide();
+            // jQuery('#tree ul.gj-tree-bootstrap-list li div[data-role="wrapper"]:eq(0)').hide();
             jQuery('#tree ul.gj-tree-bootstrap-list li ul.gj-tree-bootstrap-list:eq(0)').addClass('first-row-alignment');
             this.tree.expand(node);
         });

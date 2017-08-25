@@ -189,6 +189,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                     emergencyLocationModel.TimeZone = item.TimeZone;
                     emergencyLocationModel.UTCOffset = item.UTCOffset;
                     this.affectedStations.push(emergencyLocationModel);
+                    this.affectedStations.sort(function (a, b) { return (a.AirportName.toUpperCase() > b.AirportName.toUpperCase()) ? 1 : ((b.AirportName.toUpperCase() > a.AirportName.toUpperCase()) ? -1 : 0); });
                 });
             });
     }

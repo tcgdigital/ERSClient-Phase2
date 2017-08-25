@@ -80,7 +80,6 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         this.disableUploadButton = true;
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         //this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
-
         if (this._router.url.indexOf('archivedashboard') > -1) {
             this.isArchive = true;
             this.currentIncident = +UtilityService.GetFromSession('ArchieveIncidentId');
@@ -348,7 +347,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                             if (actionables.length > 0) {
                                 this.checklistTrail.ChklistId = actionables[0].ChklistId;
                             }
-                            this.checklistTrail.Query = `<div><p>Checklist completion status is <strong>${item.CompletionStatus}</strong> which is changed by department ${this.checklistTrail.Department.DepartmentName} on <strong>Date :</strong>  ${moment(this.checklistTrail.CreatedOn).format('DD-MMM-YYYY h:mm A')}  </p><div></p><div>`;
+                            this.checklistTrail.Query = `<div><p>Checklist completion status is <strong>${item.CompletionStatus}</strong> which is changed by department ${this.checklistTrail.Department.DepartmentName} on <strong>Date :</strong>  ${moment(this.checklistTrail.CreatedOn).format('DD-MMM-YYYY HH:mm')}  </p><div></p><div>`;
                             this.checklistTrails.push(this.checklistTrail);
                         });
 
