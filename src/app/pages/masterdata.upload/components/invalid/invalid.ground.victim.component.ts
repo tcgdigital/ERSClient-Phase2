@@ -46,6 +46,13 @@ export class InvalidGroundVictimListComponent implements OnInit, OnDestroy{
         }),
         (error: any) => {
             console.log(`Error: ${error}`);
+        }
+        ()=>{
+            this.invalidGroundVictims.sort((a, b)=>{
+                if (a.InvalidGroundVictimName < b.InvalidGroundVictimName) return -1;
+                if (a.InvalidGroundVictimName > b.InvalidGroundVictimName) return 1;
+                return 0;
+            })
         };
     }
 

@@ -59,7 +59,7 @@ export class MasterDataUploadForValidService {
         'PassengerId,FlightNumber,PassengerName,PassengerGender,PassengerNationality,BaggageCount,Pnr,PassengerType,ContactNumber,Seatno,IdentificationDocType,IdentificationDocNumber,PassengerType,IsVip,Origin,Destination,InboundFlightNumber,OutBoundFlightNumber,EmployeeId';
 
         return this._dataServiceAffectedPeople.Query()
-            .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=PassengerId ne null;$select=${affectedPeopleProjection};$expand=Passenger))`)
+            .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=PassengerId ne null;$select=${affectedPeopleProjection};$expand=Passenger;$orderby=Passenger/PassengerName))`)
             .Filter(`IncidentId eq ${incidentId}`)
             .Select(involvePartyProjection)
             .Execute()
@@ -82,7 +82,7 @@ export class MasterDataUploadForValidService {
         let crewPrjection = 'CrewId,EmployeeNumber,CrewName,CrewDob,AsgCat,DeadheadCrew,BaseLocation,Email,DepartureStationCode,ArrivalStationCode,FlightNo,WorkPosition,ContactNumber';
 
         return this._dataServiceAffectedPeople.Query()
-        .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=CrewId ne null;$select=${affectedPeopleProjection};$expand=Crew))`)
+        .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=CrewId ne null;$select=${affectedPeopleProjection};$expand=Crew;$orderby=Crew/CrewName))`)
         .Filter(`IncidentId eq ${incidentId}`)
         .Select(`${involvePartyProjection}`)
         .Execute()
@@ -118,7 +118,7 @@ export class MasterDataUploadForValidService {
      */
     GetAllGroundVictimsByIncidentId(incidentId: number): Observable<GroundVictimModel[]>{
         return this._dataServiceGroundVictims.Query()
-        .Expand(`GroundVictims`)
+        .Expand(`GroundVictims($select=GroundVictimName;$orderby=GroundVictimName)`)
         .Filter(`IncidentId eq ${incidentId}`)
         .Execute()
         .map(a=>a.Records.map(b=>b.GroundVictims).reduce((a,b)=>a.concat(b)));
