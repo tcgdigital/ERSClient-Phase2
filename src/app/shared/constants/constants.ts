@@ -492,12 +492,12 @@ export class GlobalConstants {
             Message: 'A existing Broadcast message has been modified. Please refer to tab section "Broadcast Message".'
         },
 
-        /*{
+        {
             Type: 'ChecklistNotification',
             Key: 'ReceiveChecklistCreationResponse',
-            Title: 'Checklist Created',
-            Message: 'A Checklist has been created. Please refer to tab section "Checklist > Active"'
-        },*/ {
+            Title: '',
+            Message: ''
+        }, {
             Type: 'ChecklistNotification',
             Key: 'ReceiveChecklistStatusChangeResponse',
             Title: '',

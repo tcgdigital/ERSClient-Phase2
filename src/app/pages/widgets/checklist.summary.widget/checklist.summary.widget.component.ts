@@ -79,6 +79,10 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
         this.globalState.Subscribe('ReceiveChecklistStatusChangeResponse', (model: ActionableModel) => {
             this.getActionableCount(model.IncidentId, model.DepartmentId);
         });
+        this.globalState.Subscribe('ReceiveChecklistCreationResponse', (count: number) => {
+            if (count > 0)
+                this.getActionableCount(this.currentIncidentId, this.currentDepartmentId);
+        });
     }
 
     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
