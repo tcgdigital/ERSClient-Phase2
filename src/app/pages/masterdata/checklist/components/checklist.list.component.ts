@@ -8,7 +8,7 @@ import {
     ResponseModel, DataExchangeService, UtilityService, GlobalStateService
     , SearchConfigModel,
     SearchTextBox, SearchDropdown,
-    NameValue, KeyValue
+    NameValue, KeyValue, GlobalConstants
 } from '../../../../shared';
 import { DepartmentModel, DepartmentService } from '../../department';
 import { EmergencyTypeModel, EmergencyTypeService } from '../../emergencytype';
@@ -37,11 +37,14 @@ export class ChecklistListComponent implements OnInit {
     expandSearch: boolean = false;
     searchValue: string = "Expand Search";
     invalidChecklists: InvalidChecklistModel[] = [];
+    exportLink: string;
 
     @ViewChild('invalidChecklistModal') public invalidChecklistModal: ModalDirective;
 
     constructor(private checkListService: ChecklistService, private emergencytypeService: EmergencyTypeService,
-        private dataExchange: DataExchangeService<ChecklistModel>, private globalState: GlobalStateService) { }
+        private dataExchange: DataExchangeService<ChecklistModel>, private globalState: GlobalStateService) { 
+            
+        }
 
     findIfParent(item: ChecklistModel): any {
         return (item.CheckListChildrenMapper.length > 0);
@@ -119,6 +122,7 @@ export class ChecklistListComponent implements OnInit {
 
     ngOnInit(): void {
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+        this.exportLink = GlobalConstants.EXTERNAL_URL + 'api/MasterDataExportImport/GetMasterDataForChecklists/' + this.currentDepartmentId;
         this.getCheckLists(this.currentDepartmentId);
         this.dataExchange.Subscribe('checkListModelSaved',
             (model) => this.onCheckListModelSavedSuccess(model));

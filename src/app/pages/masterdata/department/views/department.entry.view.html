@@ -42,7 +42,7 @@
             <div class="form-group col-lg-4 cl-md-6 col-sm-12">
                 <label for="DepartmentSpoc">Department Spoc:</label>
                 <select id="DepartmentSpoc" formControlName="DepartmentSpoc" name="DepartmentSpoc" class="form-control">
-                    <option value=null>Select Department Spoc</option>
+                    <option value="">Select Department Spoc</option>
                     <option *ngFor="let user of users" [value]="user.UserProfileId" >
                         {{user.caption}}
                     </option>
