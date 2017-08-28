@@ -59,7 +59,7 @@
                                                                                         <label for="RequestedBy">Requested By:<span class="required">*</span></label>
                                                                                         <input id="RequestedBy" type="text" formControlName="RequestedBy" class="form-control" placeholder="Enter Requested By" autofocus
                                                                                         />
-                                                                                        <small *ngIf="!form.controls.RequestedBy.valid" class="text-danger">
+                                                                                        <small *ngIf="!form.controls.RequestedBy.valid && submitted" class="text-danger">
                                                                                 Required.
                                                                                 </small>
                                                                                 </div>
