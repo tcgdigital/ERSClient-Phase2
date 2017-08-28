@@ -24,12 +24,14 @@
                 <td data-title="Approved On">{{message.ApprovedOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
                 <td data-title="Published On">{{message.PublishedOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
                 <td data-title="Edit">
-                   <i *ngIf="!isArchive" class="fa fa-edit fa-2x" (click)="UpdatePresidentMessage(message)"></i>
+                    <span *ngIf="!isArchive">
+                        <i class="fa fa-edit fa-2x" (click)="UpdatePresidentMessage(message)"></i>
+                    </span>
                 </td>
-                <td data-title= "Download Report">
+                <td data-title="Download Report">
                     <a *ngIf="message.PresidentMessageStatus === 'Published'" target="_blank" href="{{downloadPath + message.PresidentsMessageId}}">
                         <i class="fa fa-download fa-2x" aria-hidden="true"></i>
-                    </a> 
+                    </a>
                 </td>
             </tr>
         </tbody>

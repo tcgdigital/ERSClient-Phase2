@@ -19,7 +19,9 @@
                 <td data-title="Created On">{{query.CreatedOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
                 <td data-title="Sent For Approval On">{{query.SentForApprovalOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
                 <td data-title="Edit">
+                    <span *ngIf="!isArchive">
                     <i class="fa fa-edit fa-2x" (click)="UpdateMediaRelease(query)"></i>
+                    </span>
                 </td>
             </tr>
         </tbody>

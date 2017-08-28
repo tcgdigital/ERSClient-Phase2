@@ -260,6 +260,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
+                this.affectedPeople = this.affectedPeople
+                .sort(function (a, b) { return (a.PassengerName.trim().toUpperCase() > b.PassengerName.trim().toUpperCase()) ? 1 : ((b.PassengerName.trim().toUpperCase() > a.PassengerName.trim().toUpperCase()) ? -1 : 0); });
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
