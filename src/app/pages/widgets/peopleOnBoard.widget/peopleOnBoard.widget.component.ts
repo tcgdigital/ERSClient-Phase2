@@ -528,11 +528,11 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
                 Description: 'Arrival Station',
                 Value: ''
             }),
-            new SearchTextBox({
-                Name: 'Crew/WorkPosition',
-                Description: 'Work Position',
-                Value: ''
-            }),
+            // new SearchTextBox({
+            //     Name: 'Crew/WorkPosition',
+            //     Description: 'Work Position',
+            //     Value: ''
+            // }),
             new SearchTextBox({
                 Name: 'Crew/Email',
                 Description: 'Email Id',
