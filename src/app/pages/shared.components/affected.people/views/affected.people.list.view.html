@@ -155,7 +155,7 @@
                                             <td data-title="comm"><strong>{{caller.ContactNumber}}</strong>
                                             </td>
                                             <td data-title="Select NOK">
-                                                <md-checkbox [(ngModel)]="caller.IsNok" (change)="saveNok(affectedPersonModel.AffectedPersonId,caller,$event)" aria-label="Add"></md-checkbox>
+                                                <md-checkbox [disabled] ="isArchive" [(ngModel)]="caller.IsNok" (change)="saveNok(affectedPersonModel.AffectedPersonId,caller,$event)" aria-label="Add"></md-checkbox>
                                                 <br /><span>Relation: {{caller.Relationship}}</span>
                                             </td>
                                         </tr>

@@ -51,7 +51,7 @@
                         (click)="openChatTrails(affectedObject.AffectedObjectId)"></i>
                 </td>
                 <td data-title="Interaction Details">
-                    <i class="fa fa-edit fa-2x" (click)="openAffectedObjectDetail(affectedObject)"></i>
+                    <i [disabled] ="isArchive" class="fa fa-edit fa-2x" (click)="openAffectedObjectDetail(affectedObject)"></i>
                 </td>
             </tr>
         </tbody>

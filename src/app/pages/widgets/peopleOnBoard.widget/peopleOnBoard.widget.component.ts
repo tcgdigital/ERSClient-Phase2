@@ -3,6 +3,7 @@ import { PeopleOnBoardWidgetService } from './peopleOnBoard.widget.service';
 import { PeopleOnBoardModel } from './peopleOnBoard.widget.model';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Observable } from 'rxjs/Rx';
+import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { InvolvePartyModel } from '../../shared.components/involveparties';
 import { AffectedPeopleModel } from '../../shared.components/affected.people/components/affected.people.model';
 import { PassengerModel, CargoModel, CrewModel, GroundVictimModel } from '../../shared.components';
@@ -71,6 +72,8 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
      * @memberOf PeopleOnBoardWidgetComponent
      */
     constructor(private peopleOnBoardWidgetService: PeopleOnBoardWidgetService,
+        private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig,
         private globalState: GlobalStateService) { }
 
     getPeopleOnboardCounts(incident): void {
@@ -96,23 +99,32 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
         // SignalR Notification
         this.globalState.Subscribe('ReceiveIncidentBorrowingCompletionResponse', (incidentId: number) => {
             Observable.timer(1000).subscribe(() => {
-                this.getPeopleOnboardCounts(incidentId);
+                this.getPeopleOnboardCounts(this.currentIncidentId);
             });
         });
-        this.globalState.Subscribe('ReceivePassengerImportCompletionResponse', (incidentId: number) => {
-            Observable.timer(1000).subscribe(() => {
-                this.getPeopleOnboardCounts(incidentId);
-            });
+        this.globalState.Subscribe('ReceivePassengerImportCompletionResponse', (count: number) => {
+            if (count > 0)
+                Observable.timer(1000).subscribe(() => {
+                    this.getPeopleOnboardCounts(this.currentIncidentId);
+                });
+            else
+                this.toastrService.error("Passenger import operation has been failed due to some exception.", "Passenger Import Failed");
         });
-        this.globalState.Subscribe('ReceiveCargoImportCompletionResponse', (incidentId: number) => {
-            Observable.timer(1000).subscribe(() => {
-                this.getPeopleOnboardCounts(incidentId);
-            });
+        this.globalState.Subscribe('ReceiveCargoImportCompletionResponse', (count: number) => {
+            if (count > 0)
+                Observable.timer(1000).subscribe(() => {
+                    this.getPeopleOnboardCounts(this.currentIncidentId);
+                });
+            else
+                this.toastrService.error("Cargo import operation has been failed due to some exception.", "Cargo Import Failed");
         });
-        this.globalState.Subscribe('ReceiveCrewImportCompletionResponse', (incidentId: number) => {
-            Observable.timer(1000).subscribe(() => {
-                this.getPeopleOnboardCounts(incidentId);
-            });
+        this.globalState.Subscribe('ReceiveCrewImportCompletionResponse', (count: number) => {
+            if (count > 0)
+                Observable.timer(1000).subscribe(() => {
+                    this.getPeopleOnboardCounts(this.currentIncidentId);
+                });
+            else
+                this.toastrService.error("Crew import operation has been failed due to some exception.", "Crew Import Failed");
         });
     }
 

@@ -121,8 +121,9 @@ export class AffectedPeopleVerificationComponent implements OnInit {
         this.globalState.Subscribe('ReceiveIncidentBorrowingCompletionResponse', () => {
             this.getAffectedPeople(this.currentIncident);
         });
-        this.globalState.Subscribe('ReceivePassengerImportCompletionResponse', () => {
-            this.getAffectedPeople(this.currentIncident);
+        this.globalState.Subscribe('ReceivePassengerImportCompletionResponse', (count: number) => {
+            if (count > 0)
+                this.getAffectedPeople(this.currentIncident);
         });
     }
 

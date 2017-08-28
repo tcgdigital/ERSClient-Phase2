@@ -80,7 +80,6 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         this.disableUploadButton = true;
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         //this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
-
         if (this._router.url.indexOf('archivedashboard') > -1) {
             this.isArchive = true;
             this.currentIncident = +UtilityService.GetFromSession('ArchieveIncidentId');

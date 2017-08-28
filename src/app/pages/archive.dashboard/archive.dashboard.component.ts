@@ -28,6 +28,7 @@ export class ArchiveDashboardComponent implements OnInit {
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
     public isShowViewReadonlyCrisis: boolean = false;
     public isReopened: boolean = false;
+    public closedDate:Date=new Date();
     /**
      * Creates an instance of ArchiveDashboardComponent.
      * @param {ActivatedRoute} router
@@ -96,6 +97,7 @@ export class ArchiveDashboardComponent implements OnInit {
         this.incidentService.Get(this.archievedIncidentId)
             .map((record: IncidentModel) => {
                 this.currentIncident = new KeyValue(record.Description, record.IncidentId);
+                this.closedDate = record.ClosedOn;
                 this.incidentDate = new Date(record.EmergencyDate);
             })
             .flatMap((_) => this.departmentService.Get(this.currentDepartmentId))
