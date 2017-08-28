@@ -94,5 +94,6 @@ export class AffectedPeopleToView extends BaseModel {
 	public GroupId: number;
 	public commlength : boolean;
 	public PNRdisabled : string;
+	public PassCrewNm : string;
 }
 
