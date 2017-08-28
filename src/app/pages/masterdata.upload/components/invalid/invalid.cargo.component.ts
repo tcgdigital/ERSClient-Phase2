@@ -58,8 +58,8 @@ export class InvalidCargoListComponent implements OnInit, OnDestroy {
                 this.invalidCargoes.sort((a, b)=>{
                     if (a.AWB < b.AWB) return -1;
                     if (a.AWB > b.AWB) return 1;
-                    if (a.POL < b.POL) return -1;
-                    if (a.POL > b.POL) return 1;
+                    // if (a.POL < b.POL) return -1;
+                    // if (a.POL > b.POL) return 1;
                     return 0;
                 })
             };
