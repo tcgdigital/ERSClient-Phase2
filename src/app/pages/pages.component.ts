@@ -534,7 +534,6 @@ export class PagesComponent implements OnInit {
      */
     private ExecuteOperationSimple(key: string, model: any): void {
         const message = GlobalConstants.NotificationMessage.find((x) => x.Key === key);
-        debugger;
         if (message.Title !== '' && message.Message !== '') {
             if (key == 'ReceivePassengerImportCompletionResponse' && model.toString() == '0')
                 console.log('Default message omitted');

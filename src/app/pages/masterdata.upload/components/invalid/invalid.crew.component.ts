@@ -58,6 +58,13 @@ export class InvalidCrewListComponent implements OnInit, OnDestroy{
         }), 
         (error: any) => {
             console.log(`Error: ${error}`);
+        }
+        ()=>{
+            this.invalidCrews.sort((a, b)=>{
+                if (a.CrewName < b.CrewName) return -1;
+                if (a.CrewName > b.CrewName) return 1;
+                return 0;
+            })
         };
         // ()=>{
         //      this.invalidCrews.forEach(a=>{

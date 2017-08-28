@@ -102,6 +102,11 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         this.globalState.Subscribe('ReceiveChecklistStatusChangeResponse', (model: ActionableModel) => {
             this.getAllActiveActionable(model.IncidentId, model.DepartmentId);
         });
+        
+        this.globalState.Subscribe('ReceiveChecklistCreationResponse', (count: number) => {
+            if (count > 0)
+                this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
+        });
     }
 
     
