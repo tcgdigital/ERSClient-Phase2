@@ -328,9 +328,9 @@ export class GlobalConstants {
         { value: 'NonFlight', key: 2 }
     ];
 
-    public static TargetDepartmentTravel: number = 1138; // 1138; 10
-    public static TargetDepartmentAdmin: number = 1138; //1138; 13
-    public static TargetDepartmentCrew: number = 1138; //1138; 9
+    public static TargetDepartmentTravel: number = 10; // 1138; 10
+    public static TargetDepartmentAdmin: number = 13; //1138; 13
+    public static TargetDepartmentCrew: number = 9; //1138; 9
     public static DemandTypeId: number = 1;
     public static RequiredLocation: string = 'Office';
     public static ScheduleTimeForCallback: number = 75;
@@ -492,12 +492,12 @@ export class GlobalConstants {
             Message: 'A existing Broadcast message has been modified. Please refer to tab section "Broadcast Message".'
         },
 
-        /*{
+        {
             Type: 'ChecklistNotification',
             Key: 'ReceiveChecklistCreationResponse',
-            Title: 'Checklist Created',
-            Message: 'A Checklist has been created. Please refer to tab section "Checklist > Active"'
-        },*/ {
+            Title: '',
+            Message: ''
+        }, {
             Type: 'ChecklistNotification',
             Key: 'ReceiveChecklistStatusChangeResponse',
             Title: '',

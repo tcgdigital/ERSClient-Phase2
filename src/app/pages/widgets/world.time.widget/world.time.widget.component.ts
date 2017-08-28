@@ -141,7 +141,6 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit {
         observables.push(this.incidentService.GetOpenIncidents());
 
         Observable.forkJoin(observables).subscribe((res) => {
-            debugger;
             const isAnyIncidentOpen: boolean = res[0] as boolean;
             const openIncidents: Array<IncidentModel> = (res[1] as ResponseModel<IncidentModel>).Records;
 

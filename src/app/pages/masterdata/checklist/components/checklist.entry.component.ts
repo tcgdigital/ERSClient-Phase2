@@ -373,7 +373,8 @@ export class ChecklistEntryComponent implements OnInit {
 
                 this.checkListModel.CheckListCode = CheckList_Code;
                 this.createChecklist(this.checkListModel);
-
+                this.showAddRegion(this.showAdd);
+                this.showAdd = false;
             }
             else {// EDIT REGION
                 delete this.checkListModel['Active'];

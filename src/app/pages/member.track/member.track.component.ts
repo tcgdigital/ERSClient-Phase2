@@ -55,6 +55,7 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
     public isShowHistory: boolean = true;
     public isShowAllocationDeallocation: boolean = true;
     private $toggle: JQuery;
+    public isSelectedDept: boolean;
 
 
     constructor(private globalState: GlobalStateService, private userProfileService: UserProfileService,
@@ -227,7 +228,9 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
                         member.MemberCurrentEngagementId = obj.MemberCurrentEngagementId;
                         member.MemberEngagementTrackId = obj.MemberEngagementTrackId;
                     }
-
+                    // if(member.IsBusy && (this.memberEngagementsToView.find((x)=>x.DepartmentId) != +UtilityService.GetFromSession('CurrentDepartmentId'))){
+                    //     this.isSelectedDept = true;
+                    // }
                     return member;
                 });
                 this.availblecount = this.memberEngagementsToView.filter((x) => x.IsBusy === false).length;

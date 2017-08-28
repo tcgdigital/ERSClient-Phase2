@@ -58,6 +58,13 @@ export class InvalidPassengersListComponent implements OnInit, OnDestroy{
         }), 
         (error: any) => {
             console.log(`Error: ${error}`);
+        }
+        ()=>{
+            this.invalidPassengers.sort((a, b)=>{
+                if (a.PassengerName < b.PassengerName) return -1;
+                if (a.PassengerName > b.PassengerName) return 1;
+                return 0;
+            })
         };
     }
 
