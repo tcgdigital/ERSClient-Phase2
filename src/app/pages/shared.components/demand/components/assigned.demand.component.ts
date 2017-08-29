@@ -312,8 +312,8 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     }
 
     public ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        //this.globalState.Unsubscribe('incidentChangefromDashboard');
+        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 
     public ngAfterContentInit(): any {

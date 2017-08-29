@@ -109,7 +109,7 @@ export class MediaReleaseWidgetComponent implements OnInit {
 
     ngOnDestroy(): void {
         // this.globalState.Unsubscribe('incidentChange');
-        this.globalState.Unsubscribe('MediaReleasePublished');
+        //this.globalState.Unsubscribe('MediaReleasePublished');
     }
 
     private incidentChangeHandler(incident: KeyValue): void {

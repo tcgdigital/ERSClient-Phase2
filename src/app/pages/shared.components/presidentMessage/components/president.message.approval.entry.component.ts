@@ -81,9 +81,9 @@ export class PresidentMessageApprovalEntryComponent implements OnInit, OnDestroy
     }
 
     ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe("OnPresidentMessageApprovalUpdate");
-        this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        //this.dataExchange.Unsubscribe("OnPresidentMessageApprovalUpdate");
+        //this.globalState.Unsubscribe('incidentChangefromDashboard');
+        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 
     onPresidentMessageUpdate(presidentMessageModel: PresidentMessageModel): void {

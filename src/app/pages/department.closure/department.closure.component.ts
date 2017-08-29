@@ -62,7 +62,7 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.globalState.Unsubscribe('departmentChange');
+        //this.globalState.Unsubscribe('departmentChange');
         // this.globalState.Unsubscribe('incidentChange');
     }
 

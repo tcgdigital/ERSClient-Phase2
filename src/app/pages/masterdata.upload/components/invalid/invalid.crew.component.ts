@@ -40,8 +40,8 @@ export class InvalidCrewListComponent implements OnInit, OnDestroy{
     
 
     ngOnDestroy(): void{
-        this.dataExchange.Unsubscribe("OpenInvalidCrews");
-        this.globalState.Unsubscribe("incidentChange");
+        //this.dataExchange.Unsubscribe("OpenInvalidCrews");
+        //this.globalState.Unsubscribe("incidentChange");
     }
 
     openInvalidCrews(invalidCrew: InvalidCrewModel): void{

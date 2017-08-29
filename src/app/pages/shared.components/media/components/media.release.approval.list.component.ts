@@ -89,11 +89,11 @@ export class MediaReleaseApprovalListComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe('MediaModelSaved');
-        this.dataExchange.Unsubscribe('MediaModelUpdated');
-        this.dataExchange.Unsubscribe('MediaModelSentForApproval');
-        this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        //this.dataExchange.Unsubscribe('MediaModelSaved');
+        //this.dataExchange.Unsubscribe('MediaModelUpdated');
+        //this.dataExchange.Unsubscribe('MediaModelSentForApproval');
+        //this.globalState.Unsubscribe('incidentChangefromDashboard');
+        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 
     private incidentChangeHandler(incident: KeyValue): void {

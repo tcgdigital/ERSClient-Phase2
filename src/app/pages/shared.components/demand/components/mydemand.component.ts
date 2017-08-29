@@ -252,9 +252,9 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     }
 
     public ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChangeFromDashboard');
-        this.globalState.Unsubscribe('DemandAddedUpdated');
+        //this.globalState.Unsubscribe('incidentChangefromDashboard');
+        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        //this.globalState.Unsubscribe('DemandAddedUpdated');
     }
 
     private incidentChangeHandler(incident: KeyValue): void {

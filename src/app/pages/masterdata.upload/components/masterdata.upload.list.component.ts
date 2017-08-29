@@ -92,7 +92,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy(): void {
         // this.globalState.Unsubscribe('incidentChange');
-        this.globalState.Unsubscribe('departmentChange');
+        //this.globalState.Unsubscribe('departmentChange');
     }
 
     reset(): void {

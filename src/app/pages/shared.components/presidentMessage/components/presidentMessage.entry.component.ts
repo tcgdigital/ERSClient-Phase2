@@ -85,9 +85,9 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe("OnPresidentMessageUpdate");
-        this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        //this.dataExchange.Unsubscribe("OnPresidentMessageUpdate");
+        //this.globalState.Unsubscribe('incidentChangefromDashboard');
+        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 
     getTemplateMedias(): void {

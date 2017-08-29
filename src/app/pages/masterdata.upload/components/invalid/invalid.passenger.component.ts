@@ -44,8 +44,8 @@ export class InvalidPassengersListComponent implements OnInit, OnDestroy{
       
 
     ngOnDestroy(): void{
-        this.dataExchange.Unsubscribe("OpenInvalidPassengers");
-        this.globalState.Unsubscribe("incidentChange");
+        //this.dataExchange.Unsubscribe("OpenInvalidPassengers");
+        //this.globalState.Unsubscribe("incidentChange");
     }
 
     getInvalidPassengerRecords(): void{

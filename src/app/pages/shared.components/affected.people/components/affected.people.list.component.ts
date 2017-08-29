@@ -303,7 +303,7 @@ export class AffectedPeopleListComponent implements OnInit {
     }
 
     ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChangefromDashboard');
+      //  this.globalState.Unsubscribe('incidentChangefromDashboard');
     }
 
     openChatTrails(affectedPersonId: number): void {

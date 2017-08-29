@@ -831,10 +831,10 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.globalState.Unsubscribe('OnDemandUpdate');
-        this.globalState.Unsubscribe('OnDemandDetailClick');
-        this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        //this.globalState.Unsubscribe('OnDemandUpdate');
+        //this.globalState.Unsubscribe('OnDemandDetailClick');
+        //this.globalState.Unsubscribe('incidentChangefromDashboard');
+        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 
     private incidentChangeHandler(incident: KeyValue): void {

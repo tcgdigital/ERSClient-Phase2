@@ -61,9 +61,9 @@ export enum StorageType {
 
 export class GlobalConstants {
     // public static EXTERNAL_URL: string = 'http://10.168.33.194:8080/';
-    //  public static EXTERNAL_URL: string = 'http://localhost:5001/';
-    public static EXTERNAL_URL: string = 'http://172.20.23.110:99/';
-  //  public static EXTERNAL_URL: string = 'http://cmgtest.pal.com.ph:8080/';
+     public static EXTERNAL_URL: string = 'http://localhost:5001/';
+    //public static EXTERNAL_URL: string = 'http://172.20.23.110:99/';
+    // public static EXTERNAL_URL: string = 'http://cmgtest.pal.com.ph:8080/';
 
     public static NOTIFICATION_URL: string = `${GlobalConstants.EXTERNAL_URL}Notification/Hubs`;
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
@@ -79,7 +79,7 @@ export class GlobalConstants {
     public static EMAIL_PATTERN: string = '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$';
     public static URL_PATTERN: string = '^(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:\~\+#]*[\w\-\@?^=%&amp;\~\+#])?$';
     public static LAST_INCIDENT_PICK_COUNT: string = '5';
-    public static ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION: number = 12;
+    public static ELAPSED_MAX_HOUR_INTERVAL_COUNT_FOR_GRAPH_CREATION: number = 12;
     public static currentLoggedInUser: number = 0;
     public static PagePermissionMatrix: PagesPermissionMatrixModel[] = [];
     public static accessibilityErrorMessage: string = 'Access Restricted';
@@ -328,9 +328,9 @@ export class GlobalConstants {
         { value: 'NonFlight', key: 2 }
     ];
 
-    public static TargetDepartmentTravel: number = 1138; // 1138; 36;10
-    public static TargetDepartmentAdmin: number = 1138; //1138;36; 13
-    public static TargetDepartmentCrew: number = 1138; //1138;36; 9
+    public static TargetDepartmentTravel: number = 10; // 1138; 36;10
+    public static TargetDepartmentAdmin: number = 13; //1138;36; 13
+    public static TargetDepartmentCrew: number = 9; //1138;36; 9
     public static DemandTypeId: number = 1;
     public static RequiredLocation: string = 'Office';
     public static ScheduleTimeForCallback: number = 75;
