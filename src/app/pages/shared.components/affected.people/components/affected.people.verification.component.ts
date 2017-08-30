@@ -128,7 +128,7 @@ export class AffectedPeopleVerificationComponent implements OnInit {
     }
 
     ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChangefromDashboard');
+       // this.globalState.Unsubscribe('incidentChangefromDashboard');
     }
 
     departmentChangeHandler(department: KeyValue): void {

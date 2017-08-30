@@ -24,11 +24,13 @@
                 <td data-title="Approved On">{{query.ApprovedOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
                 <td data-title="Published On">{{query.PublishedOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
                 <td data-title="Edit">
-                    <i class="fa fa-edit fa-2x" (click)="UpdateMediaRelease(query)"></i>
+                    <span *ngIf="!isArchive">
+                        <i class="fa fa-edit fa-2x" (click)="UpdateMediaRelease(query)"></i>
+                    </span>
                 </td>
                 <td data-title="Download Report">
                     <a *ngIf="query.MediaReleaseStatus === 'Published'" target="_blank" href="{{downloadPath + query.MediaqueryId}}">
-                        <i class="fa fa-download fa-2x" aria-hidden="true"></i>
+                            <i class="fa fa-download fa-2x" aria-hidden="true"></i>
                     </a>
                 </td>
             </tr>

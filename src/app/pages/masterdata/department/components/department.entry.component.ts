@@ -124,12 +124,7 @@ export class DepartmentEntryComponent implements OnInit {
 
                 this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString().replace(/^\D+/g, '');
                 this.departmentModel.CreatedBy = +this.credential.UserId;
-                if (this.form.controls['ParentDepartmentId'].value == '') {
-                    this.departmentModel.ParentDepartmentId = null;
-                }
-                else {
-                    this.departmentModel.ParentDepartmentId = +this.form.controls['ParentDepartmentId'].value;
-                }
+                this.setparentDepartmentAndDeptSpoc();
                 this.departmentService.Create(this.departmentModel)
                     .subscribe((response: DepartmentModel) => {
                         this.toastrService.success(`Department Saved Successfully. ${GlobalConstants.departmentAndFunctionalityReloginMessage}`, 'Success', this.toastrConfig);
@@ -145,7 +140,6 @@ export class DepartmentEntryComponent implements OnInit {
             }
             else {
                 // EDIT REGION
-
                 this.departmentModel = new DepartmentModel();
                 this.departmentModel.DepartmentId = values.DepartmentId;
 
@@ -157,18 +151,12 @@ export class DepartmentEntryComponent implements OnInit {
                     (x) => x.ParentDepartmentId);
 
                 this.departmentModel.deleteAttributes();
-                if (this.form.controls['ParentDepartmentId'].value == '') {
-                    this.departmentModel.ParentDepartmentId = null;
-                }
-                else {
-                    this.departmentModel.ParentDepartmentId = +this.form.controls['ParentDepartmentId'].value;
-                }
+                this.setparentDepartmentAndDeptSpoc();
+                
                 if (this.departmentModel.ContactNo) {
                     this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString().replace(/^\D+/g, '');
                 }
-                if(this.departmentModel.DepartmentSpoc.toString()=='null'){
-                    this.departmentModel.DepartmentSpoc=null;
-                }
+                
                 this.departmentService.Update(this.departmentModel, this.departmentModel.DepartmentId)
                     .subscribe((response: DepartmentModel) => {
                         this.toastrService.success(`Department updated Successfully.  ${GlobalConstants.departmentAndFunctionalityReloginMessage}`, 'Success', this.toastrConfig);
@@ -182,6 +170,25 @@ export class DepartmentEntryComponent implements OnInit {
                         console.log(`Error: ${error}`);
                     });
             }
+        }
+    }
+
+    setparentDepartmentAndDeptSpoc(): void {
+        if (this.form.controls['ParentDepartmentId'].value == '') 
+        {
+            this.departmentModel.ParentDepartmentId = null;
+        }
+        else 
+        {
+            this.departmentModel.ParentDepartmentId = +this.form.controls['ParentDepartmentId'].value;
+        }
+        if(this.form.controls["DepartmentSpoc"].value == '')
+        {
+            this.departmentModel.DepartmentSpoc = null;
+        }
+        else
+        {
+            this.departmentModel.DepartmentSpoc = +this.form.controls["DepartmentSpoc"].value;
         }
     }
 
@@ -230,8 +237,8 @@ export class DepartmentEntryComponent implements OnInit {
             DepartmentName: new FormControl(department ? department.DepartmentName : '', [Validators.required]),
             Description: new FormControl(department ? department.Description : '', [Validators.required]),
             ContactNo: new FormControl(department ? department.ContactNo : '', [Validators.required]),
-            DepartmentSpoc: new FormControl(department ? department.DepartmentSpoc : null),
-            ParentDepartmentId: new FormControl((department && department.ParentDepartmentId) ? department.ParentDepartmentId : ''),
+            DepartmentSpoc: new FormControl((department && department.DepartmentSpoc) ? department.DepartmentSpoc : ''),
+            ParentDepartmentId: new FormControl((department && department.ParentDepartmentId) ? department.ParentDepartmentId : '')
         });
     }
 

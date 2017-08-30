@@ -88,6 +88,6 @@ export class CasualtySummaryWidgetComponent implements OnInit {
     }
 
     ngOnDestroy() {
-        this.globalState.Unsubscribe('AffectedPersonStatusChanged');
+        //this.globalState.Unsubscribe('AffectedPersonStatusChanged');
     }
 }

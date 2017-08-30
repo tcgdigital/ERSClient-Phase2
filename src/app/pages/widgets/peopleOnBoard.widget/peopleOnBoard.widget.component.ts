@@ -339,7 +339,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
     }
     ngOnDestroy(): void {
         // this.globalState.Unsubscribe('incidentChange');
-        this.globalState.Unsubscribe('AffectedPersonStatusChanged');
+        //this.globalState.Unsubscribe('AffectedPersonStatusChanged');
     }
 
     invokeSearchPassenger(query: string): void {
@@ -426,7 +426,12 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
         let cargoListLocal: CargoModel[] = [];
         this.peopleOnBoardWidgetService.GetAllCargosByIncident(this.currentIncidentId)
             .subscribe((result: ResponseModel<InvolvePartyModel>) => {
-                cargoListLocal = result.Records[0].Flights[0].Cargoes;
+                cargoListLocal = result.Records[0].Flights[0].Cargoes.sort((a, b)=>{
+                    if(a.AWB < b.AWB) return -1;
+                    if(a.AWB > b.AWB) return 1;
+
+                    return 0;
+                });
                 this.cargoList = Observable.of(cargoListLocal);
             });
         this.childModalCargos.show();

@@ -109,9 +109,9 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
             this.demandRaisedSummary = this.demandRaisedSummaryWidgetService
                 .GetDemandRaisedCount(this.incidentId, this.initiatedDepartmentId);
         }
-        if (changes['departmentId'] !== undefined
-            && (changes['departmentId'].currentValue !== changes['departmentId'].previousValue)
-            && changes['departmentId'].previousValue !== undefined) {
+        if (changes['initiatedDepartmentId'] !== undefined
+            && (changes['initiatedDepartmentId'].currentValue !== changes['initiatedDepartmentId'].previousValue)
+            && changes['initiatedDepartmentId'].previousValue !== undefined) {
             this.demandRaisedSummary = this.demandRaisedSummaryWidgetService
                 .GetDemandRaisedCount(this.incidentId, this.initiatedDepartmentId);
         }
@@ -140,7 +140,8 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
     // TODO: Need to refactor
     setRagStatus(): void {
         Observable.interval(1000).subscribe((_) => {
-            UtilityService.SetRAGStatusGrid(this.allDemandRaisedSummaryModelList, 'Demand');
+            //UtilityService.SetRAGStatusGrid(this.allDemandRaisedSummaryModelList, 'Demand');
+            UtilityService.setRagStatus(this.allDemandRaisedSummaryModelList);
 
             this.allDemandRaisedSummaryModel = Observable.of(this.allDemandRaisedSummaryModelList);
         });
@@ -199,7 +200,8 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
             }
         });
 
-        UtilityService.SetRAGStatus(this.allDeptDemandRaisedSummaries, 'Demand');
+        // UtilityService.SetRAGStatus(this.allDeptDemandRaisedSummaries, 'Demand');
+        UtilityService.setRagStatus(this.allDeptDemandRaisedSummaries);
         this.showAllDeptSubCompleted = true;
         this.showAllDeptSubPending = false;
     }
@@ -226,7 +228,8 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
             }
         });
 
-        UtilityService.SetRAGStatus(this.allDeptDemandRaisedSummaries, 'Demand');
+        //UtilityService.SetRAGStatus(this.allDeptDemandRaisedSummaries, 'Demand');
+        UtilityService.setRagStatus(this.allDeptDemandRaisedSummaries);
         this.showAllDeptSubPending = true;
         this.showAllDeptSubCompleted = false;
     }
@@ -257,7 +260,8 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
                 this.subDeptDemandRaisedSummaries.push(subDeptDemandRaisedSummary);
             }
         });
-        UtilityService.SetRAGStatus(this.subDeptDemandRaisedSummaries, 'Demand');
+        //UtilityService.SetRAGStatus(this.subDeptDemandRaisedSummaries, 'Demand');
+        UtilityService.setRagStatus(this.subDeptDemandRaisedSummaries);
         this.showSubDeptSubCompleted = true;
         this.showSubDeptSubPending = false;
     }
@@ -278,7 +282,8 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
                 this.subDeptDemandRaisedSummaries.push(subDeptDemandRaisedSummary);
             }
         });
-        UtilityService.SetRAGStatus(this.subDeptDemandRaisedSummaries, 'Demand');
+        //UtilityService.SetRAGStatus(this.subDeptDemandRaisedSummaries, 'Demand');
+        UtilityService.setRagStatus(this.subDeptDemandRaisedSummaries);
         this.showSubDeptSubCompleted = false;
         this.showSubDeptSubPending = true;
     }

@@ -80,6 +80,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         private globalState: GlobalStateService,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig,
+        private _router: Router,
         private callcenteronlypageservice: CallCenterOnlyPageService,
         private communicationlogservice: CommunicationLogService,
         private passangerService: PassengerService) { }
@@ -152,6 +153,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     createdBy: number;
     createdByName: string;
     DemandCheckDisabled: string = "";
+    public isArchive: boolean = false;
 
     getPassengersCrews(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
@@ -733,6 +735,14 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     }
 
     ngOnInit(): any {
+        if (this._router.url.indexOf('archivedashboard') > -1) {
+            this.isArchive = true;
+            this.currentIncident = +UtilityService.GetFromSession('ArchieveIncidentId');
+        }
+        else {
+            this.isArchive = false;
+            this.currentIncident = +UtilityService.GetFromSession('CurrentIncidentId');
+        }
         this.form = this.formInitialization();
         this.currentIncident = +UtilityService.GetFromSession('CurrentIncidentId');
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');

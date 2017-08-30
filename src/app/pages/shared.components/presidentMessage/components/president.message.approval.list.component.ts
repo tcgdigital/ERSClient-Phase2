@@ -88,9 +88,9 @@ export class PresidentMessageApprovalListComponent implements OnInit, OnDestroy 
     }
 
     public ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe('PresidentMessageApprovalUpdated');
-        this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        //this.dataExchange.Unsubscribe('PresidentMessageApprovalUpdated');
+        //this.globalState.Unsubscribe('incidentChangefromDashboard');
+        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 
     private incidentChangeHandler(incident: KeyValue): void {

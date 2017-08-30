@@ -20,7 +20,7 @@
                         <td data-title="Cargo Number">{{call.Caller.ContactNumber}}</td>
                         <td data-title="AWBS">{{getAWBS(call.Enquiries[0].AffectedObjectId)}}</td>
                         <td data-title="Cargo Relation">{{call.Caller.Relationship}}&nbsp;</td>
-                        <td data-title="Action"><i disabled ="isArchive" class="fa fa-edit fa-2x" (click)="openCallcenter(call.ExternalInputId)"></i>&nbsp;</td>
+                        <td data-title="Action"><i *ngIf ="!isArchive" class="fa fa-edit fa-2x" (click)="openCallcenter(call.ExternalInputId)"></i>&nbsp;</td>
                     </tr>
                 </tbody>
             </table>

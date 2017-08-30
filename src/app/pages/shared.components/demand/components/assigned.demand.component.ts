@@ -27,6 +27,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDestroy {
     @ViewChild('childModalRemarks') public childModalRemarks: ModalDirective;
     @ViewChild('childModal') public childModal: ModalDirective;
+    @ViewChild('childModalTrail') public childModalTrail: ModalDirective;
 
     demands: DemandModelToView[] = [];
     demand: DemandModelToView = new DemandModelToView();
@@ -45,6 +46,8 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     protected _onRouteChange: Subscription;
     isArchive: boolean = false;
     demandFilePath: string;
+    public demandTypeName: string = '';
+    public requesterDepartmentName: string = '';
     public globalStateProxyOpen: GlobalStateService;
     public isShowAssignToMeDemand: boolean = true;
     public isInvalidRemarks: boolean = false;
@@ -60,6 +63,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     constructor(private demandService: DemandService, private injector: Injector,
         private departmentService: DepartmentService,
         private demandRemarkLogsService: DemandRemarkLogService,
+        private demandTrailService: DemandTrailService,
         private globalState: GlobalStateService,
         private dataExchange: DataExchangeService<number>,
         private toastrService: ToastrService,
@@ -109,6 +113,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.demandService.GetForAssignedDept(deptId, incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demands = this.demandService.DemandMapper(response.Records);
+                UtilityService.setRagStatus(this.demands);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -119,6 +124,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.childModal.hide();
     }
 
+    /*
     public setRagStatus(): void {
         Observable.interval(1000).subscribe((_) => {
             if (this.demands && this.demands.length > 0) {
@@ -157,6 +163,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
             }
         });
     }
+    */
 
     public getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
@@ -311,14 +318,34 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         }
     }
 
+    public cancelTrail(): void {
+        this.childModalTrail.hide();
+    }
+
+    public getDemandTrails(demandId): void {
+        this.demandTrailService.getDemandTrailByDemandId(demandId)
+            .subscribe((response: ResponseModel<DemandTrailModel>) => {
+                this.demandTrails = response.Records;
+                this.childModalTrail.show();
+            }, (error: any) => {
+                console.log('error:  ' + error);
+            });
+    }
+
+    public openTrail(demand: DemandModelToView): void {
+        this.demandTypeName = demand.DemandTypeName;
+        this.requesterDepartmentName = demand.RequesterDepartmentName;
+        this.getDemandTrails(demand.DemandId);
+    }
+
     public ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        //this.globalState.Unsubscribe('incidentChangefromDashboard');
+        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 
     public ngAfterContentInit(): any {
         // this.setRagStatus();
-        UtilityService.SetRAGStatus(this.demands, 'Demand');
+        //UtilityService.SetRAGStatus(this.demands, 'Demand');
     }
     private incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;

@@ -110,13 +110,14 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
 
     public ngAfterContentInit(): any {
         // this.setRagStatus();
-        UtilityService.SetRAGStatus(this.demandsForApproval, 'Demand');
+        // UtilityService.SetRAGStatus(this.demandsForApproval, 'Demand');
     }
     
     public getDemandsForApproval(deptId, incidentId): void {
         this.demandService.GetByApproverDepartment(deptId, incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demandsForApproval = this.demandService.DemandMapper(response.Records);
+                UtilityService.setRagStatus(this.demandsForApproval);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -127,6 +128,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.childModal.hide();
     }
 
+    /*
     public setRagStatus(): void {
         Observable.interval(1000).subscribe((_) => {
             this.demandsForApproval.forEach((x) => {
@@ -164,6 +166,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
             });
         });
     }
+    */
 
     public getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
@@ -325,8 +328,8 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     }
 
     public ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        //this.globalState.Unsubscribe('incidentChangefromDashboard');
+        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 
     public openDemandDetails(demandId: number): void {

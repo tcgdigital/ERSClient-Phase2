@@ -87,10 +87,10 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe('BroadcastModelSaved');
-        this.dataExchange.Unsubscribe('BroadcastModelUpdated');
-        this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        //this.dataExchange.Unsubscribe('BroadcastModelSaved');
+        //this.dataExchange.Unsubscribe('BroadcastModelUpdated');
+       // this.globalState.Unsubscribe('incidentChangefromDashboard');
+        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 
     private incidentChangeHandler(incident: KeyValue): void {

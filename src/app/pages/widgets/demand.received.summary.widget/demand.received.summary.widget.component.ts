@@ -98,9 +98,9 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
             changes['incidentId'].previousValue !== undefined) {
             this.demandReceivedSummary = this.demandReceivedSummaryWidgetService.GetDemandReceivedCount(this.incidentId, this.initiatedDepartmentId);
         }
-        if (changes['departmentId'] !== undefined && (changes['departmentId'].currentValue !==
-            changes['departmentId'].previousValue) &&
-            changes['departmentId'].previousValue !== undefined) {
+        if (changes['initiatedDepartmentId'] !== undefined && (changes['initiatedDepartmentId'].currentValue !==
+            changes['initiatedDepartmentId'].previousValue) &&
+            changes['initiatedDepartmentId'].previousValue !== undefined) {
             this.demandReceivedSummary = this.demandReceivedSummaryWidgetService.GetDemandReceivedCount(this.incidentId, this.initiatedDepartmentId);
         }
     }
@@ -163,7 +163,8 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
             }
         });
 
-        UtilityService.SetRAGStatus(this.allDeptDemandReceivedSummaries, 'Demand');
+        // UtilityService.SetRAGStatus(this.allDeptDemandReceivedSummaries, 'Demand');
+        UtilityService.setRagStatus(this.allDeptDemandReceivedSummaries);
         this.showAllDeptSubCompleted = true;
         this.showAllDeptSubPending = false;
     }
@@ -190,7 +191,8 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
             }
         });
 
-        UtilityService.SetRAGStatus(this.allDeptDemandReceivedSummaries, 'Demand');
+        // UtilityService.SetRAGStatus(this.allDeptDemandReceivedSummaries, 'Demand');
+        UtilityService.setRagStatus(this.allDeptDemandReceivedSummaries);
         this.showAllDeptSubPending = true;
         this.showAllDeptSubCompleted = false;
     }
@@ -217,7 +219,8 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
             }
         });
 
-        UtilityService.SetRAGStatus(this.subDeptDemandReceivedSummaries, 'Demand');
+        // UtilityService.SetRAGStatus(this.subDeptDemandReceivedSummaries, 'Demand');
+        UtilityService.setRagStatus(this.subDeptDemandReceivedSummaries);
         this.showSubDeptSubCompleted = true;
         this.showSubDeptSubPending = false;
     }
@@ -244,7 +247,8 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
             }
         });
 
-        UtilityService.SetRAGStatus(this.subDeptDemandReceivedSummaries, 'Demand');
+        // UtilityService.SetRAGStatus(this.subDeptDemandReceivedSummaries, 'Demand');
+        UtilityService.setRagStatus(this.subDeptDemandReceivedSummaries);
         this.showSubDeptSubCompleted = false;
         this.showSubDeptSubPending = true;
     }
