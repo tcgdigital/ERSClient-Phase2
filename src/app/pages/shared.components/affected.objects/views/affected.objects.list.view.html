@@ -51,7 +51,9 @@
                         (click)="openChatTrails(affectedObject.AffectedObjectId)"></i>
                 </td>
                 <td data-title="Interaction Details">
-                    <i [disabled] ="isArchive" class="fa fa-edit fa-2x" (click)="openAffectedObjectDetail(affectedObject)"></i>
+                        <span *ngIf="!isArchive">
+                            <i class="fa fa-edit fa-2x" (click)="openAffectedObjectDetail(affectedObject)"></i>
+                        </span>
                 </td>
             </tr>
         </tbody>

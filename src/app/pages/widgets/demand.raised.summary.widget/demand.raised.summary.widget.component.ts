@@ -109,9 +109,9 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
             this.demandRaisedSummary = this.demandRaisedSummaryWidgetService
                 .GetDemandRaisedCount(this.incidentId, this.initiatedDepartmentId);
         }
-        if (changes['departmentId'] !== undefined
-            && (changes['departmentId'].currentValue !== changes['departmentId'].previousValue)
-            && changes['departmentId'].previousValue !== undefined) {
+        if (changes['initiatedDepartmentId'] !== undefined
+            && (changes['initiatedDepartmentId'].currentValue !== changes['initiatedDepartmentId'].previousValue)
+            && changes['initiatedDepartmentId'].previousValue !== undefined) {
             this.demandRaisedSummary = this.demandRaisedSummaryWidgetService
                 .GetDemandRaisedCount(this.incidentId, this.initiatedDepartmentId);
         }

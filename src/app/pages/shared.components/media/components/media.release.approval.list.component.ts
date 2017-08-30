@@ -4,6 +4,7 @@ import {
 } from '@angular/core';
 import { MediaModel } from './media.model';
 import { MediaService } from './media.service';
+import { Router } from '@angular/router';
 import {
     ResponseModel, DataExchangeService, GlobalConstants,
     GlobalStateService, KeyValue, UtilityService
@@ -22,7 +23,7 @@ export class MediaReleaseApprovalListComponent implements OnInit, OnDestroy {
     currentIncidentId: number;
     currentDepartmentId: number;
     downloadPath: string;
-
+    isArchive: boolean = false;
     /**
      * Creates an instance of MediaReleaseListComponent.
      * @param {MediaService} mediaService
@@ -33,7 +34,7 @@ export class MediaReleaseApprovalListComponent implements OnInit, OnDestroy {
      */
     constructor(private mediaService: MediaService,
         private dataExchange: DataExchangeService<MediaModel>,
-        private globalState: GlobalStateService) { }
+        private globalState: GlobalStateService, private _router: Router) { }
 
     getMediaReleases(departmentId: number, incidentId: number): void {
         this.mediaService.Query(departmentId, incidentId)
@@ -60,6 +61,14 @@ export class MediaReleaseApprovalListComponent implements OnInit, OnDestroy {
         this.initiatedDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.initiatedDepartmentId;
+        if (this._router.url.indexOf('archivedashboard') > -1) {
+            this.isArchive = true;
+            this.currentIncidentId = +UtilityService.GetFromSession('ArchieveIncidentId');
+        }
+        else {
+            this.isArchive = false;
+            this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
+        }
         this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/Media/' + this.currentIncidentId + '/';
 
@@ -80,11 +89,11 @@ export class MediaReleaseApprovalListComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe('MediaModelSaved');
-        this.dataExchange.Unsubscribe('MediaModelUpdated');
-        this.dataExchange.Unsubscribe('MediaModelSentForApproval');
-        this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        //this.dataExchange.Unsubscribe('MediaModelSaved');
+        //this.dataExchange.Unsubscribe('MediaModelUpdated');
+        //this.dataExchange.Unsubscribe('MediaModelSentForApproval');
+        //this.globalState.Unsubscribe('incidentChangefromDashboard');
+        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 
     private incidentChangeHandler(incident: KeyValue): void {

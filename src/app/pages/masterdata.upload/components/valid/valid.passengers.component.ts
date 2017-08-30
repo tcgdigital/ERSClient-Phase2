@@ -60,8 +60,8 @@ export class ValidPassengersListComponent implements OnInit, OnDestroy{
     }
 
     ngOnDestroy(): void{
-        this.dataExchange.Unsubscribe("OpenPassengers");
-        this.globalState.Unsubscribe("incidentChange");
+        //this.dataExchange.Unsubscribe("OpenPassengers");
+        //this.globalState.Unsubscribe("incidentChange");
     }
 
     private incidentChangeHandler(incident: KeyValue): void {

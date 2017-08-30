@@ -800,7 +800,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                 .setValue(moment(date.SelectedDate as Date).utc().format('DD-MMM-YYYY HH:mm'));
         }
         else if (controlName === 'Scheduleddeparture') {
-            localDepartureArrivalDate = this.DateFormat(new Date(utc + (this.GetUTCOffsetHours(true))));
+            //localDepartureArrivalDate = this.DateFormat(new Date(utc + (this.GetUTCOffsetHours(true))));
+            localDepartureArrivalDate = this.DateFormat(this.GetLocalDateTime(utc,true));
             this.formFlight.get('Scheduleddeparture').setValue(departurearrivalDate);
             this.formFlight.get('ScheduleddepartureLOC').setValue(localDepartureArrivalDate);
 
@@ -809,7 +810,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             });
         }
         else if (controlName === 'Scheduledarrival') {
-            localDepartureArrivalDate = this.DateFormat(new Date(utc + (this.GetUTCOffsetHours(false))));
+            //localDepartureArrivalDate = this.DateFormat(new Date(utc + (this.GetUTCOffsetHours(false))));
+            localDepartureArrivalDate = this.DateFormat(this.GetLocalDateTime(utc,false));
             this.formFlight.get('Scheduledarrival').setValue(departurearrivalDate);
             this.formFlight.get('ScheduledarrivalLOC').setValue(localDepartureArrivalDate);
         }

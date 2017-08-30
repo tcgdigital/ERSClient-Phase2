@@ -339,7 +339,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
     }
     ngOnDestroy(): void {
         // this.globalState.Unsubscribe('incidentChange');
-        this.globalState.Unsubscribe('AffectedPersonStatusChanged');
+        //this.globalState.Unsubscribe('AffectedPersonStatusChanged');
     }
 
     invokeSearchPassenger(query: string): void {

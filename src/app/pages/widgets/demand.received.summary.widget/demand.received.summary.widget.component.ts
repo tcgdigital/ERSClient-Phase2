@@ -98,9 +98,9 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
             changes['incidentId'].previousValue !== undefined) {
             this.demandReceivedSummary = this.demandReceivedSummaryWidgetService.GetDemandReceivedCount(this.incidentId, this.initiatedDepartmentId);
         }
-        if (changes['departmentId'] !== undefined && (changes['departmentId'].currentValue !==
-            changes['departmentId'].previousValue) &&
-            changes['departmentId'].previousValue !== undefined) {
+        if (changes['initiatedDepartmentId'] !== undefined && (changes['initiatedDepartmentId'].currentValue !==
+            changes['initiatedDepartmentId'].previousValue) &&
+            changes['initiatedDepartmentId'].previousValue !== undefined) {
             this.demandReceivedSummary = this.demandReceivedSummaryWidgetService.GetDemandReceivedCount(this.incidentId, this.initiatedDepartmentId);
         }
     }
