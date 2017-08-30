@@ -102,14 +102,14 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         this.globalState.Subscribe('ReceiveChecklistStatusChangeResponse', (model: ActionableModel) => {
             this.getAllActiveActionable(model.IncidentId, model.DepartmentId);
         });
-        
+
         this.globalState.Subscribe('ReceiveChecklistCreationResponse', (count: number) => {
             if (count > 0)
                 this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
         });
     }
 
-    
+
 
     openChildActionable(actionable: ActionableModel): void {
         actionable['expanded'] = !actionable['expanded'];
@@ -261,7 +261,8 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     cancelUpdateCommentAndURL(editedActionableModel: ActionableModel): void {
-        this.myInputVariable.nativeElement.value = '';
+        if (!this.isArchive)
+            this.myInputVariable.nativeElement.value = '';
         this.filepathWithLinks = null;
         this.fileName = null;
         this.childModal.hide();
