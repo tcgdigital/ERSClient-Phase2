@@ -179,6 +179,16 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.resetFlightForm();
         this.resetIncidentViewForm();
 
+        this.form.get('EmergencyDate')
+        .setValue(moment(new Date()).format('DD-MMM-YYYY HH:mm'));
+        this.form.get('EmergencyDateLocal')
+        .setValue(moment(new Date()).utc().format('DD-MMM-YYYY HH:mm'));
+        this.form.get('ReportedDate')
+        .setValue(moment(new Date()).format('DD-MMM-YYYY HH:mm'));
+        this.form.get('ReportedDateLocal')
+        .setValue(moment(new Date()).utc().format('DD-MMM-YYYY HH:mm'));
+
+
         this.emergencyLocationService.GetAllActiveEmergencyLocations()
             .subscribe((result: ResponseModel<EmergencyLocationModel>) => {
                 result.Records.forEach((item: EmergencyLocationModel) => {
