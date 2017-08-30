@@ -173,7 +173,6 @@ export class EmergencyClosureComponent implements OnInit {
 						unique.push(x);
 						departmentIds.push(x.DepartmentId);
 					})
-
 				let allActionables: Observable<ActionableModel[]>
 					= this.actionableService.BatchGet(this.currentIncident, departmentIds).map(x => x.Records);
 
@@ -215,8 +214,8 @@ export class EmergencyClosureComponent implements OnInit {
 							this.closuresToShow.forEach(x => {
 								x.InitialNotify = false;
 								x.SeperateNotify = false;
-								x.InitialNotify = this.initialNotificationSend.some(z => x.DepartmentId == z);
-								x.SeperateNotify = this.notificationSeperatelySend.some(z => x.DepartmentId == z);
+								x.InitialNotify = this.initialNotificationSend.some(z => x.Department.DepartmentId == z);
+								x.SeperateNotify = this.notificationSeperatelySend.some(z => x.Department.DepartmentId == z);
 							});
 							this.closuresToShow.sort((a: DepartmentClosureModel, b: DepartmentClosureModel) => {
 								if (a.Department.DepartmentName < b.Department.DepartmentName) return -1;
