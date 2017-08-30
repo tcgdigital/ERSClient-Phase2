@@ -27,6 +27,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDestroy {
     @ViewChild('childModalRemarks') public childModalRemarks: ModalDirective;
     @ViewChild('childModal') public childModal: ModalDirective;
+    @ViewChild('childModalTrail') public childModalTrail: ModalDirective;
 
     demands: DemandModelToView[] = [];
     demand: DemandModelToView = new DemandModelToView();
@@ -45,6 +46,8 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     protected _onRouteChange: Subscription;
     isArchive: boolean = false;
     demandFilePath: string;
+    public demandTypeName: string = '';
+    public requesterDepartmentName: string = '';
     public globalStateProxyOpen: GlobalStateService;
     public isShowAssignToMeDemand: boolean = true;
     public isInvalidRemarks: boolean = false;
@@ -60,6 +63,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     constructor(private demandService: DemandService, private injector: Injector,
         private departmentService: DepartmentService,
         private demandRemarkLogsService: DemandRemarkLogService,
+        private demandTrailService: DemandTrailService,
         private globalState: GlobalStateService,
         private dataExchange: DataExchangeService<number>,
         private toastrService: ToastrService,
@@ -309,6 +313,26 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         else {
             this.toastrService.error('There is no request assigned.');
         }
+    }
+
+    public cancelTrail(): void {
+        this.childModalTrail.hide();
+    }
+
+    public getDemandTrails(demandId): void {
+        this.demandTrailService.getDemandTrailByDemandId(demandId)
+            .subscribe((response: ResponseModel<DemandTrailModel>) => {
+                this.demandTrails = response.Records;
+                this.childModalTrail.show();
+            }, (error: any) => {
+                console.log('error:  ' + error);
+            });
+    }
+
+    public openTrail(demand: DemandModelToView): void {
+        this.demandTypeName = demand.DemandTypeName;
+        this.requesterDepartmentName = demand.RequesterDepartmentName;
+        this.getDemandTrails(demand.DemandId);
     }
 
     public ngOnDestroy(): void {
