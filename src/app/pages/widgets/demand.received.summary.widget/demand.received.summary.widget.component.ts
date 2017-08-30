@@ -163,8 +163,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
             }
         });
 
-        // UtilityService.SetRAGStatus(this.allDeptDemandReceivedSummaries, 'Demand');
-        UtilityService.setRagStatus(this.allDeptDemandReceivedSummaries);
+        UtilityService.SetRAGStatus(this.allDeptDemandReceivedSummaries, 'Demand');
         this.showAllDeptSubCompleted = true;
         this.showAllDeptSubPending = false;
     }
@@ -191,8 +190,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
             }
         });
 
-        // UtilityService.SetRAGStatus(this.allDeptDemandReceivedSummaries, 'Demand');
-        UtilityService.setRagStatus(this.allDeptDemandReceivedSummaries);
+        UtilityService.SetRAGStatus(this.allDeptDemandReceivedSummaries, 'Demand');
         this.showAllDeptSubPending = true;
         this.showAllDeptSubCompleted = false;
     }
@@ -219,8 +217,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
             }
         });
 
-        // UtilityService.SetRAGStatus(this.subDeptDemandReceivedSummaries, 'Demand');
-        UtilityService.setRagStatus(this.subDeptDemandReceivedSummaries);
+        UtilityService.SetRAGStatus(this.subDeptDemandReceivedSummaries, 'Demand');
         this.showSubDeptSubCompleted = true;
         this.showSubDeptSubPending = false;
     }
@@ -247,8 +244,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
             }
         });
 
-        // UtilityService.SetRAGStatus(this.subDeptDemandReceivedSummaries, 'Demand');
-        UtilityService.setRagStatus(this.subDeptDemandReceivedSummaries);
+        UtilityService.SetRAGStatus(this.subDeptDemandReceivedSummaries, 'Demand');
         this.showSubDeptSubCompleted = false;
         this.showSubDeptSubPending = true;
     }
