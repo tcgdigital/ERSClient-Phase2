@@ -113,6 +113,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.demandService.GetForAssignedDept(deptId, incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demands = this.demandService.DemandMapper(response.Records);
+                UtilityService.setRagStatus(this.demands);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -123,6 +124,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.childModal.hide();
     }
 
+    /*
     public setRagStatus(): void {
         Observable.interval(1000).subscribe((_) => {
             if (this.demands && this.demands.length > 0) {
@@ -161,6 +163,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
             }
         });
     }
+    */
 
     public getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
@@ -342,7 +345,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
 
     public ngAfterContentInit(): any {
         // this.setRagStatus();
-        UtilityService.SetRAGStatus(this.demands, 'Demand');
+        //UtilityService.SetRAGStatus(this.demands, 'Demand');
     }
     private incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
