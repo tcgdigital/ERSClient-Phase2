@@ -324,7 +324,59 @@ export class UtilityService {
         return dateObject;
     }
 
+    public static setRagStatus<T extends any>(dataModels: T[]): void {
+        Observable.interval(1000).subscribe((_) => {
+            if (dataModels && dataModels.length > 0) {
+                dataModels.forEach((x) => {
+                    if (x.ClosedOn == null) {
+                        const ScheduleTime: number = (Number(x.ScheduleTime) * 60000);
+                        const CreatedOn: number = new Date(x.CreatedOn).getTime();
+                        const CurrentTime: number = new Date().getTime();
+                        const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
+                        const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
+                        if(percentage <= 0)
+                        {
+                            x.RagStatus = 'statusRed';
+                        }
+                        else if (percentage < 50) {
+                            x.RagStatus = 'statusGreen';
+                        } 
+                        else if (percentage >= 100) {
+                            x.RagStatus = 'statusRed';
+                        }
+                        else {
+                            x.RagStatus = 'statusAmber';
+                        }
+                    }
+                    else {
+                        const ScheduleTime: number = (Number(x.ScheduleTime) * 60000);
+                        const CreatedOn: number = new Date(x.CreatedOn).getTime();
+                        const CurrentTime: number = x.ClosedOn.getTime(); // new Date().getTime();
+                        const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
+                        const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
+                        
+                        if(percentage <= 0)
+                        {
+                            x.RagStatus = 'statusRed';
+                        }
+                        else if (percentage < 50) {
+                            x.RagStatus = 'statusGreen';
+                        } 
+                        else if (percentage >= 100) {
+                            x.RagStatus = 'statusRed';
+                        }
+                        else {
+                            x.RagStatus = 'statusAmber';
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    /*
     public static SetRAGStatus<T extends any>(dataModels: T[], appliedModule: string): void {
+        //debugger;
         const RAGScale: RAGScaleModel[] = UtilityService.RAGScaleData.filter((item: RAGScaleModel) => {
             return item.AppliedModule === appliedModule;
         }).sort((a: any, b: any) => {
@@ -336,17 +388,26 @@ export class UtilityService {
         Observable.interval(1000).subscribe((_) => {
             dataModels.forEach((entity: any) => {
                 let scheduleClose: number;
-                let actualClose: number;
+                // let actualClose: number;
 
                 if (entity.constructor.name === 'AllDeptDemandRaisedSummary' ||
                     entity.constructor.name === 'AllDeptDemandReceivedSummary' ||
                     entity.constructor.name === 'DemandModelToView') {
                     scheduleClose = (Number(entity.ScheduleTime) * 60000);
-                    actualClose = new Date(entity.CreatedOn).getTime();
+                    // actualClose = new Date(entity.CreatedOn).getTime();
                 }
 
-                const currentTime: number = new Date().getTime();
-                const timeDiffofCurrentMinus: number = (currentTime - actualClose);
+                let currentTime: number;
+                if (entity.ClosedOn == null)
+                {
+                    currentTime = new Date().getTime();
+                }
+                else
+                {
+                    currentTime = entity.ClosedOn.getTime();
+                }
+                // const currentTime: number = new Date().getTime();
+                const timeDiffofCurrentMinus: number = (currentTime - new Date(entity.CreatedOn).getTime());
                 const percentage: number = (((timeDiffofCurrentMinus) * 100) / (scheduleClose));
 
                 const selectedRag: RAGScaleModel = RAGScale.find((x: RAGScaleModel) => x.StartingPoint <= percentage
@@ -358,7 +419,8 @@ export class UtilityService {
             });
         });
     }
-
+    */
+    /*
     public static SetRAGStatusGrid<T extends any>(dataModels: T[], appliedModule: string): void {
 
         const RAGScale: RAGScaleModel[] = UtilityService.RAGScaleData.filter((item: RAGScaleModel) => {
@@ -384,6 +446,7 @@ export class UtilityService {
             }
         });
     }
+    */
 
     public static GetRAGStatus(appliedModule: string, assignDate?: Date, scheduleClose?: Date): string {
         // TODO:  RAG code should come from database.
