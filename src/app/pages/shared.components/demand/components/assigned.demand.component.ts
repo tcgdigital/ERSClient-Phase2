@@ -113,7 +113,8 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.demandService.GetForAssignedDept(deptId, incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demands = this.demandService.DemandMapper(response.Records);
-                UtilityService.setRagStatus(this.demands);
+
+                UtilityService.SetRAGStatus(this.demands, 'Demand'); 
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });

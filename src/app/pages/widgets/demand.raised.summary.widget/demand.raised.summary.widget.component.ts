@@ -140,9 +140,8 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
     // TODO: Need to refactor
     setRagStatus(): void {
         Observable.interval(1000).subscribe((_) => {
-            //UtilityService.SetRAGStatusGrid(this.allDemandRaisedSummaryModelList, 'Demand');
-            UtilityService.setRagStatus(this.allDemandRaisedSummaryModelList);
-
+            // UtilityService.SetRAGStatusGrid(this.allDemandRaisedSummaryModelList, 'Demand');
+            UtilityService.SetRAGStatus(this.allDemandRaisedSummaryModelList, 'Demand');
             this.allDemandRaisedSummaryModel = Observable.of(this.allDemandRaisedSummaryModelList);
         });
     }
@@ -200,8 +199,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
             }
         });
 
-        // UtilityService.SetRAGStatus(this.allDeptDemandRaisedSummaries, 'Demand');
-        UtilityService.setRagStatus(this.allDeptDemandRaisedSummaries);
+        UtilityService.SetRAGStatus(this.allDeptDemandRaisedSummaries, 'Demand');
         this.showAllDeptSubCompleted = true;
         this.showAllDeptSubPending = false;
     }
@@ -228,8 +226,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
             }
         });
 
-        //UtilityService.SetRAGStatus(this.allDeptDemandRaisedSummaries, 'Demand');
-        UtilityService.setRagStatus(this.allDeptDemandRaisedSummaries);
+        UtilityService.SetRAGStatus(this.allDeptDemandRaisedSummaries, 'Demand');
         this.showAllDeptSubPending = true;
         this.showAllDeptSubCompleted = false;
     }
@@ -260,8 +257,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
                 this.subDeptDemandRaisedSummaries.push(subDeptDemandRaisedSummary);
             }
         });
-        //UtilityService.SetRAGStatus(this.subDeptDemandRaisedSummaries, 'Demand');
-        UtilityService.setRagStatus(this.subDeptDemandRaisedSummaries);
+        UtilityService.SetRAGStatus(this.subDeptDemandRaisedSummaries, 'Demand');
         this.showSubDeptSubCompleted = true;
         this.showSubDeptSubPending = false;
     }
@@ -282,8 +278,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
                 this.subDeptDemandRaisedSummaries.push(subDeptDemandRaisedSummary);
             }
         });
-        //UtilityService.SetRAGStatus(this.subDeptDemandRaisedSummaries, 'Demand');
-        UtilityService.setRagStatus(this.subDeptDemandRaisedSummaries);
+        UtilityService.SetRAGStatus(this.subDeptDemandRaisedSummaries, 'Demand');
         this.showSubDeptSubCompleted = false;
         this.showSubDeptSubPending = true;
     }

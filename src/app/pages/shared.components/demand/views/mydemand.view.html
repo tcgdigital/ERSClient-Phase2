@@ -41,7 +41,9 @@
                         <td data-title="Required Location">{{demand.RequiredLocation}}&nbsp;</td>
                         <td data-title="Demand Status">{{demand.DemandStatusDescription}}&nbsp;</td>
                         <td data-title="Remarks"><i class="fa fa-list-alt fa-2x" (click)="openDemandRemarks(demand)"></i></td>
-                        <td data-title="RAG"><span [ngClass]="demand.RagStatus"></span></td>
+                        <td data-title="RAG">
+                            <span [ngClass]="demand.RagStatus"></span>
+                        </td>
                         <td data-title="Download File">
                             <ul>
                                 <li *ngFor="let file of demand.FileStores">
