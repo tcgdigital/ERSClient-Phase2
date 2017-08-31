@@ -108,7 +108,6 @@ export class WidgetUtilityService {
         let DepartmentName: string = '';
         console.log(requesterDepartmentId);
 
-
         if (departmentType == 'TargetDepartment') {
             DepartmentName = arrGraphData[0].TargetDepartment.Description;
         }
@@ -145,6 +144,10 @@ export class WidgetUtilityService {
             this.elapsedIntervalForGraph = this.elapsedIntervalForGraph;
         }
 
+        if (arrGraphData.length < this.elapsedIntervalForGraph) {
+            this.elapsedIntervalForGraph = arrGraphData.length;
+        }
+
         let closedTotal: number = 0;
         let pendingTotal: number = 0;
         let pendingInter: number = 0;
@@ -169,7 +172,7 @@ export class WidgetUtilityService {
         this.elapsedIntervalForGraph++;
 
         let totalCount: number = 0;
-        for (let i: number = 1; i <= this.elapsedIntervalForGraph - 1; i++) {
+        for (let i: number = 1; i <= this.elapsedIntervalForGraph -2; i++) {
             let pendingOld: number = 0;
 
             let filteredTotal: DemandStatusLogModel[] = arrGraphData
