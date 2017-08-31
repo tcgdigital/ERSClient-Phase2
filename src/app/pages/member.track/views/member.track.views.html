@@ -60,7 +60,6 @@
                                         <!-- <td data-title="Is Notification Acknowledged"><i class="fa fa-check fa-2x" aria-hidden="true" [hidden]="memberengagement.IsAcknowledged == false"></i>&nbsp;</td> -->
                                         <td data-title="Is Volunteered"><i class="fa fa-check fa-2x" aria-hidden="true" [hidden]="memberengagement.isVolunteered == false"></i>&nbsp;</td>
                                         <td data-title="Busy"><input 
-                                                [disabled]="isSelectedDept"
                                                 *ngIf="isShowAllocationDeallocation | accesibility:currentDepartmentId:'AllocationDeallocationMember'" type="checkbox" 
                                                 [checked]="memberengagement.IsBusy" 
                                                 [attr.data-userid]="memberengagement.UserId"
