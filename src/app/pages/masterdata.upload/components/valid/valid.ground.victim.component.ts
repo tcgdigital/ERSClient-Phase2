@@ -42,6 +42,12 @@ export class ValidGroundVictimListComponent implements OnInit, OnDestroy{
         .flatMap(x=>x)
         .subscribe(a=>{            
             this.groundVictims.push(a);
+            this.groundVictims.sort((a, b) => {
+                if (a.GroundVictimName < b.GroundVictimName) return -1;
+                if (a.GroundVictimName > b.GroundVictimName) return 1;
+
+                return 0;
+            })
             console.log(this.groundVictims);
         }),
         (error: any) => {

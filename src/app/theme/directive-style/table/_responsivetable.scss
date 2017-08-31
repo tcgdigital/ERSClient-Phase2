@@ -205,10 +205,10 @@
                         display: block;
                         border: 1px solid $table-border-color;
                         border-radius: 2px;
-                        // margin-bottom: 1.6rem;
+                        margin-bottom: 1.6rem;
                         >td {
                             background-color: $table-bg;
-                            //display: block;
+                            display: block;
                             vertical-align: middle;
                             text-align: right;
                             &[data-title]:before {

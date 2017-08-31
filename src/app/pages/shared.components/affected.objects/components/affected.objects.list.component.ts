@@ -99,7 +99,7 @@ export class AffectedObjectsListComponent implements OnInit {
     }
 
     ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChangefromDashboard');
+        //this.globalState.Unsubscribe('incidentChangefromDashboard');
     }
 
     openChatTrails(affectedObjectId): void {

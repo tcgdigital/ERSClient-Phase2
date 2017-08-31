@@ -124,7 +124,7 @@ export class MasterDataUploadForValidService {
      */
     GetAllGroundVictimsByIncidentId(incidentId: number): Observable<GroundVictimModel[]>{
         return this._dataServiceGroundVictims.Query()
-        .Expand(`GroundVictims($select=GroundVictimName;$orderby=GroundVictimName)`)
+        .Expand(`GroundVictims`)
         .Filter(`IncidentId eq ${incidentId}`)
         .Execute()
         .map(a=>a.Records.map(b=>b.GroundVictims).reduce((a,b)=>a.concat(b)));

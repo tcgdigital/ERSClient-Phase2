@@ -260,20 +260,22 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
-                this.affectedPeople.forEach(x => 
+
+                this.affectedPeople.forEach(x=>
                 {
                     if(x.PassengerName.trim() == "")
-                        {
-                            x.PassCrewNm = x.CrewName.trim();
-                        }
-                        else
-                        {
-                            x.PassCrewNm = x.PassengerName.trim();
-                        }
+                    {
+                        x.PassCrewNm = x.CrewName;
+                    }
+                    else
+                    {
+                        x.PassCrewNm = x.PassengerName;
+                    }
 
                 });
+
                 this.affectedPeople = this.affectedPeople
-                .sort(function (a, b) { return (a.PassCrewNm.toUpperCase() > b.PassCrewNm.toUpperCase()) ? 1 : (b.PassCrewNm.toUpperCase() > a.PassCrewNm.toUpperCase() ? -1 : 0); });
+                .sort(function (a, b) { return (a.PassCrewNm.trim().toUpperCase() > b.PassCrewNm.trim().toUpperCase()) ? 1 : ((b.PassCrewNm.trim().toUpperCase() > a.PassCrewNm.trim().toUpperCase()) ? -1 : 0); });
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -843,10 +845,10 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.globalState.Unsubscribe('OnDemandUpdate');
-        this.globalState.Unsubscribe('OnDemandDetailClick');
-        this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        //this.globalState.Unsubscribe('OnDemandUpdate');
+        //this.globalState.Unsubscribe('OnDemandDetailClick');
+        //this.globalState.Unsubscribe('incidentChangefromDashboard');
+        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 
     private incidentChangeHandler(incident: KeyValue): void {

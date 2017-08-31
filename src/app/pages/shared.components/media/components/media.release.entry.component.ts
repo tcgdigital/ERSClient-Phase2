@@ -83,9 +83,9 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
 
 
     ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe('OnMediaReleaseUpdate');
-        this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        //this.dataExchange.Unsubscribe('OnMediaReleaseUpdate');
+        //this.globalState.Unsubscribe('incidentChangefromDashboard');
+        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 
     getTemplateMedias(): void {

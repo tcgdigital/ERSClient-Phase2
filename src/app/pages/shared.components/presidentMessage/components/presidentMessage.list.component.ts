@@ -52,10 +52,10 @@ export class PresidentMessageListComponent implements OnInit, OnDestroy {
     }
 
     public ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe('PresidentMessageModelSaved');
-        this.dataExchange.Unsubscribe('PresidentMessageModelUpdated');
-        this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        //this.dataExchange.Unsubscribe('PresidentMessageModelSaved');
+        //this.dataExchange.Unsubscribe('PresidentMessageModelUpdated');
+        //this.globalState.Unsubscribe('incidentChangefromDashboard');
+        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 
     public ngOnInit(): void {

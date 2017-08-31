@@ -298,8 +298,8 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
     }
 
     public ngOnDestroy(): void {
-        this.globalState.Unsubscribe('incidentChangefromDashboard');
-        this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        //this.globalState.Unsubscribe('incidentChangefromDashboard');
+        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 
     private getDepartmentName(deptId): void {

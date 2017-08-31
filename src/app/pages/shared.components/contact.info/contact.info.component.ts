@@ -32,7 +32,7 @@ export class ContactInfoComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.globalState.Unsubscribe('contactClicked');
+        //this.globalState.Unsubscribe('contactClicked');
     }
 
     contactClicked(): void {

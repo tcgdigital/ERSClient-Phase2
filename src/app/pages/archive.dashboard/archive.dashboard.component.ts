@@ -1,5 +1,5 @@
 import {
-    Component, ViewEncapsulation,
+    Component, ViewEncapsulation,ElementRef,
     OnInit, SimpleChange, OnDestroy
 } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
@@ -38,7 +38,7 @@ export class ArchiveDashboardComponent implements OnInit {
      * @memberof ArchiveDashboardComponent
      */
     constructor(private router: ActivatedRoute, private incidentService: IncidentService,
-        private departmentService: DepartmentService, private globalState: GlobalStateService,
+        private departmentService: DepartmentService,private elementRef: ElementRef, private globalState: GlobalStateService,
         private routerObj: Router) {
         this.incidentDate = new Date();
     }
@@ -63,26 +63,77 @@ export class ArchiveDashboardComponent implements OnInit {
     getPagePermission(): void {
         const rootTab: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
             .find((x: PagesPermissionMatrixModel) => {
-                return x.ModuleName === 'Dashboard' &&
+                return x.ModuleName === 'Archive Dashboard' &&
                     x.ParentPageId === null && x.Type === 'Tab' &&
                     x.DepartmentId === this.currentDepartmentId
             });
 
-        if (rootTab) {
-            const accessibleTabs: string[] = GlobalConstants.PagePermissionMatrix
-                .filter((x: PagesPermissionMatrixModel) => {
-                    return x.ParentPageId === rootTab.PageId &&
-                        x.DepartmentId === this.currentDepartmentId
-                })
-                .map((x) => x.PageCode);
-            if (accessibleTabs.length > 0) {
-                this.tablinks = GlobalConstants.ArchieveDashboardTabLinks.filter((x: ITabLinkInterface) => accessibleTabs.some((y) => y === x.id));
-                UtilityService.SelectFirstTab(this.tablinks, this.routerObj);
+            if (rootTab) {
+                const $self: JQuery = jQuery(this.elementRef.nativeElement);
+                $self.find('#tab-container').show();
+                $self.find('#error-container').hide();
+                const accessibleTabs: string[] = GlobalConstants.PagePermissionMatrix
+                    .filter((x: PagesPermissionMatrixModel) => {
+                        return x.ParentPageId === rootTab.PageId &&
+                            x.DepartmentId === this.currentDepartmentId;
+                    })
+                    .map((x) => x.PageCode);
+                if (accessibleTabs.length > 0) {
+                    this.tablinks = GlobalConstants.ArchieveDashboardTabLinks.filter((x: ITabLinkInterface) => accessibleTabs.some((y) => y === x.id));
+                    if (this.tablinks) {
+                        this.tablinks.forEach((item: ITabLinkInterface) => {
+                            const parent:PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
+                            .find((itemPagePermission:PagesPermissionMatrixModel)=>{
+                                return (itemPagePermission.PageCode==item.id &&
+                                     itemPagePermission.DepartmentId === this.currentDepartmentId);
+                            });
+                            if (item.subtab) {
+                                item.subtab.forEach((itemSubTab: ITabLinkInterface, index: number) => {
+                                    const subPageModel: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
+                                        .find((x: PagesPermissionMatrixModel) => {
+                                            return (x.PageCode == itemSubTab.id && x.ParentPageId==parent.PageId &&
+                                                x.DepartmentId === this.currentDepartmentId);
+                                        });
+                                    if (subPageModel==undefined) {
+                                        itemSubTab.selected=false;
+                                        //item.subtab.splice(index,1);
+                                        //item.subtab
+                                    }
+                                    else{
+                                        itemSubTab.selected=true;
+                                    }
+                                });
+                            }
+    
+                        });
+                    }
+    
+                    UtilityService.SelectFirstTab(this.tablinks, this.routerObj);
+    
+                }
             }
-        }
-        else {
-            this.tablinks = [];
-        }
+            else {
+                this.tablinks = [];
+                const $self: JQuery = jQuery(this.elementRef.nativeElement);
+                $self.find('#tab-container').hide();
+                $self.find('#error-container').show();
+            }
+
+        // if (rootTab) {
+        //     const accessibleTabs: string[] = GlobalConstants.PagePermissionMatrix
+        //         .filter((x: PagesPermissionMatrixModel) => {
+        //             return x.ParentPageId === rootTab.PageId &&
+        //                 x.DepartmentId === this.currentDepartmentId
+        //         })
+        //         .map((x) => x.PageCode);
+        //     if (accessibleTabs.length > 0) {
+        //         this.tablinks = GlobalConstants.ArchieveDashboardTabLinks.filter((x: ITabLinkInterface) => accessibleTabs.some((y) => y === x.id));
+        //         UtilityService.SelectFirstTab(this.tablinks, this.routerObj);
+        //     }
+        // }
+        // else {
+        //     this.tablinks = [];
+        // }
         // this.tablinks = TAB_LINKS;
     }
 

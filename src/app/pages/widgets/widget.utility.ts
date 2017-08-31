@@ -9,11 +9,11 @@ import {
 } from './demand.raised.summary.widget/demand.raised.summary.widget.model';
 
 export class WidgetUtilityService {
-    public static elapsedHourForGraph: number = GlobalConstants.ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION;
+    public static elapsedIntervalForGraph: number = GlobalConstants.ELAPSED_MAX_HOUR_INTERVAL_COUNT_FOR_GRAPH_CREATION;
 
     public static GetGraphCheckList(requesterDepartmentId: number, Highcharts: any, arrGraphData: ActionableStatusLogModel[],
         containerName: string, graphSubjectType: string, emergencyDate: Date, departmentName: string): void {
-        this.elapsedHourForGraph = GlobalConstants.ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION;
+        this.elapsedIntervalForGraph = GlobalConstants.ELAPSED_MAX_HOUR_INTERVAL_COUNT_FOR_GRAPH_CREATION;
         let DepartmentName = departmentName;
         let arrGraphPending: number[] = [];
         let arrGraphCompleted: number[] = [];
@@ -35,14 +35,14 @@ export class WidgetUtilityService {
 
         let now: Date = new Date();
         let timediff: number = this.diff_minutes(now, new Date(emergencyDate));
-        if (timediff < 60 && timediff < (this.elapsedHourForGraph * 60)) {
-            this.elapsedHourForGraph = 1;
+        if (timediff < 60 && timediff < (this.elapsedIntervalForGraph * 60)) {
+            this.elapsedIntervalForGraph = 1;
         }
-        else if (timediff < (this.elapsedHourForGraph * 60) && timediff >= 60) {
-            this.elapsedHourForGraph = ((timediff % 60) > 0 ? 1 : 0) + (Math.abs(timediff / 60));
+        else if (timediff < (this.elapsedIntervalForGraph * 60) && timediff >= 60) {
+            this.elapsedIntervalForGraph = ((timediff % 60) > 0 ? 1 : 0) + (Math.abs(timediff / 60));
         }
         else {
-            this.elapsedHourForGraph = this.elapsedHourForGraph;
+            this.elapsedIntervalForGraph = this.elapsedIntervalForGraph;
         }
 
         let closedTotal: number = 0;
@@ -62,9 +62,9 @@ export class WidgetUtilityService {
             return item;
         });
 
-        this.elapsedHourForGraph++;
+        this.elapsedIntervalForGraph++;
         let totalCount: number = 0;
-        for (let i: number = 1; i <= this.elapsedHourForGraph - 1; i++) {
+        for (let i: number = 1; i <= this.elapsedIntervalForGraph - 1; i++) {
 
             let pendingOld: number = 0;
 
@@ -108,7 +108,6 @@ export class WidgetUtilityService {
         let DepartmentName: string = '';
         console.log(requesterDepartmentId);
 
-
         if (departmentType == 'TargetDepartment') {
             DepartmentName = arrGraphData[0].TargetDepartment.Description;
         }
@@ -116,7 +115,7 @@ export class WidgetUtilityService {
             DepartmentName = arrGraphData[0].RequesterDepartment.Description;
         }
 
-        this.elapsedHourForGraph = GlobalConstants.ELAPSED_HOUR_COUNT_FOR_DEMAND_GRAPH_CREATION;
+        this.elapsedIntervalForGraph = GlobalConstants.ELAPSED_MAX_HOUR_INTERVAL_COUNT_FOR_GRAPH_CREATION;
 
         let arrGraphPending: number[] = [];
         let arrGraphCompleted: number[] = [];
@@ -133,17 +132,20 @@ export class WidgetUtilityService {
 
         // If the elapse hours is less than time since incident create then the elapse hour will be 
         // hour difference between now - incident create.
-
         let now: Date = new Date();
         let timediff: number = this.diff_minutes(now, new Date(emergencyDate));
-        if (timediff < 60 && timediff < (this.elapsedHourForGraph * 60)) {
-            this.elapsedHourForGraph = 1;
+        if (timediff < 60 && timediff < (this.elapsedIntervalForGraph * 60)) {
+            this.elapsedIntervalForGraph = 1;
         }
-        else if (timediff < (this.elapsedHourForGraph * 60) && timediff >= 60) {
-            this.elapsedHourForGraph = ((timediff % 60) > 0 ? 1 : 0) + (Math.abs(timediff / 60));
+        else if (timediff < (this.elapsedIntervalForGraph * 60) && timediff >= 60) {
+            this.elapsedIntervalForGraph = ((timediff % 60) > 0 ? 1 : 0) + (Math.abs(timediff / 60));
         }
         else {
-            this.elapsedHourForGraph = this.elapsedHourForGraph;
+            this.elapsedIntervalForGraph = this.elapsedIntervalForGraph;
+        }
+
+        if (arrGraphData.length < this.elapsedIntervalForGraph) {
+            this.elapsedIntervalForGraph = arrGraphData.length;
         }
 
         let closedTotal: number = 0;
@@ -167,10 +169,10 @@ export class WidgetUtilityService {
         });
 
 
-        this.elapsedHourForGraph++;
+        this.elapsedIntervalForGraph++;
 
         let totalCount: number = 0;
-        for (let i: number = 1; i <= this.elapsedHourForGraph - 1; i++) {
+        for (let i: number = 1; i <= this.elapsedIntervalForGraph -2; i++) {
             let pendingOld: number = 0;
 
             let filteredTotal: DemandStatusLogModel[] = arrGraphData

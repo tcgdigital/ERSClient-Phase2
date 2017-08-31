@@ -13,6 +13,7 @@
                     <tr>
                         <th>Demand Type</th>
                         <th>Demand Description</th>
+                        <th>Trail</th>
                         <th>Requester Department</th>
                         <th>Priority</th>
                         <th>Schedule Time Close</th>
@@ -31,6 +32,7 @@
                     <tr *ngFor="let demand of demands">
                         <td data-title="Reference Number">{{demand.DemandTypeName}} </td>
                         <td data-title="PDA Name"><a href="javascript:void(0);" (click)="openDemandDetails(demand.DemandId)">{{demand.DemandDesc}} </a></td>
+                        <td data-title="Trail"><i class="fa fa-info-circle fa-2x" (click)="openTrail(demand)"></i> </td>
                         <td data-title="PDA Contact">{{demand.RequesterDepartmentName}} </td>
                         <td data-title="PNR">{{demand.Priority}} </td>
                         <td data-title="Passenger Type">{{demand.ScheduleTimeToShow}} </td>
@@ -246,4 +248,43 @@
             </div>
         </div>
     </div>
+</div>
+
+<div bsModal #childModalTrail="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Demand Trail</h4>
+            <button type="button" class="close pull-right" aria-label="Close" (click)="cancelTrail()">
+              <span aria-hidden="true">&times;</span>
+               </button>
+        </div>
+        <div class="modal-body">
+            <div class="row modalBodyHeaderStyle">
+                <div class="col-sm-6 form-group">
+                    <label class="lebelHeaderStyle"><strong>Demand Type Name</strong></label> <br>
+                    <span class="form-control">{{demandTypeName}}</span> </div>
+
+                <div class="col-sm-6 form-group">
+                    <label class="lebelHeaderStyle"><strong>Requester Department</strong></label> <br>
+                    <span class="form-control">{{requesterDepartmentName}}</span> </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <responsive-table>
+                        <table responsive-table-body>
+                            <tbody>
+                                <tr *ngFor="let trail of demandTrails">
+                                    <td [innerHTML]="trail.Answers" type="text">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </responsive-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
