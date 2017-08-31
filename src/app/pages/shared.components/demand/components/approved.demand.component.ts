@@ -117,7 +117,9 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.demandService.GetByApproverDepartment(deptId, incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demandsForApproval = this.demandService.DemandMapper(response.Records);
-                UtilityService.SetRAGStatus(this.demandsForApproval, 'Demand');
+                Observable.interval(1000).subscribe((_) => {
+                    UtilityService.SetRAGStatus(this.demandsForApproval, 'Demand');
+                });
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
