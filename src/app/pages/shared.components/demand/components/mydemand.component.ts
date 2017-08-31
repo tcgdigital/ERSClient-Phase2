@@ -71,6 +71,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
         private toastrConfig: ToastrConfig, private _router: Router,
         private injector: Injector) {
         this.demandForRemarks = new DemandModelToView();
+        this.mydemands = new Array<DemandModelToView>();
         this.demandFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Demand/';
         this.globalStateProxy = injector.get(GlobalStateService);
     }
@@ -113,6 +114,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
 
     public getMyDemands(deptId, incidentId): void {
 
+        this.mydemands.length = 0;
         this.demandService.GetByRequesterDepartment(deptId, incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 console.log(response);
@@ -125,57 +127,57 @@ export class MyDemandComponent implements OnInit, OnDestroy {
                     const resolutiontime = new Date(timediff);
                     x.ScheduleTimeToShow = moment(resolutiontime).format('DD-MMM-YYYY HH:mm');
                     x['showRemarks'] = false;
+                    x.RagStatus = "";
                 });
 
-                UtilityService.setRagStatus(this.mydemands);
-
+                UtilityService.SetRAGStatus(this.mydemands, 'Demand'); 
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
-            
+
     }
 
-/*
-    public setRagStatus_Old(): void {
-        Observable.interval(1000).subscribe((_) => {
-            debugger;
-            if (this.mydemands && this.mydemands.length > 0) {
-                this.mydemands.forEach((x) => {
-                    if (x.ClosedOn == null) {
-                        const ScheduleTime: number = (Number(x.ScheduleTime) * 60000);
-                        const CreatedOn: number = new Date(x.CreatedOn).getTime();
-                        const CurrentTime: number = new Date().getTime();
-                        const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-                        const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
-                        if (percentage < 50) {
-                            x.RagStatus = 'statusGreen';
-                        } else if (percentage >= 100) {
-                            x.RagStatus = 'statusRed';
+    /*
+        public setRagStatus_Old(): void {
+            Observable.interval(1000).subscribe((_) => {
+                debugger;
+                if (this.mydemands && this.mydemands.length > 0) {
+                    this.mydemands.forEach((x) => {
+                        if (x.ClosedOn == null) {
+                            const ScheduleTime: number = (Number(x.ScheduleTime) * 60000);
+                            const CreatedOn: number = new Date(x.CreatedOn).getTime();
+                            const CurrentTime: number = new Date().getTime();
+                            const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
+                            const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
+                            if (percentage < 50) {
+                                x.RagStatus = 'statusGreen';
+                            } else if (percentage >= 100) {
+                                x.RagStatus = 'statusRed';
+                            }
+                            else {
+                                x.RagStatus = 'statusAmber';
+                            }
                         }
                         else {
-                            x.RagStatus = 'statusAmber';
+                            const ScheduleTime: number = (Number(x.ScheduleTime) * 60000);
+                            const CreatedOn: number = new Date(x.CreatedOn).getTime();
+                            const CurrentTime: number = x.ClosedOn.getTime(); // new Date().getTime();
+                            const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
+                            const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
+                            if (percentage < 50) {
+                                x.RagStatus = 'statusGreen';
+                            } else if (percentage >= 100) {
+                                x.RagStatus = 'statusRed';
+                            }
+                            else {
+                                x.RagStatus = 'statusAmber';
+                            }
                         }
-                    }
-                    else {
-                        const ScheduleTime: number = (Number(x.ScheduleTime) * 60000);
-                        const CreatedOn: number = new Date(x.CreatedOn).getTime();
-                        const CurrentTime: number = x.ClosedOn.getTime(); // new Date().getTime();
-                        const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-                        const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
-                        if (percentage < 50) {
-                            x.RagStatus = 'statusGreen';
-                        } else if (percentage >= 100) {
-                            x.RagStatus = 'statusRed';
-                        }
-                        else {
-                            x.RagStatus = 'statusAmber';
-                        }
-                    }
-                });
-            }
-        });
-    }
-*/
+                    });
+                }
+            });
+        }
+    */
 
     public open(demandId): void {
         const num = UtilityService.UUID();
