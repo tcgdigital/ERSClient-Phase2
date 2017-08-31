@@ -13,11 +13,13 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
     ResponseModel, DataExchangeService,
     UtilityService, GlobalConstants,
-    FileUploadService, KeyValue, GlobalStateService, AuthModel
+    FileUploadService, KeyValue, GlobalStateService, AuthModel, FileStoreModel
 } from '../../../shared';
 import { FileData, ValidationResultModel } from '../../../shared/models';
 
 import { OrganizationService, OrganizationModel } from "../../shared.components/organization";
+import { MasterDataUploadForValidService } from './masterdata.upload.valid.records.service';
+import { IncidentModel } from '../../incident'
 
 
 @Component({
@@ -39,6 +41,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
     @ViewChild('inputFileCargo') inputFileCargo: any;
     @ViewChild('inputFileCargoPALEx') inputFileCargoPALEx: any;
     @ViewChild('inputFileGroundVictim') inputFileGroundVictim: any;
+    @ViewChild('inputFileLoadSheet') inputFileLoadSheet: any;
 
     @ViewChild('validPassengersModal') public validPassengersModal: ModalDirective;
     @ViewChild('validCargoModal') public validCargoModal: ModalDirective;
@@ -60,6 +63,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
     groundVictimTemplatePath: string = './assets/static-content/GroundVictim.xlsx';
 
     filesToUpload: FileData[];
+    filesLoadSheet: FileData[] = [];
     objFileData: FileData;
     form: FormGroup;
     disableUploadButton: boolean;
@@ -67,6 +71,12 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
     currentOrganizationId: number = 0;
     currentOrganizationCode: string = "";
     orgLocalArray: OrganizationModel[] = [];
+    
+    loadSheetPath: string = '';
+    loadSheetModuleName: string = 'LoadSheet';
+    currentLoadSheetAvailable: boolean = false;
+    currentLoadSheet: FileStoreModel = new FileStoreModel();
+    
 
     constructor(formBuilder: FormBuilder,
         private fileUploadService: FileUploadService,
@@ -74,7 +84,8 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig,
         private globalState: GlobalStateService,
-        private organizationService: OrganizationService) {
+        private organizationService: OrganizationService,
+        private _validRecordService: MasterDataUploadForValidService) {
         this.filesToUpload = [];
     }
 
@@ -85,7 +96,10 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
         this.credential = UtilityService.getCredentialDetails();
         this.currentOrganizationId = +UtilityService.GetFromSession('CurrentOrganizationId');
         this.populateCurrentOrganization();
-        this.CreatedBy = this.credential.UserId;
+        this.CreatedBy = UtilityService.GetFromSession('CurrentUserId');;
+        this.IncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
+        this.DepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+        this.getCurrentLoadSheet(this.IncidentId);
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
@@ -105,6 +119,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
         this.inputFileCargo.nativeElement.value = '';
         this.inputFileCargoPALEx.nativeElement.value = '';
         this.inputFileGroundVictim.nativeElement.value = '';
+        this.inputFileLoadSheet.nativeElement.value = '';
     }
 
     populateCurrentOrganization() : void
@@ -119,8 +134,12 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
     }
 
     uploadFiles(): void {
-        // if (this.inputFilePax.nativeElement.value !== '' || this.inputFileCrewManifestPAL.nativeElement.value !== ''
-        //     || this.inputFileCargo.nativeElement.value !== '' || this.inputFileGroundVictim.nativeElement.value !== '') {
+        if(this.filesLoadSheet.length > 0)
+        {
+            this.uploadLoadSheet();
+        }
+        if(this.filesToUpload.length > 0)
+        {
             this.disableUploadButton = false;
             const baseUrl = GlobalConstants.EXTERNAL_URL;
             const param = 'IncidentId=' + this.IncidentId + '&CreatedBy=' + this.CreatedBy;
@@ -130,7 +149,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
                     console.log('success');
                     this.filesToUpload = [];
                     //this.toastrService.success('Uploaded Data is processed successfully.' + '\n'
-                     //   + 'To check any invalid records, please refer \'View Invalid Records\' link for the current timestamp.', 'Success', this.toastrConfig);
+                        //   + 'To check any invalid records, please refer \'View Invalid Records\' link for the current timestamp.', 'Success', this.toastrConfig);
                     result.forEach(item=>{
                         if(item.ResultType == 1)
                         {
@@ -148,10 +167,28 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
                     console.log(`Error: ${error}`);
                     this.toastrService.error(error, 'Error', this.toastrConfig);
                 });
-        // }
-        // else {
-        //     this.disableUploadButton = true;
-        // }
+        }
+              
+    }
+
+    uploadLoadSheet(): void {
+        this.disableUploadButton = false;
+        const baseUrl = GlobalConstants.EXTERNAL_URL;
+        let organizationId = +UtilityService.GetFromSession('CurrentOrganizationId');
+        let moduleName = this.loadSheetModuleName;
+        let param = `${this.IncidentId}/${organizationId}/${this.DepartmentId}/${moduleName}/${this.CreatedBy}`;
+
+        if(this.filesLoadSheet.length > 0)
+        {
+            this.fileUploadService.uploadFiles<FileStoreModel>(baseUrl + './api/fileUpload/UploadLoadSheetFile/' + param, this.filesLoadSheet)
+            .subscribe((result: FileStoreModel) =>{
+                this.filesLoadSheet = [];
+                this.inputFileLoadSheet.nativeElement.value = '';
+                this.getCurrentLoadSheet(this.IncidentId);
+                this.toastrService.success('Load sheet document is uploaded successfully', 'Success', this.toastrConfig);
+            })
+        }
+
     }
 
     getFileDetails(e: any, type: string): void {
@@ -172,6 +209,60 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
                 this.disableUploadButton = true;
             }
         }
+    }
+
+    getLoadSheetFileDetails(e: any, type: string): void {
+        this.filesLoadSheet = [];
+        this.disableUploadButton = false;
+        for (let i = 0; i < e.target.files.length; i++) {
+            const extension = e.target.files[i].name.split('.').pop();
+
+            if(extension.toLowerCase() == 'exe' || extension.toLowerCase() == 'dll')
+            {
+                this.toastrService.error('File Extension: "exe" and "dll" are not allowed to upload!', 'Error', this.toastrConfig);
+                this.form.reset();
+                this.disableUploadButton = true;
+            }
+            else
+            {
+                let objFileLoadSheet = new FileData();
+                objFileLoadSheet.field = type;
+                objFileLoadSheet.file = e.target.files[i];
+                this.filesLoadSheet.push(objFileLoadSheet);
+            }
+        }
+    }
+
+    getCurrentLoadSheet(incidentId: number) : void {
+        this._validRecordService.GetCurrentIncidentWithLoadSheet(incidentId)
+        .subscribe((response: ResponseModel<IncidentModel>)=>{
+            const currentIncidentObject = response.Records[0];
+            let localFileStoreLoadSheet = [];
+            if(currentIncidentObject.FileStores.length > 0)
+            {
+                localFileStoreLoadSheet = currentIncidentObject.FileStores
+                .filter(a=>a.ModuleName.toLowerCase() == this.loadSheetModuleName.toLowerCase());
+                if(localFileStoreLoadSheet.length > 0)
+                {
+                    this.currentLoadSheet = localFileStoreLoadSheet[0];
+                    this.currentLoadSheetAvailable = true;
+                    this.loadSheetPath = GlobalConstants.EXTERNAL_URL + 
+                    './api/FileDownload/GetFile/' + this.loadSheetModuleName + '/' + this.currentLoadSheet.FileStoreID;
+                } 
+                else
+                {
+                    this.currentLoadSheet = new FileStoreModel();
+                    this.currentLoadSheetAvailable = false;
+                    this.loadSheetPath = '';
+                }
+            }
+            else
+            {
+                this.currentLoadSheet = new FileStoreModel();
+                this.currentLoadSheetAvailable = false;
+                this.loadSheetPath = '';
+            }
+        });
     }
 
     openPassenger(): void {
@@ -244,6 +335,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
         this.IncidentId = incident.Value;
         this.currentOrganizationId = +UtilityService.GetFromSession('CurrentOrganizationId');
         this.populateCurrentOrganization();
+        this.getCurrentLoadSheet(this.IncidentId);
     }
 
     private departmentChangeHandler(department: KeyValue): void {
@@ -261,6 +353,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
             fileCargo: new FormControl(),
             fileCargoPALEx: new FormControl(),
             fileGroundVictim: new FormControl()
+            
         });
     }
 }

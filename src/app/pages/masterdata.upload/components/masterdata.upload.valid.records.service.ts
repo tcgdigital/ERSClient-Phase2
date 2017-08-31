@@ -6,6 +6,8 @@ import {
     DataProcessingService
 } from '../../../shared';
 
+import { IncidentModel } from '../../incident'
+
 import { InvolvePartyModel, AffectedPeopleModel, CargoModel, GroundVictimModel } from '../../shared.components';
 
 
@@ -22,6 +24,7 @@ export class MasterDataUploadForValidService {
     private _dataServiceAffectedPeople: DataService<InvolvePartyModel>;
     private _dataServiceAffectedObject: DataService<InvolvePartyModel>;
     private _dataServiceGroundVictims: DataService<InvolvePartyModel>;
+    private _dataServiceIncident: DataService<IncidentModel>;
     private _validPassengers: AffectedPeopleModel[] = [];
     
     /**
@@ -41,6 +44,9 @@ export class MasterDataUploadForValidService {
 
         this._dataServiceGroundVictims = this.dataServiceFactory
             .CreateServiceWithOptions<InvolvePartyModel>('InvolvedParties', option);
+        
+        this._dataServiceIncident = this.dataServiceFactory
+            .CreateServiceWithOptions<IncidentModel>('Incidents', option);
     }
 
     /**
@@ -122,5 +128,12 @@ export class MasterDataUploadForValidService {
         .Filter(`IncidentId eq ${incidentId}`)
         .Execute()
         .map(a=>a.Records.map(b=>b.GroundVictims).reduce((a,b)=>a.concat(b)));
+    }
+
+    GetCurrentIncidentWithLoadSheet(incidentId: number): Observable<ResponseModel<IncidentModel>>{
+        return this._dataServiceIncident.Query()
+        .Filter(`IncidentId eq ${incidentId}`)
+        .Expand(`FileStores`)
+        .Execute();        
     }
 }
