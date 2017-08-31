@@ -45,6 +45,10 @@ export class WidgetUtilityService {
             this.elapsedIntervalForGraph = this.elapsedIntervalForGraph;
         }
 
+        if (arrGraphData.length < this.elapsedIntervalForGraph) {
+            this.elapsedIntervalForGraph = arrGraphData.length;
+        }
+        //debugger;
         let closedTotal: number = 0;
         let pendingTotal: number = 0;
         let pendingInter: number = 0;
@@ -62,9 +66,9 @@ export class WidgetUtilityService {
             return item;
         });
 
-        this.elapsedIntervalForGraph++;
+        this.elapsedIntervalForGraph = dateDateSorted.length - 1;
         let totalCount: number = 0;
-        for (let i: number = 1; i <= this.elapsedIntervalForGraph - 1; i++) {
+        for (let i: number = 1; i <= this.elapsedIntervalForGraph; i++) {
 
             let pendingOld: number = 0;
 
@@ -79,7 +83,7 @@ export class WidgetUtilityService {
                 });
 
             totalCount = filteredTotal.length;
-
+            //this.elapsedIntervalForGraph = totalCount;
             let closed: ActionableStatusLogModel[] = filteredTotal
                 .filter((x: ActionableStatusLogModel) => {
                     return x.CompletionStatus == 'Closed';
@@ -169,10 +173,9 @@ export class WidgetUtilityService {
         });
 
 
-        this.elapsedIntervalForGraph++;
-
+        this.elapsedIntervalForGraph = dateDateSorted.length - 1;
         let totalCount: number = 0;
-        for (let i: number = 1; i <= this.elapsedIntervalForGraph -2; i++) {
+        for (let i: number = 1; i <= this.elapsedIntervalForGraph ; i++) {
             let pendingOld: number = 0;
 
             let filteredTotal: DemandStatusLogModel[] = arrGraphData
