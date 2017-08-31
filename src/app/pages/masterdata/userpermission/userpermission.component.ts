@@ -134,6 +134,7 @@ checkAllStatusMember(event: any = '', model: DepartmentsToView = null) : void {
         {
             model.IsMemberOf = false;
             model.IsHod = false;
+            this.allSelectHOD = false;
         }
         else
         {
