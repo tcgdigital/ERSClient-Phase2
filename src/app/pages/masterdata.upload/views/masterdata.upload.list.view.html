@@ -215,6 +215,18 @@
                                         </a>
                                     </td>
                                 </tr>
+
+                                <tr>
+                                    <td data-title="File Name">Load Sheet Document</td>
+                                    <td data-title="Select File">
+                                        <input type="file" #inputFileLoadSheet id="file" (change)="getLoadSheetFileDetails($event,'LoadSheet')" />
+                                    </td>
+                                    <td data-title="Download Templates">
+                                        <a *ngIf="currentLoadSheetAvailable" target="_self" href="{{loadSheetPath}}">
+                                            <i class="fa fa-download fa-lg" aria-hidden="true"></i>&nbsp;Download Loadsheet Document 
+                                        </a>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </responsive-table>

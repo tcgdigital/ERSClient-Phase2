@@ -91,25 +91,60 @@ export class UserPermissionComponent {
         return item.IsMemberOf == true;
     }
     selectAllMember(value: any) : void{
-           this.departmentsToView.forEach(x =>{
-                x.IsMemberOf = value.checked;
-            });       
+        this.departmentsToView.forEach(x =>{
+            x.IsMemberOf = value.checked;
+            if(value.checked == false)
+            {
+                x.IsHod = value.checked;
+                this.allSelectHOD = value.checked;
+            }
+        });       
     }
     selectAllHOD(value: any) : void{
-           this.departmentsToView.forEach(x =>{
-                x.IsHod = value.checked;
-            });
+        this.departmentsToView.forEach(x =>{
+            x.IsHod = value.checked;
+            if(value.checked == true)
+            {
+                x.IsMemberOf = true;
+                this.allSelectMember = true;
+            }
+        });
     }
-checkAllStatusHod() : void{
-      this.allSelectHOD = this.departmentsToView.length != 0 && this.departmentsToView.filter(x=>{
-         return x.IsHod == true;
-     }).length == this.departmentsToView.length;
+checkAllStatusHod(event: any = '', model: DepartmentsToView = null) : void {
+    if(event != '' && model != null)
+    {
+        if(event.checked == true)
+        {
+            model.IsHod = true;
+            model.IsMemberOf = true;
+        }
+        else
+        {
+            model.IsHod = false;
+        }
+    }
+    this.allSelectHOD = this.departmentsToView.length != 0 && this.departmentsToView.filter(x=>{
+        return (x.IsHod == true && x.IsMemberOf == true);
+    }).length == this.departmentsToView.length;
 }
-checkAllStatusMember() : void{
-      this.allSelectMember = this.departmentsToView.length != 0 && this.departmentsToView.filter(x=>{
-         return x.IsMemberOf == true;
-     }).length == this.departmentsToView.length;
+checkAllStatusMember(event: any = '', model: DepartmentsToView = null) : void {
+    if(event != '' && model != null)
+    {
+        if (event.checked == false)
+        {
+            model.IsMemberOf = false;
+            model.IsHod = false;
+            this.allSelectHOD = false;
+        }
+        else
+        {
+            model.IsMemberOf = true;
+        }
     }
+    this.allSelectMember = this.departmentsToView.length != 0 && this.departmentsToView.filter(x=>{
+         return (x.IsMemberOf == true && x.IsHod == true);
+    }).length == this.departmentsToView.length;
+}
     save(): void {
         let model = this.departmentsToView.filter(this.isMemberOf);
         let selectedUser = this.selectedUser;
@@ -127,13 +162,20 @@ checkAllStatusMember() : void{
                 return item;
             }
         });
-        this.userPermissionService.CreateBulk(this.userPermissionModelToSave)
-            .subscribe((response: UserPermissionModel[]) => {
-                this.toastrService.success('User permissions saved Successfully.', 'Success', this.toastrConfig);
-                console.log("Success");
-            }, (error: any) => {
-                console.log(`Error: ${error}`);
-            });
+        if(this.userPermissionModelToSave.length > 0)
+        {
+            this.userPermissionService.CreateBulk(this.userPermissionModelToSave)
+                .subscribe((response: UserPermissionModel[]) => {
+                    this.toastrService.success('User permissions saved Successfully.', 'Success', this.toastrConfig);
+                    console.log("Success");
+                }, (error: any) => {
+                    console.log(`Error: ${error}`);
+                });
+        }
+        else
+        {
+            this.toastrService.error('User must be mapped with at least one department!', 'Error', this.toastrConfig);
+        }
     }
 
     ngOnInit(): any {

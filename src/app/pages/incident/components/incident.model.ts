@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { BaseModel, KeyValue } from '../../../shared';
+import { BaseModel, KeyValue, FileStoreModel } from '../../../shared';
 import { EmergencyTypeModel } from '../../masterdata/emergencytype';
 import { DepartmentModel } from '../../masterdata/department';
 import { InvolvePartyModel, OrganizationModel } from '../../shared.components';
@@ -58,6 +58,7 @@ export class IncidentModel extends BaseModel {
     public Department: DepartmentModel;
 
     public InvolvedParties?: InvolvePartyModel[];
+    public FileStores?: FileStoreModel[];
 
 
     constructor() {
@@ -105,6 +106,7 @@ export class IncidentModel extends BaseModel {
         this.SavedBy = null;
         this.SavedOn = null;
         this.DepartmentId = 0;
+        this.FileStores = [];
     }
 }
 
