@@ -32,10 +32,10 @@
                 <tr *ngFor="let departmentToView of departmentsToView">
                     <td data-title="Department Code">{{departmentToView.DepartmentName}}</td>
                     <td data-title="Member Of">
-                        <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="departmentToView.IsMemberOf" aria-label="Add" (change)="checkAllStatusMember($event)"></md-checkbox>
+                        <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="departmentToView.IsMemberOf" aria-label="Add" (change)="checkAllStatusMember($event, departmentToView)"></md-checkbox>
                     </td>
                     <td data-title="Is HOD">
-                        <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="departmentToView.IsHod" aria-label="Add" (change)="checkAllStatusHod($event)"></md-checkbox>
+                        <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="departmentToView.IsHod" aria-label="Add" (change)="checkAllStatusHod($event, departmentToView)"></md-checkbox>
                     </td>
                 </tr>
             </tbody>
