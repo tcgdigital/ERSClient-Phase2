@@ -18,7 +18,7 @@
                                                         <input type="hidden" formControlName="DemandId" name="EnquiryId" />
                                                         <div class="row">
                                                                 <div class="form-group col-lg-6 col-md-6 col-sm-4">
-                                                                        <label for="DemandTypeId">Demand Type<span class="required"  *ngIf="isReadonly">*</span></label>
+                                                                        <label for="DemandTypeId">Demand Type<span class="required">*</span></label>
                                                                         <select id="selectDemandTypeId" class="form-control" formControlName="DemandTypeId">
                                                                                 <option value=''>Select Demand Type</option>
                                                                                 <!--<option [value]=''>Select Demand Type</option>-->
@@ -26,7 +26,7 @@
                                                                                         {{demandType.DemandTypeName}}
                                                                                 </option>
                                                                                 </select>
-                                                                        <small *ngIf="(!form.controls.DemandTypeId.valid && submitted) && !isReadonly" class="text-danger">
+                                                                        <small *ngIf="(!form.controls.DemandTypeId.valid && submitted && !isEdit)" class="text-danger">
                                                                                 Required.
                                                                                 </small>
                                                                 </div>

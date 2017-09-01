@@ -55,9 +55,11 @@ export class DemandRaisedSummaryWidgetService {
         departmentIdProjection = `(RequesterDepartmentId eq ${departmentId})`;
         this.demandService.GetDemandByRequesterDepartments(incidentId, departmentIdProjection)
             .subscribe((result) => {
+
                 this.dataTemp = result.Records.filter((filter) => {
                     return filter.RequesterDepartmentId == departmentId;
                 });
+
                 this.allocatedDemandDetail = new AllDemandRaisedSummaryModel();
                 this.allocatedDemandDetails = [];
                 this.dataTemp.forEach((item: DemandModel) => {
@@ -65,15 +67,18 @@ export class DemandRaisedSummaryWidgetService {
                     this.allocatedDemandDetail = this.FillAllDemandRaisedSummaryObject(this.allocatedDemandDetail, item);
                     this.allocatedDemandDetails.push(this.allocatedDemandDetail);
                 });
+
                 this.allocatedDemandDetails.map((demand) => {
                     let minutesInt: number = parseInt(demand.ScheduleTime);
-                    let totalMilliSecondsTillCreatedOn: number = demand.CreatedOn.getTime();
+                    let totalMilliSecondsTillCreatedOn: number = new Date(demand.CreatedOn).getTime();
                     let totalMinutesTillCreatedOn: number = totalMilliSecondsTillCreatedOn / 60000;
                     let totalMinutesAfterAddingScheduleTime: number = totalMinutesTillCreatedOn + minutesInt;
                     let totalMilliSecondsAfterAddingScheduleTime: number = totalMinutesAfterAddingScheduleTime * 60000;
                     demand.ScheduledClose = new Date(totalMilliSecondsAfterAddingScheduleTime);
                 });
+
                 callback(this.allocatedDemandDetails);
+                
             });
     }
 
@@ -108,6 +113,7 @@ export class DemandRaisedSummaryWidgetService {
         initialObject.IsClosed = fillObject.IsClosed;
         initialObject.ClosedBy = fillObject.ClosedBy;
         initialObject.ClosedOn = fillObject.ClosedOn;
+        initialObject.CreatedOn = fillObject.CreatedOn;
         initialObject.ScheduledClose = fillObject.ScheduledClose;
         initialObject.ContactNumber = fillObject.ContactNumber;
         initialObject.Priority = fillObject.Priority;

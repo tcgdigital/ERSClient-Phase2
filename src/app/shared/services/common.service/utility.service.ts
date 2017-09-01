@@ -370,9 +370,10 @@ export class UtilityService {
             Observable.interval(1000).subscribe((_) => {
                 dataModels.forEach((entity: any) => {
                     let scheduleClose: number;
-
+                   
                     if (entity.constructor.name === 'AllDeptDemandRaisedSummary' ||
                         entity.constructor.name === 'AllDeptDemandReceivedSummary' ||
+                        entity.constructor.name === 'AllDemandRaisedSummaryModel' ||
                         entity.constructor.name === 'DemandModelToView') {
                         scheduleClose = (Number(entity.ScheduleTime) * 60000);
                     }
