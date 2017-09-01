@@ -513,11 +513,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             this.incidentDataExchangeModel.InvolvedPartyModel, this.incidentDataExchangeModel.FLightModel,
             this.incidentDataExchangeModel.AffectedModel)
             .subscribe((response: IncidentModel) => {
-                console.log(response);
                 UtilityService.SetToSession({ CurrentIncidentId: response.IncidentId });
-                console.log('Success');
                 this.globalStateProxy.NotifyDataChanged('incidentCreate', response.IncidentId);
-                console.log('Success');
                 this.router.navigate(['pages/dashboard']);
             }, (error: any) => {
                 console.log('Error');
@@ -532,7 +529,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.incidentDataExchangeModel.FLightModel = flightModel;
         this.incidentDataExchangeModel.AffectedModel = affectedModel;
         this.incidentDataExchangeModel.IsFlightRelated = this.isFlightRelated;
-        console.log('Going to the View page.........................');
+        //console.log('Going to the View page.........................');
     }
 
     resetIncidentViewForm(): void {
@@ -810,7 +807,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                 .setValue(moment(date.SelectedDate as Date).utc().format('DD-MMM-YYYY HH:mm'));
         }
         else if (controlName === 'Scheduleddeparture') {
-            debugger;
             //localDepartureArrivalDate = this.DateFormat(new Date(utc + (this.GetUTCOffsetHours(true))));
             localDepartureArrivalDate = this.DateFormat(this.GetLocalDateTime(utc,true));
             this.formFlight.get('Scheduleddeparture').setValue(departurearrivalDate);
@@ -821,7 +817,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             });
         }
         else if (controlName === 'Scheduledarrival') {
-            debugger;
             //localDepartureArrivalDate = this.DateFormat(new Date(utc + (this.GetUTCOffsetHours(false))));
             localDepartureArrivalDate = this.DateFormat(this.GetLocalDateTime(utc,false));
             this.formFlight.get('Scheduledarrival').setValue(departurearrivalDate);
@@ -847,7 +842,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     private GetLocalDateTime(utc: number, isOrigin: boolean): Date {
-        debugger;
         let localDate = new Date(utc + this.GetUTCOffsetHours(isOrigin));
         if (this.isDst(localDate)) {
             let final:Date =new Date(localDate.getTime() + (1 * 60 * 60 * 1000));
