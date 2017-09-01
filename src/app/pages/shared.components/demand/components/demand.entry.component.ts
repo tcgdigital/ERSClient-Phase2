@@ -76,6 +76,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     caller: CallerModel;
     credential: AuthModel;
     isReadonly: boolean = false;
+    isEdit: boolean = false;
     protected _onRouteChange: Subscription;
     isArchive: boolean = false;
     resolutionTime: Date;
@@ -349,6 +350,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.Action = 'Submit';
         this.freshDemand = true;
         this.isReadonly = false;
+        this.isEdit = false;
         this.childModalEntry.show();
     }
 
@@ -368,6 +370,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
     setModelForUpdate(id: string) {
+        
         this.childModalEntry.hide();
         const idNum: number = +(id.split('!')[0]);
         this.demandService.GetByDemandId(idNum)
@@ -393,14 +396,17 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.showAdd = true;
                 this.buttonValue = 'Create Demand';
                 this.RemoveDemandTypeId();
+                this.demandTypePreapproved = this.demandTypesAll.filter((x) => x.DemandTypeId == this.demandModel.DemandTypeId)[0];
+                this.AddDemandTypeId();
                 this.isReadonly = false;
+                this.isEdit = true;
                 this.childModalEntry.show();
 
                 this.form.controls['PDATicketNumber'].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
                 this.form.controls['AffectedPersonId'].reset({ value: this.demandModel.AffectedPersonId, disabled: true });
                 this.form.controls['AffectedObjectId'].reset({ value: this.demandModel.AffectedObjectId, disabled: true });
                 this.form.controls['DemandTypeId'].reset({ value: +this.demandModel.DemandTypeId, disabled: true });
-                this.form.controls['RequestedBy'].reset({ value: this.caller.FirstName, disabled: false });
+                this.form.controls['RequestedBy'].reset({ value: this.demandModel.RequestedBy, disabled: false });  // this.caller.FirstName
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });

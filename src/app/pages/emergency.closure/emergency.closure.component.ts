@@ -311,7 +311,7 @@ export class EmergencyClosureComponent implements OnInit {
 							this.UserDepartmentNotificationMappers = response.Records.map(x => {
 								let y: NotificationContactsWithTemplateModel = new NotificationContactsWithTemplateModel();
 								y.UserId = x.UserId;
-								y.IsActive = true;
+								y.IsActive = (x.User.ActiveFlag.toLowerCase() == 'active');
 								y.IncidentId = this.currentIncident;
 								y.DepartmentId = x.DepartmentId;
 								y.CreatedBy = x.CreatedBy;

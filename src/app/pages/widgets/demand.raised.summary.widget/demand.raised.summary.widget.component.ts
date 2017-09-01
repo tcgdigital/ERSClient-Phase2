@@ -23,6 +23,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Observable } from 'rxjs/Rx';
 import * as Highcharts from 'highcharts';
 import { DemandStatusLogModel,DemandStatusLogService } from "../../shared.components/demandstatuslog";
+import { RAGScaleModel } from '../../../pages/shared.components';
 
 @Component({
     selector: 'demand-raised-summary-widget',
@@ -131,19 +132,16 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         this.demandRaisedSummaryWidgetService.GetAllDemandByRequesterDepartment
             (this.incidentId, this.initiatedDepartmentId, (x: AllDemandRaisedSummaryModel[]) => {
                 this.allDemandRaisedSummaryModelList = x;
-                this.setRagStatus();
                 this.allDemandRaisedSummaryModel = Observable.of(this.allDemandRaisedSummaryModelList);
+                this.setRagStatus();
                 this.childModalAllDemandRaisedSummary.show();
             });
     }
 
     // TODO: Need to refactor
     setRagStatus(): void {
-        Observable.interval(1000).subscribe((_) => {
             // UtilityService.SetRAGStatusGrid(this.allDemandRaisedSummaryModelList, 'Demand');
             UtilityService.SetRAGStatus(this.allDemandRaisedSummaryModelList, 'Demand');
-            this.allDemandRaisedSummaryModel = Observable.of(this.allDemandRaisedSummaryModelList);
-        });
     }
 
     // TODO: Need to refactor
@@ -200,6 +198,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         });
 
         UtilityService.SetRAGStatus(this.allDeptDemandRaisedSummaries, 'Demand');
+
         this.showAllDeptSubCompleted = true;
         this.showAllDeptSubPending = false;
     }
@@ -227,6 +226,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
         });
 
         UtilityService.SetRAGStatus(this.allDeptDemandRaisedSummaries, 'Demand');
+        
         this.showAllDeptSubPending = true;
         this.showAllDeptSubCompleted = false;
     }
@@ -257,7 +257,10 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
                 this.subDeptDemandRaisedSummaries.push(subDeptDemandRaisedSummary);
             }
         });
+
         UtilityService.SetRAGStatus(this.subDeptDemandRaisedSummaries, 'Demand');
+
+        
         this.showSubDeptSubCompleted = true;
         this.showSubDeptSubPending = false;
     }
@@ -278,7 +281,9 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
                 this.subDeptDemandRaisedSummaries.push(subDeptDemandRaisedSummary);
             }
         });
+
         UtilityService.SetRAGStatus(this.subDeptDemandRaisedSummaries, 'Demand');
+        
         this.showSubDeptSubCompleted = false;
         this.showSubDeptSubPending = true;
     }
