@@ -49,7 +49,6 @@ export class WidgetUtilityService {
         }
 
 
-        //debugger;
         let closedTotal: number = 0;
         let pendingTotal: number = 0;
         let pendingInter: number = 0;

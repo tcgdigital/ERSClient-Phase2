@@ -17,7 +17,7 @@ import { UserPermissionModel } from '../../masterdata/userpermission/components'
 import { PagePermissionService } from '../../../pages/masterdata/page.functionality/components/page.permission.service';
 import { PagesPermissionMatrixModel } from '../../../pages/masterdata/page.functionality/components/page.functionality.model';
 import * as _ from 'underscore';
-
+import { TimeZoneModel,TimeZoneModels,TimeZoneService } from "../../shared.components/timezone";
 @Component({
     selector: 'login',
     encapsulation: ViewEncapsulation.None,
@@ -42,6 +42,7 @@ export class LoginComponent implements OnInit {
         private authService: AuthenticationService,
         private globalState: GlobalStateService,
         private router: Router,
+        private timeZoneService:TimeZoneService,
         private incidentService: IncidentService,
         private licensingService: LicensingService,
         private ragScaleService: RAGScaleService,
@@ -96,7 +97,7 @@ export class LoginComponent implements OnInit {
                             this.getDepartments(loginCredentialBasic.UserId);
                             GlobalConstants.currentLoggedInUser = +loginCredentialBasic.UserId.toString();
                             this.getIncidents();
-
+                            
                             if (!Object.keys(loginCredentialBasic).some((x) => x === 'EmailConfirmed')) {
                                 localStorage.setItem('LastLoginTime', (new Date()).toString());
                                 UtilityService.SetToSession({ CurrentUserId: loginCredentialBasic.UserId });
@@ -161,11 +162,18 @@ export class LoginComponent implements OnInit {
                 this.incidents = x.map((y: IncidentModel) => new KeyValue(y.EmergencyName, y.IncidentId));
                 if (this.incidents.length > 0) {
                     this.currentIncidentId = this.incidents[0].Value;
+                    //this.getTimeZones();
                     console.log(this.currentIncidentId);
                     UtilityService.SetToSession({ CurrentIncidentId: this.currentIncidentId });
                 }
 
             });
+    }
+
+    private getTimeZones():void{
+        this.timeZoneService.GetTimeZones(this.currentIncidentId)
+        .subscribe((result:TimeZoneModels)=>{
+        });
     }
 
     private getRAGScaleData() {
