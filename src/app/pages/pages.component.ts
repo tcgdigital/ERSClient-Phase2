@@ -202,6 +202,10 @@ export class PagesComponent implements OnInit {
         this.currentDepartmentId = selectedDepartment.Value;
         this.globalState.NotifyDataChanged('departmentChange', selectedDepartment);
         this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
+
+        if(GlobalConstants.CallCenterDepartmentId==this.currentDepartmentId){
+            this.router.navigate(['pages/callcenteronlypage']);
+        }
     }
 
     public onIncidentChange(selectedIncident: KeyValue): void {
@@ -308,6 +312,9 @@ export class PagesComponent implements OnInit {
             else {
                 this.currentDepartmentId = this.departments[0].Value;
                 UtilityService.SetToSession({ CurrentDepartmentId: this.currentDepartmentId });
+                if(GlobalConstants.CallCenterDepartmentId==this.currentDepartmentId){
+                    this.router.navigate(['pages/callcenteronlypage']);
+                }
             }
         }
     }

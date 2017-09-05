@@ -4,7 +4,7 @@ import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 
-
+import { UtilityService } from '../../shared/services';
 
 
 
@@ -17,10 +17,11 @@ import { Subscription } from 'rxjs/Rx';
 })
 
 export class LandingComponent implements OnInit {
-
+    public incidentId:number=0;
     constructor(private router: Router) { };
 
     ngOnInit(): void {
+        UtilityService.RemoveFromSession('CurrentIncidentId');
     }
 
     ngOnDestroy(): void {

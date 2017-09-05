@@ -10,6 +10,7 @@ import {
 } from './components';
 import { UserProfileService } from '../masterdata/userprofile/components';
 import { LoginRootComponent } from './login.root.component';
+import { TimeZoneService } from "../shared.components/timezone";
 
 @NgModule({
     imports: [
@@ -27,7 +28,8 @@ import { LoginRootComponent } from './login.root.component';
     providers: [
         IncidentService,
         UserProfileService,
-        PagePermissionService
+        PagePermissionService,
+        TimeZoneService
     ]
 })
 export class LoginModule {
