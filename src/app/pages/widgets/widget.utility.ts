@@ -18,7 +18,6 @@ export class WidgetUtilityService {
         let arrGraphPending: number[] = [];
         let arrGraphCompleted: number[] = [];
 
-
         let start: Date = new Date(emergencyDate);
         let temp: Date = new Date(emergencyDate);
         let inter: string = JSON.stringify(start);
@@ -45,6 +44,11 @@ export class WidgetUtilityService {
             this.elapsedIntervalForGraph = this.elapsedIntervalForGraph;
         }
 
+        if (arrGraphData.length < this.elapsedIntervalForGraph) {
+            this.elapsedIntervalForGraph = arrGraphData.length;
+        }
+
+
         let closedTotal: number = 0;
         let pendingTotal: number = 0;
         let pendingInter: number = 0;
@@ -62,9 +66,12 @@ export class WidgetUtilityService {
             return item;
         });
 
-        this.elapsedIntervalForGraph++;
+        this.elapsedIntervalForGraph = dateDateSorted.length - 1;
+        if (this.elapsedIntervalForGraph > GlobalConstants.ELAPSED_MAX_HOUR_INTERVAL_COUNT_FOR_GRAPH_CREATION) {
+            this.elapsedIntervalForGraph = GlobalConstants.ELAPSED_MAX_HOUR_INTERVAL_COUNT_FOR_GRAPH_CREATION;
+        }
         let totalCount: number = 0;
-        for (let i: number = 1; i <= this.elapsedIntervalForGraph - 1; i++) {
+        for (let i: number = 1; i <= this.elapsedIntervalForGraph; i++) {
 
             let pendingOld: number = 0;
 
@@ -79,7 +86,7 @@ export class WidgetUtilityService {
                 });
 
             totalCount = filteredTotal.length;
-
+            //this.elapsedIntervalForGraph = totalCount;
             let closed: ActionableStatusLogModel[] = filteredTotal
                 .filter((x: ActionableStatusLogModel) => {
                     return x.CompletionStatus == 'Closed';
@@ -107,7 +114,6 @@ export class WidgetUtilityService {
         containerName: string, graphSubjectType: string, emergencyDate: Date, departmentType: string): void {
         let DepartmentName: string = '';
         console.log(requesterDepartmentId);
-
         if (departmentType == 'TargetDepartment') {
             DepartmentName = arrGraphData[0].TargetDepartment.Description;
         }
@@ -148,6 +154,8 @@ export class WidgetUtilityService {
             this.elapsedIntervalForGraph = arrGraphData.length;
         }
 
+
+
         let closedTotal: number = 0;
         let pendingTotal: number = 0;
         let pendingInter: number = 0;
@@ -169,10 +177,12 @@ export class WidgetUtilityService {
         });
 
 
-        this.elapsedIntervalForGraph++;
-
+        this.elapsedIntervalForGraph = dateDateSorted.length - 1;
+        if (this.elapsedIntervalForGraph > GlobalConstants.ELAPSED_MAX_HOUR_INTERVAL_COUNT_FOR_GRAPH_CREATION) {
+            this.elapsedIntervalForGraph = GlobalConstants.ELAPSED_MAX_HOUR_INTERVAL_COUNT_FOR_GRAPH_CREATION;
+        }
         let totalCount: number = 0;
-        for (let i: number = 1; i <= this.elapsedIntervalForGraph -2; i++) {
+        for (let i: number = 1; i <= this.elapsedIntervalForGraph; i++) {
             let pendingOld: number = 0;
 
             let filteredTotal: DemandStatusLogModel[] = arrGraphData

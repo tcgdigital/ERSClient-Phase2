@@ -141,7 +141,6 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     /*
         public setRagStatus_Old(): void {
             Observable.interval(1000).subscribe((_) => {
-                debugger;
                 if (this.mydemands && this.mydemands.length > 0) {
                     this.mydemands.forEach((x) => {
                         if (x.ClosedOn == null) {

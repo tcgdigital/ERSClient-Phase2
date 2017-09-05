@@ -13,6 +13,7 @@ import { IncidentEntryComponent, IncidentViewComponent, IncidentService } from '
 import { DepartmentService, EmergencyTypeService } from '../masterdata';
 import { SharedModule, DataExchangeService, LocationService,GlobalStateService } from '../../shared';
 import { FlightModule, InvolvePartyModule, OrganizationService, AircraftTypeService } from '../shared.components';
+import { TimeZoneService } from "../shared.components/timezone";
 @NgModule({
     imports: [
         CommonModule,
@@ -41,7 +42,8 @@ import { FlightModule, InvolvePartyModule, OrganizationService, AircraftTypeServ
         LocationService,
         ToastrService,
         OrganizationService,
-        AircraftTypeService
+        AircraftTypeService,
+        TimeZoneService
     ]
 })
 export class IncidentModule { }
