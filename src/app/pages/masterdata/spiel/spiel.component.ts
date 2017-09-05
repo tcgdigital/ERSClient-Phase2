@@ -93,7 +93,7 @@ export class SpileComponent implements OnInit {
             {
                 this.keyValueService.Update(KeyVal, KeyVal.KeyValueId).subscribe(() => {
                     this.getSpiel();
-                    this.toastrService.success('Spile Text Saved successfully.', 'Success', this.toastrConfig);
+                    this.toastrService.success('Spiel Text Saved successfully.', 'Success', this.toastrConfig);
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
                 }
