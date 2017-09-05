@@ -1,0 +1,43 @@
+<div class="card card-without-top-border">
+    <div class="card-header">
+            <strong>Spile</strong>
+    </div>
+    <div class="card-block">
+    <form [formGroup]="generalform">
+        <div class="row">
+            <div class="form-group col-lg-2 col-sm-5 col-md-4">
+                <label for="Spiel">Spiel Type:<span class="required">*</span></label>
+                <select id="Spiel" class="form-control" formControlName="SpielType" name="SpielType" (change)="spielChanged()">
+                                <option value ='' >Select Spiel Type</option>
+                                <option value = "SpielTextEnglish" >
+                                        Spiel (English)
+                                </option>
+                                <option value = "SpielTextTagalog" >
+                                        Spiel (Tagalog)
+                                </option>
+                        </select>
+                <small *ngIf="!generalform.controls.SpielType.valid && submitted" class="text-danger">
+                        Required.
+                </small>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-lg-6 col-sm-6 col-md-6 col-xs-12">
+                <label for="Spiel">Spiel Text:<span class="required">*</span></label>
+                <textarea id="SpielText" class="form-control" formControlName="SpielText" name="SpielText" rows="4" cols="120">
+                </textarea><!--  [(ngModel)]="spielText" -->
+                <small *ngIf="!generalform.controls.SpielText.valid && submitted" class="text-danger">
+                        Required.
+                </small>
+            </div>
+        </div>
+        <div class="row">
+                <div class="form-group col-lg-2 col-sm-6 col-md-4">
+                    <div class="formtype">
+                        <button class="btn btn-primary" type="button" (click)="spielSave()">Submit</button>
+                    </div>
+                </div>
+        </div>
+    </form>
+    </div>
+</div>
