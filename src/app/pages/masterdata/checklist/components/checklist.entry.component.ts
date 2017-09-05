@@ -513,9 +513,11 @@ export class ChecklistEntryComponent implements OnInit {
                     else {
                         this.toastrService.success(result.Message, "Success", this.toastrConfig);
                     }
+                    this.filesToUpload = [];
                     this.dataExchange.Publish("FileUploadedSuccessfullyCheckList", new ChecklistModel());
                     this.inputFileChecklist.nativeElement.value = "";
                     this.disableUploadButton = true;
+                    this.showAddRegion(this.showAdd);
                     this.showAdd = false;
                 });
 
@@ -548,7 +550,7 @@ export class ChecklistEntryComponent implements OnInit {
 
     private getFileDetails(e: any, type: string): void {
         this.disableUploadButton = false;
-
+        this.filesToUpload = [];
         for (let i = 0; i < e.target.files.length; i++) {
             const extension = e.target.files[i].name.split('.').pop();
 
