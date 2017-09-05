@@ -312,6 +312,8 @@ export class DataProcessingService {
         request: T, batchIndex: number, uniqueId: string) {
 
         const payload: string = JSON.stringify(request.Entity);
+        const incidentId: number = +UtilityService.GetFromSession('CurrentIncidentId');
+
         batchCommand.push('--changeset_' + uniqueId);
         batchCommand.push('Content-Type: application/http');
         batchCommand.push('Content-Transfer-Encoding: binary');
@@ -322,6 +324,9 @@ export class DataProcessingService {
         batchCommand.push('accept: application/json; charset=utf-8; odata.metadata=none');
         batchCommand.push('Authorization: Bearer ' + UtilityService.GetFromSession('access_token'));
         batchCommand.push('Content-Length: ' + payload.length.toString());
+        if(!isNaN(incidentId) && incidentId > 0){
+            batchCommand.push(`CurrentIncidentId: ${incidentId}`);
+        }
         batchCommand.push('');
         batchCommand.push(payload);
         batchCommand.push('');
