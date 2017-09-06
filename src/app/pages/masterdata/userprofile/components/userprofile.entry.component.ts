@@ -110,7 +110,8 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
                 this.userProfileModel.Location = 'Not Available';
                 this.userProfileService.Create(this.userProfileModel)
                     .subscribe((response: UserProfileModel) => {
-                        this.form.reset();
+                        //this.form.reset();
+                        this.initiateForm();
                         this.toastrService.success('User profile created Successfully.', 'Success', this.toastrConfig);
                         this.dataExchange.Publish('UserProfileModelCreated', response);
                         this.showAddRegion(this.showAdd);
@@ -125,6 +126,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
                 this.formControlDirtyCheck();
                 this.userProfileService.Update(this.userProfileModeltoUpdate, this.userProfileModeltoUpdate.UserProfileId)
                     .subscribe((response: UserProfileModel) => {
+                        this.initiateForm();
                         this.showAddRegion(this.showAdd);
                         this.showAdd = false;
                         this.toastrService.success('User profile edited Successfully.', 'Success', this.toastrConfig);
