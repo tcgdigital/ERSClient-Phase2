@@ -64,8 +64,12 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
         this.form = new FormGroup({
             QuickLinkId: new FormControl(0),
             QuickLinkName: new FormControl('', [Validators.required]),
-            QuickLinkURL: new FormControl(''),            
+            QuickLinkURL: new FormControl('')            
         });
+
+        this.filepathWithLinks = null;
+        this.fileName = null;
+        this.submitted = false;
     }
 
     public fileChangeEvent(fileInput: any) {
@@ -129,7 +133,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
                 }
             }
             if ((this.form.controls['QuickLinkURL'].value==undefined || this.form.controls['QuickLinkURL'].value=='') 
-                || (this.filepathWithLinks == '')) 
+                && (this.filepathWithLinks == null)) 
             {
                 this.toastrService.error('QuickLink URL is required or a file must be uploaded', 'Error', this.toastrConfig)
             }
@@ -163,13 +167,13 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
                             this.toastrService.success('Quick link edited Successfully.', 'Success', this.toastrConfig);
                             this.initializeInputForm();
                             this.initiateQuickLinkModel();
-                            this.form = new FormGroup({
-                                QuickLinkId: new FormControl(this.quickLinkModel.QuickLinkId),
-                                QuickLinkName: new FormControl(this.quickLinkModel.QuickLinkName,
-                                    [Validators.required, Validators.minLength(5)]),
-                                QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL,
-                                    [Validators.minLength(12)])
-                            });
+                            // this.form = new FormGroup({
+                            //     QuickLinkId: new FormControl(this.quickLinkModel.QuickLinkId),
+                            //     QuickLinkName: new FormControl(this.quickLinkModel.QuickLinkName,
+                            //         [Validators.required, Validators.minLength(5)]),
+                            //     QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL,
+                            //         [Validators.minLength(12)])
+                            // });
                             this.showAddRegion(this.showAdd);
                             this.showAdd = false;
                         }, (error: any) => {
@@ -187,12 +191,13 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
         this.showAddRegion(this.showAdd);
         this.showAdd = false;
         this.isValidUrl = false;
-        this.form = new FormGroup({
-            QuickLinkId: new FormControl(0),
-            QuickLinkName: new FormControl(this.quickLinkModel.QuickLinkName,
-                [Validators.required]),
-            QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL)
-        });
+        // this.form = new FormGroup({
+        //     QuickLinkId: new FormControl(0),
+        //     QuickLinkName: new FormControl(this.quickLinkModel.QuickLinkName,
+        //         [Validators.required]),
+        //     QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL)
+        // });
+        this.initializeInputForm();
         this.clearFileUpload(true);
     }
 
