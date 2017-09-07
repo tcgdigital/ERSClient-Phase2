@@ -76,7 +76,8 @@ export class GlobalConstants {
     public static AD_AUTH_ENABLED: boolean = false;
     public static PASSWORD_PATTERN: RegExp = /^(?!.*[\s])(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,20}$/ig;
     public static NUMBER_PATTERN: string = '^[0-9-+]*$';
-    public static EMAIL_PATTERN: string = '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$';
+    //public static EMAIL_PATTERN: string = '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$';
+    public static EMAIL_PATTERN: string = '^[_a-z_A-Z0-9-]+(\.[_a-z_A-Z0-9-]+)*@[a-z_A-Z0-9-]+(\.[a-z_A-Z0-9-]+)*(\.[a-z_A-Z]{2,4})$';
     public static URL_PATTERN: string = '^(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:\~\+#]*[\w\-\@?^=%&amp;\~\+#])?$';
     public static LAST_INCIDENT_PICK_COUNT: string = '5';
     public static ELAPSED_MAX_HOUR_INTERVAL_COUNT_FOR_GRAPH_CREATION: number = 12;
@@ -328,9 +329,9 @@ export class GlobalConstants {
         { value: 'NonFlight', key: 2 }
     ];
 
-    public static TargetDepartmentTravel: number = 1138; // 1138; 36;10
-    public static TargetDepartmentAdmin: number = 1138; //1138;36; 13
-    public static TargetDepartmentCrew: number = 1138; //1138;36; 9
+    public static TargetDepartmentTravel: number = 10; // 1138; 36;10
+    public static TargetDepartmentAdmin: number = 13; //1138;36; 13
+    public static TargetDepartmentCrew: number = 9; //1138;36; 9
     public static DemandTypeId: number = 1;
     public static RequiredLocation: string = 'Office';
     public static ScheduleTimeForCallback: number = 75;

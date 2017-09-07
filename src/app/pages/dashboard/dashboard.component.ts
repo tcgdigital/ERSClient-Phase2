@@ -61,7 +61,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     currentUserId: number;
     isFlightRelatedPopup: boolean = false;
     userId: number;
-    public isArchive:boolean=false;
+    public isArchive: boolean = false;
     severities: KeyValue[] = [];
     isOffSetPopup: boolean = false;
     public IsDrillPopup: boolean;
@@ -74,7 +74,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private sub: any;
     public isShowViewReadonlyCrisis: boolean = false;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
-    public closedDate:Date=new Date();
+    public closedDate: Date = new Date();
 
     constructor(private globalState: GlobalStateService,
         private departmentService: DepartmentService,
@@ -144,25 +144,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 this.tablinks = GlobalConstants.DashboardTabLinks.filter((x: ITabLinkInterface) => accessibleTabs.some((y) => y === x.id));
                 if (this.tablinks) {
                     this.tablinks.forEach((item: ITabLinkInterface) => {
-                        const parent:PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
-                        .find((itemPagePermission:PagesPermissionMatrixModel)=>{
-                            return (itemPagePermission.PageCode==item.id &&
-                                 itemPagePermission.DepartmentId === this.currentDepartmentId);
-                        });
+                        const parent: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
+                            .find((itemPagePermission: PagesPermissionMatrixModel) => {
+                                return (itemPagePermission.PageCode == item.id &&
+                                    itemPagePermission.DepartmentId === this.currentDepartmentId);
+                            });
                         if (item.subtab) {
                             item.subtab.forEach((itemSubTab: ITabLinkInterface, index: number) => {
                                 const subPageModel: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
                                     .find((x: PagesPermissionMatrixModel) => {
-                                        return (x.PageCode == itemSubTab.id && x.ParentPageId==parent.PageId &&
+                                        return (x.PageCode == itemSubTab.id && x.ParentPageId == parent.PageId &&
                                             x.DepartmentId === this.currentDepartmentId);
                                     });
-                                if (subPageModel==undefined) {
-                                    itemSubTab.selected=false;
+                                if (subPageModel == undefined) {
+                                    itemSubTab.selected = false;
                                     //item.subtab.splice(index,1);
                                     //item.subtab
                                 }
-                                else{
-                                    itemSubTab.selected=true;
+                                else {
+                                    itemSubTab.selected = true;
                                 }
                             });
                         }
@@ -236,7 +236,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.incidentService.Get(incidentId)
             .subscribe((data: IncidentModel) => {
                 this.currentIncident = new KeyValue(data.EmergencyName, data.IncidentId);
-                this.incidentDate = new Date(data.CreatedOn);
+                try{
+                    if(typeof data.CreatedOn == 'string')
+                        this.incidentDate = new Date((data.CreatedOn as string).substr(0,23));
+                    else
+                        this.incidentDate = new Date(data.CreatedOn.toISOString().substr(0,23));
+                }
+                catch(ex){
+                    this.incidentDate = new Date(data.CreatedOn);
+                }
             });
     }
 
