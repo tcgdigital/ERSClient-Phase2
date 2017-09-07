@@ -36,7 +36,17 @@ export class ClockWidgetService {
         }
         const o: Observable<TimeCount> = Observable.interval(1000)
             .map((x: number) => {
-                this.timePassed = Math.floor((new Date().getTime() - initialDate.getTime()) / 1000);
+                let currentDateLocal = new Date();
+                let currentDateUTC = new Date(currentDateLocal.getUTCFullYear(), 
+                currentDateLocal.getUTCMonth(), currentDateLocal.getUTCDate(), 
+                currentDateLocal.getUTCHours(), currentDateLocal.getUTCMinutes(), currentDateLocal.getUTCSeconds());
+                
+                let initialDateUTC = new Date(initialDate.getUTCFullYear(), 
+                initialDate.getUTCMonth(), initialDate.getUTCDate(), 
+                initialDate.getUTCHours(), initialDate.getUTCMinutes(), initialDate.getUTCSeconds());
+
+                //this.timePassed = Math.floor((new Date().getTime() - initialDate.getTime()) / 1000);
+                this.timePassed = Math.floor((currentDateUTC.getTime() - initialDateUTC.getTime()) / 1000);
 
                 this.counter.Days = Math.floor(this.timePassed / this.days);
                 this.timePassed -= this.counter.Days * this.days;
@@ -61,7 +71,17 @@ export class ClockWidgetService {
         }
         // const o: Observable<TimeCount> = Observable.interval(1000)
         //     .map((x: number) => {
-                this.timePassed = Math.floor((new Date(closedDate).getTime() - initialDate.getTime()) / 1000);
+                let initialDateUTC =  new Date(initialDate.getUTCFullYear(), 
+                initialDate.getUTCMonth(), initialDate.getUTCDate(), 
+                initialDate.getUTCHours(), initialDate.getUTCMinutes(), initialDate.getUTCSeconds());
+
+                let closedDateUTC =  new Date(closedDate.getUTCFullYear(), 
+                closedDate.getUTCMonth(), closedDate.getUTCDate(), 
+                closedDate.getUTCHours(), closedDate.getUTCMinutes(), closedDate.getUTCSeconds());
+
+                //this.timePassed = Math.floor((new Date(closedDate).getTime() - initialDate.getTime()) / 1000);
+
+                this.timePassed = Math.floor((closedDateUTC.getTime() - initialDateUTC.getTime()) / 1000);
 
                 this.counter.Days = Math.floor(this.timePassed / this.days);
                 this.timePassed -= this.counter.Days * this.days;
