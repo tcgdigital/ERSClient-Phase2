@@ -236,7 +236,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.incidentService.Get(incidentId)
             .subscribe((data: IncidentModel) => {
                 this.currentIncident = new KeyValue(data.EmergencyName, data.IncidentId);
-                this.incidentDate = new Date(data.CreatedOn);
                 // try{
                 //     if(typeof data.CreatedOn == 'string')
                 //         this.incidentDate = new Date((data.CreatedOn as string).substr(0,23));
@@ -246,6 +245,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 // catch(ex){
                 //     this.incidentDate = new Date(data.CreatedOn);
                 // }
+                this.incidentDate = new Date(data.CreatedOn);
             });
     }
 

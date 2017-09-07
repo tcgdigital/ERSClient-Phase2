@@ -70,16 +70,17 @@ export class ClockWidgetComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private initiateTimer(): void {
+        //debugger;
         //let utcInitiation: Date = new Date(this.initiationDateTime.toISOString().replace('Z', ''));
 
         if (this.isArchive) {
-           // let utcClosed: Date = new Date(this.closedDate.toString().substr(0,23));
+            // let utcClosed: Date = new Date(this.closedDate.toString().substr(0,23));
 
-            if (this.clockWidgetService.initiateTimerStatic(`Counter`, this.initiationDateTime, this.closedDate))
+            if (this.clockWidgetService.initiateTimerStatic(`Counter`, new Date(this.initiationDateTime), new Date(this.closedDate)))
                 this.counterSubscription();
         }
         else {
-            if (this.clockWidgetService.initiateTimer(`Counter`, this.initiationDateTime))
+            if (this.clockWidgetService.initiateTimer(`Counter`, new Date(this.initiationDateTime)))
                 this.counterSubscription();
         }
     }
