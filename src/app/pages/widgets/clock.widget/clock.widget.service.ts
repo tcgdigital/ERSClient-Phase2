@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subscription } from 'rxjs/Rx';
 import * as moment from 'moment';
-
+import { WidgetUtilityService } from '../widget.utility';
 import { TimeCount } from './clock.widget.model';
 import { UtilityService } from '../../../shared';
 
@@ -36,7 +36,14 @@ export class ClockWidgetService {
         }
         const o: Observable<TimeCount> = Observable.interval(1000)
             .map((x: number) => {
-                this.timePassed = Math.floor((new Date().getTime() - initialDate.getTime()) / 1000);
+                //debugger;
+                let currentDateLocal = new Date();
+                let currentDateUTC =  WidgetUtilityService.getUTCDateTime(currentDateLocal);
+                
+                let initialDateUTC = WidgetUtilityService.getUTCDateTime(initialDate);
+
+                //this.timePassed = Math.floor((new Date().getTime() - initialDate.getTime()) / 1000);
+                this.timePassed = Math.floor((currentDateUTC.getTime() - initialDateUTC.getTime()) / 1000);
 
                 this.counter.Days = Math.floor(this.timePassed / this.days);
                 this.timePassed -= this.counter.Days * this.days;
@@ -55,13 +62,27 @@ export class ClockWidgetService {
         return true;
     }
 
+
     initiateTimerStatic(sub_name: string, initialDate: Date, closedDate:Date): boolean {
         if (sub_name === undefined || initialDate === undefined) {
             return false;
         }
+        debugger;
         // const o: Observable<TimeCount> = Observable.interval(1000)
         //     .map((x: number) => {
-                this.timePassed = Math.floor((new Date(closedDate).getTime() - initialDate.getTime()) / 1000);
+            let currentDateUTC =  WidgetUtilityService.getUTCDateTime(closedDate);
+            
+            let initialDateUTC = WidgetUtilityService.getUTCDateTime(initialDate);
+
+            // let currentDateLocal = new Date(closedDate);
+            // let currentDateUTC = new Date(currentDateLocal.getUTCFullYear(), 
+            // currentDateLocal.getUTCMonth(), currentDateLocal.getUTCDate(), 
+            // currentDateLocal.getUTCHours(), currentDateLocal.getUTCMinutes(), currentDateLocal.getUTCSeconds());
+            
+            // let initialDateUTC = new Date(initialDate.getUTCFullYear(), 
+            // initialDate.getUTCMonth(), initialDate.getUTCDate(), 
+            // initialDate.getUTCHours(), initialDate.getUTCMinutes(), initialDate.getUTCSeconds());
+                this.timePassed = Math.floor((currentDateUTC.getTime() - initialDateUTC.getTime()) / 1000);
 
                 this.counter.Days = Math.floor(this.timePassed / this.days);
                 this.timePassed -= this.counter.Days * this.days;

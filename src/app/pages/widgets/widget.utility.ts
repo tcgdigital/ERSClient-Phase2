@@ -278,4 +278,12 @@ export class WidgetUtilityService {
             }]
         });
     }
+
+    public static getUTCDateTime(date:Date):Date{
+        let currentDate = date;
+        let currentDateUTC = new Date(currentDate.getUTCFullYear(), 
+        currentDate.getUTCMonth(), currentDate.getUTCDate(), 
+        currentDate.getUTCHours(), currentDate.getUTCMinutes(), currentDate.getUTCSeconds(),currentDate.getUTCMilliseconds());
+        return currentDateUTC;
+    }
 }
