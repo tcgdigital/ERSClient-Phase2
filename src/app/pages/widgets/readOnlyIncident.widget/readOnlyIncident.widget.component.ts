@@ -10,10 +10,12 @@ import {
     AircraftTypeModel,
     AircraftTypeService
 } from '../../shared.components';
+import { EmergencyLocationService, EmergencyLocationModel } from '../../masterdata/emergencylocation';
 import {
     FormGroup, FormControl, FormBuilder, Validators,
     ReactiveFormsModule
 } from '@angular/forms';
+import { TimeZoneModel, ZoneIndicator, TimeZoneModels, TimeZoneService } from "../../shared.components/timezone";
 import { Observable } from 'rxjs/Rx';
 import { IncidentModel } from '../../incident/components/incident.model';
 import { InvolvePartyModel } from '../../shared.components/involveparties/components/involveparty.model';
@@ -54,11 +56,14 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
     public ScheduleArrivalLocal: Date;
     public activeEmergencyTypes: EmergencyTypeModel[] = [];
     public BorrowedIncidentName: string;
+    affectedStations: EmergencyLocationModel[] = [];
 
     constructor(
         private readOnlyIncidentWidgetService: ReadOnlyIncidentWidgetService,
         private organizationService: OrganizationService,
+        private emergencyLocationService: EmergencyLocationService,
         private aircraftTypeService: AircraftTypeService,
+        private timeZoneService: TimeZoneService,
         private emergencyTypeService: EmergencyTypeService) { }
 
     ngOnInit() {
@@ -70,6 +75,21 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
         this.getAllActiveEmergencyTypes();
         this.getAllActiveAircraftTypes();
         this.resetIncidentViewForm();
+
+
+        this.emergencyLocationService.GetAllActiveEmergencyLocations()
+        .subscribe((result: ResponseModel<EmergencyLocationModel>) => {
+            result.Records.forEach((item: EmergencyLocationModel) => {
+                const emergencyLocationModel: EmergencyLocationModel = new EmergencyLocationModel();
+                emergencyLocationModel.IATA = item.IATA;
+                emergencyLocationModel.AirportName = item.AirportName;
+                emergencyLocationModel.Country = item.Country;
+                emergencyLocationModel.TimeZone = item.TimeZone;
+                emergencyLocationModel.UTCOffset = item.UTCOffset;
+                this.affectedStations.push(emergencyLocationModel);
+                this.affectedStations.sort(function (a, b) { return (a.AirportName.toUpperCase() > b.AirportName.toUpperCase()) ? 1 : ((b.AirportName.toUpperCase() > a.AirportName.toUpperCase()) ? -1 : 0); });
+            });
+        });
     }
 
     getAllActiveOrganizations(): void {
@@ -161,7 +181,7 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
 
             this.ScheduleDepartureLocal = new Date(new Date(this.incidentDataExchangeModel.FLightModel.DepartureDate).toLocaleString() + ' UTC');
             this.ScheduleArrivalLocal = new Date(new Date(this.incidentDataExchangeModel.FLightModel.ArrivalDate).toLocaleString() + ' UTC');
-
+           
 
             this.formPopup = new FormGroup({
                 IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
@@ -192,11 +212,20 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
                 OriginPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.OriginCode),
                 DestinationPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.DestinationCode),
                 ScheduleddeparturePopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.DepartureDate).format('DD-MM-YYYY HH:mm')),
-                ScheduleddepartureLOCPopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.DepartureDate).utc().format('DD-MM-YYYY HH:mm')),
+                ScheduleddepartureLOCPopup: new FormControl(''),
                 ScheduledarrivalPopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.ArrivalDate).format('DD-MM-YYYY HH:mm')),
-                ScheduledarrivalLOCPopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.ArrivalDate).utc().format('DD-MM-YYYY HH:mm')),
+                ScheduledarrivalLOCPopup: new FormControl(''),
                 FlightTailNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightTaleNumber),
                 AircraftTypeIdPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.AircraftTypeId)
+            });
+
+            this.GetLocalDateTime(new Date(this.incidentDataExchangeModel.FLightModel.DepartureDate), true,(dt:Date) => {
+                let localDepartureArrivalDate:string = this.DateFormat(dt);
+                this.formPopup.get('ScheduleddepartureLOCPopup').setValue(localDepartureArrivalDate);
+            });
+            this.GetLocalDateTime(new Date(this.incidentDataExchangeModel.FLightModel.ArrivalDate), true,(dt:Date) => {
+                let localDepartureArrivalDate:string = this.DateFormat(dt);
+                this.formPopup.get('ScheduledarrivalLOCPopup').setValue(localDepartureArrivalDate);
             });
             this.IsDrillPopup = this.incidentDataExchangeModel.IncidentModel.IsDrill;
             this.isFlightRelatedPopup = true;
@@ -205,6 +234,48 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
     }
     public hideIncidentView(): void {
         this.childModalViewIncident.hide();
+    }
+
+    public GetUTCOffsetHours(isOrigin: boolean): string {
+        let originOrDestinationIATA: string = '';
+        let UTC_TimeZone: string = '';
+        let UTC_OffsetNumber: number = 0.0;
+        let isNegative: boolean = false;
+        if (isOrigin) {
+            originOrDestinationIATA = this.incidentDataExchangeModel.FLightModel.OriginCode;
+        }
+        else {
+            originOrDestinationIATA = this.incidentDataExchangeModel.FLightModel.DestinationCode;
+        }
+        UTC_TimeZone = this.affectedStations.find((item: EmergencyLocationModel) =>
+            item.IATA == originOrDestinationIATA
+        ).TimeZone;
+        return UTC_TimeZone;
+    }
+
+    private GetLocalDateTime(utc: Date, isOrigin: boolean, callback?: ((_: Date) => void)): void {
+        let timeZone: string = this.GetUTCOffsetHours(isOrigin);
+        let zi = new ZoneIndicator();
+        zi.Year = utc.getFullYear().toString();
+        zi.Month = (utc.getMonth() + 1).toString();
+        zi.Day = utc.getDate().toString();
+        zi.Hour = utc.getHours().toString();
+        zi.Minute = utc.getMinutes().toString();
+        zi.Second = utc.getSeconds().toString();
+        zi.CurrentTime = new Date();
+        zi.ZoneName = timeZone;
+        let localDate = new Date();
+        this.timeZoneService.GetLocalTime(zi)
+            .subscribe((result: ZoneIndicator) => {
+                localDate = new Date(result.CurrentTime);
+
+                if (callback)
+                    callback(localDate);
+            });
+
+        //let localDate = new Date(utc + this.GetUTCOffsetHours(isOrigin));
+
+        //return localDate;
     }
 
     getAllActiveEmergencyTypes(): void {
@@ -252,4 +323,13 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
         });
         this.IsDrillPopup = false;
     }
+
+    private DateFormat(date: Date): string {
+        let hours = (date.getHours());
+        // let mid = (hours > 12) ? 'PM' : 'AM';
+        const months: string[] = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+        // return `${date.getDate()}-${months[date.getMonth()]}-${date.getFullYear()} ${((date.getHours() % 12) < 10) ? ("0" + (date.getHours() % 12)) : (date.getHours() % 12)}:${((date.getMinutes()) < 10) ? ("0" + (date.getMinutes())) : (date.getMinutes())} ${mid}`;
+        return `${date.getDate()}-${months[date.getMonth()]}-${date.getFullYear()} ${((date.getHours()) < 10) ? ("0" + (date.getHours())) : (date.getHours())}:${(date.getMinutes() < 10) ? ("0" + (date.getMinutes())) : (date.getMinutes())}`;
+    }
+
 }

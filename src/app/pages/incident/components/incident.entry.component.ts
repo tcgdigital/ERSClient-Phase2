@@ -582,7 +582,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         }
         const tt = moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).utc().format('DD-MMM-YYYY HH:mm');
         const _utc = moment(new Date(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).toISOString()).format('DD-MMM-YYYY HH:mm');
-
         this.formPopup = new FormGroup({
             IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
             EmergencyTypeIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyTypeId),
@@ -626,7 +625,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                 // LatitudePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Latitude),
                 // LongitudePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Longitude),
                 ReportedDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.ReportedDate).format('DD-MMM-YYYY HH:mm')),
-                ReportedDateLocalPopup: new FormControl(moment(this.ReportedDateLocal).utc().format('DD-MMM-YYYY HH:mm')),
+                ReportedDateLocalPopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.ReportedDate).utc().format('DD-MMM-YYYY HH:mm')),
                 DescriptionPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Description),
                 EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD-MMM-YYYY HH:mm')),
                 EmergencyDateLocalPopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).utc().format('DD-MMM-YYYY HH:mm')),
@@ -645,8 +644,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                 ScheduledarrivalPopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.ArrivalDate).format('DD-MMM-YYYY HH:mm')),
                 FlightTailNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightTaleNumber),
                 AircraftTypeIdPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.AircraftTypeId),
-                ScheduleddepartureLOCPopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.DepartureDate).utc().format('DD-MMM-YYYY HH:mm')),
-                ScheduledarrivalLOCPopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.ArrivalDate).utc().format('DD-MMM-YYYY HH:mm'))
+                ScheduleddepartureLOCPopup: new FormControl(this.formFlight.get('ScheduleddepartureLOC').value),
+                ScheduledarrivalLOCPopup: new FormControl(this.formFlight.get('ScheduledarrivalLOC').value)
             });
             this.IsDrillPopup = this.incidentDataExchangeModel.IncidentModel.IsDrill;
             this.isFlightRelatedPopup = true;
@@ -742,7 +741,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.incidentModel.OtherConfirmationInformation = this.form.controls['OtherConfirmationInformation'].value;
         // this.incidentModel.Latitude = this.form.controls['Latitude'].value;
         // this.incidentModel.Longitude = this.form.controls['Longitude'].value;
-
 
         this.incidentModel.ReportedDate = new Date(this.form.controls['ReportedDate'].value);
 

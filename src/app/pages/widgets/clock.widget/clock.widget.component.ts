@@ -4,8 +4,9 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {
-   GlobalConstants
+    GlobalConstants
 } from '../../../shared';
+import * as moment from 'moment/moment';
 import { TimeCount } from './clock.widget.model';
 import { ClockWidgetService } from './clock.widget.service';
 
@@ -21,7 +22,7 @@ export class ClockWidgetComponent implements OnInit, OnChanges, OnDestroy {
     @Input('initiatedDepartmentId') initiatedDepartmentId: number;
     @Input('isArchive') isArchive: boolean;
     @Input('closedDate') closedDate: Date;
-    
+
 
     days: number = 0;
     hours: number = 0;
@@ -31,7 +32,7 @@ export class ClockWidgetComponent implements OnInit, OnChanges, OnDestroy {
     styleClass: string = '';
     subscriptionId: string;
     public isShow: boolean = true;
-    public accessibilityErrorMessage:string = GlobalConstants.accessibilityErrorMessage;
+    public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
     /**
      * Creates an instance of ClockWidgetComponent.
      * @param {ClockWidgetService} clockWidgetService
@@ -48,7 +49,7 @@ export class ClockWidgetComponent implements OnInit, OnChanges, OnDestroy {
     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
         if (changes['initiationDateTime'] !== undefined &&
             (changes['initiationDateTime'].currentValue !==
-            changes['initiationDateTime'].previousValue) &&
+                changes['initiationDateTime'].previousValue) &&
             changes['initiationDateTime'].previousValue !== undefined) {
             this.initiateTimer();
         }
@@ -69,14 +70,17 @@ export class ClockWidgetComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private initiateTimer(): void {
-        if(this.isArchive){
-            if (this.clockWidgetService.initiateTimerStatic(`Counter`, this.initiationDateTime,this.closedDate))
+        let utcInitiation: Date = new Date(this.initiationDateTime.toISOString().replace('Z', ''));
+
+        if (this.isArchive) {
+            let utcClosed: Date = new Date(this.closedDate.toString().substr(0,23));
+
+            if (this.clockWidgetService.initiateTimerStatic(`Counter`, utcInitiation, this.closedDate))
                 this.counterSubscription();
         }
-        else{
-            if (this.clockWidgetService.initiateTimer(`Counter`, this.initiationDateTime))
+        else {
+            if (this.clockWidgetService.initiateTimer(`Counter`, utcInitiation))
                 this.counterSubscription();
         }
-       
     }
 }
