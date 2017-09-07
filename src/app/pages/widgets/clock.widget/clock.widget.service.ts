@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subscription } from 'rxjs/Rx';
 import * as moment from 'moment';
-import { WidgetUtilityService } from '../widget.utility';
 import { TimeCount } from './clock.widget.model';
-import { UtilityService } from '../../../shared';
+import { UtilityService } from '../../../shared/services';
 
 interface TimerList {
     [name: string]: {
@@ -38,9 +37,9 @@ export class ClockWidgetService {
             .map((x: number) => {
                 //debugger;
                 let currentDateLocal = new Date();
-                let currentDateUTC =  WidgetUtilityService.getUTCDateTime(currentDateLocal);
+                let currentDateUTC =  UtilityService.getUTCDateTime(currentDateLocal);
                 
-                let initialDateUTC = WidgetUtilityService.getUTCDateTime(initialDate);
+                let initialDateUTC = UtilityService.getUTCDateTime(initialDate);
 
                 //this.timePassed = Math.floor((new Date().getTime() - initialDate.getTime()) / 1000);
                 this.timePassed = Math.floor((currentDateUTC.getTime() - initialDateUTC.getTime()) / 1000);
@@ -67,12 +66,11 @@ export class ClockWidgetService {
         if (sub_name === undefined || initialDate === undefined) {
             return false;
         }
-        debugger;
         // const o: Observable<TimeCount> = Observable.interval(1000)
         //     .map((x: number) => {
-            let currentDateUTC =  WidgetUtilityService.getUTCDateTime(closedDate);
+            let currentDateUTC =  UtilityService.getUTCDateTime(closedDate);
             
-            let initialDateUTC = WidgetUtilityService.getUTCDateTime(initialDate);
+            let initialDateUTC = UtilityService.getUTCDateTime(initialDate);
 
             // let currentDateLocal = new Date(closedDate);
             // let currentDateUTC = new Date(currentDateLocal.getUTCFullYear(), 
