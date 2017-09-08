@@ -22,4 +22,5 @@ export class KeyValueService extends ServiceBase<KeyValueModel>{
         return this._dataService.Query().Filter(`Key eq '${key}'`)
         .Execute()
     }
+
 }

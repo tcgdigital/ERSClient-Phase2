@@ -1691,6 +1691,14 @@ export class GlobalConstants {
             selected: false,
             hidden: false,
             order: 12
+        }, {
+            id: 'spiel',
+            title: 'Call Centre Spiel',
+            // icon: 'fa fa-medium fa-2x',
+            url: '/pages/masterdata/spiel',
+            selected: false,
+            hidden: false,
+            order: 13
         }
     ] as ITabLinkInterface[];
 }

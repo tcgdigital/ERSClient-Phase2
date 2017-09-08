@@ -11,6 +11,7 @@ export * from './template';
 export * from './userpermission';
 export * from './userprofile';
 export * from './emergencylocation';
+export * from './spiel';
 
 export * from './masterdata.component';
 export * from './masterdata.module';

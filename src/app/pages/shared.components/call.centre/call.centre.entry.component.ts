@@ -558,7 +558,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     setenquiryModelforCopassangers(enquiryModel: EnquiryModel): EnquiryModel[] {
         let enquirymodels: EnquiryModel[] = [];
 
-        this.consolidatedCopassengers.map(x => {
+        this.selectedCoPassangers.map(x => {
             let enquiry: EnquiryModel = new EnquiryModel();
             enquiry.AffectedPersonId = x.AffectedPersonId;
             enquiry.IncidentId = this.currentIncident;
@@ -847,7 +847,8 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                 this.externalInput.IsCallRecieved = true;
                 this.externalInput.ExternalInputId = this.callid;
                 if (this.enquiryType == 1 && this.consolidatedCopassengers.length > 0) {
-
+                    
+                    this.selectedCoPassangers = this.consolidatedCopassengers.filter(x => x.IsSelected == true);
                     let enquiryModelsToSave: EnquiryModel[] = [];
                     enquiryModelsToSave = this.setenquiryModelforCopassangers(this.enquiry);
                     enquiryModelsToSave.push(this.enquiry);
@@ -864,12 +865,11 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                             let num = UtilityService.UUID();
                             this.globalState.NotifyDataChanged('CallRecieved', num);
 
-                            this.selectedCoPassangers = this.consolidatedCopassengers.filter(x => x.IsSelected == true);
                             if (this.selectedCoPassangers.filter(x => x.AffectedPersonId == this.enquiry.AffectedPersonId).length == 0) {
                                 let obj = this.affectedPeople.find(x => x.AffectedPersonId == this.enquiry.AffectedPersonId); // this.initialvalue.Value
                                 this.selectedCoPassangers.push(obj);
                             }
-
+        
                             if (this.selectedCoPassangers.length > 0) {
                                 let afftedIdstocreateDemand: number[] = [];
                                 this.selectedCoPassangers.map(x => afftedIdstocreateDemand.push(x.AffectedPersonId));
@@ -1002,9 +1002,11 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                         );
                 }
                 else if ((this.enquiryType == 1)) {
-
+                    
                     // this.consolidatedCopassengers.length = 0;
 
+                    this.selectedCoPassangers = this.consolidatedCopassengers.filter(x => x.IsSelected == true);
+                   
                     let enquiryModelsToSaveEdit: EnquiryModel[] = [];
                     enquiryModelsToSaveEdit = this.setenquiryModelforCopassangers(this.enquiry);
                     this.enquiry.CommunicationLogs = communicationlogs;
