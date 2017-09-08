@@ -94,7 +94,7 @@
                             </small>
                 </div>
                 <div class="form-group col-lg-2 col-sm-6 col-md4">
-                    <label for="Nationality">Nationality<span class="required">*</span></label>
+                    <label for="Nationality">Nationality<!-- <span class="required">*</span> --></label>
                     <input id="Nationality" class="form-control" type="text" name="Nationality" formControlName="Nationality" placeholder="Enter Nationality"
                     />
                     <small *ngIf="!pdacrewform.controls.Nationality.valid && isSubmitted" class="text-danger">
@@ -121,7 +121,7 @@
             </div>
             <div class="row" [hidden]="enquiryType!=1 && enquiryType!=3">
                 <div class="form-group col-lg-2 col-sm-6 col-md-4">
-                    <label for="FlightNumber">Flight Number<span class="required">*</span></label>
+                    <label for="FlightNumber">Flight Number<!-- <span class="required">*</span> --></label>
                     <input id="FlightNumber" class="form-control" type="text" name="FlightNumber" formControlName="FlightNumber" placeholder="Enter Flight Number"
                     />
                     <small *ngIf="!pdacrewform.controls.FlightNumber.valid && isSubmitted" class="text-danger">
@@ -201,7 +201,8 @@
 
                 <div class="form-group col-lg-4 col-sm-12 col-md-8">
                     <label for="Query">Discussion Notes<span class="required">*</span></label>
-                    <input id="Query" class="form-control" type="text" name="Query" formControlName="Query" placeholder="Enter Discussion Notes" />
+                    <!-- <input id="Query" class="form-control" type="text" name="Query" formControlName="Query" placeholder="Enter Discussion Notes" /> -->
+                    <textarea id="Query" class="form-control" name="Query" formControlName="Query" placeholder="Enter Discussion Notes"></textarea>
                     <small *ngIf="!pdacrewform.controls.Query.valid && isSubmitted" class="text-danger">
                             Required.
                             </small>
@@ -278,7 +279,8 @@
 
                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
                     <label for="Query">Discussion Notes<span class="required">*</span></label>
-                    <input id="Query" class="form-control" type="text" name="Query" formControlName="Query" placeholder="Enter Discussion Notes" />
+                    <!-- <input id="Query" class="form-control" type="text" name="Query" formControlName="Query" placeholder="Enter Discussion Notes" /> -->
+                    <textarea id="Query" class="form-control" name="Query" formControlName="Query" placeholder="Enter Discussion Notes"></textarea>
                     <small *ngIf="!cargoform.controls.Query.valid && isSubmitted" class="text-danger">
                             Required.
                             </small>
@@ -297,7 +299,8 @@
                 </div>
                 <div class="form-group col-lg-4 col-sm-12 col-md-6">
                     <label for="Query">Discussion Notes<span class="required">*</span></label>
-                    <input id="Query" class="form-control" type="text" name="Query" formControlName="Query" placeholder="Enter Discussion Notes" />
+                    <!-- <input id="Query" class="form-control" type="text" name="Query" formControlName="Query" placeholder="Enter Discussion Notes" /> -->
+                    <textarea id="Query" class="form-control" name="Query" formControlName="Query" placeholder="Enter Discussion Notes"></textarea>
                     <small *ngIf="!otherform.controls.Query.valid && isSubmitted" class="text-danger">
                             Required.
                             </small>
