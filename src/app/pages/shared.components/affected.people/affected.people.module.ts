@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MdCheckboxModule } from '@angular2-material/checkbox';
-
+import { CommunicationLogService } from '../../shared.components/communicationlogs';
+import { DepartmentService } from '../../masterdata/department';
 import { AffectedPeopleComponent } from './affected.people.component';
 import { AffectedPeopleRouting } from './affected.people.routing';
 import {
@@ -38,7 +39,9 @@ import { ModalModule } from 'ngx-bootstrap/modal';
         DataExchangeService,
         InvolvePartyService,
         CallerService,
-        PassengerService
+        PassengerService,
+        DepartmentService,
+        CommunicationLogService
     ]
 })
 export class AffectedPeopleModule { }

@@ -16,4 +16,19 @@ export class CommunicationLogService extends ServiceBase<CommunicationLogModel> 
         const option: DataProcessingService = new DataProcessingService();
     }
 
+    CreateCommunicationLog(communicationLogModel: CommunicationLogModel): Observable<CommunicationLogModel> {
+        return this._dataService.Post(communicationLogModel)
+            .Execute()
+            .map((data: CommunicationLogModel) => {
+                return data;
+            });
+    }
+
+    GetLogByAffectedPersonId(affectedPersonId: number): Observable<ResponseModel<CommunicationLogModel>> {
+        return this._dataService.Query()
+            .Filter(`AffectedPersonId eq ${affectedPersonId}`)
+            .OrderBy('CreatedOn desc')
+            .Execute();
+    }
+
 }

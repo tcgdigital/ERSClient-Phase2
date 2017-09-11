@@ -35,7 +35,6 @@ export class ClockWidgetService {
         }
         const o: Observable<TimeCount> = Observable.interval(1000)
             .map((x: number) => {
-                //debugger;
                 let currentDateLocal = new Date();
                 let currentDateUTC =  UtilityService.getUTCDateTime(currentDateLocal);
                 
