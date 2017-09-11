@@ -14,7 +14,7 @@ export class CanLoadSubTabs implements CanLoad {
     constructor() {}
    
     canLoad(route: Route): Observable<boolean>|Promise<boolean>|boolean {
-      //debugger;//return this.permissions.canLoadChildren(this.currentUser, route);
+      //return this.permissions.canLoadChildren(this.currentUser, route);
       return false;
     }
   }

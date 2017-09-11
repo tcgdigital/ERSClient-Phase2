@@ -2,14 +2,16 @@ import { Component, ViewEncapsulation, OnInit, ViewChild, Injector } from '@angu
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription, Observable } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-import { InvolvePartyModel, CommunicationLogModel } from '../../../shared.components';
-import { InvolvePartyService } from '../../involveparties';
+import { CommunicationLogModel, CommunicationLogService } from '../../../shared.components/communicationlogs';
+import { InvolvePartyService, InvolvePartyModel } from '../../involveparties';
 import { EnquiryModel } from '../../call.centre/components/call.centre.model';
 import { CallerModel, CallerService } from '../../caller';
 import { PassengerService, CoPassengerMappingModel, PassengerModel } from '../../passenger/components';
 import { NextOfKinModel } from '../../nextofkins';
 import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';
 import { AffectedPeopleService } from './affected.people.service';
+import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
+import * as jwtDecode from 'jwt-decode';
 import {
     ResponseModel, DataExchangeService, GlobalConstants, AuthModel,
     GlobalStateService, UtilityService, KeyValue, FileUploadService, SearchConfigModel,
@@ -60,7 +62,8 @@ export class AffectedPeopleListComponent implements OnInit {
     expandSearch: boolean = false;
     searchValue: string = "Expand Search";
     public isShowIsNOKInvolved: boolean = true;
-
+    public userName: string;
+    public currentDepartmentName: string;
     /**
      * Creates an instance of AffectedPeopleListComponent.
      *
@@ -77,7 +80,9 @@ export class AffectedPeopleListComponent implements OnInit {
         private involvedPartyService: InvolvePartyService,
         private dataExchange: DataExchangeService<number>,
         private globalState: GlobalStateService,
+        private communicationLogService: CommunicationLogService,
         private _router: Router,
+        private departmentService: DepartmentService,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig,
         private fileUploadService: FileUploadService,
@@ -125,6 +130,16 @@ export class AffectedPeopleListComponent implements OnInit {
 
     cancelModal() {
         this.childModal.hide();
+    }
+
+    getCurrentDepartmentName(departmentId): void {
+        this.departmentService.Get(departmentId)
+            .subscribe((response: DepartmentModel) => {
+                this.currentDepartmentName = response.DepartmentName;
+
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
     }
 
     getFileDetails(e: any): void {
@@ -178,6 +193,8 @@ export class AffectedPeopleListComponent implements OnInit {
         this.affectedPersonToUpdate.Identification = affectedModifiedForm.Identification;
         this.affectedPersonToUpdate.MedicalStatus = affectedModifiedForm['MedicalStatusToshow'];
         this.affectedPersonToUpdate.Remarks = affectedModifiedForm.Remarks;
+        if (this.affectedPersonToUpdate.MedicalStatus != '')
+            this.createCommunicationLogModel(this.affectedPersonToUpdate, affectedModifiedForm.CreatedBy);
         this.affectedPeopleService.Update(this.affectedPersonToUpdate)
             .subscribe((response: AffectedPeopleModel) => {
                 this.toastrService.success('Additional Information updated.')
@@ -192,6 +209,42 @@ export class AffectedPeopleListComponent implements OnInit {
             }, (error: any) => {
                 alert(error);
             });
+    }
+
+    createCommunicationLogModel(affectedPersonToUpdate: AffectedPeopleModel, createdBy: number): void {
+        const communicationLogs: CommunicationLogModel[] = [];
+        const communicationLog: CommunicationLogModel = new CommunicationLogModel();
+        let editedFields = '';
+        let answer = '';
+        let descchanged = '';
+        this.communicationLogService.GetLogByAffectedPersonId(affectedPersonToUpdate.AffectedPersonId)
+            .subscribe((result: ResponseModel<CommunicationLogModel>) => {
+                var QueryStatusFullText = result.Records[0].Queries;
+                var MedicalStatus = QueryStatusFullText.split('Status changed to ')[1];
+                if (MedicalStatus.trim().toLowerCase() != affectedPersonToUpdate.MedicalStatus.trim().toLowerCase()) {
+                    communicationLog.InteractionDetailsId = 0;
+                    communicationLog.InteractionDetailsType = GlobalConstants.InteractionDetailsTypeEnquiry;
+                    communicationLog.Queries = 'Medical Status changed to ' + affectedPersonToUpdate.MedicalStatus;
+                    communicationLog.Answers = 'Medical Status changed to ' + affectedPersonToUpdate.MedicalStatus;
+                    communicationLog.AffectedPersonId = affectedPersonToUpdate.AffectedPersonId;
+                    communicationLog.AffectedObjectId = null;
+                    communicationLog.EnquiryId = null;
+                    communicationLog.DemandId = null;
+                    communicationLog.RequesterName = this.userName;
+                    communicationLog.RequesterDepartment = this.currentDepartmentName;
+                    communicationLog.RequesterType = 'Enquiry';
+                    communicationLog.ActiveFlag = 'Active';
+                    communicationLog.CreatedBy = createdBy;
+                    communicationLog.CreatedOn = new Date();
+
+                    communicationLogs.push(communicationLog);
+
+                    this.communicationLogService.CreateCommunicationLog(communicationLog)
+                        .subscribe((itemResult: CommunicationLogModel) => {
+                        });
+                }
+            });
+
     }
 
 
@@ -257,6 +310,16 @@ export class AffectedPeopleListComponent implements OnInit {
 
     ngOnInit(): any {
 
+
+
+        const token = UtilityService.GetFromSession('access_token');
+        if (token) {
+            const tokenData = jwtDecode(token);
+            if (tokenData && tokenData.UserName)
+                this.userName = tokenData.UserName;
+        }
+
+
         if (this._router.url.indexOf('archivedashboard') > -1) {
             this.isArchive = true;
             this.currentIncident = +UtilityService.GetFromSession('ArchieveIncidentId');
@@ -272,7 +335,7 @@ export class AffectedPeopleListComponent implements OnInit {
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/PassengerStatusInfo/' + this.currentIncident;
         this.downloadRoute = GlobalConstants.EXTERNAL_URL + 'api/Report/CrewStatusInfo/' + this.currentIncident;
         this.credential = UtilityService.getCredentialDetails();
-
+        this.getCurrentDepartmentName(this.currentDepartmentId);
         this.initiateSearchConfigurations();
         this.IsDestroyed = false;
         this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
@@ -303,7 +366,7 @@ export class AffectedPeopleListComponent implements OnInit {
     }
 
     ngOnDestroy(): void {
-      //  this.globalState.Unsubscribe('incidentChangefromDashboard');
+        //  this.globalState.Unsubscribe('incidentChangefromDashboard');
     }
 
     openChatTrails(affectedPersonId: number): void {
