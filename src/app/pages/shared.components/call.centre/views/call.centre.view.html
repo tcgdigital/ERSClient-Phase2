@@ -171,7 +171,9 @@
                     </div>
                     <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=2">
                         <label for="awb">AWB <span class="required">*</span></label>
-                        <autocomplete [items]="awbs" (notify)='onNotifyCargo($event)' [initialvalue]="initialvalue"></autocomplete>
+                        <autocomplete [items]="awbs" (notify)='onNotifyCargo($event)' [initialvalue]="initialvalue" [actionLinks]="actionLinks"
+                        (actionClickHandler)="onActionCargoClick($event)">
+                    </autocomplete>
                     </div>
                     <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=1">
                         <label for="LastName">View Passengers with same PNR </label>
@@ -268,6 +270,52 @@
         <div class="col-sm-6 form-group">
             <label class="lebelHeaderStyle"><strong>PDA Name</strong></label>
             <label class="form-control">{{pdaNameForTrail}}&nbsp;</label>
+        </div>
+        <div class="col-sm-6 form-group">
+            <label class="lebelHeaderStyle"><strong>Reference Number</strong></label>
+            <label class="form-control">{{ticketNumber}}&nbsp;</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <responsive-table>
+                <table responsive-table-body>
+                    <tbody>
+                        <tr *ngFor="let comm of communications">
+                            <td data-title="comm"><strong>{{comm.RequesterType}}</strong> logged by
+                                <span [hidden]="comm.RequesterDepartment.length==0">
+                                    <strong>{{comm.RequesterName}} (Dept: {{comm.RequesterDepartment}})</strong>
+                                </span>
+                                <span> on 
+                                    <strong>{{comm.CreatedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;:</strong>
+                                </span> {{comm.Answers}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </responsive-table>
+        </div>
+    </div>
+    <!--</div>-->
+</ng-container>
+<ng-container *ngIf="!hideModalCargo">
+    <!--<div [hidden]="hideModal">-->
+    <div class="row">
+        <div class="col-lg-6 col-md-8 col-sm-8">
+            <h4 class="modal-title">Communication Trail</h4>
+        </div>
+        <div class="col-lg-6 col-md-4 col-sm-2">
+            <button type="button" class="close pull-right" aria-label="Close" (click)="cancelModal()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="row modalBodyHeaderStyle">
+        <div class="col-sm-6 form-group">
+            <label class="lebelHeaderStyle"><strong>AWB Number</strong></label>
+            <label class="form-control">{{AWBNumber}}&nbsp;</label>
         </div>
         <div class="col-sm-6 form-group">
             <label class="lebelHeaderStyle"><strong>Reference Number</strong></label>

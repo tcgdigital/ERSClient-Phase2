@@ -12,6 +12,7 @@ import {
 } from '../../../shared';
 import { EnquiryModel, EnquiryService } from './components';
 import { AffectedPeopleModel } from "../affected.people/components";
+import { AffectedObjectModel } from '../affected.objects/components';
 import { PassengerService, CoPassengerMappingModel, CoPassangerModelsGroupIdsModel } from "../passenger/components";
 
 import {
@@ -123,10 +124,12 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         ActionIcon: 'fa fa-comments-o fa-lg'
     }];
     pdaNameForTrail: string = "";
+    AWBNumber: string = "";
     ticketNumber: string = "";
     communications: CommunicationLogModel[] = [];
     showCallcenterModal: boolean = false;
     hideModal: boolean = true;
+    hideModalCargo: boolean = true;
     initialgroupId: number = 0;
 
     protected _onRouteChange: Subscription;
@@ -806,6 +809,24 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             });
     }
 
+    onActionCargoClick(eventArgs: any) {
+        //console.log(eventArgs);
+        let affectedCargoid = eventArgs.selectedItem.Value;
+        this.affectedObjectsService.GetCommunicationByAWB(affectedCargoid)
+            .subscribe((response: ResponseModel<AffectedObjectModel>) => {
+                let responseModel: AffectedObjectModel = response.Records[0];
+                this.AWBNumber = responseModel.AWB;
+                this.ticketNumber = responseModel.TicketNumber;
+                this.communications = responseModel.CommunicationLogs;
+                this.showCallcenterModal = true;
+                // this.childModalForTrail.show();
+                this.hideModalCargo = false;
+
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
+    }
+
 
     formInitialization(): any {
         return new FormGroup({
@@ -820,6 +841,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     cancelModal() {
         // this.childModalForTrail.hide();
         this.hideModal = true;
+        this.hideModalCargo = true;
         this.showCallcenterModal = false;
     }
 
