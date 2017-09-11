@@ -189,7 +189,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedObjects = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
                 for (const affectedObject of this.affectedObjects) {
-                    this.awbs.push(new KeyValue(affectedObject.AWB, affectedObject.AffectedObjectId));
+                    this.awbs.push(new KeyValue(affectedObject.AWB + ' (' + affectedObject.TicketNumber + ')', affectedObject.AffectedObjectId));
                 }
             }, (error: any) => {
                 console.log(`Error: ${error}`);
