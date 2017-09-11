@@ -98,8 +98,8 @@ export class UserPermissionService
     public GetAllDepartmentUsersFromDepartmentIdProjection(departmentIdProjection: string): Observable<ResponseModel<UserPermissionModel>> {
 
         return this._dataService.Query()
-            .Expand('Department($select=DepartmentId,DepartmentName),User($select=Email,Name,MainContact,AlternateContact,UserProfileId,UserId)')
-            .Filter(`${departmentIdProjection}`)
+            .Expand('Department($select=DepartmentId,DepartmentName),User')
+            .Filter(`User/isActive eq true and ${departmentIdProjection}`)
             .OrderBy('CreatedOn desc')
             .Execute();
 

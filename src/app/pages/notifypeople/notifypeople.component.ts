@@ -91,10 +91,12 @@ export class NotifyPeopleComponent implements OnInit {
             result.unshift(CurrentDeptItem);
 
             result.forEach(x => {
-                if(x.children.length > 0)
-                {
+                if (x.children.length > 0) {
                     x.children.forEach(y => {
                         y.text = y.User.Name + " (" + y.text + ")";
+                        if (y.population == 'true') {
+                            y.text = y.text + "<i class='fa fa-user-circle-o leftspacing'></i>";
+                        }
                     });
 
                     x.children.sort(function (a, b) { return (a.text.toUpperCase() > b.text.toUpperCase()) ? 1 : ((b.text.toUpperCase() > a.text.toUpperCase()) ? -1 : 0); });
@@ -169,7 +171,7 @@ export class NotifyPeopleComponent implements OnInit {
             AdditionalData: new FormControl('')
         });
     }
-    
+
     private departmentChangeHandler(department: KeyValue): void {
         this.currentDepartmentId = department.Value;
         if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'NotifyPeople'))

@@ -70,7 +70,6 @@ export class ClockWidgetComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private initiateTimer(): void {
-        //debugger;
         //let utcInitiation: Date = new Date(this.initiationDateTime.toISOString().replace('Z', ''));
 
         if (this.isArchive) {
