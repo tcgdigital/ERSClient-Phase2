@@ -163,13 +163,16 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                 passengerModels.sort(function (a, b) { return (a.PassengerName.toUpperCase() > b.PassengerName.toUpperCase()) ? 1 : ((b.PassengerName.toUpperCase() > a.PassengerName.toUpperCase()) ? -1 : 0); });
                 const crewModels = this.affectedPeople.filter(x => x.IsCrew == true);
                 crewModels.sort(function (a, b) { return (a.CrewName.toUpperCase() > b.CrewName.toUpperCase()) ? 1 : ((b.CrewName.toUpperCase() > a.CrewName.toUpperCase()) ? -1 : 0); });
+                
                 for (const affectedPerson of passengerModels) {
-                    this.passengers.push(new KeyValue((affectedPerson.PassengerName || affectedPerson.CrewName), affectedPerson.AffectedPersonId));
+                    //this.passengers.push(new KeyValue((affectedPerson.PassengerName || affectedPerson.CrewName), affectedPerson.AffectedPersonId));
+                    this.passengers.push(new KeyValue(affectedPerson.PassengerName + ' (' + affectedPerson.TicketNumber + ')', affectedPerson.AffectedPersonId));
                     this.copassengerlistPassenger.push(Object.assign({}, affectedPerson));
                 }
                 this.copassengerlistPassenger.forEach(x => x.IsSelected = false);
                 for (const affectedPerson of crewModels) {
-                    this.crews.push(new KeyValue((affectedPerson.PassengerName || affectedPerson.CrewName), affectedPerson.AffectedPersonId));
+                    //this.crews.push(new KeyValue((affectedPerson.PassengerName || affectedPerson.CrewName), affectedPerson.AffectedPersonId));
+                    this.crews.push(new KeyValue(affectedPerson.CrewName + ' (' + affectedPerson.TicketNumber + ')', affectedPerson.AffectedPersonId));
                 }
             }, (error: any) => {
                 console.log(`Error: ${error}`);
@@ -234,6 +237,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                 this.otherquery = response[0].MediaAndOtherQuery;
                 this.form.controls["Queries"].reset({ value: this.otherquery.Query, disabled: false });
             }
+            
             this.enquiry.CallerId = response[0].Caller.CallerId;
             this.enquiry.ExternalInputId = this.callid;
             this.caller = response[0].Caller;
@@ -276,6 +280,16 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                     this.consolidatedCopassengers.map(x => this.initialgrouidlist.push(x.PassengerId))
                     //   });
 
+                    this.consolidatedCopassengers.forEach(x => {
+                        x.IsSelected = false;
+                        response[0].Enquiries.forEach(y => {
+                            if(x.AffectedPersonId == y.AffectedPersonId)
+                            {
+                                x.IsSelected = true;
+                            }
+                        });
+                    });
+
                 }
                 if (this.enquiriesToUpdate.length > 0) {
                     this.communicationlogstoupdateId = _.pluck(_.flatten(_.pluck(this.enquiriesToUpdate, 'CommunicationLogs')), 'InteractionDetailsId');
@@ -315,6 +329,11 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         this.copassengerlistPassenger.map(x => this.copassengerlistPassengerForMappedPerson.push(Object.assign({}, x)));
         /*
         this.copassengerlistpnr.forEach(x => {
+            x.PassengerName = x.PassengerName + ' (' + x.TicketNumber + ')';
+        });
+        */
+        /*
+        this.copassengerlistpnr.forEach(x => {
             // x.IsSelected = false;
             this.copassengerlistPassengerForMappedPerson = _.without(this.copassengerlistPassengerForMappedPerson, _.findWhere(this.copassengerlistPassengerForMappedPerson, { AffectedPersonId: x.AffectedPersonId }));
         });
@@ -326,7 +345,6 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                     x.PNRdisabled = "disabled";
                     //console.log(y.AffectedPersonId);
                 }
-
             });
             x.PassengerName = x.PassengerName + " (" + x.Pnr + ")";
         });

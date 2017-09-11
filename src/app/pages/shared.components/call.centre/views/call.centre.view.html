@@ -135,7 +135,7 @@
                     <label for="Query">Discussion Notes <span class="required">*</span></label>
                     <small [hidden]="form.controls.Queries.valid || (form.controls.Queries.pristine && !submitted)" class="text-danger pull-right">Required (Max. Char 1000)</small>
                     <!-- <input id="Query" class="form-control" type="text" name="Query" formControlName="Queries" placeholder="Enter Discussion Notes" /> -->
-                    <textarea id="Query" class="form-control" name="Query" formControlName="Queries" placeholder="Enter Discussion Notes"></textarea>
+                    <textarea rows="1" id="Query" class="form-control" name="Query" formControlName="Queries" placeholder="Enter Discussion Notes"></textarea>
                 </div>
         
                 <div class="form-group col-md-2 col-sm-12">
@@ -155,7 +155,7 @@
                         <label for="Query">Discussion Notes <span class="required">*</span></label>
                         <small [hidden]="form.controls.Queries.valid || (form.controls.Queries.pristine && !submitted)" class="text-danger pull-right">Required (Max. Char 1000)</small>
                         <!-- <input id="Query" class="form-control" type="text" name="Query" formControlName="Queries" placeholder="Enter Discussion Notes" /> -->
-                        <textarea id="Query" class="form-control" name="Query" formControlName="Queries" placeholder="Enter Discussion Notes"></textarea>
+                        <textarea rows="1" id="Query" class="form-control" name="Query" formControlName="Queries" placeholder="Enter Discussion Notes"></textarea>
                     </div>
                     <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=1">
                         <label for="Passengers">PDA Name <span class="required">*</span></label>
@@ -165,7 +165,9 @@
                     </div>
                     <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=3">
                         <label for="Passengers">PDA Name <span class="required">*</span></label>
-                        <autocomplete [items]="crews" (notify)='onNotifyCrew($event)' [initialvalue]="initialvalue"></autocomplete>
+                        <autocomplete [items]="crews" (notify)='onNotifyCrew($event)' [initialvalue]="initialvalue" [actionLinks]="actionLinks"
+                        (actionClickHandler)="onActionClick($event)">
+                    </autocomplete>
                     </div>
                     <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=2">
                         <label for="awb">AWB <span class="required">*</span></label>
