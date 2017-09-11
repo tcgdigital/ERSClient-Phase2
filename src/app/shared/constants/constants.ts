@@ -62,8 +62,8 @@ export enum StorageType {
 export class GlobalConstants {
     // public static EXTERNAL_URL: string = 'http://10.168.33.194:8080/';
     public static EXTERNAL_URL: string = 'http://localhost:5001/';
-    //public static EXTERNAL_URL: string = 'http://172.20.23.110:99/';
-     //public static EXTERNAL_URL: string = 'http://cmgtest.pal.com.ph:8080/';
+    // public static EXTERNAL_URL: string = 'http://172.20.23.110:99/';
+    //  public static EXTERNAL_URL: string = 'http://cmgtest.pal.com.ph:8080/';
 
     public static NOTIFICATION_URL: string = `${GlobalConstants.EXTERNAL_URL}Notification/Hubs`;
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
@@ -329,9 +329,9 @@ export class GlobalConstants {
         { value: 'NonFlight', key: 2 }
     ];
 
-    public static TargetDepartmentTravel: number = 10; // 1138; 36;10
-    public static TargetDepartmentAdmin: number = 13; //1138;36; 13
-    public static TargetDepartmentCrew: number = 9; //1138;36; 9
+    public static TargetDepartmentTravel: number = 36; // 1138; 36;10
+    public static TargetDepartmentAdmin: number = 36; //1138;36; 13
+    public static TargetDepartmentCrew: number = 36; //1138;36; 9
     public static DemandTypeId: number = 1;
     public static RequiredLocation: string = 'Office';
     public static ScheduleTimeForCallback: number = 75;
@@ -342,7 +342,7 @@ export class GlobalConstants {
     public static RequesterTypeEnquiry: string = 'Enquiry';
     public static InteractionDetailsTypeDemand: string = 'DemandType';
     public static InteractionDetailsTypeEnquiry: string = 'EnquiryType';
-    public static CallCenterDepartmentId:number= 25;
+    public static CallCenterDepartmentId:number= 25; //1125; 66; 25
     public static MedicalStatus: IMedicalStatus[] = [
         {
             key: 1,
