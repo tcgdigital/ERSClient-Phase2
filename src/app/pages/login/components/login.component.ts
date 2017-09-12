@@ -17,7 +17,7 @@ import { UserPermissionModel } from '../../masterdata/userpermission/components'
 import { PagePermissionService } from '../../../pages/masterdata/page.functionality/components/page.permission.service';
 import { PagesPermissionMatrixModel } from '../../../pages/masterdata/page.functionality/components/page.functionality.model';
 import * as _ from 'underscore';
-import { TimeZoneModel,TimeZoneModels,TimeZoneService } from "../../shared.components/timezone";
+import { TimeZoneModel, TimeZoneModels, TimeZoneService } from "../../shared.components/timezone";
 @Component({
     selector: 'login',
     encapsulation: ViewEncapsulation.None,
@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
         private authService: AuthenticationService,
         private globalState: GlobalStateService,
         private router: Router,
-        private timeZoneService:TimeZoneService,
+        private timeZoneService: TimeZoneService,
         private incidentService: IncidentService,
         private licensingService: LicensingService,
         private ragScaleService: RAGScaleService,
@@ -94,21 +94,21 @@ export class LoginComponent implements OnInit {
                         if (loginCredentialBasic) {
                             // This is to check that whether the user has department associated with him. From UserPermission table.
                             // let errorSuccess: boolean = this.userProfileService.VerifyUserDepartmentMapping(+loginCredentialBasic.UserId.toString());
-                            this.getDepartments(loginCredentialBasic.UserId,loginCredentialBasic);
+                            this.getDepartments(loginCredentialBasic.UserId, loginCredentialBasic);
                             GlobalConstants.currentLoggedInUser = +loginCredentialBasic.UserId.toString();
                             this.getIncidents();
-                            
+
                             if (!Object.keys(loginCredentialBasic).some((x) => x === 'EmailConfirmed')) {
                                 localStorage.setItem('LastLoginTime', (new Date()).toString());
                                 UtilityService.SetToSession({ CurrentUserId: loginCredentialBasic.UserId });
                                 this.GetUserInfoFromUserProfileByUserProfileId(loginCredentialBasic.UserId);
                                 this.getRAGScaleData();
                                 if (!Object.keys(loginCredentialBasic).some((x) => x === 'EmailConfirmed')) {
-                                    if(GlobalConstants.CallCenterDepartmentId==this.currentDepartmentId){
+                                    if (GlobalConstants.CallCenterDepartmentId == this.currentDepartmentId) {
                                         this.router.navigate(['pages/callcenteronlypage']);
                                     }
                                 }
-                                
+
                             } else {
                                 this.toastrService.warning('Please change your default password', 'Sign In', this.toastrConfig);
                                 this.router.navigate(['login/change']);
@@ -140,11 +140,11 @@ export class LoginComponent implements OnInit {
         }
     }
 
-    private getDepartments(userId: number,loginCredentialBasic:any): void {
+    private getDepartments(userId: number, loginCredentialBasic: any): void {
         this.userPermissionService.GetAllDepartmentsAssignedToUser(userId)
             .map((x: ResponseModel<UserPermissionModel>) => x.Records.sort((a, b) => {
-                if (a.Department.DepartmentName < b.Department.DepartmentName) return -1;
-                if (a.Department.DepartmentName > b.Department.DepartmentName) return 1;
+                if (a.Department.DepartmentName.trim().toLowerCase() < b.Department.DepartmentName.trim().toLowerCase()) return -1;
+                if (a.Department.DepartmentName.trim().toLowerCase() > b.Department.DepartmentName.trim().toLowerCase()) return 1;
                 return 0;
             })
             ).subscribe((x: UserPermissionModel[]) => {
@@ -155,11 +155,11 @@ export class LoginComponent implements OnInit {
                     console.log(this.currentDepartmentId);
                     UtilityService.SetToSession({ CurrentDepartmentId: this.currentDepartmentId });
                     if (!Object.keys(loginCredentialBasic).some((x) => x === 'EmailConfirmed')) {
-                        if(GlobalConstants.CallCenterDepartmentId==this.currentDepartmentId){
+                        if (GlobalConstants.CallCenterDepartmentId == this.currentDepartmentId) {
                             this.router.navigate(['pages/callcenteronlypage']);
                         }
                     }
-                   
+
                 }
             });
     }
@@ -182,10 +182,10 @@ export class LoginComponent implements OnInit {
             });
     }
 
-    private getTimeZones():void{
+    private getTimeZones(): void {
         this.timeZoneService.GetTimeZones(this.currentIncidentId)
-        .subscribe((result:TimeZoneModels)=>{
-        });
+            .subscribe((result: TimeZoneModels) => {
+            });
     }
 
     private getRAGScaleData() {
@@ -228,13 +228,13 @@ export class LoginComponent implements OnInit {
         this.incidentService.GetOpenIncidents()
             .subscribe((item: ResponseModel<IncidentModel>) => {
                 if (item.Count > 0) {
-                    if(GlobalConstants.CallCenterDepartmentId==this.currentDepartmentId){
+                    if (GlobalConstants.CallCenterDepartmentId == this.currentDepartmentId) {
                         this.router.navigate(['pages/callcenteronlypage']);
                     }
-                    else{
+                    else {
                         this.router.navigate(['pages/dashboard']);
                     }
-                    
+
                 }
                 else {
                     this.router.navigate(['pages/landing']);

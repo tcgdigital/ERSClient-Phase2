@@ -17,8 +17,13 @@
     }
 }
 
-.line-align{
-    line-height: 48px;
+// .line-align{
+//     line-height: 48px;
+// }
+
+.line-pos{
+    white-space: nowrap;
+    margin-left: -10%;
 }
 
 .orientation {
@@ -27,6 +32,9 @@
 @media screen and (max-width: $resXXS-S) {
     .orientation {
         margin: 75px auto;
+    }
+    .link-box{
+        margin-left: 2%;
     }
 }
 
@@ -39,6 +47,10 @@
     .orientation {
         margin: 75px auto;
     }
+
+    .line-pos{
+        margin-left: 2%;
+    }
 }
 
 @media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {}
@@ -47,12 +59,27 @@
     .orientation {
         margin: 75px auto;
     }
+    .line-pos{
+        margin-left: -26%;
+    }
+    .link-box{
+        strong{
+            font-size: 10.7px; 
+        }
+    }
 }
 
 @media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {
     .orientation {
         margin: 75px auto;
     }
+    .line-pos{
+        margin-left: -3%;  
+    }
 }
 
-@media screen and (min-width: $resXL-S) {}
+@media screen and (min-width: 1440px) {
+    .line-pos{
+        margin-left: -5%;
+    }
+}
