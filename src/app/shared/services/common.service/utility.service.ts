@@ -152,6 +152,14 @@ export class UtilityService {
     //     }
     // }
 
+    public static getUTCDateTime(date:Date):Date{
+        let currentDate = date;
+        let currentDateUTC = new Date(currentDate.getUTCFullYear(), 
+        currentDate.getUTCMonth(), currentDate.getUTCDate(), 
+        currentDate.getUTCHours(), currentDate.getUTCMinutes(), currentDate.getUTCSeconds(),currentDate.getUTCMilliseconds());
+        return currentDateUTC;
+    }
+
     public static shade(color, weight) {
         return UtilityService.mix('#000000', color, weight);
     }
@@ -536,7 +544,7 @@ export class UtilityService {
         let subTabs: ITabLinkInterface[];
         const rootTab: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
             .find((x: PagesPermissionMatrixModel) => x.PageCode === parentTabName
-                && x.Type === 'Tab' && x.DepartmentId === departmentId && x.CanView);
+                && x.Type === 'Tab' && x.DepartmentId === departmentId && x.CanView && x.ModuleName==='Dashboard');
 
         if (rootTab) {
             const tabs: string[] = GlobalConstants.PagePermissionMatrix
@@ -559,7 +567,7 @@ export class UtilityService {
         let subTabs: ITabLinkInterface[];
         const rootTab: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
             .find((x: PagesPermissionMatrixModel) => x.PageCode === parentTabName
-                && x.Type === 'Tab' && x.DepartmentId === departmentId && x.CanView);
+                && x.Type === 'Tab' && x.DepartmentId === departmentId && x.CanView && x.ModuleName==='Archive Dashboard');
 
         if (rootTab) {
             const tabs: string[] = GlobalConstants.PagePermissionMatrix

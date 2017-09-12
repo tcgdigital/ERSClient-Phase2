@@ -141,6 +141,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 })
                 .map((x) => x.PageCode);
             if (accessibleTabs.length > 0) {
+                console.log(GlobalConstants.DashboardTabLinks);
                 this.tablinks = GlobalConstants.DashboardTabLinks.filter((x: ITabLinkInterface) => accessibleTabs.some((y) => y === x.id));
                 if (this.tablinks) {
                     this.tablinks.forEach((item: ITabLinkInterface) => {
@@ -157,7 +158,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                                             x.DepartmentId === this.currentDepartmentId);
                                     });
                                 if (subPageModel == undefined) {
-                                    itemSubTab.selected = false;
+                                    //itemSubTab.selected = false;
                                     //item.subtab.splice(index,1);
                                     //item.subtab
                                 }
@@ -236,7 +237,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.incidentService.Get(incidentId)
             .subscribe((data: IncidentModel) => {
                 this.currentIncident = new KeyValue(data.EmergencyName, data.IncidentId);
-                this.incidentDate = new Date(data.CreatedOn);
                 // try{
                 //     if(typeof data.CreatedOn == 'string')
                 //         this.incidentDate = new Date((data.CreatedOn as string).substr(0,23));
@@ -246,6 +246,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 // catch(ex){
                 //     this.incidentDate = new Date(data.CreatedOn);
                 // }
+                this.incidentDate = new Date(data.CreatedOn);
             });
     }
 

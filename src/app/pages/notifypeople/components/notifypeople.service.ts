@@ -155,6 +155,10 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
                             notifyModelInner.id = count;
                             notifyModelInner.text = eachUserPermission.User.Email;
                             notifyModelInner.population = '';
+                            if(eachUserPermission.IsHod){
+                                notifyModelInner.population = 'true';
+                            }
+                            
                             notifyModelInner.checked = false;
                             let filterItems = resultUserdepartmentNotificationMapper.filter((itemFind: UserdepartmentNotificationMapperModel) => {
                                 return (itemFind.UserId == eachUserPermission.User.UserProfileId && itemFind.DepartmentId == departmentLocal[0].DepartmentId);
