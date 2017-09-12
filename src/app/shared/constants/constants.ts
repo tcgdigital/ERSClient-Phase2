@@ -342,7 +342,7 @@ export class GlobalConstants {
     public static RequesterTypeEnquiry: string = 'Enquiry';
     public static InteractionDetailsTypeDemand: string = 'DemandType';
     public static InteractionDetailsTypeEnquiry: string = 'EnquiryType';
-    public static CallCenterDepartmentId:number= 1125; // 1125;66;25
+    public static CallCenterDepartmentId:number= 25; // 1125;66;25
     public static MedicalStatus: IMedicalStatus[] = [
         {
             key: 1,

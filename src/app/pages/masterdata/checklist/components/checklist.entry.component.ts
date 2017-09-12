@@ -110,9 +110,17 @@ export class ChecklistEntryComponent implements OnInit {
         else {
             this.parentChecklists = this.noDtaList;
         }
+        
         this.selectedparentChecklistdetails = this.parentChecklists[0].CheckListDetails;
         this.selectedcount = this.checkListParentDepartmentWise.filter(x => x["IsSelected"] == true).length;
         this.isSelected = this.checkListParentDepartmentWise.length == this.selectedcount;
+
+        this.parentChecklists.sort((a, b) => {
+            if(a.CheckListCode < b.CheckListCode) return -1;
+            if(a.CheckListCode > b.CheckListCode) return 1;
+
+            return 0;
+        });
     }
 
     addDepartmentName(x: ChecklistModel[]): ChecklistModel[] {
@@ -151,6 +159,12 @@ export class ChecklistEntryComponent implements OnInit {
     parentDepartmentChange(): void {
         //  this.selectedcount = 0;
         this.checkListParentDepartmentWise = this.CheckListParents.filter(x => x.DepartmentId == this.ParentDepartmentId);
+        this.checkListParentDepartmentWise.sort((a, b)=>{
+            if(a.CheckListCode < b.CheckListCode) return -1;
+            if(a.CheckListCode > b.CheckListCode) return 1;
+
+            return 0;
+        });
         this.selectedcount = this.checkListParentDepartmentWise.filter(x => x.IsSelected == true).length;
         this.isSelected = this.checkListParentDepartmentWise.length == this.selectedcount;
     }

@@ -203,7 +203,7 @@ export class PagesComponent implements OnInit {
         this.globalState.NotifyDataChanged('departmentChange', selectedDepartment);
         this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
 
-        if(GlobalConstants.CallCenterDepartmentId==this.currentDepartmentId){
+        if (GlobalConstants.CallCenterDepartmentId == this.currentDepartmentId) {
             this.router.navigate(['pages/callcenteronlypage']);
         }
     }
@@ -256,8 +256,8 @@ export class PagesComponent implements OnInit {
     private GetUserDepartments(): Observable<UserPermissionModel[]> {
         return this.userPermissionService.GetAllDepartmentsAssignedToUser(this.userId)
             .map((x: ResponseModel<UserPermissionModel>) => x.Records.sort((a, b) => {
-                if (a.Department.DepartmentName < b.Department.DepartmentName) return -1;
-                if (a.Department.DepartmentName > b.Department.DepartmentName) return 1;
+                if (a.Department.DepartmentName.trim().toLowerCase() < b.Department.DepartmentName.trim().toLowerCase()) return -1;
+                if (a.Department.DepartmentName.trim().toLowerCase() > b.Department.DepartmentName.trim().toLowerCase()) return 1;
                 return 0;
             }));
     }
@@ -312,7 +312,7 @@ export class PagesComponent implements OnInit {
             else {
                 this.currentDepartmentId = this.departments[0].Value;
                 UtilityService.SetToSession({ CurrentDepartmentId: this.currentDepartmentId });
-                if(GlobalConstants.CallCenterDepartmentId==this.currentDepartmentId){
+                if (GlobalConstants.CallCenterDepartmentId == this.currentDepartmentId) {
                     this.router.navigate(['pages/callcenteronlypage']);
                 }
             }

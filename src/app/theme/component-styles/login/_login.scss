@@ -101,15 +101,29 @@ forgot-password .Absolute-Center.is-Responsive {
 
 #logo-container {
     margin-left:8px;
-    background: url(./assets/images/logo_pal1.png) center center no-repeat;
+    background: url(./assets/images/logo_pal_login.png) center center no-repeat;
     background-size: 100%;
     height: 90px;
     width: 160px;
+    position: absolute;
+    top: 0;
+    left: 10px;
     @media screen and (max-width: $resLG-E) {
         height: 80px;
         width: 130px;
         margin-left:8px;
         background-size: 100%;
+        position: absolute;
+        top: 0;
+        left: 10px;
+    }
+
+    .cms-txt {
+        position: absolute;
+        top: 23px;
+        left: 155px;
+        font-size: 23px;
+        color: rgb(29, 45, 97);
     }
 }
 
@@ -165,21 +179,22 @@ input:-webkit-autofill:active {
 
 .loginholder-container {
     width: 25%;
-    margin: 5% auto;
+    margin: 10% auto;
     position: relative;
     overflow: auto;
     background: transparent;
     border-radius: 5px;
     @media screen and (max-width: $resLG-E) {
         width:35%;
-        margin-top: 9%;
     }
     @media screen and (max-width: $resMD-E) {
         width: 55%;
+        margin-top: 11%;
     }
     @media screen and (max-width: $resSM-S) {
         width: 75%;
         margin-left: 11%;
+        margin-top: 21%;
     }
 }
 
@@ -225,7 +240,18 @@ login-root {
     height: 100%;
 }
 
-@media screen and (max-width: $resXS-E) {
+@media screen and (max-width: $resXXS-S) {
+    .cms-txt {
+        position: absolute;
+        top: 26px;
+        left: 153px;
+        font-size: 13px;
+        line-height: 14px;
+        color: rgb(29, 45, 97);
+    }
+}
+
+@media screen and (min-width: $resXS-S) and (max-width: $resXS-E) {
     login-root {
     background-image: url(./assets/images/login_smalldevice_image.png);
     background-size: cover;
@@ -236,6 +262,15 @@ login-root {
     width: 100%;
     position: fixed;
     height: 100%;
+}
+
+.cms-txt {
+    position: absolute;
+    top: 32px;
+    left: 153px;
+    font-size: 14px;
+    line-height: 17px;
+    color: rgb(29, 45, 97);
 }
 }
 
@@ -251,6 +286,14 @@ login-root {
     position: fixed;
     height: 100%;
 }
+.cms-txt {
+    position: absolute;
+    top: 26px;
+    left: 153px;
+    font-size: 13px;
+    line-height: 14px;
+    color: rgb(29, 45, 97);
+}
 }
 
 @media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
@@ -265,10 +308,33 @@ login-root {
     position: fixed;
     height: 100%;
 }
+.cms-txt {
+    position: absolute;
+    top: 33px;
+    left: 153px;
+    font-size: 19px;
+    line-height: 14px;
+    color: rgb(29, 45, 97);
+}
 }
 
-@media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {}
+@media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {
+    .cms-txt {
+        position: absolute;
+        top: 24px;
+        left: 153px;
+        font-size: 22px;
+        color: rgb(29, 45, 97);
+    }
+}
 
 @media screen and (min-width: $resXL-S) {
+    .cms-txt {
+        position: absolute;
+        top: 27px;
+        left: 185px;
+        font-size: 23px;
+        color: rgb(29, 45, 97);
+    }
 
 }

@@ -71,7 +71,20 @@ export class ChecklistListComponent implements OnInit {
                 })
                 console.log(this.checkLists);
                 this.initiateSearchConfigurations();
-            });
+            },
+            (error: any) => {
+                console.log(`Error: ${error}`);
+            },
+        ()=>{
+            this.checkLists.sort((a, b)=>{
+                    if (a.EmergencyType.EmergencyTypeName < b.EmergencyType.EmergencyTypeName) return -1;
+                    if (a.EmergencyType.EmergencyTypeName > b.EmergencyType.EmergencyTypeName) return 1;
+                    if (a.Sequence < b.Sequence) return -1;
+                    if (a.Sequence > b.Sequence) return 1;
+
+                    return 0;
+                });
+        });
     }
 
     getInvalidChecklists(): void{
