@@ -12,6 +12,7 @@ import {
 } from '../../../shared';
 import { EnquiryModel, EnquiryService } from './components';
 import { AffectedPeopleModel } from "../affected.people/components";
+import { AffectedObjectModel } from '../affected.objects/components';
 import { PassengerService, CoPassengerMappingModel, CoPassangerModelsGroupIdsModel } from "../passenger/components";
 
 import {
@@ -123,10 +124,12 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         ActionIcon: 'fa fa-comments-o fa-lg'
     }];
     pdaNameForTrail: string = "";
+    AWBNumber: string = "";
     ticketNumber: string = "";
     communications: CommunicationLogModel[] = [];
     showCallcenterModal: boolean = false;
     hideModal: boolean = true;
+    hideModalCargo: boolean = true;
     initialgroupId: number = 0;
 
     protected _onRouteChange: Subscription;
@@ -163,13 +166,16 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                 passengerModels.sort(function (a, b) { return (a.PassengerName.toUpperCase() > b.PassengerName.toUpperCase()) ? 1 : ((b.PassengerName.toUpperCase() > a.PassengerName.toUpperCase()) ? -1 : 0); });
                 const crewModels = this.affectedPeople.filter(x => x.IsCrew == true);
                 crewModels.sort(function (a, b) { return (a.CrewName.toUpperCase() > b.CrewName.toUpperCase()) ? 1 : ((b.CrewName.toUpperCase() > a.CrewName.toUpperCase()) ? -1 : 0); });
+                
                 for (const affectedPerson of passengerModels) {
-                    this.passengers.push(new KeyValue((affectedPerson.PassengerName || affectedPerson.CrewName), affectedPerson.AffectedPersonId));
+                    //this.passengers.push(new KeyValue((affectedPerson.PassengerName || affectedPerson.CrewName), affectedPerson.AffectedPersonId));
+                    this.passengers.push(new KeyValue(affectedPerson.PassengerName + ' (' + affectedPerson.TicketNumber + ')', affectedPerson.AffectedPersonId));
                     this.copassengerlistPassenger.push(Object.assign({}, affectedPerson));
                 }
                 this.copassengerlistPassenger.forEach(x => x.IsSelected = false);
                 for (const affectedPerson of crewModels) {
-                    this.crews.push(new KeyValue((affectedPerson.PassengerName || affectedPerson.CrewName), affectedPerson.AffectedPersonId));
+                    //this.crews.push(new KeyValue((affectedPerson.PassengerName || affectedPerson.CrewName), affectedPerson.AffectedPersonId));
+                    this.crews.push(new KeyValue(affectedPerson.CrewName + ' (' + affectedPerson.TicketNumber + ')', affectedPerson.AffectedPersonId));
                 }
             }, (error: any) => {
                 console.log(`Error: ${error}`);
@@ -183,7 +189,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedObjects = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
                 for (const affectedObject of this.affectedObjects) {
-                    this.awbs.push(new KeyValue(affectedObject.AWB, affectedObject.AffectedObjectId));
+                    this.awbs.push(new KeyValue(affectedObject.AWB + ' (' + affectedObject.TicketNumber + ')', affectedObject.AffectedObjectId));
                 }
             }, (error: any) => {
                 console.log(`Error: ${error}`);
@@ -234,6 +240,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                 this.otherquery = response[0].MediaAndOtherQuery;
                 this.form.controls["Queries"].reset({ value: this.otherquery.Query, disabled: false });
             }
+            
             this.enquiry.CallerId = response[0].Caller.CallerId;
             this.enquiry.ExternalInputId = this.callid;
             this.caller = response[0].Caller;
@@ -276,6 +283,16 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                     this.consolidatedCopassengers.map(x => this.initialgrouidlist.push(x.PassengerId))
                     //   });
 
+                    this.consolidatedCopassengers.forEach(x => {
+                        x.IsSelected = false;
+                        response[0].Enquiries.forEach(y => {
+                            if(x.AffectedPersonId == y.AffectedPersonId)
+                            {
+                                x.IsSelected = true;
+                            }
+                        });
+                    });
+
                 }
                 if (this.enquiriesToUpdate.length > 0) {
                     this.communicationlogstoupdateId = _.pluck(_.flatten(_.pluck(this.enquiriesToUpdate, 'CommunicationLogs')), 'InteractionDetailsId');
@@ -315,6 +332,11 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         this.copassengerlistPassenger.map(x => this.copassengerlistPassengerForMappedPerson.push(Object.assign({}, x)));
         /*
         this.copassengerlistpnr.forEach(x => {
+            x.PassengerName = x.PassengerName + ' (' + x.TicketNumber + ')';
+        });
+        */
+        /*
+        this.copassengerlistpnr.forEach(x => {
             // x.IsSelected = false;
             this.copassengerlistPassengerForMappedPerson = _.without(this.copassengerlistPassengerForMappedPerson, _.findWhere(this.copassengerlistPassengerForMappedPerson, { AffectedPersonId: x.AffectedPersonId }));
         });
@@ -326,7 +348,6 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                     x.PNRdisabled = "disabled";
                     //console.log(y.AffectedPersonId);
                 }
-
             });
             x.PassengerName = x.PassengerName + " (" + x.Pnr + ")";
         });
@@ -558,7 +579,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     setenquiryModelforCopassangers(enquiryModel: EnquiryModel): EnquiryModel[] {
         let enquirymodels: EnquiryModel[] = [];
 
-        this.consolidatedCopassengers.map(x => {
+        this.selectedCoPassangers.map(x => {
             let enquiry: EnquiryModel = new EnquiryModel();
             enquiry.AffectedPersonId = x.AffectedPersonId;
             enquiry.IncidentId = this.currentIncident;
@@ -788,6 +809,24 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             });
     }
 
+    onActionCargoClick(eventArgs: any) {
+        //console.log(eventArgs);
+        let affectedCargoid = eventArgs.selectedItem.Value;
+        this.affectedObjectsService.GetCommunicationByAWB(affectedCargoid)
+            .subscribe((response: ResponseModel<AffectedObjectModel>) => {
+                let responseModel: AffectedObjectModel = response.Records[0];
+                this.AWBNumber = responseModel.AWB;
+                this.ticketNumber = responseModel.TicketNumber;
+                this.communications = responseModel.CommunicationLogs;
+                this.showCallcenterModal = true;
+                // this.childModalForTrail.show();
+                this.hideModalCargo = false;
+
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
+    }
+
 
     formInitialization(): any {
         return new FormGroup({
@@ -802,6 +841,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
     cancelModal() {
         // this.childModalForTrail.hide();
         this.hideModal = true;
+        this.hideModalCargo = true;
         this.showCallcenterModal = false;
     }
 
@@ -847,7 +887,8 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                 this.externalInput.IsCallRecieved = true;
                 this.externalInput.ExternalInputId = this.callid;
                 if (this.enquiryType == 1 && this.consolidatedCopassengers.length > 0) {
-
+                    
+                    this.selectedCoPassangers = this.consolidatedCopassengers.filter(x => x.IsSelected == true);
                     let enquiryModelsToSave: EnquiryModel[] = [];
                     enquiryModelsToSave = this.setenquiryModelforCopassangers(this.enquiry);
                     enquiryModelsToSave.push(this.enquiry);
@@ -864,12 +905,11 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                             let num = UtilityService.UUID();
                             this.globalState.NotifyDataChanged('CallRecieved', num);
 
-                            this.selectedCoPassangers = this.consolidatedCopassengers.filter(x => x.IsSelected == true);
                             if (this.selectedCoPassangers.filter(x => x.AffectedPersonId == this.enquiry.AffectedPersonId).length == 0) {
                                 let obj = this.affectedPeople.find(x => x.AffectedPersonId == this.enquiry.AffectedPersonId); // this.initialvalue.Value
                                 this.selectedCoPassangers.push(obj);
                             }
-
+        
                             if (this.selectedCoPassangers.length > 0) {
                                 let afftedIdstocreateDemand: number[] = [];
                                 this.selectedCoPassangers.map(x => afftedIdstocreateDemand.push(x.AffectedPersonId));
@@ -1002,9 +1042,11 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                         );
                 }
                 else if ((this.enquiryType == 1)) {
-
+                    
                     // this.consolidatedCopassengers.length = 0;
 
+                    this.selectedCoPassangers = this.consolidatedCopassengers.filter(x => x.IsSelected == true);
+                   
                     let enquiryModelsToSaveEdit: EnquiryModel[] = [];
                     enquiryModelsToSaveEdit = this.setenquiryModelforCopassangers(this.enquiry);
                     this.enquiry.CommunicationLogs = communicationlogs;

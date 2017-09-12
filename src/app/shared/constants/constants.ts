@@ -62,8 +62,8 @@ export enum StorageType {
 export class GlobalConstants {
     // public static EXTERNAL_URL: string = 'http://10.168.33.194:8080/';
     public static EXTERNAL_URL: string = 'http://localhost:5001/';
-    //public static EXTERNAL_URL: string = 'http://172.20.23.110:99/';
-     //public static EXTERNAL_URL: string = 'http://cmgtest.pal.com.ph:8080/';
+    // public static EXTERNAL_URL: string = 'http://172.20.23.110:99/';
+    //  public static EXTERNAL_URL: string = 'http://cmgtest.pal.com.ph:8080/';
 
     public static NOTIFICATION_URL: string = `${GlobalConstants.EXTERNAL_URL}Notification/Hubs`;
     public static CLIENT_ID: string = 'A924D89F487E4F888EA8CFDB1AE4E9D3';
@@ -342,7 +342,7 @@ export class GlobalConstants {
     public static RequesterTypeEnquiry: string = 'Enquiry';
     public static InteractionDetailsTypeDemand: string = 'DemandType';
     public static InteractionDetailsTypeEnquiry: string = 'EnquiryType';
-    public static CallCenterDepartmentId:number= 25;
+    public static CallCenterDepartmentId:number= 1125; // 1125;66;25
     public static MedicalStatus: IMedicalStatus[] = [
         {
             key: 1,
@@ -1691,6 +1691,14 @@ export class GlobalConstants {
             selected: false,
             hidden: false,
             order: 12
+        }, {
+            id: 'spiel',
+            title: 'Call Centre Spiel',
+            // icon: 'fa fa-medium fa-2x',
+            url: '/pages/masterdata/spiel',
+            selected: false,
+            hidden: false,
+            order: 13
         }
     ] as ITabLinkInterface[];
 }

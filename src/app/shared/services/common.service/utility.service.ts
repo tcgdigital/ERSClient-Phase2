@@ -152,6 +152,14 @@ export class UtilityService {
     //     }
     // }
 
+    public static getUTCDateTime(date:Date):Date{
+        let currentDate = date;
+        let currentDateUTC = new Date(currentDate.getUTCFullYear(), 
+        currentDate.getUTCMonth(), currentDate.getUTCDate(), 
+        currentDate.getUTCHours(), currentDate.getUTCMinutes(), currentDate.getUTCSeconds(),currentDate.getUTCMilliseconds());
+        return currentDateUTC;
+    }
+
     public static shade(color, weight) {
         return UtilityService.mix('#000000', color, weight);
     }

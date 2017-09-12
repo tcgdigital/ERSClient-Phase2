@@ -20,7 +20,8 @@ const pageRoutes: Routes = [
             { path: 'pagefunctionality', loadChildren: './page.functionality/page.functionality.module#PageFunctionalityModule' },
             { path: 'userprofile', loadChildren: './userprofile/userprofile.module#UserProfileModule' },
             { path: 'affectedstation', loadChildren: './emergencylocation/emergencylocation.module#EmergencyLocationModule' },
-            { path: 'broadcastdepartment', loadChildren: './broadcastdepartment/boradcastdepartment.module#BroadcastDepartmentMappingModule' }
+            { path: 'broadcastdepartment', loadChildren: './broadcastdepartment/boradcastdepartment.module#BroadcastDepartmentMappingModule' },
+            { path: 'spiel', loadChildren: './spiel/spiel.module#SpielModule' }
         ]
     }
 ];
