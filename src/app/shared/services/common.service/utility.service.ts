@@ -544,7 +544,7 @@ export class UtilityService {
         let subTabs: ITabLinkInterface[];
         const rootTab: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
             .find((x: PagesPermissionMatrixModel) => x.PageCode === parentTabName
-                && x.Type === 'Tab' && x.DepartmentId === departmentId && x.CanView);
+                && x.Type === 'Tab' && x.DepartmentId === departmentId && x.CanView && x.ModuleName==='Dashboard');
 
         if (rootTab) {
             const tabs: string[] = GlobalConstants.PagePermissionMatrix
@@ -567,7 +567,7 @@ export class UtilityService {
         let subTabs: ITabLinkInterface[];
         const rootTab: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
             .find((x: PagesPermissionMatrixModel) => x.PageCode === parentTabName
-                && x.Type === 'Tab' && x.DepartmentId === departmentId && x.CanView);
+                && x.Type === 'Tab' && x.DepartmentId === departmentId && x.CanView && x.ModuleName==='Archive Dashboard');
 
         if (rootTab) {
             const tabs: string[] = GlobalConstants.PagePermissionMatrix
