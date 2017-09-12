@@ -89,7 +89,7 @@ export class UserPermissionService
         let count: number = 1;
         return this._dataService.Query()
             .Expand('User($expand=Notifications($filter=SituationId eq 1 or SituationId eq 2;$select=AckStatus;))')
-            .Filter(`DepartmentId eq ${departmentId}`)
+            .Filter(`DepartmentId eq ${departmentId} and User/isActive eq true`)
             .OrderBy('CreatedOn desc')
             .Execute();
 
