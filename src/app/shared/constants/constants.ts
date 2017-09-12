@@ -780,7 +780,7 @@ export class GlobalConstants {
             title: 'Checklists',
             // icon: 'fa fa-edge fa-2x',
             url: '/pages/dashboard/actionable',
-            selected: false,
+            selected: true,
             hidden: false,
             order: 1,
             subtab: [
@@ -788,7 +788,7 @@ export class GlobalConstants {
                     id: 'ActiveChecklist',
                     title: 'Open Checklist',
                     url: './open',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1190,7 +1190,7 @@ export class GlobalConstants {
             title: 'Checklists',
             // icon: 'fa fa-edge fa-2x',
             url: '/pages/archivedashboard/actionable',
-            selected: false,
+            selected: true,
             hidden: false,
             order: 1,
             subtab: [
@@ -1198,7 +1198,7 @@ export class GlobalConstants {
                     id: 'ActiveChecklist',
                     title: 'Open Checklist',
                     url: './open',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
