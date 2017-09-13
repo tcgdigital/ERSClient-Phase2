@@ -253,7 +253,7 @@ export class AffectedPeopleListComponent implements OnInit {
         communicationLog.DemandId = null;
         communicationLog.RequesterName = this.userName;
         communicationLog.RequesterDepartment = this.currentDepartmentName;
-        communicationLog.RequesterType = 'Enquiry';
+        communicationLog.RequesterType = 'Medical Status change';
         communicationLog.ActiveFlag = 'Active';
         communicationLog.CreatedBy = createdBy;
         communicationLog.CreatedOn = new Date();
