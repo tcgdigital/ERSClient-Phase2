@@ -81,13 +81,14 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
             });
     }
 
-    public GetAllOpenByIncidentIdandDepartmentId(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
+    public GetAllOpenByIncidentIdandDepartmentId1(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
             .Expand('CheckList($select=CheckListId,CheckListCode)')
             .Filter(`CompletionStatus ne 'Closed' and IncidentId eq ${incidentId} and DepartmentId eq ${departmentId}`)
             .OrderBy('CreatedOn desc')
             .Execute()
             .map((actionables: ResponseModel<ActionableModel>) => {
+                debugger;
                 this._actionables = actionables;
                 this._actionables.Records.forEach((element) => {
                     element.Active = (element.ActiveFlag === 'Active');
@@ -99,6 +100,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
             })
             .flatMap((actionables: ResponseModel<ActionableModel>) => this.GetAllByIncident(incidentId))
             .map((allActionables: ResponseModel<ActionableModel>) => {
+                debugger;
                 this._allActionables = allActionables;
                 this._actionables.Records.map((element: ActionableModel) => {
                     // if (element.ParentCheckListId == null) {
@@ -121,6 +123,30 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
                     // }
                 });
                 return this._actionables;
+            });
+    }
+
+    public GetAllOpenByIncidentIdandDepartmentId(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>[]> {
+        const observables: Observable<ResponseModel<ActionableModel>>[] = new Array<Observable<ResponseModel<ActionableModel>>>();
+        observables.push(this.GetActionableByIncidentandDepartment(incidentId,departmentId));
+        observables.push(this.GetAllOpenByIncidentId(incidentId));
+        return Observable.forkJoin(observables);
+    }
+
+    public GetActionableByIncidentandDepartment(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
+        return this._dataService.Query()
+            .Expand('CheckList($select=CheckListId,CheckListCode)')
+            .Filter(`CompletionStatus ne 'Closed' and IncidentId eq ${incidentId} and DepartmentId eq ${departmentId}`)
+            .OrderBy('CreatedOn desc')
+            .Execute()
+            .map((actionables: ResponseModel<ActionableModel>) => {
+                actionables.Records.forEach((element) => {
+                    element.Active = (element.ActiveFlag === 'Active');
+                    element.Done = false;
+                    element.show = false;
+                    element.RagColor = UtilityService.GetRAGStatus('Checklist', element.AssignedDt, element.ScheduleClose);
+                });
+                return actionables;
             });
     }
 
@@ -183,7 +209,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
             .Execute();
     }
 
-    public GetAllCloseByIncidentIdandDepartmentId(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
+    public GetAllCloseByIncidentIdandDepartmentId1(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
             .Expand('CheckList($expand=CheckListChildrenMapper)')
             .Filter(`CompletionStatus eq 'Closed' and IncidentId eq ${incidentId} and DepartmentId eq ${departmentId}`)
@@ -197,6 +223,29 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
 
                 return actionables;
             });
+    }
+
+    private GetAllCloseByIncidentIdandDepartmentId(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
+        return this._dataService.Query()
+            .Expand('CheckList($expand=CheckListChildrenMapper)')
+            .Filter(`CompletionStatus eq 'Closed' and IncidentId eq ${incidentId} and DepartmentId eq ${departmentId}`)
+            .OrderBy('CreatedOn desc')
+            .Execute()
+            .map((actionables: ResponseModel<ActionableModel>) => {
+                this._actionables = actionables;
+                this._actionables.Records.forEach((element) => {
+                    element.Active = (element.ActiveFlag === 'Active');
+                });
+
+                return actionables;
+            });
+    }
+
+    public GetClosedActionable(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>[]>  {
+        const observables: Observable<ResponseModel<ActionableModel>>[] = new Array<Observable<ResponseModel<ActionableModel>>>();
+        observables.push(this.GetAllCloseByIncidentIdandDepartmentId(incidentId,departmentId));
+        observables.push(this.GetAllCloseByIncidentId(incidentId));
+        return Observable.forkJoin(observables);
     }
 
     public GetAcionableByIncidentIdandCheckListId(incidentId: number, checkListId: number): Observable<ResponseModel<ActionableModel>> {

@@ -108,15 +108,28 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     }
 
     getAllCloseActionable(incidentId: number, departmentId: number): void {
-        this.actionableService.GetAllCloseByIncidentIdandDepartmentId(incidentId, departmentId)
-            .subscribe((response: ResponseModel<ActionableModel>) => {
-                this.closeActionables = response.Records;
-                this.closeActionables.forEach((x) => {
-                    x['expanded'] = false;
-                    x['Done'] = false;
-                    x['actionableChilds'] = [];
-                });
-                this.getAllCloseActionableByIncident(this.currentIncident);
+        this.actionableService.GetClosedActionable(incidentId, departmentId)
+            .subscribe((res: ResponseModel<ActionableModel>[]) => {
+                if (res && res.length > 1) {
+                    debugger;
+                    if (res[0]) {
+                        this.closeActionables = res[0].Records;
+                        if (this.closeActionables.length > 0) {
+                            this.closeActionables.forEach((x) => {
+                                x['expanded'] = false;
+                                x['Done'] = false;
+                                x['actionableChilds'] = [];
+                            });
+                        }
+                    }
+                    if (res[1]) {
+                        debugger;
+                        this.actionableWithParents = res[1].Records;
+                        this.parentChecklistIds = this.actionableWithParents.map((actionable) => {
+                            return 1;
+                        });
+                    }
+                }
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -324,7 +337,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     //                     });
     //                 }
     //             });
-                
+
     //         }, (error: any) => {
     //             console.log(`Error: ${error}`);
     //         });
