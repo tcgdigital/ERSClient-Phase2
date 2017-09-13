@@ -82,7 +82,6 @@ export class LoginComponent implements OnInit {
     public Login(userid: string, password: string): void {
         this.authService.Login(userid, password)
             .subscribe((data: AuthResponseModel) => {
-
                 console.log(jwtDecode(data.access_token));
                 const loginCredentialBasic: any = jwtDecode(data.access_token);
                 this.pagePermissionService.GetPagePermissionMatrix(loginCredentialBasic.UserId)
