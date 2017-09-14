@@ -274,6 +274,30 @@ login-root {
 }
 }
 
+@media screen and (min-width:370px) and (max-width: 424px) {
+    login-root {
+    background-image: url(./assets/images/login_smalldevice_image.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    @include background-size(100%, 100%);
+    display: block;
+    float: left;
+    width: 100%;
+    position: fixed;
+    height: 100%;
+}
+
+.cms-txt {
+    position: absolute;
+    top: 22px;
+    left: 153px;
+    font-size: 14px;
+    line-height: 17px;
+    color: rgb(29, 45, 97);
+    width: 173px;
+}
+}
+
 @media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {
   login-root {
     background-image: url(./assets/images/background_device_image.png);
