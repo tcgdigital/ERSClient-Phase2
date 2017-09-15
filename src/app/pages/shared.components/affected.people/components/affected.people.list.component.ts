@@ -212,39 +212,57 @@ export class AffectedPeopleListComponent implements OnInit {
     }
 
     createCommunicationLogModel(affectedPersonToUpdate: AffectedPeopleModel, createdBy: number): void {
-        const communicationLogs: CommunicationLogModel[] = [];
-        const communicationLog: CommunicationLogModel = new CommunicationLogModel();
+       
         let editedFields = '';
         let answer = '';
         let descchanged = '';
         this.communicationLogService.GetLogByAffectedPersonId(affectedPersonToUpdate.AffectedPersonId)
             .subscribe((result: ResponseModel<CommunicationLogModel>) => {
-                var QueryStatusFullText = result.Records[0].Queries;
-                var MedicalStatus = QueryStatusFullText.split('Status changed to ')[1];
-                if (MedicalStatus.trim().toLowerCase() != affectedPersonToUpdate.MedicalStatus.trim().toLowerCase()) {
-                    communicationLog.InteractionDetailsId = 0;
-                    communicationLog.InteractionDetailsType = GlobalConstants.InteractionDetailsTypeEnquiry;
-                    communicationLog.Queries = 'Medical Status changed to ' + affectedPersonToUpdate.MedicalStatus;
-                    communicationLog.Answers = 'Medical Status changed to ' + affectedPersonToUpdate.MedicalStatus;
-                    communicationLog.AffectedPersonId = affectedPersonToUpdate.AffectedPersonId;
-                    communicationLog.AffectedObjectId = null;
-                    communicationLog.EnquiryId = null;
-                    communicationLog.DemandId = null;
-                    communicationLog.RequesterName = this.userName;
-                    communicationLog.RequesterDepartment = this.currentDepartmentName;
-                    communicationLog.RequesterType = 'Enquiry';
-                    communicationLog.ActiveFlag = 'Active';
-                    communicationLog.CreatedBy = createdBy;
-                    communicationLog.CreatedOn = new Date();
-
-                    communicationLogs.push(communicationLog);
-
-                    this.communicationLogService.CreateCommunicationLog(communicationLog)
-                        .subscribe((itemResult: CommunicationLogModel) => {
-                        });
+                if(result.Count==0){
+                    this.insertCommunicationLog(affectedPersonToUpdate,createdBy);
                 }
+                else{
+                    var QueryStatusFullText = result.Records[0].Queries;
+                    
+                    if(QueryStatusFullText.indexOf('Status changed to ')==-1){
+                        this.insertCommunicationLog(affectedPersonToUpdate,createdBy);
+                    }
+                    else{
+                        var MedicalStatus = QueryStatusFullText.split('Status changed to ')[1];
+                        if (MedicalStatus.trim().toLowerCase() != affectedPersonToUpdate.MedicalStatus.trim().toLowerCase()) {
+                            this.insertCommunicationLog(affectedPersonToUpdate,createdBy);
+                        }
+                    }
+                }
+                
+                
             });
 
+    }
+
+    insertCommunicationLog(affectedPersonToUpdate:AffectedPeopleModel,createdBy:number):void{
+        const communicationLogs: CommunicationLogModel[] = [];
+        const communicationLog: CommunicationLogModel = new CommunicationLogModel();
+        communicationLog.InteractionDetailsId = 0;
+        communicationLog.InteractionDetailsType = GlobalConstants.InteractionDetailsTypeEnquiry;
+        communicationLog.Queries = 'Medical Status changed to ' + affectedPersonToUpdate.MedicalStatus;
+        communicationLog.Answers = 'Medical Status changed to ' + affectedPersonToUpdate.MedicalStatus;
+        communicationLog.AffectedPersonId = affectedPersonToUpdate.AffectedPersonId;
+        communicationLog.AffectedObjectId = null;
+        communicationLog.EnquiryId = null;
+        communicationLog.DemandId = null;
+        communicationLog.RequesterName = this.userName;
+        communicationLog.RequesterDepartment = this.currentDepartmentName;
+        communicationLog.RequesterType = 'Medical Status change';
+        communicationLog.ActiveFlag = 'Active';
+        communicationLog.CreatedBy = createdBy;
+        communicationLog.CreatedOn = new Date();
+
+        communicationLogs.push(communicationLog);
+
+        this.communicationLogService.CreateCommunicationLog(communicationLog)
+            .subscribe((itemResult: CommunicationLogModel) => {
+            });
     }
 
 

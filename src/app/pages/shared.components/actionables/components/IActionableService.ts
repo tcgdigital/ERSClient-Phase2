@@ -4,9 +4,15 @@ import { IServiceInretface, ResponseModel, BaseModel } from '../../../../shared'
 
 export interface IActionableService extends IServiceInretface<ActionableModel> {
 
-    GetAllOpenByIncidentIdandDepartmentId(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>>;
+    GetAllOpenByIncidentIdandDepartmentId1(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>>;
 
-    GetAllCloseByIncidentIdandDepartmentId(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>>;
+    GetAllOpenByIncidentIdandDepartmentId(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>[]>;
+
+    GetActionableByIncidentandDepartment(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>>;
+
+    GetAllCloseByIncidentIdandDepartmentId1(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>>;
+
+    GetClosedActionable(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>[]>;
 
     setRagColor(businessTimeStart?: Date, businessTimeEnd?: Date): string;
 

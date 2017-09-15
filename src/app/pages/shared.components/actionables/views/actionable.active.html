@@ -29,7 +29,7 @@
                     <td data-title="Description">
                         <i class="fa fa-plus" aria-hidden="true" [hidden]="hasChildChecklist(actionable.ChklistId)==false || actionable.expanded == true"
                             (click)="openChildActionable(actionable); $event.stopPropagation();">&nbsp;</i>
-                        <i class="fa fa-minus" aria-hidden="true" [hidden]="hasChildChecklist(actionable.ChklistId)==false || actionable.expanded == false "
+                        <i class="fa fa-minus" aria-hidden="true" [hidden]="hasChildChecklist(actionable.ChklistId)==false || actionable.expanded == false"
                             (click)="openChildActionable(actionable); $event.stopPropagation();">&nbsp;</i>{{actionable.Description}}
                     </td>
                     <td data-title="Schedule Close Time">{{actionable.ScheduleClose | date: 'dd-MMM-yyyy HH:mm'}}</td>

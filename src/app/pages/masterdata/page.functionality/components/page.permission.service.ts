@@ -46,9 +46,11 @@ export class PagePermissionService extends ServiceBase<PagePermissionModel>
         return this._pagePermissionMatrixService.Get(userId.toString())
             .Execute()
             .map((pagePermissionMatrixes: PagesPermissionMatrixModel[]) => {
-                return pagePermissionMatrixes.filter((item: PagesPermissionMatrixModel) => {
-                    return ((item.IsHod === true) || (item.IsHod === false && item.OnlyHOD === false));
-                });
+                if(pagePermissionMatrixes){
+                    return pagePermissionMatrixes.filter((item: PagesPermissionMatrixModel) => {
+                        return ((item.IsHod === true) || (item.IsHod === false && item.OnlyHOD === false));
+                    });
+                }
             });
     }
 

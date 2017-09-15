@@ -28,7 +28,7 @@ export class UserProfileService extends ServiceBase<UserProfileModel>
 
     GetQuery(query: string): Observable<ResponseModel<UserProfileModel>> {
         return this._dataService.Query()
-            .Filter(query).Execute();
+            .Filter(query +' and isActive eq true').Execute();
     }
 
 
@@ -40,7 +40,7 @@ export class UserProfileService extends ServiceBase<UserProfileModel>
 
     GetForDirectory(): Observable<ResponseModel<UserProfileModel>> {
         return this._dataService.Query()
-            .Select('UserProfileId,UserId,Name,MainContact,AlternateContact')
+            .Select('UserProfileId,UserId,Name,MainContact,AlternateContact,isActive')
             .Filter('isActive eq true')
             .Execute();
     }
