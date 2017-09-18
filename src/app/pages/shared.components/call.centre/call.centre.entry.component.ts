@@ -166,7 +166,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                 passengerModels.sort(function (a, b) { return (a.PassengerName.toUpperCase() > b.PassengerName.toUpperCase()) ? 1 : ((b.PassengerName.toUpperCase() > a.PassengerName.toUpperCase()) ? -1 : 0); });
                 const crewModels = this.affectedPeople.filter(x => x.IsCrew == true);
                 crewModels.sort(function (a, b) { return (a.CrewName.toUpperCase() > b.CrewName.toUpperCase()) ? 1 : ((b.CrewName.toUpperCase() > a.CrewName.toUpperCase()) ? -1 : 0); });
-                
+
                 for (const affectedPerson of passengerModels) {
                     //this.passengers.push(new KeyValue((affectedPerson.PassengerName || affectedPerson.CrewName), affectedPerson.AffectedPersonId));
                     this.passengers.push(new KeyValue(affectedPerson.PassengerName + ' (' + affectedPerson.TicketNumber + ')', affectedPerson.AffectedPersonId));
@@ -240,7 +240,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                 this.otherquery = response[0].MediaAndOtherQuery;
                 this.form.controls["Queries"].reset({ value: this.otherquery.Query, disabled: false });
             }
-            
+
             this.enquiry.CallerId = response[0].Caller.CallerId;
             this.enquiry.ExternalInputId = this.callid;
             this.caller = response[0].Caller;
@@ -286,8 +286,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                     this.consolidatedCopassengers.forEach(x => {
                         x.IsSelected = false;
                         response[0].Enquiries.forEach(y => {
-                            if(x.AffectedPersonId == y.AffectedPersonId)
-                            {
+                            if (x.AffectedPersonId == y.AffectedPersonId) {
                                 x.IsSelected = true;
                             }
                         });
@@ -548,10 +547,9 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
 
             const now = new Date();
             demand.DemandCode = 'DEM' + typeSuffix + '-' + this.addzero(now.getSeconds()) + this.addzero(now.getMinutes()) + this.addzero(now.getHours()) +
-            this.addzero(now.getDate()) + this.addzero(now.getMonth() + 1) + now.getFullYear().toString(); //'DEM-' + UtilityService.UUID(); 
-
+                this.addzero(now.getDate()) + this.addzero(now.getMonth() + 1) + now.getFullYear().toString(); //'DEM-' + UtilityService.UUID(); 
             demand.DemandDesc = (this.enquiryType == 1 || this.enquiryType == 3) ?
-                (type + ' Requested for ' + personName + ' (' + this.selctedEnquiredPerson.TicketNumber + ')') : (type + ' Requested for ' + this.selctedEnquiredObject.AWB + ' (' + this.selctedEnquiredObject.TicketNumber + ')');
+                (type + ' Requested for ' + personName + ' (' + this.selctedEnquiredPerson.TicketNumber + ') and the caller name is :' + this.caller.FirstName + ' ' + this.caller.LastName + ' and the discussion note is :' + this.enquiry.Queries) : (type + ' Requested for ' + this.selctedEnquiredObject.AWB + ' (' + this.selctedEnquiredObject.TicketNumber + ') and the caller name is ' + this.caller.FirstName + ' ' + this.caller.LastName + ' and the discussion note is :' + this.enquiry.Queries);
             demand.DemandStatusDescription = `New demand by ${this.createdByName} (${this.currentDepartmentName})`;
             demand.DemandTypeId = GlobalConstants.DemandTypeId;
             demand.CallerId = this.caller.CallerId;
@@ -887,7 +885,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                 this.externalInput.IsCallRecieved = true;
                 this.externalInput.ExternalInputId = this.callid;
                 if (this.enquiryType == 1 && this.consolidatedCopassengers.length > 0) {
-                    
+
                     this.selectedCoPassangers = this.consolidatedCopassengers.filter(x => x.IsSelected == true);
                     let enquiryModelsToSave: EnquiryModel[] = [];
                     enquiryModelsToSave = this.setenquiryModelforCopassangers(this.enquiry);
@@ -909,7 +907,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                                 let obj = this.affectedPeople.find(x => x.AffectedPersonId == this.enquiry.AffectedPersonId); // this.initialvalue.Value
                                 this.selectedCoPassangers.push(obj);
                             }
-        
+
                             if (this.selectedCoPassangers.length > 0) {
                                 let afftedIdstocreateDemand: number[] = [];
                                 this.selectedCoPassangers.map(x => afftedIdstocreateDemand.push(x.AffectedPersonId));
@@ -1042,11 +1040,11 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
                         );
                 }
                 else if ((this.enquiryType == 1)) {
-                    
+
                     // this.consolidatedCopassengers.length = 0;
 
                     this.selectedCoPassangers = this.consolidatedCopassengers.filter(x => x.IsSelected == true);
-                   
+
                     let enquiryModelsToSaveEdit: EnquiryModel[] = [];
                     enquiryModelsToSaveEdit = this.setenquiryModelforCopassangers(this.enquiry);
                     this.enquiry.CommunicationLogs = communicationlogs;

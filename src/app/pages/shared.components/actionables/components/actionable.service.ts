@@ -88,7 +88,6 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
             .OrderBy('CreatedOn desc')
             .Execute()
             .map((actionables: ResponseModel<ActionableModel>) => {
-                debugger;
                 this._actionables = actionables;
                 this._actionables.Records.forEach((element) => {
                     element.Active = (element.ActiveFlag === 'Active');
@@ -100,7 +99,6 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
             })
             .flatMap((actionables: ResponseModel<ActionableModel>) => this.GetAllByIncident(incidentId))
             .map((allActionables: ResponseModel<ActionableModel>) => {
-                debugger;
                 this._allActionables = allActionables;
                 this._actionables.Records.map((element: ActionableModel) => {
                     // if (element.ParentCheckListId == null) {
