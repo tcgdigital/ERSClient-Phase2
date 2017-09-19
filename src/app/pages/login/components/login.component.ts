@@ -110,6 +110,7 @@ export class LoginComponent implements OnInit {
 
                             } else {
                                 this.toastrService.warning('Please change your default password', 'Sign In', this.toastrConfig);
+                                UtilityService.SetToSession({ IsChangPasswordRequired: true });
                                 this.router.navigate(['login/change']);
                             }
                         } else {

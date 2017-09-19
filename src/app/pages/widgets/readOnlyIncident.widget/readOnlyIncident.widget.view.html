@@ -47,8 +47,8 @@
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="AffectedCountry">State Of Occurence</label>
-                            <input id="AffectedCountryPopup" class="form-control" type="text" name="AffectedCountry" disabled formControlName="AffectedCountryPopup" 
-                            placeholder=""/>
+                            <input id="AffectedCountryPopup" class="form-control" type="text" name="AffectedCountry" disabled formControlName="AffectedCountryPopup"
+                                placeholder="" />
                         </div>
                     </div>
                     <div class="row">
@@ -95,8 +95,7 @@
                             <div class="form-group">
                                 <label for="OtherConfirmationInformation">Other Information</label>
                                 <input id="OtherConfirmationInformationPopup" disabled class="form-control" type="text" name="OtherConfirmationInformationPopup"
-                                    formControlName="OtherConfirmationInformationPopup" placeholder=""
-                                />
+                                    formControlName="OtherConfirmationInformationPopup" placeholder="" />
                             </div>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
@@ -212,6 +211,7 @@
                                         formControlName="ScheduledarrivalLOCPopup" placeholder="" />
                                 </div>
                                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
+
                                     <label for="FlightTailNumber">FlightTailNumber</label>
                                     <input id="FlightTailNumberPopup" disabled formControlName="FlightTailNumberPopup" class="form-control" type="text" name="FlightTailNumberPopup"
                                         placeholder="" />
@@ -219,13 +219,14 @@
                             </div>
                             <div class="row">
                                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
+
                                     <label for="AircraftTypeId">Aircraft Type</label>
                                     <select id="AircraftTypeIdPopup" disabled class="form-control" formControlName="AircraftTypeIdPopup" name="AircraftTypeIdPopup">
-                                                <option value=''>Select Aircraft Type</option>
-                                                <option *ngFor="let activeAircraftType of activeAircraftTypes" [value]="activeAircraftType.AircraftTypeId" >
-                                                    {{activeAircraftType.AircraftTypeCode}}
-                                                </option>
-                                            </select>
+                                        <option value=''>Select Aircraft Type</option>
+                                        <option *ngFor="let activeAircraftType of activeAircraftTypes" [value]="activeAircraftType.AircraftTypeId" >
+                                            {{activeAircraftType.AircraftTypeCode}}
+                                        </option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
