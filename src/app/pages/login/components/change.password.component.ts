@@ -6,6 +6,7 @@ import {
     FormGroup, FormBuilder,
     FormControl, Validators
 } from '@angular/forms';
+import { UtilityService } from '../../../shared/services';
 import { ChangePasswordModel } from './auth.model';
 import { AccountResponse } from '../../../shared/models';
 import { GlobalConstants } from '../../../shared/constants';
@@ -74,6 +75,7 @@ export class ChangePasswordComponent implements OnInit, AfterViewInit {
                             this.changePasswordForm.reset();
                             this.toastrService.success('Password has been changed successfully. Redirecting to login for sign in again',
                                 'Sign In', this.toastrConfig);
+                            UtilityService.RemoveFromSession('IsChangPasswordRequired');
                             this.router.navigate(['login']);
                         } else {
                             this.errorMessage = response.Message;

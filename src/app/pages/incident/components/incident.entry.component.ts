@@ -722,6 +722,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             new Date(this.formFlight.controls['Scheduledarrival'].value) : new Date('01/02/2001');
         this.flightModel.FlightTaleNumber = (isFlightRelated === true) ?
             this.formFlight.controls['FlightTailNumber'].value : 'DUMMY_FLT_TAIL';
+        // this.flightModel.FlightTaleNumber = (isFlightRelated === true) ?
+        //     ' ' : 'DUMMY_FLT_TAIL';
         this.flightModel.AircraftTypeId = (isFlightRelated === true) ?
             this.formFlight.controls['AircraftTypeId'].value : 1;
         this.flightModel.LoadAndTrimInfo = null;
@@ -808,7 +810,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         }
         else if (controlName === 'Scheduleddeparture') {
             //localDepartureArrivalDate = this.DateFormat(new Date(utc + (this.GetUTCOffsetHours(true))));
-            this.GetLocalDateTime(date.SelectedDate as Date, true,(dt:Date) => {
+            this.GetLocalDateTime(date.SelectedDate as Date, true, (dt: Date) => {
                 localDepartureArrivalDate = this.DateFormat(dt);
                 this.formFlight.get('Scheduleddeparture').setValue(departurearrivalDate);
                 this.formFlight.get('ScheduleddepartureLOC').setValue(localDepartureArrivalDate);
@@ -823,7 +825,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         }
         else if (controlName === 'Scheduledarrival') {
 
-            this.GetLocalDateTime(date.SelectedDate as Date, false,(dt:Date) => {
+            this.GetLocalDateTime(date.SelectedDate as Date, false, (dt: Date) => {
                 localDepartureArrivalDate = this.DateFormat(dt);
                 this.formFlight.get('Scheduledarrival').setValue(departurearrivalDate);
                 this.formFlight.get('ScheduledarrivalLOC').setValue(localDepartureArrivalDate);
