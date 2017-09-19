@@ -173,12 +173,12 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
                 Description: 'Email',
                 Value: ''
             }),
-            new SearchTextBox({
-                Name: 'ContactNumber',
-                Description: 'Contact',
-                Value: '',
-                OrCommand: 'MainContact|AlternateContact'
-            }),
+            // new SearchTextBox({
+            //     Name: 'ContactNumber',
+            //     Description: 'Contact',
+            //     Value: '',
+            //     OrCommand: 'MainContact|AlternateContact'
+            // }),
             // new SearchTextBox({
             //     Name: 'AlternateContact',
             //     Description: 'Alternate Contact',
