@@ -111,7 +111,7 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
 
     deleteStation(emergencyLocation: EmergencyLocationModel): void {
         delete emergencyLocation.Active;
-        if (confirm("Are you want to delete station: " + emergencyLocation.IATA + "?")) {
+        if (confirm("Do you want to delete station: " + emergencyLocation.IATA + "?")) {
             let IATA = emergencyLocation.IATA;
             this.emergencyLocationService.Delete(emergencyLocation.EmergencyLocationId, emergencyLocation)
                 .subscribe((response: any) => {
