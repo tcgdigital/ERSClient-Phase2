@@ -314,13 +314,14 @@
                                 <label for="AircraftTypeId">Aircraft Type<span class="required">*</span></label>
                                 <select id="AircraftTypeId" class="form-control" [ngClass]="flightClass" formControlName="AircraftTypeId" name="AircraftTypeId"
                                     (change)="aircraftTypeChange($event.target.value,activeAircraftTypes)">
-                                    <option value=''>Select Aircraft Type</option>
-                                    <option *ngFor="let activeAircraftType of activeAircraftTypes" [value]="activeAircraftType.AircraftTypeId" >
-                                        {{activeAircraftType.AircraftTypeCode}}
-                                    </option>
-                                    </select>
+                                            <option value=''>Select Aircraft Type</option>
+                                            <option *ngFor="let activeAircraftType of activeAircraftTypes" [value]="activeAircraftType.AircraftTypeId" >
+                                                {{activeAircraftType.AircraftTypeCode}}
+                                            </option>
+                                            </select>
                                 <small *ngIf="formFlight.controls.AircraftTypeId.hasError('required')" [hidden]="formFlight.controls.AircraftTypeId.valid || (formFlight.controls.AircraftTypeId.pristine && !submittedFlight)"
                                     class="text-danger">Required</small>
+
                             </div>
                         </div>
                     </div>
@@ -605,8 +606,6 @@
                                     <label for="FlightTailNumber">Flight Tail Number</label>
                                     <input id="FlightTailNumberPopup" disabled formControlName="FlightTailNumberPopup" class="form-control" type="text" name="FlightTailNumberPopup"
                                         placeholder="" />
-
-
                                 </div>
                             </div>
                             <div class="row">
@@ -615,11 +614,11 @@
                                     <label for="AircraftTypeId">Aircraft Type</label>
                                     <select id="AircraftTypeIdPopup" disabled class="form-control" formControlName="AircraftTypeIdPopup" name="AircraftTypeId"
                                         (change)="aircraftTypeChange($event.target.value,activeEmergencyTypes)">
-                                    <option value=''>Select Aircraft Type</option>
-                                    <option *ngFor="let activeAircraftType of activeAircraftTypes" [value]="activeAircraftType.AircraftTypeId" >
-                                        {{activeAircraftType.AircraftTypeCode}}
-                                    </option>
-                                    </select>
+                                            <option value=''>Select Aircraft Type</option>
+                                            <option *ngFor="let activeAircraftType of activeAircraftTypes" [value]="activeAircraftType.AircraftTypeId" >
+                                                {{activeAircraftType.AircraftTypeCode}}
+                                            </option>
+                                            </select>
                                 </div>
                             </div>
                         </div>

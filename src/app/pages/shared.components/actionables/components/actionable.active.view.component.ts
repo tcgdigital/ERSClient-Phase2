@@ -87,7 +87,6 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
             this.isArchive = false;
             this.currentIncident = +UtilityService.GetFromSession('CurrentIncidentId');
         }
-        debugger;
         this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
 
         this.credential = UtilityService.getCredentialDetails();
@@ -226,7 +225,6 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         this.actionableService.GetAllOpenByIncidentIdandDepartmentId(incidentId, departmentId)
             .subscribe((res: ResponseModel<ActionableModel>[]) => {
                 if (res && res.length > 1) {
-                    debugger;
                     if (res[0]) {
                         this.activeActionables = res[0].Records;
                         if (this.activeActionables.length > 0) {
@@ -237,7 +235,6 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                         }
                     }
                     if (res[1]) {
-                        debugger;
                         this.actionableWithParentsChilds = res[1].Records;
                         if (this.actionableWithParentsChilds.length > 0) {
                             const parentMapper = _.flatten(_.map(this.actionableWithParentsChilds, x => x.CheckList.CheckListParentMapper)) as ChecklistMapper[]
@@ -268,7 +265,6 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     getAllActiveActionableByIncident(incidentId): void {
-        debugger;
         this.parentChecklistIds = [];
         const parents: number[] = [];
         this.ChecklistMappers = [];
@@ -276,7 +272,6 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
 
         this.actionableService.GetAllOpenByIncidentId(incidentId)
             .subscribe((response: ResponseModel<ActionableModel>) => {
-                debugger;
                 this.actionableWithParentsChilds = response.Records;
                 this.actionableWithParentsChilds.forEach((actionable: ActionableModel) => {
                     if (actionable.CheckList.CheckListParentMapper.length > 0) {

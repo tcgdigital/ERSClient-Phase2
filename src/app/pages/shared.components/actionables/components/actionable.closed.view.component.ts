@@ -111,7 +111,6 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
         this.actionableService.GetClosedActionable(incidentId, departmentId)
             .subscribe((res: ResponseModel<ActionableModel>[]) => {
                 if (res && res.length > 1) {
-                    debugger;
                     if (res[0]) {
                         this.closeActionables = res[0].Records;
                         if (this.closeActionables.length > 0) {
@@ -123,7 +122,6 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
                         }
                     }
                     if (res[1]) {
-                        debugger;
                         this.actionableWithParents = res[1].Records;
                         this.parentChecklistIds = this.actionableWithParents.map((actionable) => {
                             return 1;
