@@ -137,11 +137,13 @@ module.exports = function (options) {
                 output: {
                     comments: false
                 },
-                mangle: {
-                    screw_ie8: true
-                },
+                mangle: true,
+                // mangle: {
+                //     screw_ie8: true
+                // },
                 compress: {
-                    screw_ie8: true,
+                    // screw_ie8: true,
+                    keep_fnames: true,
                     warnings: false,
                     conditionals: true,
                     unused: true,
