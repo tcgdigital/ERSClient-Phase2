@@ -101,7 +101,16 @@ export class AffectedPeopleListComponent implements OnInit {
         if (this.inputFileCrew) {
             this.inputFileCrew.nativeElement.value = '';
         }
+
         this.affectedPersonModelForStatus = affectedPerson;
+        if(this.affectedPersonModelForStatus.Age == "NaN")
+        {
+            this.affectedPersonModelForStatus.Age = "Not Available";
+        }
+        if(this.affectedPersonModelForStatus.Nationality.trim() == "")
+        {
+            this.affectedPersonModelForStatus.Nationality = "Not Available";
+        }
 
         if (affectedPerson.MedicalStatus !== 'NA') {
             this.affectedPersonModelForStatus['MedicalStatusToshow'] = this.medicalStatus
