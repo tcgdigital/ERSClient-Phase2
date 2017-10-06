@@ -2,6 +2,7 @@ export * from './broadcast.widget';
 export * from './casualty.summary.widget';
 export * from './checklist.summary.widget';
 export * from './clock.widget';
+export * from './additional.info.widget';
 export * from './demand.received.summary.widget';
 export * from './demand.raised.summary.widget';
 export * from './mediaRelease.widget';
@@ -15,3 +16,4 @@ export * from './quicklink.quickview.widget';
 export * from './widget.module';
 export * from './widget.utility';
 export * from './world.time.widget';
+

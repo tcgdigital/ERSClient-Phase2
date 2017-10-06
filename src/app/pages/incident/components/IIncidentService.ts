@@ -15,10 +15,10 @@ export interface IIncidentService extends IServiceInretface<IncidentModel> {
         flight?: FlightModel): Observable<IncidentModel>;
 
     GetIncidentById(id: number): Observable<IncidentModel>;
-
+    GetAdditionalInfoByIncident(incidentId: number): Observable<ResponseModel<IncidentModel>>;
     CreateInvolveParty(entity: InvolvePartyModel): Observable<InvolvePartyModel>;
 
-    GetLastConfiguredCountIncidents(count:string): Observable<ResponseModel<IncidentModel>>;
+    GetLastConfiguredCountIncidents(count: string): Observable<ResponseModel<IncidentModel>>;
 
     GetFlightInfoFromIncident(incidentId: number): Observable<FlightModel>;
 

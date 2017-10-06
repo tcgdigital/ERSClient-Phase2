@@ -1,0 +1,104 @@
+@import '../../config/config';
+.additional-info-container {
+    @include box-shadow(0px, 3px, 5px, 0, $header-shadow);
+    //background-color: $additional-info-widget-bg;
+    text-align: center;
+    margin-top:5px;
+    color: #09316c;
+    .additional-info-number,
+    .additional-info-text {
+        width: 100%;
+        display: block;
+        text-align: center;
+    }
+    .inner-div{
+        width:100%;
+        padding:4px;
+    }
+}
+
+.additional-info-number {
+    font-family: $font-family-widget;
+    font-size: 30px;
+    padding-top: 0;
+    padding-bottom: 0; color:$font-colori-white;
+    border-top: 1px solid $additional-info-widget-border;
+}
+
+.additional-info-text {
+    text-transform: uppercase;
+    font-family: $font-family-widget;
+    font-size: 12px;
+    font-weight: bold;
+    background-color: none;
+   // padding: 5px;
+    //np border-bottom: 1px solid $additional-info-widget-border;
+}
+
+.additional-info-v-border {
+    border-left: 2px solid $additional-info-widget-border;
+    border-right: 2px solid $additional-info-widget-border;
+}
+
+@media screen and (max-width: $resXS-E) {
+    .additional-info-container {
+        height: auto !important;
+        max-width: 100%;
+    }
+    .additional-info-number {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+    .flight-panel {
+        text-align: left;
+        padding-left: 6px !important;
+    }
+    .flight-panel-space {
+        margin: 10px 0;
+    }
+    
+.additional-info-number {
+    font-family: $font-family-widget;
+    font-size: 30px;
+    padding-top: 0;
+    padding-bottom: 0; color:$font-colori-white;
+    line-height:30px;
+    border-top: 1px solid $additional-info-widget-border;
+}
+
+.additional-info-text {
+    text-transform: uppercase;
+    font-family: $font-family-widget;
+    font-size: 12px;
+    font-weight: bold;
+    background-color: none;
+    padding: 0;
+    /*border-bottom: 1px solid $additional-info-widget-border;*/
+}
+}
+
+@media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {
+
+}
+
+@media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
+    .additional-info-layout {
+        -webkit-box-flex: 0;
+        -webkit-flex: 0 0 30%;
+        -ms-flex: 0 0 30%;
+        flex: 0 0 30%;
+        max-width: 30%;
+    }
+}
+
+@media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {}
+
+@media screen and (min-width: $resXL-S) {}
+
+.additional-info-align{
+    margin-left: 5px;
+    color: #fff;
+    font-size: 12px;
+    margin-top: 2px;
+    margin-bottom: -5px;
+}
