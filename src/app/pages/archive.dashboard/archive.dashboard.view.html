@@ -24,6 +24,10 @@
 </div>
 
 <!-- KPI Section Starts-->
+<div class="row">
+    <additional-info-widget [currentIncidentId]="archievedIncidentId" class=" col-xl-12">
+    </additional-info-widget>
+</div>
 <div *ngIf="isShowPage | accesibility:currentDepartmentId:'Archive'" class="row">
     <clock-widget 
         [initiationDateTime]="incidentDate" 

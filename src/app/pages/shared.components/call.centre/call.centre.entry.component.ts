@@ -569,7 +569,8 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             demand.DemandTrails = this.createDemandTrail(demand);
             demand.CommunicationLogs = this.SetCommunicationLog(type + " Demand", GlobalConstants.InteractionDetailsTypeDemand, demand.AffectedPersonId);
             demand.CommunicationLogs[0].Queries = demand.CommunicationLogs[0].Queries + ' Demand Code: ' + demand.DemandCode;
-
+            demand.CommunicationLogs[0].Answers = demand.CommunicationLogs[0].Answers + ' Demand Code: ' + demand.DemandCode;
+            
             this.demands.push(demand);
         }
     }
