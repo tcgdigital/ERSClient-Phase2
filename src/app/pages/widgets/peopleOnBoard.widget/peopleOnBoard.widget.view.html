@@ -68,8 +68,9 @@
                                         <td data-title=""><strong>Gender Wise Passengers:</strong></td>
                                         <td data-title="">
                                             <span *ngFor="let gender of peopleOnBoard.totalGenderTypeCount">
-                                        {{gender.Key}}: {{gender.Value}}
-                                    </span>
+                                                <span *ngIf="gender.Key != ''">{{gender.Key}}: {{gender.Value}}</span>
+                                                <span *ngIf="gender.Key == '' || gender.Key == 'null'">Not Mentioned: {{gender.Value}}</span>
+                                            </span>
                                         </td>
                                     </tr>
                                     <tr>

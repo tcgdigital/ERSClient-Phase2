@@ -49,6 +49,15 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
             .Execute();
     }
 
+    GetAdditionalInfoByIncident(incidentId: number): Observable<ResponseModel<IncidentModel>> {
+        return this._dataService.Query()
+            .Filter(`IncidentId eq ${incidentId}`)
+            .Select('IncidentId,EmergencyLocation,WhereHappend')
+            .Expand('EmergencyType($select=EmergencyCategory),InvolvedParties($expand=Flights($select=FlightNo,FlightTaleNumber,OriginCode,DestinationCode,DepartureDate,ArrivalDate))')
+            .OrderBy('CreatedOn desc')
+            .Execute();
+    }
+
     GetAllActiveIncidents(): Observable<ResponseModel<IncidentModel>> {
         return this._dataService.Query()
             .Expand(`Organization($select=OrganizationId,OrganizationCode,OrganizationName)`)
@@ -73,21 +82,21 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
         return this._dataService.Get(id.toString()).Execute();
     }
 
-     /**
-      * Create Incident for both
-      * NonFlightRelated(With Dummy Flight Object) & FlightRelated Emergency
-      * @param {IncidentModel} incidentModel 
-      * @param {boolean} isFlightRelated 
-      * @param {InvolvePartyModel} [involvedParty] 
-      * @param {FlightModel} [flight] 
-      * @param {AffectedModel} [affected] 
-      * @returns {Observable<IncidentModel>} 
-      * 
-      * @memberOf IncidentService
-      */
-     CreateIncident(incidentModel: IncidentModel, isFlightRelated: boolean, involvedParty?: InvolvePartyModel,
+    /**
+     * Create Incident for both
+     * NonFlightRelated(With Dummy Flight Object) & FlightRelated Emergency
+     * @param {IncidentModel} incidentModel 
+     * @param {boolean} isFlightRelated 
+     * @param {InvolvePartyModel} [involvedParty] 
+     * @param {FlightModel} [flight] 
+     * @param {AffectedModel} [affected] 
+     * @returns {Observable<IncidentModel>} 
+     * 
+     * @memberOf IncidentService
+     */
+    CreateIncident(incidentModel: IncidentModel, isFlightRelated: boolean, involvedParty?: InvolvePartyModel,
         flight?: FlightModel, affected?: AffectedModel): Observable<IncidentModel> {
-        let incident: IncidentModel;        
+        let incident: IncidentModel;
         involvedParty.Affecteds = [];
         delete affected.Active;
         involvedParty.Affecteds.push(affected);
@@ -163,7 +172,7 @@ export class IncidentService extends ServiceBase<IncidentModel> implements IInci
             .map((item: ResponseModel<IncidentModel>) => {
                 if (item.Count > 0) {
                     if (item.Records[0].InvolvedParties.length > 0) {
-                        if(item.Records[0].InvolvedParties[0].Flights.length>0){
+                        if (item.Records[0].InvolvedParties[0].Flights.length > 0) {
                             return item.Records[0].InvolvedParties[0].Flights[0];
                         }
                     }
