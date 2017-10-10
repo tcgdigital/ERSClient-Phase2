@@ -31,9 +31,15 @@ export class UserProfileService extends ServiceBase<UserProfileModel>
             .Filter(query +' and isActive eq true').Execute();
     }
 
-
     GetAllActiveWithContact(): Observable<ResponseModel<UserProfileModel>> {
         return this._dataService.Query()
+            .Filter(`MainContact ne null and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
+            .Execute();
+    }
+
+    GetAllActiveWithContactAlternet(): Observable<ResponseModel<UserProfileModel>> {
+        return this._dataService.Query()
+            .Select(`Name,UserProfileId`)
             .Filter(`MainContact ne null and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
             .Execute();
     }
