@@ -63,7 +63,6 @@ export class ChecklistService extends ServiceBase<ChecklistModel> implements ICh
             .Filter(`DepartmentId eq ${departmentId} and ActiveFlag eq 'Active'`)
             .Expand('CheckListParentMapper($expand=ParentCheckList)')
             .Execute();
-
     }
 
     GetQuery(query: string): Observable<ResponseModel<ChecklistModel>> {
@@ -75,7 +74,6 @@ export class ChecklistService extends ServiceBase<ChecklistModel> implements ICh
             .Filter(query).Execute();
     }
 
-
     Create(entity: ChecklistModel): Observable<ChecklistModel> {
         let checkList: ChecklistModel;
         return this._dataService.Post(entity)
@@ -85,14 +83,12 @@ export class ChecklistService extends ServiceBase<ChecklistModel> implements ICh
                 checkList.Active = (checkList.ActiveFlag === 'Active');
                 return data;
             })
-            .flatMap((data: ChecklistModel) =>
-                this.departmentService.Get(data.DepartmentId))
+            .flatMap((data: ChecklistModel) => this.departmentService.Get(data.DepartmentId))
             .map((data: DepartmentModel) => {
                 checkList.TargetDepartment = data;
                 return checkList;
             })
-            .flatMap((data: ChecklistModel) =>
-                this.emergencyTypeService.Get(data.EmergencyTypeId))
+            .flatMap((data: ChecklistModel) => this.emergencyTypeService.Get(data.EmergencyTypeId))
             .map((data: EmergencyTypeModel) => {
                 checkList.EmergencyType = data;
                 return checkList;
@@ -109,25 +105,23 @@ export class ChecklistService extends ServiceBase<ChecklistModel> implements ICh
                 checklist.Active = (data.ActiveFlag === 'Active');
                 return checklist;
             })
-            .flatMap((data: ChecklistModel) =>
-                this.departmentService.Get(data.DepartmentId))
+            .flatMap((data: ChecklistModel) => this.departmentService.Get(data.DepartmentId))
             .map((data: DepartmentModel) => {
                 checklist.TargetDepartment = data;
                 return checklist;
             })
-            .flatMap((data: ChecklistModel) =>
-                this.emergencyTypeService.Get(data.EmergencyTypeId))
+            .flatMap((data: ChecklistModel) => this.emergencyTypeService.Get(data.EmergencyTypeId))
             .map((data: EmergencyTypeModel) => {
                 checklist.EmergencyType = data;
                 return checklist;
             });
-
     }
 
     Update(entity: ChecklistModel): Observable<ChecklistModel> {
         const key: string = entity.CheckListId.toString();
-        // const checkList: ChecklistModel;
-        return this._dataService.Patch(entity, key).Execute();
+        return this._dataService
+            .Patch(entity, key)
+            .Execute();
     }
 
     /**
@@ -162,7 +156,49 @@ export class ChecklistService extends ServiceBase<ChecklistModel> implements ICh
             .Execute();
     }
 
-    GetInvalidChecklists(): Observable<ResponseModel<InvalidChecklistModel>>{
+    GetInvalidChecklists(): Observable<ResponseModel<InvalidChecklistModel>> {
         return this._dataServiceInvalidRecords.Query().Execute();
+    }
+
+    CreateAlternat(entity: ChecklistModel): Observable<ChecklistModel> {
+        let observables: Array<Observable<any>> = new Array<Observable<any>>();
+        let checklist: ChecklistModel;
+
+        return this._dataService.Post(entity)
+            .Execute()
+            .map((data: ChecklistModel) => {
+                checklist = data;
+                return checklist;
+            })
+            .flatMap((data: ChecklistModel) => {
+                observables.push(this.departmentService.Get(data.DepartmentId));
+                observables.push(this.emergencyTypeService.Get(data.EmergencyTypeId));
+                return Observable.forkJoin(observables);
+            }).map((dataCollection: any[]) => {
+                checklist.TargetDepartment = dataCollection[0];
+                checklist.EmergencyType = dataCollection[1];
+                checklist.Active = (checklist.ActiveFlag === 'Active');
+                return checklist;
+            });
+    }
+
+    EditAlternet(entity: ChecklistModel): Observable<ChecklistModel> {
+        let observables: Array<Observable<any>> = new Array<Observable<any>>();
+        let checklist: ChecklistModel;
+
+        return this._dataService.Post(entity)
+            .Execute()
+            .flatMap((data: ChecklistModel) => {
+                observables.push(this.Get(data.CheckListId));
+                observables.push(this.departmentService.Get(data.DepartmentId));
+                observables.push(this.emergencyTypeService.Get(data.EmergencyTypeId));
+                return Observable.forkJoin(observables);
+            }).map((dataCollection: any[]) => {
+                checklist = dataCollection[0]
+                checklist.TargetDepartment = dataCollection[1];
+                checklist.EmergencyType = dataCollection[2];
+                checklist.Active = (checklist.ActiveFlag === 'Active');
+                return checklist;
+            });
     }
 }

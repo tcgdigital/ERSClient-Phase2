@@ -25,6 +25,13 @@
   </system.webServer>
 </configuration>
 
+Enable websocket configuration
+cd %windir%\System32\inetsrv\ appcmd.exe unlock config /section:system.webserver/webSocket
+
+<system.webServer>
+  <webSocket enabled="true" pingInterval="00:00:05" />
+</system.webServer>
+
 3. Setting up base tag in index.html. It should be immediately after <head> tag
 
 <base href="/"/>
@@ -35,6 +42,8 @@ IIS configuration settings:
 1.Max concurrent requests per application: Increasing the number of concurrent IIS requests will increase server 
 resources available for serving requests. The default value is 5000; to increase this setting, execute the following 
 commands in an elevated command prompt:
+
+location: %systemroot%\System32\inetsrv\config\applicationHost.config
 
 cd %windir%\System32\inetsrv\ appcmd.exe set config /section:system.webserver/serverRuntime /appConcurrentRequestLimit:10000 
 

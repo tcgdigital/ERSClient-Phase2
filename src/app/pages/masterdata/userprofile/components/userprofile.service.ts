@@ -55,15 +55,16 @@ export class UserProfileService extends ServiceBase<UserProfileModel>
 
     GetAllUsers(): Observable<ResponseModel<UserProfileModel>>{
         return this._dataService.Query()
-        .Select('UserProfileId,UserId,Name,Email,EmployeeId,MainContact,AlternateContact,isActive,ActiveFlag,isVolunteered,PassportNumber,PassportValidity,Nationality,Gender,VisaRecords,VoluterPreferenceRecords,TrainingDetails,NOKDetails')
-        //.Expand('VisaDetails, VolunterPreferences, TrainingRecords, NextOfKins')
-        .OrderBy('Name')
-        .Top('200')
-        .Execute();
+            .Select('UserProfileId,UserId,Name,Email,EmployeeId,MainContact,AlternateContact,isActive,ActiveFlag,isVolunteered,PassportNumber,PassportValidity,Nationality,Gender,VisaRecords,VoluterPreferenceRecords,TrainingDetails,NOKDetails')
+            .OrderBy('Name')
+            .Top('200')
+            .Execute();
     }
 
     GetAllInvalidRecords(): Observable<ResponseModel<InvalidUserProfileModel>> {
         return this._dataServiceInvalidRecords.Query()
-        .Execute();
+            .Select('UserId,Name,Email,EmployeeId,DepartmentName,MainContact,AlternateContact,PassportDetails,Nationality,Gender,VisaDetails,TrainingDetails,NOKDetails,ErrorReason')
+            .OrderBy('Name')
+            .Execute();
     }
 }

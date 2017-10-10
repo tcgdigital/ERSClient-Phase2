@@ -81,6 +81,24 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
             });
     }
 
+    public GetAllByIncidentandSubDepartmentAlternet(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
+        this.departmentIds = [];
+        let requests: Array<RequestModel<ActionableModel>> = new Array<RequestModel<ActionableModel>>();
+
+        return this.departmentService.GetAllActiveSubDepartments(departmentId)
+            .map((response: ResponseModel<DepartmentModel>) => response.Records.map(((dept: DepartmentModel) => dept.DepartmentId)))
+            .flatMap((deptIds: number[]) => {
+                this.departmentIds = deptIds;
+                requests = deptIds.map((deptId: number) =>
+                    new RequestModel<ActionableModel>(`/odata/Actionables?$expand=CheckList($expand=TargetDepartment)&
+                    $filter=IncidentId eq ${incidentId} and DepartmentId eq ${deptId} and ActiveFlag eq 'Active'&
+                    $orderby=CreatedOn desc`, WEB_METHOD.GET));
+
+                return this._batchDataService.BatchPost<ActionableModel>(requests)
+                    .Execute() as Observable<ResponseModel<ActionableModel>>;
+            })
+    }
+
     public GetAllOpenByIncidentIdandDepartmentId1(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
             .Expand('CheckList($select=CheckListId,CheckListCode)')
@@ -126,7 +144,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
 
     public GetAllOpenByIncidentIdandDepartmentId(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>[]> {
         const observables: Observable<ResponseModel<ActionableModel>>[] = new Array<Observable<ResponseModel<ActionableModel>>>();
-        observables.push(this.GetActionableByIncidentandDepartment(incidentId,departmentId));
+        observables.push(this.GetActionableByIncidentandDepartment(incidentId, departmentId));
         observables.push(this.GetAllOpenByIncidentId(incidentId));
         return Observable.forkJoin(observables);
     }
@@ -239,9 +257,9 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
             });
     }
 
-    public GetClosedActionable(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>[]>  {
+    public GetClosedActionable(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>[]> {
         const observables: Observable<ResponseModel<ActionableModel>>[] = new Array<Observable<ResponseModel<ActionableModel>>>();
-        observables.push(this.GetAllCloseByIncidentIdandDepartmentId(incidentId,departmentId));
+        observables.push(this.GetAllCloseByIncidentIdandDepartmentId(incidentId, departmentId));
         observables.push(this.GetAllCloseByIncidentId(incidentId));
         return Observable.forkJoin(observables);
     }
@@ -249,7 +267,6 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
     public GetAcionableByIncidentIdandCheckListId(incidentId: number, checkListId: number): Observable<ResponseModel<ActionableModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq ${incidentId} and ChklistId eq ${checkListId}`)
-            //.Filter(`ChklistId eq ${checkListId}`)
             .Execute();
     }
 
@@ -294,8 +311,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
     public BatchOperation(data: any[]): Observable<ResponseModel<BaseModel>> {
         const requests: Array<RequestModel<BaseModel>> = [];
         data.forEach((x) => {
-            requests.push(new RequestModel<any>
-                (`/odata/Actionables(${x.ActionId})`, WEB_METHOD.PATCH, x));
+            requests.push(new RequestModel<any>(`/odata/Actionables(${x.ActionId})`, WEB_METHOD.PATCH, x));
         });
         return this._batchDataService.BatchPost<BaseModel>(requests).Execute();
     }

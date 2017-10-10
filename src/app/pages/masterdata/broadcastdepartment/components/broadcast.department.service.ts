@@ -31,15 +31,16 @@ export class BroadcastDepartmentService
             ('BroadcastDepartmentMappingBatch', 'BatchPostAsync', option);
     }
 
-    
-
     Query(departmentId: number): Observable<ResponseModel<BroadCastDepartmentModel>> {
         return this._dataService.Query()
             .Expand('TargetDepartment($select=DepartmentId,DepartmentName)')
-            .Filter(`InitiationDepartmentId eq ${departmentId}`).Execute();
+            .Filter(`InitiationDepartmentId eq ${departmentId}`)
+            .Execute();
     }
 
      CreateBulk(entities: BroadCastDepartmentModel[]): Observable<BroadCastDepartmentModel[]> {
-        return this._bulkDataService.BulkPost(entities).Execute();
+        return this._bulkDataService
+            .BulkPost(entities)
+            .Execute();
     } 
 }

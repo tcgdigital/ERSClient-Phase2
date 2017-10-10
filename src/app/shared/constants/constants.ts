@@ -329,10 +329,10 @@ export class GlobalConstants {
         { value: 'NonFlight', key: 2 }
     ];
 
-    public static TargetDepartmentTravel: number = 36; // 1138; 36;10
-    public static TargetDepartmentAdmin: number = 36; //1138;36; 13
-    public static TargetDepartmentCrew: number = 36; //1138;36; 9
-    public static CallCenterDepartmentId: number = 66; // 1125;66;25
+    public static TargetDepartmentTravel: number = 1138; // 1138; 36;10
+    public static TargetDepartmentAdmin: number = 1138; //1138;36; 13
+    public static TargetDepartmentCrew: number = 1138; //1138;36; 9
+    public static CallCenterDepartmentId: number = 1125; // 1125;66;25
     public static DemandTypeId: number = 1;
     public static RequiredLocation: string = 'Office';
     public static ScheduleTimeForCallback: number = 75;

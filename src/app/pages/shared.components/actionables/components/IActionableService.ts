@@ -10,6 +10,8 @@ export interface IActionableService extends IServiceInretface<ActionableModel> {
 
     GetActionableByIncidentandDepartment(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>>;
 
+    GetAllByIncidentandSubDepartmentAlternet(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>>
+
     GetAllCloseByIncidentIdandDepartmentId1(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>>;
 
     GetClosedActionable(incidentId: number, departmentId: number): Observable<ResponseModel<ActionableModel>[]>;
