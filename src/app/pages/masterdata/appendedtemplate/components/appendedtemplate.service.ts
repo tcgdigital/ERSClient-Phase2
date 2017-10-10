@@ -29,7 +29,8 @@ export class AppendedTemplateService
         return this._dataService.Query()
             .Expand('EmergencySituation')
             .OrderBy('CreatedOn desc')
-            .Execute().map((data: ResponseModel<AppendedTemplateModel>) => {
+            .Execute()
+            .map((data: ResponseModel<AppendedTemplateModel>) => {
                 templates = data;
                 templates.Records.forEach((x) => x.Active = (x.ActiveFlag === 'Active'));
                 return templates;
@@ -38,15 +39,20 @@ export class AppendedTemplateService
 
     GetQuery(query: string): Observable<ResponseModel<AppendedTemplateModel>> {
         return this._dataService.Query()
-            .Expand('EmergencySituation').Filter(query).Execute();
+            .Expand('EmergencySituation')
+            .Filter(query)
+            .Execute();
     }
 
     GetByEmergencySituationId(emergencySituationId: number): Observable<ResponseModel<AppendedTemplateModel>> {
         return this._dataService.Query()
-            .Filter(`EmergencySituationId eq ${emergencySituationId}`).Execute();
+            .Filter(`EmergencySituationId eq ${emergencySituationId}`)
+            .Execute();
     }
 
     CreateAppendedTemplate(appendedTemplateModel: AppendedTemplateModel): Observable<AppendedTemplateModel> {
-        return this._dataService.Post(appendedTemplateModel).Execute();
+        return this._dataService
+            .Post(appendedTemplateModel)
+            .Execute();
     }
 }

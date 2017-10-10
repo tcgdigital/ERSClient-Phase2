@@ -46,9 +46,4 @@ export class ActionableStatusLogService extends ServiceBase<ActionableStatusLogM
             .OrderBy("CreatedOn desc")
             .Execute();
     }
-
-
-    
-
-    
 }

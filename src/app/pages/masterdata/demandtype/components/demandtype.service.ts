@@ -10,6 +10,7 @@ import {
     DataServiceFactory, DataProcessingService,
     IServiceInretface, ServiceBase, NameValue
 } from '../../../../shared';
+import * as _ from 'underscore';
 
 @Injectable()
 export class DemandTypeService extends ServiceBase<DemandTypeModel> implements IDemandTypeService {
@@ -20,7 +21,7 @@ export class DemandTypeService extends ServiceBase<DemandTypeModel> implements I
 
     GetAll(): Observable<ResponseModel<DemandTypeModel>> {
         return this._dataService.Query()
-            .Expand('ApproverDepartment($select=DepartmentName , DepartmentId)')
+            .Expand('ApproverDepartment($select=DepartmentName, DepartmentId)')
             .Execute();
     }
 
@@ -39,9 +40,31 @@ export class DemandTypeService extends ServiceBase<DemandTypeModel> implements I
             });
     }
 
+    GetAllApproverDepartmentAlternet(): Observable<Array<NameValue<number>>> {
+        return this.GetAll()
+            .filter((data) => _.all(data.Records, x => x.ApproverDepartment != null)
+                && _.all(data.Records, x => x.ApproverDepartment.DepartmentId == null))
+            .map((x) => x.Records.map(y => 
+                new NameValue<number>(y.ApproverDepartment.DepartmentName, y.ApproverDepartment.DepartmentId)));
+
+
+        // const approverDepartments: Array<NameValue<number>> = new Array<NameValue<number>>();
+
+        // x.forEach((y) => {
+        //     if (y.ApproverDepartment && approverDepartments
+        //         .find((z) => z.Value === y.ApproverDepartment.DepartmentId) == null) {
+        //         approverDepartments.push(new NameValue<number>(y.ApproverDepartment.DepartmentName, y.ApproverDepartment.DepartmentId));
+        //     }
+        // });
+        // return approverDepartments;
+        // });
+    }
+
     GetQuery(query: string): Observable<ResponseModel<DemandTypeModel>> {
-        return this._dataService.Query()
-            .Filter(query).Expand('ApproverDepartment($select=DepartmentName , DepartmentId)')
+        return this._dataService
+            .Query()
+            .Filter(query)
+            .Expand('ApproverDepartment($select=DepartmentName , DepartmentId)')
             .Execute();
     }
 }

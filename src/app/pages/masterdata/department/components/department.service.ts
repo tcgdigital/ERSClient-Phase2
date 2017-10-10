@@ -66,7 +66,6 @@ export class DepartmentService
             .Filter(query).Execute();
     }
 
-
     /**
      * Initiate Batch operation
      *
@@ -79,7 +78,8 @@ export class DepartmentService
         requests.push(new RequestModel<BaseModel>('/odata/Departments', WEB_METHOD.GET));
         requests.push(new RequestModel<BaseModel>('/odata/EmergencyTypes', WEB_METHOD.GET));
 
-        return this._batchDataService.BatchPost<BaseModel>(requests)
+        return this._batchDataService
+            .BatchPost<BaseModel>(requests)
             .Execute();
     }
 
@@ -101,7 +101,7 @@ export class DepartmentService
 
     GetAllActiveSubDepartments(departmentId: number): Observable<ResponseModel<DepartmentModel>> {
         return this._dataService.Query()
-            .Select('DepartmentId', 'DepartmentName', 'Description', 'ParentDepartmentId')
+            .Select('DepartmentId, DepartmentName, Description, ParentDepartmentId')
             .Filter(`ActiveFlag eq 'Active' and ParentDepartmentId eq ${departmentId}`)
             .OrderBy('CreatedOn desc')
             .Execute();
@@ -109,8 +109,8 @@ export class DepartmentService
 
     GetAllActiveDepartmentParentDepartmentMatrix(): Observable<ResponseModel<DepartmentModel>> {
         return this._dataService.Query()
-            .Select('DepartmentId', 'DepartmentName', 'Description', 'ParentDepartmentId')
-            .Expand('ParentDepartment($select=DepartmentId,DepartmentName)')
+            .Select('DepartmentId, DepartmentName, Description, ParentDepartmentId')
+            .Expand('ParentDepartment($select=DepartmentId, DepartmentName)')
             .Filter(`ActiveFlag eq 'Active'`)
             .OrderBy('CreatedOn desc')
             .Execute();
@@ -118,14 +118,14 @@ export class DepartmentService
 
     GetDepartmentNameIds(): Observable<ResponseModel<DepartmentModel>> {
         return this._dataService.Query()
-            .Select('DepartmentId,DepartmentName')
+            .Select('DepartmentId, DepartmentName')
             .Filter(`ActiveFlag eq 'Active'`)
             .Execute();
     }
 
     GetDepartmentById(departmentId:number): Observable<ResponseModel<DepartmentModel>> {
         return this._dataService.Query()
-            .Select('DepartmentId,DepartmentName,Description')
+            .Select('DepartmentId, DepartmentName, Description')
             .Filter(`ActiveFlag eq 'Active' and DepartmentId eq ${departmentId}`)
             .Execute();
     }
@@ -136,7 +136,6 @@ export class DepartmentService
             .Filter(`ActiveFlag eq 'Active'`)
             .Execute();
     }
-
 
     GetParentDepartments(): Observable<ResponseModel<DepartmentModel>> {
         return this._dataService.Query()

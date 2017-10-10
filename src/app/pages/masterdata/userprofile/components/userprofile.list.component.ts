@@ -33,17 +33,20 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
         this.userProfileService.GetAllUsers()
             .subscribe((response: ResponseModel<UserProfileModel>) => {
                 this.userProfiles = response.Records;
-                console.log(response.Records);
+
                 this.userProfiles.map((item: UserProfileModel) => {
                     item.isActive = (item.ActiveFlag == 'Active');
                 });
             });
     }
 
-    getInvalidUserProfiles(): void {
+    getInvalidUserProfiles(callback: () => void = null): void {
         this.userProfileService.GetAllInvalidRecords()
             .subscribe((response: ResponseModel<InvalidUserProfileModel>) => {
                 this.invalidUserProfiles = response.Records;
+                debugger;
+                if (callback != null)
+                    callback();
             })
     }
 
@@ -64,18 +67,22 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
             this.searchValue = "Expand Search Panel";
         }
         this.expandSearch = !this.expandSearch;
-
     }
 
     ngOnInit(): any {
         this.getUserProfiles();
-        this.getInvalidUserProfiles();
+        // this.getInvalidUserProfiles();
         this.initiateSearchConfigurations();
-        this.dataExchange.Subscribe("UserProfileModelCreated", model => this.onUserProfileSuccess(model));
-        this.dataExchange.Subscribe("UserProfileModelModified", model => this.onUserProfileSuccess(model));
+
+        this.dataExchange.Subscribe("UserProfileModelCreated", (model: UserProfileModel) =>
+            this.onUserProfileSuccess(model));
+
+        this.dataExchange.Subscribe("UserProfileModelModified", (model: UserProfileModel) =>
+            this.onUserProfileSuccess(model));
+
         this.dataExchange.Subscribe('UserProfileLoadedFromFile', () => {
             this.getUserProfiles();
-            this.getInvalidUserProfiles();
+            // this.getInvalidUserProfiles();
         })
     }
 
@@ -112,6 +119,7 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
         this.userProfilePatch.deleteAttributes();
         this.userProfilePatch.UserProfileId = editedUderProfile.UserProfileId;
         this.userProfilePatch.isVolunteered = event.checked;
+
         this.userProfileService.Update(this.userProfilePatch)
             .subscribe((response: UserProfileModel) => {
                 this.getUserProfiles();
@@ -145,7 +153,9 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
     }
 
     openInvalidRecords(): void {
-        this.invalidUserProfileModal.show();
+        let self = this;
+        this.getInvalidUserProfiles(() => self.invalidUserProfileModal.show());
+        // this.invalidUserProfileModal.show();
     }
 
     closeInvalidProfile(): void {
