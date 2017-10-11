@@ -11,7 +11,7 @@ import { AffectedPeopleService } from '../affected.people';
 import { AffectedObjectsService } from '../affected.objects';
 import { DepartmentService } from '../../masterdata/department';
 import { DemandService } from '../demand';
-import { DataExchangeService, SharedModule } from '../../../shared';
+import { DataExchangeService, SharedModule, KeyValueService } from '../../../shared';
 import { InvolvePartyService } from '../involveparties';
 import { CommunicationLogService } from '../communicationlogs';
 import { ModalModule } from 'ngx-bootstrap/modal';

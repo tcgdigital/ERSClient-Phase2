@@ -7,7 +7,7 @@ import { ConnectionStarter, CallbackHandler } from './page.model';
 import {
     SideMenuService, KeyValue,
     ResponseModel, GlobalStateService,
-    StorageType, GlobalConstants, BaseModel
+    StorageType, GlobalConstants, BaseModel, KeyValueService,KeyValueModel
 } from '../shared';
 import { DepartmentService, DepartmentModel } from './masterdata';
 import { IncidentService, IncidentModel } from './incident';
@@ -58,6 +58,7 @@ export class PagesComponent implements OnInit {
     public isLanding: boolean = false;
     public showQuicklink: boolean = false;
     public connectionStaters: ConnectionStarter[];
+    public activeKeyValues: KeyValueModel[] = [];
     // public ExecuteOperationProxy: () => void;
     public ExecuteOperationProxy: (...args: any[]) => void;
     public ExecuteOperationProxySimple: (...args: any[]) => void;
@@ -114,7 +115,8 @@ export class PagesComponent implements OnInit {
         private mediaReleaseWorkflowNotificationHub: NotificationBroadcastService,
         private presidentsMessageNotificationHub: NotificationBroadcastService,
         private presidentMessageWorkflowNotificationHub: NotificationBroadcastService,
-        private queryNotificationHub: NotificationBroadcastService) {
+        private queryNotificationHub: NotificationBroadcastService,
+        private keyValueService: KeyValueService) {
         this.ConfigureToster();
         this.ExecuteOperationProxy = (...args: any[]) => {
             this.ExecuteOperation.apply(this, args);
@@ -125,6 +127,7 @@ export class PagesComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        this.getAllActiveKeyValues();
         this.sideMenuService.updateMenuByRoutes(PAGES_MENU as Routes);
         this.userName = UtilityService.GetFromSession('CurrentLoggedInUserName', StorageType.LocalStorage);
         this.userId = +UtilityService.GetFromSession('CurrentUserId');
@@ -151,6 +154,15 @@ export class PagesComponent implements OnInit {
                 });
             });
         }, local_incidents, local_departments);
+    }
+
+    public getAllActiveKeyValues(): void {
+        this.keyValueService.GetAll()
+            .subscribe((response: ResponseModel<KeyValueModel>) => {
+                this.activeKeyValues = response.Records;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
     }
 
     public ngOnDestroy(): void {
@@ -202,8 +214,7 @@ export class PagesComponent implements OnInit {
         this.currentDepartmentId = selectedDepartment.Value;
         this.globalState.NotifyDataChanged('departmentChange', selectedDepartment);
         this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
-
-        if (GlobalConstants.CallCenterDepartmentId == this.currentDepartmentId) {
+        if (+this.activeKeyValues.find((x: KeyValueModel) => x.Key === 'CallCenterDepartmentId').Value == this.currentDepartmentId) {
             this.router.navigate(['pages/callcenteronlypage']);
         }
     }
@@ -312,7 +323,7 @@ export class PagesComponent implements OnInit {
             else {
                 this.currentDepartmentId = this.departments[0].Value;
                 UtilityService.SetToSession({ CurrentDepartmentId: this.currentDepartmentId });
-                if (GlobalConstants.CallCenterDepartmentId == this.currentDepartmentId) {
+                if (+this.activeKeyValues.find((x: KeyValueModel) => x.Key === 'CallCenterDepartmentId').Value == this.currentDepartmentId) {
                     this.router.navigate(['pages/callcenteronlypage']);
                 }
             }

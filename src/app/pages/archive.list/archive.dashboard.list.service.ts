@@ -14,12 +14,12 @@ export class ArchiveListService extends ServiceBase<IncidentModel> implements IA
 
     constructor(private dataServiceFactory: DataServiceFactory) {
         super(dataServiceFactory, 'Incidents');
-
     }
 
     public GetAllClosedIncidents(): Observable<ResponseModel<IncidentModel>> {
         return this._dataService.Query()
-            .Expand('EmergencyType')
+            .Select('EmergencyName,IncidentId,isReopen,Severity,IsDrill,EmergencyType,EmergencyLocation,EmergencyDate,ClosedOn,')
+            .Expand('EmergencyType($select=EmergencyTypeId, EmergencyTypeName)')
             .Filter(`ClosedOn ne null`)
             .OrderBy('ClosedOn desc')
             .Execute();

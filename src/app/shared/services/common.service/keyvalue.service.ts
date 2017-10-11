@@ -23,4 +23,9 @@ export class KeyValueService extends ServiceBase<KeyValueModel>{
         .Execute()
     }
 
+    public GetAll(): Observable<ResponseModel<KeyValueModel>>{
+        return this._dataService.Query()
+        .Execute()
+    }
+
 }

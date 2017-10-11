@@ -50,12 +50,14 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
             .Expand('Affecteds($expand=AffectedObjects($expand=Cargo,CommunicationLogs($select=InteractionDetailsId)))')
             .Execute();
     }
+
     GetAffectedObjectQuery(incidentId, query): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq ${incidentId}`)
             .Expand(`Affecteds($expand=AffectedObjects($expand=Cargo,CommunicationLogs($select=InteractionDetailsId);$filter=${query}))`)
             .Execute();
     }
+
     FlattenAffactedObjects(involvedParty: InvolvePartyModel): AffectedObjectsToView[] {
         let affectedObjectsToView: AffectedObjectsToView[] = [];
         let affectedObjects: AffectedObjectModel[];
@@ -91,7 +93,6 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
                     // item.CommunicationLogs: data.CommunicationLogs
                     return item;
                 });
-
             }
         }
         return affectedObjectsToView;
@@ -134,5 +135,4 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
             .Expand(`Caller`)
             .Execute();
     }
-
 }

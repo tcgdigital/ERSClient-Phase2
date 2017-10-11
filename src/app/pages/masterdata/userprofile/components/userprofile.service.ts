@@ -28,12 +28,18 @@ export class UserProfileService extends ServiceBase<UserProfileModel>
 
     GetQuery(query: string): Observable<ResponseModel<UserProfileModel>> {
         return this._dataService.Query()
-            .Filter(query +' and isActive eq true').Execute();
+            .Filter(query).Execute();
     }
-
 
     GetAllActiveWithContact(): Observable<ResponseModel<UserProfileModel>> {
         return this._dataService.Query()
+            .Filter(`MainContact ne null and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
+            .Execute();
+    }
+
+    GetAllActiveWithContactAlternet(): Observable<ResponseModel<UserProfileModel>> {
+        return this._dataService.Query()
+            .Select(`Name,UserProfileId`)
             .Filter(`MainContact ne null and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
             .Execute();
     }
@@ -55,15 +61,16 @@ export class UserProfileService extends ServiceBase<UserProfileModel>
 
     GetAllUsers(): Observable<ResponseModel<UserProfileModel>>{
         return this._dataService.Query()
-        .Select('UserProfileId,UserId,Name,Email,EmployeeId,MainContact,AlternateContact,isActive,ActiveFlag,isVolunteered,PassportNumber,PassportValidity,Nationality,Gender,VisaRecords,VoluterPreferenceRecords,TrainingDetails,NOKDetails')
-        //.Expand('VisaDetails, VolunterPreferences, TrainingRecords, NextOfKins')
-        .OrderBy('Name')
-        .Top('200')
-        .Execute();
+            .Select('UserProfileId,UserId,Name,Email,EmployeeId,MainContact,AlternateContact,isActive,ActiveFlag,isVolunteered,PassportNumber,PassportValidity,Nationality,Gender,VisaRecords,VoluterPreferenceRecords,TrainingDetails,NOKDetails')
+            .OrderBy('Name')
+            .Top('200')
+            .Execute();
     }
 
     GetAllInvalidRecords(): Observable<ResponseModel<InvalidUserProfileModel>> {
         return this._dataServiceInvalidRecords.Query()
-        .Execute();
+            .Select('UserId,Name,Email,EmployeeId,DepartmentName,MainContact,AlternateContact,PassportDetails,Nationality,Gender,VisaDetails,TrainingDetails,NOKDetails,ErrorReason')
+            .OrderBy('Name')
+            .Execute();
     }
 }

@@ -102,7 +102,6 @@
                     <i class="fa fa-edit fa-2x" (click)="UpdateUserProfile(userprofile)"></i>
                 </td>
             </tr>
-
         </tbody>
     </table>
 </responsive-table>
@@ -115,7 +114,6 @@
                 <button type="button" class="close pull-right" aria-label="Close" (click)="closeInvalidProfile()">
                     <span aria-hidden="true">&times;</span>
                 </button>
-
             </div>
             <div class="modal-body">
                 <responsive-table>
@@ -150,25 +148,14 @@
                                 <td data-title="Department Name">{{userprofile.DepartmentName}}</td>
                                 <td data-title="Main Contact">{{userprofile.MainContact}}</td>
                                 <td data-title="Alternate Contact">{{userprofile.AlternateContact}}</td>
-                                <td data-title="Passport Details">
-                                    {{userprofile.PassportDetails}}
-                                </td>
+                                <td data-title="Passport Details">{{userprofile.PassportDetails}}</td>
                                 <td data-title="Nationality">{{userprofile.Nationality}}</td>
                                 <td data-title="Gender">{{userprofile.Gender}}</td>
-                                <td data-title="Visa Details">
-                                    {{userprofile.VisaDetails}}
-                                </td>
-                                <td data-title="Training Details">
-                                    {{userprofile.TrainingDetails}}
-                                </td>
-                                <td data-title="Next Of Kins">
-                                    {{userprofile.NOKDetails}}
-                                </td>
-                                <td data-title="Error Reason">
-                                    {{userprofile.ErrorReason}}
-                                </td>
+                                <td data-title="Visa Details">{{userprofile.VisaDetails}}</td>
+                                <td data-title="Training Details">{{userprofile.TrainingDetails}}</td>
+                                <td data-title="Next Of Kins">{{userprofile.NOKDetails}}</td>
+                                <td data-title="Error Reason">{{userprofile.ErrorReason}}</td>
                             </tr>
-
                         </tbody>
                     </table>
                 </responsive-table>
@@ -176,54 +163,3 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--<div class="panel-body WidthHun">
-    <table class="table footable default">
-        <thead>
-            <tr>
-                <th>User Id</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Main Contact</th>
-                <th>Alternate Contact</th>
-                <th>Location</th>
-                <th>IsActive</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let userprofile of userProfiles">
-                <td>{{userprofile.UserId}}</td>
-                <td>{{userprofile.Name}}</td>
-                <td>{{userprofile.Email }}</td>
-                <td>{{userprofile.MainContact}}</td>
-                <td>{{userprofile.AlternateContact}}</td>
-                <td>{{userprofile.Location}}</td>
-                <td>
-                    <input type="checkbox" [(ngModel)]="userprofile.isActive" [disabled]="true" />
-                </td>
-                <td>
-                    <button class="btn btn-warning" type="button" (click)="UpdateUserProfile(userprofile)">Edit</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>-->

@@ -6,4 +6,6 @@ export interface IDemandTypeService extends IServiceInretface<DemandTypeModel> {
   GetAllApproverDepartment(): Observable<Array<NameValue<number>>>;
 
   GetQuery(query: string): Observable<ResponseModel<DemandTypeModel>>;
+
+  GetAllApproverDepartmentAlternet(): Observable<Array<NameValue<number>>>;
 }

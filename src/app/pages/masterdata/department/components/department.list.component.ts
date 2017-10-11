@@ -48,7 +48,6 @@ export class DepartmentListComponent implements OnInit {
             this.searchValue = "Expand Search Panel";
         }
         this.expandSearch = !this.expandSearch;
-
     }
 
     ngOnInit(): any {
@@ -128,7 +127,8 @@ export class DepartmentListComponent implements OnInit {
                 PlaceHolder: 'Select Parent Department',
                 Value: '',
                 ListData: this.departmentService.GetParentDepartments()
-                    .map((x) => x.Records).map((x) => {
+                    .map((x) => x.Records)
+                    .map((x) => {
                         const parentDepartments: Array<NameValue<number>> = Array<NameValue<number>>();
                         x.forEach((y) => {
                             if (parentDepartments.find((z) => z.Value === y.ParentDepartment.DepartmentId) == null) {
@@ -144,8 +144,8 @@ export class DepartmentListComponent implements OnInit {
                 PlaceHolder: 'Select Department SPOC',
                 Value: '',
                 ListData: this.userProfileService.GetAllActiveWithContact()
-                    .map((x) => x.Records)
-                    .map((x) => x.map((y) => new NameValue<number>(y.Name, y.UserProfileId)))
+                    .map((x) => x.Records.map((y) => new NameValue<number>(y.Name, y.UserProfileId)))
+                // .map((x) => x.map((y) => new NameValue<number>(y.Name, y.UserProfileId)))
             }),
             new SearchDropdown({
                 Name: 'ActiveFlag',

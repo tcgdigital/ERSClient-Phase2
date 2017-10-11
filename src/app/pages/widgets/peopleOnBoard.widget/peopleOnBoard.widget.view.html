@@ -67,10 +67,14 @@
                                     <tr>
                                         <td data-title=""><strong>Gender Wise Passengers:</strong></td>
                                         <td data-title="">
-                                            <span *ngFor="let gender of peopleOnBoard.totalGenderTypeCount">
+                                            <span><strong>M:</strong> {{peopleOnBoard.totalGenderTypeCount | mfcicount:'M'}}</span>
+                                            <span><strong>F:</strong> {{peopleOnBoard.totalGenderTypeCount | mfcicount:'F'}}</span>
+                                            <span><strong>C:</strong> {{peopleOnBoard.totalGenderTypeCount | mfcicount:'CHD'}}</span>
+                                            <span><strong>I:</strong> {{peopleOnBoard.totalGenderTypeCount | mfcicount:'INF'}}</span>
+                                            <!-- <span *ngFor="let gender of peopleOnBoard.totalGenderTypeCount">
                                                 <span *ngIf="gender.Key != ''">{{gender.Key}}: {{gender.Value}}</span>
                                                 <span *ngIf="gender.Key == '' || gender.Key == 'null'">Not Mentioned: {{gender.Value}}</span>
-                                            </span>
+                                            </span> -->
                                         </td>
                                     </tr>
                                     <tr>

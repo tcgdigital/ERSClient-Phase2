@@ -4,7 +4,7 @@ import {
     FormGroup, FormControl, FormBuilder, Validators,
     ReactiveFormsModule
 } from '@angular/forms';
-import { KeyValueService, KeyValueModel } from '../../../shared';
+import { KeyValueService, KeyValueModel, ResponseModel } from '../../../shared';
 
 @Component({
     selector: 'dept-main',
@@ -17,22 +17,34 @@ export class SpileComponent implements OnInit {
     public data: any;
     public generalform: FormGroup;
     public submitted: boolean = false;
-    private speilEnglish : KeyValueModel;
-    private speilTagalog : KeyValueModel;
+    public activeKeyValues: KeyValueModel[] = [];
+    private updatedKeyValue: KeyValueModel;
 
-    constructor(private keyValueService: KeyValueService, 
+    constructor(private keyValueService: KeyValueService,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig,
     ) { }
-    
-    public ngOnInit() 
-    { 
+
+    public ngOnInit() {
+        this.updatedKeyValue=new KeyValueModel();
+        this.getAllActiveKeyValues();
         this.initializeForm();
-        this.getSpiel();
+    }
+
+    getAllActiveKeyValues(): void {
+        this.keyValueService.GetAll()
+            .subscribe((response: ResponseModel<KeyValueModel>) => {
+                this.activeKeyValues = response.Records;
+
+                this.generalform.controls["SpielText"].setValue('');
+
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
     }
 
     initializeForm(): void {
-        
+
         this.generalform = new FormGroup({
             SpielType: new FormControl('', [Validators.required]),
             SpielText: new FormControl('', [Validators.required])
@@ -40,59 +52,42 @@ export class SpileComponent implements OnInit {
 
     }
 
-    public getSpiel(): void{
-        this.submitted = false;
-        this.keyValueService.GetValue('SpielTextEnglish')
-        .map(data=>{
-           return this.speilEnglish = data.Records[0];
-        })
-        .flatMap(_=>this.keyValueService.GetValue('SpielTextTagalog'))
-        .map(data=>{
-           return this.speilTagalog = data.Records[0];
-        }).subscribe(() => {
-                
-        }, (error: any) => {
-            console.log(`Error: ${error}`);
-        });
+    
+
+    keyvalueChange(Key: string, activeKeyValues: KeyValueModel[]): void {
+        if (Key != '') {
+            const activeOrganization: KeyValueModel = activeKeyValues
+                .find((x: KeyValueModel) => x.Key === Key);
+
+            this.generalform.controls["SpielText"].setValue(activeOrganization.Value);
+        }
+        else {
+            this.generalform.controls["SpielText"].setValue('');
+        }
+
     }
 
-    public spielChanged() : void{
-        
-        if(this.generalform.controls["SpielType"].value == "SpielTextEnglish")
-        {
-            this.generalform.controls["SpielText"].setValue(this.speilEnglish.Value);
-        }
-        else if(this.generalform.controls["SpielType"].value == "SpielTextTagalog")
-        {
-            this.generalform.controls["SpielText"].setValue(this.speilTagalog.Value);
-        }
-        else
-        {
-            //this.generalform.get('SpielText').setValue('');
-            this.generalform.controls["SpielText"].setValue("");
-        }
-    }
+   
 
-    public spielSave() : void{
-        
-        if(this.generalform.valid)
-        {
+    public spielSave(): void {
+        if (this.generalform.valid) {
             let KeyVal: KeyValueModel = null;
-            if(this.generalform.controls["SpielType"].value == "SpielTextEnglish")
-            {
-                this.speilEnglish.Value = this.generalform.controls["SpielText"].value;
-                KeyVal = this.speilEnglish;
-            }
-            else if(this.generalform.controls["SpielType"].value == "SpielTextTagalog")
-            {
-                this.speilTagalog.Value = this.generalform.controls["SpielText"].value;
-                KeyVal = this.speilTagalog;
-            }
-
-            if(KeyVal != null)
-            {
+            
+            const activeOrganization: KeyValueModel = this.activeKeyValues
+            .find((x: KeyValueModel) => x.Key === this.generalform.controls["SpielType"].value);
+            
+            this.updatedKeyValue.Value = this.generalform.controls["SpielText"].value;
+            KeyVal = this.updatedKeyValue;
+            KeyVal.KeyValueId=activeOrganization.KeyValueId;
+            if (KeyVal != null) {
+                delete KeyVal.ActiveFlag;
+                delete KeyVal.CreatedBy;
+                delete KeyVal.CreatedOn;
+                delete KeyVal.Description;
+                delete KeyVal.Key;
                 this.keyValueService.Update(KeyVal, KeyVal.KeyValueId).subscribe(() => {
-                    this.getSpiel();
+                    this.initializeForm();
+                    this.getAllActiveKeyValues();
                     this.toastrService.success('Spiel Text Saved successfully.', 'Success', this.toastrConfig);
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
@@ -100,12 +95,11 @@ export class SpileComponent implements OnInit {
                 );
             }
         }
-        else
-        {
+        else {
             this.submitted = true;
         }
-        
+
     }
 
-    
+
 }

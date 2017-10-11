@@ -1,8 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { Headers } from '@angular/http';
-
 import { Observable } from 'rxjs/Rx';
-
 import { AffectedModel } from './affected.model';
 import { IAffectedService } from './IAffectedService';
 import {
@@ -38,7 +36,6 @@ export class AffectedService extends ServiceBase<AffectedModel> implements IAffe
             .Execute();
     }
 
-
     Create(entity: AffectedModel): Observable<AffectedModel> {
         let affected: AffectedModel;
         return this._dataService.Post(entity)
@@ -50,9 +47,9 @@ export class AffectedService extends ServiceBase<AffectedModel> implements IAffe
             })
             .flatMap((data: AffectedModel) =>
                 this.involvedPartyService.Get(data.InvolvedPartyId))
-            .map((data: InvolvePartyModel) => {
-                affected.InvolvedParty = data;
-                return affected;
+                    .map((data: InvolvePartyModel) => {
+                        affected.InvolvedParty = data;
+                        return affected;
             });
     }
 

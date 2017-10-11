@@ -5,7 +5,6 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Ng2BootstrapModule } from 'ngx-bootstrap';
 import { NgSelectizeModule } from 'ng-selectize';
-
 import {
     HTTP_INTERCEPTOR_PROVIDER,
     HTTP_INTERCEPTOR_NO_OVERRIDE_PROVIDER
@@ -17,7 +16,8 @@ import {
 import {
     PaddingFormatterPipe,
     AccessibilityPipe,
-    DateFormatterPipe
+    DateFormatterPipe,
+    MfciCountPipe
 } from './pipes';
 
 import {
@@ -146,7 +146,8 @@ const SHARED_CONSTANTS: any[] = [
 const SHARED_PIPES: any[] = [
     PaddingFormatterPipe,
     AccessibilityPipe,
-    DateFormatterPipe
+    DateFormatterPipe,
+    MfciCountPipe
 ];
 
 export function createConfig(): ConnectionConfig {
