@@ -28,7 +28,7 @@ export class UserProfileService extends ServiceBase<UserProfileModel>
 
     GetQuery(query: string): Observable<ResponseModel<UserProfileModel>> {
         return this._dataService.Query()
-            .Filter(query +' and isActive eq true').Execute();
+            .Filter(query).Execute();
     }
 
     GetAllActiveWithContact(): Observable<ResponseModel<UserProfileModel>> {

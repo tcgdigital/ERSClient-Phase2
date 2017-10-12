@@ -44,7 +44,6 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
         this.userProfileService.GetAllInvalidRecords()
             .subscribe((response: ResponseModel<InvalidUserProfileModel>) => {
                 this.invalidUserProfiles = response.Records;
-                debugger;
                 if (callback != null)
                     callback();
             })

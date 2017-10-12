@@ -3,12 +3,11 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription, Observable } from 'rxjs/Rx';
-
 import { DemandTrailModel } from '../demand/components/demand.trail.model';
 import {
     ResponseModel, DataExchangeService,
     AutocompleteComponent, KeyValue,
-    GlobalConstants, UtilityService, GlobalStateService, AuthModel
+    GlobalConstants, UtilityService, GlobalStateService, AuthModel, KeyValueService,KeyValueModel
 } from '../../../shared';
 import { EnquiryModel, EnquiryService } from './components';
 import { AffectedPeopleModel } from "../affected.people/components";
@@ -48,7 +47,8 @@ import * as _ from 'underscore';
         DemandService,
         InvolvePartyService,
         CommunicationLogService,
-        PassengerService
+        PassengerService,
+        KeyValueService
     ]
 })
 export class EnquiryEntryComponent /*implements OnInit*/ {
@@ -84,10 +84,12 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         private _router: Router,
         private callcenteronlypageservice: CallCenterOnlyPageService,
         private communicationlogservice: CommunicationLogService,
-        private passangerService: PassengerService) { }
+        private passangerService: PassengerService,
+        private keyValueService: KeyValueService) { }
 
 
     public form: FormGroup;
+    public activeKeyValues: KeyValueModel[] = [];
     enquiryTypes: any[] = GlobalConstants.ExternalInputEnquiryType;
     pdaenquery: PDAEnquiryModel = new PDAEnquiryModel();
     cargoquery: CargoEnquiryModel = new CargoEnquiryModel();
@@ -540,8 +542,9 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             demand.AWB = (this.enquiryType == 2) ?
                 this.affectedObjects.find((x) => x.AffectedObjectId === demand.AffectedObjectId).AWB : null;
             demand.ContactNumber = this.caller.ContactNumber;
-            demand.TargetDepartmentId = isCallback ? this.currentDepartmentId : (isTravelRequest ? GlobalConstants.TargetDepartmentTravel
-                : (isAdmin ? GlobalConstants.TargetDepartmentAdmin : GlobalConstants.TargetDepartmentCrew));
+            demand.TargetDepartmentId = isCallback ? this.currentDepartmentId : (isTravelRequest ? +this.activeKeyValues
+                .find((x: KeyValueModel) => x.Key === 'TargetDepartmentTravel').Value
+                : (isAdmin ? +this.activeKeyValues.find((x: KeyValueModel) => x.Key === 'TargetDepartmentAdmin').Value : +this.activeKeyValues.find((x: KeyValueModel) => x.Key === 'TargetDepartmentCrew').Value));
             demand.RequesterDepartmentId = this.currentDepartmentId;
             demand.RequesterParentDepartmentId = this.departments.find((x) => x.DepartmentId === this.currentDepartmentId).ParentDepartmentId;
 
@@ -570,7 +573,7 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
             demand.CommunicationLogs = this.SetCommunicationLog(type + " Demand", GlobalConstants.InteractionDetailsTypeDemand, demand.AffectedPersonId);
             demand.CommunicationLogs[0].Queries = demand.CommunicationLogs[0].Queries + ' Demand Code: ' + demand.DemandCode;
             demand.CommunicationLogs[0].Answers = demand.CommunicationLogs[0].Answers + ' Demand Code: ' + demand.DemandCode;
-            
+
             this.demands.push(demand);
         }
     }
@@ -754,7 +757,17 @@ export class EnquiryEntryComponent /*implements OnInit*/ {
         }
     }
 
+    getAllActiveKeyValues(): void {
+        this.keyValueService.GetAll()
+            .subscribe((response: ResponseModel<KeyValueModel>) => {
+                this.activeKeyValues = response.Records;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
+    }
+
     ngOnInit(): any {
+        this.getAllActiveKeyValues();
         if (this._router.url.indexOf('archivedashboard') > -1) {
             this.isArchive = true;
             this.currentIncident = +UtilityService.GetFromSession('ArchieveIncidentId');

@@ -6,7 +6,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { HttpModule } from '@angular/http';
 import {
     GlobalStateService, NotificationBroadcastService,
-    NotificationModule
+    NotificationModule, KeyValueService,KeyValueModel
 } from '../shared';
 import { PagesComponent } from './pages.component';
 import { SharedModule } from '../shared/shared.module';
@@ -51,7 +51,8 @@ import { WidgetModule } from './widgets';
         AuthenticationService,
         UserPermissionService,
         QuickLinkService,
-        RouteGuardService
+        RouteGuardService,
+        KeyValueService
     ]
 })
 export class PagesModule {

@@ -6,7 +6,7 @@ import * as jwtDecode from 'jwt-decode';
 import { RAGScaleService, RAGScaleModel } from '../../../pages/shared.components/ragscale';
 import { AuthenticationService } from './authentication.service';
 import { UtilityService } from '../../../shared/services';
-import { GlobalStateService, ResponseModel, KeyValue, GlobalConstants, StorageType } from '../../../shared';
+import { GlobalStateService, ResponseModel, KeyValue, GlobalConstants, StorageType, KeyValueService, KeyValueModel } from '../../../shared';
 import { AuthRequestModel, AuthResponseModel } from './auth.model';
 import { IncidentModel, IncidentService } from '../../incident';
 import { UserProfileService, UserProfileModel } from '../../masterdata/userprofile/index';
@@ -30,6 +30,7 @@ export class LoginComponent implements OnInit {
     public userId: AbstractControl;
     public password: AbstractControl;
     public submitted: boolean;
+    public activeKeyValues: KeyValueModel[] = [];
     departments: KeyValue[] = [];
     incidents: KeyValue[] = [];
     currentDepartmentId: number = 0;
@@ -47,7 +48,8 @@ export class LoginComponent implements OnInit {
         private licensingService: LicensingService,
         private ragScaleService: RAGScaleService,
         private userPermissionService: UserPermissionService,
-        private pagePermissionService: PagePermissionService) {
+        private pagePermissionService: PagePermissionService,
+        private keyValueService: KeyValueService) {
 
         this.form = formBuilder.group({
             userId: ['', Validators.compose([Validators.required, Validators.minLength(4)])],
@@ -79,46 +81,60 @@ export class LoginComponent implements OnInit {
             });
     }
 
+    // public getAllActiveKeyValues(): void {
+    //     this.keyValueService.GetAll()
+    //         .subscribe((response: ResponseModel<KeyValueModel>) => {
+    //             this.activeKeyValues = response.Records;
+    //         }, (error: any) => {
+    //             console.log(`Error: ${error}`);
+    //         });
+    // }
+
     public Login(userid: string, password: string): void {
         this.authService.Login(userid, password)
             .subscribe((data: AuthResponseModel) => {
-                console.log(jwtDecode(data.access_token));
-                const loginCredentialBasic: any = jwtDecode(data.access_token);
-                this.pagePermissionService.GetPagePermissionMatrix(loginCredentialBasic.UserId)
-                    .subscribe((item: PagesPermissionMatrixModel[]) => {
-                        GlobalConstants.PagePermissionMatrix = [];
-                        UtilityService.SetToSession({ PagePermissionMatrix: item },
-                            StorageType.SessionStorage, true);
-                        GlobalConstants.PagePermissionMatrix = item;
-                        if (loginCredentialBasic) {
-                            // This is to check that whether the user has department associated with him. From UserPermission table.
-                            // let errorSuccess: boolean = this.userProfileService.VerifyUserDepartmentMapping(+loginCredentialBasic.UserId.toString());
-                            this.getDepartments(loginCredentialBasic.UserId, loginCredentialBasic);
-                            GlobalConstants.currentLoggedInUser = +loginCredentialBasic.UserId.toString();
-                            this.getIncidents();
+                this.keyValueService.GetAll()
+                    .subscribe((response: ResponseModel<KeyValueModel>) => {
+                        this.activeKeyValues = response.Records;
+                        console.log(jwtDecode(data.access_token));
+                        const loginCredentialBasic: any = jwtDecode(data.access_token);
+                        this.pagePermissionService.GetPagePermissionMatrix(loginCredentialBasic.UserId)
+                            .subscribe((item: PagesPermissionMatrixModel[]) => {
+                                GlobalConstants.PagePermissionMatrix = [];
+                                UtilityService.SetToSession({ PagePermissionMatrix: item },
+                                    StorageType.SessionStorage, true);
+                                GlobalConstants.PagePermissionMatrix = item;
+                                if (loginCredentialBasic) {
+                                    // This is to check that whether the user has department associated with him. From UserPermission table.
+                                    // let errorSuccess: boolean = this.userProfileService.VerifyUserDepartmentMapping(+loginCredentialBasic.UserId.toString());
+                                    this.getDepartments(loginCredentialBasic.UserId, loginCredentialBasic);
+                                    GlobalConstants.currentLoggedInUser = +loginCredentialBasic.UserId.toString();
+                                    this.getIncidents();
 
-                            if (!Object.keys(loginCredentialBasic).some((x) => x === 'EmailConfirmed')) {
-                                localStorage.setItem('LastLoginTime', (new Date()).toString());
-                                UtilityService.SetToSession({ CurrentUserId: loginCredentialBasic.UserId });
-                                this.GetUserInfoFromUserProfileByUserProfileId(loginCredentialBasic.UserId);
-                                this.getRAGScaleData();
-                                if (!Object.keys(loginCredentialBasic).some((x) => x === 'EmailConfirmed')) {
-                                    if (GlobalConstants.CallCenterDepartmentId == this.currentDepartmentId) {
-                                        this.router.navigate(['pages/callcenteronlypage']);
+                                    if (!Object.keys(loginCredentialBasic).some((x) => x === 'EmailConfirmed')) {
+                                        localStorage.setItem('LastLoginTime', (new Date()).toString());
+                                        UtilityService.SetToSession({ CurrentUserId: loginCredentialBasic.UserId });
+                                        this.GetUserInfoFromUserProfileByUserProfileId(loginCredentialBasic.UserId);
+                                        this.getRAGScaleData();
+                                        if (!Object.keys(loginCredentialBasic).some((x) => x === 'EmailConfirmed')) {
+                                            if (+this.activeKeyValues.find((x: KeyValueModel) => x.Key === 'CallCenterDepartmentId').Value == this.currentDepartmentId) {
+                                                this.router.navigate(['pages/callcenteronlypage']);
+                                            }
+                                        }
+
+                                    } else {
+                                        this.toastrService.warning('Please change your default password', 'Sign In', this.toastrConfig);
+                                        UtilityService.SetToSession({ IsChangPasswordRequired: true });
+                                        this.router.navigate(['login/change']);
                                     }
+                                } else {
+                                    this.toastrService.error('Unable to connect the server or an unspecified exception',
+                                        'Sign In Exception', this.toastrConfig);
                                 }
+                            });
 
-                            } else {
-                                this.toastrService.warning('Please change your default password', 'Sign In', this.toastrConfig);
-                                UtilityService.SetToSession({ IsChangPasswordRequired: true });
-                                this.router.navigate(['login/change']);
-                            }
-                        } else {
-                            this.toastrService.error('Unable to connect the server or an unspecified exception',
-                                'Sign In Exception', this.toastrConfig);
-                        }
+
                     });
-
             }, (error: any) => {
                 console.log(`Error: ${error}`);
                 if (error.error === 'invalid_grant') {
@@ -155,7 +171,7 @@ export class LoginComponent implements OnInit {
                     console.log(this.currentDepartmentId);
                     UtilityService.SetToSession({ CurrentDepartmentId: this.currentDepartmentId });
                     if (!Object.keys(loginCredentialBasic).some((x) => x === 'EmailConfirmed')) {
-                        if (GlobalConstants.CallCenterDepartmentId == this.currentDepartmentId) {
+                        if (+this.activeKeyValues.find((x: KeyValueModel) => x.Key === 'CallCenterDepartmentId').Value == this.currentDepartmentId) {
                             this.router.navigate(['pages/callcenteronlypage']);
                         }
                     }
@@ -228,7 +244,7 @@ export class LoginComponent implements OnInit {
         this.incidentService.GetOpenIncidents()
             .subscribe((item: ResponseModel<IncidentModel>) => {
                 if (item.Count > 0) {
-                    if (GlobalConstants.CallCenterDepartmentId == this.currentDepartmentId) {
+                    if (+this.activeKeyValues.find((x: KeyValueModel) => x.Key === 'CallCenterDepartmentId').Value == this.currentDepartmentId) {
                         this.router.navigate(['pages/callcenteronlypage']);
                     }
                     else {

@@ -8,6 +8,7 @@ import {
     LoginComponent, ForgotPasswordComponent,
     ChangePasswordComponent
 } from './components';
+import { KeyValueService } from '../../shared';
 import { UserProfileService } from '../masterdata/userprofile/components';
 import { LoginRootComponent } from './login.root.component';
 import { TimeZoneService } from "../shared.components/timezone";
@@ -29,7 +30,8 @@ import { TimeZoneService } from "../shared.components/timezone";
         IncidentService,
         UserProfileService,
         PagePermissionService,
-        TimeZoneService
+        TimeZoneService,
+        KeyValueService
     ]
 })
 export class LoginModule {
