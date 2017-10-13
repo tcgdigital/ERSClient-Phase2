@@ -8,7 +8,6 @@ import { SpileComponent } from './spiel.component';
 
 
 
-
 @NgModule({
     imports: [
         CommonModule,
