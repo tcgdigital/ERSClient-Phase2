@@ -1693,7 +1693,7 @@ export class GlobalConstants {
             order: 12
         }, {
             id: 'spiel',
-            title: 'Call Centre Spiel',
+            title: 'Configuration',
             // icon: 'fa fa-medium fa-2x',
             url: '/pages/masterdata/spiel',
             selected: false,
