@@ -18,8 +18,7 @@ export class ArchiveListService extends ServiceBase<IncidentModel> implements IA
 
     public GetAllClosedIncidents(): Observable<ResponseModel<IncidentModel>> {
         return this._dataService.Query()
-            .Select('EmergencyName,IncidentId,isReopen,Severity,IsDrill,EmergencyType,EmergencyLocation,EmergencyDate,ClosedOn,')
-            .Expand('EmergencyType($select=EmergencyTypeId, EmergencyTypeName)')
+            .Expand('EmergencyType')
             .Filter(`ClosedOn ne null`)
             .OrderBy('ClosedOn desc')
             .Execute();
