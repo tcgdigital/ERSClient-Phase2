@@ -299,9 +299,9 @@
                                     formControlName="ScheduledarrivalLOC" placeholder="Scheduled Arrival - Destination" />
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="FlightTailNumber">Flight Tail Number<span class="required">*</span></label>
+                                <label for="FlightTailNumber">AC Registry<span class="required">*</span></label>
                                 <input id="FlightTailNumber" class="form-control" [ngClass]="flightClass" type="text" name="FlightTailNumber" formControlName="FlightTailNumber"
-                                    placeholder="Flight Tail Number" />
+                                    placeholder="AC Registry" />
                                 <small *ngIf="formFlight.controls.FlightTailNumber.hasError('required')" [hidden]="formFlight.controls.FlightTailNumber.valid || (formFlight.controls.FlightTailNumber.pristine && !submittedFlight)"
                                     class="text-danger">Required</small>
                                 <small *ngIf="formFlight.controls.FlightTailNumber.hasError('maxlength')" [hidden]="formFlight.controls.FlightTailNumber.valid || (formFlight.controls.FlightTailNumber.pristine && !submitted)"
@@ -576,7 +576,7 @@
                                         placeholder="" />
                                 </div>
                                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                    <label for="Scheduleddeparture(UTC)">Scheduled departure (UTC)</label>
+                                    <label for="Scheduleddeparture(UTC)">Sched. Departure (UTC)</label>
                                     <input id="ScheduleddeparturePopup" disabled formControlName="ScheduleddeparturePopup" class="form-control" type="text" name="ScheduleddeparturePopup"
                                         placeholder="" />
                                 </div>
@@ -584,26 +584,26 @@
                             <div class="row">
 
                                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                    <label for="Scheduleddeparture(LOCAL)">Sched Departure Org (LOCAL)</label>
+                                    <label for="Scheduleddeparture(LOCAL)">Sched. Departure Org. (LOCAL)</label>
                                     <input id="ScheduleddepartureLOCPopup" disabled class="form-control" [ngClass]="flightClass" type="text" name="ScheduleddepartureLOCPopup"
                                         formControlName="ScheduleddepartureLOCPopup" placeholder="" />
 
                                 </div>
                                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                    <label for="Scheduledarrival(UTC)">Scheduled arrival (UTC)</label>
+                                    <label for="Scheduledarrival(UTC)">Sched. Arrival (UTC)</label>
                                     <input id="ScheduledarrivalPopup" disabled formControlName="ScheduledarrivalPopup" class="form-control" type="text" name="ScheduledarrivalPopup"
                                         placeholder="" />
 
                                 </div>
                                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                    <label for="Scheduledarrival(LOCAL)">Sched Arrival Dest (LOCAL)</label>
+                                    <label for="Scheduledarrival(LOCAL)">Sched. Arrival Dest. (LOCAL)</label>
                                     <input id="ScheduledarrivalLOCPopup" disabled class="form-control" [ngClass]="flightClass" type="text" name="ScheduledarrivalLOCPopup"
                                         formControlName="ScheduledarrivalLOCPopup" placeholder="" />
 
 
                                 </div>
                                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                    <label for="FlightTailNumber">Flight Tail Number</label>
+                                    <label for="FlightTailNumber">AC Registry</label>
                                     <input id="FlightTailNumberPopup" disabled formControlName="FlightTailNumberPopup" class="form-control" type="text" name="FlightTailNumberPopup"
                                         placeholder="" />
                                 </div>
