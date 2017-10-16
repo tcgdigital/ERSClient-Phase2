@@ -268,7 +268,7 @@
                             </small>
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="Scheduleddeparture(UTC)">Scheduled Departure (UTC)<span class="required">*</span></label>
+                                <label for="Scheduleddeparture(UTC)">Sched. Departure (UTC)<span class="required">*</span></label>
                                 <input id="Scheduleddeparture" #departuredatepicker="datetimepicker" readonly class="form-control" [ngClass]="flightClass"
                                     type="text" name="Scheduleddeparture" formControlName="Scheduleddeparture" placeholder="Scheduled Departure"
                                     datetime-picker [options]="datepickerOptionDeparture" (selectHandler)="dateTimeSet($event,'Scheduleddeparture');"
@@ -280,23 +280,23 @@
                         <div class="row">
 
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="ScheduledDeparture(LOCAL)">Scheduled Departure - Origin (LOCAL)<span class="required">*</span></label>
+                                <label for="ScheduledDeparture(LOCAL)">Sched. Departure Org. (LOCAL)<span class="required">*</span></label>
                                 <input id="ScheduleddepartureLOC" disabled class="form-control" [ngClass]="flightClass" type="text" name="ScheduleddepartureLOC"
-                                    formControlName="ScheduleddepartureLOC" placeholder="Scheduled Departure - Origin" />
+                                    formControlName="ScheduleddepartureLOC" placeholder="Sched. Departure Org. (LOCAL)" />
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="Scheduledarrival(UTC)">Scheduled Arrival (UTC)<span class="required">*</span></label>
+                                <label for="Scheduledarrival(UTC)">Sched. Arrival (UTC)<span class="required">*</span></label>
                                 <input #arrivaldatepicker="datetimepicker" id="Scheduledarrival" readonly class="form-control" [ngClass]="flightClass" type="text"
-                                    name="Scheduledarrival" formControlName="Scheduledarrival" placeholder="Scheduled Arrival"
+                                    name="Scheduledarrival" formControlName="Scheduledarrival" placeholder="Sched. Arrival (UTC)"
                                     datetime-picker [options]="datepickerOptionArrival" (selectHandler)="dateTimeSet($event,'Scheduledarrival');"
                                 />
                                 <small *ngIf="formFlight.controls.Scheduledarrival.hasError('required')" [hidden]="formFlight.controls.Scheduledarrival.valid || (formFlight.controls.Scheduledarrival.pristine && !submittedFlight)"
                                     class="text-danger">Required</small>
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                                <label for="ScheduledArrival(LOCAL)">Scheduled Arrival - Destination (LOCAL)<span class="required">*</span></label>
+                                <label for="ScheduledArrival(LOCAL)">Sched. Arrival Dest. (LOCAL)<span class="required">*</span></label>
                                 <input id="ScheduledarrivalLOC" disabled class="form-control" [ngClass]="flightClass" type="text" name="ScheduledarrivalLOC"
-                                    formControlName="ScheduledarrivalLOC" placeholder="Scheduled Arrival - Destination" />
+                                    formControlName="ScheduledarrivalLOC" placeholder="Sched. Arrival Dest. (LOCAL)" />
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
                                 <label for="FlightTailNumber">AC Registry<span class="required">*</span></label>

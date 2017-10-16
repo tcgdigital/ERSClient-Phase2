@@ -60,6 +60,7 @@ export enum StorageType {
 }
 
 export class GlobalConstants {
+    //public static EXTERNAL_URL: string = 'http://api.cmgprod.pal.com.ph/';
     public static EXTERNAL_URL: string = 'http://localhost:5001/';
 
     public static NOTIFICATION_URL: string = `${GlobalConstants.EXTERNAL_URL}Notification/Hubs`;

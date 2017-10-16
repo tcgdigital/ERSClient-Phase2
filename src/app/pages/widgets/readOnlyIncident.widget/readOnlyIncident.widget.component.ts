@@ -111,7 +111,13 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
     }
 
     public onViewIncidentClick(): void {
-        this.incidentId = this.currentIncidentLocal.Value;
+        if(this.currentIncidentLocal.Value!=undefined){
+            this.incidentId = this.currentIncidentLocal.Value;
+        }
+        else{
+            this.incidentId = +this.currentIncidentLocal;
+        }
+        
         this.readOnlyIncidentWidgetService.GetIncidentByIncidentId(this.incidentId)
             .subscribe((item: IncidentModel) => {
                 this.incidentDataExchangeModel = new IncidentDataExchangeModel();
@@ -219,11 +225,27 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
                 AircraftTypeIdPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.AircraftTypeId)
             });
 
+            let localDepartureDate:string = this.DateFormat(this.incidentDataExchangeModel.FLightModel.DepartureDate);
+            this.formPopup.get('ScheduleddeparturePopup').setValue(localDepartureDate);
+            // this.GetLocalDateTime(new Date(this.incidentDataExchangeModel.FLightModel.DepartureDate), true,(dt:Date) => {
+            //     let localDepartureArrivalDate:string = this.DateFormat(this.incidentDataExchangeModel.FLightModel.DepartureDate);
+            //     this.formPopup.get('ScheduleddeparturePopup').setValue(localDepartureArrivalDate);
+            // });
+
+            let localArrivalDate:string = this.DateFormat(this.incidentDataExchangeModel.FLightModel.ArrivalDate);
+            this.formPopup.get('ScheduledarrivalPopup').setValue(localArrivalDate);
+            // this.GetLocalDateTime(new Date(this.incidentDataExchangeModel.FLightModel.ArrivalDate), false,(dt:Date) => {
+            //     let localDepartureArrivalDate:string = this.DateFormat(this.incidentDataExchangeModel.FLightModel.ArrivalDate);
+            //     this.formPopup.get('ScheduledarrivalPopup').setValue(localDepartureArrivalDate);
+            // });
+
+
+            
             this.GetLocalDateTime(new Date(this.incidentDataExchangeModel.FLightModel.DepartureDate), true,(dt:Date) => {
                 let localDepartureArrivalDate:string = this.DateFormat(dt);
                 this.formPopup.get('ScheduleddepartureLOCPopup').setValue(localDepartureArrivalDate);
             });
-            this.GetLocalDateTime(new Date(this.incidentDataExchangeModel.FLightModel.ArrivalDate), true,(dt:Date) => {
+            this.GetLocalDateTime(new Date(this.incidentDataExchangeModel.FLightModel.ArrivalDate), false,(dt:Date) => {
                 let localDepartureArrivalDate:string = this.DateFormat(dt);
                 this.formPopup.get('ScheduledarrivalLOCPopup').setValue(localDepartureArrivalDate);
             });
@@ -325,11 +347,11 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
     }
 
     private DateFormat(date: Date): string {
-        let hours = (date.getHours());
+        let hours = new Date(date).getHours();
         // let mid = (hours > 12) ? 'PM' : 'AM';
         const months: string[] = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
         // return `${date.getDate()}-${months[date.getMonth()]}-${date.getFullYear()} ${((date.getHours() % 12) < 10) ? ("0" + (date.getHours() % 12)) : (date.getHours() % 12)}:${((date.getMinutes()) < 10) ? ("0" + (date.getMinutes())) : (date.getMinutes())} ${mid}`;
-        return `${date.getDate()}-${months[date.getMonth()]}-${date.getFullYear()} ${((date.getHours()) < 10) ? ("0" + (date.getHours())) : (date.getHours())}:${(date.getMinutes() < 10) ? ("0" + (date.getMinutes())) : (date.getMinutes())}`;
+        return `${new Date(date).getDate()}-${months[new Date(date).getMonth()]}-${new Date(date).getFullYear()} ${((new Date(date).getHours()) < 10) ? ("0" + (new Date(date).getHours())) : (new Date(date).getHours())}:${(new Date(date).getMinutes() < 10) ? ("0" + (new Date(date).getMinutes())) : (new Date(date).getMinutes())}`;
     }
 
 }

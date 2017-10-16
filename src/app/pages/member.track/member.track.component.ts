@@ -67,7 +67,10 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
     ngOnInit() {
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
+        this.pageInitialCall(this.currentDepartmentId,this.currentIncidentId);
+    }
 
+    pageInitialCall(departmentId:number, incidentId:number): void {
         this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
         this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
 
@@ -77,6 +80,7 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
         this.credential = UtilityService.getCredentialDetails();
         this.createdBy = +this.credential.UserId;
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/MemberEngagementReport/' + this.currentIncidentId;
+
     }
 
     ngAfterViewChecked() {
@@ -119,7 +123,6 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
                 memberTrackModel.Remarks = obj.Remarks;
                 memberTrackModel.UnDeploy = false;
                 memberTrackModel.CreatedBy = this.createdBy;
-
                 if (obj.MemberEngagementTrackId == null || obj.MemberEngagementTrackId == 0 || obj.MemberEngagementTrackId == undefined) {
                     const memberCurrentEngagementToSave: MemberCurrentEngagementModel = new MemberCurrentEngagementModel();
                     memberCurrentEngagementToSave.DepartmentId = this.currentDepartmentId;
@@ -139,6 +142,7 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
                     this.membertrackService.CreateMemberTrack(memberTrackModel)
                         .subscribe((response: MemberEngagementTrackModel) => {
                             const memberCurrentEngagementToedit: MemberCurrentEngagementModel = new MemberCurrentEngagementModel();
+                            memberCurrentEngagementToedit.DepartmentId = this.currentDepartmentId;
                             memberCurrentEngagementToedit.IsBusy = true;
                             memberCurrentEngagementToedit.MemberEngagementTrackId = response.MemberEngagementTrackId;
                             memberCurrentEngagementToedit.deleteAttributes();
@@ -160,29 +164,38 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
             //this.toastrService.success('Work Details Required');
         }
         else {
-            const memberTrackModel: MemberEngagementTrackModel = new MemberEngagementTrackModel();
-            memberTrackModel.deleteAttributes();
-            memberTrackModel.MemberEngagementTrackId = obj.MemberEngagementTrackId;
-            // if (this.currentDepartmentId != memberTrackModel.DepartmentId) {
-            //     this.toastrService.error('hahaha');
-            // }
-            // else {
-            memberTrackModel.UnDeploy = true;
-            memberTrackModel.UnDeployedOn = new Date();
-            const memberCurrentEngagementToEdit: MemberCurrentEngagementModel = new MemberCurrentEngagementModel();
-            memberCurrentEngagementToEdit.deleteAttributes();
-            memberCurrentEngagementToEdit.MemberCurrentEngagementId = obj.MemberCurrentEngagementId;
-            memberCurrentEngagementToEdit.IsBusy = false;
-            this.membertrackService.Update(memberCurrentEngagementToEdit, memberCurrentEngagementToEdit.MemberCurrentEngagementId)
-                .flatMap(() => this.membertrackService.UpdateMemberTrack(memberTrackModel, memberTrackModel.MemberEngagementTrackId))
-                .subscribe(() => {
-                    this.toastrService.success('Member is available now.');
-                    //alert('Member is available now.');
-                    this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
-                    // obj.isRemarksSubmitted=false;
-                });
-            //}
+            if (obj.DepartmentId == this.currentDepartmentId) {
+                const memberTrackModel: MemberEngagementTrackModel = new MemberEngagementTrackModel();
+                memberTrackModel.deleteAttributes();
+                memberTrackModel.MemberEngagementTrackId = obj.MemberEngagementTrackId;
+                // if (this.currentDepartmentId != memberTrackModel.DepartmentId) {
+                //     this.toastrService.error('hahaha');
+                // }
+                // else {
+                memberTrackModel.UnDeploy = true;
+                memberTrackModel.UnDeployedOn = new Date();
+                const memberCurrentEngagementToEdit: MemberCurrentEngagementModel = new MemberCurrentEngagementModel();
+                memberCurrentEngagementToEdit.deleteAttributes();
+                memberCurrentEngagementToEdit.MemberCurrentEngagementId = obj.MemberCurrentEngagementId;
+                memberCurrentEngagementToEdit.IsBusy = false;
+                this.membertrackService.Update(memberCurrentEngagementToEdit, memberCurrentEngagementToEdit.MemberCurrentEngagementId)
+                    .flatMap(() => this.membertrackService.UpdateMemberTrack(memberTrackModel, memberTrackModel.MemberEngagementTrackId))
+                    .subscribe(() => {
+                        this.toastrService.success('Member is available now.');
+                        //alert('Member is available now.');
+                        this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
+                        // obj.isRemarksSubmitted=false;
+                    });
+                //}
+            }
+            else {
+                this.toastrService.error('The department who has make this busy only that department can make it available.');
+            }
+
         }
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+        this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
+        this.pageInitialCall(this.currentDepartmentId,this.currentIncidentId);
     }
 
 
@@ -227,6 +240,8 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
                         member.Remarks = member.IsBusy ? obj.MemberEngagementTrack.Remarks : '';
                         member.MemberCurrentEngagementId = obj.MemberCurrentEngagementId;
                         member.MemberEngagementTrackId = obj.MemberEngagementTrackId;
+                        let gr: MemberCurrentEngagementModel = this.memberTracks.find((y) => y.MemberEngagementTrackId === member.MemberEngagementTrackId);
+                        member.DepartmentId = gr.DepartmentId;
                     }
                     return member;
                 });

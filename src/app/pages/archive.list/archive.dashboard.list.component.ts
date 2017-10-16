@@ -43,7 +43,6 @@ import { ArchiveListService } from './archive.dashboard.list.service';
 })
 export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     @ViewChild('childModalViewClosedIncident') public childModalViewClosedIncident: ModalDirective;
-
     public closedCrisises: any[];
     activeEmergencyTypes: EmergencyTypeModel[] = [];
     affectedStations: EmergencyLocationModel[] = [];
@@ -90,7 +89,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        this.useLink = false;
+        this.useLink = true;
         this.isFlightRelated = false;
         this.disableIsDrillPopup = true;
         this.isOffSetPopup = false;
