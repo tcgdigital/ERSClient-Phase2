@@ -7,7 +7,6 @@ import { KeyValue } from '../../../shared';
 
 export class MfciCountPipe implements PipeTransform {
     transform(items: KeyValue[], args: string): any {
-        debugger;
         if (items.length > 0) {
             let result: KeyValue = items.find(item => item.Key === args);
             if (result)

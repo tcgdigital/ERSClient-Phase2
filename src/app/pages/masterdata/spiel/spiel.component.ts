@@ -94,8 +94,21 @@ export class SpileComponent implements OnInit {
             }
             const activeOrganization: KeyValueModel = activeKeyValues
                 .find((x: KeyValueModel) => x.Key === Key);
-
-            this.generalform.controls["SpielText"].setValue(activeOrganization.Value);
+            if (activeOrganization.ControlType.toLowerCase() == 'dropdown') {
+                let departments:DepartmentModel[]= this.activeDepartments.filter((x: DepartmentModel) => {
+                    return x.DepartmentId == +activeOrganization.Value;
+                });
+                if(departments.length==0){
+                    this.generalform.controls["SpielText"].setValue('');
+                }
+                else{
+                    this.generalform.controls["SpielText"].setValue(activeOrganization.Value);
+                }
+            }
+            else{
+                this.generalform.controls["SpielText"].setValue(activeOrganization.Value);
+            }
+            
         }
         else {
             this.generalform.controls["SpielText"].setValue('');
