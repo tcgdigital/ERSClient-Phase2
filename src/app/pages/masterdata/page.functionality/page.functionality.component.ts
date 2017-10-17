@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-
+import * as _ from 'underscore';
 
 import { DepartmentService, DepartmentModel } from '../department';
 import { PageService, PagePermissionService } from './components';
@@ -9,7 +9,7 @@ import {
     PagesForDepartmentModel
 } from './components/page.functionality.model';
 import {
-    DataExchangeService, ResponseModel,GlobalConstants,
+    DataExchangeService, ResponseModel, GlobalConstants,
     AutocompleteComponent, KeyValue, AuthModel, UtilityService
 } from '../../../shared';
 
@@ -26,6 +26,7 @@ export class PageFunctionalityComponent implements OnInit {
     selectedDepartment: number;
     pagesForDepartmentConstant: PagesForDepartmentModel[] = [];
     pagesForDepartment: PagesForDepartmentModel[] = [];
+    pagesForDepartmentFinal: PagesForDepartmentModel[] = [];
     items: KeyValue[] = [];
     date: Date = new Date();
     pagePermissionModelToSave: PagePermissionModel[] = [];
@@ -103,7 +104,7 @@ export class PageFunctionalityComponent implements OnInit {
         this.selectedDepartment = message.Value;
         this.pagePermissionService.GetFilter(message.Value.toString())
             .subscribe((response: ResponseModel<PagePermissionModel>) => {
-                this.pagesForDepartment = this.SetAllSelectedToFalse(this.pagesForDepartmentConstant);
+                this.pagesForDepartment = this.SetAllSelectedToFalse(this.pagesForDepartmentFinal);
 
                 if (response.Count !== 0) {
                     this.pagesForDepartment.forEach((item: PagesForDepartmentModel) => {
@@ -162,7 +163,6 @@ export class PageFunctionalityComponent implements OnInit {
 
     }
     checkAllStatusView(): void {
-
         this.allSelectView = this.pagesForDepartment.length != 0 && this.pagesForDepartment.filter(x => {
 
             return x.AllowView == true;
@@ -185,27 +185,27 @@ export class PageFunctionalityComponent implements OnInit {
         this.CheckUncheckParentIfAllChildChange(event.checked, elm, this.pagesForDepartment);
     }
 
-    CheckUncheckParentIfAllChildChange(isChecked: boolean, selectedPage: PagesForDepartmentModel, pagesForDepartment: PagesForDepartmentModel[]):void{
-        const parentPageId:number = selectedPage.ParentPageId;
-        const parentPage:PagesForDepartmentModel = pagesForDepartment.find((item:PagesForDepartmentModel)=>{
-            return item.PageId==parentPageId;
+    CheckUncheckParentIfAllChildChange(isChecked: boolean, selectedPage: PagesForDepartmentModel, pagesForDepartment: PagesForDepartmentModel[]): void {
+        const parentPageId: number = selectedPage.ParentPageId;
+        const parentPage: PagesForDepartmentModel = pagesForDepartment.find((item: PagesForDepartmentModel) => {
+            return item.PageId == parentPageId;
         });
 
-        const childPages:PagesForDepartmentModel[] = pagesForDepartment.filter((item:PagesForDepartmentModel)=>{
-            return item.ParentPageId==parentPage.PageId;
+        const childPages: PagesForDepartmentModel[] = pagesForDepartment.filter((item: PagesForDepartmentModel) => {
+            return item.ParentPageId == parentPage.PageId;
         });
 
-        const filterAllowView:PagesForDepartmentModel[] = childPages.filter((item:PagesForDepartmentModel)=>{
-            return item.AllowView==isChecked;
+        const filterAllowView: PagesForDepartmentModel[] = childPages.filter((item: PagesForDepartmentModel) => {
+            return item.AllowView == isChecked;
         });
-        if(filterAllowView.length==childPages.length){
-            parentPage.AllowView=isChecked;
-            if(!isChecked){
-                childPages.map((item:PagesForDepartmentModel)=>{
-                    return item.isDisabled=true;
+        if (filterAllowView.length == childPages.length) {
+            parentPage.AllowView = isChecked;
+            if (!isChecked) {
+                childPages.map((item: PagesForDepartmentModel) => {
+                    return item.isDisabled = true;
                 });
             }
-            this.CheckUncheckParentIfAllChildChange(isChecked,parentPage,pagesForDepartment);
+            this.CheckUncheckParentIfAllChildChange(isChecked, parentPage, pagesForDepartment);
         }
     }
 
@@ -262,6 +262,29 @@ export class PageFunctionalityComponent implements OnInit {
                     pageForDepartment.isDisabled = false;
                     this.pagesForDepartmentConstant.push(pageForDepartment);
                 });
+
+                //_.pluck(this.pagesForDepartmentConstant,'ModuleName');
+
+                let tt: any = _(this.pagesForDepartmentConstant).chain().pluck('ModuleName').unique();
+                _.each(tt._wrapped, (res: string) => {
+                    let eachModuleDataSet: PagesForDepartmentModel[] = _.filter(this.pagesForDepartmentConstant, (item: PagesForDepartmentModel) => {
+                        return item.ModuleName.toLowerCase() == res.toLowerCase();
+                    });
+                    let eachModuleDataSetWithNoParentPage: PagesForDepartmentModel[] = _.filter(eachModuleDataSet, (item: PagesForDepartmentModel) => {
+                        return item.ParentPageId == null;
+                    });
+                    _.each(eachModuleDataSetWithNoParentPage, (res: PagesForDepartmentModel) => {
+                        res.Summery = res.ModuleName + ' -> ' + res.PageName;
+                        this.pagesForDepartmentFinal.push(res);
+                        let eachModuleDataSetWithParentPage: PagesForDepartmentModel[] = _.filter(eachModuleDataSet, (item: PagesForDepartmentModel) => {
+                            return item.ParentPageId == res.PageId;
+                        });
+                        _.each(eachModuleDataSetWithParentPage, (res: PagesForDepartmentModel) => {
+                            res.Summery = res.ModuleName + ' -> ' + res.ParentPageName + ' -> ' + res.PageName;
+                            this.pagesForDepartmentFinal.push(res);
+                        });
+                    });
+                })
 
             });
     }
