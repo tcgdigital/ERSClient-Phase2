@@ -7,9 +7,11 @@ export interface IUserProfileService extends IServiceInretface<UserProfileModel>
 
     GetAllActiveWithContact(): Observable<ResponseModel<UserProfileModel>>;
 
-    GetAllActiveWithContactAlternet(): Observable<ResponseModel<UserProfileModel>>
+    GetAllActiveWithContactAlternet(): Observable<ResponseModel<UserProfileModel>>;
 
     GetForDirectory(): Observable<ResponseModel<UserProfileModel>>;
 
     GetDepartmentPages(userprofileId: number): Observable<ResponseModel<UserProfileModel>>;
+
+    CheckUserHasPermission(userProfileId: number): Observable<boolean>;
 }

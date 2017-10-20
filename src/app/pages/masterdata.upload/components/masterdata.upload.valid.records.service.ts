@@ -6,10 +6,11 @@ import {
     DataProcessingService
 } from '../../../shared';
 
-import { IncidentModel } from '../../incident'
-
-import { InvolvePartyModel, AffectedPeopleModel, CargoModel, GroundVictimModel } from '../../shared.components';
-
+import { IncidentModel } from '../../incident';
+import {
+    InvolvePartyModel, AffectedPeopleModel,
+    CargoModel, GroundVictimModel
+} from '../../shared.components';
 
 
 /**
@@ -20,13 +21,13 @@ import { InvolvePartyModel, AffectedPeopleModel, CargoModel, GroundVictimModel }
  */
 @Injectable()
 export class MasterDataUploadForValidService {
-   
+
     private _dataServiceAffectedPeople: DataService<InvolvePartyModel>;
     private _dataServiceAffectedObject: DataService<InvolvePartyModel>;
     private _dataServiceGroundVictims: DataService<InvolvePartyModel>;
     private _dataServiceIncident: DataService<IncidentModel>;
     private _validPassengers: AffectedPeopleModel[] = [];
-    
+
     /**
      * Creates an instance of MasterDataUploadForValidService.
      * @param {DataServiceFactory} dataServiceFactory 
@@ -34,7 +35,7 @@ export class MasterDataUploadForValidService {
      * @memberOf AffectedPeopleService
      */
     constructor(private dataServiceFactory: DataServiceFactory) {
-        let option: DataProcessingService = new DataProcessingService();   
+        const option: DataProcessingService = new DataProcessingService();
 
         this._dataServiceAffectedPeople = this.dataServiceFactory
             .CreateServiceWithOptions<InvolvePartyModel>('InvolvedParties', option);
@@ -44,7 +45,7 @@ export class MasterDataUploadForValidService {
 
         this._dataServiceGroundVictims = this.dataServiceFactory
             .CreateServiceWithOptions<InvolvePartyModel>('InvolvedParties', option);
-        
+
         this._dataServiceIncident = this.dataServiceFactory
             .CreateServiceWithOptions<IncidentModel>('Incidents', option);
     }
@@ -57,20 +58,19 @@ export class MasterDataUploadForValidService {
      *  @returns Observable<AffectedPeopleModel[]>
      * @memberOf MasterDataUploadForValidService
      */
-    GetAllPassengerByIncidentId(incidentId: number): Observable<AffectedPeopleModel[]>{
-        let involvePartyProjection = 'InvolvedPartyType,InvolvedPartyDesc';
-        let affectedProjection = 'Severity';
-        let affectedPeopleProjection = 'AffectedPersonId,TicketNumber,IsStaff,IsCrew,IsVerified,Identification';
-        let passengerPrjection = 
-        'PassengerId,FlightNumber,PassengerName,PassengerGender,PassengerNationality,BaggageCount,Pnr,PassengerType,ContactNumber,Seatno,IdentificationDocType,IdentificationDocNumber,PassengerType,IsVip,Origin,Destination,InboundFlightNumber,OutBoundFlightNumber,EmployeeId';
+    GetAllPassengerByIncidentId(incidentId: number): Observable<AffectedPeopleModel[]> {
+        const involvePartyProjection = 'InvolvedPartyType,InvolvedPartyDesc';
+        const affectedProjection = 'Severity';
+        const affectedPeopleProjection = 'AffectedPersonId,TicketNumber,IsStaff,IsCrew,IsVerified,Identification';
+        const passengerPrjection = 'PassengerId,FlightNumber,PassengerName,PassengerGender,PassengerNationality,BaggageCount,Pnr,PassengerType,ContactNumber,Seatno,IdentificationDocType,IdentificationDocNumber,PassengerType,IsVip,Origin,Destination,InboundFlightNumber,OutBoundFlightNumber,EmployeeId';
 
         return this._dataServiceAffectedPeople.Query()
             .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=PassengerId ne null;$select=${affectedPeopleProjection};$expand=Passenger;$orderby=Passenger/PassengerName))`)
             .Filter(`IncidentId eq ${incidentId}`)
             .Select(involvePartyProjection)
             .Execute()
-            .map(x=>x.Records.map(y=>y.Affecteds).reduce((a,b)=>a.concat(b)))
-            .map(x=>x.map(y=>y.AffectedPeople).reduce((a,b)=>a.concat(b)));                       
+            .map((x) => x.Records.map((y) => y.Affecteds).reduce((a, b) => a.concat(b)))
+            .map((x) => x.map((y) => y.AffectedPeople).reduce((a, b) => a.concat(b)));
     }
 
     /**
@@ -81,19 +81,19 @@ export class MasterDataUploadForValidService {
      * 
      * @memberOf MasterDataUploadForValidService
      */
-    GetAllCrewByIncidentId(incidentId: number): Observable<AffectedPeopleModel[]>{
-        let involvePartyProjection = 'InvolvedPartyType,InvolvedPartyDesc';
-        let affectedProjection = 'Severity';
-        let affectedPeopleProjection = 'AffectedPersonId,TicketNumber,IsStaff,IsCrew,IsVerified,Identification';
-        let crewPrjection = 'CrewId,EmployeeNumber,CrewName,CrewDob,AsgCat,DeadheadCrew,BaseLocation,Email,DepartureStationCode,ArrivalStationCode,FlightNo,WorkPosition,ContactNumber';
+    GetAllCrewByIncidentId(incidentId: number): Observable<AffectedPeopleModel[]> {
+        const involvePartyProjection = 'InvolvedPartyType,InvolvedPartyDesc';
+        const affectedProjection = 'Severity';
+        const affectedPeopleProjection = 'AffectedPersonId,TicketNumber,IsStaff,IsCrew,IsVerified,Identification';
+        const crewPrjection = 'CrewId,EmployeeNumber,CrewName,CrewDob,AsgCat,DeadheadCrew,BaseLocation,Email,DepartureStationCode,ArrivalStationCode,FlightNo,WorkPosition,ContactNumber';
 
         return this._dataServiceAffectedPeople.Query()
-        .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=CrewId ne null;$select=${affectedPeopleProjection};$expand=Crew;$orderby=Crew/CrewName))`)
-        .Filter(`IncidentId eq ${incidentId}`)
-        .Select(`${involvePartyProjection}`)
-        .Execute()
-        .map(x=>x.Records.map(y=>y.Affecteds).reduce((a,b)=>a.concat(b)))
-        .map(x=>x.map(y=>y.AffectedPeople).reduce((a,b)=>a.concat(b)));
+            .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=CrewId ne null;$select=${affectedPeopleProjection};$expand=Crew;$orderby=Crew/CrewName))`)
+            .Filter(`IncidentId eq ${incidentId}`)
+            .Select(`${involvePartyProjection}`)
+            .Execute()
+            .map((x) => x.Records.map((y) => y.Affecteds).reduce((a, b) => a.concat(b)))
+            .map((x) => x.map((y) => y.AffectedPeople).reduce((a, b) => a.concat(b)));
     }
 
     /**
@@ -104,15 +104,14 @@ export class MasterDataUploadForValidService {
      * 
      * @memberOf MasterDataUploadForValidService
      */
-    GetAllCargoByIncidentId(incidentId: number): Observable<CargoModel[]>{
+    GetAllCargoByIncidentId(incidentId: number): Observable<CargoModel[]> {
         return this._dataServiceAffectedObject.Query()
-        .Expand(`Flights($expand=Cargoes)`)
-        .Filter(`IncidentId eq ${incidentId}`)
-        .Execute()
-        .map(a=>a.Records.map(b=>b.Flights).reduce((a,b)=>a.concat(b)))
-        .map(a=>a.map(b=>b.Cargoes).reduce((a,b)=>a.concat(b)));
+            .Expand(`Flights($expand=Cargoes)`)
+            .Filter(`IncidentId eq ${incidentId}`)
+            .Execute()
+            .map((a) => a.Records.map((b) => b.Flights).reduce((c, d) => c.concat(d)))
+            .map((a) => a.map((b) => b.Cargoes).reduce((c, d) => c.concat(d)));
     }
-
 
     /**
      * Get All Ground Victims
@@ -122,18 +121,19 @@ export class MasterDataUploadForValidService {
      * 
      * @memberOf MasterDataUploadForValidService
      */
-    GetAllGroundVictimsByIncidentId(incidentId: number): Observable<GroundVictimModel[]>{
+    GetAllGroundVictimsByIncidentId(incidentId: number): Observable<GroundVictimModel[]> {
         return this._dataServiceGroundVictims.Query()
-        .Expand(`GroundVictims`)
-        .Filter(`IncidentId eq ${incidentId}`)
-        .Execute()
-        .map(a=>a.Records.map(b=>b.GroundVictims).reduce((a,b)=>a.concat(b)));
+            .Expand(`GroundVictims`)
+            .Filter(`IncidentId eq ${incidentId}`)
+            .Execute()
+            .map((a) => a.Records.map((b) => b.GroundVictims)
+            .reduce((c, d) => c.concat(d)));
     }
 
-    GetCurrentIncidentWithLoadSheet(incidentId: number): Observable<ResponseModel<IncidentModel>>{
+    GetCurrentIncidentWithLoadSheet(incidentId: number): Observable<ResponseModel<IncidentModel>> {
         return this._dataServiceIncident.Query()
-        .Filter(`IncidentId eq ${incidentId}`)
-        .Expand(`FileStores`)
-        .Execute();        
+            .Filter(`IncidentId eq ${incidentId}`)
+            .Expand(`FileStores`)
+            .Execute();
     }
 }

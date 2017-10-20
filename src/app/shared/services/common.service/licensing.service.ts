@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { Response } from '@angular/http';
-import { GlobalConstants } from '../../constants'
+import { GlobalConstants } from '../../constants';
 import { DataService, DataServiceFactory, DataProcessingService } from '../data.service';
 import { LicenseVerificationResponse, LicenseInformationModel } from '../../models'
 
@@ -9,7 +9,7 @@ import { LicenseVerificationResponse, LicenseInformationModel } from '../../mode
 export class LicensingService {
     private _licenseValidationService: DataService<any>;
     private _licenseInformationService: DataService<any>;
-    private _licenseSetService : DataService<any>;
+    private _licenseSetService: DataService<any>;
 
     constructor(private dataServiceFactory: DataServiceFactory) {
         const option: DataProcessingService = new DataProcessingService();
@@ -17,11 +17,10 @@ export class LicensingService {
 
         this._licenseValidationService = this.dataServiceFactory
             .CreateServiceWithOptionsAndActionSuffix('License', 'VerifyLicense', option);
-            
         this._licenseInformationService = this.dataServiceFactory
-            .CreateServiceWithOptionsAndActionSuffix( 'License', 'GetLicenseInfo', option );
-             this._licenseSetService = this.dataServiceFactory
-            .CreateServiceWithOptionsAndActionSuffix( 'License', 'SetLicenseKey', option );
+            .CreateServiceWithOptionsAndActionSuffix('License', 'GetLicenseInfo', option);
+        this._licenseSetService = this.dataServiceFactory
+            .CreateServiceWithOptionsAndActionSuffix('License', 'SetLicenseKey', option);
     }
 
     LicenseVerificationResponseExceptionHandler(error: Response): Observable<LicenseVerificationResponse> {
@@ -37,16 +36,16 @@ export class LicensingService {
     }
     public GetLicenseInfo(): Observable<LicenseInformationModel> {
         return this._licenseInformationService.SimpleGet()
-        .Execute()
-        .map((response: any) => {
-            return response as LicenseInformationModel;
-        });
+            .Execute()
+            .map((response: any) => {
+                return response as LicenseInformationModel;
+            });
     }
-    public SetLicenseInfo(onClickVerify): Observable<LicenseInformationModel>{
+    public SetLicenseInfo(onClickVerify): Observable<LicenseInformationModel> {
         return this._licenseSetService.JsonPost(onClickVerify)
-        .Execute()
-        .map((response: any) => {
-            return response as LicenseInformationModel;
-        });
+            .Execute()
+            .map((response: any) => {
+                return response as LicenseInformationModel;
+            });
     }
 }
