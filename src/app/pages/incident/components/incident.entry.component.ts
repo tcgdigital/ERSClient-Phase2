@@ -718,8 +718,16 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         }
         this.flightModel.DepartureDate = (isFlightRelated === true) ?
             new Date(this.formFlight.controls['Scheduleddeparture'].value) : new Date('01/01/2001');
+
+        this.flightModel.DepartureDateLocal = (isFlightRelated === true) ?
+            new Date(this.formFlight.controls['ScheduleddepartureLOC'].value) : new Date('01/01/2001');
+
         this.flightModel.ArrivalDate = (isFlightRelated === true) ?
             new Date(this.formFlight.controls['Scheduledarrival'].value) : new Date('01/02/2001');
+
+        this.flightModel.ArrivalDateLocal = (isFlightRelated === true) ?
+            new Date(this.formFlight.controls['ScheduledarrivalLOC'].value) : new Date('01/02/2001');
+
         this.flightModel.FlightTaleNumber = (isFlightRelated === true) ?
             this.formFlight.controls['FlightTailNumber'].value : 'DUMMY_FLT_TAIL';
         // this.flightModel.FlightTaleNumber = (isFlightRelated === true) ?
