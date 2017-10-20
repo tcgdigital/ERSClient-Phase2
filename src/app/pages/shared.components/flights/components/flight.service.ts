@@ -35,7 +35,7 @@ export class FlightService {
     GetAllActiveFlights(): Observable<ResponseModel<FlightModel>> {
         return this._dataService.Query()
             .Select('FlightId', 'FlightNo', 'FlightTaleNumber', 'OriginCode',
-            'DestinationCode', 'DepartureDate', 'ArrivalDate', 'LoadAndTrimInfo', 'CreatedBy', 'CreatedOn')
+            'DestinationCode', 'DepartureDate', 'ArrivalDate','DepartureDateLocal', 'ArrivalDateLocal', 'LoadAndTrimInfo', 'CreatedBy', 'CreatedOn')
             .Filter("ActiveFlag eq 'Active'")
             .OrderBy("CreatedOn desc")
             .Execute();

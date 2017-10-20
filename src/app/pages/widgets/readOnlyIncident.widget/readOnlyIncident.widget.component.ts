@@ -240,15 +240,19 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
             // });
 
 
-            
-            this.GetLocalDateTime(new Date(this.incidentDataExchangeModel.FLightModel.DepartureDate), true,(dt:Date) => {
-                let localDepartureArrivalDate:string = this.DateFormat(dt);
-                this.formPopup.get('ScheduleddepartureLOCPopup').setValue(localDepartureArrivalDate);
-            });
-            this.GetLocalDateTime(new Date(this.incidentDataExchangeModel.FLightModel.ArrivalDate), false,(dt:Date) => {
-                let localDepartureArrivalDate:string = this.DateFormat(dt);
-                this.formPopup.get('ScheduledarrivalLOCPopup').setValue(localDepartureArrivalDate);
-            });
+            let localDepartureDateLoc:string = this.DateFormat(this.incidentDataExchangeModel.FLightModel.DepartureDateLocal);
+            this.formPopup.get('ScheduleddepartureLOCPopup').setValue(localDepartureDateLoc);
+            // this.GetLocalDateTime(new Date(this.incidentDataExchangeModel.FLightModel.DepartureDate), true,(dt:Date) => {
+            //     let localDepartureArrivalDate:string = this.DateFormat(dt);
+            //     this.formPopup.get('ScheduleddepartureLOCPopup').setValue(localDepartureArrivalDate);
+            // });
+
+            let localArrivalDateLoc:string = this.DateFormat(this.incidentDataExchangeModel.FLightModel.ArrivalDateLocal);
+            this.formPopup.get('ScheduledarrivalLOCPopup').setValue(localArrivalDateLoc);
+            // this.GetLocalDateTime(new Date(this.incidentDataExchangeModel.FLightModel.ArrivalDate), false,(dt:Date) => {
+            //     let localDepartureArrivalDate:string = this.DateFormat(dt);
+            //     this.formPopup.get('ScheduledarrivalLOCPopup').setValue(localDepartureArrivalDate);
+            // });
             this.IsDrillPopup = this.incidentDataExchangeModel.IncidentModel.IsDrill;
             this.isFlightRelatedPopup = true;
         }

@@ -39,6 +39,7 @@ export class PagesForDepartmentModel extends BaseModel {
     public ParentPageId?: number;
     public ParentPageName: string;
     public ModuleName: string;
+    public Summery: string;
     public ID: string;
     public URL: string;
     public Type: string;
