@@ -26,7 +26,7 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
     date: Date = new Date();
     emergencyLocations: EmergencyLocationModel[] = [];
     Action: string;
-    numaricRegex = "/^[0-9]{10,10}$/";
+    numaricRegex = '/^[0-9]{10,10}$/';
     showAdd: boolean = false;
     credential: AuthModel;
     filesToUpload: File[];
@@ -89,14 +89,14 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
         this.filesToUpload = [];
         this.isDisabledUpload = false;
         for (var i = 0; i < e.target.files.length; i++) {
-            var extension = e.target.files[i].name.split('.').pop();
+            const extension = e.target.files[i].name.split('.').pop();
 
             if (extension.toLowerCase() == 'xlsx') {
                 this.filesToUpload.push(e.target.files[i]);
             }
             else {
                 this.toastrService.error('Invalid File Format!', 'Error', this.toastrConfig);
-                this.inputFileStations.nativeElement.value = "";
+                this.inputFileStations.nativeElement.value = '';
                 this.isDisabledUpload = true;
             }
         }
@@ -106,7 +106,7 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
         if (this.filesToUpload.length) {
             const baseUrl = GlobalConstants.EXTERNAL_URL;
             const param = this.credential.UserId;
-            const errorMsg: string;
+            const errorMsg: string = '';
             this.date = new Date();
             this.fileUploadService.uploadFiles<string>(baseUrl + './api/MasterDataExportImport/AirportStationUpload/' + param,
                 this.filesToUpload, this.date.toString()).subscribe((result: string) => {
@@ -114,9 +114,9 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
                         this.toastrService.error(result, 'Error', this.toastrConfig);
                     }
                     else {
-                        this.toastrService.success("File Uploaded successfully.\n" + result, "Success", this.toastrConfig);
+                        this.toastrService.success('File Uploaded successfully.\n' + result, 'Success', this.toastrConfig);
                     }
-                    this.dataExchange.Publish("FileUploadedSuccessfully", new EmergencyLocationModel());
+                    this.dataExchange.Publish('FileUploadedSuccessfully', new EmergencyLocationModel());
                     this.initiateForm();
                     this.isDisabledUpload = true;
                 });
@@ -124,7 +124,7 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
         }
 
         else {
-            this.toastrService.error("Invalid File Format!", "Error", this.toastrConfig);
+            this.toastrService.error('Invalid File Format!', 'Error', this.toastrConfig);
             this.initiateForm();
             this.isDisabledUpload = true;
         }
@@ -135,24 +135,26 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
         if (this.form.valid) {
             this.isInvalidForm = false;
             UtilityService.setModelFromFormGroup<EmergencyLocationModel>(this.emergencyLocation, this.form,
-                x => x.EmergencyLocationId, x => x.IATA, x => x.AirportName, x => x.Country, x => x.City);
-            let timeZone: string = this.form.controls['TimeZone'].value;
-            let utcOffset: string = this.timeZones.filter(a => a.zonename == timeZone)[0].decimaloffset;
-            let utcOffsetInMS: string = (+utcOffset * 3600 * 1000).toString();
+                (x) => x.EmergencyLocationId, (x) => x.IATA, (x) => x.AirportName, (x) => x.Country, (x) => x.City);
+
+            const timeZone: string = this.form.controls['TimeZone'].value;
+            const utcOffset: string = this.timeZones.filter((a) => a.zonename == timeZone)[0].decimaloffset;
+            const utcOffsetInMS: string = (+utcOffset * 3600 * 1000).toString();
+
             this.emergencyLocation.TimeZone = timeZone;
             this.emergencyLocation.UTCOffset = utcOffsetInMS;
             if (this.emergencyLocation.EmergencyLocationId == 0) {
                 this.emergencyLocation.CreatedBy = +this.credential.UserId;
 
-                if (this.form.controls["isActive"].value != false)
-                    this.emergencyLocation.ActiveFlag = "Active";
+                if (this.form.controls['isActive'].value != false)
+                    this.emergencyLocation.ActiveFlag = 'Active';
                 else
-                    this.emergencyLocation.ActiveFlag = "InActive";
+                    this.emergencyLocation.ActiveFlag = 'InActive';
 
                 this.emergencyLocationService.Create(this.emergencyLocation)
                     .subscribe((response: EmergencyLocationModel) => {
                         this.toastrService.success('Crisis Location is created Successfully.', 'Success', this.toastrConfig);
-                        this.dataExchange.Publish("EmergencyLocationModelSaved", response);
+                        this.dataExchange.Publish('EmergencyLocationModelSaved', response);
                         this.initiateForm();
                         this.showAddRegion(this.showAdd);
                         this.showAdd = false;
@@ -161,14 +163,14 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
                     });
             }
             else {
-                if (this.form.controls["isActive"].value != false)
-                    this.emergencyLocation.ActiveFlag = "Active";
+                if (this.form.controls['isActive'].value != false)
+                    this.emergencyLocation.ActiveFlag = 'Active';
                 else
-                    this.emergencyLocation.ActiveFlag = "InActive";
+                    this.emergencyLocation.ActiveFlag = 'InActive';
                 this.emergencyLocationService.Update(this.emergencyLocation)
                     .subscribe((response: EmergencyLocationModel) => {
                         this.toastrService.success('Crisis Location is updated Successfully.', 'Success', this.toastrConfig);
-                        this.dataExchange.Publish("EmergencyLocationModelUpdated", response);
+                        this.dataExchange.Publish('EmergencyLocationModelUpdated', response);
                         this.initiateForm();
                         this.showAddRegion(this.showAdd);
                         this.showAdd = false;
@@ -178,37 +180,16 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
             }
         }
         else {
-            this.isInvalidForm = true
+            this.isInvalidForm = true;
         }
     }
 
-    private initiateForm(): void {
-        this.emergencyLocation = new EmergencyLocationModel();
-        this.Action = "Save";
-
-        this.form = new FormGroup({
-            EmergencyLocationId: new FormControl(0),
-            IATA: new FormControl('', [Validators.required]),
-            AirportName: new FormControl('', Validators.required),
-            City: new FormControl('', Validators.required),
-            Country: new FormControl('', Validators.required),
-            fileStation: new FormControl(),
-            TimeZone: new FormControl('', Validators.required),
-            isActive: new FormControl(false)
-        })
-    }
-
-    // showAddRegion() {
-    //     this.showAdd = true;
-    //     this.initiateForm();
-
-    // }
     showAddRegion(value): void {
         if (!value) {
-            this.showAddText = "CLICK TO COLLAPSE";
+            this.showAddText = 'CLICK TO COLLAPSE';
         }
         else {
-            this.showAddText = "ADD RESPONSIBLE STATION";
+            this.showAddText = 'ADD RESPONSIBLE STATION';
         }
 
         window.setInterval(() => {
@@ -223,5 +204,21 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
         this.showAddRegion(this.showAdd);
         this.showAdd = false;
         this.isInvalidForm = false;
+    }
+
+    private initiateForm(): void {
+        this.emergencyLocation = new EmergencyLocationModel();
+        this.Action = 'Save';
+
+        this.form = new FormGroup({
+            EmergencyLocationId: new FormControl(0),
+            IATA: new FormControl('', [Validators.required]),
+            AirportName: new FormControl('', Validators.required),
+            City: new FormControl('', Validators.required),
+            Country: new FormControl('', Validators.required),
+            fileStation: new FormControl(),
+            TimeZone: new FormControl('', Validators.required),
+            isActive: new FormControl(false)
+        });
     }
 }

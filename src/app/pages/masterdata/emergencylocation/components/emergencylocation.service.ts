@@ -20,19 +20,19 @@ export class EmergencyLocationService extends ServiceBase<EmergencyLocationModel
      * @memberOf EmergencyLocationService
      */
     constructor(private dataServiceFactory: DataServiceFactory) {
-        super(dataServiceFactory, 'EmergencyLocations')
+        super(dataServiceFactory, 'EmergencyLocations');
     }
 
     GetAllActive(): Observable<ResponseModel<EmergencyLocationModel>> {
         return this._dataService.Query()
             .Filter("ActiveFlag eq 'Active'")
-            .OrderBy("CreatedOn desc")
+            .OrderBy('CreatedOn desc')
             .Execute();
     }
 
     GetAllEmergencyLocations(): Observable<ResponseModel<EmergencyLocationModel>> {
         return this._dataService.Query()
-            .OrderBy("IATA asc")
+            .OrderBy('IATA asc')
             .Execute();
     }
 
@@ -40,7 +40,7 @@ export class EmergencyLocationService extends ServiceBase<EmergencyLocationModel
         return this._dataService.Query()
             .Select('EmergencyLocationId', 'City', 'IATA', 'AirportName', 'Country', 'TimeZone', 'UTCOffset', 'CreatedBy', 'CreatedOn')
             .Filter("ActiveFlag eq 'Active'")
-            .OrderBy("CreatedOn desc")
+            .OrderBy('CreatedOn desc')
             .Execute();
     }
 
@@ -58,5 +58,4 @@ export class EmergencyLocationService extends ServiceBase<EmergencyLocationModel
         return this._dataService.Query()
             .Filter(query).Execute();
     }
-
 }
