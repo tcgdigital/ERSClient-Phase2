@@ -117,9 +117,9 @@ export class MyDemandComponent implements OnInit, OnDestroy {
         this.mydemands.length = 0;
         this.demandService.GetByRequesterDepartment(deptId, incidentId)
             .subscribe((response: ResponseModel<DemandModel>) => {
-                console.log(response);
+                // console.log(response);
                 this.mydemands = this.demandService.DemandMapper(response.Records);
-                console.log(this.mydemands);
+                // console.log(this.mydemands);
                 this.mydemands.forEach((x) => {
                     const scheduleTime = x.ScheduleTime;
                     const createdOn = new Date(x.CreatedOn);

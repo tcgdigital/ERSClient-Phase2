@@ -267,25 +267,33 @@ export class PageFunctionalityComponent implements OnInit {
 
                 let tt: any = _(this.pagesForDepartmentConstant).chain().pluck('ModuleName').unique();
                 _.each(tt._wrapped, (res: string) => {
-                    let eachModuleDataSet: PagesForDepartmentModel[] = _.filter(this.pagesForDepartmentConstant, (item: PagesForDepartmentModel) => {
-                        return item.ModuleName.toLowerCase() == res.toLowerCase();
-                    });
-                    let eachModuleDataSetWithNoParentPage: PagesForDepartmentModel[] = _.filter(eachModuleDataSet, (item: PagesForDepartmentModel) => {
-                        return item.ParentPageId == null;
-                    });
+                    let eachModuleDataSet: PagesForDepartmentModel[] =
+                        _.filter(this.pagesForDepartmentConstant, (item: PagesForDepartmentModel) => {
+                            return item.ModuleName.toLowerCase() == res.toLowerCase();
+                        });
+                    let eachModuleDataSetWithNoParentPage: PagesForDepartmentModel[] =
+                        _.filter(eachModuleDataSet, (item: PagesForDepartmentModel) => {
+                            return item.ParentPageId == null;
+                        });
                     _.each(eachModuleDataSetWithNoParentPage, (res: PagesForDepartmentModel) => {
                         res.Summery = res.ModuleName + ' -> ' + res.PageName;
                         this.pagesForDepartmentFinal.push(res);
-                        let eachModuleDataSetWithParentPage: PagesForDepartmentModel[] = _.filter(eachModuleDataSet, (item: PagesForDepartmentModel) => {
-                            return item.ParentPageId == res.PageId;
-                        });
-                        _.each(eachModuleDataSetWithParentPage, (res: PagesForDepartmentModel) => {
-                            res.Summery = res.ModuleName + ' -> ' + res.ParentPageName + ' -> ' + res.PageName;
-                            this.pagesForDepartmentFinal.push(res);
-                        });
+                        this.FillData(eachModuleDataSet, res.PageId, res.Summery);
                     });
                 })
 
             });
+    }
+
+    private FillData(eachModuleDataSet: PagesForDepartmentModel[], pageId: number, summery: string): void {
+        let eachModuleDataSetWithSubPage: PagesForDepartmentModel[] =
+            _.filter(eachModuleDataSet, (item: PagesForDepartmentModel) => {
+                return item.ParentPageId == pageId;
+            });
+        _.each(eachModuleDataSetWithSubPage, (res1: PagesForDepartmentModel) => {
+            res1.Summery = summery + ' -> ' + res1.PageName;
+            this.pagesForDepartmentFinal.push(res1);
+            this.FillData(eachModuleDataSet, res1.PageId, res1.Summery);
+        });
     }
 }

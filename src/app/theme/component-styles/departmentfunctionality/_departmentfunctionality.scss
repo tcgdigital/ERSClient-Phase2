@@ -1,13 +1,13 @@
-.buttonholder{
-        float: right;
+.buttonholder {
+    float: right;
     vertical-align: middle;
     padding: 15px;
 }
 
-.trimString{
+.trimString {
     display:inline-block;
-    width:650px;
-    white-space: nowrap;
-    overflow:hidden !important;
-    text-overflow: ellipsis;
+    width: 80%; //white-space: nowrap;
+    
+    //overflow:hidden !important;
+    //text-overflow: ellipsis;
 }

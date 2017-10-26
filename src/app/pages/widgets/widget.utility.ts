@@ -113,7 +113,7 @@ export class WidgetUtilityService {
     public static GetGraphDemand(requesterDepartmentId: number, Highcharts: any, arrGraphData: DemandStatusLogModel[],
         containerName: string, graphSubjectType: string, emergencyDate: Date, departmentType: string): void {
         let DepartmentName: string = '';
-        console.log(requesterDepartmentId);
+        // console.log(requesterDepartmentId);
         if (departmentType == 'TargetDepartment') {
             DepartmentName = arrGraphData[0].TargetDepartment.Description;
         }

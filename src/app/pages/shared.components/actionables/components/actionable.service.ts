@@ -169,7 +169,7 @@ export class ActionableService extends ServiceBase<ActionableModel> implements I
     public SetParentActionableStatusByIncidentIdandDepartmentIdandActionable(incidentId: number,
         departmentId: number, actionable: ActionableModel,
         currentActionables: ActionableModel[]): void {
-        console.log(actionable);
+        // console.log(actionable);
         // if (actionable.ParentCheckListId != null) {
         //     this._dataService.Query()
         //         .Filter(`IncidentId eq ${incidentId} and ChklistId eq ${actionable.ParentCheckListId} and ActiveFlag eq 'Active'`)

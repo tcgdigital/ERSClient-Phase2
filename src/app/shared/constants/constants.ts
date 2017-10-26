@@ -75,7 +75,6 @@ export class GlobalConstants {
     public static AD_AUTH_ENABLED: boolean = false;
     public static PASSWORD_PATTERN: RegExp = /^(?!.*[\s])(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,20}$/ig;
     public static NUMBER_PATTERN: string = '^[0-9-+]*$';
-    //public static EMAIL_PATTERN: string = '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$';
     public static EMAIL_PATTERN: string = '^[_a-z_A-Z0-9-]+(\.[_a-z_A-Z0-9-]+)*@[a-z_A-Z0-9-]+(\.[a-z_A-Z0-9-]+)*(\.[a-z_A-Z]{2,4})$';
     public static URL_PATTERN: string = '^(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:\~\+#]*[\w\-\@?^=%&amp;\~\+#])?$';
     public static LAST_INCIDENT_PICK_COUNT: string = '5';

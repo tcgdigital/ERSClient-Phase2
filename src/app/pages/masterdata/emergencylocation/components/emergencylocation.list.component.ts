@@ -67,7 +67,7 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
                 this.emergencyLocations.forEach(x => {
                     x.Active = (x.ActiveFlag === 'Active');
                 })
-                console.log(this.emergencyLocations);
+                // console.log(this.emergencyLocations);
             });
     }
 

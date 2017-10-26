@@ -409,7 +409,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         Observable.interval(10000).subscribe((_) => {
             this.activeActionables.forEach((item: ActionableModel) => {
                 item.RagColor = UtilityService.GetRAGStatus('Checklist', item.AssignedDt, item.ScheduleClose);
-                console.log(`Schedule run RAG ststus: ${item.RagColor}`);
+                // console.log(`Schedule run RAG ststus: ${item.RagColor}`);
             });
         }, (error: any) => {
             console.log(`Error: ${error}`);

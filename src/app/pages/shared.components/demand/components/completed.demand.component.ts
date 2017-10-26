@@ -135,7 +135,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
                 this.demandRemarks = response.Records;
                 this.childModalRemarks.show();
             }, (error: any) => {
-                console.log('error:  ' + error);
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -209,7 +209,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
                 this.getDemandRemarks(demand.DemandId);
                 this.Remarks = '';
             }, (error: any) => {
-                console.log('error:  ' + error);
+                console.log(`Error: ${error}`);
                 alert('Error occured during saving the remark');
             });
     }

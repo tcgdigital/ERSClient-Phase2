@@ -29,7 +29,7 @@ export class ChecklistListComponent implements OnInit {
     date: Date = new Date();
     StationList: string[] = [];
     currentDepartmentId: number;
-    
+
     public isShowAddEditChecklist: boolean = true;
     searchConfigs: Array<SearchConfigModel<any>> = new Array<SearchConfigModel<any>>();
     parentChecklistListForSearch: Array<NameValue<number>> = Array<NameValue<number>>();
@@ -42,9 +42,9 @@ export class ChecklistListComponent implements OnInit {
     @ViewChild('invalidChecklistModal') public invalidChecklistModal: ModalDirective;
 
     constructor(private checkListService: ChecklistService, private emergencytypeService: EmergencyTypeService,
-        private dataExchange: DataExchangeService<ChecklistModel>, private globalState: GlobalStateService) { 
-            
-        }
+        private dataExchange: DataExchangeService<ChecklistModel>, private globalState: GlobalStateService) {
+
+    }
 
     findIfParent(item: ChecklistModel): any {
         return (item.CheckListChildrenMapper.length > 0);
@@ -68,15 +68,15 @@ export class ChecklistListComponent implements OnInit {
                     }
                     else
                         a.StationList = [];
-                })
-                console.log(this.checkLists);
+                });
+                // console.log(this.checkLists);
                 this.initiateSearchConfigurations();
             },
             (error: any) => {
                 console.log(`Error: ${error}`);
             },
-        ()=>{
-            this.checkLists.sort((a, b)=>{
+            () => {
+                this.checkLists.sort((a, b) => {
                     if (a.EmergencyType.EmergencyTypeName < b.EmergencyType.EmergencyTypeName) return -1;
                     if (a.EmergencyType.EmergencyTypeName > b.EmergencyType.EmergencyTypeName) return 1;
                     if (a.Sequence < b.Sequence) return -1;
@@ -84,14 +84,14 @@ export class ChecklistListComponent implements OnInit {
 
                     return 0;
                 });
-        });
+            });
     }
 
-    getInvalidChecklists(): void{
+    getInvalidChecklists(): void {
         this.checkListService.GetInvalidChecklists()
-        .subscribe((response : ResponseModel<InvalidChecklistModel>) => {
-            this.invalidChecklists = response.Records;
-        })
+            .subscribe((response: ResponseModel<InvalidChecklistModel>) => {
+                this.invalidChecklists = response.Records;
+            })
     }
 
     getEmergencyTypes(): void {
@@ -145,7 +145,7 @@ export class ChecklistListComponent implements OnInit {
         this.initiateSearchConfigurations();
         this.getInvalidChecklists();
 
-        this.dataExchange.Subscribe('FileUploadedSuccessfullyCheckList',()=>{
+        this.dataExchange.Subscribe('FileUploadedSuccessfullyCheckList', () => {
             this.getCheckLists(this.currentDepartmentId);
         });
     }
