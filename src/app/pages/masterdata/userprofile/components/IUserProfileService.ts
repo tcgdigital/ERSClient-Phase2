@@ -13,5 +13,5 @@ export interface IUserProfileService extends IServiceInretface<UserProfileModel>
 
     GetDepartmentPages(userprofileId: number): Observable<ResponseModel<UserProfileModel>>;
 
-    CheckUserHasPermission(userProfileId: number): Observable<boolean>;
+    CheckUserHasPermission(userProfileId: number): Observable<number>;
 }

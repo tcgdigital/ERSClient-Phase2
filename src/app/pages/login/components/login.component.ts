@@ -220,12 +220,15 @@ export class LoginComponent implements OnInit {
 
     private CheckDepartmentPages(UserProfileId: number): void {
         this.userProfileService.CheckUserHasPermission(UserProfileId)
-            .subscribe((res: boolean) => {
-                if (res)
-                    this.CheckClosedIncident();
-                else
+            .subscribe((res: number) => {
+                debugger;
+                if (res == 1)
+                    this.toastrService.warning('User Not Assigned to Any Department');
+                else if (res == 2)
                     this.toastrService
                         .warning('Departments assigned to this user don\'t have access to any pages');
+                else
+                    this.CheckClosedIncident();
             });
 
         /*this.userProfileService.GetDepartmentPages(UserProfileId)

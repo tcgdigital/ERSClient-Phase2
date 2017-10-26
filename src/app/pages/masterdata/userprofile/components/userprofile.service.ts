@@ -72,12 +72,11 @@ export class UserProfileService extends ServiceBase<UserProfileModel>
             .Execute();
     }
 
-    CheckUserHasPermission(userProfileId: number): Observable<boolean> {
+    CheckUserHasPermission(userProfileId: number): Observable<number> {
         return this._checkPermissionService.SimpleGet(`/${userProfileId}`)
             .Execute()
             .map((response: any) => {
-                debugger;
-                return response as boolean;
+                return response as number;
             });
     }
 }
