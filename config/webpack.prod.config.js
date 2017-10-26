@@ -134,10 +134,13 @@ module.exports = function (options) {
              * See: https://webpack.github.io/docs/list-of-plugins.html#uglifyjsplugin
              */
             new UglifyJsPlugin({
+                ie8: false,
+                ecma: 8,
                 output: {
-                    comments: false
+                    comments: false,
+                    beautify: false
                 },
-                mangle: true,
+                mangle: false,
                 // mangle: {
                 //     screw_ie8: true
                 // },
@@ -152,7 +155,7 @@ module.exports = function (options) {
                     dead_code: true,
                     evaluate: true,
                     if_return: true,
-                    join_vars: true,
+                    // join_vars: true,
                     negate_iife: false // we need this for lazy v8
                 }
             }),
