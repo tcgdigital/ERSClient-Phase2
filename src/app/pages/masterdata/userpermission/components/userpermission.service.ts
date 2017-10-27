@@ -134,7 +134,6 @@ export class UserPermissionService
         return this._userPermissionService.SimpleGet(`/${emergencyTypeId}`)
             .Execute()
             .map((resp) => {
-                debugger;
                 return resp as UserPermissionModel[];
             });
     }

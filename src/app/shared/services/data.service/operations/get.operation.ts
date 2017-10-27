@@ -116,7 +116,6 @@ export class BulkGetOperation<T extends any> extends DataOperation<any> {
      * @memberOf GetOperation
      */
     public Execute(): Observable<T[]> {
-        debugger;
         const uri: string = this.DataProcessingService
             .GetUri(this.TypeName, this.Key, this.actionSuffix);
 
