@@ -282,7 +282,6 @@ export class EmergencyClosureComponent implements OnInit {
 	}
 
 	submitIncidentClosure(): void {
-		debugger;
 		if (this.incident.ClosureNote == null || this.incident.ClosureNote.toString().trim() == "") {
 			this.toastrService.error('Closure Note is mandatory.', 'Error', this.toastrConfig);
 		}
