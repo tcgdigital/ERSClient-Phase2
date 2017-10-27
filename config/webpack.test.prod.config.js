@@ -16,11 +16,11 @@ const WebpackMd5Hash = require('webpack-md5-hash');
 const V8LazyParseWebpackPlugin = require('v8-lazy-parse-webpack-plugin');
 
 /**Webpack constant */
-const ENV = process.env.ENV = process.env.NODE_ENV = 'production';
+const ENV = process.env.ENV = process.env.NODE_ENV = 'testproduction';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 8080;
 const HMR = false;
-const API_URL = process.env.API_URL = 'http://api.cmgprod.pal.com.ph/';
+const API_URL = process.env.API_URL = 'http://172.20.23.110:99/';
 
 const METADATA = webpackMerge
     (webpackCommenConfig({

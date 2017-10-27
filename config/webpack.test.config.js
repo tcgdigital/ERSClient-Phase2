@@ -1,189 +1,256 @@
 /**General declaration */
 const path = require('path');
+const webpackMerge = require('webpack-merge');
+const webpackMergeDll = webpackMerge.strategy({
+    plugins: 'replace'
+});
 const helpers = require('./config.helper');
+const webpackCommenConfig = require('./webpack.common.config');
 
 /**Webpack plugin objects */
-const ProvidePlugin = require('webpack/lib/ProvidePlugin');
+const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 const DefinePlugin = require('webpack/lib/DefinePlugin');
+const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
 const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
-const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
+const WriteFilePlugin = require('write-file-webpack-plugin');
 
 /**Webpack constant */
 const ENV = process.env.ENV = process.env.NODE_ENV = 'testing';
+const HOST = process.env.HOST || 'localhost';
+const PORT = process.env.PORT || 3000;
+const HMR = helpers.hasProcessFlag('hot');
+const API_URL = process.env.API_URL = 'http://172.20.23.110:99/';
+
+const METADATA = webpackMerge
+    (webpackCommenConfig({
+        env: ENV
+    }).METADATA, {
+        env: ENV,
+        host: HOST,
+        port: PORT,
+        hmr: HMR,
+        api: API_URL
+    });
+
+const DllBundlesPlugin = require('webpack-dll-bundles-plugin').DllBundlesPlugin;
 
 /**Webpack configurations */
 module.exports = function (options) {
-    return {
-        /** Developer tool to enhance debugging
-         * eval - Each module is executed with eval and //@ sourceURL.
-         * source-map - A SourceMap is emitted. See also output.sourceMapFilename.
-         * hidden-source-map - Same as source-map, but doesn’t add a reference comment to the bundle.
-         * inline-source-map - A SourceMap is added as DataUrl to the JavaScript file.
-         * eval-source-map - Each module is executed with eval and a SourceMap is added as DataUrl to the eval.
-         * cheap-source-map - A SourceMap without column-mappings. SourceMaps from loaders are not used.
-         * cheap-module-source-map - A SourceMap without column-mappings. SourceMaps from loaders are simplified to a single mapping per line.
-         * 
-         * See: http://webpack.github.io/docs/configuration.html#devtool
-         * See: https://github.com/webpack/docs/wiki/build-performance#sourcemaps
-         */
-        devtool: 'inline-source-map',
-
-        resolve: {
-            /** An array of extensions that should be used to resolve modules.
-             * See: http://webpack.github.io/docs/configuration.html#resolve-extensions
+    return webpackMerge(webpackCommenConfig({
+        env: ENV
+    }), {
+            /** Developer tool to enhance debugging
+             * eval - Each module is executed with eval and //@ sourceURL.
+             * source-map - A SourceMap is emitted. See also output.sourceMapFilename.
+             * hidden-source-map - Same as source-map, but doesn’t add a reference comment to the bundle.
+             * inline-source-map - A SourceMap is added as DataUrl to the JavaScript file.
+             * eval-source-map - Each module is executed with eval and a SourceMap is added as DataUrl to the eval.
+             * cheap-source-map - A SourceMap without column-mappings. SourceMaps from loaders are not used.
+             * cheap-module-source-map - A SourceMap without column-mappings. SourceMaps from loaders are simplified to a single mapping per line.
+             * 
+             * See: http://webpack.github.io/docs/configuration.html#devtool
+             * See: https://github.com/webpack/docs/wiki/build-performance#sourcemaps
              */
-            extensions: ['.ts', '.js'],
+            devtool: 'source-map', // 'cheap-module-source-map',
 
-            /** Make sure root is src
+            /* Options affecting the output of the compilation.
+             * See: http://webpack.github.io/docs/configuration.html#output
              */
-            modules: [path.resolve(__dirname, 'src'), 'node_modules']
-        },
-        module: {
-            rules: [
-                /** Source map loader support for *.js files
-                 * Extracts SourceMaps for source files that as added as sourceMappingURL comment.
-                 * See: https://github.com/webpack/source-map-loader
+            output: {
+                /* The output directory as absolute path (required).
+                 * See: http://webpack.github.io/docs/configuration.html#output-path
                  */
-                {
-                    enforce: 'pre',
-                    test: /\.js$/,
-                    loader: 'source-map-loader',
-                    exclude: [
-                        // these packages have problems with their sourcemaps
-                        helpers.root('node_modules/rxjs'),
-                        helpers.root('node_modules/@angular')
-                    ]
-                },
+                path: helpers.root('dist'),
 
-                /** Typescript loader support for .ts and Angular 2 async routes via .async.ts
-                 * See: https://github.com/s-panferov/awesome-typescript-loader
+                /** Specifies the name of each output file on disk.
+                 * IMPORTANT: You must not specify an absolute path here!
+                 * See: http://webpack.github.io/docs/configuration.html#output-filename
                  */
-                {
-                    test: /\.ts$/,
-                    use: [
-                        {
-                            loader: 'awesome-typescript-loader',
-                            query: {
-                                // use inline sourcemaps for "karma-remap-coverage" reporter
-                                sourceMap: false,
-                                inlineSourceMap: true,
-                                compilerOptions: {
-                                    // Remove TypeScript helpers to be injected
-                                    // below by DefinePlugin
-                                    removeComments: true
-                                }
-                            },
-                        },
-                        'angular2-template-loader'
-                    ],
-                    exclude: [/\.e2e\.ts$/]
-                },
+                filename: '[name].bundle.js',
 
-                /** Json loader support for *.json files.
-                 * See: https://github.com/webpack/json-loader
+                /** The filename of the SourceMaps for the JavaScript files.
+                 * They are inside the output.path directory.
+                 * See: http://webpack.github.io/docs/configuration.html#output-sourcemapfilename
                  */
-                {
-                    test: /\.json$/,
-                    loader: 'json-loader',
-                    exclude: [helpers.root('src/index.html')]
-                },
+                sourceMapFilename: '[name].bundle.map',
 
-                /** Raw loader support for *.css files
-                 * Returns file content as string
-                 * See: https://github.com/webpack/raw-loader
+                /** The filename of non-entry chunks as relative path
+                 * inside the output.path directory.
+                 * See: http://webpack.github.io/docs/configuration.html#output-chunkfilename
                  */
-                {
-                    test: /\.css$/,
-                    loader: ['to-string-loader', 'css-loader'],
-                    exclude: [helpers.root('src/index.html')]
-                },
+                chunkFilename: '[id].chunk.js',
 
-                /** Raw loader support for *.html
-                 * Returns file content as string
-                 * See: https://github.com/webpack/raw-loader
+                /**If set, export the bundle as library. output.library is the name.
+                 * Use this if you are writing a library and want to publish it as single file. 
                  */
-                {
-                    test: /\.html$/,
-                    loader: 'raw-loader',
-                    exclude: [helpers.root('src/index.html')]
-                },
+                library: 'ac_[name]',
 
-                /** Instruments JS files with Istanbul for subsequent code coverage reporting.
-                 * Instrument only testing sources.
-                 * See: https://github.com/deepsweet/istanbul-instrumenter-loader
+                /**Which format to export the library:
+                 * "var" - Export by setting a variable: var Library = xxx (default)
+                 * "this" - Export by setting a property of this: this["Library"] = xxx
+                 * "commonjs" - Export by setting a property of exports: exports["Library"] = xxx
+                 * "commonjs2" - Export by setting module.exports: module.exports = xxx
+                 * "amd" - Export to AMD (optionally named - set the name via the library option)
+                 * "umd" - Export to AMD, CommonJS2 or as property in root */
+                libraryTarget: 'var',
+            },
+            // module: {
+            //     rules: [
+            //         /** css loader support for *.css files (styles directory only)
+            //          * Loads external css styles into the DOM, supports HMR
+            //          */
+            //         {
+            //             test: /\.css$/,
+            //             use: ['style-loader', 'css-loader'],
+            //             include: [helpers.root('src', 'styles')]
+            //         },
+
+            //         /**sass loader support for *.scss files (styles directory only)
+            //          * Loads external sass styles into the DOM, supports HMR
+            //          */
+            //         {
+            //             test: /\.scss$/,
+            //             use: ['style-loader', 'css-loader', 'sass-loader'],
+            //             include: [helpers.root('src', 'styles')]
+            //         },
+            //     ]
+            // },
+            plugins: [
+                /** Plugin: DefinePlugin
+                 * Description: Define free variables.
+                 * Useful for having testing builds with debug logging or adding global constants.
+                 *
+                 * Environment helpers
+                 *
+                 * See: https://webpack.github.io/docs/list-of-plugins.html#defineplugin
                  */
-                {
-                    enforce: 'post',
-                    test: /\.(js|ts)$/,
-                    loader: 'istanbul-instrumenter-loader',
-                    include: helpers.root('src'),
-                    exclude: [
-                        /\.(e2e|spec)\.ts$/,
-                        /node_modules/
-                    ]
-                }
-            ]
-        },
-        plugins: [
-            /** Plugin: DefinePlugin
-             * Description: Define free variables.
-             * Useful for having development builds with debug logging or adding global constants.
-             *
-             * Environment helpers
-             *
-             * See: https://webpack.github.io/docs/list-of-plugins.html#defineplugin
-             */
-            // NOTE: when adding more properties, make sure you include them in custom-typings.d.ts
-            new DefinePlugin({
-                'ENV': JSON.stringify(ENV),
-                'HMR': false,
-                'process.env': {
+                // NOTE: when adding more properties, make sure you include them in custom-typings.d.ts
+                new DefinePlugin({
                     'ENV': JSON.stringify(ENV),
-                    'NODE_ENV': JSON.stringify(ENV),
-                    'HMR': false,
-                }
-            }),
+                    'HMR': JSON.stringify(HMR),
+                    'API_URL': JSON.stringify(API_URL),
+                    'process.env': {
+                        'ENV': JSON.stringify(ENV),
+                        'NODE_ENV': JSON.stringify(ENV),
+                        'HMR': JSON.stringify(HMR),
+                        'API_URL': JSON.stringify(API_URL)
+                    }
+                }),
 
-            /** Plugin: ContextReplacementPlugin
-             * Description: Provides context to Angular's use of System.import
-             * See: https://webpack.github.io/docs/list-of-plugins.html#contextreplacementplugin
-             * See: https://github.com/angular/angular/issues/11580
-             */
-            new ContextReplacementPlugin(
-                /angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
-                helpers.root('src'), // location of your src
+                new DllBundlesPlugin({
+                    bundles: {
+                        polyfills: [
+                            'core-js',
+                            {
+                                name: 'zone.js',
+                                path: 'zone.js/dist/zone.js'
+                            },
+                            {
+                                name: 'zone.js',
+                                path: 'zone.js/dist/long-stack-trace-zone.js'
+                            },
+                            'ts-helpers',
+                        ],
+                        vendor: [
+                            '@angular/platform-browser',
+                            '@angular/platform-browser-dynamic',
+                            '@angular/core',
+                            '@angular/common',
+                            '@angular/forms',
+                            '@angular/http',
+                            '@angular/router',
+                            '@angularclass/hmr',
+                            'rxjs',
+                        ]
+                    },
+                    dllDir: helpers.root('dll'),
+                    webpackConfig: webpackMergeDll(webpackCommenConfig({
+                        env: ENV
+                    }), {
+                            devtool: 'source-map', //cheap-module-source-map',
+                            plugins: []
+                        })
+                }),
+
+                /**
+                 * Plugin: AddAssetHtmlPlugin
+                 * Description: Adds the given JS or CSS file to the files
+                 * Webpack knows about, and put it into the list of assets
+                 * html-webpack-plugin injects into the generated html.
+                 *
+                 * See: https://github.com/SimenB/add-asset-html-webpack-plugin
+                 */
+                new AddAssetHtmlPlugin([{
+                    filepath: helpers.root(`dll/${DllBundlesPlugin.resolveFile('polyfills')}`)
+                },
                 {
-                    // your Angular Async Route paths relative to this root directory
+                    filepath: helpers.root(`dll/${DllBundlesPlugin.resolveFile('vendor')}`)
                 }
-            ),
+                ]),
 
-            /** Plugin LoaderOptionsPlugin (experimental)
-             * See: https://gist.github.com/sokra/27b24881210b56bbaff7
+                new WriteFilePlugin(),
+
+                /**
+                 * Plugin: NamedModulesPlugin (experimental)
+                 * Description: Uses file names as module name.
+                 * See: https://github.com/webpack/webpack/commit/a04ffb928365b19feb75087c63f13cadfc08e1eb
+                 */
+                // new NamedModulesPlugin(),
+
+                /**
+                 * Plugin LoaderOptionsPlugin (experimental)
+                 * See: https://gist.github.com/sokra/27b24881210b56bbaff7
+                 */
+                new LoaderOptionsPlugin({
+                    debug: true,
+                    options: {
+                        context: helpers.root('src'),
+                        output: {
+                            path: helpers.root('dist')
+                        },
+
+                        /**
+                         * Static analysis linter for TypeScript advanced options configuration
+                         * Description: An extensible linter for the TypeScript language.
+                         * See: https://github.com/wbuchwalter/tslint-loader
+                         */
+                        tslint: {
+                            emitErrors: false,
+                            failOnHint: false,
+                            resourcePath: 'src'
+                        }
+                    }
+                })
+            ],
+            /** Webpack testing Server configuration
+             * Description: The webpack-dev-server is a little node.js Express server.
+             * The server emits information about the compilation state to the client,
+             * which reacts to those events.
+             *
+             * See: https://webpack.github.io/docs/webpack-dev-server.html
              */
-            new LoaderOptionsPlugin({
-                debug: false,
-                options: {
-                    // legacy options go here
+            devServer: {
+                host: METADATA.HOST,
+                port: METADATA.PORT,
+                historyApiFallback: {
+                    index: '/index.html'
+                },
+                watchOptions: {
+                    aggregateTimeout: 300,
+                    poll: 1000
                 }
-            }),
-        ],
-        performance: {
-            /** Disable performance hints
-             * See: https://github.com/a-tarasyuk/rr-boilerplate/blob/master/webpack/dev.config.babel.js#L41
+            },
+            /**Include polyfills or mocks for various node stuff
+             * Description: Node configuration
+             * See: https://webpack.github.io/docs/configuration.html#node
              */
-            hints: false
-        },
-        /**Include polyfills or mocks for various node stuff
-         * Description: Node configuration
-         * See: https://webpack.github.io/docs/configuration.html#node
-         */
-        node: {
-            global: true,
-            crypto: 'empty',
-            process: false,
-            module: false,
-            clearImmediate: false,
-            setImmediate: false
-        }
-    }
-};
+            node: {
+                global: true,
+                crypto: 'empty',
+                process: true,
+                module: false,
+                clearImmediate: false,
+                setImmediate: false
+            }
+        });
+}
