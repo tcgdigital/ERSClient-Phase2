@@ -147,7 +147,7 @@ export class ArchiveDashboardComponent implements OnInit {
     private GetIncidentAndDepartment(): void {
         this.incidentService.Get(this.archievedIncidentId)
             .map((record: IncidentModel) => {
-                this.currentIncident = new KeyValue(record.Description, record.IncidentId);
+                this.currentIncident = new KeyValue(record.EmergencyName, record.IncidentId);
                 this.closedDate = record.ClosedOn;
                 this.incidentDate = new Date(record.EmergencyDate);
             })

@@ -9,6 +9,7 @@
                     <th>Quick Link Name</th>
                     <th>Quick Link URL</th>
                     <th>File Download</th>
+                    <th>Delete</th>
                 </tr>
             </thead>
             <tbody>
@@ -20,6 +21,9 @@
                     <td data-title="Quick Link URL"><a href="{{quicklink.QuickLinkURL}}" target="_blank">{{ quicklink.QuickLinkURL }}</a></td>
                     <td data-title="File">
                         <a target="_self" *ngIf="quicklink.UploadURL!=null" href="{{quicklink.UploadURL}}" download="QuicklinkFile"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+                    </td>
+                    <td data-title="Delete">
+                        <a target="_self" (click)="delQuickLink(quicklink.QuickLinkId,quicklink)"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></a>
                     </td>
                 </tr>
             </tbody>
