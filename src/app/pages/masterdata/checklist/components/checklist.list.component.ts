@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation, ViewChild } from '@angular/core';
 
 import { ChecklistModel } from './checklist.model';
-import { InvalidChecklistModel } from './invalid.checklist.model'
+import { InvalidChecklistModel } from './invalid.checklist.model';
 import { ChecklistService } from './checklist.service';
 import { Observable } from 'rxjs/Rx';
 import {
@@ -12,7 +12,7 @@ import {
 } from '../../../../shared';
 import { DepartmentModel, DepartmentService } from '../../department';
 import { EmergencyTypeModel, EmergencyTypeService } from '../../emergencytype';
-import { ModalDirective } from "ngx-bootstrap";
+import { ModalDirective } from 'ngx-bootstrap';
 
 @Component({
     selector: 'checklist-list',
@@ -29,26 +29,25 @@ export class ChecklistListComponent implements OnInit {
     date: Date = new Date();
     StationList: string[] = [];
     currentDepartmentId: number;
-    
+
     public isShowAddEditChecklist: boolean = true;
     searchConfigs: Array<SearchConfigModel<any>> = new Array<SearchConfigModel<any>>();
     parentChecklistListForSearch: Array<NameValue<number>> = Array<NameValue<number>>();
     emergencyTypesForSearch: Array<NameValue<number>> = Array<NameValue<number>>();
     expandSearch: boolean = false;
-    searchValue: string = "Expand Search";
+    searchValue: string = 'Expand Search';
     invalidChecklists: InvalidChecklistModel[] = [];
     exportLink: string;
 
     @ViewChild('invalidChecklistModal') public invalidChecklistModal: ModalDirective;
 
     constructor(private checkListService: ChecklistService, private emergencytypeService: EmergencyTypeService,
-        private dataExchange: DataExchangeService<ChecklistModel>, private globalState: GlobalStateService) { 
-            
-        }
+        private dataExchange: DataExchangeService<ChecklistModel>, private globalState: GlobalStateService) {
+
+    }
 
     findIfParent(item: ChecklistModel): any {
         return (item.CheckListChildrenMapper.length > 0);
-
     }
 
     getCheckLists(departmentId): void {
@@ -58,8 +57,8 @@ export class ChecklistListComponent implements OnInit {
                     x.Active = (x.ActiveFlag === 'Active');
                 });
                 this.checkLists = response.Records;
-                this.checkLists.forEach(a => {
-                    if (a.Stations != null && a.Stations != "") {
+                this.checkLists.forEach((a) => {
+                    if (a.Stations != null && a.Stations != '') {
                         a.StationList = [];
                         if (a.Stations.indexOf(',') > 0)
                             a.StationList = a.Stations.split(',');
@@ -68,15 +67,15 @@ export class ChecklistListComponent implements OnInit {
                     }
                     else
                         a.StationList = [];
-                })
-                console.log(this.checkLists);
+                });
+                // console.log(this.checkLists);
                 this.initiateSearchConfigurations();
             },
             (error: any) => {
                 console.log(`Error: ${error}`);
             },
-        ()=>{
-            this.checkLists.sort((a, b)=>{
+            () => {
+                this.checkLists.sort((a, b) => {
                     if (a.EmergencyType.EmergencyTypeName < b.EmergencyType.EmergencyTypeName) return -1;
                     if (a.EmergencyType.EmergencyTypeName > b.EmergencyType.EmergencyTypeName) return 1;
                     if (a.Sequence < b.Sequence) return -1;
@@ -84,14 +83,14 @@ export class ChecklistListComponent implements OnInit {
 
                     return 0;
                 });
-        });
+            });
     }
 
-    getInvalidChecklists(): void{
+    getInvalidChecklists(): void {
         this.checkListService.GetInvalidChecklists()
-        .subscribe((response : ResponseModel<InvalidChecklistModel>) => {
-            this.invalidChecklists = response.Records;
-        })
+            .subscribe((response: ResponseModel<InvalidChecklistModel>) => {
+                this.invalidChecklists = response.Records;
+            });
     }
 
     getEmergencyTypes(): void {
@@ -107,14 +106,14 @@ export class ChecklistListComponent implements OnInit {
         this.checkListService.GetAllActiveCheckLists()
             .subscribe((response: ResponseModel<ChecklistModel>) => {
                 this.activeCheckLists = response.Records;
-                this.checkLists.forEach(a => {
-                    if (a.Stations != null && a.Stations != "") {
+                this.checkLists.forEach((a) => {
+                    if (a.Stations != null && a.Stations != '') {
                         if (a.Stations.indexOf(',') > 0)
                             a.StationList = a.Stations.split(',');
                     }
                     else
                         a.StationList = [];
-                })
+                });
             });
     }
 
@@ -124,13 +123,12 @@ export class ChecklistListComponent implements OnInit {
 
     expandSearchPanel(value): void {
         if (!value) {
-            this.searchValue = "Hide Search Panel";
+            this.searchValue = 'Hide Search Panel';
         }
         else {
-            this.searchValue = "Expand Search Panel";
+            this.searchValue = 'Expand Search Panel';
         }
         this.expandSearch = !this.expandSearch;
-
     }
 
     ngOnInit(): void {
@@ -145,7 +143,7 @@ export class ChecklistListComponent implements OnInit {
         this.initiateSearchConfigurations();
         this.getInvalidChecklists();
 
-        this.dataExchange.Subscribe('FileUploadedSuccessfullyCheckList',()=>{
+        this.dataExchange.Subscribe('FileUploadedSuccessfullyCheckList', () => {
             this.getCheckLists(this.currentDepartmentId);
         });
     }
@@ -209,8 +207,6 @@ export class ChecklistListComponent implements OnInit {
         this.getCheckLists(this.currentDepartmentId);
     }
 
-
-
     private initiateSearchConfigurations(): void {
         const status: Array<NameValue<string>> = [
             new NameValue<string>('Active', 'Active'),
@@ -228,15 +224,6 @@ export class ChecklistListComponent implements OnInit {
                 Description: 'Checklist Details',
                 Value: ''
             }),
-            // new SearchDropdown({
-            //     Name: 'ParentCheckListId',
-            //     Description: 'Parent Checklist',
-            //     PlaceHolder: 'Select Parent Checklist',
-            //     Value: '',
-            //     ListData: this.checkListService.GetAllParents()
-            //         .map((x) => x.Records)
-            //         .map((y) => y.map(z => z.CheckListParentMapper.map((q) => new NameValue<number>(q.CheckListCode, q.ChecklistMapperId))))
-            // }),
             new SearchDropdown({
                 Name: 'EmergencyTypeId',
                 Description: 'Crisis Type',
@@ -251,11 +238,6 @@ export class ChecklistListComponent implements OnInit {
                 Description: 'URL',
                 Value: ''
             }),
-            // new SearchTextBox({
-            //     Name: 'Duration',
-            //     Description: 'Duration',
-            //     Value: ''
-            // }),
             new SearchDropdown({
                 Name: 'ActiveFlag',
                 Description: 'Status',

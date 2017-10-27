@@ -41,8 +41,8 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
     getAllDepartments(): void {
         this.departmentService.GetAll()
             .subscribe((response: ResponseModel<DepartmentModel>) => {
-                this.departments = response.Records;                
-                console.log(this.departments);
+                this.departments = response.Records;
+                // console.log(this.departments);
                 this.demandTypeModel.DepartmentId = (this.demandTypeModel.DemandTypeId === 0)
                     ? this.departments[0].DepartmentId
                     : this.demandTypeModel.DepartmentId;

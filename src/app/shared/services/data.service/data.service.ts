@@ -6,6 +6,7 @@ import { HttpInterceptorService } from '../../interceptor';
 import {
     GetOperation,
     SimpleGetOperation,
+    BulkGetOperation,
     QueryOperation,
     PostOperation,
     SimplePostOperation,
@@ -58,8 +59,6 @@ export class DataService<T extends BaseModel>{
             this.httpInterceptorService, this.typeName, key, this.actionSuffix);
     }
 
-    
-
     /**
      * Get an instance of QueryOperation for API GET request
      *
@@ -70,6 +69,10 @@ export class DataService<T extends BaseModel>{
      */
     public SimpleGet(param: string = ''): SimpleGetOperation<any> {
         return new SimpleGetOperation<any>(this.dataProcessingService, this.httpService, this.httpInterceptorService, this.typeName, (param !== '') ? (this.actionSuffix + param) : this.actionSuffix);
+    }
+
+    public BulkGet(param: string = ''): BulkGetOperation<any[]> {
+        return new BulkGetOperation<any>(this.dataProcessingService, this.httpService, this.httpInterceptorService, this.typeName, (param !== '') ? (this.actionSuffix + param) : this.actionSuffix);
     }
 
     /**

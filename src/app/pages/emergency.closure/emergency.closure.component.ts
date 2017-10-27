@@ -28,7 +28,6 @@ import { Router } from '@angular/router';
 	encapsulation: ViewEncapsulation.None,
 	templateUrl: './views/emergency.closure.view.html',
 	styleUrls: ['./styles/emergency.closure.style.scss']
-
 })
 export class EmergencyClosureComponent implements OnInit {
 	@ViewChild('childModal') public childModal: ModalDirective;
@@ -89,7 +88,7 @@ export class EmergencyClosureComponent implements OnInit {
 	ngOnInit(): void {
 		this.currentIncident = +UtilityService.GetFromSession("CurrentIncidentId");
 		this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-		
+
 		if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'CloseEmergency'))
 			this.GetIncident(this.currentIncident);
 
@@ -110,11 +109,7 @@ export class EmergencyClosureComponent implements OnInit {
 		this.GetIncident(this.currentIncident);
 	}
 
-	private departmentChangeHandler(department: KeyValue): void {
-		this.currentDepartmentId = department.Value;
-		if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'CloseEmergency'))
-			this.GetIncident(this.currentIncident);
-	}
+
 
 	ngOnDestroy(): void {
 		// this.globalState.Unsubscribe('incidentChange');
@@ -145,22 +140,22 @@ export class EmergencyClosureComponent implements OnInit {
 		Observable.merge(allActiveDepartments, emergencyDepartments, notifyDeptUsers, departmentClosures)
 			.flatMap((x: BaseModel[]) => x)
 			.subscribe((response: any) => {
-				if (Object.keys(response).some(x => x === 'Department')) {
+				if (Object.keys(response).some((x) => x === 'Department')) {
 					this.departmnetsToNotify.push(<DepartmentModel>response["Department"]);
 
-					if (Object.keys(response).some(x => x === 'EmergencyTypeDepartmentId')) {
+					if (Object.keys(response).some((x) => x === 'EmergencyTypeDepartmentId')) {
 						let y = <EmergencyDepartmentModel>response;
 						this.initialNotificationSend.push(y.Department.DepartmentId);
 					}
-					if (Object.keys(response).some(x => x === 'UserDepartmentNotificationMapperId')) {
+					if (Object.keys(response).some((x) => x === 'UserDepartmentNotificationMapperId')) {
 						let y = <UserDepartmentNotificationMapper>response;
 						this.notificationSeperatelySend.push(y.Department.DepartmentId);
 					}
 				}
-				else if (Object.keys(response).some(x => x === 'DepartmentId')) {
+				else if (Object.keys(response).some((x) => x === 'DepartmentId')) {
 					this.departmnetsToNotify.push(<DepartmentModel>response);
 				}
-				else if (Object.keys(response).some(x => x === 'DepartmentClosureId')) {
+				else if (Object.keys(response).some((x) => x === 'DepartmentClosureId')) {
 					this.departmentClosures.push(<DepartmentClosureModel>response);
 				}
 			},
@@ -169,7 +164,7 @@ export class EmergencyClosureComponent implements OnInit {
 				let unique: DepartmentModel[] = [];
 				let departmentIds: number[] = [];
 				Observable.from(this.departmnetsToNotify).distinct(function (x) { return x.DepartmentId; })
-					.subscribe(x => {
+					.subscribe((x) => {
 						unique.push(x);
 						departmentIds.push(x.DepartmentId);
 					})
@@ -226,7 +221,7 @@ export class EmergencyClosureComponent implements OnInit {
 							this.closuresToShow.sort((a, b) => {
 								if (a.Department.DepartmentName < b.Department.DepartmentName) return -1;
 								if (a.Department.DepartmentName > b.Department.DepartmentName) return 1;
-		
+
 								return 0;
 							});
 						}
@@ -287,6 +282,7 @@ export class EmergencyClosureComponent implements OnInit {
 	}
 
 	submitIncidentClosure(): void {
+		debugger;
 		if (this.incident.ClosureNote == null || this.incident.ClosureNote.toString().trim() == "") {
 			this.toastrService.error('Closure Note is mandatory.', 'Error', this.toastrConfig);
 		}
@@ -305,13 +301,15 @@ export class EmergencyClosureComponent implements OnInit {
 							this.reportPath = new ReportPath();
 							this.reportPath = reportPath;
 						})
-						.flatMap(_ => this.userPermissionService.GetAllActiveHODUsersOfAllDepartments())
-						.map((response: ResponseModel<UserPermissionModel>) => {
+						// .flatMap((_) => this.userPermissionService.GetAllActiveHODUsersOfAllDepartments())
+						// .map((response: ResponseModel<UserPermissionModel>) => {
+						.flatMap((_) => this.userPermissionService.GetActiveHODUsersOfCrisisTypeSpecificDepartments(this.incident.EmergencyTypeId))
+						.map((response: UserPermissionModel[]) => {
 							this.UserDepartmentNotificationMappers = [];
-							this.UserDepartmentNotificationMappers = response.Records.map(x => {
+							this.UserDepartmentNotificationMappers = response.map((x) => {
 								let y: NotificationContactsWithTemplateModel = new NotificationContactsWithTemplateModel();
 								y.UserId = x.UserId;
-								y.IsActive = (x.User.ActiveFlag.toLowerCase() == 'active');
+								y.IsActive = ((typeof x.User.ActiveFlag == 'number' && x.User.ActiveFlag == 1) || (typeof x.User.ActiveFlag == 'string' && x.User.ActiveFlag == 'active'));
 								y.IncidentId = this.currentIncident;
 								y.DepartmentId = x.DepartmentId;
 								y.CreatedBy = x.CreatedBy;
@@ -338,19 +336,24 @@ export class EmergencyClosureComponent implements OnInit {
 
 	}
 
-
 	private GetChecklistDemandCount(item: DepartmentClosureModel, id: number): void {
-		item.Checklistnumber = this.actionable.filter(z => {
+		item.Checklistnumber = this.actionable.filter((z) => {
 			return z.DepartmentId == id;
 		}).length;
-		item.ChecklistClosednumber = this.actionable.filter(z => {
+		item.ChecklistClosednumber = this.actionable.filter((z) => {
 			return z.DepartmentId == id && z.CompletionStatusChangedBy != null;
 		}).length;
-		item.demandnumber = this.demands.filter(z => {
+		item.demandnumber = this.demands.filter((z) => {
 			return z.RequesterDepartmentId == id;
 		}).length;
-		item.demandClosednumber = this.demands.filter(z => {
+		item.demandClosednumber = this.demands.filter((z) => {
 			return z.RequesterDepartmentId == id && z.ClosedBy != null;
 		}).length;
+	}
+
+	private departmentChangeHandler(department: KeyValue): void {
+		this.currentDepartmentId = department.Value;
+		if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'CloseEmergency'))
+			this.GetIncident(this.currentIncident);
 	}
 }

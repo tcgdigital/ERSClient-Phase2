@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
-import { UserProfileModel } from './userProfile.model';
-import { InvalidUserProfileModel } from './invalid.userprofile.model'
+import { UserProfileModel, UserPerrmissionModel, PagePerrmissionModel } from './userProfile.model';
+import { InvalidUserProfileModel } from './invalid.userprofile.model';
 import { ServiceBase, DataServiceFactory, ResponseModel, DataService, DataProcessingService } from '../../../../shared';
 import { IUserProfileService } from './IUserProfileService';
 
@@ -10,19 +10,13 @@ import { IUserProfileService } from './IUserProfileService';
 export class UserProfileService extends ServiceBase<UserProfileModel>
     implements IUserProfileService {
 
-    /**
-    * Creates an instance of UserProfileService.
-    * @param {DataServiceFactory} dataServiceFactory 
-    * 
-    * @memberOf UserProfileService
-    */
     private _dataServiceInvalidRecords: DataService<InvalidUserProfileModel>;
     private _checkPermissionService: DataService<any>;
 
     constructor(private dataServiceFactory: DataServiceFactory) {
         super(dataServiceFactory, 'UserProfiles');
 
-        let option: DataProcessingService = new DataProcessingService();
+        const option: DataProcessingService = new DataProcessingService();
         this._dataServiceInvalidRecords = this.dataServiceFactory
             .CreateServiceWithOptions<InvalidUserProfileModel>('InvalidUserProfileRecords', option);
 
@@ -88,5 +82,4 @@ export class UserProfileService extends ServiceBase<UserProfileModel>
                 return response as number;
             });
     }
-
 }

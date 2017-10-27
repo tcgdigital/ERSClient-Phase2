@@ -75,7 +75,7 @@ export class MediaReleaseWidgetComponent implements OnInit {
                 this.mediaReleases = Observable.of(data
                     .map((x: MediaReleaseWidgetModel) => new TextAccordionModel(x.MediaReleaseType, x.PublishedOn,
                         this.downloadPath + x.MediaqueryId)));
-                console.log(this.mediaReleases);
+                // console.log(this.mediaReleases);
             });
     }
 

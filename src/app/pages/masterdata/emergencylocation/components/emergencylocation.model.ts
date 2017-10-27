@@ -18,7 +18,7 @@ export class EmergencyLocationModel extends BaseModel {
         this.City = '';
         this.IATA = '';
         this.AirportName = '';
-        this.Country='';
+        this.Country = '';
         this.Active = false;
     }
 }

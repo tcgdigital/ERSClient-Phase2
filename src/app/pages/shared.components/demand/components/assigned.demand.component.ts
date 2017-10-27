@@ -329,7 +329,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
                 this.demandTrails = response.Records;
                 this.childModalTrail.show();
             }, (error: any) => {
-                console.log('error:  ' + error);
+                console.log(`Error: ${error}`);
             });
     }
 

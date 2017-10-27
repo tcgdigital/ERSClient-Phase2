@@ -53,7 +53,7 @@ export class FileUploadService {
                     for (const file of files) {
                         const fileData: FileData = file as FileData;
                         formData.append(fileData.field, fileData.file, fileData.file.name);
-                        console.log(formData);
+                        // console.log(formData);
                     }
                 }
                 else {

@@ -194,7 +194,6 @@ export class LoginComponent implements OnInit {
                     console.log(this.currentIncidentId);
                     UtilityService.SetToSession({ CurrentIncidentId: this.currentIncidentId });
                 }
-
             });
     }
 
@@ -222,16 +221,13 @@ export class LoginComponent implements OnInit {
     private CheckDepartmentPages(UserProfileId: number): void {
         this.userProfileService.CheckUserHasPermission(UserProfileId)
             .subscribe((res: number) => {
-                if (res == 1) {
+                if (res == 1)
                     this.toastrService.warning('User Not Assigned to Any Department');
-                }
-                else if (res == 2) {
+                else if (res == 2)
                     this.toastrService
                         .warning('Departments assigned to this user don\'t have access to any pages');
-                }
-                else if (res == 3) {
+                else
                     this.CheckClosedIncident();
-                }
             });
     }
 
@@ -242,14 +238,11 @@ export class LoginComponent implements OnInit {
                     if (+this.activeKeyValues.find((x: KeyValueModel) => x.Key === 'CallCenterDepartmentId').Value == this.currentDepartmentId) {
                         this.router.navigate(['pages/callcenteronlypage']);
                     }
-                    else {
+                    else
                         this.router.navigate(['pages/dashboard']);
-                    }
-
                 }
-                else {
+                else
                     this.router.navigate(['pages/landing']);
-                }
             });
     }
 }

@@ -4,12 +4,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { MdCheckboxModule } from '@angular2-material/checkbox';
-import { EmergencyLocationService , EmergencyLocationListComponent, EmergencyLocationEntryComponent } from './components';
+import { EmergencyLocationService, EmergencyLocationListComponent, EmergencyLocationEntryComponent } from './components';
 import { DataExchangeService, SharedModule, FileUploadService } from '../../../shared';
-import { EmergencyLocationComponent } from './emergencylocation.component'
-import { EmergencyLocationRouting } from './emergencylocation.routing'
-
-
+import { EmergencyLocationComponent } from './emergencylocation.component';
+import { EmergencyLocationRouting } from './emergencylocation.routing';
 
 @NgModule({
     imports: [

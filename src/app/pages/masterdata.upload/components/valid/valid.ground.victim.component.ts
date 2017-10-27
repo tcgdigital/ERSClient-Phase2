@@ -1,16 +1,16 @@
 import {
-        Component, ViewEncapsulation, Input, OnChanges, SimpleChange,
-        OnInit, OnDestroy, AfterContentInit, ViewChild
-       } from '@angular/core';
+    Component, ViewEncapsulation, Input, OnChanges, SimpleChange,
+    OnInit, OnDestroy, AfterContentInit, ViewChild
+} from '@angular/core';
 import {
-        FormGroup, FormControl, FormBuilder,
-        AbstractControl, Validators, ReactiveFormsModule
-       } from '@angular/forms';
+    FormGroup, FormControl, FormBuilder,
+    AbstractControl, Validators, ReactiveFormsModule
+} from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
 import {
-        ResponseModel, DataExchangeService, KeyValue,
-        UtilityService, GlobalConstants, GlobalStateService
-       } from '../../../../shared';
+    ResponseModel, DataExchangeService, KeyValue,
+    UtilityService, GlobalConstants, GlobalStateService
+} from '../../../../shared';
 
 import { MasterDataUploadForValidService } from '../masterdata.upload.valid.records.service'
 import { GroundVictimModel } from '../../../shared.components/'
@@ -22,37 +22,37 @@ import { GroundVictimModel } from '../../../shared.components/'
     templateUrl: '../../views/valid/valid.ground.victim.list.view.html'
 })
 
-export class ValidGroundVictimListComponent implements OnInit, OnDestroy{
+export class ValidGroundVictimListComponent implements OnInit, OnDestroy {
     groundVictims: GroundVictimModel[] = [];
     @Input() IncidentId: number;
     @Input() IsVisible: boolean;
 
     constructor(private _validRecordService: MasterDataUploadForValidService,
-            private dataExchange: DataExchangeService<GroundVictimModel>,
-            private globalState: GlobalStateService){}
+        private dataExchange: DataExchangeService<GroundVictimModel>,
+        private globalState: GlobalStateService) { }
 
-    ngOnInit(): void{
-      this.dataExchange.Subscribe("OpenGroundVictims", model => this.OpenGroundVictims(model));
-      this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model)); 
+    ngOnInit(): void {
+        this.dataExchange.Subscribe("OpenGroundVictims", model => this.OpenGroundVictims(model));
+        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
     }
 
-    
-    getValidGroundVictims(): void {       
-        this._validRecordService.GetAllGroundVictimsByIncidentId(this.IncidentId)
-        .flatMap(x=>x)
-        .subscribe(a=>{            
-            this.groundVictims.push(a);
-            this.groundVictims.sort((a, b) => {
-                if (a.GroundVictimName < b.GroundVictimName) return -1;
-                if (a.GroundVictimName > b.GroundVictimName) return 1;
 
-                return 0;
-            })
-            console.log(this.groundVictims);
-        }),
-        (error: any) => {
-            console.log(`Error: ${error}`);
-        };
+    getValidGroundVictims(): void {
+        this._validRecordService.GetAllGroundVictimsByIncidentId(this.IncidentId)
+            .flatMap(x => x)
+            .subscribe(a => {
+                this.groundVictims.push(a);
+                this.groundVictims.sort((a, b) => {
+                    if (a.GroundVictimName < b.GroundVictimName) return -1;
+                    if (a.GroundVictimName > b.GroundVictimName) return 1;
+
+                    return 0;
+                })
+                // console.log(this.groundVictims);
+            }),
+            (error: any) => {
+                console.log(`Error: ${error}`);
+            };
     }
 
     OpenGroundVictims(groundVictim: GroundVictimModel): void {
@@ -64,12 +64,12 @@ export class ValidGroundVictimListComponent implements OnInit, OnDestroy{
         this.IsVisible = !this.IsVisible;
     }
 
-    ngOnDestroy(): void{
+    ngOnDestroy(): void {
         this.dataExchange.Unsubscribe("OpenGroundVictims");
         this.dataExchange.Unsubscribe("incidentChange");
     }
 
     private incidentChangeHandler(incident: KeyValue): void {
-        this.IncidentId = incident.Value;        
+        this.IncidentId = incident.Value;
     }
 }

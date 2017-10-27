@@ -150,7 +150,7 @@ export class LocalizationService {
 
                     if (Object.keys(requestData).some((x) => restrictedFields.some((y) => y === x))) {
                         restrictedFields.forEach(z => {
-                            console.log(requestData[z]);
+                            // console.log(requestData[z]);
                             let existingDate = new Date(new Date(requestData[z].split('.')[0]).toLocaleString() + " UTC");
                             //moment(existingDate).format('YYYY-MM-DD');
                             preserved[z] = this.toJSONDate(existingDate);
@@ -178,8 +178,8 @@ export class LocalizationService {
     }
 
     private static toJSONDate(date: Date): string {
-        
-        return `${this.pad(date.getFullYear().toString(),'0',4)}-${this.pad((date.getMonth() + 1).toString(),'0',2)}-${this.pad(date.getDate().toString(),'0',2)}T${this.pad(date.getHours().toString(),'0',2)}:${this.pad(date.getMinutes().toString(),'0',2)}:${this.pad(date.getSeconds().toString(),'0',2)}.000Z`;
+
+        return `${this.pad(date.getFullYear().toString(), '0', 4)}-${this.pad((date.getMonth() + 1).toString(), '0', 2)}-${this.pad(date.getDate().toString(), '0', 2)}T${this.pad(date.getHours().toString(), '0', 2)}:${this.pad(date.getMinutes().toString(), '0', 2)}:${this.pad(date.getSeconds().toString(), '0', 2)}.000Z`;
     }
 
     private static pad(str: any, char: string, max: number): string {

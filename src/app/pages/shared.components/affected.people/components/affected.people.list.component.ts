@@ -311,7 +311,7 @@ export class AffectedPeopleListComponent implements OnInit {
                     x['MedicalStatusToshow'] = x.MedicalStatus;
                     x['showDiv'] = false;
                 });
-                console.log(this.affectedPeople);
+                // console.log(this.affectedPeople);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
