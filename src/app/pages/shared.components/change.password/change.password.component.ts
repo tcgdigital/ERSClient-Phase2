@@ -62,7 +62,7 @@ export class ChangePasswordComponent implements OnInit, AfterViewInit {
         this.errorMessage = '';
 
         if (this.changePasswordForm.valid) {
-            console.log(changePasswordModel);
+            // console.log(changePasswordModel);
             this.changePasswordService.ChangePassword(changePasswordModel)
                 .subscribe((response: AccountResponse) => {
                     if (response) {

@@ -17,10 +17,10 @@ import { ToastrService, ToastrConfig } from 'ngx-toastr';
 })
 export class EmergencyLocationListComponent implements OnInit, OnDestroy {
     emergencyLocations: EmergencyLocationModel[] = [];
-    searchConfigs: SearchConfigModel<any>[] = [];
+    searchConfigs: Array<SearchConfigModel<any>> = [];
     emergencyLocationPatch: EmergencyLocationModel = null;
     expandSearch: boolean = false;
-    searchValue: string = "Expand Search";
+    searchValue: string = 'Expand Search';
 
     constructor(private emergencyLocationService: EmergencyLocationService,
         private dataExchange: DataExchangeService<EmergencyLocationModel>,
@@ -29,10 +29,10 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
 
     expandSearchPanel(value): void {
         if (!value) {
-            this.searchValue = "Hide Search Panel";
+            this.searchValue = 'Hide Search Panel';
         }
         else {
-            this.searchValue = "Expand Search Panel";
+            this.searchValue = 'Expand Search Panel';
         }
         this.expandSearch = !this.expandSearch;
 
@@ -41,33 +41,33 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.getAllEmergencyLocations();
         this.initiateSearchConfigurations();
-        this.dataExchange.Subscribe("EmergencyLocationModelSaved", model => {
+        this.dataExchange.Subscribe('EmergencyLocationModelSaved', (model) => {
             this.emergencyLocations.unshift(model);
         });
 
-        this.dataExchange.Subscribe("EmergencyLocationModelUpdated", model => {
+        this.dataExchange.Subscribe('EmergencyLocationModelUpdated', (model) => {
             this.getAllEmergencyLocations();
         });
 
-        this.dataExchange.Subscribe("FileUploadedSuccessfully", () => {
+        this.dataExchange.Subscribe('FileUploadedSuccessfully', () => {
             this.getAllEmergencyLocations();
         });
     }
 
     ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe("FileUploadedSuccessfully");
-        this.dataExchange.Unsubscribe("EmergencyLocationModelSaved");
-        this.dataExchange.Unsubscribe("EmergencyLocationModelUpdated");
+        this.dataExchange.Unsubscribe('FileUploadedSuccessfully');
+        this.dataExchange.Unsubscribe('EmergencyLocationModelSaved');
+        this.dataExchange.Unsubscribe('EmergencyLocationModelUpdated');
     }
 
     getAllEmergencyLocations(): void {
         this.emergencyLocationService.GetAllEmergencyLocations()
             .subscribe((response: ResponseModel<EmergencyLocationModel>) => {
                 this.emergencyLocations = response.Records;
-                this.emergencyLocations.forEach(x => {
+                this.emergencyLocations.forEach((x) => {
                     x.Active = (x.ActiveFlag === 'Active');
-                })
-                console.log(this.emergencyLocations);
+                });
+                // console.log(this.emergencyLocations);
             });
     }
 
@@ -75,9 +75,9 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
         if (query !== '') {
             if (query.indexOf('isActive') >= 0) {
                 if (query.indexOf("'true'") >= 0)
-                    query = query.replace("'true'", "true");
+                    query = query.replace("'true'", 'true');
                 if (query.indexOf("'false'") >= 0)
-                    query = query.replace("'false'", "false");
+                    query = query.replace("'false'", 'false');
             }
             this.emergencyLocationService.GetQuery(query)
                 .subscribe((response: ResponseModel<EmergencyLocationModel>) => {
@@ -94,13 +94,14 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
     IsActive(event: any, editedEmergencyLocation: EmergencyLocationModel): void {
         delete editedEmergencyLocation.Active;
         this.emergencyLocationPatch = new EmergencyLocationModel();
-        //this.emergencyLocationPatch.deleteAttributes();
+        // this.emergencyLocationPatch.deleteAttributes();
         this.emergencyLocationPatch = editedEmergencyLocation;
 
         if (event.checked)
             this.emergencyLocationPatch.ActiveFlag = 'Active';
         else
-            this.emergencyLocationPatch.ActiveFlag = 'InActive'
+            this.emergencyLocationPatch.ActiveFlag = 'InActive';
+
         this.emergencyLocationService.Update(this.emergencyLocationPatch)
             .subscribe((response: EmergencyLocationModel) => {
                 this.getAllEmergencyLocations();
@@ -111,11 +112,11 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
 
     deleteStation(emergencyLocation: EmergencyLocationModel): void {
         delete emergencyLocation.Active;
-        if (confirm("Do you want to delete station: " + emergencyLocation.IATA + "?")) {
-            let IATA = emergencyLocation.IATA;
+        if (confirm('Do you want to delete station: ' + emergencyLocation.IATA + '?')) {
+            const IATA = emergencyLocation.IATA;
             this.emergencyLocationService.Delete(emergencyLocation.EmergencyLocationId, emergencyLocation)
                 .subscribe((response: any) => {
-                    this.toastrService.success("Station: " + IATA + " is deleted successfully", "Success", this.toastrConfig);
+                    this.toastrService.success('Station: ' + IATA + ' is deleted successfully', 'Success', this.toastrConfig);
                     this.getAllEmergencyLocations();
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
@@ -128,15 +129,15 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
     }
 
     UpdateEmergencyLocation(emergencyLocationModelUpdate: EmergencyLocationModel) {
-        let emergencyModelToSend = Object.assign({}, emergencyLocationModelUpdate)
-        this.dataExchange.Publish("OnEmergencyLocationUpdate", emergencyModelToSend);
+        const emergencyModelToSend = Object.assign({}, emergencyLocationModelUpdate);
+        this.dataExchange.Publish('OnEmergencyLocationUpdate', emergencyModelToSend);
     }
 
     private initiateSearchConfigurations(): void {
-        let status: NameValue<string>[] = [
-            new NameValue<string>('Active', "Active"),
-            new NameValue<string>('InActive', "InActive")
-        ]
+        const status: Array<NameValue<string>> = [
+            new NameValue<string>('Active', 'Active'),
+            new NameValue<string>('InActive', 'InActive')
+        ];
         this.searchConfigs = [
             new SearchTextBox({
                 Name: 'IATA',

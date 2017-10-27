@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MdCheckboxModule } from '@angular2-material/checkbox';
-
-
 import { BroadcastDepartmentRouting } from './boradcast.department.routing';
 import { BroadcastDepartmentComponent } from './boradcast.department.component';
 import {
@@ -26,8 +24,6 @@ import { DataExchangeService, SharedModule } from '../../../shared';
     ],
     declarations: [
         BroadcastDepartmentComponent
-        // BroadcastDepartmentEntryComponent,
-        // BroadCastDepartmentListComponent
     ],
     providers: [
         BroadcastDepartmentService,

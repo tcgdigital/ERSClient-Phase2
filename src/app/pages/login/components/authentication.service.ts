@@ -35,7 +35,7 @@ export class AuthenticationService {
         return this._dataService.SimplePost(params)
             .Execute()
             .map((response: any) => {
-                console.log(response);
+                // console.log(response);
                 UtilityService.SetToSession(response);
                 this._isLoggedIn = true;
                 return response;

@@ -47,7 +47,7 @@ export class BrandHeaderComponent implements OnInit {
     }
 
     public onHambargerClicked($event): void {
-        console.log('brand header click');
+        // console.log('brand header click');
         this.hambargerClicked.emit($event);
     }
 

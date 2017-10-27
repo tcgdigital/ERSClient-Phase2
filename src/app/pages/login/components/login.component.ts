@@ -194,7 +194,6 @@ export class LoginComponent implements OnInit {
                     console.log(this.currentIncidentId);
                     UtilityService.SetToSession({ CurrentIncidentId: this.currentIncidentId });
                 }
-
             });
     }
 
@@ -220,7 +219,19 @@ export class LoginComponent implements OnInit {
     }
 
     private CheckDepartmentPages(UserProfileId: number): void {
-        this.userProfileService.GetDepartmentPages(UserProfileId)
+        this.userProfileService.CheckUserHasPermission(UserProfileId)
+            .subscribe((res: number) => {
+                debugger;
+                if (res == 1)
+                    this.toastrService.warning('User Not Assigned to Any Department');
+                else if (res == 2)
+                    this.toastrService
+                        .warning('Departments assigned to this user don\'t have access to any pages');
+                else
+                    this.CheckClosedIncident();
+            });
+
+        /*this.userProfileService.GetDepartmentPages(UserProfileId)
             .subscribe((item: ResponseModel<UserProfileModel>) => {
                 const userprofile = item.Records;
                 const userpermissions = _.flatten(_.pluck(userprofile, 'UserPermissions'));
@@ -237,7 +248,7 @@ export class LoginComponent implements OnInit {
                         this.toastrService.warning('Departments assigned to this user don\'t have access to any pages');
                     }
                 }
-            });
+            });*/
     }
 
     private CheckClosedIncident(): void {
@@ -247,14 +258,11 @@ export class LoginComponent implements OnInit {
                     if (+this.activeKeyValues.find((x: KeyValueModel) => x.Key === 'CallCenterDepartmentId').Value == this.currentDepartmentId) {
                         this.router.navigate(['pages/callcenteronlypage']);
                     }
-                    else {
+                    else
                         this.router.navigate(['pages/dashboard']);
-                    }
-
                 }
-                else {
+                else
                     this.router.navigate(['pages/landing']);
-                }
             });
     }
 }

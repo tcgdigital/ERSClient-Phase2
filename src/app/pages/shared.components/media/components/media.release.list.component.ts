@@ -40,7 +40,7 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
         this.mediaService.Query(departmentId, incidentId)
             .subscribe((response: ResponseModel<MediaModel>) => {
                 this.mediaReleases = response.Records;
-                console.log(this.mediaReleases);
+                // console.log(this.mediaReleases);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });

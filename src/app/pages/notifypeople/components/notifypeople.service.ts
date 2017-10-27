@@ -130,8 +130,8 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
             .flatMap((result) => this.userPermissionService.GetAllDepartmentUsersFromDepartmentIdProjection(departmentIdProjection))
             .subscribe((userPermissions: ResponseModel<UserPermissionModel>) => {
                 this.GetUserDepartmentNotificationMapperByIncident(incidentId, (resultUserdepartmentNotificationMapper: UserdepartmentNotificationMapperModel[]) => {
-                    console.log(this.allDepartments);
-                    console.log(userPermissions);
+                    // console.log(this.allDepartments);
+                    // console.log(userPermissions);
                     count = 1;
                     this.departmentArray.forEach((itemDepartmentId: number, index: number) => {
 
@@ -155,10 +155,10 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
                             notifyModelInner.id = count;
                             notifyModelInner.text = eachUserPermission.User.Email;
                             notifyModelInner.population = '';
-                            if(eachUserPermission.IsHod){
+                            if (eachUserPermission.IsHod) {
                                 notifyModelInner.population = 'true';
                             }
-                            
+
                             notifyModelInner.checked = false;
                             let filterItems = resultUserdepartmentNotificationMapper.filter((itemFind: UserdepartmentNotificationMapperModel) => {
                                 return (itemFind.UserId == eachUserPermission.User.UserProfileId && itemFind.DepartmentId == departmentLocal[0].DepartmentId);
@@ -208,10 +208,10 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
     public NotifyPeopleCall(checkedIds: number[], departmentId: number,
         incidentId: number, callback?: ((_: TemplateModel) => void)): void {
         this.notifyPeopleModels = [];
-        var currentIncidentModel:IncidentModel=new IncidentModel();
+        var currentIncidentModel: IncidentModel = new IncidentModel();
         checkedIds.forEach((itemId: number) => {
             this.FindIdRecursively(this.allDepartmentUserPermission, itemId);
-            console.log(this.notifyPeopleModels);
+            // console.log(this.notifyPeopleModels);
             //this.notifyPeopleModels.push(this.notifyPeopleModel);
         });
 
@@ -223,7 +223,7 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
 
         this.incidentService.Get(incidentId)
             .map((incidentResponse: IncidentModel) => {
-                this.currentIncident=new IncidentModel();
+                this.currentIncident = new IncidentModel();
                 this.currentIncident.IncidentId = incidentResponse.IncidentId;
                 this.currentIncident.EmergencyName = incidentResponse.EmergencyName;
                 currentIncidentModel = incidentResponse;
@@ -269,7 +269,7 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
         delete appendedTemplate.Active;
         this.appendedTemplateService.CreateAppendedTemplate(appendedTemplate)
             .subscribe((appendedTemplate: AppendedTemplateModel) => {
-                console.log(this.notifyPeopleModels);
+                // console.log(this.notifyPeopleModels);
                 this.notificationContactsWithTemplates = [];
                 this.notifyPeopleModels.forEach((item: NotifyPeopleModel, index: number) => {
                     let notificationContactsWithTemplate: NotificationContactsWithTemplateModel = new NotificationContactsWithTemplateModel();

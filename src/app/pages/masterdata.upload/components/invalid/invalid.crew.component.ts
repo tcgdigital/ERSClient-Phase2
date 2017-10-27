@@ -58,7 +58,7 @@ export class InvalidCrewListComponent implements OnInit, OnDestroy {
                     if (a.CrewName > b.CrewName) return 1;
                     return 0;
                 })
-                console.log(this.invalidCrews);
+                // console.log(this.invalidCrews);
             }),
             (error: any) => {
                 console.log(`Error: ${error}`);

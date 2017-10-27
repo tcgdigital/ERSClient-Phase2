@@ -78,7 +78,7 @@ export class ForgotPasswordComponent implements OnInit, AfterViewInit {
         this.errorMessage = '';
 
         if (this.forgotPasswordForm.valid) {
-            console.log(forgotPasswordModel);
+            // console.log(forgotPasswordModel);
             this.forgotPasswordService.ResetPassword(forgotPasswordModel)
                 .subscribe((response: AccountResponse) => {
                     if (response) {

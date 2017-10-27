@@ -79,7 +79,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         this.ChecklistMappers = [];
         this.disableUploadButton = true;
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
-        //this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+        // this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
         if (this._router.url.indexOf('archivedashboard') > -1) {
             this.isArchive = true;
             this.currentIncident = +UtilityService.GetFromSession('ArchieveIncidentId');
@@ -140,7 +140,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe('OpenActionablePageInitiate');
         // this.globalState.Unsubscribe('incidentChange');
-        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        // this.globalState.Unsubscribe('departmentChangeFromDashboard');
     }
 
     ngAfterContentInit(): void {
@@ -223,7 +223,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         const mappers: ChecklistMapper[] = [];
 
         this.actionableService.GetAllOpenByIncidentIdandDepartmentId(incidentId, departmentId)
-            .subscribe((res: ResponseModel<ActionableModel>[]) => {
+            .subscribe((res: Array<ResponseModel<ActionableModel>>) => {
                 if (res && res.length > 1) {
                     if (res[0]) {
                         this.activeActionables = res[0].Records;
@@ -237,7 +237,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                     if (res[1]) {
                         this.actionableWithParentsChilds = res[1].Records;
                         if (this.actionableWithParentsChilds.length > 0) {
-                            const parentMapper = _.flatten(_.map(this.actionableWithParentsChilds, x => x.CheckList.CheckListParentMapper)) as ChecklistMapper[]
+                            const parentMapper = _.flatten(_.map(this.actionableWithParentsChilds, (x) => x.CheckList.CheckListParentMapper)) as ChecklistMapper[];
                             this.parentChecklistIds = _.unique(parentMapper.map((x) => x.ParentCheckListId));
                             this.ChecklistMappers = _.unique(parentMapper);
 
@@ -257,8 +257,8 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
 
 
 
-               
-                //this.getAllActiveActionableByIncident(this.currentIncident);
+
+                // this.getAllActiveActionableByIncident(this.currentIncident);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -409,7 +409,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         Observable.interval(10000).subscribe((_) => {
             this.activeActionables.forEach((item: ActionableModel) => {
                 item.RagColor = UtilityService.GetRAGStatus('Checklist', item.AssignedDt, item.ScheduleClose);
-                console.log(`Schedule run RAG ststus: ${item.RagColor}`);
+                // console.log(`Schedule run RAG ststus: ${item.RagColor}`);
             });
         }, (error: any) => {
             console.log(`Error: ${error}`);

@@ -42,7 +42,7 @@ export class InvalidPassengersListComponent implements OnInit, OnDestroy {
     }
 
 
-    ngOnDestroy(): void{
+    ngOnDestroy(): void {
         //this.dataExchange.Unsubscribe("OpenInvalidPassengers");
         //this.globalState.Unsubscribe("incidentChange");
     }
@@ -59,7 +59,7 @@ export class InvalidPassengersListComponent implements OnInit, OnDestroy {
 
                     return 0;
                 })
-                console.log(this.invalidPassengers);
+                // console.log(this.invalidPassengers);
             }),
             (error: any) => {
                 console.log(`Error: ${error}`);

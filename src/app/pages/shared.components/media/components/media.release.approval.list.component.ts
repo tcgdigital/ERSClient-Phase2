@@ -41,7 +41,7 @@ export class MediaReleaseApprovalListComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<MediaModel>) => {
                 this.mediaReleases = response.Records.
                     filter((a) => a.MediaReleaseStatus === 'SentForApproval');
-                console.log(this.mediaReleases);
+                // console.log(this.mediaReleases);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });

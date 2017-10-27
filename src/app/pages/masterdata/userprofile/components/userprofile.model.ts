@@ -6,6 +6,7 @@ import { UserPermissionModel } from '../../userpermission';
 import { VisaDetailsModel } from './visa.details.model';
 import { VolunterPreferenceModel } from './volunter.preference.nodel';
 import { TrainingRecordModel } from './training.record.model';
+import { PageModel } from '../../page.functionality';
 
 
 export class UserProfileModel extends BaseModel {
@@ -42,15 +43,15 @@ export class UserProfileModel extends BaseModel {
     public isActive: boolean;
     public isVolunteered: boolean;
 
-    public EmployeeId : string;
-    public Nationality : string;
-    public PassportNumber : string;
-    public PassportValidity? : Date;
+    public EmployeeId: string;
+    public Nationality: string;
+    public PassportNumber: string;
+    public PassportValidity?: Date;
 
-    public VisaRecords : string;
-    public VoluterPreferenceRecords : string;
-    public TrainingDetails : string; 
-    public NOKDetails : string;
+    public VisaRecords: string;
+    public VoluterPreferenceRecords: string;
+    public TrainingDetails: string;
+    public NOKDetails: string;
 
     public UserPermissions?: UserPermissionModel[];
     public Notifications?: NotificationModel[];
@@ -78,4 +79,26 @@ export class UserAuthenticationModel {
     public AccessFailedCount: number;
 }
 
+export class UserPerrmissionModel extends BaseModel {
+    public UserPermissionId: number;
+    public DepartmentId: number;
+    public UserId: number;
+    public IsMemberOf: boolean;
+    public IsHod: boolean;
 
+    public User: UserProfileModel;
+    public Department: DepartmentModel;
+}
+
+export class PagePerrmissionModel extends BaseModel{
+    public PermissionId: number;
+    public DepartmentId: number;
+    public PageId: number;
+    public CanView: boolean;
+    public CanEdit: boolean;
+    public CanDelete: boolean;
+    public OnlyHOD: boolean;
+
+    public Department: DepartmentModel;
+    public Page: PageModel;
+}

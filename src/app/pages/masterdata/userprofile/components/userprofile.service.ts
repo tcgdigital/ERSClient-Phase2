@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 
-import { UserProfileModel } from './userProfile.model';
-import { InvalidUserProfileModel } from './invalid.userprofile.model'
+import { UserProfileModel, UserPerrmissionModel, PagePerrmissionModel } from './userProfile.model';
+import { InvalidUserProfileModel } from './invalid.userprofile.model';
 import { ServiceBase, DataServiceFactory, ResponseModel, DataService, DataProcessingService } from '../../../../shared';
 import { IUserProfileService } from './IUserProfileService';
 
@@ -10,20 +10,18 @@ import { IUserProfileService } from './IUserProfileService';
 export class UserProfileService extends ServiceBase<UserProfileModel>
     implements IUserProfileService {
 
-    /**
-    * Creates an instance of UserProfileService.
-    * @param {DataServiceFactory} dataServiceFactory 
-    * 
-    * @memberOf UserProfileService
-    */
     private _dataServiceInvalidRecords: DataService<InvalidUserProfileModel>;
+    private _checkPermissionService: DataService<any>;
 
     constructor(private dataServiceFactory: DataServiceFactory) {
         super(dataServiceFactory, 'UserProfiles');
 
-        let option: DataProcessingService = new DataProcessingService();
+        const option: DataProcessingService = new DataProcessingService();
         this._dataServiceInvalidRecords = this.dataServiceFactory
             .CreateServiceWithOptions<InvalidUserProfileModel>('InvalidUserProfileRecords', option);
+
+        this._checkPermissionService = this.dataServiceFactory
+            .CreateServiceWithOptionsAndActionSuffix('PagePermissionMatrix', 'CheckUserHasPermission', option);
     }
 
     GetQuery(query: string): Observable<ResponseModel<UserProfileModel>> {
@@ -51,7 +49,7 @@ export class UserProfileService extends ServiceBase<UserProfileModel>
             .Execute();
     }
 
-    GetDepartmentPages(userprofileId: number) : Observable<ResponseModel<UserProfileModel>>{
+    GetDepartmentPages(userprofileId: number): Observable<ResponseModel<UserProfileModel>> {
         return this._dataService.Query()
             .Select('UserProfileId')
             .Expand('UserPermissions($select=DepartmentId,UserId;$expand=Department($select=DepartmentId;$expand=Permissions($select=DepartmentId,PageId)))')
@@ -59,7 +57,7 @@ export class UserProfileService extends ServiceBase<UserProfileModel>
             .Execute();
     }
 
-    GetAllUsers(): Observable<ResponseModel<UserProfileModel>>{
+    GetAllUsers(): Observable<ResponseModel<UserProfileModel>> {
         return this._dataService.Query()
             .Select('UserProfileId,UserId,Name,Email,EmployeeId,MainContact,AlternateContact,isActive,ActiveFlag,isVolunteered,PassportNumber,PassportValidity,Nationality,Gender,VisaRecords,VoluterPreferenceRecords,TrainingDetails,NOKDetails')
             .OrderBy('Name')
@@ -72,5 +70,13 @@ export class UserProfileService extends ServiceBase<UserProfileModel>
             .Select('UserId,Name,Email,EmployeeId,DepartmentName,MainContact,AlternateContact,PassportDetails,Nationality,Gender,VisaDetails,TrainingDetails,NOKDetails,ErrorReason')
             .OrderBy('Name')
             .Execute();
+    }
+
+    CheckUserHasPermission(userProfileId: number): Observable<number> {
+        return this._checkPermissionService.SimpleGet(`/${userProfileId}`)
+            .Execute()
+            .map((response: any) => {
+                return response as number;
+            });
     }
 }

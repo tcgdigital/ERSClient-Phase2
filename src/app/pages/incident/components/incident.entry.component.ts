@@ -497,7 +497,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
 
     onPOPUPSubmit(values: object): void {
         console.log('Incident Created.');
-        console.log(this.incidentDataExchangeModel);
+        // console.log(this.incidentDataExchangeModel);
         if (this.incidentDataExchangeModel.IncidentModel.EmergencyLocation === 'Offsite') {
             this.incidentDataExchangeModel.IncidentModel.EmergencyLocation = this.incidentDataExchangeModel.IncidentModel.OffSetLocation;
             delete this.incidentDataExchangeModel.IncidentModel.OffSetLocation;
