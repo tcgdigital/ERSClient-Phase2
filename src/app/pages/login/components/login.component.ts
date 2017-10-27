@@ -221,7 +221,6 @@ export class LoginComponent implements OnInit {
     private CheckDepartmentPages(UserProfileId: number): void {
         this.userProfileService.CheckUserHasPermission(UserProfileId)
             .subscribe((res: number) => {
-                debugger;
                 if (res == 1)
                     this.toastrService.warning('User Not Assigned to Any Department');
                 else if (res == 2)
@@ -230,25 +229,6 @@ export class LoginComponent implements OnInit {
                 else
                     this.CheckClosedIncident();
             });
-
-        /*this.userProfileService.GetDepartmentPages(UserProfileId)
-            .subscribe((item: ResponseModel<UserProfileModel>) => {
-                const userprofile = item.Records;
-                const userpermissions = _.flatten(_.pluck(userprofile, 'UserPermissions'));
-                const departments = _.flatten(_.pluck(userpermissions, 'Department'));
-                if (departments.length <= 0) {
-                    this.toastrService.warning('User Not Assigned to Any Department');
-                }
-                else {
-                    const permissions = _.flatten(_.pluck(departments, 'Permissions'));
-                    if (permissions.length > 0) {
-                        this.CheckClosedIncident();
-                    }
-                    else {
-                        this.toastrService.warning('Departments assigned to this user don\'t have access to any pages');
-                    }
-                }
-            });*/
     }
 
     private CheckClosedIncident(): void {

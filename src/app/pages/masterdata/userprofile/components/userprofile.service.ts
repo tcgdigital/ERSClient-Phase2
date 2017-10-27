@@ -20,8 +20,11 @@ export class UserProfileService extends ServiceBase<UserProfileModel>
         this._dataServiceInvalidRecords = this.dataServiceFactory
             .CreateServiceWithOptions<InvalidUserProfileModel>('InvalidUserProfileRecords', option);
 
+
+
         this._checkPermissionService = this.dataServiceFactory
             .CreateServiceWithOptionsAndActionSuffix('PagePermissionMatrix', 'CheckUserHasPermission', option);
+
     }
 
     GetQuery(query: string): Observable<ResponseModel<UserProfileModel>> {
@@ -72,7 +75,7 @@ export class UserProfileService extends ServiceBase<UserProfileModel>
             .Execute();
     }
 
-    CheckUserHasPermission(userProfileId: number): Observable<number> {
+    public CheckUserHasPermission(userProfileId: number): Observable<number> {
         return this._checkPermissionService.SimpleGet(`/${userProfileId}`)
             .Execute()
             .map((response: any) => {

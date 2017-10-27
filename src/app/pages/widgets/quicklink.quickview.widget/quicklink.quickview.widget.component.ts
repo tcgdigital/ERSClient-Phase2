@@ -4,7 +4,7 @@ import {
     SimpleChange
 } from '@angular/core';
 import { KeyValue, ResponseModel } from '../../../shared/models';
-import { GlobalConstants,GlobalStateService } from '../../../shared';
+import { GlobalConstants, GlobalStateService } from '../../../shared';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { QuickLinkModel } from '../../masterdata/quicklink/components';
 import { QuickLinkService } from '../../masterdata/quicklink/components';
@@ -28,7 +28,7 @@ export class QuickLinkQuickViewWidgetComponent implements OnInit {
     public currentIncidentIdLocal: number;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
 
-    constructor(private quicklinkService: QuickLinkService,private globalState: GlobalStateService) { }
+    constructor(private quicklinkService: QuickLinkService, private globalState: GlobalStateService) { }
 
     ngOnInit() {
         this.incidentId = 0;
@@ -42,6 +42,13 @@ export class QuickLinkQuickViewWidgetComponent implements OnInit {
         this.quicklinkService.GetAll()
             .subscribe((response: ResponseModel<QuickLinkModel>) => {
                 this.quicklinks = response.Records;
+            });
+    }
+
+    delQuickLink(quickLinkId: number, quickLink: QuickLinkModel): void {
+        this.quicklinkService.Delete(quickLinkId, quickLink)
+            .subscribe((response: QuickLinkModel) => {
+                this.getQuickLinks();
             });
     }
 
