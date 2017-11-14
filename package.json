@@ -85,6 +85,7 @@
     "jstimezonedetect": "^1.0.6",
     "jwt-decode": "^2.2.0",
     "load-google-maps-api-2": "^1.0.2",
+    "localforage": "^1.5.3",
     "lodash": "^4.17.4",
     "lz-string": "^1.4.4",
     "moment": "^2.18.1",

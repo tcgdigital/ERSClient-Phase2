@@ -11,7 +11,7 @@
     width: 135px;
     border-top-left-radius: 15px;
     border-bottom-left-radius: 15px;
-    @include box-shadow(-1px, 2px, 7px, 2px, $header-shadow);
+    @include box-shadow(1px, 0px, 3px, 1px, $header-shadow);
     .world-clocks {
         display: block;
     }

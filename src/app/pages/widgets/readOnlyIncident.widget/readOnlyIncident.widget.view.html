@@ -1,13 +1,15 @@
 <a *ngIf="useLink" href="javascript:void(0);" (click)="onViewIncidentClick()">View Event</a>
 <a class="fa fa-edit fa-2x" *ngIf="!useLink" href="javascript:void(0);" (click)="onViewIncidentClick()"></a>
 
-<div bsModal #childModalViewIncident="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+<div *ngIf="isDataLoaded" bsModal #childModalViewIncident="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <form [formGroup]="formPopup">
             <div class="modal-content">
                 <div class="modal-header">
-                    <span class="mod-head"><strong>Event View</strong></span>
+                    <span class="mod-head">
+                        <strong>Event View</strong>
+                    </span>
                     <div *ngIf="IsDrillPopup" class="dilld">DRILL</div>
                     <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideIncidentView()"></i>
                 </div>
@@ -16,21 +18,21 @@
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="OrganizationId">Organization</label>
                             <select id="OrganizationIdPopup" disabled class="form-control" formControlName="OrganizationIdPopup" name="OrganizationIdPopup">
-                                        <option value=''>Select Organization</option>
-                                        <option *ngFor="let organization of activeOrganizations" [value]="organization.OrganizationId" >
-                                            {{organization.OrganizationCode}}
-                                        </option>
-                                    </select>
+                                <option value=''>Select Organization</option>
+                                <option *ngFor="let organization of activeOrganizations" [value]="organization.OrganizationId">
+                                    {{organization.OrganizationCode}}
+                                </option>
+                            </select>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="EmergencyType">Crisis Type</label>
                             <select id="EmergencyTypeIdPopup" disabled class="form-control" formControlName="EmergencyTypeIdPopup" name="EmergencyTypeIdPopup">
-                                    <option value="0" >Select Crisis Type</option>
-                                    <option *ngFor="let emergencyType of activeEmergencyTypes" [value]="emergencyType.EmergencyTypeId" >
-                                        {{emergencyType.EmergencyTypeName}}
-                                    </option>
+                                <option value="0">Select Crisis Type</option>
+                                <option *ngFor="let emergencyType of activeEmergencyTypes" [value]="emergencyType.EmergencyTypeId">
+                                    {{emergencyType.EmergencyTypeName}}
+                                </option>
                             </select>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
@@ -71,7 +73,8 @@
                         <div class="form-group col-lg-9 col-sm-12 col-md-6">
                             <label for="Description">Note</label>
                             <textarea id="DescriptionPopup" disabled formControlName="DescriptionPopup" class="form-control textarea" type="text" name="DescriptionPopup"
-                                placeholder=""></textarea>
+                                placeholder="">
+                            </textarea>
                         </div>
                     </div>
                     <div class="row">
@@ -80,7 +83,6 @@
                                 <label for="WhatHappend">Event</label>
                                 <input id="WhatHappendPopup" disabled class="form-control" type="text" name="WhatHappendPopup" formControlName="WhatHappendPopup"
                                     placeholder="" />
-
                             </div>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
@@ -88,7 +90,6 @@
                                 <label for="WhereHappend">Location</label>
                                 <input id="WhereHappendPopup" disabled class="form-control" type="text" name="WhereHappendPopup" formControlName="WhereHappendPopup"
                                     placeholder="" />
-
                             </div>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
@@ -112,7 +113,6 @@
                                 <label for="ReportedByName">Reporter</label>
                                 <input id="ReportedByNamePopup" disabled class="form-control" type="text" name="ReportedByNamePopup" formControlName="ReportedByNamePopup"
                                     placeholder="" />
-
                             </div>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
@@ -129,14 +129,6 @@
                                     placeholder="" />
                             </div>
                         </div>
-                        <!-- <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <div class="form-group">
-                                <label for="SenderOfCrisisInformation">Sender Of Crisis Information</label>
-                                <input id="SenderOfCrisisInformationPopup" disabled class="form-control" type="text" name="SenderOfCrisisInformationPopup"
-                                    formControlName="SenderOfCrisisInformationPopup" placeholder=""
-                                />
-                            </div>
-                        </div> -->
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="Severity">Severity</label>
                             <input id="SeverityPopup" class="form-control" type="text" name="SeverityPopup" formControlName="SeverityPopup" disabled
@@ -154,11 +146,6 @@
                             <input id="ReportedDateLocalPopup" disabled formControlName="ReportedDateLocalPopup" class="form-control" type="text" name="ReportedDateLocalPopup"
                                 placeholder="" />
                         </div>
-                        <!-- <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="Severity">Severity</label>
-                            <input id="SeverityPopup" class="form-control" type="text" name="SeverityPopup" formControlName="SeverityPopup" disabled
-                                placeholder="" />
-                        </div> -->
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <div class="form-group">
                                 <label for="IncidentsToPickForReplication">Incident To Replicate</label>
@@ -197,8 +184,8 @@
                             <div class="row">
                                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
                                     <label for="Scheduleddeparture(UTC)">Sched. Departure Org. (LOCAL)</label>
-                                    <input id="ScheduleddeparturePopup" disabled formControlName="ScheduleddepartureLOCPopup" class="form-control" type="text" name="ScheduleddeparturePopup"
-                                        placeholder="" />
+                                    <input id="ScheduleddeparturePopup" disabled formControlName="ScheduleddepartureLOCPopup" class="form-control" type="text"
+                                        name="ScheduleddeparturePopup" placeholder="" />
                                 </div>
                                 <div class="form-group col-lg-3 col-sm-12 col-md-6">
                                     <label for="Scheduledarrival(LOCAL)">Sched. Arrival (UTC)</label>
@@ -221,7 +208,7 @@
                                     <label for="AircraftTypeId">Aircraft Type</label>
                                     <select id="AircraftTypeIdPopup" disabled class="form-control" formControlName="AircraftTypeIdPopup" name="AircraftTypeIdPopup">
                                         <option value=''>Select Aircraft Type</option>
-                                        <option *ngFor="let activeAircraftType of activeAircraftTypes" [value]="activeAircraftType.AircraftTypeId" >
+                                        <option *ngFor="let activeAircraftType of activeAircraftTypes" [value]="activeAircraftType.AircraftTypeId">
                                             {{activeAircraftType.AircraftTypeCode}}
                                         </option>
                                     </select>
@@ -229,7 +216,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </form>
