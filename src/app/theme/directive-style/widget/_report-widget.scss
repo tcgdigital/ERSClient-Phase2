@@ -2,8 +2,8 @@
 .report_widget-container {
     height: 70px;
     background: #fff;
-    border: #999 solid 1px;
-    @include box-shadow(0px, 3px, 8px, 0, $header-shadow);
+    // border: #999 solid 1px;
+    @include box-shadow(0px, 1px, 3px, 0px, $header-shadow);
     .reportbox {
         padding: 15px 0px;
         width: 100%;
