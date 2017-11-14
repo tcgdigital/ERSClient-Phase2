@@ -32,19 +32,19 @@ import { Router } from '@angular/router';
 export class EmergencyClosureComponent implements OnInit {
 	@ViewChild('childModal') public childModal: ModalDirective;
 
-	currentIncident: number;
-	currentDepartmentId: number;
-	incident: IncidentModel = new IncidentModel();
-	departmnetsToNotify: DepartmentModel[] = [];
-	departmentClosures: DepartmentClosureModel[] = [];
-	closuresToShow: DepartmentClosureModel[] = [];
-	actionable: ActionableModel[] = [];
-	demands: DemandModel[] = [];
-	initialNotificationSend: number[] = [];
-	notificationSeperatelySend: number[] = [];
-	report: string = "";
-	remarks: string = "";
-	credential: AuthModel;
+	public currentIncident: number;
+	public currentDepartmentId: number;
+	public incident: IncidentModel = new IncidentModel();
+	public departmnetsToNotify: DepartmentModel[] = [];
+	public departmentClosures: DepartmentClosureModel[] = [];
+	public closuresToShow: DepartmentClosureModel[] = [];
+	public actionable: ActionableModel[] = [];
+	public demands: DemandModel[] = [];
+	public initialNotificationSend: number[] = [];
+	public notificationSeperatelySend: number[] = [];
+	public report: string = "";
+	public remarks: string = "";
+	public credential: AuthModel;
 	public reportPath: ReportPath;
 	public UserDepartmentNotificationMappers: NotificationContactsWithTemplateModel[];
 	public isShowPage: boolean = true;
@@ -109,8 +109,6 @@ export class EmergencyClosureComponent implements OnInit {
 		this.GetIncident(this.currentIncident);
 	}
 
-
-
 	ngOnDestroy(): void {
 		// this.globalState.Unsubscribe('incidentChange');
 		//this.globalState.Unsubscribe('departmentChange');
@@ -125,17 +123,17 @@ export class EmergencyClosureComponent implements OnInit {
 	}
 
 	getAllDepartmentsToNotify(): void {
-		let allActiveDepartments: Observable<DepartmentModel[]>
-			= this.departmentService.GetDepartmentNameIds().map(x => x.Records);
+		let allActiveDepartments: Observable<DepartmentModel[]> = this.departmentService
+			.GetDepartmentNameIds().map(x => x.Records);
 
-		let emergencyDepartments: Observable<EmergencyDepartmentModel[]>
-			= this.emergencyTypeDepartmentService.GetFilterByEmergencyTypeDepartmentId(this.incident.EmergencyTypeId).map(x => x.Records);
+		let emergencyDepartments: Observable<EmergencyDepartmentModel[]> = this.emergencyTypeDepartmentService
+			.GetFilterByEmergencyTypeDepartmentId(this.incident.EmergencyTypeId).map(x => x.Records);
 
-		let notifyDeptUsers: Observable<UserDepartmentNotificationMapper[]>
-			= this.notifyService.GetAllByIncident(this.currentIncident).map(x => x.Records);
+		let notifyDeptUsers: Observable<UserDepartmentNotificationMapper[]> = this.notifyService
+			.GetAllByIncident(this.currentIncident).map(x => x.Records);
 
-		let departmentClosures: Observable<DepartmentClosureModel[]>
-			= this.departmentClosureService.GetAllByIncident(this.currentIncident).map(x => x.Records);
+		let departmentClosures: Observable<DepartmentClosureModel[]> = this.departmentClosureService
+			.GetAllByIncident(this.currentIncident).map(x => x.Records);
 
 		Observable.merge(allActiveDepartments, emergencyDepartments, notifyDeptUsers, departmentClosures)
 			.flatMap((x: BaseModel[]) => x)
@@ -159,7 +157,7 @@ export class EmergencyClosureComponent implements OnInit {
 					this.departmentClosures.push(<DepartmentClosureModel>response);
 				}
 			},
-			(error) => { console.log(error); },
+			(error) => { console.log(`Error: ${error}`); },
 			() => {
 				let unique: DepartmentModel[] = [];
 				let departmentIds: number[] = [];
@@ -168,11 +166,11 @@ export class EmergencyClosureComponent implements OnInit {
 						unique.push(x);
 						departmentIds.push(x.DepartmentId);
 					})
-				let allActionables: Observable<ActionableModel[]>
-					= this.actionableService.BatchGet(this.currentIncident, departmentIds).map(x => x.Records);
+				let allActionables: Observable<ActionableModel[]> = this.actionableService
+					.BatchGet(this.currentIncident, departmentIds).map(x => x.Records);
 
-				let allDemands: Observable<DemandModel[]>
-					= this.demandService.BatchGet(this.currentIncident, departmentIds).map(x => x.Records);
+				let allDemands: Observable<DemandModel[]> = this.demandService
+					.BatchGet(this.currentIncident, departmentIds).map(x => x.Records);
 
 				Observable.merge(allActionables, allDemands)
 					.flatMap((x: any) => x.reduce((a, b) => a.concat(b)))
@@ -184,10 +182,13 @@ export class EmergencyClosureComponent implements OnInit {
 							this.demands.push(<DemandModel>response1);
 						}
 					},
-					(error) => { console.log(error); },
+					(error) => { console.log(`Error: ${error}`); },
 					() => {
 						if (unique.length > 0) {
-							unique = unique.sort(function (a, b) { return (a.DepartmentName.toUpperCase() > b.DepartmentName.toUpperCase()) ? 1 : ((b.DepartmentName.toUpperCase() > a.DepartmentName.toUpperCase()) ? -1 : 0); });
+							unique = unique.sort((a: DepartmentModel, b: DepartmentModel) => {
+								return (a.DepartmentName.toUpperCase() > b.DepartmentName.toUpperCase()) ?
+									1 : ((b.DepartmentName.toUpperCase() > a.DepartmentName.toUpperCase()) ? -1 : 0);
+							});
 							this.closuresToShow = unique.map((x: DepartmentModel) => {
 								let item: DepartmentClosureModel = new DepartmentClosureModel();
 								let closureItem = this.departmentClosures.find(y => {
@@ -205,7 +206,10 @@ export class EmergencyClosureComponent implements OnInit {
 							});
 						}
 						if (this.closuresToShow.length > 0) {
-							this.closuresToShow = this.closuresToShow.sort(function (a, b) { return (a.Department.DepartmentName.toUpperCase() > b.Department.DepartmentName.toUpperCase()) ? 1 : ((b.Department.DepartmentName.toUpperCase() > a.Department.DepartmentName.toUpperCase()) ? -1 : 0); });
+							this.closuresToShow = this.closuresToShow.sort((a: DepartmentClosureModel, b: DepartmentClosureModel) => {
+								return (a.Department.DepartmentName.toUpperCase() > b.Department.DepartmentName.toUpperCase()) ?
+									1 : ((b.Department.DepartmentName.toUpperCase() > a.Department.DepartmentName.toUpperCase()) ? -1 : 0);
+							});
 							this.closuresToShow.forEach(x => {
 								x.InitialNotify = false;
 								x.SeperateNotify = false;
@@ -233,9 +237,10 @@ export class EmergencyClosureComponent implements OnInit {
 		this.departmentClosureService.GetAllByIncident(this.currentIncident)
 			.subscribe((departmentClosures: ResponseModel<DepartmentClosureModel>) => {
 				departmentClosureModels.forEach((item: DepartmentClosureModel) => {
-					const filtered: DepartmentClosureModel[] = departmentClosures.Records.filter((dc: DepartmentClosureModel) => {
-						return dc.DepartmentId == item.Department.DepartmentId;
-					});
+					const filtered: DepartmentClosureModel[] = departmentClosures.Records
+						.filter((dc: DepartmentClosureModel) => {
+							return dc.DepartmentId == item.Department.DepartmentId;
+						});
 					if (filtered.length > 0) {
 						item.IsSubmitted = filtered[0].IsSubmitted;
 						item.SubmittedOn = new Date(filtered[0].SubmittedOn);
@@ -252,7 +257,6 @@ export class EmergencyClosureComponent implements OnInit {
 				if (response.Records.length > 0) {
 					this.report = response.Records[0].ClosureReport;
 					this.remarks = response.Records[0].ClosureRemark;
-
 				}
 				this.childModal.show();
 			});
@@ -272,13 +276,11 @@ export class EmergencyClosureComponent implements OnInit {
 			this.incident.SavedOn = new Date();
 			this.incidentService.Update(this.incident, this.incident.IncidentId)
 				.subscribe(() => {
-
 					this.toastrService.info('Closure Report Saved Successfully.', 'Success', this.toastrConfig);
 				}, (error) => {
 					this.toastrService.info('Some error occured.', 'Error', this.toastrConfig);
 				});
 		}
-
 	}
 
 	submitIncidentClosure(): void {
@@ -300,8 +302,6 @@ export class EmergencyClosureComponent implements OnInit {
 							this.reportPath = new ReportPath();
 							this.reportPath = reportPath;
 						})
-						// .flatMap((_) => this.userPermissionService.GetAllActiveHODUsersOfAllDepartments())
-						// .map((response: ResponseModel<UserPermissionModel>) => {
 						.flatMap((_) => this.userPermissionService.GetActiveHODUsersOfCrisisTypeSpecificDepartments(this.incident.EmergencyTypeId))
 						.map((response: UserPermissionModel[]) => {
 							this.UserDepartmentNotificationMappers = [];

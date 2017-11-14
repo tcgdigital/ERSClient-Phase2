@@ -132,8 +132,7 @@ export class UserPermissionService
 
     public GetActiveHODUsersOfCrisisTypeSpecificDepartments(emergencyTypeId: number): Observable<UserPermissionModel[]> {
         return this._userPermissionService.SimpleGet(`/${emergencyTypeId}`)
-            .Execute()
-            .map((resp) => {
+            .Execute().map((resp) => {
                 return resp as UserPermissionModel[];
             });
     }

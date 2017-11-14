@@ -1,6 +1,6 @@
 @import '../../config/config';
 .widget-container {
-    @include box-shadow(0px, 3px, 5px, 0, $header-shadow);
+    @include box-shadow(-1px, 1px, 3px, 1px, $header-shadow);
     background-color: $summary-widget-bg1;
     color:#fff;
     height: 92px;

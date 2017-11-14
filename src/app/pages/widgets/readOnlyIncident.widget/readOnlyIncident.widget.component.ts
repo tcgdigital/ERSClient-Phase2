@@ -1,5 +1,9 @@
-import { Component, OnInit, Input, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+    Component, OnInit, Input, Output,
+    ViewChild, ViewEncapsulation, EventEmitter
+} from '@angular/core';
 import * as moment from 'moment/moment';
+import * as _ from 'underscore';
 import { EmergencyTypeModel, EmergencyTypeService } from '../../masterdata';
 import {
     ResponseModel
@@ -37,16 +41,18 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
     providers: [ReadOnlyIncidentWidgetService, OrganizationService, AircraftTypeService]
 })
 export class ReadOnlyIncidentWidgetComponent implements OnInit {
-    @Input() currentIncidentLocal: KeyValue;
-    @Input() useLink: boolean;
+    @Input() public currentIncidentLocal: KeyValue;
+    @Input() public useLink: boolean;
+    @Input() public loadOnInitialize: boolean = false;
     @ViewChild('childModalViewIncident') public childModalViewIncident: ModalDirective;
-    incidentDataExchangeModel: IncidentDataExchangeModel = null;
-    disableIsDrillPopup: boolean;
-    severities: KeyValue[] = [];
+
+    @Output() ShowWindowEvent: EventEmitter<any> = new EventEmitter<any>();
+    @Output() HideWindowEvent: EventEmitter<any> = new EventEmitter<any>();
+
+    public incidentDataExchangeModel: IncidentDataExchangeModel = null;
+    public disableIsDrillPopup: boolean;
     public IsDrillPopup: boolean;
-    isFlightRelatedPopup: boolean = false;
-    activeOrganizations: OrganizationModel[] = [];
-    activeAircraftTypes: AircraftTypeModel[] = [];
+    public isFlightRelatedPopup: boolean = false;
     public incidentId: number;
     public incidentDate: Date;
     public formPopup: FormGroup;
@@ -54,9 +60,14 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
     public ReportedDateLocal: Date;
     public ScheduleDepartureLocal: Date;
     public ScheduleArrivalLocal: Date;
-    public activeEmergencyTypes: EmergencyTypeModel[] = [];
     public BorrowedIncidentName: string;
-    affectedStations: EmergencyLocationModel[] = [];
+    public isDataLoaded: boolean = false;
+
+    public severities: KeyValue[] = new Array<KeyValue>();
+    public activeEmergencyTypes: EmergencyTypeModel[] = new Array<EmergencyTypeModel>();
+    public affectedStations: EmergencyLocationModel[] = new Array<EmergencyLocationModel>();
+    public activeOrganizations: OrganizationModel[] = new Array<OrganizationModel>();
+    public activeAircraftTypes: AircraftTypeModel[] = new Array<AircraftTypeModel>();
 
     constructor(
         private readOnlyIncidentWidgetService: ReadOnlyIncidentWidgetService,
@@ -66,81 +77,46 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
         private timeZoneService: TimeZoneService,
         private emergencyTypeService: EmergencyTypeService) { }
 
-    ngOnInit() {
-        this.incidentId = 0;
-
-        this.incidentDate = new Date();
-        this.severities = UtilityService.GetKeyValues(Severity);
-        this.getAllActiveOrganizations();
-        this.getAllActiveEmergencyTypes();
-        this.getAllActiveAircraftTypes();
-        this.resetIncidentViewForm();
-
-
-        this.emergencyLocationService.GetAllActiveEmergencyLocations()
-        .subscribe((result: ResponseModel<EmergencyLocationModel>) => {
-            result.Records.forEach((item: EmergencyLocationModel) => {
-                const emergencyLocationModel: EmergencyLocationModel = new EmergencyLocationModel();
-                emergencyLocationModel.IATA = item.IATA;
-                emergencyLocationModel.AirportName = item.AirportName;
-                emergencyLocationModel.Country = item.Country;
-                emergencyLocationModel.TimeZone = item.TimeZone;
-                emergencyLocationModel.UTCOffset = item.UTCOffset;
-                this.affectedStations.push(emergencyLocationModel);
-                this.affectedStations.sort(function (a, b) { return (a.AirportName.toUpperCase() > b.AirportName.toUpperCase()) ? 1 : ((b.AirportName.toUpperCase() > a.AirportName.toUpperCase()) ? -1 : 0); });
-            });
-        });
+    public ngOnInit(): void {
+        if (this.loadOnInitialize)
+            this.Initialization(() => { this.isDataLoaded = true; });
     }
 
-    getAllActiveOrganizations(): void {
-        this.organizationService.GetAllActiveOrganizations()
-            .subscribe((response: ResponseModel<OrganizationModel>) => {
-                this.activeOrganizations = response.Records;
-            }, (error: any) => {
-                console.log(`Error: ${error}`);
-            });
-    }
+    // public getAllActiveOrganizations(): void {
+    //     this.organizationService.GetAllActiveOrganizations()
+    //         .subscribe((response: ResponseModel<OrganizationModel>) => {
+    //             this.activeOrganizations = response.Records;
+    //         }, (error: any) => {
+    //             console.log(`Error: ${error}`);
+    //         });
+    // }
 
-    getAllActiveAircraftTypes(): void {
-        this.aircraftTypeService.GetAllActiveAircraftTypes()
-            .subscribe((response: ResponseModel<AircraftTypeModel>) => {
-                this.activeAircraftTypes = response.Records;
-            }, (error: any) => {
-                console.log(`Error: ${error}`);
-            });
-    }
+    // public getAllActiveAircraftTypes(): void {
+    //     this.aircraftTypeService.GetAllActiveAircraftTypes()
+    //         .subscribe((response: ResponseModel<AircraftTypeModel>) => {
+    //             this.activeAircraftTypes = response.Records;
+    //         }, (error: any) => {
+    //             console.log(`Error: ${error}`);
+    //         });
+    // }
 
     public onViewIncidentClick(): void {
-        if(this.currentIncidentLocal.Value!=undefined){
+        if (this.currentIncidentLocal.Value != undefined)
             this.incidentId = this.currentIncidentLocal.Value;
-        }
-        else{
+        else
             this.incidentId = +this.currentIncidentLocal;
-        }
-        
-        this.readOnlyIncidentWidgetService.GetIncidentByIncidentId(this.incidentId)
-            .subscribe((item: IncidentModel) => {
-                this.incidentDataExchangeModel = new IncidentDataExchangeModel();
-                this.incidentDataExchangeModel.IsFlightRelated = false;
-                this.incidentDataExchangeModel.IncidentModel = new IncidentModel();
-                this.incidentDataExchangeModel.IncidentModel = item;
 
-                if (item.InvolvedParties.length > 0) {
-                    this.incidentDataExchangeModel.InvolvedPartyModel = new InvolvePartyModel();
-                    this.incidentDataExchangeModel.InvolvedPartyModel = item.InvolvedParties[0];
-                    if (item.InvolvedParties[0].Flights.length > 0) {
-                        this.incidentDataExchangeModel.IsFlightRelated = true;
-                        this.incidentDataExchangeModel.FLightModel = new FlightModel();
-                        this.incidentDataExchangeModel.FLightModel = item.InvolvedParties[0].Flights[0];
-                    }
-                }
-                if (this.incidentDataExchangeModel.IncidentModel.BorrowedIncident != null) {
-                    this.fetchBorrowedIncident(this.incidentDataExchangeModel.IncidentModel.BorrowedIncident);
-                }
-                else {
-                    this.loadDataIncidentViewPopup();
-                }
+        if (!this.loadOnInitialize)
+            this.Initialization(() => {
+                if (this.incidentId == 0 && this.currentIncidentLocal.Value != undefined)
+                    this.incidentId = this.currentIncidentLocal.Value;
+                else
+                    this.incidentId = +this.currentIncidentLocal;
+                this.isDataLoaded = true;
+                this.FetchIncident.call(this);
             });
+        else
+            this.FetchIncident();
     }
 
     public fetchBorrowedIncident(incidentId: number): void {
@@ -187,7 +163,6 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
 
             this.ScheduleDepartureLocal = new Date(new Date(this.incidentDataExchangeModel.FLightModel.DepartureDate).toLocaleString() + ' UTC');
             this.ScheduleArrivalLocal = new Date(new Date(this.incidentDataExchangeModel.FLightModel.ArrivalDate).toLocaleString() + ' UTC');
-           
 
             this.formPopup = new FormGroup({
                 IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
@@ -211,9 +186,6 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
                 ReportedDateLocalPopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.ReportedDate).utc().format('DD-MM-YYYY HH:mm')),
                 SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity),
                 BorrowedIncidentPopup: new FormControl(this.BorrowedIncidentName),
-
-
-
                 FlightNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightNo),
                 OriginPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.OriginCode),
                 DestinationPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.DestinationCode),
@@ -225,39 +197,24 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
                 AircraftTypeIdPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.AircraftTypeId)
             });
 
-            let localDepartureDate:string = this.DateFormat(this.incidentDataExchangeModel.FLightModel.DepartureDate);
+            let localDepartureDate: string = this.DateFormat(this.incidentDataExchangeModel.FLightModel.DepartureDate);
             this.formPopup.get('ScheduleddeparturePopup').setValue(localDepartureDate);
-            // this.GetLocalDateTime(new Date(this.incidentDataExchangeModel.FLightModel.DepartureDate), true,(dt:Date) => {
-            //     let localDepartureArrivalDate:string = this.DateFormat(this.incidentDataExchangeModel.FLightModel.DepartureDate);
-            //     this.formPopup.get('ScheduleddeparturePopup').setValue(localDepartureArrivalDate);
-            // });
 
-            let localArrivalDate:string = this.DateFormat(this.incidentDataExchangeModel.FLightModel.ArrivalDate);
+            let localArrivalDate: string = this.DateFormat(this.incidentDataExchangeModel.FLightModel.ArrivalDate);
             this.formPopup.get('ScheduledarrivalPopup').setValue(localArrivalDate);
-            // this.GetLocalDateTime(new Date(this.incidentDataExchangeModel.FLightModel.ArrivalDate), false,(dt:Date) => {
-            //     let localDepartureArrivalDate:string = this.DateFormat(this.incidentDataExchangeModel.FLightModel.ArrivalDate);
-            //     this.formPopup.get('ScheduledarrivalPopup').setValue(localDepartureArrivalDate);
-            // });
 
-
-            let localDepartureDateLoc:string = this.DateFormat(this.incidentDataExchangeModel.FLightModel.DepartureDateLocal);
+            let localDepartureDateLoc: string = this.DateFormat(this.incidentDataExchangeModel.FLightModel.DepartureDateLocal);
             this.formPopup.get('ScheduleddepartureLOCPopup').setValue(localDepartureDateLoc);
-            // this.GetLocalDateTime(new Date(this.incidentDataExchangeModel.FLightModel.DepartureDate), true,(dt:Date) => {
-            //     let localDepartureArrivalDate:string = this.DateFormat(dt);
-            //     this.formPopup.get('ScheduleddepartureLOCPopup').setValue(localDepartureArrivalDate);
-            // });
 
-            let localArrivalDateLoc:string = this.DateFormat(this.incidentDataExchangeModel.FLightModel.ArrivalDateLocal);
+            let localArrivalDateLoc: string = this.DateFormat(this.incidentDataExchangeModel.FLightModel.ArrivalDateLocal);
             this.formPopup.get('ScheduledarrivalLOCPopup').setValue(localArrivalDateLoc);
-            // this.GetLocalDateTime(new Date(this.incidentDataExchangeModel.FLightModel.ArrivalDate), false,(dt:Date) => {
-            //     let localDepartureArrivalDate:string = this.DateFormat(dt);
-            //     this.formPopup.get('ScheduledarrivalLOCPopup').setValue(localDepartureArrivalDate);
-            // });
+
             this.IsDrillPopup = this.incidentDataExchangeModel.IncidentModel.IsDrill;
             this.isFlightRelatedPopup = true;
         }
         this.childModalViewIncident.show();
     }
+
     public hideIncidentView(): void {
         this.childModalViewIncident.hide();
     }
@@ -291,6 +248,7 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
         zi.CurrentTime = new Date();
         zi.ZoneName = timeZone;
         let localDate = new Date();
+
         this.timeZoneService.GetLocalTime(zi)
             .subscribe((result: ZoneIndicator) => {
                 localDate = new Date(result.CurrentTime);
@@ -298,20 +256,16 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
                 if (callback)
                     callback(localDate);
             });
-
-        //let localDate = new Date(utc + this.GetUTCOffsetHours(isOrigin));
-
-        //return localDate;
     }
 
-    getAllActiveEmergencyTypes(): void {
-        this.emergencyTypeService.GetAllActive()
-            .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
-                this.activeEmergencyTypes = response.Records;
-            }, (error: any) => {
-                console.log(`Error: ${error}`);
-            });
-    }
+    // getAllActiveEmergencyTypes(): void {
+    //     this.emergencyTypeService.GetAllActive()
+    //         .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
+    //             this.activeEmergencyTypes = response.Records;
+    //         }, (error: any) => {
+    //             console.log(`Error: ${error}`);
+    //         });
+    // }
 
     resetIncidentViewForm(): void {
         this.formPopup = new FormGroup({
@@ -336,7 +290,6 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
             ReportedDateLocalPopup: new FormControl(''),
             SeverityPopup: new FormControl('0'),
             BorrowedIncidentPopup: new FormControl(''),
-
             FlightNumberPopup: new FormControl(''),
             OriginPopup: new FormControl(''),
             DestinationPopup: new FormControl(''),
@@ -352,10 +305,96 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
 
     private DateFormat(date: Date): string {
         let hours = new Date(date).getHours();
-        // let mid = (hours > 12) ? 'PM' : 'AM';
         const months: string[] = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-        // return `${date.getDate()}-${months[date.getMonth()]}-${date.getFullYear()} ${((date.getHours() % 12) < 10) ? ("0" + (date.getHours() % 12)) : (date.getHours() % 12)}:${((date.getMinutes()) < 10) ? ("0" + (date.getMinutes())) : (date.getMinutes())} ${mid}`;
-        return `${new Date(date).getDate()}-${months[new Date(date).getMonth()]}-${new Date(date).getFullYear()} ${((new Date(date).getHours()) < 10) ? ("0" + (new Date(date).getHours())) : (new Date(date).getHours())}:${(new Date(date).getMinutes() < 10) ? ("0" + (new Date(date).getMinutes())) : (new Date(date).getMinutes())}`;
+        return `${new Date(date).getDate()}-${months[new Date(date).getMonth()]}-${new Date(date).getFullYear()} ${((new Date(date).getHours()) < 10) ?
+            ("0" + (new Date(date).getHours())) : (new Date(date).getHours())}:${(new Date(date).getMinutes() < 10) ?
+                ("0" + (new Date(date).getMinutes())) : (new Date(date).getMinutes())}`;
     }
 
+    private Initialization(callback: () => void = null): void {
+        this.incidentId = 0;
+        this.incidentDate = new Date();
+        this.severities = UtilityService.GetKeyValues(Severity);
+        this.resetIncidentViewForm();
+
+        let observables: Array<Observable<ResponseModel<any>>> = new Array<Observable<ResponseModel<any>>>();
+        observables.push(this.organizationService.GetAllActiveOrganizations());
+        observables.push(this.emergencyTypeService.GetAllActive());
+        observables.push(this.aircraftTypeService.GetAllActiveAircraftTypes());
+        observables.push(this.emergencyLocationService.GetAllActiveEmergencyLocations());
+
+        Observable.forkJoin(observables)
+            .subscribe((response: ResponseModel<any>[]) => {
+                if (response && response.length > 0) {
+                    this.activeOrganizations = _.isEmpty(response[0].Records) ?
+                        new Array<OrganizationModel>() : response[0].Records as OrganizationModel[];
+
+                    this.activeEmergencyTypes = _.isEmpty(response[1].Records) ?
+                        new Array<EmergencyTypeModel>() : response[1].Records as EmergencyTypeModel[];
+
+                    this.activeAircraftTypes = _.isEmpty(response[2].Records) ?
+                        new Array<AircraftTypeModel>() : response[2].Records as AircraftTypeModel[];
+
+                    this.affectedStations = _.isEmpty(response[3].Records) ?
+                        new Array<EmergencyLocationModel>() :
+                        (response[3].Records as EmergencyLocationModel[])
+                            .sort((a: EmergencyLocationModel, b: EmergencyLocationModel) => {
+                                return (a.AirportName.toUpperCase() > b.AirportName.toUpperCase()) ? 1 :
+                                    ((b.AirportName.toUpperCase() > a.AirportName.toUpperCase()) ? -1 : 0);
+                            });
+
+                    if (callback != null)
+                        callback();
+                }
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
+
+        /*this.getAllActiveOrganizations();
+        this.getAllActiveEmergencyTypes();
+        this.getAllActiveAircraftTypes();
+        this.resetIncidentViewForm();
+
+        this.emergencyLocationService.GetAllActiveEmergencyLocations()
+            .subscribe((result: ResponseModel<EmergencyLocationModel>) => {
+                result.Records.forEach((item: EmergencyLocationModel) => {
+                    const emergencyLocationModel: EmergencyLocationModel = new EmergencyLocationModel();
+                    emergencyLocationModel.IATA = item.IATA;
+                    emergencyLocationModel.AirportName = item.AirportName;
+                    emergencyLocationModel.Country = item.Country;
+                    emergencyLocationModel.TimeZone = item.TimeZone;
+                    emergencyLocationModel.UTCOffset = item.UTCOffset;
+                    this.affectedStations.push(emergencyLocationModel);
+                    this.affectedStations.sort(function (a, b) { return (a.AirportName.toUpperCase() > b.AirportName.toUpperCase()) ? 1 : ((b.AirportName.toUpperCase() > a.AirportName.toUpperCase()) ? -1 : 0); });
+                });
+            });*/
+    }
+
+    private FetchIncident(): void {
+        this.readOnlyIncidentWidgetService.GetIncidentByIncidentId(this.incidentId)
+            .subscribe((item: IncidentModel) => {
+                this.incidentDataExchangeModel = new IncidentDataExchangeModel();
+                this.incidentDataExchangeModel.IsFlightRelated = false;
+                this.incidentDataExchangeModel.IncidentModel = new IncidentModel();
+                this.incidentDataExchangeModel.IncidentModel = item;
+
+                if (item.InvolvedParties.length > 0) {
+                    this.incidentDataExchangeModel.InvolvedPartyModel = new InvolvePartyModel();
+                    this.incidentDataExchangeModel.InvolvedPartyModel = item.InvolvedParties[0];
+                    if (item.InvolvedParties[0].Flights.length > 0) {
+                        this.incidentDataExchangeModel.IsFlightRelated = true;
+                        this.incidentDataExchangeModel.FLightModel = new FlightModel();
+                        this.incidentDataExchangeModel.FLightModel = item.InvolvedParties[0].Flights[0];
+                    }
+                }
+                if (this.incidentDataExchangeModel.IncidentModel.BorrowedIncident != null) {
+                    this.fetchBorrowedIncident(this.incidentDataExchangeModel.IncidentModel.BorrowedIncident);
+                }
+                else {
+                    this.loadDataIncidentViewPopup();
+                }
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
+    }
 }

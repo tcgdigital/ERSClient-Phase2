@@ -343,6 +343,7 @@ export class PagesComponent implements OnInit {
             this.connectionStaters = new Array<ConnectionStarter>();
 
             if (window.location.href.indexOf('localhost') == -1) {
+            // if (window.location.href.indexOf('localhost') > -1) {
                 this.connectionStaters.push(new ConnectionStarter(this.passengerImportCompletedNotificationHub,
                     'PassengerImportCompletedNotificationHub', {
                         incidentId: incId

@@ -1,23 +1,20 @@
-<div class="row  no-gutters">
+<div class="row no-gutters">
     <div class="col-12">
-
         <div class="row no-gutters">
             <div class="col-lg-8 col-md-6">
-
-                <div class="header-incident truncate" title="{{incidentName}}"> <strong>Event: </strong> {{incidentName}}</div>
+                <div class="header-incident truncate" title="{{incidentName}}">
+                    <strong>Event: </strong> {{incidentName}}
+                </div>
                 <div *ngIf="IsDrillIndicator" class="header-drill"> Drill</div>
                 <div class="view-inc">
-
-
-                    <view-readOnly-incident-widget *ngIf="isShowViewReadonlyCrisis" [currentIncidentLocal]="currentIncident" [useLink]="useLink"></view-readOnly-incident-widget>
-
+                    <view-readOnly-incident-widget *ngIf="isShowViewReadonlyCrisis" [loadOnInitialize]="true" [currentIncidentLocal]="currentIncident" [useLink]="useLink"></view-readOnly-incident-widget>
                 </div>
-
             </div>
             <div class="col-lg-4 col-md-6">
-                <div class="dept-header"> <strong>Department: </strong> {{departmentName}}</div>
+                <div class="dept-header">
+                    <strong>Department: </strong> {{departmentName}}
+                </div>
             </div>
-
         </div>
     </div>
 </div>

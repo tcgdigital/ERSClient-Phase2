@@ -1,7 +1,7 @@
 @import '../../config/config';
 
 .messaging-widget-container {
-    @include box-shadow(0px, 3px, 5px, 0, $header-shadow);
+    @include box-shadow(1px, 1px, 4px, 1px, $header-shadow);
     background-color: $message-widget-bg;
     height: 150px;
 }
