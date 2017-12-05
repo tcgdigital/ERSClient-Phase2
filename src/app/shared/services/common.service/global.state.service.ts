@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
+import { debug } from 'util';
 
 @Injectable()
 export class GlobalStateService {
@@ -25,11 +26,16 @@ export class GlobalStateService {
         }
     }
 
-    Subscribe(event: string, callback: Function) {
-        const subscribers = this._subscriptions.get(event) || [];
-        subscribers.push(callback);
+    Subscribe(event: string, callback: Function, checkDuplicate: boolean = true) {
+        let subscribers: Function[] = this._subscriptions.get(event) || new Array<Function>();
 
-        this._subscriptions.set(event, subscribers);
+        if (checkDuplicate && subscribers
+            .some(x => this.getCallbackName(x) == this.getCallbackName(callback)))
+            this._subscriptions.set(event, new Array<Function>(callback));
+        else {
+            subscribers.push(callback);
+            this._subscriptions.set(event, subscribers);
+        }
     }
 
     Unsubscribe(event: string) {
@@ -42,5 +48,14 @@ export class GlobalStateService {
         subscribers.forEach((callback) => {
             callback.call(null, data['data']);
         });
+    }
+
+    private getCallbackName(f: Function): string {
+        try {
+            return f.toString().match(/^[^{]+\{(.*?)\}$/)[1].trim();
+        } catch (ex) {
+            console.log(ex);
+        }
+        return '';
     }
 }
