@@ -250,7 +250,6 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     }
 
     public openDemandDetails(demandId: number): void {
-        //this.dataExchange.Publish('OnDemandDetailClick', demandId);
         const num = UtilityService.UUID();
         this.globalStateProxy.NotifyDataChanged('OnDemandDetailClick', demandId + '!' + num);
     }

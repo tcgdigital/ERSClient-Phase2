@@ -152,7 +152,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     getAllDepartments(): void {
         this.departmentService.GetAll()
             .subscribe((response: ResponseModel<DepartmentModel>) => {
-                this.departments = response.Records.filter(a=>a.ActiveFlag == 'Active');
+                this.departments = response.Records.filter(a => a.ActiveFlag == 'Active');
             }, (error: any) => {
                 console.log('error:  ' + error);
             });
@@ -203,7 +203,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             this.departments.find((x) => x.DepartmentId === demandForAnswer.TargetDepartmentId).DepartmentName : undefined;
         const date = new Date();
         if (flag) {
-            
+
             answer = `<p>${demand.DemandStatusDescription} <strong>Date :</strong>  ${moment(date).format('DD-MMM-YYYY HH:mm')} `;
         }
         else {
@@ -262,21 +262,18 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
 
-                this.affectedPeople.forEach(x=>
-                {
-                    if(x.PassengerName.trim() == "")
-                    {
+                this.affectedPeople.forEach(x => {
+                    if (x.PassengerName.trim() == "") {
                         x.PassCrewNm = x.CrewName;
                     }
-                    else
-                    {
+                    else {
                         x.PassCrewNm = x.PassengerName;
                     }
 
                 });
 
                 this.affectedPeople = this.affectedPeople
-                .sort(function (a, b) { return (a.PassCrewNm.trim().toUpperCase() > b.PassCrewNm.trim().toUpperCase()) ? 1 : ((b.PassCrewNm.trim().toUpperCase() > a.PassCrewNm.trim().toUpperCase()) ? -1 : 0); });
+                    .sort(function (a, b) { return (a.PassCrewNm.trim().toUpperCase() > b.PassCrewNm.trim().toUpperCase()) ? 1 : ((b.PassCrewNm.trim().toUpperCase() > a.PassCrewNm.trim().toUpperCase()) ? -1 : 0); });
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -370,7 +367,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
     setModelForUpdate(id: string) {
-        
+
         this.childModalEntry.hide();
         const idNum: number = +(id.split('!')[0]);
         this.demandService.GetByDemandId(idNum)
@@ -628,11 +625,10 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             this.fileUploadService.uploadFiles<string>(baseUrl + './api/fileUpload/UploadFilesModuleWise/' + param,
                 this.filesToUpload, this.date.toString()).subscribe((result: string) => {
                     const fileStore: FileStoreModel = new FileStoreModel();
-                    if(this.demandModel.FileStores != null){
+                    if (this.demandModel.FileStores != null) {
                         fileStore.FileStoreID = this.demandModel.FileStores[0].FileStoreID;
                     }
-                    else
-                    {
+                    else {
                         fileStore.FileStoreID = 0;
                     }
                     fileStore.IncidentId = this.currentIncidentId;
@@ -640,7 +636,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                     fileStore.OrganizationId = organizationId;
                     fileStore.FilePath = result;
                     fileStore.UploadedFileName = this.filesToUpload[0].name;
-                    
+
                     if (this.demandModel.DemandId === 0) {
                         fileStore.DemandId = this.demandModel.DemandId;
                     }
