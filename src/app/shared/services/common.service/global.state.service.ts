@@ -1,15 +1,30 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { debug } from 'util';
+import { NotificationEvents } from '../../constants/constants';
 
 @Injectable()
 export class GlobalStateService {
     private _data = new Subject<object>();
     private _dataStream$ = this._data.asObservable();
     private _subscriptions: Map<string, Function[]> = new Map<string, Function[]>();
+    private _events: string[];
 
     constructor() {
         this._dataStream$.subscribe((data: object) => this._onEvent(data));
+        this._events = new Array<string>();
+        // ('departmentChangeFromDashboard',
+        //     'incidentChangefromDashboard',
+        //     'departmentChange',
+        //     'incidentChange',
+        //     'incidentCreate'
+        // );
+
+        this._events.push(NotificationEvents.DepartmentChangeFromDashboardEvent);
+        this._events.push(NotificationEvents.IncidentChangeFromDashboardEvent);
+        this._events.push(NotificationEvents.DepartmentChangedEvent);
+        this._events.push(NotificationEvents.IncidentChangedEvent);
+        this._events.push(NotificationEvents.IncidentCreatedEvent);
     }
 
     NotifyDataChanged(_event: string, value: any) {
@@ -29,13 +44,21 @@ export class GlobalStateService {
     Subscribe(event: string, callback: Function, checkDuplicate: boolean = true) {
         let subscribers: Function[] = this._subscriptions.get(event) || new Array<Function>();
 
-        if (checkDuplicate && subscribers
-            .some(x => this.getCallbackName(x) == this.getCallbackName(callback)))
+        
+        checkDuplicate = !this._events.some((x: string) => x == event);
+
+        if (checkDuplicate && subscribers.some((x: Function) => {
+            console.log(event);
+            return this.getCallbackName(x) == this.getCallbackName(callback);
+        }))
             this._subscriptions.set(event, new Array<Function>(callback));
         else {
             subscribers.push(callback);
             this._subscriptions.set(event, subscribers);
         }
+
+        // subscribers.push(callback);
+        // this._subscriptions.set(event, subscribers);
     }
 
     Unsubscribe(event: string) {
@@ -52,7 +75,14 @@ export class GlobalStateService {
 
     private getCallbackName(f: Function): string {
         try {
-            return f.toString().match(/^[^{]+\{(.*?)\}$/)[1].trim();
+            let func: RegExpMatchArray = f.toString().match(/function[^{]+\{([\s\S]*)\}$/)
+                || f.toString().match(/^[^{]+\{(.*?)\}$/);
+            
+            if (func.length > 0){
+                let funcBody = func[1].trim();
+                console.log(funcBody);
+                return funcBody;
+            }
         } catch (ex) {
             console.log(ex);
         }
