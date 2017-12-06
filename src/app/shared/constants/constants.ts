@@ -1730,3 +1730,27 @@ export const layoutSizes = {
 export const isMobile = () =>
     (/android|webos|iphone|ipad|ipod|blackberry|windows phone/)
         .test(navigator.userAgent.toLowerCase());
+
+export const NotificationEvents = {
+    IncidentChangeFromDashboardEvent: 'incidentChangefromDashboard',
+    DepartmentChangeFromDashboardEvent: 'departmentChangeFromDashboard',
+    IncidentCreatedEvent:'incidentCreate',
+    ContactClickedEvent: 'contactClicked',
+    DepartmentChangedEvent: 'departmentChange',
+    IncidentChangedEvent: 'incidentChange',
+    CheckListStatusChangedEvent: 'checkListStatusChange',
+    AffectedPersonStatusChangedEvent: 'AffectedPersonStatusChanged',
+    BroadcastPublishedEvent: 'BroadcastPublished',
+    CallRecievedEvent: 'CallRecieved',
+    ClosePDAEnqueryReceivedEvent: 'closePDAEnqReceived',
+    DemandApprovedEvent: 'DemandApproved',
+    DemandAssignedEvent: 'DemandAssigned',
+    DemandCompletedEvent: 'DemandCompleted',
+    DemandAddedUpdatedEvent: 'DemandAddedUpdated',
+    OnDemandUpdateEvent: 'OnDemandUpdate',
+    OnDemandDetailClickEvent: 'OnDemandDetailClick',
+    MediaReleasePublishedEvent: 'MediaReleasePublished',
+    PresidentsMessagePublishedEvent: 'PresidentsMessagePublished',
+    PresidentMessagePublished: 'PresidentMessagePublished',
+    ActiveLinkClickedEvent: 'menu.activeLink'
+}
