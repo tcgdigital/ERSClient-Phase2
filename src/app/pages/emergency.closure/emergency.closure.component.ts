@@ -342,12 +342,10 @@ export class EmergencyClosureComponent implements OnInit {
 		item.ChecklistClosednumber = this.actionable.filter((z) => {
 			return z.DepartmentId == id && z.CompletionStatusChangedBy != null;
 		}).length;
-		item.demandnumber = this.demands.filter((z) => {
-			return z.RequesterDepartmentId == id;
-		}).length;
-		item.demandClosednumber = this.demands.filter((z) => {
-			return z.RequesterDepartmentId == id && z.ClosedBy != null;
-		}).length;
+		item.demandnumber = this.demands
+			.filter((z) => z.RequesterDepartmentId == id && !z.IsRejected).length;
+		item.demandClosednumber = this.demands
+			.filter((z) => z.RequesterDepartmentId == id && z.ClosedBy != null && !z.IsRejected).length;
 	}
 
 	private departmentChangeHandler(department: KeyValue): void {

@@ -194,65 +194,67 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
     public onSubmit(): void {
         this.submited = true;
         if (this.form.valid) {
-            this.departmentClosureService.CheckPendingCheckListOrDemandForIncidentAndDepartment(this.currentIncidentId, this.currentDepartmentId, (item: boolean) => {
-                if (item) {
-                    this.toastrService.warning('You can not submit the closure report since you have pending checklist or request.', 'Department Closure', this.toastrConfig);
-                    return false;
-                }
-                else {
-                    this.departmentClosureService.GetAllByIncidentDepartment(this.currentIncidentId, this.currentDepartmentId)
-                        .subscribe((result: ResponseModel<DepartmentClosureModel>) => {
-                            if (result.Count == 0) {
-                                this.departmentClosureModelSubmit = new DepartmentClosureModel();
-                                this.departmentClosureModelSubmit.DepartmentClosureId = 0;
-                                this.departmentClosureModelSubmit.ClosureReport = this.form.controls['ClosureReport'].value;
-                                this.departmentClosureModelSubmit.ClosureRemark = this.form.controls['ClosureRemarks'].value;
-                                this.departmentClosureModelSubmit.IncidentId = this.currentIncidentId;
-                                this.departmentClosureModelSubmit.DepartmentId = this.currentDepartmentId;
-                                this.departmentClosureModelSubmit.IsSaved = true;
-                        
-                                this.departmentClosureModelSubmit.SavedBy = +UtilityService.GetFromSession('CurrentUserId');
-                                this.departmentClosureModelSubmit.SavedOn = new Date();
-                                this.departmentClosureModelSubmit.IsSubmitted = true;
-                                this.departmentClosureModelSubmit.SubmittedBy = +UtilityService.GetFromSession('CurrentUserId');
-                                this.departmentClosureModelSubmit.SubmittedOn = new Date();
-                                this.departmentClosureModelSubmit.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
-                                this.departmentClosureModelSubmit.CreatedOn = new Date();
-                                this.departmentClosureService.CreateDepartmentClosure(this.departmentClosureModelSubmit)
-                                    .subscribe((resultReturn: DepartmentClosureModel) => {
-                                        this.isSubmited = true;
-                                        //this.formReset();
-                                        this.toastrService.success('The Department Closure Submit is performed.', 'Department Closure', this.toastrConfig);
-                                    }, () => {
-                                        this.toastrService.error('Error Occured', 'Department Closure', this.toastrConfig);
-                                    });
-                            }
-                            else {
-                                result.Records[0].ClosureReport = this.form.controls['ClosureReport'].value;
-                                result.Records[0].ClosureRemark = this.form.controls['ClosureRemarks'].value;
-                                result.Records[0].IncidentId = this.currentIncidentId;
-                                result.Records[0].DepartmentId = this.currentDepartmentId;
-                                result.Records[0].IsSaved = true;
-                                result.Records[0].SavedBy = +UtilityService.GetFromSession('CurrentUserId');
-                                result.Records[0].SavedOn = new Date();
-                                result.Records[0].IsSubmitted = true;
-                                result.Records[0].SubmittedBy = +UtilityService.GetFromSession('CurrentUserId');
-                                result.Records[0].SubmittedOn = new Date();
-                                result.Records[0].CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
-                                result.Records[0].CreatedOn = new Date();
-                                delete result.Records[0].Department;
-                                this.departmentClosureService.UpdateDepartmentClosure(result.Records[0])
-                                    .subscribe((resultReturn: DepartmentClosureModel) => {
-                                        this.isSubmited = true;
-                                        //this.formReset();
-                                        this.toastrService.success('The Department Closure Submit is performed.', 'Department Closure', this.toastrConfig);
-                                    }, () => {
-                                        this.toastrService.error('Error Occured', 'Department Closure', this.toastrConfig);
-                                    });
-                            }
-                        });
-                }
-            });
+            this.departmentClosureService.CheckPendingCheckListOrDemandForIncidentAndDepartment
+                (this.currentIncidentId, this.currentDepartmentId, (item: boolean) => {
+                    if (item) {
+                        this.toastrService.warning('You can not submit the closure report since you have pending checklist or request.',
+                         'Department Closure', this.toastrConfig);
+                        return false;
+                    }
+                    else {
+                        this.departmentClosureService.GetAllByIncidentDepartment(this.currentIncidentId, this.currentDepartmentId)
+                            .subscribe((result: ResponseModel<DepartmentClosureModel>) => {
+                                if (result.Count == 0) {
+                                    this.departmentClosureModelSubmit = new DepartmentClosureModel();
+                                    this.departmentClosureModelSubmit.DepartmentClosureId = 0;
+                                    this.departmentClosureModelSubmit.ClosureReport = this.form.controls['ClosureReport'].value;
+                                    this.departmentClosureModelSubmit.ClosureRemark = this.form.controls['ClosureRemarks'].value;
+                                    this.departmentClosureModelSubmit.IncidentId = this.currentIncidentId;
+                                    this.departmentClosureModelSubmit.DepartmentId = this.currentDepartmentId;
+                                    this.departmentClosureModelSubmit.IsSaved = true;
+
+                                    this.departmentClosureModelSubmit.SavedBy = +UtilityService.GetFromSession('CurrentUserId');
+                                    this.departmentClosureModelSubmit.SavedOn = new Date();
+                                    this.departmentClosureModelSubmit.IsSubmitted = true;
+                                    this.departmentClosureModelSubmit.SubmittedBy = +UtilityService.GetFromSession('CurrentUserId');
+                                    this.departmentClosureModelSubmit.SubmittedOn = new Date();
+                                    this.departmentClosureModelSubmit.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
+                                    this.departmentClosureModelSubmit.CreatedOn = new Date();
+                                    this.departmentClosureService.CreateDepartmentClosure(this.departmentClosureModelSubmit)
+                                        .subscribe((resultReturn: DepartmentClosureModel) => {
+                                            this.isSubmited = true;
+                                            //this.formReset();
+                                            this.toastrService.success('The Department Closure Submit is performed.', 'Department Closure', this.toastrConfig);
+                                        }, () => {
+                                            this.toastrService.error('Error Occured', 'Department Closure', this.toastrConfig);
+                                        });
+                                }
+                                else {
+                                    result.Records[0].ClosureReport = this.form.controls['ClosureReport'].value;
+                                    result.Records[0].ClosureRemark = this.form.controls['ClosureRemarks'].value;
+                                    result.Records[0].IncidentId = this.currentIncidentId;
+                                    result.Records[0].DepartmentId = this.currentDepartmentId;
+                                    result.Records[0].IsSaved = true;
+                                    result.Records[0].SavedBy = +UtilityService.GetFromSession('CurrentUserId');
+                                    result.Records[0].SavedOn = new Date();
+                                    result.Records[0].IsSubmitted = true;
+                                    result.Records[0].SubmittedBy = +UtilityService.GetFromSession('CurrentUserId');
+                                    result.Records[0].SubmittedOn = new Date();
+                                    result.Records[0].CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
+                                    result.Records[0].CreatedOn = new Date();
+                                    delete result.Records[0].Department;
+                                    this.departmentClosureService.UpdateDepartmentClosure(result.Records[0])
+                                        .subscribe((resultReturn: DepartmentClosureModel) => {
+                                            this.isSubmited = true;
+                                            //this.formReset();
+                                            this.toastrService.success('The Department Closure Submit is performed.', 'Department Closure', this.toastrConfig);
+                                        }, () => {
+                                            this.toastrService.error('Error Occured', 'Department Closure', this.toastrConfig);
+                                        });
+                                }
+                            });
+                    }
+                });
         }
 
     }

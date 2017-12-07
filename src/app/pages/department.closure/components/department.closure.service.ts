@@ -65,7 +65,8 @@ export class DepartmentClosureService extends ServiceBase<DepartmentClosureModel
             .Execute();
     }
 
-    public CheckPendingCheckListOrDemandForIncidentAndDepartment(incidentId: number, departmentId: number, callback?: ((_: boolean) => void)): void {
+    public CheckPendingCheckListOrDemandForIncidentAndDepartment(incidentId: number, departmentId: number,
+        notifyCallback?: ((_: boolean) => void)): void {
         this.actionableService.GetPendingOpenActionableForIncidentAndDepartment(incidentId, departmentId)
             .map((actionables: ResponseModel<ActionableModel>) => {
                 this.IsDepartmentClosureSubmit = (actionables.Count > 0);
@@ -75,13 +76,15 @@ export class DepartmentClosureService extends ServiceBase<DepartmentClosureModel
                 .Execute())
             .subscribe((demands: ResponseModel<DemandModel>) => {
                 if (this.IsDepartmentClosureSubmit == false) {
-                    if (callback) {
-                        callback((demands.Count > 0));
+                    if (notifyCallback) {
+                        // If any of the assigned demand is not approved or rejected then the specific demand will not be considered as open.
+                        // which allow the user to process the callback instead of showing notification.
+                        notifyCallback(!demands.Records.some((x: DemandModel) => x.IsApproved || x.IsRejected));
                     }
                 }
                 else {
-                    if (callback) {
-                        callback(true);
+                    if (notifyCallback) {
+                        notifyCallback(true);
                     }
                 }
             });

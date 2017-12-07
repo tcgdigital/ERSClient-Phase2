@@ -12,6 +12,7 @@ import {
     DataProcessingService,
     ServiceBase
 } from '../../../shared';
+import { Response } from '@angular/http/src/static_response';
 
 @Injectable()
 export class DemandReceivedSummaryWidgetService {
@@ -35,19 +36,28 @@ export class DemandReceivedSummaryWidgetService {
 
     GetDemandReceivedCount(incidentId: number, departmentId: number): DemandReceivedSummaryModel {
         let demandsByTargetDeptartment: DemandModel[];
-
-        let departmentIdProjection: string = '';
+        let departmentFilter: string = '';
         let departmentIds: number[] = [];
-        departmentIdProjection = `(TargetDepartmentId eq ${departmentId})`;
-        this.demandService.GetDemandByTargetDepartments(incidentId, departmentIdProjection)
-                    .subscribe((result) => {
-                        this.demandReceivedSummary.demandAllocatedCount = result.Count;
-                        demandsByTargetDeptartment = result.Records;
-                        this.demandReceivedSummary.demandCompletedCount = demandsByTargetDeptartment.filter((item) => {
-                            return item.IsCompleted === true;
-                        }).length;
-                    });
-        
+        departmentFilter = `(TargetDepartmentId eq ${departmentId})`;
+        this.demandService.GetDemandByTargetDepartments(incidentId, departmentFilter)
+            .subscribe((result: ResponseModel<DemandModel>) => {
+                // Bug Resolved - This is to check that whether the demand data having demand type table data. which have the information of auto approved.
+                // If auto approved flag is true then we are directly considering the autoapproved demand count.
+                const autoApprovedDemandCount = result.Records
+                    .filter((x: DemandModel) => x.DemandType.IsAutoApproved == true).length;
+                // Bug Resolved - This is to check that wheter the demand data having demand type table data. Which have the information of auto approved.
+                // If auto approved flag is false then we are considering the information of IsApproved flag in the demand table.
+                const ApproverBasedDemandCount = result.Records
+                    .filter((x: DemandModel) => x.DemandType.IsAutoApproved == false && x.IsApproved == true).length;
+
+                this.demandReceivedSummary.demandAllocatedCount = (autoApprovedDemandCount + ApproverBasedDemandCount);
+
+                demandsByTargetDeptartment = result.Records;
+                this.demandReceivedSummary.demandCompletedCount = demandsByTargetDeptartment.filter((item) => {
+                    return item.IsCompleted === true;
+                }).length;
+            });
+
         return this.demandReceivedSummary;
     }
 
@@ -111,6 +121,7 @@ export class DemandReceivedSummaryWidgetService {
                 });
                 uniqueDepartments.forEach((itemDepartment: DepartmentModel) => {
                     let demandReceivedModel: DemandReceivedModel = new DemandReceivedModel();
+
                     let demandModels = result.Records.filter((item: DemandModel) => {
                         return item.TargetDepartmentId == itemDepartment.DepartmentId;
                     });
@@ -118,14 +129,29 @@ export class DemandReceivedSummaryWidgetService {
                         demandReceivedModel.demandModelList = demandModels;
                         demandReceivedModel.departmentId = itemDepartment.DepartmentId;
                         demandReceivedModel.targetDepartmentName = itemDepartment.DepartmentName;
-                        demandReceivedModel.assigned = demandModels.length;
-                        let demandModelsCompletedLocal: DemandModel[] = demandModels.filter((item: DemandModel) => { return item.IsClosed == true; });
-                        demandReceivedModel.completed = demandModelsCompletedLocal.length;
-                        let demandModelsPendingLocal: DemandModel[] = demandModels.filter((item: DemandModel) => { return item.IsClosed == false; });
-                        demandReceivedModel.pending = demandModelsPendingLocal.length;
+
+                        //Get cout of assigned demand
+                        const autoApprovedDemandsAssignedCount: number = demandModels
+                            .filter((item: DemandModel) => item.DemandType.IsAutoApproved == true).length;
+                        const approverBasedDemandsAssignedCount: number = demandModels
+                            .filter((item: DemandModel) => item.DemandType.IsAutoApproved == false && item.IsApproved == true).length;
+                        demandReceivedModel.assigned = (autoApprovedDemandsAssignedCount + approverBasedDemandsAssignedCount);
+
+                        //Get cout of completed demand
+                        const demandsCompletedCount: number = demandModels
+                            .filter((item: DemandModel) => { return item.IsClosed == true; }).length;
+                        demandReceivedModel.completed = demandsCompletedCount;
+
+                        //Get cout of pending demand
+                        const autoApprovedDemandsPendingCount: number = demandModels
+                            .filter((item: DemandModel) => item.DemandType.IsAutoApproved == true && item.IsClosed == false).length;
+                        const approverBasedDemandsPendingCount: number = demandModels
+                            .filter((item: DemandModel) => item.DemandType.IsAutoApproved == false
+                                && item.IsApproved == true && item.IsClosed == false).length;
+                        demandReceivedModel.pending = (autoApprovedDemandsPendingCount + approverBasedDemandsPendingCount);
+
                         this.demandReceivedModelList.push(demandReceivedModel);
                     }
-
                 });
                 callback(this.demandReceivedModelList);
             });
