@@ -208,7 +208,8 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
     }
 
     public GetDemandByIncident(incidentId: number): Observable<ResponseModel<DemandModel>> {
-        const demandprojection: string = `DemandId,RequesterDepartmentId,TargetDepartmentId,IsClosed,ClosedOn,ScheduleTime,CreatedOn,DemandDesc,IsApproved`;
+        const demandprojection: string = `DemandId,RequesterDepartmentId,TargetDepartmentId,IsClosed,
+        ClosedOn,ScheduleTime,CreatedOn,DemandDesc,IsApproved,DemandStatusDescription`;
         return this._dataService.Query()
             .Expand('TargetDepartment($select=DepartmentId,DepartmentName),RequesterDepartment($select=DepartmentId,DepartmentName),DemandType($select=DemandTypeName,IsAutoApproved)')
             .Filter(`IncidentId eq ${incidentId} and ActiveFlag eq 'Active'`)

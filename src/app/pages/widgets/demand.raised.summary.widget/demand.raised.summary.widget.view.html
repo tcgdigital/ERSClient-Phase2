@@ -91,7 +91,7 @@
                                                 <th>Requester Department</th>
                                                 <th>Raised</th>
                                                 <th>Closed</th>
-                                                <th>Pending</th>
+                                                <th>Pending/Rejected</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -110,7 +110,7 @@
                                                         {{demand.completed}}
                                                     </a>
                                                 </td>
-                                                <td data-title="Pending">
+                                                <td data-title="Pending/Rejected">
                                                     <a href="javascript:void(0);" (click)="showAllDeptSubPendingFunc(demand.demandModelList)">
                                                         {{demand.pending}}
                                                     </a>
@@ -193,7 +193,7 @@
                         </div>
                         <div id="showAllDeptSubPending" class="card" *ngIf="showAllDeptSubPending">
                             <div class="card-header">
-                                <strong>Pending Demand</strong>
+                                <strong>Pending/Rejected Demand</strong>
                                 <i class="fa fa-times pull-right" aria-hidden="true" (click)="hideAllDeptSubPending()"></i>
                             </div>
                             <div class="card-block">
@@ -205,6 +205,7 @@
                                                 <th>Target Department</th>
                                                 <th>Schedule Close Time</th>
                                                 <th>RAG</th>
+                                                <th>Status</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -216,6 +217,7 @@
                                                 <td data-title="Requester Department">{{allDeptDemandRaisedCompleted.targetDepartmentName}}</td>
                                                 <td data-title="Schedule Close Time">{{allDeptDemandRaisedCompleted.scheduleCloseTime | date: 'dd-MMM-yyyy HH:mm'}}</td>
                                                 <td data-title="RAG"><span [ngClass]="allDeptDemandRaisedCompleted.RagStatus"></span></td>
+                                                <td data-title="Status">{{allDeptDemandRaisedCompleted.DemandStatusDescription}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -245,7 +247,7 @@
                                 <th>Requester Department</th>
                                 <th>Allocated</th>
                                 <th>Closed</th>
-                                <th>Pending</th>
+                                <th>Pending/Rejected</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -256,7 +258,7 @@
                                 <td data-title="Requester Department">{{demand.requesterDepartmentName}}</td>
                                 <td data-title="Allocated">{{demand.assigned}}</td>
                                 <td data-title="Closed"><a href="javascript:void(0)" (click)="showSubDeptSubCompletedFunc(demand.demandModelList)">{{demand.completed}}</a></td>
-                                <td data-title="Pending"><a href="javascript:void(0)" (click)="showSubDeptSubPendingFunc(demand.demandModelList)">{{demand.pending}}</a></td>
+                                <td data-title="Pending/Rejected"><a href="javascript:void(0)" (click)="showSubDeptSubPendingFunc(demand.demandModelList)">{{demand.pending}}</a></td>
                             </tr>
                         </tbody>
                     </table>
@@ -308,6 +310,7 @@
                                         <th>Target Department</th>
                                         <th>Schedule Close Time</th>
                                         <th>RAG</th>
+                                        <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -321,6 +324,7 @@
                                         <td data-title="RAG">
                                             <span [ngClass]="subDeptDemandRaisedCompleted.RagStatus"></span>
                                         </td>
+                                        <td data-title="Status">{{subDeptDemandRaisedCompleted.DemandStatusDescription}}</td>
                                     </tr>
                                 </tbody>
                             </table>

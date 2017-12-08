@@ -61,7 +61,7 @@ export class DemandReceivedSummaryWidgetService {
         return this.demandReceivedSummary;
     }
 
-    GetSubDepartmentDemandByRequesterDepartment(incidentId: number, departmentId: number, callback?: ((_: DemandReceivedModel[]) => void)): void {
+    GetSubDepartmentDemandByTargetDepartment(incidentId: number, departmentId: number, callback?: ((_: DemandReceivedModel[]) => void)): void {
         let uniqueDepartments: DepartmentModel[] = [];
         this.demandReceivedModelList = [];
         let localDemandList: DemandModel[] = [];
@@ -88,17 +88,39 @@ export class DemandReceivedSummaryWidgetService {
                     this.subDepartments.forEach((itemDepartment: DepartmentModel) => {
                         let demandReceivedModel: DemandReceivedModel = new DemandReceivedModel();
                         let demandModels = this.allDemands.filter((item: DemandModel) => {
-                            return item.RequesterDepartmentId == itemDepartment.DepartmentId;
+                            return item.TargetDepartmentId == itemDepartment.DepartmentId;
                         });
-                        if (demandModels.length > 0) {
+                        if (demandModels.length > 0 && (itemDepartment.ParentDepartmentId || 0) === departmentId) {
                             demandReceivedModel.demandModelList = demandModels;
                             demandReceivedModel.departmentId = itemDepartment.DepartmentId;
                             demandReceivedModel.targetDepartmentName = itemDepartment.DepartmentName;
-                            demandReceivedModel.assigned = demandModels.length;
-                            let demandModelsCompletedLocal: DemandModel[] = demandModels.filter((item: DemandModel) => { return item.IsClosed == true; });
-                            demandReceivedModel.completed = demandModelsCompletedLocal.length;
-                            let demandModelsPendingLocal: DemandModel[] = demandModels.filter((item: DemandModel) => { return item.IsClosed == false; });
-                            demandReceivedModel.pending = demandModelsPendingLocal.length;
+
+                            //Get cout of assigned demand
+                            const autoApprovedDemandsAssignedCount: number = demandModels
+                            .filter((item: DemandModel) => item.DemandType.IsAutoApproved == true).length;
+                            const approverBasedDemandsAssignedCount: number = demandModels
+                            .filter((item: DemandModel) => item.DemandType.IsAutoApproved == false && item.IsApproved == true).length;
+                            demandReceivedModel.assigned = (autoApprovedDemandsAssignedCount + approverBasedDemandsAssignedCount);
+
+                            //Get cout of completed demand
+                            const demandsCompletedCount: number = demandModels
+                            .filter((item: DemandModel) => { return item.IsClosed == true; }).length;
+                            demandReceivedModel.completed = demandsCompletedCount;
+
+                            //Get cout of pending demand
+                            const autoApprovedDemandsPendingCount: number = demandModels
+                            .filter((item: DemandModel) => item.DemandType.IsAutoApproved == true && item.IsClosed == false).length;
+                            const approverBasedDemandsPendingCount: number = demandModels
+                            .filter((item: DemandModel) => item.DemandType.IsAutoApproved == false
+                                && item.IsApproved == true && item.IsClosed == false).length;
+                            demandReceivedModel.pending = (autoApprovedDemandsPendingCount + approverBasedDemandsPendingCount);
+
+
+                            // demandReceivedModel.assigned = demandModels.length;
+                            // let demandModelsCompletedLocal: DemandModel[] = demandModels.filter((item: DemandModel) => { return item.IsClosed == true; });
+                            // demandReceivedModel.completed = demandModelsCompletedLocal.length;
+                            // let demandModelsPendingLocal: DemandModel[] = demandModels.filter((item: DemandModel) => { return item.IsClosed == false; });
+                            // demandReceivedModel.pending = demandModelsPendingLocal.length;
                             this.demandReceivedModelList.push(demandReceivedModel);
                         }
 

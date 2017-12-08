@@ -50,12 +50,14 @@ export class AllDeptDemandRaisedSummary extends DemandModel {
     public targetDepartmentName: string;
     public scheduleCloseTime: Date;
     public RagStatus: string;
+    public DemandStatusDescription: string;
 
     constructor() {
         super();
         this.description = '';
         this.targetDepartmentName = '';
         this.RagStatus = '';
+        this.DemandStatusDescription = '';
     }
 }
 
@@ -74,7 +76,7 @@ export class SubDeptDemandRaisedSummary extends DemandModel {
 }
 
 export class GraphObject {
-    public requesterDepartmentId:number;
+    public requesterDepartmentId: number;
     public requesterDepartmentName: string;
     public CreatedOn: Date;
     public closedOn?: Date;
@@ -83,7 +85,7 @@ export class GraphObject {
     public isPending: boolean;
 
     constructor() {
-        this.requesterDepartmentId=0;
+        this.requesterDepartmentId = 0;
         this.requesterDepartmentName = '';
         this.CreatedOn = new Date();
         this.closedOn = null;
