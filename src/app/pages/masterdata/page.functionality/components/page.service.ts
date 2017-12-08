@@ -28,6 +28,7 @@ export class PageService implements IServiceInretface<PageModel>{
         return this._dataServiceForPage
         .Query()
         .Expand('ParentPage($select=PageName)')
+        .Filter('ActiveFlag eq CMS.DataModel.Enum.ActiveFlag\'Active\'')
         .OrderBy('ModuleName,ParentPageId,PageName,SortOrder')
         .Execute();
     }

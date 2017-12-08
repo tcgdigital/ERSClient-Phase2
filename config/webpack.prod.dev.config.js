@@ -19,7 +19,7 @@ const ENV = process.env.ENV = process.env.NODE_ENV = 'productiondev';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 3000;
 const HMR = helpers.hasProcessFlag('hot');
-const API_URL = process.env.API_URL = 'http://api.cmgprod.pal.com.ph/';
+const API_URL = process.env.API_URL = 'https://api.cmgprod.pal.com.ph/';
 
 const METADATA = webpackMerge
     (webpackCommenConfig({

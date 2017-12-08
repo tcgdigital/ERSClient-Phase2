@@ -1,4 +1,4 @@
-<div class="row" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'ArchiveListing')">
+<div class="row" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'DeptwiseClosure')">
     <div class="col-12">
         <div class="card">
             <div class="card-header">
@@ -13,7 +13,7 @@
     </div>
 </div>
 
-<div *ngIf="isShowPage | accesibility:currentDepartmentId:'ArchiveListing'" class="card">
+<div *ngIf="isShowPage | accesibility:currentDepartmentId:'DeptwiseClosure'" class="card">
     <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
         <div class="card-header">
             <strong>Department Wise Closure</strong>
