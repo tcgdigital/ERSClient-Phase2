@@ -7,7 +7,7 @@ import { ConnectionStarter, CallbackHandler } from './page.model';
 import {
     SideMenuService, KeyValue,
     ResponseModel, GlobalStateService,
-    StorageType, GlobalConstants, BaseModel, KeyValueService,KeyValueModel
+    StorageType, GlobalConstants, BaseModel, KeyValueService, KeyValueModel
 } from '../shared';
 import { DepartmentService, DepartmentModel } from './masterdata';
 import { IncidentService, IncidentModel } from './incident';
@@ -343,7 +343,7 @@ export class PagesComponent implements OnInit {
             this.connectionStaters = new Array<ConnectionStarter>();
 
             if (window.location.href.indexOf('localhost') == -1) {
-            // if (window.location.href.indexOf('localhost') > -1) {
+                // if (window.location.href.indexOf('localhost') > -1) {
                 this.connectionStaters.push(new ConnectionStarter(this.passengerImportCompletedNotificationHub,
                     'PassengerImportCompletedNotificationHub', {
                         incidentId: incId
@@ -608,5 +608,12 @@ export class PagesComponent implements OnInit {
         this.toastrConfig.preventDuplicates = true;
         this.toastrConfig.timeOut = 10000;
         this.toastrConfig.extendedTimeOut = 5000;
+    }
+
+    private PlaySound(): void {
+        const audio = new Audio();
+        audio.src = '../assets/audio/alarm.wav';
+        audio.load();
+        audio.play();
     }
 }
