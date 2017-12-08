@@ -186,15 +186,14 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
         return this.departmentAccessOwnerService.GetDependentDepartmentAccessOwners(departmentId);
     }
 
-    public GetDemandByTargetDepartments(incidentId: number, departmentIdProjection: string): Observable<ResponseModel<DemandModel>> {
+    public GetDemandByTargetDepartments(incidentId: number, departmentFilter: string): Observable<ResponseModel<DemandModel>> {
         const demandprojection: string = `DemandId,TargetDepartmentId,RequesterDepartmentId,IsCompleted,
-        ClosedOn,ScheduleTime,CreatedOn,DemandDesc,IsClosed,DemandStatusDescription`;
+        ClosedOn,ScheduleTime,IsApproved,CreatedOn,DemandDesc,IsClosed,DemandStatusDescription`;
         return this._dataService.Query()
-            .Expand('TargetDepartment($select=DepartmentId,DepartmentName),RequesterDepartment($select=DepartmentId,DepartmentName)')
-            .Filter(`IncidentId eq ${incidentId} and ActiveFlag eq 'Active' and ${departmentIdProjection}`)
+            .Expand('TargetDepartment($select=DepartmentId,DepartmentName),RequesterDepartment($select=DepartmentId,DepartmentName),DemandType($select=DemandTypeName,IsAutoApproved)')
+            .Filter(`IncidentId eq ${incidentId} and ActiveFlag eq 'Active' and ${departmentFilter}`)
             .Select(`${demandprojection}`)
             .Execute();
-
     }
 
     public GetDemandByRequesterDepartments(incidentId: number, departmentIdProjection: string): Observable<ResponseModel<DemandModel>> {
@@ -209,9 +208,10 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
     }
 
     public GetDemandByIncident(incidentId: number): Observable<ResponseModel<DemandModel>> {
-        const demandprojection: string = `DemandId,RequesterDepartmentId,TargetDepartmentId,IsClosed,ClosedOn,ScheduleTime,CreatedOn,DemandDesc`;
+        const demandprojection: string = `DemandId,RequesterDepartmentId,TargetDepartmentId,IsClosed,
+        ClosedOn,ScheduleTime,CreatedOn,DemandDesc,IsApproved,DemandStatusDescription`;
         return this._dataService.Query()
-            .Expand('TargetDepartment($select=DepartmentId,DepartmentName),RequesterDepartment($select=DepartmentId,DepartmentName)')
+            .Expand('TargetDepartment($select=DepartmentId,DepartmentName),RequesterDepartment($select=DepartmentId,DepartmentName),DemandType($select=DemandTypeName,IsAutoApproved)')
             .Filter(`IncidentId eq ${incidentId} and ActiveFlag eq 'Active'`)
             .Select(`${demandprojection}`)
             .Execute();
@@ -252,7 +252,7 @@ export class DemandService extends ServiceBase<DemandModel> implements IDemandSe
                 filterString = `RequesterDepartmentId eq ${item}`;
         });
         requests.push(new RequestModel<DemandModel>
-            (`/odata/Demands?$filter=IncidentId eq ${incidentId} and (${filterString}) and ActiveFlag eq 'Active'`, WEB_METHOD.GET));
+            (`/odata/Demands?$expand=DemandType($select=DemandTypeName,IsAutoApproved)&$filter=IncidentId eq ${incidentId} and (${filterString}) and ActiveFlag eq 'Active'`, WEB_METHOD.GET));
 
         return this._batchDataService.BatchPost<DemandModel>(requests)
             .Execute() as Observable<ResponseModel<DemandModel>>;

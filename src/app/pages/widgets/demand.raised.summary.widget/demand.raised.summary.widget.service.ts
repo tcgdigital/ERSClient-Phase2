@@ -55,7 +55,6 @@ export class DemandRaisedSummaryWidgetService {
         departmentIdProjection = `(RequesterDepartmentId eq ${departmentId})`;
         this.demandService.GetDemandByRequesterDepartments(incidentId, departmentIdProjection)
             .subscribe((result) => {
-
                 this.dataTemp = result.Records.filter((filter) => {
                     return filter.RequesterDepartmentId == departmentId;
                 });

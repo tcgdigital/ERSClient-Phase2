@@ -134,7 +134,10 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
                 this.allDemandRaisedSummaryModelList = x;
                 this.allDemandRaisedSummaryModel = Observable.of(this.allDemandRaisedSummaryModelList);
                 this.setRagStatus();
-                this.childModalAllDemandRaisedSummary.show();
+                //this.childModalAllDemandRaisedSummary.show();
+                if(callback){
+                    callback();
+                }
             });
     }
 
@@ -221,6 +224,8 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
                 allDeptDemandRaisedSummary.scheduleCloseTime = new Date(CreatedOn + ScheduleTime);
                 allDeptDemandRaisedSummary.ScheduleTime = item.ScheduleTime;
                 allDeptDemandRaisedSummary.CreatedOn = item.CreatedOn;
+                allDeptDemandRaisedSummary.DemandStatusDescription=item.DemandStatusDescription;
+
                 this.allDeptDemandRaisedSummaries.push(allDeptDemandRaisedSummary);
             }
         });
@@ -254,6 +259,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
                 subDeptDemandRaisedSummary.scheduleCloseTime = new Date(CreatedOn + ScheduleTime);
                 subDeptDemandRaisedSummary.ScheduleTime = item.ScheduleTime;
                 subDeptDemandRaisedSummary.CreatedOn = item.CreatedOn;
+                subDeptDemandRaisedSummary.DemandStatusDescription=item.DemandStatusDescription;
                 this.subDeptDemandRaisedSummaries.push(subDeptDemandRaisedSummary);
             }
         });
@@ -278,6 +284,7 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit {
                 subDeptDemandRaisedSummary.scheduleCloseTime = new Date(CreatedOn + ScheduleTime);
                 subDeptDemandRaisedSummary.ScheduleTime = item.ScheduleTime;
                 subDeptDemandRaisedSummary.CreatedOn = item.CreatedOn;
+                subDeptDemandRaisedSummary.DemandStatusDescription=item.DemandStatusDescription;
                 this.subDeptDemandRaisedSummaries.push(subDeptDemandRaisedSummary);
             }
         });

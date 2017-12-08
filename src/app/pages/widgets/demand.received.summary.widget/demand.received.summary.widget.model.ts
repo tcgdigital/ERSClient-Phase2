@@ -32,13 +32,13 @@ export class DemandReceivedModel {
     }
 }
 
-export class AllDeptDemandReceivedSummary extends  DemandModel {
+export class AllDeptDemandReceivedSummary extends DemandModel {
     public description: string;
     public requesterDepartmentName: string;
     public scheduleCloseTime: Date;
     public RagStatus: string;
 
-    constructor(){
+    constructor() {
         super();
         this.description = '';
         this.requesterDepartmentName = '';
@@ -46,13 +46,13 @@ export class AllDeptDemandReceivedSummary extends  DemandModel {
     }
 }
 
-export class SubDeptDemandReceivedSummary extends  DemandModel {
+export class SubDeptDemandReceivedSummary extends DemandModel {
     public description: string;
     public requesterDepartmentName: string;
     public scheduleCloseTime: Date;
     public RagStatus: string;
 
-    constructor(){
+    constructor() {
         super();
         this.description = '';
         this.requesterDepartmentName = '';

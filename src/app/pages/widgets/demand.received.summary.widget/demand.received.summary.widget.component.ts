@@ -132,7 +132,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
     public openViewAllSubDeptDemandReceivedSummary(): void {
         this.showSubDeptSubCompleted = false;
         this.showSubDeptSubPending = false;
-        this.demandReceivedSummaryWidgetService.GetSubDepartmentDemandByRequesterDepartment
+        this.demandReceivedSummaryWidgetService.GetSubDepartmentDemandByTargetDepartment
             (this.incidentId, this.initiatedDepartmentId, (item: DemandReceivedModel[]) => {
                 item = item.sort(function (a, b) { return (a.targetDepartmentName.toUpperCase() > b.targetDepartmentName.toUpperCase()) ? 1 : ((b.targetDepartmentName.toUpperCase() > a.targetDepartmentName.toUpperCase()) ? -1 : 0); });
                 this.subDemandReceivedList = Observable.of(item);
@@ -178,7 +178,9 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
     public showAllDeptSubPendingFunc(demandModelList: DemandModel[]): void {
         this.allDeptDemandReceivedSummaries = [];
         demandModelList.forEach((item: DemandModel) => {
-            if (item.IsClosed === false) {
+            if (item.IsClosed === false &&(item.DemandType.IsAutoApproved===true||
+                (item.DemandType.IsAutoApproved===false && item.IsApproved===true))) {
+
                 const allDeptDemandReceivedSummary: AllDeptDemandReceivedSummary = new AllDeptDemandReceivedSummary();
                 allDeptDemandReceivedSummary.description = item.DemandDesc;
                 allDeptDemandReceivedSummary.requesterDepartmentName = item.RequesterDepartment.DepartmentName;
@@ -209,7 +211,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
             if (item.IsClosed === true) {
                 const subDeptDemandReceivedSummary: SubDeptDemandReceivedSummary = new SubDeptDemandReceivedSummary();
                 subDeptDemandReceivedSummary.description = item.DemandDesc;
-                subDeptDemandReceivedSummary.requesterDepartmentName = item.TargetDepartment.DepartmentName;
+                subDeptDemandReceivedSummary.requesterDepartmentName = item.RequesterDepartment.DepartmentName;
                 const ScheduleTime: number = (Number(item.ScheduleTime) * 60000);
                 const CreatedOn: number = new Date(item.CreatedOn).getTime();
                 subDeptDemandReceivedSummary.scheduleCloseTime = new Date(CreatedOn + ScheduleTime);
@@ -234,10 +236,11 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
     public showSubDeptSubPendingFunc(demandModelList: DemandModel[]): void {
         this.subDeptDemandReceivedSummaries = [];
         demandModelList.forEach((item: DemandModel) => {
-            if (item.IsClosed === false) {
+            if (item.IsClosed === false &&(item.DemandType.IsAutoApproved===true||
+                (item.DemandType.IsAutoApproved===false && item.IsApproved===true))) {
                 const subDeptDemandReceivedSummary: SubDeptDemandReceivedSummary = new SubDeptDemandReceivedSummary();
                 subDeptDemandReceivedSummary.description = item.DemandDesc;
-                subDeptDemandReceivedSummary.requesterDepartmentName = item.TargetDepartment.DepartmentName;
+                subDeptDemandReceivedSummary.requesterDepartmentName = item.RequesterDepartment.DepartmentName;
                 const ScheduleTime: number = (Number(item.ScheduleTime) * 60000);
                 const CreatedOn: number = new Date(item.CreatedOn).getTime();
                 subDeptDemandReceivedSummary.scheduleCloseTime = new Date(CreatedOn + ScheduleTime);
