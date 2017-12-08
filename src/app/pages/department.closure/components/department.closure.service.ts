@@ -69,12 +69,14 @@ export class DepartmentClosureService extends ServiceBase<DepartmentClosureModel
         notifyCallback?: ((_: boolean) => void)): void {
         this.actionableService.GetPendingOpenActionableForIncidentAndDepartment(incidentId, departmentId)
             .map((actionables: ResponseModel<ActionableModel>) => {
+                debugger;
                 this.IsDepartmentClosureSubmit = (actionables.Count > 0);
             })
             .flatMap((x) => this._dataServiceForDemand.Query()
                 .Filter(`IncidentId eq ${incidentId} and TargetDepartmentId eq ${departmentId} and IsCompleted ne true`)
                 .Execute())
             .subscribe((demands: ResponseModel<DemandModel>) => {
+                debugger;
                 if (this.IsDepartmentClosureSubmit == false) {
                     if (notifyCallback) {
                         // If any of the assigned demand is not approved or rejected then the specific demand will not be considered as open.
