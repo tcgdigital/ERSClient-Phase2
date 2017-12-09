@@ -261,11 +261,14 @@ module.exports = function (options) {
                 from: 'src/assets/images',
                 to: 'assets/images'
             }, {
+                from: 'src/assets/sounds',
+                to: 'assets/sounds'
+            }, {
                 from: 'web.config'
             }, {
                 from: 'src/assets/static-content',
                 to: 'assets/static-content'
-            },{
+            }, {
                 from: 'node_modules/ckeditor',
                 to: 'assets/scripts/ckeditor'
             },]),

@@ -690,7 +690,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(): void {
-        debugger;
         this.submitted = true;
         if (this.form.valid) {
             if (this.demandModel.DemandId === 0) {
@@ -799,7 +798,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     demandUpdate(resolutionTimeChanged): void {
         if (this.form.dirty || resolutionTimeChanged) {
-            debugger;
             if (this.demandModel.IsRejected === true && !this.demandTypes.find((x) => x.DemandTypeId === this.demandModel.DemandTypeId).IsAutoApproved) {
                 const demandtypeitem: DemandTypeModel = this.demandTypes.find((x) => x.DemandTypeId === this.demandModel.DemandTypeId);
                 this.demandModelEdit.IsRejected = false;
@@ -810,7 +808,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
             this.demandService.Update(this.demandModelEdit)
                 .subscribe((response: DemandModel) => {
-                    debugger;
                     this.toastrService.success('Demand successfully updated.', 'Success', this.toastrConfig);
                     const num = UtilityService.UUID();
                     this.globalStateProxyOpen.NotifyDataChanged('DemandAddedUpdated', num);
