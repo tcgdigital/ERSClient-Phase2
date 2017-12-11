@@ -1752,5 +1752,13 @@ export const NotificationEvents = {
     MediaReleasePublishedEvent: 'MediaReleasePublished',
     PresidentsMessagePublishedEvent: 'PresidentsMessagePublished',
     PresidentMessagePublished: 'PresidentMessagePublished',
-    ActiveLinkClickedEvent: 'menu.activeLink'
+    ActiveLinkClickedEvent: 'menu.activeLink',
+
+    DemandCreationResponse:'ReceiveDemandCreationResponse',
+    DemandApprovedResponse: 'ReceiveDemandApprovedResponse',
+    DemandAssignedResponse: 'ReceiveDemandAssignedResponse',
+    DemandClosedResponse:'ReceiveDemandClosedResponse',
+    CompletedDemandstoCloseResponse: 'ReceiveCompletedDemandstoCloseResponse',
+    DemandRejectedFromApprovalResponse: 'ReceiveDemandRejectedFromApprovalResponse',
+    RejectedDemandsFromClosureResponse: 'ReceiveRejectedDemandsFromClosureResponse'
 }

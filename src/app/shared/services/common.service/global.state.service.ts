@@ -13,18 +13,7 @@ export class GlobalStateService {
     constructor() {
         this._dataStream$.subscribe((data: object) => this._onEvent(data));
         this._events = new Array<string>();
-        // ('departmentChangeFromDashboard',
-        //     'incidentChangefromDashboard',
-        //     'departmentChange',
-        //     'incidentChange',
-        //     'incidentCreate'
-        // );
-
-        this._events.push(NotificationEvents.DepartmentChangeFromDashboardEvent);
-        this._events.push(NotificationEvents.IncidentChangeFromDashboardEvent);
-        this._events.push(NotificationEvents.DepartmentChangedEvent);
-        this._events.push(NotificationEvents.IncidentChangedEvent);
-        this._events.push(NotificationEvents.IncidentCreatedEvent);
+        this.restrictDuplicateNotification();
     }
 
     NotifyDataChanged(_event: string, value: any) {
@@ -87,5 +76,21 @@ export class GlobalStateService {
             console.log(ex);
         }
         return '';
+    }
+
+    private restrictDuplicateNotification(): void{
+        this._events.push(NotificationEvents.DepartmentChangeFromDashboardEvent);
+        this._events.push(NotificationEvents.IncidentChangeFromDashboardEvent);
+        this._events.push(NotificationEvents.DepartmentChangedEvent);
+        this._events.push(NotificationEvents.IncidentChangedEvent);
+        this._events.push(NotificationEvents.IncidentCreatedEvent);
+
+        this._events.push(NotificationEvents.DemandCreationResponse);
+        this._events.push(NotificationEvents.DemandApprovedResponse);
+        this._events.push(NotificationEvents.DemandAssignedResponse);
+        this._events.push(NotificationEvents.DemandClosedResponse);
+        this._events.push(NotificationEvents.CompletedDemandstoCloseResponse);
+        this._events.push(NotificationEvents.DemandRejectedFromApprovalResponse);
+        this._events.push(NotificationEvents.RejectedDemandsFromClosureResponse);
     }
 }
