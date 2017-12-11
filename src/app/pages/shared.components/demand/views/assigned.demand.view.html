@@ -43,7 +43,7 @@
                         <td data-title="Download File">
                             <ul>
                                 <li *ngFor="let file of demand.FileStores">
-                                    <a target="_self" href="{{demandFilePath + file.FileStoreID}}" download="file.UploadedFileName"></a>
+                                    <a target="_self" href="{{demandFilePath + file.FileStoreID}}" download="file.UploadedFileName"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
                                 </li>
                             </ul>
                         </td>
