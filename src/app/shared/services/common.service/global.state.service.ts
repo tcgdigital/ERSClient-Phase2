@@ -89,6 +89,7 @@ export class GlobalStateService {
         this._events.push(NotificationEvents.DemandApprovedResponse);
         this._events.push(NotificationEvents.DemandAssignedResponse);
         this._events.push(NotificationEvents.DemandClosedResponse);
+        this._events.push(NotificationEvents.CompletedDemandAssignedResponse);
         this._events.push(NotificationEvents.CompletedDemandstoCloseResponse);
         this._events.push(NotificationEvents.DemandRejectedFromApprovalResponse);
         this._events.push(NotificationEvents.RejectedDemandsFromClosureResponse);
