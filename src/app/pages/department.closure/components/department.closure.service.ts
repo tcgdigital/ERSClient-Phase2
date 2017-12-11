@@ -78,7 +78,6 @@ export class DepartmentClosureService extends ServiceBase<DepartmentClosureModel
                 if (this.IsDepartmentClosureSubmit == false) {
                     if (notifyCallback) {
                         if (demands.Records.length > 0) {
-                            debugger;
                             // If any of the assigned demand is not approved or rejected then the specific demand will not be considered as open.
                             // which allow the user to process the callback instead of showing notification.
                             const isAnyOpenDemandExists: boolean = demands.Records.some((x: DemandModel) => (x.IsApproved && !x.IsClosed) || !x.IsRejected);

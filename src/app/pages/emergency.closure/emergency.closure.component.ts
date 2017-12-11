@@ -343,9 +343,9 @@ export class EmergencyClosureComponent implements OnInit {
 			return z.DepartmentId == id && z.CompletionStatusChangedBy != null;
 		}).length;
 		item.demandnumber = this.demands
-			.filter((z) => z.RequesterDepartmentId == id && !z.IsRejected).length;
+			.filter((z) => z.TargetDepartmentId == id && !z.IsRejected).length;
 		item.demandClosednumber = this.demands
-			.filter((z) => z.RequesterDepartmentId == id && z.ClosedBy != null && !z.IsRejected).length;
+			.filter((z) => z.TargetDepartmentId == id && z.IsCompleted != false && !z.IsRejected).length;
 	}
 
 	private departmentChangeHandler(department: KeyValue): void {
