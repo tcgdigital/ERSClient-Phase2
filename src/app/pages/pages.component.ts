@@ -613,6 +613,8 @@ export class PagesComponent implements OnInit {
     private PlaySound(): void {
         const audio = new Audio();
         audio.src = '../assets/audio/alarm.wav';
+        audio.loop = false;
+        audio.autoplay = false;
         audio.load();
         audio.play();
     }
