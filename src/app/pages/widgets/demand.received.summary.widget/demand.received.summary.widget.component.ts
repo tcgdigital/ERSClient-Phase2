@@ -81,6 +81,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
         this.globalState.Subscribe('ReceiveDemandApprovedResponse', () => this.onDemandAddedUpdatedSuccess());
         this.globalState.Subscribe('ReceiveDemandAssignedResponse', () => this.onDemandAddedUpdatedSuccess());
         this.globalState.Subscribe('ReceiveDemandClosedResponse', () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe('ReceiveCompletedDemandAssignedResponse', () => this.onDemandAddedUpdatedSuccess());
         this.globalState.Subscribe('ReceiveCompletedDemandstoCloseResponse', () => this.onDemandAddedUpdatedSuccess());
         this.globalState.Subscribe('ReceiveDemandRejectedFromApprovalResponse', () => this.onDemandAddedUpdatedSuccess());
         this.globalState.Subscribe('ReceiveRejectedDemandsFromClosureResponse', () => this.onDemandAddedUpdatedSuccess());

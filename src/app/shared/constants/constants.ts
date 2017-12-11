@@ -1758,6 +1758,7 @@ export const NotificationEvents = {
     DemandApprovedResponse: 'ReceiveDemandApprovedResponse',
     DemandAssignedResponse: 'ReceiveDemandAssignedResponse',
     DemandClosedResponse:'ReceiveDemandClosedResponse',
+    CompletedDemandAssignedResponse: 'ReceiveCompletedDemandAssignedResponse',
     CompletedDemandstoCloseResponse: 'ReceiveCompletedDemandstoCloseResponse',
     DemandRejectedFromApprovalResponse: 'ReceiveDemandRejectedFromApprovalResponse',
     RejectedDemandsFromClosureResponse: 'ReceiveRejectedDemandsFromClosureResponse'
