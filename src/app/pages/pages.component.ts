@@ -536,7 +536,8 @@ export class PagesComponent implements OnInit {
         if (message.Title !== '' && message.Message !== ''
             /*&& model.CreatedBy !== +UtilityService.GetFromSession('CurrentUserId')*/) {
             const msg: string = this.PrepareMessage<T>(message.Message, model);
-            this.toastrService.info(msg, message.Title);
+            const activeToaste = this.toastrService.info(msg, message.Title);
+            activeToaste.onShown.subscribe(() => this.PlaySound());
         }
         this.globalState.NotifyDataChanged(key, model);
     }
@@ -560,8 +561,10 @@ export class PagesComponent implements OnInit {
                 console.log('Default message omitted');
             else if (key == 'ReceiveCrewImportCompletionResponse' && model.toString() == '0')
                 console.log('Default message omitted');
-            else
-                this.toastrService.info(message.Message, message.Title);
+            else {
+                const activeToaste = this.toastrService.info(message.Message, message.Title);
+                activeToaste.onShown.subscribe(() => this.PlaySound());
+            }
         }
         this.globalState.NotifyDataChanged(key, model);
     }
@@ -612,7 +615,7 @@ export class PagesComponent implements OnInit {
 
     private PlaySound(): void {
         const audio = new Audio();
-        audio.src = '../assets/audio/alarm.wav';
+        audio.src = '../assets/sounds/alarm.wav';
         audio.loop = false;
         audio.autoplay = false;
         audio.load();
