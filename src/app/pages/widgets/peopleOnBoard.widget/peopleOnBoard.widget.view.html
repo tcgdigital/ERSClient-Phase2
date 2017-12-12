@@ -9,28 +9,28 @@
             <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
         </div>
         <div *ngIf="isShow | accesibility:initiatedDepartmentId:'AffectedOnBoardKPI'" class="row no-gutters">
-            <div class="col widget-block">
+            <div class="col widget-block" *ngIf="isShowPassengerKPI | accesibility:initiatedDepartmentId:'PassengerKPI'">
                 <span class="widget-number">
                     <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
                     <span class="marker" (click)="openAllPassengersDetails()">{{peopleOnBoard.totalAffectedPassengerCount | padding: '0': 2}}</span>
                 </span>
                 <span class="widget-text">passengers</span>
             </div>
-            <div class="col widget-block">
+            <div class="col widget-block" *ngIf="isShowCrewMembers | accesibility:initiatedDepartmentId:'CrewMembers'">
                 <span class="widget-number">
                     <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
                     <span class="marker" (click)="openAllCrewsDetails()">{{peopleOnBoard.totalAffectedCrewCount | padding: '0': 2}}</span>
                 </span>
                 <span class="widget-text">crew members</span>
             </div>
-            <div class="col widget-block">
+            <div class="col widget-block" *ngIf="isShowCargo | accesibility:initiatedDepartmentId:'CargoMembers'">
                 <span class="widget-number">
                     <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
                     <span class="marker" (click)="openAllCargoDetails()">{{peopleOnBoard.totalAffectedCargoCount | padding: '0': 2}}</span>
                 </span>
                 <span class="widget-text">Cargos</span>
             </div>
-            <div class="col widget-block">
+            <div class="col widget-block" *ngIf="isShowGroundMembers | accesibility:initiatedDepartmentId:'GroundMembers'">
                 <span class="widget-number">
                     <i class="fa fa-address-card-o fa-lg" aria-hidden="true"></i>
                     <span class="marker" (click) = "openAllGroundVictims()">{{peopleOnBoard.totalGroundVictimCount | padding: '0': 2}}</span>

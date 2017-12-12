@@ -21,7 +21,7 @@
             </div>
         </div>
         <div class="col-4">
-            <i class="fa fa-phone" (click)="onContactClicked($event)"></i>
+            <i class="fa fa-phone" *ngIf="isShowPage | accesibility:currentDepartmentId:'TelephoneDirectory'" (click)="onContactClicked($event)"></i>
         </div>
 
         <div class="col-4">

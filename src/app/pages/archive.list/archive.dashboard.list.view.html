@@ -54,7 +54,7 @@
                         <td data-title="Closed On">{{closedCrisis.ClosedOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
                         <td data-title="Action">
                             <!-- <a class="fa fa-file-text-o fa-4x" href="javascript:void(0);" (click)="onViewIncidentClick(closedCrisis.IncidentId)"></a> -->
-                            <view-readOnly-incident-widget [currentIncidentLocal]="closedCrisis.IncidentId" [useLink]="useLink"></view-readOnly-incident-widget>
+                            <view-readOnly-incident-widget *ngIf="isShowPagereadOnly | accesibility:currentDepartmentId:'ViewClosedIncident'" [currentIncidentLocal]="closedCrisis.IncidentId" [useLink]="useLink"></view-readOnly-incident-widget>
                         </td>
                         <td data-title="Active">
                             <md-checkbox *ngIf="isShowPage | accesibility:currentDepartmentId:'ReopenACrisis'" md-no-ink id="IsActive" [ngModel]="closedCrisis.isReopen" name="IsActive" (change)="IsReopenCheckedChange($event,closedCrisis)"
