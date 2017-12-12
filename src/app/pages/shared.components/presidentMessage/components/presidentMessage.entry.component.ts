@@ -48,7 +48,7 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
     isInvalidForm: boolean = false;
     isApprovedContent: boolean = false;
     isSavedContent: boolean = true;
-
+    public isShow: boolean = true;
     toolbarConfig: any = GlobalConstants.EditorToolbarConfig;
 
     /**

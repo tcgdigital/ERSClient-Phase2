@@ -60,6 +60,10 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
 
     public cargoList: Observable<CargoModel[]>;
     public isShow: boolean = true;
+    public isShowPassengerKPI: boolean = true;
+    public isShowCrewMembers: boolean = true;
+    public isShowCargo: boolean = true;
+    public isShowGroundMembers: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
     currentDepartmentId: number;
     currentIncidentIdLocal: number;

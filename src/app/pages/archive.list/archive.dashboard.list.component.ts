@@ -62,6 +62,7 @@ export class ArchiveDashboardListComponent implements OnInit {
     public ScheduleArrivalLocal: Date;
     public BorrowedIncidentName: string;
     public isShowPage: boolean = true;
+    public isShowPagereadOnly: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
 
     activeEmergencyTypes: EmergencyTypeModel[] = [];
