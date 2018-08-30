@@ -6,13 +6,13 @@ import {
     ResponseModel, GlobalConstants, KeyValue,
     GlobalStateService, UtilityService
 } from '../../../../shared';
-import { Observable, Subscription } from 'rxjs/Rx';
+import { Subscription, Subject } from 'rxjs/Rx';
 
 import {
     CallCenterOnlyPageService,
     ExternalInputModel
 } from '../../../callcenteronlypage/component';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -20,7 +20,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
     encapsulation: ViewEncapsulation.None,
     templateUrl: '../views/media.query.assignedcallslist.view.html'
 })
-export class MediaQueryRecievedCallsListComponent implements OnInit {
+export class MediaQueryRecievedCallsListComponent implements OnInit, OnDestroy {
     @ViewChild('childModalcallcenter') public childModalcallcenter: ModalDirective;
 
     allAssignedCalls: ExternalInputModel[] = [];
@@ -29,6 +29,7 @@ export class MediaQueryRecievedCallsListComponent implements OnInit {
     callId: number;
     callcenterload: boolean = false;
     public isArchive: boolean = false;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(private callcenteronlypageservice: CallCenterOnlyPageService,
         private _router: Router,
@@ -46,11 +47,15 @@ export class MediaQueryRecievedCallsListComponent implements OnInit {
         }
 
         this.getAllMediaQueryCallsRecieved(this.currentIncidentId);
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('CallRecieved', (model: KeyValue) => this.getAllMediaQueryCallsRecieved(this.currentIncidentId));
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.CallRecieved, 
+            (model: KeyValue) => this.getAllMediaQueryCallsRecieved(this.currentIncidentId));
 
         // SignalR Notification
-        this.globalState.Subscribe('AssignedMediaEnquiryCreationResponse', (model: ExternalInputModel) => {
+        this.globalState.Subscribe
+        (GlobalConstants.NotificationConstant.AssignedMediaEnquiryCreationResponse.Key, (model: ExternalInputModel) => {
             // this.getAllMediaQueryCallsRecieved(model.IncidentId);
             const index: number = this.allAssignedCalls
                 .findIndex((x: ExternalInputModel) => x.ExternalInputId === model.ExternalInputId);
@@ -63,6 +68,11 @@ export class MediaQueryRecievedCallsListComponent implements OnInit {
         });
     }
 
+    public ngOnDestroy(): void {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
+
     incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
         this.getAllMediaQueryCallsRecieved(this.currentIncidentId);
@@ -72,8 +82,11 @@ export class MediaQueryRecievedCallsListComponent implements OnInit {
         this.childModalcallcenter.hide();
         this.callcenterload = false;
         this.callcenteronlypageservice.GetMediaQueryCallsRecievedByIncident(incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 

@@ -1,10 +1,13 @@
 import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
 
-import { EnquiryService, EnquiryModel, QueryModel } from '../../call.centre/components';
+import { 
+    EnquiryService, EnquiryModel, QueryModel 
+} from '../../call.centre/components';
 import {
-    ResponseModel, GlobalConstants, KeyValue,
-    GlobalStateService, UtilityService
+    ResponseModel, KeyValue,
+    GlobalStateService, UtilityService, GlobalConstants
 } from '../../../../shared';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'media-query',
@@ -14,11 +17,21 @@ import {
 export class MediaQueryListComponent implements OnInit, OnDestroy {
     mediaQueries: QueryModel[] = [];
     currentincidentId: number;
-    constructor(private enquiryService: EnquiryService, private globalState: GlobalStateService) {
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
+
+    /**
+     *Creates an instance of MediaQueryListComponent.
+     * @param {EnquiryService} enquiryService
+     * @param {GlobalStateService} globalState
+     * @memberof MediaQueryListComponent
+     */
+    constructor(private enquiryService: EnquiryService, 
+        private globalState: GlobalStateService) {
     }
 
     getMediaQueries(incidentId): void {
         this.enquiryService.getMediaQueryByIncident(incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EnquiryModel>) => {
                 this.mediaQueries = this.enquiryService.MapQuery(response.Records);
             }, (error: any) => {
@@ -29,7 +42,9 @@ export class MediaQueryListComponent implements OnInit, OnDestroy {
     ngOnInit(): any {
         this.currentincidentId = +UtilityService.GetFromSession('CurrentIncidentId');
         this.getMediaQueries(this.currentincidentId);
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
+        
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+            (model: KeyValue) => this.incidentChangeHandler(model));
     }
 
     private incidentChangeHandler(incident: KeyValue): void {
@@ -38,6 +53,9 @@ export class MediaQueryListComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        //this.globalState.Unsubscribe('incidentChangefromDashboard');
+        //this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 }

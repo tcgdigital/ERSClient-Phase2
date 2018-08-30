@@ -6,10 +6,10 @@ import {
     FormGroup, FormControl, FormBuilder,
     AbstractControl, Validators, ReactiveFormsModule
 } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs/Rx';
+import { Observable, Subscription, Subject } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-import { Router, NavigationEnd } from '@angular/router';
-import { ChecklistModel, ChecklistMapper } from '../../../masterdata/checklist/components/checklist.model';
+import { Router } from '@angular/router';
+import { ChecklistMapper } from '../../../masterdata/checklist/components/checklist.model';
 
 import { ActionableModel } from './actionable.model';
 import { ActionableService } from './actionable.service';
@@ -18,11 +18,12 @@ import * as moment from 'moment/moment';
 import {
     ResponseModel, DataExchangeService,
     UtilityService, GlobalConstants, KeyValue, BaseModel,
-    FileUploadService, GlobalStateService, SharedModule, AuthModel
+    FileUploadService, GlobalStateService, AuthModel
 } from '../../../../shared';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import * as _ from 'underscore';
 import { ChecklistTrailModel, ChecklistTrailService } from "../../checklist.trail";
+
 @Component({
     selector: 'actionable-active',
     encapsulation: ViewEncapsulation.None,
@@ -61,6 +62,8 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     private currentDepartmentId: number = null;
     private currentIncident: number = null;
 
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
+
     constructor(formBuilder: FormBuilder, private actionableService: ActionableService,
         private fileUploadService: FileUploadService,
         private departmentService: DepartmentService,
@@ -79,7 +82,8 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         this.ChecklistMappers = [];
         this.disableUploadButton = true;
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
-        // this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+        // this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange, (model: KeyValue) => this.departmentChangeHandler(model));
+
         if (this._router.url.indexOf('archivedashboard') > -1) {
             this.isArchive = true;
             this.currentIncident = +UtilityService.GetFromSession('ArchieveIncidentId');
@@ -92,31 +96,39 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         this.credential = UtilityService.getCredentialDetails();
         this.form = this.resetActionableForm();
         this.actionableModelToUpdate = new ActionableModel();
-        this.dataExchange.Subscribe('OpenActionablePageInitiate',
+
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.OpenActionablePageInitiate,
             (model) => this.onOpenActionablePageInitiate(model));
 
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChange, 
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard, 
+            (model: KeyValue) => this.departmentChangeHandler(model));
 
         // Signalr Notifivation
-        this.globalState.Subscribe('ReceiveChecklistStatusChangeResponse', (model: ActionableModel) => {
+        this.globalState.Subscribe
+        (GlobalConstants.NotificationConstant.ReceiveChecklistStatusChangeResponse.Key, (model: ActionableModel) => {
             this.getAllActiveActionable(model.IncidentId, model.DepartmentId);
         });
 
-        this.globalState.Subscribe('ReceiveChecklistCreationResponse', (count: number) => {
+        this.globalState.Subscribe
+        (GlobalConstants.NotificationConstant.ReceiveChecklistCreationResponse.Key, (count: number) => {
             if (count > 0)
                 this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
         });
     }
 
-
-
     openChildActionable(actionable: ActionableModel): void {
         actionable['expanded'] = !actionable['expanded'];
         this.actionableService.GetChildActionables(actionable.ChklistId, this.currentIncident)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((responseActionable: ResponseModel<ActionableModel>) => {
+                
                 this.departmentService.GetDepartmentNameIds()
+                    .takeUntil(this.ngUnsubscribe)
                     .subscribe((response: ResponseModel<DepartmentModel>) => {
+                        
                         actionable['actionableChilds'] = [];
                         responseActionable.Records[0].CheckList.CheckListChildrenMapper.forEach((item: ChecklistMapper) => {
                             this.GetListOfChildActionables(item.ChildCheckListId, this.currentIncident, (child: ActionableModel) => {
@@ -128,6 +140,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                     });
+
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -138,9 +151,12 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe('OpenActionablePageInitiate');
-        // this.globalState.Unsubscribe('incidentChange');
-        // this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.OpenActionablePageInitiate);
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChange);
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     ngAfterContentInit(): void {
@@ -152,6 +168,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
 
     getActionableTrails(actionaId: number): void {
         this.checklistTrailService.GetTrailByActionableId(actionaId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ChecklistTrailModel>) => {
                 this.checklistTrails = response.Records;
                 this.childModalTrail.show();
@@ -180,6 +197,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
             this.disableUploadButton = false;
             const baseUrl = GlobalConstants.EXTERNAL_URL;
             this.fileUploadService.uploadFiles<string>(baseUrl + 'api/fileUpload/upload', this.filesToUpload)
+                .takeUntil(this.ngUnsubscribe)
                 .subscribe((result: string) => {
                     this.filepathWithLinks = `${GlobalConstants.EXTERNAL_URL}UploadFiles/${result.replace(/^.*[\\\/]/, '')}`;
                     const extension = result.replace(/^.*[\\\/]/, '').split('.').pop();
@@ -223,6 +241,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         const mappers: ChecklistMapper[] = [];
 
         this.actionableService.GetAllOpenByIncidentIdandDepartmentId(incidentId, departmentId)
+            //.takeUntil(this.ngUnsubscribe)
             .subscribe((res: Array<ResponseModel<ActionableModel>>) => {
                 if (res && res.length > 1) {
                     if (res[0]) {
@@ -240,25 +259,9 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                             const parentMapper = _.flatten(_.map(this.actionableWithParentsChilds, (x) => x.CheckList.CheckListParentMapper)) as ChecklistMapper[];
                             this.parentChecklistIds = _.unique(parentMapper.map((x) => x.ParentCheckListId));
                             this.ChecklistMappers = _.unique(parentMapper);
-
-                            // this.actionableWithParentsChilds.forEach((actionable: ActionableModel) => {
-                            //     if (actionable.CheckList.CheckListParentMapper.length > 0) {
-                            //         actionable.CheckList.CheckListParentMapper.forEach((item: ChecklistMapper) => {
-                            //             parents.push(item.ParentCheckListId);
-                            //             mappers.push(item);
-                            //         });
-                            //     }
-                            // });
-                            // this.parentChecklistIds = _.unique(parents);
-                            // this.ChecklistMappers = _.unique(mappers);
                         }
                     }
                 }
-
-
-
-
-                // this.getAllActiveActionableByIncident(this.currentIncident);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -271,6 +274,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         const mappers: ChecklistMapper[] = [];
 
         this.actionableService.GetAllOpenByIncidentId(incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ActionableModel>) => {
                 this.actionableWithParentsChilds = response.Records;
                 this.actionableWithParentsChilds.forEach((actionable: ActionableModel) => {
@@ -314,6 +318,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         }
 
         this.actionableService.Update(this.editActionableModel)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ActionableModel) => {
                 this.toastrService.success('Actionable comments updated successfully.', 'Success', this.toastrConfig);
                 editedActionableModel.show = false;
@@ -355,6 +360,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     private batchUpdate(data: any[]) {
         this.listActionableSelected = data;
         this.actionableService.BatchOperation(data)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((x) => {
                 this.SaveChecklistTrails(this.listActionableSelected);
             }, (error: any) => {
@@ -365,9 +371,12 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     private SaveChecklistTrails(data: any[]): void {
         this.checklistTrails = [];
         this.departmentService.GetAllActiveDepartments()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((allResultDepartments: ResponseModel<DepartmentModel>) => {
                 this.allDepartments = allResultDepartments.Records;
+
                 this.actionableService.GetAllByIncident(+UtilityService.GetFromSession('CurrentIncidentId'))
+                    .takeUntil(this.ngUnsubscribe)
                     .subscribe((resultsActionable: ResponseModel<ActionableModel>) => {
                         data.forEach((item: ActionableModel) => {
                             this.checklistTrail = new ChecklistTrailModel();
@@ -395,25 +404,36 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                         });
 
                         this.checklistTrailService.BatchOperation(this.checklistTrails)
+                            .takeUntil(this.ngUnsubscribe)
                             .subscribe((result: ResponseModel<BaseModel>) => {
                                 this.toastrService.success('Actionables updated successfully.', 'Success', this.toastrConfig);
                                 this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
-                                this.globalStateProxyOpen.NotifyDataChanged('checkListStatusChange', null);
+                                this.globalStateProxyOpen.NotifyDataChanged(GlobalConstants.DataExchangeConstant.CheckListStatusChange, null);
+                            }, (error: any) => {
+                                console.log(`Error: ${error}`);
                             });
+
+                    }, (error: any) => {
+                        console.log(`Error: ${error}`);
                     });
+
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
 
     private setRagIntervalHandler(): void {
-        Observable.interval(10000).subscribe((_) => {
-            this.activeActionables.forEach((item: ActionableModel) => {
-                item.RagColor = UtilityService.GetRAGStatus('Checklist', item.AssignedDt, item.ScheduleClose);
-                // console.log(`Schedule run RAG ststus: ${item.RagColor}`);
+        Observable.interval(10000)
+            .takeUntil(this.ngUnsubscribe)
+            .subscribe((_) => {
+                this.activeActionables.forEach((item: ActionableModel) => {
+                    item.RagColor = UtilityService.GetRAGStatus('Checklist', item.AssignedDt, item.ScheduleClose);
+                    // console.log(`Schedule run RAG ststus: ${item.RagColor}`);
+                });
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
-        }, (error: any) => {
-            console.log(`Error: ${error}`);
-        });
     }
 
     private resetActionableForm(actionable?: ActionableModel): FormGroup {
@@ -447,10 +467,13 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
 
     private GetListOfChildActionables(checkListId: number, incidentId: number, callback?: Function): void {
         this.actionableService.GetAcionableByIncidentIdandCheckListId(incidentId, checkListId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((res: ResponseModel<ActionableModel>) => {
                 if (callback) {
                     callback(res.Records[0]);
                 }
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 }

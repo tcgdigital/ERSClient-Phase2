@@ -1,22 +1,20 @@
 import {
-    Component, ViewEncapsulation, OnDestroy,
-    Output, EventEmitter, OnInit, Input
+    Component, ViewEncapsulation, OnDestroy, OnInit, Input
 } from '@angular/core';
 import {
-    ReactiveFormsModule, FormGroup, FormControl,
-    FormBuilder, AbstractControl, Validators
+    FormGroup, FormControl, FormBuilder, Validators
 } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 
-
 import { MediaService } from './media.service';
-import { MediaModel, MediaReleaseTemplate } from './media.model';
+import { MediaModel } from './media.model';
 import {
     ResponseModel, UtilityService, KeyValue,
     DataExchangeService, GlobalConstants, GlobalStateService, AuthModel
 } from '../../../../shared';
 
 import { TemplateMediaModel, TemplateMediaService } from '../../template.media/components';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'mediaRelease-entry',
@@ -49,6 +47,8 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
 
     toolbarConfig: any = GlobalConstants.EditorToolbarConfig;
     toolbarConfigApproved: any = GlobalConstants.EditorToolbarConfig;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
+    
     /**
      * Creates an instance of MediaQueryEntryComponent.
      * @param {MediaQueryService} mediaQueryService
@@ -76,23 +76,35 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
         this.getTemplateMedias();
         this.isInvalidForm = false;
         this.credential = UtilityService.getCredentialDetails();
-        this.dataExchange.Subscribe('OnMediaReleaseUpdate', (model) => this.onMediaReleaseUpdate(model));
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.OnMediaReleaseUpdate, 
+            (model: MediaModel) => this.onMediaReleaseUpdate(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard, 
+            (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
 
     ngOnDestroy(): void {
-        //this.dataExchange.Unsubscribe('OnMediaReleaseUpdate');
-        //this.globalState.Unsubscribe('incidentChangefromDashboard');
-        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        //this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.OnMediaReleaseUpdate);
+        //this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard);
+        //this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     getTemplateMedias(): void {
         this.templateMediaService.GetAll()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<TemplateMediaModel>) => {
                 this.templateMedias = response.Records
                     .filter((a) => a.TemplateType === 'Media Release');
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -101,10 +113,13 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
             const templateId = evt.target.value;
             //this.toolbarConfig['readOnly'] = false;
             this.mediaQueryService.GetContentFromTemplate(this.currentIncidentId, this.currentDepartmentId, +templateId)
+                .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: any) => {
                     this.templateContent = `${response.Subject}${response.Body}`;
                     this.media.Message = this.templateContent;
                     this.applyReadOnlytextBox = false; 
+                }, (error: any) => {
+                    console.log(`Error: ${error}`);
                 });
         }
         else {
@@ -289,17 +304,18 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
         if (this.media.MediaqueryId === 0) {
             this.media.CreatedBy = +this.credential.UserId;
             this.media.CreatedOn = new Date();
+
             this.mediaQueryService.Create(this.media)
                 .subscribe((response: MediaModel) => {
                     if (this.Action === 'Save') 
                         this.toastrService.success('Media release is saved successfully.', 'Success', this.toastrConfig);
                     
                     if (this.Action === 'SentForApproval') {
-                        this.dataExchange.Publish('MediaModelSentForApproval', response);
+                        this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.MediaModelSentForApproval, response);
                         this.toastrService.success('Media release is successfully sent for approval.', 'Success', this.toastrConfig);
                     }
                     if (this.media.IsPublished) {
-                        this.globalState.NotifyDataChanged('MediaReleasePublished', response);
+                        this.globalState.NotifyDataChanged(GlobalConstants.DataExchangeConstant.MediaReleasePublished, response);
                         this.toastrService.success('Media release is published successfully.', 'Success', this.toastrConfig);
                     }
                     this.dataExchange.Publish('MediaModelSaved', response);
@@ -312,17 +328,18 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
         else {
             this.media.UpdatedBy = +this.credential.UserId;
             this.media.UpdatedOn = new Date();
+            
             this.mediaQueryService.Update(this.media)
                 .subscribe((response: MediaModel) => {
                     if (this.Action === 'Save')
                         this.toastrService.success('Media release is edited successfully.', 'Success', this.toastrConfig);
                    
                     if (this.Action === 'SentForApproval') {
-                        this.dataExchange.Publish('MediaModelSentForApproval', response);
+                        this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.MediaModelSentForApproval, response);
                         this.toastrService.success('Media release is successfully sent for approval.', 'Success', this.toastrConfig);
                     }
                     if (this.media.IsPublished) {
-                        this.globalState.NotifyDataChanged('MediaReleasePublished', this.media);
+                        this.globalState.NotifyDataChanged(GlobalConstants.DataExchangeConstant.MediaReleasePublished, this.media);
                         this.toastrService.success('Media release is published successfully.', 'Success', this.toastrConfig);
                     }
                     this.dataExchange.Publish('MediaModelUpdated', response);

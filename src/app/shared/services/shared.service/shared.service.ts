@@ -3,12 +3,12 @@ import { GlobalStateService } from "../../../shared";
 
 @Injectable()
 export class SharedService {
-
     constructor(private globalState: GlobalStateService) {}
     
     NotifyDataChanged(_event: string, value: any) {
         this.globalState.NotifyDataChanged(_event,value);
     }
+    
     Subscribe(event: string, callback: Function) {
        this.globalState.Subscribe(event,callback);
     }
@@ -16,6 +16,4 @@ export class SharedService {
     Unsubscribe(event: string) {
         this.globalState.Unsubscribe(event);
     }
-
-    
 }

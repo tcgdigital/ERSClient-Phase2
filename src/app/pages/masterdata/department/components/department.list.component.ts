@@ -1,12 +1,12 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Observable, Subject } from 'rxjs/Rx';
 import { DepartmentModel } from './department.model';
 import { DepartmentService } from './department.service';
 import { UserProfileService } from '../../userprofile';
 import {
     ResponseModel, SearchConfigModel,
     SearchTextBox, SearchDropdown,
-    NameValue, DataExchangeService
+    NameValue, DataExchangeService, GlobalConstants
 } from '../../../../shared';
 
 @Component({
@@ -15,20 +15,30 @@ import {
     templateUrl: '../views/department.list.view.html',
     styleUrls: ['../styles/department.style.scss']
 })
-export class DepartmentListComponent implements OnInit {
+export class DepartmentListComponent implements OnInit, OnDestroy {
     departments: DepartmentModel[] = [];
     searchConfigs: Array<SearchConfigModel<any>> = Array<SearchConfigModel<any>>();
     departmentIds: number[] = [];
     departmentModelPatch: DepartmentModel = null;
     expandSearch: boolean = false;
     searchValue: string = "Expand Search";
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
-    constructor(private departmentService: DepartmentService, private dataExchange: DataExchangeService<DepartmentModel>,
+    /**
+     *Creates an instance of DepartmentListComponent.
+     * @param {DepartmentService} departmentService
+     * @param {DataExchangeService<DepartmentModel>} dataExchange
+     * @param {UserProfileService} userProfileService
+     * @memberof DepartmentListComponent
+     */
+    constructor(private departmentService: DepartmentService,
+        private dataExchange: DataExchangeService<DepartmentModel>,
         private userProfileService: UserProfileService) {
     }
 
     getDepertments(): void {
         this.departmentService.GetAll()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 response.Records.forEach((x) => {
                     x['Active'] = (x.ActiveFlag === 'Active');
@@ -53,8 +63,13 @@ export class DepartmentListComponent implements OnInit {
     ngOnInit(): any {
         this.getDepertments();
         this.initiateSearchConfigurations();
-        this.dataExchange.Subscribe('departmentSavedOrEdited',
-            (model) => this.onDepartmentEditorSaveSuccess(model));
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentSavedOrEdited,
+            (model: DepartmentModel) => this.onDepartmentEditorSaveSuccess(model));
+    }
+
+    ngOnDestroy(): void {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     onDepartmentEditorSaveSuccess(model?: DepartmentModel): void {
@@ -63,7 +78,7 @@ export class DepartmentListComponent implements OnInit {
     }
 
     editdepartment(editedDepartment): void {
-        this.dataExchange.Publish('departmentModelEdited', editedDepartment);
+        this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.DepartmentModelEdited, editedDepartment);
     }
 
     IsActive(event: any, editeddepartment: DepartmentModel): void {
@@ -85,15 +100,16 @@ export class DepartmentListComponent implements OnInit {
     invokeSearch(query: string): void {
         if (query !== '') {
             this.departmentService.GetQuery(query)
+                .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: ResponseModel<DepartmentModel>) => {
                     response.Records.forEach((x) => {
                         x['Active'] = (x.ActiveFlag === 'Active');
                         this.departmentIds.push(x.DepartmentId);
                     });
                     this.departments = response.Records;
-                }, ((error: any) => {
+                }, (error: any) => {
                     console.log(`Error: ${error}`);
-                }));
+                });
         }
         else {
             this.getDepertments();

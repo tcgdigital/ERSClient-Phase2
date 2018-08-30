@@ -1,6 +1,7 @@
 <div class="row">
     <div class="col-sm-12 col-xs-12">
-        <input type="button" class="btn btn-primary pull-right" (click)="expandSearchPanel(expandSearch)" [ngModel]="searchValue" />
+        <input type="button" class="btn btn-primary pull-right" (click)="expandSearchPanel(expandSearch)" [ngModel]="searchValue"
+        />
         <button class="btn btn-primary pull-right btn-pos" type="button" (click)="openInvalidRecords()">View Invalid Records</button>
     </div>
 </div>
@@ -11,101 +12,149 @@
     </div>
 </div>
 
+<ng-container *ngIf="userProfiles.length == 0">
+    <responsive-table [hidden]="userProfiles.length != 0">
+        <table responsive-table-body class="fixed-column">
+            <thead>
+                <tr>
+                    <th>User Id</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Employee Id</th>
+                    <th>Main Contact</th>
+                    <th>Alternate Contact</th>
+                    <th>Passport Details</th>
+                    <th>Nationality</th>
+                    <th>Gender</th>
+                    <th>Visa Details</th>
+                    <th>Volunter Preferences</th>
+                    <th>Training Records</th>
+                    <th>NOK Details</th>
+                    <th>Active Indicator</th>
+                    <th>Volunteer Indicator</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="16" class="non-frozen">No records found.</td>
+                </tr>
+            </tbody>
+        </table>
+    </responsive-table>
+</ng-container>
 
-<responsive-table>
-    <table responsive-table-body>
-        <thead>
-            <tr>
-                <th>User Id</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Employee Id</th>
-                <th>Main Contact</th>
-                <th>Alternate Contact</th>
-                <th>Active Indicator</th>
-                <th>Volunteer Indicator</th>
-                <th>Passport Details</th>
-                 <!-- <th>Passport Validity</th>                 -->
-                <th>Nationality</th>
-                <th>Gender</th>
-                <th>Visa Details</th>
-                <th>Volunter Preferences</th>
-                <th>Training Records</th>
-                <th>NOK Details</th>
-                <th>Edit</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr [hidden]="userProfiles.length != 0">
-                <td colspan="6">No records found.</td>
-            </tr>
-            <tr *ngFor="let userprofile of userProfiles">
-                <td data-title="User Id">{{userprofile.UserId}}</td>
-                <td data-title="Name">{{userprofile.Name}}</td>
-                <td data-title="Email">{{userprofile.Email }}</td>
-                <td data-title="Employee Id">{{userprofile.EmployeeId}}</td>
-                <td data-title="Main Contact">{{userprofile.MainContact}}</td>
-                <td data-title="Alternate Contact">{{userprofile.AlternateContact}}</td>
-                <td data-title="IsActive">
-                    <md-checkbox class="Marght" id="IsActive" name="IsActive" [(ngModel)]="userprofile.isActive" (change)="checkChange($event,userprofile)"
-                        aria-label="ActiveFlag">
-                    </md-checkbox>
-                </td>
-                <td data-title="Is Volunteered">
-                    <md-checkbox class="Marght" id="IsActive" name="IsActive" [(ngModel)]="userprofile.isVolunteered" (change)="checkChangeVolunteered($event,userprofile)"
-                        aria-label="ActiveFlag">
-                    </md-checkbox>
-                </td>
-                <td data-title="Passport Details">
-                    {{userprofile.PassportNumber}}
-                </td>
-                <!-- <td data-title="Passport Validity">
-                    {{userprofile.PassportValidity | date: 'dd-MMM-yyyy hh:mm a'}}
-                </td> -->
-                <td data-title="Nationality">{{userprofile.Nationality}}</td>
-                <td data-title="Gender">{{userprofile.Gender}}</td>
-                <td data-title="Visa Details">
-                    <!-- <ul *ngIf="userprofile.VisaDetails.length > 0">
-                        <li *ngFor="let visa of userprofile.VisaDetails">
-                            {{visa.VisaNumber}} / {{visa.VisaValidity | date: 'dd-MMM-yyyy hh:mm a'}}
-                        </li>
-                    </ul> -->
-                    {{userprofile.VisaRecords}}
-                </td>
-                <td data-title="Volunter Preferences">
-                    <!-- <ul *ngIf="userprofile.VolunterPreferences.length > 0">
-                        <li *ngFor="let vol of userprofile.VolunterPreferences">
-                            {{vol.VoluterPreferenceName}}
-                        </li>
-                    </ul> -->
-                    {{userprofile.VoluterPreferenceRecords}}
-                </td>
-                <td data-title="Training Records">
-                    <!-- <ul *ngIf="userprofile.TrainingRecords.length > 0">
-                        <li *ngFor="let train of userprofile.TrainingRecords">
-                            {{train.VoluterPreferenceName}} / {{train.CourseStartDate | date: 'dd-MMM-yyyy hh:mm a'}} &nbsp;/&nbsp; {{train.CourseEndDate
-                            | date: 'dd-MMM-yyyy hh:mm a'}}
-                        </li>
-                    </ul> -->
-                    {{userprofile.TrainingDetails}}
-                </td>
-                <td data-title="NOK Details">
-                    <!-- <ul *ngIf="userprofile.NextOfKins.length > 0">
-                        <li *ngFor="let NOK of userprofile.NextOfKins">
-                            {{NOK.NextOfKinName}} / {{NOK.ContactNumber}}
+<ng-container *ngIf="userProfiles.length != 0">
+    <responsive-table [allowFixedColumn]="freezeColumnEnabled">
+        <table responsive-table-body class="fixed-column">
+            <thead>
+                <tr>
+                    <th>User Id</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Employee Id</th>
+                    <th>Main Contact</th>
+                    <th>Alternate Contact</th>
+                    <th>Passport Details</th>
+                    <th>Nationality</th>
+                    <th>Gender</th>
+                    <th>Visa Details</th>
+                    <th>Volunter Preferences</th>
+                    <th>Training Records</th>
+                    <th>NOK Details</th>
+                    <th>Active Indicator</th>
+                    <th>Volunteer Indicator</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr [hidden]="userProfiles.length != 0">
+                    <td colspan="16" class="non-frozen">No records found.</td>
+                </tr>
+                <tr *ngFor="let userprofile of userProfiles">
+                    <td data-title="User Id" title="{{userprofile.UserId}}">
+                        {{userprofile.UserId}}
+                    </td>
+                    <td data-title="Name" title="{{userprofile.Name}}">
+                        {{userprofile.Name}}
+                    </td>
+                    <td data-title="Email" title="{{userprofile.Email}}">
+                        {{userprofile.Email }}
+                    </td>
+                    <td data-title="Employee Id" title="{{userprofile.EmployeeId}}">
+                        {{userprofile.EmployeeId}}
+                    </td>
+                    <td data-title="Main Contact" title="{{userprofile.MainContact}}">
+                        {{userprofile.MainContact}}
+                    </td>
+                    <td data-title="Alternate Contact" title="{{userprofile.AlternateContact}}">
+                        {{userprofile.AlternateContact}}
+                    </td>
 
-                        </li>
-                    </ul> -->
-                    {{userprofile.NOKDetails}}
-                </td>
-                <td data-title="Edit">
-                    <i class="fa fa-edit fa-2x" (click)="UpdateUserProfile(userprofile)"></i>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</responsive-table>
+                    <td data-title="Passport Details" title="{{userprofile.PassportNumber}}">
+                        {{userprofile.PassportNumber}}
+                    </td>
+                    <!-- <td data-title="Passport Validity">
+                        {{userprofile.PassportValidity | date: 'dd-MMM-yyyy hh:mm a'}}
+                    </td> -->
+                    <td data-title="Nationality" title="{{userprofile.Nationality}}">
+                        {{userprofile.Nationality}}
+                    </td>
+                    <td data-title="Gender" title="{{userprofile.Gender}}">
+                        {{userprofile.Gender}}
+                    </td>
+                    <td data-title="Visa Details" title="{{userprofile.VisaRecords}}">
+                        <!-- <ul *ngIf="userprofile.VisaDetails.length > 0">
+                            <li *ngFor="let visa of userprofile.VisaDetails">
+                                {{visa.VisaNumber}} / {{visa.VisaValidity | date: 'dd-MMM-yyyy hh:mm a'}}
+                            </li>
+                        </ul> -->
+                        {{userprofile.VisaRecords}}
+                    </td>
+                    <td data-title="Volunter Preferences" title="{{userprofile.VoluterPreferenceRecords}}">
+                        <!-- <ul *ngIf="userprofile.VolunterPreferences.length > 0">
+                            <li *ngFor="let vol of userprofile.VolunterPreferences">
+                                {{vol.VoluterPreferenceName}}
+                            </li>
+                        </ul> -->
+                        {{userprofile.VoluterPreferenceRecords}}
+                    </td>
+                    <td data-title="Training Records" title="{{userprofile.TrainingDetails}}">
+                        <!-- <ul *ngIf="userprofile.TrainingRecords.length > 0">
+                            <li *ngFor="let train of userprofile.TrainingRecords">
+                                {{train.VoluterPreferenceName}} / {{train.CourseStartDate | date: 'dd-MMM-yyyy hh:mm a'}} &nbsp;/&nbsp; {{train.CourseEndDate
+                                | date: 'dd-MMM-yyyy hh:mm a'}}
+                            </li>
+                        </ul> -->
+                        {{userprofile.TrainingDetails}}
+                    </td>
+                    <td data-title="NOK Details" title="{{userprofile.NOKDetails}}">
+                        <!-- <ul *ngIf="userprofile.NextOfKins.length > 0">
+                            <li *ngFor="let NOK of userprofile.NextOfKins">
+                                {{NOK.NextOfKinName}} / {{NOK.ContactNumber}}
 
+                            </li>
+                        </ul> -->
+                        {{userprofile.NOKDetails}}
+                    </td>
+                    <td data-title="IsActive">
+                        <md-checkbox class="Marght" id="IsActive" name="IsActive" [(ngModel)]="userprofile.isActive" (change)="checkChange($event,userprofile)"
+                            aria-label="ActiveFlag">
+                        </md-checkbox>
+                    </td>
+                    <td data-title="Is Volunteered">
+                        <md-checkbox class="Marght" id="IsActive" name="IsActive" [(ngModel)]="userprofile.isVolunteered" (change)="checkChangeVolunteered($event,userprofile)"
+                            aria-label="ActiveFlag">
+                        </md-checkbox>
+                    </td>
+                    <td data-title="Edit">
+                        <i class="fa fa-edit fa-2x" (click)="UpdateUserProfile(userprofile)"></i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </responsive-table>
+</ng-container>
 <div bsModal #invalidUserProfileModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">

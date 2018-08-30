@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, Input, OnInit, OnDestroy, ViewChild, Injector } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, OnDestroy, ViewChild, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 
@@ -24,7 +24,6 @@ import {
     GlobalConstants,
     Severity,
     KeyValue,
-    KeyVal,
     IncidentStatus,
     InvolvedPartyType,
     UtilityService,
@@ -37,7 +36,8 @@ import {
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { FlightModel, InvolvePartyModel } from '../../shared.components';
 import { IncidentDataExchangeModel } from './incidentDataExchange.model';
-import { TimeZoneModel, ZoneIndicator, TimeZoneModels, TimeZoneService } from "../../shared.components/timezone";
+import { ZoneIndicator, TimeZoneService } from "../../shared.components/timezone";
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'incident-entry',
@@ -112,7 +112,15 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     public ScheduleArrivalLocal: Date;
     public lastCount: string = GlobalConstants.LAST_INCIDENT_PICK_COUNT;
     public EmergencyCountry: string = '';
+    public dateTimePatternValidator = {
+        'd': { pattern: new RegExp(/(([0]?[1-9])|([1-2][0-9])|(3[01]))/) },
+        'M': { pattern: new RegExp(/(jan|feb|mar|apr|jun|jul|Aug|sep|oct|nov|dec)/) },
+        'y': { pattern: new RegExp(/^(20[1-9]\d)$/) },
+        'm': { pattern: new RegExp('\[0-59\]') },
+        's': { pattern: new RegExp('\[0,59\]') }
+    }
     credential: AuthModel;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     /**
      * Creates an instance of IncidentEntryComponent.
@@ -123,16 +131,12 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
      *
      * @memberOf IncidentEntryComponent
      */
-    constructor(formBuilder: FormBuilder, private globalState: GlobalStateService,
-        private router: Router,
+    constructor(private router: Router,
         private incidentService: IncidentService,
         private emergencyTypeService: EmergencyTypeService,
         private injector: Injector,
         private emergencyLocationService: EmergencyLocationService,
-        private locationService: LocationService,
         private timeZoneService: TimeZoneService,
-        private toastrConfig: ToastrConfig,
-        private toastrService: ToastrService,
         private organizationService: OrganizationService,
         private aircraftTypeService: AircraftTypeService) {
         this.severities = UtilityService.GetKeyValues(Severity);
@@ -183,15 +187,18 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
 
         this.form.get('EmergencyDate')
             .setValue(moment(new Date()).format('DD-MMM-YYYY HH:mm'));
+
         this.form.get('EmergencyDateLocal')
             .setValue(moment(new Date()).utc().format('DD-MMM-YYYY HH:mm'));
+
         this.form.get('ReportedDate')
             .setValue(moment(new Date()).format('DD-MMM-YYYY HH:mm'));
+
         this.form.get('ReportedDateLocal')
             .setValue(moment(new Date()).utc().format('DD-MMM-YYYY HH:mm'));
 
-
         this.emergencyLocationService.GetAllActiveEmergencyLocations()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<EmergencyLocationModel>) => {
                 result.Records.forEach((item: EmergencyLocationModel) => {
                     const emergencyLocationModel: EmergencyLocationModel = new EmergencyLocationModel();
@@ -203,6 +210,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                     this.affectedStations.push(emergencyLocationModel);
                     this.affectedStations.sort(function (a, b) { return (a.AirportName.toUpperCase() > b.AirportName.toUpperCase()) ? 1 : ((b.AirportName.toUpperCase() > a.AirportName.toUpperCase()) ? -1 : 0); });
                 });
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -214,6 +223,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
 
     getAllActiveEmergencyTypes(): void {
         this.emergencyTypeService.GetAllActive()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                 this.activeEmergencyTypes = response.Records;
             }, (error: any) => {
@@ -223,6 +233,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
 
     getAllActiveOrganizations(): void {
         this.organizationService.GetAllActiveOrganizations()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<OrganizationModel>) => {
                 const org: OrganizationModel = response.Records.find((item: OrganizationModel) => {
                     return item.OrganizationCode == 'All Organization';
@@ -244,6 +255,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             return false;
         }
         this.incidentService.GetLastConfiguredCountIncidents()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<IncidentModel>) => {
                 this.incidentsToPickForReplication = [];
                 response.Records.sort((a, b) => {
@@ -279,11 +291,14 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                     }
                 });
                 this.incidentModel.BorrowedIncident = 0;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
     getAllActiveAircraftTypes(): void {
         this.aircraftTypeService.GetAllActiveAircraftTypes()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<AircraftTypeModel>) => {
                 this.activeAircraftTypes = response.Records;
             }, (error: any) => {
@@ -340,13 +355,17 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
 
                 const incidentToPickForReplication: IncidentModel = incidentsToPickForReplication
                     .find((x: IncidentModel) => x.IncidentId === +incidentId);
+
                 this.incidentService.GetFlightInfoFromIncident(+incidentId)
+                    .takeUntil(this.ngUnsubscribe)
                     .subscribe((itemFlight: FlightModel) => {
                         this.FillFlightFields(itemFlight);
                         jQuery('#Scheduleddeparture, #Scheduledarrival').attr('data-disable', 'true');
                         this.departuredatepicker.toggleControl();
                         this.arrivaldatepicker.toggleControl();
                         this.isBorrowedIncidentPopup = true;
+                    }, (error: any) => {
+                        console.log(`Error: ${error}`);
                     });
             }
             else {
@@ -398,7 +417,10 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         event.stopPropagation();
     }
 
-    ngOnDestroy() { }
+    ngOnDestroy() {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
 
     ShowWeatherLocation(): void {
         this.childModalViewWeatherLocation.show();
@@ -514,12 +536,13 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             this.incidentDataExchangeModel.IsFlightRelated,
             this.incidentDataExchangeModel.InvolvedPartyModel, this.incidentDataExchangeModel.FLightModel,
             this.incidentDataExchangeModel.AffectedModel)
+
             .subscribe((response: IncidentModel) => {
                 UtilityService.SetToSession({ CurrentIncidentId: response.IncidentId });
                 this.globalStateProxy.NotifyDataChanged('incidentCreate', response.IncidentId);
                 this.router.navigate(['pages/dashboard']);
             }, (error: any) => {
-                console.log('Error');
+                console.log(`Error ${error}`);
             });
     }
 
@@ -875,6 +898,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         zi.CurrentTime = new Date();
         zi.ZoneName = timeZone;
         let localDate = new Date();
+
         this.timeZoneService.GetLocalTime(zi)
             .subscribe((result: ZoneIndicator) => {
                 localDate = new Date(result.CurrentTime);
@@ -882,10 +906,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                 if (callback)
                     callback(localDate);
             });
-
-        //let localDate = new Date(utc + this.GetUTCOffsetHours(isOrigin));
-
-        //return localDate;
     }
 
     private stdTimezoneOffset(dt: Date): number {

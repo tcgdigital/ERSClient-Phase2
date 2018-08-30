@@ -1,51 +1,49 @@
 @import '../../config/config';
+.col-no-left-padding {
+    padding-left: 0 !important;
+}
 
-.col-no-left-padding{
-    padding-left: 0 !important;
-}
-.col-no-right-padding{
+.col-no-right-padding {
     padding-right: 0 !important;
 }
-.row-no-padding > [class*="col-"] {
+
+.row-no-padding>[class*="col-"] {
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
-.labelStyle{
+
+.labelStyle {
     border: none;
     text-decoration: underline;
     cursor: pointer;
 }
 
-.entryHolder{
-    background: $entryholder-background ;
+.entryHolder {
+    background: $entryholder-background;
     padding: 15px;
     border: $entryholder-color solid 1px;
-    float: left;
-    margin: 15px 23px;
-    @media screen and (max-width: $resMD-S){
-margin: 15px 1.5%;
-}
-}
-
-.addbuttonHolder{
-    padding: 5px 15px;
-    float: right;
+    float: left; // margin: 15px 23px;
+    @media screen and (max-width: $resMD-S) {
+        margin: 15px 1.5%;
+    }
 }
 
-.formStyle{
-    width : 97%;
-}
-
-.heightFix{
+// .addbuttonHolder {
+//     padding: 5px 15px;
+//     float: right;
+// }
+// .formStyle{
+//     width : 97%;
+// }
+.heightFix {
     height: 94px;
 }
 
-.buttonholder{
-        float: right;
-    vertical-align: middle;
-    padding-top: 27px;
-}
-
+// .buttonholder {
+//     float: right;
+//     vertical-align: middle;
+//     padding-top: 27px;
+// }
 .multiselect-selector {
     background: $multiselect-background none repeat scroll 0 0;
     border: $multiselect-border solid 1px;
@@ -76,37 +74,36 @@ margin: 15px 1.5%;
 //     text-align: right;
 //     padding-bottom: 8px
 // }
-
 .anchor-Export {
     margin-right: 15px;
 }
 
 .btn-pos {
-    margin-right:15px;
-    margin-bottom:10px;
+    margin-right: 15px;
+    margin-bottom: 10px;
 }
 
 @media screen and (max-width: $resXXS-S) {
-.btn-pos {
-    margin-right:6px;
-    margin-bottom:10px;
-}
+    .btn-pos {
+        margin-right: 6px;
+        margin-bottom: 10px;
+    }
 }
 
 @media screen and (max-width: $resXS-E) {}
 
 @media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {
-.btn-pos {
-    margin-right:40px;
-    margin-bottom:10px;
-}
+    .btn-pos {
+        margin-right: 40px;
+        margin-bottom: 10px;
+    }
 }
 
 @media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
-.btn-pos {
-    margin-right:15px;
-    margin-bottom:10px;
-}
+    .btn-pos {
+        margin-right: 15px;
+        margin-bottom: 10px;
+    }
 }
 
 @media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {}

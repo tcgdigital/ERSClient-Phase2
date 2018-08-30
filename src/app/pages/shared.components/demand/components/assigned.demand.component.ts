@@ -2,7 +2,7 @@ import {
     Component, ViewEncapsulation, OnDestroy, Injector,
     OnInit, AfterContentInit, ViewChild
 } from '@angular/core';
-import { Observable, Subscription } from 'rxjs/Rx';
+import { Observable, Subscription, Subject } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router, NavigationEnd } from '@angular/router';
 import { InvolvePartyModel } from '../../involveparties';
@@ -15,7 +15,8 @@ import { DepartmentService, DepartmentModel } from '../../../masterdata/departme
 import * as moment from 'moment/moment';
 import {
     ResponseModel, DataExchangeService, KeyValue,
-    GlobalConstants, GlobalStateService, UtilityService, AuthModel
+    GlobalConstants, GlobalStateService, UtilityService, 
+    AuthModel
 } from '../../../../shared';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
@@ -51,6 +52,8 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     public globalStateProxyOpen: GlobalStateService;
     public isShowAssignToMeDemand: boolean = true;
     public isInvalidRemarks: boolean = false;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
+
     /**
      * Creates an instance of AssignedDemandComponent.
      * @param {DemandService} demandService
@@ -90,15 +93,21 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.createdByName = this.credential.UserName;
         this.getAllDepartments();
 
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard, 
+            (model: KeyValue) => this.departmentChangeHandler(model));
 
         // SignalR Notification
-        this.globalState.Subscribe('ReceiveDemandAssignedResponse', (model: DemandModel) => {
+        this.globalState.Subscribe
+        (GlobalConstants.NotificationConstant.ReceiveDemandAssignedResponse.Key, (model: DemandModel) => {
             // this.getAssignedDemands(model.TargetDepartmentId, model.IncidentId);
             this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
         });
-        this.globalState.Subscribe('ReceiveCompletedDemandAssignedResponse', (model: DemandModel) => {
+
+        this.globalState.Subscribe
+        (GlobalConstants.NotificationConstant.ReceiveCompletedDemandAssignedResponse.Key, (model: DemandModel) => {
             // this.getAssignedDemands(model.TargetDepartmentId, model.IncidentId);
             this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
         });
@@ -111,9 +120,9 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
 
     public getAssignedDemands(deptId: number, incidentId: number): void {
         this.demandService.GetForAssignedDept(deptId, incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demands = this.demandService.DemandMapper(response.Records);
-
                 UtilityService.SetRAGStatus(this.demands, 'Demand'); 
             }, (error: any) => {
                 console.log(`Error: ${error}`);
@@ -125,49 +134,9 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.childModal.hide();
     }
 
-    /*
-    public setRagStatus(): void {
-        Observable.interval(1000).subscribe((_) => {
-            if (this.demands && this.demands.length > 0) {
-                this.demands.forEach((x) => {
-                    if (x.ClosedOn == null) {
-                        const ScheduleTime: number = (Number(x.ScheduleTime) * 60000);
-                        const CreatedOn: number = new Date(x.CreatedOn).getTime();
-                        const CurrentTime: number = new Date().getTime();
-                        const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-                        const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
-                        if (percentage < 50) {
-                            x.RagStatus = 'statusGreen';
-                        } else if (percentage >= 100) {
-                            x.RagStatus = 'statusRed';
-                        }
-                        else {
-                            x.RagStatus = 'statusAmber';
-                        }
-                    }
-                    else {
-                        const ScheduleTime: number = (Number(x.ScheduleTime) * 60000);
-                        const CreatedOn: number = new Date(x.CreatedOn).getTime();
-                        const CurrentTime: number = new Date().getTime();
-                        const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-                        const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
-                        if (percentage < 50) {
-                            x.RagStatus = 'statusGreen';
-                        } else if (percentage >= 100) {
-                            x.RagStatus = 'statusRed';
-                        }
-                        else {
-                            x.RagStatus = 'statusAmber';
-                        }
-                    }
-                });
-            }
-        });
-    }
-    */
-
     public getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
                 this.demandRemarks = response.Records;
                 this.childModalRemarks.show();
@@ -182,6 +151,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
 
     public getAllDepartments() {
         this.departmentService.GetAll()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
                 this.currentDepartmentName = this.getCurrentDepartmentName(this.currentDepartmentId);
@@ -267,7 +237,9 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.RemarkToCreate.RequesterDepartmentName = this.currentDepartmentName;
         this.RemarkToCreate.TargetDepartmentName = demand.TargetDepartmentName;
         this.RemarkToCreate.CreatedByName = this.createdByName;
+        
         this.demandRemarkLogsService.Create(this.RemarkToCreate)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: DemandRemarkLogModel) => {
                 this.toastrService.success('Remark saved successfully.', 'Success', this.toastrConfig);
                 this.getDemandRemarks(demand.DemandId);
@@ -305,10 +277,11 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
             }
             else {
                 this.demandService.UpdateBulkForCompletion(demandCompletion)
+                    .takeUntil(this.ngUnsubscribe)
                     .subscribe((response: DemandModel[]) => {
                         this.toastrService.success('Demand status updated successfully.', 'Success', this.toastrConfig);
                         this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
-                        this.globalStateProxyOpen.NotifyDataChanged('DemandAssigned', null);
+                        this.globalStateProxyOpen.NotifyDataChanged(GlobalConstants.DataExchangeConstant.DemandAssigned, null);
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                     });
@@ -325,6 +298,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
 
     public getDemandTrails(demandId): void {
         this.demandTrailService.getDemandTrailByDemandId(demandId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandTrailModel>) => {
                 this.demandTrails = response.Records;
                 this.childModalTrail.show();
@@ -340,8 +314,11 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     }
 
     public ngOnDestroy(): void {
-        //this.globalState.Unsubscribe('incidentChangefromDashboard');
-        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        //this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard);
+        //this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     public ngAfterContentInit(): any {

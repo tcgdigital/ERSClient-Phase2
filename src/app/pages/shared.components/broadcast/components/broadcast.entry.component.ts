@@ -1,12 +1,10 @@
 import {
-    Component, ViewEncapsulation, OnDestroy,
-    Output, EventEmitter, OnInit, Input
+    Component, ViewEncapsulation, OnDestroy, OnInit, Input
 } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { Router } from '@angular/router';
+import { Subscription, Subject } from 'rxjs/Rx';
 import {
-    FormGroup, FormControl, FormBuilder,
-    AbstractControl, Validators
+    FormGroup, FormControl, FormBuilder, Validators
 } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 
@@ -57,6 +55,8 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     hideMessageError: boolean = true;
     hideDeptError: boolean = true;
 
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
+
     /**
      * Creates an instance of BroadcastEntryComponent.
      * @param {BroadcastDepartmentService} broadcastDepartmentMappingService
@@ -101,15 +101,23 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         this.broadcast.DepartmentBroadcasts = [];
         this.Action = 'Save';
 
-        this.dataExchange.Subscribe('OnBroadcastUpdate', (model) => this.onBroadcastUpdate(model));
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.OnBroadcastUpdate,
+            (model: BroadCastModel) => this.onBroadcastUpdate(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard,
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard,
+            (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
     ngOnDestroy(): void {
-        //this.dataExchange.Unsubscribe('OnBroadcastUpdate');
-       // this.globalState.Unsubscribe('incidentChangefromDashboard');
-        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        // this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.OnBroadcastUpdate);
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard);
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     initiateForm(): void {
@@ -197,12 +205,14 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
 
             if (this.broadcast.BroadcastId === 0) {
                 this.broadcast.CreatedBy = +this.credential.UserId;
+
                 this.broadcastService.Create(this.broadcast)
                     .subscribe((response: BroadCastModel) => {
                         this.toastrService.success('Broadcast saved successfully.', 'Success', this.toastrConfig);
-                        this.dataExchange.Publish('BroadcastModelSaved', response);
+                        this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.BroadcastModelSaved, response);
+
                         if (this.broadcast.IsSubmitted) {
-                            this.globalState.NotifyDataChanged('BroadcastPublished', response);
+                            this.globalState.NotifyDataChanged(GlobalConstants.DataExchangeConstant.BroadcastPublished, response);
                         }
                         this.cancel();
                         this.IsAllSelected = false;
@@ -215,9 +225,9 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
                     .subscribe((response: BroadCastModel) => {
                         this.toastrService.success('Broadcast edited successfully.', 'Success', this.toastrConfig);
 
-                        this.dataExchange.Publish('BroadcastModelUpdated', response);
+                        this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.BroadcastModelUpdated, response);
                         if (this.broadcast.IsSubmitted) {
-                            this.globalState.NotifyDataChanged('BroadcastPublished', this.broadcast);
+                            this.globalState.NotifyDataChanged(GlobalConstants.DataExchangeConstant.BroadcastPublished, this.broadcast);
                         }
                         this.cancel();
                         this.IsAllSelected = false;
@@ -291,6 +301,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
 
     private getBroadcastDepartmentMappings(departmentId): void {
         this.broadcastDepartmentMappingService.Query(departmentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<BroadCastDepartmentModel>) => {
                 const broadcastmappingIds: number[] = this.BroadCastDepartmentMappings
                     .map((item) => item.BroadcastDepartmentMappingId);
@@ -302,12 +313,18 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
                 this.currentDepartment.BroadcastDepartmentMappingId = Math.max.apply(Math, broadcastmappingIds) + 1;
                 this.currentDepartment.TargetDepartment = new DepartmentModel();
                 this.currentDepartment.TargetDepartment.DepartmentId = departmentId;
+
                 this.departmentService.Get(departmentId)
+                    .takeUntil(this.ngUnsubscribe)
                     .subscribe((response1: DepartmentModel) => {
                         this.currentDepartment.TargetDepartment.DepartmentName = response1.DepartmentName;
+                    }, (error: any) => {
+                        console.log(`Error: ${error}`);
                     });
 
                 this.BroadCastDepartmentMappings.push(this.currentDepartment);
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 }

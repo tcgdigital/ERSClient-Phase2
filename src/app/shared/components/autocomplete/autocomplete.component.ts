@@ -6,6 +6,7 @@ import {
 import { KeyValue } from '../../models';
 import { DataExchangeService } from '../../services/data.exchange';
 import { IAutocompleteActions } from './IAutocompleteActions';
+import { GlobalConstants } from '../../../shared';
 
 @Component({
     selector: 'autocomplete',
@@ -85,14 +86,14 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.dataExchange.Subscribe('clearAutoCompleteInput', (model) => this.query = model);
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.ClearAutoCompleteInput, (model) => this.query = model);
         if (this.items.length > 0 && this.items.find(x => x.Value == this.initialvalue.Value) != null) {
             this.query = this.initialvalue.Key;
         }
     }
 
     ngOnDestroy() {
-        this.dataExchange.Unsubscribe('clearAutoCompleteInput');
+        this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.ClearAutoCompleteInput);
     }
 
 

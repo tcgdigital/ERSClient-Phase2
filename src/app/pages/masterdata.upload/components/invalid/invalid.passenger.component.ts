@@ -1,15 +1,14 @@
 import {
-    Component, ViewEncapsulation, Input, OnChanges,
-    OnInit, OnDestroy, AfterContentInit, ViewChild, SimpleChange,
+    Component, ViewEncapsulation, Input, OnInit, OnDestroy
 } from '@angular/core';
 import {
     FormGroup, FormControl, FormBuilder,
     AbstractControl, Validators, ReactiveFormsModule
 } from '@angular/forms';
-import { Observable } from 'rxjs/Rx';
+import { Subject } from 'rxjs/Rx';
 import {
-    ResponseModel, DataExchangeService,
-    UtilityService, GlobalConstants, GlobalStateService, KeyValue
+    DataExchangeService,
+    GlobalConstants, GlobalStateService, KeyValue
 } from '../../../../shared';
 
 import { MasterDataUploadForInvalidService } from '../masterdata.upload.invalid.records.service'
@@ -20,20 +19,22 @@ import { InvalidPassengerModel } from '../../../shared.components/'
     encapsulation: ViewEncapsulation.None,
     templateUrl: '../../views/invalid/invalid.passenger.view.html'
 })
-
 export class InvalidPassengersListComponent implements OnInit, OnDestroy {
-
     invalidPassengers: InvalidPassengerModel[] = []
     @Input() IncidentId: number;
     @Input() IsVisible: boolean;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(private _invalidRecordService: MasterDataUploadForInvalidService,
         private dataExchange: DataExchangeService<InvalidPassengerModel>,
         private globalState: GlobalStateService) { }
 
     ngOnInit(): void {
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.dataExchange.Subscribe("OpenInvalidPassengers", model => this.openInvalidPassengers(model));
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChange,
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.OpenInvalidPassengers,
+            (model: InvalidPassengerModel) => this.openInvalidPassengers(model));
     }
 
     openInvalidPassengers(invalidPassenger: InvalidPassengerModel): void {
@@ -41,16 +42,18 @@ export class InvalidPassengersListComponent implements OnInit, OnDestroy {
         this.getInvalidPassengerRecords();
     }
 
-
     ngOnDestroy(): void {
-        //this.dataExchange.Unsubscribe("OpenInvalidPassengers");
-        //this.globalState.Unsubscribe("incidentChange");
+        //this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.OpenInvalidPassengers);
+        //this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChange);
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     getInvalidPassengerRecords(): void {
         this.invalidPassengers = [];
         this._invalidRecordService.GetAllInvalidPassengersByIncident(this.IncidentId)
             .flatMap(x => x)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe(a => {
                 this.invalidPassengers.push(a);
                 this.invalidPassengers.sort((a, b) => {
@@ -59,11 +62,9 @@ export class InvalidPassengersListComponent implements OnInit, OnDestroy {
 
                     return 0;
                 })
-                // console.log(this.invalidPassengers);
-            }),
-            (error: any) => {
+            }, (error: any) => {
                 console.log(`Error: ${error}`);
-            };
+            });
     }
 
     cancel(): void {

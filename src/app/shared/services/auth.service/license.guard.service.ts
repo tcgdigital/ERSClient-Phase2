@@ -24,6 +24,8 @@ export class LicenseGuard implements CanActivate, CanActivateChild {
                     this.router.navigate(['/licensing/${response.Code}']);
                     return false;
                 }
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
         return true;
     }

@@ -20,6 +20,8 @@ export class LocationService {
                 Observable.fromPromise(this.api)
                     .subscribe((googleMaps: any) => {
                         this.fetchLocationByApi(location, googleMaps, observer);
+                    }, (error: any) => {
+                        console.log(`Error: ${error}`);
                     });
             });
         } else {

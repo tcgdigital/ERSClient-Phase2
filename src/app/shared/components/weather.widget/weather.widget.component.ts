@@ -45,6 +45,8 @@ export class WeatherWidgetComponent implements OnInit, OnChanges {
             .subscribe((data: WeatherData) => {
                 this.currentWeather = data;
                 // console.log(this.currentWeather);
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -54,6 +56,8 @@ export class WeatherWidgetComponent implements OnInit, OnChanges {
                 this.weatherForecast = data;
                 console.log('weatherForecast');
                 console.log(this.weatherForecast);
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 

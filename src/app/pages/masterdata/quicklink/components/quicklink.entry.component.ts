@@ -3,20 +3,18 @@ import {
     FormGroup,
     FormControl,
     FormBuilder,
-    AbstractControl,
     Validators,
-    ReactiveFormsModule
 } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-
 
 import { QuickLinkModel } from './quicklink.model';
 import { QuickLinkService } from './quicklink.service';
 import {
-    ResponseModel, DataExchangeService,
+    DataExchangeService,
     AuthModel, UtilityService, FileUploadService, GlobalConstants,
     IUploadDocuments
 } from '../../../../shared';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'quicklink-entry',
@@ -42,10 +40,23 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
     credential: AuthModel;
     public showAddText: string = 'ADD QUICKLINK';
     isValidUrl: boolean = false;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
-    constructor(formBuilder: FormBuilder, private quickLinkService: QuickLinkService,
+    /**
+     *Creates an instance of QuickLinkEntryComponent.
+     * @param {FormBuilder} formBuilder
+     * @param {QuickLinkService} quickLinkService
+     * @param {DataExchangeService<QuickLinkModel>} dataExchange
+     * @param {FileUploadService} fileUploadService
+     * @param {ToastrService} toastrService
+     * @param {ToastrConfig} toastrConfig
+     * @memberof QuickLinkEntryComponent
+     */
+    constructor(formBuilder: FormBuilder,
+        private quickLinkService: QuickLinkService,
         private dataExchange: DataExchangeService<QuickLinkModel>,
-        private fileUploadService: FileUploadService, private toastrService: ToastrService,
+        private fileUploadService: FileUploadService,
+        private toastrService: ToastrService,
         private toastrConfig: ToastrConfig) {
         this.showAdd = false;
         this.buttonValue = "Add QuickLink";
@@ -57,14 +68,16 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
         this.credential = UtilityService.getCredentialDetails();
         this.initializeInputForm();
         this.initiateQuickLinkModel();
-        this.dataExchange.Subscribe("quickLinkModelEdited", model => this.onQuickLinkEditSuccess(model));
+
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.QuickLinkModelEdited,
+            (model: QuickLinkModel) => this.onQuickLinkEditSuccess(model));
     }
 
     initializeInputForm(): void {
         this.form = new FormGroup({
             QuickLinkId: new FormControl(0),
             QuickLinkName: new FormControl('', [Validators.required]),
-            QuickLinkURL: new FormControl('')            
+            QuickLinkURL: new FormControl('')
         });
 
         this.filepathWithLinks = null;
@@ -85,18 +98,12 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
     public upload() {
         if (this.filesToUpload !== undefined) {
             const baseUrl = GlobalConstants.EXTERNAL_URL;
+
             this.fileUploadService.uploadFiles<string>(baseUrl + 'api/fileUpload/upload', this.filesToUpload)
                 .subscribe((result: string) => {
                     this.filepathWithLinks = `${GlobalConstants.EXTERNAL_URL}UploadFiles/${result.replace(/^.*[\\\/]/, '')}`;
                     const extension = result.replace(/^.*[\\\/]/, '').split('.').pop();
-                    // if (dropdownselected === '1') {
                     this.fileName = 'Quicklink' + `.${extension}`;
-                    // }
-                    // else if (dropdownselected === '2') {
-                    //     this.fileName = 'View_Audit_Report' + `.${extension}`;
-                    // }
-                    // this.OnDocumentUploaded(dropdownselected);
-
                 }, (error) => {
                     console.log(`Error: ${error}`);
                 });
@@ -108,7 +115,10 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe("quickLinkModelEdited");
+        this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.QuickLinkModelEdited);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     initiateQuickLinkModel(): void {
@@ -133,9 +143,8 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
                     this.isValidUrl = false;
                 }
             }
-            if ((this.form.controls['QuickLinkURL'].value==undefined || this.form.controls['QuickLinkURL'].value=='') 
-                && (this.filepathWithLinks == null)) 
-            {
+            if ((this.form.controls['QuickLinkURL'].value == undefined || this.form.controls['QuickLinkURL'].value == '')
+                && (this.filepathWithLinks == null)) {
                 this.toastrService.error('QuickLink URL is required or a file must be uploaded', 'Error', this.toastrConfig)
             }
             else {
@@ -144,11 +153,12 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
                     this.quickLinkModel.QuickLinkName = this.form.controls['QuickLinkName'].value;
                     this.quickLinkModel.QuickLinkURL = this.form.controls['QuickLinkURL'].value;
                     this.quickLinkModel.UploadURL = this.filepathWithLinks;
+
                     this.quickLinkService.Create(this.quickLinkModel)
                         .subscribe((response: QuickLinkModel) => {
                             this.initializeInputForm();
                             this.toastrService.success('Quick link saved Successfully.', 'Success', this.toastrConfig);
-                            this.dataExchange.Publish("quickLinkModelSaved", response);
+                            this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.QuickLinkModelSaved, response);
                             this.showAddRegion(this.showAdd);
                             this.showAdd = false;
                             this.initiateQuickLinkModel();
@@ -158,29 +168,21 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
                 }
 
                 else {//EDIT REGION
-                    //if (this.form.dirty) {
                     this.formControlDirtyCheck();
                     this.quickLinkModelEdit.UploadURL = this.filepathWithLinks;
                     delete this.quickLinkModelEdit.Active;
                     this.quickLinkModelEdit.deleteAttributes();
+
                     this.quickLinkService.Update(this.quickLinkModelEdit)
                         .subscribe((response: QuickLinkModel) => {
                             this.toastrService.success('Quick link edited Successfully.', 'Success', this.toastrConfig);
                             this.initializeInputForm();
                             this.initiateQuickLinkModel();
-                            // this.form = new FormGroup({
-                            //     QuickLinkId: new FormControl(this.quickLinkModel.QuickLinkId),
-                            //     QuickLinkName: new FormControl(this.quickLinkModel.QuickLinkName,
-                            //         [Validators.required, Validators.minLength(5)]),
-                            //     QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL,
-                            //         [Validators.minLength(12)])
-                            // });
                             this.showAddRegion(this.showAdd);
                             this.showAdd = false;
                         }, (error: any) => {
                             console.log(`Error: ${error}`);
                         });
-                    //}
                 }
             }
         }
@@ -192,12 +194,6 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
         this.showAddRegion(this.showAdd);
         this.showAdd = false;
         this.isValidUrl = false;
-        // this.form = new FormGroup({
-        //     QuickLinkId: new FormControl(0),
-        //     QuickLinkName: new FormControl(this.quickLinkModel.QuickLinkName,
-        //         [Validators.required]),
-        //     QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL)
-        // });
         this.initializeInputForm();
         this.clearFileUpload(true);
     }
@@ -234,11 +230,10 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy {
         this.filepathWithLinks = this.quickLinkModel.UploadURL;
         if (this.filepathWithLinks != null) {
             const extension = this.filepathWithLinks.replace(/^.*[\\\/]/, '').split('.').pop();
-            // if (dropdownselected === '1') {
             this.fileName = 'Quicklink' + `.${extension}`;
         }
 
-        window.scrollTo(0,0);
+        window.scrollTo(0, 0);
     }
 
     showAddRegion(value): void {

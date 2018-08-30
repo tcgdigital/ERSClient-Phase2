@@ -1,11 +1,11 @@
 import {
     Component, OnInit, ViewEncapsulation,
-    Input, ViewChild, OnDestroy, SimpleChange, AfterViewInit
+    Input, ViewChild, OnDestroy, SimpleChange
 } from '@angular/core';
 import { CheckListSummeryModel, DeptCheckListModel, SubDeptCheckListModel } from './checklist.summary.widget.model';
 import { ChecklistSummaryWidgetService } from './checklist.summary.widget.service';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs/Rx';
 import { ChecklistTrailModel, ChecklistTrailService } from '../../shared.components/checklist.trail';
 import { ActionableModel } from '../../shared.components/actionables/components/actionable.model';
 import { ResponseModel, GlobalStateService, KeyValue, GlobalConstants } from '../../../shared';
@@ -16,7 +16,7 @@ import { IncidentModel, IncidentService } from '../../incident';
 import {
     GraphObject
 } from '../demand.raised.summary.widget/demand.raised.summary.widget.model';
-import { ActionableStatusLogModel,ActionableStatusLogService } from "../../shared.components/actionablestatuslog";
+import { ActionableStatusLogModel, ActionableStatusLogService } from "../../shared.components/actionablestatuslog";
 
 @Component({
     selector: 'checklist-summary-widget',
@@ -53,6 +53,8 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
     currentDepartmentId: number;
     currentIncidentId: number;
 
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
+
     /**
      * Creates an instance of ChecklistSummaryWidgetComponent.
      * @param {ChecklistSummaryWidgetService} checklistSummaryWidgetService
@@ -69,20 +71,30 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
         this.currentDepartmentId = this.initiatedDepartmentId;
         this.getActionableCount(this.currentIncidentId, this.currentDepartmentId);
         this.showGraph = false;
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
-        this.globalState.Subscribe('checkListStatusChange', () => this.checkListStatusChangeHandler());
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChange,
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard,
+            (model: KeyValue) => this.departmentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.CheckListStatusChange,
+            () => this.checkListStatusChangeHandler());
+
         this.showAllDeptSubChecklistCompleted = false;
         this.showAllDeptSubChecklistPending = false;
 
         // SignalR Notification
-        this.globalState.Subscribe('ReceiveChecklistStatusChangeResponse', (model: ActionableModel) => {
-            this.getActionableCount(model.IncidentId, model.DepartmentId);
-        });
-        this.globalState.Subscribe('ReceiveChecklistCreationResponse', (count: number) => {
-            if (count > 0)
-                this.getActionableCount(this.currentIncidentId, this.currentDepartmentId);
-        });
+        this.globalState.Subscribe
+            (GlobalConstants.NotificationConstant.ReceiveChecklistStatusChangeResponse.Key, (model: ActionableModel) => {
+                this.getActionableCount(model.IncidentId, model.DepartmentId);
+            });
+
+        this.globalState.Subscribe
+            (GlobalConstants.NotificationConstant.ReceiveChecklistCreationResponse.Key, (count: number) => {
+                if (count > 0)
+                    this.getActionableCount(this.currentIncidentId, this.currentDepartmentId);
+            });
     }
 
     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
@@ -98,6 +110,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
     getActionableCount(incidentId, departmentId): void {
         this.checkListSummery = new CheckListSummeryModel();
         this.checklistSummaryWidgetService.GetActionableCount(incidentId, departmentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((checkListSummeryObservable) => {
                 this.checkListSummery = checkListSummeryObservable;
             }, (error: any) => {
@@ -110,6 +123,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
         const data: ActionableModel[] = [];
         const uniqueDepartments: DepartmentModel[] = [];
         this.checklistSummaryWidgetService.GetAllDepartmentChecklists(this.incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<ActionableModel>) => {
                 result.Records.forEach((record) => {
                     data.push(record);
@@ -165,6 +179,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
         const data: ActionableModel[] = [];
         const uniqueDepartments: DepartmentModel[] = [];
         this.checklistSummaryWidgetService.GetAllSubDepartmentChecklists(this.incidentId, this.initiatedDepartmentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<ActionableModel>) => {
                 result.Records.forEach((record) => {
                     data.push(record);
@@ -220,9 +235,12 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
         }
 
         this.checklistTrailService.GetChecklistTrailByDepartmentIdandIncidentId(departmentId, this.currentIncidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((resultSet: ResponseModel<ChecklistTrailModel>) => {
                 this.showGraph = true;
                 this.GetChecklistGraph(resultSet.Records, this.currentTarget);
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -233,17 +251,23 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
             $currentRow.closest('tr').addClass('bg-blue-color');
         }
         const requesterDepartmentId: number = resultSet[0].DepartmentId;
-        
-        this.actionableStatusLogService.GetAllByIncidentDepartment(this.incidentId,requesterDepartmentId)
-        .subscribe((actionableStatusLogModels:ResponseModel<ActionableStatusLogModel>)=>{
-            this.incidentService.GetIncidentById(this.incidentId)
-            .subscribe((incidentModel: IncidentModel) => {
-                WidgetUtilityService.GetGraphCheckList(requesterDepartmentId, Highcharts, actionableStatusLogModels.Records,
-                    'checklist-graph-container', 'Status', incidentModel.CreatedOn,resultSet[0].Department.DepartmentName);
-                this.showCheckListGraph = true;
+
+        this.actionableStatusLogService.GetAllByIncidentDepartment(this.incidentId, requesterDepartmentId)
+            .takeUntil(this.ngUnsubscribe)
+            .subscribe((actionableStatusLogModels: ResponseModel<ActionableStatusLogModel>) => {
+
+                this.incidentService.GetIncidentById(this.incidentId)
+                    .takeUntil(this.ngUnsubscribe)
+                    .subscribe((incidentModel: IncidentModel) => {
+                        WidgetUtilityService.GetGraphCheckList(requesterDepartmentId, Highcharts, actionableStatusLogModels.Records,
+                            'checklist-graph-container', 'Status', incidentModel.CreatedOn, resultSet[0].Department.DepartmentName);
+                        this.showCheckListGraph = true;
+                    }, (error: any) => {
+                        console.log(`Error: ${error}`);
+                    });
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
-        });
-        
     }
 
     public onViewAllCheckListShown($event: ModalDirective): void {
@@ -339,8 +363,8 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
             subdeptChecklists.push(subdeptChecklist);
         });
         this.subDeptPendingCheckLists = subdeptChecklists;
-        Observable.interval(1000).subscribe((_) => {
 
+        Observable.interval(1000).subscribe((_) => {
             this.subDeptPendingCheckLists.forEach((itemSubDeptCheckListModel: SubDeptCheckListModel) => {
                 const CreatedOn: number = new Date(itemSubDeptCheckListModel.AssignedDt).getTime();
                 const ScheduleTime: number = (Number(itemSubDeptCheckListModel.Duration) * 60000);
@@ -428,6 +452,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
             subdeptChecklists.push(subdeptChecklist);
         });
         this.subDeptPendingCheckLists = subdeptChecklists;
+
         Observable.interval(1000).subscribe((_) => {
             subdeptChecklists = [];
             this.subDeptPendingCheckLists.forEach((itemSubDeptCheckListModel: SubDeptCheckListModel) => {
@@ -450,9 +475,12 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        // this.globalState.Unsubscribe('incidentChange');
-        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
-        //this.globalState.Unsubscribe('checkListStatusChange');
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChange);
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard);
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.CheckListStatusChange);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     private incidentChangeHandler(incident: KeyValue): void {

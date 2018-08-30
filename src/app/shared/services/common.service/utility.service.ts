@@ -152,11 +152,11 @@ export class UtilityService {
     //     }
     // }
 
-    public static getUTCDateTime(date:Date):Date{
+    public static getUTCDateTime(date: Date): Date {
         let currentDate = date;
-        let currentDateUTC = new Date(currentDate.getUTCFullYear(), 
-        currentDate.getUTCMonth(), currentDate.getUTCDate(), 
-        currentDate.getUTCHours(), currentDate.getUTCMinutes(), currentDate.getUTCSeconds(),currentDate.getUTCMilliseconds());
+        let currentDateUTC = new Date(currentDate.getUTCFullYear(),
+            currentDate.getUTCMonth(), currentDate.getUTCDate(),
+            currentDate.getUTCHours(), currentDate.getUTCMinutes(), currentDate.getUTCSeconds(), currentDate.getUTCMilliseconds());
         return currentDateUTC;
     }
 
@@ -378,7 +378,7 @@ export class UtilityService {
             Observable.interval(1000).subscribe((_) => {
                 dataModels.forEach((entity: any) => {
                     let scheduleClose: number;
-                   
+
                     if (entity.constructor.name === 'AllDeptDemandRaisedSummary' ||
                         entity.constructor.name === 'AllDeptDemandReceivedSummary' ||
                         entity.constructor.name === 'AllDemandRaisedSummaryModel' ||
@@ -435,6 +435,10 @@ export class UtilityService {
 
     public static GetRAGStatus(appliedModule: string, assignDate?: Date, scheduleClose?: Date): string {
         // TODO:  RAG code should come from database.
+        if(UtilityService.RAGScaleData.length == 0){
+            return '';
+        }
+
         const RAGScale: RAGScaleModel[] = UtilityService.RAGScaleData.filter((item: RAGScaleModel) => {
             return item.AppliedModule === appliedModule;
         }).sort((a: any, b: any) => {
@@ -469,7 +473,7 @@ export class UtilityService {
     }
 
     public static GetNecessaryPageLevelPermissionValidation(departmentId: number, pageCode: string): boolean {
-        
+
         this.isShowPage = false;
         this.pagePermissionMatrix = GlobalConstants.PagePermissionMatrix;
 
@@ -545,7 +549,7 @@ export class UtilityService {
         let subTabs: ITabLinkInterface[];
         const rootTab: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
             .find((x: PagesPermissionMatrixModel) => x.PageCode === parentTabName
-                && x.Type === 'Tab' && x.DepartmentId === departmentId && x.CanView && x.ModuleName==='Dashboard');
+                && x.Type === 'Tab' && x.DepartmentId === departmentId && x.CanView && x.ModuleName === 'Dashboard');
 
         if (rootTab) {
             const tabs: string[] = GlobalConstants.PagePermissionMatrix
@@ -563,12 +567,13 @@ export class UtilityService {
         }
         return subTabs;
     }
+
     public static GetArchieveDashboardSubTabs(parentTabName: string): ITabLinkInterface[] {
         const departmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         let subTabs: ITabLinkInterface[];
         const rootTab: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
             .find((x: PagesPermissionMatrixModel) => x.PageCode === parentTabName
-                && x.Type === 'Tab' && x.DepartmentId === departmentId && x.CanView && x.ModuleName==='Archive Dashboard');
+                && x.Type === 'Tab' && x.DepartmentId === departmentId && x.CanView && x.ModuleName === 'Archive Dashboard');
 
         if (rootTab) {
             const tabs: string[] = GlobalConstants.PagePermissionMatrix

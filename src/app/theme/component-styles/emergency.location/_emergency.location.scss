@@ -1,38 +1,33 @@
 @import '../../config/config';
-
-.halfBoxStyle{
+.halfBoxStyle {
     width: 49.5%;
     padding-left: 14px;
 }
-.entryHolder{
+
+.entryHolder {
     background: $entryholder-background;
     padding: 15px;
     border: $entryholder-color solid 1px;
-    float: left;
-    margin: 15px 23px;
-}
-
-.formStyle{
-    width : 97%;
-}
-
-.buttonholder{
-    float: right;
-    vertical-align: middle;
-    padding-top: 27px;
-}
-
-
-.addbuttonHolder{
-    padding: 5px 22px;
-    float: right;
+    float: left; // margin: 15px 23px;
 }
 
 .input_station {
-    width:216px;
+    width: 216px;
 }
 
-.butt-des{
-    text-align: right;
-    padding-bottom: 8px
-}
+// .formStyle{
+//     width : 97%;
+// }
+// .buttonholder {
+//     float: right;
+//     vertical-align: middle;
+//     padding-top: 27px;
+// }
+// .addbuttonHolder {
+//     padding: 5px 22px;
+//     float: right;
+// }
+// .butt-des {
+//     text-align: right;
+//     padding-bottom: 8px
+// }

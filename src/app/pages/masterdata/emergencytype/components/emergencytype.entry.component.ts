@@ -1,24 +1,22 @@
 import {
-    Component, ViewEncapsulation,
-    Output, EventEmitter, OnInit
+    Component, ViewEncapsulation, OnInit, OnDestroy
 } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-
-
 import { EmergencyTypeService } from './emergencytype.service';
 import { EmergencyTypeModel } from './emergencytype.model';
 import {
-    ResponseModel, DataExchangeService, GlobalConstants,
-    BaseModel, UtilityService, AuthModel, NameValidator
+    DataExchangeService, GlobalConstants,
+    UtilityService, AuthModel
 } from '../../../../shared';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'emergencytype-entry',
     encapsulation: ViewEncapsulation.None,
     templateUrl: '../views/emergencytype.entry.view.html'
 })
-export class EmergencyTypeEntryComponent implements OnInit {
+export class EmergencyTypeEntryComponent implements OnInit, OnDestroy {
     public form: FormGroup;
     emergencyTypeModel: EmergencyTypeModel = new EmergencyTypeModel();
     emergencyTypeModelWithoutActive: EmergencyTypeModel = new EmergencyTypeModel();
@@ -29,11 +27,21 @@ export class EmergencyTypeEntryComponent implements OnInit {
     credential: AuthModel;
     public submitted: boolean;
     public showAddText: string = 'ADD CRISIS TYPE';
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     emergencyCategory: Object = GlobalConstants.EmergencyCategories;
 
+    /**
+     *Creates an instance of EmergencyTypeEntryComponent.
+     * @param {EmergencyTypeService} emergencyTypeService
+     * @param {DataExchangeService<EmergencyTypeModel>} dataExchange
+     * @param {ToastrService} toastrService
+     * @param {ToastrConfig} toastrConfig
+     * @memberof EmergencyTypeEntryComponent
+     */
     constructor(private emergencyTypeService: EmergencyTypeService,
-        private dataExchange: DataExchangeService<EmergencyTypeModel>, private toastrService: ToastrService,
+        private dataExchange: DataExchangeService<EmergencyTypeModel>, 
+        private toastrService: ToastrService,
         private toastrConfig: ToastrConfig) { }
 
     onEmergencyTypeUpdate(model: EmergencyTypeModel): void {
@@ -60,9 +68,16 @@ export class EmergencyTypeEntryComponent implements OnInit {
         this.emergencyTypeModel = new EmergencyTypeModel();
         this.credential = UtilityService.getCredentialDetails();
         this.emergencyTypeModel.EmergencyCategory = "FlightRelated";
-        this.dataExchange.Subscribe("OnEmergencyTypeUpdate", model => this.onEmergencyTypeUpdate(model))
+        
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.OnEmergencyTypeUpdate, 
+            (model: EmergencyTypeModel) => this.onEmergencyTypeUpdate(model));
     }
 
+    ngOnDestroy(): void {
+		this.ngUnsubscribe.next();
+		this.ngUnsubscribe.complete();
+    }
+    
     onSubmit(): void {
         this.submitted = true;
         if (this.form.controls['EmergencyTypeName'].value == '') {
@@ -90,7 +105,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
                     this.showAddRegion(this.showAdd);
                     this.showAdd = false;
                     this.toastrService.success('Crisis Type saved Successfully.', 'Success', this.toastrConfig);
-                    this.dataExchange.Publish("EmergencyTypeModelSaved", response);
+                    this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.EmergencyTypeModelSaved, response);
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
                 });
@@ -105,7 +120,7 @@ export class EmergencyTypeEntryComponent implements OnInit {
                     this.showAddRegion(this.showAdd);
                     this.showAdd = false;
                     this.toastrService.success('Crisis Type edited Successfully.', 'Success', this.toastrConfig);
-                    this.dataExchange.Publish("EmergencyTypeModelUpdated", response);
+                    this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.EmergencyTypeModelUpdated, response);
                 }, (error: any) => {
                     console.log(`Error: ${error}`);
                 });

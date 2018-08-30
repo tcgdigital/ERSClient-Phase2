@@ -17,10 +17,10 @@
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="OrganizationId">Organization<span class="required">*</span></label>
                             <select id="OrganizationId" class="form-control" formControlName="OrganizationId" name="OrganizationId" (change)="organizationChange($event.target.value,activeOrganizations)">
-                                    <option value=''>Select Organization</option>
-                                    <option *ngFor="let organization of activeOrganizations" [value]="organization.OrganizationId" >
-                                        {{organization.OrganizationCode}}
-                                    </option>
+                                <option value=''>Select Organization</option>
+                                <option *ngFor="let organization of activeOrganizations" [value]="organization.OrganizationId">
+                                    {{organization.OrganizationCode}}
+                                </option>
                             </select>
                             <small *ngIf="form.controls.OrganizationId.hasError('required')" [hidden]="form.controls.OrganizationId.valid || (form.controls.OrganizationId.pristine && !submitted)"
                                 class="text-danger">Required</small>
@@ -32,10 +32,10 @@
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="EmergencyType">Crisis Type<span class="required">*</span></label>
                             <select id="EmergencyTypeId" class="form-control" formControlName="EmergencyTypeId" name="EmergencyTypeId" (change)="emergencyTypeChange($event.target.value,activeEmergencyTypes)">
-                                    <option value='' >Select Crisis Type</option>
-                                    <option *ngFor="let emergencyType of activeEmergencyTypes" [value]="emergencyType.EmergencyTypeId" >
-                                        {{emergencyType.EmergencyTypeName}}
-                                    </option>
+                                <option value=''>Select Crisis Type</option>
+                                <option *ngFor="let emergencyType of activeEmergencyTypes" [value]="emergencyType.EmergencyTypeId">
+                                    {{emergencyType.EmergencyTypeName}}
+                                </option>
                             </select>
                             <small *ngIf="form.controls.EmergencyTypeId.hasError('required')" [hidden]="form.controls.EmergencyTypeId.valid || (form.controls.EmergencyTypeId.pristine && !submitted)"
                                 class="text-danger">Required</small>
@@ -53,11 +53,11 @@
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="AffectedStation">Responsible Station<span class="required">*</span></label>
                             <select id="AffectedStationId" class="form-control" formControlName="AffectedStationId" name="AffectedStationId" (change)="affectedStationChange($event.target.value,affectedStations)">
-                                    <option value=''>Select Responsible Station</option>
-                                    <option value="Offsite">Offsite</option>
-                                    <option *ngFor="let affectedStation of affectedStations" [value]="affectedStation.IATA" >
-                                        {{affectedStation.AirportName}}
-                                    </option>
+                                <option value=''>Select Responsible Station</option>
+                                <option value="Offsite">Offsite</option>
+                                <option *ngFor="let affectedStation of affectedStations" [value]="affectedStation.IATA">
+                                    {{affectedStation.AirportName}}
+                                </option>
                             </select>
                             <small *ngIf="form.controls.AffectedStationId.hasError('required')" [hidden]="form.controls.AffectedStationId.valid || (form.controls.AffectedStationId.pristine && !submitted)"
                                 class="text-danger">Required</small>
@@ -81,10 +81,15 @@
                         <div class="col-lg-3 col-sm-12 col-md-6">
                             <div class="row">
                                 <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                                    <label for="EmergencyDate">Date of Crisis<span class="required">*</span>&nbsp;&nbsp;(Manila Time)</label>
-                                    <input id="EmergencyDate" readonly class="form-control" type="text" name="EmergencyDate" formControlName="EmergencyDate"
+                                    <label for="EmergencyDate">Date of Crisis<span class="required">*</span>&nbsp;&nbsp;(Manila
+                                        Time)</label>
+
+                                    <input id="EmergencyDate" [dropSpecialCharacters]="false" specialCharacters="[ '-' ,':' ]" mask="00-SSS-0000 00:00"  class="form-control" type="text" name="EmergencyDate" formControlName="EmergencyDate"
                                         placeholder="Crisis Date" datetime-picker [options]="datepickerOptionED" (selectHandler)="dateTimeSet($event,'EmergencyDate');"
                                     />
+                                    <!-- <input id="EmergencyDate" readonly class="form-control" type="text" name="EmergencyDate" formControlName="EmergencyDate"
+                                        placeholder="Crisis Date" datetime-picker [options]="datepickerOptionED" (selectHandler)="dateTimeSet($event,'EmergencyDate');"
+                                    /> -->
                                     <small *ngIf="form.controls.EmergencyDate.hasError('required')" [hidden]="form.controls.EmergencyDate.valid || (form.controls.EmergencyDate.pristine && !submitted)"
                                         class="text-danger">Required</small>
                                 </div>
@@ -164,10 +169,10 @@
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="Severity">Severity</label>
                             <select id="selectApprover" class="form-control" formControlName="Severity" name="Severity">
-                                    <option value='' >Select Severity</option>
-                                    <option *ngFor="let severity of severities" [value]="severity.Key" >
-                                        {{severity.Key}}
-                                    </option>
+                                <option value=''>Select Severity</option>
+                                <option *ngFor="let severity of severities" [value]="severity.Key">
+                                    {{severity.Key}}
+                                </option>
                             </select>
                         </div>
                     </div>
@@ -184,7 +189,8 @@
                     </div> -->
                     <div class="row">
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
-                            <label for="ReportedDate">Reported Date Time<span class="required">*</span>&nbsp;&nbsp;(Manila Time)</label>
+                            <label for="ReportedDate">Reported Date Time<span class="required">*</span>&nbsp;&nbsp;(Manila
+                                Time)</label>
                             <input id="ReportedDate" readonly class="form-control" type="text" name="ReportedDate" formControlName="ReportedDate" placeholder="Reported Date"
                                 datetime-picker [options]="datepickerOptionFLT" (selectHandler)="dateTimeSet($event,'ReportedDate');"
                             />
@@ -209,16 +215,16 @@
                             <label for="IncidentsToPickForReplication">Event To Replicate</label>
                             <select id="BorrowedIncident" [(ngModel)]="incidentModel.BorrowedIncident" class="form-control" formControlName="BorrowedIncident"
                                 name="BorrowedIncident" (change)="incidentsToPickForReplicationChange($event.target.value,incidentsToPickForReplication)">
-                                    <option value=0>Select Event To Pick</option>
-                                    <option *ngFor="let incidentToPickForReplication of incidentsToPickForReplication" [value]="incidentToPickForReplication.IncidentId" >
-                                        {{incidentToPickForReplication.EmergencyName}}
-                                    </option>
+                                <option value=0>Select Event To Pick</option>
+                                <option *ngFor="let incidentToPickForReplication of incidentsToPickForReplication" [value]="incidentToPickForReplication.IncidentId">
+                                    {{incidentToPickForReplication.EmergencyName}}
+                                </option>
                             </select>
                         </div>
                     </div>
                 </div>
             </form>
-            <div class="card" *ngIf="isFlightRelated">
+            <div class="card m-2" *ngIf="isFlightRelated">
                 <form [formGroup]="formFlight">
                     <div class="card-header ">
                         <strong>Flight Information</strong>
@@ -233,7 +239,7 @@
                                     class="text-danger">Required</small>
                                 <small *ngIf="formFlight.controls.FlightNumber.hasError('maxlength')" [hidden]="formFlight.controls.FlightNumber.valid || (formFlight.controls.FlightNumber.pristine && !submitted)"
                                     class="text-danger">
-                            </small>
+                                </small>
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
                                 <label for="Origin">Origin<span class="required">*</span></label>
@@ -241,7 +247,7 @@
                                 /> -->
                                 <select id="Origin" class="form-control" [ngClass]="flightClass" formControlName="Origin" name="Origin">
                                     <option value=''>Select Origin Station</option>
-                                    <option *ngFor="let affectedStation of affectedStations" [value]="affectedStation.IATA" >
+                                    <option *ngFor="let affectedStation of affectedStations" [value]="affectedStation.IATA">
                                         {{affectedStation.AirportName}}
                                     </option>
                                 </select>
@@ -249,7 +255,7 @@
                                     class="text-danger">Required</small>
                                 <small *ngIf="formFlight.controls.Origin.hasError('maxlength')" [hidden]="formFlight.controls.Origin.valid || (formFlight.controls.Origin.pristine && !submitted)"
                                     class="text-danger">
-                            </small>
+                                </small>
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
                                 <label for="Destination">Destination<span class="required">*</span></label>
@@ -257,7 +263,7 @@
                                     placeholder="Destination" /> -->
                                 <select id="Destination" class="form-control" [ngClass]="flightClass" formControlName="Destination" name="Destination">
                                     <option value=''>Select Destination Station</option>
-                                    <option *ngFor="let affectedStation of affectedStations" [value]="affectedStation.IATA" >
+                                    <option *ngFor="let affectedStation of affectedStations" [value]="affectedStation.IATA">
                                         {{affectedStation.AirportName}}
                                     </option>
                                 </select>
@@ -265,7 +271,7 @@
                                     class="text-danger">Required</small>
                                 <small *ngIf="formFlight.controls.Destination.hasError('maxlength')" [hidden]="formFlight.controls.Destination.valid || (formFlight.controls.Destination.pristine && !submitted)"
                                     class="text-danger">
-                            </small>
+                                </small>
                             </div>
                             <div class="form-group col-lg-3 col-sm-12 col-md-6">
                                 <label for="Scheduleddeparture(UTC)">Sched. Departure (UTC)<span class="required">*</span></label>
@@ -306,7 +312,7 @@
                                     class="text-danger">Required</small>
                                 <small *ngIf="formFlight.controls.FlightTailNumber.hasError('maxlength')" [hidden]="formFlight.controls.FlightTailNumber.valid || (formFlight.controls.FlightTailNumber.pristine && !submitted)"
                                     class="text-danger">
-                            </small>
+                                </small>
                             </div>
                         </div>
                         <div class="row">
@@ -314,11 +320,11 @@
                                 <label for="AircraftTypeId">Aircraft Type<span class="required">*</span></label>
                                 <select id="AircraftTypeId" class="form-control" [ngClass]="flightClass" formControlName="AircraftTypeId" name="AircraftTypeId"
                                     (change)="aircraftTypeChange($event.target.value,activeAircraftTypes)">
-                                            <option value=''>Select Aircraft Type</option>
-                                            <option *ngFor="let activeAircraftType of activeAircraftTypes" [value]="activeAircraftType.AircraftTypeId" >
-                                                {{activeAircraftType.AircraftTypeCode}}
-                                            </option>
-                                            </select>
+                                    <option value=''>Select Aircraft Type</option>
+                                    <option *ngFor="let activeAircraftType of activeAircraftTypes" [value]="activeAircraftType.AircraftTypeId">
+                                        {{activeAircraftType.AircraftTypeCode}}
+                                    </option>
+                                </select>
                                 <small *ngIf="formFlight.controls.AircraftTypeId.hasError('required')" [hidden]="formFlight.controls.AircraftTypeId.valid || (formFlight.controls.AircraftTypeId.pristine && !submittedFlight)"
                                     class="text-danger">Required</small>
 
@@ -380,21 +386,21 @@
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="OrganizationId">Organization</label>
                             <select id="OrganizationIdPopup" disabled class="form-control" formControlName="OrganizationIdPopup" name="OrganizationIdPopup">
-                                        <option value=''>Select Organization</option>
-                                        <option *ngFor="let organization of activeOrganizations" [value]="organization.OrganizationId" >
-                                            {{organization.OrganizationCode}}
-                                        </option>
-                                    </select>
+                                <option value=''>Select Organization</option>
+                                <option *ngFor="let organization of activeOrganizations" [value]="organization.OrganizationId">
+                                    {{organization.OrganizationCode}}
+                                </option>
+                            </select>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
                             <label for="EmergencyType">Crisis Type</label>
                             <select id="EmergencyTypeIdPopup" disabled class="form-control" formControlName="EmergencyTypeIdPopup" name="EmergencyTypeIdPopup">
-                                    <option value="0" >Select Crisis Type</option>
-                                    <option *ngFor="let emergencyType of activeEmergencyTypes" [value]="emergencyType.EmergencyTypeId" >
-                                        {{emergencyType.EmergencyTypeName}}
-                                    </option>
+                                <option value="0">Select Crisis Type</option>
+                                <option *ngFor="let emergencyType of activeEmergencyTypes" [value]="emergencyType.EmergencyTypeId">
+                                    {{emergencyType.EmergencyTypeName}}
+                                </option>
                             </select>
                         </div>
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
@@ -614,11 +620,11 @@
                                     <label for="AircraftTypeId">Aircraft Type</label>
                                     <select id="AircraftTypeIdPopup" disabled class="form-control" formControlName="AircraftTypeIdPopup" name="AircraftTypeId"
                                         (change)="aircraftTypeChange($event.target.value,activeEmergencyTypes)">
-                                            <option value=''>Select Aircraft Type</option>
-                                            <option *ngFor="let activeAircraftType of activeAircraftTypes" [value]="activeAircraftType.AircraftTypeId" >
-                                                {{activeAircraftType.AircraftTypeCode}}
-                                            </option>
-                                            </select>
+                                        <option value=''>Select Aircraft Type</option>
+                                        <option *ngFor="let activeAircraftType of activeAircraftTypes" [value]="activeAircraftType.AircraftTypeId">
+                                            {{activeAircraftType.AircraftTypeCode}}
+                                        </option>
+                                    </select>
                                 </div>
                             </div>
                         </div>

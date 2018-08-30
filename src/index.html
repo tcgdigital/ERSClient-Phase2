@@ -21,8 +21,8 @@
     <!-- base url -->
     <script>
         if (!window.location.origin || window.location.origin == undefined) {
-            window.location.origin = window.location.protocol + "//" 
-                + window.location.hostname 
+            window.location.origin = window.location.protocol + "//"
+                + window.location.hostname
                 + (window.location.port ? ':' + window.location.port : '');
         }
         window.CKEDITOR_BASEPATH = window.location.origin + '/assets/scripts/ckeditor/';
@@ -35,7 +35,7 @@
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Intl.~locale.en"></script>
 </head>
 
-<body>
+<body oncontextmenu="return false;">
     <app></app>
     <div id="preloader">
         <div></div>

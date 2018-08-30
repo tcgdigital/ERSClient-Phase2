@@ -1,5 +1,4 @@
 @import '../../config/config';
-
 .multiselect-selector {
     background: $multiselect-background none repeat scroll 0 0;
     border: $multiselect-border solid 1px;
@@ -26,28 +25,25 @@
     top: 51px;
 }
 
-.entryHolder{
-    background: $entryholder-background ;
+.entryHolder {
+    background: $entryholder-background;
     padding: 15px;
     border: $entryholder-color solid 1px;
-    float: left;
-    margin: 15px 23px;
-    @media screen and (max-width: $resMD-S){
-margin: 15px 1.5%;
-}
-}
-
-.addbuttonHolder{
-    padding: 5px 22px;
-    float: right;
+    float: left; // margin: 15px 23px;
+    @media screen and (max-width: $resMD-S) {
+        margin: 15px 1.5%;
+    }
 }
 
-.formStyle{
-    width : 97%;
-}
-
-.buttonholder{
-        float: right;
-    vertical-align: middle;
-    padding-top: 27px;
-}
+// .addbuttonHolder {
+//     padding: 5px 22px;
+//     float: right;
+// }
+// .formStyle {
+//     width: 97%;
+// }
+// .buttonholder {
+//     float: right;
+//     vertical-align: middle;
+//     padding-top: 27px;
+// }

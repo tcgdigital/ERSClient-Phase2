@@ -2,7 +2,6 @@ import {
     Component, ViewEncapsulation,
     Output, EventEmitter, Input, OnInit
 } from '@angular/core';
-import {KeyValue} from '../../../shared';
 import { GlobalStateService, UtilityService } from '../../services';
 import { Router } from '@angular/router';
 import * as jwtDecode from 'jwt-decode';
@@ -30,11 +29,8 @@ export class BrandHeaderComponent implements OnInit {
     public FileName: string;
     public logoImage: string = 'assets/images/logo_pal1.png';
     public logoUrl: string = '#';
-    currentIncidentId: number;
-    public isShowPage: boolean = true;
-    currentDepartmentId: number;
     public enabledPassword: boolean = !GlobalConstants.AD_AUTH_ENABLED;
-    constructor(private router: Router, private authenticationService: AuthenticationService,private globalState: GlobalStateService) {
+    constructor(private router: Router, private authenticationService: AuthenticationService) {
     }
 
     ngOnInit(): void {
@@ -48,15 +44,7 @@ export class BrandHeaderComponent implements OnInit {
             if(tokenData && tokenData.UserName)
                 this.userName = tokenData.UserName;
         }
-
-        this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
-        this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
     }
-
-    private departmentChangeHandler(department: KeyValue): void {
-		this.currentDepartmentId = department.Value;
-	}
 
     public onHambargerClicked($event): void {
         // console.log('brand header click');

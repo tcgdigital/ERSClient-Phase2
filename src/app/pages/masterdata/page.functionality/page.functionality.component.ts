@@ -1,7 +1,5 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-
-
 import { DepartmentService, DepartmentModel } from '../department';
 import { PageService, PagePermissionService } from './components';
 import {
@@ -9,10 +7,10 @@ import {
     PagesForDepartmentModel
 } from './components/page.functionality.model';
 import {
-    DataExchangeService, ResponseModel,GlobalConstants,
-    AutocompleteComponent, KeyValue, AuthModel, UtilityService
+    ResponseModel,GlobalConstants,
+    KeyValue, AuthModel, UtilityService
 } from '../../../shared';
-
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'page-functionality',
@@ -20,7 +18,7 @@ import {
     templateUrl: './views/page.functionality.view.html',
     styleUrls: ['./styles/page.functionality.style.scss']
 })
-export class PageFunctionalityComponent implements OnInit {
+export class PageFunctionalityComponent implements OnInit, OnDestroy {
     departments: DepartmentModel[] = [];
     pages: PageModel[] = [];
     selectedDepartment: number;
@@ -32,7 +30,8 @@ export class PageFunctionalityComponent implements OnInit {
     credential: AuthModel;
     allSelectView: boolean;
     allSelectOnlyHOD: boolean;
-
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
+    
     constructor(private pageService: PageService,
         private pagePermissionService: PagePermissionService,
         private departmentService: DepartmentService, private toastrService: ToastrService,
@@ -40,12 +39,14 @@ export class PageFunctionalityComponent implements OnInit {
 
     getDepartments(): void {
         this.departmentService.GetAll()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
                 this.departments.forEach((item: DepartmentModel) => {
                     this.items.push(new KeyValue(item.DepartmentName, item.DepartmentId));
                 });
-
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -68,8 +69,6 @@ export class PageFunctionalityComponent implements OnInit {
     isValidOnlyForHOD(item: PagesForDepartmentModel) {
         return (item.OnlyForHod == true);
     };
-
-
 
     save(): void {
         const model = this.pagesForDepartment.filter(this.canViewd);
@@ -102,6 +101,7 @@ export class PageFunctionalityComponent implements OnInit {
     onNotify(message: KeyValue): void {
         this.selectedDepartment = message.Value;
         this.pagePermissionService.GetFilter(message.Value.toString())
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<PagePermissionModel>) => {
                 this.pagesForDepartment = this.SetAllSelectedToFalse(this.pagesForDepartmentConstant);
 
@@ -121,10 +121,11 @@ export class PageFunctionalityComponent implements OnInit {
                     });
                 }
 
-
                 this.checkAllStatusView();
                 this.checkAllStatusOnlyHOD();
                 this.disableChildIfNotParentAllowView(this.pagesForDepartment);
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -149,22 +150,20 @@ export class PageFunctionalityComponent implements OnInit {
 
     }
 
-
     selectAllDeptView(value: any): void {
         this.pagesForDepartment.forEach(x => {
             x.AllowView = value.checked;
         });
     }
+
     selectAllDeptOnlyHOD(value: any): void {
         this.pagesForDepartment.forEach(x => {
             x.OnlyForHod = value.checked;
         });
-
     }
+
     checkAllStatusView(): void {
-
         this.allSelectView = this.pagesForDepartment.length != 0 && this.pagesForDepartment.filter(x => {
-
             return x.AllowView == true;
         }).length == this.pagesForDepartment.length;
     }
@@ -176,9 +175,9 @@ export class PageFunctionalityComponent implements OnInit {
             this.allSelectOnlyHOD = false;
         }
         this.allSelectView = this.pagesForDepartment.length != 0 && this.pagesForDepartment.filter(x => {
-
             return x.AllowView == true;
         }).length == this.pagesForDepartment.length;
+
         this.checkAllStatusOnlyHOD();
         this.disableChildIfNotParentAllowView(this.pagesForDepartment);
         this.CheckUncheckChildPages(event.checked, elm, this.pagesForDepartment);
@@ -198,6 +197,7 @@ export class PageFunctionalityComponent implements OnInit {
         const filterAllowView:PagesForDepartmentModel[] = childPages.filter((item:PagesForDepartmentModel)=>{
             return item.AllowView==isChecked;
         });
+
         if(filterAllowView.length==childPages.length){
             parentPage.AllowView=isChecked;
             if(!isChecked){
@@ -222,8 +222,6 @@ export class PageFunctionalityComponent implements OnInit {
         });
     }
 
-
-
     checkAllStatusOnlyHOD(): void {
         this.allSelectOnlyHOD = this.pagesForDepartment.length != 0 && this.pagesForDepartment.filter(x => {
             return x.OnlyForHod == true;
@@ -241,7 +239,9 @@ export class PageFunctionalityComponent implements OnInit {
         this.allSelectOnlyHOD = false;
         this.getDepartments();
         this.credential = UtilityService.getCredentialDetails();
+
         this.pageService.GetPagesOrderBySortOrder()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<PageModel>) => {
                 this.pages = response.Records;
                 this.pages.forEach((item: PageModel) => {
@@ -262,7 +262,13 @@ export class PageFunctionalityComponent implements OnInit {
                     pageForDepartment.isDisabled = false;
                     this.pagesForDepartmentConstant.push(pageForDepartment);
                 });
-
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
+
+    ngOnDestroy(): void {
+		this.ngUnsubscribe.next();
+		this.ngUnsubscribe.complete();
+	}
 }

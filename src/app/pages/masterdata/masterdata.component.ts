@@ -19,7 +19,8 @@ export class MasterDateComponent {
     public ngOnInit(): void {
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.getPagePermission();
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange, 
+            (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs/Rx';
 import { UserPermissionModel } from "../../masterdata/userpermission/components/userpermission.model";
 import {
     NotifyPeopleModel,
@@ -16,7 +16,6 @@ import {
     DataServiceFactory,
     DataProcessingService,
     ServiceBase,
-    BaseModel,
     GlobalConstants,
     UtilityService
 } from '../../../shared';
@@ -25,6 +24,7 @@ import { UserPermissionService } from '../../masterdata/userpermission/component
 import { TemplateModel, TemplateService } from "../../masterdata/template";
 import { IncidentModel, IncidentService } from "../../incident";
 import { DepartmentModel, DepartmentService } from "../../masterdata/department";
+
 @Injectable()
 export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationMapperModel> implements INotifyPeopleService {
     private _bulkDataService: DataService<NotificationContactsWithTemplateModel>;
@@ -40,6 +40,8 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
     public notificationContactsWithTemplate: NotificationContactsWithTemplateModel;
     public notificationContactsWithTemplates: NotificationContactsWithTemplateModel[];
     public userDepartmentNotificationMappers: UserdepartmentNotificationMapperModel[];
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
+
     constructor(private dataServiceFactory: DataServiceFactory,
         private userPermissionService: UserPermissionService,
         private templateService: TemplateService,
@@ -57,6 +59,7 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
 
     public GetUserDepartmentNotificationMapperByIncident(incidentId: number, callback?: ((_: UserdepartmentNotificationMapperModel[]) => void)): void {
         this.userdepartmentNotificationMapperService.GetUserDepartmentNotificationMapperFromIncident(incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<UserdepartmentNotificationMapperModel>) => {
                 response.Records.forEach((item: UserdepartmentNotificationMapperModel) => {
                     this.userDepartmentNotificationMappers.push(item);
@@ -64,13 +67,14 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
                 if (callback) {
                     callback(this.userDepartmentNotificationMappers);
                 }
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
-
-
     public GetAllDepartmentMatrix(departmentId: number, incidentId: number, callback?: ((_: NotifyPeopleModel[]) => void)): void {
         this.userPermissionService.GetAllDepartmentMatrix()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((departments: ResponseModel<DepartmentModel>) => {
                 this.departmentIdProjection = '';
                 this.arrayMatrix = [];
@@ -90,8 +94,9 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
                         callback(item);
                     }
                 });
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
-
     }
 
     public FillDepartmentMatrix(allDepartments: ResponseModel<DepartmentModel>, initialparentDepartmentId: number): void {
@@ -123,11 +128,13 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
     public GetDepartmentUser(departmentIdProjection: string, incidentId: number, callback?: ((_: NotifyPeopleModel[]) => void)): void {
         this.allDepartmentUserPermission = [];
         let count: number = 1;
+
         this.userPermissionService.GetAllDepartmentsFromDepartmentIdProjection(departmentIdProjection)
             .map((item: ResponseModel<DepartmentModel>) => {
                 this.allDepartments = item;
             })
             .flatMap((result) => this.userPermissionService.GetAllDepartmentUsersFromDepartmentIdProjection(departmentIdProjection))
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((userPermissions: ResponseModel<UserPermissionModel>) => {
                 this.GetUserDepartmentNotificationMapperByIncident(incidentId, (resultUserdepartmentNotificationMapper: UserdepartmentNotificationMapperModel[]) => {
                     // console.log(this.allDepartments);
@@ -178,11 +185,9 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
                     if (callback) {
                         callback(this.allDepartmentUserPermission);
                     }
-
-
                 });
-
-
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -233,6 +238,7 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
                 this.currentDepartment = departmentResponse;
             })
             .flatMap((x) => this.templateService.GetByEmergencySituationId(emergencySituation[0].EmergencySituationId))
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<TemplateModel>) => {
                 let templateMediaTypes: any[] = GlobalConstants.TemplateMediaType;
 
@@ -261,6 +267,8 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
                 if (callback) {
                     callback(template);
                 }
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
 
     }
@@ -289,6 +297,7 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
                     this.notificationContactsWithTemplates.push(notificationContactsWithTemplate);
 
                 });
+
                 this.CreateBulkInsert(incidentId, this.notificationContactsWithTemplates)
                     .subscribe((response: NotificationContactsWithTemplateModel[]) => {
                         if (callback) {
@@ -300,7 +309,9 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
                         }
                         console.log(`Error: ${error}`);
                     });
-            })
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
     }
 
     CreateBulkInsert(incidentId: number, entities: NotificationContactsWithTemplateModel[]): Observable<NotificationContactsWithTemplateModel[]> {
@@ -310,5 +321,4 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
             ('UserDepartmentNotificationMapperBatch', `InsertUserDepartmentNotificationMapperBulk/${incidentId}`, option);
         return this._bulkDataService.BulkPost(entities).Execute();
     }
-
 }

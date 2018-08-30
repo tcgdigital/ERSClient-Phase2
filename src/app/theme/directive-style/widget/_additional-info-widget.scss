@@ -1,9 +1,8 @@
 @import '../../config/config';
 .additional-info-container {
-    @include box-shadow(0px, 3px, 5px, 0, $header-shadow);
-    //background-color: $additional-info-widget-bg;
+    @include box-shadow(0px, 3px, 5px, 0, $header-shadow); //background-color: $additional-info-widget-bg;
     text-align: center;
-    margin-top:5px;
+    margin-top: 5px;
     background: #df7160;
     color: #fff;
     .additional-info-number,
@@ -12,9 +11,9 @@
         display: block;
         text-align: center;
     }
-    .inner-div{
-        width:100%;
-        padding:4px;
+    .inner-div {
+        width: 100%;
+        padding: 4px;
     }
 }
 
@@ -22,7 +21,8 @@
     font-family: $font-family-widget;
     font-size: 30px;
     padding-top: 0;
-    padding-bottom: 0; color:$font-colori-white;
+    padding-bottom: 0;
+    color: $font-colori-white;
     border-top: 1px solid $additional-info-widget-border;
 }
 
@@ -31,8 +31,7 @@
     font-family: $font-family-widget;
     font-size: 12px;
     font-weight: bold;
-    background-color: none;
-   // padding: 5px;
+    background-color: none; // padding: 5px;
     //np border-bottom: 1px solid $additional-info-widget-border;
 }
 
@@ -57,30 +56,27 @@
     .flight-panel-space {
         margin: 10px 0;
     }
-    
-.additional-info-number {
-    font-family: $font-family-widget;
-    font-size: 30px;
-    padding-top: 0;
-    padding-bottom: 0; color:$font-colori-white;
-    line-height:30px;
-    border-top: 1px solid $additional-info-widget-border;
+    .additional-info-number {
+        font-family: $font-family-widget;
+        font-size: 30px;
+        padding-top: 0;
+        padding-bottom: 0;
+        color: $font-colori-white;
+        line-height: 30px;
+        border-top: 1px solid $additional-info-widget-border;
+    }
+    .additional-info-text {
+        text-transform: uppercase;
+        font-family: $font-family-widget;
+        font-size: 12px;
+        font-weight: bold;
+        background-color: none;
+        padding: 0;
+        /*border-bottom: 1px solid $additional-info-widget-border;*/
+    }
 }
 
-.additional-info-text {
-    text-transform: uppercase;
-    font-family: $font-family-widget;
-    font-size: 12px;
-    font-weight: bold;
-    background-color: none;
-    padding: 0;
-    /*border-bottom: 1px solid $additional-info-widget-border;*/
-}
-}
-
-@media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {
-
-}
+@media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {}
 
 @media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
     .additional-info-layout {
@@ -96,7 +92,7 @@
 
 @media screen and (min-width: $resXL-S) {}
 
-.additional-info-align{
+.additional-info-align {
     margin-left: 5px;
     color: #fff;
     font-size: 12px;

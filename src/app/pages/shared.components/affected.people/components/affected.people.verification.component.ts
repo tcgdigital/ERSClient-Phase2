@@ -1,14 +1,14 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-import { Router, NavigationEnd } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { Router } from '@angular/router';
+import { Subscription, Subject } from 'rxjs/Rx';
 
 import { InvolvePartyModel } from '../../../shared.components';
 import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';
 import { AffectedPeopleService } from './affected.people.service';
 import {
-    ResponseModel, DataExchangeService,
-    GlobalStateService, UtilityService, KeyValue, AuthModel, GlobalConstants
+    ResponseModel, GlobalStateService, UtilityService,
+    KeyValue, AuthModel, GlobalConstants
 } from '../../../../shared';
 import { InvolvePartyService } from '../../involveparties';
 
@@ -17,8 +17,7 @@ import { InvolvePartyService } from '../../involveparties';
     encapsulation: ViewEncapsulation.None,
     templateUrl: '../views/affected.people.verification.html'
 })
-export class AffectedPeopleVerificationComponent implements OnInit {
-
+export class AffectedPeopleVerificationComponent implements OnInit, OnDestroy {
     public isShowVerifyAffectedPeople: boolean = true;
     public currentDepartmentId: number = 0;
     protected _onRouteChange: Subscription;
@@ -32,6 +31,7 @@ export class AffectedPeopleVerificationComponent implements OnInit {
     credential: AuthModel;
     downloadPath: string;
     downloadURL: string;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(private affectedPeopleService: AffectedPeopleService,
         private involvedPartyService: InvolvePartyService,
@@ -42,6 +42,7 @@ export class AffectedPeopleVerificationComponent implements OnInit {
 
     getAffectedPeople(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeopleForVerification = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0])
                     .sort((a, b) => {
@@ -61,14 +62,15 @@ export class AffectedPeopleVerificationComponent implements OnInit {
 
     saveVerifiedAffectedPeople(): void {
         const datenow = this.date;
-        this.verifiedAffectedPeople = this.affectedPeopleService.MapAffectedPeople(this.affectedPeopleForVerification, this.userid);
+        this.verifiedAffectedPeople = this.affectedPeopleService
+            .MapAffectedPeople(this.affectedPeopleForVerification, this.userid);
+
         this.affectedPeopleService.CreateBulk(this.verifiedAffectedPeople)
             .subscribe((response: AffectedPeopleModel[]) => {
                 this.toastrService.success('Selected People directly affected are verified.', 'Success', this.toastrConfig);
                 this.getAffectedPeople(this.currentIncident);
-
             }, (error: any) => {
-                alert(error);
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -99,7 +101,9 @@ export class AffectedPeopleVerificationComponent implements OnInit {
     ngOnInit(): any {
         this.allSelectVerify = false;
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
-        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard,
+            (model: KeyValue) => this.departmentChangeHandler(model));
 
         if (this._router.url.indexOf('archivedashboard') > -1) {
             this.isArchive = true;
@@ -115,20 +119,27 @@ export class AffectedPeopleVerificationComponent implements OnInit {
         this.downloadURL = GlobalConstants.EXTERNAL_URL + 'api/Report/CrewVerifiedManifest/' + this.currentIncident;
         this.credential = UtilityService.getCredentialDetails();
         this.userid = +this.credential.UserId;
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard,
+            (model: KeyValue) => this.incidentChangeHandler(model));
 
         // Signal Notification
-        this.globalState.Subscribe('ReceiveIncidentBorrowingCompletionResponse', () => {
-            this.getAffectedPeople(this.currentIncident);
-        });
-        this.globalState.Subscribe('ReceivePassengerImportCompletionResponse', (count: number) => {
-            if (count > 0)
+        this.globalState.Subscribe
+            (GlobalConstants.NotificationConstant.ReceiveIncidentBorrowingCompletionResponse.Key, () => {
                 this.getAffectedPeople(this.currentIncident);
-        });
+            });
+
+        this.globalState.Subscribe
+            (GlobalConstants.NotificationConstant.ReceivePassengerImportCompletionResponse.Key, (count: number) => {
+                if (count > 0)
+                    this.getAffectedPeople(this.currentIncident);
+            });
     }
 
     ngOnDestroy(): void {
-       // this.globalState.Unsubscribe('incidentChangefromDashboard');
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard);
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     departmentChangeHandler(department: KeyValue): void {

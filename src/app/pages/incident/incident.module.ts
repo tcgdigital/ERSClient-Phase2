@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MdCheckboxModule } from '@angular2-material/checkbox';
 import { ModalModule, ModalDirective } from 'ngx-bootstrap';
+import { NgxMaskModule } from 'ngx-mask'
 import { AgmCoreModule } from '@agm/core';
 import { ToastrService } from 'ngx-toastr';
 import { IncidentRouting } from './incident.routing';
@@ -27,6 +28,10 @@ import { TimeZoneService } from "../shared.components/timezone";
         InvolvePartyModule,
         IncidentRouting,
         ModalModule.forRoot(),
+        NgxMaskModule.forRoot({
+            clearIfNotMatch: true,
+            dropSpecialCharacters: false
+        })
     ],
     declarations: [
         IncidentEntryComponent,

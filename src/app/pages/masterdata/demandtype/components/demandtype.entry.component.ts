@@ -1,18 +1,19 @@
 import {
-    Component, ViewEncapsulation,
-    Output, EventEmitter, OnInit, OnDestroy
+    Component, ViewEncapsulation, OnInit, OnDestroy
 } from '@angular/core';
 import {
-    FormGroup, FormControl, FormBuilder,
-    AbstractControl, Validators
+    FormGroup, FormControl, Validators
 } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 
 import { DemandTypeService } from './demandtype.service';
 import { DepartmentModel, DepartmentService } from '../../department';
 import { DemandTypeModel } from './demandtype.model';
-import { ResponseModel, DataExchangeService, AuthModel, UtilityService } from '../../../../shared';
+import {
+    ResponseModel, DataExchangeService,
+    AuthModel, UtilityService, GlobalConstants
+} from '../../../../shared';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'demandtype-entry',
@@ -32,20 +33,33 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
     public autoApproved: boolean;
     public submitted: boolean;
     public showAddText: string = 'ADD DEMAND TYPE';
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
+    /**
+     *Creates an instance of DemandTypeEntryComponent.
+     * @param {DemandTypeService} demandTypeService
+     * @param {DepartmentService} departmentService
+     * @param {DataExchangeService<DemandTypeModel>} dataExchange
+     * @param {ToastrService} toastrService
+     * @param {ToastrConfig} toastrConfig
+     * @memberof DemandTypeEntryComponent
+     */
     constructor(private demandTypeService: DemandTypeService,
         private departmentService: DepartmentService,
-        private dataExchange: DataExchangeService<DemandTypeModel>, private toastrService: ToastrService,
+        private dataExchange: DataExchangeService<DemandTypeModel>,
+        private toastrService: ToastrService,
         private toastrConfig: ToastrConfig) { }
 
     getAllDepartments(): void {
         this.departmentService.GetAll()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
-                // console.log(this.departments);
                 this.demandTypeModel.DepartmentId = (this.demandTypeModel.DemandTypeId === 0)
                     ? this.departments[0].DepartmentId
                     : this.demandTypeModel.DepartmentId;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -67,7 +81,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
             ApproverDept: new FormControl(approverDept, [Validators.required])
         });
 
-        window.scrollTo(0,0);
+        window.scrollTo(0, 0);
     }
 
     cancel(): void {
@@ -87,12 +101,12 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
             IsAutoApproved: new FormControl(false),
             ApproverDept: new FormControl('', [Validators.required])
         });
-         this.showApproverDept = true;
+        this.showApproverDept = true;
     }
 
     IsAutoApproved(value: any): void {
         this.showApproverDept = !value.checked;
-        this.form.controls["ApproverDept"].reset({value: '',disabled:false});
+        this.form.controls["ApproverDept"].reset({ value: '', disabled: false });
     }
 
     resetDemandTypeForm(): void {
@@ -118,7 +132,9 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         this.demandTypeModel.CreatedOn = this.date;
         this.demandTypeModel.DemandTypeId = 0;
         this.Action = 'Submit';
-        this.dataExchange.Subscribe('OnDemandUpdate', (model) => this.onDemandTypeUpdate(model));
+
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.OnDemandUpdate,
+            (model: DemandTypeModel) => this.onDemandTypeUpdate(model));
     }
 
     onSubmit() {
@@ -140,9 +156,9 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
                 }
             }
             else {
-              this.demandTypeModel.DepartmentId= null;
+                this.demandTypeModel.DepartmentId = null;
             }
-            
+
             this.demandTypeModel.ActiveFlag = 'Active';
             this.demandTypeModel.CreatedBy = +this.credential.UserId;
             this.demandTypeModel.CreatedOn = this.date;
@@ -154,10 +170,9 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
                     this.showApproverDept = true;
                     this.showAddRegion(this.showAdd);
                     this.demandTypeModel = new DemandTypeModel();
-                    
-                    this.showAdd = false;
-                    this.dataExchange.Publish('demandTypeModelSaved', response);
 
+                    this.showAdd = false;
+                    this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.DemandTypeModelSaved, response);
                 }, (error: any) => {
                     this.toastrService.error(error.message, 'Error', this.toastrConfig);
                     console.log(`Error: ${error}`);
@@ -165,7 +180,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         }
         else {
             this.formControlDirtyCheck();
-             if (this.showApproverDept) {
+            if (this.showApproverDept) {
                 if (this.form.controls['ApproverDept'].value == '') {
                     this.toastrService.error('Please provide approver department.', 'Error', this.toastrConfig);
                     return false;
@@ -177,7 +192,8 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
             else {
                 this.demandTypeModelToEdit.DepartmentId = null;
             }
-            this.demandTypeService.Update(this.demandTypeModelToEdit, this.demandTypeModelToEdit.DemandTypeId)
+            this.demandTypeService
+                .Update(this.demandTypeModelToEdit, this.demandTypeModelToEdit.DemandTypeId)
                 .subscribe((response: DemandTypeModel) => {
                     this.toastrService.success('Demand Edited Successfully.', 'Success', this.toastrConfig);
                     this.resetDemandTypeForm();
@@ -185,13 +201,12 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
                     this.showAddRegion(this.showAdd);
                     this.demandTypeModel = new DemandTypeModel();
                     this.showAdd = false;
-                    this.dataExchange.Publish('demandTypeModelUpdated', response);
+                    this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.DemandTypeModelUpdated, response);
                 }, (error: any) => {
                     this.toastrService.error(error.message, 'Error', this.toastrConfig);
                     console.log(`Error: ${error}`);
                 });
         }
-
     }
 
     formControlDirtyCheck(): void {
@@ -213,7 +228,10 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe('OnDemandUpdate');
+        this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.OnDemandUpdate);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     showAddRegion(value): void {
@@ -224,8 +242,8 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         else {
             this.showAddText = "ADD DEMAND TYPE";
         }
-        
-        window.setInterval(()=>{
+
+        window.setInterval(() => {
             jQuery(window).scroll();
         }, 100);
 

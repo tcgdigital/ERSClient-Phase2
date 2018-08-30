@@ -9,6 +9,7 @@ import {
     ResponseModel, DataExchangeService, GlobalConstants,
     GlobalStateService, KeyValue, UtilityService
 } from '../../../../shared';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'mediaRelease-approval-list',
@@ -24,6 +25,8 @@ export class MediaReleaseApprovalListComponent implements OnInit, OnDestroy {
     currentDepartmentId: number;
     downloadPath: string;
     isArchive: boolean = false;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
+
     /**
      * Creates an instance of MediaReleaseListComponent.
      * @param {MediaService} mediaService
@@ -38,6 +41,7 @@ export class MediaReleaseApprovalListComponent implements OnInit, OnDestroy {
 
     getMediaReleases(departmentId: number, incidentId: number): void {
         this.mediaService.Query(departmentId, incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<MediaModel>) => {
                 this.mediaReleases = response.Records.
                     filter((a) => a.MediaReleaseStatus === 'SentForApproval');
@@ -53,7 +57,7 @@ export class MediaReleaseApprovalListComponent implements OnInit, OnDestroy {
 
     UpdateMediaRelease(mediaQueryModelUpdate: MediaModel): void {
         const mediaReleaseModelToSend = Object.assign({}, mediaQueryModelUpdate);
-        this.dataExchange.Publish('OnMediaReleaseApproverUpdate', mediaReleaseModelToSend);
+        this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.OnMediaReleaseApproverUpdate, mediaReleaseModelToSend);
     }
 
     ngOnInit(): void {
@@ -72,28 +76,42 @@ export class MediaReleaseApprovalListComponent implements OnInit, OnDestroy {
         this.getMediaReleases(this.currentDepartmentId, this.currentIncidentId);
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/Media/' + this.currentIncidentId + '/';
 
-        this.dataExchange.Subscribe('MediaModelSentForApproval', (model) => this.onMediaSuccess(model));
-        this.dataExchange.Subscribe('MediaModelApprovalUpdated', (model) => this.onMediaSuccess(model));
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.MediaModelSentForApproval,
+            (model: MediaModel) => this.onMediaSuccess(model));
+
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.MediaModelApprovalUpdated,
+            (model: MediaModel) => this.onMediaSuccess(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard,
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard,
+            (model: KeyValue) => this.departmentChangeHandler(model));
 
         // Signalr Notification
-        this.globalState.Subscribe('ReceiveMediaMessageSendForApprovalResponse', (model: MediaModel) =>
-            this.getMediaReleases(model.ApproverDepartmentId, model.IncidentId));
+        this.globalState.Subscribe
+            (GlobalConstants.NotificationConstant.ReceiveMediaMessageSendForApprovalResponse.Key, (model: MediaModel) =>
+                this.getMediaReleases(model.ApproverDepartmentId, model.IncidentId));
 
-        this.globalState.Subscribe('ReceiveMediaMessagePublishedResponse', (model: MediaModel) =>
-            this.getMediaReleases(model.ApproverDepartmentId, model.IncidentId));
+        this.globalState.Subscribe
+            (GlobalConstants.NotificationConstant.ReceiveMediaMessagePublishedResponse.Key, (model: MediaModel) =>
+                this.getMediaReleases(model.ApproverDepartmentId, model.IncidentId));
 
-        this.globalState.Subscribe('ReceiveMediaMessageUpdateResponse', (model: MediaModel) =>
-            this.getMediaReleases(model.ApproverDepartmentId, model.IncidentId));
+        this.globalState.Subscribe
+            (GlobalConstants.NotificationConstant.ReceiveMediaMessageUpdateResponse.Key, (model: MediaModel) =>
+                this.getMediaReleases(model.ApproverDepartmentId, model.IncidentId));
     }
 
     ngOnDestroy(): void {
-        //this.dataExchange.Unsubscribe('MediaModelSaved');
-        //this.dataExchange.Unsubscribe('MediaModelUpdated');
-        //this.dataExchange.Unsubscribe('MediaModelSentForApproval');
-        //this.globalState.Unsubscribe('incidentChangefromDashboard');
-        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        //this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.MediaModelSaved);
+        //this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.MediaModelUpdated);
+        //this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.MediaModelSentForApproval);
+
+        //this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard);
+        //this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     private incidentChangeHandler(incident: KeyValue): void {

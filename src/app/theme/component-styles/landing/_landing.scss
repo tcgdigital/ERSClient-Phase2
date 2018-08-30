@@ -20,8 +20,7 @@
 // .line-align{
 //     line-height: 48px;
 // }
-
-.line-pos{
+.line-pos {
     white-space: nowrap;
     margin-left: -10%;
 }
@@ -29,11 +28,12 @@
 .orientation {
     margin: 200px auto;
 }
+
 @media screen and (max-width: $resXXS-S) {
     .orientation {
         margin: 75px auto;
     }
-    .link-box{
+    .link-box {
         margin-left: 2%;
     }
 }
@@ -43,12 +43,10 @@
         width: 100%;
         margin-top: 16px;
     }
-
     .orientation {
         margin: 75px auto;
     }
-
-    .line-pos{
+    .line-pos {
         margin-left: 2%;
     }
 }
@@ -59,12 +57,12 @@
     .orientation {
         margin: 75px auto;
     }
-    .line-pos{
+    .line-pos {
         margin-left: -26%;
     }
-    .link-box{
-        strong{
-            font-size: 10.7px; 
+    .link-box {
+        strong {
+            font-size: 10.7px;
         }
     }
 }
@@ -73,13 +71,13 @@
     .orientation {
         margin: 75px auto;
     }
-    .line-pos{
-        margin-left: -3%;  
+    .line-pos {
+        margin-left: -3%;
     }
 }
 
 @media screen and (min-width: 1440px) {
-    .line-pos{
+    .line-pos {
         margin-left: -5%;
     }
 }

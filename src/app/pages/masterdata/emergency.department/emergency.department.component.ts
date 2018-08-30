@@ -1,12 +1,12 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-
 
 import { DepartmentService, DepartmentModel } from '../department';
 import { EmergencyTypeService, EmergencyTypeModel } from '../emergencytype';
 import { EmergencyTypeDepartmentService } from './components/emergency.department.service';
 import { EmergencyDepartmentModel, DepartmesForEmergency } from './components/emergency.department.model';
-import { ResponseModel, DataExchangeService, AutocompleteComponent, KeyValue, AuthModel, UtilityService } from '../../../shared';
+import { ResponseModel, KeyValue, AuthModel, UtilityService } from '../../../shared';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'emergency-department-main',
@@ -14,7 +14,7 @@ import { ResponseModel, DataExchangeService, AutocompleteComponent, KeyValue, Au
     templateUrl: './views/emergency-department.view.html',
     styleUrls: ['./styles/emergency.department.style.scss']
 })
-export class EmergencyDepartmentComponent {
+export class EmergencyDepartmentComponent implements OnInit, OnDestroy {
     emergencyTypeItems: EmergencyTypeModel[] = [];
     departments: DepartmentModel[] = [];
     departmentsForEmergency: DepartmesForEmergency[] = [];
@@ -25,18 +25,33 @@ export class EmergencyDepartmentComponent {
     private items: Array<KeyValue> = [];
     credential: AuthModel;
     allselect: boolean = false;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
-    constructor(private emergencyDepartmentService: EmergencyTypeDepartmentService, private emergencyTypeService: EmergencyTypeService,
-        private departmentService: DepartmentService, private toastrService: ToastrService,
+    /**
+     *Creates an instance of EmergencyDepartmentComponent.
+     * @param {EmergencyTypeDepartmentService} emergencyDepartmentService
+     * @param {EmergencyTypeService} emergencyTypeService
+     * @param {DepartmentService} departmentService
+     * @param {ToastrService} toastrService
+     * @param {ToastrConfig} toastrConfig
+     * @memberof EmergencyDepartmentComponent
+     */
+    constructor(private emergencyDepartmentService: EmergencyTypeDepartmentService, 
+        private emergencyTypeService: EmergencyTypeService,
+        private departmentService: DepartmentService, 
+        private toastrService: ToastrService,
         private toastrConfig: ToastrConfig) { };
 
     getEmergencyTypes(): void {
         this.emergencyTypeService.GetAll()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                 this.emergencyTypeItems = response.Records;
                 for (let emergencyType of this.emergencyTypeItems) {
                     this.items.push(new KeyValue(emergencyType.EmergencyTypeName, emergencyType.EmergencyTypeId));
                 }
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     };
 
@@ -50,6 +65,7 @@ export class EmergencyDepartmentComponent {
     onNotify(message: KeyValue): void {
         this.selectedEmergencyType = message.Value;
         this.emergencyDepartmentService.GetFilterByEmergencyType(message.Value)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EmergencyDepartmentModel>) => {
                 this.departmentsForEmergency = this.SetAllSelectedToFalse(this.departmentsForEmergencyConstant);
                 for (let item2 of this.departmentsForEmergency) {
@@ -62,6 +78,8 @@ export class EmergencyDepartmentComponent {
                     }
                 }
                 this.checkAllStatus();
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     };
 
@@ -80,6 +98,7 @@ export class EmergencyDepartmentComponent {
             return x.IsSelected == true;
         }).length == this.departmentsForEmergency.length));
     }
+
     invokeReset(): void {
         this.departmentsForEmergency = [];
         this.allselect = false;
@@ -114,7 +133,9 @@ export class EmergencyDepartmentComponent {
     ngOnInit(): any {
         this.getEmergencyTypes();
         this.credential = UtilityService.getCredentialDetails();
+
         this.departmentService.GetAll()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
                 for (let department of this.departments) {
@@ -124,6 +145,13 @@ export class EmergencyDepartmentComponent {
                     item1.IsSelected = false;
                     this.departmentsForEmergencyConstant.push(item1);
                 }
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
+
+    ngOnDestroy(): void {
+		this.ngUnsubscribe.next();
+		this.ngUnsubscribe.complete();
+	}
 }

@@ -136,14 +136,29 @@ module.exports = function (options) {
                  * to string and sass loader support for *.scss files (from Angular components)
                  * Returns compiled css content as string
                  */
-                // {
-                //     test: /\.scss$/,
-                //     use: ['to-string-loader', 'css-loader', 'sass-loader']
-                // },
                 {
                     test: /\.scss$/,
                     use: ['raw-loader', 'sass-loader']
                 },
+                // {
+                //     test: /\.(scss)$/,
+                //     use: [
+                //         { loader: 'raw-loader' }, 
+                //         { loader: 'style-loader' }, 
+                //         { loader: 'css-loader' },
+                //         {
+                //             loader: 'postcss-loader',
+                //             options: {
+                //                 plugins: function () {
+                //                     return [
+                //                     require('autoprefixer')
+                //                     ];
+                //                 }
+                //             }
+                //         },
+                //         { loader: 'sass-loader' }
+                //     ]
+                // },
                 {
                     test: /initial\.scss$/,
                     use: ExtractTextWebpackPlugin.extract({
@@ -334,6 +349,7 @@ module.exports = function (options) {
                 "window.jQuery": "jquery",
                 Tether: "tether",
                 "window.Tether": "tether",
+                'Popper': 'popper.js',
                 Tooltip: "exports-loader?Tooltip!bootstrap/js/dist/tooltip",
                 Alert: "exports-loader?Alert!bootstrap/js/dist/alert",
                 Button: "exports-loader?Button!bootstrap/js/dist/button",

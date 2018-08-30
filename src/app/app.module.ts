@@ -11,6 +11,7 @@ import {
 import { Ng2BootstrapModule, ModalModule } from 'ngx-bootstrap';
 import { ToastrModule } from 'ngx-toastr';
 import { AgmCoreModule } from '@agm/core';
+import { NgxMaskModule } from 'ngx-mask'
 
 import { routing } from './app.routing';
 import { SharedModule } from './shared';
@@ -27,7 +28,7 @@ import { ProgressBrowserXhr } from './shared/components';
 // Application wide providers
 const APP_PROVIDERS = [
     AppStateService,
-    { provide: BrowserXhr, useClass: ProgressBrowserXhr } ,
+    { provide: BrowserXhr, useClass: ProgressBrowserXhr },
 ];
 
 type StoreType = {
@@ -44,6 +45,10 @@ type StoreType = {
         FormsModule,
         ReactiveFormsModule,
         BrowserAnimationsModule,
+        NgxMaskModule.forRoot({
+            clearIfNotMatch: true,
+            dropSpecialCharacters: false
+        }),
         Ng2BootstrapModule.forRoot(),
         ModalModule.forRoot(),
         SharedModule.forRoot(),

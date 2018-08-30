@@ -2,7 +2,8 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ChecklistModel } from './components';
 import {
     UtilityService,KeyValue,
-    GlobalStateService
+    GlobalStateService,
+    GlobalConstants
 } from '../../../shared';
 
 @Component({
@@ -15,15 +16,20 @@ export class ChecklistComponent implements OnInit {
     public isShowAddEditChecklist: boolean = true;
     public checkList: ChecklistModel;
     public currentDepartmentId: number;
+
     /**
-     *
+     *Creates an instance of ChecklistComponent.
+     * @param {GlobalStateService} globalState
+     * @memberof ChecklistComponent
      */
     constructor(private globalState: GlobalStateService) {
-
     }
+
     ngOnInit(): void {
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
-        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
+        
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange, 
+            (model) => this.departmentChangeHandler(model));
     }
 
     private departmentChangeHandler(department: KeyValue): void {

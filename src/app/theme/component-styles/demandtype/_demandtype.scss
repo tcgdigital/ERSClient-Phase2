@@ -1,65 +1,61 @@
 @import '../../config/config';
+.col-no-left-padding {
+    padding-left: 0 !important;
+}
 
-.col-no-left-padding{
-    padding-left: 0 !important;
-}
-.col-no-right-padding{
-    padding-right: 0 !important;
-}
-.row-no-padding > [class*="col-"] {
-    padding-left: 0 !important;
+.col-no-right-padding {
     padding-right: 0 !important;
 }
 
-.entryHolder{
-    background: $entryholder-background ;
+.row-no-padding>[class*="col-"] {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.entryHolder {
+    background: $entryholder-background;
     padding: 15px;
     border: $entryholder-color solid 1px;
-    float: left;
-    margin: 15px 23px;
-    @media screen and (max-width: $resMD-S){
-margin: 15px 1.5%;
-}
-}
-
-.addbuttonHolder{
-    padding: 5px 22px;
-    float: right;
+    float: left; // margin: 15px 23px;
+    @media screen and (max-width: $resMD-S) {
+        margin: 15px 1.5%;
+    }
 }
 
-.formStyle{
-    width : 97%;
-}
-
-.buttonholder{
-        float: right;
-    vertical-align: middle;
-    padding-top: 27px;
-}
-
-.butt-des{
-    text-align: right;
-    padding-bottom: 8px
-}
-
+// .addbuttonHolder {
+//     padding: 5px 22px;
+//     float: right;
+// }
+// .formStyle{
+//     width : 97%;
+// }
+// .buttonholder {
+//     float: right;
+//     vertical-align: middle;
+//     padding-top: 27px;
+// }
+// .butt-des {
+//     text-align: right;
+//     padding-bottom: 8px
+// }
 .checkbox-bottom-align {
     margin-top: 24px;
 }
 
 @media screen and (max-width: $resXS-E) {
-.checkbox-bottom-align {
-    margin-top: 0;
-}
+    .checkbox-bottom-align {
+        margin-top: 0;
+    }
 }
 
 @media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {
-.checkbox-bottom-align {
-    margin-top: 0;
-}
+    .checkbox-bottom-align {
+        margin-top: 0;
+    }
 }
 
 @media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
-.checkbox-bottom-align {
-    margin-top: 0;
-}
+    .checkbox-bottom-align {
+        margin-top: 0;
+    }
 }

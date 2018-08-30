@@ -39,18 +39,27 @@ export class HttpCacheService extends Http {
                                 return resp.json();
                             else
                                 return resp;
-
-                        }).subscribe((remoteData: Response) => {
+                        })
+                        .subscribe((remoteData: Response) => {
                             if (lodash.isEqual(remoteData, localData))
                                 subscriber.complete();
                             else {
+
                                 Observable.fromPromise(localForage.setItem(url, remoteData))
                                     .subscribe((saved) => {
                                         subscriber.next(remoteData);
                                         subscriber.complete();
+                                    }, (error: any) => {
+                                        console.log(`Error: ${error}`);
                                     });
                             }
+                            
+                        }, (error: any) => {
+                            console.log(`Error: ${error}`);
                         });
+
+                }, (error: any) => {
+                    console.log(`Error: ${error}`);
                 });
         });
 

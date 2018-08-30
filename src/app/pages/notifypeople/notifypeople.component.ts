@@ -62,8 +62,11 @@ export class NotifyPeopleComponent implements OnInit {
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
 
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange, 
+            (model: KeyValue) => this.departmentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChange, 
+            (model: KeyValue) => this.incidentChangeHandler(model));
 
         if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'NotifyPeople'))
             this.PopulateNotifyDepartmentUsers(this.currentDepartmentId, this.currentIncidentId);

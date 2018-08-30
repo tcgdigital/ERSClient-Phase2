@@ -1,20 +1,13 @@
-import { Component, ViewEncapsulation, OnInit, AfterContentInit } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, AfterContentInit, OnDestroy } from '@angular/core';
 import { ITabLinkInterface } from '../../../shared/components/tab.control';
-import * as _ from 'underscore';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs/Rx';
 import { GroundVictimModel } from '../ground.victim/components/ground.victim.model';
 import { PeopleOnBoardWidgetService } from '../../widgets/peopleOnBoard.widget/peopleOnBoard.widget.service';
-import { PeopleOnBoardModel } from '../../widgets/peopleOnBoard.widget/peopleOnBoard.widget.model';
 import { InvolvePartyModel } from '../../shared.components/involveparties';
 import {
-    ResponseModel,
-    DataService,
-    DataServiceFactory,
-    DataProcessingService,
-    ServiceBase, UtilityService,
+    ResponseModel, UtilityService,
     GlobalStateService, KeyValue, SearchConfigModel,
-    SearchTextBox, SearchDropdown,
-    NameValue, GlobalConstants
+    SearchTextBox, NameValue, GlobalConstants
 } from '../../../shared';
 
 @Component({
@@ -23,7 +16,7 @@ import {
     templateUrl: './views/ground.victims.view.html',
     styleUrls: ['./styles/ground.victims.scss']
 })
-export class GroundVictimsComponent implements OnInit, AfterContentInit {
+export class GroundVictimsComponent implements OnInit, OnDestroy, AfterContentInit {
     public currentIncidentId: number;
     public currentDepartmentId: number;
     public groundVictimList: Observable<GroundVictimModel[]>;
@@ -31,7 +24,14 @@ export class GroundVictimsComponent implements OnInit, AfterContentInit {
     public subTabs: ITabLinkInterface[] = new Array<ITabLinkInterface>();
     expandSearch: boolean = false;
     searchValue: string = 'Expand Search';
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
+    /**
+     *Creates an instance of GroundVictimsComponent.
+     * @param {PeopleOnBoardWidgetService} peopleOnBoardWidgetService
+     * @param {GlobalStateService} globalState
+     * @memberof GroundVictimsComponent
+     */
     constructor(private peopleOnBoardWidgetService: PeopleOnBoardWidgetService,
         private globalState: GlobalStateService) { }
 
@@ -40,15 +40,26 @@ export class GroundVictimsComponent implements OnInit, AfterContentInit {
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.openAllGroundVictims();
         this.initiateSearchConfigurations();
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChange,
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
+            (model: KeyValue) => this.departmentChangeHandler(model));
 
         // this.subTabs = _.find(GlobalConstants.TabLinks, (x) => x.id === 'CrewQuery').subtab;
         // Signal Notification
-        this.globalState.Subscribe('ReceiveIncidentBorrowingCompletionResponse', () => {
-            this.openAllGroundVictims();
-        });
+        this.globalState.Subscribe
+            (GlobalConstants.NotificationConstant.ReceiveIncidentBorrowingCompletionResponse.Key, () => {
+                this.openAllGroundVictims();
+            });
     }
+
+    public ngOnDestroy(): void {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
+
     public ngAfterContentInit(): void {
         // this.subTabs = UtilityService.GetSubTabs('GroundVictims');
     }
@@ -66,9 +77,12 @@ export class GroundVictimsComponent implements OnInit, AfterContentInit {
     public openAllGroundVictims(): void {
         let groundVictimListLocal: GroundVictimModel[] = [];
         this.peopleOnBoardWidgetService.GetAllGroundVictimsByIncident(this.currentIncidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<InvolvePartyModel>) => {
                 groundVictimListLocal = result.Records[0].GroundVictims;
                 this.groundVictimList = Observable.of(groundVictimListLocal);
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -88,21 +102,25 @@ export class GroundVictimsComponent implements OnInit, AfterContentInit {
         if (query !== '') {
             query = `${query}`;
             this.peopleOnBoardWidgetService.GetGroundVictimsByQuery(query, this.currentIncidentId)
+                .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                     response.Records.forEach((x) => {
                         x.Active = (x.ActiveFlag === 'Active');
                     });
                     groundVictimListLocal = response.Records[0].GroundVictims;
                     this.groundVictimList = Observable.of(groundVictimListLocal);
-                }, ((error: any) => {
+                }, (error: any) => {
                     console.log(`Error: ${error}`);
-                }));
+                });
         }
         else {
             this.peopleOnBoardWidgetService.GetAllGroundVictimsByIncident(this.currentIncidentId)
+                .takeUntil(this.ngUnsubscribe)
                 .subscribe((result: ResponseModel<InvolvePartyModel>) => {
                     groundVictimListLocal = result.Records[0].GroundVictims;
                     this.groundVictimList = Observable.of(groundVictimListLocal);
+                }, (error: any) => {
+                    console.log(`Error: ${error}`);
                 });
         }
     }
@@ -110,9 +128,12 @@ export class GroundVictimsComponent implements OnInit, AfterContentInit {
     invokeReset(): void {
         let groundVictimListLocal: GroundVictimModel[] = [];
         this.peopleOnBoardWidgetService.GetAllGroundVictimsByIncident(this.currentIncidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<InvolvePartyModel>) => {
                 groundVictimListLocal = result.Records[0].GroundVictims;
                 this.groundVictimList = Observable.of(groundVictimListLocal);
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 

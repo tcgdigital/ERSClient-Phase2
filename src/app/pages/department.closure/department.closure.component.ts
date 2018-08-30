@@ -3,26 +3,20 @@ import {
     OnInit, OnDestroy
 } from '@angular/core';
 import {
-    FormGroup, FormControl, FormBuilder,
-    AbstractControl, Validators, ReactiveFormsModule
+    FormGroup, FormControl, FormBuilder, Validators
 } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { DepartmentClosureModel } from './components/department.closure.model';
 import { DepartmentClosureService } from './components/department.closure.service';
 
-import { IncidentModel, IncidentService } from "../incident";
+import { IncidentModel } from "../incident";
 import {
-    ResponseModel,
-    DataExchangeService,
-    Severity,
-    KeyValue,
-    IncidentStatus,
-    GlobalStateService,
+    ResponseModel, KeyValue, GlobalStateService,
     UtilityService, GlobalConstants
 } from '../../shared';
+import { Subject } from 'rxjs';
 
 @Component({
-
     selector: 'department-closure-main',
     encapsulation: ViewEncapsulation.None,
     styleUrls: ['./styles/department.closure.style.scss'],
@@ -39,18 +33,24 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
     public isSubmited: boolean = false;
     public isShowPage: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
-    constructor(formBuilder: FormBuilder, private globalState: GlobalStateService,
-        private departmentClosureService: DepartmentClosureService, private toastrConfig: ToastrConfig,
+    constructor(private globalState: GlobalStateService,
+        private departmentClosureService: DepartmentClosureService,
+        private toastrConfig: ToastrConfig,
         private toastrService: ToastrService) {
     }
 
     ngOnInit(): void {
         this.submited = false;
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
+            (model: KeyValue) => this.departmentChangeHandler(model));
+
         this.currentIncidentId = +UtilityService.GetFromSession("CurrentIncidentId");
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChange,
+            (model: KeyValue) => this.incidentChangeHandler(model));
         this.InitialDataLoad();
     }
 
@@ -62,8 +62,11 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        //this.globalState.Unsubscribe('departmentChange');
-        // this.globalState.Unsubscribe('incidentChange');
+        //this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.DepartmentChange);
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChange);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     private FillFormControls(departmentClosureModel: DepartmentClosureModel): void {
@@ -104,7 +107,6 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
     }
 
     private initiateDepartmentClosureModel(incidentId: number): void {
-
         this.departmentClosureService.GetIncidentFromIncidentId(incidentId)
             .map((incidentResult: IncidentModel) => {
                 this.departmentClosureModel = new DepartmentClosureModel();
@@ -123,6 +125,7 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
                 this.FillFormControls(this.departmentClosureModel);
             })
             .flatMap(_ => this.departmentClosureService.GetAllByIncidentDepartment(incidentId, this.currentDepartmentId))
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((resultDepartmentClosureModel: ResponseModel<DepartmentClosureModel>) => {
                 if (resultDepartmentClosureModel.Count > 0) {
                     if (resultDepartmentClosureModel.Records[0].IsSubmitted) {
@@ -133,13 +136,16 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
                     this.departmentClosureModel.ClosureRemark = departmentClosure.ClosureRemark;
                     this.FillFormControls(this.departmentClosureModel);
                 }
-            })
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
     }
 
     public onSave(): void {
         this.submited = true;
         if (this.form.valid) {
             this.departmentClosureService.GetAllByIncidentDepartment(this.currentIncidentId, this.currentDepartmentId)
+                .takeUntil(this.ngUnsubscribe)
                 .subscribe((result: ResponseModel<DepartmentClosureModel>) => {
                     if (result.Count == 0) {
                         this.departmentClosureModelSave = new DepartmentClosureModel();
@@ -156,11 +162,12 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
                         this.departmentClosureModelSave.SubmittedOn = null;
                         this.departmentClosureModelSave.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
                         this.departmentClosureModelSave.CreatedOn = new Date();
+
                         this.departmentClosureService.CreateDepartmentClosure(this.departmentClosureModelSave)
                             .subscribe((resultReturn: DepartmentClosureModel) => {
-                                //this.formReset();
                                 this.toastrService.success('The Department Closure Save is performed.', 'Department Closure', this.toastrConfig);
-                            }, () => {
+                            }, (error: any) => {
+                                console.log(`Error: ${error}`);
                                 this.toastrService.error('Error Occured', 'Department Closure', this.toastrConfig);
                             });
                     }
@@ -175,21 +182,20 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
                         result.Records[0].CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
                         result.Records[0].CreatedOn = new Date();
                         delete result.Records[0].Department;
+
                         this.departmentClosureService.UpdateDepartmentClosure(result.Records[0])
                             .subscribe((resultReturn: DepartmentClosureModel) => {
-                                //this.formReset();
                                 this.toastrService.success('The Department Closure Save is performed.', 'Department Closure', this.toastrConfig);
-                            }, () => {
+                            }, (error: any) => {
+                                console.log(`Error: ${error}`);
                                 this.toastrService.error('Error Occured', 'Department Closure', this.toastrConfig);
                             });
                     }
+                }, (error: any) => {
+                    console.log(`Error: ${error}`);
                 });
-
-
         }
-
     }
-
 
     public onSubmit(): void {
         this.submited = true;
@@ -198,11 +204,12 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
                 (this.currentIncidentId, this.currentDepartmentId, (item: boolean) => {
                     if (item) {
                         this.toastrService.warning('You can not submit the closure report since you have pending checklist or request.',
-                         'Department Closure', this.toastrConfig);
+                            'Department Closure', this.toastrConfig);
                         return false;
                     }
                     else {
                         this.departmentClosureService.GetAllByIncidentDepartment(this.currentIncidentId, this.currentDepartmentId)
+                            .takeUntil(this.ngUnsubscribe)
                             .subscribe((result: ResponseModel<DepartmentClosureModel>) => {
                                 if (result.Count == 0) {
                                     this.departmentClosureModelSubmit = new DepartmentClosureModel();
@@ -220,12 +227,13 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
                                     this.departmentClosureModelSubmit.SubmittedOn = new Date();
                                     this.departmentClosureModelSubmit.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
                                     this.departmentClosureModelSubmit.CreatedOn = new Date();
+
                                     this.departmentClosureService.CreateDepartmentClosure(this.departmentClosureModelSubmit)
                                         .subscribe((resultReturn: DepartmentClosureModel) => {
                                             this.isSubmited = true;
-                                            //this.formReset();
                                             this.toastrService.success('The Department Closure Submit is performed.', 'Department Closure', this.toastrConfig);
-                                        }, () => {
+                                        }, (error: any) => {
+                                            console.log(`Error: ${error}`);
                                             this.toastrService.error('Error Occured', 'Department Closure', this.toastrConfig);
                                         });
                                 }
@@ -243,12 +251,13 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
                                     result.Records[0].CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
                                     result.Records[0].CreatedOn = new Date();
                                     delete result.Records[0].Department;
+
                                     this.departmentClosureService.UpdateDepartmentClosure(result.Records[0])
                                         .subscribe((resultReturn: DepartmentClosureModel) => {
                                             this.isSubmited = true;
-                                            //this.formReset();
                                             this.toastrService.success('The Department Closure Submit is performed.', 'Department Closure', this.toastrConfig);
-                                        }, () => {
+                                        }, (error: any) => {
+                                            console.log(`Error: ${error}`);
                                             this.toastrService.error('Error Occured', 'Department Closure', this.toastrConfig);
                                         });
                                 }

@@ -1,24 +1,21 @@
 import {
     Component, ViewEncapsulation,
-    Output, EventEmitter, OnInit, OnDestroy, ViewChild
+    OnInit, OnDestroy, ViewChild
 } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import {
-    FormGroup, FormControl,
-    FormBuilder, AbstractControl, Validators
+    FormGroup, FormControl, Validators
 } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-
 import { UserProfileService } from './userprofile.service';
 import { UserProfileModel, UserAuthenticationModel } from './userprofile.model';
-import { UserAuthService } from './user.auth.service';
-import { GenericSearchComponent } from '../../../../shared/components/generic.search/generic.search.component';
-import { AccountResponse, ValidationResultModel } from '../../../../shared/models';
+import { ValidationResultModel } from '../../../../shared/models';
 
 import {
-    ResponseModel, DataExchangeService, GlobalConstants, EmailValidator,
-    UtilityService, AuthModel, NameValidator, UserIdValidator, FileData, FileUploadService
+    DataExchangeService, GlobalConstants,
+    UtilityService, AuthModel, UserIdValidator,
+    FileData, FileUploadService
 } from '../../../../shared';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'userprofile-entry',
@@ -44,12 +41,11 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
     HRInfoTemplatePath: string = './assets/static-content/PRHR_YYYYMMDD.csv';
     HRTrainingTemplatePath: string = './assets/static-content/PRHR_Training_YYYYMMDD.csv';
     public showAddText: string = 'ADD USER';
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(private userProfileService: UserProfileService,
         private dataExchange: DataExchangeService<UserProfileModel>,
-        private userAuthService: UserAuthService,
         private fileUploadService: FileUploadService,
-        private builder: FormBuilder,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig) {
     }
@@ -59,13 +55,16 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
         this.showAdd = false;
         this.initiateForm();
         this.credential = UtilityService.getCredentialDetails();
-        this.dataExchange.Subscribe('UserProfileModelToBeModified', (model) => this.onUserProfileModified(model));
+
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.UserProfileModelToBeModified,
+            (model: UserProfileModel) => this.onUserProfileModified(model));
     }
 
     onUserProfileModified(userProfileModel: UserProfileModel): void {
         this.userProfileModel = userProfileModel;
         this.userProfileModel.UserProfileId = userProfileModel.UserProfileId;
         this.Action = 'Edit';
+
         this.form = new FormGroup({
             UserProfileId: new FormControl(userProfileModel.UserProfileId),
             Email: new FormControl(userProfileModel.Email, [Validators.required, Validators.pattern(GlobalConstants.EMAIL_PATTERN)]),
@@ -79,7 +78,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
         });
         this.form.controls["UserId"].reset({ value: userProfileModel.UserId, disabled: true });
         this.showAdd = true;
-        window.scrollTo(0,0);
+        window.scrollTo(0, 0);
     }
 
     cancel(): void {
@@ -97,7 +96,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
             //     this.toastrService.error('User name should consist number or special character.', 'Error', this.toastrConfig);
             //     return null;
             // }
-            
+
             this.submitted = false;
             if (this.userProfileModel.UserProfileId === 0) {
                 this.userProfileModel.CreatedBy = +this.credential.UserId;
@@ -108,15 +107,14 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
                 this.userProfileModel.isActive = this.form.controls['isActive'].value;
                 this.userProfileModel.isVolunteered = this.form.controls['isVolunteered'].value;
                 this.userProfileModel.Location = 'Not Available';
+
                 this.userProfileService.Create(this.userProfileModel)
                     .subscribe((response: UserProfileModel) => {
-                        //this.form.reset();
                         this.initiateForm();
                         this.toastrService.success('User profile created Successfully.', 'Success', this.toastrConfig);
-                        this.dataExchange.Publish('UserProfileModelCreated', response);
+                        this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.UserProfileModelCreated, response);
                         this.showAddRegion(this.showAdd);
                         this.showAdd = false;
-
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                         this.toastrService.error(`${error.message}`, 'Error', this.toastrConfig);
@@ -130,7 +128,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
                         this.showAddRegion(this.showAdd);
                         this.showAdd = false;
                         this.toastrService.success('User profile edited Successfully.', 'Success', this.toastrConfig);
-                        this.dataExchange.Publish('UserProfileModelModified', response);
+                        this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.UserProfileModelModified, response);
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                         this.toastrService.error(`${error.message}`, 'Error', this.toastrConfig);
@@ -170,7 +168,10 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe('UserProfileModelModified');
+        this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.UserProfileModelModified);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     showAddRegion(value): void {
@@ -180,10 +181,10 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
         else {
             this.showAddText = "ADD USER";
         }
-        window.setInterval(()=>{
+        window.setInterval(() => {
             jQuery(window).scroll();
         }, 100);
-        
+
         this.showAdd = !value;
     }
 
@@ -211,9 +212,9 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
 
                     this.inputFileUserProfile.nativeElement.value = "";
                     this.disableUploadButton = true;
-                    this.dataExchange.Publish('UserProfileLoadedFromFile', this.userProfileModel);
+                    this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.UserProfileLoadedFromFile, this.userProfileModel);
                     this.showAddRegion(this.showAdd);
-                    this.showAdd = false;                    
+                    this.showAdd = false;
 
                 }, (error) => {
                     console.log(`Error: ${error}`);

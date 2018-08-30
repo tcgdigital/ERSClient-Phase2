@@ -3,18 +3,18 @@ import {
     OnInit, OnDestroy, ViewChild
 } from '@angular/core';
 import {
-    ResponseModel, GlobalConstants, KeyValue,
-    GlobalStateService, UtilityService
+    ResponseModel, KeyValue, GlobalStateService, UtilityService, GlobalConstants
 } from '../../../../shared';
-import { Observable, Subscription } from 'rxjs/Rx';
+import { Subscription, Subject } from 'rxjs/Rx';
 
 import {
     CallCenterOnlyPageService,
     ExternalInputModel
 } from '../../../callcenteronlypage/component';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { InvolvePartyModel, AffectedObjectsToView, AffectedObjectsService
+import { 
+    InvolvePartyModel, AffectedObjectsToView, AffectedObjectsService
 } from '../../../shared.components';
 
 @Component({
@@ -23,7 +23,7 @@ import { InvolvePartyModel, AffectedObjectsToView, AffectedObjectsService
     templateUrl: '../views/cargo.query.recievedcallslist.view.html',
     providers: [AffectedObjectsService]
 })
-export class CargoQueryRecievedCallsListComponent implements OnInit {
+export class CargoQueryRecievedCallsListComponent implements OnInit, OnDestroy {
     @ViewChild('childModalcallcenter') public childModalcallcenter: ModalDirective;
 
     allAssignedCalls: ExternalInputModel[] = [];
@@ -34,6 +34,7 @@ export class CargoQueryRecievedCallsListComponent implements OnInit {
     public isArchive: boolean = false;
     awbs: KeyValue[] = [];
     affectedObjects: AffectedObjectsToView[];
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(private callcenteronlypageservice: CallCenterOnlyPageService,
         private affectedObjectsService: AffectedObjectsService,
@@ -53,11 +54,15 @@ export class CargoQueryRecievedCallsListComponent implements OnInit {
 
         //this.getAllCargoQueryCallsRecieved(this.currentIncidentId);
         this.getCargo();
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllCargoQueryCallsRecieved(this.currentIncidentId));
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.CallRecieved, 
+            (model: number) => this.getAllCargoQueryCallsRecieved(this.currentIncidentId));
 
         // SignalR Notification
-        this.globalState.Subscribe('AssignedCargoEnquiryCreationResponse', (model: ExternalInputModel) => {
+        this.globalState.Subscribe
+        (GlobalConstants.NotificationConstant.AssignedCargoEnquiryCreationResponse.Key, (model: ExternalInputModel) => {
             // this.getAllCargoQueryCallsRecieved(model.IncidentId);
             const index: number = this.allAssignedCalls
                 .findIndex((x: ExternalInputModel) => x.ExternalInputId === model.ExternalInputId);
@@ -70,6 +75,11 @@ export class CargoQueryRecievedCallsListComponent implements OnInit {
         });
     }
 
+    public ngOnDestroy(): void {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
+
     incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
         this.getAllCargoQueryCallsRecieved(this.currentIncidentId);
@@ -79,8 +89,11 @@ export class CargoQueryRecievedCallsListComponent implements OnInit {
         this.childModalcallcenter.hide();
         this.callcenterload = false;
         this.callcenteronlypageservice.GetCargoQueryCallsRecievedByIncident(incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -97,6 +110,7 @@ export class CargoQueryRecievedCallsListComponent implements OnInit {
 
     getCargo(): void {
         this.affectedObjectsService.GetFilterByIncidentId(this.currentIncidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedObjects = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
                 for (const affectedObject of this.affectedObjects) {

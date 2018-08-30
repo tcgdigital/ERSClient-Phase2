@@ -3,7 +3,7 @@ import { ITabLinkInterface } from '../../../shared/components/tab.control';
 import { UtilityService } from '../../../shared/services/common.service';
 import { Router } from '@angular/router';
 import {
-    KeyValue, GlobalStateService
+    KeyValue, GlobalStateService, GlobalConstants
 } from '../../../shared';
 @Component({
     selector: 'other-query',
@@ -18,22 +18,18 @@ export class PassangerQueryComponent implements OnInit, AfterContentInit {
     public ngOnInit(): void {
         if (this.router.url.indexOf('Archieve') > 0) {
             //Archieve Dashboard
-            this.globalState.Subscribe('departmentChange', (model: KeyValue) => {
+            this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange, (model: KeyValue) => {
                 this.subTabs = UtilityService.GetArchieveDashboardSubTabs('PassengerQuery');
             });
         }
         else {
             //Dashboard
-            this.globalState.Subscribe('departmentChange', (model: KeyValue) => {
+            this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange, (model: KeyValue) => {
                 this.subTabs = UtilityService.GetDashboardSubTabs('PassengerQuery');
             });
         }
     }
     public ngAfterContentInit(): void {
-// <<<<<<< HEAD
-//         if (GlobalConstants.TabLinks.some((x) => x.id === 'PassengerQuery'))
-//             this.subTabs = GlobalConstants.TabLinks.find((x) => x.id === 'PassengerQuery').subtab;
-// =======
         if (this.router.url.indexOf('Archieve') > 0) {
             //Archieve Dashboard
             this.subTabs = UtilityService.GetArchieveDashboardSubTabs('PassengerQuery');
@@ -42,8 +38,5 @@ export class PassangerQueryComponent implements OnInit, AfterContentInit {
             //Dashboard
             this.subTabs = UtilityService.GetDashboardSubTabs('PassengerQuery');
         }
-// >>>>>>> master
     }
-
-
 }

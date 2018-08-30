@@ -3,7 +3,7 @@ import { ITabLinkInterface } from '../../../shared/components/tab.control';
 import { UtilityService } from '../../../shared/services/common.service';
 import { Router } from '@angular/router';
 import {
-    KeyValue, GlobalStateService
+    KeyValue, GlobalStateService, GlobalConstants
 } from '../../../shared';
 @Component({
     selector: 'other-query',
@@ -18,13 +18,13 @@ export class FutureTravelQueryComponent implements OnInit, AfterContentInit {
     public ngOnInit(): void {
         if (this.router.url.indexOf('Archieve') > 0) {
             //Archieve Dashboard
-            this.globalState.Subscribe('departmentChange', (model: KeyValue) => {
+            this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange, (model: KeyValue) => {
                 this.subTabs = UtilityService.GetArchieveDashboardSubTabs('FutureTravelQuery');
             });
         }
         else {
             //Dashboard
-            this.globalState.Subscribe('departmentChange', (model: KeyValue) => {
+            this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange, (model: KeyValue) => {
                 this.subTabs = UtilityService.GetDashboardSubTabs('FutureTravelQuery');
             });
         }

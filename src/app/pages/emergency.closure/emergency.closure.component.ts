@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs/Rx';
 import { DepartmentClosureService } from '../department.closure/components/department.closure.service';
 import { DepartmentClosureModel } from '../department.closure';
 import { IncidentService } from '../incident/components/incident.service';
@@ -11,7 +11,7 @@ import { EmergencyDepartmentModel } from '../masterdata/emergency.department';
 import { NotifyPeopleService } from '../notifypeople/components/notifypeople.service';
 import { ActionableService } from '../shared.components/actionables/components/actionable.service';
 import { DemandService } from '../shared.components/demand/components/demand.service';
-import { NotifyPeopleModel, UserDepartmentNotificationMapper, NotificationContactsWithTemplateModel } from '../notifypeople';
+import { UserDepartmentNotificationMapper, NotificationContactsWithTemplateModel } from '../notifypeople';
 import { ActionableModel, DemandModel } from '../shared.components';
 import { UtilityService, ResponseModel, BaseModel, GlobalStateService, KeyValue, AuthModel, GlobalConstants } from '../../shared';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -49,6 +49,7 @@ export class EmergencyClosureComponent implements OnInit {
 	public UserDepartmentNotificationMappers: NotificationContactsWithTemplateModel[];
 	public isShowPage: boolean = true;
 	public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
+	private ngUnsubscribe: Subject<any> = new Subject<any>();
 
 	/**
 	 * Creates an instance of EmergencyClosureComponent.
@@ -92,8 +93,11 @@ export class EmergencyClosureComponent implements OnInit {
 		if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'CloseEmergency'))
 			this.GetIncident(this.currentIncident);
 
-		this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
-		this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+		this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChange,
+			(model: KeyValue) => this.incidentChangeHandler(model));
+
+		this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
+			(model: KeyValue) => this.departmentChangeHandler(model));
 		this.credential = UtilityService.getCredentialDetails();
 	}
 
@@ -110,15 +114,20 @@ export class EmergencyClosureComponent implements OnInit {
 	}
 
 	ngOnDestroy(): void {
-		// this.globalState.Unsubscribe('incidentChange');
-		//this.globalState.Unsubscribe('departmentChange');
+		// this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChange);
+		// this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.DepartmentChange);
+		this.ngUnsubscribe.next();
+		this.ngUnsubscribe.complete();
 	}
 
 	GetIncident(incidentId: number): void {
 		this.incidentService.GetIncidentById(incidentId)
+			.takeUntil(this.ngUnsubscribe)
 			.subscribe((response: IncidentModel) => {
 				this.incident = response;
 				this.getAllDepartmentsToNotify();
+			}, (error: any) => {
+				console.log(`Error: ${error}`);
 			});
 	}
 
@@ -137,6 +146,7 @@ export class EmergencyClosureComponent implements OnInit {
 
 		Observable.merge(allActiveDepartments, emergencyDepartments, notifyDeptUsers, departmentClosures)
 			.flatMap((x: BaseModel[]) => x)
+			.takeUntil(this.ngUnsubscribe)
 			.subscribe((response: any) => {
 				if (Object.keys(response).some((x) => x === 'Department')) {
 					this.departmnetsToNotify.push(<DepartmentModel>response["Department"]);
@@ -156,16 +166,16 @@ export class EmergencyClosureComponent implements OnInit {
 				else if (Object.keys(response).some((x) => x === 'DepartmentClosureId')) {
 					this.departmentClosures.push(<DepartmentClosureModel>response);
 				}
-			},
-			(error) => { console.log(`Error: ${error}`); },
-			() => {
+			}, (error) => { console.log(`Error: ${error}`); }, () => {
 				let unique: DepartmentModel[] = [];
 				let departmentIds: number[] = [];
+
 				Observable.from(this.departmnetsToNotify).distinct(function (x) { return x.DepartmentId; })
 					.subscribe((x) => {
 						unique.push(x);
 						departmentIds.push(x.DepartmentId);
-					})
+					});
+
 				let allActionables: Observable<ActionableModel[]> = this.actionableService
 					.BatchGet(this.currentIncident, departmentIds).map(x => x.Records);
 
@@ -181,9 +191,7 @@ export class EmergencyClosureComponent implements OnInit {
 						else if (Object.keys(response1).some(x => x === 'DemandId')) {
 							this.demands.push(<DemandModel>response1);
 						}
-					},
-					(error) => { console.log(`Error: ${error}`); },
-					() => {
+					}, (error) => { console.log(`Error: ${error}`); }, () => {
 						if (unique.length > 0) {
 							unique = unique.sort((a: DepartmentModel, b: DepartmentModel) => {
 								return (a.DepartmentName.toUpperCase() > b.DepartmentName.toUpperCase()) ?
@@ -235,6 +243,7 @@ export class EmergencyClosureComponent implements OnInit {
 
 	getIsSubmittedFlagValue(departmentClosureModels: DepartmentClosureModel[]): void {
 		this.departmentClosureService.GetAllByIncident(this.currentIncident)
+			.takeUntil(this.ngUnsubscribe)
 			.subscribe((departmentClosures: ResponseModel<DepartmentClosureModel>) => {
 				departmentClosureModels.forEach((item: DepartmentClosureModel) => {
 					const filtered: DepartmentClosureModel[] = departmentClosures.Records
@@ -246,11 +255,14 @@ export class EmergencyClosureComponent implements OnInit {
 						item.SubmittedOn = new Date(filtered[0].SubmittedOn);
 					}
 				});
+			}, (error: any) => {
+				console.log(`Error: ${error}`);
 			});
 	}
 
 	openCurrentDepartmentClosureReadonlyDetail(departmentId): void {
 		this.departmentClosureService.getAllbyIncidentandDepartment(this.currentIncident, departmentId)
+			.takeUntil(this.ngUnsubscribe)
 			.subscribe((response: ResponseModel<DepartmentClosureModel>) => {
 				this.report = '';
 				this.remarks = '';
@@ -259,6 +271,8 @@ export class EmergencyClosureComponent implements OnInit {
 					this.remarks = response.Records[0].ClosureRemark;
 				}
 				this.childModal.show();
+			}, (error: any) => {
+				console.log(`Error: ${error}`);
 			});
 	}
 
@@ -274,10 +288,12 @@ export class EmergencyClosureComponent implements OnInit {
 			this.incident.IsSaved = true;
 			this.incident.SavedBy = +this.credential.UserId;
 			this.incident.SavedOn = new Date();
+
 			this.incidentService.Update(this.incident, this.incident.IncidentId)
 				.subscribe(() => {
 					this.toastrService.info('Closure Report Saved Successfully.', 'Success', this.toastrConfig);
-				}, (error) => {
+				}, (error: any) => {
+					console.log(`Error: ${error}`);
 					this.toastrService.info('Some error occured.', 'Error', this.toastrConfig);
 				});
 		}
@@ -294,6 +310,7 @@ export class EmergencyClosureComponent implements OnInit {
 			this.incident.ClosedBy = +this.credential.UserId;
 			this.incident.ClosedOn = new Date();
 			this.incident.ActiveFlag = 'InActive';
+
 			this.incidentService.Update(this.incident, this.incident.IncidentId)
 				.subscribe((resultIncident: IncidentModel) => {
 					this.toastrService.success('Closure Report Saved Successfully.You will be logged out.', 'Success', this.toastrConfig);
@@ -323,10 +340,13 @@ export class EmergencyClosureComponent implements OnInit {
 						})
 						.flatMap(() => this.emergencyClosureService.sendNotificationToDepartmentHOD(this.UserDepartmentNotificationMappers))
 						.map(() => { })
+						.takeUntil(this.ngUnsubscribe)
 						.subscribe(() => {
 							this.toastrService.success('Notification has been sent to the users.', 'Success', this.toastrConfig);
 							this.authService.Logout();
 							this.router.navigate(['login']);
+						}, (error: any) => {
+							console.log(`Error: ${error}`);
 						});
 				}, (error: any) => {
 					console.log(error);

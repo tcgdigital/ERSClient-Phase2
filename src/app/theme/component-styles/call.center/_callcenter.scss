@@ -1,16 +1,15 @@
 @import '../../config/config';
-
-.halfBoxStyle{
-        width: 49.5%;
+.halfBoxStyle {
+    width: 49.5%;
     padding-left: 14px;
 }
-.entryHolder{
+
+.entryHolder {
     background: $entryholder-background;
-    float: left;
-    margin: 15px 23px;
-@media screen and (max-width: $resMD-S){
-margin: 15px 1.5%;
-}
+    float: left; // margin: 15px 23px;
+    @media screen and (max-width: $resMD-S) {
+        margin: 15px 1.5%;
+    }
 }
 
 .multiselect-list1 {
@@ -39,15 +38,13 @@ margin: 15px 1.5%;
     font-size: 12px;
 }
 
-
-.entryHolder{
-    background: $entryholder-background ;
+.entryHolder {
+    background: $entryholder-background;
     padding: 15px;
-    float: left;
-    margin: 15px 23px;
-    @media screen and (max-width: $resMD-S){
-margin: 15px 1.5%;
-}
+    float: left; // margin: 15px 23px;
+    @media screen and (max-width: $resMD-S) {
+        margin: 15px 1.5%;
+    }
 }
 
 .cc-other-button {
@@ -55,8 +52,5 @@ margin: 15px 1.5%;
 }
 
 .cc-other-form {
-    width:100%;
+    width: 100%;
 }
-
-
-

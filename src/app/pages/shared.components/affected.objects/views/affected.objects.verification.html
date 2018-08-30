@@ -7,7 +7,7 @@
         <button class="btn btn-primary" type="button" (click)="saveVerifiedObjects()" *ngIf="!isArchive">Verify</button>
     </div>
 </div>
-<div class="hidden-lg-up">
+<div class="d-block d-lg-none">
     <md-checkbox id="IsAutoApproved" [(ngModel)]="allSelectVerify" (change)="selectAllVerify($event)" aria-label="Add">Verify</md-checkbox>
 </div>
 <responsive-table>

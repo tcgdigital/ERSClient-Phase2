@@ -1,31 +1,25 @@
-import { Component, ViewEncapsulation, Input, OnInit, OnDestroy, ViewChild, Injector } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, ViewEncapsulation, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import {
-    FormGroup, FormControl, FormBuilder, Validators
+    FormGroup, FormControl
 } from '@angular/forms';
 import * as moment from 'moment/moment';
 import { IncidentModel } from './incident.model';
 import { EmergencyTypeModel, EmergencyTypeService } from '../../masterdata';
-import { DateTimePickerSelectEventArgs } from '../../../shared/directives/datetimepicker';
 import { EmergencyLocationService, EmergencyLocationModel } from '../../masterdata/emergencylocation';
-import { IncidentService } from './incident.service';
 
 import {
     ResponseModel,
     GlobalStateService,
     Severity,
     KeyValue,
-    KeyVal,
     IncidentStatus,
-    InvolvedPartyType,
     UtilityService,
-    LocationService,
-    Location,
     DateTimePickerOptions
 } from '../../../shared';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { FlightModel, InvolvePartyModel } from '../../shared.components';
 import { IncidentDataExchangeModel } from './incidentDataExchange.model';
+import { Subject } from 'rxjs';
 
 
 @Component({
@@ -33,7 +27,7 @@ import { IncidentDataExchangeModel } from './incidentDataExchange.model';
     encapsulation: ViewEncapsulation.None,
     templateUrl: '../views/incident.view.html'
 })
-export class IncidentViewComponent {
+export class IncidentViewComponent implements OnInit, OnDestroy {
     @Input() IncidentId: number;
     @ViewChild('childModalViewIncident') public childModalViewIncident: ModalDirective;
 
@@ -63,11 +57,9 @@ export class IncidentViewComponent {
     public DepartureDate: Date;
     public globalStateProxy: GlobalStateService;
     public IsDrillPopup: boolean;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
-    constructor(formBuilder: FormBuilder,
-        private router: Router,
-        private incidentService: IncidentService,
-        private emergencyLocationService: EmergencyLocationService,
+    constructor(private emergencyLocationService: EmergencyLocationService,
         private emergencyTypeService: EmergencyTypeService) {
 
         this.severities = UtilityService.GetKeyValues(Severity);
@@ -93,6 +85,7 @@ export class IncidentViewComponent {
         this.resetIncidentViewForm();
 
         this.emergencyLocationService.GetAllActiveEmergencyLocations()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<EmergencyLocationModel>) => {
                 result.Records.forEach((item: EmergencyLocationModel) => {
                     const emergencyLocationModel: EmergencyLocationModel = new EmergencyLocationModel();
@@ -100,9 +93,14 @@ export class IncidentViewComponent {
                     emergencyLocationModel.AirportName = item.AirportName;
                     this.affectedStations.push(emergencyLocationModel);
                 });
-
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
+    }
 
+    ngOnDestroy(): void {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     loadDataIncidentViewPopup() {
@@ -125,6 +123,7 @@ export class IncidentViewComponent {
 
         this.IsDrillPopup = this.incidentDataExchangeModel.IncidentModel.IsDrill;
         this.isFlightRelatedPopup = false;
+
         if (this.incidentDataExchangeModel.FLightModel != null) {
             this.formPopup = new FormGroup({
                 IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
@@ -153,6 +152,7 @@ export class IncidentViewComponent {
 
     getAllActiveEmergencyTypes(): void {
         this.emergencyTypeService.GetAll()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                 this.activeEmergencyTypes = response.Records;
             }, (error: any) => {
@@ -181,5 +181,4 @@ export class IncidentViewComponent {
         });
         this.IsDrillPopup = false;
     }
-
 }

@@ -29,12 +29,11 @@ export class DemandRaisedSummaryWidgetService {
         this.demandRaisedModelList = [];
     }
 
-
-
     GetDemandRaisedCount(incidentId: number, departmentId: number): DemandRaisedSummaryModel {
         let demandsByRequesterDeptartment: DemandModel[];
         let departmentIdProjection: string = '';
         let departmentIds: number[] = [];
+
         this.demandService.GetDemandByRequesterDepartment(incidentId, departmentId)
             .subscribe((result) => {
                 this.demandRaisedSummary.demandRaisedCount = result.Count;
@@ -42,17 +41,19 @@ export class DemandRaisedSummaryWidgetService {
                 this.demandRaisedSummary.demandClosedCount = demandsByRequesterDeptartment.filter((item) => {
                     return item.IsClosed === true;
                 }).length;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
+
         return this.demandRaisedSummary;
     }
-
-
 
     GetAllDemandByRequesterDepartment(incidentId: number, departmentId: number, callback?: ((_: AllDemandRaisedSummaryModel[]) => void)): void {
         let demandsByTargetDeptartment: DemandModel[];
         let departmentIdProjection: string = '';
         let departmentIds: number[] = [];
         departmentIdProjection = `(RequesterDepartmentId eq ${departmentId})`;
+
         this.demandService.GetDemandByRequesterDepartments(incidentId, departmentIdProjection)
             .subscribe((result) => {
                 this.dataTemp = result.Records.filter((filter) => {
@@ -77,7 +78,8 @@ export class DemandRaisedSummaryWidgetService {
                 });
 
                 callback(this.allocatedDemandDetails);
-                
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -128,6 +130,7 @@ export class DemandRaisedSummaryWidgetService {
     GetAllDepartmentDemandByIncident(incidentId: number, callback?: ((_: DemandRaisedModel[]) => void)): void {
         this.demandRaisedModelList = [];
         let uniqueDepartments: DepartmentModel[] = [];
+
         this.demandService.GetDemandByIncident(incidentId)
             .subscribe((result: ResponseModel<DemandModel>) => {
                 result.Records.forEach((itemDemand: DemandModel) => {
@@ -155,6 +158,8 @@ export class DemandRaisedSummaryWidgetService {
 
                 });
                 callback(this.demandRaisedModelList);
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -164,6 +169,7 @@ export class DemandRaisedSummaryWidgetService {
         let localDemandList: DemandModel[] = [];
         this.allDemands = [];
         this.subDepartments = [];
+
         this.demandService.GetDemandByIncident(incidentId)
             .map((result: ResponseModel<DemandModel>) => {
                 result.Records.forEach((itemDemand: DemandModel) => {
@@ -201,8 +207,9 @@ export class DemandRaisedSummaryWidgetService {
                     });
                     callback(this.demandRaisedModelList);
                 }
+
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
-
-
 }

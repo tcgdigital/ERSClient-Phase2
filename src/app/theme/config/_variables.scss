@@ -1,12 +1,14 @@
 // $font-family-body: 'sansregular';
 // $font-family-prod: 'oswaldbook';
-
 // $font-family-body: Arial, Helvetica, sans-serif;
-$font-family-body: Verdana, Geneva, sans-serif;
+$font-family-body: Verdana,
+Geneva,
+sans-serif;
 $font-family-prod: $font-family-body;
-$font-family-widget: "Arial Narrow", Arial, sans-serif;
+$font-family-widget: "Arial Narrow",
+Arial,
+sans-serif;
 $font-family-ribbon: sans-serif;
-
 $resXL-S: 1200px;
 $resLG-E: 1199px;
 $resLG-S: 992px;
@@ -17,11 +19,9 @@ $resSM-S: 576px;
 $resXS-E: 575px;
 $resXS-S: 321px;
 $resXXS-S: 320px;
-
 $assets-root: './assets/';
-$images-root: $assets-root + 'images/';
-$fonts-root: $assets-root + 'fonts/';
-
+$images-root: $assets-root+'images/';
+$fonts-root: $assets-root+'fonts/';
 $font-size-tiny: 7px;
 $font-size-small: 10px;
 $font-size-mid-small: 11px;
@@ -30,23 +30,17 @@ $font-size-normal: 13px;
 $font-size-above-normal: 16px;
 $font-size-mid-large: 17px;
 $font-size-large: 18px;
-
 $font-weight-thin: 100;
 $font-weight-light: 300;
 $font-weight-normal: 400;
 $font-weight-bold: 700;
 $font-weight-bolder: 500;
 $font-weight-ultraBold: 900;
-
 $header-height: 40px;
 $footer-height: 30px;
-
 $text-accordion-item-translate3d-middle:-100px;
 $text-accordion-item-translate3d-back:-200px;
 $text-accordion-item-translate3d-out:-300px;
-
 $table-header-font-weight: $font-weight-normal;
 $table-cell-padding: 1rem;
-$table-condensed-cell-padding:  $table-cell-padding/2;
-
-
+$table-condensed-cell-padding : $table-cell-padding/2;

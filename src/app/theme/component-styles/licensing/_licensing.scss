@@ -1,5 +1,4 @@
 @import '../../config/config';
-
 // .container-fluid{
 //     background-color: #1a82f7;
 //     background-image: url(images/linear_bg_1.png);
@@ -17,33 +16,39 @@
 //     padding: 0;
 // }
 .btn {
-     display: block;
-     z-index: 1;
-     position: relative;
-     box-sizing: border-box;
-     margin: 10px;
+    display: block;
+    z-index: 1;
+    position: relative;
+    box-sizing: border-box;
+    margin: 10px;
 }
 
-p{
+p {
     text-align: center;
     color: #fff;
-    font-size: 30px; 
+    font-size: 30px;
 }
 
-.key-submit{
+.key-submit {
     text-align: center;
     color: rgb(0, 0, 0);
     font-size: 25px;
     width: 50%;
 }
 
-.license-alignment{
+.license-alignment {
     width: 50%;
     margin: 0 auto;
     padding: 10% 0;
 }
 
-.container-fluid{
+.license-alignment-apply-key {
+    // width: 75%;
+    // margin: 0 auto;
+    // padding: 10% 0;
+}
+
+.container-fluid {
     background-image: url(./assets/images/background_image.png);
     background-size: cover;
     background-repeat: no-repeat;
@@ -55,70 +60,84 @@ p{
     height: 100%;
 }
 
-@media screen and (max-width: $resXS-E) {
-.container-fluid {
-    background-image: url(./assets/images/login_smalldevice_image.png);
-    background-size: cover;
-    background-repeat: no-repeat;
-    @include background-size(100%, 100%);
-    display: block;
-    float: left;
-    width: 100%;
-    position: fixed;
-    height: 100%;
+.jumbo-text {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    cursor: pointer;
+    border: none;
+    font: normal 42px/normal "Passero One", Helvetica, sans-serif;
+    color: rgba(255, 255, 255, 1);
+    text-align: left;
+    -o-text-overflow: clip;
+    text-overflow: clip;
+    text-shadow: 0 1px 0 rgb(204, 204, 204), 0 2px 0 rgb(201, 201, 201), 0 3px 0 rgb(187, 187, 187), 0 4px 0 rgb(185, 185, 185), 0 5px 0 rgb(170, 170, 170), 0 6px 1px rgba(0, 0, 0, 0.0980392), 0 0 5px rgba(0, 0, 0, 0.0980392), 0 1px 3px rgba(0, 0, 0, 0.298039), 0 3px 5px rgba(0, 0, 0, 0.2), 0 5px 10px rgba(0, 0, 0, 0.247059), 0 10px 10px rgba(0, 0, 0, 0.2), 0 20px 20px rgba(0, 0, 0, 0.14902);
+    -webkit-transition: all 300ms cubic-bezier(0.42, 0, 0.58, 1);
+    -moz-transition: all 300ms cubic-bezier(0.42, 0, 0.58, 1);
+    -o-transition: all 300ms cubic-bezier(0.42, 0, 0.58, 1);
+    transition: all 300ms cubic-bezier(0.42, 0, 0.58, 1);
 }
 
-.license-alignment > p {
-    font-size: 16px;
-}
+@media screen and (max-width: $resXS-E) {
+    .container-fluid {
+        background-image: url(./assets/images/login_smalldevice_image.png);
+        background-size: cover;
+        background-repeat: no-repeat;
+        @include background-size(100%, 100%);
+        display: block;
+        float: left;
+        width: 100%;
+        position: fixed;
+        height: 100%;
+    }
+    .license-alignment>p {
+        font-size: 16px;
+    }
 }
 
 @media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {
-.container-fluid {
-    background-image: url(./assets/images/background_device_image.png);
-    background-size: cover;
-    background-repeat: no-repeat;
-    @include background-size(100%, 100%);
-    display: block;
-    float: left;
-    width: 100%;
-    position: fixed;
-    height: 100%;
-}
-
-.license-alignment > p {
-    font-size: 18px;
-}
+    .container-fluid {
+        background-image: url(./assets/images/background_device_image.png);
+        background-size: cover;
+        background-repeat: no-repeat;
+        @include background-size(100%, 100%);
+        display: block;
+        float: left;
+        width: 100%;
+        position: fixed;
+        height: 100%;
+    }
+    .license-alignment>p {
+        font-size: 18px;
+    }
 }
 
 @media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
-.container-fluid {
-    background-image: url(./assets/images/login_smalldesktop_image.png);
-    background-size: cover;
-    background-repeat: no-repeat;
-    @include background-size(100%, 100%);
-    display: block;
-    float: left;
-    width: 100%;
-    position: fixed;
-    height: 100%;
-}
-
-.license-alignment > p {
-    font-size: 18px;
-}
+    .container-fluid {
+        background-image: url(./assets/images/login_smalldesktop_image.png);
+        background-size: cover;
+        background-repeat: no-repeat;
+        @include background-size(100%, 100%);
+        display: block;
+        float: left;
+        width: 100%;
+        position: fixed;
+        height: 100%;
+    }
+    .license-alignment>p {
+        font-size: 18px;
+    }
 }
 
 @media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {}
 
-@media screen and (min-width: $resXL-S) {
+@media screen and (min-width: $resXL-S) {}
 
-}
-
-.input-align{
+.input-align {
     text-align: center;
 }
-.sub-align{
+
+.sub-align {
     text-align: center;
     height: 22px;
     padding: 0 24%;

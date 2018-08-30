@@ -2,19 +2,17 @@ import {
     Component, OnInit, Input, OnDestroy,
     ViewEncapsulation, ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Subject } from 'rxjs/Rx';
 import {
-    FormGroup, FormControl, FormBuilder, Validators,
-    ReactiveFormsModule
+    FormGroup, FormControl, FormBuilder
 } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { ArchiveDocumentTypeService } from '../archive.report.widget/archive.doument.type.service';
 import { ArchiveDocumentTypeModel } from '../archive.upload.widget/archive.upload.widget.model';
 import {
-    DataServiceFactory, DataExchangeService, ResponseModel, FileUploadService, UtilityService,
-    TextAccordionModel, GlobalStateService, KeyValue, GlobalConstants, IUploadDocuments
+    ResponseModel, FileUploadService, UtilityService,
+    GlobalStateService, KeyValue, GlobalConstants, IUploadDocuments
 } from '../../../shared';
-import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
     selector: 'archive-upload-widget',
@@ -35,9 +33,19 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
     uploadDocuments: IUploadDocuments[];
     archiveDocumentType: ArchiveDocumentTypeModel;
     public isShowUploadOtherReport: boolean = true;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
-
-
+    /**
+     *Creates an instance of ArchiveUploadWidgetComponent.
+     * @param {FormBuilder} formBuilder
+     * @param {UtilityService} UtilityService
+     * @param {FileUploadService} fileUploadService
+     * @param {GlobalStateService} globalState
+     * @param {ToastrService} toastrService
+     * @param {ToastrConfig} toastrConfig
+     * @param {ArchiveDocumentTypeService} archiveDocumentTypeService
+     * @memberof ArchiveUploadWidgetComponent
+     */
     constructor(private formBuilder: FormBuilder,
         private UtilityService: UtilityService,
         private fileUploadService: FileUploadService,
@@ -47,13 +55,17 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
         private archiveDocumentTypeService: ArchiveDocumentTypeService) { }
 
     public ngOnInit(): void {
-        const vv:boolean = this.isReopened;
+        const vv: boolean = this.isReopened;
         this.uploadDocuments = GlobalConstants.UploadDocuments;
         this.form = new FormGroup({
             uploadDocumentControl: new FormControl(0)
         });
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChange,
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
+            (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
     public upload() {
@@ -62,9 +74,12 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
             this.toastrService.error('Please select document type and then upload.', 'Document Upload', this.toastrConfig);
             return false;
         }
+
         if (this.filesToUpload !== undefined) {
             const baseUrl = GlobalConstants.EXTERNAL_URL;
+
             this.fileUploadService.uploadFiles<string>(baseUrl + 'api/fileUpload/upload', this.filesToUpload)
+                .takeUntil(this.ngUnsubscribe)
                 .subscribe((result: string) => {
                     this.filepathWithLinks = `${GlobalConstants.EXTERNAL_URL}UploadFiles/${result.replace(/^.*[\\\/]/, '')}`;
                     const extension = result.replace(/^.*[\\\/]/, '').split('.').pop();
@@ -89,6 +104,7 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
     public OnDocumentUploaded(dropdownselected: string): void {
 
         this.archiveDocumentTypeService.GetByIncident(this.incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((returnResult: ResponseModel<ArchiveDocumentTypeModel>) => {
                 if (returnResult.Records.length === 0) {
                     this.archiveDocumentType = new ArchiveDocumentTypeModel();
@@ -108,12 +124,15 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
                             this.fileName = null;
                             this.filesToUpload = null;
                             return false;
+                        }, (error: any) => {
+                            console.log(`Error: ${error}`);
                         });
                 }
                 else {
                     let filteredArchiveDocumentType: ArchiveDocumentTypeModel[] = returnResult.Records.filter((item: ArchiveDocumentTypeModel) => {
                         return item.DocumentType === dropdownselected;
                     });
+
                     if (filteredArchiveDocumentType.length > 0) {
                         this.archiveDocumentType = new ArchiveDocumentTypeModel();
                         this.archiveDocumentType.ArchieveDocumentTypeId = filteredArchiveDocumentType[0].ArchieveDocumentTypeId;
@@ -132,6 +151,8 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
                                 this.fileName = null;
                                 this.filesToUpload = null;
                                 return false;
+                            }, (error: any) => {
+                                console.log(`Error: ${error}`);
                             });
                     }
                     else {
@@ -152,11 +173,14 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
                                 this.fileName = null;
                                 this.filesToUpload = null;
                                 return false;
+                            }, (error: any) => {
+                                console.log(`Error: ${error}`);
                             });
                     }
                 }
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
-
     }
 
     public fileChangeEvent(fileInput: any) {
@@ -170,8 +194,11 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        // this.globalState.Unsubscribe('incidentChange');
-        // this.globalState.Unsubscribe('departmentChange');
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChange);
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.DepartmentChange);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     private incidentChangeHandler(incident: KeyValue): void {

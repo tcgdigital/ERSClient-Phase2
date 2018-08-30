@@ -29,8 +29,7 @@ export class ChangePasswordComponent implements OnInit, AfterViewInit {
     public submitted: boolean = false;
     public errorMessage: string = '';
 
-    constructor(private formBuilder: FormBuilder,
-        private elementRef: ElementRef,
+    constructor(private elementRef: ElementRef,
         private router: Router,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig,
@@ -81,6 +80,8 @@ export class ChangePasswordComponent implements OnInit, AfterViewInit {
                             this.errorMessage = response.Message;
                         }
                     }
+                }, (error: any) => {
+                    console.log(`Error: ${error}`);
                 });
         }
     }

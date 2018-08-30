@@ -38,8 +38,6 @@ export class AdditionalInfoWidgetComponent implements OnInit, OnChanges, OnDestr
     }
 
     private GetAdditionalInfoByIncident() {
-
-
         this.additionalInfoWidgetService.GetAdditionalInfoByIncident(this.currentIncidentId, (InfoModel: AdditionalInfoModel) => {
             this.additionalInfoModel = InfoModel;
             if (this.additionalInfoModel.EmergencyCategory.toLowerCase() == 'flightrelated') {

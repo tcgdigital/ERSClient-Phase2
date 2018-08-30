@@ -1,39 +1,21 @@
 import {
     Component, ViewEncapsulation,
-    OnInit, SimpleChange, OnDestroy, ViewChild
+    OnInit, OnDestroy, ViewChild
 } from '@angular/core';
-import * as moment from 'moment/moment';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-import { EmergencyTypeModel, EmergencyTypeService } from '../masterdata';
-import { EmergencyLocationService, EmergencyLocationModel } from '../masterdata/emergencylocation';
-import { IncidentModel, IncidentService, IncidentDataExchangeModel } from '../incident';
-import {
-    FlightModel,
-    FlightService,
-    InvolvePartyModel,
-    InvolvePartyService,
-    OrganizationModel,
-    OrganizationService,
-    AircraftTypeModel,
-    AircraftTypeService
-} from '../shared.components';
-import {
-    FormGroup, FormControl, FormBuilder, Validators,
-    ReactiveFormsModule
-} from '@angular/forms';
+import { EmergencyTypeModel } from '../masterdata';
+import { EmergencyLocationModel } from '../masterdata/emergencylocation';
+import { IncidentModel, IncidentDataExchangeModel } from '../incident';
+import { OrganizationModel, AircraftTypeModel } from '../shared.components';
+import { FormGroup } from '@angular/forms';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Router } from '@angular/router';
 import {
-    ITabLinkInterface, GlobalStateService, UtilityService, KeyValue, ResponseModel, Severity,
-    KeyVal,
-    IncidentStatus,
-    InvolvedPartyType,
-    DataExchangeService,
-    LocationService,
-    Location,
-    DateTimePickerOptions, GlobalConstants
+    GlobalStateService, UtilityService, KeyValue,
+    ResponseModel, Severity, GlobalConstants
 } from '../../shared';
 import { ArchiveListService } from './archive.dashboard.list.service';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'archive-dashboard-list',
@@ -41,8 +23,10 @@ import { ArchiveListService } from './archive.dashboard.list.service';
     templateUrl: './archive.dashboard.list.view.html',
     encapsulation: ViewEncapsulation.None,
 })
-export class ArchiveDashboardListComponent implements OnInit {
-    @ViewChild('childModalViewClosedIncident') public childModalViewClosedIncident: ModalDirective;
+export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
+    @ViewChild('childModalViewClosedIncident')
+    public childModalViewClosedIncident: ModalDirective;
+
     public closedCrisises: any[];
     public formPopup: FormGroup;
     disableIsDrillPopup: boolean;
@@ -62,8 +46,8 @@ export class ArchiveDashboardListComponent implements OnInit {
     public ScheduleArrivalLocal: Date;
     public BorrowedIncidentName: string;
     public isShowPage: boolean = true;
-    public isShowPagereadOnly: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     activeEmergencyTypes: EmergencyTypeModel[] = [];
     affectedStations: EmergencyLocationModel[] = [];
@@ -71,19 +55,10 @@ export class ArchiveDashboardListComponent implements OnInit {
     activeAircraftTypes: AircraftTypeModel[] = [];
     incidentsToPickForReplication: IncidentModel[] = [];
 
-    constructor(formBuilder: FormBuilder,
-        private toastrService: ToastrService,
+    constructor(private toastrService: ToastrService,
         private toastrConfig: ToastrConfig,
         private archiveListService: ArchiveListService,
-        private emergencyTypeService: EmergencyTypeService,
-        private dataExchange: DataExchangeService<IncidentDataExchangeModel>,
-        private emergencyLocationService: EmergencyLocationService,
-        private incidentService: IncidentService,
-        private involvePartyService: InvolvePartyService,
-        private flightService: FlightService,
         private globalState: GlobalStateService,
-        private organizationService: OrganizationService,
-        private aircraftTypeService: AircraftTypeService,
         private router: Router) {
         this.closedCrisises = [];
         this.affectedStations = [];
@@ -95,16 +70,13 @@ export class ArchiveDashboardListComponent implements OnInit {
         this.isFlightRelated = false;
         this.disableIsDrillPopup = true;
         this.isOffSetPopup = false;
-
-        // this.getAllActiveEmergencyTypes();
-        // this.getAllActiveOrganizations();
-        // this.getAllActiveAircraftTypes();
-        // this.resetIncidentViewForm();
         this.GetAllClosedIncidents();
-        
+
         this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+        
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
+            (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
     public IsReopenCheckedChange(event: any, closedCrisis: IncidentModel): void {
@@ -112,11 +84,12 @@ export class ArchiveDashboardListComponent implements OnInit {
     }
 
     private departmentChangeHandler(department: KeyValue): void {
-		this.currentDepartmentId = department.Value;
-	}
+        this.currentDepartmentId = department.Value;
+    }
 
     public GetAllClosedIncidents(): void {
         this.archiveListService.GetAllClosedIncidents()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((closedIncident: ResponseModel<IncidentModel>) => {
                 closedIncident.Records.forEach((itemIncident: IncidentModel) => {
                     if (itemIncident.ReOpenBy != null && itemIncident.ReOpenOn != null
@@ -131,197 +104,26 @@ export class ArchiveDashboardListComponent implements OnInit {
                     itemIncident['IncidentView'] = editIncident;
                     this.closedCrisises.push(itemIncident);
                 });
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
-    // public hideIncidentView(): void {
-    //     this.childModalViewClosedIncident.hide();
-    // }
-
-    // public loadDataIncidentViewPopup(): void {
-    //     const offsetVal: string = '';
-    //     this.disableIsDrillPopup = true;
-
-    //     this.EmergencyDateLocal = new Date(new Date(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).toLocaleString() + ' UTC');
-    //     this.ReportedDateLocal = new Date(new Date(this.incidentDataExchangeModel.IncidentModel.ReportedDate).toLocaleString() + ' UTC');
-
-
-    //     this.formPopup = new FormGroup({
-    //         IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
-    //         OrganizationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OrganizationId),
-    //         EmergencyTypeIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyTypeId),
-    //         AffectedStationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyLocation),
-    //         EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD-MM-YYYY HH:mm')),
-    //         EmergencyDateLocalPopup: new FormControl(moment(this.EmergencyDateLocal).format('DD-MM-YYYY HH:mm')),
-    //         EmergencyNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyName),
-    //         DescriptionPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Description),
-    //         WhatHappendPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.WhatHappend),
-    //         WhereHappendPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.WhereHappend),
-    //         OtherConfirmationInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OtherConfirmationInformation),
-    //         SourceInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.SourceInformation),
-    //         ReportedByNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ReportedByName),
-    //         ReportedByAddressPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ReportedByAddress),
-    //         ContactOfWitnessPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ContactOfWitness),
-    //         SenderOfCrisisInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.SenderOfCrisisInformation),
-    //         ReportedDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.ReportedDate).format('DD-MM-YYYY HH:mm')),
-    //         ReportedDateLocalPopup: new FormControl(moment(this.ReportedDateLocal).format('DD-MM-YYYY HH:mm')),
-    //         SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity),
-    //         BorrowedIncidentPopup: new FormControl(this.BorrowedIncidentName),
-    //     });
-    //     this.IsDrillPopup = this.incidentDataExchangeModel.IncidentModel.IsDrill;
-
-    //     this.isFlightRelatedPopup = false;
-    //     if (this.incidentDataExchangeModel.FLightModel.FlightNo !== 'DUMMY_FLIGHT') {
-
-    //         this.ScheduleDepartureLocal = new Date(new Date(this.incidentDataExchangeModel.FLightModel.DepartureDate).toLocaleString() + ' UTC');
-    //         this.ScheduleArrivalLocal = new Date(new Date(this.incidentDataExchangeModel.FLightModel.ArrivalDate).toLocaleString() + ' UTC');
-
-
-    //         this.formPopup = new FormGroup({
-    //             IncidentId: new FormControl(this.incidentDataExchangeModel.IncidentModel.IncidentId),
-    //             OrganizationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OrganizationId),
-    //             EmergencyTypeIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyTypeId),
-    //             AffectedStationIdPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyLocation),
-    //             EmergencyDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.EmergencyDate).format('DD-MM-YYYY HH:mm')),
-    //             EmergencyDateLocalPopup: new FormControl(moment(this.EmergencyDateLocal).format('DD-MM-YYYY HH:mm')),
-    //             EmergencyNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.EmergencyName),
-    //             DescriptionPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Description),
-    //             WhatHappendPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.WhatHappend),
-    //             WhereHappendPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.WhereHappend),
-    //             OtherConfirmationInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.OtherConfirmationInformation),
-    //             SourceInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.SourceInformation),
-    //             ReportedByNamePopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ReportedByName),
-    //             ReportedByAddressPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ReportedByAddress),
-    //             ContactOfWitnessPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.ContactOfWitness),
-    //             SenderOfCrisisInformationPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.SenderOfCrisisInformation),
-    //             ReportedDatePopup: new FormControl(moment(this.incidentDataExchangeModel.IncidentModel.ReportedDate).format('DD-MM-YYYY HH:mm')),
-    //             ReportedDateLocalPopup: new FormControl(moment(this.ReportedDateLocal).format('DD-MM-YYYY HH:mm')),
-    //             SeverityPopup: new FormControl(this.incidentDataExchangeModel.IncidentModel.Severity),
-    //             BorrowedIncidentPopup: new FormControl(this.BorrowedIncidentName),
-
-    //             FlightNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightNo),
-    //             OriginPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.OriginCode),
-    //             DestinationPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.DestinationCode),
-    //             ScheduleddeparturePopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.DepartureDate).format('DD-MM-YYYY HH:mm')),
-    //             ScheduleddepartureLOCPopup: new FormControl(moment(this.ScheduleDepartureLocal).format('DD-MM-YYYY HH:mm')),
-    //             ScheduledarrivalPopup: new FormControl(moment(this.incidentDataExchangeModel.FLightModel.ArrivalDate).format('DD-MM-YYYY HH:mm')),
-    //             ScheduledarrivalLOCPopup: new FormControl(moment(this.ScheduleArrivalLocal).format('DD-MM-YYYY HH:mm')),
-    //             FlightTailNumberPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.FlightTaleNumber),
-    //             AircraftTypeIdPopup: new FormControl(this.incidentDataExchangeModel.FLightModel.AircraftTypeId)
-    //         });
-    //         this.IsDrillPopup = this.incidentDataExchangeModel.IncidentModel.IsDrill;
-    //         this.isFlightRelatedPopup = true;
-    //     }
-    //     this.childModalViewClosedIncident.show();
-    // }
-
-    // getAllActiveEmergencyTypes(): void {
-    //     this.emergencyTypeService.GetAllActive()
-    //         .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
-    //             this.activeEmergencyTypes = response.Records;
-    //         }, (error: any) => {
-    //             console.log(`Error: ${error}`);
-    //         });
-    // }
-
-    // public resetIncidentViewForm(): void {
-    //     this.formPopup = new FormGroup({
-    //         IncidentId: new FormControl(0),
-    //         OrganizationIdPopup: new FormControl(''),
-    //         EmergencyTypeIdPopup: new FormControl('0'),
-    //         AffectedStationIdPopup: new FormControl('0'),
-    //         EmergencyDatePopup: new FormControl(''),
-    //         EmergencyDateLocalPopup: new FormControl(''),
-    //         EmergencyNamePopup: new FormControl(''),
-    //         DescriptionPopup: new FormControl(''),
-    //         WhatHappendPopup: new FormControl(''),
-    //         WhereHappendPopup: new FormControl(''),
-    //         OtherConfirmationInformationPopup: new FormControl(''),
-    //         SourceInformationPopup: new FormControl(''),
-    //         ReportedByNamePopup: new FormControl(''),
-    //         ReportedByAddressPopup: new FormControl(''),
-    //         ContactOfWitnessPopup: new FormControl(''),
-    //         SenderOfCrisisInformationPopup: new FormControl(''),
-    //         ReportedDatePopup: new FormControl(''),
-    //         ReportedDateLocalPopup: new FormControl(''),
-    //         SeverityPopup: new FormControl('0'),
-    //         BorrowedIncidentPopup: new FormControl(''),
-
-    //         FlightNumberPopup: new FormControl(''),
-    //         OriginPopup: new FormControl(''),
-    //         DestinationPopup: new FormControl(''),
-    //         ScheduleddeparturePopup: new FormControl(''),
-    //         ScheduleddepartureLOCPopup: new FormControl(''),
-    //         ScheduledarrivalPopup: new FormControl(''),
-    //         ScheduledarrivalLOCPopup: new FormControl(''),
-    //         FlightTailNumberPopup: new FormControl(''),
-    //         AircraftTypeIdPopup: new FormControl(''),
-    //     });
-    //     this.IsDrillPopup = false;
-    // }
-
-    // public onViewIncidentClick(incidentId: number): void {
-    //     this.incidentService.GetIncidentByIncidentId(incidentId)
-    //         .subscribe((item: IncidentModel) => {
-    //             this.incidentDataExchangeModel = new IncidentDataExchangeModel();
-    //             this.incidentDataExchangeModel.IsFlightRelated = false;
-    //             this.incidentDataExchangeModel.IncidentModel = new IncidentModel();
-    //             this.incidentDataExchangeModel.IncidentModel = item;
-
-    //             if (item.InvolvedParties.length > 0) {
-    //                 this.incidentDataExchangeModel.InvolvedPartyModel = new InvolvePartyModel();
-    //                 this.incidentDataExchangeModel.InvolvedPartyModel = item.InvolvedParties[0];
-    //                 if (item.InvolvedParties[0].Flights.length > 0) {
-    //                     this.incidentDataExchangeModel.IsFlightRelated = true;
-    //                     this.incidentDataExchangeModel.FLightModel = new FlightModel();
-    //                     this.incidentDataExchangeModel.FLightModel = item.InvolvedParties[0].Flights[0];
-    //                 }
-    //             }
-    //             if (this.incidentDataExchangeModel.IncidentModel.BorrowedIncident != null) {
-    //                 this.fetchBorrowedIncident(this.incidentDataExchangeModel.IncidentModel.BorrowedIncident);
-    //             }
-    //             else {
-    //                 this.loadDataIncidentViewPopup();
-    //             }
-    //         });
-    // }
-
-    // public fetchBorrowedIncident(incidentId: number): void {
-    //     this.incidentService.GetIncidentByIncidentId(incidentId)
-    //         .subscribe((item: IncidentModel) => {
-    //             this.BorrowedIncidentName = item.EmergencyName;
-    //             this.loadDataIncidentViewPopup();
-    //         });
-    // }
-
-    // getAllActiveOrganizations(): void {
-    //     this.organizationService.GetAllActiveOrganizations()
-    //         .subscribe((response: ResponseModel<OrganizationModel>) => {
-    //             this.activeOrganizations = response.Records;
-    //         }, (error: any) => {
-    //             console.log(`Error: ${error}`);
-    //         });
-    // }
-
-    // getAllActiveAircraftTypes(): void {
-    //     this.aircraftTypeService.GetAllActiveAircraftTypes()
-    //         .subscribe((response: ResponseModel<AircraftTypeModel>) => {
-    //             this.activeAircraftTypes = response.Records;
-    //         }, (error: any) => {
-    //             console.log(`Error: ${error}`);
-    //         });
-    // }
-
-    // public ngOnDestroy(): void { }
+    ngOnDestroy(): void {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
 
     public onSubmitClosedCrisis(closedCrisisList: IncidentModel[]): void {
         // We collect all closed crisis
         const reopenedCrisis = closedCrisisList.filter((item: IncidentModel) => {
             return item.isReopen === true;
         });
+
         const closedCrisis = closedCrisisList.filter((item: IncidentModel) => {
             return item.isReopen === false;
         });
+
         if (closedCrisis.length > 0) {
             const objectLiteral1: string = JSON.stringify(closedCrisis);
             const deepCopyIncident1: IncidentModel[] = JSON.parse(objectLiteral1);
@@ -333,10 +135,13 @@ export class ArchiveDashboardListComponent implements OnInit {
                 item.ReClosedOn = new Date();
                 return item;
             });
+
             // Again call to the database for update the reopened one.
             this.archiveListService.CreateBulkInsertClosedIncident(totalClosedCrisis)
                 .subscribe((result: IncidentModel[]) => {
                     //this.toastrService.success('Incident status updated successfully.', 'Archive Crisis', this.toastrConfig);
+                }, (error: any) => {
+                    console.log(`Error: ${error}`);
                 });
         }
         if (reopenedCrisis.length > 0) {
@@ -354,11 +159,13 @@ export class ArchiveDashboardListComponent implements OnInit {
             this.archiveListService.CreateBulkInsertClosedIncident(totalReopendCrisis)
                 .subscribe((result: IncidentModel[]) => {
                     this.toastrService.success('Incident status updated successfully.', 'Archive Crisis', this.toastrConfig);
+                }, (error: any) => {
+                    console.log(`Error: ${error}`);
                 });
         }
     }
 
-    private onArchivedIncidentClick(incidentId: number,isReopened:boolean): void {
+    private onArchivedIncidentClick(incidentId: number, isReopened: boolean): void {
         UtilityService.SetToSession({ ArchieveIncidentId: incidentId });
         UtilityService.SetToSession({ IsReopened: isReopened });
         this.router.navigate(['pages/archivedashboard']);

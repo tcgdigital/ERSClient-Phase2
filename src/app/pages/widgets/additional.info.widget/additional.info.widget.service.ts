@@ -39,6 +39,8 @@ export class AdditionalInfoWidgetService {
             if(callback){
                 callback(this.additionalInfoModel);
             }
+        }, (error: any) => {
+            console.log(`Error: ${error}`);
         });
     }
 }

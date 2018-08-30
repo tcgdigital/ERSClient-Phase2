@@ -1,6 +1,6 @@
 import {
     Component, ViewEncapsulation, OnInit, AfterViewChecked,
-    ElementRef, AfterContentInit, ViewChild, AfterViewInit
+    ElementRef, ViewChild, OnDestroy
 } from '@angular/core';
 import {
     MemberEngagementTrackModel, MemberCurrentEngagementModel,
@@ -10,19 +10,14 @@ import { MemberTrackService } from './components/member.track.service';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 
 import {
-    ResponseModel,
-    DataExchangeService,
-    Severity,
-    KeyValue,
-    IncidentStatus,
-    GlobalStateService,
+    ResponseModel, KeyValue, GlobalStateService,
     UtilityService, AuthModel, GlobalConstants
 } from '../../shared';
 
 import { UserProfileService, UserProfileModel } from '../masterdata/userprofile/components';
 import { UserPermissionService, UserPermissionModel } from '../masterdata/userpermission/components';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'member-track-main',
@@ -30,8 +25,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
     templateUrl: './views/member.track.views.html',
     styleUrls: ['./styles/member.track.styles.scss']
 })
-
-export class MemberTrackComponent implements OnInit, AfterViewChecked {
+export class MemberTrackComponent implements OnInit, OnDestroy, AfterViewChecked {
     @ViewChild('childModalHistory')
     public childModalHistory: ModalDirective;
 
@@ -54,25 +48,34 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
     public isShowHistory: boolean = true;
     public isShowAllocationDeallocation: boolean = true;
-    private $toggle: JQuery;
     public isSelectedDept: boolean;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
-
-    constructor(private globalState: GlobalStateService, private userProfileService: UserProfileService,
-        private userpermissionService: UserPermissionService, private membertrackService: MemberTrackService,
-        private elementRef: ElementRef, private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig) {
+    constructor(private globalState: GlobalStateService,
+        private userProfileService: UserProfileService,
+        private userpermissionService: UserPermissionService,
+        private membertrackService: MemberTrackService,
+        private elementRef: ElementRef,
+        private toastrService: ToastrService) {
     }
 
     ngOnInit() {
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
-        this.pageInitialCall(this.currentDepartmentId,this.currentIncidentId);
+        this.pageInitialCall(this.currentDepartmentId, this.currentIncidentId);
     }
 
-    pageInitialCall(departmentId:number, incidentId:number): void {
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
+    ngOnDestroy(): void {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
+
+    pageInitialCall(departmentId: number, incidentId: number): void {
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
+            (model: KeyValue) => this.departmentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChange,
+            (model: KeyValue) => this.incidentChangeHandler(model));
 
         if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'MemberTracking'))
             this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
@@ -80,7 +83,6 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
         this.credential = UtilityService.getCredentialDetails();
         this.createdBy = +this.credential.UserId;
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/MemberEngagementReport/' + this.currentIncidentId;
-
     }
 
     ngAfterViewChecked() {
@@ -111,8 +113,10 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
         const userId = $element.data('userid');
         const obj: MemberCurrentEngagementModelToView = this.memberEngagementsToView
             .find((x) => x.UserId.toString() == userId);
+
         if ($element.prop('checked')) {
             obj.isRemarksSubmitted = true;
+
             if (obj && obj.Remarks.length > 0) {
                 const memberTrackModel: MemberEngagementTrackModel = new MemberEngagementTrackModel();
                 memberTrackModel.DepartmentId = this.currentDepartmentId;
@@ -123,6 +127,7 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
                 memberTrackModel.Remarks = obj.Remarks;
                 memberTrackModel.UnDeploy = false;
                 memberTrackModel.CreatedBy = this.createdBy;
+
                 if (obj.MemberEngagementTrackId == null || obj.MemberEngagementTrackId == 0 || obj.MemberEngagementTrackId == undefined) {
                     const memberCurrentEngagementToSave: MemberCurrentEngagementModel = new MemberCurrentEngagementModel();
                     memberCurrentEngagementToSave.DepartmentId = this.currentDepartmentId;
@@ -130,12 +135,13 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
                     memberCurrentEngagementToSave.IsBusy = true;
                     memberCurrentEngagementToSave.UserId = userId;
                     memberCurrentEngagementToSave.MemberEngagementTrack = memberTrackModel;
+
                     this.membertrackService.Create(memberCurrentEngagementToSave)
                         .subscribe((response: MemberCurrentEngagementModel) => {
                             this.toastrService.success('Member is engaged now.');
-                            //alert('Member is engaged now.');
-
                             this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
+                        }, (error: any) => {
+                            console.log(`Error: ${error}`);
                         });
                 }
                 else {
@@ -146,12 +152,16 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
                             memberCurrentEngagementToedit.IsBusy = true;
                             memberCurrentEngagementToedit.MemberEngagementTrackId = response.MemberEngagementTrackId;
                             memberCurrentEngagementToedit.deleteAttributes();
+
                             this.membertrackService.Update(memberCurrentEngagementToedit, obj.MemberCurrentEngagementId)
                                 .subscribe((response1: MemberCurrentEngagementModel) => {
                                     this.toastrService.success('Member is engaged now.');
-                                    //alert('Member is engaged now.');
                                     this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
+                                }, (error: any) => {
+                                    console.log(`Error: ${error}`);
                                 });
+                        }, (error: any) => {
+                            console.log(`Error: ${error}`);
                         });
                 }
             }
@@ -160,33 +170,27 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
                 this.toastrService.error('Please Enter Work Details');
             }
             this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
-            //alert('Work Details Required');
-            //this.toastrService.success('Work Details Required');
         }
         else {
             if (obj.DepartmentId == this.currentDepartmentId) {
                 const memberTrackModel: MemberEngagementTrackModel = new MemberEngagementTrackModel();
                 memberTrackModel.deleteAttributes();
                 memberTrackModel.MemberEngagementTrackId = obj.MemberEngagementTrackId;
-                // if (this.currentDepartmentId != memberTrackModel.DepartmentId) {
-                //     this.toastrService.error('hahaha');
-                // }
-                // else {
                 memberTrackModel.UnDeploy = true;
                 memberTrackModel.UnDeployedOn = new Date();
                 const memberCurrentEngagementToEdit: MemberCurrentEngagementModel = new MemberCurrentEngagementModel();
                 memberCurrentEngagementToEdit.deleteAttributes();
                 memberCurrentEngagementToEdit.MemberCurrentEngagementId = obj.MemberCurrentEngagementId;
                 memberCurrentEngagementToEdit.IsBusy = false;
+
                 this.membertrackService.Update(memberCurrentEngagementToEdit, memberCurrentEngagementToEdit.MemberCurrentEngagementId)
                     .flatMap(() => this.membertrackService.UpdateMemberTrack(memberTrackModel, memberTrackModel.MemberEngagementTrackId))
                     .subscribe(() => {
                         this.toastrService.success('Member is available now.');
-                        //alert('Member is available now.');
                         this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
-                        // obj.isRemarksSubmitted=false;
+                    }, (error: any) => {
+                        console.log(`Error: ${error}`);
                     });
-                //}
             }
             else {
                 this.toastrService.error('The department who has make this busy only that department can make it available.');
@@ -195,7 +199,7 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
         }
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
-        this.pageInitialCall(this.currentDepartmentId,this.currentIncidentId);
+        this.pageInitialCall(this.currentDepartmentId, this.currentIncidentId);
     }
 
 
@@ -219,6 +223,7 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
             })
             .flatMap((_) => this.membertrackService.GetAllByIncidentDepartment(departmentId, incidentId))
             .map((response1: ResponseModel<MemberCurrentEngagementModel>) => { this.memberTracks = response1.Records; })
+            .takeUntil(this.ngUnsubscribe)
             .subscribe(() => {
                 this.isChecked = false;
                 this.memberEngagementsToView = this.userpermissions.map((x) => {
@@ -248,15 +253,20 @@ export class MemberTrackComponent implements OnInit, AfterViewChecked {
                 this.availblecount = this.memberEngagementsToView.filter((x) => x.IsBusy === false).length;
                 this.freecount = this.memberEngagementsToView.filter((x) => x.IsBusy === true).length;
                 this.GenerateToggle();
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
     open(id) {
         this.membertrackService.GetAllHistory(id, this.currentDepartmentId, this.currentIncidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<MemberEngagementTrackModel>) => {
                 this.memberHistory = response.Records;
+
                 this.memberHistory.forEach((x) => {
                     this.userProfileService.Get(x.CreatedBy)
+                        .takeUntil(this.ngUnsubscribe)
                         .subscribe((response1: UserProfileModel) => {
                             x['createdby'] = response1.Name;
                         });

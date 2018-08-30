@@ -2,13 +2,17 @@
 .widget-container {
     @include box-shadow(-1px, 1px, 3px, 1px, $header-shadow);
     background-color: $summary-widget-bg1;
-    color:#fff;
+    color: #fff;
     height: 92px;
 }
 
-incident-header-widget .widget-container{height: auto;}
+incident-header-widget .widget-container {
+    height: auto;
+}
 
-incident-header-widget a{ font-size: 12px;}
+incident-header-widget a {
+    font-size: 12px;
+}
 
 .widget-title {
     text-transform: uppercase;
@@ -30,10 +34,9 @@ incident-header-widget a{ font-size: 12px;}
 
 .widget-number {
     span {
-        font-family: $font-family-widget;
-        // font-size: 30px;
+        font-family: $font-family-widget; // font-size: 30px;
         font-size: 22px;
-        &.marker{
+        &.marker {
             text-decoration: overline;
             cursor: pointer;
         }
@@ -44,8 +47,7 @@ incident-header-widget a{ font-size: 12px;}
 }
 
 .widget-text {
-    display: block;
-    // margin-top: -10px;
+    display: block; // margin-top: -10px;
     margin-top: -2px;
     font-family: $font-family-widget;
     text-transform: uppercase;
@@ -69,25 +71,28 @@ incident-header-widget a{ font-size: 12px;}
     padding-right: 0 !important;
     padding-top: 15px !important;
     @media screen and (max-width: $resLG-E) {
-    //padding-right: 15px !important;
+        //padding-right: 15px !important;
     }
 }
 
-
-
-.statusRed, .statusGreen, .statusAmber {
+.statusRed,
+.statusGreen,
+.statusAmber {
     border-radius: 20px;
     float: left;
     height: 12px;
     margin-left: 10px;
     width: 12px;
 }
-.statusRed{
+
+.statusRed {
     background: $rag-red none repeat scroll 0 0;
 }
+
 .statusGreen {
     background: $rag-green none repeat scroll 0 0;
 }
+
 .statusAmber {
     background: $rag-amber none repeat scroll 0 0;
 }
@@ -110,21 +115,21 @@ incident-header-widget a{ font-size: 12px;}
         max-width: 96%;
     }
 }
-@media screen and (max-width: $resLG-E){
-    .demand-raised-layout{
+
+@media screen and (max-width: $resLG-E) {
+    .demand-raised-layout {
         //margin-left: 5px;
-    width: 100%;
-    //padding-right: 8px !important;
+        width: 100%; //padding-right: 8px !important;
     }
 }
 
-@media screen and (max-width: $resLG-E){
-   .checklist-layout{
+@media screen and (max-width: $resLG-E) {
+    .checklist-layout {
         //margin-left: 5px;
-    width: 100%;
-    //padding-right: 25px !important;
+        width: 100%; //padding-right: 25px !important;
     }
 }
+
 @media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {}
 
 @media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
@@ -167,7 +172,7 @@ incident-header-widget a{ font-size: 12px;}
 
 @media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {
     .row-fix {
-        margin-right:0;
+        margin-right: 0;
     }
     .casualty-layout {
         //max-width: 31.7%;
