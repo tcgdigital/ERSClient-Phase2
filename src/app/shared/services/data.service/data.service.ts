@@ -1,6 +1,6 @@
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
-import { BaseModel, RequestModel } from '../../models';
+import { BaseModel, RequestModel, NameValue } from '../../models';
 import { DataProcessingService } from './data.processing.service';
 import { HttpInterceptorService } from '../../interceptor';
 import {
@@ -162,6 +162,20 @@ export class DataService<T extends BaseModel>{
      */
     public Patch(entity: any, key: string): PatchOperation<T> {
         return new PatchOperation<T>(this.dataProcessingService, this.httpService, this.httpInterceptorService, this.typeName, entity, key);
+    }
+
+    /**
+     * Get an instance of QueryOperation for OData PATCH request with additional header information
+     *
+     * @param {*} entity
+     * @param {string} key
+     * @param {*} additionalHeader
+     * @returns {PatchOperation<T>}
+     * @memberof DataService
+     */
+    public PatchWithHeader(entity: any, key: string, additionalHeader: NameValue<string>): PatchOperation<T> {
+        return new PatchOperation<T>(this.dataProcessingService, this.httpService, 
+            this.httpInterceptorService, this.typeName, entity, key, additionalHeader);
     }
 
     /**

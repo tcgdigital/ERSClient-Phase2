@@ -38,6 +38,8 @@ export class AffectedPeopleModel extends BaseModel {
 	public CommunicationLogs?: CommunicationLogModel[];
 	public Demands?: DemandModel[];
 
+	public CurrentDepartmentName: string;
+
 	constructor( initialize ? : boolean) {		
 		if(initialize){
 			super();

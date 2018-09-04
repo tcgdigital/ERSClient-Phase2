@@ -206,6 +206,7 @@
                         border: 1px solid $table-border-color !important;
                         border-radius: 2px;
                         margin-bottom: 12px;
+                        padding-bottom: 15px;
                         >td {
                             background-color: $table-bg;
                             display: block;
@@ -265,6 +266,10 @@
             }
         }
     }
+
+    .scrollclass {
+        height: auto;
+    }
 }
 
 .table-hover>tbody>tr:hover> {
@@ -303,6 +308,10 @@
                 background-color: $table-stripped-red-hover-bg;
             }
         }
+    }
+
+    .scrollclass {
+        height: auto;
     }
 }
 

@@ -2,7 +2,6 @@ import { Component, ViewEncapsulation, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription, Observable, Subject } from 'rxjs/Rx';
 
-
 import { InvolvePartyModel, CommunicationLogModel } from '../../../shared.components';
 import { AffectedObjectsToView, AffectedObjectModel } from './affected.objects.model';
 import { AffectedObjectsService } from './affected.objects.service';
@@ -15,7 +14,7 @@ import {
 } from '../../../../shared';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
-
+import { DepartmentService, DepartmentModel } from '../../../masterdata';
 
 @Component({
     selector: 'affectedobject-list',
@@ -41,12 +40,15 @@ export class AffectedObjectsListComponent implements OnInit {
     downloadPath: string;
     expandSearch: boolean = false;
     searchValue: string = 'Expand Search';
+    currentDepartmentId: number;
+    public currentDepartmentName: string;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(private affectedObjectService: AffectedObjectsService,
         private callerservice: CallerService,
         private toastrService: ToastrService,
         private globalState: GlobalStateService,
+        private departmentService: DepartmentService,
         private _router: Router) { }
 
     getAffectedObjects(incidentId): void {
@@ -78,14 +80,17 @@ export class AffectedObjectsListComponent implements OnInit {
         if (this._router.url.indexOf('archivedashboard') > -1) {
             this.isArchive = true;
             this.currentIncident = +UtilityService.GetFromSession('ArchieveIncidentId');
+            this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         }
         else {
             this.isArchive = false;
             this.currentIncident = +UtilityService.GetFromSession('CurrentIncidentId');
+            this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         }
 
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/CargoStatusInfo/' + this.currentIncident;
         this.getAffectedObjects(this.currentIncident);
+        this.getCurrentDepartmentName(this.currentDepartmentId);
 
         this.initiateSearchConfigurations();
         this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard,
@@ -101,7 +106,7 @@ export class AffectedObjectsListComponent implements OnInit {
     ngOnDestroy(): void {
         //this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard);
         this.ngUnsubscribe.next();
-        this.ngUnsubscribe.complete
+        this.ngUnsubscribe.complete();
     }
 
     openChatTrails(affectedObjectId): void {
@@ -157,9 +162,8 @@ export class AffectedObjectsListComponent implements OnInit {
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
-
     }
-    
+
     saveNok(affectedObjectId, caller: CallerModel, event: any): void {
         if (event.checked) {
             const nok = new NextOfKinModel();
@@ -225,13 +229,28 @@ export class AffectedObjectsListComponent implements OnInit {
         this.getAffectedObjects(this.currentIncident);
     }
 
+    getCurrentDepartmentName(departmentId): void {
+        this.departmentService.Get(departmentId)
+            .takeUntil(this.ngUnsubscribe)
+            .subscribe((response: DepartmentModel) => {
+                this.currentDepartmentName = response.DepartmentName;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
+    }
+
     saveUpdateAffectedObject(affectedObject: AffectedObjectsToView) {
         const affectedObjectUpdate = new AffectedObjectModel();
         affectedObjectUpdate.Remarks = affectedObject.Remarks;
         affectedObjectUpdate.IdentificationDesc = affectedObject.IdentificationDesc;
         affectedObjectUpdate.LostFoundStatus = affectedObject.LostFoundStatus;
+        debugger;
+        
+        const additionalHeader: NameValue<string>
+            = new NameValue<string>('CurrentDepartmentName', this.currentDepartmentName);
 
-        this.affectedObjectService.UpdateStatus(affectedObjectUpdate, affectedObject.AffectedObjectId)
+        this.affectedObjectService.UpdateStatusWithHeader
+            (affectedObjectUpdate, affectedObject.AffectedObjectId, additionalHeader)
             .subscribe((response: AffectedObjectModel) => {
                 this.toastrService.success('Adiitional Information updated.');
                 this.getAffectedObjects(this.currentIncident);

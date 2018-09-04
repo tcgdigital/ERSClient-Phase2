@@ -14,6 +14,7 @@ import {
 import { SharedModule, DataExchangeService } from '../../../shared';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { CallerService } from '../caller';
+import { DepartmentService } from '../../masterdata';
 
 @NgModule({
     imports: [
@@ -34,7 +35,8 @@ import { CallerService } from '../caller';
     providers: [
         AffectedObjectsService,
         DataExchangeService,
-        CallerService
+        CallerService,
+        DepartmentService,
     ]
 })
 export class AffectedObjectsModule { }

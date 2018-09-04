@@ -113,12 +113,10 @@ export class AffectedPeopleListComponent implements OnInit {
         }
 
         this.affectedPersonModelForStatus = affectedPerson;
-        if(this.affectedPersonModelForStatus.Age == "NaN")
-        {
+        if (this.affectedPersonModelForStatus.Age == "NaN") {
             this.affectedPersonModelForStatus.Age = "Not Available";
         }
-        if(this.affectedPersonModelForStatus.Nationality.trim() == "")
-        {
+        if (this.affectedPersonModelForStatus.Nationality.trim() == "") {
             this.affectedPersonModelForStatus.Nationality = "Not Available";
         }
 
@@ -227,47 +225,50 @@ export class AffectedPeopleListComponent implements OnInit {
         this.affectedPersonToUpdate.MedicalStatus = affectedModifiedForm['MedicalStatusToshow'];
         this.affectedPersonToUpdate.Remarks = affectedModifiedForm.Remarks;
 
+        const additionalHeader: NameValue<string> 
+            = new NameValue<string>('CurrentDepartmentName', this.currentDepartmentName);
+
+        /*
         if (this.affectedPersonToUpdate.MedicalStatus != '')
             this.createCommunicationLogModel(this.affectedPersonToUpdate, affectedModifiedForm.CreatedBy);
+        */
 
-        this.affectedPeopleService.Update(this.affectedPersonToUpdate)
+        this.affectedPeopleService.UpdateWithHeader(this.affectedPersonToUpdate, additionalHeader)
             .subscribe((response: AffectedPeopleModel) => {
                 this.toastrService.success('Additional Information updated.')
                 if (this.filesToUpload.length) {
                     this.uploadFile();
                 }
+
                 this.getAffectedPeople(this.currentIncident);
                 affectedModifiedForm['MedicalStatusToshow'] = affectedModifiedForm.MedicalStatus;
                 let num = UtilityService.UUID();
                 this.globalStateProxyOpen.NotifyDataChanged('AffectedPersonStatusChanged', num);
                 this.childModal.hide();
+
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
     }
 
     createCommunicationLogModel(affectedPersonToUpdate: AffectedPeopleModel, createdBy: number): void {
-       
-        let editedFields = '';
-        let answer = '';
-        let descchanged = '';
-
         this.communicationLogService.GetLogByAffectedPersonId(affectedPersonToUpdate.AffectedPersonId)
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<CommunicationLogModel>) => {
-                if(result.Count==0){
-                    this.insertCommunicationLog(affectedPersonToUpdate,createdBy);
+                debugger;
+                if (result.Count == 0) {
+                    this.insertCommunicationLog(affectedPersonToUpdate, createdBy);
                 }
-                else{
+                else {
                     var QueryStatusFullText = result.Records[0].Queries;
-                    
-                    if(QueryStatusFullText.indexOf('Status changed to ')==-1){
-                        this.insertCommunicationLog(affectedPersonToUpdate,createdBy);
+
+                    if (QueryStatusFullText.indexOf('Status changed to ') == -1) {
+                        this.insertCommunicationLog(affectedPersonToUpdate, createdBy);
                     }
-                    else{
+                    else {
                         var MedicalStatus = QueryStatusFullText.split('Status changed to ')[1];
                         if (MedicalStatus.trim().toLowerCase() != affectedPersonToUpdate.MedicalStatus.trim().toLowerCase()) {
-                            this.insertCommunicationLog(affectedPersonToUpdate,createdBy);
+                            this.insertCommunicationLog(affectedPersonToUpdate, createdBy);
                         }
                     }
                 }
@@ -276,9 +277,10 @@ export class AffectedPeopleListComponent implements OnInit {
             });
     }
 
-    insertCommunicationLog(affectedPersonToUpdate:AffectedPeopleModel,createdBy:number):void{
+    insertCommunicationLog(affectedPersonToUpdate: AffectedPeopleModel, createdBy: number): void {
         const communicationLogs: CommunicationLogModel[] = [];
         const communicationLog: CommunicationLogModel = new CommunicationLogModel();
+
         communicationLog.InteractionDetailsId = 0;
         communicationLog.InteractionDetailsType = GlobalConstants.InteractionDetailsTypeEnquiry;
         communicationLog.Queries = 'Medical Status changed to ' + affectedPersonToUpdate.MedicalStatus;
@@ -293,7 +295,6 @@ export class AffectedPeopleListComponent implements OnInit {
         communicationLog.ActiveFlag = 'Active';
         communicationLog.CreatedBy = createdBy;
         communicationLog.CreatedOn = new Date();
-
         communicationLogs.push(communicationLog);
 
         this.communicationLogService.CreateCommunicationLog(communicationLog)
@@ -393,17 +394,17 @@ export class AffectedPeopleListComponent implements OnInit {
         this.initiateSearchConfigurations();
         this.IsDestroyed = false;
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard,
             (model: KeyValue) => this.incidentChangeHandler(model));
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard,
             (model: KeyValue) => this.departmentChangeHandler(model));
 
         // Signal Notification
         this.globalState.Subscribe
-        (GlobalConstants.NotificationConstant.ReceiveIncidentBorrowingCompletionResponse.Key, () => {
-            this.getAffectedPeople(this.currentIncident);
-        });
+            (GlobalConstants.NotificationConstant.ReceiveIncidentBorrowingCompletionResponse.Key, () => {
+                this.getAffectedPeople(this.currentIncident);
+            });
 
         this.globalState.Subscribe(GlobalConstants.NotificationConstant.ReceivePassengerImportCompletionResponse.Key, (count: number) => {
             if (count > 0)

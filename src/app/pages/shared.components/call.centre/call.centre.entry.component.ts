@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, Input, OnDestroy, HostListener } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router } from '@angular/router';
@@ -403,6 +403,11 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         this.totalcount = 0;
     }
 
+    onResetPassenger(): void {
+        this.copassengerlistpnr = [];
+        this.copassengerlistPassengerForMappedPerson = [];
+        this.consolidatedCopassengers = [];
+    }
 
     onNotifyCrew(message: KeyValue): void {
         this.enquiry.AffectedPersonId = message.Value;
@@ -410,6 +415,10 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         this.affectedId = this.affectedPeople.find(x => x.AffectedPersonId == message.Value).AffectedId;
         this.communicationLog.AffectedPersonId = message.Value;
         delete this.communicationLog.AffectedObjectId;
+    }
+
+    onResetCrew(): void {
+
     }
 
     onNotifyCargo(message: KeyValue): void {
@@ -420,10 +429,17 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         delete this.communicationLog.AffectedPersonId;
     }
 
+    onResetCargo(): void {
 
+    }
+
+    @HostListener('document:click', ['$event'])
+    onDocunentClick(event) {
+        jQuery('ul.dropdown-menu-down').hide();
+    }
+    
     //set models to save or update
     SetCommunicationLog(requestertype, interactionType, affectedPersonId?: number): CommunicationLogModel[] {
-
         let communicationLogs = new Array<CommunicationLogModel>();
         let comm: CommunicationLogModel = new CommunicationLogModel();
         comm.InteractionDetailsId = 0;
@@ -1095,8 +1111,10 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         this.populateconsolidatedcopassangers();
     }
 
-    showListsamepnr(): void {
+    showListsamepnr($event): void {
         this.list1Selected = !this.list1Selected;
+        jQuery('ul.dropdown-menu-down').hide();
+        jQuery($event.currentTarget).siblings('ul.dropdown-menu-down').show();
     }
 
     selectCopassengerfrompassenger($event: any, copassenger: AffectedPeopleToView): void {
@@ -1108,8 +1126,10 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         this.populateconsolidatedcopassangers();
     }
 
-    showListPassengers(): void {
+    showListPassengers($event): void {
         this.list2Selected = !this.list2Selected;
+        jQuery('ul.dropdown-menu-down').hide();
+        jQuery($event.currentTarget).siblings('ul.dropdown-menu-down').show();
     }
 
     selectCopassengerAll($event: any, copassenger: AffectedPeopleToView): void {

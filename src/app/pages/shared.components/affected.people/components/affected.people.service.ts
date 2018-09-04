@@ -44,12 +44,13 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
 
         this._enquiryService = dataServiceFactory
             .CreateServiceWithOptions<EnquiryModel>('Enquiries', option);
+
         this._nokService = this.dataServiceFactory
             .CreateServiceWithOptions<NextOfKinModel>('NextOfKins', option);
+
         this._passengerService = this.dataServiceFactory
             .CreateServiceWithOptions<PassengerModel>
             ('Passengers', option);
-
     }
 
     public FlattenAffectedPeople(involvedParty: InvolvePartyModel): any {
@@ -232,7 +233,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     public GetCommunicationByPDA(id: number): Observable<ResponseModel<AffectedPeopleModel>> {
         return this._dataService.Query()
             .Filter(`AffectedPersonId eq ${id}`)
-            .Expand("Passenger , Crew, CommunicationLogs($filter=ActiveFlag eq 'Active';$orderby=CreatedOn desc)")
+            .Expand("Passenger,Crew,CommunicationLogs($filter=ActiveFlag eq 'Active';$orderby=CreatedOn desc)")
             .Execute();
     }
 

@@ -1,5 +1,5 @@
 <div class="input-field col s12  multiselect-selector">
-    <input id="item" type="text" class="validate filter-input form-control inputStyle" [(ngModel)]="query" (keyup)="filter()"
+    <input type="text" class="validate filter-input form-control inputStyle" [(ngModel)]="query" (keyup)="filter()"
         (click)="filter()" [attr.placeholder]="placeholder">
     <i class="fa fa-times crossStyle" aria-hidden="true" *ngIf="showClose()" (click)="clear()"></i>
     <i class="fa fa-caret-down expandStyle" aria-hidden="true" [hidden]="showClose()" (click)="filter()"></i>
