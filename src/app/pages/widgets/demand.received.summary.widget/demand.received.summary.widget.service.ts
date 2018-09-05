@@ -39,6 +39,7 @@ export class DemandReceivedSummaryWidgetService {
         let departmentFilter: string = '';
         let departmentIds: number[] = [];
         departmentFilter = `(TargetDepartmentId eq ${departmentId})`;
+
         this.demandService.GetDemandByTargetDepartments(incidentId, departmentFilter)
             .subscribe((result: ResponseModel<DemandModel>) => {
                 // Bug Resolved - This is to check that whether the demand data having demand type table data. which have the information of auto approved.
@@ -56,6 +57,8 @@ export class DemandReceivedSummaryWidgetService {
                 this.demandReceivedSummary.demandCompletedCount = demandsByTargetDeptartment.filter((item) => {
                     return item.IsCompleted === true;
                 }).length;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
 
         return this.demandReceivedSummary;
@@ -67,6 +70,7 @@ export class DemandReceivedSummaryWidgetService {
         let localDemandList: DemandModel[] = [];
         this.allDemands = [];
         this.subDepartments = [];
+
         this.demandService.GetDemandByIncident(incidentId)
             .map((result: ResponseModel<DemandModel>) => {
                 result.Records.forEach((itemDemand: DemandModel) => {
@@ -97,42 +101,39 @@ export class DemandReceivedSummaryWidgetService {
 
                             //Get cout of assigned demand
                             const autoApprovedDemandsAssignedCount: number = demandModels
-                            .filter((item: DemandModel) => item.DemandType.IsAutoApproved == true).length;
+                                .filter((item: DemandModel) => item.DemandType.IsAutoApproved == true).length;
                             const approverBasedDemandsAssignedCount: number = demandModels
-                            .filter((item: DemandModel) => item.DemandType.IsAutoApproved == false && item.IsApproved == true).length;
+                                .filter((item: DemandModel) => item.DemandType.IsAutoApproved == false && item.IsApproved == true).length;
                             demandReceivedModel.assigned = (autoApprovedDemandsAssignedCount + approverBasedDemandsAssignedCount);
 
                             //Get cout of completed demand
                             const demandsCompletedCount: number = demandModels
-                            .filter((item: DemandModel) => { return item.IsClosed == true; }).length;
+                                .filter((item: DemandModel) => { return item.IsClosed == true; }).length;
                             demandReceivedModel.completed = demandsCompletedCount;
 
                             //Get cout of pending demand
                             const autoApprovedDemandsPendingCount: number = demandModels
-                            .filter((item: DemandModel) => item.DemandType.IsAutoApproved == true && item.IsClosed == false).length;
+                                .filter((item: DemandModel) => item.DemandType.IsAutoApproved == true && item.IsClosed == false).length;
                             const approverBasedDemandsPendingCount: number = demandModels
-                            .filter((item: DemandModel) => item.DemandType.IsAutoApproved == false
-                                && item.IsApproved == true && item.IsClosed == false).length;
+                                .filter((item: DemandModel) => item.DemandType.IsAutoApproved == false
+                                    && item.IsApproved == true && item.IsClosed == false).length;
                             demandReceivedModel.pending = (autoApprovedDemandsPendingCount + approverBasedDemandsPendingCount);
 
-
-                            // demandReceivedModel.assigned = demandModels.length;
-                            // let demandModelsCompletedLocal: DemandModel[] = demandModels.filter((item: DemandModel) => { return item.IsClosed == true; });
-                            // demandReceivedModel.completed = demandModelsCompletedLocal.length;
-                            // let demandModelsPendingLocal: DemandModel[] = demandModels.filter((item: DemandModel) => { return item.IsClosed == false; });
-                            // demandReceivedModel.pending = demandModelsPendingLocal.length;
                             this.demandReceivedModelList.push(demandReceivedModel);
                         }
 
                     });
                     callback(this.demandReceivedModelList);
                 }
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
     GetAllDepartmentDemandByIncident(incidentId: number, callback?: ((_: DemandReceivedModel[]) => void)): void {
         this.demandReceivedModelList = [];
         let uniqueDepartments: DepartmentModel[] = [];
+
         this.demandService.GetDemandByIncident(incidentId)
             .subscribe((result: ResponseModel<DemandModel>) => {
                 result.Records.forEach((itemDemand: DemandModel) => {
@@ -176,6 +177,9 @@ export class DemandReceivedSummaryWidgetService {
                     }
                 });
                 callback(this.demandReceivedModelList);
+
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -193,8 +197,8 @@ export class DemandReceivedSummaryWidgetService {
                 allDeptDemandReceivedSummary.CreatedOn = item.CreatedOn;
                 this.allDeptDemandReceivedSummaries.push(allDeptDemandReceivedSummary);
             }
-
         });
+
         Observable.interval(1000).subscribe(_ => {
             this.allDeptDemandReceivedSummaries.forEach((dept: AllDeptDemandReceivedSummary) => {
                 let ScheduleTime: number = (Number(dept.ScheduleTime) * 60000);
@@ -212,6 +216,7 @@ export class DemandReceivedSummaryWidgetService {
                 }
             });
         });
+        
         this.showAllDeptSubCompleted = true;
         this.showAllDeptSubPending = false;
     }

@@ -1,22 +1,20 @@
 import {
-    Component, ViewEncapsulation, Output, Injector,
-    EventEmitter, OnInit, OnDestroy, ViewChild
+    Component, ViewEncapsulation, Injector,
+    OnInit, OnDestroy, ViewChild
 } from '@angular/core';
 import {
-    FormGroup, FormControl, FormBuilder,
-    AbstractControl, Validators
+    FormGroup, FormControl, Validators
 } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-import { Router, NavigationEnd } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { Router } from '@angular/router';
+import { Subscription, Subject } from 'rxjs/Rx';
 import { DemandService } from './demand.service';
 import { DemandTrailService } from './demandtrail.service';
 import { DemandModel } from './demand.model';
 import { DemandTrailModel } from './demand.trail.model';
 import { DemandTypeService, DemandTypeModel } from '../../../masterdata/demandtype';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
-import { PageService, PageModel } from '../../../masterdata/page.functionality';
+import { PageService } from '../../../masterdata/page.functionality';
 import {
     AffectedObjectsService, AffectedObjectsToView, AffectedPeopleService,
     AffectedPeopleToView, InvolvePartyModel, CommunicationLogModel
@@ -88,6 +86,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     public freshDemand: boolean = true;
     public isrejected: boolean = false;
     public isShowAddDemand: boolean = true;
+
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
     /**
      * Creates an instance of DemandEntryComponent.
      * @param {DemandService} demandService
@@ -127,12 +127,15 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     getDemandType(): void {
         this.demandTypeService.GetAll()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandTypeModel>) => {
                 this.demandTypesAll = response.Records; //.filter((x) => x.DemandTypeId == 1)[0];
                 this.demandTypes = response.Records.filter((x) => x.ActiveFlag === 'Active');
                 this.demandModel.DemandTypeId = (this.demandModel.DemandTypeId === 0)
                     ? this.demandTypes[0].DemandTypeId
                     : this.demandModel.DemandTypeId;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -151,6 +154,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     getAllDepartments(): void {
         this.departmentService.GetAll()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records.filter(a => a.ActiveFlag == 'Active');
             }, (error: any) => {
@@ -259,6 +263,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     getPassengersCrews(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
 
@@ -281,6 +286,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     getCargo(currentIncident): void {
         this.affectedObjectsService.GetFilterByIncidentId(currentIncident)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedObjects = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
             }, (error: any) => {
@@ -370,7 +376,9 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
         this.childModalEntry.hide();
         const idNum: number = +(id.split('!')[0]);
+
         this.demandService.GetByDemandId(idNum)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.freshDemand = false;
                 this.demandModel = response.Records[0];
@@ -413,6 +421,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     showDemandDetails(id: string) {
         const idNum: number = +(id.split('!')[0]);
         this.demandService.GetByDemandId(idNum)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demandModel = response.Records[0];
 
@@ -495,14 +504,22 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.isReadonly = false;
 
 
-        this.globalState.Subscribe('OnDemandUpdate', (model) => this.setModelForUpdate(model));
-        this.globalState.Subscribe('OnDemandDetailClick', (model) => this.showDemandDetails(model));
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.OnDemandUpdate,
+            (model) => this.setModelForUpdate(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.OnDemandDetailClick,
+            (model) => this.showDemandDetails(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard,
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard,
+            (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
     getDepartmentNameAndParentDepartment(departmentId): void {
         this.departmentService.Get(departmentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: DepartmentModel) => {
                 this.currentDepartmentName = response.DepartmentName;
                 this.parentDeptId = response.ParentDepartmentId;
@@ -622,8 +639,11 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             const moduleName = 'Demand';
             const param = `${this.currentIncidentId}/${organizationId}/${this.currentDepartmentId}/${moduleName}`;
             this.date = new Date();
+
             this.fileUploadService.uploadFiles<string>(baseUrl + './api/fileUpload/UploadFilesModuleWise/' + param,
-                this.filesToUpload, this.date.toString()).subscribe((result: string) => {
+                this.filesToUpload, this.date.toString())
+                .takeUntil(this.ngUnsubscribe)
+                .subscribe((result: string) => {
                     const fileStore: FileStoreModel = new FileStoreModel();
                     if (this.demandModel.FileStores != null) {
                         fileStore.FileStoreID = this.demandModel.FileStores[0].FileStoreID;
@@ -656,6 +676,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                     }
                     else {
                         this.fileStoreService.Create(fileStore)
+                            .takeUntil(this.ngUnsubscribe)
                             .subscribe((response: FileStoreModel) => {
                                 if (this.form.dirty) {
                                     this.demandUpdate(resolutionTimeChanged);
@@ -663,7 +684,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                                 else {
                                     this.toastrService.success('Demand successfully updated.', 'Success', this.toastrConfig);
                                     const num = UtilityService.UUID();
-                                    this.globalStateProxyOpen.NotifyDataChanged('DemandAddedUpdated', num);
+                                    this.globalStateProxyOpen.NotifyDataChanged(GlobalConstants.DataExchangeConstant.DemandAddedUpdated, num);
                                     this.initializeForm();
                                     this.demandModel = new DemandModel();
                                     this.showAdd = false;
@@ -671,10 +692,14 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                                     this.childModalEntry.hide();
                                     this.filesToUpload = [];
                                 }
+                            }, (error: any) => {
+                                console.log(`Error: ${error}`);
                             });
                     }
 
                     this.filesToUpload.length = null;
+                }, (error: any) => {
+                    console.log(`Error: ${error}`);
                 });
         }
         else {
@@ -749,8 +774,10 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.formControlDirtyCheck();
                 let resolutionTimeChanged = false;
                 this.resolutionTime = new Date(this.form.controls['ScheduleTime'].value);
+
                 if (this.resolutionTime) {
                     this.demandService.GetByDemandId(this.demandModelEdit.DemandId)
+                        .takeUntil(this.ngUnsubscribe)
                         .subscribe((response: ResponseModel<DemandModel>) => {
                             const createdOnDate = new Date(response.Records[0].CreatedOn);
                             const time = createdOnDate.getTime();
@@ -765,6 +792,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                             else {
                                 this.demandUpdate(resolutionTimeChanged);
                             }
+                        }, (error: any) => {
+                            console.log(`Error: ${error}`);
                         });
                 }
                 else {
@@ -781,10 +810,11 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     demandCreate(): void {
         this.demandService.Create(this.demandModel)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: DemandModel) => {
                 this.toastrService.success('Demand successfully created.', 'Success', this.toastrConfig);
                 const num = UtilityService.UUID();
-                this.globalStateProxyOpen.NotifyDataChanged('DemandAddedUpdated', num);
+                this.globalStateProxyOpen.NotifyDataChanged(GlobalConstants.DataExchangeConstant.DemandAddedUpdated, num);
                 this.initializeForm();
                 this.demandModel = new DemandModel();
                 this.showAdd = false;
@@ -807,32 +837,39 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             }
 
             this.demandService.Update(this.demandModelEdit)
+                .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: DemandModel) => {
                     this.toastrService.success('Demand successfully updated.', 'Success', this.toastrConfig);
                     const num = UtilityService.UUID();
-                    this.globalStateProxyOpen.NotifyDataChanged('DemandAddedUpdated', num);
-                    this.demandModel.DemandStatusDescription=this.demandModelEdit.DemandStatusDescription;
+                    this.globalStateProxyOpen.NotifyDataChanged(GlobalConstants.DataExchangeConstant.DemandAddedUpdated, num);
+                    this.demandModel.DemandStatusDescription = this.demandModelEdit.DemandStatusDescription;
                     const demandTrail = this.createDemandTrailModel(this.demandModel, this.demandModelEdit, false)[0];
                     demandTrail.DemandId = this.demandModel.DemandId;
                     this.freshDemand = false;
+
                     this.demandTrailService.Create(demandTrail)
+                        .takeUntil(this.ngUnsubscribe)
                         .subscribe((resp: DemandTrailModel) => { },
-                        (error: any) => {
-                            console.log('Error in demandTrail');
-                        });
-                    if (this.caller.CallerId !== 0) {
-                        this.callerService.Update(this.caller)
-                            .subscribe((resp: CallerModel) => { },
                             (error: any) => {
                                 console.log('Error in demandTrail');
                             });
+
+                    if (this.caller.CallerId !== 0) {
+                        this.callerService.Update(this.caller)
+                            .takeUntil(this.ngUnsubscribe)
+                            .subscribe((resp: CallerModel) => { },
+                                (error: any) => {
+                                    console.log('Error in demandTrail');
+                                });
                     }
+
                     this.initializeForm();
                     this.demandModel = new DemandModel();
                     this.showAdd = false;
                     this.buttonValue = 'Create Demand';
                     this.submitted = false;
                     this.childModalEntry.hide();
+                    
                 }, (error: any) => {
                     console.log('Error');
                 });
@@ -850,10 +887,13 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        //this.globalState.Unsubscribe('OnDemandUpdate');
-        //this.globalState.Unsubscribe('OnDemandDetailClick');
-        //this.globalState.Unsubscribe('incidentChangefromDashboard');
-        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.OnDemandUpdate);
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.OnDemandDetailClick);
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard);
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     private incidentChangeHandler(incident: KeyValue): void {

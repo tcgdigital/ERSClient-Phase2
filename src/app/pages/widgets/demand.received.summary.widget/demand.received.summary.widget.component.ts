@@ -1,8 +1,11 @@
 import {
-    Component, OnInit, ElementRef, AfterViewInit,
+    Component, OnInit, OnDestroy, ElementRef, AfterViewInit,
     ViewEncapsulation, Input, ViewChild, SimpleChange
 } from '@angular/core';
-import { ResponseModel, UtilityService, GlobalStateService, GlobalConstants } from '../../../shared';
+import {
+    ResponseModel, UtilityService,
+    GlobalStateService, GlobalConstants
+} from '../../../shared';
 import { WidgetUtilityService } from '../widget.utility';
 import {
     DemandReceivedSummaryModel,
@@ -17,9 +20,10 @@ import {
 import { DemandModel } from '../../shared.components/demand/components/demand.model';
 import { DemandReceivedSummaryWidgetService } from './demand.received.summary.widget.service';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs/Rx';
 import * as Highcharts from 'highcharts';
-import { DemandStatusLogModel,DemandStatusLogService } from "../../shared.components/demandstatuslog";
+import { DemandStatusLogModel, DemandStatusLogService }
+    from "../../shared.components/demandstatuslog";
 
 
 @Component({
@@ -28,7 +32,7 @@ import { DemandStatusLogModel,DemandStatusLogService } from "../../shared.compon
     encapsulation: ViewEncapsulation.None,
     providers: [IncidentService]
 })
-export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewInit {
+export class DemandReceivedSummaryWidgetComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input('currentIncidentId') incidentId: number;
     @Input('initiatedDepartmentId') initiatedDepartmentId: number;
 
@@ -52,16 +56,16 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
     public arrGraphData: GraphObject[];
     public showDemandReceivedGraph: boolean = false;
     public showGraph: boolean = false;
-    private $selfElement: JQuery;
-    private $placeholder: JQuery;
     public isShow: boolean = true;
     public isShowViewAll: boolean = true;
     public isShowViewSub: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
 
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
+
     constructor(private elementRef: ElementRef, private globalState: GlobalStateService,
         private demandReceivedSummaryWidgetService: DemandReceivedSummaryWidgetService,
-         private incidentService: IncidentService,
+        private incidentService: IncidentService,
         private demandStatusLogService: DemandStatusLogService) { }
 
     public ngOnInit(): void {
@@ -71,20 +75,25 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
         this.demandReceivedSummary = this.demandReceivedSummaryWidgetService
             .GetDemandReceivedCount(this.incidentId, this.initiatedDepartmentId);
 
-        this.globalState.Subscribe('DemandAddedUpdated', () => this.onDemandAddedUpdatedSuccess());
-        this.globalState.Subscribe('DemandApproved', () => this.onDemandAddedUpdatedSuccess());
-        this.globalState.Subscribe('DemandAssigned', () => this.onDemandAddedUpdatedSuccess());
-        this.globalState.Subscribe('DemandCompleted', () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DemandAddedUpdated, () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DemandApproved, () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DemandAssigned, () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DemandCompleted, () => this.onDemandAddedUpdatedSuccess());
 
         // SignalR Notification
-        this.globalState.Subscribe('ReceiveDemandCreationResponse', () => this.onDemandAddedUpdatedSuccess());
-        this.globalState.Subscribe('ReceiveDemandApprovedResponse', () => this.onDemandAddedUpdatedSuccess());
-        this.globalState.Subscribe('ReceiveDemandAssignedResponse', () => this.onDemandAddedUpdatedSuccess());
-        this.globalState.Subscribe('ReceiveDemandClosedResponse', () => this.onDemandAddedUpdatedSuccess());
-        this.globalState.Subscribe('ReceiveCompletedDemandAssignedResponse', () => this.onDemandAddedUpdatedSuccess());
-        this.globalState.Subscribe('ReceiveCompletedDemandstoCloseResponse', () => this.onDemandAddedUpdatedSuccess());
-        this.globalState.Subscribe('ReceiveDemandRejectedFromApprovalResponse', () => this.onDemandAddedUpdatedSuccess());
-        this.globalState.Subscribe('ReceiveRejectedDemandsFromClosureResponse', () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe(GlobalConstants.NotificationConstant.ReceiveDemandCreationResponse.Key, () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe(GlobalConstants.NotificationConstant.ReceiveDemandApprovedResponse.Key, () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe(GlobalConstants.NotificationConstant.ReceiveDemandAssignedResponse.Key, () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe(GlobalConstants.NotificationConstant.ReceiveDemandClosedResponse.Key, () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe(GlobalConstants.NotificationConstant.ReceiveCompletedDemandAssignedResponse.Key, () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe(GlobalConstants.NotificationConstant.ReceiveCompletedDemandstoCloseResponse.Key, () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe(GlobalConstants.NotificationConstant.ReceiveDemandRejectedFromApprovalResponse.Key, () => this.onDemandAddedUpdatedSuccess());
+        this.globalState.Subscribe(GlobalConstants.NotificationConstant.ReceiveRejectedDemandsFromClosureResponse.Key, () => this.onDemandAddedUpdatedSuccess());
+    }
+
+    ngOnDestroy(): void {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     public onDemandAddedUpdatedSuccess(): void {
@@ -179,8 +188,8 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
     public showAllDeptSubPendingFunc(demandModelList: DemandModel[]): void {
         this.allDeptDemandReceivedSummaries = [];
         demandModelList.forEach((item: DemandModel) => {
-            if (item.IsClosed === false &&(item.DemandType.IsAutoApproved===true||
-                (item.DemandType.IsAutoApproved===false && item.IsApproved===true))) {
+            if (item.IsClosed === false && (item.DemandType.IsAutoApproved === true ||
+                (item.DemandType.IsAutoApproved === false && item.IsApproved === true))) {
 
                 const allDeptDemandReceivedSummary: AllDeptDemandReceivedSummary = new AllDeptDemandReceivedSummary();
                 allDeptDemandReceivedSummary.description = item.DemandDesc;
@@ -195,7 +204,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
         });
 
         UtilityService.SetRAGStatus(this.allDeptDemandReceivedSummaries, 'Demand');
-        
+
         this.showAllDeptSubPending = true;
         this.showAllDeptSubCompleted = false;
     }
@@ -237,8 +246,8 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
     public showSubDeptSubPendingFunc(demandModelList: DemandModel[]): void {
         this.subDeptDemandReceivedSummaries = [];
         demandModelList.forEach((item: DemandModel) => {
-            if (item.IsClosed === false &&(item.DemandType.IsAutoApproved===true||
-                (item.DemandType.IsAutoApproved===false && item.IsApproved===true))) {
+            if (item.IsClosed === false && (item.DemandType.IsAutoApproved === true ||
+                (item.DemandType.IsAutoApproved === false && item.IsApproved === true))) {
                 const subDeptDemandReceivedSummary: SubDeptDemandReceivedSummary = new SubDeptDemandReceivedSummary();
                 subDeptDemandReceivedSummary.description = item.DemandDesc;
                 subDeptDemandReceivedSummary.requesterDepartmentName = item.RequesterDepartment.DepartmentName;
@@ -252,7 +261,7 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
         });
 
         UtilityService.SetRAGStatus(this.subDeptDemandReceivedSummaries, 'Demand');
-        
+
         this.showSubDeptSubCompleted = false;
         this.showSubDeptSubPending = true;
     }
@@ -299,14 +308,21 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, AfterViewIn
             $currentRow.closest('tr').addClass('bg-blue-color');
         }
         this.demandStatusLogService.GetAllByIncidentTargetDepartment(this.incidentId, targetDepartmentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((demandStatusLogModels: ResponseModel<DemandStatusLogModel>) => {
+
                 this.incidentService.GetIncidentById(this.incidentId)
+                    .takeUntil(this.ngUnsubscribe)
                     .subscribe((incidentModel: IncidentModel) => {
                         WidgetUtilityService.GetGraphDemand(targetDepartmentId, Highcharts,
-                             demandStatusLogModels.Records, 'demand-received-graph-container',
-                              'Received', incidentModel.CreatedOn,'TargetDepartment');
+                            demandStatusLogModels.Records, 'demand-received-graph-container',
+                            'Received', incidentModel.CreatedOn, 'TargetDepartment');
                         this.showDemandReceivedGraph = true;
+                    }, (error: any) => {
+                        console.log(`Error: ${error}`);
                     });
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 }

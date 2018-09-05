@@ -1,11 +1,12 @@
-import { Component, OnInit, ViewEncapsulation, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewEncapsulation, ElementRef, AfterViewInit } from '@angular/core';
 import { ForgotPasswordService } from './forgot.password.service';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { GlobalConstants } from '../../../shared/constants/constants';
 import { ForgotPasswordModel } from './auth.model';
 import { AccountResponse } from '../../../shared/models';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'forgot-password',
@@ -14,14 +15,14 @@ import { Router } from '@angular/router';
     encapsulation: ViewEncapsulation.None,
     providers: [ForgotPasswordService]
 })
-export class ForgotPasswordComponent implements OnInit, AfterViewInit {
+export class ForgotPasswordComponent implements OnInit, OnDestroy, AfterViewInit {
     public forgotPasswordForm: FormGroup;
     public submitted: boolean = false;
     public errorMessage: string = '';
     public SecurityQuestion: string = '';
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
-    constructor(private formBuilder: FormBuilder,
-        private elementRef: ElementRef,
+    constructor(private elementRef: ElementRef,
         private router: Router,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig,
@@ -33,6 +34,7 @@ export class ForgotPasswordComponent implements OnInit, AfterViewInit {
 
     public onBlurMethod(value): void {
         this.forgotPasswordService.GetEecurityQuestion(value)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((x) => {
                 this.SecurityQuestion = x;
                 if (x == null || x === undefined) {
@@ -45,27 +47,43 @@ export class ForgotPasswordComponent implements OnInit, AfterViewInit {
                     this.forgotPasswordForm.controls['SecurityQuestion']
                         .setValue(this.SecurityQuestion);
                 }
-            }, (error) => {
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
                 this.toastrService.error('The UserId or Email does not exist');
-
             });
+    }
+
+    ngOnDestroy(): void {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     public ngAfterViewInit(): void {
         const $self: JQuery = jQuery(this.elementRef.nativeElement);
-        $self.find('.input-group-addon').on('click', (event) => {
-            const $btn: JQuery = $(event.currentTarget);
-            const $input: JQuery = $btn.siblings('input');
 
-            if ($input.text() !== 'empty') {
-                $btn.find('i').toggleClass('fa-eye fa-eye-slash');
-                if ($btn.find('i').hasClass('fa-eye')) {
-                    $input.attr('type', 'text');
-                } else {
-                    $input.attr('type', 'password');
+        $self.find('.input-group-addon')
+            .on('mousedown', (event) => {
+                const $btn: JQuery = $(event.currentTarget);
+                const $input: JQuery = $btn.siblings('input');
+
+                if ($input.text() !== 'empty') {
+                    $btn.find('i').toggleClass('fa-eye fa-eye-slash');
+                    if ($btn.find('i').hasClass('fa-eye')) {
+                        $input.attr('type', 'text');
+                    }
                 }
-            }
-        });
+            })
+            .on('mouseup', (event) => {
+                const $btn: JQuery = $(event.currentTarget);
+                const $input: JQuery = $btn.siblings('input');
+
+                if ($input.text() !== 'empty') {
+                    $btn.find('i').toggleClass('fa-eye fa-eye-slash');
+                    if ($btn.find('i').hasClass('fa-eye-slash')) {
+                        $input.attr('type', 'password');
+                    }
+                }
+            })
     }
 
     public onCancelClick($event): void {
@@ -93,6 +111,8 @@ export class ForgotPasswordComponent implements OnInit, AfterViewInit {
                             this.errorMessage = response.Message;
                         }
                     }
+                }, (error: any) => {
+                    console.log(`Error: ${error}`);
                 });
         }
     }

@@ -103,7 +103,7 @@ export class DateTimePickerDirective implements AfterViewInit {
         };
         this.datepickerInstance = $self.datepicker(options).data('datepicker');
 
-        $self.siblings('.input-group-addon').on('click', () => {
+        $self.siblings('.input-group-append').on('click', () => {
             if (this.datepickerInstance) {
                 this.datepickerInstance.show();
             }
@@ -117,22 +117,24 @@ export class DateTimePickerDirective implements AfterViewInit {
     public toggleControl() {
         const $element: JQuery = jQuery(this.elementRef.nativeElement);
         if ($element.attr('data-disable') !== undefined) {
-            $element.siblings('.input-group-addon').hide();
+            $element.siblings('.input-group-append').hide();
         } else {
-            $element.siblings('.input-group-addon').show();
+            $element.siblings('.input-group-append').show();
         }
     }
 
     private addPickerIcon($element: JQuery): void {
         $element.wrap('<div class="input-group date"></div>');
         const $root: JQuery = $element.closest('.input-group');
-        $root.append(`<span class="input-group-addon">
-                        <i class="fa fa-calendar" aria-hidden="true"></i>
-                    </span>`);
+        $root.append(`<div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class=" fa fa-calendar" aria-hidden="true"></i>
+                        </span>
+                    </div>`);
         if ($element.attr('data-disable') == undefined) {
-            $root.find('.input-group-addon').show();
+            $root.find('.input-group-append').show();
         } else {
-            $root.find('.input-group-addon').hide();
+            $root.find('.input-group-append').hide();
         }
     }
 }

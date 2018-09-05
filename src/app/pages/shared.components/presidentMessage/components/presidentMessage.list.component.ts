@@ -1,9 +1,12 @@
 import { Component, OnInit, ViewEncapsulation, Input, OnDestroy } from '@angular/core';
 import { PresidentMessageModel } from './presidentMessage.model';
 import { PresidentMessageService } from './presidentMessage.service';
-import { ResponseModel, DataExchangeService, GlobalStateService, KeyValue, UtilityService, GlobalConstants } from '../../../../shared';
-import { Router, NavigationEnd } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { 
+    ResponseModel, DataExchangeService, GlobalStateService, 
+    KeyValue, UtilityService, GlobalConstants 
+} from '../../../../shared';
+import { Router } from '@angular/router';
+import { Subscription, Subject } from 'rxjs/Rx';
 
 @Component({
     selector: 'presidentMessage-detail',
@@ -20,6 +23,7 @@ export class PresidentMessageListComponent implements OnInit, OnDestroy {
     isArchive: boolean = false;
     downloadPath: string;
     protected _onRouteChange: Subscription;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     /**
      * Creates an instance of PresidentMessageListComponent.
@@ -35,6 +39,7 @@ export class PresidentMessageListComponent implements OnInit, OnDestroy {
 
     getPresidentMessages(departmentId: number, incidentId: number): void {
         this.presidentMessageService.Query(departmentId, incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<PresidentMessageModel>) => {
                 this.PresidentsMessages = response.Records;
             }, (error: any) => {
@@ -48,14 +53,17 @@ export class PresidentMessageListComponent implements OnInit, OnDestroy {
 
     UpdatePresidentMessage(presidentMessageModelUpdate: PresidentMessageModel): void {
         const presidentMessageModelToSend = Object.assign({}, presidentMessageModelUpdate);
-        this.dataExchange.Publish('OnPresidentMessageUpdate', presidentMessageModelToSend);
+        this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.OnPresidentMessageUpdate, presidentMessageModelToSend);
     }
 
     public ngOnDestroy(): void {
-        //this.dataExchange.Unsubscribe('PresidentMessageModelSaved');
-        //this.dataExchange.Unsubscribe('PresidentMessageModelUpdated');
-        //this.globalState.Unsubscribe('incidentChangefromDashboard');
-        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        //this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.PresidentMessageModelSaved);
+        //this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.PresidentMessageModelUpdated);
+        //this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard);
+        //this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     public ngOnInit(): void {
@@ -74,26 +82,40 @@ export class PresidentMessageListComponent implements OnInit, OnDestroy {
         }
 
         this.getPresidentMessages(this.currentDepartmentId, this.currentIncidentId);
-        this.dataExchange.Subscribe('PresidentMessageModelSaved', (model) => this.onPresidentMessageSuccess(model));
-        this.dataExchange.Subscribe('PresidentMessageModelUpdated', (model) => this.onPresidentMessageSuccess(model));
-        this.dataExchange.Subscribe('PresidentMessageApprovalUpdated', (model) => this.onPresidentMessageSuccess(model));
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.PresidentMessageModelSaved, 
+            (model: PresidentMessageModel) => this.onPresidentMessageSuccess(model));
+
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.PresidentMessageModelUpdated, 
+            (model: PresidentMessageModel) => this.onPresidentMessageSuccess(model));
+
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.PresidentMessageApprovalUpdated, 
+            (model: PresidentMessageModel) => this.onPresidentMessageSuccess(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard, 
+            (model: KeyValue) => this.departmentChangeHandler(model));
 
         // Signalr Notification
-        this.globalState.Subscribe('ReceivePresidentsMessageCreatedResponse', (model: PresidentMessageModel) => {
+        this.globalState.Subscribe
+        (GlobalConstants.NotificationConstant.ReceivePresidentsMessageCreatedResponse.Key, (model: PresidentMessageModel) => {
             this.getPresidentMessages(this.currentDepartmentId, this.currentIncidentId);
         });
 
-        this.globalState.Subscribe('ReceivePresidentsMessageUpdateResponse', (model: PresidentMessageModel) => {
+        this.globalState.Subscribe
+        (GlobalConstants.NotificationConstant.ReceivePresidentsMessageUpdateResponse.Key, (model: PresidentMessageModel) => {
             this.getPresidentMessages(this.currentDepartmentId, this.currentIncidentId);
         });
 
-        this.globalState.Subscribe('ReceivePresidentsMessageApprovedResponse', (model: PresidentMessageModel) => {
+        this.globalState.Subscribe
+        (GlobalConstants.NotificationConstant.ReceivePresidentsMessageApprovedResponse.Key, (model: PresidentMessageModel) => {
             this.getPresidentMessages(this.currentDepartmentId, this.currentIncidentId);
         });
 
-        this.globalState.Subscribe('ReceivePresidentsMessageRejectedResponse', (model: PresidentMessageModel) => {
+        this.globalState.Subscribe
+        (GlobalConstants.NotificationConstant.ReceivePresidentsMessageRejectedResponse.Key, (model: PresidentMessageModel) => {
             this.getPresidentMessages(this.currentDepartmentId, this.currentIncidentId);
         });
     }

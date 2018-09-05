@@ -1,12 +1,12 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-
 
 import { DepartmentService, DepartmentModel } from '../department';
 import { UserProfileService, UserProfileModel } from '../userprofile';
 import { UserPermissionService } from './components/userpermission.service';
 import { UserPermissionModel, DepartmentsToView } from './components/userpermission.model';
-import { ResponseModel, DataExchangeService, AutocompleteComponent, KeyValue } from '../../../shared';
+import { ResponseModel, KeyValue } from '../../../shared';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'user-permission-main',
@@ -14,7 +14,7 @@ import { ResponseModel, DataExchangeService, AutocompleteComponent, KeyValue } f
     templateUrl: './views/userpermission.view.html',
     styleUrls: ['./styles/userpermission.style.scss']
 })
-export class UserPermissionComponent {
+export class UserPermissionComponent implements OnDestroy {
     userProfileItems: UserProfileModel[] = [];
     departments: DepartmentModel[] = [];
     departmentsToView: DepartmentsToView[] = [];
@@ -25,14 +25,16 @@ export class UserPermissionComponent {
     private items: Array<KeyValue> = [];
     allSelectMember: boolean;
     allSelectHOD: boolean;
-
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
+    
     constructor(private userPermissionService: UserPermissionService,
         private userProfileService: UserProfileService,
         private departmentService: DepartmentService, private toastrService: ToastrService,
         private toastrConfig: ToastrConfig) { };
 
     getUserProfiles(): void {
-        this.userProfileService.GetAll()
+        this.userProfileService.GetForDirectory()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<UserProfileModel>) => {
                 this.userProfileItems = response.Records;
                 this.userProfileItems.forEach(userProfile => {
@@ -42,6 +44,11 @@ export class UserPermissionComponent {
                 console.log(`Error: ${error}`);
             });
     };
+
+    ngOnDestroy(): void {
+        this.ngUnsubscribe.next();
+		this.ngUnsubscribe.complete();
+    }
 
     SetAllSelectedToFalse(departmentsToViewModel: DepartmentsToView[]): void {
         departmentsToViewModel.forEach(item => {
@@ -59,6 +66,7 @@ export class UserPermissionComponent {
     onNotify(message: KeyValue): void {
         this.selectedUser = message.Value;
         this.userPermissionService.GetFilterByUsers(message.Value)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<UserPermissionModel>) => {
                 this.SetAllSelectedToFalse(this.departmentsToViewConstant);
                 this.departmentsToView = this.departmentsToViewConstant;
@@ -79,7 +87,6 @@ export class UserPermissionComponent {
                 this.checkAllStatusMember();
             }, (error: any) => {
                 console.log(`Error: ${error}`);
-
             });
     };
 
@@ -173,6 +180,7 @@ export class UserPermissionComponent {
         this.allSelectHOD = false;
         this.getUserProfiles();
         this.departmentService.GetAll()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
                 this.departmentsToViewConstant = this.userPermissionService

@@ -2,10 +2,10 @@ import {
     Component, OnInit, Input, OnDestroy,
     ViewEncapsulation, ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs/Rx';
 
 import {
-    DataServiceFactory, DataExchangeService,
+    DataExchangeService,
     UtilityService, GlobalConstants,
     TextAccordionModel, GlobalStateService, KeyValue
 } from '../../../shared';
@@ -38,6 +38,8 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
     public isShowViewAll: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
 
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
+
     /**
      * Creates an instance of BroadcastWidgetComponent.
      * @param {BroadcastWidgetService} broadcastWidgetService
@@ -53,65 +55,63 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.initiatedDepartmentId;
-        
-        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'BroadcastMessageWidgetViewAll')) {
+
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation
+            (this.currentDepartmentId, 'BroadcastMessageWidgetViewAll')) {
             this.getAllPublishedBroadcasts();
         }
-        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'BroadcastMessageWidget')) {
+
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation
+            (this.currentDepartmentId, 'BroadcastMessageWidget')) {
             this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
             this.getAllBroadcastByIncidentAndDepartment();
         }
 
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
-        this.globalState.Subscribe('BroadcastPublished', (model) => this.onBroadcastPublish(model));
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChange,
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
+            (model: KeyValue) => this.departmentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.BroadcastPublished,
+            (model) => this.onBroadcastPublish(model));
 
         // SignalR Notification
-        this.globalState.Subscribe('ReceiveBroadcastCreationResponse', (model: BroadCastModel) => {
-            this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
-        });
+        this.globalState.Subscribe
+            (GlobalConstants.NotificationConstant.ReceiveBroadcastCreationResponse.Key, (model: BroadCastModel) => {
+                this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
+            });
 
-        this.globalState.Subscribe('ReceiveBroadcastModificationResponse', (model: BroadCastModel) => {
-            this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
-        });
+        this.globalState.Subscribe
+            (GlobalConstants.NotificationConstant.ReceiveBroadcastModificationResponse.Key, (model: BroadCastModel) => {
+                this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
+            });
     }
 
-    // public getLatestBroadcasts(departmentId, incidentId): void {
-    //     this.LatestBroadcastModels = new Array<BroadcastWidgetModel>();
-    //     this.broadcastWidgetService
-    //         .GetLatestBroadcastsByIncidentAndDepartment(departmentId, incidentId)
-    //         .flatMap((x) => x)           
-    //         .subscribe((x) => {
-    //             this.LatestBroadcastModels.push(x);
-    //         }, (error: any) => {
-    //             console.log(`Error: ${error}`);
-    //         }, () => {                
-    //             this.LatestBroadcasts = Observable.of(this.LatestBroadcastModels
-    //                 .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn, '')));
-    //         });
-    // }
-
-     public getLatestBroadcasts(departmentId, incidentId): void {
+    public getLatestBroadcasts(departmentId, incidentId): void {
         this.LatestBroadcastModels = new Array<BroadcastWidgetModel>();
+
         this.broadcastWidgetService
             .GetLatestBroadcastsByIncidentAndDepartment(departmentId, incidentId)
-            .flatMap(x=>x)
+            .takeUntil(this.ngUnsubscribe)
+            .flatMap(x => x)
             .subscribe(a => {
-                let existingIndex = this.LatestBroadcastModels.findIndex(b=>b.BroadcastId == a.BroadcastId);
-                if(existingIndex == -1)
+                let existingIndex = this.LatestBroadcastModels.findIndex(b => b.BroadcastId == a.BroadcastId);
+                if (existingIndex == -1)
                     this.LatestBroadcastModels.push(a);
             }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                console.log(`Error: ${error}`);
             }, () => {
-                    this.LatestBroadcasts = Observable.of(this.LatestBroadcastModels
+                this.LatestBroadcasts = Observable.of(this.LatestBroadcastModels
                     .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn, '')));
             });
-     }
+    }
 
     public getAllPublishedBroadcasts(callback?: Function): void {
         const data: BroadcastWidgetModel[] = [];
         this.broadcastWidgetService
             .GetAllPublishedBroadcastsByIncident(this.currentIncidentId)
+            .takeUntil(this.ngUnsubscribe)
             .flatMap((x) => x)
             .subscribe((x) => {
                 data.push(x);
@@ -127,8 +127,10 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
 
     getAllBroadcastByIncidentAndDepartment(callback?: Function): void {
         const data: BroadcastWidgetModel[] = [];
+
         this.broadcastWidgetService
             .GetAllBroadcastsByIncidentAndDepartment(this.currentDepartmentId, this.currentIncidentId)
+            .takeUntil(this.ngUnsubscribe)
             .flatMap((x) => x)
             .subscribe((x) => {
                 data.push(x);
@@ -147,6 +149,7 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
         // this.getAllPublishedBroadcasts(() => {
         //     this.childModal.show();
         // });
+
         this.getAllBroadcastByIncidentAndDepartment(() => {
             this.childBroadcastByDept.show();
         })
@@ -167,18 +170,24 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        // this.globalState.Unsubscribe('incidentChange');
-        // this.globalState.Unsubscribe('departmentChange');
-        //this.globalState.Unsubscribe('BroadcastPublished');
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChange);
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.DepartmentChange);
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.BroadcastPublished);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     private incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
 
-        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'BroadcastMessageWidgetViewAll')) {
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation
+            (this.currentDepartmentId, 'BroadcastMessageWidgetViewAll')) {
             this.getAllPublishedBroadcasts();
         }
-        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'BroadcastMessageWidget')) {
+
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation
+            (this.currentDepartmentId, 'BroadcastMessageWidget')) {
             this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
             this.getAllBroadcastByIncidentAndDepartment();
         }
@@ -186,7 +195,7 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
 
     private onBroadcastPublish(broadcast: BroadCastModel): void {
         if (broadcast.IsSubmitted) {
-            this.LatestBroadcastModels = [];            
+            this.LatestBroadcastModels = [];
             this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
         }
     }
@@ -194,10 +203,13 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
     private departmentChangeHandler(department: KeyValue): void {
         this.currentDepartmentId = department.Value;
 
-        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'BroadcastMessageWidgetViewAll')) {
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation
+            (this.currentDepartmentId, 'BroadcastMessageWidgetViewAll')) {
             this.getAllPublishedBroadcasts();
         }
-        if (UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'BroadcastMessageWidget')) {
+
+        if (UtilityService.GetNecessaryPageLevelPermissionValidation
+            (this.currentDepartmentId, 'BroadcastMessageWidget')) {
             this.getLatestBroadcasts(this.currentDepartmentId, this.currentIncidentId);
             this.getAllBroadcastByIncidentAndDepartment();
         }

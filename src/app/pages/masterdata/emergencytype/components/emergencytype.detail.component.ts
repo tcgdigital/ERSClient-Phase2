@@ -1,14 +1,14 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { EmergencyTypeModel } from './emergencytype.model';
 import { EmergencyTypeService } from './emergencytype.service';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs/Rx';
 
 import {
     ResponseModel, DataExchangeService, SearchConfigModel,
     SearchTextBox, SearchDropdown,
-    NameValue
+    NameValue,
+    GlobalConstants
 } from '../../../../shared';
-import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
     selector: 'emergencytype-detail',
@@ -21,6 +21,7 @@ export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
     emergencyTypePatch: EmergencyTypeModel = null;
     expandSearch: boolean = false;
     searchValue: string = "Expand Search";
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     /**
      * Creates an instance of EmergencyTypeDetailComponent.
@@ -39,6 +40,7 @@ export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
      */
     getEmergencyTypes(): void {
         this.emergencyTypeService.GetAll()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                 this.emergencyTypes = response.Records;
                 this.emergencyTypes.forEach(x => {
@@ -55,7 +57,7 @@ export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
 
     UpdateEmergencyType(emergencyTypeModelUpdate: EmergencyTypeModel): void {
         let emergencyModelToSend = Object.assign({}, emergencyTypeModelUpdate)
-        this.dataExchange.Publish("OnEmergencyTypeUpdate", emergencyModelToSend);
+        this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.OnEmergencyTypeUpdate, emergencyModelToSend);
     }
 
     expandSearchPanel(value): void {
@@ -72,8 +74,12 @@ export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.getEmergencyTypes();
         this.initiateSearchConfigurations();
-        this.dataExchange.Subscribe('EmergencyTypeModelSaved', model => this.onSuccess(model));
-        this.dataExchange.Subscribe('EmergencyTypeModelUpdated', model => this.onSuccess(model))
+
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.EmergencyTypeModelSaved, 
+            (model: EmergencyTypeModel) => this.onSuccess(model));
+
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.EmergencyTypeModelUpdated, 
+            (model: EmergencyTypeModel) => this.onSuccess(model))
     }
 
     /**
@@ -82,9 +88,12 @@ export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
      * @memberOf EmergencyTypeDetailComponent
      */
     ngOnDestroy(): void {
-        //this.dataExchange.Unsubscribe('OnEmergencyTypeUpdate');
-        this.dataExchange.Unsubscribe('EmergencyTypeModelSaved');
-        this.dataExchange.Unsubscribe('EmergencyTypeModelUpdated');
+        //this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.OnEmergencyTypeUpdate);
+        this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.EmergencyTypeModelSaved);
+        this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.EmergencyTypeModelUpdated);
+
+        this.ngUnsubscribe.next();
+		this.ngUnsubscribe.complete();
     }
 
     IsActive(event: any, editedEmergencyType: EmergencyTypeModel): void {
@@ -140,6 +149,7 @@ export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
     invokeSearch(query: string): void {
         if (query !== '') {
             this.emergencyTypeService.GetQuery(query)
+                .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                     this.emergencyTypes = response.Records;
                 }, ((error: any) => {

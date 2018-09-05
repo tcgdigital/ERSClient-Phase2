@@ -1,7 +1,6 @@
 @import '../../config/config';
-
 .statusRed {
-    background: $rag-red  none repeat scroll 0 0;
+    background: $rag-red none repeat scroll 0 0;
     border-radius: 20px;
     float: left;
     height: 12px;
@@ -27,32 +26,29 @@
     width: 12px;
 }
 
-.entryHolder{
+.entryHolder {
     background: $entryholder-background;
     padding: 15px;
-    border:$entryholder-color solid 1px;
-    float: left;
-    margin: 15px 23px;
-    @media screen and (max-width: $resMD-S){
-margin: 15px 1.5%;
-}
-}
-
-.addbuttonHolder{
-    padding: 5px 15px;
-    float: right;
+    border: $entryholder-color solid 1px;
+    float: left; // margin: 15px 23px;
+    @media screen and (max-width: $resMD-S) {
+        margin: 15px 1.5%;
+    }
 }
 
-.formStyle{
-    width : 97%;
+// .addbuttonHolder {
+//     padding: 5px 15px;
+//     float: right;
+// }
+// .formStyle{
+//     width : 97%;
+// }
+.noBorder {
+    border: none !important;
 }
 
-.noBorder{
-    border : none !important;
-}
-
-.halfBoxStyle{
-        width: 49.5%;
+.halfBoxStyle {
+    width: 49.5%;
     padding-left: 14px;
 }
 
@@ -61,27 +57,27 @@ margin: 15px 1.5%;
     padding: 5px;
 }
 
-.lebelHeaderStyle{
+.lebelHeaderStyle {
     text-align: center;
 }
-.buttonholder{
-        float: right;
-    vertical-align: middle;
-       padding-right: 6px;
-}
 
-.holderRemark{
+// .buttonholder {
+//     float: right;
+//     vertical-align: middle;
+//     padding-right: 6px;
+// }
+.holderRemark {
     padding-left: 23px;
     padding-right: 7px;
 }
 
-.buttonholderRemark{
-        float: right;
+.buttonholderRemark {
+    float: right;
     vertical-align: middle;
-       padding-right: 6px;
-       padding-top: 21px;
-}
-.marg25{
-    margin-top:25px;
+    padding-right: 6px;
+    padding-top: 21px;
 }
 
+.marg25 {
+    margin-top: 25px;
+}

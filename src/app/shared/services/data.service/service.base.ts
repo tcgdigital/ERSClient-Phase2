@@ -1,6 +1,6 @@
 
 import { Observable } from 'rxjs/Rx';
-import { BaseModel, ResponseModel } from '../../models';
+import { BaseModel, ResponseModel, NameValue } from '../../models';
 import { IServiceInretface } from './service.interface';
 import { DataService } from './data.service'
 import { DataServiceFactory } from './data.service.factory';
@@ -44,7 +44,12 @@ export abstract class ServiceBase<T extends BaseModel> implements IServiceInretf
         return this._dataService.Patch(entity, key.toString()).Execute();
     }
 
-    public Delete(key: number,entity ?: T): Observable<T> {
+    public UpdateWithHeader(entity: T, header: NameValue<string> ): Observable<T> {
+        let key = entity[Object.keys(entity)[0]].toString();
+        return this._dataService.PatchWithHeader(entity, key.toString(), header).Execute();
+    }
+
+    public Delete(key: number, entity?: T): Observable<T> {
         key = (key) ? key : entity[Object.keys(entity)[0]].toString();
         return this._dataService.Delete(key.toString()).Execute();
     }

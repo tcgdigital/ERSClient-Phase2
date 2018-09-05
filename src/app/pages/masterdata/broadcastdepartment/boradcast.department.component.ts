@@ -2,9 +2,10 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { BroadCastDepartmentModel, BroadcastDepartmentService } from './components';
 
 import { DepartmentService, DepartmentModel } from '../department';
-import { ResponseModel, DataExchangeService, AutocompleteComponent, KeyValue, AuthModel, UtilityService } from '../../../shared';
+import { ResponseModel, KeyValue, AuthModel, UtilityService } from '../../../shared';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import * as _ from 'underscore';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'broadcastDepartment-main',
@@ -22,23 +23,27 @@ export class BroadcastDepartmentComponent {
     credential: AuthModel;
     allselect: boolean = false;
     private items: KeyValue[] = [];
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
-    constructor(private broadcastdepartmentmappingservice: BroadcastDepartmentService, 
+    constructor(private broadcastdepartmentmappingservice: BroadcastDepartmentService,
         private toastrService: ToastrService,
         private departmentService: DepartmentService,
         private toastrConfig: ToastrConfig) { }
 
     getAlldepartments(): void {
         this.departmentService.GetAll()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((departments: ResponseModel<DepartmentModel>) => {
                 this.departments = departments.Records;
                 this.departments.forEach((x) => {
                     const item = Object.assign({}, x);
                     this.items.push(new KeyValue(x.DepartmentName, x.DepartmentId));
                 });
-
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
+
     setinitialdepartmentstobroadcast(): void {
         this.departmentsToBroadcastToShow = [];
         this.departments.forEach((x) => {
@@ -53,7 +58,7 @@ export class BroadcastDepartmentComponent {
             .subscribe((response: ResponseModel<BroadCastDepartmentModel>) => {
                 this.setinitialdepartmentstobroadcast();
                 this.departmentsToBroadcastToShow = _.without(this.departmentsToBroadcastToShow,
-                     _.findWhere(this.departmentsToBroadcastToShow, { DepartmentId: departmentId }));
+                    _.findWhere(this.departmentsToBroadcastToShow, { DepartmentId: departmentId }));
                 if (response.Records.length > 0) {
                     response.Records.forEach((x) => {
                         this.departmentsToBroadcastToShow.forEach((y) => {
@@ -65,6 +70,8 @@ export class BroadcastDepartmentComponent {
                 }
                 this.allselect = this.departmentsToBroadcastToShow.length != 0 && this.departmentsToBroadcastToShow
                     .filter((x) => x['Isselected']).length == this.departmentsToBroadcastToShow.length;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -80,8 +87,8 @@ export class BroadcastDepartmentComponent {
     }
 
     onestatuschanged(value: any): void {
-        this.allselect = this.departmentsToBroadcastToShow.length != 0 && (this.departmentsToBroadcastToShow.filter(x => x['Isselected']).length == this.departmentsToBroadcastToShow.length);
-
+        this.allselect = this.departmentsToBroadcastToShow.length != 0 
+            && (this.departmentsToBroadcastToShow.filter(x => x['Isselected']).length == this.departmentsToBroadcastToShow.length);
     }
 
     invokeReset(): void {
@@ -99,6 +106,7 @@ export class BroadcastDepartmentComponent {
             let datenow = this.date;
             let userId = +this.credential.UserId;
             let selecteddept = this.selectedInitiateDept;
+
             modeltosave = model.map((x) => {
                 let item: BroadCastDepartmentModel = new BroadCastDepartmentModel();
                 item.InitiationDepartmentId = selecteddept;
@@ -108,6 +116,7 @@ export class BroadcastDepartmentComponent {
                 item.CreatedOn = datenow;
                 return item;
             });
+
             this.broadcastdepartmentmappingservice.CreateBulk(modeltosave)
                 .subscribe((response: BroadCastDepartmentModel[]) => {
                     this.toastrService.success('Departments mapped successfully to broadcast.', 'Success', this.toastrConfig);

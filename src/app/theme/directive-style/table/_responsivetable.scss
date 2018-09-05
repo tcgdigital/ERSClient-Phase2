@@ -6,15 +6,15 @@
 .table-responsive-vertical {
     overflow-x: hidden; // a.nav
     a.scroll-nav {
-        &:active, &:hover {
+        &:active,
+        &:hover {
             text-decoration: none;
         }
         position: absolute;
         top: 50%;
         @include transform(translateY(-50%));
         width: 22px;
-        height: 46px;
-        // background-color: $text-accordion-nav-bg;
+        height: 46px; // background-color: $text-accordion-nav-bg;
         background-color: rgba(37, 31, 31, 0.4);
         background-repeat: no-repeat;
         background-position: center center;
@@ -73,7 +73,7 @@
     width: 100%;
     max-width: 100%;
     margin-bottom: 0 !important;
-    p{
+    p {
         margin: 0;
     }
     background-color: $table-bg;
@@ -125,7 +125,7 @@
 .table {
     tbody>tr>td {
         font-size: $font-size-normal;
-        a{
+        a {
             font-size: $font-size-normal;
         }
     }
@@ -184,8 +184,8 @@
     }
 }
 
-.scrollclass{
-    height:200px;
+.scrollclass {
+    height: 200px;
     overflow: auto;
 }
 
@@ -203,9 +203,10 @@
                     display: block;
                     >tr {
                         display: block;
-                        border: 1px solid $table-border-color;
+                        border: 1px solid $table-border-color !important;
                         border-radius: 2px;
-                        margin-bottom: 1.6rem;
+                        margin-bottom: 12px;
+                        padding-bottom: 15px;
                         >td {
                             background-color: $table-bg;
                             display: block;
@@ -215,7 +216,7 @@
                                 content: attr(data-title);
                                 float: left;
                                 font-size: inherit;
-                                font-weight: 400;
+                                font-weight: bold;
                                 color: $table-header-font-color;
                             }
                         }
@@ -265,6 +266,10 @@
             }
         }
     }
+
+    .scrollclass {
+        height: auto;
+    }
 }
 
 .table-hover>tbody>tr:hover> {
@@ -303,6 +308,10 @@
                 background-color: $table-stripped-red-hover-bg;
             }
         }
+    }
+
+    .scrollclass {
+        height: auto;
     }
 }
 

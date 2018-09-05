@@ -3,19 +3,18 @@ import {
     OnInit, OnDestroy, ViewChild
 } from '@angular/core';
 import {
-    ResponseModel, GlobalConstants, KeyValue,
-    GlobalStateService, UtilityService
+    ResponseModel, KeyValue, GlobalStateService, UtilityService, GlobalConstants
 } from '../../../../shared';
-import { Observable, Subscription } from 'rxjs/Rx';
+import { Subscription, Subject } from 'rxjs/Rx';
 
 import {
-    CallCenterOnlyPageService,
-    ExternalInputModel
+    CallCenterOnlyPageService, ExternalInputModel
 } from '../../../callcenteronlypage/component';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { InvolvePartyService } from '../../involveparties';
-import { InvolvePartyModel,
+import {
+    InvolvePartyModel,
     AffectedPeopleService, AffectedPeopleToView
 } from '../../../shared.components';
 
@@ -25,7 +24,7 @@ import { InvolvePartyModel,
     templateUrl: '../views/passanger.query.recievedcallslist.view.html',
     providers: [InvolvePartyService, AffectedPeopleService]
 })
-export class PassangerQueryRecievedCallsListComponent implements OnInit {
+export class PassangerQueryRecievedCallsListComponent implements OnInit, OnDestroy {
     @ViewChild('childModalcallcenter') public childModalcallcenter: ModalDirective;
     @ViewChild('childModaldemand') public childModaldemand: ModalDirective;
 
@@ -37,7 +36,17 @@ export class PassangerQueryRecievedCallsListComponent implements OnInit {
     public isArchive: boolean = false;
     affectedPeople: AffectedPeopleToView[];
     passengers: KeyValue[] = [];
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
+    /**
+     *Creates an instance of PassangerQueryRecievedCallsListComponent.
+     * @param {CallCenterOnlyPageService} callcenteronlypageservice
+     * @param {InvolvePartyService} involvedPartyService
+     * @param {AffectedPeopleService} affectedPeopleService
+     * @param {Router} _router
+     * @param {GlobalStateService} globalState
+     * @memberof PassangerQueryRecievedCallsListComponent
+     */
     constructor(private callcenteronlypageservice: CallCenterOnlyPageService,
         private involvedPartyService: InvolvePartyService,
         private affectedPeopleService: AffectedPeopleService,
@@ -57,26 +66,30 @@ export class PassangerQueryRecievedCallsListComponent implements OnInit {
 
         this.getPassengersCrews();
         // this.getAllPassengerQueryCallsRecieved(this.currentIncidentId);
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllPassengerQueryCallsRecieved(this.currentIncidentId));
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard,
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.CallRecieved,
+            (model: number) => this.getAllPassengerQueryCallsRecieved(this.currentIncidentId));
 
         // SignalR Notification
-        this.globalState.Subscribe('AssignedPassangerEnquiryCreationResponse', (model: ExternalInputModel) => {
-            // this.getAllPassengerQueryCallsRecieved(model.IncidentId);
-            const index: number = this.allAssignedCalls
-                .findIndex((x: ExternalInputModel) => x.ExternalInputId === model.ExternalInputId);
+        this.globalState.Subscribe
+            (GlobalConstants.NotificationConstant.AssignedPassangerEnquiryCreationResponse.Key,
+            (model: ExternalInputModel) => {
+                const index: number = this.allAssignedCalls
+                    .findIndex((x: ExternalInputModel) => x.ExternalInputId === model.ExternalInputId);
 
-            if (index > -1) {
-                this.allAssignedCalls.splice(index, 1, model);
-            } else {
-                this.allAssignedCalls.unshift(model)
-            }
-        });
-        /*
-        this.globalState.Subscribe('closePDAEnqReceived', (model: string) => {
-            this.cancelCallcenter();
-        });
-        */
+                if (index > -1) {
+                    this.allAssignedCalls.splice(index, 1, model);
+                } else {
+                    this.allAssignedCalls.unshift(model)
+                }
+            });
+    }
+
+    public ngOnDestroy(): void {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     incidentChangeHandler(incident: KeyValue): void {
@@ -88,8 +101,11 @@ export class PassangerQueryRecievedCallsListComponent implements OnInit {
         this.childModalcallcenter.hide();
         this.callcenterload = false;
         this.callcenteronlypageservice.GetPassengerQueryCallsRecievedByIncident(incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -106,6 +122,7 @@ export class PassangerQueryRecievedCallsListComponent implements OnInit {
 
     getPassengersCrews(): void {
         this.involvedPartyService.GetFilterByIncidentId(this.currentIncidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
                 const passengerModels = this.affectedPeople.filter(x => x.IsCrew === false);

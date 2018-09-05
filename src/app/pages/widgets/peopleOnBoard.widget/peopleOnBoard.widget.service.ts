@@ -36,6 +36,7 @@ export class PeopleOnBoardWidgetService implements OnInit {
         let nationalityWiseCount: number = 0;
         let paxTypeWiseCount: number = 0;
         this.peopleOnBoard = new PeopleOnBoardModel();
+
         return this.GetAllPassengerCount(incidentId)
             .map((dataTotalAffectedPassenger: ResponseModel<InvolvePartyModel>) => {
                 let passengerListLocal: PassengerModel[] = [];

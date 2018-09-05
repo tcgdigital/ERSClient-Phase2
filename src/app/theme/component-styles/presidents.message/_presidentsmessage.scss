@@ -1,26 +1,22 @@
-
-.entryHolder{
+.entryHolder {
     background: #fff;
     padding: 15px;
     border: #ccc solid 1px;
-    float: left;
-    margin: 15px 23px;
-    @media screen and (max-width: $resMD-S){
-margin: 15px 1.5%;
-}
-}
-
-.addbuttonHolder{
-    padding: 5px 15px;
-    float: right;
+    float: left; // margin: 15px 23px;
+    @media screen and (max-width: $resMD-S) {
+        margin: 15px 1.5%;
+    }
 }
 
-.formStyle{
-    width : 97%;
-}
-
-.buttonholder{
-        float: right;
-    vertical-align: middle;
-    padding-top: 27px;
-}
+// .addbuttonHolder{
+//     padding: 5px 15px;
+//     float: right;
+// }
+// .formStyle{
+//     width : 97%;
+// }
+// .buttonholder{
+//         float: right;
+//     vertical-align: middle;
+//     padding-top: 27px;
+// }

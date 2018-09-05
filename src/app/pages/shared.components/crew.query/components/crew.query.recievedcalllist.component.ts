@@ -3,16 +3,15 @@ import {
     OnInit, OnDestroy, ViewChild
 } from '@angular/core';
 import {
-    ResponseModel, GlobalConstants, KeyValue,
-    GlobalStateService, UtilityService
+    ResponseModel, KeyValue, GlobalStateService, UtilityService, GlobalConstants
 } from '../../../../shared';
-import { Observable, Subscription } from 'rxjs/Rx';
+import { Subscription, Subject } from 'rxjs/Rx';
 
 import {
     CallCenterOnlyPageService,
     ExternalInputModel
 } from '../../../callcenteronlypage/component';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { InvolvePartyService } from '../../involveparties';
 import { InvolvePartyModel,
@@ -25,7 +24,7 @@ import { InvolvePartyModel,
     templateUrl: '../views/crew.query.recievedcallslist.view.html',
     providers: [InvolvePartyService, AffectedPeopleService]
 })
-export class CrewQueryRecievedCallsListComponent implements OnInit {
+export class CrewQueryRecievedCallsListComponent implements OnInit, OnDestroy {
     @ViewChild('childModalcallcenter') public childModalcallcenter: ModalDirective;
 
     allAssignedCalls: ExternalInputModel[] = [];
@@ -36,7 +35,17 @@ export class CrewQueryRecievedCallsListComponent implements OnInit {
     public isArchive: boolean = false;
     affectedPeople: AffectedPeopleToView[];
     crews: KeyValue[] = [];
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
+    /**
+     *Creates an instance of CrewQueryRecievedCallsListComponent.
+     * @param {CallCenterOnlyPageService} callcenteronlypageservice
+     * @param {InvolvePartyService} involvedPartyService
+     * @param {AffectedPeopleService} affectedPeopleService
+     * @param {Router} _router
+     * @param {GlobalStateService} globalState
+     * @memberof CrewQueryRecievedCallsListComponent
+     */
     constructor(private callcenteronlypageservice: CallCenterOnlyPageService,
         private involvedPartyService: InvolvePartyService,
         private affectedPeopleService: AffectedPeopleService,
@@ -56,12 +65,15 @@ export class CrewQueryRecievedCallsListComponent implements OnInit {
 
         // this.getAllCrewQueryCallsRecieved(this.currentIncidentId);
         this.getPassengersCrews();
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllCrewQueryCallsRecieved(this.currentIncidentId));
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.CallRecieved, 
+            (model: number) => this.getAllCrewQueryCallsRecieved(this.currentIncidentId));
 
         // SignalR Notification
-        this.globalState.Subscribe('AssignedCrewEnquiryCreationResponse', (model: ExternalInputModel) => {
-
+        this.globalState.Subscribe
+        (GlobalConstants.NotificationConstant.AssignedCrewEnquiryCreationResponse.Key, (model: ExternalInputModel) => {
             const index: number = this.allAssignedCalls
                 .findIndex((x: ExternalInputModel) => x.ExternalInputId === model.ExternalInputId);
 
@@ -73,6 +85,11 @@ export class CrewQueryRecievedCallsListComponent implements OnInit {
         });
     }
 
+    public ngOnDestroy(): void {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
+
     incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
         this.getAllCrewQueryCallsRecieved(this.currentIncidentId);
@@ -82,6 +99,7 @@ export class CrewQueryRecievedCallsListComponent implements OnInit {
         this.childModalcallcenter.hide();
         this.callcenterload = false;
         this.callcenteronlypageservice.GetCrewQueryCallsRecievedByIncident(incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;
             });
@@ -100,6 +118,7 @@ export class CrewQueryRecievedCallsListComponent implements OnInit {
 
     getPassengersCrews(): void {
         this.involvedPartyService.GetFilterByIncidentId(this.currentIncidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
                 const crewModels = this.affectedPeople.filter(x => x.IsCrew == true);

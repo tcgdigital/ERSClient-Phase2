@@ -39,6 +39,7 @@ export class ResponsiveTableComponent implements AfterContentInit, AfterViewInit
     18. 'table-mc-deep-orange'-deep orange
     */
     @Input() hoverStyle: string = 'table-mc-light-blue';
+    @Input() allowFixedColumn: boolean = false;
 
     constructor(private elementRef: ElementRef) { }
 
@@ -48,6 +49,12 @@ export class ResponsiveTableComponent implements AfterContentInit, AfterViewInit
 
     public ngAfterViewInit(): void {
         this.$currentElement = jQuery(this.elementRef.nativeElement);
+
+        if(this.allowFixedColumn){
+            this.$currentElement
+                .find('.table-responsive-vertical')
+                .addClass('fixed-column-container');
+        }
         const $table: JQuery = this.$currentElement.find('table.table');
 
         jQuery('div[bsmodal]').unbind('scroll').scroll(() => {

@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs/Rx';
 
 import { DemandTypeModel } from './demandtype.model';
 import { DemandTypeService } from './demandtype.service';
 import {
     ResponseModel, DataExchangeService, SearchConfigModel,
-    SearchTextBox, SearchDropdown, NameValue
+    SearchTextBox, SearchDropdown, NameValue, GlobalConstants
 } from '../../../../shared';
 
 @Component({
@@ -14,24 +14,34 @@ import {
     templateUrl: '../views/demandtype.list.view.html',
     styleUrls: ['../styles/demandtype.style.scss']
 })
-export class DemandTypeListComponent implements OnInit {
+export class DemandTypeListComponent implements OnInit, OnDestroy {
     demandTypes: DemandTypeModel[] = [];
     demandTypeModelToUpdate: DemandTypeModel = new DemandTypeModel();
     searchConfigs: Array<SearchConfigModel<any>> = new Array<SearchConfigModel<any>>();
     expandSearch: boolean = false;
     searchValue: string = "Expand Search";
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
+    /**
+     *Creates an instance of DemandTypeListComponent.
+     * @param {DemandTypeService} demandTypeService
+     * @param {DataExchangeService<DemandTypeModel>} dataExchange
+     * @memberof DemandTypeListComponent
+     */
     constructor(private demandTypeService: DemandTypeService,
         private dataExchange: DataExchangeService<DemandTypeModel>) { }
 
     getDemandTypes(): void {
         this.demandTypeService.GetAll()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandTypeModel>) => {
 
                 this.demandTypes = response.Records;
                 this.demandTypes.forEach((x) => {
                     x['Active'] = (x.ActiveFlag === 'Active');
                 });
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -56,7 +66,7 @@ export class DemandTypeListComponent implements OnInit {
 
     edit(demandTypeModelToUpdate: DemandTypeModel): void {
         const demandTypeModelToSend = Object.assign({}, demandTypeModelToUpdate);
-        this.dataExchange.Publish('OnDemandUpdate', demandTypeModelToSend);
+        this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.OnDemandUpdate, demandTypeModelToSend);
     }
 
     expandSearchPanel(value): void {
@@ -73,13 +83,20 @@ export class DemandTypeListComponent implements OnInit {
     ngOnInit(): any {
         this.getDemandTypes();
         this.initiateSearchConfigurations();
-        this.dataExchange.Subscribe('demandTypeModelSaved', (model) => this.onDemandSuccess(model));
-        this.dataExchange.Subscribe('demandTypeModelUpdated', (model) => this.onDemandSuccess(model));
+        
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.DemandTypeModelSaved,
+            (model: DemandTypeModel) => this.onDemandSuccess(model));
+
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.DemandTypeModelUpdated,
+            (model: DemandTypeModel) => this.onDemandSuccess(model));
     }
 
     ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe('demandTypeModelUpdated');
-        this.dataExchange.Unsubscribe('demandTypeModelSaved');
+        this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.DemandTypeModelUpdated);
+        this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.DemandTypeModelSaved);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     invokeSearch(query: string): void {
@@ -91,6 +108,7 @@ export class DemandTypeListComponent implements OnInit {
                     query = query.replace("'false'", 'false');
             }
             this.demandTypeService.GetQuery(query)
+                .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: ResponseModel<DemandTypeModel>) => {
                     this.demandTypes = response.Records;
                     this.demandTypes.forEach((x) => {

@@ -1,6 +1,5 @@
-import { Component, ViewEncapsulation, Output, EventEmitter, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { FormGroup, FormControl, FormBuilder, AbstractControl, Validators } from '@angular/forms';
+import { Component, ViewEncapsulation, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 
 import { EmergencyLocationService } from './emergencylocation.service';
@@ -10,9 +9,10 @@ import { ITimeZone } from '../../../../shared/models/base.model';
 import { GlobalTimeZone } from '../../../../shared/constants/timezone';
 
 import {
-    ResponseModel, DataExchangeService, FileUploadService,
+    DataExchangeService, FileUploadService,
     GlobalConstants, UtilityService, AuthModel
 } from '../../../../shared';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'emergencylocation-entry',
@@ -36,6 +36,7 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
     @ViewChild('inputFileStations') inputFileStations: any;
     public showAddText: string = 'ADD RESPONSIBLE STATION';
     public timeZones: ITimeZone[];
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(private emergencyLocationService: EmergencyLocationService,
         private dataExchange: DataExchangeService<EmergencyLocationModel>,
@@ -53,7 +54,9 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
         this.isInvalidForm = false;
         this.initiateForm();
         this.credential = UtilityService.getCredentialDetails();
-        this.dataExchange.Subscribe('OnEmergencyLocationUpdate', (model) => this.onEmergencyLocationUpdate(model));
+
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.OnEmergencyLocationUpdate,
+            (model: EmergencyLocationModel) => this.onEmergencyLocationUpdate(model));
     }
 
     onEmergencyLocationUpdate(model: EmergencyLocationModel) {
@@ -82,7 +85,10 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe('OnEmergencyLocationUpdate');
+        this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.OnEmergencyLocationUpdate);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     getFileDetails(e: any): void {
@@ -108,22 +114,23 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
             const param = this.credential.UserId;
             const errorMsg: string = '';
             this.date = new Date();
+
             this.fileUploadService.uploadFiles<string>(baseUrl + './api/MasterDataExportImport/AirportStationUpload/' + param,
-                this.filesToUpload, this.date.toString()).subscribe((result: string) => {
+                this.filesToUpload, this.date.toString())
+                .subscribe((result: string) => {
                     if (result.startsWith('Error:')) {
                         this.toastrService.error(result, 'Error', this.toastrConfig);
                     }
                     else {
                         this.toastrService.success('File Uploaded successfully.\n' + result, 'Success', this.toastrConfig);
                     }
-                    this.dataExchange.Publish('FileUploadedSuccessfully', new EmergencyLocationModel());
+                    this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.FileUploadedSuccessfully, new EmergencyLocationModel());
                     this.initiateForm();
                     this.isDisabledUpload = true;
+                }, (error: any) => {
+                    console.log(`Error: ${error}`);
                 });
-
-        }
-
-        else {
+        } else {
             this.toastrService.error('Invalid File Format!', 'Error', this.toastrConfig);
             this.initiateForm();
             this.isDisabledUpload = true;
@@ -154,7 +161,7 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
                 this.emergencyLocationService.Create(this.emergencyLocation)
                     .subscribe((response: EmergencyLocationModel) => {
                         this.toastrService.success('Crisis Location is created Successfully.', 'Success', this.toastrConfig);
-                        this.dataExchange.Publish('EmergencyLocationModelSaved', response);
+                        this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.EmergencyLocationModelSaved, response);
                         this.initiateForm();
                         this.showAddRegion(this.showAdd);
                         this.showAdd = false;
@@ -167,10 +174,11 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
                     this.emergencyLocation.ActiveFlag = 'Active';
                 else
                     this.emergencyLocation.ActiveFlag = 'InActive';
+                    
                 this.emergencyLocationService.Update(this.emergencyLocation)
                     .subscribe((response: EmergencyLocationModel) => {
                         this.toastrService.success('Crisis Location is updated Successfully.', 'Success', this.toastrConfig);
-                        this.dataExchange.Publish('EmergencyLocationModelUpdated', response);
+                        this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.EmergencyLocationModelUpdated, response);
                         this.initiateForm();
                         this.showAddRegion(this.showAdd);
                         this.showAdd = false;

@@ -1,29 +1,36 @@
 @import '../../config/config';
- .modal-width-demand {
-        width: 900px;
-    }
-.view-all-style, .sub-dept-style {
-  padding-top: 12px;
-  font-weight: bold;
-  padding-top: 12px;
-  font-weight: bold;
-  font-size: 11px;
-  text-decoration: underline;
+.modal-width-demand {
+    width: 900px;
 }
 
-.statusRed, .statusGreen, .statusAmber {
+.view-all-style,
+.sub-dept-style {
+    padding-top: 12px;
+    font-weight: bold;
+    padding-top: 12px;
+    font-weight: bold;
+    font-size: 11px;
+    text-decoration: underline;
+}
+
+.statusRed,
+.statusGreen,
+.statusAmber {
     border-radius: 20px;
     float: left;
     height: 12px;
     margin-left: 10px;
     width: 12px;
 }
-.statusRed{
+
+.statusRed {
     background: $rag-red none repeat scroll 0 0;
 }
+
 .statusGreen {
     background: $rag-green none repeat scroll 0 0;
 }
+
 .statusAmber {
     background: $rag-amber none repeat scroll 0 0;
 }

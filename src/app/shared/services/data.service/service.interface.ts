@@ -1,4 +1,4 @@
-import { BaseModel, ResponseModel } from '../../models';
+import { BaseModel, ResponseModel, NameValue } from '../../models';
 import { Observable } from 'rxjs/Rx';
 
 export interface IServiceInretface<T extends BaseModel> {
@@ -11,6 +11,8 @@ export interface IServiceInretface<T extends BaseModel> {
     CreateBulk(entities: T[]): Observable<T[]>;
 
     Update(entity: T): Observable<T>;
+
+    UpdateWithHeader(entity: T, header: NameValue<string>): Observable<T>;
 
     Delete(key: number, entity ?: T): void;
 }

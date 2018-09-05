@@ -1,12 +1,10 @@
 import {
     Component, ViewEncapsulation, OnInit,
-    AfterContentInit, ViewChild, OnDestroy, Injector
+    ViewChild, OnDestroy, Injector
 } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-import { Router, NavigationEnd } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
-import { InvolvePartyModel } from '../../involveparties';
+import { Router } from '@angular/router';
+import { Subscription, Subject } from 'rxjs/Rx';
 import { DemandModel, DemandModelToView, DemandRemarkLogModel } from './demand.model';
 import { DemandService } from './demand.service';
 import { DemandRemarkLogService } from './demand.remarklogs.service';
@@ -17,12 +15,9 @@ import * as moment from 'moment/moment';
 import {
     ResponseModel, DataExchangeService, KeyValue,
     GlobalConstants, GlobalStateService,
-    UtilityService, AuthModel, FileUploadService
+    UtilityService, AuthModel
 } from '../../../../shared';
-import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { FileStoreModel } from '../../../../shared/models/file.store.model';
-import { FileStoreService } from '../../../../shared/services/common.service';
 
 @Component({
     selector: 'my-demand',
@@ -51,16 +46,21 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     demandFilePath: string;
     public globalStateProxy: GlobalStateService;
     public isInvalidRemarks: boolean = false;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
+
 
     /**
-     * Creates an instance of MyDemandComponent.
+     *Creates an instance of MyDemandComponent.
      * @param {DemandService} demandService
      * @param {DemandRemarkLogService} demandRemarkLogsService
      * @param {DataExchangeService<number>} dataExchange
      * @param {DemandTrailService} demandTrailService
      * @param {GlobalStateService} globalState
-     *
-     * @memberOf MyDemandComponent
+     * @param {ToastrService} toastrService
+     * @param {ToastrConfig} toastrConfig
+     * @param {Router} _router
+     * @param {Injector} injector
+     * @memberof MyDemandComponent
      */
     constructor(private demandService: DemandService,
         private demandRemarkLogsService: DemandRemarkLogService,
@@ -92,16 +92,24 @@ export class MyDemandComponent implements OnInit, OnDestroy {
         this.createdByName = this.credential.UserName;
         this.Remarks = '';
 
-        this.globalState.Subscribe('DemandAddedUpdated', (model) => this.demandUpdated(model));
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DemandAddedUpdated, 
+            (model) => this.demandUpdated(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard, 
+            (model: KeyValue) => this.departmentChangeHandler(model));
 
         // SignalR Notification
-        this.globalState.Subscribe('ReceiveDemandCreationResponse', (model: DemandModel) => {
+        this.globalState.Subscribe
+        (GlobalConstants.NotificationConstant.ReceiveDemandCreationResponse.Key, (model: DemandModel) => {
             // this.getMyDemands(model.RequesterDepartmentId, model.IncidentId);
             this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
         });
-        this.globalState.Subscribe('ReceiveDemandStatusUpdateResponse', (model: DemandModel) => {
+
+        this.globalState.Subscribe
+        (GlobalConstants.NotificationConstant.ReceiveDemandStatusUpdateResponse.Key, (model: DemandModel) => {
             // this.getMyDemands(model.RequesterDepartmentId, model.IncidentId);
             this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
         });
@@ -113,9 +121,9 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     }
 
     public getMyDemands(deptId, incidentId): void {
-
         this.mydemands.length = 0;
         this.demandService.GetByRequesterDepartment(deptId, incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 // console.log(response);
                 this.mydemands = this.demandService.DemandMapper(response.Records);
@@ -135,58 +143,17 @@ export class MyDemandComponent implements OnInit, OnDestroy {
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
-
     }
-
-    /*
-        public setRagStatus_Old(): void {
-            Observable.interval(1000).subscribe((_) => {
-                if (this.mydemands && this.mydemands.length > 0) {
-                    this.mydemands.forEach((x) => {
-                        if (x.ClosedOn == null) {
-                            const ScheduleTime: number = (Number(x.ScheduleTime) * 60000);
-                            const CreatedOn: number = new Date(x.CreatedOn).getTime();
-                            const CurrentTime: number = new Date().getTime();
-                            const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-                            const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
-                            if (percentage < 50) {
-                                x.RagStatus = 'statusGreen';
-                            } else if (percentage >= 100) {
-                                x.RagStatus = 'statusRed';
-                            }
-                            else {
-                                x.RagStatus = 'statusAmber';
-                            }
-                        }
-                        else {
-                            const ScheduleTime: number = (Number(x.ScheduleTime) * 60000);
-                            const CreatedOn: number = new Date(x.CreatedOn).getTime();
-                            const CurrentTime: number = x.ClosedOn.getTime(); // new Date().getTime();
-                            const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-                            const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
-                            if (percentage < 50) {
-                                x.RagStatus = 'statusGreen';
-                            } else if (percentage >= 100) {
-                                x.RagStatus = 'statusRed';
-                            }
-                            else {
-                                x.RagStatus = 'statusAmber';
-                            }
-                        }
-                    });
-                }
-            });
-        }
-    */
 
     public open(demandId): void {
         const num = UtilityService.UUID();
-        this.globalStateProxy.NotifyDataChanged('OnDemandUpdate', demandId + '!' + num);
-        //this.dataExchange.Publish('OnDemandUpdate', demandId + '!' + num);
+        this.globalStateProxy.NotifyDataChanged(GlobalConstants.DataExchangeConstant.OnDemandUpdate, demandId + '!' + num);
+        //this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.OnDemandUpdate, demandId + '!' + num);
     }
 
     public getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
                 this.demandRemarks = response.Records;
                 this.childModalRemarks.show();
@@ -197,6 +164,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
 
     public getDemandTrails(demandId): void {
         this.demandTrailService.getDemandTrailByDemandId(demandId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandTrailModel>) => {
                 this.demandTrails = response.Records;
                 this.childModalTrail.show();
@@ -232,6 +200,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
         this.RemarkToCreate.RequesterDepartmentName = demand.RequesterDepartmentName;
         this.RemarkToCreate.TargetDepartmentName = demand.TargetDepartmentName;
         this.RemarkToCreate.CreatedByName = this.createdByName;
+
         this.demandRemarkLogsService.Create(this.RemarkToCreate)
             .subscribe((response: DemandRemarkLogModel) => {
                 this.toastrService.success('Remark saved successfully.', 'Success', this.toastrConfig);
@@ -251,7 +220,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
 
     public openDemandDetails(demandId: number): void {
         const num = UtilityService.UUID();
-        this.globalStateProxy.NotifyDataChanged('OnDemandDetailClick', demandId + '!' + num);
+        this.globalStateProxy.NotifyDataChanged(GlobalConstants.DataExchangeConstant.OnDemandDetailClick, demandId + '!' + num);
     }
 
     public canceltrail(demand): void {
@@ -259,9 +228,12 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     }
 
     public ngOnDestroy(): void {
-        //this.globalState.Unsubscribe('incidentChangefromDashboard');
-        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
-        //this.globalState.Unsubscribe('DemandAddedUpdated');
+        //this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard);
+        //this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard);
+        //this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.DemandAddedUpdated);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     private incidentChangeHandler(incident: KeyValue): void {

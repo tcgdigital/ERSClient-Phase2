@@ -1,5 +1,5 @@
 @import '../config/config';
-@import '../../../assets/css/cms-icons';
+@import url(../../../assets/css/cms-icons.css);
 html {
     position: relative;
     height: 100%;
@@ -10,6 +10,20 @@ body {
     margin: 0 auto;
     font-size: $font-size-normal;
     font-family: $font-family-body;
+    -webkit-user-select: none;
+    /* Chrome all / Safari all */
+    -moz-user-select: none;
+    /* Firefox all */
+    -ms-user-select: none;
+    /* IE 10+ */
+    -o-user-select: none;
+    user-select: none;
+}
+
+@media print {
+    body {
+        display: block !important;
+    }
 }
 
 ul {
@@ -94,8 +108,8 @@ footer .row {
     background-color: $disabled-background;
 }
 
-.validationAlert{
-    color:red;
+.validationAlert {
+    color: red;
     font-weight: bold;
     font-size: 16px;
 }
@@ -118,7 +132,8 @@ pages {
     float: left;
     width: 100%;
 }
-.widgetDefaultStyle{
+
+.widgetDefaultStyle {
     max-height: 121px;
     height: 121px;
 }
@@ -160,7 +175,6 @@ pages {
         padding-left: 12%;
     }
 }
-
 
 /*
 @media screen and (max-width: $resXS-E) {}

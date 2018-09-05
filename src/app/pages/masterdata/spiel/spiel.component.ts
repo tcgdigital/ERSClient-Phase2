@@ -1,11 +1,11 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import {
-    FormGroup, FormControl, FormBuilder, Validators,
-    ReactiveFormsModule
+    FormGroup, FormControl, Validators
 } from '@angular/forms';
 import { KeyValueService, KeyValueModel, ResponseModel } from '../../../shared';
 import { DepartmentService, DepartmentModel } from '../department';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'dept-main',
@@ -14,7 +14,7 @@ import { DepartmentService, DepartmentModel } from '../department';
     templateUrl: './views/spiel.entry.view.html',
     styleUrls: ['./styles/spiel.style.scss']
 })
-export class SpileComponent implements OnInit {
+export class SpileComponent implements OnInit, OnDestroy {
     public data: any;
     public generalform: FormGroup;
     public submitted: boolean = false;
@@ -24,6 +24,7 @@ export class SpileComponent implements OnInit {
     public isTextArea: boolean = false;
     public isDropdown: boolean = false;
     private updatedKeyValue: KeyValueModel;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(private keyValueService: KeyValueService,
         private toastrService: ToastrService,
@@ -40,29 +41,35 @@ export class SpileComponent implements OnInit {
         this.initializeForm();
     }
 
+    ngOnDestroy(): void {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
+
     getAllActiveDepartments(): void {
         this.departmentService.GetAllActiveDepartments()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((departments: ResponseModel<DepartmentModel>) => {
                 if (departments.Count > 0) {
                     this.activeDepartments = departments.Records;
                 }
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
     getAllActiveKeyValues(): void {
         this.keyValueService.GetAll()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<KeyValueModel>) => {
                 this.activeKeyValues = response.Records;
-
                 this.generalform.controls["SpielText"].setValue('');
-
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
     }
 
     initializeForm(): void {
-
         this.generalform = new FormGroup({
             SpielType: new FormControl('', [Validators.required]),
             SpielText: new FormControl('', [Validators.required])
@@ -71,8 +78,6 @@ export class SpileComponent implements OnInit {
         this.isTextArea = false;
         this.isDropdown = false;
     }
-
-
 
     keyvalueChange(target: any, Key: string, activeKeyValues: KeyValueModel[]): void {
         if (Key != '') {
@@ -95,20 +100,19 @@ export class SpileComponent implements OnInit {
             const activeOrganization: KeyValueModel = activeKeyValues
                 .find((x: KeyValueModel) => x.Key === Key);
             if (activeOrganization.ControlType.toLowerCase() == 'dropdown') {
-                let departments:DepartmentModel[]= this.activeDepartments.filter((x: DepartmentModel) => {
+                let departments: DepartmentModel[] = this.activeDepartments.filter((x: DepartmentModel) => {
                     return x.DepartmentId == +activeOrganization.Value;
                 });
-                if(departments.length==0){
+                if (departments.length == 0) {
                     this.generalform.controls["SpielText"].setValue('');
                 }
-                else{
+                else {
                     this.generalform.controls["SpielText"].setValue(activeOrganization.Value);
                 }
             }
-            else{
+            else {
                 this.generalform.controls["SpielText"].setValue(activeOrganization.Value);
             }
-            
         }
         else {
             this.generalform.controls["SpielText"].setValue('');
@@ -116,10 +120,7 @@ export class SpileComponent implements OnInit {
             this.isDropdown = false;
             this.isTextArea = false;
         }
-
     }
-
-
 
     public spielSave(): void {
         if (this.generalform.valid) {
@@ -151,8 +152,5 @@ export class SpileComponent implements OnInit {
         else {
             this.submitted = true;
         }
-
     }
-
-
 }

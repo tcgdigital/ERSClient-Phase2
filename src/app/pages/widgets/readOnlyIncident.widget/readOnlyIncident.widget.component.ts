@@ -1,6 +1,6 @@
 import {
     Component, OnInit, Input, Output,
-    ViewChild, ViewEncapsulation, EventEmitter
+    ViewChild, ViewEncapsulation, EventEmitter, OnDestroy
 } from '@angular/core';
 import * as moment from 'moment/moment';
 import * as _ from 'underscore';
@@ -9,28 +9,19 @@ import {
     ResponseModel
 } from '../../../shared';
 import {
-    OrganizationModel,
-    OrganizationService,
-    AircraftTypeModel,
-    AircraftTypeService
+    OrganizationModel, OrganizationService,
+    AircraftTypeModel, AircraftTypeService
 } from '../../shared.components';
 import { EmergencyLocationService, EmergencyLocationModel } from '../../masterdata/emergencylocation';
-import {
-    FormGroup, FormControl, FormBuilder, Validators,
-    ReactiveFormsModule
-} from '@angular/forms';
-import { TimeZoneModel, ZoneIndicator, TimeZoneModels, TimeZoneService } from "../../shared.components/timezone";
-import { Observable } from 'rxjs/Rx';
+import { FormGroup, FormControl } from '@angular/forms';
+import { ZoneIndicator, TimeZoneService } from "../../shared.components/timezone";
+import { Observable, Subject } from 'rxjs/Rx';
 import { IncidentModel } from '../../incident/components/incident.model';
 import { InvolvePartyModel } from '../../shared.components/involveparties/components/involveparty.model';
 import { FlightModel } from '../../shared.components/flights/components/flight.model';
 import { IncidentDataExchangeModel } from '../../incident/components/incidentDataExchange.model';
-import { PresidentMessageModel } from '../../shared.components';
 import { ReadOnlyIncidentWidgetService } from './readOnlyIncident.widget.service';
-import {
-    DataServiceFactory, DataExchangeService,
-    GlobalStateService, KeyValue, UtilityService, Severity
-} from '../../../shared';
+import { KeyValue, UtilityService, Severity } from '../../../shared';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -40,7 +31,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
     encapsulation: ViewEncapsulation.None,
     providers: [ReadOnlyIncidentWidgetService, OrganizationService, AircraftTypeService]
 })
-export class ReadOnlyIncidentWidgetComponent implements OnInit {
+export class ReadOnlyIncidentWidgetComponent implements OnInit, OnDestroy {
     @Input() public currentIncidentLocal: KeyValue;
     @Input() public useLink: boolean;
     @Input() public loadOnInitialize: boolean = false;
@@ -68,6 +59,7 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
     public affectedStations: EmergencyLocationModel[] = new Array<EmergencyLocationModel>();
     public activeOrganizations: OrganizationModel[] = new Array<OrganizationModel>();
     public activeAircraftTypes: AircraftTypeModel[] = new Array<AircraftTypeModel>();
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(
         private readOnlyIncidentWidgetService: ReadOnlyIncidentWidgetService,
@@ -82,23 +74,10 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
             this.Initialization(() => { this.isDataLoaded = true; });
     }
 
-    // public getAllActiveOrganizations(): void {
-    //     this.organizationService.GetAllActiveOrganizations()
-    //         .subscribe((response: ResponseModel<OrganizationModel>) => {
-    //             this.activeOrganizations = response.Records;
-    //         }, (error: any) => {
-    //             console.log(`Error: ${error}`);
-    //         });
-    // }
-
-    // public getAllActiveAircraftTypes(): void {
-    //     this.aircraftTypeService.GetAllActiveAircraftTypes()
-    //         .subscribe((response: ResponseModel<AircraftTypeModel>) => {
-    //             this.activeAircraftTypes = response.Records;
-    //         }, (error: any) => {
-    //             console.log(`Error: ${error}`);
-    //         });
-    // }
+    ngOnDestroy(): void {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
 
     public onViewIncidentClick(): void {
         if (this.currentIncidentLocal.Value != undefined)
@@ -121,9 +100,12 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
 
     public fetchBorrowedIncident(incidentId: number): void {
         this.readOnlyIncidentWidgetService.GetIncidentByIncidentId(incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((item: IncidentModel) => {
                 this.BorrowedIncidentName = item.EmergencyName;
                 this.loadDataIncidentViewPopup();
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -258,15 +240,6 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
             });
     }
 
-    // getAllActiveEmergencyTypes(): void {
-    //     this.emergencyTypeService.GetAllActive()
-    //         .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
-    //             this.activeEmergencyTypes = response.Records;
-    //         }, (error: any) => {
-    //             console.log(`Error: ${error}`);
-    //         });
-    // }
-
     resetIncidentViewForm(): void {
         this.formPopup = new FormGroup({
             IncidentId: new FormControl(0),
@@ -324,6 +297,7 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
         observables.push(this.emergencyLocationService.GetAllActiveEmergencyLocations());
 
         Observable.forkJoin(observables)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<any>[]) => {
                 if (response && response.length > 0) {
                     this.activeOrganizations = _.isEmpty(response[0].Records) ?
@@ -349,29 +323,11 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit {
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
-
-        /*this.getAllActiveOrganizations();
-        this.getAllActiveEmergencyTypes();
-        this.getAllActiveAircraftTypes();
-        this.resetIncidentViewForm();
-
-        this.emergencyLocationService.GetAllActiveEmergencyLocations()
-            .subscribe((result: ResponseModel<EmergencyLocationModel>) => {
-                result.Records.forEach((item: EmergencyLocationModel) => {
-                    const emergencyLocationModel: EmergencyLocationModel = new EmergencyLocationModel();
-                    emergencyLocationModel.IATA = item.IATA;
-                    emergencyLocationModel.AirportName = item.AirportName;
-                    emergencyLocationModel.Country = item.Country;
-                    emergencyLocationModel.TimeZone = item.TimeZone;
-                    emergencyLocationModel.UTCOffset = item.UTCOffset;
-                    this.affectedStations.push(emergencyLocationModel);
-                    this.affectedStations.sort(function (a, b) { return (a.AirportName.toUpperCase() > b.AirportName.toUpperCase()) ? 1 : ((b.AirportName.toUpperCase() > a.AirportName.toUpperCase()) ? -1 : 0); });
-                });
-            });*/
     }
 
     private FetchIncident(): void {
         this.readOnlyIncidentWidgetService.GetIncidentByIncidentId(this.incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((item: IncidentModel) => {
                 this.incidentDataExchangeModel = new IncidentDataExchangeModel();
                 this.incidentDataExchangeModel.IsFlightRelated = false;

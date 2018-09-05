@@ -1,14 +1,14 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-import { Router, NavigationEnd } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { Router } from '@angular/router';
+import { Subscription, Subject } from 'rxjs/Rx';
 
 import { InvolvePartyModel } from '../../../shared.components';
 import { AffectedObjectModel, AffectedObjectsToView } from './affected.objects.model';
 import { AffectedObjectsService } from './affected.objects.service';
 import {
-    ResponseModel, DataExchangeService,
-    GlobalStateService, UtilityService, KeyValue, AuthModel, GlobalConstants
+    ResponseModel, GlobalStateService, UtilityService, 
+    KeyValue, AuthModel, GlobalConstants
 } from '../../../../shared';
 
 @Component({
@@ -29,7 +29,17 @@ export class AffectedObjectsVerificationComponent implements OnInit {
     userid: number;
     credential: AuthModel;
     downloadPath: string;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
+    /**
+     *Creates an instance of AffectedObjectsVerificationComponent.
+     * @param {AffectedObjectsService} affectedObjectsService
+     * @param {GlobalStateService} globalState
+     * @param {ToastrService} toastrService
+     * @param {ToastrConfig} toastrConfig
+     * @param {Router} _router
+     * @memberof AffectedObjectsVerificationComponent
+     */
     constructor(private affectedObjectsService: AffectedObjectsService,
         private globalState: GlobalStateService,
         private toastrService: ToastrService,
@@ -39,6 +49,7 @@ export class AffectedObjectsVerificationComponent implements OnInit {
 
     getAffectedObjects(incidentId): void {
         this.affectedObjectsService.GetFilterByIncidentId(incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 if (response.Records[0]) {
                     this.affectedObjectsForVerification = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
@@ -84,7 +95,9 @@ export class AffectedObjectsVerificationComponent implements OnInit {
         this.isArchive = false;
         this.allSelectVerify = false;
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
-        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard,
+             (model: KeyValue) => this.departmentChangeHandler(model));
 
         if (this._router.url.indexOf('archivedashboard') > -1) {
             this.isArchive = true;
@@ -97,15 +110,22 @@ export class AffectedObjectsVerificationComponent implements OnInit {
         this.getAffectedObjects(this.currentIncident);
         this.credential = UtilityService.getCredentialDetails();
         this.userid = +this.credential.UserId;
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+            (model: KeyValue) => this.incidentChangeHandler(model));
 
         // SignalR Notification
-        this.globalState.Subscribe('ReceiveIncidentBorrowingCompletionResponse', () => {
+        this.globalState.Subscribe
+        (GlobalConstants.NotificationConstant.ReceiveIncidentBorrowingCompletionResponse.Key, () => {
             this.getAffectedObjects(this.currentIncident);
         });
     }
+
     ngOnDestroy(): void {
-       // this.globalState.Unsubscribe('incidentChangefromDashboard');
+       // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard);
+
+       this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     departmentChangeHandler(department: KeyValue): void {

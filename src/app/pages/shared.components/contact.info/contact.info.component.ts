@@ -1,14 +1,14 @@
 import { Component, ViewEncapsulation, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 
 import {
     GlobalStateService, ResponseModel, SearchConfigModel,
-    SearchTextBox
+    SearchTextBox,
+    GlobalConstants
 } from '../../../shared';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { UserProfileService } from '../../masterdata/userprofile/components/userprofile.service';
 import { UserProfileModel } from '../../masterdata/userprofile/components';
-
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'contactinfo',
@@ -21,25 +21,39 @@ export class ContactInfoComponent implements OnInit, OnDestroy {
 
     userprofiles: UserProfileModel[] = [];
     searchConfigs: SearchConfigModel<any>[] = [];
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
-    constructor(private globalState: GlobalStateService, private userprofileService: UserProfileService) {
-
+    /**
+     *Creates an instance of ContactInfoComponent.
+     * @param {GlobalStateService} globalState
+     * @param {UserProfileService} userprofileService
+     * @memberof ContactInfoComponent
+     */
+    constructor(private globalState: GlobalStateService,
+        private userprofileService: UserProfileService) {
     }
 
     ngOnInit(): any {
         this.initiateSearchConfigurations();
-        this.globalState.Subscribe('contactClicked', (model) => this.contactClicked());
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.ContactClicked,
+            (model) => this.contactClicked());
     }
 
     ngOnDestroy() {
-        //this.globalState.Unsubscribe('contactClicked');
+        //this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.ContactClicked);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     contactClicked(): void {
         this.userprofileService.GetForDirectory()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<UserProfileModel>) => {
                 this.userprofiles = response.Records;
                 this.childModal.show();
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -50,6 +64,7 @@ export class ContactInfoComponent implements OnInit, OnDestroy {
     invokeSearch(query: string): void {
         if (query !== '') {
             this.userprofileService.GetQuery(query)
+                .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: ResponseModel<UserProfileModel>) => {
                     this.userprofiles = response.Records;
                 }, ((error: any) => {
@@ -60,8 +75,11 @@ export class ContactInfoComponent implements OnInit, OnDestroy {
 
     invokeReset(): void {
         this.userprofileService.GetForDirectory()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<UserProfileModel>) => {
                 this.userprofiles = response.Records;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 

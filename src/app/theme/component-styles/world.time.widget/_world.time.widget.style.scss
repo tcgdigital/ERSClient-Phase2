@@ -1,6 +1,5 @@
-@import '../../../../assets/css/jClocksGMT';
+@import url(../../../../assets/css/jClocksGMT.css);
 @import '../../config/config';
-
 .world-clock-container {
     padding: 20px 14px;
     z-index: 9;
@@ -36,13 +35,14 @@
             background: rgb(203, 103, 88);
         }
     }
-    select{
+    select {
         width: 100%;
         padding: 2px;
         font-size: 11px;
         margin-left: 4px;
     }
 }
+
 /*@media screen and (min-width: $resXXS-S) {
     .world-clock-opner {
         left: -87px !important;

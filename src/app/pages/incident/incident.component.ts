@@ -19,8 +19,9 @@ export class IncidentComponent implements OnInit {
     }
 
     ngOnInit(): any {
-        
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange, 
+            (model: KeyValue) => this.departmentChangeHandler(model));
+
         this.currentDepartment = +UtilityService.GetFromSession('CurrentDepartmentId');
     }
 

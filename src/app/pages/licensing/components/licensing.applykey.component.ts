@@ -1,15 +1,13 @@
 import {
     Component, OnInit, ViewEncapsulation,
-    ElementRef, OnDestroy, AfterViewInit
+    OnDestroy, AfterViewInit
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
-import { ActivatedRoute, NavigationEnd } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { LicensingService } from '../../../shared/services/common.service';
-import { LicenseInformationModel, LicenseVerificationResponse } from '../../../shared/models';
 import {
-    FormGroup, FormControl, FormBuilder, Validators,
-    ReactiveFormsModule
+    FormGroup, FormControl, Validators
 } from '@angular/forms';
 
 @Component({
@@ -17,24 +15,22 @@ import {
     templateUrl: '../views/licensing.applykey.view.html',
     encapsulation: ViewEncapsulation.None
 })
-
 export class LicensingApplyKeyComponent implements OnInit, OnDestroy, AfterViewInit {
     protected onRouteChange: Subscription;
     private id: number;
-    private onClickVerify: string;
     public form: FormGroup;
 
     constructor(private licensingService: LicensingService,
-        private elementRef: ElementRef,
         private router: Router,
-        private route: ActivatedRoute,
-        private formBuilder: FormBuilder) { }
+        private route: ActivatedRoute) { }
 
     verifyKey(values: object): void {
         let data: string = this.form.controls['key'].value;
         this.licensingService.SetLicenseInfo(data)
             .subscribe((item) => {
                 this.router.navigate(['/login']);
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 

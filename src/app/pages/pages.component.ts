@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, OnInit, ViewChild } from '@angular/core';
-import { Routes, Router, ActivatedRoute } from '@angular/router';
+import { Routes, Router } from '@angular/router';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import * as _ from 'underscore';
 import { Observable } from 'rxjs/Observable';
@@ -9,7 +9,6 @@ import {
     ResponseModel, GlobalStateService,
     StorageType, GlobalConstants, BaseModel, KeyValueService, KeyValueModel
 } from '../shared';
-import { DepartmentService, DepartmentModel } from './masterdata';
 import { IncidentService, IncidentModel } from './incident';
 import { PAGES_MENU } from './pages.menu';
 import { UtilityService } from '../shared/services';
@@ -18,28 +17,26 @@ import { AuthenticationService } from './login/components/authentication.service
 import { UserPermissionService } from './masterdata/userpermission/components';
 import { UserPermissionModel } from './masterdata/userpermission/components';
 import {
-    NotificationConnection, BroadcastEventListener,
-    NotificationBroadcastService, ConnectionConfig,
-    INotificationConnection
+    NotificationBroadcastService, INotificationConnection
 } from '../shared/services/notification.services';
 import { BroadCastModel } from './shared.components/broadcast';
 import { CasualtyExchangeModel } from './widgets/casualty.summary.widget';
 import { ActionableModel } from './shared.components/actionables';
 import { DemandModel } from './shared.components/demand';
 import { MediaModel } from './shared.components/media';
-import { EnquiryModel } from './shared.components/call.centre';
 import { ExternalInputModel } from './callcenteronlypage';
 import { PresidentMessageModel } from './shared.components/presidentMessage';
 import { PresidentMessageWidgetModel } from './widgets/presidentMessage.widget';
 import { MediaReleaseWidgetModel } from './widgets/mediaRelease.widget';
-import { AffectedPeopleModel } from './shared.components/affected.people';
-import { WorldTimeWidgetComponent } from './widgets/world.time.widget'
+import { WorldTimeWidgetComponent } from './widgets/world.time.widget';
+import { RAGScaleService, RAGScaleModel } from './shared.components/ragscale';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'pages',
     encapsulation: ViewEncapsulation.None,
     templateUrl: './pages.view.html',
-    providers: []
+    providers: [RAGScaleService]
 })
 export class PagesComponent implements OnInit {
     @ViewChild('changePasswordModel') public changePasswordModel: ModalDirective;
@@ -59,24 +56,23 @@ export class PagesComponent implements OnInit {
     public showQuicklink: boolean = false;
     public connectionStaters: ConnectionStarter[];
     public activeKeyValues: KeyValueModel[] = [];
-    // public ExecuteOperationProxy: () => void;
     public ExecuteOperationProxy: (...args: any[]) => void;
     public ExecuteOperationProxySimple: (...args: any[]) => void;
-    private sub: any;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     /**
-     * Creates an instance of PagesComponent.
+     *Creates an instance of PagesComponent.
      * @param {Router} router
      * @param {SideMenuService} sideMenuService
      * @param {IncidentService} incidentService
-     * @param {DepartmentService} departmentService
      * @param {UserPermissionService} userPermissionService
      * @param {AuthenticationService} authenticationService
      * @param {GlobalStateService} globalState
      * @param {ToastrService} toastrService
      * @param {ToastrConfig} toastrConfig
-     * @param {ActivatedRoute} route
      * @param {NotificationBroadcastService} passengerImportCompletedNotificationHub
+     * @param {NotificationBroadcastService} cargoImportCompletedNotificationHub
+     * @param {NotificationBroadcastService} crewImportCompletedNotificationHub
      * @param {NotificationBroadcastService} incidentBorrowingNotificationHub
      * @param {NotificationBroadcastService} broadcastMessageNotificationHub
      * @param {NotificationBroadcastService} casualtyStatusUpdateNotificationHub
@@ -89,18 +85,17 @@ export class PagesComponent implements OnInit {
      * @param {NotificationBroadcastService} presidentsMessageNotificationHub
      * @param {NotificationBroadcastService} presidentMessageWorkflowNotificationHub
      * @param {NotificationBroadcastService} queryNotificationHub
+     * @param {KeyValueService} keyValueService
      * @memberof PagesComponent
      */
     constructor(private router: Router,
         private sideMenuService: SideMenuService,
         private incidentService: IncidentService,
-        private departmentService: DepartmentService,
         private userPermissionService: UserPermissionService,
         private authenticationService: AuthenticationService,
         private globalState: GlobalStateService,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig,
-        private route: ActivatedRoute,
         private passengerImportCompletedNotificationHub: NotificationBroadcastService,
         private cargoImportCompletedNotificationHub: NotificationBroadcastService,
         private crewImportCompletedNotificationHub: NotificationBroadcastService,
@@ -116,8 +111,11 @@ export class PagesComponent implements OnInit {
         private presidentsMessageNotificationHub: NotificationBroadcastService,
         private presidentMessageWorkflowNotificationHub: NotificationBroadcastService,
         private queryNotificationHub: NotificationBroadcastService,
-        private keyValueService: KeyValueService) {
+        private keyValueService: KeyValueService,
+        private ragScaleService: RAGScaleService, ) {
+
         this.ConfigureToster();
+
         this.ExecuteOperationProxy = (...args: any[]) => {
             this.ExecuteOperation.apply(this, args);
         };
@@ -138,6 +136,7 @@ export class PagesComponent implements OnInit {
 
         this.ProcessData(() => {
             this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
+
             this.globalState.Subscribe('incidentCreate', (model: number) => {
                 this.getIncidents(() => {
                     this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
@@ -147,17 +146,21 @@ export class PagesComponent implements OnInit {
             });
 
             // SignalR Notification
-            this.globalState.Subscribe('ReceiveCrisisClosureResponse', (model) => {
-                Observable.timer(5000).subscribe((x) => {
-                    this.authenticationService.Logout();
-                    this.router.navigate(['login']);
+            this.globalState.Subscribe
+                (GlobalConstants.NotificationConstant.ReceiveCrisisClosureResponse.Key, (model) => {
+                    Observable.timer(5000).subscribe((x) => {
+                        this.authenticationService.Logout();
+                        this.router.navigate(['login']);
+                    });
                 });
-            });
         }, local_incidents, local_departments);
+
+        this.getRAGScaleData();
     }
 
     public getAllActiveKeyValues(): void {
         this.keyValueService.GetAll()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<KeyValueModel>) => {
                 this.activeKeyValues = response.Records;
             }, (error: any) => {
@@ -167,6 +170,8 @@ export class PagesComponent implements OnInit {
 
     public ngOnDestroy(): void {
         //  this.globalState.Unsubscribe('incidentCreate');
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     public toggleSideMenu($event): void {
@@ -174,7 +179,7 @@ export class PagesComponent implements OnInit {
     }
 
     public onContactClicked($event): void {
-        this.globalState.NotifyDataChanged('contactClicked', '');
+        this.globalState.NotifyDataChanged(GlobalConstants.DataExchangeConstant.ContactClicked, '');
     }
 
     public onHelpClicked($event): void {
@@ -212,7 +217,8 @@ export class PagesComponent implements OnInit {
     public onDepartmentChange(selectedDepartment: KeyValue): void {
         UtilityService.SetToSession({ CurrentDepartmentId: selectedDepartment.Value });
         this.currentDepartmentId = selectedDepartment.Value;
-        this.globalState.NotifyDataChanged('departmentChange', selectedDepartment);
+
+        this.globalState.NotifyDataChanged(GlobalConstants.DataExchangeConstant.DepartmentChange, selectedDepartment);
         this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
         if (+this.activeKeyValues.find((x: KeyValueModel) => x.Key === 'CallCenterDepartmentId').Value == this.currentDepartmentId) {
             this.router.navigate(['pages/callcenteronlypage']);
@@ -226,7 +232,7 @@ export class PagesComponent implements OnInit {
             CurrentOrganizationId: this.incidentOrganizations
                 .find((z) => z.Key === selectedIncident.Value.toString()).Value
         });
-        this.globalState.NotifyDataChanged('incidentChange', selectedIncident);
+        this.globalState.NotifyDataChanged(GlobalConstants.DataExchangeConstant.IncidentChange, selectedIncident);
         this.PrepareConnectionAndCall(this.currentIncidentId, this.currentDepartmentId);
     }
 
@@ -239,19 +245,25 @@ export class PagesComponent implements OnInit {
 
     private getDepartments(callback: () => void = null): void {
         this.GetUserDepartments()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((userDepartments: UserPermissionModel[]) => {
                 this.ProcessUserDepartments(userDepartments);
                 if (callback != null)
                     callback();
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
     private getIncidents(callback: () => void = null): void {
         this.GetIncidents()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((incidents: IncidentModel[]) => {
                 this.ProcessIncidents(incidents);
                 if (callback != null)
                     callback();
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -274,17 +286,18 @@ export class PagesComponent implements OnInit {
     }
 
     private ProcessData(callback: () => void, ...observables: Array<Observable<any[]>>): void {
-        Observable.forkJoin(observables).subscribe((res: any[]) => {
-            if (res && res.length > 0) {
-                if (res[0].length > 0 && _.all(res[0], (x) => _.some(Object.keys(x), (y) => y === 'EmergencyTypeId'))) {
-                    this.ProcessIncidents(res[0] as IncidentModel[]);
+        Observable.forkJoin(observables)
+            .subscribe((res: any[]) => {
+                if (res && res.length > 0) {
+                    if (res[0].length > 0 && _.all(res[0], (x) => _.some(Object.keys(x), (y) => y === 'EmergencyTypeId'))) {
+                        this.ProcessIncidents(res[0] as IncidentModel[]);
+                    }
+                    if (res[1].length > 0 && _.all(res[1], (x) => _.some(Object.keys(x), (y) => y === 'UserPermissionId'))) {
+                        this.ProcessUserDepartments(res[1] as UserPermissionModel[]);
+                    }
+                    callback();
                 }
-                if (res[1].length > 0 && _.all(res[1], (x) => _.some(Object.keys(x), (y) => y === 'UserPermissionId'))) {
-                    this.ProcessUserDepartments(res[1] as UserPermissionModel[]);
-                }
-                callback();
-            }
-        });
+            });
     }
 
     private ProcessIncidents(incidents: IncidentModel[]): void {
@@ -471,6 +484,8 @@ export class PagesComponent implements OnInit {
                 }).start().then((c: INotificationConnection) => {
                     this.ListenCallbacks(c, x);
                 });
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -555,11 +570,11 @@ export class PagesComponent implements OnInit {
     private ExecuteOperationSimple(key: string, model: any): void {
         const message = GlobalConstants.NotificationMessage.find((x) => x.Key === key);
         if (message.Title !== '' && message.Message !== '') {
-            if (key == 'ReceivePassengerImportCompletionResponse' && model.toString() == '0')
+            if (key == GlobalConstants.NotificationConstant.ReceivePassengerImportCompletionResponse.Key && model.toString() == '0')
                 console.log('Default message omitted');
-            else if (key == 'ReceiveCargoImportCompletionResponse' && model.toString() == '0')
+            else if (key == GlobalConstants.NotificationConstant.ReceiveCargoImportCompletionResponse.Key && model.toString() == '0')
                 console.log('Default message omitted');
-            else if (key == 'ReceiveCrewImportCompletionResponse' && model.toString() == '0')
+            else if (key == GlobalConstants.NotificationConstant.ReceiveCrewImportCompletionResponse.Key && model.toString() == '0')
                 console.log('Default message omitted');
             else {
                 const activeToaste = this.toastrService.info(message.Message, message.Title);
@@ -620,5 +635,23 @@ export class PagesComponent implements OnInit {
         audio.autoplay = false;
         audio.load();
         audio.play();
+    }
+
+    /**
+     *In case of page reload get RAGScaleData from database
+     *
+     * @private
+     * @memberof PagesComponent
+     */
+    private getRAGScaleData() {
+        if (UtilityService.RAGScaleData.length == 0) {
+            this.ragScaleService.GetAllActive()
+                .takeUntil(this.ngUnsubscribe)
+                .subscribe((item: ResponseModel<RAGScaleModel>) => {
+                    UtilityService.RAGScaleData = item.Records;
+                }, (error: any) => {
+                    console.log(`Error: ${error}`);
+                });
+        }
     }
 }

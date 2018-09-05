@@ -10,7 +10,7 @@
     cursor: pointer;
     font-family: $font-family-body;
     font-size: $font-size-below-normal;
-    .text-display{
+    .text-display {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -94,18 +94,17 @@
         text-align: left;
         margin: 10px 0;
         span {
-            overflow: hidden;
-           // white-space: nowrap;
+            overflow: hidden; // white-space: nowrap;
         }
         &:after {
             right: 9px;
         }
-.text-display{
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: 107px;
-    }
+        .text-display {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 107px;
+        }
     }
 }
 
@@ -126,7 +125,6 @@
     .wrapper-dropdown {
         width: 138px;
     }
-
     .wrapper-dropdown-incident {
         width: 180px !important;
     }
@@ -144,7 +142,7 @@
 @media screen and (min-width: $resXL-S) {
     .wrapper-dropdown {
         width: 240px;
-        &:after{
+        &:after {
             right: 10px;
         }
         &.active {

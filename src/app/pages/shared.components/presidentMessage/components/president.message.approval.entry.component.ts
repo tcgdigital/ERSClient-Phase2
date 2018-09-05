@@ -1,22 +1,18 @@
 import {
-    Component, ViewEncapsulation, OnDestroy,
-    Output, EventEmitter, OnInit, Input
+    Component, ViewEncapsulation, OnDestroy, OnInit, Input
 } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import {
-    FormGroup, FormControl,
-    FormBuilder, AbstractControl, Validators
+    FormGroup, FormControl, FormBuilder, Validators
 } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-
 
 import { PresidentMessageService } from './presidentMessage.service';
 import { PresidentMessageModel } from './presidentMessage.model';
 import {
-    ResponseModel, DataExchangeService, KeyValue,
+    DataExchangeService, KeyValue,
     GlobalConstants, UtilityService, GlobalStateService, AuthModel
 } from '../../../../shared';
-
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'presidentMessage-approval-entry',
@@ -49,6 +45,8 @@ export class PresidentMessageApprovalEntryComponent implements OnInit, OnDestroy
 
     toolbarConfig: any = GlobalConstants.EditorToolbarConfig;
     public isShowApproveRejectPresidentMessage: boolean = true;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
+    
     /**
      * Creates an instance of PresidentMessageEntryComponent.
      * @param {PresidentMessageService} presidentMessageService 
@@ -75,15 +73,24 @@ export class PresidentMessageApprovalEntryComponent implements OnInit, OnDestroy
         this.currentIncidentId = this.incidentId;
         this.currentDepartmentId = this.initiatedDepartmentId;
         this.credential = UtilityService.getCredentialDetails();
-        this.dataExchange.Subscribe("OnPresidentMessageApprovalUpdate", model => this.onPresidentMessageUpdate(model));
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.OnPresidentMessageApprovalUpdate, 
+            model => this.onPresidentMessageUpdate(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard, 
+            (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
     ngOnDestroy(): void {
-        //this.dataExchange.Unsubscribe("OnPresidentMessageApprovalUpdate");
-        //this.globalState.Unsubscribe('incidentChangefromDashboard');
-        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        //this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.OnPresidentMessageApprovalUpdate);
+        //this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard);
+        //this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     onPresidentMessageUpdate(presidentMessageModel: PresidentMessageModel): void {
@@ -166,6 +173,7 @@ export class PresidentMessageApprovalEntryComponent implements OnInit, OnDestroy
         
         this.PresidentsMessage.UpdatedBy = +this.credential.UserId;
         this.PresidentsMessage.UpdatedOn = new Date();
+        
         this.presidentMessageService.Update(this.PresidentsMessage)
             .subscribe((response: PresidentMessageModel) => {
                 if(this.Action ==="Approve")
@@ -173,7 +181,7 @@ export class PresidentMessageApprovalEntryComponent implements OnInit, OnDestroy
                 if(this.Action === "Reject")
                      this.toastrService.success('President Message is rejected successfully.', 'Success', this.toastrConfig);
                      
-                this.dataExchange.Publish("PresidentMessageApprovalUpdated", response);                                                
+                this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.PresidentMessageApprovalUpdated, response);                                                
                
                 this.showAdd = false; 
                 this.InitiateForm();

@@ -4,10 +4,11 @@ import { PresidentMessageWidgetModel } from './presidentMessage.widget.model';
 import { PresidentMessageModel } from '../../shared.components';
 import { PresidentMessageWidgetService } from './presidentMessage.widget.service';
 import {
-    DataServiceFactory, DataExchangeService, GlobalStateService,
+    DataExchangeService, GlobalStateService,
     TextAccordionModel, KeyValue, UtilityService, GlobalConstants
 } from '../../../shared';
 import { ModalDirective } from 'ngx-bootstrap/modal';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'presidentMessage-widget',
@@ -29,6 +30,8 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
     AllPresidentMessages: Observable<PresidentMessageWidgetModel[]>;
     downloadPath: string;
 
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
+
     constructor(private presidentMessagewidgetService: PresidentMessageWidgetService,
         private dataExchange: DataExchangeService<PresidentMessageWidgetModel>,
         private globalState: GlobalStateService) { }
@@ -45,32 +48,41 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
         }
 
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/GenerateMediareleaseReport/PresidentMessage/' + this.currentIncidentId + '/';
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
-        this.globalState.Subscribe('PresidentMessagePublished', (model) => this.onPresidentMessagePublish(model));
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChange,
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
+            (model: KeyValue) => this.departmentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.PresidentMessagePublished,
+            (model) => this.onPresidentMessagePublish(model));
 
         // Signalr Notification
-        this.globalState.Subscribe('ReceivePresidentsMessageResponse', (model: PresidentMessageWidgetModel) =>
-            this.getLatestPresidentsMessages(this.currentIncidentId));
+        this.globalState.Subscribe
+            (GlobalConstants.NotificationConstant.ReceivePresidentsMessageResponse.Key, (model: PresidentMessageWidgetModel) =>
+                this.getLatestPresidentsMessages(this.currentIncidentId));
     }
 
     public ngOnDestroy(): void {
-        // this.globalState.Unsubscribe('incidentChange');
-        //this.globalState.Unsubscribe('PresidentMessagePublished');
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChange);
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.PresidentMessagePublished);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     getLatestPresidentsMessages(incidentId: number): void {
         let data: PresidentMessageWidgetModel[] = [];
         this.presidentMessagewidgetService
             .GetAllPresidentMessageByIncident(incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .flatMap((x) => x)
             .take(3)
             .subscribe((x) => {
                 data.push(x);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
-            },
-            () => this.presidentMessages = Observable.of(data
+            }, () => this.presidentMessages = Observable.of(data
                 .map((x: PresidentMessageWidgetModel) =>
                     new TextAccordionModel(x.PresidentMessageType, x.PublishedOn,
                         this.downloadPath + x.PresidentsMessageId))));
@@ -80,11 +92,13 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
         let data: PresidentMessageWidgetModel[] = [];
         this.presidentMessagewidgetService
             .GetAllPresidentMessageByIncident(this.currentIncidentId)
+            .takeUntil(this.ngUnsubscribe)
             .flatMap((x) => x)
             .subscribe((x) => {
                 data.push(x);
-            }, (error: any) => { },
-            () => {
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            }, () => {
                 this.AllPresidentMessages = Observable.of(data);
                 if (callback) {
                     callback();

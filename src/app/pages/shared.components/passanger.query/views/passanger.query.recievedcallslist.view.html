@@ -20,7 +20,7 @@
                         <td data-title="Caller Number">{{call.Caller.ContactNumber}}</td>
                         <td data-title="PDA Name">{{getPDAName(call.PDAEnquiry.AffectedPersonId)}}</td>
                         <td data-title="PDA Relation">{{call.Caller.Relationship}}&nbsp;</td>
-                        <td data-title="Action"><i *ngIf ="!isArchive" class="fa fa-edit fa-2x" (click)="openCallcenter(call.ExternalInputId)"></i>&nbsp;</td>
+                        <td data-title="Action"><i *ngIf="!isArchive" class="fa fa-edit fa-2x" (click)="openCallcenter(call.ExternalInputId)"></i>&nbsp;</td>
                     </tr>
                 </tbody>
             </table>
@@ -36,7 +36,7 @@
             <div class="modal-header">
                 <h4 class="modal-title">Call center</h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="cancelCallcenter()">
-                  <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">

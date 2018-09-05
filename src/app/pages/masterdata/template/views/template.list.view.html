@@ -20,14 +20,15 @@
             <th>Description</th>
            </tr>
         </thead>
-         <tr [hidden]="templates.length != 0">
+            <tr [hidden]="templates.length != 0">
                 <td colspan="6">No records found.</td>
             </tr>
-        <tr *ngFor="let template of templates">
-            <td data-title="Media">{{template.TemplateMediaId}}</td>
-            <td data-title="Situation">{{template.EmergencySituation.EmergencySituationName}}</td>
-            <td data-title="Description">{{template.Description}}</td>
-        </tr>
+            <tr *ngFor="let template of templates">
+                <td data-title="Media">{{template.TemplateMediaId}}</td>
+                <td data-title="Situation">{{template.EmergencySituation.EmergencySituationName}}</td>
+                <td data-title="Description" [innerHTML]="template.Description"></td>
+                <!-- <td data-title="Description">{{template.Description}}</td> -->
+            </tr>
     </table>
 </responsive-table>
 </div>

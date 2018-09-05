@@ -73,6 +73,8 @@ export class ChangePasswordComponent implements OnInit, AfterViewInit {
                             this.errorMessage = response.Message;
                         }
                     }
+                }, (error: any) => {
+                    console.log(`Error: ${error}`);
                 });
         }
     }

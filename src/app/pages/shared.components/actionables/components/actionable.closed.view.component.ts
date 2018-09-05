@@ -1,16 +1,15 @@
 import {
     Component, ViewEncapsulation,
-    Input, OnInit, OnDestroy, ViewChild, Injector
+    OnInit, OnDestroy, ViewChild, Injector
 } from '@angular/core';
 import {
-    FormGroup, FormControl, FormBuilder,
-    AbstractControl, Validators, ReactiveFormsModule
+    FormGroup, FormControl, FormBuilder
 } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs/Rx';
+import { Subscription, Subject } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department/components';
-import { ChecklistModel, ChecklistMapper } from '../../../masterdata/checklist/components/checklist.model';
+import { ChecklistMapper } from '../../../masterdata/checklist/components/checklist.model';
 
 import { ActionableModel } from './actionable.model';
 import { ActionableService } from './actionable.service';
@@ -30,6 +29,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 export class ActionableClosedComponent implements OnInit, OnDestroy {
     @ViewChild('childModal') public childModal: ModalDirective;
     @ViewChild('childModalTrail') public childModalTrail: ModalDirective;
+
     closeActionables: ActionableModel[] = [];
     public form: FormGroup;
     actionableModelToUpdate: ActionableModel;
@@ -50,6 +50,8 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     public ChecklistMappers: ChecklistMapper[] = [];
     //actionableWithParentsChilds: ActionableModel[] = [];
 
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
+
     constructor(formBuilder: FormBuilder, private actionableService: ActionableService,
         private dataExchange: DataExchangeService<boolean>, private globalState: GlobalStateService,
         private toastrService: ToastrService, private departmentService: DepartmentService,
@@ -64,7 +66,6 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
         if (this._router.url.indexOf('archivedashboard') > -1) {
             this.isArchive = true;
             this.currentIncident = +UtilityService.GetFromSession('ArchieveIncidentId');
-
         }
         else {
             this.isArchive = false;
@@ -77,13 +78,18 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
 
         this.form = this.resetActionableForm();
         this.actionableModelToUpdate = new ActionableModel();
-        this.dataExchange.Subscribe('CloseActionablePageInitiate', (model) => this.onCloseActionablePageInitiate(model));
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.CloseActionablePageInitiate, 
+            (model) => this.onCloseActionablePageInitiate(model));
 
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChange, 
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard, 
+            (model: KeyValue) => this.departmentChangeHandler(model));
 
         // Signalr Notifivation
-        this.globalState.Subscribe('ReceiveChecklistStatusChangeResponse', (model: ActionableModel) => {
+        this.globalState.Subscribe
+        (GlobalConstants.NotificationConstant.ReceiveChecklistStatusChangeResponse.Key, (model: ActionableModel) => {
             this.getAllCloseActionable(model.IncidentId, model.DepartmentId);
         });
     }
@@ -93,9 +99,11 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe('CloseActionablePageInitiate');
-        this.dataExchange.Unsubscribe('departmentChangeFromDashboard');
+        this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.CloseActionablePageInitiate);
+        this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard);
 
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     IsReopen(event: any, editedActionable: ActionableModel): void {
@@ -104,11 +112,11 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
         tempActionable.Done = true;
         this.actionableService.SetParentActionableStatusByIncidentIdandDepartmentIdandActionable(this.currentIncident,
             this.currentDepartmentId, editedActionable, this.closeActionables);
-
     }
 
     getAllCloseActionable(incidentId: number, departmentId: number): void {
         this.actionableService.GetClosedActionable(incidentId, departmentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((res: ResponseModel<ActionableModel>[]) => {
                 if (res && res.length > 1) {
                     if (res[0]) {
@@ -135,6 +143,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
 
     getAllCloseActionableByIncident(incidentId): void {
         this.actionableService.GetAllCloseByIncidentId(incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ActionableModel>) => {
                 this.actionableWithParents = response.Records;
                 this.parentChecklistIds = this.actionableWithParents.map((actionable) => {
@@ -160,6 +169,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
 
     getActionableTrails(actionaId: number): void {
         this.checklistTrailService.GetTrailByActionableId(actionaId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ChecklistTrailModel>) => {
                 this.checklistTrails = response.Records;
                 this.childModalTrail.show();
@@ -174,10 +184,15 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
 
     openChildActionable(actionable: ActionableModel): void {
         actionable['expanded'] = !actionable['expanded'];
+
         this.actionableService.GetChildActionables(actionable.ChklistId, this.currentIncident)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((responseActionable: ResponseModel<ActionableModel>) => {
+                
                 this.departmentService.GetDepartmentNameIds()
+                    .takeUntil(this.ngUnsubscribe)
                     .subscribe((response: ResponseModel<DepartmentModel>) => {
+                        
                         actionable['actionableChilds'] = [];
                         responseActionable.Records[0].CheckList.CheckListChildrenMapper.forEach((item: ChecklistMapper) => {
                             this.GetListOfChildActionables(item.ChildCheckListId, this.currentIncident, (child: ActionableModel) => {
@@ -189,6 +204,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                     });
+
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -198,12 +214,13 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
         const filterActionableUpdate = closedActionablesUpdate.filter((item: ActionableModel) => {
             return (item.Done === true);
         });
+
         if (filterActionableUpdate.length > 0) {
             filterActionableUpdate.forEach((x) => {
                 delete x['expanded'];
                 delete x['actionableChilds'];
-
             });
+
             this.batchUpdate(filterActionableUpdate.map((x) => {
                 return {
                     ActionId: x.ActionId,
@@ -222,6 +239,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     batchUpdate(data: any[]) {
         this.listActionableSelected = data;
         this.actionableService.BatchOperation(data)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((x) => {
                 this.SaveChecklistTrails(this.listActionableSelected);
 
@@ -233,10 +251,14 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     private SaveChecklistTrails(data: any[]): void {
         this.checklistTrails = [];
         this.departmentService.GetAllActiveDepartments()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((allResultDepartments: ResponseModel<DepartmentModel>) => {
+                
                 this.allDepartments = allResultDepartments.Records;
                 this.actionableService.GetAllByIncident(+UtilityService.GetFromSession('CurrentIncidentId'))
+                    .takeUntil(this.ngUnsubscribe)
                     .subscribe((resultsActionable: ResponseModel<ActionableModel>) => {
+                        
                         data.forEach((item: ActionableModel) => {
                             this.checklistTrail = new ChecklistTrailModel();
                             this.checklistTrail.ChecklistTrailId = 0;
@@ -263,20 +285,24 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
                         });
 
                         this.checklistTrailService.BatchOperation(this.checklistTrails)
+                            .takeUntil(this.ngUnsubscribe)
                             .subscribe((result: ResponseModel<BaseModel>) => {
                                 this.toastrService.success('Actionables updated successfully.', 'Success', this.toastrConfig);
                                 this.getAllCloseActionable(this.currentIncident, this.currentDepartmentId);
-                                this.globalStateProxy.NotifyDataChanged('checkListStatusChange', null);
+                                this.globalStateProxy.NotifyDataChanged(GlobalConstants.DataExchangeConstant.CheckListStatusChange, null);
 
+                            }, (error: any) => {
+                                console.log(`Error: ${error}`);
                             });
+
+                    }, (error: any) => {
+                        console.log(`Error: ${error}`);
                     });
 
-
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
-
-
-
 
     cancelUpdateCommentAndURL(): void {
         this.childModal.hide();
@@ -311,33 +337,13 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
 
     private GetListOfChildActionables(checkListId: number, incidentId: number, callback?: Function): void {
         this.actionableService.GetAcionableByIncidentIdandCheckListId(incidentId, checkListId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((res: ResponseModel<ActionableModel>) => {
                 if (callback) {
                     callback(res.Records[0]);
                 }
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
-
-    // getAllActiveActionableByIncident(incidentId): void {
-    //     this.parentChecklistIds = [];
-    //     const parents: number[] = [];
-    //     this.ChecklistMappers = [];
-    //     const mappers: ChecklistMapper[] = [];
-
-    //     this.actionableService.GetAllOpenByIncidentId(incidentId)
-    //         .subscribe((response: ResponseModel<ActionableModel>) => {
-    //             this.actionableWithParentsChilds = response.Records;
-    //             this.actionableWithParentsChilds.forEach((actionable: ActionableModel) => {
-    //                 if (actionable.CheckList.CheckListParentMapper.length > 0) {
-    //                     actionable.CheckList.CheckListParentMapper.forEach((item: ChecklistMapper) => {
-    //                         parents.push(item.ParentCheckListId);
-    //                         mappers.push(item);
-    //                     });
-    //                 }
-    //             });
-
-    //         }, (error: any) => {
-    //             console.log(`Error: ${error}`);
-    //         });
-    // }
 }

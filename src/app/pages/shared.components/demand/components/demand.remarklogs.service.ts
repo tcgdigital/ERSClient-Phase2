@@ -6,17 +6,19 @@ import { DemandRemarkLogModel } from './demand.model';
 import {
     ResponseModel, DataService,
     DataServiceFactory, DataProcessingService,
-    IServiceInretface, BaseModel, RequestModel, GlobalConstants, WEB_METHOD
+    IServiceInretface, BaseModel, RequestModel, GlobalConstants, WEB_METHOD, NameValue
 } from '../../../../shared';
 
 @Injectable()
 export class DemandRemarkLogService implements IServiceInretface<DemandRemarkLogModel> {
     private _dataService: DataService<DemandRemarkLogModel>;
+
     constructor(private dataServiceFactory: DataServiceFactory) {
         const option: DataProcessingService = new DataProcessingService();
         this._dataService = this.dataServiceFactory
             .CreateServiceWithOptions<DemandRemarkLogModel>('DemandRemarkLogs', option);
     }
+    
     GetAll(): Observable<ResponseModel<DemandRemarkLogModel>> {
         return this._dataService.Query()
             .Execute();
@@ -43,6 +45,12 @@ export class DemandRemarkLogService implements IServiceInretface<DemandRemarkLog
     Update(entity: DemandRemarkLogModel): Observable<DemandRemarkLogModel> {
         let key: string = entity.DemandId.toString()
         return this._dataService.Patch(entity, key)
+            .Execute();
+    }
+
+    UpdateWithHeader(entity: DemandRemarkLogModel, header: NameValue<string>): Observable<DemandRemarkLogModel> {
+        let key: string = entity.DemandId.toString()
+        return this._dataService.PatchWithHeader(entity, key, header)
             .Execute();
     }
 

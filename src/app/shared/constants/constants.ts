@@ -12,6 +12,8 @@ export interface INotificationMessage {
     Key: string;
     Title: string;
     Message: string;
+    ErrorTitle: string;
+    ErrorMessage: string;
 }
 export interface IKeyValue {
     value: string;
@@ -448,322 +450,529 @@ export class GlobalConstants {
             Type: 'PassengerImportNotification',
             Key: 'ReceivePassengerImportCompletionResponse',
             Title: 'Passenger Imported',
-            Message: 'Passengers has been imported. Please refer to tab section "Affected People".'
-        },
-
-        {
+            Message: 'Passengers has been imported. Please refer to tab section "Affected People".',
+            ErrorTitle: 'Passenger Import Failed',
+            ErrorMessage: 'Passenger import operation has been failed due to some exception.'
+        }, {
             Type: 'CargoImportNotification',
             Key: 'ReceiveCargoImportCompletionResponse',
             Title: 'Cargo Imported',
-            Message: 'Cargo has been imported. Please refer to tab section "Affected People".'
-        },
-
-        {
+            Message: 'Cargo has been imported. Please refer to tab section "Affected People".',
+            ErrorTitle: 'Cargo Import Failed',
+            ErrorMessage: 'Cargo import operation has been failed due to some exception.'
+        }, {
             Type: 'CrewImportNotification',
             Key: 'ReceiveCrewImportCompletionResponse',
             Title: 'Crew Imported',
-            Message: 'Crew has been imported. Please refer to tab section "Affected People".'
-        },
-
-        {
+            Message: 'Crew has been imported. Please refer to tab section "Affected People".',
+            ErrorTitle: 'Crew Import Failed',
+            ErrorMessage: 'Crew import operation has been failed due to some exception.'
+        }, {
             Type: 'IncidentBorrowNotification',
             Key: 'ReceiveIncidentBorrowingCompletionResponse',
             Title: 'Incident Borrowed',
-            Message: 'Incident has been borrowed successfully.'
-        },
-
-        {
+            Message: 'Incident has been borrowed successfully.',
+            ErrorTitle: '',
+            ErrorMessage: ''
+        }, {
             Type: 'BroadcastNotification',
             Key: 'ReceiveBroadcastCreationResponse',
             Title: 'Broadcast Created',
-            Message: 'A new Broadcast has been created. Please refer to tab section "Broadcast Message".'
+            Message: 'A new Broadcast has been created. Please refer to tab section "Broadcast Message".',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'BroadcastNotification',
             Key: 'ReceiveBroadcastModificationResponse',
             Title: 'Broadcast Modified',
-            Message: 'A existing Broadcast message has been modified. Please refer to tab section "Broadcast Message".'
-        },
-
-        {
+            Message: 'A existing Broadcast message has been modified. Please refer to tab section "Broadcast Message".',
+            ErrorTitle: '',
+            ErrorMessage: ''
+        }, {
             Type: 'ChecklistNotification',
             Key: 'ReceiveChecklistCreationResponse',
             Title: '',
-            Message: ''
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'ChecklistNotification',
             Key: 'ReceiveChecklistStatusChangeResponse',
             Title: '',
-            Message: ''
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'ChecklistNotification',
             Key: 'ReceiveChecklistClosureResponse',
             Title: 'Checklist Closed',
-            Message: 'A Checklist has been closed. Please refer to tab section "Checklist > Closed".'
+            Message: 'A Checklist has been closed. Please refer to tab section "Checklist > Closed".',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, /*{
             Type: 'ChecklistNotification',
             Key: 'ReceiveChecklistActivationResponse',
             Title: 'Checklist Reopened',
             Message: 'A Checklist has been reopened. Please refer to tab section "Checklist > Active"'
-        },*/
-
-        {
+        },*/ {
             Type: 'CrisisCreationNotification',
             Key: 'ReceiveCrisisCreationResponse',
             Title: 'Crisis Created',
-            Message: 'A new crisis has been initiated. Please logout and re-login to the system to see the details of the new crisis.'
+            Message: 'A new crisis has been initiated. Please logout and re-login to the system to see the details of the new crisis.',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'CrisisCreationNotification',
             Key: 'ReceiveDepartmentCreationResponse',
             Title: 'Department Created',
-            Message: 'A new department has been created. Please logout and re-login to the system to see the new department.'
-        },
-
-        {
+            Message: 'A new department has been created. Please logout and re-login to the system to see the new department.',
+            ErrorTitle: '',
+            ErrorMessage: ''
+        }, {
             Type: 'CrisisClosureNotification',
             Key: 'ReceiveCrisisClosureResponse',
             Title: 'Crisis Closed',
-            Message: 'Current crisis has been closed by {0:model.UserName}, you will be redirected to login page.'
-        },
-
-        {
+            Message: 'Current crisis has been closed by {0:model.UserName}, you will be redirected to login page.',
+            ErrorTitle: '',
+            ErrorMessage: ''
+        }, {
             Type: 'CasualtyNotification',
             Key: 'ReceiveCasualtyCountResponse',
             Title: 'Casualty Status',
-            Message: 'Additional information has been changed. Please refer to dashboard\'s "PDA Casualty Status Block".'
-        },
-
-        {
+            Message: 'Additional information has been changed. Please refer to dashboard\'s "PDA Casualty Status Block".',
+            ErrorTitle: '',
+            ErrorMessage: ''
+        }, {
             Type: 'DemandNotification',
             Key: 'ReceiveDemandCreationResponse',
             Title: 'Demand Created',
-            Message: 'A new {0:model.DemandCode} Demand has been created. Please refer to tab section "Demand > My Demands".'
+            Message: 'A new {0:model.DemandCode} Demand has been created. Please refer to tab section "Demand > My Demands".',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveDemandApprovalPendingResponse',
             Title: 'Demand Approval Pending',
-            Message: 'A Demand has been assigned for your approval. Please refer to tab section "Demand > Approval Pending".'
+            Message: 'A Demand has been assigned for your approval. Please refer to tab section "Demand > Approval Pending".',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveDemandApprovedResponse',
             Title: 'Demand Approved',
-            Message: 'Corresponding demand has been approved.'
+            Message: 'Corresponding demand has been approved.',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveDemandAssignedResponse',
             Title: 'Demand Assigned to Me',
-            Message: 'A new Demand has been assigned to you. Please refer to tab section "Demand > Assigned to Me".'
+            Message: 'A new Demand has been assigned to you. Please refer to tab section "Demand > Assigned to Me".',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveCompletedDemandAssignedResponse',
             Title: 'Demand Completed',
-            Message: 'Corresponding demand has been completed.'
+            Message: 'Corresponding demand has been completed.',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveDemandRejectedFromApprovalResponse',
             Title: 'Demand Rejected',
-            Message: 'Corresponding demand has been rejected by Approver Department.'
+            Message: 'Corresponding demand has been rejected by Approver Department.',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveDemandClosedResponse',
             Title: 'Demand Completed',
-            Message: 'A Demand has been completed. Please refer to tab section "Demand > Completed".'
+            Message: 'A Demand has been completed. Please refer to tab section "Demand > Completed".',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveDemandStatusUpdateResponse',
             Title: '',
-            Message: ''
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
             // Title: 'Demand Status Updated',
             // Message: 'A Demand\'s status has been updated. Please refer to tab section "Demand > My Demands"'
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveCompletedDemandstoCloseResponse',
             Title: 'Demand Closed',
-            Message: 'A Demand has been closed. Please refer to tab section "Demand > Completed".'
+            Message: 'A Demand has been closed. Please refer to tab section "Demand > Completed".',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveRejectedDemandsFromClosureResponse',
             Title: 'Demand Rejected',
-            Message: 'Corresponding demand has been rejected by Initiator Department after completion.'
+            Message: 'Corresponding demand has been rejected by Initiator Department after completion.',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'DemandNotification',
             Key: 'ReceiveRejectedDemandstoAssignResponse',
             Title: '',
-            Message: ''
-        },
-
-
-        {
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
+        }, {
             Type: 'PresidentsMessageNotification',
             Key: 'ReceivePresidentsMessageResponse',
             Title: 'Presidents Message Published',
-            Message: 'A Presidents Message has been published. Please refer to dashboard\'s "Presidents Message Block".'
-        },
-
-        {
+            Message: 'A Presidents Message has been published. Please refer to dashboard\'s "Presidents Message Block".',
+            ErrorTitle: '',
+            ErrorMessage: ''
+        }, {
             Type: 'PresidentsMessageWorkflowNotification',
             Key: 'ReceivePresidentsMessageCreatedResponse',
             Title: 'Presidents Message Created',
-            Message: 'A Presidents Message has been created. Please refer to tab section "Presidents Message > Presidents Message Release".'
+            Message: 'A Presidents Message has been created. Please refer to tab section "Presidents Message > Presidents Message Release".',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'PresidentsMessageWorkflowNotification',
             Key: 'ReceivePresidentsMessageSendForApprovalResponse',
             Title: 'Presidents Message is Sent for Approval',
-            Message: 'A Presidents Message has been sent for approval. Please refer to tab section "Presidents Message > Pending Approval".'
+            Message: 'A Presidents Message has been sent for approval. Please refer to tab section "Presidents Message > Pending Approval".',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'PresidentsMessageWorkflowNotification',
             Key: 'ReceivePresidentsMessageApprovedResponse',
             Title: 'Presidents Message Approved',
-            Message: 'A Presidents Message has been approved. Please refer to tab section "Presidents Message > Presidents Message Release".'
+            Message: 'A Presidents Message has been approved. Please refer to tab section "Presidents Message > Presidents Message Release".',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'PresidentsMessageWorkflowNotification',
             Key: 'ReceivePresidentsMessageRejectedResponse',
             Title: 'Presidents Message Rejected',
-            Message: 'A Presidents Message has been rejected. Please refer to tab section "Presidents Message > Presidents Message Release".'
+            Message: 'A Presidents Message has been rejected. Please refer to tab section "Presidents Message > Presidents Message Release".',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'PresidentsMessageWorkflowNotification',
             Key: 'ReceivePresidentsMessagePublishedResponse',
             Title: 'Presidents Message Published',
-            Message: 'A Presidents Message has been published. Please refer to tab section "Presidents Message > Presidents Message Release".'
+            Message: 'A Presidents Message has been published. Please refer to tab section "Presidents Message > Presidents Message Release".',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'PresidentsMessageWorkflowNotification',
             Key: 'ReceivePresidentsMessageUpdateResponse',
             Title: '',
-            Message: ''
-        },
-
-
-        {
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
+        }, {
             Type: 'MediaMessageNotification',
             Key: 'ReceiveMediaMessageResponse',
             Title: 'Media Release Published',
-            Message: 'A Media Release has been published. Please refer to dashboard\'s "Media Release Block".'
-        },
-
-        {
+            Message: 'A Media Release has been published. Please refer to dashboard\'s "Media Release Block".',
+            ErrorTitle: '',
+            ErrorMessage: ''
+        }, {
             Type: 'MediaMessageWorkflowNotification',
             Key: 'ReceiveMediaMessageCreatedResponse',
             Title: 'Media Release Created',
-            Message: 'A Media Release has been created. Please refer to tab section "Media Management > Media Release".'
+            Message: 'A Media Release has been created. Please refer to tab section "Media Management > Media Release".',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'MediaMessageWorkflowNotification',
             Key: 'ReceiveMediaMessageSendForApprovalResponse',
             Title: 'Media Release is Sent for Approval',
-            Message: 'A Media Release has been sent for approval. Please refer to tab section "Media Management > Pending Approval".'
+            Message: 'A Media Release has been sent for approval. Please refer to tab section "Media Management > Pending Approval".',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'MediaMessageWorkflowNotification',
             Key: 'ReceiveMediaMessageApprovedResponse',
             Title: 'Media Release Approved',
-            Message: 'A Media Release has been approved. Please refer to tab section "Media Management > Media Release".'
+            Message: 'A Media Release has been approved. Please refer to tab section "Media Management > Media Release".',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'MediaMessageWorkflowNotification',
             Key: 'ReceiveMediaMessageRejectedResponse',
             Title: 'Media Release Rejected',
-            Message: 'A Media Release has been rejected. Please refer to tab section "Media Management > Media Release".'
+            Message: 'A Media Release has been rejected. Please refer to tab section "Media Management > Media Release".',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'MediaMessageWorkflowNotification',
             Key: 'ReceiveMediaMessagePublishedResponse',
             Title: 'Media Release Published',
-            Message: 'A Media Release has been published. Please refer to tab section "Media Management > Media Release".'
+            Message: 'A Media Release has been published. Please refer to tab section "Media Management > Media Release".',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'MediaMessageWorkflowNotification',
             Key: 'ReceiveMediaMessageUpdateResponse',
             Title: '',
-            Message: ''
-        },
-
-
-        {
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
+        }, {
             Type: 'EnquiryNotification',
             Key: 'ReceiveCargoEnquiryCreationResponse',
             Title: '',
-            Message: ''
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'EnquiryNotification',
             Key: 'AssignedCargoEnquiryCreationResponse',
             Title: '',
-            Message: ''
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'EnquiryNotification',
             Key: 'ReceiveCrewEnquiryCreationResponse',
             Title: '',
-            Message: ''
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'EnquiryNotification',
             Key: 'AssignedCrewEnquiryCreationResponse',
             Title: '',
-            Message: ''
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'EnquiryNotification',
             Key: 'ReceiveMediaEnquiryCreationResponse',
             Title: '',
-            Message: ''
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'EnquiryNotification',
             Key: 'AssignedMediaEnquiryCreationResponse',
             Title: '',
-            Message: ''
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'EnquiryNotification',
             Key: 'ReceiveOtherEnquiryCreationResponse',
             Title: '',
-            Message: ''
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'EnquiryNotification',
             Key: 'AssignedOtherEnquiryCreationResponse',
             Title: '',
-            Message: ''
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'EnquiryNotification',
             Key: 'ReceivePassangerEnquiryCreationResponse',
             Title: '',
-            Message: ''
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'EnquiryNotification',
             Key: 'AssignedPassangerEnquiryCreationResponse',
             Title: '',
-            Message: ''
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'EnquiryNotification',
             Key: 'ReceiveFutureTravelEnquiryCreationResponse',
             Title: '',
-            Message: ''
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'EnquiryNotification',
             Key: 'AssignedFutureTravelEnquiryCreationResponse',
             Title: '',
-            Message: ''
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'EnquiryNotification',
             Key: 'ReceiveGeneralUpdateEnquiryCreationResponse',
             Title: '',
-            Message: ''
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'EnquiryNotification',
             Key: 'AssignedGeneralUpdateEnquiryCreationResponse',
             Title: '',
-            Message: ''
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'EnquiryNotification',
             Key: 'ReceiveSituationalUpdatesEnquiryCreationResponse',
             Title: '',
-            Message: ''
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'EnquiryNotification',
             Key: 'AssignedSituationalUpdatesEnquiryCreationResponse',
             Title: '',
-            Message: ''
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'EnquiryNotification',
             Key: 'ReceiveCustomerDissatisfactionEnquiryCreationResponse',
             Title: '',
-            Message: ''
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }, {
             Type: 'EnquiryNotification',
             Key: 'AssignedCustomerDissatisfactionEnquiryCreationResponse',
             Title: '',
-            Message: ''
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }
     ];
+
+    public static DataExchangeConstant = {
+        IncidentChangefromDashboard: 'incidentChangefromDashboard',
+        CallRecieved: 'CallRecieved',
+        DepartmentChange: 'departmentChange',
+        IncidentChange: 'incidentChange',
+        OpenActionablePageInitiate: 'OpenActionablePageInitiate',
+        DepartmentChangeFromDashboard: 'departmentChangeFromDashboard',
+        ContactClicked: 'contactClicked',
+        OnDemandUpdate: 'OnDemandUpdate',
+        OnDemandDetailClick: 'OnDemandDetailClick',
+        DemandAddedUpdated: 'DemandAddedUpdated',
+        DemandApproved: 'DemandApproved',
+        DemandAssigned: 'DemandAssigned',
+        DemandCompleted: 'DemandCompleted',
+        OnMediaReleaseApproverUpdate: 'OnMediaReleaseApproverUpdate',
+        BroadcastPublished: 'BroadcastPublished',
+        CheckListStatusChange: 'checkListStatusChange',
+        MediaReleasePublished: 'MediaReleasePublished',
+        PresidentMessagePublished: 'PresidentMessagePublished',
+
+        ClearAutoCompleteInput: 'clearAutoCompleteInput',
+        OpenInvalidCargoes: 'OpenInvalidCargoes',
+        OpenInvalidCrews: 'OpenInvalidCrews',
+        OpenInvalidGroundVictims: 'OpenInvalidGroundVictims',
+        OpenInvalidPassengers: 'OpenInvalidPassengers',
+        OpenCargoes: 'OpenCargoes',
+        OpenCrews: 'OpenCrews',
+        OpenGroundVictims: 'OpenGroundVictims',
+        OpenPassengers: 'OpenPassengers',
+        ChecklistModelEdited: 'checklistModelEdited',
+        CheckListModelSaved: 'checkListModelSaved',
+        CheckListListReload: 'checkListListReload',
+        FileUploadedSuccessfullyCheckList: 'FileUploadedSuccessfullyCheckList',
+        DemandTypeModelSaved: 'demandTypeModelSaved',
+        DemandTypeModelUpdated: 'demandTypeModelUpdated',
+        DepartmentModelEdited: 'departmentModelEdited',
+        DepartmentSavedOrEdited: 'departmentSavedOrEdited',
+        OnEmergencyLocationUpdate: 'OnEmergencyLocationUpdate',
+        EmergencyLocationModelSaved: 'EmergencyLocationModelSaved',
+        EmergencyLocationModelUpdated: 'EmergencyLocationModelUpdated',
+        FileUploadedSuccessfully: 'FileUploadedSuccessfully',
+        EmergencyTypeModelSaved: 'EmergencyTypeModelSaved',
+        EmergencyTypeModelUpdated: 'EmergencyTypeModelUpdated',
+        OnEmergencyTypeUpdate: 'OnEmergencyTypeUpdate',
+        QuickLinkModelEdited: 'quickLinkModelEdited',
+        QuickLinkModelSaved: 'quickLinkModelSaved',
+        UserProfileModelToBeModified: 'UserProfileModelToBeModified',
+        UserProfileModelCreated: 'UserProfileModelCreated',
+        UserProfileModelModified: 'UserProfileModelModified',
+        UserProfileLoadedFromFile: 'UserProfileLoadedFromFile',
+        CloseActionablePageInitiate: 'CloseActionablePageInitiate',
+        OnBroadcastUpdate: 'OnBroadcastUpdate',
+        BroadcastModelUpdated: 'BroadcastModelUpdated',
+        BroadcastModelSaved: 'BroadcastModelSaved',
+        MediaModelSentForApproval: 'MediaModelSentForApproval',
+        OnMediaReleaseUpdate: 'OnMediaReleaseUpdate',
+        MediaModelSaved: 'MediaModelSaved',
+        MediaModelUpdated: 'MediaModelUpdated',
+        MediaModelApprovalUpdated: 'MediaModelApprovalUpdated',
+        OnPresidentMessageApprovalUpdate: 'OnPresidentMessageApprovalUpdate',
+        PresidentsMessageSentForApproval: 'PresidentsMessageSentForApproval',
+        PresidentMessageApprovalUpdated: 'PresidentMessageApprovalUpdated',
+        OnPresidentMessageUpdate: 'OnPresidentMessageUpdate',
+        PresidentMessageModelSaved: 'PresidentMessageModelSaved',
+        PresidentMessageModelUpdated: 'PresidentMessageModelUpdated'
+    };
+
+    public static NotificationConstant = {
+        ReceivePassengerImportCompletionResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceivePassengerImportCompletionResponse'),
+        ReceiveCargoImportCompletionResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveCargoImportCompletionResponse'),
+        ReceiveCrewImportCompletionResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveCrewImportCompletionResponse'),
+        ReceiveIncidentBorrowingCompletionResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveIncidentBorrowingCompletionResponse'),
+        ReceiveBroadcastCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveBroadcastCreationResponse'),
+        ReceiveBroadcastModificationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveBroadcastModificationResponse'),
+        ReceiveChecklistCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveChecklistCreationResponse'),
+        ReceiveChecklistStatusChangeResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveChecklistStatusChangeResponse'),
+        ReceiveChecklistClosureResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveChecklistClosureResponse'),
+        ReceiveCrisisCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveCrisisCreationResponse'),
+        ReceiveDepartmentCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveDepartmentCreationResponse'),
+        ReceiveCrisisClosureResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveCrisisClosureResponse'),
+        ReceiveCasualtyCountResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveCasualtyCountResponse'),
+        ReceiveDemandCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveDemandCreationResponse'),
+        ReceiveDemandApprovalPendingResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveDemandApprovalPendingResponse'),
+        ReceiveDemandApprovedResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveDemandApprovedResponse'),
+        ReceiveDemandAssignedResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveDemandAssignedResponse'),
+        ReceiveCompletedDemandAssignedResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveCompletedDemandAssignedResponse'),
+        ReceiveDemandRejectedFromApprovalResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveDemandRejectedFromApprovalResponse'),
+        ReceiveDemandClosedResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveDemandClosedResponse'),
+        ReceiveDemandStatusUpdateResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveDemandStatusUpdateResponse'),
+        ReceiveCompletedDemandstoCloseResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveCompletedDemandstoCloseResponse'),
+        ReceiveRejectedDemandsFromClosureResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveRejectedDemandsFromClosureResponse'),
+        ReceiveRejectedDemandstoAssignResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveRejectedDemandstoAssignResponse'),
+        ReceivePresidentsMessageResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceivePresidentsMessageResponse'),
+        ReceivePresidentsMessageCreatedResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceivePresidentsMessageCreatedResponse'),
+        ReceivePresidentsMessageSendForApprovalResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceivePresidentsMessageSendForApprovalResponse'),
+        ReceivePresidentsMessageApprovedResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceivePresidentsMessageApprovedResponse'),
+        ReceivePresidentsMessageRejectedResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceivePresidentsMessageRejectedResponse'),
+        ReceivePresidentsMessagePublishedResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceivePresidentsMessagePublishedResponse'),
+        ReceivePresidentsMessageUpdateResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceivePresidentsMessageUpdateResponse'),
+        ReceiveMediaMessageResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveMediaMessageResponse'),
+        ReceiveMediaMessageCreatedResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveMediaMessageCreatedResponse'),
+        ReceiveMediaMessageSendForApprovalResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveMediaMessageSendForApprovalResponse'),
+        ReceiveMediaMessageApprovedResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveMediaMessageApprovedResponse'),
+        ReceiveMediaMessageRejectedResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveMediaMessageRejectedResponse'),
+        ReceiveMediaMessagePublishedResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveMediaMessagePublishedResponse'),
+        ReceiveMediaMessageUpdateResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveMediaMessageUpdateResponse'),
+        ReceiveCargoEnquiryCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveCargoEnquiryCreationResponse'),
+        AssignedCargoEnquiryCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'AssignedCargoEnquiryCreationResponse'),
+        ReceiveCrewEnquiryCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveCrewEnquiryCreationResponse'),
+        AssignedCrewEnquiryCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'AssignedCrewEnquiryCreationResponse'),
+        ReceiveMediaEnquiryCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveMediaEnquiryCreationResponse'),
+        AssignedMediaEnquiryCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'AssignedMediaEnquiryCreationResponse'),
+        ReceiveOtherEnquiryCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveOtherEnquiryCreationResponse'),
+        AssignedOtherEnquiryCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'AssignedOtherEnquiryCreationResponse'),
+        ReceivePassangerEnquiryCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceivePassangerEnquiryCreationResponse'),
+        AssignedPassangerEnquiryCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'AssignedPassangerEnquiryCreationResponse'),
+        ReceiveFutureTravelEnquiryCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveFutureTravelEnquiryCreationResponse'),
+        AssignedFutureTravelEnquiryCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'AssignedFutureTravelEnquiryCreationResponse'),
+        ReceiveGeneralUpdateEnquiryCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveGeneralUpdateEnquiryCreationResponse'),
+        AssignedGeneralUpdateEnquiryCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'AssignedGeneralUpdateEnquiryCreationResponse'),
+        ReceiveSituationalUpdatesEnquiryCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveSituationalUpdatesEnquiryCreationResponse'),
+        AssignedSituationalUpdatesEnquiryCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'AssignedSituationalUpdatesEnquiryCreationResponse'),
+        ReceiveCustomerDissatisfactionEnquiryCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveCustomerDissatisfactionEnquiryCreationResponse'),
+        AssignedCustomerDissatisfactionEnquiryCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'AssignedCustomerDissatisfactionEnquiryCreationResponse'),
+    };
 
     public static DashboardTabLinks: ITabLinkInterface[] = [
         {
@@ -1734,7 +1943,7 @@ export const isMobile = () =>
 export const NotificationEvents = {
     IncidentChangeFromDashboardEvent: 'incidentChangefromDashboard',
     DepartmentChangeFromDashboardEvent: 'departmentChangeFromDashboard',
-    IncidentCreatedEvent:'incidentCreate',
+    IncidentCreatedEvent: 'incidentCreate',
     ContactClickedEvent: 'contactClicked',
     DepartmentChangedEvent: 'departmentChange',
     IncidentChangedEvent: 'incidentChange',
@@ -1754,10 +1963,10 @@ export const NotificationEvents = {
     PresidentMessagePublished: 'PresidentMessagePublished',
     ActiveLinkClickedEvent: 'menu.activeLink',
 
-    DemandCreationResponse:'ReceiveDemandCreationResponse',
+    DemandCreationResponse: 'ReceiveDemandCreationResponse',
     DemandApprovedResponse: 'ReceiveDemandApprovedResponse',
     DemandAssignedResponse: 'ReceiveDemandAssignedResponse',
-    DemandClosedResponse:'ReceiveDemandClosedResponse',
+    DemandClosedResponse: 'ReceiveDemandClosedResponse',
     CompletedDemandAssignedResponse: 'ReceiveCompletedDemandAssignedResponse',
     CompletedDemandstoCloseResponse: 'ReceiveCompletedDemandstoCloseResponse',
     DemandRejectedFromApprovalResponse: 'ReceiveDemandRejectedFromApprovalResponse',

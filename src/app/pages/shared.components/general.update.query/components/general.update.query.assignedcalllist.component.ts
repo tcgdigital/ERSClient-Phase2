@@ -3,16 +3,15 @@ import {
     OnInit, OnDestroy, ViewChild
 } from '@angular/core';
 import {
-    ResponseModel, GlobalConstants, KeyValue,
-    GlobalStateService, UtilityService
+    ResponseModel, KeyValue, GlobalStateService, UtilityService, GlobalConstants
 } from '../../../../shared';
-import { Observable, Subscription } from 'rxjs/Rx';
+import { Subscription, Subject } from 'rxjs/Rx';
 
 import {
     CallCenterOnlyPageService,
     ExternalInputModel
 } from '../../../callcenteronlypage/component';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -29,7 +28,15 @@ export class GeneralUpdateQueryAssignedCallsListComponent implements OnInit {
     callId: number;
     callcenterload: boolean = false;
     public isArchive: boolean = false;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
+    /**
+     *Creates an instance of GeneralUpdateQueryAssignedCallsListComponent.
+     * @param {CallCenterOnlyPageService} callcenteronlypageservice
+     * @param {Router} _router
+     * @param {GlobalStateService} globalState
+     * @memberof GeneralUpdateQueryAssignedCallsListComponent
+     */
     constructor(private callcenteronlypageservice: CallCenterOnlyPageService,
         private _router: Router,
         private globalState: GlobalStateService) {
@@ -46,11 +53,15 @@ export class GeneralUpdateQueryAssignedCallsListComponent implements OnInit {
         }
 
         this.getAllGeneralUpdatesCalls(this.currentIncidentId);
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllGeneralUpdatesCalls(this.currentIncidentId));
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.CallRecieved, 
+            (model: number) => this.getAllGeneralUpdatesCalls(this.currentIncidentId));
 
         // SignalR Notification
-        this.globalState.Subscribe('ReceiveGeneralUpdateEnquiryCreationResponse', (model: ExternalInputModel) => {
+        this.globalState.Subscribe
+        (GlobalConstants.NotificationConstant.ReceiveGeneralUpdateEnquiryCreationResponse.Key, (model: ExternalInputModel) => {
             // this.getAllGeneralUpdatesCallsRecieved(model.IncidentId);
             const index: number = this.allAssignedCalls
                 .findIndex((x: ExternalInputModel) => x.ExternalInputId === model.ExternalInputId);
@@ -63,6 +74,11 @@ export class GeneralUpdateQueryAssignedCallsListComponent implements OnInit {
         });
     }
 
+    public ngOnDestroy(): void {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
+
     incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
         this.getAllGeneralUpdatesCalls(this.currentIncidentId);
@@ -72,8 +88,11 @@ export class GeneralUpdateQueryAssignedCallsListComponent implements OnInit {
         this.childModalcallcenter.hide();
         this.callcenterload = false;
         this.callcenteronlypageservice.GetGeneralUpdateCallsByIncident(incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 

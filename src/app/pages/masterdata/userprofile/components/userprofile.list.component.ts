@@ -1,15 +1,15 @@
-import { Component, OnInit, ViewEncapsulation, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, OnDestroy, ViewChild } from '@angular/core';
 import { UserProfileService } from './userprofile.service';
 import { UserProfileModel } from './userprofile.model';
 import { InvalidUserProfileModel } from './invalid.userprofile.model'
 import {
     ResponseModel, DataExchangeService, SearchConfigModel,
     SearchTextBox, SearchDropdown,
-    NameValue
+    NameValue,
+    GlobalConstants
 } from '../../../../shared';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs/Rx';
 import { ModalDirective } from "ngx-bootstrap";
-
 
 @Component({
     selector: 'userprofile-list',
@@ -23,6 +23,8 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
     userProfilePatch: UserProfileModel = null;
     expandSearch: boolean = false;
     searchValue: string = "Expand Search";
+    freezeColumnEnabled: boolean = true;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     @ViewChild('invalidUserProfileModal') public invalidUserProfileModal: ModalDirective;
 
@@ -31,22 +33,28 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
 
     getUserProfiles(): void {
         this.userProfileService.GetAllUsers()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<UserProfileModel>) => {
                 this.userProfiles = response.Records;
 
                 this.userProfiles.map((item: UserProfileModel) => {
                     item.isActive = (item.ActiveFlag == 'Active');
                 });
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
     getInvalidUserProfiles(callback: () => void = null): void {
         this.userProfileService.GetAllInvalidRecords()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvalidUserProfileModel>) => {
                 this.invalidUserProfiles = response.Records;
                 if (callback != null)
                     callback();
-            })
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
+            });
     }
 
     onUserProfileSuccess(data: UserProfileModel): void {
@@ -55,7 +63,7 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
 
     UpdateUserProfile(userProfileModelUpdate: UserProfileModel): void {
         let userProfileModelToSend = Object.assign({}, userProfileModelUpdate)
-        this.dataExchange.Publish("UserProfileModelToBeModified", userProfileModelToSend);
+        this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.UserProfileModelToBeModified, userProfileModelToSend);
     }
 
     expandSearchPanel(value): void {
@@ -70,19 +78,16 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
 
     ngOnInit(): any {
         this.getUserProfiles();
-        // this.getInvalidUserProfiles();
         this.initiateSearchConfigurations();
 
-        this.dataExchange.Subscribe("UserProfileModelCreated", (model: UserProfileModel) =>
-            this.onUserProfileSuccess(model));
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.UserProfileModelCreated,
+            (model: UserProfileModel) => this.onUserProfileSuccess(model));
 
-        this.dataExchange.Subscribe("UserProfileModelModified", (model: UserProfileModel) =>
-            this.onUserProfileSuccess(model));
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.UserProfileModelModified,
+            (model: UserProfileModel) => this.onUserProfileSuccess(model));
 
-        this.dataExchange.Subscribe('UserProfileLoadedFromFile', () => {
-            this.getUserProfiles();
-            // this.getInvalidUserProfiles();
-        })
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.UserProfileLoadedFromFile,
+            () => { this.getUserProfiles() });
     }
 
     trackByIndex(index) {
@@ -90,9 +95,12 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe('UserProfileModelCreated');
-        this.dataExchange.Unsubscribe('UserProfileModelModified');
-        this.dataExchange.Unsubscribe('UserProfileLoadedFromFile');
+        this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.UserProfileModelCreated);
+        this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.UserProfileModelModified);
+        this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.UserProfileLoadedFromFile);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     checkChange(event: any, editedUderProfile: UserProfileModel): void {
@@ -136,6 +144,7 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
                     query = query.replace("'false'", "false");
             }
             this.userProfileService.GetQuery(query)
+                .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: ResponseModel<UserProfileModel>) => {
                     this.userProfiles = response.Records;
                 }, ((error: any) => {

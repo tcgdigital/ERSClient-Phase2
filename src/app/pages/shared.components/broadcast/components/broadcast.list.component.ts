@@ -2,13 +2,14 @@ import {
     Component, OnInit, ViewEncapsulation,
     Input, OnDestroy
 } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
-import { Subscription } from 'rxjs/Rx';
+import { Router } from '@angular/router';
+import { Subscription, Subject } from 'rxjs/Rx';
 import { BroadCastModel } from './broadcast.model';
 import { BroadcastService } from './broadcast.service';
 import {
     ResponseModel, DataExchangeService,
-    GlobalStateService, KeyValue, UtilityService
+    GlobalStateService, KeyValue, UtilityService, 
+    GlobalConstants
 } from '../../../../shared';
 
 @Component({
@@ -29,6 +30,7 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
     protected _onRouteChange: Subscription;
     isArchive: boolean = false;
     public isShowAddEditBroadcast:boolean=true;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(private broadCastService: BroadcastService,
         private dataExchange: DataExchangeService<BroadCastModel>,
@@ -36,8 +38,11 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
 
     getBroadCasts(departmentId, incidentId): void {
         this.broadCastService.Query(departmentId, incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<BroadCastModel>) => {
                 this.broadcastMessages = response.Records;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -47,7 +52,7 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
 
     UpdateBroadcast(broadcastModelUpdate: BroadCastModel): void {
         const broadcastModelToSend = Object.assign({}, broadcastModelUpdate);
-        this.dataExchange.Publish('OnBroadcastUpdate', broadcastModelToSend);
+        this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.OnBroadcastUpdate, broadcastModelToSend);
     }
 
     ngOnInit(): void {
@@ -65,32 +70,38 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
         }
         this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
 
-        this.dataExchange.Subscribe('BroadcastModelUpdated', (model) => this.onBroadcastSuccess(model));
-        this.dataExchange.Subscribe('BroadcastModelSaved', (model) => this.onBroadcastSuccess(model));
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.BroadcastModelUpdated, 
+            (model: BroadCastModel) => this.onBroadcastSuccess(model));
+
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.BroadcastModelSaved, 
+            (model: BroadCastModel) => this.onBroadcastSuccess(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard, 
+            (model: KeyValue) => this.departmentChangeHandler(model));
 
         // SignalR Notification
-        this.globalState.Subscribe('ReceiveBroadcastCreationResponse', (model: BroadCastModel) => {
-            // this.broadcastMessages.unshift(model);
+        this.globalState.Subscribe
+        (GlobalConstants.NotificationConstant.ReceiveBroadcastCreationResponse.Key, (model: BroadCastModel) => {
             this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
         });
 
-        this.globalState.Subscribe('ReceiveBroadcastModificationResponse', (model: BroadCastModel) => {
+        this.globalState.Subscribe
+        (GlobalConstants.NotificationConstant.ReceiveBroadcastModificationResponse.Key, (model: BroadCastModel) => {
             this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
-            // const index: number = this.broadcastMessages
-            //     .findIndex((x) => x.BroadcastId === model.BroadcastId);
-            // if (index >= 0) {
-            //     this.broadcastMessages.splice(index, 1, model);
-            // }
         });
     }
 
     ngOnDestroy(): void {
-        //this.dataExchange.Unsubscribe('BroadcastModelSaved');
-        //this.dataExchange.Unsubscribe('BroadcastModelUpdated');
-       // this.globalState.Unsubscribe('incidentChangefromDashboard');
-        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        // this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.BroadcastModelSaved);
+        // this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.BroadcastModelUpdated);
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard);
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     private incidentChangeHandler(incident: KeyValue): void {

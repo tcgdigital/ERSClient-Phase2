@@ -6,7 +6,7 @@ import { DataProcessingService, DataOperation } from '../index';
 import { GlobalConstants } from '../../../constants';
 
 /**
- * Data operation specific for GET request
+ * Data operation specific for GET request (Strongly typed)
  *
  * @export
  * @class GetOperation
@@ -47,7 +47,7 @@ export class GetOperation<T extends BaseModel> extends DataOperation<BaseModel> 
 }
 
 /**
- * Data operation specific for GET request for any data model
+ * Data operation specific for GET request for any data model (Loosely typed)
  *
  * @export
  * @class GetOperation

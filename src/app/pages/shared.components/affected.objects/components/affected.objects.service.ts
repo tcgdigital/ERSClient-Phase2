@@ -9,7 +9,7 @@ import { NextOfKinModel } from '../../nextofkins';
 import {
     ResponseModel, DataService,
     DataServiceFactory, DataProcessingService,
-    ServiceBase, UtilityService
+    ServiceBase, UtilityService, NameValue
 } from '../../../../shared';
 
 @Injectable()
@@ -127,6 +127,10 @@ export class AffectedObjectsService extends ServiceBase<InvolvePartyModel> imple
 
     public UpdateStatus(entity: AffectedObjectModel, key?: number): Observable<AffectedObjectModel> {
         return this._dataServiceForCargo.Patch(entity, key.toString()).Execute();
+    }
+
+    public UpdateStatusWithHeader(entity: AffectedObjectModel, key: number, header: NameValue<string>): Observable<AffectedObjectModel>{
+        return this._dataServiceForCargo.PatchWithHeader(entity, key.toString(), header).Execute();
     }
 
     public GetCallerListForAffectedObject(affectedObjectId: number): Observable<ResponseModel<EnquiryModel>> {

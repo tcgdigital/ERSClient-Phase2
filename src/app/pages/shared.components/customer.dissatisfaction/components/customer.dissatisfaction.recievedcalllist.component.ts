@@ -3,16 +3,15 @@ import {
     OnInit, OnDestroy, ViewChild
 } from '@angular/core';
 import {
-    ResponseModel, GlobalConstants, KeyValue,
-    GlobalStateService, UtilityService
+    ResponseModel, KeyValue, GlobalStateService, UtilityService, GlobalConstants
 } from '../../../../shared';
-import { Observable, Subscription } from 'rxjs/Rx';
+import { Subscription, Subject } from 'rxjs/Rx';
 
 import {
     CallCenterOnlyPageService,
     ExternalInputModel
 } from '../../../callcenteronlypage/component';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -20,7 +19,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
     encapsulation: ViewEncapsulation.None,
     templateUrl: '../views/customer.dissatisfaction.assignedcallslist.view.html'
 })
-export class CustomerDissatisfactionRecievedCallsListComponent implements OnInit {
+export class CustomerDissatisfactionRecievedCallsListComponent implements OnInit, OnDestroy {
     @ViewChild('childModalcallcenter') public childModalcallcenter: ModalDirective;
 
     allAssignedCalls: ExternalInputModel[] = [];
@@ -29,7 +28,15 @@ export class CustomerDissatisfactionRecievedCallsListComponent implements OnInit
     callId: number;
     callcenterload: boolean = false;
     public isArchive: boolean = false;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
+    /**
+     *Creates an instance of CustomerDissatisfactionRecievedCallsListComponent.
+     * @param {CallCenterOnlyPageService} callcenteronlypageservice
+     * @param {Router} _router
+     * @param {GlobalStateService} globalState
+     * @memberof CustomerDissatisfactionRecievedCallsListComponent
+     */
     constructor(private callcenteronlypageservice: CallCenterOnlyPageService,
         private _router: Router,
         private globalState: GlobalStateService) {
@@ -46,11 +53,16 @@ export class CustomerDissatisfactionRecievedCallsListComponent implements OnInit
         }
 
         this.getAllCustomerDissatisfactionCallsRecieved(this.currentIncidentId);
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllCustomerDissatisfactionCallsRecieved(this.currentIncidentId));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.CallRecieved, 
+            (model: number) => this.getAllCustomerDissatisfactionCallsRecieved(this.currentIncidentId));
 
         // SignalR Notification
-        this.globalState.Subscribe('AssignedCustomerDissatisfactionEnquiryCreationResponse', (model: ExternalInputModel) => {
+        this.globalState.Subscribe
+        (GlobalConstants.NotificationConstant.AssignedCustomerDissatisfactionEnquiryCreationResponse.Key, (model: ExternalInputModel) => {
             // this.getAllCustomerDissatisfactionCallsRecieved(model.IncidentId);
             const index: number = this.allAssignedCalls
                 .findIndex((x: ExternalInputModel) => x.ExternalInputId === model.ExternalInputId);
@@ -63,6 +75,11 @@ export class CustomerDissatisfactionRecievedCallsListComponent implements OnInit
         });
     }
 
+    public ngOnDestroy(): void {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
+
     incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
         this.getAllCustomerDissatisfactionCallsRecieved(this.currentIncidentId);
@@ -72,8 +89,11 @@ export class CustomerDissatisfactionRecievedCallsListComponent implements OnInit
         this.childModalcallcenter.hide();
         this.callcenterload = false;
         this.callcenteronlypageservice.GetCustomerDissatisfactionCallsRecievedByIncident(incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 

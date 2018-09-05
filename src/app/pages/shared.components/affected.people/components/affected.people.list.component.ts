@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, OnInit, ViewChild, Injector } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
-import { Subscription, Observable } from 'rxjs/Rx';
+import { Router } from '@angular/router';
+import { Subscription, Observable, Subject } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { CommunicationLogModel, CommunicationLogService } from '../../../shared.components/communicationlogs';
 import { InvolvePartyService, InvolvePartyModel } from '../../involveparties';
@@ -64,15 +64,25 @@ export class AffectedPeopleListComponent implements OnInit {
     public isShowIsNOKInvolved: boolean = true;
     public userName: string;
     public currentDepartmentName: string;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
+
     /**
-     * Creates an instance of AffectedPeopleListComponent.
-     *
+     *Creates an instance of AffectedPeopleListComponent.
      * @param {AffectedPeopleService} affectedPeopleService
+     * @param {Injector} injector
+     * @param {CallerService} callerservice
      * @param {InvolvePartyService} involvedPartyService
      * @param {DataExchangeService<number>} dataExchange
      * @param {GlobalStateService} globalState
-     *
-     * @memberOf AffectedPeopleListComponent
+     * @param {CommunicationLogService} communicationLogService
+     * @param {Router} _router
+     * @param {DepartmentService} departmentService
+     * @param {ToastrService} toastrService
+     * @param {ToastrConfig} toastrConfig
+     * @param {FileUploadService} fileUploadService
+     * @param {FileStoreService} fileStoreService
+     * @param {PassengerService} passangerService
+     * @memberof AffectedPeopleListComponent
      */
     constructor(private affectedPeopleService: AffectedPeopleService,
         private injector: Injector,
@@ -103,12 +113,10 @@ export class AffectedPeopleListComponent implements OnInit {
         }
 
         this.affectedPersonModelForStatus = affectedPerson;
-        if(this.affectedPersonModelForStatus.Age == "NaN")
-        {
+        if (this.affectedPersonModelForStatus.Age == "NaN") {
             this.affectedPersonModelForStatus.Age = "Not Available";
         }
-        if(this.affectedPersonModelForStatus.Nationality.trim() == "")
-        {
+        if (this.affectedPersonModelForStatus.Nationality.trim() == "") {
             this.affectedPersonModelForStatus.Nationality = "Not Available";
         }
 
@@ -117,23 +125,30 @@ export class AffectedPeopleListComponent implements OnInit {
                 .find((x) => x.value === affectedPerson.MedicalStatus).value;
         }
         this.affectedPeopleService.GetCallerListForAffectedPerson(affectedPerson.AffectedPersonId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EnquiryModel>) => {
                 this.callers = response.Records.map((x) => {
                     return x.Caller;
                 });
+
                 if (affectedPerson.PassengerId !== 0 && affectedPerson.GroupId !== 0) {
                     this.passangerService.getCoPassengers(affectedPerson.GroupId)
+                        .takeUntil(this.ngUnsubscribe)
                         .subscribe((response: ResponseModel<CoPassengerMappingModel>) => {
                             if (response.Records.length > 0) {
                                 this.copassangers = _.flatten(_.pluck(response.Records, 'Passenger'));
                                 this.copassangers = _.without(this.copassangers, _.findWhere(this.copassangers, { PassengerId: affectedPerson.PassengerId }));
                                 this.childModal.show();
                             }
+                        }, (error: any) => {
+                            console.log(`Error: ${error}`);
                         });
                 }
                 else {
                     this.childModal.show();
                 }
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -143,9 +158,9 @@ export class AffectedPeopleListComponent implements OnInit {
 
     getCurrentDepartmentName(departmentId): void {
         this.departmentService.Get(departmentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: DepartmentModel) => {
                 this.currentDepartmentName = response.DepartmentName;
-
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -173,7 +188,9 @@ export class AffectedPeopleListComponent implements OnInit {
 
             this.date = new Date();
             this.fileUploadService.uploadFiles<string>(baseUrl + './api/fileUpload/UploadFilesModuleWise/' + param,
-                this.filesToUpload, this.date.toString()).subscribe((result: string) => {
+                this.filesToUpload, this.date.toString())
+                .takeUntil(this.ngUnsubscribe)
+                .subscribe((result: string) => {
                     console.log(result);
                     let fileStore: FileStoreModel = new FileStoreModel();
                     fileStore.FileStoreID = 0;
@@ -192,7 +209,12 @@ export class AffectedPeopleListComponent implements OnInit {
                         .subscribe((response: FileStoreModel) => {
                             this.getAffectedPeople(this.currentIncident);
                             console.log(response);
+                        }, (error: any) => {
+                            console.log(`Error: ${error}`);
                         });
+
+                }, (error: any) => {
+                    console.log(`Error: ${error}`);
                 });
         }
     }
@@ -202,56 +224,63 @@ export class AffectedPeopleListComponent implements OnInit {
         this.affectedPersonToUpdate.Identification = affectedModifiedForm.Identification;
         this.affectedPersonToUpdate.MedicalStatus = affectedModifiedForm['MedicalStatusToshow'];
         this.affectedPersonToUpdate.Remarks = affectedModifiedForm.Remarks;
+
+        const additionalHeader: NameValue<string> 
+            = new NameValue<string>('CurrentDepartmentName', this.currentDepartmentName);
+
+        /*
         if (this.affectedPersonToUpdate.MedicalStatus != '')
             this.createCommunicationLogModel(this.affectedPersonToUpdate, affectedModifiedForm.CreatedBy);
-        this.affectedPeopleService.Update(this.affectedPersonToUpdate)
+        */
+
+        this.affectedPeopleService.UpdateWithHeader(this.affectedPersonToUpdate, additionalHeader)
             .subscribe((response: AffectedPeopleModel) => {
                 this.toastrService.success('Additional Information updated.')
                 if (this.filesToUpload.length) {
                     this.uploadFile();
                 }
+
                 this.getAffectedPeople(this.currentIncident);
                 affectedModifiedForm['MedicalStatusToshow'] = affectedModifiedForm.MedicalStatus;
                 let num = UtilityService.UUID();
                 this.globalStateProxyOpen.NotifyDataChanged('AffectedPersonStatusChanged', num);
                 this.childModal.hide();
+
             }, (error: any) => {
-                alert(error);
+                console.log(`Error: ${error}`);
             });
     }
 
     createCommunicationLogModel(affectedPersonToUpdate: AffectedPeopleModel, createdBy: number): void {
-       
-        let editedFields = '';
-        let answer = '';
-        let descchanged = '';
         this.communicationLogService.GetLogByAffectedPersonId(affectedPersonToUpdate.AffectedPersonId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<CommunicationLogModel>) => {
-                if(result.Count==0){
-                    this.insertCommunicationLog(affectedPersonToUpdate,createdBy);
+                debugger;
+                if (result.Count == 0) {
+                    this.insertCommunicationLog(affectedPersonToUpdate, createdBy);
                 }
-                else{
+                else {
                     var QueryStatusFullText = result.Records[0].Queries;
-                    
-                    if(QueryStatusFullText.indexOf('Status changed to ')==-1){
-                        this.insertCommunicationLog(affectedPersonToUpdate,createdBy);
+
+                    if (QueryStatusFullText.indexOf('Status changed to ') == -1) {
+                        this.insertCommunicationLog(affectedPersonToUpdate, createdBy);
                     }
-                    else{
+                    else {
                         var MedicalStatus = QueryStatusFullText.split('Status changed to ')[1];
                         if (MedicalStatus.trim().toLowerCase() != affectedPersonToUpdate.MedicalStatus.trim().toLowerCase()) {
-                            this.insertCommunicationLog(affectedPersonToUpdate,createdBy);
+                            this.insertCommunicationLog(affectedPersonToUpdate, createdBy);
                         }
                     }
                 }
-                
-                
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
-
     }
 
-    insertCommunicationLog(affectedPersonToUpdate:AffectedPeopleModel,createdBy:number):void{
+    insertCommunicationLog(affectedPersonToUpdate: AffectedPeopleModel, createdBy: number): void {
         const communicationLogs: CommunicationLogModel[] = [];
         const communicationLog: CommunicationLogModel = new CommunicationLogModel();
+
         communicationLog.InteractionDetailsId = 0;
         communicationLog.InteractionDetailsType = GlobalConstants.InteractionDetailsTypeEnquiry;
         communicationLog.Queries = 'Medical Status changed to ' + affectedPersonToUpdate.MedicalStatus;
@@ -266,11 +295,12 @@ export class AffectedPeopleListComponent implements OnInit {
         communicationLog.ActiveFlag = 'Active';
         communicationLog.CreatedBy = createdBy;
         communicationLog.CreatedOn = new Date();
-
         communicationLogs.push(communicationLog);
 
         this.communicationLogService.CreateCommunicationLog(communicationLog)
             .subscribe((itemResult: CommunicationLogModel) => {
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -283,6 +313,7 @@ export class AffectedPeopleListComponent implements OnInit {
 
     getAffectedPeople(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0])
                     .sort((a, b) => {
@@ -305,13 +336,13 @@ export class AffectedPeopleListComponent implements OnInit {
 
     searchAffectedPeople(query: string, incidentId: number): void {
         this.involvedPartyService.GetQuery(query, incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
                 this.affectedPeople.forEach((x) => {
                     x['MedicalStatusToshow'] = x.MedicalStatus;
                     x['showDiv'] = false;
                 });
-                // console.log(this.affectedPeople);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -336,16 +367,12 @@ export class AffectedPeopleListComponent implements OnInit {
     }
 
     ngOnInit(): any {
-
-
-
         const token = UtilityService.GetFromSession('access_token');
         if (token) {
             const tokenData = jwtDecode(token);
             if (tokenData && tokenData.UserName)
                 this.userName = tokenData.UserName;
         }
-
 
         if (this._router.url.indexOf('archivedashboard') > -1) {
             this.isArchive = true;
@@ -361,19 +388,25 @@ export class AffectedPeopleListComponent implements OnInit {
         }
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/PassengerStatusInfo/' + this.currentIncident;
         this.downloadRoute = GlobalConstants.EXTERNAL_URL + 'api/Report/CrewStatusInfo/' + this.currentIncident;
+
         this.credential = UtilityService.getCredentialDetails();
         this.getCurrentDepartmentName(this.currentDepartmentId);
         this.initiateSearchConfigurations();
         this.IsDestroyed = false;
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard,
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard,
+            (model: KeyValue) => this.departmentChangeHandler(model));
 
         // Signal Notification
-        this.globalState.Subscribe('ReceiveIncidentBorrowingCompletionResponse', () => {
-            this.getAffectedPeople(this.currentIncident);
-        });
+        this.globalState.Subscribe
+            (GlobalConstants.NotificationConstant.ReceiveIncidentBorrowingCompletionResponse.Key, () => {
+                this.getAffectedPeople(this.currentIncident);
+            });
 
-        this.globalState.Subscribe('ReceivePassengerImportCompletionResponse', (count: number) => {
+        this.globalState.Subscribe(GlobalConstants.NotificationConstant.ReceivePassengerImportCompletionResponse.Key, (count: number) => {
             if (count > 0)
                 this.getAffectedPeople(this.currentIncident);
         });
@@ -383,21 +416,23 @@ export class AffectedPeopleListComponent implements OnInit {
         let affectedpersonToUpdate = new AffectedPeopleModel();
         affectedpersonToUpdate.IsNokInformed = event.checked;
         affectedpersonToUpdate.AffectedPersonId = id;
+
         this.affectedPeopleService.Update(affectedpersonToUpdate, id)
             .subscribe((response: AffectedPeopleModel) => {
                 this.toastrService.success(`NOK information status updated`)
                 this.getAffectedPeople(this.currentIncident);
             }, (error: any) => {
-                alert(error);
+                console.log(`Error: ${error}`);
             });
     }
 
     ngOnDestroy(): void {
-        //  this.globalState.Unsubscribe('incidentChangefromDashboard');
+        //  this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard);
     }
 
     openChatTrails(affectedPersonId: number): void {
         this.affectedPeopleService.GetCommunicationByPDA(affectedPersonId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<AffectedPeopleModel>) => {
                 let responseModel: AffectedPeopleModel = response.Records[0];
                 this.pdaNameForTrail = responseModel.Passenger != null ? responseModel.Passenger.PassengerName.toUpperCase() : '';
@@ -405,7 +440,6 @@ export class AffectedPeopleListComponent implements OnInit {
                 this.ticketNumber = responseModel.TicketNumber;
                 this.communications = responseModel.CommunicationLogs;
                 this.childModalForTrail.show();
-
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -417,7 +451,9 @@ export class AffectedPeopleListComponent implements OnInit {
 
     openCallerList(affectedperson): void {
         this.affectedPersonModel = affectedperson;
+
         this.affectedPeopleService.GetCallerListForAffectedPerson(affectedperson.AffectedPersonId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EnquiryModel>) => {
                 this.callers = response.Records.map((x) => {
                     return x.Caller;
@@ -425,6 +461,8 @@ export class AffectedPeopleListComponent implements OnInit {
                 this.callers.forEach((x) => {
                     x['isnok'] = false;
                 });
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -446,10 +484,13 @@ export class AffectedPeopleListComponent implements OnInit {
             let callertoupdate = new CallerModel();
             callertoupdate.IsNok = true;
             callertoupdate.deleteAttributes();
+
             this.affectedPeopleService.CreateNok(nok)
                 .flatMap(() => this.callerservice.Update(callertoupdate, caller.CallerId))
                 .subscribe(() => {
                     this.toastrService.success('NOK updated.');
+                }, (error: any) => {
+                    console.log(`Error: ${error}`);
                 });
         }
         else {
@@ -459,6 +500,8 @@ export class AffectedPeopleListComponent implements OnInit {
             this.callerservice.Update(callertoupdate, caller.CallerId)
                 .subscribe(() => {
                     this.toastrService.success('NOK updated.');
+                }, (error: any) => {
+                    console.log(`Error: ${error}`);
                 });
         }
     }

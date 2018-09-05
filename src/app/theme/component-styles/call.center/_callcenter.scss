@@ -1,16 +1,15 @@
 @import '../../config/config';
-
-.halfBoxStyle{
-        width: 49.5%;
+.halfBoxStyle {
+    width: 49.5%;
     padding-left: 14px;
 }
-.entryHolder{
+
+.entryHolder {
     background: $entryholder-background;
-    float: left;
-    margin: 15px 23px;
-@media screen and (max-width: $resMD-S){
-margin: 15px 1.5%;
-}
+    float: left; // margin: 15px 23px;
+    @media screen and (max-width: $resMD-S) {
+        margin: 15px 1.5%;
+    }
 }
 
 .multiselect-list1 {
@@ -18,8 +17,8 @@ margin: 15px 1.5%;
     border: $multiselect-border solid 1px;
     border-radius: 0 0 6px 6px;
     color: $multiselect-color;
-    padding: 5px 8px;
-    width: 90.5%;
+    padding: 5px 0;
+    width: 91.3%;
     font-size: 12px;
     max-height: 120px;
     position: absolute;
@@ -27,6 +26,12 @@ margin: 15px 1.5%;
     overflow-x: hidden;
     overflow-y: auto;
     top: 46px;
+    >li {
+        padding: 5px;
+    }
+    >li:hover {
+        background-color: #b3e5fc;
+    }
 }
 
 .multiselect-selector {
@@ -39,15 +44,13 @@ margin: 15px 1.5%;
     font-size: 12px;
 }
 
-
-.entryHolder{
-    background: $entryholder-background ;
+.entryHolder {
+    background: $entryholder-background;
     padding: 15px;
-    float: left;
-    margin: 15px 23px;
-    @media screen and (max-width: $resMD-S){
-margin: 15px 1.5%;
-}
+    float: left; // margin: 15px 23px;
+    @media screen and (max-width: $resMD-S) {
+        margin: 15px 1.5%;
+    }
 }
 
 .cc-other-button {
@@ -55,8 +58,5 @@ margin: 15px 1.5%;
 }
 
 .cc-other-form {
-    width:100%;
+    width: 100%;
 }
-
-
-

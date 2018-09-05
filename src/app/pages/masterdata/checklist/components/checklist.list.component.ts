@@ -3,10 +3,10 @@ import { Component, OnInit, OnDestroy, ViewEncapsulation, ViewChild } from '@ang
 import { ChecklistModel } from './checklist.model';
 import { InvalidChecklistModel } from './invalid.checklist.model';
 import { ChecklistService } from './checklist.service';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs/Rx';
 import {
-    ResponseModel, DataExchangeService, UtilityService, GlobalStateService
-    , SearchConfigModel,
+    ResponseModel, DataExchangeService, UtilityService,
+    GlobalStateService, SearchConfigModel,
     SearchTextBox, SearchDropdown,
     NameValue, KeyValue, GlobalConstants
 } from '../../../../shared';
@@ -20,7 +20,7 @@ import { ModalDirective } from 'ngx-bootstrap';
     templateUrl: '../views/checklist.list.view.html',
     styleUrls: ['../styles/checklist.style.scss']
 })
-export class ChecklistListComponent implements OnInit {
+export class ChecklistListComponent implements OnInit, OnDestroy {
     checkLists: ChecklistModel[] = [];
     activeCheckLists: ChecklistModel[] = [];
     activeDepartments: DepartmentModel[] = [];
@@ -38,12 +38,22 @@ export class ChecklistListComponent implements OnInit {
     searchValue: string = 'Expand Search';
     invalidChecklists: InvalidChecklistModel[] = [];
     exportLink: string;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     @ViewChild('invalidChecklistModal') public invalidChecklistModal: ModalDirective;
 
-    constructor(private checkListService: ChecklistService, private emergencytypeService: EmergencyTypeService,
-        private dataExchange: DataExchangeService<ChecklistModel>, private globalState: GlobalStateService) {
-
+    /**
+     *Creates an instance of ChecklistListComponent.
+     * @param {ChecklistService} checkListService
+     * @param {EmergencyTypeService} emergencytypeService
+     * @param {DataExchangeService<ChecklistModel>} dataExchange
+     * @param {GlobalStateService} globalState
+     * @memberof ChecklistListComponent
+     */
+    constructor(private checkListService: ChecklistService,
+        private emergencytypeService: EmergencyTypeService,
+        private dataExchange: DataExchangeService<ChecklistModel>,
+        private globalState: GlobalStateService) {
     }
 
     findIfParent(item: ChecklistModel): any {
@@ -52,6 +62,7 @@ export class ChecklistListComponent implements OnInit {
 
     getCheckLists(departmentId): void {
         this.checkListService.GetAllByDepartment(departmentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ChecklistModel>) => {
                 response.Records.forEach((x) => {
                     x.Active = (x.ActiveFlag === 'Active');
@@ -68,13 +79,10 @@ export class ChecklistListComponent implements OnInit {
                     else
                         a.StationList = [];
                 });
-                // console.log(this.checkLists);
                 this.initiateSearchConfigurations();
-            },
-            (error: any) => {
+            }, (error: any) => {
                 console.log(`Error: ${error}`);
-            },
-            () => {
+            }, () => {
                 this.checkLists.sort((a, b) => {
                     if (a.EmergencyType.EmergencyTypeName < b.EmergencyType.EmergencyTypeName) return -1;
                     if (a.EmergencyType.EmergencyTypeName > b.EmergencyType.EmergencyTypeName) return 1;
@@ -88,22 +96,30 @@ export class ChecklistListComponent implements OnInit {
 
     getInvalidChecklists(): void {
         this.checkListService.GetInvalidChecklists()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvalidChecklistModel>) => {
                 this.invalidChecklists = response.Records;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
     getEmergencyTypes(): void {
         this.emergencytypeService.GetAll()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                 this.emergencyTypesForSearch = response.Records
                     .map((x) => new NameValue<number>(x.EmergencyTypeName, x.EmergencyTypeId));
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
+
         this.initiateSearchConfigurations();
     }
 
     getAllActiveCheckLists(): void {
         this.checkListService.GetAllActiveCheckLists()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ChecklistModel>) => {
                 this.activeCheckLists = response.Records;
                 this.checkLists.forEach((a) => {
@@ -114,6 +130,8 @@ export class ChecklistListComponent implements OnInit {
                     else
                         a.StationList = [];
                 });
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -135,26 +153,34 @@ export class ChecklistListComponent implements OnInit {
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.exportLink = GlobalConstants.EXTERNAL_URL + 'api/MasterDataExportImport/GetMasterDataForChecklists/' + this.currentDepartmentId;
         this.getCheckLists(this.currentDepartmentId);
-        this.dataExchange.Subscribe('checkListModelSaved',
-            (model) => this.onCheckListModelSavedSuccess(model));
-        this.dataExchange.Subscribe('checkListListReload',
-            (model) => this.onCheckListModelReloadSuccess(model));
-        this.globalState.Subscribe('departmentChange', (model) => this.departmentChangeHandler(model));
+
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.CheckListModelSaved,
+            (model: ChecklistModel) => this.onCheckListModelSavedSuccess(model));
+
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.CheckListListReload,
+            (model:ChecklistModel) => this.onCheckListModelReloadSuccess(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
+            (model: any) => this.departmentChangeHandler(model));
+
         this.initiateSearchConfigurations();
         this.getInvalidChecklists();
 
-        this.dataExchange.Subscribe('FileUploadedSuccessfullyCheckList', () => {
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.FileUploadedSuccessfullyCheckList, () => {
             this.getCheckLists(this.currentDepartmentId);
         });
     }
 
     ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe('checkListModelSaved');
-        this.dataExchange.Unsubscribe('checkListListReload');
+        this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.CheckListModelSaved);
+        this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.CheckListListReload);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     editChecklist(editedChecklistModel: ChecklistModel): void {
-        this.dataExchange.Publish('checklistModelEdited', editedChecklistModel);
+        this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.ChecklistModelEdited, editedChecklistModel);
     }
 
     onCheckListModelReloadSuccess(editedChecklistModel: ChecklistModel): void {
@@ -169,6 +195,7 @@ export class ChecklistListComponent implements OnInit {
         if (!event.checked) {
             this.checkListModelPatch.ActiveFlag = 'InActive';
         }
+
         this.checkListService.Update(this.checkListModelPatch)
             .subscribe((response: ChecklistModel) => {
                 this.getCheckLists(this.currentDepartmentId);
@@ -188,7 +215,9 @@ export class ChecklistListComponent implements OnInit {
     invokeSearch(query: string): void {
         if (query !== '') {
             query = `${query} and DepartmentId eq ${this.currentDepartmentId}`;
+            
             this.checkListService.GetQuery(query)
+                .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: ResponseModel<ChecklistModel>) => {
                     response.Records.forEach((x) => {
                         x.Active = (x.ActiveFlag === 'Active');

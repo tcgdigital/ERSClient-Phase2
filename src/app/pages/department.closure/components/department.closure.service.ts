@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs/Rx';
 import { IncidentModel, IncidentService } from "../../incident";
 import { DepartmentClosureModel } from './department.closure.model';
 import { IDepartmentClosureService } from './IDepartmentClosureService';
@@ -13,21 +13,18 @@ import {
 
 @Injectable()
 export class DepartmentClosureService extends ServiceBase<DepartmentClosureModel> implements IDepartmentClosureService {
-
-    private _departmentClosureService: DataService<DepartmentClosureModel>;
     public IsDepartmentClosureSubmit: boolean;
     private _dataServiceForDemand: DataService<DemandModel>;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
+
     constructor(private dataServiceFactory: DataServiceFactory,
         private incidentService: IncidentService,
-        private actionableService: ActionableService
-
-    ) {
+        private actionableService: ActionableService) {
         super(dataServiceFactory, 'DepartmentClosures');
         let option: DataProcessingService = new DataProcessingService();
 
         this._dataServiceForDemand = this.dataServiceFactory.CreateServiceWithOptions<DemandModel>('Demands', option);
         this.IsDepartmentClosureSubmit = false;
-
     }
 
     public GetIncidentFromIncidentId(incidentId: number): Observable<IncidentModel> {
@@ -74,6 +71,7 @@ export class DepartmentClosureService extends ServiceBase<DepartmentClosureModel
             .flatMap((x) => this._dataServiceForDemand.Query()
                 .Filter(`IncidentId eq ${incidentId} and TargetDepartmentId eq ${departmentId} and IsCompleted ne true`)
                 .Execute())
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((demands: ResponseModel<DemandModel>) => {
                 if (this.IsDepartmentClosureSubmit == false) {
                     if (notifyCallback) {
@@ -92,6 +90,8 @@ export class DepartmentClosureService extends ServiceBase<DepartmentClosureModel
                         notifyCallback(true);
                     }
                 }
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 }

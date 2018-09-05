@@ -2,14 +2,14 @@ import {
     Component, OnInit, Input, OnDestroy,
     ViewEncapsulation, ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Subject } from 'rxjs/Rx';
 import { ArchiveDocumentTypeService } from './archive.doument.type.service';
 import { DepartmentClosureService } from './department.closure.service';
 import { OtherReportModel, DepartmentClosureModel } from './archive.report.widget.model';
 import { ArchiveDocumentTypeModel } from '../../widgets/archive.upload.widget';
 import {
-    DataServiceFactory, DataExchangeService, ResponseModel,
-    TextAccordionModel, GlobalStateService, KeyValue, GlobalConstants
+    DataExchangeService, ResponseModel,
+    GlobalStateService, KeyValue, GlobalConstants
 } from '../../../shared';
 import { ArchiveReportWidgetModel } from './archive.report.widget.model';
 import { ArchiveReportWidgetService } from './archive.report.widget.service';
@@ -34,6 +34,7 @@ export class ArchiveReportWidgetComponent implements OnInit, OnDestroy {
     public isShowClosureReport: boolean = true;
     public isShowDepartwiseReport: boolean = true;
     public isShowOtherReport: boolean = true;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(private archiveReportWidgetService: ArchiveReportWidgetService,
         private archiveDocumentTypeService: ArchiveDocumentTypeService,
@@ -47,12 +48,16 @@ export class ArchiveReportWidgetComponent implements OnInit, OnDestroy {
         this.downloadUrl = GlobalConstants.EXTERNAL_URL + 'api/Report/CrisisSummaryReport/' + this.incidentId;
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/ActivityLogReport/' + this.incidentId;
 
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChange, 
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange, 
+            (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
     public GetArchiveDocumentTypeData(incidentId: number, callback?: Function): void {
         this.archiveDocumentTypeService.GetByIncident(incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<ArchiveDocumentTypeModel>) => {
                 this.otherReports = [];
                 result.Records.forEach((item: ArchiveDocumentTypeModel) => {
@@ -71,17 +76,22 @@ export class ArchiveReportWidgetComponent implements OnInit, OnDestroy {
                 if (callback) {
                     callback();
                 }
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
     public GetDepartmentClosureData(incidentId: number, callback?: Function): void {
         this.departmentClosureService.GetAllByIncident(incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<DepartmentClosureModel>) => {
                 this.otherReports = [];
                 this.departmentWiseClosureReports = result.Records;
                 if (callback) {
                     callback();
                 }
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -92,8 +102,11 @@ export class ArchiveReportWidgetComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        // this.globalState.Unsubscribe('incidentChange');
-        // this.globalState.Unsubscribe('departmentChange');
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChange);
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.DepartmentChange);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     private incidentChangeHandler(incident: KeyValue): void {

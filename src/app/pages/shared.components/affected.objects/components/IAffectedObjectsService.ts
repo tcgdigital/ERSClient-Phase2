@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs/Rx';
-import { InvolvePartyModel, AffectedModel } from '../../../shared.components';
+import { InvolvePartyModel, AffectedModel, EnquiryModel } from '../../../shared.components';
 import { AffectedObjectModel, AffectedObjectsToView } from './affected.objects.model';
-import { ResponseModel, IServiceInretface } from '../../../../shared';
+import { ResponseModel, IServiceInretface, NameValue } from '../../../../shared';
 
 export interface IAffectedObjectsService extends IServiceInretface<InvolvePartyModel> {
     GetFilterByIncidentId(incidentId): Observable<ResponseModel<InvolvePartyModel>>;
@@ -13,4 +13,10 @@ export interface IAffectedObjectsService extends IServiceInretface<InvolvePartyM
     CreateBulkObjects(entities: AffectedObjectModel[]): Observable<AffectedObjectModel[]>;
 
     GetCommunicationByAWB(id: number): Observable<ResponseModel<AffectedObjectModel>>;
+
+    UpdateStatus(entity: AffectedObjectModel, key?: number): Observable<AffectedObjectModel>;
+
+    UpdateStatusWithHeader(entity: AffectedObjectModel, key: number, header: NameValue<string>): Observable<AffectedObjectModel>;
+
+    GetCallerListForAffectedObject(affectedObjectId: number): Observable<ResponseModel<EnquiryModel>>;
 }

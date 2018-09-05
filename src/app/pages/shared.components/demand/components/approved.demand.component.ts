@@ -2,21 +2,19 @@ import {
     Component, ViewEncapsulation, OnDestroy, Injector,
     OnInit, AfterContentInit, ViewChild
 } from '@angular/core';
-import { Observable, Subscription } from 'rxjs/Rx';
+import { Subscription, Subject } from 'rxjs/Rx';
 import * as moment from 'moment/moment';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-import { Router, NavigationEnd } from '@angular/router';
-import { InvolvePartyModel } from '../../involveparties';
+import { Router } from '@angular/router';
 import { DemandModel, DemandModelToView, DemandRemarkLogModel } from './demand.model';
 import { CommunicationLogModel } from '../../communicationlogs';
 import { DemandService } from './demand.service';
-import { DemandTrailService } from './demandtrail.service';
 import { DemandTrailModel } from './demand.trail.model';
 import { DemandRemarkLogService } from './demand.remarklogs.service';
 import {
     ResponseModel, DataExchangeService,
     GlobalConstants, GlobalStateService,
-    UtilityService, KeyValue, AuthModel
+    UtilityService, KeyValue, AuthModel,
 } from '../../../../shared';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -52,6 +50,9 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     demand: DemandModelToView = new DemandModelToView();
     public isShowApprovedDemand: boolean = true;
     public isInvalidRemarks: boolean = false;
+
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
+    
     /**
      * Creates an instance of ApprovedDemandComponent.
      * @param {DemandService} demandService
@@ -90,19 +91,27 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.createdByName = this.credential.UserName;
 
         this.getCurrentDepartmentName(this.currentDepartmentId);
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard, 
+            (model: KeyValue) => this.departmentChangeHandler(model));
 
         // SignalR Notification
-        this.globalState.Subscribe('ReceiveDemandApprovalPendingResponse', (model: DemandModel) => {
+        this.globalState.Subscribe
+        (GlobalConstants.NotificationConstant.ReceiveDemandApprovalPendingResponse.Key, (model: DemandModel) => {
             // this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId);
             this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
         });
-        this.globalState.Subscribe('ReceiveDemandApprovedResponse', (model: DemandModel) => {
+
+        this.globalState.Subscribe
+        (GlobalConstants.NotificationConstant.ReceiveDemandApprovedResponse.Key, (model: DemandModel) => {
             // this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId);
             this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
         });
-        this.globalState.Subscribe('ReceiveDemandRejectedFromApprovalResponse', (model: DemandModel) => {
+
+        this.globalState.Subscribe
+        (GlobalConstants.NotificationConstant.ReceiveDemandRejectedFromApprovalResponse.Key, (model: DemandModel) => {
             // this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId);
             this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
         });
@@ -115,11 +124,10 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     
     public getDemandsForApproval(deptId, incidentId): void {
         this.demandService.GetByApproverDepartment(deptId, incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandModel>) => {
-                
                 this.demandsForApproval = this.demandService.DemandMapper(response.Records);
                 UtilityService.SetRAGStatus(this.demandsForApproval, 'Demand');
-
             }, (error: any) => {
                 console.log(`Error: ${error}`);
             });
@@ -130,48 +138,9 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.childModal.hide();
     }
 
-    /*
-    public setRagStatus(): void {
-        Observable.interval(1000).subscribe((_) => {
-            this.demandsForApproval.forEach((x) => {
-                if (x.ClosedOn === undefined || x.ClosedOn == null) {
-                    const ScheduleTime: number = (Number(x.ScheduleTime) * 60000);
-                    const CreatedOn: number = new Date(x.CreatedOn).getTime();
-                    const CurrentTime: number = new Date().getTime();
-                    const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-                    const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
-
-                    if (percentage < 50) {
-                        x.RagStatus = 'statusGreen';
-                    } else if (percentage >= 100) {
-                        x.RagStatus = 'statusRed';
-                    }
-                    else {
-                        x.RagStatus = 'statusAmber';
-                    }
-                }
-                else {
-                    const ScheduleTime: number = (Number(x.ScheduleTime) * 60000);
-                    const CreatedOn: number = new Date(x.CreatedOn).getTime();
-                    const CurrentTime: number = new Date().getTime();
-                    const TimeDiffofCurrentMinusCreated: number = (CurrentTime - CreatedOn);
-                    const percentage: number = (((TimeDiffofCurrentMinusCreated) * 100) / (ScheduleTime));
-                    if (percentage < 50) {
-                        x.RagStatus = 'statusGreen';
-                    } else if (percentage >= 100) {
-                        x.RagStatus = 'statusRed';
-                    }
-                    else {
-                        x.RagStatus = 'statusAmber';
-                    }
-                }
-            });
-        });
-    }
-    */
-
     public getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
                 this.demandRemarks = response.Records;
                 this.childModalRemarks.show();
@@ -240,7 +209,9 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.RemarkToCreate.TargetDepartmentName = demand.TargetDepartmentName;
         this.RemarkToCreate.CreatedByName = this.createdByName;
         this.RemarkToCreate.CreatedBy = +this.credential.UserId;
+        
         this.demandRemarkLogsService.Create(this.RemarkToCreate)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: DemandRemarkLogModel) => {
                 this.getDemandRemarks(demand.DemandId);
                 this.Remarks = '';
@@ -306,10 +277,11 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
             }
             else {
                 this.demandService.UpdateBulkForApproval(demandCompletion)
+                    .takeUntil(this.ngUnsubscribe)
                     .subscribe((response: DemandModel[]) => {
                         this.toastrService.success('Demand status successfully updated.', 'Success', this.toastrConfig);
                         this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
-                        this.globalStateProxyOpen.NotifyDataChanged('DemandApproved', null);
+                        this.globalStateProxyOpen.NotifyDataChanged(GlobalConstants.DataExchangeConstant.DemandApproved, null);
                     }, (error: any) => {
                         console.log(`Error: ${error}`);
                     });
@@ -322,6 +294,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
 
     public getCurrentDepartmentName(departmentId): void {
         this.departmentService.Get(departmentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: DepartmentModel) => {
                 this.currentDepartmentName = response.DepartmentName;
             }, (error: any) => {
@@ -330,8 +303,11 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     }
 
     public ngOnDestroy(): void {
-        //this.globalState.Unsubscribe('incidentChangefromDashboard');
-        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard);
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     public openDemandDetails(demandId: number): void {

@@ -5,7 +5,7 @@
     font-family: $font-family-prod;
     float: left;
     margin-right: 10px;
-    line-height:20px;
+    line-height: 20px;
 }
 
 .client-name {
@@ -20,14 +20,14 @@
 }
 
 .login-name {
-    font-size:13px;
+    font-size: 13px;
 }
 
 @media screen and (max-width: $resXXS-S) {
     .branding {
         img {
-                width: 32%;
-                float: left;
+            width: 32%;
+            float: left;
             text-align: center;
             height: 44px;
         }

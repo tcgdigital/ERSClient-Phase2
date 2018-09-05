@@ -7,13 +7,14 @@
     width: 100%;
     font-size: 12px;
     .inputStyle {
-        width: 90% !important;
+        width: calc(100% - 30px);
         display: -webkit-inline-box !important;
         border: none !important;
         font-size: 12px;
         padding: 0px;
         line-height: 1.25;
         color: $multiselect-color;
+        height: 20px;
     }
     .crossStyle {
         font-size: 20px;

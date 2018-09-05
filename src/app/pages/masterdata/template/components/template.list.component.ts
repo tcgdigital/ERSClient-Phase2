@@ -1,12 +1,11 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { TemplateModel } from './template.model';
 import { TemplateService } from './template.service';
-import { Observable } from 'rxjs/Rx';
+import { Subject } from 'rxjs/Rx';
 import { EmergencySituationService } from '../../emergency.situation';
 import {
     ResponseModel, DataExchangeService,
-    GlobalConstants, UtilityService,
-    SearchTextBox, SearchDropdown,
+    GlobalConstants, SearchDropdown,
     NameValue, SearchConfigModel
 } from '../../../../shared';
 
@@ -25,6 +24,7 @@ export class TemplateListComponent implements OnInit, OnDestroy {
     templateMediaTypes: any[] = GlobalConstants.TemplateMediaType;
     expandSearch: boolean = false;
     searchValue: string = "Expand Search";
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(private templateService: TemplateService,
         private emergencySituationService: EmergencySituationService,
@@ -40,8 +40,11 @@ export class TemplateListComponent implements OnInit, OnDestroy {
 
     getTemplates(): void {
         this.templateService.GeAllEmailTemplates()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<TemplateModel>) => {
                 this.templates = response.Records;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -63,16 +66,19 @@ export class TemplateListComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.getTemplates();
         this.initiateSearchConfigurations();
-        //this.dataExchange.Subscribe("quickLinkModelSaved", 
+        //this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.QuickLinkModelSaved, 
         //model => this.onTemplateSaveSuccess(model));
     }
 
     ngOnDestroy(): void {
-        //this.dataExchange.Unsubscribe("quickLinkModelSaved");
+        //this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.QuickLinkModelSaved);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     editQuickLink(editedQuickLink: TemplateModel): void {
-        //this.dataExchange.Publish("quickLinkModelEdited", editedQuickLink);
+        //this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.QuickLinkModelEdited, editedQuickLink);
     }
 
     IsActive(event: any, editedTemplate: TemplateModel): void {
@@ -89,36 +95,34 @@ export class TemplateListComponent implements OnInit, OnDestroy {
                 console.log(`Error: ${error}`);
             });
     }
+
     invokeSearch(query: string): void {
         if (query !== '') {
             this.templateService.GetQuery(query.replace(/(\'\|)/ig, ''))
+                .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: ResponseModel<TemplateModel>) => {
-                    this.templates = response.Records.filter(a=>a.ActiveFlag == 'Active');
+                    this.templates = response.Records.filter(a => a.ActiveFlag == 'Active');
                 }, ((error: any) => {
                     console.log(`Error: ${error}`);
                 }));
-        }      
+        }
     }
+
     invokeReset(): void {
         this.getTemplates();
     }
+
     getMediaName(id: number): string {
         if (id > 0) {
             return this.templateMediaTypes.find(x => x.Key == id).Value;
         }
         return "";
     }
+
     private initiateSearchConfigurations(): void {
         let mediatype: NameValue<string>[] = GlobalConstants.TemplateMediaType
             .map(x => new NameValue<string>(x.value, `|CMS.DataModel.Enum.TemplateMediaType'${x.value}'|`));
         this.searchConfigs = [
-            // new SearchDropdown({
-            //     Name: 'TemplateMediaId',
-            //     Description: 'Template Media',
-            //     PlaceHolder: 'Select Template Media',
-            //     Value: '',
-            //     ListData: Observable.of(mediatype)
-            // }),
             new SearchDropdown({
                 Name: 'EmergencySituationId',
                 Description: 'Situation',

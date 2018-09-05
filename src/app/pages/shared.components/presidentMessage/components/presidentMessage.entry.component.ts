@@ -1,14 +1,10 @@
 import {
-    Component, ViewEncapsulation, OnDestroy,
-    Output, EventEmitter, OnInit, Input
+    Component, ViewEncapsulation, OnDestroy, OnInit, Input
 } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import {
-    FormGroup, FormControl,
-    FormBuilder, AbstractControl, Validators
+    FormGroup, FormControl, FormBuilder, Validators
 } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-
 
 import { PresidentMessageService } from './presidentMessage.service';
 import { PresidentMessageModel } from './presidentMessage.model';
@@ -18,6 +14,7 @@ import {
 } from '../../../../shared';
 
 import { TemplateMediaModel, TemplateMediaService } from '../../template.media/components';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'presidentMessage-entry',
@@ -38,7 +35,7 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
     showAdd: boolean;
     credential: AuthModel;
     hideMessageError: boolean = true;
-    hideRemarksError: boolean = true;   
+    hideRemarksError: boolean = true;
     templateMedias: TemplateMediaModel[] = [];
     templateContent: string;
     currentTemplateMediaId: string;
@@ -48,8 +45,9 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
     isInvalidForm: boolean = false;
     isApprovedContent: boolean = false;
     isSavedContent: boolean = true;
-    public isShow: boolean = true;
+
     toolbarConfig: any = GlobalConstants.EditorToolbarConfig;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     /**
      * Creates an instance of PresidentMessageEntryComponent.
@@ -79,34 +77,49 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
         this.currentDepartmentId = this.initiatedDepartmentId;
         this.getTemplateMedias();
         this.credential = UtilityService.getCredentialDetails();
-        this.dataExchange.Subscribe("OnPresidentMessageUpdate", model => this.onPresidentMessageUpdate(model));
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.OnPresidentMessageUpdate,
+            (model: PresidentMessageModel) => this.onPresidentMessageUpdate(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard,
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard,
+            (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
     ngOnDestroy(): void {
-        //this.dataExchange.Unsubscribe("OnPresidentMessageUpdate");
-        //this.globalState.Unsubscribe('incidentChangefromDashboard');
-        //this.globalState.Unsubscribe('departmentChangeFromDashboard');
+        //this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.OnPresidentMessageUpdate);
+        //this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard);
+        //this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     getTemplateMedias(): void {
         this.templateMediaService.GetAll()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<TemplateMediaModel>) => {
                 this.templateMedias = response.Records
                     .filter((a) => a.TemplateType === 'President Message');
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
     getContentFromTemplate(evt: any) {
         if (evt.target.value !== '') {
             const templateId = evt.target.value;
-            
+
             this.presidentMessageService.GetContentFromTemplate(this.currentIncidentId, this.currentDepartmentId, +templateId)
+                .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: any) => {
                     this.templateContent = `${response.Body}`;
                     this.PresidentsMessage.Message = this.templateContent;
-                    this.applyReadOnlytextBox = false; 
+                    this.applyReadOnlytextBox = false;
+                }, (error: any) => {
+                    console.log(`Error: ${error}`);
                 });
         }
         else {
@@ -124,31 +137,29 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
     }
 
     onPresidentMessageUpdate(presedientMessageModel: PresidentMessageModel): void {
-         this.currentTemplateMediaId = this.templateMedias
+        this.currentTemplateMediaId = this.templateMedias
             .find((a) => a.TemplatePurpose === presedientMessageModel.PresidentMessageType).TemplateMediaId.toString();
 
-        if(presedientMessageModel.PresidentMessageStatus === 'Approved' || presedientMessageModel.PresidentMessageStatus === 'Published')
-        {
+        if (presedientMessageModel.PresidentMessageStatus === 'Approved' || presedientMessageModel.PresidentMessageStatus === 'Published') {
             this.PresidentsMessage = new PresidentMessageModel();
             this.PresidentsMessage = presedientMessageModel;
             this.PresidentsMessage.PresidentsMessageId = presedientMessageModel.PresidentsMessageId;
             this.PresidentsMessage.Message = this.PresidentsMessage.ApprovedContent;
         }
-        else
-        {
+        else {
             this.PresidentsMessage = new PresidentMessageModel();
             this.PresidentsMessage = presedientMessageModel;
             this.PresidentsMessage.PresidentsMessageId = presedientMessageModel.PresidentsMessageId;
             this.PresidentsMessage.IsUpdated = true;
-        }            
-      
+        }
+
         if (this.PresidentsMessage.PresidentMessageStatus === 'SentForApproval' || this.PresidentsMessage.PresidentMessageStatus === 'Published') {
             this.form.controls['PresidentMessageType'].reset({ value: this.currentTemplateMediaId, disabled: true });
             this.applyReadOnlytextBox = true;
             this.applyReadOnlyButtons = true;
             this.appReadOnlyPublish = true;
             this.toolbarConfig['readOnly'] = true;
-        }        
+        }
         else if (this.PresidentsMessage.PresidentMessageStatus === 'Approved') {
             this.appReadOnlyPublish = false;
             this.form.controls['PresidentMessageType'].reset({ value: this.currentTemplateMediaId, disabled: true });
@@ -168,36 +179,31 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
     }
 
     validateForm(): boolean {
-        if((this.form.controls['Message'].value == "" || this.form.controls['Message'].value == undefined) 
-        && (this.form.controls['PresidentMessageType'].value == "" || this.form.controls['PresidentMessageType'].value == undefined ))
-        {
+        if ((this.form.controls['Message'].value == "" || this.form.controls['Message'].value == undefined)
+            && (this.form.controls['PresidentMessageType'].value == "" || this.form.controls['PresidentMessageType'].value == undefined)) {
             this.hideMessageError = false;
             this.hideRemarksError = false;
             return false;
         }
-        if(this.form.controls['Message'].value == "" || this.form.controls['Message'].value == null || this.form.controls['Message'].value == undefined)
-        {
+        if (this.form.controls['Message'].value == "" || this.form.controls['Message'].value == null || this.form.controls['Message'].value == undefined) {
             this.hideMessageError = false;
             return false;
-        } 
-        else if(this.form.controls['PresidentMessageType'].value == "" || this.form.controls['PresidentMessageType'].value == null || this.form.controls['PresidentMessageType'].value == undefined)
-        {
+        }
+        else if (this.form.controls['PresidentMessageType'].value == "" || this.form.controls['PresidentMessageType'].value == null || this.form.controls['PresidentMessageType'].value == undefined) {
             this.hideMessageError = true;
             this.hideRemarksError = false;
             return false;
-        } 
-        else
-        {               
+        }
+        else {
             this.hideMessageError = true;
-            this.hideRemarksError = true;    
+            this.hideRemarksError = true;
             return true;
         }
     }
-    
+
 
     save(): void {
-        if(this.validateForm()) 
-        {
+        if (this.validateForm()) {
             this.hideMessageError = true;
             this.hideRemarksError = true;
             this.PresidentsMessage.IsPublished = false;
@@ -207,20 +213,18 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
     }
 
     SentForApproval(): void {
-        if(this.validateForm())
-        {
+        if (this.validateForm()) {
             this.hideMessageError = true;
             this.hideRemarksError = true;
             this.PresidentsMessage.IsPublished = false;
             this.Action = 'SentForApproval';
             this.CreateOrUpdatePresidentMessage();
-        }        
+        }
     }
 
     publish(): void {
 
-        if(this.validateForm()) 
-        {
+        if (this.validateForm()) {
             this.hideMessageError = true;
             this.hideRemarksError = true;
             this.PresidentsMessage.IsPublished = true;
@@ -235,7 +239,7 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
     private CreateOrUpdatePresidentMessage(): void {
         UtilityService.setModelFromFormGroup<PresidentMessageModel>
             (this.PresidentsMessage, this.form, (x) => x.Remarks, (x) => x.PresidentMessageType);
-        
+
         const presidentsTypeId: number = +this.PresidentsMessage.PresidentMessageType;
         this.PresidentsMessage.PresidentMessageType = this.templateMedias.find((a) => a.TemplateMediaId === presidentsTypeId).TemplatePurpose;
 
@@ -264,23 +268,23 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
 
             this.presidentMessageService.Create(this.PresidentsMessage)
                 .subscribe((response: PresidentMessageModel) => {
-                    if (this.Action === 'Save') 
+                    if (this.Action === 'Save')
                         this.toastrService.success('President message is saved successfully.', 'Success', this.toastrConfig);
-                    
-                     if (this.Action === 'SentForApproval') {
-                        this.dataExchange.Publish('PresidentsMessageSentForApproval', response);
+
+                    if (this.Action === 'SentForApproval') {
+                        this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.PresidentsMessageSentForApproval, response);
                         this.toastrService.success('President message is successfully sent for approval.', 'Success', this.toastrConfig);
                     }
 
-                     if (this.PresidentsMessage.IsPublished) {
+                    if (this.PresidentsMessage.IsPublished) {
                         this.globalState.NotifyDataChanged('PresidentsMessagePublished', response);
                         this.toastrService.success('President message is published successfully.', 'Success', this.toastrConfig);
                     }
 
-                    this.dataExchange.Publish("PresidentMessageModelSaved", response);
+                    this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.PresidentMessageModelSaved, response);
 
                     if (this.PresidentsMessage.IsPublished) {
-                        this.globalState.NotifyDataChanged('PresidentMessagePublished', response);
+                        this.globalState.NotifyDataChanged(GlobalConstants.DataExchangeConstant.PresidentMessagePublished, response);
                     }
                     this.InitiateForm();
                     this.showAdd = false;
@@ -291,25 +295,26 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
         else {
             this.PresidentsMessage.UpdatedBy = +this.credential.UserId;
             this.PresidentsMessage.UpdatedOn = new Date();
+
             this.presidentMessageService.Update(this.PresidentsMessage)
                 .subscribe((response: PresidentMessageModel) => {
-                     if (this.Action === 'Save') 
+                    if (this.Action === 'Save')
                         this.toastrService.success('President message is saved successfully.', 'Success', this.toastrConfig);
-                    
-                     if (this.Action === 'SentForApproval') {
-                        this.dataExchange.Publish('PresidentsMessageSentForApproval', response);
+
+                    if (this.Action === 'SentForApproval') {
+                        this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.PresidentsMessageSentForApproval, response);
                         this.toastrService.success('President message is successfully sent for approval.', 'Success', this.toastrConfig);
                     }
 
-                     if (this.PresidentsMessage.IsPublished) {
+                    if (this.PresidentsMessage.IsPublished) {
                         this.globalState.NotifyDataChanged('PresidentsMessagePublished', response);
                         this.toastrService.success('President message is published successfully.', 'Success', this.toastrConfig);
                     }
 
-                    this.dataExchange.Publish("PresidentMessageModelUpdated", response);
+                    this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.PresidentMessageModelUpdated, response);
 
                     if (this.PresidentsMessage.IsPublished) {
-                        this.globalState.NotifyDataChanged('PresidentMessagePublished', this.PresidentsMessage);
+                        this.globalState.NotifyDataChanged(GlobalConstants.DataExchangeConstant.PresidentMessagePublished, this.PresidentsMessage);
 
                     }
                     this.InitiateForm();
@@ -348,7 +353,7 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
         this.currentTemplateMediaId = '';
         this.applyReadOnlytextBox = false;
         this.applyReadOnlyButtons = false;
-        this.appReadOnlyPublish = true;       
+        this.appReadOnlyPublish = true;
         this.toolbarConfig['readOnly'] = false;
         this.form.controls['PresidentMessageType'].reset({ value: '', disabled: false });
     }

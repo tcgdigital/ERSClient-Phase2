@@ -9,7 +9,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     top: 41px;
-    z-index: 1;
+    z-index: 99;
     ul {
         list-style-type: none;
         li {
@@ -58,7 +58,7 @@
 }
 
 .dock-menu {
-    width: 3.6%; 
+    width: 3.6%;
     ul li {
         padding: 10px 11px;
         &.active:after {

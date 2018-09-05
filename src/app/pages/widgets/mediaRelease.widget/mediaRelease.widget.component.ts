@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Component, OnInit, OnDestroy, Input, ViewChild } from '@angular/core';
+import { Observable, Subject } from 'rxjs/Rx';
 import {
-    DataServiceFactory, DataExchangeService, GlobalStateService,
+    DataExchangeService, GlobalStateService,
     KeyValue, UtilityService, TextAccordionModel, GlobalConstants
 } from '../../../shared';
 import { MediaReleaseWidgetModel } from './mediaRelease.widget.model';
@@ -14,7 +14,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
     templateUrl: './mediaRelease.widget.view.html',
     styleUrls: ['./mediaRelease.widget.style.scss']
 })
-export class MediaReleaseWidgetComponent implements OnInit {
+export class MediaReleaseWidgetComponent implements OnInit, OnDestroy {
     @Input('initiatedDepartmentId') initiatedDepartmentId: number;
     @Input('currentIncidentId') incidentId: number;
     @ViewChild('childModalMediaRelease') public childModal: ModalDirective;
@@ -28,6 +28,8 @@ export class MediaReleaseWidgetComponent implements OnInit {
     public isShow: boolean = true;
     public isShowViewAll: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
+
     /**
      * Creates an instance of MediaReleaseWidgetComponent.
      * @param {MediaReleaseWidgetService} mediaReleaseWidgetService
@@ -50,32 +52,37 @@ export class MediaReleaseWidgetComponent implements OnInit {
             this.getLatestMediaReleases(this.currentIncidentId);
         }
 
-        this.globalState.Subscribe('incidentChange', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
-        this.globalState.Subscribe('MediaReleasePublished', (model) => this.onMediaReleasePublish(model));
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChange,
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
+            (model: KeyValue) => this.departmentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.MediaReleasePublished,
+            (model: MediaModel) => this.onMediaReleasePublish(model));
 
         // Signalr Notification
-        this.globalState.Subscribe('ReceiveMediaMessageResponse', (model: MediaReleaseWidgetModel) => {
-            this.getLatestMediaReleases(this.currentIncidentId);
-        });
+        this.globalState.Subscribe
+            (GlobalConstants.NotificationConstant.ReceiveMediaMessageResponse.Key, (model: MediaReleaseWidgetModel) => {
+                this.getLatestMediaReleases(this.currentIncidentId);
+            });
     }
 
     public getLatestMediaReleases(incidentId): void {
         let data: MediaReleaseWidgetModel[] = [];
         this.mediaReleaseWidgetService
             .GetAllMediaReleaseByIncident(incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .flatMap((x) => x)
             .take(3)
             .subscribe((x: MediaReleaseWidgetModel) => {
                 data.push(x);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
-            },
-            () => {
+            }, () => {
                 this.mediaReleases = Observable.of(data
                     .map((x: MediaReleaseWidgetModel) => new TextAccordionModel(x.MediaReleaseType, x.PublishedOn,
                         this.downloadPath + x.MediaqueryId)));
-                // console.log(this.mediaReleases);
             });
     }
 
@@ -83,13 +90,13 @@ export class MediaReleaseWidgetComponent implements OnInit {
         let data: MediaReleaseWidgetModel[] = [];
         this.mediaReleaseWidgetService
             .GetAllMediaReleaseByIncident(this.currentIncidentId)
+            .takeUntil(this.ngUnsubscribe)
             .flatMap((x) => x)
             .subscribe((x) => {
                 data.push(x);
             }, (error: any) => {
                 console.log(`Error: ${error}`);
-            },
-            () => {
+            }, () => {
                 this.AllMediaReleases = Observable.of(data);
                 if (callback) {
                     callback();
@@ -108,8 +115,11 @@ export class MediaReleaseWidgetComponent implements OnInit {
     }
 
     ngOnDestroy(): void {
-        // this.globalState.Unsubscribe('incidentChange');
-        //this.globalState.Unsubscribe('MediaReleasePublished');
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChange);
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.MediaReleasePublished);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     private incidentChangeHandler(incident: KeyValue): void {

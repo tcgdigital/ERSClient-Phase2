@@ -1,11 +1,12 @@
 import { Component, ViewEncapsulation, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import {
-    ResponseModel, GlobalConstants, KeyValue,
-    GlobalStateService, UtilityService
+    ResponseModel, KeyValue, GlobalStateService, UtilityService, GlobalConstants
 } from '../../../../shared';
-import { Observable, Subscription } from 'rxjs/Rx';
+import { Subscription, Subject } from 'rxjs/Rx';
 
-import { CallCenterOnlyPageService, ExternalInputModel } from '../../../callcenteronlypage/component';
+import { 
+    CallCenterOnlyPageService, ExternalInputModel 
+} from '../../../callcenteronlypage/component';
 import { Router, NavigationEnd } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
@@ -14,7 +15,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
     encapsulation: ViewEncapsulation.None,
     templateUrl: '../views/cargo.query.assignedcallslist.view.html'
 })
-export class CargoQueryAssignedCallsListComponent implements OnInit {
+export class CargoQueryAssignedCallsListComponent implements OnInit, OnDestroy {
     @ViewChild('childModalcallcenter') public childModalcallcenter: ModalDirective;
 
     allAssignedCalls: ExternalInputModel[] = [];
@@ -23,6 +24,7 @@ export class CargoQueryAssignedCallsListComponent implements OnInit {
     callId: number;
     callcenterload: boolean = false;
     public isArchive: boolean = false;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(private callcenteronlypageservice: CallCenterOnlyPageService, private _router: Router,
         private globalState: GlobalStateService) {
@@ -39,11 +41,15 @@ export class CargoQueryAssignedCallsListComponent implements OnInit {
         }
         this.getAllCargoQueryCalls(this.currentIncidentId);
 
-        this.globalState.Subscribe('incidentChangefromDashboard', (model: KeyValue) => this.incidentChangeHandler(model));
-        this.globalState.Subscribe('CallRecieved', (model: number) => this.getAllCargoQueryCalls(this.currentIncidentId));
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+            (model: KeyValue) => this.incidentChangeHandler(model));
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.CallRecieved, 
+            (model: number) => this.getAllCargoQueryCalls(this.currentIncidentId));
 
         // SignalR Notification
-        this.globalState.Subscribe('ReceiveCargoEnquiryCreationResponse', (model: ExternalInputModel) => {
+        this.globalState.Subscribe
+        (GlobalConstants.NotificationConstant.ReceiveCargoEnquiryCreationResponse.Key, (model: ExternalInputModel) => {
             // this.getAllCargoQueryCalls(model.IncidentId);
             const index: number = this.allAssignedCalls
                 .findIndex((x: ExternalInputModel) => x.ExternalInputId === model.ExternalInputId);
@@ -56,6 +62,11 @@ export class CargoQueryAssignedCallsListComponent implements OnInit {
         });
     }
 
+    public ngOnDestroy(): void {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
+
     incidentChangeHandler(incident: KeyValue): void {
         this.currentIncidentId = incident.Value;
         this.getAllCargoQueryCalls(this.currentIncidentId);
@@ -64,9 +75,13 @@ export class CargoQueryAssignedCallsListComponent implements OnInit {
     getAllCargoQueryCalls(incidentId): void {
         this.childModalcallcenter.hide();
         this.callcenterload = false;
+
         this.callcenteronlypageservice.GetCargoQueryCallsByIncident(incidentId)
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 

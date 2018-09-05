@@ -1,13 +1,12 @@
 @import '../../config/config';
-@import '../../../../assets/css/weather-icons';
-@import '../../../../assets/css/weather-icons-wind';
+@import url(../../../../assets/css/weather-icons.css);
+@import url(../../../../assets/css/weather-icons-wind.css);
 .weather-container {
     padding-left: 10px;
     .current-weather {
         padding: 3%;
         background-color: #ec4747;
         color: #fff;
-        .row:nth-child(1) {}
         .row:nth-child(2) {
             margin-top: 5px;
         }
@@ -37,15 +36,11 @@
             font-size: 80px;
             text-align: center;
         }
-        .current-temp {}
-        .weather-prop {
-            
-        }
     }
     .weather-forecast {
         div.row {
             padding: 9px;
-            p{
+            p {
                 margin: 0;
                 padding: 0;
                 display: inline-block;

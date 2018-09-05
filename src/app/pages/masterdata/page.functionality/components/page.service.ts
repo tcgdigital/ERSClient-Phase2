@@ -7,11 +7,13 @@ import {
     DataService,
     DataServiceFactory,
     DataProcessingService,
-    IServiceInretface
+    IServiceInretface,
+    NameValue
 } from '../../../../shared';
 
 @Injectable()
 export class PageService implements IServiceInretface<PageModel>{
+    
     private _dataServiceForPage: DataService<PageModel>;
 
     constructor(private dataServiceFactory: DataServiceFactory) {
@@ -24,13 +26,13 @@ export class PageService implements IServiceInretface<PageModel>{
         return this._dataServiceForPage.Query().Execute();
     }
 
-    GetPagesOrderBySortOrder():Observable<ResponseModel<PageModel>> {
+    GetPagesOrderBySortOrder(): Observable<ResponseModel<PageModel>> {
         return this._dataServiceForPage
-        .Query()
-        .Expand('ParentPage($select=PageName)')
-        .Filter('ActiveFlag eq CMS.DataModel.Enum.ActiveFlag\'Active\'')
-        .OrderBy('ModuleName,ParentPageId,PageName,SortOrder')
-        .Execute();
+            .Query()
+            .Expand('ParentPage($select=PageName)')
+            .Filter('ActiveFlag eq CMS.DataModel.Enum.ActiveFlag\'Active\'')
+            .OrderBy('ModuleName,ParentPageId,PageName,SortOrder')
+            .Execute();
     }
 
     GetFilter(filter: string): Observable<ResponseModel<PageModel>> {
@@ -53,6 +55,10 @@ export class PageService implements IServiceInretface<PageModel>{
     }
 
     Update(entity: PageModel): Observable<PageModel> {
+        return Observable.of(entity);
+    }
+
+    UpdateWithHeader(entity: PageModel, header: NameValue<string>): Observable<PageModel> {
         return Observable.of(entity);
     }
 

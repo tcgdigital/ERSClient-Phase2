@@ -1,20 +1,23 @@
 @import '../../config/config';
+.col-no-left-padding {
+    padding-left: 0 !important;
+}
 
-.col-no-left-padding{
-    padding-left: 0 !important;
-}
-.col-no-right-padding{
+.col-no-right-padding {
     padding-right: 0 !important;
 }
-.row-no-padding > [class*="col-"] {
+
+.row-no-padding>[class*="col-"] {
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
-.labelStyle{
+
+.labelStyle {
     border: none;
     text-decoration: underline;
     cursor: pointer;
 }
+
 .statusGreen {
     background: $rag-green none repeat scroll 0 0;
     border-radius: 20px;
@@ -46,23 +49,25 @@
     border-top: none !important;
 }
 
-.holderStyle{
+.holderStyle {
     float: left;
     padding-left: 5px;
     padding-right: 5px;
     width: 100%;
 }
 
-.buttonholder{
-        float: right;
+.buttonholder {
+    float: right;
     vertical-align: middle;
     padding-top: 27px;
 }
-.button-align{
+
+.button-align {
     text-align: right;
     padding-bottom: 7px;
 }
-.down-icon{
+
+.down-icon {
     font-size: 20px;
     padding-left: 23px;
 }

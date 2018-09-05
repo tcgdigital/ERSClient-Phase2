@@ -5,10 +5,10 @@ import {
     ResponseModel, DataExchangeService, SearchConfigModel,
     SearchTextBox, SearchDropdown,
     NameValue,
+    GlobalConstants,
 } from '../../../../shared';
-import { Observable } from 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-
 
 @Component({
     selector: 'emergencylocation-list',
@@ -21,6 +21,7 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
     emergencyLocationPatch: EmergencyLocationModel = null;
     expandSearch: boolean = false;
     searchValue: string = 'Expand Search';
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(private emergencyLocationService: EmergencyLocationService,
         private dataExchange: DataExchangeService<EmergencyLocationModel>,
@@ -35,39 +36,47 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
             this.searchValue = 'Expand Search Panel';
         }
         this.expandSearch = !this.expandSearch;
-
     }
 
     ngOnInit(): void {
         this.getAllEmergencyLocations();
         this.initiateSearchConfigurations();
-        this.dataExchange.Subscribe('EmergencyLocationModelSaved', (model) => {
-            this.emergencyLocations.unshift(model);
-        });
 
-        this.dataExchange.Subscribe('EmergencyLocationModelUpdated', (model) => {
-            this.getAllEmergencyLocations();
-        });
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.EmergencyLocationModelSaved,
+            (model: EmergencyLocationModel) => {
+                this.emergencyLocations.unshift(model);
+            });
 
-        this.dataExchange.Subscribe('FileUploadedSuccessfully', () => {
-            this.getAllEmergencyLocations();
-        });
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.EmergencyLocationModelUpdated,
+            (model) => {
+                this.getAllEmergencyLocations();
+            });
+
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.FileUploadedSuccessfully,
+            () => {
+                this.getAllEmergencyLocations();
+            });
     }
 
     ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe('FileUploadedSuccessfully');
-        this.dataExchange.Unsubscribe('EmergencyLocationModelSaved');
-        this.dataExchange.Unsubscribe('EmergencyLocationModelUpdated');
+        this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.FileUploadedSuccessfully);
+        this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.EmergencyLocationModelSaved);
+        this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.EmergencyLocationModelUpdated);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     getAllEmergencyLocations(): void {
         this.emergencyLocationService.GetAllEmergencyLocations()
+            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EmergencyLocationModel>) => {
                 this.emergencyLocations = response.Records;
                 this.emergencyLocations.forEach((x) => {
                     x.Active = (x.ActiveFlag === 'Active');
                 });
-                // console.log(this.emergencyLocations);
+            }, (error: any) => {
+                console.log(`Error: ${error}`);
             });
     }
 
@@ -76,10 +85,12 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
             if (query.indexOf('isActive') >= 0) {
                 if (query.indexOf("'true'") >= 0)
                     query = query.replace("'true'", 'true');
+
                 if (query.indexOf("'false'") >= 0)
                     query = query.replace("'false'", 'false');
             }
             this.emergencyLocationService.GetQuery(query)
+                .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: ResponseModel<EmergencyLocationModel>) => {
                     this.emergencyLocations = response.Records;
                 }, ((error: any) => {
@@ -114,6 +125,7 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
         delete emergencyLocation.Active;
         if (confirm('Do you want to delete station: ' + emergencyLocation.IATA + '?')) {
             const IATA = emergencyLocation.IATA;
+            
             this.emergencyLocationService.Delete(emergencyLocation.EmergencyLocationId, emergencyLocation)
                 .subscribe((response: any) => {
                     this.toastrService.success('Station: ' + IATA + ' is deleted successfully', 'Success', this.toastrConfig);
@@ -130,7 +142,7 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
 
     UpdateEmergencyLocation(emergencyLocationModelUpdate: EmergencyLocationModel) {
         const emergencyModelToSend = Object.assign({}, emergencyLocationModelUpdate);
-        this.dataExchange.Publish('OnEmergencyLocationUpdate', emergencyModelToSend);
+        this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.OnEmergencyLocationUpdate, emergencyModelToSend);
     }
 
     private initiateSearchConfigurations(): void {

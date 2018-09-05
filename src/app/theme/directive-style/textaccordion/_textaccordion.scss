@@ -24,74 +24,75 @@
     margin-top: 1.2em;
     >li {
         position: relative;
-        span {		 
-        width: 100%;		             
-        display: block;		            
-        height: 120px;		             
-        overflow-x: hidden;		
-        overflow-y: auto;		
-        font-size: 12px;		            
-        text-align: justify;		              
-        padding: 20px 13px 5px 30px;		 
-        background: $text-accordion-bg;		             
-        line-height: 18px;
+        span {
+            width: 100%;
+            display: block;
+            height: 120px;
+            overflow-x: hidden;
+            overflow-y: auto;
+            font-size: 12px;
+            text-align: justify;
+            padding: 20px 13px 5px 30px;
+            background: $text-accordion-bg;
+            line-height: 18px;
         }
         i.publish-date {
             position: absolute;
             top: 0;
             right: 15px;
             color: $text-accordion-date;
-            background-color: #f5f5f5; font-size: 12px;
+            background-color: #f5f5f5;
+            font-size: 12px;
         }
     }
 }
 
- .accessibility-error {		              
-        padding: 50px 13px 5px 42px !important;
-        height: 118px !important;
-            &.accessibility-error:before {
-                content: "\f071";
-                font-family: FontAwesome;
-                height: 17px;
-                position: absolute;
-                margin-top: -3px;
-                left: 20px;
-                font-size: 18px;
-                color: #ff0000;
-            }
-        }
+.accessibility-error {
+    padding: 50px 13px 5px 42px !important;
+    height: 118px !important;
+    &.accessibility-error:before {
+        content: "\f071";
+        font-family: FontAwesome;
+        height: 17px;
+        position: absolute;
+        margin-top: -3px;
+        left: 20px;
+        font-size: 18px;
+        color: #ff0000;
+    }
+}
 
-.clock-container > div > span.accessibility-error {
-            font-size: 12px;
-            padding: 20px 13px 5px 35px !important;
-            color:#fff;
-            &.accessibility-error:before {
-                content: "\f071";
-                font-family: FontAwesome;
-                height: 17px;
-                position: absolute;
-                margin-top: -6px;
-                left: 27px;
-                font-size: 16px;
-                color: #fff;
-            }
-        }
+.clock-container>div>span.accessibility-error {
+    font-size: 12px;
+    padding: 20px 13px 5px 35px !important;
+    color: #fff;
+    &.accessibility-error:before {
+        content: "\f071";
+        font-family: FontAwesome;
+        height: 17px;
+        position: absolute;
+        margin-top: -6px;
+        left: 27px;
+        font-size: 16px;
+        color: #fff;
+    }
+}
 
-.widget-container > div > div:nth-child(2) > .accessibility-error {
-            font-size: 12px;
-            padding: 20px 13px 5px 42px !important;
-            color:#fff;
-            &.accessibility-error:before {
-                content: "\f071";
-                font-family: FontAwesome;
-                height: 17px;
-                position: absolute;
-                margin-top: -6px;
-                left: 20px;
-                font-size: 16px;
-                color: #fff;
-            }
-        }
+.widget-container>div>div:nth-child(2)>.accessibility-error {
+    font-size: 12px;
+    padding: 20px 13px 5px 42px !important;
+    color: #fff;
+    &.accessibility-error:before {
+        content: "\f071";
+        font-family: FontAwesome;
+        height: 17px;
+        position: absolute;
+        margin-top: -6px;
+        left: 20px;
+        font-size: 16px;
+        color: #fff;
+    }
+}
 
 .cd-item-wrapper {
     @include perspective(500px);
@@ -108,23 +109,27 @@
             position: relative;
             z-index: 3; // @include box-shadow(0, 0, 6px, 2px, $header-shadow);
         }
-        &.cd-item-middle { min-width:150px !important;
+        &.cd-item-middle {
+            min-width: 150px !important;
             z-index: 2;
         }
     }
 }
 
-.active .cd-item-wrapper li.cd-item-middle { min-width:150px !important;
+.active .cd-item-wrapper li.cd-item-middle {
+    min-width: 150px !important;
     @include translate3d(0, 0, $text-accordion-item-translate3d-middle);
     @include box-shadow(0, 1px, 4px, 1px, $header-shadow);
     opacity: .8;
 }
 
-.cd-item-wrapper li.cd-item-back {min-width:100px !important;
+.cd-item-wrapper li.cd-item-back {
+    min-width: 100px !important;
     z-index: 1;
 }
 
-.active .cd-item-wrapper li.cd-item-back {min-width:100px !important;
+.active .cd-item-wrapper li.cd-item-back {
+    min-width: 100px !important;
     @include translate3d(0, 0, $text-accordion-item-translate3d-back);
     @include box-shadow(0, 1px, 4px, 1px, $header-shadow);
     opacity: .4;

@@ -40,7 +40,8 @@ export class BroadcastComponent {
             this.incidentId = +UtilityService.GetFromSession('CurrentIncidentId');
             this.isArchive = false;
         }
-        this.globalState.Subscribe('departmentChangeFromDashboard', (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard, 
+            (model: KeyValue) => this.departmentChangeHandler(model));
 
     }
 
