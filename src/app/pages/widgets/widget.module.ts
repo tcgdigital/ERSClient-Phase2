@@ -8,7 +8,7 @@ import { ActionableService } from '../shared.components/actionables';
 import { DemandService } from '../shared.components/demand';
 import { DepartmentAccessOwnerService } from '../shared.components/departmentaccessowner';
 import { ModalModule, ModalDirective } from 'ngx-bootstrap';
-import { SharedModule, FileUploadService } from '../../shared';
+import { SharedModule, FileUploadService,AutocompleteComponent } from '../../shared';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChecklistTrailService } from "../shared.components/checklist.trail";
 import { UtilityService } from '../../shared';
@@ -16,6 +16,7 @@ import { IncidentService } from '../incident/components';
 import { ActionableStatusLogService } from "../shared.components/actionablestatuslog";
 import { DemandStatusLogService } from "../shared.components/demandstatuslog";
 import { WorldTimeWidgetComponent, WorldTimeWidgetService } from './world.time.widget';
+import { QuickLinkGroupService, QuickLinkGroupComponent } from './../masterdata/quicklinkgroup';
 
 import {
     BroadcastWidgetComponent,

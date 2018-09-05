@@ -244,7 +244,6 @@ export class AffectedObjectsListComponent implements OnInit {
         affectedObjectUpdate.Remarks = affectedObject.Remarks;
         affectedObjectUpdate.IdentificationDesc = affectedObject.IdentificationDesc;
         affectedObjectUpdate.LostFoundStatus = affectedObject.LostFoundStatus;
-        debugger;
         
         const additionalHeader: NameValue<string>
             = new NameValue<string>('CurrentDepartmentName', this.currentDepartmentName);

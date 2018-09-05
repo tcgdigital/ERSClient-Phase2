@@ -1,11 +1,16 @@
 import {
-    Component, OnInit, Input, ViewEncapsulation, OnDestroy
+    Component, OnInit, Input, ViewChild,
+    Output, EventEmitter, ViewEncapsulation,
+    SimpleChange
 } from '@angular/core';
 import { KeyValue, ResponseModel } from '../../../shared/models';
 import { GlobalConstants, GlobalStateService } from '../../../shared';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 import { QuickLinkModel } from '../../masterdata/quicklink/components';
 import { QuickLinkService } from '../../masterdata/quicklink/components';
-import { Subject } from 'rxjs/Rx';
+import { QuickLinkGroupService } from '../../masterdata/quicklinkgroup';
+import { Observable } from 'rxjs/Rx';
+import { QuickLinkGroupModel } from '../../masterdata/quicklinkgroup';
 
 @Component({
     selector: 'quick-link-widget',
@@ -14,43 +19,42 @@ import { Subject } from 'rxjs/Rx';
     encapsulation: ViewEncapsulation.None
 })
 
-export class QuickLinkQuickViewWidgetComponent implements OnInit, OnDestroy {
+export class QuickLinkQuickViewWidgetComponent implements OnInit {
     @Input('currentIncident') currentIncident: number;
     @Input('initiatedDepartmentId') initiatedDepartmentId: number;
 
     public incidentId: number;
     quicklinks: QuickLinkModel[] = [];
+    quicklinkGroups: QuickLinkGroupModel[] = [];
     public isShowPage: boolean = true;
     public currentDepartmentId: number;
     public currentIncidentIdLocal: number;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
-    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
-    constructor(private quicklinkService: QuickLinkService,
-        private globalState: GlobalStateService) { }
+    constructor(private quicklinkService: QuickLinkService, private globalState: GlobalStateService, private quickLinkGroupService: QuickLinkGroupService) { }
 
     ngOnInit() {
         this.incidentId = 0;
         this.currentDepartmentId = this.initiatedDepartmentId;
         this.currentIncidentIdLocal = this.currentIncident;
-
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
-            (model: KeyValue) => this.departmentChangeHandler(model));
+        this.globalState.Subscribe('departmentChange', (model: KeyValue) => this.departmentChangeHandler(model));
+        //this.getQuickLinkGroups();
         this.getQuickLinks();
     }
 
-    ngOnDestroy(): void {
-        this.ngUnsubscribe.next();
-        this.ngUnsubscribe.complete();
+
+    getQuickLinkGroups(): void {
+        this.quickLinkGroupService.GetAll()
+            .subscribe((response: ResponseModel<QuickLinkGroupModel>) => {
+                this.quicklinkGroups = response.Records;
+            });
     }
+
 
     getQuickLinks(): void {
         this.quicklinkService.GetAll()
-            .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<QuickLinkModel>) => {
                 this.quicklinks = response.Records;
-            }, (error: any) => {
-                console.log(`Error: ${error}`);
             });
     }
 
@@ -61,7 +65,21 @@ export class QuickLinkQuickViewWidgetComponent implements OnInit, OnDestroy {
             });
     }
 
+    onNotifyChanges(message: KeyValue) : void {
+        let filter: string = `QuickLinkGroupId eq ${message.Value}`;
+
+        this.quicklinkService.GetQuery(filter)
+            .subscribe((response: ResponseModel<QuickLinkModel>) => {
+                this.quicklinks = response.Records;
+            });
+    }
+
+    onNotifyReset() : void{
+        this.getQuickLinks();
+    }
+
     private departmentChangeHandler(department: KeyValue): void {
         this.currentDepartmentId = department.Value;
+
     }
 }

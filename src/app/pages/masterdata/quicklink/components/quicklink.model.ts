@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BaseModel } from '../../../../shared';
+import { QuickLinkGroupModel } from '../../quicklinkgroup';
+
 
 export class QuickLinkModel extends BaseModel {
     public QuickLinkId: number;
@@ -7,6 +9,8 @@ export class QuickLinkModel extends BaseModel {
     public QuickLinkURL: string;
     public UploadURL: string;
     public Active: boolean;
+    public QuickLinkGroupId?: number;
+    public QuickLinkGroup: QuickLinkGroupModel;
 
     constructor() {
         super();

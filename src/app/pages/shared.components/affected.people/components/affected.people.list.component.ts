@@ -255,7 +255,6 @@ export class AffectedPeopleListComponent implements OnInit {
         this.communicationLogService.GetLogByAffectedPersonId(affectedPersonToUpdate.AffectedPersonId)
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<CommunicationLogModel>) => {
-                debugger;
                 if (result.Count == 0) {
                     this.insertCommunicationLog(affectedPersonToUpdate, createdBy);
                 }
