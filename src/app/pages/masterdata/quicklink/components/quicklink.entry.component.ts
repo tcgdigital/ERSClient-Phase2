@@ -19,6 +19,7 @@ import {
     KeyValue
 } from '../../../../shared';
 import { QuickLinkGroupModel, QuickLinkGroupComponent } from '../../quicklinkgroup';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'quicklink-entry',
@@ -47,6 +48,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
     isValidUrl: boolean = false;
     selectedGroup: KeyValue;
     enableAddButtonOnGroupSelection: boolean = true;
+    private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(formBuilder: FormBuilder, private quickLinkService: QuickLinkService,
         private dataExchange: DataExchangeService<QuickLinkModel>,
@@ -65,7 +67,8 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     ngAfterViewInit() {
-        this.dataExchange.Subscribe("quickLinkModelEdited", model => this.onQuickLinkEditSuccess(model));
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.QuickLinkModelEdited, 
+            (model: QuickLinkModel) => this.onQuickLinkEditSuccess(model));
     }
 
     initializeInputForm(): void {
@@ -97,14 +100,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
                 .subscribe((result: string) => {
                     this.filepathWithLinks = `${GlobalConstants.EXTERNAL_URL}UploadFiles/${result.replace(/^.*[\\\/]/, '')}`;
                     const extension = result.replace(/^.*[\\\/]/, '').split('.').pop();
-                    // if (dropdownselected === '1') {
                     this.fileName = 'Quicklink' + `.${extension}`;
-                    // }
-                    // else if (dropdownselected === '2') {
-                    //     this.fileName = 'View_Audit_Report' + `.${extension}`;
-                    // }
-                    // this.OnDocumentUploaded(dropdownselected);
-
                 }, (error) => {
                     console.log(`Error: ${error}`);
                 });
@@ -116,7 +112,9 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     ngOnDestroy(): void {
-        this.dataExchange.Unsubscribe("quickLinkModelEdited");
+        this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.QuickLinkModelEdited);
+        this.ngUnsubscribe.next();	
+        this.ngUnsubscribe.complete();
     }
 
     initiateQuickLinkModel(): void {
@@ -170,7 +168,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
                                 response.QuickLinkGroup.QuickLinkGroupId = this.selectedGroup.Value;
                                 response.QuickLinkGroup.GroupName = this.selectedGroup.Key;
                             }
-                            this.dataExchange.Publish("quickLinkModelSaved", response);
+                            this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.QuickLinkModelSaved, response);
                             this.showAddRegion(this.showAdd);
                             this.showAdd = false;
                             this.initiateQuickLinkModel();
@@ -215,7 +213,6 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
                         }, (error: any) => {
                             console.log(`Error: ${error}`);
                         });
-                    //}
                 }
             }
         }
@@ -229,12 +226,6 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
         this.showAddRegion(this.showAdd);
         this.showAdd = false;
         this.isValidUrl = false;
-        // this.form = new FormGroup({
-        //     QuickLinkId: new FormControl(0),
-        //     QuickLinkName: new FormControl(this.quickLinkModel.QuickLinkName,
-        //         [Validators.required]),
-        //     QuickLinkURL: new FormControl(this.quickLinkModel.QuickLinkURL)
-        // });
         this.initializeInputForm();
         this.clearFileUpload(true);
     }
