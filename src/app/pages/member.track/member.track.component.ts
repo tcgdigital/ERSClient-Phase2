@@ -141,7 +141,7 @@ export class MemberTrackComponent implements OnInit, OnDestroy, AfterViewChecked
                             this.toastrService.success('Member is engaged now.');
                             this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
                         }, (error: any) => {
-                            console.log(`Error: ${error}`);
+                            console.log(`Error: ${error.message}`);
                         });
                 }
                 else {
@@ -158,10 +158,10 @@ export class MemberTrackComponent implements OnInit, OnDestroy, AfterViewChecked
                                     this.toastrService.success('Member is engaged now.');
                                     this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
                                 }, (error: any) => {
-                                    console.log(`Error: ${error}`);
+                                    console.log(`Error: ${error.message}`);
                                 });
                         }, (error: any) => {
-                            console.log(`Error: ${error}`);
+                            console.log(`Error: ${error.message}`);
                         });
                 }
             }
@@ -189,7 +189,7 @@ export class MemberTrackComponent implements OnInit, OnDestroy, AfterViewChecked
                         this.toastrService.success('Member is available now.');
                         this.getMembarCurrentEngagementList(this.currentDepartmentId, this.currentIncidentId);
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
             }
             else {
@@ -254,7 +254,7 @@ export class MemberTrackComponent implements OnInit, OnDestroy, AfterViewChecked
                 this.freecount = this.memberEngagementsToView.filter((x) => x.IsBusy === true).length;
                 this.GenerateToggle();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

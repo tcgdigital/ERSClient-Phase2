@@ -226,7 +226,7 @@ export class ChecklistEntryComponent implements OnInit, OnDestroy {
             .subscribe((item: ResponseModel<DepartmentModel>) => {
                 this.allDepartments = item.Records;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -273,7 +273,7 @@ export class ChecklistEntryComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<OrganizationModel>) => {
                 this.activeOrganizations = response.Records;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -371,7 +371,7 @@ export class ChecklistEntryComponent implements OnInit, OnDestroy {
                             this.CheckListParents.forEach((x) => x.IsSelected = false);
                             this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.CheckListListReload, response1);
                         }, (error: any) => {
-                            console.log(`Error: ${error}`);
+                            console.log(`Error: ${error.message}`);
                         });
                 }
             }
@@ -400,7 +400,7 @@ export class ChecklistEntryComponent implements OnInit, OnDestroy {
                 this.initiateCheckListModel();
                 this.CheckListParents.forEach(x => x.IsSelected = false);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -474,7 +474,7 @@ export class ChecklistEntryComponent implements OnInit, OnDestroy {
                     this.showAddRegion(this.showAdd);
                     this.showAdd = false;
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
         else {

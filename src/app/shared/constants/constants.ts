@@ -912,7 +912,11 @@ export class GlobalConstants {
         PresidentMessageApprovalUpdated: 'PresidentMessageApprovalUpdated',
         OnPresidentMessageUpdate: 'OnPresidentMessageUpdate',
         PresidentMessageModelSaved: 'PresidentMessageModelSaved',
-        PresidentMessageModelUpdated: 'PresidentMessageModelUpdated'
+        PresidentMessageModelUpdated: 'PresidentMessageModelUpdated',
+
+        AffectedPersonSelected: 'AffectedPersonSelected',
+        CareMemberCreated: 'CareMemberCreated',
+        CareMemberForAllPDACreated: 'CareMemberForAllPDACreated'
     };
 
     public static NotificationConstant = {

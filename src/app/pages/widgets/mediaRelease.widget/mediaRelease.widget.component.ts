@@ -78,7 +78,7 @@ export class MediaReleaseWidgetComponent implements OnInit, OnDestroy {
             .subscribe((x: MediaReleaseWidgetModel) => {
                 data.push(x);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             }, () => {
                 this.mediaReleases = Observable.of(data
                     .map((x: MediaReleaseWidgetModel) => new TextAccordionModel(x.MediaReleaseType, x.PublishedOn,
@@ -95,7 +95,7 @@ export class MediaReleaseWidgetComponent implements OnInit, OnDestroy {
             .subscribe((x) => {
                 data.push(x);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             }, () => {
                 this.AllMediaReleases = Observable.of(data);
                 if (callback) {

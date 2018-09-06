@@ -149,7 +149,7 @@ export class DepartmentEntryComponent implements OnInit, OnDestroy {
                         this.showAdd = false;
                         this.submitted = false;
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
             }
             else {
@@ -181,7 +181,7 @@ export class DepartmentEntryComponent implements OnInit, OnDestroy {
                         this.showAdd = false;
                         this.submitted = false;
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
             }
         }

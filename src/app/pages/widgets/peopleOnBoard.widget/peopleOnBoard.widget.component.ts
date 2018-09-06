@@ -81,7 +81,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
                 console.log(peopleOnBoardObservable);
                 this.peopleOnBoard = peopleOnBoardObservable;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -165,7 +165,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
                     this.childModalPassengers.show();
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -179,7 +179,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
                 cargoListLocal = result.Records[0].Flights[0].Cargoes;
                 this.cargoList = Observable.of(cargoListLocal);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -196,7 +196,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
                 this.groundVictimList = Observable.of(groundVictimListLocal);
                 this.childModalGroundVictims.show();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -238,7 +238,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
                     this.passengerListByNationality = [];
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -292,7 +292,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
                     this.childModalEnquiredPassengers.show();
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -324,7 +324,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
                     this.childModalCrews.show();
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -373,7 +373,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
                     this.childModalEnquiredCrew.show();
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -407,7 +407,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
                         this.passengerList = Observable.of(passengerListLocal);
                     }
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
         else {
@@ -438,7 +438,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
                         this.crewList = Observable.of(crewListLocal);
                     }
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
         else {
@@ -459,7 +459,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
                     cargoListLocal = result.Records[0].Flights[0].Cargoes;
                     this.cargoList = Observable.of(cargoListLocal);
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
         else {
@@ -491,7 +491,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
                 });
                 this.cargoList = Observable.of(cargoListLocal);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
 
         this.childModalCargos.show();

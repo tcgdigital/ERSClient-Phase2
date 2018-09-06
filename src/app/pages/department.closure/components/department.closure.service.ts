@@ -91,7 +91,7 @@ export class DepartmentClosureService extends ServiceBase<DepartmentClosureModel
                     }
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 }

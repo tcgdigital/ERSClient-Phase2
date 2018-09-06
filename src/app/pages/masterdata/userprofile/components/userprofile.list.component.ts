@@ -41,7 +41,7 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
                     item.isActive = (item.ActiveFlag == 'Active');
                 });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -53,7 +53,7 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
                 if (callback != null)
                     callback();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -117,7 +117,7 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
             .subscribe((response: UserProfileModel) => {
                 this.getUserProfiles();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -131,7 +131,7 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
             .subscribe((response: UserProfileModel) => {
                 this.getUserProfiles();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -148,7 +148,7 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
                 .subscribe((response: ResponseModel<UserProfileModel>) => {
                     this.userProfiles = response.Records;
                 }, ((error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 }));
         }
         else {

@@ -45,7 +45,7 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<MediaModel>) => {
                 this.mediaReleases = response.Records;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

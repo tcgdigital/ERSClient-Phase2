@@ -1,13 +1,18 @@
 <div class="row">
-    <div class="col-md-4 col-lg-5 text-right">
-        <label class="lebelHeaderStyle">Crew Status Info Report</label>
-        <a target="_blank" href="{{downloadRoute}}" download="CrewStatusInfo"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+    <div class="col-lg-4 col-md-12">
+        <care-member-for-all [currentIncidentId]="currentIncident" [currentDepartmentId]="currentDepartmentId"></care-member-for-all>
     </div>
-    <div class="col-md-5 col-lg-4 text-right">
-        <label class="lebelHeaderStyle">Passenger Status Info Report</label>
-        <a target="_blank" href="{{downloadPath}}" download="PDAStatusInfo"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+    <div class="col-lg-3 col-md-4 col-sm-12 text-lg-right text-md-left text-right">
+        <a target="_blank" href="{{downloadRoute}}" download="CrewStatusInfo">
+            <i class="fa fa-download" aria-hidden="true"></i>&nbsp; Status Info Report (Crew)
+        </a>
     </div>
-    <div class="col-md-3 col-lg-3 text-right">
+    <div class="col-lg-3 col-md-4 col-sm-12 text-lg-right text-md-left text-right pb-1">
+        <a target="_blank" href="{{downloadPath}}" download="PDAStatusInfo">
+            <i class="fa fa-download" aria-hidden="true"></i>&nbsp; Status Info Report (Pax)
+        </a>
+    </div>
+    <div class="col-lg-2 col-md-4 col-sm-12 text-right">
         <input type="button" class="btn btn-primary" (click)="expandSearchPanel(expandSearch)" [ngModel]="searchValue" />
     </div>
 </div>
@@ -28,6 +33,8 @@
                 <th>PNR</th>
                 <th>Passenger Type</th>
                 <th>Medical Status</th>
+                <th>Care Name</th>
+                <th>Care Log</th>
                 <th>Interaction Details</th>
                 <th>View</th>
                 <th>Is NOK Informed</th>
@@ -45,13 +52,22 @@
                 <td data-title="PNR">{{affectedperson.Pnr}}&nbsp;</td>
                 <td data-title="Passenger Type">{{affectedperson.PaxType}}&nbsp;</td>
                 <td data-title="Medical Status">{{affectedperson.MedicalStatus}}&nbsp;</td>
-                <td data-title="Interaction Details"><i class="fa fa-comments" [ngClass]="{'trailActiveButtonStyle': affectedperson.commlength, 'trailNormalButtonStyle': !affectedperson.commlength}"
-                        (click)="openChatTrails(affectedperson.AffectedPersonId)"></i>
+                <td data-title="Care Name">{{affectedperson.CurrentCareMemberName}}&nbsp;</td>
+                <td data-title="Care Log">
+                    <span class="fa-stack fa-md" aria-hidden="true" (click)="openAffectedPersonCareMemberDetail(affectedperson)">
+                        <i class="fa fa-comment-o fa-stack-2x"></i>
+                        <i class="fa fa-user fa-stack-1x"></i>
+                    </span>
                 </td>
-                <td data-title="Action">
-                    <i class="fa fa-edit fa-2x" (click)="openAffectedPersonDetail(affectedperson)"></i>
+                <td data-title="Interaction Details">
+                    <i class="fa fa-comments fa-md" [ngClass]="{'trailActiveButtonStyle': affectedperson.commlength, 'trailNormalButtonStyle': !affectedperson.commlength}"
+                        (click)="openChatTrails(affectedperson.AffectedPersonId)">
+                    </i>
                 </td>
-                <td data-title="Active">
+                <td data-title="View Com. Trail">
+                    <i class="fa fa-edit fa-2x pt-2" (click)="openAffectedPersonDetail(affectedperson)"></i>
+                </td>
+                <td data-title="Is NOK Informed">
                     <md-checkbox [disabled]="isArchive" *ngIf="isShowIsNOKInvolved | accesibility:currentDepartmentId:'ShowIsNOKInformed'" class="Marght"
                         id="IsNokInformed" name="IsNokInformed" [ngModel]="affectedperson.IsNokInformed" (change)="IsNokInformed($event,affectedperson.AffectedPersonId,affectedperson.CrewName || affectedperson.PassengerName)"
                         aria-label="ActiveFlag">
@@ -363,6 +379,23 @@
                         </responsive-table>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div bsModal #childModalForCareMembers="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Care Member Trail</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="cancelCareTrailModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <care-member-tracker [currentIncidentId]="currentIncident" [currentDepartmentId]="currentDepartmentId"></care-member-tracker>
             </div>
         </div>
     </div>

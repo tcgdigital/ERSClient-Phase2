@@ -42,7 +42,7 @@ export class DemandRaisedSummaryWidgetService {
                     return item.IsClosed === true;
                 }).length;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
 
         return this.demandRaisedSummary;
@@ -79,7 +79,7 @@ export class DemandRaisedSummaryWidgetService {
 
                 callback(this.allocatedDemandDetails);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -159,7 +159,7 @@ export class DemandRaisedSummaryWidgetService {
                 });
                 callback(this.demandRaisedModelList);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -209,7 +209,7 @@ export class DemandRaisedSummaryWidgetService {
                 }
 
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 }

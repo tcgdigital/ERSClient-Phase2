@@ -135,7 +135,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                     ? this.demandTypes[0].DemandTypeId
                     : this.demandModel.DemandTypeId;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -280,7 +280,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.affectedPeople = this.affectedPeople
                     .sort(function (a, b) { return (a.PassCrewNm.trim().toUpperCase() > b.PassCrewNm.trim().toUpperCase()) ? 1 : ((b.PassCrewNm.trim().toUpperCase() > a.PassCrewNm.trim().toUpperCase()) ? -1 : 0); });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -290,7 +290,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedObjects = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -413,7 +413,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.form.controls['DemandTypeId'].reset({ value: +this.demandModel.DemandTypeId, disabled: true });
                 this.form.controls['RequestedBy'].reset({ value: this.demandModel.RequestedBy, disabled: false });  // this.caller.FirstName
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -449,7 +449,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.form.controls['DemandTypeId'].reset({ value: this.demandModel.DemandTypeId, disabled: true });
                 this.form.controls['RequestedBy'].reset({ value: this.demandModel.RequestedBy, disabled: true });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -525,7 +525,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.parentDeptId = response.ParentDepartmentId;
                 this.demandModel.RequesterParentDepartmentId = this.parentDeptId;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -693,13 +693,13 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                                     this.filesToUpload = [];
                                 }
                             }, (error: any) => {
-                                console.log(`Error: ${error}`);
+                                console.log(`Error: ${error.message}`);
                             });
                     }
 
                     this.filesToUpload.length = null;
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
         else {
@@ -793,7 +793,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                                 this.demandUpdate(resolutionTimeChanged);
                             }
                         }, (error: any) => {
-                            console.log(`Error: ${error}`);
+                            console.log(`Error: ${error.message}`);
                         });
                 }
                 else {
@@ -822,7 +822,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.submitted = false;
                 this.childModalEntry.hide();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

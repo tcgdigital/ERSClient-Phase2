@@ -56,7 +56,7 @@ export class AffectedObjectsListComponent implements OnInit {
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedObjects = this.affectedObjectService.FlattenAffactedObjects(response.Records[0]);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -119,7 +119,7 @@ export class AffectedObjectsListComponent implements OnInit {
                 this.AWBNumber = responseModel.Cargo.AWB;
                 this.childModal.show();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -141,7 +141,7 @@ export class AffectedObjectsListComponent implements OnInit {
             .subscribe((response1: AffectedObjectModel) => {
                 this.getAffectedObjects(this.currentIncident);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -160,7 +160,7 @@ export class AffectedObjectsListComponent implements OnInit {
                 });
                 this.childAffectedObjectDetailsModal.show();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -184,7 +184,7 @@ export class AffectedObjectsListComponent implements OnInit {
                 .subscribe(() => {
                     this.toastrService.success('NOK updated.');
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
         else {
@@ -195,7 +195,7 @@ export class AffectedObjectsListComponent implements OnInit {
                 .subscribe(() => {
                     this.toastrService.success('NOK updated.');
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
     }
@@ -206,7 +206,7 @@ export class AffectedObjectsListComponent implements OnInit {
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedObjects = this.affectedObjectService.FlattenAffactedObjects(response.Records[0]);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -235,7 +235,7 @@ export class AffectedObjectsListComponent implements OnInit {
             .subscribe((response: DepartmentModel) => {
                 this.currentDepartmentName = response.DepartmentName;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -244,7 +244,6 @@ export class AffectedObjectsListComponent implements OnInit {
         affectedObjectUpdate.Remarks = affectedObject.Remarks;
         affectedObjectUpdate.IdentificationDesc = affectedObject.IdentificationDesc;
         affectedObjectUpdate.LostFoundStatus = affectedObject.LostFoundStatus;
-        debugger;
         
         const additionalHeader: NameValue<string>
             = new NameValue<string>('CurrentDepartmentName', this.currentDepartmentName);
@@ -256,7 +255,7 @@ export class AffectedObjectsListComponent implements OnInit {
                 this.getAffectedObjects(this.currentIncident);
                 this.childAffectedObjectDetailsModal.hide();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

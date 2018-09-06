@@ -57,15 +57,18 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
         let affectedPeopleForView: AffectedPeopleToView[] = [];
         let affectedPeople: AffectedPeopleModel[];
         let affected: AffectedModel;
+        
         if (involvedParty != null) {
             affected = UtilityService.pluck(involvedParty, ['Affecteds'])[0][0];
 
             if (affected != null) {
                 affectedPeople = UtilityService.pluck(affected, ['AffectedPeople'])[0];
                 affectedPeopleForView = affectedPeople.map((dataItem) => {
+                    
                     const item = new AffectedPeopleToView();
                     item.AffectedId = dataItem.AffectedId;
                     item.AffectedPersonId = dataItem.AffectedPersonId;
+                    item.CurrentCareMemberName = dataItem.CurrentCareMemberName;
                     item.PassengerName = dataItem.Passenger != null ? dataItem.Passenger.PassengerName : '';
                     item.Pnr = dataItem.Passenger != null ? (dataItem.Passenger.Pnr == null ? 'NA' : dataItem.Passenger.Pnr) : 'NA';
                     item.CrewName = dataItem.Crew != null ? dataItem.Crew.CrewName : '';
@@ -92,14 +95,12 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
                     item.BaggageWeight = dataItem.Passenger != null ? (dataItem.Passenger.BaggageWeight == null ? 0 : dataItem.Passenger.BaggageWeight) : 0;
                     item.PassengerSpecialServiceRequestCode = dataItem.Passenger != null ? (dataItem.Passenger.SpecialServiceRequestCode == null ? 'NA' : dataItem.Passenger.SpecialServiceRequestCode) : 'NA';
                     item.PassengerEmployeeId = dataItem.Passenger != null ? (dataItem.Passenger.EmployeeId == null ? 'NA' : dataItem.Passenger.EmployeeId) : 'NA';
-                    //   item.CoTravellerInformation = dataItem.Passenger != null ? (dataItem.Passenger.CoTravellerInformation == null ? 'NA' : dataItem.Passenger.CoTravellerInformation) : 'NA';
                     item.CrewIdCode = dataItem.Crew != null ? (dataItem.Crew.EmployeeNumber == null ? 'NA' : dataItem.Crew.EmployeeNumber) : 'NA';
                     item.IsStaff = dataItem.IsStaff != null ? dataItem.IsStaff : false;
                     item.MedicalStatus = dataItem.MedicalStatus != null ? dataItem.MedicalStatus : 'NA';
                     item.Remarks = dataItem.Remarks != null ? dataItem.Remarks : 'NA';
                     item.Identification = dataItem.Identification != null ? dataItem.Identification : 'NA';
                     item.SeatNo = dataItem.Passenger != null ? dataItem.Passenger.Seatno : 'No Seat Number Available';
-                    // item.CommunicationLogs: dataItem.CommunicationLogs,
                     item.PaxType = dataItem.Passenger != null ? dataItem.Passenger.PassengerType : dataItem.Crew != null ? 'Crew' : '';
                     if (dataItem.Crew) {
                         item.CrewId = dataItem.CrewId;
@@ -118,7 +119,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
                         item.PassengerId = 0;
                     }
                     item.IsNokInformed = dataItem.IsNokInformed;
-                    
+
                     item.commlength = dataItem.CommunicationLogs.length > 0;
 
                     return item;
@@ -128,10 +129,29 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
         return affectedPeopleForView;
     }
 
-    public GetCoPassangers(AffectedPersonId): Observable<ResponseModel<AffectedPeopleModel>> {
+    public GetCoPassangers(AffectedPersonId: number): Observable<ResponseModel<AffectedPeopleModel>> {
         return this._dataService.Query()
             .Filter(`AffectedPersonId eq ${AffectedPersonId}`)
             .Expand('Passenger($expand=CoPassengerMappings($expand=Passenger))')
+            .Execute();
+    }
+
+    public GetCurrentCareMember(affectedPersonId: number, careMemberId: number)
+        : Observable<ResponseModel<AffectedPeopleModel>> {
+        return this._dataService.Query()
+            .Expand(`CareMembers($expand=UserProfile($select=Name), Department($select=DepartmentName); 
+                $select=CareEngagementTrackId, CareMemberName, EffectedFrom, IncidentId, AffectedPersonId;
+                $filter=CareEngagementTrackId eq ${careMemberId})`)
+            .Filter(`AffectedPersonId eq ${affectedPersonId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
+            .Select(`AffectedPersonId, CurrentCareMemberName`)
+            .Execute();
+    }
+
+    public GetAllAffectedPeopleIdsByIncidentId(incidentId: number): Observable<ResponseModel<AffectedPeopleModel>>{
+        return this._dataService.Query()
+            .Expand(`Affected($select=AffectedId;$expand=InvolvedParty($select=IncidentId))`)
+            .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
+            .Select(`AffectedPersonId`)
             .Execute();
     }
 
@@ -141,13 +161,15 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
 
     public GetAffectedPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
-            .Filter(`IsCrew eq false and Affected/InvolvedParty/IncidentId eq ${incidentId}`)
+            .Filter(`IsCrew eq false and Affected/InvolvedParty/IncidentId eq ${incidentId}
+                and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
             .Execute();
     }
 
     public GetAffectedCrewCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
-            .Filter(`IsCrew eq true and Affected/InvolvedParty/IncidentId eq ${incidentId}`)
+            .Filter(`IsCrew eq true and Affected/InvolvedParty/IncidentId eq ${incidentId}
+                and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
             .Execute();
     }
 
@@ -169,35 +191,35 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     public GetDeceasedPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
             .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
-             ActiveFlag eq 'Active' and tolower(MedicalStatus) eq 'deceased'`)
+                ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and tolower(MedicalStatus) eq 'deceased'`)
             .Execute();
     }
 
     public GetMissingPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
             .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
-             ActiveFlag eq 'Active' and tolower(MedicalStatus) eq 'missing'`)
+                ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and tolower(MedicalStatus) eq 'missing'`)
             .Execute();
     }
 
     public GetInjuredPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
             .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
-             ActiveFlag eq 'Active' and tolower(MedicalStatus) eq 'injured'`)
+                ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and tolower(MedicalStatus) eq 'injured'`)
             .Execute();
     }
 
     public GetUninjuredPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
             .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
-             ActiveFlag eq 'Active' and tolower(MedicalStatus) eq 'uninjured'`)
+                ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and tolower(MedicalStatus) eq 'uninjured'`)
             .Execute();
     }
 
     public GetOtherPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
             .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
-             ActiveFlag eq 'Active' and tolower(MedicalStatus) eq 'others'`)
+                ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and tolower(MedicalStatus) eq 'others'`)
             .Execute();
     }
 
@@ -233,13 +255,13 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     public GetCommunicationByPDA(id: number): Observable<ResponseModel<AffectedPeopleModel>> {
         return this._dataService.Query()
             .Filter(`AffectedPersonId eq ${id}`)
-            .Expand("Passenger,Crew,CommunicationLogs($filter=ActiveFlag eq 'Active';$orderby=CreatedOn desc)")
+            .Expand("Passenger,Crew,CommunicationLogs($filter=ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active';$orderby=CreatedOn desc)")
             .Execute();
     }
 
     public GetCallerListForAffectedPerson(affectedPersonId: number): Observable<ResponseModel<EnquiryModel>> {
         return this._enquiryService.Query()
-            .Filter(`AffectedPersonId eq ${affectedPersonId} and ActiveFlag  eq 'Active'`)
+            .Filter(`AffectedPersonId eq ${affectedPersonId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
             .Expand(`Caller`)
             .Execute();
     }

@@ -211,7 +211,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                     this.affectedStations.sort(function (a, b) { return (a.AirportName.toUpperCase() > b.AirportName.toUpperCase()) ? 1 : ((b.AirportName.toUpperCase() > a.AirportName.toUpperCase()) ? -1 : 0); });
                 });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -227,7 +227,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                 this.activeEmergencyTypes = response.Records;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -244,7 +244,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                 }
                 this.activeOrganizations = response.Records;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -292,7 +292,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                 });
                 this.incidentModel.BorrowedIncident = 0;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -302,7 +302,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<AircraftTypeModel>) => {
                 this.activeAircraftTypes = response.Records;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -365,7 +365,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                         this.arrivaldatepicker.toggleControl();
                         this.isBorrowedIncidentPopup = true;
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
             }
             else {

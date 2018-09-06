@@ -107,7 +107,7 @@ export class EmergencyTypeEntryComponent implements OnInit, OnDestroy {
                     this.toastrService.success('Crisis Type saved Successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.EmergencyTypeModelSaved, response);
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
         else {
@@ -122,7 +122,7 @@ export class EmergencyTypeEntryComponent implements OnInit, OnDestroy {
                     this.toastrService.success('Crisis Type edited Successfully.', 'Success', this.toastrConfig);
                     this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.EmergencyTypeModelUpdated, response);
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
 

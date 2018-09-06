@@ -56,7 +56,7 @@ export class AffectedPeopleVerificationComponent implements OnInit, OnDestroy {
                     });
                 this.isVerfiedChange();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -70,7 +70,7 @@ export class AffectedPeopleVerificationComponent implements OnInit, OnDestroy {
                 this.toastrService.success('Selected People directly affected are verified.', 'Success', this.toastrConfig);
                 this.getAffectedPeople(this.currentIncident);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

@@ -58,7 +58,7 @@ export class IncidentHeaderWidgetComponent implements OnInit, OnChanges, OnDestr
             .subscribe((item: IncidentModel) => {
                 this.IsDrillIndicator = item.IsDrill;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -69,7 +69,7 @@ export class IncidentHeaderWidgetComponent implements OnInit, OnChanges, OnDestr
                 this.currentDepartment.Key = item.Records[0].DepartmentName;
                 this.departmentName = item.Records[0].Description;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

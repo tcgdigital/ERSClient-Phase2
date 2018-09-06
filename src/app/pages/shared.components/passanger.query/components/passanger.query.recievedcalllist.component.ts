@@ -105,7 +105,7 @@ export class PassangerQueryRecievedCallsListComponent implements OnInit, OnDestr
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -132,7 +132,7 @@ export class PassangerQueryRecievedCallsListComponent implements OnInit, OnDestr
 
                 this.getAllPassengerQueryCallsRecieved(this.currentIncidentId);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

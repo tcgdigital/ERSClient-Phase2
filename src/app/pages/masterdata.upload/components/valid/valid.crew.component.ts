@@ -57,7 +57,7 @@ export class ValidCrewListComponent implements OnInit, OnDestroy {
             .subscribe(a => {
                 this.crews.push(a.Crew);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
 
         console.log(this.crews);

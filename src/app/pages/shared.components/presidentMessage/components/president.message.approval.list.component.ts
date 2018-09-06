@@ -43,7 +43,7 @@ export class PresidentMessageApprovalListComponent implements OnInit, OnDestroy 
             .subscribe((response: ResponseModel<PresidentMessageModel>) => {
                 this.PresidentsMessages = response.Records.filter((a) => a.PresidentMessageStatus === 'SentForApproval');
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

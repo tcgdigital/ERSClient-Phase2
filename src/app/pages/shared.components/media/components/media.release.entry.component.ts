@@ -104,7 +104,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
                 this.templateMedias = response.Records
                     .filter((a) => a.TemplateType === 'Media Release');
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -119,7 +119,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
                     this.media.Message = this.templateContent;
                     this.applyReadOnlytextBox = false; 
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
         else {
@@ -322,7 +322,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
                     this.showAdd = false;
                     this.formInit();
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
         else {
@@ -346,7 +346,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
                     this.showAdd = false;
                     this.formInit();
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
         

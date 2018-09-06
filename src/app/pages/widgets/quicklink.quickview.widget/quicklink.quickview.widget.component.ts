@@ -50,7 +50,7 @@ export class QuickLinkQuickViewWidgetComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<QuickLinkModel>) => {
                 this.quicklinks = response.Records;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

@@ -45,3 +45,12 @@ input[type=submit]:focus,
 [contenteditable].form-control:focus {
     box-shadow: inset 0 -1px 0 #ddd;
 }
+
+span.input-group-text {
+    height: 30px;
+    font-size: 14px;
+}
+
+button:focus {
+    outline: none;
+}

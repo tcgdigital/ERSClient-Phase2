@@ -58,7 +58,7 @@ export class DemandReceivedSummaryWidgetService {
                     return item.IsCompleted === true;
                 }).length;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
 
         return this.demandReceivedSummary;
@@ -126,7 +126,7 @@ export class DemandReceivedSummaryWidgetService {
                     callback(this.demandReceivedModelList);
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -179,7 +179,7 @@ export class DemandReceivedSummaryWidgetService {
                 callback(this.demandReceivedModelList);
 
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

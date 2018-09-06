@@ -53,7 +53,7 @@ export class ContactInfoComponent implements OnInit, OnDestroy {
                 this.userprofiles = response.Records;
                 this.childModal.show();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -68,7 +68,7 @@ export class ContactInfoComponent implements OnInit, OnDestroy {
                 .subscribe((response: ResponseModel<UserProfileModel>) => {
                     this.userprofiles = response.Records;
                 }, ((error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 }));
         }
     }
@@ -79,7 +79,7 @@ export class ContactInfoComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<UserProfileModel>) => {
                 this.userprofiles = response.Records;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

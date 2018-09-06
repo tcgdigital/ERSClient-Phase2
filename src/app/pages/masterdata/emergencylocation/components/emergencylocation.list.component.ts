@@ -76,7 +76,7 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
                     x.Active = (x.ActiveFlag === 'Active');
                 });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -94,7 +94,7 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
                 .subscribe((response: ResponseModel<EmergencyLocationModel>) => {
                     this.emergencyLocations = response.Records;
                 }, ((error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 }));
         }
         else {
@@ -117,7 +117,7 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
             .subscribe((response: EmergencyLocationModel) => {
                 this.getAllEmergencyLocations();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -131,7 +131,7 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
                     this.toastrService.success('Station: ' + IATA + ' is deleted successfully', 'Success', this.toastrConfig);
                     this.getAllEmergencyLocations();
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
     }

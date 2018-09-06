@@ -46,7 +46,7 @@ export class PageFunctionalityComponent implements OnInit, OnDestroy {
                     this.items.push(new KeyValue(item.DepartmentName, item.DepartmentId));
                 });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -94,7 +94,7 @@ export class PageFunctionalityComponent implements OnInit, OnDestroy {
             .subscribe((response: PagePermissionModel[]) => {
                 this.toastrService.success(`Department Funtionality saved Successfully. ${GlobalConstants.departmentAndFunctionalityReloginMessage}`, 'Success', this.toastrConfig);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -125,7 +125,7 @@ export class PageFunctionalityComponent implements OnInit, OnDestroy {
                 this.checkAllStatusOnlyHOD();
                 this.disableChildIfNotParentAllowView(this.pagesForDepartment);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -263,7 +263,7 @@ export class PageFunctionalityComponent implements OnInit, OnDestroy {
                     this.pagesForDepartmentConstant.push(pageForDepartment);
                 });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

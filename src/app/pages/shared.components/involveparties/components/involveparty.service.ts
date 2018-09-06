@@ -99,7 +99,7 @@ export class InvolvePartyService
     public GetAllPassengersByIncident(incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
         let involvePartyProjection: string = 'InvolvedPartyType,InvolvedPartyDesc';
         let affectedProjection: string = 'Severity';
-        let affectedPeopleProjection: string = 'AffectedPersonId,TicketNumber,IsStaff,IsCrew,IsVerified,Identification';
+        let affectedPeopleProjection: string = 'AffectedPersonId,TicketNumber,IsStaff,IsCrew,IsVerified,Identification,CurrentCareMemberName';
         let passengerPrjection: string = 'PassengerId,FlightNumber,PassengerName,PassengerGender,BaggageCount,Destination,PassengerDob,Pnr,PassengerType,PassengerNationality,DepartureDateTime,ArrivalDateTime,ContactNumber,Seatno';
         return this._dataService.Query()
             .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=PassengerId ne null;$select=${affectedPeopleProjection};$expand=Passenger($select=${passengerPrjection}),NextOfKins))`)
@@ -112,7 +112,7 @@ export class InvolvePartyService
     public GetAllCrewsByIncident(incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
         let involvePartyProjection: string = 'InvolvedPartyType,InvolvedPartyDesc';
         let affectedProjection: string = 'Severity';
-        let affectedCrewProjection: string = 'AffectedPersonId,TicketNumber,IsStaff,IsCrew,IsVerified,Identification';
+        let affectedCrewProjection: string = 'AffectedPersonId,TicketNumber,IsStaff,IsCrew,IsVerified,Identification,CurrentCareMemberName';
         let crewPrjection: string = 'CrewId,EmployeeNumber,CrewName,AsgCat,DeadheadCrew,BaseLocation,Email,DepartureStationCode,ArrivalStationCode,FlightNo,WorkPosition,ContactNumber';
         return this._dataService.Query()
             .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=CrewId ne null;$select=${affectedCrewProjection};$expand=Crew($select=${crewPrjection}),NextOfKins))`)
@@ -125,7 +125,7 @@ export class InvolvePartyService
     public GetQueryForPassenger(query: string, incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
         let involvePartyProjection: string = 'InvolvedPartyType,InvolvedPartyDesc';
         let affectedProjection: string = 'Severity';
-        let affectedPeopleProjection: string = 'AffectedPersonId,TicketNumber,IsStaff,IsCrew,IsVerified,Identification';
+        let affectedPeopleProjection: string = 'AffectedPersonId,TicketNumber,IsStaff,IsCrew,IsVerified,Identification,CurrentCareMemberName';
         let passengerPrjection: string = 'PassengerId,FlightNumber,PassengerName,PassengerGender,BaggageCount,Destination,PassengerDob,Pnr,PassengerType,PassengerNationality,DepartureDateTime,ArrivalDateTime,ContactNumber,Seatno';
         return this._dataService.Query()
             .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=PassengerId ne null and ${query};$select=${affectedPeopleProjection};$expand=Passenger($select=${passengerPrjection}),NextOfKins))`)
@@ -137,7 +137,7 @@ export class InvolvePartyService
     public GetQueryForCrew(query: string, incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
         let involvePartyProjection: string = 'InvolvedPartyType,InvolvedPartyDesc';
         let affectedProjection: string = 'Severity';
-        let affectedPeopleProjection: string = 'AffectedPersonId,TicketNumber,IsStaff,IsCrew,IsVerified,Identification';
+        let affectedPeopleProjection: string = 'AffectedPersonId,TicketNumber,IsStaff,IsCrew,IsVerified,Identification,CurrentCareMemberName';
         let crewPrjection: string = 'EmployeeNumber,CrewName,ContactNumber,AsgCat,DeadheadCrew,BaseLocation,DepartureStationCode,ArrivalStationCode,WorkPosition,Email';
         return this._dataService.Query()
             .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=CrewId ne null and ${query};$select=${affectedPeopleProjection};$expand=Crew($select=${crewPrjection})))`)

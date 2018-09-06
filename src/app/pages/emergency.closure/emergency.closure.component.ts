@@ -127,7 +127,7 @@ export class EmergencyClosureComponent implements OnInit {
 				this.incident = response;
 				this.getAllDepartmentsToNotify();
 			}, (error: any) => {
-				console.log(`Error: ${error}`);
+				console.log(`Error: ${error.message}`);
 			});
 	}
 
@@ -166,7 +166,7 @@ export class EmergencyClosureComponent implements OnInit {
 				else if (Object.keys(response).some((x) => x === 'DepartmentClosureId')) {
 					this.departmentClosures.push(<DepartmentClosureModel>response);
 				}
-			}, (error) => { console.log(`Error: ${error}`); }, () => {
+			}, (error) => { console.log(`Error: ${error.message}`); }, () => {
 				let unique: DepartmentModel[] = [];
 				let departmentIds: number[] = [];
 
@@ -191,7 +191,7 @@ export class EmergencyClosureComponent implements OnInit {
 						else if (Object.keys(response1).some(x => x === 'DemandId')) {
 							this.demands.push(<DemandModel>response1);
 						}
-					}, (error) => { console.log(`Error: ${error}`); }, () => {
+					}, (error) => { console.log(`Error: ${error.message}`); }, () => {
 						if (unique.length > 0) {
 							unique = unique.sort((a: DepartmentModel, b: DepartmentModel) => {
 								return (a.DepartmentName.toUpperCase() > b.DepartmentName.toUpperCase()) ?
@@ -256,7 +256,7 @@ export class EmergencyClosureComponent implements OnInit {
 					}
 				});
 			}, (error: any) => {
-				console.log(`Error: ${error}`);
+				console.log(`Error: ${error.message}`);
 			});
 	}
 
@@ -272,7 +272,7 @@ export class EmergencyClosureComponent implements OnInit {
 				}
 				this.childModal.show();
 			}, (error: any) => {
-				console.log(`Error: ${error}`);
+				console.log(`Error: ${error.message}`);
 			});
 	}
 
@@ -293,7 +293,7 @@ export class EmergencyClosureComponent implements OnInit {
 				.subscribe(() => {
 					this.toastrService.info('Closure Report Saved Successfully.', 'Success', this.toastrConfig);
 				}, (error: any) => {
-					console.log(`Error: ${error}`);
+					console.log(`Error: ${error.message}`);
 					this.toastrService.info('Some error occured.', 'Error', this.toastrConfig);
 				});
 		}
@@ -346,7 +346,7 @@ export class EmergencyClosureComponent implements OnInit {
 							this.authService.Logout();
 							this.router.navigate(['login']);
 						}, (error: any) => {
-							console.log(`Error: ${error}`);
+							console.log(`Error: ${error.message}`);
 						});
 				}, (error: any) => {
 					console.log(error);

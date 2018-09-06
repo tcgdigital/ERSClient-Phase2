@@ -51,7 +51,7 @@ export class InvalidGroundVictimListComponent implements OnInit, OnDestroy {
                     return 0;
                 })
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

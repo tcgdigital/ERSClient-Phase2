@@ -52,6 +52,20 @@ export class DataExchangeService<T> {
         this.messageQueue[name].subject.next(data);
     }
 
+    public PublishSingle(name: string, data: T, lazy: boolean = true) {
+        if (data === undefined || name === undefined) {
+            return;
+        }
+        if (lazy) {
+            this.NewQueue(name);
+        }
+        else if (!this.IsKeyExists(name)) {
+            return;
+        }
+        this.messageQueue[name].subject.next(data);
+        this.messageQueue[name].subject.complete();
+    }
+
     public Subscribe(name: string, callback: (type: T) => void, lazy: boolean = true): string {
         //if (lazy === void 0) { lazy = true; }
         if (name === undefined || callback === undefined) {

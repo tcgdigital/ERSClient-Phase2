@@ -116,7 +116,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
                         this.showAddRegion(this.showAdd);
                         this.showAdd = false;
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                         this.toastrService.error(`${error.message}`, 'Error', this.toastrConfig);
                     });
             }
@@ -130,7 +130,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
                         this.toastrService.success('User profile edited Successfully.', 'Success', this.toastrConfig);
                         this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.UserProfileModelModified, response);
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                         this.toastrService.error(`${error.message}`, 'Error', this.toastrConfig);
                     });
             }
@@ -217,7 +217,7 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
                     this.showAdd = false;
 
                 }, (error) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
         else {

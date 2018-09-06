@@ -30,7 +30,7 @@ export class LicensingApplyKeyComponent implements OnInit, OnDestroy, AfterViewI
             .subscribe((item) => {
                 this.router.navigate(['/login']);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

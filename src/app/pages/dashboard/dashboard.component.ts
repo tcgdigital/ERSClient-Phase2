@@ -100,7 +100,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                     this.affectedStations.push(emergencyLocationModel);
                 });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
 
         this.getAllActiveOrganizations();
@@ -192,7 +192,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<OrganizationModel>) => {
                 this.activeOrganizations = response.Records;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -202,7 +202,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<AircraftTypeModel>) => {
                 this.activeAircraftTypes = response.Records;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -217,7 +217,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                     }
                 });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -227,7 +227,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                 this.activeEmergencyTypes = response.Records;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -255,7 +255,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 // }
                 this.incidentDate = new Date(data.CreatedOn);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -264,7 +264,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             .subscribe((data) => {
                 this.currentDepartment = new KeyValue(data.Description, data.DepartmentId);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

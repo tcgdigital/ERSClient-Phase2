@@ -8,7 +8,8 @@ import {
 	CommunicationLogModel,
 	DemandModel
 } from '../../../shared.components';
- import { PDAEnquiryModel } from "../../../callcenteronlypage";
+import { PDAEnquiryModel } from "../../../callcenteronlypage";
+import { CareMemberTrackerModel } from '../../care.member.tracker';
 
 export class AffectedPeopleModel extends BaseModel {
 	public AffectedPersonId: number;
@@ -26,37 +27,38 @@ export class AffectedPeopleModel extends BaseModel {
 	public IsCrew: boolean;
 	public IsVerified: boolean;
 	public IsNokInformed: boolean;
+	public CurrentCareMemberName: string;
 
 	public Affected: AffectedModel;
 	public Passenger?: PassengerModel;
 	public Crew?: CrewModel;
-
 
 	public NextOfKins?: NextOfKinModel[];
 	public Enquiries?: EnquiryModel[];
 	public PDAEnquiries?: PDAEnquiryModel[];
 	public CommunicationLogs?: CommunicationLogModel[];
 	public Demands?: DemandModel[];
-
+	public CareMembers: CareMemberTrackerModel[];
 	public CurrentDepartmentName: string;
 
-	constructor( initialize ? : boolean) {		
-		if(initialize){
+	constructor(initialize?: boolean) {
+		if (initialize) {
 			super();
-		this.AffectedPersonId = 0;
-		this.AffectedId = 0;
-		this.PassengerId = null;
-		this.CrewId = null;
-		this.IsLost = null;
-		this.TicketNumber = '';
-		this.Identification = '';
-		this.LostFoundStatus = '';
-		this.MedicalStatus = '';
-		this.ReunionStatus = null;
-		this.Remarks = '';
-		this.IsStaff = false;
-		this.IsCrew = false;
-		this.IsVerified = false;
+			this.AffectedPersonId = 0;
+			this.AffectedId = 0;
+			this.PassengerId = null;
+			this.CrewId = null;
+			this.IsLost = null;
+			this.TicketNumber = '';
+			this.Identification = '';
+			this.LostFoundStatus = '';
+			this.MedicalStatus = '';
+			this.ReunionStatus = null;
+			this.Remarks = '';
+			this.IsStaff = false;
+			this.IsCrew = false;
+			this.IsVerified = false;
+			this.CurrentCareMemberName = '';
 		}
 	}
 }
@@ -82,10 +84,10 @@ export class AffectedPeopleToView extends BaseModel {
 	public Age: string;
 	// public  CommunicationLogs: dataItem.CommunicationLogs,
 	public PaxType: string;
-	public BaggageCount?: number; 
-	public BaggageWeight : number;
-	public PassengerEmployeeId : string;
-	public CrewIdCode : string;
+	public BaggageCount?: number;
+	public BaggageWeight: number;
+	public PassengerEmployeeId: string;
+	public CrewIdCode: string;
 	public PassengerSpecialServiceRequestCode: string;
 	public CoTravellerInformation: string;
 	public PassengerId?: number;
@@ -94,8 +96,8 @@ export class AffectedPeopleToView extends BaseModel {
 	public Crew?: CrewModel;
 	public IsSelected: boolean;
 	public GroupId: number;
-	public commlength : boolean;
-	public PNRdisabled : string;
-	public PassCrewNm : string;
+	public commlength: boolean;
+	public PNRdisabled: string;
+	public PassCrewNm: string;
+	public CurrentCareMemberName: string;
 }
-

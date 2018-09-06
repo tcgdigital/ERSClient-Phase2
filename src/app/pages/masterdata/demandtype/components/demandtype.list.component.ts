@@ -41,7 +41,7 @@ export class DemandTypeListComponent implements OnInit, OnDestroy {
                     x['Active'] = (x.ActiveFlag === 'Active');
                 });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -56,7 +56,7 @@ export class DemandTypeListComponent implements OnInit, OnDestroy {
             .subscribe((response: DemandTypeModel) => {
                 this.getDemandTypes();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -115,7 +115,7 @@ export class DemandTypeListComponent implements OnInit, OnDestroy {
                         x['Active'] = (x.ActiveFlag === 'Active');
                     });
                 }, ((error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 }));
         }
         else {
