@@ -894,6 +894,7 @@ export class GlobalConstants {
         OnEmergencyTypeUpdate: 'OnEmergencyTypeUpdate',
         QuickLinkModelEdited: 'quickLinkModelEdited',
         QuickLinkModelSaved: 'quickLinkModelSaved',
+        QuickLinkModelModified: 'quickLinkModelModified',
         UserProfileModelToBeModified: 'UserProfileModelToBeModified',
         UserProfileModelCreated: 'UserProfileModelCreated',
         UserProfileModelModified: 'UserProfileModelModified',

@@ -24,6 +24,8 @@ import { UserPermissionService } from './masterdata/userpermission/components';
 import { QuickLinkQuickViewWidgetComponent } from '../pages/widgets/quicklink.quickview.widget';
 import { QuickLinkService } from './masterdata/quicklink/components';
 import { WidgetModule } from './widgets';
+import { QuickLinkGroupModule } from './masterdata/quicklinkgroup';
+import { QuickLinkGroupComponent, QuickLinkGroupService } from './masterdata/quicklinkgroup';
 
 @NgModule({
     imports: [
@@ -38,6 +40,7 @@ import { WidgetModule } from './widgets';
         ToastrModule,
         ModalModule,
         WidgetModule,
+        QuickLinkGroupModule,
         PagesRouting
     ],
     declarations: [

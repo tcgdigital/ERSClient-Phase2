@@ -8,6 +8,7 @@ import { QuickLinkComponent } from './quicklink.component';
 import { QuickLinkEntryComponent, QuickLinkListComponent, QuickLinkService } from './components';
 import { DataExchangeService , SharedModule,FileUploadService } from '../../../shared';
 import { MdCheckboxModule } from '@angular2-material/checkbox';
+import { QuickLinkGroupModule } from '../quicklinkgroup';
 
 @NgModule({
     imports: [
@@ -18,7 +19,8 @@ import { MdCheckboxModule } from '@angular2-material/checkbox';
         FormsModule,
         QuickLinkRouting,
         MdCheckboxModule,
-        SharedModule
+        SharedModule,
+        QuickLinkGroupModule
     ],
     declarations: [
         QuickLinkEntryComponent,
