@@ -142,7 +142,7 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit, OnDestro
                             });
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -164,7 +164,7 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit, OnDestro
                     this.currentTimezone = null;
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 }

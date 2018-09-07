@@ -77,7 +77,7 @@ export class ArchiveReportWidgetComponent implements OnInit, OnDestroy {
                     callback();
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -91,7 +91,7 @@ export class ArchiveReportWidgetComponent implements OnInit, OnDestroy {
                     callback();
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

@@ -47,7 +47,7 @@ export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
                     x["Active"] = (x.ActiveFlag == 'Active');
                 });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -108,7 +108,7 @@ export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
             .subscribe((response: EmergencyTypeModel) => {
                 this.getEmergencyTypes();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -153,7 +153,7 @@ export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
                 .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                     this.emergencyTypes = response.Records;
                 }, ((error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 }));
         }
         else {

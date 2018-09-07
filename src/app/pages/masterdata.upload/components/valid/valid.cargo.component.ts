@@ -52,7 +52,7 @@ export class ValidCargoListComponent implements OnInit, OnDestroy {
                 console.log(this.cargoes);
 
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             }, () => {
                 this.cargoes.sort((a, b) => {
                     if (a.AWB < b.AWB) return -1;

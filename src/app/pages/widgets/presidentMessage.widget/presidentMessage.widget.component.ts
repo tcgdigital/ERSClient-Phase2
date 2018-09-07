@@ -81,7 +81,7 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
             .subscribe((x) => {
                 data.push(x);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             }, () => this.presidentMessages = Observable.of(data
                 .map((x: PresidentMessageWidgetModel) =>
                     new TextAccordionModel(x.PresidentMessageType, x.PublishedOn,
@@ -97,7 +97,7 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
             .subscribe((x) => {
                 data.push(x);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             }, () => {
                 this.AllPresidentMessages = Observable.of(data);
                 if (callback) {

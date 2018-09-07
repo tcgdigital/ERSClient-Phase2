@@ -21,7 +21,7 @@ export class LocationService {
                     .subscribe((googleMaps: any) => {
                         this.fetchLocationByApi(location, googleMaps, observer);
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
             });
         } else {

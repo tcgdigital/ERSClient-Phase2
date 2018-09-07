@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Rx';
 import { HttpInterceptorService } from '../../../interceptor';
 import {
     BaseModel, WEB_METHOD,
-    RequestModel, ResponseModel
+    RequestModel, ResponseModel, NameValue
 } from '../../../models';
 import { UtilityService } from '../../../services';
 import { DataProcessingService, DataOperation } from '../index';
@@ -178,8 +178,10 @@ export class BulkPostOperation<T extends BaseModel> extends DataOperation<BaseMo
         super(dataProcessingService, httpService, httpInterceptor, entities);
 
         this.TypeName = typeName;
-        if (actionSufix)
+
+        if (actionSufix && actionSufix != null && actionSufix != undefined)
             this.ActionSuffix = actionSufix;
+
         this.dataProcessingService.EndPoint = GlobalConstants.API;
         this.RequestHeaders = new Headers({
             'Content-Type': 'application/json; charset=utf-8; odata.metadata=none',

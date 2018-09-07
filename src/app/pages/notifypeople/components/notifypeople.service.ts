@@ -68,7 +68,7 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
                     callback(this.userDepartmentNotificationMappers);
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -95,7 +95,7 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
                     }
                 });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -187,7 +187,7 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
                     }
                 });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -268,7 +268,7 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
                     callback(template);
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
 
     }
@@ -307,10 +307,10 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
                         if (callback) {
                             callback(false);
                         }
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

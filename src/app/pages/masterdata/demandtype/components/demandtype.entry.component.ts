@@ -59,7 +59,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
                     ? this.departments[0].DepartmentId
                     : this.demandTypeModel.DepartmentId;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -175,7 +175,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
                     this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.DemandTypeModelSaved, response);
                 }, (error: any) => {
                     this.toastrService.error(error.message, 'Error', this.toastrConfig);
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
         else {
@@ -204,7 +204,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
                     this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.DemandTypeModelUpdated, response);
                 }, (error: any) => {
                     this.toastrService.error(error.message, 'Error', this.toastrConfig);
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
     }

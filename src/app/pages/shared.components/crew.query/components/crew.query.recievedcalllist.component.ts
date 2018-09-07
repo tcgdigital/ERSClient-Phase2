@@ -128,7 +128,7 @@ export class CrewQueryRecievedCallsListComponent implements OnInit, OnDestroy {
                 }
                 this.getAllCrewQueryCallsRecieved(this.currentIncidentId);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

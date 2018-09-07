@@ -168,7 +168,7 @@ export class CallCenterOnlyPageComponent implements OnInit {
                     this.initiateEnquiryForms();
                     this.isSubmitted = false;
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
     }

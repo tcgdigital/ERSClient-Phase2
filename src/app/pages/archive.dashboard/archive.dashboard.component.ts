@@ -149,7 +149,7 @@ export class ArchiveDashboardComponent implements OnInit, OnDestroy {
             .subscribe((data: DepartmentModel) => {
                 this.currentDepartment = new KeyValue(data.Description, data.DepartmentId);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

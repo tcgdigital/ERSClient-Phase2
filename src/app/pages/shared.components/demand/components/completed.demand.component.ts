@@ -129,7 +129,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.completedDemands = this.demandService.DemandMapper(response.Records);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -145,7 +145,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
                 this.demandRemarks = response.Records;
                 this.childModalRemarks.show();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -221,7 +221,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
                 this.getDemandRemarks(demand.DemandId);
                 this.Remarks = '';
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
                 alert('Error occured during saving the remark');
             });
     }
@@ -292,7 +292,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
                         this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
                         this.globalStateProxyOpen.NotifyDataChanged(GlobalConstants.DataExchangeConstant.DemandCompleted, null);
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
             }
         }
@@ -307,7 +307,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
             .subscribe((response: DepartmentModel) => {
                 this.currentDepartmentName = response.DepartmentName;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

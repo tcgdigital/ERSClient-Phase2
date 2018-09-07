@@ -319,10 +319,10 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, OnDestroy, 
                             'Received', incidentModel.CreatedOn, 'TargetDepartment');
                         this.showDemandReceivedGraph = true;
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 }

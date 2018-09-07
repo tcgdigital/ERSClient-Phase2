@@ -141,15 +141,15 @@ export class LoginComponent implements OnInit, OnDestroy {
                                         'Sign In Exception', this.toastrConfig);
                                 }
                             }, (error: any) => {
-                                console.log(`Error: ${error}`);
+                                console.log(`Error: ${error.message}`);
                             });
 
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
 
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
                 if (error.error === 'invalid_grant') {
                     this.toastrService.error(error.error_description, 'Sign In Exception', this.toastrConfig);
                 }
@@ -193,7 +193,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -212,7 +212,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                     UtilityService.SetToSession({ CurrentIncidentId: this.currentIncidentId });
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -221,7 +221,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: TimeZoneModels) => {
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -231,7 +231,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             .subscribe((item: ResponseModel<RAGScaleModel>) => {
                 UtilityService.RAGScaleData = item.Records;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -242,7 +242,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 localStorage.setItem('CurrentLoggedInUserName', item.Name);
                 this.CheckDepartmentPages(item.UserProfileId);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -258,7 +258,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 else
                     this.CheckClosedIncident();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -276,7 +276,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 else
                     this.router.navigate(['pages/landing']);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 }

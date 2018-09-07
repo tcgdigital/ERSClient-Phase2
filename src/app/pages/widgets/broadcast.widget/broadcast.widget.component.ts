@@ -100,7 +100,7 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
                 if (existingIndex == -1)
                     this.LatestBroadcastModels.push(a);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             }, () => {
                 this.LatestBroadcasts = Observable.of(this.LatestBroadcastModels
                     .map((x: BroadcastWidgetModel) => new TextAccordionModel(x.Message, x.SubmittedOn, '')));
@@ -116,7 +116,7 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
             .subscribe((x) => {
                 data.push(x);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             }, () => {
                 this.AllPublishedBroadcasts = data;
                 if (callback) {
@@ -135,7 +135,7 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
             .subscribe((x) => {
                 data.push(x);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             }, () => {
                 this.AllBroadCastByIncidentAndDepartment = data;
                 console.log(this.AllBroadCastByIncidentAndDepartment);

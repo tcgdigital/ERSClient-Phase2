@@ -1,0 +1,46 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-sm-12 form-group">
+                        <label for="CareMemberName">Care Member Name:</label>
+                        <input type="text" id="CareMemberName" class="form-control">
+                        <div class="input-group-append">
+                            <span class="input-group-text">
+                                <i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp; Add Member
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <responsive-table>
+                            <table responsive-table-body>
+                                <thead>
+                                    <th>Care Member Name</th>
+                                    <th>Assigned On</th>
+                                    <th>Assigned By</th>
+                                    <th>Department</th>
+                                </thead>
+                                <tbody>
+                                    <tr [hidden]="careMembers.length != 0">
+                                        <td colspan="4">No Care Members are available.</td>
+                                    </tr>
+                                    <tr *ngFor="let careMember of careMembers">
+                                        <td data-title="Care Member Name">{{careMember.CareMemberName}}</td>
+                                        <td data-title="Assigned On">{{careMember.EffectedFrom}}</td>
+                                        <td data-title="Assigned By">{{careMember.UserProfile.Name}}</td>
+                                        <td data-title="Department">{{careMember.Department.DepartmentName}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </responsive-table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

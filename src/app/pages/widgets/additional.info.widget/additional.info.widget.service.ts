@@ -40,7 +40,7 @@ export class AdditionalInfoWidgetService {
                 callback(this.additionalInfoModel);
             }
         }, (error: any) => {
-            console.log(`Error: ${error}`);
+            console.log(`Error: ${error.message}`);
         });
     }
 }

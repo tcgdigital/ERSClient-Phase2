@@ -28,23 +28,27 @@ export class EnquiryService extends ServiceBase<EnquiryModel>
     }
 
     public getOtherQueryByIncident(IncidentId: number): Observable<ResponseModel<EnquiryModel>> {
-        return this._dataService.Query().Filter(`IncidentId eq  ${IncidentId}  and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Others'`)
+        return this._dataService.Query()
+            .Filter(`IncidentId eq  ${IncidentId}  and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Others'`)
             .Expand('Caller').Execute();
     }
 
     public getCrewQueryByIncident(IncidentId: number): Observable<ResponseModel<EnquiryModel>> {
-        return this._dataService.Query().Filter(`IncidentId eq  ${IncidentId}  and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Crew'`)
+        return this._dataService.Query()
+            .Filter(`IncidentId eq  ${IncidentId}  and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Crew'`)
             .Expand('Caller').Execute();
     }
 
     public getMediaQueryByIncident(IncidentId: number): Observable<ResponseModel<EnquiryModel>> {
-        return this._dataService.Query().Filter(`IncidentId eq  ${IncidentId}  and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Media'`)
+        return this._dataService.Query()
+            .Filter(`IncidentId eq  ${IncidentId}  and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Media'`)
             .Expand('Caller').Execute();
     }
 
     public GetEnquiredAffectedPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
-            .Filter(`IncidentId eq ${incidentId} and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Passenger' and AffectedPersonId ne null`).Execute();
+            .Filter(`IncidentId eq ${incidentId} and EnquiryType eq CMS.DataModel.Enum.EnquiryType'Passenger' and AffectedPersonId ne null`)
+            .Execute();
     }
 
     public MapQuery(enquiryModel: EnquiryModel[]): QueryModel[] {
@@ -95,12 +99,12 @@ export class EnquiryService extends ServiceBase<EnquiryModel>
                 return enquiryModelList;
             });
     }
-    
+
     public CreateBulk(entities: EnquiryModel[]): Observable<EnquiryModel[]> {
         return this._bulkDataService.BulkPost(entities).Execute();
     };
 
-     public UpdateBulkToDeactivateFromExternalId(externalInputId: number): Observable<EnquiryModel[]> {
+    public UpdateBulkToDeactivateFromExternalId(externalInputId: number): Observable<EnquiryModel[]> {
         let option = new DataProcessingService();
         let bulkDataServiceToDeactivate = this.dataServiceFactory
             .CreateServiceWithOptionsAndActionSuffix<EnquiryModel>

@@ -48,7 +48,7 @@ export class ValidPassengersListComponent implements OnInit, OnDestroy {
             .subscribe(a => {
                 this.passengers.push(a.Passenger);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

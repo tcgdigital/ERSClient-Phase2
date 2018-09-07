@@ -82,7 +82,7 @@ export class GroundVictimsComponent implements OnInit, OnDestroy, AfterContentIn
                 groundVictimListLocal = result.Records[0].GroundVictims;
                 this.groundVictimList = Observable.of(groundVictimListLocal);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -110,7 +110,7 @@ export class GroundVictimsComponent implements OnInit, OnDestroy, AfterContentIn
                     groundVictimListLocal = response.Records[0].GroundVictims;
                     this.groundVictimList = Observable.of(groundVictimListLocal);
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
         else {
@@ -120,7 +120,7 @@ export class GroundVictimsComponent implements OnInit, OnDestroy, AfterContentIn
                     groundVictimListLocal = result.Records[0].GroundVictims;
                     this.groundVictimList = Observable.of(groundVictimListLocal);
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
     }
@@ -133,7 +133,7 @@ export class GroundVictimsComponent implements OnInit, OnDestroy, AfterContentIn
                 groundVictimListLocal = result.Records[0].GroundVictims;
                 this.groundVictimList = Observable.of(groundVictimListLocal);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

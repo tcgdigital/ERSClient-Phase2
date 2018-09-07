@@ -26,12 +26,12 @@ export class EnquiryModel extends BaseModel {
     public Queries: string;
     public Remarks: string;
     public IncidentId: number;
-    public ExternalInputId : number;
+    public ExternalInputId: number;
 
     public Caller?: CallerModel;
     public NextOfKin?: NextOfKinModel;
     public Incident: IncidentModel;
-    public ExternalInput : ExternalInputModel;
+    public ExternalInput: ExternalInputModel;
 
     public AffectedPeople?: AffectedPeopleModel[];
     public AffectedObjects?: AffectedObjectModel[];
@@ -56,12 +56,12 @@ export class EnquiryModel extends BaseModel {
 }
 
 export class QueryModel extends BaseModel {
-              public  EnquiryId: number;
-              public  Queries: string;
-              public  CallerName: string;
-              public  ContactNumber: string;
-              public  AlternateContactNumber: string;
- }
+    public EnquiryId: number;
+    public Queries: string;
+    public CallerName: string;
+    public ContactNumber: string;
+    public AlternateContactNumber: string;
+}
 
 
 

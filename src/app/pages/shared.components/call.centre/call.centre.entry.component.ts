@@ -183,7 +183,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                     this.crews.push(new KeyValue(affectedPerson.CrewName + ' (' + affectedPerson.TicketNumber + ')', affectedPerson.AffectedPersonId));
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             }, () => {
                 this.getExternalInput(this.enquiryType);
             });
@@ -198,7 +198,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                     this.awbs.push(new KeyValue(affectedObject.AWB + ' (' + affectedObject.TicketNumber + ')', affectedObject.AffectedObjectId));
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             }, () => {
                 this.getExternalInput(this.enquiryType);
             });
@@ -212,7 +212,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                 if (response)
                     this.currentDepartmentName = this.departments.find(x => x.DepartmentId == this.currentDepartmentId).DepartmentName;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -300,7 +300,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                         this.communicationlogstoupdateId.push(this.enquiry.CommunicationLogs[0].InteractionDetailsId);
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -745,7 +745,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                         this.toastrService.success('Demands Saved successfully.', 'Success', this.toastrConfig);
                         let num = UtilityService.UUID();
                     }
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
     }
 
@@ -764,7 +764,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<KeyValueModel>) => {
                 this.activeKeyValues = response.Records;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -820,7 +820,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                 this.hideModal = false;
 
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -839,7 +839,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                 this.hideModalCargo = false;
 
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -936,7 +936,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                                 this.createDemands(this.enquiry.AffectedPersonId);
                             }
                         }, (error: any) => {
-                            console.log(`Error: ${error}`);
+                            console.log(`Error: ${error.message}`);
                         });
 
                     let num = UtilityService.UUID();
@@ -979,7 +979,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                             }
                             this.createDemands(affId); // this.affectedId
                         }, (error: any) => {
-                            console.log(`Error: ${error}`);
+                            console.log(`Error: ${error.message}`);
                         });
                 }
 
@@ -1023,7 +1023,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                                     .subscribe(() => {
                                         this.communicationlogservice.Create(communicationlogs[0]).subscribe();
                                     }, (error: any) => {
-                                        console.log(`Error: ${error}`);
+                                        console.log(`Error: ${error.message}`);
                                     });
                             }
 
@@ -1033,7 +1033,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                             this.globalState.NotifyDataChanged(GlobalConstants.DataExchangeConstant.CallRecieved, num);
                             this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.ClearAutoCompleteInput, '');
                         }, (error: any) => {
-                            console.log(`Error: ${error}`);
+                            console.log(`Error: ${error.message}`);
                         });
                 }
                 else if ((this.enquiryType == 1)) {
@@ -1088,7 +1088,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                             this.globalState.NotifyDataChanged(GlobalConstants.DataExchangeConstant.CallRecieved, num);
                             this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.ClearAutoCompleteInput, '');
                         }, (error: any) => {
-                            console.log(`Error: ${error}`);
+                            console.log(`Error: ${error.message}`);
                         });
                 }
             }

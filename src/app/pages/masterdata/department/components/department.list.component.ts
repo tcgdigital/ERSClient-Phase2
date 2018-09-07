@@ -46,7 +46,7 @@ export class DepartmentListComponent implements OnInit, OnDestroy {
                 });
                 this.departments = response.Records;
             }, ((error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             }));
     }
 
@@ -93,7 +93,7 @@ export class DepartmentListComponent implements OnInit, OnDestroy {
             .subscribe((response: DepartmentModel) => {
                 this.getDepertments();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -108,7 +108,7 @@ export class DepartmentListComponent implements OnInit, OnDestroy {
                     });
                     this.departments = response.Records;
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
         else {

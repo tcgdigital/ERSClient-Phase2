@@ -85,7 +85,7 @@ export class FutureTravelQueryAssignedCallsListComponent implements OnInit, OnDe
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

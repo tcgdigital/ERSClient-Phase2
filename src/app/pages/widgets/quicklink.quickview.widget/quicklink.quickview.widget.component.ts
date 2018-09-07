@@ -50,11 +50,12 @@ export class QuickLinkQuickViewWidgetComponent implements OnInit {
             });
     }
 
-
     getQuickLinks(): void {
         this.quicklinkService.GetAll()
             .subscribe((response: ResponseModel<QuickLinkModel>) => {
                 this.quicklinks = response.Records;
+            }, (error: any) => {
+                console.log(`Error: ${error.message}`);
             });
     }
 

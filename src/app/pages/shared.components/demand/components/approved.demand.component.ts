@@ -129,7 +129,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
                 this.demandsForApproval = this.demandService.DemandMapper(response.Records);
                 UtilityService.SetRAGStatus(this.demandsForApproval, 'Demand');
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -145,7 +145,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
                 this.demandRemarks = response.Records;
                 this.childModalRemarks.show();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -216,7 +216,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
                 this.getDemandRemarks(demand.DemandId);
                 this.Remarks = '';
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
                 alert('Error occured during saving the remark');
             });
     }
@@ -283,7 +283,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
                         this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
                         this.globalStateProxyOpen.NotifyDataChanged(GlobalConstants.DataExchangeConstant.DemandApproved, null);
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
             }
         }
@@ -298,7 +298,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
             .subscribe((response: DepartmentModel) => {
                 this.currentDepartmentName = response.DepartmentName;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

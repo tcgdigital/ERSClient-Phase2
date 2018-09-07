@@ -51,7 +51,7 @@ export class EmergencyDepartmentComponent implements OnInit, OnDestroy {
                     this.items.push(new KeyValue(emergencyType.EmergencyTypeName, emergencyType.EmergencyTypeId));
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     };
 
@@ -79,7 +79,7 @@ export class EmergencyDepartmentComponent implements OnInit, OnDestroy {
                 }
                 this.checkAllStatus();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     };
 
@@ -126,7 +126,7 @@ export class EmergencyDepartmentComponent implements OnInit, OnDestroy {
                 .subscribe((response: EmergencyDepartmentModel[]) => {
                     this.toastrService.success('Crisis wise department saved Successfully.', 'Success', this.toastrConfig);
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
     };
 
@@ -146,7 +146,7 @@ export class EmergencyDepartmentComponent implements OnInit, OnDestroy {
                     this.departmentsForEmergencyConstant.push(item1);
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

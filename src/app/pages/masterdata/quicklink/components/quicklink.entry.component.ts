@@ -102,7 +102,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
                     const extension = result.replace(/^.*[\\\/]/, '').split('.').pop();
                     this.fileName = 'Quicklink' + `.${extension}`;
                 }, (error) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
         else {
@@ -173,7 +173,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
                             this.showAdd = false;
                             this.initiateQuickLinkModel();
                         }, (error: any) => {
-                            console.log(`Error: ${error}`);
+                            console.log(`Error: ${error.message}`);
                         });
                 }
 
@@ -211,7 +211,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
                             this.showAddRegion(this.showAdd);
                             this.showAdd = false;
                         }, (error: any) => {
-                            console.log(`Error: ${error}`);
+                            console.log(`Error: ${error.message}`);
                         });
                 }
             }

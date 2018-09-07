@@ -42,7 +42,7 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<BroadCastModel>) => {
                 this.broadcastMessages = response.Records;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

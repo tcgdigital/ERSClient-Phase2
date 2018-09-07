@@ -37,7 +37,7 @@ export class CasualtySummaryWidgetComponent implements OnInit, OnDestroy {
             .subscribe((casualtySummeryObservable) => {
                 this.casualtySummery = casualtySummeryObservable;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

@@ -25,7 +25,7 @@ export class LicenseGuard implements CanActivate, CanActivateChild {
                     return false;
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
         return true;
     }

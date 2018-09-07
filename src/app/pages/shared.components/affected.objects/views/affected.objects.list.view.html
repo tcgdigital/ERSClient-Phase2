@@ -1,7 +1,8 @@
 <div class="row">
     <div class="col-lg-10 col-md-9 text-right">
-        <label class="lebelHeaderStyle">Cargo Status Info Report</label>
-        <a target="_blank" href="{{downloadPath}}" download="CargoStatusInfo"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+        <a target="_blank" href="{{downloadPath}}" download="CargoStatusInfo">
+            <i class="fa fa-download" aria-hidden="true"></i>&nbsp; Cargo Status Info Report
+        </a>
     </div>
     <div class="col-lg-2 col-md-3 text-right">
         <input type="button" class="btn btn-primary" (click)="expandSearchPanel(expandSearch)" [ngModel]="searchValue" />
@@ -121,112 +122,112 @@
             </div>
             <div class="modal-body">
                 <!-- <div class="holderStyle"> -->
-                    <div class="row modalBodyHeaderStyle">
-                        <div class="col-md-6 col-sm-12 form-group">
-                            <label class="lebelHeaderStyle"><strong>AWB</strong></label>
-                            <label class="form-control">{{affectedObjectDetails.AWB}}</label>
-                        </div>
-                        <div class="col-md-6 col-sm-12 form-group">
-                            <label class="lebelHeaderStyle"><strong>Reference Number</strong></label>
-                            <label class="form-control">{{affectedObjectDetails.TicketNumber}}</label>
-                        </div>
+                <div class="row modalBodyHeaderStyle">
+                    <div class="col-md-6 col-sm-12 form-group">
+                        <label class="lebelHeaderStyle"><strong>AWB</strong></label>
+                        <label class="form-control">{{affectedObjectDetails.AWB}}</label>
                     </div>
+                    <div class="col-md-6 col-sm-12 form-group">
+                        <label class="lebelHeaderStyle"><strong>Reference Number</strong></label>
+                        <label class="form-control">{{affectedObjectDetails.TicketNumber}}</label>
+                    </div>
+                </div>
 
-                    <div class="row">
-                        <div class="col-lg-6 col-md-12">
-                            <div class="row">
-                                <div class="form-group col-md-6 col-sm-12">
-                                    <label for="ShipperName">Shipper's Name:</label>
-                                    <input value="{{affectedObjectDetails.ShipperName}}" readonly type="text" class="form-control" />
-                                </div>
-
-                                <div class="form-group col-md-6 col-sm-12">
-                                    <label for="ShipperAddress">Shipper's Address:</label>
-                                    <input value="{{affectedObjectDetails.ShipperAddress}}" readonly type="text" class="form-control" />
-                                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-md-12">
+                        <div class="row">
+                            <div class="form-group col-md-6 col-sm-12">
+                                <label for="ShipperName">Shipper's Name:</label>
+                                <input value="{{affectedObjectDetails.ShipperName}}" readonly type="text" class="form-control" />
                             </div>
 
-                            <div class="row">
-                                <div class="form-group col-md-6 col-sm-12">
-                                    <label for="ConsigneeName">Consignee’s Name:</label>
-                                    <input value="{{affectedObjectDetails.ConsigneeName}}" readonly type="text" class="form-control" />
-                                </div>
-
-                                <div class="form-group col-md-6 col-sm-12">
-                                    <label for="ConsigneeAddress">Consignee’s Address:</label>
-                                    <input value="{{affectedObjectDetails.ConsigneeAddress}}" readonly type="text" class="form-control" />
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="form-group col-md-6 col-sm-12">
-                                    <md-checkbox id="IsVerified" [disabled]="true" [(ngModel)]="affectedObjectDetails.IsVerified" aria-label="Add" ng-disabled="true">
-                                        Verification Status:
-                                    </md-checkbox>
-                                </div>
-
-                                <div class="form-group col-md-6 col-sm-12">
-                                    <label for="LostFoundStatus">Status:</label>
-                                    <select id="selectStatus" [(ngModel)]="affectedObjectDetails.LostFoundStatus" class="form-control">
-                                        <option *ngFor="let status of allcargostatus" [value]="status.caption">{{status.caption}}
-                                        </option>
-                                    </select>
-                                </div>
+                            <div class="form-group col-md-6 col-sm-12">
+                                <label for="ShipperAddress">Shipper's Address:</label>
+                                <input value="{{affectedObjectDetails.ShipperAddress}}" readonly type="text" class="form-control" />
                             </div>
                         </div>
 
-                        <div class="col-lg-6 col-md-12">
-                            <responsive-table [scrollableclass]="true">
-                                <table responsive-table-body>
-                                    <thead>
-                                        <tr>
-                                            <th>Caller Name</th>
-                                            <th>Contact Number</th>
-                                            <th>Select as NOK</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr [hidden]="callers.length != 0">
-                                            <td colspan="3">No Call has been made yet.</td>
-                                        </tr>
-                                        <tr *ngFor="let caller of callers">
-                                            <td data-title="Caller Name">
-                                                <strong>{{caller.FirstName + " "+ caller.LastName}}</strong>
-                                            </td>
-                                            <td data-title="Contact Number">
-                                                <strong>{{caller.ContactNumber}}</strong>
-                                            </td>
-                                            <td data-title="Select as NOK">
-                                                <md-checkbox [(ngModel)]="caller.IsNok" (change)="saveNok(affectedObjectDetails.AffectedObjectId,caller,$event)" aria-label="Add"></md-checkbox>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </responsive-table>
-                        </div>
-                    </div>
+                        <div class="row">
+                            <div class="form-group col-md-6 col-sm-12">
+                                <label for="ConsigneeName">Consignee’s Name:</label>
+                                <input value="{{affectedObjectDetails.ConsigneeName}}" readonly type="text" class="form-control" />
+                            </div>
 
-                    <div class="row">
-                        <div class="form-group col-sm-12 col-md-6">
-                            <label for="DiscussionNote">Identification Details:</label>
-                            <input value="{{affectedObjectDetails.IdentificationDesc}}" [(ngModel)]="affectedObjectDetails.IdentificationDesc" type="text"
-                                class="form-control" />
+                            <div class="form-group col-md-6 col-sm-12">
+                                <label for="ConsigneeAddress">Consignee’s Address:</label>
+                                <input value="{{affectedObjectDetails.ConsigneeAddress}}" readonly type="text" class="form-control" />
+                            </div>
                         </div>
 
-                        <div class="form-group col-sm-12 col-md-6">
-                            <label for="DiscussionNote">Remarks:</label>
-                            <input value="{{affectedObjectDetails.Remarks}}" [(ngModel)]="affectedObjectDetails.Remarks" type="text" class="form-control"
-                            />
-                        </div>
-                    </div>
+                        <div class="row">
+                            <div class="form-group col-md-6 col-sm-12">
+                                <md-checkbox id="IsVerified" [disabled]="true" [(ngModel)]="affectedObjectDetails.IsVerified" aria-label="Add" ng-disabled="true">
+                                    Verification Status:
+                                </md-checkbox>
+                            </div>
 
-                    <div class="row">
-                        <div class="form-group col-sm-12">
-                            <div class="buttonholder">
-                                <button class="btn btn-primary" type="button" (click)="saveUpdateAffectedObject(affectedObjectDetails)">Submit</button>
+                            <div class="form-group col-md-6 col-sm-12">
+                                <label for="LostFoundStatus">Status:</label>
+                                <select id="selectStatus" [(ngModel)]="affectedObjectDetails.LostFoundStatus" class="form-control">
+                                    <option *ngFor="let status of allcargostatus" [value]="status.caption">{{status.caption}}
+                                    </option>
+                                </select>
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-lg-6 col-md-12">
+                        <responsive-table [scrollableclass]="true">
+                            <table responsive-table-body>
+                                <thead>
+                                    <tr>
+                                        <th>Caller Name</th>
+                                        <th>Contact Number</th>
+                                        <th>Select as NOK</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr [hidden]="callers.length != 0">
+                                        <td colspan="3">No Call has been made yet.</td>
+                                    </tr>
+                                    <tr *ngFor="let caller of callers">
+                                        <td data-title="Caller Name">
+                                            <strong>{{caller.FirstName + " "+ caller.LastName}}</strong>
+                                        </td>
+                                        <td data-title="Contact Number">
+                                            <strong>{{caller.ContactNumber}}</strong>
+                                        </td>
+                                        <td data-title="Select as NOK">
+                                            <md-checkbox [(ngModel)]="caller.IsNok" (change)="saveNok(affectedObjectDetails.AffectedObjectId,caller,$event)" aria-label="Add"></md-checkbox>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </responsive-table>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-12 col-md-6">
+                        <label for="DiscussionNote">Identification Details:</label>
+                        <input value="{{affectedObjectDetails.IdentificationDesc}}" [(ngModel)]="affectedObjectDetails.IdentificationDesc" type="text"
+                            class="form-control" />
+                    </div>
+
+                    <div class="form-group col-sm-12 col-md-6">
+                        <label for="DiscussionNote">Remarks:</label>
+                        <input value="{{affectedObjectDetails.Remarks}}" [(ngModel)]="affectedObjectDetails.Remarks" type="text" class="form-control"
+                        />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-12">
+                        <div class="buttonholder">
+                            <button class="btn btn-primary" type="button" (click)="saveUpdateAffectedObject(affectedObjectDetails)">Submit</button>
+                        </div>
+                    </div>
+                </div>
                 <!-- </div> -->
             </div>
         </div>

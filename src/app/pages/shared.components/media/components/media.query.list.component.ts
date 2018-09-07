@@ -35,7 +35,7 @@ export class MediaQueryListComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<EnquiryModel>) => {
                 this.mediaQueries = this.enquiryService.MapQuery(response.Records);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

@@ -217,7 +217,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
                         this.cancel();
                         this.IsAllSelected = false;
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
             }
             else {
@@ -232,7 +232,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
                         this.cancel();
                         this.IsAllSelected = false;
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
             }
         }
@@ -319,12 +319,12 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
                     .subscribe((response1: DepartmentModel) => {
                         this.currentDepartment.TargetDepartment.DepartmentName = response1.DepartmentName;
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
 
                 this.BroadCastDepartmentMappings.push(this.currentDepartment);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 }

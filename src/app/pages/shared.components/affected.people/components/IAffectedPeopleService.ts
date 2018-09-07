@@ -32,4 +32,12 @@ export interface IAffectedPeopleService extends IServiceInretface<AffectedPeople
     GetCasualtyStatus(incidentId: number): Observable<CasualtySummeryModel>;
 
     GetCommunicationByPDA(id: number): Observable<ResponseModel<AffectedPeopleModel>>;
+
+    GetCoPassangers(AffectedPersonId: number): Observable<ResponseModel<AffectedPeopleModel>>;
+
+    GetCurrentCareMember(affectedPersonId: number, careMemberId: number)
+        : Observable<ResponseModel<AffectedPeopleModel>>;
+
+    GetAllAffectedPeopleIdsByIncidentId(incidentId: number)
+        : Observable<ResponseModel<AffectedPeopleModel>>;
 }
