@@ -8,58 +8,64 @@
         <input type="button" class="btn btn-primary" (click)="expandSearchPanel(expandSearch)" [ngModel]="searchValue" />
     </div>
 </div>
+
 <div class="row">
     <div class="col-12" *ngIf="expandSearch">
         <generic-search [filterConfigs]="searchConfigs" (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();">
         </generic-search>
     </div>
 </div>
-<responsive-table>
-    <table responsive-table-body>
-        <thead>
-            <tr>
-                <th>Reference Number</th>
-                <th>Air Way Bill</th>
-                <th>Cargo Type</th>
-                <th>Manifest Pieces</th>
-                <th>Manifest weight(kg)</th>
-                <th>POL</th>
-                <th>POU</th>
-                <th>Cargo Status</th>
-                <th>Verification Status</th>
-                <th>Interaction Details</th>
-                <th>Update Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr [hidden]="affectedObjects.length != 0">
-                <td colspan="11">No Cargo is available.</td>
-            </tr>
-            <tr *ngFor="let affectedObject of affectedObjects">
-                <td data-title="Reference Number">{{affectedObject.TicketNumber}}&nbsp;</td>
-                <td data-title="Air Way Bill">{{affectedObject.AWB}}&nbsp;</td>
-                <td data-title="Cargo Type">{{affectedObject.CargoType}}&nbsp;</td>
-                <td data-title="Manifest Pieces">{{affectedObject.mftpcs}}&nbsp;</td>
-                <td data-title="Manifest weight">{{affectedObject.mftwgt}}&nbsp;</td>
-                <td data-title="POL">{{affectedObject.POL}}&nbsp;</td>
-                <td data-title="POU">{{affectedObject.POU}}&nbsp;</td>
-                <td data-title="Cargo Status">{{affectedObject.LostFoundStatus}}&nbsp;</td>
-                <td data-title="Verification Status">
-                    <i class="fa fa-check fa-lg fontGreen" aria-hidden="true" [hidden]="affectedObject.IsVerified == false"></i>
-                    <i class="fa fa-question fa-lg fontAmber" aria-hidden="true" [hidden]="affectedObject.IsVerified == true"></i>
-                </td>
-                <td data-title="Interaction Details"><i class="fa fa-comments" [ngClass]="{'trailActiveButtonStyle': affectedObject.commlength, 'trailNormalButtonStyle': !affectedObject.commlength}"
-                        (click)="openChatTrails(affectedObject.AffectedObjectId)"></i>
-                </td>
-                <td data-title="Interaction Details">
-                    <span *ngIf="!isArchive">
-                        <i class="fa fa-edit fa-2x" (click)="openAffectedObjectDetail(affectedObject)"></i>
-                    </span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</responsive-table>
+
+<div class="row">
+    <div class="col-sm-12">
+        <responsive-table>
+            <table responsive-table-body>
+                <thead>
+                    <tr>
+                        <th>Reference Number</th>
+                        <th>Air Way Bill</th>
+                        <th>Cargo Type</th>
+                        <th>Manifest Pieces</th>
+                        <th>Manifest weight(kg)</th>
+                        <th>POL</th>
+                        <th>POU</th>
+                        <th>Cargo Status</th>
+                        <th>Verification Status</th>
+                        <th>Interaction Details</th>
+                        <th>Update Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr [hidden]="affectedObjects.length != 0">
+                        <td colspan="11">No Cargo is available.</td>
+                    </tr>
+                    <tr *ngFor="let affectedObject of affectedObjects">
+                        <td data-title="Reference Number">{{affectedObject.TicketNumber}}&nbsp;</td>
+                        <td data-title="Air Way Bill">{{affectedObject.AWB}}&nbsp;</td>
+                        <td data-title="Cargo Type">{{affectedObject.CargoType}}&nbsp;</td>
+                        <td data-title="Manifest Pieces">{{affectedObject.mftpcs}}&nbsp;</td>
+                        <td data-title="Manifest weight">{{affectedObject.mftwgt}}&nbsp;</td>
+                        <td data-title="POL">{{affectedObject.POL}}&nbsp;</td>
+                        <td data-title="POU">{{affectedObject.POU}}&nbsp;</td>
+                        <td data-title="Cargo Status">{{affectedObject.LostFoundStatus}}&nbsp;</td>
+                        <td data-title="Verification Status">
+                            <i class="fa fa-check fa-lg fontGreen" aria-hidden="true" [hidden]="affectedObject.IsVerified == false"></i>
+                            <i class="fa fa-question fa-lg fontAmber" aria-hidden="true" [hidden]="affectedObject.IsVerified == true"></i>
+                        </td>
+                        <td data-title="Interaction Details"><i class="fa fa-comments" [ngClass]="{'trailActiveButtonStyle': affectedObject.commlength, 'trailNormalButtonStyle': !affectedObject.commlength}"
+                                (click)="openChatTrails(affectedObject.AffectedObjectId)"></i>
+                        </td>
+                        <td data-title="Interaction Details">
+                            <span *ngIf="!isArchive">
+                                <i class="fa fa-edit fa-2x" (click)="openAffectedObjectDetail(affectedObject)"></i>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </responsive-table>
+    </div>
+</div>
 
 
 
@@ -192,10 +198,10 @@
                                     </tr>
                                     <tr *ngFor="let caller of callers">
                                         <td data-title="Caller Name">
-                                            <strong>{{caller.FirstName + " "+ caller.LastName}}</strong>
+                                            <strong>{{caller.FirstName + " "+ caller.LastName}}&nbsp;</strong>
                                         </td>
                                         <td data-title="Contact Number">
-                                            <strong>{{caller.ContactNumber}}</strong>
+                                            <strong>{{caller.ContactNumber}}&nbsp;</strong>
                                         </td>
                                         <td data-title="Select as NOK">
                                             <md-checkbox [(ngModel)]="caller.IsNok" (change)="saveNok(affectedObjectDetails.AffectedObjectId,caller,$event)" aria-label="Add"></md-checkbox>

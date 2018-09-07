@@ -1,5 +1,5 @@
- <div class="card-block">
- <responsive-table>
+<div class="card-block">
+    <responsive-table>
         <table responsive-table-body>
             <thead>
                 <tr>
@@ -15,11 +15,11 @@
                 </tr>
                 <tr *ngFor="let query of mediaQueries">
                     <td data-title="Media Queries">{{query.Queries}}&nbsp;</td>
-                    <td data-title="Caller Name">{{call.Caller.FirstName + "  "+ call.Caller.LastName}}&nbsp;</td>
+                    <td data-title="Caller Name">{{call.Caller.FirstName + " "+ call.Caller.LastName}}&nbsp;</td>
                     <td data-title="Contact Number">{{query.ContactNumber}}&nbsp;</td>
                     <td data-title="Alternate Number">{{query.AlternateContactNumber}}&nbsp;</td>
                 </tr>
             </tbody>
         </table>
     </responsive-table>
- </div>
+</div>

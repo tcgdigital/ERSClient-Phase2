@@ -2,10 +2,13 @@
     <div class="col-3 col-md-12 col-lg-3 border-seperator">
         <div class="message-icon">
             <!-- <a href="javascript:void(0);" (click)="openBroadcastMessages()"> -->
-                <i *ngIf="isShowViewAll | accesibility:currentDepartmentId:'BroadcastMessageWidgetViewAll'" class="fa fa-bullhorn fa-3x hover" aria-hidden="true" (click)="openBroadcastMessages()"></i>
-                <span class="hover" *ngIf="isShowViewAll | accesibility:currentDepartmentId:'BroadcastMessageWidgetViewAll'" (click)="openBroadcastMessages()">broadcast message</span>
+            <i *ngIf="isShowViewAll | accesibility:currentDepartmentId:'BroadcastMessageWidgetViewAll'" class="fa fa-bullhorn fa-3x hover"
+                aria-hidden="true" (click)="openBroadcastMessages()"></i>
+            <span class="hover" *ngIf="isShowViewAll | accesibility:currentDepartmentId:'BroadcastMessageWidgetViewAll'" (click)="openBroadcastMessages()">broadcast
+                message</span>
             <!-- </a> -->
-            <a *ngIf="isShowViewAll | accesibility:currentDepartmentId:'BroadcastMessageWidgetViewAll'" href="javascript:void(0);" (click)="openBroadcastMessagesByDepartment()">view all</a>
+            <a *ngIf="isShowViewAll | accesibility:currentDepartmentId:'BroadcastMessageWidgetViewAll'" href="javascript:void(0);" (click)="openBroadcastMessagesByDepartment()">view
+                all</a>
         </div>
     </div>
     <div class="col-9 col-md-12 col-lg-9">
@@ -28,8 +31,8 @@
             <div class="modal-header">
                 <h4 class="modal-title">Broadcast Messages</h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="hideAllBroadcastMessages()">
-          <span aria-hidden="true">&times;</span>
-        </button>
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <responsive-table>
@@ -44,10 +47,10 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let broadcast of AllPublishedBroadcasts">
-                                <td data-title="Broadcast Messages" width="50%">{{broadcast.Message}}</td>
-                                <td data-title="Priority">{{broadcast.Priority}}</td>
-                                <td data-title="Initiated Department">{{broadcast.InitiateDepartment.DepartmentName}}</td>
-                                <td data-title="Published On">{{broadcast.SubmittedOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                                <td data-title="Broadcast Messages" width="50%">{{broadcast.Message}}&nbsp;</td>
+                                <td data-title="Priority">{{broadcast.Priority}}&nbsp;</td>
+                                <td data-title="Initiated Department">{{broadcast.InitiateDepartment.DepartmentName}}&nbsp;</td>
+                                <td data-title="Published On">{{broadcast.SubmittedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
                             </tr>
                         </tbody>
                     </table>
@@ -57,14 +60,15 @@
     </div>
 </div>
 
-<div bsModal #childBroadcastByDept="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+<div bsModal #childBroadcastByDept="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Broadcast Messages</h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="hideAllBroadcastMessageByDept()">
-          <span aria-hidden="true">&times;</span>
-        </button>
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <responsive-table>
@@ -78,9 +82,9 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let broadcast of AllBroadCastByIncidentAndDepartment">
-                                <td data-title="Broadcast Messages" width="50%">{{broadcast.Message}}</td>
-                                <td data-title="Priority">{{broadcast.Priority}}</td>
-                                <td data-title="Published On">{{broadcast.SubmittedOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                                <td data-title="Broadcast Messages" width="50%">{{broadcast.Message}}&nbsp;</td>
+                                <td data-title="Priority">{{broadcast.Priority}}&nbsp;</td>
+                                <td data-title="Published On">{{broadcast.SubmittedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
                             </tr>
                         </tbody>
                     </table>

@@ -56,10 +56,10 @@ import { AffectedPeopleService, AffectedPeopleModel } from '../../affected.peopl
                                                 <td colspan="4">No Care Members are available.</td>
                                             </tr>
                                             <tr *ngFor="let careMember of careMembers">
-                                                <td data-title="Care Member Name">{{careMember.CareMemberName}}</td>
-                                                <td data-title="Assigned On">{{careMember.EffectedFrom | date: 'dd-MMM-yyyy HH:mm'}}</td>
-                                                <td data-title="Assigned By">{{careMember.UserProfile.Name}}</td>
-                                                <td data-title="Department">{{careMember.Department.DepartmentName}}</td>
+                                                <td data-title="Care Member Name">{{careMember.CareMemberName}}&nbsp;</td>
+                                                <td data-title="Assigned On">{{careMember.EffectedFrom | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
+                                                <td data-title="Assigned By">{{careMember.UserProfile.Name}}&nbsp;</td>
+                                                <td data-title="Department">{{careMember.Department.DepartmentName}}&nbsp;</td>
                                             </tr>
                                         </tbody>
                                     </table>

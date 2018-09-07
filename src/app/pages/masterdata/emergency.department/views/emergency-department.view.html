@@ -12,8 +12,8 @@
         </div>
     </div>
 
-    <div class="row d-block d-lg-none">
-        <div class="col-12">
+    <div class="row">
+        <div class="col-sm-12 d-block d-lg-none">
             <md-checkbox id="IsAutoApproved" [(ngModel)]="allselect" (change)="slectAllDept($event)" aria-label="Add">Select
                 Department
             </md-checkbox>
@@ -21,7 +21,7 @@
     </div>
 
     <div class="row">
-        <div class="col-12">
+        <div class="col-sm-12">
             <responsive-table>
                 <table responsive-table-body>
                     <thead>
@@ -36,14 +36,13 @@
                     </thead>
                     <tbody>
                         <tr [hidden]="departmentsForEmergency.length != 0">
-                            <td colspan="6">No records found.</td>
+                            <td colspan="2">No records found.</td>
                         </tr>
                         <tr *ngFor="let departmentForEmergency of departmentsForEmergency">
-                            <td data-title="Department Code">{{departmentForEmergency.DepartmentName}}</td>
+                            <td data-title="Department Code">{{departmentForEmergency.DepartmentName}}&nbsp;</td>
                             <td data-title="Select Department">
                                 <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="departmentForEmergency.IsSelected" aria-label="Add" (change)="checkAllStatus($event)"></md-checkbox>
                             </td>
-
                         </tr>
                     </tbody>
                 </table>

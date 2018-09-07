@@ -100,10 +100,10 @@
                                         <td colspan="4">No Remark is added yet.</td>
                                     </tr>
                                     <tr *ngFor="let remark of demandRemarks">
-                                        <td data-title="Requester Department">{{remark.RequesterDepartmentName}}</td>
-                                        <td data-title="Remarks added by">{{remark.CreatedByName}}</td>
-                                        <td data-title="Remarks added on">{{remark.CreatedOn | customDate: 'DD-MMM-YYYY HH:mm'}}</td>
-                                        <td data-title="Remarks">{{remark.Remark}}</td>
+                                        <td data-title="Requester Department">{{remark.RequesterDepartmentName}}&nbsp;</td>
+                                        <td data-title="Remarks added by">{{remark.CreatedByName}}&nbsp;</td>
+                                        <td data-title="Remarks added on">{{remark.CreatedOn | customDate: 'DD-MMM-YYYY HH:mm'}}&nbsp;</td>
+                                        <td data-title="Remarks">{{remark.Remark}}&nbsp;</td>
                                     </tr>
                                 </tbody>
                             </table>

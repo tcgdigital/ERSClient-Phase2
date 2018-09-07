@@ -1,73 +1,73 @@
-<div class="card-block">
-    <div class="row">
-        <div class="form-group col-lg-6 col-md-12">
-            <label for="Passengers">Users:<span class="required">*</span></label>
-            <autocomplete [items]="items" (notify)='onNotify($event)' (InvokeAutoCompleteReset)="invokeReset();"></autocomplete>
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="form-group col-lg-6 col-md-12">
+                <label for="Passengers">Users:<span class="required">*</span></label>
+                <autocomplete [items]="items" (notify)='onNotify($event)' (InvokeAutoCompleteReset)="invokeReset();"></autocomplete>
+            </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col-12 buttonholder">
-            <button class="btn btn-primary" type="button" (click)="save()">Submit</button>
+        <div class="row">
+            <div class="col-sm-12 buttonholder">
+                <button class="btn btn-primary" type="button" (click)="save()">Submit</button>
+            </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col d-block d-lg-none">
-            <md-checkbox id="IsAutoApproved" [(ngModel)]="allSelectMember" (change)="selectAllMember($event)" aria-label="Add">Select
-                Member Of
-            </md-checkbox>
+        <div class="row">
+            <div class="col-sm-6 d-block d-lg-none text-right">
+                <md-checkbox id="IsAutoApproved" [(ngModel)]="allSelectMember" (change)="selectAllMember($event)" aria-label="Add">Select
+                    Member Of
+                </md-checkbox>
+            </div>
+            <div class="col-sm-6 d-block d-lg-none text-right">
+                <md-checkbox id="IsAutoApproved" [(ngModel)]="allSelectHOD" (change)="selectAllHOD($event)" aria-label="Add">Select
+                    HOD
+                </md-checkbox>
+            </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col-12 d-block d-lg-none">
-            <md-checkbox id="IsAutoApproved" [(ngModel)]="allSelectHOD" (change)="selectAllHOD($event)" aria-label="Add">Select
-                HOD
-            </md-checkbox>
+        <div class="row">
+            <div class="col-sm-12">
+                <responsive-table>
+                    <table responsive-table-body>
+                        <thead>
+                            <tr>
+                                <th>Department Code</th>
+                                <th>
+                                    <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="allSelectMember" (change)="selectAllMember($event)" aria-label="Add">Select
+                                        Member Of</md-checkbox>
+                                </th>
+                                <th>
+                                    <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="allSelectHOD" (change)="selectAllHOD($event)" aria-label="Add">Select
+                                        HOD
+                                    </md-checkbox>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr [hidden]="departmentsToView.length != 0">
+                                <td colspan="3">No records found.</td>
+                            </tr>
+                            <tr *ngFor="let departmentToView of departmentsToView">
+                                <td data-title="Department Code">{{departmentToView.DepartmentName}}</td>
+                                <td data-title="Select Member Of">
+                                    <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="departmentToView.IsMemberOf" aria-label="Add" (change)="checkAllStatusMember($event, departmentToView)"></md-checkbox>
+                                </td>
+                                <td data-title="Is HOD">
+                                    <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="departmentToView.IsHod" aria-label="Add" (change)="checkAllStatusHod($event, departmentToView)"></md-checkbox>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </responsive-table>
+            </div>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12">
-            <responsive-table>
-                <table responsive-table-body>
-                    <thead>
-                        <tr>
-                            <th>Department Code</th>
-                            <th>
-                                <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="allSelectMember" (change)="selectAllMember($event)" aria-label="Add">Select
-                                    Member Of</md-checkbox>
-                            </th>
-                            <th>
-                                <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="allSelectHOD" (change)="selectAllHOD($event)" aria-label="Add">Select
-                                    HOD</md-checkbox>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr [hidden]="departmentsToView.length != 0">
-                            <td colspan="6">No records found.</td>
-                        </tr>
-                        <tr *ngFor="let departmentToView of departmentsToView">
-                            <td data-title="Department Code">{{departmentToView.DepartmentName}}</td>
-                            <td data-title="Member Of">
-                                <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="departmentToView.IsMemberOf" aria-label="Add" (change)="checkAllStatusMember($event, departmentToView)"></md-checkbox>
-                            </td>
-                            <td data-title="Is HOD">
-                                <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="departmentToView.IsHod" aria-label="Add" (change)="checkAllStatusHod($event, departmentToView)"></md-checkbox>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </responsive-table>
-        </div>
-    </div>
 
 
-    <div class="row">
-        <div class="col-12 buttonholder">
-            <button class="btn btn-primary" type="button" (click)="save()">Submit</button>
+        <div class="row">
+            <div class="col-12 buttonholder">
+                <button class="btn btn-primary" type="button" (click)="save()">Submit</button>
+            </div>
         </div>
     </div>
 </div>

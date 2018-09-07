@@ -283,7 +283,7 @@
                         <tr *ngFor="let comm of communications">
                             <td data-title="comm"><strong>{{comm.RequesterType}}</strong> logged by
                                 <span [hidden]="comm.RequesterDepartment.length==0">
-                                    <strong>{{comm.RequesterName}} (Dept: {{comm.RequesterDepartment}})</strong>
+                                    <strong>{{comm.RequesterName}} (Dept: {{comm.RequesterDepartment}})&nbsp;</strong>
                                 </span>
                                 <span> on
                                     <strong>{{comm.CreatedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;:</strong>
@@ -328,7 +328,7 @@
                         <tr *ngFor="let comm of communications">
                             <td data-title="comm"><strong>{{comm.RequesterType}}</strong> logged by
                                 <span [hidden]="comm.RequesterDepartment.length==0">
-                                    <strong>{{comm.RequesterName}} (Dept: {{comm.RequesterDepartment}})</strong>
+                                    <strong>{{comm.RequesterName}} (Dept: {{comm.RequesterDepartment}})&nbsp;</strong>
                                 </span>
                                 <span> on
                                     <strong>{{comm.CreatedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;:</strong>

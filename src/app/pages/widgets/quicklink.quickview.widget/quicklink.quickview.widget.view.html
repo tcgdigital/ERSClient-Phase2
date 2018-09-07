@@ -10,7 +10,7 @@
                         <label>Select Group</label>
                         <quick-link-group (notifyOnChange)="onNotifyChanges($event)" (notifyOnReset)="onNotifyReset()"></quick-link-group>
                     </div>
-                   
+
                 </div>
             </div>
             <div class="card-block">
@@ -32,18 +32,21 @@
                                         <td colspan="5">No records found.</td>
                                     </tr>
                                     <tr *ngFor="let quicklink of quicklinks">
-                                        <td data-title="Group Name">{{(quicklink.QuickLinkGroup!= null)?quicklink.QuickLinkGroup.GroupName:''}}</td>
-                                        <td data-title="Quick Link Name">{{quicklink.QuickLinkName}}</td>
+                                        <td data-title="Group Name">{{(quicklink.QuickLinkGroup!= null)?quicklink.QuickLinkGroup.GroupName:''}}&nbsp;</td>
+                                        <td data-title="Quick Link Name">{{quicklink.QuickLinkName}}&nbsp;</td>
                                         <td data-title="Quick Link URL"><a href="{{quicklink.QuickLinkURL}}" target="_blank">{{
-                                                quicklink.QuickLinkURL }}
+                                                quicklink.QuickLinkURL }}&nbsp;
                                             </a></td>
                                         <td data-title="File">
-                                            <a target="_self" *ngIf="quicklink.UploadURL!=null" href="{{quicklink.UploadURL}}" download="QuicklinkFile"><i
-                                                    class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+                                            <a target="_self" *ngIf="quicklink.UploadURL!=null" href="{{quicklink.UploadURL}}" download="QuicklinkFile">
+                                                <i class="fa fa-download fa-2x" aria-hidden="true">
+                                                </i>
+                                            </a>
                                         </td>
                                         <td data-title="Delete">
-                                            <a target="_self" (click)="delQuickLink(quicklink.QuickLinkId,quicklink)"><i
-                                                    class="fa fa-trash-o fa-2x" aria-hidden="true"></i></a>
+                                            <a target="_self" (click)="delQuickLink(quicklink.QuickLinkId,quicklink)">
+                                                <i class="fa fa-trash-o fa-2x" aria-hidden="true"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 </tbody>

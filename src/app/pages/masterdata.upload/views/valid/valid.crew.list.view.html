@@ -25,28 +25,28 @@
         </thead>
         <tbody>
             <tr *ngIf="crews.length<=0">
-                <td data-title="Records" colspan="11">No records to show.</td>
+                <td data-title="Records" colspan="17">No records to show.</td>
             </tr>
             <tr *ngFor="let affected of crews">
-                <td data-title="Employee Number">{{affected.EmployeeNumber}}</td>
-                <td data-title="Employee Name">{{affected.CrewName}}</td>
-                <td data-title="Assigned Category">{{affected.AsgCat}}</td>
-                <td data-title="Operating Crew">{{affected.DeadheadCrew}}</td>
-                <td data-title="Base Location">{{affected.BaseLocation}}</td>
-                <td data-title="Email Id">{{affected.Email}}</td>
-                <td data-title="Departure Station">{{affected.DepartureStationCode}}</td>
-                <td data-title="Arrival Station">{{affected.ArrivalStationCode}}</td>
+                <td data-title="Employee Number">{{affected.EmployeeNumber}}&nbsp;</td>
+                <td data-title="Employee Name">{{affected.CrewName}}&nbsp;</td>
+                <td data-title="Assigned Category">{{affected.AsgCat}}&nbsp;</td>
+                <td data-title="Operating Crew">{{affected.DeadheadCrew}}&nbsp;</td>
+                <td data-title="Base Location">{{affected.BaseLocation}}&nbsp;</td>
+                <td data-title="Email Id">{{affected.Email}}&nbsp;</td>
+                <td data-title="Departure Station">{{affected.DepartureStationCode}}&nbsp;</td>
+                <td data-title="Arrival Station">{{affected.ArrivalStationCode}}&nbsp;</td>
                 <!-- <td data-title="Flight Number">{{affected.FlightNo}}</td> -->
                 <!-- <td data-title="Work Position">{{affected.WorkPosition}}</td> -->
-                <td data-title="Contact Number">{{affected.ContactNumber}}</td>
-                <td data-title="Date Of Birth">{{ affected.CrewDob | date: 'dd-MMM-yyyy' }}</td>
-                <td data-title="Gender">{{affected.CrewGender}}</td>
-                <td data-title="Nationality">{{affected.CrewNationality}}</td>
-                <td data-title="Passport Details">{{affected.PassportNumber}}</td>
-                <td data-title="NOK Details">{{affected.NOKDetails}}</td>
-                <td data-title="Medical Clearances">{{affected.MedicalClearance | date: 'dd-MMM-yyyy'}}</td>
-                <td data-title="License Records">{{affected.LicenseRecords}}</td>
-                <td data-title="Qualification Records">{{affected.QualificationRecords}}</td>
+                <td data-title="Contact Number">{{affected.ContactNumber}}&nbsp;</td>
+                <td data-title="Date Of Birth">{{ affected.CrewDob | date: 'dd-MMM-yyyy' }}&nbsp;</td>
+                <td data-title="Gender">{{affected.CrewGender}}&nbsp;</td>
+                <td data-title="Nationality">{{affected.CrewNationality}}&nbsp;</td>
+                <td data-title="Passport Details">{{affected.PassportNumber}}&nbsp;</td>
+                <td data-title="NOK Details">{{affected.NOKDetails}}&nbsp;</td>
+                <td data-title="Medical Clearances">{{affected.MedicalClearance | date: 'dd-MMM-yyyy'}}&nbsp;</td>
+                <td data-title="License Records">{{affected.LicenseRecords}}&nbsp;</td>
+                <td data-title="Qualification Records">{{affected.QualificationRecords}}&nbsp;</td>
             </tr>
         </tbody>
     </table>

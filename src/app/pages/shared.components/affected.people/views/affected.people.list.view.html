@@ -16,6 +16,7 @@
         <input type="button" class="btn btn-primary" (click)="expandSearchPanel(expandSearch)" [ngModel]="searchValue" />
     </div>
 </div>
+
 <div class="row">
     <div class="col-12" *ngIf="expandSearch">
         <generic-search [filterConfigs]="searchConfigs" (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();">
@@ -23,68 +24,72 @@
     </div>
 </div>
 
-<responsive-table>
-    <table responsive-table-body>
-        <thead>
-            <tr>
-                <th>Reference Number</th>
-                <th>PDA Name</th>
-                <th>PDA Contact</th>
-                <th>PNR</th>
-                <th>Passenger Type</th>
-                <th>Medical Status</th>
-                <th>Care Name</th>
-                <th>Care Log</th>
-                <th>Interaction Details</th>
-                <th>View</th>
-                <th>Is NOK Informed</th>
-                <th>Crew 201 File</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr [hidden]="affectedPeople.length != 0">
-                <td colspan="10">No PDA is available.</td>
-            </tr>
-            <tr *ngFor="let affectedperson of affectedPeople">
-                <td data-title="Reference Number">{{affectedperson.TicketNumber}}&nbsp;</td>
-                <td data-title="PDA Name">{{affectedperson.CrewName || affectedperson.PassengerName}}&nbsp;</td>
-                <td data-title="PDA Contact">{{affectedperson.ContactNumber}}&nbsp;</td>
-                <td data-title="PNR">{{affectedperson.Pnr}}&nbsp;</td>
-                <td data-title="Passenger Type">{{affectedperson.PaxType}}&nbsp;</td>
-                <td data-title="Medical Status">{{affectedperson.MedicalStatus}}&nbsp;</td>
-                <td data-title="Care Name">{{affectedperson.CurrentCareMemberName}}&nbsp;</td>
-                <td data-title="Care Log">
-                    <span class="fa-stack fa-md" aria-hidden="true" (click)="openAffectedPersonCareMemberDetail(affectedperson)">
-                        <i class="fa fa-comment-o fa-stack-2x"></i>
-                        <i class="fa fa-user fa-stack-1x"></i>
-                    </span>
-                </td>
-                <td data-title="Interaction Details">
-                    <i class="fa fa-comments fa-md" [ngClass]="{'trailActiveButtonStyle': affectedperson.commlength, 'trailNormalButtonStyle': !affectedperson.commlength}"
-                        (click)="openChatTrails(affectedperson.AffectedPersonId)">
-                    </i>
-                </td>
-                <td data-title="View Com. Trail">
-                    <i class="fa fa-edit fa-2x pt-2" (click)="openAffectedPersonDetail(affectedperson)"></i>
-                </td>
-                <td data-title="Is NOK Informed">
-                    <md-checkbox [disabled]="isArchive" *ngIf="isShowIsNOKInvolved | accesibility:currentDepartmentId:'ShowIsNOKInformed'" class="Marght"
-                        id="IsNokInformed" name="IsNokInformed" [ngModel]="affectedperson.IsNokInformed" (change)="IsNokInformed($event,affectedperson.AffectedPersonId,affectedperson.CrewName || affectedperson.PassengerName)"
-                        aria-label="ActiveFlag">
-                    </md-checkbox>
-                </td>
-                <td data-title="Crew 201 File">
-                    <ul *ngIf="affectedperson.IsCrew">
-                        <li *ngFor="let file of affectedperson.Crew.FileStores">
-                            <a target="_blank" href="{{downloadFilePath + file.FileStoreID}}" download="file.UploadedFileName"><i
-                                    class="fa fa-download fa-2x" aria-hidden="true"></i></a>
-                        </li>
-                    </ul>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</responsive-table>
+<div class="row">
+    <div class="col-sm-12">
+        <responsive-table>
+            <table responsive-table-body>
+                <thead>
+                    <tr>
+                        <th>Reference Number</th>
+                        <th>PDA Name</th>
+                        <th>PDA Contact</th>
+                        <th>PNR</th>
+                        <th>Passenger Type</th>
+                        <th>Medical Status</th>
+                        <th>Care Name</th>
+                        <th>Care Log</th>
+                        <th>Interaction Details</th>
+                        <th>View</th>
+                        <th>Is NOK Informed</th>
+                        <th>Crew 201 File</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr [hidden]="affectedPeople.length != 0">
+                        <td colspan="12">No PDA is available.</td>
+                    </tr>
+                    <tr *ngFor="let affectedperson of affectedPeople">
+                        <td data-title="Reference Number">{{affectedperson.TicketNumber}}&nbsp;</td>
+                        <td data-title="PDA Name">{{affectedperson.CrewName || affectedperson.PassengerName}}&nbsp;</td>
+                        <td data-title="PDA Contact">{{affectedperson.ContactNumber}}&nbsp;</td>
+                        <td data-title="PNR">{{affectedperson.Pnr}}&nbsp;</td>
+                        <td data-title="Passenger Type">{{affectedperson.PaxType}}&nbsp;</td>
+                        <td data-title="Medical Status">{{affectedperson.MedicalStatus}}&nbsp;</td>
+                        <td data-title="Care Name">{{affectedperson.CurrentCareMemberName}}&nbsp;</td>
+                        <td data-title="Care Log">
+                            <span class="fa-stack fa-md" aria-hidden="true" (click)="openAffectedPersonCareMemberDetail(affectedperson)">
+                                <i class="fa fa-comment-o fa-stack-2x"></i>
+                                <i class="fa fa-user fa-stack-1x"></i>
+                            </span>
+                        </td>
+                        <td data-title="Interaction Details">
+                            <i class="fa fa-comments fa-md" [ngClass]="{'trailActiveButtonStyle': affectedperson.commlength, 'trailNormalButtonStyle': !affectedperson.commlength}"
+                                (click)="openChatTrails(affectedperson.AffectedPersonId)">
+                            </i>
+                        </td>
+                        <td data-title="View Com. Trail">
+                            <i class="fa fa-edit fa-2x pt-2" (click)="openAffectedPersonDetail(affectedperson)"></i>
+                        </td>
+                        <td data-title="Is NOK Informed">
+                            <md-checkbox [disabled]="isArchive" *ngIf="isShowIsNOKInvolved | accesibility:currentDepartmentId:'ShowIsNOKInformed'" class="Marght"
+                                id="IsNokInformed" name="IsNokInformed" [ngModel]="affectedperson.IsNokInformed" (change)="IsNokInformed($event,affectedperson.AffectedPersonId,affectedperson.CrewName || affectedperson.PassengerName)"
+                                aria-label="ActiveFlag">
+                            </md-checkbox>
+                        </td>
+                        <td data-title="Crew 201 File">
+                            <ul *ngIf="affectedperson.IsCrew">
+                                <li *ngFor="let file of affectedperson.Crew.FileStores">
+                                    <a target="_blank" href="{{downloadFilePath + file.FileStoreID}}" download="file.UploadedFileName"><i
+                                            class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </responsive-table>
+    </div>
+</div>
 
 
 
@@ -166,8 +171,8 @@
                                             <td colspan="9">No Call has been made yet.</td>
                                         </tr>
                                         <tr *ngFor="let caller of callers">
-                                            <td data-title="Caller Name"><strong>{{caller.FirstName + " "+ caller.LastName}}</strong></td>
-                                            <td data-title="Contact Number"><strong>{{caller.ContactNumber}}</strong></td>
+                                            <td data-title="Caller Name"><strong>{{caller.FirstName + " "+ caller.LastName}}&nbsp;</strong></td>
+                                            <td data-title="Contact Number"><strong>{{caller.ContactNumber}}&nbsp;</strong></td>
                                             <td data-title="Select NOK">
                                                 <md-checkbox [disabled]="isArchive" [(ngModel)]="caller.IsNok" (change)="saveNok(affectedPersonModel.AffectedPersonId,caller,$event)"
                                                     aria-label="Add"></md-checkbox>
@@ -268,8 +273,8 @@
                                             <td data-title="&#9785;" colspan="3">No Call has been made yet.</td>
                                         </tr>
                                         <tr *ngFor="let caller of callers">
-                                            <td data-title="Caller Name"><strong>{{caller.FirstName + " "+ caller.LastName}}</strong></td>
-                                            <td data-title="Contact Number"><strong>{{caller.ContactNumber}}</strong></td>
+                                            <td data-title="Caller Name"><strong>{{caller.FirstName + " "+ caller.LastName}}&nbsp;</strong></td>
+                                            <td data-title="Contact Number"><strong>{{caller.ContactNumber}}&nbsp;</strong></td>
                                             <td data-title="Select NOK">
                                                 <md-checkbox [disabled]="isArchive" [(ngModel)]="caller.IsNok" (change)="saveNok(affectedPersonModel.AffectedPersonId,caller,$event)"
                                                     aria-label="Add"></md-checkbox>
@@ -294,7 +299,7 @@
                                             <td data-title="&#9785;">No copassengers mapped yet</td>
                                         </tr>
                                         <tr *ngFor="let copassenger of copassangers">
-                                            <td data-title="Co Passenger">{{copassenger.PassengerName}}</td>
+                                            <td data-title="Co Passenger">{{copassenger.PassengerName}}&nbsp;</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -367,7 +372,7 @@
                                         <td data-title="comm">
                                             <strong>{{comm.RequesterType}}</strong> logged by
                                             <span [hidden]="comm.RequesterDepartment.length==0">
-                                                <strong>{{comm.RequesterName}} (Dept: {{comm.RequesterDepartment}})</strong>
+                                                <strong>{{comm.RequesterName}} (Dept: {{comm.RequesterDepartment}})&nbsp;</strong>
                                             </span>
                                             <span> on
                                                 <strong>{{comm.CreatedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;:</strong>

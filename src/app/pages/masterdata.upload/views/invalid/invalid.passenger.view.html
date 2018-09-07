@@ -7,55 +7,46 @@
                 <th>PNR</th>
                 <th>Date Of Birth</th>
                 <th>Seat Number</th>
-
-                <th>Passenger Type</th>  
+                <th>Passenger Type</th>
                 <th>Gender</th>
                 <th>Nationality</th>
                 <th>Identity Document Type</th>
                 <th>Identity Document Number</th>
-                
                 <th>VIP Passenger</th>
                 <th>Origin</th>
-                <th>Destination</th> 
+                <th>Destination</th>
                 <th>Contact Number</th>
-
                 <th>Baggage Count</th>
                 <th>Baggage Weight(in KG)</th>
                 <th>Inbound Flight Number</th>
                 <th>Outbound Flight Number</th>
                 <th>Employee Id</th>
-                
-                
             </tr>
         </thead>
         <tbody>
             <tr *ngIf="invalidPassengers.length<=0">
-                <td data-title="Records" colspan="7">No records to show.</td>
+                <td data-title="Records" colspan="18">No records to show.</td>
             </tr>
             <tr *ngFor="let affected of invalidPassengers">
                 <!-- <td data-title="Flight Number">{{affected.FlightNumber}}</td> -->
-                <td data-title="Passenger Name">{{affected.PassengerName}}</td>
-                <td data-title="PNR">{{affected.Pnr}}</td>
-                <td data-title="Date Of Birth">{{affected.PassengerDob}}</td>
-                <td data-title="Seat Number">{{affected.Seatno}}</td>
-
-                <td data-title="Passenger Type">{{affected.PassengerType}}</td>
-                <td data-title="Gender">{{affected.PassengerGender}}</td>
-                <td data-title="Nationality">{{affected.PassengerNationality}}</td>
-                <td data-title="Identity Document Type">{{affected.IdentificationDocType}}</td>
-                <td data-title="Identity Document Number">{{affected.IdentificationDocNumber}}</td>
-                
-                <td data-title="VIP Passenger">{{affected.IsVip ? "Yes" : "No" }}</td>
-                <td data-title="Origin">{{affected.Origin}}</td>
-                <td data-title="Destination">{{affected.Destination}}</td>
-                <td data-title="Contact Number">{{affected.ContactNumber}}</td>
-
-                <td data-title="Baggage Count">{{affected.BaggageCount}}</td>
-                <td data-title="Baggage Weight(in KG)">{{affected.BaggageWeight}}</td>
-                <td data-title="Inbound Flight Number">{{affected.InboundFlightNumber}}</td>
-                <td data-title="Outbound Flight Number">{{affected.OutBoundFlightNumber}}</td>
-                <td data-title="Employee Id">{{affected.EmployeeId}}</td>
-
+                <td data-title="Passenger Name">{{affected.PassengerName}}&nbsp;</td>
+                <td data-title="PNR">{{affected.Pnr}}&nbsp;</td>
+                <td data-title="Date Of Birth">{{affected.PassengerDob}}&nbsp;</td>
+                <td data-title="Seat Number">{{affected.Seatno}}&nbsp;</td>
+                <td data-title="Passenger Type">{{affected.PassengerType}}&nbsp;</td>
+                <td data-title="Gender">{{affected.PassengerGender}}&nbsp;</td>
+                <td data-title="Nationality">{{affected.PassengerNationality}}&nbsp;</td>
+                <td data-title="Identity Document Type">{{affected.IdentificationDocType}}&nbsp;</td>
+                <td data-title="Identity Document Number">{{affected.IdentificationDocNumber}}&nbsp;</td>
+                <td data-title="VIP Passenger">{{affected.IsVip ? "Yes" : "No" }}&nbsp;</td>
+                <td data-title="Origin">{{affected.Origin}}&nbsp;</td>
+                <td data-title="Destination">{{affected.Destination}}&nbsp;</td>
+                <td data-title="Contact Number">{{affected.ContactNumber}}&nbsp;</td>
+                <td data-title="Baggage Count">{{affected.BaggageCount}}&nbsp;</td>
+                <td data-title="Baggage Weight(in KG)">{{affected.BaggageWeight}}&nbsp;</td>
+                <td data-title="Inbound Flight Number">{{affected.InboundFlightNumber}}&nbsp;</td>
+                <td data-title="Outbound Flight Number">{{affected.OutBoundFlightNumber}}&nbsp;</td>
+                <td data-title="Employee Id">{{affected.EmployeeId}}&nbsp;</td>
             </tr>
         </tbody>
     </table>

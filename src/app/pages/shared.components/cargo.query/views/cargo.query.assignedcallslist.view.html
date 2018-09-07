@@ -16,7 +16,7 @@
                     </tr>
                     <tr *ngFor="let call of allAssignedCalls">
                         <td data-title="Caller Name">{{call.Caller.FirstName + " "+ call.Caller.LastName}}&nbsp;</td>
-                        <td data-title="PDA Name">{{call.Caller.ContactNumber}}</td>
+                        <td data-title="PDA Name">{{call.Caller.ContactNumber}}&nbsp;</td>
                         <td data-title="PDA Age">{{call.Caller.Relationship}}&nbsp;</td>
                         <td data-title="Action"><i *ngIf ="!isArchive" class="fa fa-edit fa-2x" (click)="openCallcenter(call.ExternalInputId)"></i>&nbsp;</td>
                     </tr>

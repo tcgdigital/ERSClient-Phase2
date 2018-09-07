@@ -1,39 +1,43 @@
-<responsive-table>
-    <table responsive-table-body>
-        <thead>
-            <tr>
-                <th>Releases</th>
-                <th>Status</th>
-                <th>Created On</th>
-                <th>Sent For Approval On</th>
-                <th>Approved On</th>
-                <th>Published On</th>
-                <th>Edit</th>
-                <th>Download Report</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngIf="!mediaReleases.length">
-                <td colspan="8">No Releases to show.</td>
-            </tr>
-            <tr *ngFor="let query of mediaReleases">
-                <td data-title="Releases" width="30%">{{query.MediaReleaseType}}</td>
-                <td data-title="Status">{{query.MediaReleaseStatus=== 'SentForApproval' ? 'Sent For Approval': query.MediaReleaseStatus}}</td>
-                <td data-title="Created On">{{query.CreatedOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
-                <td data-title="Sent For Approval On">{{query.SentForApprovalOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
-                <td data-title="Approved On">{{query.ApprovedOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
-                <td data-title="Published On">{{query.PublishedOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
-                <td data-title="Edit">
-                    <span *ngIf="!isArchive">
-                        <i class="fa fa-edit fa-2x" (click)="UpdateMediaRelease(query)"></i>
-                    </span>
-                </td>
-                <td data-title="Download Report">
-                    <a *ngIf="query.MediaReleaseStatus === 'Published'" target="_blank" href="{{downloadPath + query.MediaqueryId}}">
-                            <i class="fa fa-download fa-2x" aria-hidden="true"></i>
-                    </a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</responsive-table>
+<div class="row">
+    <div class="col-sm-12">
+        <responsive-table>
+            <table responsive-table-body>
+                <thead>
+                    <tr>
+                        <th>Releases</th>
+                        <th>Status</th>
+                        <th>Created On</th>
+                        <th>Sent For Approval On</th>
+                        <th>Approved On</th>
+                        <th>Published On</th>
+                        <th>Edit</th>
+                        <th>Download Report</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngIf="!mediaReleases.length">
+                        <td colspan="8">No Releases to show.</td>
+                    </tr>
+                    <tr *ngFor="let query of mediaReleases">
+                        <td data-title="Releases" width="30%">{{query.MediaReleaseType}}&nbsp;</td>
+                        <td data-title="Status">{{query.MediaReleaseStatus=== 'SentForApproval' ? 'Sent For Approval': query.MediaReleaseStatus}}&nbsp;</td>
+                        <td data-title="Created On">{{query.CreatedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
+                        <td data-title="Sent For Approval On">{{query.SentForApprovalOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
+                        <td data-title="Approved On">{{query.ApprovedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
+                        <td data-title="Published On">{{query.PublishedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
+                        <td data-title="Edit">
+                            <span *ngIf="!isArchive">
+                                <i class="fa fa-edit fa-2x" (click)="UpdateMediaRelease(query)"></i>
+                            </span>
+                        </td>
+                        <td data-title="Download Report">
+                            <a *ngIf="query.MediaReleaseStatus === 'Published'" target="_blank" href="{{downloadPath + query.MediaqueryId}}">
+                                <i class="fa fa-download fa-2x" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </responsive-table>
+    </div>
+</div>

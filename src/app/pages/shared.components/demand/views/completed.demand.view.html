@@ -1,62 +1,72 @@
 <div class="row">
     <div class="col-sm-12 pull-right">
-    <div class="addbuttonHolder">
-        <button class="btn btn-primary" type="button" (click)="submit()" [disabled] ="isArchive" *ngIf="(isShowCompletedDemand | accesibility:currentDepartmentId:'UpdateCompletedDemand')">Submit</button>
-    </div>
+        <div class="addbuttonHolder">
+            <button class="btn btn-primary" type="button" (click)="submit()" [disabled]="isArchive" *ngIf="(isShowCompletedDemand | accesibility:currentDepartmentId:'UpdateCompletedDemand')">Submit</button>
+        </div>
     </div>
 </div>
 
-<responsive-table>
-    <table responsive-table-body>
-        <thead>
-            <tr>
-                <th>Demand Type</th>
-                <th>Demand Description</th>
-                <th>Requested By</th>
-                <th>Target Department</th>
-                <th>Contact Number</th>
-                <th>Priority</th>
-                <th>Schedule Time Close</th>
-                <th>Required Location</th>
-                <th>Remarks</th>
-                <th>Download File</th>
-                <th>Accept</th>
-                <th>Reject</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr [hidden]="completedDemands.length != 0">
-                <td colspan="9">No Demand is Assigned.</td>
-            </tr>
-            <tr *ngFor="let demand of completedDemands">
-                <td data-title="Demand Type">{{demand.DemandTypeName}}&nbsp;</td>
-                <td data-title="Demand Description"><a href="javascript:void(0);" (click)="openDemandDetails(demand.DemandId)">{{demand.DemandDesc}}</a>&nbsp;</td>
-                <td data-title="Requested By">{{demand.RequestedBy}}&nbsp;</td>
-                <td data-title="Target Department">{{demand.TargetDepartmentName}}&nbsp;</td>
-                <td data-title="Contact Number">{{demand.ContactNumber}}&nbsp;</td>
-                <td data-title="Priority">{{demand.Priority}}&nbsp;</td>
-                <td data-title="Schedule Time Close">{{demand.ScheduleTimeToShow}}&nbsp;</td>
-                <td data-title="Required Location">{{demand.RequiredLocation}}&nbsp;</td>
-                <td data-title="Remarks"><i class="fa fa-list-alt fa-2x" (click)="openDemandRemarks(demand)"></i></td>
-                <td data-title="Download File">
-                    <ul>
-                        <li *ngFor="let file of demand.FileStores">
-                            <a target="_self" href="{{file.FilePath}}" download="file.UploadedFileName"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
-                        </li>
-                    </ul>
-                </td>
-                <td data-title="Accept">
-                    <md-checkbox [disabled] ="isArchive" *ngIf="isShowAcceptRejectDemand | accesibility:currentDepartmentId:'AcceptRejectDemand'" class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsClosed" [disabled]="demand.IsRejected" aria-label="Done">
-                    </md-checkbox>
-                </td>
-                <td data-title="Reject">
-                    <md-checkbox [disabled] ="isArchive" *ngIf="isShowAcceptRejectDemand | accesibility:currentDepartmentId:'AcceptRejectDemand'" class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsRejected" [disabled]="demand.IsClosed" aria-label="Done">
-                    </md-checkbox>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</responsive-table>
+<div class="row">
+    <div class="col-sm-12">
+        <responsive-table>
+            <table responsive-table-body>
+                <thead>
+                    <tr>
+                        <th>Demand Type</th>
+                        <th>Demand Description</th>
+                        <th>Requested By</th>
+                        <th>Target Department</th>
+                        <th>Contact Number</th>
+                        <th>Priority</th>
+                        <th>Schedule Time Close</th>
+                        <th>Required Location</th>
+                        <th>Remarks</th>
+                        <th>Download File</th>
+                        <th>Accept</th>
+                        <th>Reject</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr [hidden]="completedDemands.length != 0">
+                        <td colspan="9">No Demand is Assigned.</td>
+                    </tr>
+                    <tr *ngFor="let demand of completedDemands">
+                        <td data-title="Demand Type">{{demand.DemandTypeName}}&nbsp;</td>
+                        <td data-title="Demand Description"><a href="javascript:void(0);" (click)="openDemandDetails(demand.DemandId)">{{demand.DemandDesc}}</a>&nbsp;</td>
+                        <td data-title="Requested By">{{demand.RequestedBy}}&nbsp;</td>
+                        <td data-title="Target Department">{{demand.TargetDepartmentName}}&nbsp;</td>
+                        <td data-title="Contact Number">{{demand.ContactNumber}}&nbsp;</td>
+                        <td data-title="Priority">{{demand.Priority}}&nbsp;</td>
+                        <td data-title="Schedule Time Close">{{demand.ScheduleTimeToShow}}&nbsp;</td>
+                        <td data-title="Required Location">{{demand.RequiredLocation}}&nbsp;</td>
+                        <td data-title="Remarks"><i class="fa fa-list-alt fa-2x" (click)="openDemandRemarks(demand)"></i></td>
+                        <td data-title="Download File">
+                            <ul>
+                                <li *ngFor="let file of demand.FileStores">
+                                    <a target="_self" href="{{file.FilePath}}" download="file.UploadedFileName">
+                                        <i class="fa fa-download fa-2x" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </td>
+                        <td data-title="Accept">
+                            <md-checkbox [disabled]="isArchive" *ngIf="isShowAcceptRejectDemand | accesibility:currentDepartmentId:'AcceptRejectDemand'"
+                                class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsClosed" [disabled]="demand.IsRejected"
+                                aria-label="Done">
+                            </md-checkbox>
+                        </td>
+                        <td data-title="Reject">
+                            <md-checkbox [disabled]="isArchive" *ngIf="isShowAcceptRejectDemand | accesibility:currentDepartmentId:'AcceptRejectDemand'"
+                                class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsRejected" [disabled]="demand.IsClosed"
+                                aria-label="Done">
+                            </md-checkbox>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </responsive-table>
+    </div>
+</div>
 
 
 <div bsModal #childModalRemarks="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
@@ -66,8 +76,8 @@
             <div class="modal-header">
                 <h4 class="modal-title">Demand Remarks</h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="cancelRemarkUpdate()">
-                  <span aria-hidden="true">&times;</span>
-                   </button>
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <div class="row holderRemark" *ngIf="!isArchive">
@@ -95,10 +105,10 @@
                                         <td colspan="9">No Remark is added yet.</td>
                                     </tr>
                                     <tr *ngFor="let remark of demandRemarks">
-                                        <td data-title="Requester Department">{{remark.RequesterDepartmentName}}</td>
-                                        <td data-title="Remarks added by">{{remark.CreatedByName}}</td>
-                                        <td data-title="Remarks added on">{{remark.CreatedOn | customDate: 'DD-MMM-YYYY HH:mm'}}</td>
-                                        <td data-title="Remarks">{{remark.Remark}}</td>
+                                        <td data-title="Requester Department">{{remark.RequesterDepartmentName}}&nbsp;</td>
+                                        <td data-title="Remarks added by">{{remark.CreatedByName}}&nbsp;</td>
+                                        <td data-title="Remarks added on">{{remark.CreatedOn | customDate: 'DD-MMM-YYYY HH:mm'}}&nbsp;</td>
+                                        <td data-title="Remarks">{{remark.Remark}}&nbsp;</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -118,8 +128,8 @@
             <div class="modal-header">
                 <h4 class="modal-title">Demand Details</h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="cancelModal()">
-                  <span aria-hidden="true">&times;</span>
-                   </button>
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <div class="holderStyle">
