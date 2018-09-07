@@ -1,12 +1,10 @@
 <div class="row">
     <div class="col-md-5 col-lg-6 text-right">
-        <!-- <label>Verified Manifest (Pax)</label> -->
         <a target="_blank" href="{{downloadPath}}" download="PDAVerifiedManifest">
             <i class="fa fa-download" aria-hidden="true"></i>&nbsp; Verified Manifest (Pax)
         </a>
     </div>
     <div class="col-md-4 col-lg-3 text-right">
-        <!-- <label>Verified Manifest (Crew)</label> -->
         <a target="_blank" href="{{downloadURL}}" download="CrewVerifiedManifest">
             <i class="fa fa-download" aria-hidden="true"></i>&nbsp; Verified Manifest (Crew)
         </a>
@@ -18,6 +16,7 @@
         </div>
     </div>
 </div>
+
 <div class="row">
     <div class="col-12">
         <responsive-table>
@@ -37,7 +36,7 @@
                 </thead>
                 <tbody>
                     <tr [hidden]="affectedPeopleForVerification.length != 0">
-                        <td colspan="9">No Verified PDA is available.</td>
+                        <td colspan="6">No Verified PDA is available.</td>
                     </tr>
                     <tr *ngFor="let affectedperson of affectedPeopleForVerification">
                         <td data-title="Verify">

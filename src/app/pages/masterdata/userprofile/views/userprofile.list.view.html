@@ -5,6 +5,7 @@
         <button class="btn btn-primary pull-right btn-pos" type="button" (click)="openInvalidRecords()">View Invalid Records</button>
     </div>
 </div>
+
 <div class="row">
     <div class="col-12" *ngIf="expandSearch">
         <generic-search [filterConfigs]="searchConfigs" (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();">
@@ -73,35 +74,35 @@
                 </tr>
                 <tr *ngFor="let userprofile of userProfiles">
                     <td data-title="User Id" title="{{userprofile.UserId}}">
-                        {{userprofile.UserId}}
+                        {{userprofile.UserId}}&nbsp;
                     </td>
                     <td data-title="Name" title="{{userprofile.Name}}">
-                        {{userprofile.Name}}
+                        {{userprofile.Name}}&nbsp;
                     </td>
                     <td data-title="Email" title="{{userprofile.Email}}">
-                        {{userprofile.Email }}
+                        {{userprofile.Email }}&nbsp;
                     </td>
                     <td data-title="Employee Id" title="{{userprofile.EmployeeId}}">
-                        {{userprofile.EmployeeId}}
+                        {{userprofile.EmployeeId}}&nbsp;
                     </td>
                     <td data-title="Main Contact" title="{{userprofile.MainContact}}">
-                        {{userprofile.MainContact}}
+                        {{userprofile.MainContact}}&nbsp;
                     </td>
                     <td data-title="Alternate Contact" title="{{userprofile.AlternateContact}}">
-                        {{userprofile.AlternateContact}}
+                        {{userprofile.AlternateContact}}&nbsp;
                     </td>
 
                     <td data-title="Passport Details" title="{{userprofile.PassportNumber}}">
-                        {{userprofile.PassportNumber}}
+                        {{userprofile.PassportNumber}}&nbsp;
                     </td>
                     <!-- <td data-title="Passport Validity">
                         {{userprofile.PassportValidity | date: 'dd-MMM-yyyy hh:mm a'}}
                     </td> -->
                     <td data-title="Nationality" title="{{userprofile.Nationality}}">
-                        {{userprofile.Nationality}}
+                        {{userprofile.Nationality}}&nbsp;
                     </td>
                     <td data-title="Gender" title="{{userprofile.Gender}}">
-                        {{userprofile.Gender}}
+                        {{userprofile.Gender}}&nbsp;
                     </td>
                     <td data-title="Visa Details" title="{{userprofile.VisaRecords}}">
                         <!-- <ul *ngIf="userprofile.VisaDetails.length > 0">
@@ -109,7 +110,7 @@
                                 {{visa.VisaNumber}} / {{visa.VisaValidity | date: 'dd-MMM-yyyy hh:mm a'}}
                             </li>
                         </ul> -->
-                        {{userprofile.VisaRecords}}
+                        {{userprofile.VisaRecords}}&nbsp;
                     </td>
                     <td data-title="Volunter Preferences" title="{{userprofile.VoluterPreferenceRecords}}">
                         <!-- <ul *ngIf="userprofile.VolunterPreferences.length > 0">
@@ -117,7 +118,7 @@
                                 {{vol.VoluterPreferenceName}}
                             </li>
                         </ul> -->
-                        {{userprofile.VoluterPreferenceRecords}}
+                        {{userprofile.VoluterPreferenceRecords}}&nbsp;
                     </td>
                     <td data-title="Training Records" title="{{userprofile.TrainingDetails}}">
                         <!-- <ul *ngIf="userprofile.TrainingRecords.length > 0">
@@ -126,7 +127,7 @@
                                 | date: 'dd-MMM-yyyy hh:mm a'}}
                             </li>
                         </ul> -->
-                        {{userprofile.TrainingDetails}}
+                        {{userprofile.TrainingDetails}}&nbsp;
                     </td>
                     <td data-title="NOK Details" title="{{userprofile.NOKDetails}}">
                         <!-- <ul *ngIf="userprofile.NextOfKins.length > 0">
@@ -135,7 +136,7 @@
 
                             </li>
                         </ul> -->
-                        {{userprofile.NOKDetails}}
+                        {{userprofile.NOKDetails}}&nbsp;
                     </td>
                     <td data-title="IsActive">
                         <md-checkbox class="Marght" id="IsActive" name="IsActive" [(ngModel)]="userprofile.isActive" (change)="checkChange($event,userprofile)"
@@ -155,6 +156,7 @@
         </table>
     </responsive-table>
 </ng-container>
+
 <div bsModal #invalidUserProfileModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -165,49 +167,53 @@
                 </button>
             </div>
             <div class="modal-body">
-                <responsive-table>
-                    <table responsive-table-body>
-                        <thead>
-                            <tr>
-                                <th>User Id</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Employee Id</th>
-                                <th>Department Name</th>
-                                <th>Main Contact</th>
-                                <th>Alternate Contact</th>
-                                <th>Passport Details</th>
-                                <th>Nationality</th>
-                                <th>Gender</th>
-                                <th>Visa Details</th>
-                                <th>Training Details</th>
-                                <th>Next Of Kins</th>
-                                <th>Error Reason</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr [hidden]="invalidUserProfiles.length != 0">
-                                <td colspan="6">No records found.</td>
-                            </tr>
-                            <tr *ngFor="let userprofile of invalidUserProfiles">
-                                <td data-title="User Id">{{userprofile.UserId}}</td>
-                                <td data-title="Name">{{userprofile.Name}}</td>
-                                <td data-title="Email">{{userprofile.Email }}</td>
-                                <td data-title="Employee Id">{{userprofile.EmployeeId}}</td>
-                                <td data-title="Department Name">{{userprofile.DepartmentName}}</td>
-                                <td data-title="Main Contact">{{userprofile.MainContact}}</td>
-                                <td data-title="Alternate Contact">{{userprofile.AlternateContact}}</td>
-                                <td data-title="Passport Details">{{userprofile.PassportDetails}}</td>
-                                <td data-title="Nationality">{{userprofile.Nationality}}</td>
-                                <td data-title="Gender">{{userprofile.Gender}}</td>
-                                <td data-title="Visa Details">{{userprofile.VisaDetails}}</td>
-                                <td data-title="Training Details">{{userprofile.TrainingDetails}}</td>
-                                <td data-title="Next Of Kins">{{userprofile.NOKDetails}}</td>
-                                <td data-title="Error Reason">{{userprofile.ErrorReason}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </responsive-table>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <responsive-table>
+                            <table responsive-table-body>
+                                <thead>
+                                    <tr>
+                                        <th>User Id</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Employee Id</th>
+                                        <th>Department Name</th>
+                                        <th>Main Contact</th>
+                                        <th>Alternate Contact</th>
+                                        <th>Passport Details</th>
+                                        <th>Nationality</th>
+                                        <th>Gender</th>
+                                        <th>Visa Details</th>
+                                        <th>Training Details</th>
+                                        <th>Next Of Kins</th>
+                                        <th>Error Reason</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr [hidden]="invalidUserProfiles.length != 0">
+                                        <td colspan="14">No records found.</td>
+                                    </tr>
+                                    <tr *ngFor="let userprofile of invalidUserProfiles">
+                                        <td data-title="User Id">{{userprofile.UserId}}&nbsp;</td>
+                                        <td data-title="Name">{{userprofile.Name}}&nbsp;</td>
+                                        <td data-title="Email">{{userprofile.Email }}&nbsp;</td>
+                                        <td data-title="Employee Id">{{userprofile.EmployeeId}}&nbsp;</td>
+                                        <td data-title="Department Name">{{userprofile.DepartmentName}}&nbsp;</td>
+                                        <td data-title="Main Contact">{{userprofile.MainContact}}&nbsp;</td>
+                                        <td data-title="Alternate Contact">{{userprofile.AlternateContact}}&nbsp;</td>
+                                        <td data-title="Passport Details">{{userprofile.PassportDetails}}&nbsp;</td>
+                                        <td data-title="Nationality">{{userprofile.Nationality}}&nbsp;</td>
+                                        <td data-title="Gender">{{userprofile.Gender}}&nbsp;</td>
+                                        <td data-title="Visa Details">{{userprofile.VisaDetails}}&nbsp;</td>
+                                        <td data-title="Training Details">{{userprofile.TrainingDetails}}&nbsp;</td>
+                                        <td data-title="Next Of Kins">{{userprofile.NOKDetails}}&nbsp;</td>
+                                        <td data-title="Error Reason">{{userprofile.ErrorReason}}&nbsp;</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </responsive-table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -59,7 +59,7 @@
                                 <tbody>
                                     <tr>
                                         <td data-title="" width="25%"><strong>Total Passengers:</strong></td>
-                                        <td data-title="">{{peopleOnBoard.totalAffectedPassengerCount | padding: '0': 2}}</td>
+                                        <td data-title="">{{peopleOnBoard.totalAffectedPassengerCount | padding: '0': 2}}&nbsp;</td>
                                     </tr>
                                     <!-- <tr>
                                         <td data-title="Enquired Passengers:"><strong>Enquired Passengers:</strong></td>
@@ -68,10 +68,10 @@
                                     <tr>
                                         <td data-title=""><strong>Gender Wise Passengers:</strong></td>
                                         <td data-title="">
-                                            <span><strong>M:</strong> {{peopleOnBoard.totalGenderTypeCount | mfcicount:'M'}}</span>
-                                            <span><strong>F:</strong> {{peopleOnBoard.totalGenderTypeCount | mfcicount:'F'}}</span>
-                                            <span><strong>C:</strong> {{peopleOnBoard.totalGenderTypeCount | mfcicount:'CHD'}}</span>
-                                            <span><strong>I:</strong> {{peopleOnBoard.totalGenderTypeCount | mfcicount:'INF'}}</span>
+                                            <span><strong>M:</strong> {{peopleOnBoard.totalGenderTypeCount | mfcicount:'M'}}&nbsp;</span>
+                                            <span><strong>F:</strong> {{peopleOnBoard.totalGenderTypeCount | mfcicount:'F'}}&nbsp;</span>
+                                            <span><strong>C:</strong> {{peopleOnBoard.totalGenderTypeCount | mfcicount:'CHD'}}&nbsp;</span>
+                                            <span><strong>I:</strong> {{peopleOnBoard.totalGenderTypeCount | mfcicount:'INF'}}&nbsp;</span>
                                             <!-- <span *ngFor="let gender of peopleOnBoard.totalGenderTypeCount">
                                                 <span *ngIf="gender.Key != ''">{{gender.Key}}: {{gender.Value}}</span>
                                                 <span *ngIf="gender.Key == '' || gender.Key == 'null'">Not Mentioned: {{gender.Value}}</span>
@@ -157,15 +157,15 @@
                                         <td data-title="Records" colspan="9">No passenger to show.</td>
                                     </tr>
                                     <tr *ngFor="let passenger of passengerList | async">
-                                        <td data-title="Passenger Name">{{passenger.PassengerName}}</td>
-                                        <td data-title="PNR">{{passenger.Pnr}}</td>
-                                        <td data-title="Seat Number">{{passenger.Seatno}}</td>
-                                        <td data-title="Baggage Count">{{passenger.BaggageCount}}</td>
-                                        <td data-title="Destination">{{passenger.Destination}}</td>
-                                        <td data-title="Gender">{{passenger.PassengerGender}}</td>
-                                        <td data-title="Nationality">{{passenger.PassengerNationality}}</td>
-                                        <td data-title="Contact Number">{{passenger.ContactNumber}}</td>
-                                        <td data-title="PAX Type">{{passenger.PassengerType}}</td>
+                                        <td data-title="Passenger Name">{{passenger.PassengerName}}&nbsp;</td>
+                                        <td data-title="PNR">{{passenger.Pnr}}&nbsp;</td>
+                                        <td data-title="Seat Number">{{passenger.Seatno}}&nbsp;</td>
+                                        <td data-title="Baggage Count">{{passenger.BaggageCount}}&nbsp;</td>
+                                        <td data-title="Destination">{{passenger.Destination}}&nbsp;</td>
+                                        <td data-title="Gender">{{passenger.PassengerGender}}&nbsp;</td>
+                                        <td data-title="Nationality">{{passenger.PassengerNationality}}&nbsp;</td>
+                                        <td data-title="Contact Number">{{passenger.ContactNumber}}&nbsp;</td>
+                                        <td data-title="PAX Type">{{passenger.PassengerType}}&nbsp;</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -232,18 +232,18 @@
                                 <td data-title="Records" colspan="12">No cargo to show.</td>
                             </tr>
                             <tr *ngFor="let cargo of cargoList | async">
-                                <td data-title="AWB Number">{{cargo.AWB}}</td>
-                                <td data-title="POL">{{cargo.POL}}</td>
-                                <td data-title="POU">{{cargo.POU}}</td>
-                                <td data-title="Cargo Pieces">{{cargo.mftpcs}}</td>
-                                <td data-title="Cargo Weight">{{cargo.mftwgt}}</td>
-                                <td data-title="Cargo Type">{{cargo.CargoType}}</td>
-                                <td data-title="Origin">{{cargo.Origin}}</td>
-                                <td data-title="Destination">{{cargo.Destination}}</td>
-                                <td data-title="Shipper name">{{cargo.ShipperName}}</td>
-                                <td data-title="Shipper Address">{{cargo.ShipperAddress}}</td>
-                                <td data-title="Shipper Contact Number">{{cargo.ShipperContactNo}}</td>
-                                <td data-title="Document Path">{{cargo.AWBDocPath}}</td>
+                                <td data-title="AWB Number">{{cargo.AWB}}&nbsp;</td>
+                                <td data-title="POL">{{cargo.POL}}&nbsp;</td>
+                                <td data-title="POU">{{cargo.POU}}&nbsp;</td>
+                                <td data-title="Cargo Pieces">{{cargo.mftpcs}}&nbsp;</td>
+                                <td data-title="Cargo Weight">{{cargo.mftwgt}}&nbsp;</td>
+                                <td data-title="Cargo Type">{{cargo.CargoType}}&nbsp;</td>
+                                <td data-title="Origin">{{cargo.Origin}}&nbsp;</td>
+                                <td data-title="Destination">{{cargo.Destination}}&nbsp;</td>
+                                <td data-title="Shipper name">{{cargo.ShipperName}}&nbsp;</td>
+                                <td data-title="Shipper Address">{{cargo.ShipperAddress}}&nbsp;</td>
+                                <td data-title="Shipper Contact Number">{{cargo.ShipperContactNo}}&nbsp;</td>
+                                <td data-title="Document Path">{{cargo.AWBDocPath}}&nbsp;</td>
                             </tr>
                         </tbody>
                     </table>
@@ -280,8 +280,8 @@
                                         <td data-title="Records" colspan="2">No passenger to show.</td>
                                     </tr>
                                     <tr *ngFor="let gender of peopleOnBoard.totalGenderTypeCount">
-                                        <td data-title="Gender">{{gender.Key}}</td>
-                                        <td data-title="Count">{{gender.Value}}</td>
+                                        <td data-title="Gender">{{gender.Key}}&nbsp;</td>
+                                        <td data-title="Count">{{gender.Value}}&nbsp;</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -303,8 +303,8 @@
                                         <td data-title="Records" colspan="2">No passenger to show.</td>
                                     </tr>
                                     <tr *ngFor="let nationality of peopleOnBoard.totalNationalityTypeCount">
-                                        <td data-title="Nationality">{{nationality.Key}}</td>
-                                        <td data-title="Count">{{nationality.Value}}</td>
+                                        <td data-title="Nationality">{{nationality.Key}}&nbsp;</td>
+                                        <td data-title="Count">{{nationality.Value}}&nbsp;</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -326,8 +326,8 @@
                                         <td data-title="Records" colspan="2">No passenger to show.</td>
                                     </tr>
                                     <tr *ngFor="let paxType of peopleOnBoard.totalPaxTypeCount">
-                                        <td data-title="Passenger Type">{{paxType.Key}}</td>
-                                        <td data-title="Count">{{paxType.Value}}</td>
+                                        <td data-title="Passenger Type">{{paxType.Key}}&nbsp;</td>
+                                        <td data-title="Count">{{paxType.Value}}&nbsp;</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -367,13 +367,13 @@
                                 <td data-title="Records" colspan="7">No passenger to show.</td>
                             </tr>
                             <tr *ngFor="let passenger of affectedEnquiredPeoples | async">
-                                <td data-title="Passenger Name">{{passenger.PassengerName}}</td>
-                                <td data-title="PNR">{{passenger.Pnr}}</td>
-                                <td data-title="Seat Number">{{passenger.Seatno}}</td>
-                                <td data-title="Baggage Count">{{passenger.BaggageCount}}</td>
-                                <td data-title="Destination">{{passenger.Destination}}</td>
-                                <td data-title="Contact Number">{{passenger.ContactNumber}}</td>
-                                <td data-title="PAX Type">{{passenger.PassengerType}}</td>
+                                <td data-title="Passenger Name">{{passenger.PassengerName}}&nbsp;</td>
+                                <td data-title="PNR">{{passenger.Pnr}}&nbsp;</td>
+                                <td data-title="Seat Number">{{passenger.Seatno}}&nbsp;</td>
+                                <td data-title="Baggage Count">{{passenger.BaggageCount}}&nbsp;</td>
+                                <td data-title="Destination">{{passenger.Destination}}&nbsp;</td>
+                                <td data-title="Contact Number">{{passenger.ContactNumber}}&nbsp;</td>
+                                <td data-title="PAX Type">{{passenger.PassengerType}}&nbsp;</td>
                             </tr>
                         </tbody>
                     </table>
@@ -419,20 +419,20 @@
                                 </thead>
                                 <tbody>
                                     <tr *ngIf="!(crewList | async)?.length>0">
-                                        <td data-title="Records" colspan="11">No crew to show.</td>
+                                        <td data-title="Records" colspan="9">No crew to show.</td>
                                     </tr>
                                     <tr *ngFor="let crew of crewList | async">
-                                        <td data-title="Employee Number">{{crew.EmployeeNumber}}</td>
-                                        <td data-title="Employee Name">{{crew.CrewName | uppercase}}</td>
-                                        <td data-title="Contact Number">{{crew.ContactNumber}}</td>
-                                        <td data-title="Assigned Category">{{crew.AsgCat}}</td>
-                                        <td data-title="Operating Crew">{{crew.DeadheadCrew}}</td>
-                                        <td data-title="Base Location">{{crew.BaseLocation}}</td>
-                                        <td data-title="Departure Station">{{crew.DepartureStationCode}}</td>
-                                        <td data-title="Arrival Station">{{crew.ArrivalStationCode}}</td>
-                                        <!-- <td data-title="Flight Number">{{crew.FlightNo}}</td> -->
-                                        <!-- <td data-title="Work Position">{{crew.WorkPosition}}</td> -->
-                                        <td data-title="Email Id">{{crew.Email}}</td>
+                                        <td data-title="Employee Number">{{crew.EmployeeNumber}}&nbsp;</td>
+                                        <td data-title="Employee Name">{{crew.CrewName | uppercase}}&nbsp;</td>
+                                        <td data-title="Contact Number">{{crew.ContactNumber}}&nbsp;</td>
+                                        <td data-title="Assigned Category">{{crew.AsgCat}}&nbsp;</td>
+                                        <td data-title="Operating Crew">{{crew.DeadheadCrew}}&nbsp;</td>
+                                        <td data-title="Base Location">{{crew.BaseLocation}}&nbsp;</td>
+                                        <td data-title="Departure Station">{{crew.DepartureStationCode}}&nbsp;</td>
+                                        <td data-title="Arrival Station">{{crew.ArrivalStationCode}}&nbsp;</td>
+                                        <!-- <td data-title="Flight Number">{{crew.FlightNo}}&nbsp;</td> -->
+                                        <!-- <td data-title="Work Position">{{crew.WorkPosition}}&nbsp;</td> -->
+                                        <td data-title="Email Id">{{crew.Email}}&nbsp;</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -473,20 +473,20 @@
                         </thead>
                         <tbody>
                             <tr *ngIf="!(affectedEnquiredCrews | async)?.length>0">
-                                <td data-title="Records" colspan="11">No crew to show.</td>
+                                <td data-title="Records" colspan="9">No crew to show.</td>
                             </tr>
                             <tr *ngFor="let crew of affectedEnquiredCrews | async">
-                                <td data-title="Employee Number">{{crew.EmployeeNumber}}</td>
-                                <td data-title="Employee Name">{{crew.CrewName | uppercase}}</td>
-                                <td data-title="Contact Number">{{crew.ContactNumber}}</td>
-                                <td data-title="Assigned Category">{{crew.AsgCat}}</td>
-                                <td data-title="Operating Crew">{{crew.DeadheadCrew}}</td>
-                                <td data-title="Base Location">{{crew.BaseLocation}}</td>
-                                <td data-title="Departure Station">{{crew.DepartureStationCode}}</td>
-                                <td data-title="Arrival Station">{{crew.ArrivalStationCode}}</td>
+                                <td data-title="Employee Number">{{crew.EmployeeNumber}}&nbsp;</td>
+                                <td data-title="Employee Name">{{crew.CrewName | uppercase}}&nbsp;</td>
+                                <td data-title="Contact Number">{{crew.ContactNumber}}&nbsp;</td>
+                                <td data-title="Assigned Category">{{crew.AsgCat}}&nbsp;</td>
+                                <td data-title="Operating Crew">{{crew.DeadheadCrew}}&nbsp;</td>
+                                <td data-title="Base Location">{{crew.BaseLocation}}&nbsp;</td>
+                                <td data-title="Departure Station">{{crew.DepartureStationCode}}&nbsp;</td>
+                                <td data-title="Arrival Station">{{crew.ArrivalStationCode}}&nbsp;</td>
                                 <!-- <td data-title="Flight Number">{{crew.FlightNo}}</td> -->
                                 <!-- <td data-title="Work Position">{{crew.WorkPosition}}</td> -->
-                                <td data-title="Email Id">{{crew.Email}}</td>
+                                <td data-title="Email Id">{{crew.Email}}&nbsp;</td>
                             </tr>
                         </tbody>
                     </table>
@@ -521,15 +521,15 @@
                         </thead>
                         <tbody>
                             <tr *ngIf="!(groundVictimList | async)?.length>0">
-                                <td data-title="Records" colspan="6">No ground victim to show.</td>
+                                <td data-title="Records" colspan="5">No ground victim to show.</td>
                             </tr>
                             <tr *ngFor="let affected of groundVictimList | async">
-                                <td data-title="Ground Victim Type">{{affected.GroundVictimType}}</td>
-                                <td data-title="Victim Name">{{affected.GroundVictimName}}</td>
+                                <td data-title="Ground Victim Type">{{affected.GroundVictimType}}&nbsp;</td>
+                                <td data-title="Victim Name">{{affected.GroundVictimName}}&nbsp;</td>
                                 <!-- <td data-title="Affected Count">{{affected.AffectedCount}}</td> -->
-                                <td data-title="Status">{{affected.Status}}</td>
-                                <td data-title="NOK Name">{{affected.NOKName}}</td>
-                                <td data-title="NOK Contact Number">{{affected.NOKContactNumber}}</td>
+                                <td data-title="Status">{{affected.Status}}&nbsp;</td>
+                                <td data-title="NOK Name">{{affected.NOKName}}&nbsp;</td>
+                                <td data-title="NOK Contact Number">{{affected.NOKContactNumber}}&nbsp;</td>
                             </tr>
                         </tbody>
                     </table>

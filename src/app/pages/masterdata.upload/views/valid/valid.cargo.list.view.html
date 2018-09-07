@@ -22,25 +22,25 @@
         </thead>
         <tbody>
             <tr *ngIf="cargoes.length<=0">
-                <td data-title="Records" colspan="6">No records to show.</td>
+                <td data-title="Records" colspan="15">No records to show.</td>
             </tr>
             <tr *ngFor="let affected of cargoes">
                 <!-- <td data-title="Flight Details">{{affected.FlightDetails}}</td> -->
-                <td data-title="POL">{{affected.POL}}</td>
-                <td data-title="POU">{{affected.POU}}</td>
-                <td data-title="AWB">{{affected.AWB}}</td>
-                <td data-title="Manifest Pieces">{{affected.mftpcs}}</td>
-                <td data-title="Manifest Weight">{{affected.mftwgt}}</td>
-                <td data-title="Shipper’s Name">{{affected.ShipperName}}</td>
-                <td data-title="Shipper’s Address">{{affected.ShipperAddress}}</td>
-                <td data-title="Shipper’s Contact Number">{{affected.ShipperContactNo}}</td>
-                <td data-title="Consignee's Name">{{affected.ConsigneeName}}</td>
-                <td data-title="Consignee's Address">{{affected.ConsigneeAddress}}</td>
-                <td data-title="Consignee's Contact Number">{{affected.ConsigneeContactNo}}</td>
-                <td data-title="Origin">{{affected.Origin}}</td>
-                <td data-title="Destination">{{affected.Destination}}</td>
-                <td data-title="Cargo Type">{{affected.CargoType}}</td>
-                <td data-title="Advisory To Consignee">{{affected.AdvisoryToConsignee}}</td>
+                <td data-title="POL">{{affected.POL}}&nbsp;</td>
+                <td data-title="POU">{{affected.POU}}&nbsp;</td>
+                <td data-title="AWB">{{affected.AWB}}&nbsp;</td>
+                <td data-title="Manifest Pieces">{{affected.mftpcs}}&nbsp;</td>
+                <td data-title="Manifest Weight">{{affected.mftwgt}}&nbsp;</td>
+                <td data-title="Shipper’s Name">{{affected.ShipperName}}&nbsp;</td>
+                <td data-title="Shipper’s Address">{{affected.ShipperAddress}}&nbsp;</td>
+                <td data-title="Shipper’s Contact Number">{{affected.ShipperContactNo}}&nbsp;</td>
+                <td data-title="Consignee's Name">{{affected.ConsigneeName}}&nbsp;</td>
+                <td data-title="Consignee's Address">{{affected.ConsigneeAddress}}&nbsp;</td>
+                <td data-title="Consignee's Contact Number">{{affected.ConsigneeContactNo}}&nbsp;</td>
+                <td data-title="Origin">{{affected.Origin}}&nbsp;</td>
+                <td data-title="Destination">{{affected.Destination}}&nbsp;</td>
+                <td data-title="Cargo Type">{{affected.CargoType}}&nbsp;/td>
+                <td data-title="Advisory To Consignee">{{affected.AdvisoryToConsignee}}&nbsp;</td>
             </tr>
         </tbody>
     </table>

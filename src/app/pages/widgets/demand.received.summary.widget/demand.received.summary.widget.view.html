@@ -15,7 +15,8 @@
                     <span>{{demandReceivedSummary.demandAllocatedCount | padding: '0': 2}}</span>
                 </span>
                 <span class="widget-text">Allocated</span>
-                <span  *ngIf="isShowViewAll | accesibility:initiatedDepartmentId:'DemandReceivedViewAll'" (click)="openViewAllDemandReceivedSummary()" class="widget-text view-all-style">View All</span>
+                <span *ngIf="isShowViewAll | accesibility:initiatedDepartmentId:'DemandReceivedViewAll'" (click)="openViewAllDemandReceivedSummary()"
+                    class="widget-text view-all-style">View All</span>
             </div>
             <div class="col widget-block">
                 <span class="widget-number">
@@ -23,15 +24,16 @@
                     <span>{{demandReceivedSummary.demandCompletedCount | padding: '0': 2}}</span>
                 </span>
                 <span class="widget-text">Completed</span>
-                <span  *ngIf="isShowViewSub | accesibility:initiatedDepartmentId:'DemandReceivedSubDept'" (click)="openViewAllSubDeptDemandReceivedSummary()" class="widget-text view-all-style">Sub-Dept</span>
+                <span *ngIf="isShowViewSub | accesibility:initiatedDepartmentId:'DemandReceivedSubDept'" (click)="openViewAllSubDeptDemandReceivedSummary()"
+                    class="widget-text view-all-style">Sub-Dept</span>
             </div>
         </div>
     </div>
 </div>
 
 <!--Depand Popup-->
-<div bsModal #childModalViewAllDemandReceivedSummary="bs-modal"  (onShown)="onViewAllDemandReceivedShown($event)" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-    aria-hidden="true">
+<div bsModal #childModalViewAllDemandReceivedSummary="bs-modal" (onShown)="onViewAllDemandReceivedShown($event)" class="modal fade"
+    tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -60,19 +62,19 @@
                                             <tr *ngFor="let demand of allDemandReceivedList | async">
                                                 <td data-title="Target Department">
                                                     <a href="javascript:void(0);" (click)="GetDemandReceivedGraph(demand.departmentId, $event)">
-                                                    {{demand.targetDepartmentName}}
+                                                        {{demand.targetDepartmentName}}&nbsp;
                                                     </a>
                                                 </td>
-                                                <td data-title="Allocated">{{demand.assigned}}</td>
+                                                <td data-title="Allocated">{{demand.assigned}}&nbsp;</td>
                                                 <td data-title="Completed">
                                                     <a href="javascript:void(0);" (click)="showAllDeptSubCompletedFunc(demand.demandModelList)">
-                                                        {{demand.completed}}
+                                                        {{demand.completed}}&nbsp;
                                                     </a>
                                                 </td>
                                                 <td data-title="Pending">
                                                     <a href="javascript:void(0);" (click)="showAllDeptSubPendingFunc(demand.demandModelList)">
-                                                    {{demand.pending}}
-                                                </a>
+                                                        {{demand.pending}}&nbsp;
+                                                    </a>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -107,9 +109,10 @@
                                                 <td data-title="Records" colspan="4">No demands to show.</td>
                                             </tr>
                                             <tr *ngFor="let allDeptDemandReceivedCompleted of allDeptDemandReceivedSummaries">
-                                                <td data-title="Description">{{allDeptDemandReceivedCompleted.description}}</td>
-                                                <td data-title="Target Department">{{allDeptDemandReceivedCompleted.requesterDepartmentName}}</td>
-                                                <td data-title="Schedule Close Time">{{allDeptDemandReceivedCompleted.scheduleCloseTime | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                                                <td data-title="Description">{{allDeptDemandReceivedCompleted.description}}&nbsp;</td>
+                                                <td data-title="Target Department">{{allDeptDemandReceivedCompleted.requesterDepartmentName}}&nbsp;</td>
+                                                <td data-title="Schedule Close Time">{{allDeptDemandReceivedCompleted.scheduleCloseTime
+                                                    | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
                                                 <td data-title="RAG">
                                                     <span [ngClass]="allDeptDemandReceivedCompleted.RagStatus"></span>
                                                 </td>
@@ -142,9 +145,10 @@
                                                 <td data-title="Records" colspan="4">No demands to show.</td>
                                             </tr>
                                             <tr *ngFor="let allDeptDemandReceivedCompleted of allDeptDemandReceivedSummaries">
-                                                <td data-title="Description">{{allDeptDemandReceivedCompleted.description}}</td>
-                                                <td data-title="Target Department">{{allDeptDemandReceivedCompleted.requesterDepartmentName}}</td>
-                                                <td data-title="Schedule Close Time">{{allDeptDemandReceivedCompleted.scheduleCloseTime | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                                                <td data-title="Description">{{allDeptDemandReceivedCompleted.description}}&nbsp;</td>
+                                                <td data-title="Target Department">{{allDeptDemandReceivedCompleted.requesterDepartmentName}}&nbsp;</td>
+                                                <td data-title="Schedule Close Time">{{allDeptDemandReceivedCompleted.scheduleCloseTime
+                                                    | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
                                                 <td data-title="RAG">
                                                     <span [ngClass]="allDeptDemandReceivedCompleted.RagStatus"></span>
                                                 </td>
@@ -185,13 +189,13 @@
                                 <td data-title="Records" colspan="5">No demands to show.</td>
                             </tr>
                             <tr *ngFor="let demand of subDemandReceivedList | async">
-                                <td data-title="Target Department">{{demand.targetDepartmentName}}</td>
-                                <td data-title="Allocated">{{demand.assigned}}</td>
+                                <td data-title="Target Department">{{demand.targetDepartmentName}}&nbsp;</td>
+                                <td data-title="Allocated">{{demand.assigned}}&nbsp;</td>
                                 <td data-title="Completed">
-                                    <a href="javascript:void(0)" (click)="showSubDeptSubCompletedFunc(demand.demandModelList)">{{demand.completed}}</a>
+                                    <a href="javascript:void(0)" (click)="showSubDeptSubCompletedFunc(demand.demandModelList)">{{demand.completed}}&nbsp;</a>
                                 </td>
                                 <td data-title="Pending">
-                                    <a href="javascript:void(0)" (click)="showSubDeptSubPendingFunc(demand.demandModelList)">{{demand.pending}}</a>
+                                    <a href="javascript:void(0)" (click)="showSubDeptSubPendingFunc(demand.demandModelList)">{{demand.pending}}&nbsp;</a>
                                 </td>
                             </tr>
                         </tbody>
@@ -219,9 +223,10 @@
                                         <td data-title="Records" colspan="4">No demands to show.</td>
                                     </tr>
                                     <tr *ngFor="let subDeptDemandReceivedCompleted of subDeptDemandReceivedSummaries">
-                                        <td data-title="Description">{{subDeptDemandReceivedCompleted.description}}</td>
-                                        <td data-title="Target Department">{{subDeptDemandReceivedCompleted.requesterDepartmentName}}</td>
-                                        <td data-title="Schedule Close Time">{{subDeptDemandReceivedCompleted.scheduleCloseTime | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                                        <td data-title="Description">{{subDeptDemandReceivedCompleted.description}}&nbsp;</td>
+                                        <td data-title="Target Department">{{subDeptDemandReceivedCompleted.requesterDepartmentName}}&nbsp;</td>
+                                        <td data-title="Schedule Close Time">{{subDeptDemandReceivedCompleted.scheduleCloseTime
+                                            | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
                                         <td data-title="RAG">
                                             <span [ngClass]="subDeptDemandReceivedCompleted.RagStatus"></span>
                                         </td>
@@ -252,9 +257,10 @@
                                         <td data-title="Records" colspan="4">No demands to show.</td>
                                     </tr>
                                     <tr *ngFor="let subDeptDemandReceivedCompleted of subDeptDemandReceivedSummaries">
-                                        <td data-title="Description">{{subDeptDemandReceivedCompleted.description}}</td>
-                                        <td data-title="Requester Department">{{subDeptDemandReceivedCompleted.requesterDepartmentName}}</td>
-                                        <td data-title="Schedule Close Time">{{subDeptDemandReceivedCompleted.scheduleCloseTime | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                                        <td data-title="Description">{{subDeptDemandReceivedCompleted.description}}&nbsp;</td>
+                                        <td data-title="Requester Department">{{subDeptDemandReceivedCompleted.requesterDepartmentName}}&nbsp;</td>
+                                        <td data-title="Schedule Close Time">{{subDeptDemandReceivedCompleted.scheduleCloseTime
+                                            | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
                                         <td data-title="RAG">
                                             <span [ngClass]="subDeptDemandReceivedCompleted.RagStatus"></span>
                                         </td>

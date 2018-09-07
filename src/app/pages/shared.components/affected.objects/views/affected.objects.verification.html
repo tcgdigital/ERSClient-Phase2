@@ -1,47 +1,57 @@
 <div class="row">
     <div class="col-lg-10 col-md-9 text-right">
-        <label>Verified Cargo Manifest</label>
-        <a target="_blank" href="{{downloadPath}}" download="VerifiedCargoManifest"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+        <a target="_blank" href="{{downloadPath}}" download="VerifiedCargoManifest">
+            <i class="fa fa-download fa-2x" aria-hidden="true"></i>&nbsp; Verified Cargo Manifest
+        </a>
     </div>
     <div class="col-lg-2 col-md-3 text-right">
         <button class="btn btn-primary" type="button" (click)="saveVerifiedObjects()" *ngIf="!isArchive">Verify</button>
     </div>
 </div>
-<div class="d-block d-lg-none">
-    <md-checkbox id="IsAutoApproved" [(ngModel)]="allSelectVerify" (change)="selectAllVerify($event)" aria-label="Add">Verify</md-checkbox>
+
+<div class="row">
+    <div class="col-sm-12 d-block d-lg-none">
+        <md-checkbox id="IsAutoApproved" [(ngModel)]="allSelectVerify" (change)="selectAllVerify($event)" aria-label="Add">Verify</md-checkbox>
+    </div>
 </div>
-<responsive-table>
-    <table responsive-table-body>
-        <thead>
-            <tr>
-                <th>
-                    <md-checkbox  [disabled] ="isArchive" class="Marght" id="IsAutoApproved" [(ngModel)]="allSelectVerify" (change)="selectAllVerify($event)" aria-label="Add">Verify</md-checkbox>
-                </th>
-                <th>Reference Number</th>
-                <th>Air Way Bill</th>
-                <th>Manifest Pieces</th>
-                <th>Manifest weight(kg)</th>
-                <th>POL</th>
-                <th>POU</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr [hidden]="affectedObjectsForVerification.length != 0">
-                <td colspan="7">No Verified Cargo is available.</td>
-            </tr>
-            <tr *ngFor="let affectedObject of affectedObjectsForVerification">
-                <td data-title="Verify">
-                    <md-checkbox class="Marght" id="IsVerified" [(ngModel)]="affectedObject.IsVerified" aria-label="Add" (change)="isVerifiedStatusChange()"
-                        [disabled]="isArchive">
-                    </md-checkbox>
-                </td>
-                <td data-title="Reference Number">{{affectedObject.TicketNumber}}&nbsp;</td>
-                <td data-title="Air Way Bill">{{affectedObject.AWB}}&nbsp;</td>
-                <td data-title="Manifest Pieces">{{affectedObject.mftpcs}}&nbsp;</td>
-                <td data-title="Manifest weight">{{affectedObject.mftwgt}}&nbsp;</td>
-                <td data-title="POL">{{affectedObject.POL}}&nbsp;</td>
-                <td data-title="POU">{{affectedObject.POU}}&nbsp;</td>
-            </tr>
-        </tbody>
-    </table>
-</responsive-table>
+
+<div class="row">
+    <div class="col-sm-12">
+        <responsive-table>
+            <table responsive-table-body>
+                <thead>
+                    <tr>
+                        <th>
+                            <md-checkbox [disabled]="isArchive" class="Marght" id="IsAutoApproved" [(ngModel)]="allSelectVerify" (change)="selectAllVerify($event)"
+                                aria-label="Add">Verify</md-checkbox>
+                        </th>
+                        <th>Reference Number</th>
+                        <th>Air Way Bill</th>
+                        <th>Manifest Pieces</th>
+                        <th>Manifest weight(kg)</th>
+                        <th>POL</th>
+                        <th>POU</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr [hidden]="affectedObjectsForVerification.length != 0">
+                        <td colspan="7">No Verified Cargo is available.</td>
+                    </tr>
+                    <tr *ngFor="let affectedObject of affectedObjectsForVerification">
+                        <td data-title="Verify">
+                            <md-checkbox class="Marght" id="IsVerified" [(ngModel)]="affectedObject.IsVerified" aria-label="Add" (change)="isVerifiedStatusChange()"
+                                [disabled]="isArchive">
+                            </md-checkbox>
+                        </td>
+                        <td data-title="Reference Number">{{affectedObject.TicketNumber}}&nbsp;</td>
+                        <td data-title="Air Way Bill">{{affectedObject.AWB}}&nbsp;</td>
+                        <td data-title="Manifest Pieces">{{affectedObject.mftpcs}}&nbsp;</td>
+                        <td data-title="Manifest weight">{{affectedObject.mftwgt}}&nbsp;</td>
+                        <td data-title="POL">{{affectedObject.POL}}&nbsp;</td>
+                        <td data-title="POU">{{affectedObject.POU}}&nbsp;</td>
+                    </tr>
+                </tbody>
+            </table>
+        </responsive-table>
+    </div>
+</div>

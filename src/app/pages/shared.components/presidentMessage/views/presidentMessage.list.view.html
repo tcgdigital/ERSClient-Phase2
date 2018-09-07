@@ -1,39 +1,44 @@
-<responsive-table>
-    <table responsive-table-body>
-        <thead>
-            <tr>
-                <th>President's Message Releases</th>
-                <th>Status</th>
-                <th>Created On</th>
-                <th>Sent For Approval On</th>
-                <th>Approved On</th>
-                <th>Published On</th>
-                <th>Edit</th>
-                <th>Download Report</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngIf="!PresidentsMessages.length">
-                <td colspan="10">No Message to show.</td>
-            </tr>
-            <tr *ngFor="let message of PresidentsMessages">
-                <td data-title="President's Message Releases" width="30%">{{message.PresidentMessageType}}</td>
-                <td data-title="Status">{{message.PresidentMessageStatus=== 'SentForApproval' ? 'Sent For Approval': message.PresidentMessageStatus}}</td>
-                <td data-title="Created On">{{message.CreatedOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
-                <td data-title="Sent For Approval On">{{message.SentForApprovalOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
-                <td data-title="Approved On">{{message.ApprovedOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
-                <td data-title="Published On">{{message.PublishedOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
-                <td data-title="Edit">
-                    <span *ngIf="!isArchive">
-                        <i class="fa fa-edit fa-2x" (click)="UpdatePresidentMessage(message)"></i>
-                    </span>
-                </td>
-                <td data-title="Download Report">
-                    <a *ngIf="message.PresidentMessageStatus === 'Published'" target="_blank" href="{{downloadPath + message.PresidentsMessageId}}">
-                        <i class="fa fa-download fa-2x" aria-hidden="true"></i>
-                    </a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</responsive-table>
+<div class="row">
+    <div class="col-sm-12">
+        <responsive-table>
+            <table responsive-table-body>
+                <thead>
+                    <tr>
+                        <th>President's Message Releases</th>
+                        <th>Status</th>
+                        <th>Created On</th>
+                        <th>Sent For Approval On</th>
+                        <th>Approved On</th>
+                        <th>Published On</th>
+                        <th>Edit</th>
+                        <th>Download Report</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngIf="!PresidentsMessages.length">
+                        <td colspan="10">No Message to show.</td>
+                    </tr>
+                    <tr *ngFor="let message of PresidentsMessages">
+                        <td data-title="President's Message Releases" width="30%">{{message.PresidentMessageType}}&nbsp;</td>
+                        <td data-title="Status">{{message.PresidentMessageStatus=== 'SentForApproval' ? 'Sent For Approval':
+                            message.PresidentMessageStatus}}&nbsp;</td>
+                        <td data-title="Created On">{{message.CreatedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
+                        <td data-title="Sent For Approval On">{{message.SentForApprovalOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
+                        <td data-title="Approved On">{{message.ApprovedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
+                        <td data-title="Published On">{{message.PublishedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
+                        <td data-title="Edit">
+                            <span *ngIf="!isArchive">
+                                <i class="fa fa-edit fa-2x" (click)="UpdatePresidentMessage(message)"></i>
+                            </span>
+                        </td>
+                        <td data-title="Download Report">
+                            <a *ngIf="message.PresidentMessageStatus === 'Published'" target="_blank" href="{{downloadPath + message.PresidentsMessageId}}">
+                                <i class="fa fa-download fa-2x" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </responsive-table>
+    </div>
+</div>

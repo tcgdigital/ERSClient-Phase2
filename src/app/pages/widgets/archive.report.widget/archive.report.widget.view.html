@@ -88,8 +88,8 @@
                                 <td data-title="Records" colspan="5">No department is available.</td>
                             </tr>
                             <tr *ngFor="let departmentWiseClosureReport of departmentWiseClosureReports">
-                                <td data-title="Department">{{departmentWiseClosureReport.Department.DepartmentName}}</td>
-                                <td data-title="Closure Report">{{departmentWiseClosureReport.ClosureReport}}</td>
+                                <td data-title="Department">{{departmentWiseClosureReport.Department.DepartmentName}}&nbsp;</td>
+                                <td data-title="Closure Report">{{departmentWiseClosureReport.ClosureReport}}&nbsp;</td>
                             </tr>
                         </tbody>
                     </table>
@@ -122,7 +122,8 @@
                             <tr>
                                 <td data-title="Records"> Activity Log Report</td>
                                 <td data-title="Download">
-                                    <a target="_blank" href="{{downloadPath}}" class="download-icon" download="ActivityLogReport"><i class="fa fa-download fa" aria-hidden="true"></i></a>
+                                    <a target="_blank" href="{{downloadPath}}" class="download-icon" download="ActivityLogReport"><i
+                                            class="fa fa-download fa" aria-hidden="true"></i></a>
                                 </td>
                             </tr>
                             <tr *ngFor="let otherReport of otherReports">
@@ -130,7 +131,9 @@
                                 <td data-title="Document Type" *ngIf="otherReport.DocumentType=='2'">Audit Report</td>
                                 <!-- <td>Activity Log Report</td> -->
                                 <td data-title="Download">
-                                    <a class="download-icon" target="_self" href="{{otherReport.FilePathWithName}}" download="{{otherReport.FileName}}"><i class="fa fa-download fa" aria-hidden="true"></i></a>
+                                    <a class="download-icon" target="_self" href="{{otherReport.FilePathWithName}}" download="{{otherReport.FileName}}">
+                                        <i class="fa fa-download fa" aria-hidden="true"></i>
+                                    </a>
                                     <!-- <a target="_blank" href="{{downloadPath}}" download="ActivityLogReport"><i class="fa fa-download fa" aria-hidden="true"></i></a> -->
                                 </td>
                             </tr>

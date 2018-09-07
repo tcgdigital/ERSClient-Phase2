@@ -42,9 +42,9 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let mediaRelease of AllMediaReleases | async">
-                        <td data-title="Media Releases" width="30%">{{mediaRelease.MediaReleaseType}}</td>
-                        <td data-title="Status">{{mediaRelease.MediaReleaseStatus}}</td>
-                        <td data-title="Date">{{mediaRelease.PublishedOn | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                        <td data-title="Media Releases" width="30%">{{mediaRelease.MediaReleaseType}}&nbsp;</td>
+                        <td data-title="Status">{{mediaRelease.MediaReleaseStatus}}&nbsp;</td>
+                        <td data-title="Date">{{mediaRelease.PublishedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
                         <td data-title="Download Report">
                             <a *ngIf = "mediaRelease.IsPublished" target = "_blank" href="{{downloadPath + mediaRelease.MediaqueryId}}"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>                                                  
                         </td>

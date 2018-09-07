@@ -1,45 +1,48 @@
- <div class="row">
-    <div class="col-12 butt-des">
+<div class="row">
+    <div class="col-sm-12 butt-des">
         <input type="button" class="btn btn-primary" (click)="expandSearchPanel(expandSearch)" [ngModel]="searchValue" />
     </div>
 </div>
+
 <div class="row">
-    <div class="col-12" *ngIf="expandSearch">
+    <div class="col-sm-12" *ngIf="expandSearch">
         <generic-search [filterConfigs]="searchConfigs" (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();">
         </generic-search>
     </div>
-</div> 
+</div>
 
-
-<responsive-table>
-    <table responsive-table-body>
-        <thead>
-            <tr>
-                <th>DemandType</th>
-                <th>Auto Approved</th>
-                <th>Approver Department</th>
-                <th>IsActive</th>
-                <th>Edit</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr [hidden]="demandTypes.length != 0">
-                <td colspan="6">No records found.</td>
-            </tr>
-            <tr *ngFor="let demandType of demandTypes">
-                <td data-title="DemandType">{{demandType.DemandTypeName}}</td>
-                <td data-title="Auto Approved">{{demandType.IsAutoApproved}}</td>
-                <td data-title="Approver Department">{{(demandType.ApproverDepartment==null) ? "" : demandType.ApproverDepartment.DepartmentName}}</td>
-                <td data-title="Active">
-                    <md-checkbox class="Marght" id="IsActive" name="IsActive" [ngModel]="demandType.Active" (change)="IsActive($event,demandType)"
-                        aria-label="ActiveFlag">
-                    </md-checkbox>
-                </td>
-                <td data-title="Action">
-                    <i class="fa fa-edit fa-2x" (click)="edit(demandType)"></i>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-</responsive-table>
+<div class="row">
+    <div class="col-sm-12">
+        <responsive-table>
+            <table responsive-table-body>
+                <thead>
+                    <tr>
+                        <th>DemandType</th>
+                        <th>Auto Approved</th>
+                        <th>Approver Department</th>
+                        <th>IsActive</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr [hidden]="demandTypes.length != 0">
+                        <td colspan="6">No records found.</td>
+                    </tr>
+                    <tr *ngFor="let demandType of demandTypes">
+                        <td data-title="DemandType">{{demandType.DemandTypeName}}&nbsp;</td>
+                        <td data-title="Auto Approved">{{demandType.IsAutoApproved}}&nbsp;</td>
+                        <td data-title="Approver Department">{{(demandType.ApproverDepartment==null) ? "" : demandType.ApproverDepartment.DepartmentName}}&nbsp;</td>
+                        <td data-title="Active">
+                            <md-checkbox class="Marght" id="IsActive" name="IsActive" [ngModel]="demandType.Active" (change)="IsActive($event,demandType)"
+                                aria-label="ActiveFlag">
+                            </md-checkbox>
+                        </td>
+                        <td data-title="Action">
+                            <i class="fa fa-edit fa-2x" (click)="edit(demandType)"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </responsive-table>
+    </div>
+</div>

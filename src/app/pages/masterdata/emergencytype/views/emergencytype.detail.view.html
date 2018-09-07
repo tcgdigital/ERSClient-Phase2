@@ -1,42 +1,46 @@
 <div class="row">
-    <div class="col-12 butt-des">
+    <div class="col-sm-12 butt-des">
         <input type="button" class="btn btn-primary" (click)="expandSearchPanel(expandSearch)" [ngModel]="searchValue" />
     </div>
 </div>
+
 <div class="row">
-    <div class="col-12" *ngIf="expandSearch">
+    <div class="col-sm-12" *ngIf="expandSearch">
         <generic-search [filterConfigs]="searchConfigs" (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();">
         </generic-search>
     </div>
 </div>
 
-<responsive-table>
-    <table responsive-table-body>
-        <thead>
-            <tr>
-                <th>Crisis Type Name</th>
-                <th>Crisis Category</th>
-                <th>Status</th>
-                <th>Edit</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr [hidden]="emergencyTypes.length != 0">
-                <td colspan="6">No records found.</td>
-            </tr>
-            <tr *ngFor="let emergencyType of emergencyTypes">
-                <td data-title="Emergency Type Name">{{emergencyType.EmergencyTypeName}}</td>
-                <td data-title="Emergency Category">{{emergencyType.EmergencyCategory == 'FlightRelated' ? 'Flight Related': 'Non Flight Related'}}</td>
-                <td data-title="Active">
-                    <md-checkbox class="Marght" id="IsActive" name="IsActive" [ngModel]="emergencyType.Active"  aria-label="ActiveFlag" (change)="IsActive($event,emergencyType)">
-                    </md-checkbox>
-                </td>
-                <td data-title="Action">
-                    <i class="fa fa-edit fa-2x" (click)="UpdateEmergencyType(emergencyType)"></i>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-</responsive-table>
-
+<div class="row">
+    <div class="col-sm-12">
+        <responsive-table>
+            <table responsive-table-body>
+                <thead>
+                    <tr>
+                        <th>Crisis Type Name</th>
+                        <th>Crisis Category</th>
+                        <th>Status</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr [hidden]="emergencyTypes.length != 0">
+                        <td colspan="4">No records found.</td>
+                    </tr>
+                    <tr *ngFor="let emergencyType of emergencyTypes">
+                        <td data-title="Emergency Type Name">{{emergencyType.EmergencyTypeName}}&nbsp;</td>
+                        <td data-title="Emergency Category">{{emergencyType.EmergencyCategory == 'FlightRelated' ? 'Flight Related':
+                            'Non Flight Related'}}&nbsp;</td>
+                        <td data-title="Active">
+                            <md-checkbox class="Marght" id="IsActive" name="IsActive" [ngModel]="emergencyType.Active" aria-label="ActiveFlag" (change)="IsActive($event,emergencyType)">
+                            </md-checkbox>
+                        </td>
+                        <td data-title="Action">
+                            <i class="fa fa-edit fa-2x" (click)="UpdateEmergencyType(emergencyType)"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </responsive-table>
+    </div>
+</div>
