@@ -1,0 +1,8 @@
+<div class="row">
+    <div class="col-10">
+        <autocomplete [items]="quickLinkGroups" (notify)="onNotify($event)" (InvokeAutoCompleteReset)="invokeReset();"></autocomplete>
+    </div>
+    <div class="col-2" *ngIf="enableAddButton">
+        <button class="btn btn-primary" type="button" (click)="onAddGroupClick()">Add</button>
+    </div>
+</div>

@@ -1,11 +1,12 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { QuickLinkModel } from './quicklink.model';
 import { QuickLinkService } from './quicklink.service';
-import { Subject } from 'rxjs/Rx';
+import { Observable, Subject } from 'rxjs/Rx';
+
 
 import {
     ResponseModel, DataExchangeService, SearchConfigModel,
-    SearchTextBox, NameValue, GlobalConstants
+    SearchTextBox, NameValue, SearchDropdown, GlobalConstants
 } from '../../../../shared';
 
 @Component({
@@ -23,7 +24,7 @@ export class QuickLinkListComponent implements OnInit, OnDestroy {
     expandSearch: boolean = false;
     searchValue: string = "Expand Search";
     private ngUnsubscribe: Subject<any> = new Subject<any>();
-    
+
     constructor(private quicklinkService: QuickLinkService,
         private dataExchange: DataExchangeService<QuickLinkModel>) { }
 
@@ -48,6 +49,15 @@ export class QuickLinkListComponent implements OnInit, OnDestroy {
         this.quicklinks.unshift(data);
     }
 
+    onQuickLinkModifiedSuccess(data: QuickLinkModel): void {
+        let modifiedPosition = this.quicklinks.findIndex(x => x.QuickLinkId == data.QuickLinkId);
+        let currentData = this.quicklinks.find(x => x.QuickLinkId == data.QuickLinkId);
+        if (modifiedPosition > -1 && currentData) {
+            currentData.QuickLinkGroup = data.QuickLinkGroup;
+            this.quicklinks.splice(modifiedPosition, 1, currentData);
+        }
+    }
+
     expandSearchPanel(value): void {
         if (!value) {
             this.searchValue = "Hide Search Panel";
@@ -61,19 +71,30 @@ export class QuickLinkListComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.getQuickLinks();
         this.initiateSearchConfigurations();
+
         this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.QuickLinkModelSaved,
             (model: QuickLinkModel) => this.onQuickLinkSaveSuccess(model));
+
+        //quickLinkModelEdited
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.QuickLinkModelModified,
+            (model: QuickLinkModel) => this.onQuickLinkModifiedSuccess(model));
     }
 
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.QuickLinkModelSaved);
-
         this.ngUnsubscribe.next();
-		this.ngUnsubscribe.complete();
+        this.ngUnsubscribe.complete();
     }
 
     editQuickLink(editedQuickLink: QuickLinkModel): void {
         this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.QuickLinkModelEdited, editedQuickLink);
+    }
+
+    delQuickLink(quickLinkId: number, quickLink: QuickLinkModel): void {
+        this.quicklinkService.Delete(quickLinkId, quickLink)
+            .subscribe((response: QuickLinkModel) => {
+                this.getQuickLinks();
+            });
     }
 
     IsActive(event: any, editedQuickLink: QuickLinkModel): void {
@@ -109,6 +130,7 @@ export class QuickLinkListComponent implements OnInit, OnDestroy {
             })
         ];
     }
+
     invokeSearch(query: string): void {
         if (query !== '') {
             this.quicklinkService.GetQuery(query)

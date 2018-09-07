@@ -22,22 +22,29 @@ export class QuickLinkService extends ServiceBase<QuickLinkModel> {
     }
 
     GetAll(): Observable<ResponseModel<QuickLinkModel>> {
-        let checkLists: ResponseModel<QuickLinkModel>;
-        return this._dataService.Query().OrderBy("CreatedOn desc")
+        let quickLinks: ResponseModel<QuickLinkModel>;
+        return this._dataService
+            .Query()
+            .Expand('QuickLinkGroup($select=GroupName)')
+            .OrderBy("CreatedOn desc")
             .Execute().map((data: ResponseModel<QuickLinkModel>) => {
-                checkLists = data;
-                checkLists.Records.forEach(x => x.Active = (x.ActiveFlag == 'Active'));
-                return checkLists;
+                quickLinks = data;
+                quickLinks.Records.forEach(x => x.Active = (x.ActiveFlag == 'Active'));
+                return quickLinks;
             });
     }
 
      GetQuery(query: string): Observable<ResponseModel<QuickLinkModel>> {
-       let checkLists: ResponseModel<QuickLinkModel>;
-        return this._dataService.Query().OrderBy("CreatedOn desc")
+       let quickLinks: ResponseModel<QuickLinkModel>;
+        return this._dataService
+            .Query()
+            .Expand('QuickLinkGroup($select=GroupName)')
+            .OrderBy("CreatedOn desc")
             .Filter(query) .Execute().map((data: ResponseModel<QuickLinkModel>) => {
-                checkLists = data;
-                checkLists.Records.forEach(x => x.Active = (x.ActiveFlag == 'Active'));
-                return checkLists;
+                quickLinks = data;
+                quickLinks.Records.forEach(x => x.Active = (x.ActiveFlag == 'Active'));
+                return quickLinks;
+          
             });
     }
 }

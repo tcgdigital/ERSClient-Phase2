@@ -14,10 +14,12 @@
     <table responsive-table-body>
         <thead>
             <tr>
+                <th>Group</th>
                 <th>Quick Link Name</th>
                 <th>Quick Link URL</th>
                 <th>File Download</th>
                 <th>Edit</th>
+                <th>Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -25,6 +27,7 @@
                 <td colspan="6">No records found.</td>
             </tr>
             <tr *ngFor="let quicklink of quicklinks">
+                <td data-title="Group">{{(quicklink.QuickLinkGroup != null)? quicklink.QuickLinkGroup.GroupName: ''}}</td>
                 <td data-title="Quick Link Name">{{quicklink.QuickLinkName}}</td>
                 <td data-title="Quick Link URL" ><a href="{{ quicklink.QuickLinkURL }}" target="_blank">{{ quicklink.QuickLinkURL }}</a></td>
                 <td data-title="File">
@@ -34,6 +37,10 @@
                  <td data-title="Edit">
                     <i class="fa fa-edit fa-2x" (click)="editQuickLink(quicklink)"></i>
                 </td>
+                <td data-title="Delete">
+                        <a target="_self" (click)="delQuickLink(quicklink.QuickLinkId,quicklink)"><i
+                                class="fa fa-trash-o fa-2x" aria-hidden="true"></i></a>
+                 </td>
             </tr>
 
         </tbody>

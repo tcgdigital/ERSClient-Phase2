@@ -265,7 +265,6 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
         this.communicationLogService.GetLogByAffectedPersonId(affectedPersonToUpdate.AffectedPersonId)
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<CommunicationLogModel>) => {
-                
                 if (result.Count == 0) {
                     this.insertCommunicationLog(affectedPersonToUpdate, createdBy);
                 }

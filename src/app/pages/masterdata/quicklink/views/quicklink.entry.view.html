@@ -10,22 +10,32 @@
                     />
                     <small *ngIf="!form.controls.QuickLinkName.valid" [hidden]="form.controls.QuickLinkName.valid || (form.controls.QuickLinkName.pristine && !submitted)"
                         class="text-danger">
-                    Required.
+                        Required.
                     </small>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="form-group">
                     <label for="QuickLinkURL">Quick Link URL:</label>
-                    <input id="QuickLinkURL" class="form-control" type="text" name="QuickLinkURL" formControlName="QuickLinkURL" placeholder="Enter QuickLink URL" />
+                    <input id="QuickLinkURL" class="form-control" type="text" name="QuickLinkURL" formControlName="QuickLinkURL" placeholder="Enter QuickLink URL"
+                    />
                     <!-- <small *ngIf="form.controls.QuickLinkURL.hasError('required')" [hidden]="form.controls.QuickLinkURL.valid || (form.controls.QuickLinkURL.pristine && !submitted)"
                         class="text-danger">
                     Required.
                     </small> -->
-                    
+
                     <small *ngIf="isValidUrl" class="text-danger">
-                    Invalid Input.
+                        Invalid Input.
                     </small>
+                </div>
+
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Group Name: </label>
+                    <quick-link-group [enableAddButton]="enableAddButtonOnGroupSelection" (notifyOnInsertion)="onNotifyInsertion($event)" (notifyOnChange)="onNotifyChanges($event)"
+                        (notifyOnReset)="onNotifyReset()">
+                    </quick-link-group>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-12">
@@ -38,7 +48,7 @@
         <hr>
         <div class="row">
             <div class="col-lg-4 col-sm-4 col-sm-12">
-                <input #myFileInput type="file"  (change)="fileChangeEvent($event)" placeholder="Upload file..." />
+                <input #myFileInput type="file" (change)="fileChangeEvent($event)" placeholder="Upload file..." />
             </div>
             <div class="col-lg-4 col-sm-4 col-sm-12">
                 <button type="button" class="btn btn-primary" (click)="upload()">Upload</button>
