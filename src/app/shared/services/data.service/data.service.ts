@@ -26,12 +26,15 @@ import {
  * @class DataService
  * @template T
  */
-export class DataService<T extends BaseModel>{
+export class DataService<T extends BaseModel> {
+    public TypeName: string;
+
     constructor(private typeName: string,
         private httpService: Http,
         private httpInterceptorService: HttpInterceptorService,
         private dataProcessingService: DataProcessingService,
         private actionSuffix?: string) {
+            this.TypeName = typeName;
     }
 
     /**
@@ -139,6 +142,19 @@ export class DataService<T extends BaseModel>{
     }
 
     /**
+     * Get an instance of QueryOperation for Bulk API POST request with actionSuffix
+     *
+     * @param {T[]} entities
+     * @param {string} actionSuffix
+     * @returns {BulkPostOperation<T>}
+     * @memberof DataService
+     */
+    public BulkPostWithAdditionalParam(entities: T[], additionalParam: string): BulkPostOperation<T> {
+        return new BulkPostOperation<T>(this.dataProcessingService,
+            this.httpService, this.httpInterceptorService, additionalParam, entities, this.actionSuffix);
+    }
+
+    /**
      * Get an instance of QueryOperation for Batch OData POST request
      *
      * @param {Array<RequestModel<T>>} entities
@@ -174,7 +190,7 @@ export class DataService<T extends BaseModel>{
      * @memberof DataService
      */
     public PatchWithHeader(entity: any, key: string, additionalHeader: NameValue<string>): PatchOperation<T> {
-        return new PatchOperation<T>(this.dataProcessingService, this.httpService, 
+        return new PatchOperation<T>(this.dataProcessingService, this.httpService,
             this.httpInterceptorService, this.typeName, entity, key, additionalHeader);
     }
 

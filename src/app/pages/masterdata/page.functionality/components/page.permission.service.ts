@@ -24,8 +24,6 @@ export class PagePermissionService extends ServiceBase<PagePermissionModel>
 
         this._bulkDataService = this.dataServiceFactory
             .CreateServiceWithOptions<PagePermissionModel>('PermissionBatch/BatchPostAsync', option);
-
-
     }
 
     GetFilter(deptId: string): Observable<ResponseModel<PagePermissionModel>> {
@@ -34,15 +32,23 @@ export class PagePermissionService extends ServiceBase<PagePermissionModel>
             .Execute();
     }
 
-    CreateBulk(entities: PagePermissionModel[]): Observable<PagePermissionModel[]> {
-        return this._bulkDataService.BulkPost(entities).Execute();
+    GetPermissionByDepartmentId(departmentId: number): Observable<ResponseModel<PagePermissionModel>>{
+        return this._dataService.Query()
+            .Filter(`DepartmentId eq ${departmentId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag\'Active\'`)
+            .Select(`PageId, CanView, CanEdit, CanDelete, OnlyHOD`)
+            .Execute();
+    }
+
+    CreateBulkByDepartmentId(entities: PagePermissionModel[], departmentId: number): Observable<PagePermissionModel[]> {
+        let additionalParam = `${this._bulkDataService.TypeName}/${departmentId}`
+        return this._bulkDataService.BulkPostWithAdditionalParam(entities, additionalParam).Execute();
     }
 
     GetPagePermissionMatrix(userId: number): Observable<PagesPermissionMatrixModel[]> {
-
         const option = new DataProcessingService();
         this._pagePermissionMatrixService = this.dataServiceFactory
             .CreateServiceWithOptionsAndActionSuffix<any>('PagePermissionMatrix', `GetPermissionMatrix/${userId}`, option);
+
         return this._pagePermissionMatrixService.Get(userId.toString())
             .Execute()
             .map((pagePermissionMatrixes: PagesPermissionMatrixModel[]) => {

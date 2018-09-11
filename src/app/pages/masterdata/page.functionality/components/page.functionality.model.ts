@@ -71,3 +71,26 @@ export class PagesPermissionMatrixModel extends BaseModel {
     public IsHod: boolean;
     public DepartmentId: number;
 }
+
+export class PageHierarchyModel {
+    public id: number;
+    public text: string;
+    public checked: boolean;
+    public hasChildren: boolean;
+    public children: PageHierarchyModel[];
+
+    public CanView: boolean;
+    public CanEdit: boolean;
+    public CanDelete: boolean;
+    public OnlyHOD: boolean;
+    public Type: string;
+    public ModuleName: string;
+    // public Page: PageModel;
+
+    constructor() {
+        this.CanView = false;
+        this.CanEdit = false;
+        this.CanDelete = false;
+        this.OnlyHOD = false;
+    }
+}
