@@ -4,69 +4,19 @@
             <label for="Passengers">Departments:<span class="required">*</span></label>
             <autocomplete [items]="items" (notify)='onNotify($event)' (InvokeAutoCompleteReset)="invokeReset();"></autocomplete>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-12 buttonholder">
+        <div class="col-lg-4 col-md-12 col-sm-12 text-right">
             <button class="btn btn-primary pull-right" type="button" (click)="save()">Submit</button>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-sm-6 d-block d-lg-none text-right">
-            <md-checkbox id="IsAutoApproved" [(ngModel)]="allSelectView" (change)="selectAllDeptView($event)" aria-label="Add">Can
-                View</md-checkbox>
-        </div>
-        <div class="col-sm-6 d-block d-lg-none text-right">
-            <md-checkbox id="IsAutoApproved" [(ngModel)]="allSelectOnlyHOD" (change)="selectAllDeptOnlyHOD($event)" aria-label="Add">Only
-                HOD</md-checkbox>
-        </div>
-    </div>
-
-    <div class="row">
         <div class="col-sm-12">
-            <responsive-table>
-                <table responsive-table-body>
-                    <thead>
-                        <tr>
-                            <th>Module Name</th>
-                            <th>Parent Page</th>
-                            <th>Page Name</th>
-                            <th>
-                                <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="allSelectView" (change)="selectAllDeptView($event)" aria-label="Add">Can
-                                    View</md-checkbox>
-                            </th>
-                            <th>
-                                <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="allSelectOnlyHOD" (change)="selectAllDeptOnlyHOD($event)" aria-label="Add">Only
-                                    HOD</md-checkbox>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr [hidden]="pagesForDepartment.length != 0">
-                            <td colspan="5">No records found.</td>
-                        </tr>
-                        <tr *ngFor="let pageFordepartment of pagesForDepartment">
-                            <td data-title="Module Name" title="{{pageFordepartment.ModuleName}}"><span class="trimString">{{pageFordepartment.ModuleName}}&nbsp;</span></td>
-                            <td data-title="Parent Page" title="{{pageFordepartment.ParentPageName}}"><span class="trimString">{{pageFordepartment.ParentPageName}}&nbsp;</span></td>
-                            <td data-title="Page Name" title="{{pageFordepartment.PageName}}"><span class="trimString">{{pageFordepartment.PageName}}&nbsp;</span></td>
-                            <td data-title="Can View">
-                                <md-checkbox [disabled]="pageFordepartment.isDisabled" id="IsAutoApproved" class="allowView" [(ngModel)]="pageFordepartment.AllowView"
-                                    aria-label="Add" (change)="checkStatusView($event,pageFordepartment)"></md-checkbox>
-                            </td>
-                            <td data-title="Is HOD">
-                                <md-checkbox id="IsAutoApproved" [disabled]="!pageFordepartment.isOnlyHOD" class="onlyHod" [(ngModel)]="pageFordepartment.OnlyForHod"
-                                    aria-label="Add" (change)="checkAllStatusOnlyHOD($event)"></md-checkbox>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </responsive-table>
+            <page-functionality-hierarchy [currentDepartmentId]="selectedDepartment"></page-functionality-hierarchy>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-12 buttonholder">
+        <div class="col-sm-12 text-right">
             <button class="btn btn-primary pull-right" type="button" (click)="save()">Submit</button>
         </div>
     </div>
