@@ -82,7 +82,6 @@ export class AffectedPeopleToView extends BaseModel {
 	public Gender: string;
 	public Nationality: string;
 	public Age: string;
-	// public  CommunicationLogs: dataItem.CommunicationLogs,
 	public PaxType: string;
 	public BaggageCount?: number;
 	public BaggageWeight: number;

@@ -1,12 +1,13 @@
 <div *ngIf="showAdd" class="formStyle card-block entryHolder">
     <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
-        <input type="hidden" *ngIf="userProfileModel.UserProfileId != undefined" [(ngModel)]="userProfileModel.UserProfileId" formControlName="UserProfileId">
+        <input type="hidden" *ngIf="userProfileModel.UserProfileId != undefined" [(ngModel)]="userProfileModel.UserProfileId"
+            formControlName="UserProfileId">
         <div class="row">
             <div class="col-lg-3 col-md-6 col-12">
                 <div class="form-group">
                     <label for="Email">Email:<span class="required">*</span></label>
-                    <input class="form-control" id="txtEmail" type="email" formControlName="Email" ngControl="mailAddress" placeholder="Enter Email"
-                        autofocus />
+                    <input class="form-control" id="txtEmail" type="email" formControlName="Email" ngControl="mailAddress"
+                        placeholder="Enter Email" autofocus />
 
                     <div class="error_white" *ngIf="form.controls.Email.hasError('required')" [hidden]="form.controls.Email.valid || (form.controls.Email.pristine && !submitted)">
                         <small class="text-danger">Required</small></div>
@@ -35,15 +36,15 @@
 
                     <small *ngIf="form.controls.Name.hasError('required')" [hidden]="form.controls.Name.valid || (form.controls.Name.pristine && !submitted)"
                         class="text-danger">Required</small>
-                     <!-- <small *ngIf="form.controls.Name.hasError('validateName')" [hidden]="form.controls.Name.valid || (form.controls.Name.pristine && !submitted)"
+                    <!-- <small *ngIf="form.controls.Name.hasError('validateName')" [hidden]="form.controls.Name.valid || (form.controls.Name.pristine && !submitted)"
                         class="text-danger">Invalid Input</small>  -->
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-12">
                 <div class="form-group">
                     <label for="MainContact">Main Contact:<span class="required">*</span></label>
-                    <input class="form-control" id="txtMainContact" type="text" formControlName="MainContact" placeholder="Enter MainContact"
-                        autofocus />
+                    <input class="form-control" id="txtMainContact" type="text" formControlName="MainContact"
+                        placeholder="Enter MainContact" autofocus />
 
                     <small *ngIf="form.controls.MainContact.hasError('required')" [hidden]="form.controls.MainContact.valid || (form.controls.MainContact.pristine && !submitted)"
                         class="text-danger">Required</small>
@@ -64,7 +65,8 @@
             <div class="col-lg-3 col-md-6 col-12">
                 <div class="form-group">
                     <label for="AlternateContact">Alternate Contact:</label>
-                    <input class="form-control" id="txtAlternateContact" type="text" formControlName="AlternateContact" placeholder="Enter AlternateContact"/>
+                    <input class="form-control" id="txtAlternateContact" type="text" formControlName="AlternateContact"
+                        placeholder="Enter AlternateContact" />
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-12">
@@ -91,7 +93,7 @@
                 </div>
             </div>
             <div class="row">
-                
+
             </div>
         </div>
         <div class="row">
@@ -100,14 +102,13 @@
                 <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
             </div>
         </div>
-         <hr>
+        <hr>
         <div class="row">
             <div class="col-lg-3 col-md-3 col-sm-12 butt-des">
-                <input type="file" #inputFileUserProfile id="file" (change)="getFileDetails($event,'UserProfile')" />
-
+                <input type="file" #inputFileUserProfile id="file" class="form-control-file" (change)="getFileDetails($event,'UserProfile')" />
             </div>
             <div class="col-lg-3 col-md-3 col-sm-12">
-                <button class="btn btn-primary" type="button" (click)="uploadFiles()" [disabled] = "disableUploadButton">Upload</button>
+                <button class="btn btn-primary" type="button" (click)="uploadFiles()" [disabled]="disableUploadButton">Upload</button>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-12">
                 <a target="_self" href="{{HRInfoTemplatePath}}">
@@ -124,5 +125,5 @@
 </div>
 
 <div class="addbuttonHolder">
-     <a href="javascript:void(0);" (click)="showAddRegion(showAdd)"><strong>{{showAddText}}</strong></a>
+    <a href="javascript:void(0);" (click)="showAddRegion(showAdd)"><strong>{{showAddText}}</strong></a>
 </div>

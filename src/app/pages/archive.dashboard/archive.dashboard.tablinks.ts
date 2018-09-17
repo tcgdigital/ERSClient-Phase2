@@ -406,5 +406,29 @@ export const TAB_LINKS: ITabLinkInterface[] = [
         selected: false,
         hidden: false,
         order: 17
+    }, {
+        id: 'GroundVictimQuery',
+        title: 'Ground Victim Query',
+        url: '/pages/archivedashboard/groundvictimquery',
+        selected: false,
+        hidden: false,
+        order: 18,
+        subtab: [
+            {
+                id: 'ReceivedCalls',
+                title: 'Received Calls',
+                url: './receivedCalls',
+                selected: false,
+                hidden: false,
+                order: 1
+            }, {
+                id: 'AssignedCalls',
+                title: 'Assigned Calls',
+                url: './assignedCalls',
+                selected: false,
+                hidden: false,
+                order: 2
+            }
+        ]
     }
 ] as ITabLinkInterface[];

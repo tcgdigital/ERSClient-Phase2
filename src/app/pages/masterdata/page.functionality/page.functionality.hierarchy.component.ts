@@ -19,7 +19,8 @@ export class PageFunctionalityHierarchyComponent implements OnInit, OnChanges, O
     @Input() public currentDepartmentId: number;
     @Input() public selectCanViewForAll: boolean;
     @Input() public selectHODOnlyForAll: boolean;
-    
+
+    public treeObject: any;
     public allSelectForView: boolean = false;
     public allSelectForOnlyHOD: boolean = false;
     public pageHierarchies: PageHierarchyModel[];
@@ -27,6 +28,7 @@ export class PageFunctionalityHierarchyComponent implements OnInit, OnChanges, O
     public currentSelectedPageIds: number[];
     private ngUnsubscribe: Subject<any> = new Subject<any>();
     private credential: AuthModel;
+    private pagePermissions: PagePermissionModel[]
 
     constructor(private pageService: PageService,
         private pagePermissionService: PagePermissionService,
@@ -88,10 +90,11 @@ export class PageFunctionalityHierarchyComponent implements OnInit, OnChanges, O
         jQuery(searchText).val('');
         this.ExpandCollapsTree(false);
 
-        const $tree: any = jQuery(this.elementRef.nativeElement).find(`#pageTree`).tree();
-        if ($tree != undefined && this.currentSelectedPageIds != undefined && this.currentSelectedPageIds.length > 0) {
+        let terrObj = this.treeObject;
+        if (terrObj != undefined && this.currentSelectedPageIds != undefined && this.currentSelectedPageIds.length > 0) {
             this.currentSelectedPageIds.forEach(x => {
-                const $node = $tree.getNodeById(x);
+                const $node = terrObj.getNodeById(x);
+                
                 if ($node != undefined) {
                     let $nodeTextElement = $node.find('> [data-role="wrapper"] > [data-role="display"]');
                     $nodeTextElement.removeAttr('style');
@@ -101,12 +104,12 @@ export class PageFunctionalityHierarchyComponent implements OnInit, OnChanges, O
     }
 
     private ExpandCollapsTree(isExpand: boolean): void {
-        let $tree: any = jQuery(this.elementRef.nativeElement).find(`#pageTree`).tree();
-        if ($tree !== undefined && $tree.expandAll != undefined && $tree.collapseAll != undefined) {
+        let terrObj = this.treeObject;
+        if (terrObj !== undefined) {
             if (isExpand)
-                $tree.expandAll();
+                terrObj.expandAll();
             else
-                $tree.collapseAll();
+                terrObj.collapseAll();
         }
     }
 
@@ -120,44 +123,41 @@ export class PageFunctionalityHierarchyComponent implements OnInit, OnChanges, O
             .subscribe((responses: Array<ResponseModel<any>>) => {
                 if (responses.length == 2) {
                     this.pages = <PageModel[]>responses[0].Records;
+                    this.pagePermissions = <PagePermissionModel[]>responses[1].Records;
+
                     this.pageHierarchies = this.pageService.PreparePageHierarchyData
-                        (<PageModel[]>responses[0].Records, <PagePermissionModel[]>responses[1].Records);
+                        (this.pages, this.pagePermissions);
 
                     const allPagesString: string = JSON.stringify(this.pageHierarchies);
-                    this.PrepareTrewView(allPagesString, 'page');
+                    this.PrepareTrewView(this.pageHierarchies, 'page');
                 }
             }, (error: any) => {
                 console.log(`Error: ${error.message}`);
             });
     }
 
-    private PrepareTrewView(treeData: string, treeType: string) {
+    private PrepareTrewView(treeData: PageHierarchyModel[], treeType: string) {
         this.ClearAllTreeData(treeType);
 
-        let treeObj = jQuery(`#pageTree`).tree({
+        this.treeObject = jQuery(`#pageTree`).tree({
             primaryKey: 'id',
-            uiLibrary: 'bootstrap',
+            uiLibrary: 'bootstrap4',
             iconsLibrary: 'fontawesome',
-            dataSource: JSON.parse(treeData),
+            dataSource: treeData,
             checkedField: 'CanView',
+            textField: 'text',
             icons: {
                 expand: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                 collapse: '<i class="fa fa-chevron-down" aria-hidden="true"></i>'
             },
             autoLoad: true,
             checkboxes: true,
-            cascadeCheck: true,
-            dataBound: ((e) => {
-                jQuery(e.currentTarget)
-                    .find('[data-role="wrapper"] [data-role="checkbox"] .gj-checkbox-bootstrap > input:checkbox')
-                    .each((index: number, checkBox: any) => {
-                        jQuery(checkBox).addClass('chk-canView-only');
-                    });
-            }),
+            cascadeCheck: false,
             nodeDataBound: ((e, $node, id, record) => {
                 let $nodeTextElement = $node.find('> [data-role="wrapper"] > [data-role="display"]');
                 let isHodChecked: string = record.OnlyHOD ? 'checked' : '';
 
+                $node.find('> [data-role="wrapper"] > [data-role="display"]');
                 if ($nodeTextElement.length > 0) {
                     $nodeTextElement.html(`
                         <span class="node-caption ${record.Type.toLocaleLowerCase()}"> 
@@ -165,9 +165,9 @@ export class PageFunctionalityHierarchyComponent implements OnInit, OnChanges, O
                         </span>
                         <span class="node-text">${record.text}</span>
                         <span data-role="hod-checkbox" title="Apply for HOD only">
-                            <label class="gj-checkbox-bootstrap">
+                            <label class="gj-checkbox-bootstrap gj-checkbox-bootstrap-4 gj-checkbox-fontawesome">
                                 <input type="checkbox" class="chk-hod-only" ${record.CanView ? '' : 'disabled'} data-page-id="${id}" ${isHodChecked}>
-                                <span></span>
+                                <span class="fa"></span>
                             </label>
                             <small style="padding: 4px;">Only HOD</small>
                         </span>`);
@@ -175,54 +175,76 @@ export class PageFunctionalityHierarchyComponent implements OnInit, OnChanges, O
             })
         });
 
+        let treeObj = this.treeObject;
+        this.treeObject.on('checkboxChange', function (e, $node, record, state) {
+            let $chkHODOnly = $node.find(`> [data-role="wrapper"] > [data-role="display"] 
+            > [data-role="hod-checkbox"] input.chk-hod-only`);
+            let isCanViewChecked: boolean = (state == 'checked') ? true : false;
 
-        treeObj.find('.gj-checkbox-bootstrap > input.chk-canView-only')
-            .on('change', (e) => {
-                let $chkHODOnly = jQuery(e.currentTarget)
-                    .closest('[data-role="checkbox"]')
-                    .siblings('[data-role="display"]')
-                    .find('> [data-role="hod-checkbox"] input.chk-hod-only:checkbox');
+            //Enable/Disable HOD-Only checkbox witb respect to CanView checkbox state
+            if ($chkHODOnly.length > 0) {
+                $chkHODOnly.prop('disabled', !isCanViewChecked);
+                if (!isCanViewChecked)
+                    $chkHODOnly.prop('checked', false);
+            }
 
-                if ($chkHODOnly.length > 0) {
-                    let isChecked: boolean = jQuery(e.currentTarget).prop('checked');
-                    $chkHODOnly.prop('disabled', !isChecked);
-                    if (!isChecked)
-                        $chkHODOnly.prop('checked', isChecked);
-                }
-            });
+            //Check and Un-Check cascade for all children nodes.
+            let children = treeObj.getChildren($node);
+            if (children && children.length > 0) {
+                children.forEach((id: number) => {
+                    if (isCanViewChecked)
+                        treeObj.check(treeObj.getNodeById(id));
+                    else
+                        treeObj.uncheck(treeObj.getNodeById(id));
+                });
+            }
+
+            //In case of any node got checked leaving the parent unchecked, 
+            //enforce the parent node to be checked.
+            if (isCanViewChecked) {
+                $node.parents('li[data-role="node"]')
+                    .find('>[data-role="wrapper"]>[data-role="checkbox"] input:checkbox')
+                    .each((index: number, $parentChk: any) => {
+                        jQuery($parentChk).prop('checked', true);
+                        let $hodChk = jQuery($parentChk)
+                            .closest('[data-role="wrapper"]')
+                            .find('>[data-role="display"] > [data-role="hod-checkbox"] input.chk-hod-only:checkbox');
+
+                        if ($hodChk.length > 0) {
+                            $hodChk.prop('disabled', false);
+                        }
+                    });
+            }
+        });
     }
 
     private ClearAllTreeData(treeType?: string): void {
-        let $tree: any = jQuery(this.elementRef.nativeElement).find(`#pageTree`).tree();
-        if ($tree !== undefined && $tree.destroy != undefined) {
-            $tree.destroy();
+        let terrObj = this.treeObject;
+        if (terrObj !== undefined && terrObj.destroy != undefined) {
+            terrObj.destroy();
         }
     }
 
     public CheckUncheckAllTreeviewNodes(isChecked: boolean): void {
-        let $tree: any = jQuery(this.elementRef.nativeElement).find(`#pageTree`);
-
-        if ($tree !== undefined) {
-            $tree.find('.gj-checkbox-bootstrap > input.chk-canView-only')
-                .each((index: number, checkBox: any) => {
-                    jQuery(checkBox).prop('checked', isChecked);
-                    jQuery(checkBox).trigger('change');
-                });
+        let terrObj = this.treeObject;
+        if (terrObj !== undefined) {
+            if (isChecked)
+                terrObj.checkAll();
+            else
+                terrObj.uncheckAll()
         }
     }
 
     public CheckUncheckAllTreeviewNodesHOD(isChecked: boolean): void {
-        let $tree: any = jQuery(this.elementRef.nativeElement).find(`#pageTree`);
-        if ($tree !== undefined) {
-            var $checkedNodes = $tree.find(`[data-role="wrapper"] [data-role="checkbox"] 
-            .gj-checkbox-bootstrap > input.chk-canView-only:checked`);
+        let terrObj = this.treeObject;
+        if (terrObj !== undefined) {
+            let checkedNodes = terrObj.getCheckedNodes();
 
-            if ($checkedNodes.length > 0) {
-                $checkedNodes.each((index: number, viewOnlyCheckBox: any) => {
-                    let $chkHODOnly = jQuery(viewOnlyCheckBox)
-                        .closest('[data-role="checkbox"]')
-                        .siblings('[data-role="display"]')
-                        .find('> [data-role="hod-checkbox"] input.chk-hod-only:checkbox');
+            if (checkedNodes.length > 0) {
+                checkedNodes.forEach((nodeId: number) => {
+                    let $node = terrObj.getNodeById(nodeId);
+                    let $chkHODOnly = $node.find(`> [data-role="wrapper"] > [data-role="display"] 
+                    > [data-role="hod-checkbox"] input.chk-hod-only`);
 
                     if ($chkHODOnly.length > 0) {
                         $chkHODOnly.prop('checked', isChecked);
@@ -234,23 +256,20 @@ export class PageFunctionalityHierarchyComponent implements OnInit, OnChanges, O
 
     public GeneratePagePermissionData(selectedDepartmentId: number): PagePermissionModel[] {
         let pagePermissions: PagePermissionModel[] = [];
-        let $tree: any = jQuery(this.elementRef.nativeElement).find(`#pageTree`);
+        let terrObj = this.treeObject;
 
-        if ($tree !== undefined) {
-            let $checkedNodes = $tree.find(`[data-role="wrapper"] [data-role="checkbox"] 
-            .gj-checkbox-bootstrap > input.chk-canView-only:checked`);
+        if (terrObj !== undefined) {
+            var checkedNodes = terrObj.getCheckedNodes();
+            if (checkedNodes.length > 0) {
+                checkedNodes.forEach((nodeId: number) => {
+                    let $node = terrObj.getNodeById(nodeId);
 
-            if ($checkedNodes.length > 0) {
-                $checkedNodes.each((index: number, viewOnlyCheckBox: any) => {
-                    let pageId = jQuery(viewOnlyCheckBox).closest('li.list-group-item').data('id');
-                    let $chkHODOnly = jQuery(viewOnlyCheckBox)
-                        .closest('[data-role="checkbox"]')
-                        .siblings('[data-role="display"]')
-                        .find('> [data-role="hod-checkbox"] input.chk-hod-only:checkbox');
+                    let $chkHODOnly = $node.find(`> [data-role="wrapper"] > [data-role="display"] 
+                    > [data-role="hod-checkbox"] input.chk-hod-only`);
 
                     let pagePermission: PagePermissionModel = new PagePermissionModel();
                     pagePermission.DepartmentId = selectedDepartmentId;
-                    pagePermission.PageId = +pageId;
+                    pagePermission.PageId = nodeId;
                     pagePermission.CanView = true;
                     pagePermission.CanEdit = true;
                     pagePermission.CanDelete = true;

@@ -2,14 +2,25 @@ import { BaseModel } from '../../../../shared';
 import { InvolvePartyModel } from '../../../shared.components';
 
 export class GroundVictimModel extends BaseModel{
-    GroundVictimId : number;
-    InvolvedPartyId : number;
-    GroundVictimType : string;
-    GroundVictimName : string;
-    AffectedCount? : number;
-    Status : string;
-    NOKName? : string;
-    NOKContactNumber? : string;
+    public GroundVictimId : number;
+    public InvolvedPartyId : number;
+    public GroundVictimType : string;
+    public GroundVictimName : string;
+    public AffectedCount? : number;
+    public Status : string;
+    public NOKName? : string;
+    public NOKContactNumber? : string;
 
-    InvolvedParty? : InvolvePartyModel;
+    public InvolvedParty? : InvolvePartyModel;
+}
+
+export class AffectedVictimToView extends BaseModel {
+    public AffectedId: number;
+    public InvolvedPartyId : number;
+    public GroundVictimId: number;
+    public GroundVictimName : string;
+    public GroundVictimType : string;
+    public AffectedCount: number;
+    public NOKName : string;
+    public NOKContactNumber : string;
 }

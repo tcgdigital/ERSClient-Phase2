@@ -10,7 +10,6 @@ export abstract class BaseModel {
         this.ActiveFlag = 'Active';
         this.CreatedBy = 1;
         this.CreatedOn = new Date();
-
     }
 
     public deleteAttributes() {

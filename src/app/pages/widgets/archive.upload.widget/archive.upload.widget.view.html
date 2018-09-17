@@ -20,7 +20,7 @@
                         </select>
                     </div>
                     <div class="col-sm-3 no-gutters upload-padding">
-                        <input #myFileInput type="file" (change)="fileChangeEvent($event)" [disabled]="!isReopened" placeholder="Upload file..." />
+                        <input #myFileInput type="file" class="form-control-file" (change)="fileChangeEvent($event)" [disabled]="!isReopened" placeholder="Upload file..." />
                     </div>
                     <div class="col-sm-6">
                         <button type="button" class="btn btn-primary" (click)="upload()" [disabled]="!isReopened">Upload</button>

@@ -5,16 +5,10 @@ import { InvolvePartyModel } from './involveparty.model';
 import { IInvolvePartyService } from './IInvolvePartyService';
 import { AffectedPeopleModel } from '../../affected.people/components/affected.people.model';
 import {
-    ResponseModel,
-    DataService,
-    DataServiceFactory,
-    DataProcessingService,
-    ServiceBase, UtilityService
+    ResponseModel, DataService,
+    DataServiceFactory, ServiceBase,
 } from '../../../../shared';
-import {
-    IncidentService,
-    IncidentModel
-} from '../../../incident';
+import { IncidentModel } from '../../../incident';
 
 @Injectable()
 export class InvolvePartyService
@@ -153,18 +147,18 @@ export class InvolvePartyService
             .Execute();
     }
 
-    public GetAllGroundVictimsByIncident(incidentId: number): Observable<ResponseModel<InvolvePartyModel>>{
+    public GetAllGroundVictimsByIncident(incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
-        .Expand(`GroundVictims`)
-        .Filter(`IncidentId eq ${incidentId}`)
-        .Execute();
+            .Expand(`GroundVictims,Affecteds($select=AffectedId)`)
+            .Filter(`IncidentId eq ${incidentId}`)
+            .Execute();
     }
 
-    public GetGroundVictimsByQuery(query: string, incidentid:number): Observable<ResponseModel<InvolvePartyModel>>{
+    public GetGroundVictimsByQuery(query: string, incidentid: number): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
-        .Expand(`GroundVictims($filter=${query})`)
-        .Filter(`IncidentId eq ${incidentid}`)
-        .Execute();
+            .Expand(`GroundVictims($filter=${query})`)
+            .Filter(`IncidentId eq ${incidentid}`)
+            .Execute();
     }
 
     public GetQueryCargosByIncident(query: string, incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {

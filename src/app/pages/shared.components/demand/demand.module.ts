@@ -20,7 +20,7 @@ import { PageService } from '../../masterdata/page.functionality';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { FileUploadService } from '../../../shared';
 import { FileStoreService } from '../../../shared/services/common.service';
-import { DataExchangeService, SharedModule } from '../../../shared';
+import { SharedModule } from '../../../shared';
 import { CanLoadSubTabs } from "../../../shared/services/common.service/canLoadSubTabs.service";
 
 @NgModule({

@@ -1,0 +1,49 @@
+<div class="row">
+    <div class="col-12">
+        <responsive-table>
+            <table responsive-table-body>
+                <thead>
+                    <tr>
+                        <th>Caller Name</th>
+                        <th>Contact Number</th>
+                        <th>Victim's Name</th>
+                        <th>Relationship</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr [hidden]="allReceivedCalls.length != 0">
+                        <td colspan="4">No queries to show.</td>
+                    </tr>
+                    <tr *ngFor="let call of allReceivedCalls">
+                        <td data-title="Caller Name">{{call.Caller.FirstName + " "+ call.Caller.LastName}}&nbsp;</td>
+                        <td data-title="Contact Number">{{call.Caller.ContactNumber}}&nbsp;</td>
+                        <td data-title="Victim's Name">{{getVictimName(call.Enquiries[0].GroundVictimId)}}</td>
+                        <td data-title="Relationship">{{call.Caller.Relationship}}&nbsp;</td>
+                        <td data-title="Action"><i *ngIf="!isArchive" class="fa fa-edit fa-2x" (click)="openCallcenter(call.ExternalInputId)"></i>&nbsp;</td>
+                    </tr>
+                </tbody>
+            </table>
+        </responsive-table>
+    </div>
+</div>
+
+
+<div bsModal #childModalcallcenter="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Ground Victim Enquery</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="cancelCallcenter()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="callcenterload">
+                    <call-centre-main [callid]="callId" [enquiryType]="10"></call-centre-main>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

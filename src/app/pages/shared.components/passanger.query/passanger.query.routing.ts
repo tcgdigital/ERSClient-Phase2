@@ -2,13 +2,13 @@ import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { PassangerQueryComponent } from './passanger.query.components';
-import { PassangerQueryAssignedCallsListComponent, PassangerQueryRecievedCallsListComponent } from "./components";
-
+import {
+    PassangerQueryAssignedCallsListComponent,
+    PassangerQueryRecievedCallsListComponent
+} from "./components";
 
 const passangerQueryComponent: Routes = [
-
     {
-
         path: '',
         component: PassangerQueryComponent,
         children: [
@@ -16,12 +16,10 @@ const passangerQueryComponent: Routes = [
                 path: '',
                 redirectTo: 'receivedCalls',
                 pathMatch: 'full'
-            },
-            {
+            }, {
                 path: 'assignedcalls',
                 component: PassangerQueryRecievedCallsListComponent
-            },
-            {
+            }, {
                 path: 'receivedCalls',
                 component: PassangerQueryAssignedCallsListComponent
             }]

@@ -1,7 +1,8 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="button-align">
-            <button class="btn btn-primary" type="submit" (click)="activeActionableClick(activeActionables)" [disabled]="isArchive" *ngIf="(isShowUpdateOpenChecklist | accesibility:currentDepartmentId:'UpdateOpenChecklist')">Submit</button>
+            <button class="btn btn-primary" type="submit" (click)="activeActionableClick(activeActionables)" [disabled]="isArchive"
+                *ngIf="(isShowUpdateOpenChecklist | accesibility:currentDepartmentId:'UpdateOpenChecklist')">Submit</button>
         </div>
     </div>
 </div>
@@ -35,8 +36,8 @@
                     <td data-title="Schedule Close Time">{{actionable.ScheduleClose | date: 'dd-MMM-yyyy HH:mm'}}</td>
                     <td data-title="Completion Status">
                         <span *ngIf="hasChildChecklist(actionable.ChklistId)==true">{{actionable.CompletionStatus}}</span>
-                        <select id="selectCompletionStatus" [disabled]="isArchive" *ngIf="hasChildChecklist(actionable.ChklistId)==false" class="form-control"
-                            [(ngModel)]="actionable.CompletionStatus" (change)="IsDone($event,actionable)">
+                        <select id="selectCompletionStatus" [disabled]="isArchive" *ngIf="hasChildChecklist(actionable.ChklistId)==false"
+                            class="form-control" [(ngModel)]="actionable.CompletionStatus" (change)="IsDone($event,actionable)">
                             <option value=''>Select Completion Status</option>
                             <option *ngFor="let completionStatusType of completionStatusTypes" [value]="completionStatusType.caption">
                                 {{completionStatusType.text}}
@@ -47,14 +48,14 @@
                         <div [class]="actionable.RagColor"></div>
                     </td>
                     <td data-title="Download">
-                        <a class="down-icon" target="_self" *ngIf="actionable.UploadLinks!=null" href="{{actionable.UploadLinks}}" download="{{actionable.FileName}}"><i
-                                class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+                        <a class="down-icon" target="_self" *ngIf="actionable.UploadLinks!=null" href="{{actionable.UploadLinks}}"
+                            download="{{actionable.FileName}}"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
                     </td>
                     <td data-title="Trail"><i *ngIf="isShowCommentTrail | accesibility:currentDepartmentId:'ViewChecklistTrail'"
                             class="fa fa-info-circle fa-2x" (click)="openTrail(actionable)"></i> </td>
                     <td data-title="Details">
-                        <i *ngIf="isShowViewAdditionalInfo | accesibility:currentDepartmentId:'ViewChecklistAdditionalInfo'" class="fa fa-edit fa-2x"
-                            (click)="openActionableDetail(actionable)"></i>
+                        <i *ngIf="isShowViewAdditionalInfo | accesibility:currentDepartmentId:'ViewChecklistAdditionalInfo'"
+                            class="fa fa-edit fa-2x" (click)="openActionableDetail(actionable)"></i>
                     </td>
                 </tr>
                 <tr *ngIf="actionable.expanded == true">
@@ -62,32 +63,33 @@
                         <responsive-table>
                             <table responsive-table-body>
                                 <thead>
-                                    <th>Description</th>
-                                    <th>Scheduled End Time</th>
-                                    <th>Completion Status</th>
-                                    <th>Department Name</th>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let actionableChild of actionable.actionableChilds">
-                                        <td data-title="Description">{{actionableChild.Description}}&nbsp;</td>
-                                        <td data-title="Scheduled End Time">{{actionableChild.ScheduleClose | date: 'dd-MMM-yyyy
-                                            HH:mm'}}&nbsp;</td>
-                                        <td data-title="Completion Status">
-                                            {{actionableChild.CompletionStatus}}&nbsp;
-                                        </td>
-                                        <td data-title="Department Name">{{actionableChild.DepartmentName}}&nbsp;</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </responsive-table>
-                    </td>
-                </tr>
-            </ng-container>
+                    <th>Description</th>
+                    <th>Scheduled End Time</th>
+                    <th>Completion Status</th>
+                    <th>Department Name</th>
+                    </thead>
+        <tbody>
+            <tr *ngFor="let actionableChild of actionable.actionableChilds">
+                <td data-title="Description">{{actionableChild.Description}}&nbsp;</td>
+                <td data-title="Scheduled End Time">{{actionableChild.ScheduleClose | date: 'dd-MMM-yyyy
+                    HH:mm'}}&nbsp;</td>
+                <td data-title="Completion Status">
+                    {{actionableChild.CompletionStatus}}&nbsp;
+                </td>
+                <td data-title="Department Name">{{actionableChild.DepartmentName}}&nbsp;</td>
+            </tr>
         </tbody>
     </table>
 </responsive-table>
+</td>
+</tr>
+</ng-container>
+</tbody>
+</table>
+</responsive-table>
 
-<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -102,32 +104,36 @@
                         <div class="row">
                             <div class="form-group col-lg-6 col-sm-12 col-md-6">
                                 <label><i>Comments:</i></label>
-                                <input type="text" [ngModel]="actionableModelToUpdate.Comments" [readonly]="isArchive" class="form-control" formControlName="Comments"
-                                    value="{{actionableModelToUpdate.Comments}}" placeholder="" />
+                                <input type="text" [ngModel]="actionableModelToUpdate.Comments" [readonly]="isArchive"
+                                    class="form-control" formControlName="Comments" value="{{actionableModelToUpdate.Comments}}"
+                                    placeholder="" />
                             </div>
                             <div class="form-group col-lg-6 col-sm-12 col-md-6">
                                 <label><i>URL:</i></label>
                                 <!--<input disabled type="text" [ngModel]="actionableModelToUpdate.URL" class="form-control" formControlName="URL" value="{{actionableModelToUpdate.URL}}"
                                     placeholder="URL" />-->
                                 <label class="form-control"  readonly>
-                                    <a href="{{actionableModelToUpdate.URL}}"  target="_blank">{{actionableModelToUpdate.URL}}</a>
+                                    <a href=" {{actionableModelToUpdate.URL}}"  target=" _blank">{{actionableModelToUpdate.URL}}</a>
                                 </label>
                             </div>
                         </div>
                         <div class="row" *ngIf="!isArchive">
                             <!-- <a class="glyphicon glyphicon-download-alt" target="_self" *ngIf="filepathWithLinks!=null" href="{{filepathWithLinks}}" download="{{fileName}}">Download</a> -->
                             <div class="buttonholder col-sm-10">
-
-                                <input #myFileInput type="file" (change)="fileChangeEvent($event)" placeholder="Upload file..." />
-                                <button type="button" class="btn btn-primary" (click)="upload(actionableModelToUpdate)" [disabled]="disableUploadButton">Upload</button>
+                                <input #myFileInput type="file" class="form-control-file" (change)="fileChangeEvent($event)"
+                                    placeholder="Upload file..." />
+                                <button type="button" class="btn btn-primary" (click)="upload(actionableModelToUpdate)"
+                                    [disabled]="disableUploadButton">Upload</button>
                                 <button type="button" class="btn btn-primary" (click)="clearFileUpload($event)">Clear</button>
-                                <a *ngIf="filepathWithLinks!=null" class="down-icon" target="_self" href="{{filepathWithLinks}}" download="{{fileName}}"><i
-                                        class="fa fa-download fa" aria-hidden="true"></i></a>
+                                <a *ngIf="filepathWithLinks!=null" class="down-icon" target="_self" href="{{filepathWithLinks}}"
+                                    download="{{fileName}}">
+                                    <i class="fa fa-download fa" aria-hidden="true"></i>
+                                </a>
                             </div>
                             <div class="col-sm-2">
                                 <div class="row buttonholder" *ngIf="!isArchive">
-                                    <button *ngIf="isShowUpdateAdditionalInfo | accesibility:currentDepartmentId:'UpdateChecklistAdditionalInfo'" class="btn btn-primary"
-                                        type="submit">Submit</button>&nbsp;
+                                    <button *ngIf="isShowUpdateAdditionalInfo | accesibility:currentDepartmentId:'UpdateChecklistAdditionalInfo'"
+                                        class="btn btn-primary" type="submit">Submit</button>&nbsp;
                                 </div>
                             </div>
 

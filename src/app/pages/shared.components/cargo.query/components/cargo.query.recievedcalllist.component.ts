@@ -28,7 +28,6 @@ export class CargoQueryRecievedCallsListComponent implements OnInit, OnDestroy {
 
     allAssignedCalls: ExternalInputModel[] = [];
     currentIncidentId: number;
-    protected _onRouteChange: Subscription;
     callId: number;
     callcenterload: boolean = false;
     public isArchive: boolean = false;

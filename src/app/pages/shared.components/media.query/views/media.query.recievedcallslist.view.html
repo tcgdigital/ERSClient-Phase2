@@ -15,10 +15,13 @@
                     <td colspan="4">No queries to show.</td>
                 </tr>
                 <tr *ngFor="let call of allAssignedCalls">
-                    <td data-title="Caller Name">{{call.Caller.FirstName + "  "+ call.Caller.LastName}}&nbsp;</td>
-                    <td data-title="PDA Name">{{call.Caller.ContactNumber}}&nbsp;</td>
-                    <td data-title="PDA Age">{{call.Caller.Relationship}}&nbsp;</td>
-                    <td data-title="Action"><i *ngIf="!isArchive" class="fa fa-edit fa-2x" (click)="openCallcenter(call.ExternalInputId)"></i>&nbsp;</td>
+                    <td data-title="Caller Name">{{call.Caller.FirstName + " "+ call.Caller.LastName}}&nbsp;</td>
+                    <td data-title="Contact Number">{{call.Caller.ContactNumber}}&nbsp;</td>
+                    <td data-title="Relationship">{{call.Caller.Relationship}}&nbsp;</td>
+                    <td data-title="Action">
+                        <i *ngIf="!isArchive" class="fa fa-edit fa-2x" (click)="openCallcenter(call.ExternalInputId)"></i>
+                        &nbsp;
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -32,7 +35,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Call center</h4>
+                <h4 class="modal-title">Media Enquery</h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="cancelCallcenter()">
                   <span aria-hidden="true">&times;</span>
                 </button>

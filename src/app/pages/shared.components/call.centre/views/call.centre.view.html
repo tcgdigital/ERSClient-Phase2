@@ -1,176 +1,272 @@
-<ng-container *ngIf="!showCallcenterModal">
+<ng-template [ngIf]="!showCallcenterModal">
 
-    <ng-container *ngIf="(enquiryType == 1 || enquiryType == 3)">
+    <ng-template [ngIf]="(enquiryType == +EnquiryType.Passenger || enquiryType == +EnquiryType.Crew)">
         <div class="row">
             <div class="form-group col-lg-3 col-md-6 col-sm-12">
                 <label for="FirstName">PDA First Name</label>
-                <label class="form-control grey-input text-truncate">{{pdaenquery.FirstName}}&nbsp;</label>
+                <label class="form-control grey-input text-truncate">
+                    {{pdaenquery.FirstName}}&nbsp;
+                </label>
             </div>
             <div class="form-group col-lg-3 col-md-6 col-sm-12">
-                <label for="LastName">PDA Last Name </label>
-                <label class="form-control grey-input text-truncate">{{pdaenquery.LastName}}&nbsp;</label>
+                <label for="LastName">PDA Last Name</label>
+                <label class="form-control grey-input text-truncate">
+                    {{pdaenquery.LastName}}&nbsp;
+                </label>
             </div>
             <div class="form-group col-lg-3 col-md-6 col-sm-12">
                 <label for="Nationality">Nationality</label>
-                <label class="form-control grey-input text-truncate">{{pdaenquery.Nationality}}&nbsp;</label>
+                <label class="form-control grey-input text-truncate">
+                    {{pdaenquery.Nationality}}&nbsp;
+                </label>
             </div>
             <div class="form-group col-lg-3 col-md-6 col-sm-12">
                 <label for="Age">Age </label>
-                <label class="form-control grey-input text-truncate">{{(pdaenquery.Age != 0) ? pdaenquery.Age : ''}}&nbsp;</label>
+                <label class="form-control grey-input text-truncate">
+                    {{(pdaenquery.Age != 0) ? pdaenquery.Age : ''}}&nbsp;
+                </label>
             </div>
         </div>
+
         <div class="row">
             <div class="form-group col-lg-3 col-md-6 col-sm-12">
                 <label for="PermanentAddress">Permanent Address </label>
-                <label class="form-control grey-input text-truncate">{{pdaenquery.PermanentAddress}}&nbsp;</label>
+                <label class="form-control grey-input text-truncate">
+                    {{pdaenquery.PermanentAddress}}&nbsp;
+                </label>
             </div>
             <div class="form-group col-lg-3 col-md-6 col-sm-12">
                 <label for="FlightNumber">Flight Number </label>
-                <label class="form-control grey-input text-truncate">{{pdaenquery.FlightNumber}}&nbsp;</label>
+                <label class="form-control grey-input text-truncate">
+                    {{pdaenquery.FlightNumber}}&nbsp;
+                </label>
             </div>
             <div class="form-group col-lg-3 col-md-6 col-sm-12">
                 <label for="DepartedFrom">Departed From </label>
-                <label class="form-control grey-input text-truncate">{{pdaenquery.DepartedFrom}}&nbsp;</label>
+                <label class="form-control grey-input text-truncate">
+                    {{pdaenquery.DepartedFrom}}&nbsp;
+                </label>
             </div>
             <div class="form-group col-lg-3 col-md-6 col-sm-12">
                 <label for="TravellingTo">Travelling To </label>
-                <label class="form-control grey-input text-truncate">{{pdaenquery.TravellingTo}}&nbsp;</label>
+                <label class="form-control grey-input text-truncate">
+                    {{pdaenquery.TravellingTo}}&nbsp;
+                </label>
             </div>
         </div>
+
         <div class="row">
             <div class="form-group col-lg-3 col-md-6 col-sm-12">
                 <label for="KINFirstName">NOK First Name </label>
-                <label class="form-control grey-input text-truncate">{{pdaenquery.KINFirstName}}&nbsp;</label>
+                <label class="form-control grey-input text-truncate">
+                    {{pdaenquery.KINFirstName}}&nbsp;
+                </label>
             </div>
             <div class="form-group col-lg-3 col-md-6 col-sm-12">
                 <label for="KINLastName">NOK Last Name </label>
-                <label class="form-control grey-input text-truncate">{{pdaenquery.KINLastName}}&nbsp;</label>
+                <label class="form-control grey-input text-truncate">
+                    {{pdaenquery.KINLastName}}&nbsp;
+                </label>
             </div>
             <div class="form-group col-lg-3 col-md-6 col-sm-12">
                 <label for="KINContactNumber">NOK Contact Number </label>
-                <label class="form-control grey-input text-truncate">{{pdaenquery.KINContactNumber}}&nbsp;</label>
+                <label class="form-control grey-input text-truncate">
+                    {{pdaenquery.KINContactNumber}}&nbsp;
+                </label>
             </div>
             <div class="form-group col-lg-3 col-md-6 col-sm-12">
                 <label for="KINRelationShip">NOK Relationship </label>
-                <label class="form-control grey-input text-truncate">{{pdaenquery.KINRelationShip}}&nbsp;</label>
+                <label class="form-control grey-input text-truncate">
+                    {{pdaenquery.KINRelationShip}}&nbsp;
+                </label>
             </div>
         </div>
+
         <div class="row">
             <div class="form-group col-lg-6 col-md-6 col-sm-12">
                 <label for="EnquiryReason">Enquiry Reason </label>
-                <label class="form-control grey-input text-truncate">{{pdaenquery.EnquiryReason}}&nbsp;</label>
+                <label class="form-control grey-input text-truncate">
+                    {{pdaenquery.EnquiryReason}}&nbsp;
+                </label>
             </div>
             <div class="form-group col-lg-6 col-md-6 col-sm-12">
                 <label for="TravellingWith">Travelling With </label>
-                <label class="form-control grey-input text-truncate">{{pdaenquery.TravellingWith}}&nbsp;</label>
+                <label class="form-control grey-input text-truncate">
+                    {{pdaenquery.TravellingWith}}&nbsp;
+                </label>
             </div>
         </div>
-    </ng-container>
+    </ng-template>
 
-    <ng-container *ngIf="enquiryType == 2">
+    <ng-template [ngIf]="enquiryType == +EnquiryType.Cargo">
         <div class="row">
             <div class="form-group col-lg-3 col-md-6 col-sm-12">
                 <label for="ShippersName">Shipper's Name</label>
-                <label class="form-control grey-input text-truncate">{{cargoquery.ShippersName}}&nbsp;</label>
+                <label class="form-control grey-input text-truncate">
+                    {{cargoquery.ShippersName}}&nbsp;
+                </label>
             </div>
+
             <div class="form-group col-lg-3 col-md-6 col-sm-12">
                 <label for="ShippersAddress">Shipper's Address</label>
-                <label class="form-control grey-input text-truncate">{{cargoquery.ShippersAddress}}&nbsp;</label>
+                <label class="form-control grey-input text-truncate">
+                    {{cargoquery.ShippersAddress}}&nbsp;
+                </label>
             </div>
+
             <div class="form-group col-lg-3 col-md-6 col-sm-12">
                 <label for="ShippersContactNumber">Shipper's Contact Number </label>
-                <label class="form-control grey-input text-truncate">{{cargoquery.ShippersContactNumber}}&nbsp;</label>
+                <label class="form-control grey-input text-truncate">
+                    {{cargoquery.ShippersContactNumber}}&nbsp;
+                </label>
             </div>
+
             <div class="form-group col-lg-3 col-md-6 col-sm-12">
                 <label for="ConsigneesName">Consignee's Name</label>
-                <label class="form-control grey-input text-truncate">{{cargoquery.ConsigneesName}}&nbsp;</label>
+                <label class="form-control grey-input text-truncate">
+                    {{cargoquery.ConsigneesName}}&nbsp;
+                </label>
             </div>
         </div>
+
         <div class="row">
             <div class="form-group col-lg-3 col-md-6 col-sm-12">
                 <label for="ConsigneesAddress">Consignee's Address</label>
-                <label class="form-control grey-input text-truncate">{{cargoquery.ConsigneesAddress}}&nbsp;</label>
+                <label class="form-control grey-input text-truncate">
+                    {{cargoquery.ConsigneesAddress}}&nbsp;
+                </label>
             </div>
+
             <div class="form-group col-lg-3 col-md-6 col-sm-12">
-                <label for="ConsigneesContactNumber">Consignee's Contac tNumber</label>
-                <label class="form-control grey-input text-truncate">{{cargoquery.ConsigneesContactNumber}}&nbsp;</label>
+                <label for="ConsigneesContactNumber">Consignee's Contac tNumber
+
+                </label>
+                <label class="form-control grey-input text-truncate">
+                    {{cargoquery.ConsigneesContactNumber}}&nbsp;
+                </label>
             </div>
+
             <div class="form-group col-lg-3 col-md-6 col-sm-12">
                 <label for="EnquiryReason">Enquiry Reason</label>
-                <label class="form-control grey-input text-truncate">{{cargoquery.EnquiryReason}}&nbsp;</label>
+                <label class="form-control grey-input text-truncate">
+                    {{cargoquery.EnquiryReason}}&nbsp;
+                </label>
             </div>
         </div>
-    </ng-container>
+    </ng-template>
 
-    <ng-container *ngIf="enquiryType >= 4">
+    <ng-template [ngIf]="enquiryType == +EnquiryType.GroundVictim">
+        <div class="row">
+            <div class="form-group col-lg-4 col-md-6 col-sm-12">
+                <label for="ConsigneesAddress">Victim's Name</label>
+                <label class="form-control grey-input text-truncate">{{groundvictimquery.VictimName}}&nbsp;</label>
+            </div>
+
+            <div class="form-group col-lg-4 col-md-6 col-sm-12">
+                <label for="ConsigneesContactNumber">Victim's Address</label>
+                <label class="form-control grey-input text-truncate">{{groundvictimquery.VictimAddress}}&nbsp;</label>
+            </div>
+
+            <div class="form-group col-lg-4 col-md-6 col-sm-12">
+                <label for="EnquiryReason">Victim's Contact</label>
+                <label class="form-control grey-input text-truncate">{{groundvictimquery.VictimContactNumber}}&nbsp;</label>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template [ngIf]="enquiryType >= +EnquiryType.Media && enquiryType <= +EnquiryType.CustomerDissatisfaction">
         <div class="row">
             <form [formGroup]="form" class="cc-other-form">
                 <input type="hidden" formControlName="EnquiryId" name="EnquiryId" />
 
                 <div class="form-group col-md-4 col-sm-12">
                     <label for="source">Source</label>
-                    <label class="form-control grey-input text-truncate">{{otherquery.source}}&nbsp;</label>
+                    <label class="form-control grey-input text-truncate">
+                        {{otherquery.source}}&nbsp;
+                    </label>
                 </div>
 
                 <div class="form-group col-md-6 col-sm-12">
                     <label for="Query">Discussion Notes <span class="required">*</span></label>
-                    <small [hidden]="form.controls.Queries.valid || (form.controls.Queries.pristine && !submitted)" class="text-danger pull-right">Required
-                        (Max. Char 1000)</small>
-                    <textarea rows="1" id="Query" class="form-control" name="Query" formControlName="Queries" placeholder="Enter Discussion Notes"></textarea>
+                    <small [hidden]="form.controls.Queries.valid || (form.controls.Queries.pristine && !submitted)"
+                        class="text-danger pull-right">
+                        Required (Max. Char 1000)
+                    </small>
+                    <textarea rows="1" id="Query" class="form-control" name="Query" formControlName="Queries"
+                        placeholder="Enter Discussion Notes"></textarea>
                 </div>
 
                 <div class="form-group col-md-2 col-sm-12">
-                    <button class="btn btn-primary cc-other-button" type="button" (click)="saveEnquiryDemandCaller()">Submit</button>
+                    <button class="btn btn-primary cc-other-button" type="button" (click)="SaveEnquiryDemandCaller()">Submit</button>
                 </div>
             </form>
         </div>
-    </ng-container>
+    </ng-template>
 
-    <ng-container *ngIf="enquiryType < 4">
+    <ng-template [ngIf]="enquiryType < +EnquiryType.Media || enquiryType == +EnquiryType.GroundVictim">
         <form [formGroup]="form">
             <div class="row">
                 <div class="col-lg-8 col-md-12">
                     <input type="hidden" formControlName="EnquiryId" name="EnquiryId" />
+
                     <div class="row">
                         <div class="form-group col-md-6 col-sm-12">
                             <label for="Query">Discussion Notes <span class="required">*</span></label>
-                            <small [hidden]="form.controls.Queries.valid || (form.controls.Queries.pristine && !submitted)" class="text-danger pull-right">Required
-                                (Max. Char 1000)</small>
-                            <textarea rows="1" id="Query" class="form-control" name="Query" formControlName="Queries" placeholder="Enter Discussion Notes"></textarea>
+                            <small [hidden]="form.controls.Queries.valid || (form.controls.Queries.pristine && !submitted)"
+                                class="text-danger pull-right">
+                                Required (Max. Char 1000)
+                            </small>
+                            <textarea rows="1" id="Query" class="form-control" name="Query" formControlName="Queries"
+                                placeholder="Enter Discussion Notes"></textarea>
                         </div>
 
-                        <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=1">
-                            <label for="Passengers">PDA Name <span class="required">*</span></label>
-                            <autocomplete [items]="passengers" (notify)="onNotifyPassenger($event)" (InvokeAutoCompleteReset)="onResetPassenger()" [actionLinks]="actionLinks"
-                                [initialvalue]="initialvalue" (actionClickHandler)="onActionClick($event)">
+                        <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=EnquiryType.Passenger">
+                            <label for="Passengers">Passenger Name <span class="required">*</span></label>
+
+                            <autocomplete [items]="passengers" (notify)="onNotifyPassenger($event)"
+                                (InvokeAutoCompleteReset)="onResetPassenger()" [actionLinks]="actionLinks"
+                                [initialvalue]="initialvalue" (actionClickHandler)="onPDAActionClick($event)">
                             </autocomplete>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=3">
-                            <label for="Passengers">PDA Name <span class="required">*</span></label>
-                            <autocomplete [items]="crews" (notify)='onNotifyCrew($event)' (InvokeAutoCompleteReset)="onResetCrew()" [initialvalue]="initialvalue"
-                                [actionLinks]="actionLinks" (actionClickHandler)="onActionClick($event)">
+                        <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=EnquiryType.Crew">
+                            <label for="Passengers">Crew Name <span class="required">*</span></label>
+
+                            <autocomplete [items]="crews" (notify)='onNotifyCrew($event)' (InvokeAutoCompleteReset)="onResetCrew()"
+                                [initialvalue]="initialvalue" [actionLinks]="actionLinks" (actionClickHandler)="onPDAActionClick($event)">
                             </autocomplete>
                         </div>
 
-                        <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=2">
+                        <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=EnquiryType.Cargo">
                             <label for="awb">AWB <span class="required">*</span></label>
-                            <autocomplete [items]="awbs" (notify)='onNotifyCargo($event)' (InvokeAutoCompleteReset)="onResetCargo()" [initialvalue]="initialvalue"
-                                [actionLinks]="actionLinks" (actionClickHandler)="onActionCargoClick($event)">
+
+                            <autocomplete [items]="awbs" (notify)='onNotifyCargo($event)' (InvokeAutoCompleteReset)="onResetCargo()"
+                                [initialvalue]="initialvalue" [actionLinks]="actionLinks" (actionClickHandler)="onCargoActionClick($event)">
+                            </autocomplete>
+                        </div>
+
+                        <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=EnquiryType.GroundVictim">
+                            <label for="awb">Ground Victim <span class="required">*</span></label>
+
+                            <autocomplete [items]="victims" (notify)='onNotifyGroundVictim($event)'
+                                (InvokeAutoCompleteReset)="onResetGroundVictim()" [initialvalue]="initialvalue">
                             </autocomplete>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=1">
+                    <div class="row" [hidden]="enquiryType != EnquiryType.Passenger">
+                        <div class="form-group col-md-6 col-sm-12">
                             <label for="LastName">View Passengers with same PNR </label>
+
                             <div class="multiselect-container">
-                                <div class="multiselect-selector" (click)="showListsamepnr($event); $event.stopPropagation();">
-                                    <i class="fa fa-caret-down fa-pull-right fa-fw" aria-hidden="true"></i> {{selectedcountpnr>0?
-                                    selectedcountpnr + ' Passengers(s) selected' : 'View Co-Passenger'}}
+                                <div class="multiselect-selector" (click)="ShowListsOfSamePNR($event); $event.stopPropagation();">
+                                    <i class="fa fa-caret-down fa-pull-right fa-fw" aria-hidden="true"></i>
+                                    {{selectedcountpnr > 0 ? selectedcountpnr + ' Passengers(s) selected' : 'View
+                                    Co-Passenger'}}
                                 </div>
+
                                 <ul class="multiselect-list1 dropdown-menu-down" [hidden]="!list1Selected" (click)="$event.stopPropagation();">
                                     <li *ngFor="let copassenger of copassengerlistpnr">
                                         <span>{{copassenger.PassengerName}}</span>
@@ -179,17 +275,20 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=1">
+                        <div class="form-group col-md-6 col-sm-12">
                             <label for="LastName">Select Co-passengers from All Passengers</label>
+
                             <div class="multiselect-container">
-                                <div class="multiselect-selector" (click)="showListPassengers($event); $event.stopPropagation();">
+                                <div class="multiselect-selector" (click)="ShowPassengers($event); $event.stopPropagation();">
                                     <i class="fa fa-caret-down fa-pull-right fa-fw" aria-hidden="true"></i>
-                                    {{consolidatedCopassengers.length > 0 ? consolidatedCopassengers.length + ' Passengers(s) selected' : 'Select Co-passenger'}}
+                                    {{consolidatedCopassengers.length > 0 ? consolidatedCopassengers.length + '
+                                    Passengers(s) selected' : 'Select Co-passenger'}}
                                 </div>
+
                                 <ul class="multiselect-list1 dropdown-menu-down" [hidden]="!list2Selected" (click)="$event.stopPropagation();">
                                     <li *ngFor="let copassenger of copassengerlistPassengerForMappedPerson">
-                                        <input type="checkbox" disabled="{{copassenger.PNRdisabled}}" aria-label="Callback" [checked]="copassenger.IsSelected" (change)="selectCopassengerfrompassenger($event,copassenger)"
-                                        />
+                                        <input type="checkbox" disabled="{{copassenger.PNRdisabled}}" aria-label="Callback"
+                                            [checked]="copassenger.IsSelected" (change)="SelectCoPassengerFromSelectedPassenger($event,copassenger)" />
                                         <span>{{copassenger.PassengerName}}</span>
                                     </li>
                                 </ul>
@@ -198,7 +297,7 @@
                     </div>
                 </div>
 
-                <div class="form-group col-lg-4 col-md-12" [hidden]="enquiryType!=1">
+                <div class="form-group col-lg-4 col-md-12" [hidden]="enquiryType != +EnquiryType.Passenger">
                     <label for="LastName">Select PDA to raise demands / Enquiries </label>
                     <responsive-table [scrollableclass]="true">
                         <table responsive-table-body>
@@ -210,13 +309,11 @@
                                 <tr [hidden]="consolidatedCopassengers.length > 0">
                                     <td colspan="2">No Co-Passengers mapped yet</td>
                                 </tr>
+
                                 <tr *ngFor="let copassenger of consolidatedCopassengers">
                                     <td data-title="Select Co-Passenger">
-                                        <input type="checkbox" aria-label="Callback" [checked]="copassenger.IsSelected" (change)="selectCopassengerAll($event,copassenger)"
-                                        />
-
-                                        <!-- <md-checkbox class="Marght" [ngModel]="copassenger.IsSelected" (change)="selectCopassengerAll($event,copassenger)" aria-label="Callback">
-                                        </md-checkbox> -->
+                                        <input type="checkbox" aria-label="Callback" [checked]="copassenger.IsSelected"
+                                            (change)="SelectAllCoPassengers($event,copassenger)" />
                                     </td>
                                     <td data-title="Co-Passenger Name">{{copassenger.PassengerName}}</td>
                                 </tr>
@@ -226,17 +323,28 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-sm-12" [hidden]="enquiryType > 3 || isArchive || DemandCheckDisabled == 'disabled'">
+            <div class="row" [hidden]="(enquiryType >= +EnquiryType.Media && enquiryType <= +EnquiryType.CustomerDissatisfaction) || isArchive || DemandCheckDisabled == 'disabled'">
+                <div class="col-sm-12">
                     <strong><label for="LastName">Select type of demands to be raised</label></strong>
-                    <br>
-                    <md-checkbox [disabled]="isArchive" id="IsCallBack" formControlName="IsCallBack" aria-label="Add" disabled="{{DemandCheckDisabled}}">
-                        Callback &nbsp;
+                </div>
+
+                <div class="col-md-4 col-sm-12">
+                    <md-checkbox [disabled]="isArchive" id="IsCallBack" formControlName="IsCallBack" aria-label="Add"
+                        disabled="{{DemandCheckDisabled}}">
+                        Call back Request &nbsp;
                     </md-checkbox>
-                    <md-checkbox [disabled]="isArchive" id="IsTravelRequest" formControlName="IsTravelRequest" aria-label="Add" disabled="{{DemandCheckDisabled}}">
+                </div>
+
+                <div class="col-md-4 col-sm-12">
+                    <md-checkbox [disabled]="isArchive" id="IsTravelRequest" formControlName="IsTravelRequest"
+                        aria-label="Add" disabled="{{DemandCheckDisabled}}">
                         Travel Request &nbsp;
                     </md-checkbox>
-                    <md-checkbox [disabled]="isArchive" id="IsAdminRequest" formControlName="IsAdminRequest" aria-label="Add" disabled="{{DemandCheckDisabled}}">
+                </div>
+
+                <div class="col-md-4 col-sm-12">
+                    <md-checkbox [disabled]="isArchive" id="IsAdminRequest" formControlName="IsAdminRequest" aria-label="Add"
+                        disabled="{{DemandCheckDisabled}}">
                         Admin Request &nbsp;
                     </md-checkbox>
                 </div>
@@ -244,100 +352,179 @@
 
             <div class="row">
                 <div class="form-group col-sm-12">
-                    <button class="btn btn-primary" type="button" (click)="saveEnquiryDemandCaller()">Submit</button>
+                    <button class="btn btn-primary" type="button" (click)="SaveEnquiryDemandCaller()">Submit</button>
                 </div>
             </div>
         </form>
-    </ng-container>
+    </ng-template>
 
-</ng-container>
 
-<ng-container *ngIf="!hideModal">
+
+</ng-template>
+
+<ng-template [ngIf]="!hidePDAModal">
     <div class="row">
-        <div class="col-lg-6 col-md-8 col-sm-8">
-            <h4 class="modal-title">Communication Trail</h4>
-        </div>
-        <div class="col-lg-6 col-md-4 col-sm-2">
-            <button type="button" class="close pull-right" aria-label="Close" (click)="cancelModal()">
-                <span aria-hidden="true">&times;</span>
-            </button>
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-8 col-sm-8">
+                            <h6 class="modal-title">PDA Communication Trail</h6>
+                        </div>
+
+                        <div class="col-lg-6 col-md-4 col-sm-2">
+                            <button type="button" class="close pull-right" aria-label="Close" (click)="cancelModal()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row modalBodyHeaderStyle">
+                        <div class="col-sm-6 form-group">
+                            <label class="lebelHeaderStyle"><strong>PDA Name</strong></label>
+                            <label class="form-control grey-input text-truncate">{{pdaNameForTrail}}&nbsp;</label>
+                        </div>
+
+                        <div class="col-sm-6 form-group">
+                            <label class="lebelHeaderStyle"><strong>Reference Number</strong></label>
+                            <label class="form-control grey-input text-truncate">{{ticketNumber}}&nbsp;</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <responsive-table>
+                                <table responsive-table-body>
+                                    <tbody>
+                                        <tr *ngFor="let comm of communications">
+                                            <td data-title="comm"><strong>{{comm.RequesterType}}</strong> logged by
+                                                <span [hidden]="comm.RequesterDepartment.length==0">
+                                                    <strong>{{comm.RequesterName}} (Dept:
+                                                        {{comm.RequesterDepartment}})&nbsp;</strong>
+                                                </span>
+                                                <span> on
+                                                    <strong>{{comm.CreatedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;:</strong>
+                                                </span> {{comm.Answers}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </responsive-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</ng-template>
 
-    <div class="row modalBodyHeaderStyle">
-        <div class="col-sm-6 form-group">
-            <label class="lebelHeaderStyle"><strong>PDA Name</strong></label>
-            <label class="form-control">{{pdaNameForTrail}}&nbsp;</label>
-        </div>
-        <div class="col-sm-6 form-group">
-            <label class="lebelHeaderStyle"><strong>Reference Number</strong></label>
-            <label class="form-control">{{ticketNumber}}&nbsp;</label>
-        </div>
-    </div>
-
+<ng-template [ngIf]="!hideCargoModal">
     <div class="row">
-        <div class="col-12">
-            <responsive-table>
-                <table responsive-table-body>
-                    <tbody>
-                        <tr *ngFor="let comm of communications">
-                            <td data-title="comm"><strong>{{comm.RequesterType}}</strong> logged by
-                                <span [hidden]="comm.RequesterDepartment.length==0">
-                                    <strong>{{comm.RequesterName}} (Dept: {{comm.RequesterDepartment}})&nbsp;</strong>
-                                </span>
-                                <span> on
-                                    <strong>{{comm.CreatedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;:</strong>
-                                </span> {{comm.Answers}}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </responsive-table>
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-8 col-sm-8">
+                            <h6 class="modal-title">Cargo Communication Trail</h6>
+                        </div>
+
+                        <div class="col-lg-6 col-md-4 col-sm-2">
+                            <button type="button" class="close pull-right" aria-label="Close" (click)="cancelModal()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row modalBodyHeaderStyle">
+                        <div class="col-sm-6 form-group">
+                            <label class="lebelHeaderStyle"><strong>AWB Number</strong></label>
+                            <label class="form-control grey-input text-truncate">{{AWBNumber}}&nbsp;</label>
+                        </div>
+
+                        <div class="col-sm-6 form-group">
+                            <label class="lebelHeaderStyle"><strong>Reference Number</strong></label>
+                            <label class="form-control grey-input text-truncate">{{ticketNumber}}&nbsp;</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <responsive-table>
+                                <table responsive-table-body>
+                                    <tbody>
+                                        <tr *ngFor="let comm of communications">
+                                            <td data-title="comm"><strong>{{comm.RequesterType}}</strong> logged by
+                                                <span [hidden]="comm.RequesterDepartment.length==0">
+                                                    <strong>{{comm.RequesterName}} (Dept:
+                                                        {{comm.RequesterDepartment}})&nbsp;</strong>
+                                                </span>
+                                                <span> on
+                                                    <strong>{{comm.CreatedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;:</strong>
+                                                </span> {{comm.Answers}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </responsive-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</ng-container>
+</ng-template>
 
-<ng-container *ngIf="!hideModalCargo">
+<ng-template [ngIf]="!hideVictimModal">
     <div class="row">
-        <div class="col-lg-6 col-md-8 col-sm-8">
-            <h4 class="modal-title">Communication Trail</h4>
-        </div>
-        <div class="col-lg-6 col-md-4 col-sm-2">
-            <button type="button" class="close pull-right" aria-label="Close" (click)="cancelModal()">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </div>
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-8 col-sm-8">
+                            <h6 class="modal-title">Communication Trail</h6>
+                        </div>
 
-    <div class="row modalBodyHeaderStyle">
-        <div class="col-sm-6 form-group">
-            <label class="lebelHeaderStyle"><strong>AWB Number</strong></label>
-            <label class="form-control">{{AWBNumber}}&nbsp;</label>
-        </div>
-        <div class="col-sm-6 form-group">
-            <label class="lebelHeaderStyle"><strong>Reference Number</strong></label>
-            <label class="form-control">{{ticketNumber}}&nbsp;</label>
-        </div>
-    </div>
+                        <div class="col-lg-6 col-md-4 col-sm-2">
+                            <button type="button" class="close pull-right" aria-label="Close" (click)="cancelModal()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
-    <div class="row">
-        <div class="col-12">
-            <responsive-table>
-                <table responsive-table-body>
-                    <tbody>
-                        <tr *ngFor="let comm of communications">
-                            <td data-title="comm"><strong>{{comm.RequesterType}}</strong> logged by
-                                <span [hidden]="comm.RequesterDepartment.length==0">
-                                    <strong>{{comm.RequesterName}} (Dept: {{comm.RequesterDepartment}})&nbsp;</strong>
-                                </span>
-                                <span> on
-                                    <strong>{{comm.CreatedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;:</strong>
-                                </span> {{comm.Answers}}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </responsive-table>
+                <div class="card-body">
+                    <div class="row modalBodyHeaderStyle">
+                        <div class="col-sm-12 form-group">
+                            <label class="lebelHeaderStyle"><strong>Ground Victim Name</strong></label>
+                            <label class="form-control grey-input text-truncate">{{GroundVictimName}}&nbsp;</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <responsive-table>
+                                <table responsive-table-body>
+                                    <tbody>
+                                        <tr *ngFor="let comm of communications">
+                                            <td data-title="comm"><strong>{{comm.RequesterType}}</strong> logged by
+                                                <span [hidden]="comm.RequesterDepartment.length==0">
+                                                    <strong>{{comm.RequesterName}} (Dept:
+                                                        {{comm.RequesterDepartment}})&nbsp;</strong>
+                                                </span>
+                                                <span> on
+                                                    <strong>{{comm.CreatedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;:</strong>
+                                                </span> {{comm.Answers}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </responsive-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</ng-container>
+</ng-template>
