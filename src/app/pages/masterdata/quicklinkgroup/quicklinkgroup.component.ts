@@ -1,5 +1,7 @@
-import { Component, OnInit, ViewEncapsulation, 
-    Output, EventEmitter, ViewChild, Input } from '@angular/core';
+import {
+    Component, OnInit, ViewEncapsulation,
+    Output, EventEmitter, ViewChild, Input
+} from '@angular/core';
 import { QuickLinkGroupModel } from './quicklinkgroup.model';
 import { KeyValue, AutocompleteComponent } from '../../../shared';
 import { QuickLinkGroupService } from './quicklinkgroup.service';
@@ -10,11 +12,12 @@ import { ToastrService, ToastrConfig } from 'ngx-toastr';
     encapsulation: ViewEncapsulation.None,
     template: `
     <div class="row">
-        <div class="col-10">
+        <div class="col-sm-10">
+            <label *ngIf="caption != ''">{{caption}}</label>
             <autocomplete [items]="quickLinkGroups" (notify)="onNotify($event)" (InvokeAutoCompleteReset)="invokeReset();"></autocomplete>
         </div>
-        <div class="col-2" *ngIf="enableAddButton">
-            <button class="btn btn-primary" type="button" (click)="onAddGroupClick()">Add</button>
+        <div class="col-sm-2 pl-md-0" style="margin-top: 19px;" *ngIf="enableAddButton">
+            <button class="btn btn-primary" type="button" (click)="onAddGroupClick()">Add Group</button>
         </div>
     </div>
     `
@@ -28,6 +31,7 @@ export class QuickLinkGroupComponent implements OnInit {
     @Output() notifyOnInsertion: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
 
     @Input() enableAddButton: boolean = false;
+    @Input() caption: string = '';
 
     public quickLinkGroups: Array<KeyValue> = new Array<KeyValue>();
     quickLinkGroup: QuickLinkGroupModel;

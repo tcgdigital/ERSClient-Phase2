@@ -33,14 +33,14 @@ ul.multiselect-list {
     border: $multiselect-border solid 1px;
     border-radius: 0 0 6px 6px;
     color: $multiselect-color;
-    width: 95%;
+    width: calc(100% - 30px);
     font-size: 12px;
     max-height: 150px;
     position: absolute;
     z-index: 999;
     overflow-x: hidden;
     overflow-y: auto;
-    top: 51px;
+    top: 48px;
     li {
         padding: 6px 10px;
         font-size: 12px;
@@ -66,31 +66,31 @@ ul.multiselect-list {
 }
 
 @media screen and (max-width: $resXS-E) {
-    ul.multiselect-list {
-        width: 91.5%;
-    }
+    // ul.multiselect-list {
+    //     width: 91.5%;
+    // }
 }
 
 @media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {
-    ul.multiselect-list {
-        width: 91.5%;
-    }
+    // ul.multiselect-list {
+    //     width: 91.5%;
+    // }
 }
 
 @media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
-    ul.multiselect-list {
-        width: 90.5%;
-    }
+    // ul.multiselect-list {
+    //     width: 90.5%;
+    // }
 }
 
 @media screen and (min-width: $resLG-S) and (max-width: $resLG-E) {
-    ul.multiselect-list {
-        width: 93.5%;
-    }
+    // ul.multiselect-list {
+    //     width: 93.5%;
+    // }
 }
 
 @media screen and (min-width: $resXL-S) {
-    ul.multiselect-list {
-        width: 95%;
-    }
+    // ul.multiselect-list {
+    //     width: 95%;
+    // }
 }

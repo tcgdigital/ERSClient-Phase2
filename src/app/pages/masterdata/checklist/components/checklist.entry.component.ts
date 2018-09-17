@@ -40,7 +40,7 @@ export class ChecklistEntryComponent implements OnInit, OnDestroy {
     activeDepartments: DepartmentModel[] = [];
     activeEmergencyTypes: EmergencyTypeModel[] = [];
     showAdd: boolean = false;
-    listSelected: boolean;
+    isParentChecklistSelected: boolean;
     buttonValue: string = '';
     currentDepartmentId: number;
     currentDepartmentName: string;
@@ -78,7 +78,7 @@ export class ChecklistEntryComponent implements OnInit, OnDestroy {
         private toastrConfig: ToastrConfig,
         private fileUploadService: FileUploadService) {
         this.showAdd = false;
-        this.listSelected = false;
+        this.isParentChecklistSelected = false;
         this.buttonValue = 'Add Checklist';
         this.checkListModel = new ChecklistModel();
         this.checkListModelEdit = new ChecklistModel();
@@ -90,7 +90,7 @@ export class ChecklistEntryComponent implements OnInit, OnDestroy {
     }
 
     showList(): void {
-        this.listSelected = !this.listSelected;
+        this.isParentChecklistSelected = !this.isParentChecklistSelected;
     }
 
     selectParentChecklist(checklistParent: ChecklistModel): void {

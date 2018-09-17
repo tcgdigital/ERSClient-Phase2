@@ -7,10 +7,10 @@
             <div class="card-header">
                 <div class="row">
                     <div class="col-12">
-                        <label>Select Group</label>
-                        <quick-link-group (notifyOnChange)="onNotifyChanges($event)" (notifyOnReset)="onNotifyReset()"></quick-link-group>
+                        <!-- <label>Select Group</label> -->
+                        <quick-link-group [caption]="groupCaption" (notifyOnChange)="onNotifyChanges($event)"
+                            (notifyOnReset)="onNotifyReset()"></quick-link-group>
                     </div>
-
                 </div>
             </div>
             <div class="card-block">
@@ -32,13 +32,17 @@
                                         <td colspan="5">No records found.</td>
                                     </tr>
                                     <tr *ngFor="let quicklink of quicklinks">
-                                        <td data-title="Group Name">{{(quicklink.QuickLinkGroup!= null)?quicklink.QuickLinkGroup.GroupName:''}}&nbsp;</td>
+                                        <td data-title="Group Name">{{(quicklink.QuickLinkGroup!=
+                                            null)?quicklink.QuickLinkGroup.GroupName:''}}&nbsp;</td>
                                         <td data-title="Quick Link Name">{{quicklink.QuickLinkName}}&nbsp;</td>
-                                        <td data-title="Quick Link URL"><a href="{{quicklink.QuickLinkURL}}" target="_blank">{{
+                                        <td data-title="Quick Link URL">
+                                            <a href="{{quicklink.QuickLinkURL}}" target="_blank">{{
                                                 quicklink.QuickLinkURL }}&nbsp;
-                                            </a></td>
+                                            </a>
+                                        </td>
                                         <td data-title="File">
-                                            <a target="_self" *ngIf="quicklink.UploadURL!=null" href="{{quicklink.UploadURL}}" download="QuicklinkFile">
+                                            <a target="_self" *ngIf="quicklink.UploadURL!=null" href="{{quicklink.UploadURL}}"
+                                                download="QuicklinkFile">
                                                 <i class="fa fa-download fa-2x" aria-hidden="true">
                                                 </i>
                                             </a>

@@ -984,7 +984,6 @@ export class GlobalConstants {
         {
             id: 'Checklist',
             title: 'Checklists',
-            // icon: 'fa fa-edge fa-2x',
             url: '/pages/dashboard/actionable',
             selected: true,
             hidden: false,
@@ -1009,7 +1008,6 @@ export class GlobalConstants {
         }, {
             id: 'Demand',
             title: 'Demand',
-            // icon: 'fa fa-linux fa-2x',
             url: '/pages/dashboard/demand',
             selected: false,
             hidden: false,
@@ -1048,7 +1046,6 @@ export class GlobalConstants {
         }, {
             id: 'AffectedPeople',
             title: 'Affected People',
-            // icon: 'fa fa-apple fa-2x',
             url: '/pages/dashboard/people',
             selected: false,
             hidden: false,
@@ -1071,13 +1068,19 @@ export class GlobalConstants {
                 }
             ]
         }, {
+            id: 'GroundVictims',
+            title: 'Ground Victims',
+            url: '/pages/dashboard/groundmembers',
+            selected: false,
+            hidden: false,
+            order: 4
+        }, {
             id: 'AffectedCargo',
             title: 'Affected Cargo',
-            // icon: 'fa fa-chrome fa-2x',
             url: '/pages/dashboard/cargo',
             selected: false,
             hidden: false,
-            order: 4,
+            order: 5,
             subtab: [
                 {
                     id: 'Cargo',
@@ -1102,15 +1105,14 @@ export class GlobalConstants {
             url: '/pages/dashboard/broadcast',
             selected: false,
             hidden: false,
-            order: 5
+            order: 6
         }, {
             id: 'PresidentMessage',
             title: 'President Messages',
-            // icon: 'fa fa-firefox fa-2x',
             url: '/pages/dashboard/presidentMessage',
             selected: false,
             hidden: false,
-            order: 6,
+            order: 7,
             subtab: [
                 {
                     id: 'PresidentMessageRelease',
@@ -1131,11 +1133,10 @@ export class GlobalConstants {
         }, {
             id: 'MediaMessage',
             title: 'Media Messages',
-            // icon: 'fa fa-medium fa-2x',
             url: '/pages/dashboard/media',
             selected: false,
             hidden: false,
-            order: 7,
+            order: 8,
             subtab: [
                 {
                     id: 'MediaMessageRelease',
@@ -1154,35 +1155,9 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'OtherQuery',
-            title: 'Other Query',
-            // icon: 'fa fa-windows fa-2x',
-            url: '/pages/dashboard/otherQuery',
-            selected: false,
-            hidden: false,
-            order: 8,
-            subtab: [
-                {
-                    id: 'ReceivedCalls',
-                    title: 'Received Calls',
-                    url: './receivedCalls',
-                    selected: false,
-                    hidden: false,
-                    order: 1
-                }, {
-                    id: 'AssignedCalls',
-                    title: 'Assigned Calls',
-                    url: './assignedcalls',
-                    selected: false,
-                    hidden: false,
-                    order: 2
-                }
-            ]
-        }, {
-            id: 'CrewQuery',
-            title: 'Crew Query',
-            // icon: 'fa fa-twitter fa-2x',
-            url: '/pages/dashboard/crewQuery',
+            id: 'PassengerQuery',
+            title: 'Passenger Query',
+            url: '/pages/dashboard/passengerquery',
             selected: false,
             hidden: false,
             order: 9,
@@ -1204,10 +1179,9 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'PassengerQuery',
-            title: 'Passenger Query',
-            // icon: 'fa fa-twitter fa-2x',
-            url: '/pages/dashboard/passengerquery',
+            id: 'GroundVictimQuery',
+            title: 'Ground Victim Query',
+            url: '/pages/dashboard/groundvictimquery',
             selected: false,
             hidden: false,
             order: 10,
@@ -1222,17 +1196,16 @@ export class GlobalConstants {
                 }, {
                     id: 'AssignedCalls',
                     title: 'Assigned Calls',
-                    url: './assignedcalls',
+                    url: './assignedCalls',
                     selected: false,
                     hidden: false,
                     order: 2
                 }
             ]
         }, {
-            id: 'CargoQuery',
-            title: 'Cargo Query',
-            // icon: 'fa fa-twitter fa-2x',
-            url: '/pages/dashboard/cargoquery',
+            id: 'CrewQuery',
+            title: 'Crew Query',
+            url: '/pages/dashboard/crewQuery',
             selected: false,
             hidden: false,
             order: 11,
@@ -1254,10 +1227,9 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'MediaQuery',
-            title: 'Media Query',
-            // icon: 'fa fa-twitter fa-2x',
-            url: '/pages/dashboard/mediaquery',
+            id: 'CargoQuery',
+            title: 'Cargo Query',
+            url: '/pages/dashboard/cargoquery',
             selected: false,
             hidden: false,
             order: 12,
@@ -1279,10 +1251,9 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'FutureTravelQuery',
-            title: 'Future Travel Query',
-            // icon: 'fa fa-twitter fa-2x',
-            url: '/pages/dashboard/futuretravelquery',
+            id: 'MediaQuery',
+            title: 'Media Query',
+            url: '/pages/dashboard/mediaquery',
             selected: false,
             hidden: false,
             order: 13,
@@ -1306,7 +1277,6 @@ export class GlobalConstants {
         }, {
             id: 'GeneralUpdateQuery',
             title: 'General Update Query',
-            // icon: 'fa fa-twitter fa-2x',
             url: '/pages/dashboard/generalupdatequery',
             selected: false,
             hidden: false,
@@ -1331,7 +1301,6 @@ export class GlobalConstants {
         }, {
             id: 'SituationalUpdatesQuery',
             title: 'Situational Updates Query',
-            // icon: 'fa fa-twitter fa-2x',
             url: '/pages/dashboard/situationalupdatesquery',
             selected: false,
             hidden: false,
@@ -1354,10 +1323,9 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'CustomerDissatisfactionQuery',
-            title: 'Customer Dissatisfaction Query',
-            // icon: 'fa fa-twitter fa-2x',
-            url: '/pages/dashboard/customerdissatisfactionquery',
+            id: 'FutureTravelQuery',
+            title: 'Future Travel Query',
+            url: '/pages/dashboard/futuretravelquery',
             selected: false,
             hidden: false,
             order: 16,
@@ -1379,17 +1347,33 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'GroundVictims',
-            title: 'Ground Victims',
-            // icon: 'fa fa-twitter fa-2x',
-            url: '/pages/dashboard/groundmembers',
+            id: 'CustomerDissatisfactionQuery',
+            title: 'Customer Dissatisfaction Query',
+            url: '/pages/dashboard/customerdissatisfactionquery',
             selected: false,
             hidden: false,
-            order: 17
+            order: 17,
+            subtab: [
+                {
+                    id: 'ReceivedCalls',
+                    title: 'Received Calls',
+                    url: './receivedCalls',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'AssignedCalls',
+                    title: 'Assigned Calls',
+                    url: './assignedcalls',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
         }, {
-            id: 'GroundVictimQuery',
-            title: 'Ground Victim Query',
-            url: '/pages/dashboard/groundvictimquery',
+            id: 'OtherQuery',
+            title: 'Other Query',
+            url: '/pages/dashboard/otherQuery',
             selected: false,
             hidden: false,
             order: 18,
@@ -1404,7 +1388,7 @@ export class GlobalConstants {
                 }, {
                     id: 'AssignedCalls',
                     title: 'Assigned Calls',
-                    url: './assignedCalls',
+                    url: './assignedcalls',
                     selected: false,
                     hidden: false,
                     order: 2

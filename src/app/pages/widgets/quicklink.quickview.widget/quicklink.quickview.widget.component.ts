@@ -24,6 +24,7 @@ export class QuickLinkQuickViewWidgetComponent implements OnInit {
     @Input('initiatedDepartmentId') initiatedDepartmentId: number;
 
     public incidentId: number;
+    public groupCaption: string = 'Select Group';
     quicklinks: QuickLinkModel[] = [];
     quicklinkGroups: QuickLinkGroupModel[] = [];
     public isShowPage: boolean = true;
