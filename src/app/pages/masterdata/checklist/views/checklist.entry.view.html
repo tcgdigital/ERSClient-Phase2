@@ -14,14 +14,13 @@
                     </select>
                 </div>
                 <div class="form-group col-lg-8 col-md-12 cl-sm-12">
-
                     <label for="ParentCheckListId" class="mb-0">Select Parent CheckList:</label>
                     <div class="multiselect-container">
                         <div class="multiselect-selector" (click)="showList(); $event.stopPropagation();">
-                            <i class="fa fa-caret-down fa-pull-right fa-fw" aria-hidden="true"></i> {{selectedcount>0?
+                            <i class="fa fa-pull-right fa-fw" aria-hidden="true"></i> {{selectedcount>0?
                             selectedcount + ' Parent(s) selected' : 'Select Parent'}}
                         </div>
-                        <ul class="multiselect-list" [hidden]="!listSelected" (click)="$event.stopPropagation();">
+                        <ul class="multiselect-list" [hidden]="!isParentChecklistSelected" (click)="$event.stopPropagation();">
                             <li>
                                 <input type="checkbox" aria-label="Callback" [(ngModel)]="isSelected" (change)="selectAllParent()" />
                                 <span>Select All</span>

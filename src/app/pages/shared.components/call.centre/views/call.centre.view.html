@@ -262,12 +262,12 @@
 
                             <div class="multiselect-container">
                                 <div class="multiselect-selector" (click)="ShowListsOfSamePNR($event); $event.stopPropagation();">
-                                    <i class="fa fa-caret-down fa-pull-right fa-fw" aria-hidden="true"></i>
+                                    <i class="fa fa-pull-right expandStyle" [ngClass]="isPaxWithSamePNRSelected ? 'fa-times text-danger' : 'fa-caret-down'" aria-hidden="true"></i>
                                     {{selectedcountpnr > 0 ? selectedcountpnr + ' Passengers(s) selected' : 'View
                                     Co-Passenger'}}
                                 </div>
 
-                                <ul class="multiselect-list1 dropdown-menu-down" [hidden]="!list1Selected" (click)="$event.stopPropagation();">
+                                <ul class="multiselect-list1 dropdown-menu-down" [hidden]="!isPaxWithSamePNRSelected" (click)="$event.stopPropagation();">
                                     <li *ngFor="let copassenger of copassengerlistpnr">
                                         <span>{{copassenger.PassengerName}}</span>
                                     </li>
@@ -280,12 +280,12 @@
 
                             <div class="multiselect-container">
                                 <div class="multiselect-selector" (click)="ShowPassengers($event); $event.stopPropagation();">
-                                    <i class="fa fa-caret-down fa-pull-right fa-fw" aria-hidden="true"></i>
+                                    <i class="fa fa-pull-right expandStyle" [ngClass]="isCoPaxSelected ? 'fa-times text-danger' : 'fa-caret-down'" aria-hidden="true"></i>
                                     {{consolidatedCopassengers.length > 0 ? consolidatedCopassengers.length + '
                                     Passengers(s) selected' : 'Select Co-passenger'}}
                                 </div>
 
-                                <ul class="multiselect-list1 dropdown-menu-down" [hidden]="!list2Selected" (click)="$event.stopPropagation();">
+                                <ul class="multiselect-list1 dropdown-menu-down" [hidden]="!isCoPaxSelected" (click)="$event.stopPropagation();">
                                     <li *ngFor="let copassenger of copassengerlistPassengerForMappedPerson">
                                         <input type="checkbox" disabled="{{copassenger.PNRdisabled}}" aria-label="Callback"
                                             [checked]="copassenger.IsSelected" (change)="SelectCoPassengerFromSelectedPassenger($event,copassenger)" />

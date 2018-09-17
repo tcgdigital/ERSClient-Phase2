@@ -3,59 +3,46 @@
         <input id="QuickLinkId" class="form-control" type="hidden" name="QuickLinkId" formControlName="QuickLinkId"
             [(ngModel)]="quickLinkModel.QuickLinkId" />
         <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <div class="form-group">
-                    <label for="QuickLinkName">Quick Link Name:<span class="required">*</span></label>
-                    <input id="QuickLinkName" class="form-control" type="text" name="QuickLinkName" formControlName="QuickLinkName"
-                        placeholder="Enter QuickLink Name" />
-                    <small *ngIf="!form.controls.QuickLinkName.valid" [hidden]="form.controls.QuickLinkName.valid || (form.controls.QuickLinkName.pristine && !submitted)"
-                        class="text-danger">
-                        Required.
-                    </small>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <div class="form-group">
-                    <label for="QuickLinkURL">Quick Link URL:</label>
-                    <input id="QuickLinkURL" class="form-control" type="text" name="QuickLinkURL" formControlName="QuickLinkURL"
-                        placeholder="Enter QuickLink URL" />
-                    <!-- <small *ngIf="form.controls.QuickLinkURL.hasError('required')" [hidden]="form.controls.QuickLinkURL.valid || (form.controls.QuickLinkURL.pristine && !submitted)"
-                        class="text-danger">
+            <div class="form-group col-lg-3 col-md-6 col-sm-12">
+                <label for="QuickLinkName">Quick Link Name:<span class="required">*</span></label>
+                <input id="QuickLinkName" class="form-control" type="text" name="QuickLinkName" formControlName="QuickLinkName"
+                    placeholder="Enter QuickLink Name" />
+                <small *ngIf="!form.controls.QuickLinkName.valid" [hidden]="form.controls.QuickLinkName.valid || (form.controls.QuickLinkName.pristine && !submitted)"
+                    class="text-danger">
                     Required.
-                    </small> -->
-
-                    <small *ngIf="isValidUrl" class="text-danger">
-                        Invalid Input.
-                    </small>
-                </div>
-
+                </small>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <div class="form-group">
-                    <label>Group Name: </label>
-                    <quick-link-group [enableAddButton]="enableAddButtonOnGroupSelection" (notifyOnInsertion)="onNotifyInsertion($event)"
-                        (notifyOnChange)="onNotifyChanges($event)" (notifyOnReset)="onNotifyReset()">
-                    </quick-link-group>
-                </div>
+            <div class="form-group col-lg-3 col-md-6 col-sm-12">
+                <label for="QuickLinkURL">Quick Link URL:</label>
+                <input id="QuickLinkURL" class="form-control" type="text" name="QuickLinkURL" formControlName="QuickLinkURL"
+                    placeholder="Enter QuickLink URL" />
+
+                <small *ngIf="isValidUrl" class="text-danger">
+                    Invalid Input.
+                </small>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <div class="buttonholder">
-                    <button class="btn btn-primary" type="submit">Submit</button>
-                    <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
-                </div>
+            <div class="form-group col-lg-3 col-md-6 col-sm-12">
+                <quick-link-group [caption]="groupCaption" [enableAddButton]="enableAddButtonOnGroupSelection"
+                    (notifyOnInsertion)="onNotifyInsertion($event)" (notifyOnChange)="onNotifyChanges($event)"
+                    (notifyOnReset)="onNotifyReset()">
+                </quick-link-group>
+            </div>
+            <div class="form-group col-lg-3 col-md-6 col-sm-12">
+                <button class="btn btn-primary m-1 mt-3" type="submit">Submit</button>
+                <button class="btn btn-warning m-1 mt-3" type="button" (click)="cancel()">Cancel</button>
             </div>
         </div>
         <hr>
         <div class="row">
-            <div class="col-lg-4 col-sm-4 col-sm-12">
+            <div class="col-md-4 col-sm-12">
                 <input #myFileInput type="file" class="form-control-file" (change)="fileChangeEvent($event)"
                     placeholder="Upload file..." />
             </div>
-            <div class="col-lg-4 col-sm-4 col-sm-12">
+            <div class="col-md-4 col-sm-12">
                 <button type="button" class="btn btn-primary" (click)="upload()">Upload</button>
                 <button type="button" class="btn btn-primary" (click)="clearFileUpload($event)">Clear</button>
             </div>
-            <div class="col-lg-4 col-sm-4 col-sm-12">
+            <div class="col-md-4 col-sm-12">
                 <a class="glyphicon glyphicon-download-alt" target="_self" *ngIf="fileName!=null" href="{{filepathWithLinks}}"
                     download="{{fileName}}">download</a>
             </div>

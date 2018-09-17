@@ -1,14 +1,14 @@
-import { Component, ViewEncapsulation, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import {
+    Component, ViewEncapsulation, OnInit,
+    OnDestroy, ViewChild, AfterViewInit
+} from '@angular/core';
 import {
     FormGroup,
     FormControl,
     FormBuilder,
-    AbstractControl,
-    Validators,
-    ReactiveFormsModule
+    Validators
 } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-
 
 import { QuickLinkModel } from './quicklink.model';
 import { QuickLinkService } from './quicklink.service';
@@ -32,6 +32,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
 
     public form: FormGroup;
     public submitted: boolean;
+    public groupCaption: string= 'Group Name:';
     filesToUpload: File[];
     filepathWithLinks: string = null;
     fileName: string = null;
@@ -67,7 +68,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     ngAfterViewInit() {
-        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.QuickLinkModelEdited, 
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.QuickLinkModelEdited,
             (model: QuickLinkModel) => this.onQuickLinkEditSuccess(model));
     }
 
@@ -113,7 +114,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
 
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.QuickLinkModelEdited);
-        this.ngUnsubscribe.next();	
+        this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
     }
 

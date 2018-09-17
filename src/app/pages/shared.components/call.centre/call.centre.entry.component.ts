@@ -132,8 +132,8 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
     copassengerlistPassenger: AffectedPeopleToView[] = [];
     copassengerlistPassengerForMappedPerson: AffectedPeopleToView[] = [];
     selectedcountpnr: number;
-    list1Selected: boolean = false;
-    list2Selected: boolean = false;
+    isPaxWithSamePNRSelected: boolean = false;
+    isCoPaxSelected: boolean = false;
     totallistselected: boolean = false;
     totalcount: number;
     consolidatedCopassengers: AffectedPeopleToView[] = [];
@@ -554,6 +554,8 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
     @HostListener('document:click', ['$event'])
     onDocunentClick(event) {
         jQuery('ul.dropdown-menu-down').hide();
+        this.isPaxWithSamePNRSelected = false;
+        this.isCoPaxSelected = false;
     }
 
     //set models to save or update
@@ -1255,7 +1257,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
     }
 
     public ShowListsOfSamePNR($event): void {
-        this.list1Selected = !this.list1Selected;
+        this.isPaxWithSamePNRSelected = !this.isPaxWithSamePNRSelected;
         jQuery('ul.dropdown-menu-down').hide();
         jQuery($event.currentTarget).siblings('ul.dropdown-menu-down').show();
     }
@@ -1270,7 +1272,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
     }
 
     public ShowPassengers($event): void {
-        this.list2Selected = !this.list2Selected;
+        this.isCoPaxSelected = !this.isCoPaxSelected;
         jQuery('ul.dropdown-menu-down').hide();
         jQuery($event.currentTarget).siblings('ul.dropdown-menu-down').show();
     }
