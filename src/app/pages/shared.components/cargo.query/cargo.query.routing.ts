@@ -6,9 +6,7 @@ import { CargoQueryAssignedCallsListComponent, CargoQueryRecievedCallsListCompon
 
 
 const cargoQueryComponent: Routes = [
-    
     {
-       
         path: '',
         component: CargoQueryComponent,
         children: [
@@ -16,16 +14,14 @@ const cargoQueryComponent: Routes = [
                 path: '',
                 redirectTo: 'receivedCalls',
                 pathMatch: 'full'
-            },
-             {
-                 path: 'assignedcalls',
-                component: CargoQueryRecievedCallsListComponent 
-            },
-             {
+            }, {
+                path: 'assignedcalls',
+                component: CargoQueryRecievedCallsListComponent
+            }, {
                 path: 'receivedCalls',
-                 component: CargoQueryAssignedCallsListComponent
+                component: CargoQueryAssignedCallsListComponent
             }]
     }];
 
-export const  CargoQueryRouting: ModuleWithProviders
+export const CargoQueryRouting: ModuleWithProviders
     = RouterModule.forChild(cargoQueryComponent);

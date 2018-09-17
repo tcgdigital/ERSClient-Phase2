@@ -71,8 +71,9 @@
                             <i class="fa fa-edit fa-2x pt-2" (click)="openAffectedPersonDetail(affectedperson)"></i>
                         </td>
                         <td data-title="Is NOK Informed">
-                            <md-checkbox [disabled]="isArchive" *ngIf="isShowIsNOKInvolved | accesibility:currentDepartmentId:'ShowIsNOKInformed'" class="Marght"
-                                id="IsNokInformed" name="IsNokInformed" [ngModel]="affectedperson.IsNokInformed" (change)="IsNokInformed($event,affectedperson.AffectedPersonId,affectedperson.CrewName || affectedperson.PassengerName)"
+                            <md-checkbox [disabled]="isArchive" *ngIf="isShowIsNOKInvolved | accesibility:currentDepartmentId:'ShowIsNOKInformed'"
+                                class="Marght" id="IsNokInformed" name="IsNokInformed" [ngModel]="affectedperson.IsNokInformed"
+                                (change)="IsNokInformed($event,affectedperson.AffectedPersonId,affectedperson.CrewName || affectedperson.PassengerName)"
                                 aria-label="ActiveFlag">
                             </md-checkbox>
                         </td>
@@ -93,7 +94,8 @@
 
 
 
-<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -107,7 +109,8 @@
                     <div class="modalBodyHearStydele-bg">
                         <div class="col-sm-6 form-group">
                             <label class="lebelHeaderStyle"><strong>PDA Name</strong></label>
-                            <label class="form-control">{{affectedPersonModelForStatus.CrewName || affectedPersonModelForStatus.PassengerName}}</label>
+                            <label class="form-control">{{affectedPersonModelForStatus.CrewName ||
+                                affectedPersonModelForStatus.PassengerName}}</label>
                         </div>
                         <div class="col-sm-6 form-group">
                             <label class="lebelHeaderStyle"><strong>Reference Number</strong></label>
@@ -149,7 +152,8 @@
                                 <div class="form-group col-md-4 col-sm-12 top-padding">
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <md-checkbox id="VerificationStatus" [disabled]="true" [(ngModel)]="affectedPersonModelForStatus.IsVerified" aria-label="Add">Verified</md-checkbox>
+                                            <md-checkbox id="VerificationStatus" [disabled]="true" [(ngModel)]="affectedPersonModelForStatus.IsVerified"
+                                                aria-label="Add">Verified</md-checkbox>
                                         </div>
                                     </div>
                                 </div>
@@ -171,7 +175,8 @@
                                             <td colspan="9">No Call has been made yet.</td>
                                         </tr>
                                         <tr *ngFor="let caller of callers">
-                                            <td data-title="Caller Name"><strong>{{caller.FirstName + " "+ caller.LastName}}&nbsp;</strong></td>
+                                            <td data-title="Caller Name"><strong>{{caller.FirstName + " "+
+                                                    caller.LastName}}&nbsp;</strong></td>
                                             <td data-title="Contact Number"><strong>{{caller.ContactNumber}}&nbsp;</strong></td>
                                             <td data-title="Select NOK">
                                                 <md-checkbox [disabled]="isArchive" [(ngModel)]="caller.IsNok" (change)="saveNok(affectedPersonModel.AffectedPersonId,caller,$event)"
@@ -194,22 +199,24 @@
 
                         <div class="form-group col-md-4 col-sm-12">
                             <label for="DiscussionNote">Status:</label>
-                            <select id="selectStatus" [(ngModel)]="affectedPersonModelForStatus.MedicalStatusToshow" class="form-control">
-                                <option *ngFor="let status of medicalStatus" [value]="status.value">{{status.caption}} </option>
+                            <select id="selectStatus" [(ngModel)]="affectedPersonModelForStatus.MedicalStatusToshow"
+                                class="form-control">
+                                <option *ngFor="let status of medicalStatus" [value]="status.value">{{status.caption}}
+                                </option>
                             </select>
                         </div>
 
                         <div class="form-group col-md-4 col-sm-12">
                             <label for="DiscussionNote">Remarks:</label>
-                            <input value="{{affectedPersonModelForStatus.Remarks}}" [(ngModel)]="affectedPersonModelForStatus.Remarks" class="form-control"
-                                type="text" />
+                            <input value="{{affectedPersonModelForStatus.Remarks}}" [(ngModel)]="affectedPersonModelForStatus.Remarks"
+                                class="form-control" type="text" />
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-md-6 col-sm-12" *ngIf="affectedPersonModelForStatus.IsCrew">
                             <label for="FileUpload">Upload 201 File for Crew: <span class="required"></span></label>
-                            <input type="file" #inputFileCrew id="fileuploadDemand" (change)="getFileDetails($event)" />
+                            <input type="file" #inputFileCrew id="fileuploadDemand" class="form-control-file" (change)="getFileDetails($event)" />
                         </div>
 
                         <div class="form-group col-md-6 col-sm-12" *ngIf="!isArchive">
@@ -240,8 +247,8 @@
                                     <label class="form-control">{{affectedPersonModelForStatus.Nationality}}</label>
                                 </div>
                                 <div class="form-group col-lg-4 col-md-4 col-sm-12 pt-lg-2 pt-md-4 pt-sm-0">
-                                    <md-checkbox id="VerificationStatus" [disabled]="true" [(ngModel)]="affectedPersonModelForStatus.IsVerified" aria-label="Add"
-                                        ng-disabled="true">
+                                    <md-checkbox id="VerificationStatus" [disabled]="true" [(ngModel)]="affectedPersonModelForStatus.IsVerified"
+                                        aria-label="Add" ng-disabled="true">
                                         Verification Status
                                     </md-checkbox>
                                 </div>
@@ -273,7 +280,8 @@
                                             <td data-title="&#9785;" colspan="3">No Call has been made yet.</td>
                                         </tr>
                                         <tr *ngFor="let caller of callers">
-                                            <td data-title="Caller Name"><strong>{{caller.FirstName + " "+ caller.LastName}}&nbsp;</strong></td>
+                                            <td data-title="Caller Name"><strong>{{caller.FirstName + " "+
+                                                    caller.LastName}}&nbsp;</strong></td>
                                             <td data-title="Contact Number"><strong>{{caller.ContactNumber}}&nbsp;</strong></td>
                                             <td data-title="Select NOK">
                                                 <md-checkbox [disabled]="isArchive" [(ngModel)]="caller.IsNok" (change)="saveNok(affectedPersonModel.AffectedPersonId,caller,$event)"
@@ -316,15 +324,17 @@
 
                         <div class="form-group col-md-4 col-sm-12">
                             <label for="MedicalStatusToshow">Status:</label>
-                            <select id="selectStatus" [(ngModel)]="affectedPersonModelForStatus.MedicalStatusToshow" class="form-control">
-                                <option *ngFor="let status of medicalStatus" [value]="status.value">{{status.caption}} </option>
+                            <select id="selectStatus" [(ngModel)]="affectedPersonModelForStatus.MedicalStatusToshow"
+                                class="form-control">
+                                <option *ngFor="let status of medicalStatus" [value]="status.value">{{status.caption}}
+                                </option>
                             </select>
                         </div>
 
                         <div class="form-group col-md-4 col-sm-12">
                             <label for="Remarks">Remarks:</label>
-                            <input value="{{affectedPersonModelForStatus.Remarks}}" [(ngModel)]="affectedPersonModelForStatus.Remarks" class="form-control"
-                                type="text" />
+                            <input value="{{affectedPersonModelForStatus.Remarks}}" [(ngModel)]="affectedPersonModelForStatus.Remarks"
+                                class="form-control" type="text" />
                         </div>
                     </div>
 
@@ -372,7 +382,8 @@
                                         <td data-title="comm">
                                             <strong>{{comm.RequesterType}}</strong> logged by
                                             <span [hidden]="comm.RequesterDepartment.length==0">
-                                                <strong>{{comm.RequesterName}} (Dept: {{comm.RequesterDepartment}})&nbsp;</strong>
+                                                <strong>{{comm.RequesterName}} (Dept:
+                                                    {{comm.RequesterDepartment}})&nbsp;</strong>
                                             </span>
                                             <span> on
                                                 <strong>{{comm.CreatedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;:</strong>

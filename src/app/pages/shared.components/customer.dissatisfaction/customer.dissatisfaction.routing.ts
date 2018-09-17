@@ -2,13 +2,13 @@ import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { CustomerDissatisfactionComponent } from './customer.dissatisfaction.components';
-import { CustomerDissatisfactionAssignedCallsListComponent, CustomerDissatisfactionRecievedCallsListComponent } from "./components";
-
+import {
+    CustomerDissatisfactionAssignedCallsListComponent,
+    CustomerDissatisfactionRecievedCallsListComponent
+} from "./components";
 
 const customerDissatisfactionRoutes: Routes = [
-
     {
-
         path: '',
         component: CustomerDissatisfactionComponent,
         children: [
@@ -16,12 +16,10 @@ const customerDissatisfactionRoutes: Routes = [
                 path: '',
                 redirectTo: 'receivedCalls',
                 pathMatch: 'full'
-            },
-            {
+            }, {
                 path: 'assignedcalls',
                 component: CustomerDissatisfactionRecievedCallsListComponent
-            },
-            {
+            }, {
                 path: 'receivedCalls',
                 component: CustomerDissatisfactionAssignedCallsListComponent
             }]

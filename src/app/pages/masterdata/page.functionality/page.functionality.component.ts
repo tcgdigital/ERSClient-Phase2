@@ -96,7 +96,6 @@ export class PageFunctionalityComponent implements OnInit, OnDestroy {
         });
         */
 
-        debugger;
         this.pagePermissionModelToSave = this.pageFunctionalityHierarchy
             .GeneratePagePermissionData(this.selectedDepartment);
 
@@ -104,7 +103,6 @@ export class PageFunctionalityComponent implements OnInit, OnDestroy {
             this.pagePermissionService.CreateBulkByDepartmentId
                 (this.pagePermissionModelToSave, this.selectedDepartment)
                 .subscribe((response: PagePermissionModel[]) => {
-                    debugger;
                     this.toastrService.success(`Department Funtionality saved Successfully. 
                     ${GlobalConstants.departmentAndFunctionalityReloginMessage}`, 'Success', this.toastrConfig);
                 }, (error: any) => {

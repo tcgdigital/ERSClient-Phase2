@@ -18,6 +18,7 @@ export class DemandModel extends BaseModel {
     public AffectedSituationId?: number;
     public AffectedPersonId?: number;
     public AffectedObjectId?: number;
+    public GroundVictimId?: number;
     public CallerId?: number;
     public TargetDepartmentId: number;
     public RequesterDepartmentId?: number;
@@ -46,6 +47,7 @@ export class DemandModel extends BaseModel {
     public RejectedBy?: number;
     public RejectedDate?: Date;
     public ClosedByDepartmentId?: number;
+
     public ParentDemand?: DemandModel;
     public DemandType: DemandTypeModel;
     public RequesterDepartment: DepartmentModel;
@@ -56,6 +58,7 @@ export class DemandModel extends BaseModel {
     public Caller: CallerModel;
     public AffectedPerson: AffectedPeopleModel;
     public AffectedObject: AffectedObjectModel;
+
     public DemandTrails?: DemandTrailModel[];
     public DemandRemarkLogs?: DemandRemarkLogModel[];
     public CommunicationLogs?: CommunicationLogModel[];
@@ -64,7 +67,6 @@ export class DemandModel extends BaseModel {
     constructor() {
         super();
     }
-
 }
 
 export class DemandModelToView extends BaseModel {

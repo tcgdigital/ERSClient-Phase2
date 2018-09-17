@@ -6,9 +6,7 @@ import { OtherQueryAssignedCallsListComponent, OtherQueryRecievedCallsListCompon
 
 
 const otherQueryRoutes: Routes = [
-
     {
-
         path: '',
         component: OtherQueryComponent,
         children: [
@@ -16,12 +14,10 @@ const otherQueryRoutes: Routes = [
                 path: '',
                 redirectTo: 'receivedCalls',
                 pathMatch: 'full'
-            },
-            {
+            }, {
                 path: 'assignedcalls',
                 component: OtherQueryRecievedCallsListComponent
-            },
-            {
+            }, {
                 path: 'receivedCalls',
                 component: OtherQueryAssignedCallsListComponent
             }]

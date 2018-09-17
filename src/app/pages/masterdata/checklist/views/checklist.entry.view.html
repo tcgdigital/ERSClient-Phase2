@@ -1,182 +1,182 @@
-    <div *ngIf="showAdd" class="formStyle card-block entryHolder">
+<div *ngIf="showAdd" class="formStyle card-block entryHolder">
 
-        <div class="row">
-            <div class="col-lg-6 col-md-12 col-sm-12">
-                <div class="row">
-                    <div class="form-group col-lg-4 col-md-12 cl-sm-12">
-                        <label for="Department">Parent Department:</label>
-                        <select id="selectApprover" [(ngModel)]="ParentDepartmentId" name="ParentDepartmentId" class="form-control" (change)="parentDepartmentChange()">
-                            <option value='0'>Select Parent Department</option>
-                            <option *ngFor="let parentdepartment of parentdepartments" [value]="parentdepartment.DepartmentId" >
-                                {{parentdepartment.DepartmentName}}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="form-group col-lg-8 col-md-12 cl-sm-12">
-
-                        <label for="ParentCheckListId" class="mb-0">Select Parent CheckList:</label>
-                        <div class="multiselect-container">
-                            <div class="multiselect-selector" (click)="showList(); $event.stopPropagation();">
-                                <i class="fa fa-caret-down fa-pull-right fa-fw" aria-hidden="true"></i> {{selectedcount>0?
-                                selectedcount + ' Parent(s) selected' : 'Select Parent'}}
-                            </div>
-                            <ul class="multiselect-list" [hidden]="!listSelected" (click)="$event.stopPropagation();">
-                                <li>
-                                    <input type="checkbox" aria-label="Callback" [(ngModel)]="isSelected" (change)="selectAllParent()" />
-                                    <span>Select All</span>
-                                </li>
-                                <li *ngFor="let checklistparent of checkListParentDepartmentWise">
-                                    <input type="checkbox" aria-label="Callback" [checked]="checklistparent.IsSelected" (change)="selectParentChecklist(checklistparent)"
-                                    />
-                                    <span>{{checklistparent.CheckListCode}}</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+    <div class="row">
+        <div class="col-lg-6 col-md-12 col-sm-12">
+            <div class="row">
+                <div class="form-group col-lg-4 col-md-12 cl-sm-12">
+                    <label for="Department">Parent Department:</label>
+                    <select id="selectApprover" [(ngModel)]="ParentDepartmentId" name="ParentDepartmentId" class="form-control"
+                        (change)="parentDepartmentChange()">
+                        <option value='0'>Select Parent Department</option>
+                        <option *ngFor="let parentdepartment of parentdepartments" [value]="parentdepartment.DepartmentId">
+                            {{parentdepartment.DepartmentName}}
+                        </option>
+                    </select>
                 </div>
-                <div class="row">
-                    <div class="form-group col-lg-12 col-md-12 cl-sm-12">
-                        <label for="Department">Selected Parent Checklists(click on the checklist to view details):</label>
-                        <select id="selectApprover" name="ParentDepartmentId" class="form-control" [(ngModel)]="selectedparentChecklistdetails">
-                            <option *ngFor="let checklistparent of parentChecklists" [value]="checklistparent.CheckListDetails" >
-                                {{checklistparent.CheckListCode}}
-                            </option>
-                        </select>
+                <div class="form-group col-lg-8 col-md-12 cl-sm-12">
+
+                    <label for="ParentCheckListId" class="mb-0">Select Parent CheckList:</label>
+                    <div class="multiselect-container">
+                        <div class="multiselect-selector" (click)="showList(); $event.stopPropagation();">
+                            <i class="fa fa-caret-down fa-pull-right fa-fw" aria-hidden="true"></i> {{selectedcount>0?
+                            selectedcount + ' Parent(s) selected' : 'Select Parent'}}
+                        </div>
+                        <ul class="multiselect-list" [hidden]="!listSelected" (click)="$event.stopPropagation();">
+                            <li>
+                                <input type="checkbox" aria-label="Callback" [(ngModel)]="isSelected" (change)="selectAllParent()" />
+                                <span>Select All</span>
+                            </li>
+                            <li *ngFor="let checklistparent of checkListParentDepartmentWise">
+                                <input type="checkbox" aria-label="Callback" [checked]="checklistparent.IsSelected"
+                                    (change)="selectParentChecklist(checklistparent)" />
+                                <span>{{checklistparent.CheckListCode}}</span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 col-md-12 col-sm-12">
-                <label for="ParentCheckListId">Selected Parent Checklist Details:</label>
-                <textarea readonly class="form-control heightFix" [(ngModel)]="selectedparentChecklistdetails" id="CheckListDetails" maxlength="1000"
-                    placeholder="Selected CheckList Details" required autofocus></textarea>
-
+            <div class="row">
+                <div class="form-group col-lg-12 col-md-12 cl-sm-12">
+                    <label for="Department">Selected Parent Checklists(click on the checklist to view details):</label>
+                    <select id="selectApprover" name="ParentDepartmentId" class="form-control" [(ngModel)]="selectedparentChecklistdetails">
+                        <option *ngFor="let checklistparent of parentChecklists" [value]="checklistparent.CheckListDetails">
+                            {{checklistparent.CheckListCode}}
+                        </option>
+                    </select>
+                </div>
             </div>
         </div>
-        <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
-            <input id="CheckListId" class="form-control" type="hidden" name="CheckListId" formControlName="CheckListId" [(ngModel)]="checkListModel.CheckListId"
-            />
-            <div class="row">
-                <div class="form-group col-lg-2 col-md-6 col-sm-6">
-                    <label for="Duration">Duration:<span class="required">*</span>(Minutes)</label>
-                    <input id="Duration" class="form-control" type="number" name="Duration" formControlName="Duration" placeholder="Enter Duration"
-                    />
+        <div class="col-lg-6 col-md-12 col-sm-12">
+            <label for="ParentCheckListId">Selected Parent Checklist Details:</label>
+            <textarea readonly class="form-control heightFix" [(ngModel)]="selectedparentChecklistdetails" id="CheckListDetails"
+                maxlength="1000" placeholder="Selected CheckList Details" required autofocus></textarea>
 
-                    <small *ngIf="form.controls.Duration.hasError('required')" [hidden]="form.controls.Duration.valid || (form.controls.Duration.pristine && !submitted)"
-                        class="text-danger">Required</small>
-                </div>
-                <div class="form-group col-lg-2 col-md-6 col-sm-6">
-                    <div class="form-group">
-                        <label for="Sequence">Sequence:<span class="required">*</span></label>
-                        <input id="Sequence" class="form-control" type="number" name="Sequence" formControlName="Sequence" placeholder="Enter Sequence Details"
-                        />
-
-                        <small *ngIf="form.controls.Sequence.hasError('required')" [hidden]="form.controls.Sequence.valid || (form.controls.Sequence.pristine && !submitted)"
-                            class="text-danger">Required</small>
-                    </div>
-                </div>
-                <div class="form-group col-lg-4 col-md-6 col-sm-6">
-                    <label for="Department">Department:<span class="required">*</span></label>
-                    <select id="selectApprover" formControlName="DepartmentId" name="DepartmentId" class="form-control">
-                            <option value=''>Select Department</option>
-                            <option *ngFor="let department of activeDepartments" [value]="department.DepartmentId" >
-                                {{department.DepartmentName}}
-                            </option>
-                        </select>
-
-                    <small *ngIf="form.controls.DepartmentId.hasError('required')" [hidden]="form.controls.DepartmentId.valid || (form.controls.DepartmentId.pristine && !submitted)"
-                        class="text-danger">Required</small>
-                </div>
-                <div class="form-group col-lg-4 col-md-6 col-sm-6">
-                    <label for="EmergencyType">Crisis Type:<span class="required">*</span></label>
-                    <select id="selectApprover" formControlName="EmergencyTypeId" name="EmergencyType" class="form-control">
-                        <option value=''>Select Crisis Type</option>
-                        <option *ngFor="let emergencytype of activeEmergencyTypes" [value]="emergencytype.EmergencyTypeId" >
-                            {{emergencytype.EmergencyTypeName}}
-                        </option>
-                    </select>
-
-                    <small *ngIf="form.controls.EmergencyTypeId.hasError('required')" [hidden]="form.controls.EmergencyTypeId.valid || (form.controls.EmergencyTypeId.pristine && !submitted)"
-                        class="text-danger">Required</small>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="row">
-                        <div class="col-lg-6 col-md-12 col-sm-12">
-                            <div class="form-group">
-                                <label for="URL">URL:</label>
-                                <input id="URL" class="form-control" type="text" name="URL" formControlName="URL" placeholder="Enter URL" />
-
-                                <!-- <small *ngIf="form.controls.URL.hasError('required')" [hidden]="form.controls.URL.valid || (form.controls.URL.pristine && !submitted)"
-                                    class="text-danger">Required</small> -->
-                                <small *ngIf="isURLInvalid"
-                                    class="text-danger">Invalid Input</small>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-12 col-sm-12">
-                            <div class="form-group">
-                                <label for="OrganizationId">Organization<span class="required">*</span></label>
-                                <select id="OrganizationId" class="form-control" formControlName="OrganizationId" name="OrganizationId">
-                        <option value=''>Select Organization</option>
-                        <!-- <option value=4>All Organization</option> -->
-                        <option *ngFor="let organization of activeOrganizations" [value]="organization.OrganizationId" >
-                            {{organization.OrganizationCode}}
-                        </option>
-                    </select>
-
-                                <small *ngIf="form.controls.OrganizationId.hasError('required')" [hidden]="form.controls.OrganizationId.valid || (form.controls.OrganizationId.pristine && !submitted)"
-                                    class="text-danger">Required</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
-                            <div class="form-group">
-                                <label for="Stations">Stations</label>
-                                <input id="Stations" class="form-control" type="text" name="Stations" formControlName="Stations" placeholder="Enter Stations in comma separated format"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="form-group">
-                        <label for="CheckListDetails">Check List Details:<span class="required">*</span></label>
-                        <textarea class="form-control heightFix" id="CheckListDetails" formControlName="CheckListDetails" maxlength="1000" placeholder="Enter CheckList Details"
-                            required autofocus></textarea>
-
-                        <small *ngIf="form.controls.CheckListDetails.hasError('required')" [hidden]="form.controls.CheckListDetails.valid || (form.controls.CheckListDetails.pristine && !submitted)"
-                            class="text-danger">Required</small>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="buttonholder">
-                        <button class="btn btn-primary" type="submit">Submit</button>
-                        <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-3 col-md-3 col-sm-12">
-                    <input type="file" #inputFileChecklist id="file" (change)="getFileDetails($event,'UserProfile')" />
-                    <!-- formControlName="fileChecklist" -->
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-12 butt-align">
-                    <button class="btn btn-primary" type="button" (click)="Upload()" [disabled] ="disableUploadButton">Upload</button>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-12">
-                    <a target="_self" href="{{ChecklistTemplatePath}}">
-                        <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp; Checklist Template
-                    </a>
-                </div>                
-            </div>
-        </form>
+        </div>
     </div>
+    <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+        <input id="CheckListId" class="form-control" type="hidden" name="CheckListId" formControlName="CheckListId"
+            [(ngModel)]="checkListModel.CheckListId" />
+        <div class="row">
+            <div class="form-group col-lg-2 col-md-6 col-sm-6">
+                <label for="Duration">Duration:<span class="required">*</span>(Minutes)</label>
+                <input id="Duration" class="form-control" type="number" name="Duration" formControlName="Duration"
+                    placeholder="Enter Duration" />
 
-    <div class="addbuttonHolder">
-        <a href="javascript:void(0);" (click)="showAddRegion(showAdd)"><strong>{{showAddText}}</strong></a>
+                <small *ngIf="form.controls.Duration.hasError('required')" [hidden]="form.controls.Duration.valid || (form.controls.Duration.pristine && !submitted)"
+                    class="text-danger">Required</small>
+            </div>
+            <div class="form-group col-lg-2 col-md-6 col-sm-6">
+                <div class="form-group">
+                    <label for="Sequence">Sequence:<span class="required">*</span></label>
+                    <input id="Sequence" class="form-control" type="number" name="Sequence" formControlName="Sequence"
+                        placeholder="Enter Sequence Details" />
+
+                    <small *ngIf="form.controls.Sequence.hasError('required')" [hidden]="form.controls.Sequence.valid || (form.controls.Sequence.pristine && !submitted)"
+                        class="text-danger">Required</small>
+                </div>
+            </div>
+            <div class="form-group col-lg-4 col-md-6 col-sm-6">
+                <label for="Department">Department:<span class="required">*</span></label>
+                <select id="selectApprover" formControlName="DepartmentId" name="DepartmentId" class="form-control">
+                    <option value=''>Select Department</option>
+                    <option *ngFor="let department of activeDepartments" [value]="department.DepartmentId">
+                        {{department.DepartmentName}}
+                    </option>
+                </select>
+
+                <small *ngIf="form.controls.DepartmentId.hasError('required')" [hidden]="form.controls.DepartmentId.valid || (form.controls.DepartmentId.pristine && !submitted)"
+                    class="text-danger">Required</small>
+            </div>
+            <div class="form-group col-lg-4 col-md-6 col-sm-6">
+                <label for="EmergencyType">Crisis Type:<span class="required">*</span></label>
+                <select id="selectApprover" formControlName="EmergencyTypeId" name="EmergencyType" class="form-control">
+                    <option value=''>Select Crisis Type</option>
+                    <option *ngFor="let emergencytype of activeEmergencyTypes" [value]="emergencytype.EmergencyTypeId">
+                        {{emergencytype.EmergencyTypeName}}
+                    </option>
+                </select>
+
+                <small *ngIf="form.controls.EmergencyTypeId.hasError('required')" [hidden]="form.controls.EmergencyTypeId.valid || (form.controls.EmergencyTypeId.pristine && !submitted)"
+                    class="text-danger">Required</small>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        <div class="form-group">
+                            <label for="URL">URL:</label>
+                            <input id="URL" class="form-control" type="text" name="URL" formControlName="URL"
+                                placeholder="Enter URL" />
+
+                            <!-- <small *ngIf="form.controls.URL.hasError('required')" [hidden]="form.controls.URL.valid || (form.controls.URL.pristine && !submitted)"
+                                    class="text-danger">Required</small> -->
+                            <small *ngIf="isURLInvalid" class="text-danger">Invalid Input</small>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        <div class="form-group">
+                            <label for="OrganizationId">Organization<span class="required">*</span></label>
+                            <select id="OrganizationId" class="form-control" formControlName="OrganizationId" name="OrganizationId">
+                                <option value=''>Select Organization</option>
+                                <!-- <option value=4>All Organization</option> -->
+                                <option *ngFor="let organization of activeOrganizations" [value]="organization.OrganizationId">
+                                    {{organization.OrganizationCode}}
+                                </option>
+                            </select>
+
+                            <small *ngIf="form.controls.OrganizationId.hasError('required')" [hidden]="form.controls.OrganizationId.valid || (form.controls.OrganizationId.pristine && !submitted)"
+                                class="text-danger">Required</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="form-group">
+                            <label for="Stations">Stations</label>
+                            <input id="Stations" class="form-control" type="text" name="Stations" formControlName="Stations"
+                                placeholder="Enter Stations in comma separated format" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label for="CheckListDetails">Check List Details:<span class="required">*</span></label>
+                    <textarea class="form-control heightFix" id="CheckListDetails" formControlName="CheckListDetails"
+                        maxlength="1000" placeholder="Enter CheckList Details" required autofocus></textarea>
+
+                    <small *ngIf="form.controls.CheckListDetails.hasError('required')" [hidden]="form.controls.CheckListDetails.valid || (form.controls.CheckListDetails.pristine && !submitted)"
+                        class="text-danger">Required</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="buttonholder">
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                    <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <input type="file" #inputFileChecklist id="file" class="form-control-file" (change)="getFileDetails($event,'UserProfile')" />
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12 butt-align">
+                <button class="btn btn-primary" type="button" (click)="Upload()" [disabled]="disableUploadButton">Upload</button>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <a target="_self" href="{{ChecklistTemplatePath}}">
+                    <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp; Checklist Template
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="addbuttonHolder">
+    <a href="javascript:void(0);" (click)="showAddRegion(showAdd)"><strong>{{showAddText}}</strong></a>
 </div>

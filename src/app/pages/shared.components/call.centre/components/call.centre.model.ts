@@ -17,6 +17,7 @@ export class EnquiryModel extends BaseModel {
     public EnquiryId: number;
     public AffectedPersonId?: number;
     public AffectedObjectId?: number;
+    public GroundVictimId?: number;
     public CallerId?: number;
     public NextOfKinId?: number;
     public EnquiryType: number;

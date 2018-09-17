@@ -114,10 +114,14 @@ export class NotifyPeopleComponent implements OnInit {
             }
             this.tree = this.$tree.tree({
                 primaryKey: 'id',
-                uiLibrary: 'bootstrap',
+                uiLibrary: 'bootstrap4',
                 iconsLibrary: 'fontawesome',
                 dataSource: jQuery.parseJSON(this.allDepartmentUserPermissionString),//this.allDepartmentUserPermissionString,
-                checkboxes: true
+                checkboxes: true,
+                icons: {
+                    expand: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                    collapse: '<i class="fa fa-chevron-down" aria-hidden="true"></i>'
+                }
             });
             const node = this.tree.getNodeByText(result[0].text);
             // jQuery('#tree ul.gj-tree-bootstrap-list li div[data-role="wrapper"]:eq(0)').hide();
