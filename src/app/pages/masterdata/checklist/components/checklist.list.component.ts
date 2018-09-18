@@ -151,7 +151,8 @@ export class ChecklistListComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
-        this.exportLink = GlobalConstants.EXTERNAL_URL + 'api/MasterDataExportImport/GetMasterDataForChecklists/' + this.currentDepartmentId;
+        // this.exportLink = GlobalConstants.EXTERNAL_URL + 'api/MasterDataExportImport/GetMasterDataForChecklists/' + this.currentDepartmentId;
+        this.exportLink = `${GlobalConstants.EXTERNAL_URL}api/MasterDataExportImport/GetAllCheckliet`;
         this.getCheckLists(this.currentDepartmentId);
 
         this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.CheckListModelSaved,
