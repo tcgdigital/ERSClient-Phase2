@@ -48,6 +48,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     public allDepartments: DepartmentModel[] = [];
     public listActionableSelected: any[] = [];
     public ChecklistMappers: ChecklistMapper[] = [];
+    public isDashboardChecklistCloseDownloadLink: boolean=true;
     //actionableWithParentsChilds: ActionableModel[] = [];
 
     private ngUnsubscribe: Subject<any> = new Subject<any>();

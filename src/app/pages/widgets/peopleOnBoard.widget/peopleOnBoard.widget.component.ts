@@ -15,6 +15,7 @@ import {
     NameValue, GlobalConstants
 } from '../../../shared';
 
+
 @Component({
     selector: 'peopleOnBoard-widget',
     templateUrl: './peopleOnBoard.widget.view.html',

@@ -6,7 +6,7 @@ import { Observable, Subject } from 'rxjs/Rx';
 
 import {
     ResponseModel, DataExchangeService, SearchConfigModel,
-    SearchTextBox, NameValue, SearchDropdown, GlobalConstants
+    SearchTextBox, NameValue, SearchDropdown, GlobalConstants,UtilityService
 } from '../../../../shared';
 
 @Component({
@@ -23,6 +23,8 @@ export class QuickLinkListComponent implements OnInit, OnDestroy {
     searchConfigs: SearchConfigModel<any>[] = [];
     expandSearch: boolean = false;
     searchValue: string = "Expand Search";
+    public isFileDownload: boolean =true;
+    public currentDepartmentId: number;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(private quicklinkService: QuickLinkService,
@@ -39,6 +41,7 @@ export class QuickLinkListComponent implements OnInit, OnDestroy {
         this.quicklinkService.GetAll()
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<QuickLinkModel>) => {
+                debugger;
                 this.quicklinks = response.Records;
             }, (error: any) => {
                 console.log(`Error: ${error}`);
@@ -69,6 +72,7 @@ export class QuickLinkListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.getQuickLinks();
         this.initiateSearchConfigurations();
 

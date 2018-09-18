@@ -31,6 +31,7 @@ export class ChecklistListComponent implements OnInit, OnDestroy {
     currentDepartmentId: number;
 
     public isShowAddEditChecklist: boolean = true;
+    public isShowExportToExcel: boolean = true;
     searchConfigs: Array<SearchConfigModel<any>> = new Array<SearchConfigModel<any>>();
     parentChecklistListForSearch: Array<NameValue<number>> = Array<NameValue<number>>();
     emergencyTypesForSearch: Array<NameValue<number>> = Array<NameValue<number>>();

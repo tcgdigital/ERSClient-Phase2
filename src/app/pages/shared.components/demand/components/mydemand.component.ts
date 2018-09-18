@@ -29,7 +29,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     @ViewChild('childModalTrail') public childModalTrail: ModalDirective;
 
     mydemands: DemandModelToView[] = [];
-    currentDepartmentId: number;
+    public currentDepartmentId: number;
     currentIncidentId: number;
     createdByName: string;
     createdBy: number;
@@ -47,6 +47,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     public globalStateProxy: GlobalStateService;
     public isInvalidRemarks: boolean = false;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
+    public isDashboradMyDemandDownloadLink: boolean= true;
 
 
     /**

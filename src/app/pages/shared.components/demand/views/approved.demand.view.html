@@ -1,8 +1,8 @@
 <div class="row">
     <div class="col-sm-12 pull-right">
-<div class="addbuttonHolder">
-<button class="btn btn-primary" type="button" (click)="submit()" [disabled] ="isArchive" *ngIf="(isShowApprovedDemand | accesibility:currentDepartmentId:'UpdateApprovedDemand')">Submit</button>
-</div>
+        <div class="addbuttonHolder">
+            <button class="btn btn-primary" type="button" (click)="submit()" [disabled]="isArchive" *ngIf="(isShowApprovedDemand | accesibility:currentDepartmentId:'UpdateApprovedDemand')">Submit</button>
+        </div>
     </div>
 </div>
 <responsive-table>
@@ -14,7 +14,7 @@
                 <th>Requester Department</th>
                 <th>Requested By</th>
                 <th>Target Department</th>
-                 <th>Required Location</th>
+                <th>Required Location</th>
                 <th>Priority</th>
                 <th>Schedule Time Close</th>
                 <th>RAG</th>
@@ -42,16 +42,19 @@
                 <td data-title="Download File">
                     <ul>
                         <li *ngFor="let file of demand.FileStores">
-                            <a target="_self" href="{{demandFilePath + file.FileStoreID}}" download="file.UploadedFileName"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+                            <a target="_self" href="{{demandFilePath + file.FileStoreID}}" *ngIf="isDashboradApprovedDemandDownloadLink | accesibility: currentDepartmentId :'DashboradApprovalPendingDownloadLink'"  download="file.UploadedFileName"><i
+                                    class="fa fa-download fa-2x" aria-hidden="true"></i></a>
                         </li>
                     </ul>
                 </td>
-                <td data-title="Approve" >
-                    <md-checkbox *ngIf ="!isArchive" class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsApproved" [disabled]="demand.IsRejected" aria-label="Done">
+                <td data-title="Approve">
+                    <md-checkbox *ngIf="!isArchive" class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsApproved" [disabled]="demand.IsRejected"
+                        aria-label="Done">
                     </md-checkbox>
                 </td>
                 <td data-title="Reject">
-                    <md-checkbox *ngIf ="!isArchive" class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsRejected" [disabled]="demand.IsApproved" aria-label="Done">
+                    <md-checkbox *ngIf="!isArchive" class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsRejected" [disabled]="demand.IsApproved"
+                        aria-label="Done">
                     </md-checkbox>
                 </td>
             </tr>
@@ -67,8 +70,8 @@
             <div class="modal-header">
                 <h4 class="modal-title">Demand Remarks</h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="cancelRemarkUpdate()">
-                  <span aria-hidden="true">&times;</span>
-                   </button>
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <div class="row holderRemark" *ngIf="!isArchive">
@@ -79,7 +82,7 @@
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-12 form-group">
                         <div class="buttonholderRemark">
-                            <button class="btn btn-primary" type="button" (click)="saveRemark(Remarks)" [disabled] ="isArchive">Submit</button>
+                            <button class="btn btn-primary" type="button" (click)="saveRemark(Remarks)" [disabled]="isArchive">Submit</button>
                         </div>
                     </div>
                 </div>
@@ -106,92 +109,91 @@
                         </table>
                     </responsive-table>
                 </div>
+            </div>
         </div>
     </div>
-</div>
 </div>
 
 
 <div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Demand Details</h4>
-                    <button type="button" class="close pull-right" aria-label="Close" (click)="cancelModal()">
-                  <span aria-hidden="true">&times;</span>
-                   </button>
-                </div>
-                <div class="modal-body">
-                    <div class="holderStyle">
-                        <div class="formStyle">
-                            <div class="row">
-                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
-                                    <label for="DemandTypeId">Demand Type</label>
-                                    <span class="form-control" for="DemandTypeId">{{demand.DemandTypeName}}</span>
-                                </div>
-                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
-                                    <label for="Priority">Priority</label>
-                                    <span class="form-control" for="DemandTypeId">{{demand.Priority}}</span>
-                                </div>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Demand Details</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="cancelModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="holderStyle">
+                    <div class="formStyle">
+                        <div class="row">
+                            <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                <label for="DemandTypeId">Demand Type</label>
+                                <span class="form-control" for="DemandTypeId">{{demand.DemandTypeName}}</span>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
-                                    <label for="DemandDesc">Demand Description:</label>
-                                    <span class="form-control" for="DemandTypeId">{{demand.DemandDesc}}</span>
-                                </div>
-                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
-                                    <div class="row">
-                                        <div class="form-group col-lg-6 col-md-6 col-sm-4">
-                                            <label for="RequestedBy">Requested By:</label>
-                                            <span class="form-control" for="DemandTypeId">{{demand.RequestedBy}}</span>
-                                        </div>
-                                        <div class="form-group col-lg-6 col-md-6 col-sm-4">
-                                            <label for="RequesterType">Requester Type:</label>
-                                            <span class="form-control" for="DemandTypeId">{{demand.RequesterType}}</span>
-                                        </div>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                <label for="Priority">Priority</label>
+                                <span class="form-control" for="DemandTypeId">{{demand.Priority}}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                <label for="DemandDesc">Demand Description:</label>
+                                <span class="form-control" for="DemandTypeId">{{demand.DemandDesc}}</span>
+                            </div>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                        <label for="RequestedBy">Requested By:</label>
+                                        <span class="form-control" for="DemandTypeId">{{demand.RequestedBy}}</span>
                                     </div>
-                                    <div class="row">
-                                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                                            <label for="DepartmentId">Target Department:</label>
-                                            <span class="form-control" for="DemandTypeId">{{demand.TargetDepartmentName}}</span>
-                                        </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                        <label for="RequesterType">Requester Type:</label>
+                                        <span class="form-control" for="DemandTypeId">{{demand.RequesterType}}</span>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
-                                    <label for="ReferenceNumber">Reference Number</label>
-                                    <span class="form-control" for="DemandTypeId">{{demand.ReferenceNumber}}</span>
-                                </div>
-                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
-                                    <div class="row">
-                                        <div class="form-group col-lg-6 col-md-6 col-sm-4">
-                                            <label for="PDA">PDA Name:</label>
-                                            <span class="form-control" for="DemandTypeId">{{demand.AffectedPersonName}}</span>
-                                        </div>
-                                        <div class="form-group col-lg-6 col-md-6 col-sm-4">
-                                            <label for="awb">AWB</label>
-                                            <span class="form-control" for="DemandTypeId">{{demand.AWB}}</span>
-                                        </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                        <label for="DepartmentId">Target Department:</label>
+                                        <span class="form-control" for="DemandTypeId">{{demand.TargetDepartmentName}}</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
-                                    <label for="ContactNumber"> Contact Number:</label>
-                                    <span class="form-control" for="DemandTypeId">{{demand.ContactNumber}}</span>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                <label for="ReferenceNumber">Reference Number</label>
+                                <span class="form-control" for="DemandTypeId">{{demand.ReferenceNumber}}</span>
+                            </div>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                        <label for="PDA">PDA Name:</label>
+                                        <span class="form-control" for="DemandTypeId">{{demand.AffectedPersonName}}</span>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                        <label for="awb">AWB</label>
+                                        <span class="form-control" for="DemandTypeId">{{demand.AWB}}</span>
+                                    </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                <label for="ContactNumber"> Contact Number:</label>
+                                <span class="form-control" for="DemandTypeId">{{demand.ContactNumber}}</span>
+                            </div>
 
-                                <div class="form-group col-lg-6 col-md-6 col-sm-4">
-                                    <label for="ExpectedResolutionTime">Expected Resolution Time:</label>
-                                    <span class="form-control" for="DemandTypeId">{{demand.ScheduleTimeToShow}}</span>
-                                </div>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-4">
+                                <label for="ExpectedResolutionTime">Expected Resolution Time:</label>
+                                <span class="form-control" for="DemandTypeId">{{demand.ScheduleTimeToShow}}</span>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-lg-4 col-md-4 col-sm-4">
-                                    <label for="RequiredLocation">Required Location:</label>
-                                    <span class="form-control" for="DemandTypeId">{{demand.RequiredLocation}}</span>
-                                </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-4 col-md-4 col-sm-4">
+                                <label for="RequiredLocation">Required Location:</label>
+                                <span class="form-control" for="DemandTypeId">{{demand.RequiredLocation}}</span>
                             </div>
                         </div>
                     </div>
@@ -199,3 +201,4 @@
             </div>
         </div>
     </div>
+</div>

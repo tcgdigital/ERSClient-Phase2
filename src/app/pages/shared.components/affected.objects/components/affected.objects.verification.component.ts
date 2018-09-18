@@ -18,6 +18,7 @@ import {
 })
 export class AffectedObjectsVerificationComponent implements OnInit {
     public isShowVerifyAffectedCargo: boolean = true;
+    public isVerifiedCargoManifestDownloadLink: boolean= true;
     public currentDepartmentId: number = 0;
     protected _onRouteChange: Subscription;
     affectedObjectsForVerification: AffectedObjectsToView[] = [];

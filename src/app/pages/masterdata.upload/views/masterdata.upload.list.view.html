@@ -19,12 +19,12 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td data-title="File Name">PDA Manifest</td>
+                                    <td data-title="File Name">Passenger Manifest</td>
                                     <td data-title="Select File">
                                         <input type="file" #inputFilePax id="file" formControlName="filePax" (change)="getFileDetails($event,'Passenger')" />
                                     </td>
                                     <td data-title="Download Templates">
-                                        <a target="_self" href="{{passengerTemplatePath}}" download="Passengers.xlsx">
+                                        <a target="_self" href="{{passengerTemplatePath}}" *ngIf="isPassengerTemplateLinkAvailable | accesibility:DepartmentId:'PDATemplateLink'" download="Passengers.xlsx">
                                             <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;PDA Template
                                         </a>
                                     </td>
@@ -46,7 +46,7 @@
                                         <input type="file" #inputFileCrewManifestPAL id="file" formControlName="fileCrewManifestPAL" (change)="getFileDetails($event,'Crew')" />
                                     </td>
                                     <td data-title="Download Templates">
-                                        <a target="_self" href="{{crewManifestPathPAL}}">
+                                        <a target="_self" href="{{crewManifestPathPAL}}" *ngIf="isCrewTemplateLinkAvailable | accesibility:DepartmentId:'CrewManifestLink'">
                                             <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Crew Manifest Template
                                         </a>
                                     </td>
@@ -90,7 +90,7 @@
                                         <input type="file" #inputFileCrewTrainingPAL id="file" formControlName="fileCrewTrainingPAL" (change)="getFileDetails($event,'Crew')" />
                                     </td>
                                     <td data-title="Download Templates">
-                                        <a target="_self" href="{{crewTrainingPAL}}">
+                                        <a target="_self" href="{{crewTrainingPAL}}" *ngIf="isCrewTrainingTemplateLink | accesibility: DepartmentId :'CrewTrainingTemplateLink'" >
                                             <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Crew Training Template
                                         </a>
                                     </td>
@@ -112,7 +112,7 @@
                                         <input type="file" #inputFileCrewTrainingPALExAir id="file" formControlName="fileCrewTrainingPALExAir" (change)="getFileDetails($event,'Crew')" />
                                     </td>
                                     <td data-title="Download Templates">
-                                        <a target="_self" href="{{crewTrainingPALExAir}}">
+                                        <a target="_self" href="{{crewTrainingPALExAir}}" *ngIf="isAirCrewTrainingTemplateLinkAvailable | accesibility:DepartmentId:'CrewTrainingTemplateAirCrewLink'">
                                             <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Crew Training Template
                                         </a>
                                     </td>
@@ -134,7 +134,7 @@
                                         <input type="file" #inputFileCrewTrainingPALExCabin id="file" formControlName="fileCrewTrainingPALExCabin" (change)="getFileDetails($event,'Crew')" />
                                     </td>
                                     <td data-title="Download Templates">
-                                        <a target="_self" href="{{crewTrainingPALExCabin}}">
+                                        <a target="_self" href="{{crewTrainingPALExCabin}}" *ngIf="isCabinCrewTrainingTemplateLinkAvailable | accesibility:DepartmentId:'CrewTrainingTemplateCabinCrewLink'" >
                                             <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Crew Training Template
                                         </a>
                                     </td>
@@ -156,7 +156,7 @@
                                         <input type="file" #inputFileCargo id="file" formControlName="fileCargo" (change)="getFileDetails($event,'Cargo')" />
                                     </td>
                                     <td data-title="Download Templates">
-                                        <a target="_self" href="{{cargoTemplatePathPAL}}">
+                                        <a target="_self" href="{{cargoTemplatePathPAL}}" *ngIf="isCargoTemplateLinkAvailable | accesibility:DepartmentId:'CargoManifestLink'">
                                             <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Cargo Template
                                         </a>
                                     </td>
@@ -200,7 +200,7 @@
                                         <input type="file" #inputFileGroundVictim id="file" formControlName="fileGroundVictim" (change)="getFileDetails($event,'GroundVictim')" />
                                     </td>
                                     <td data-title="Download Templates">
-                                        <a target="_self" href="{{groundVictimTemplatePath}}" download="GroundVictim.xlsx">
+                                        <a target="_self" href="{{groundVictimTemplatePath}}" *ngIf="isGroundVictimTemplateLinkAvailable | accesibility:DepartmentId:'GroundVictimManifestLink'" download="GroundVictim.xlsx">
                                             <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Ground Victim Template
                                         </a>
                                     </td>
@@ -221,7 +221,7 @@
                                     <td data-title="Select File">
                                         <input type="file" #inputFileLoadSheet id="file" (change)="getLoadSheetFileDetails($event,'LoadSheet')" />
                                     </td>
-                                    <td data-title="Download Templates">
+                                    <td colspan="3" data-title="Download Templates">
                                         <a *ngIf="currentLoadSheetAvailable" target="_self" href="{{loadSheetPath}}">
                                             <i class="fa fa-download fa-lg" aria-hidden="true"></i>&nbsp;Download Loadsheet Document 
                                         </a>

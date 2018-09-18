@@ -1,11 +1,11 @@
 <div class="row">
     <div class="col-md-4 col-lg-5 text-right">
         <label class="lebelHeaderStyle">Crew Status Info Report</label>
-        <a target="_blank" href="{{downloadRoute}}" download="CrewStatusInfo"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+        <a target="_blank" href="{{downloadRoute}}" *ngIf="isAffectedPeopleCrewStatusDownloadLink | accesibility: currentDepartmentId :'AffectedPeopleCrewStatusDownloadLink'"  download="CrewStatusInfo"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
     </div>
     <div class="col-md-5 col-lg-4 text-right">
         <label class="lebelHeaderStyle">Passenger Status Info Report</label>
-        <a target="_blank" href="{{downloadPath}}" download="PDAStatusInfo"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+        <a target="_blank" href="{{downloadPath}}" *ngIf="isPassengerStatusInfoReportDownloadLink | accesibility: currentDepartmentId:'PassengerStatusInfoReportDownloadLink'" download="PDAStatusInfo"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
     </div>
     <div class="col-md-3 col-lg-3 text-right">
         <input type="button" class="btn btn-primary" (click)="expandSearchPanel(expandSearch)" [ngModel]="searchValue" />

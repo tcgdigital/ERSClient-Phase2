@@ -20,6 +20,8 @@ import { InvolvePartyService } from '../../involveparties';
 export class AffectedPeopleVerificationComponent implements OnInit, OnDestroy {
     public isShowVerifyAffectedPeople: boolean = true;
     public currentDepartmentId: number = 0;
+    public isAffectedPeopleVerifiedManifestLink: boolean= true;
+    //public getCurrentDeptid: number;
     protected _onRouteChange: Subscription;
     affectedPeopleForVerification: AffectedPeopleToView[] = [];
     verifiedAffectedPeople: AffectedPeopleModel[];

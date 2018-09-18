@@ -52,6 +52,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
     public isShowAcceptRejectDemand: boolean = true;
     public isInvalidRemarks: boolean = false;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
+    public isDashboradCompletedDownloadLink: boolean=true;
 
     /**
      * Creates an instance of CompletedDemandComponent.

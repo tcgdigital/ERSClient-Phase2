@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-lg-10 col-md-9 text-right">
         <label class="lebelHeaderStyle">Cargo Status Info Report</label>
-        <a target="_blank" href="{{downloadPath}}" download="CargoStatusInfo"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+        <a target="_blank" href="{{downloadPath}}" *ngIf="isCargoStatusInfoReportDownloadLink | accesibility: currentDepartmentId:'CargoStatusInfoReportDownloadLink'" download="CargoStatusInfo"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
     </div>
     <div class="col-lg-2 col-md-3 text-right">
         <input type="button" class="btn btn-primary" (click)="expandSearchPanel(expandSearch)" [ngModel]="searchValue" />

@@ -31,7 +31,7 @@
                             </div>
                             <div class="col-lg-4 col-md-6 col-sm-12">
                                 <i class="fa fa-circle"></i>&nbsp;&nbsp;<label><strong>Member Tracking Report</strong></label>
-                                <a target="_blank" href="{{downloadPath}}" download="MemberTrackReport"><i class="fa fa-download fa" aria-hidden="true"></i></a>
+                                <a target="_blank" href="{{downloadPath}}" *ngIf="isMemberTrackingReportLink | accesibility:currentDepartmentId:'MemberTrackingReportLink'" download="MemberTrackReport"><i class="fa fa-download fa" aria-hidden="true"></i></a>
                             </div>
                         </div>
                         <br/>

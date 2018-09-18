@@ -65,6 +65,7 @@ export class AffectedPeopleListComponent implements OnInit {
     public userName: string;
     public currentDepartmentName: string;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
+    public isAffectedPeopleCrewStatusDownloadLink: boolean=true;
 
     /**
      *Creates an instance of AffectedPeopleListComponent.
@@ -366,6 +367,7 @@ export class AffectedPeopleListComponent implements OnInit {
     }
 
     ngOnInit(): any {
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         const token = UtilityService.GetFromSession('access_token');
         if (token) {
             const tokenData = jwtDecode(token);

@@ -75,6 +75,14 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
     currentLoadSheet: FileStoreModel = new FileStoreModel();
     private ngUnsubscribe: Subject<any> = new Subject<any>();
 
+    public isPassengerTemplateLinkAvailable: boolean = true;
+    public isCrewTemplateLinkAvailable: boolean = true;
+    public isCabinCrewTrainingTemplateLinkAvailable: boolean = true;
+    public isCargoTemplateLinkAvailable: boolean = true;
+    public isGroundVictimTemplateLinkAvailable: boolean = true;
+    public isAirCrewTrainingTemplateLinkAvailable: boolean = true;
+    public isCrewTrainingTemplateLink: boolean = true;
+
     constructor(private fileUploadService: FileUploadService,
         private dataExchange: DataExchangeService<boolean>,
         private toastrService: ToastrService,
@@ -86,15 +94,16 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
+        this.CreatedBy = UtilityService.GetFromSession('CurrentUserId');;
+        this.IncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
+        this.DepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.disableUploadButton = true;
         this.filesToUpload = [];
         this.initiateForm();
         this.credential = UtilityService.getCredentialDetails();
         this.currentOrganizationId = +UtilityService.GetFromSession('CurrentOrganizationId');
         this.populateCurrentOrganization();
-        this.CreatedBy = UtilityService.GetFromSession('CurrentUserId');;
-        this.IncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
-        this.DepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+        
         this.getCurrentLoadSheet(this.IncidentId);
 
         this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChange,

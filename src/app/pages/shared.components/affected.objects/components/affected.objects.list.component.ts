@@ -43,6 +43,7 @@ export class AffectedObjectsListComponent implements OnInit {
     currentDepartmentId: number;
     public currentDepartmentName: string;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
+    public isCargoStatusInfoReportDownloadLink: boolean=true;
 
     constructor(private affectedObjectService: AffectedObjectsService,
         private callerservice: CallerService,
@@ -77,6 +78,7 @@ export class AffectedObjectsListComponent implements OnInit {
     }
 
     ngOnInit(): any {
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         if (this._router.url.indexOf('archivedashboard') > -1) {
             this.isArchive = true;
             this.currentIncident = +UtilityService.GetFromSession('ArchieveIncidentId');

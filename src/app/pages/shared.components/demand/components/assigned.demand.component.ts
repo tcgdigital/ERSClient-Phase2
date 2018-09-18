@@ -53,7 +53,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     public isShowAssignToMeDemand: boolean = true;
     public isInvalidRemarks: boolean = false;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
-
+    public isDashboradDemandAssignedDownloadLink: boolean= true;
     /**
      * Creates an instance of AssignedDemandComponent.
      * @param {DemandService} demandService
@@ -255,6 +255,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     }
 
     public submit(): void {
+        debugger;
         if (this.demands.length > 0) {
             const demandCompletion: DemandModel[] = this.demands
                 .filter(this.isCompleted).map((x) => {
