@@ -53,7 +53,8 @@
                         <td data-title="Download File">
                             <ul>
                                 <li *ngFor="let file of demand.FileStores">
-                                    <a target="_blank" href="{{demandFilePath + file.FileStoreID}}" download="file.UploadedFileName">
+                                    <a target="_blank" href="{{demandFilePath + file.FileStoreID}}" *ngIf="isDashboradMyDemandDownloadLink | accesibility: currentDepartmentId :'DashboradMyDemandDownloadLink'" 
+                                        download="file.UploadedFileName">
                                         <i class="fa fa-download fa-2x" aria-hidden="true"></i>
                                     </a>
                                 </li>
@@ -112,8 +113,8 @@
                                     <tr *ngFor="let remark of demandRemarks">
                                         <td data-title="Requester Department">{{remark.RequesterDepartmentName}}&nbsp;</td>
                                         <td data-title="Remarks added by">{{remark.CreatedByName}}&nbsp;</td>
-                                        <td data-title="Remarks added on">{{remark.CreatedOn | customDate: 'DD-MMM-YYYY
-                                            HH:mm'}}&nbsp;</td>
+                                        <td data-title="Remarks added on">{{remark.CreatedOn | customDate: 'DD-MMM-YYYY HH:mm'}}&nbsp;
+                                        </td>
                                         <td data-title="Remarks">{{remark.Remark}}&nbsp;</td>
                                     </tr>
                                 </tbody>

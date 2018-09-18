@@ -473,7 +473,6 @@ export class UtilityService {
     }
 
     public static GetNecessaryPageLevelPermissionValidation(departmentId: number, pageCode: string): boolean {
-
         this.isShowPage = false;
         this.pagePermissionMatrix = GlobalConstants.PagePermissionMatrix;
 

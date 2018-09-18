@@ -1,6 +1,7 @@
 <div class="row">
     <div class="col-lg-10 col-md-9 text-right">
-        <a target="_blank" href="{{downloadPath}}" download="CargoStatusInfo">
+        <a target="_blank" href="{{downloadPath}}" *ngIf="isCargoStatusInfoReportDownloadLink | accesibility: currentDepartmentId:'CargoStatusInfoReportDownloadLink'"
+            download="CargoStatusInfo">
             <i class="fa fa-download" aria-hidden="true"></i>&nbsp; Cargo Status Info Report
         </a>
     </div>

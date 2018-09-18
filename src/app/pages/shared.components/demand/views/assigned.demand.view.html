@@ -51,7 +51,8 @@
                         <td data-title="Download File">
                             <ul>
                                 <li *ngFor="let file of demand.FileStores">
-                                    <a target="_self" href="{{demandFilePath + file.FileStoreID}}" download="file.UploadedFileName">
+                                    <a target="_self" href="{{demandFilePath + file.FileStoreID}}" *ngIf="isDashboradDemandAssignedDownloadLink | accesibility:currentDepartmentId:'DashboradDemandAssignedDownloadLink'"
+                                        download="file.UploadedFileName">
                                         <i class="fa fa-download fa-2x" aria-hidden="true"></i>
                                     </a>
                                 </li>
@@ -225,32 +226,39 @@
             <div class="modal-body">
                 <div class="row modalBodyHeaderStyle">
                     <div class="col-sm-6 form-group">
-                        <label class="lebelHeaderStyle">
-                            <strong>Demand Type Name</strong>
-                        </label> <br>
-                        <span class="form-control">{{demandTypeName}}</span>
-                    </div>
+                        <<<<<<< HEAD <label class="lebelHeaderStyle"><strong>Demand Type Name</strong></label> <br>
+                            <span class="form-control">{{demandTypeName}}</span> </div>
 
                     <div class="col-sm-6 form-group">
-                        <label class="lebelHeaderStyle">
-                            <strong>Requester Department</strong>
-                        </label> <br>
-                        <span class="form-control">{{requesterDepartmentName}}</span>
-                    </div>
+                        <label class="lebelHeaderStyle"><strong>Requester Department</strong></label> <br>
+                        <span class="form-control">{{requesterDepartmentName}}</span> </div>
+                    =======
+                    <label class="lebelHeaderStyle">
+                        <strong>Demand Type Name</strong>
+                    </label> <br>
+                    <span class="form-control">{{demandTypeName}}</span>
                 </div>
-                <div class="row">
-                    <div class="col-12">
-                        <responsive-table>
-                            <table responsive-table-body>
-                                <tbody>
-                                    <tr *ngFor="let trail of demandTrails">
-                                        <td [innerHTML]="trail.Answers" type="text">
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </responsive-table>
-                    </div>
+
+                <div class="col-sm-6 form-group">
+                    <label class="lebelHeaderStyle">
+                        <strong>Requester Department</strong>
+                    </label> <br>
+                    <span class="form-control">{{requesterDepartmentName}}</span>
+                </div>
+                >>>>>>> master
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <responsive-table>
+                        <table responsive-table-body>
+                            <tbody>
+                                <tr *ngFor="let trail of demandTrails">
+                                    <td [innerHTML]="trail.Answers" type="text">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </responsive-table>
                 </div>
             </div>
         </div>

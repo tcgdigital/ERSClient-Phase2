@@ -61,6 +61,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     disableUploadButton: boolean;
     private currentDepartmentId: number = null;
     private currentIncident: number = null;
+    public isDashboardOpenChecklistDownloadLink: boolean=true;
 
     private ngUnsubscribe: Subject<any> = new Subject<any>();
 

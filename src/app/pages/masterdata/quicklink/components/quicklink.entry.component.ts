@@ -127,7 +127,6 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
 
     onSubmit(values: Object): void {
         this.submitted = true;
-
         if (this.form.valid) {
             if (this.form.controls['QuickLinkURL'].value != '') { //URL Validation Region
                 // const bolValid = /^(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:\~\+#]*[\w\-\@?^=%&amp;\~\+#])?$/.test(this.form.controls['QuickLinkURL'].value);

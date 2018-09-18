@@ -53,7 +53,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     public isShowAssignToMeDemand: boolean = true;
     public isInvalidRemarks: boolean = false;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
-
+    public isDashboradDemandAssignedDownloadLink: boolean= true;
     /**
      * Creates an instance of AssignedDemandComponent.
      * @param {DemandService} demandService
