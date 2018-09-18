@@ -1,53 +1,56 @@
 <div class="row">
-    <div class="col-12 butt-des">
+    <div class="col-sm-12 butt-des">
         <input type="button" class="btn btn-primary" (click)="expandSearchPanel(expandSearch)" [ngModel]="searchValue" />
     </div>
 </div>
+
 <div class="row">
-    <div class="col-12" *ngIf="expandSearch">
+    <div class="col-sm-12" *ngIf="expandSearch">
         <generic-search [filterConfigs]="searchConfigs" (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();">
         </generic-search>
     </div>
 </div>
 
-
-<responsive-table>
-    <table responsive-table-body>
-        <thead>
-            <tr>
-                <th>IATA Station Code</th>
-                <th>Airport Station Name</th>
-                <th>City</th>
-                <th>Country</th> 
-                <th>Time Zone</th>  
-                <th>IsActive</th>                               
-                <th>Edit</th>
-                <th>Delete</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr [hidden]="emergencyLocations.length != 0">
-                <td colspan="6">No records found.</td>
-            </tr>
-            <tr *ngFor="let emergencyloc of emergencyLocations">
-                <td data-title="IATA Station Code">{{emergencyloc.IATA}}</td>
-                <td data-title="Airport Station Name">{{emergencyloc.AirportName}}</td>
-                <td data-title="City">{{emergencyloc.City}}</td>  
-                <td data-title="Country">{{emergencyloc.Country}}</td>       
-                <td data-title="Time Zone">{{emergencyloc.TimeZone}}</td>             
-                <td data-title="IsActive">
-                    <md-checkbox class="Marght" id="IsActive" name="IsActive" [ngModel]="emergencyloc.ActiveFlag === 'Active'" 
-                        aria-label="ActiveFlag" (change)="IsActive($event,emergencyloc)">
-                    </md-checkbox>
-                </td>                
-                <td data-title="Edit">
-                    <i class="fa fa-edit fa-2x" (click)="UpdateEmergencyLocation(emergencyloc)"></i>
-                </td>
-                <td data-title="Delete">
-                    <i class="fa fa-trash-o fa-2x" aria-hidden="true" (click)="deleteStation(emergencyloc)"></i>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-</responsive-table>
+<div class="row">
+    <div class="col-sm-12">
+        <responsive-table>
+            <table responsive-table-body>
+                <thead>
+                    <tr>
+                        <th>IATA Station Code</th>
+                        <th>Airport Station Name</th>
+                        <th>City</th>
+                        <th>Country</th>
+                        <th>Time Zone</th>
+                        <th>IsActive</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr [hidden]="emergencyLocations.length != 0">
+                        <td colspan="8">No records found.</td>
+                    </tr>
+                    <tr *ngFor="let emergencyloc of emergencyLocations">
+                        <td data-title="IATA Station Code">{{emergencyloc.IATA}}&nbsp;</td>
+                        <td data-title="Airport Station Name">{{emergencyloc.AirportName}}&nbsp;</td>
+                        <td data-title="City">{{emergencyloc.City}}&nbsp;</td>
+                        <td data-title="Country">{{emergencyloc.Country}}&nbsp;</td>
+                        <td data-title="Time Zone">{{emergencyloc.TimeZone}}&nbsp;</td>
+                        <td data-title="IsActive">
+                            <md-checkbox class="Marght" id="IsActive" name="IsActive" [ngModel]="emergencyloc.ActiveFlag === 'Active'" aria-label="ActiveFlag"
+                                (change)="IsActive($event,emergencyloc)">
+                            </md-checkbox>
+                        </td>
+                        <td data-title="Edit">
+                            <i class="fa fa-edit fa-2x" (click)="UpdateEmergencyLocation(emergencyloc)"></i>
+                        </td>
+                        <td data-title="Delete">
+                            <i class="fa fa-trash-o fa-2x" aria-hidden="true" (click)="deleteStation(emergencyloc)"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </responsive-table>
+    </div>
+</div>

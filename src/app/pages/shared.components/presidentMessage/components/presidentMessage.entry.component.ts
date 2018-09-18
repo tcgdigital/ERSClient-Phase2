@@ -104,7 +104,7 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
                 this.templateMedias = response.Records
                     .filter((a) => a.TemplateType === 'President Message');
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -119,7 +119,7 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
                     this.PresidentsMessage.Message = this.templateContent;
                     this.applyReadOnlytextBox = false;
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
         else {
@@ -289,7 +289,7 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
                     this.InitiateForm();
                     this.showAdd = false;
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
         else {
@@ -320,7 +320,7 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
                     this.InitiateForm();
                     this.showAdd = false;
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
     }

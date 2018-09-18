@@ -142,7 +142,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
                 UtilityService.SetRAGStatus(this.mydemands, 'Demand'); 
 
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

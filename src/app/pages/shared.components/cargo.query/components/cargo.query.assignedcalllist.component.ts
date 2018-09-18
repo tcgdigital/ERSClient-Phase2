@@ -20,13 +20,13 @@ export class CargoQueryAssignedCallsListComponent implements OnInit, OnDestroy {
 
     allAssignedCalls: ExternalInputModel[] = [];
     currentIncidentId: number;
-    protected _onRouteChange: Subscription;
     callId: number;
     callcenterload: boolean = false;
     public isArchive: boolean = false;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
 
-    constructor(private callcenteronlypageservice: CallCenterOnlyPageService, private _router: Router,
+    constructor(private callcenteronlypageservice: CallCenterOnlyPageService, 
+        private _router: Router,
         private globalState: GlobalStateService) {
     }
 
@@ -81,7 +81,7 @@ export class CargoQueryAssignedCallsListComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

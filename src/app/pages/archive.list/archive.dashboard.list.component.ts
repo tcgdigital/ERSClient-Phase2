@@ -105,7 +105,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
                     this.closedCrisises.push(itemIncident);
                 });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -141,7 +141,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
                 .subscribe((result: IncidentModel[]) => {
                     //this.toastrService.success('Incident status updated successfully.', 'Archive Crisis', this.toastrConfig);
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
         if (reopenedCrisis.length > 0) {
@@ -160,7 +160,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
                 .subscribe((result: IncidentModel[]) => {
                     this.toastrService.success('Incident status updated successfully.', 'Archive Crisis', this.toastrConfig);
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
     }

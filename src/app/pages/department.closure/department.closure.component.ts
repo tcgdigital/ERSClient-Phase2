@@ -137,7 +137,7 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
                     this.FillFormControls(this.departmentClosureModel);
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -167,7 +167,7 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
                             .subscribe((resultReturn: DepartmentClosureModel) => {
                                 this.toastrService.success('The Department Closure Save is performed.', 'Department Closure', this.toastrConfig);
                             }, (error: any) => {
-                                console.log(`Error: ${error}`);
+                                console.log(`Error: ${error.message}`);
                                 this.toastrService.error('Error Occured', 'Department Closure', this.toastrConfig);
                             });
                     }
@@ -187,12 +187,12 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
                             .subscribe((resultReturn: DepartmentClosureModel) => {
                                 this.toastrService.success('The Department Closure Save is performed.', 'Department Closure', this.toastrConfig);
                             }, (error: any) => {
-                                console.log(`Error: ${error}`);
+                                console.log(`Error: ${error.message}`);
                                 this.toastrService.error('Error Occured', 'Department Closure', this.toastrConfig);
                             });
                     }
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
     }
@@ -233,7 +233,7 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
                                             this.isSubmited = true;
                                             this.toastrService.success('The Department Closure Submit is performed.', 'Department Closure', this.toastrConfig);
                                         }, (error: any) => {
-                                            console.log(`Error: ${error}`);
+                                            console.log(`Error: ${error.message}`);
                                             this.toastrService.error('Error Occured', 'Department Closure', this.toastrConfig);
                                         });
                                 }
@@ -257,7 +257,7 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
                                             this.isSubmited = true;
                                             this.toastrService.success('The Department Closure Submit is performed.', 'Department Closure', this.toastrConfig);
                                         }, (error: any) => {
-                                            console.log(`Error: ${error}`);
+                                            console.log(`Error: ${error.message}`);
                                             this.toastrService.error('Error Occured', 'Department Closure', this.toastrConfig);
                                         });
                                 }

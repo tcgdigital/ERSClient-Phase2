@@ -92,7 +92,7 @@ export class OtherQueryRecievedCallsListComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

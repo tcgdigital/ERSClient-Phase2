@@ -17,10 +17,10 @@
                 <label for="ParentCheckListId">Select Department: <span class="required">*</span></label>
                 <div class="multiselect-container">
                     <div class="multiselect-selector" (click)="showList(); $event.stopPropagation();">
-                        <i class="fa fa-caret-down fa-pull-right fa-fw" aria-hidden="true"></i> {{selectedcount>0? selectedcount
-                        + ' Department(s) selected' : 'Select Department'}}
+                        <i class="fa fa-pull-right expandStyle" [ngClass]="isDepartmentSelected ? 'fa-times text-danger' : 'fa-caret-down'" aria-hidden="true"></i> 
+                        {{selectedcount>0 ? selectedcount + ' Department(s) selected' : 'Select Department'}}
                     </div>
-                    <ul class="multiselect-list" [hidden]="!listSelected" (click)="$event.stopPropagation();">
+                    <ul class="multiselect-list" [hidden]="!isDepartmentSelected" (click)="$event.stopPropagation();">
                         <li>
                             <input type="checkbox" [(ngModel)]="IsAllSelected" formControlName="SelectAllDepartment" aria-label="Callback" (change)="selectAllDepartment(IsAllSelected)"
                                 [readOnly]="broadcast.IsSubmitted" />

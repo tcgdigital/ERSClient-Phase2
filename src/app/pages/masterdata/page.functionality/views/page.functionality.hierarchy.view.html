@@ -1,0 +1,41 @@
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-lg-3 col-md-4 col-sm-12">
+                <md-checkbox (change)="ExpandCollapsPageTree($event)">
+                    <strong>Page Permission</strong>
+                </md-checkbox>
+            </div>
+            <div class="col-lg-5 col-md-8 col-sm-12">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="txtSearchNode">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="button" title="Clear search text" (click)="ClearSearchHighlights('#txtSearchNode')">
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="button" title="Click for search" (click)="SearchAndExpandNodeByName('#txtSearchNode')">
+                            <i class="fa fa-search" aria-hidden="true"></i>&nbsp; Search
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <md-checkbox [(ngModel)]="allSelectForView" (change)="CheckUncheckAllTreeviewNodes($event.checked)">
+                    Can View
+                </md-checkbox>
+            </div>
+            <div class="col-lg-2 col-md-6 col-sm-6">
+                <md-checkbox [(ngModel)]="allSelectForOnlyHOD" (change)="CheckUncheckAllTreeviewNodesHOD($event.checked)">
+                    Only HOD
+                </md-checkbox>
+            </div>
+        </div>
+    </div>
+    <div class="card-body pl-0 pr-0">
+        <div class="col-sm-12">
+            <div id="pageTree"></div>
+        </div>
+    </div>
+</div>

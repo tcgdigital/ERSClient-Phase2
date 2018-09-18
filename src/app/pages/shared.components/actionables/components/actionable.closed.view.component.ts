@@ -138,7 +138,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
                     }
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -151,7 +151,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
                     return 1;
                 });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -203,11 +203,11 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
                             });
                         });
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
 
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -245,7 +245,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
                 this.SaveChecklistTrails(this.listActionableSelected);
 
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -293,15 +293,15 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
                                 this.globalStateProxy.NotifyDataChanged(GlobalConstants.DataExchangeConstant.CheckListStatusChange, null);
 
                             }, (error: any) => {
-                                console.log(`Error: ${error}`);
+                                console.log(`Error: ${error.message}`);
                             });
 
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
 
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -344,7 +344,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
                     callback(res.Records[0]);
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 }

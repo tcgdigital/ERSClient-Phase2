@@ -40,7 +40,7 @@ export class BroadcastDepartmentComponent {
                     this.items.push(new KeyValue(x.DepartmentName, x.DepartmentId));
                 });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -71,7 +71,7 @@ export class BroadcastDepartmentComponent {
                 this.allselect = this.departmentsToBroadcastToShow.length != 0 && this.departmentsToBroadcastToShow
                     .filter((x) => x['Isselected']).length == this.departmentsToBroadcastToShow.length;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -121,7 +121,7 @@ export class BroadcastDepartmentComponent {
                 .subscribe((response: BroadCastDepartmentModel[]) => {
                     this.toastrService.success('Departments mapped successfully to broadcast.', 'Success', this.toastrConfig);
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                     this.invokeReset();
                 });
         }

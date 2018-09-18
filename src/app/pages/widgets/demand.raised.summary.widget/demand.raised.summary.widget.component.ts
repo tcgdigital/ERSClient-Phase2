@@ -351,10 +351,10 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit, OnDestroy {
                             'demand-raised-graph-container', 'Raised', incidentModel.CreatedOn, 'RequesterDepartment');
                         this.showDemandRaisedGraph = true;
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

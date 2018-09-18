@@ -28,7 +28,8 @@ const dashboardRoutes: Routes = [
             { path: 'otherQuery', loadChildren: '../shared.components/other.query/other.query.module#OtherQueryModule' },
             { path: 'situationalupdatesquery', loadChildren: '../shared.components/situational.update.query/situational.update.query.module#SituationalUpdateQueryModule' },
             { path: 'customerdissatisfactionquery', loadChildren: '../shared.components/customer.dissatisfaction/customer.dissatisfaction.module#CustomerDissatisfactionModule' },
-            { path: 'groundmembers', loadChildren: '../shared.components/ground.members/ground.victims.module#GroundVictimsModule' }
+            { path: 'groundmembers', loadChildren: '../shared.components/ground.members/ground.victims.module#GroundVictimsModule' },
+            { path: 'groundvictimquery', loadChildren: '../shared.components/ground.victim.query/ground.victim.query.module#GroundVictimQueryModule' }
         ]
     }
 ];

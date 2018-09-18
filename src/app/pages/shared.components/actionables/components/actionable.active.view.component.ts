@@ -139,11 +139,11 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                             });
                         });
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
 
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -204,7 +204,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                     const extension = result.replace(/^.*[\\\/]/, '').split('.').pop();
                     this.fileName = `Checklist_${actionableClicked.CheckListCode}_${actionableClicked.IncidentId}.${extension}`;
                 }, (error) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
     }
@@ -264,7 +264,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                     }
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -289,7 +289,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                 this.parentChecklistIds = _.unique(parents);
                 this.ChecklistMappers = _.unique(mappers);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -330,7 +330,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                 this.tempActionable.FileName = this.fileName;
                 this.childModal.hide();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -365,7 +365,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
             .subscribe((x) => {
                 this.SaveChecklistTrails(this.listActionableSelected);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -411,15 +411,15 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                                 this.getAllActiveActionable(this.currentIncident, this.currentDepartmentId);
                                 this.globalStateProxyOpen.NotifyDataChanged(GlobalConstants.DataExchangeConstant.CheckListStatusChange, null);
                             }, (error: any) => {
-                                console.log(`Error: ${error}`);
+                                console.log(`Error: ${error.message}`);
                             });
 
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
 
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -433,7 +433,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                     // console.log(`Schedule run RAG ststus: ${item.RagColor}`);
                 });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -474,7 +474,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                     callback(res.Records[0]);
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 }

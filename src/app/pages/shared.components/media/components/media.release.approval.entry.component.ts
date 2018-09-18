@@ -181,7 +181,7 @@ export class MediaReleaseApprovalEntryComponent implements OnInit, OnDestroy {
                 this.showAdd = false; 
                 this.formInit();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

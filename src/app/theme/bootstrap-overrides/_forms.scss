@@ -29,6 +29,9 @@ select.form-control {
 }
 
 textarea:focus,
+button:focus,
+.btn:focus, 
+.btn-primary.focus,
 textarea.form-control:focus,
 input.form-control:focus,
 select.form-control:focus,
@@ -43,5 +46,12 @@ input[type=submit]:focus,
 [type=email].form-control:focus,
 [type=tel].form-control:focus,
 [contenteditable].form-control:focus {
-    box-shadow: inset 0 -1px 0 #ddd;
+    outline: none;
+    box-shadow: none;
+    //box-shadow: inset 0 -1px 0 #ddd;
+}
+
+span.input-group-text {
+    height: 30px;
+    font-size: 14px;
 }

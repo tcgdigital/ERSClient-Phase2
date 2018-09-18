@@ -128,7 +128,7 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
                     this.initiateForm();
                     this.isDisabledUpload = true;
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         } else {
             this.toastrService.error('Invalid File Format!', 'Error', this.toastrConfig);
@@ -166,7 +166,7 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
                         this.showAddRegion(this.showAdd);
                         this.showAdd = false;
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
             }
             else {
@@ -183,7 +183,7 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
                         this.showAddRegion(this.showAdd);
                         this.showAdd = false;
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
             }
         }

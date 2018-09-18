@@ -92,7 +92,7 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
                     this.OnDocumentUploaded(dropdownselected);
 
                 }, (error) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
         else {
@@ -125,7 +125,7 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
                             this.filesToUpload = null;
                             return false;
                         }, (error: any) => {
-                            console.log(`Error: ${error}`);
+                            console.log(`Error: ${error.message}`);
                         });
                 }
                 else {
@@ -152,7 +152,7 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
                                 this.filesToUpload = null;
                                 return false;
                             }, (error: any) => {
-                                console.log(`Error: ${error}`);
+                                console.log(`Error: ${error.message}`);
                             });
                     }
                     else {
@@ -174,12 +174,12 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
                                 this.filesToUpload = null;
                                 return false;
                             }, (error: any) => {
-                                console.log(`Error: ${error}`);
+                                console.log(`Error: ${error.message}`);
                             });
                     }
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

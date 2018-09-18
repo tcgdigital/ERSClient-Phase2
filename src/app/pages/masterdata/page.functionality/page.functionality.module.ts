@@ -9,6 +9,8 @@ import { PageFunctionalityComponent } from './page.functionality.component';
 import { PageService, PagePermissionService } from './components';
 import { DepartmentService } from '../department';
 import { DataExchangeService, SharedModule } from '../../../shared';
+import { PageFunctionalityHierarchyComponent } from './page.functionality.hierarchy.component';
+import { AccordionModule } from 'ngx-bootstrap';
 
 @NgModule({
     imports: [
@@ -17,10 +19,12 @@ import { DataExchangeService, SharedModule } from '../../../shared';
         HttpModule,
         MdCheckboxModule,
         SharedModule,
+        AccordionModule.forRoot(),
         PageFunctionalityeRouting
     ],
     declarations: [
-        PageFunctionalityComponent
+        PageFunctionalityComponent,
+        PageFunctionalityHierarchyComponent
     ],
     providers: [
         PageService, 

@@ -46,7 +46,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
     currentDepartmentId: number;
     buttonValue: string = '';
     showAdd: boolean;
-    listSelected: boolean;
+    isDepartmentSelected: boolean;
     selectedcount: number;
     credential: AuthModel;
     protected _onRouteChange: Subscription;
@@ -74,7 +74,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
         this.deptBrodCastModels = [];
         this.buttonValue = 'Add New Broadcast Message';
         this.showAdd = false;
-        this.listSelected = false;
+        this.isDepartmentSelected = false;
         this.selectedcount = 0;
     }
 
@@ -217,7 +217,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
                         this.cancel();
                         this.IsAllSelected = false;
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
             }
             else {
@@ -232,7 +232,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
                         this.cancel();
                         this.IsAllSelected = false;
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
             }
         }
@@ -274,20 +274,17 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
 
     showAddRegion(ShowAdd: boolean): void {
         this.showAdd = true;
-        this.listSelected = false;
+        this.isDepartmentSelected = false;
         this.IsAllSelected = false;
         this.selectedcount = 0;
     }
 
     showList = function (e) {
-        if (this.listSelected)
-            this.listSelected = false;
-        else
-            this.listSelected = true;
+        this.isDepartmentSelected = !this.isDepartmentSelected;
     };
 
     showList1 = function (e) {
-        this.listSelected = false;
+        this.isDepartmentSelected = false;
     };
 
     private incidentChangeHandler(incident: KeyValue): void {
@@ -319,12 +316,12 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
                     .subscribe((response1: DepartmentModel) => {
                         this.currentDepartment.TargetDepartment.DepartmentName = response1.DepartmentName;
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
 
                 this.BroadCastDepartmentMappings.push(this.currentDepartment);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 }

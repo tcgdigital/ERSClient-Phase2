@@ -6,6 +6,7 @@ import {
     EnquiryModel,
     DemandModel
 } from '../../../shared.components';
+import { GroundVictimModel } from '../../ground.victim';
 
 export class CommunicationLogModel extends BaseModel {
     public InteractionDetailsId: number;
@@ -14,6 +15,7 @@ export class CommunicationLogModel extends BaseModel {
     public Answers: string;
     public AffectedPersonId?: number;
     public AffectedObjectId?: number;
+    public GroundVictimId?: number;
     public EnquiryId?: number;
     public DemandId?: number;
     public RequesterName: string;
@@ -22,6 +24,7 @@ export class CommunicationLogModel extends BaseModel {
 
     public AffectedPerson?: AffectedPeopleModel;
     public AffectedObject?: AffectedObjectModel;
+    public GroundVictim?: GroundVictimModel;
     public Enquiry?: EnquiryModel;
     public Demand?: DemandModel;
 

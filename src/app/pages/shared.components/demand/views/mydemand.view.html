@@ -28,30 +28,41 @@
                 </thead>
                 <tbody>
                     <tr [hidden]="mydemands.length != 0">
-                        <td colspan="13">No Demand is created yet.</td>
+                        <td colspan="isArchive? 13: 12">No Demand is created yet.</td>
                     </tr>
                     <tr *ngFor="let demand of mydemands">
                         <td data-title="Demand Type">{{demand.DemandTypeName}}&nbsp;</td>
-                        <td data-title="Demand Description"><a href="javascript:void(0);" (click)="openDemandDetails(demand.DemandId)">{{demand.DemandDesc}}</a>&nbsp;</td>
-                        <td data-title="Trail"><i class="fa fa-info-circle fa-2x" (click)="openTrail(demand)"></i> </td>
+                        <td data-title="Demand Description">
+                            <a href="javascript:void(0);" (click)="openDemandDetails(demand.DemandId)">{{demand.DemandDesc}}</a>&nbsp;
+                        </td>
+                        <td data-title="Trail">
+                            <i class="fa fa-info-circle fa-2x" (click)="openTrail(demand)"></i>
+                        </td>
                         <td data-title="Target Department">{{demand.TargetDepartmentName}}&nbsp;</td>
                         <td data-title="Priority">{{demand.Priority}}&nbsp;</td>
                         <td data-title="Schedule Time Close">{{demand.ScheduleTimeToShow}}&nbsp;</td>
                         <td data-title="Requester Contact Number">{{demand.ContactNumber}}&nbsp;</td>
                         <td data-title="Required Location">{{demand.RequiredLocation}}&nbsp;</td>
                         <td data-title="Demand Status">{{demand.DemandStatusDescription}}&nbsp;</td>
-                        <td data-title="Remarks"><i class="fa fa-list-alt fa-2x" (click)="openDemandRemarks(demand)"></i></td>
+                        <td data-title="Remarks">
+                            <i class="fa fa-list-alt fa-2x" (click)="openDemandRemarks(demand)"></i>
+                        </td>
                         <td data-title="RAG">
                             <span [ngClass]="demand.RagStatus"></span>
                         </td>
                         <td data-title="Download File">
                             <ul>
                                 <li *ngFor="let file of demand.FileStores">
-                                    <a target="_blank" href="{{demandFilePath + file.FileStoreID}}" *ngIf="isDashboradMyDemandDownloadLink | accesibility: currentDepartmentId :'DashboradMyDemandDownloadLink'" download="file.UploadedFileName"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+                                    <a target="_blank" href="{{demandFilePath + file.FileStoreID}}" *ngIf="isDashboradMyDemandDownloadLink | accesibility: currentDepartmentId :'DashboradMyDemandDownloadLink'"
+                                        download="file.UploadedFileName">
+                                        <i class="fa fa-download fa-2x" aria-hidden="true"></i>
+                                    </a>
                                 </li>
                             </ul>
                         </td>
-                        <td data-title="Edit" *ngIf="!isArchive"><i class="fa fa-edit fa-2x" (click)="open(demand.DemandId)"></i></td>
+                        <td data-title="Edit" *ngIf="!isArchive">
+                            <i class="fa fa-edit fa-2x" (click)="open(demand.DemandId)"></i>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -66,8 +77,8 @@
             <div class="modal-header">
                 <h4 class="modal-title">Demand Remarks</h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="cancelRemarkUpdate()">
-                  <span aria-hidden="true">&times;</span>
-                   </button>
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <div class="row" *ngIf="!isArchive">
@@ -100,10 +111,11 @@
                                         <td colspan="4">No Remark is added yet.</td>
                                     </tr>
                                     <tr *ngFor="let remark of demandRemarks">
-                                        <td data-title="Requester Department">{{remark.RequesterDepartmentName}}</td>
-                                        <td data-title="Remarks added by">{{remark.CreatedByName}}</td>
-                                        <td data-title="Remarks added on">{{remark.CreatedOn | customDate: 'DD-MMM-YYYY HH:mm'}}</td>
-                                        <td data-title="Remarks">{{remark.Remark}}</td>
+                                        <td data-title="Requester Department">{{remark.RequesterDepartmentName}}&nbsp;</td>
+                                        <td data-title="Remarks added by">{{remark.CreatedByName}}&nbsp;</td>
+                                        <td data-title="Remarks added on">{{remark.CreatedOn | customDate: 'DD-MMM-YYYY HH:mm'}}&nbsp;
+                                        </td>
+                                        <td data-title="Remarks">{{remark.Remark}}&nbsp;</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -123,8 +135,8 @@
             <div class="modal-header">
                 <h4 class="modal-title">Demand Trail</h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="cancelTrail()">
-                  <span aria-hidden="true">&times;</span>
-                   </button>
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <div class="row modalBodyHeaderStyle">

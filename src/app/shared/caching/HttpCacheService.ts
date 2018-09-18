@@ -50,16 +50,16 @@ export class HttpCacheService extends Http {
                                         subscriber.next(remoteData);
                                         subscriber.complete();
                                     }, (error: any) => {
-                                        console.log(`Error: ${error}`);
+                                        console.log(`Error: ${error.message}`);
                                     });
                             }
                             
                         }, (error: any) => {
-                            console.log(`Error: ${error}`);
+                            console.log(`Error: ${error.message}`);
                         });
 
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         });
 

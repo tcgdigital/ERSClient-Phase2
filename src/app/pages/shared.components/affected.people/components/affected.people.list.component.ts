@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnInit, ViewChild, Injector } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, ViewChild, Injector, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription, Observable, Subject } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
@@ -21,16 +21,19 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { FileStoreModel } from '../../../../shared/models/file.store.model';
 import { FileStoreService } from '../../../../shared/services/common.service';
 import * as _ from 'underscore';
+import { CareMemberTrackerModel } from '../../care.member.tracker';
 
 @Component({
     selector: 'affectedpeople-list',
     encapsulation: ViewEncapsulation.None,
     templateUrl: '../views/affected.people.list.view.html'
 })
-export class AffectedPeopleListComponent implements OnInit {
+export class AffectedPeopleListComponent implements OnInit, OnDestroy {
+
     @ViewChild('childModal') public childModal: ModalDirective;
     @ViewChild('childModalForTrail') public childModalForTrail: ModalDirective;
     @ViewChild('childModalForCallers') public childModalForCallers: ModalDirective;
+    @ViewChild('childModalForCareMembers') public childModalForCareMembers: ModalDirective;
     @ViewChild('inputFileCrew') inputFileCrew: any;
 
     affectedPeople: AffectedPeopleToView[] = [];
@@ -90,6 +93,8 @@ export class AffectedPeopleListComponent implements OnInit {
         private callerservice: CallerService,
         private involvedPartyService: InvolvePartyService,
         private dataExchange: DataExchangeService<number>,
+        private dataExchangeCareMemberCreation: DataExchangeService<CareMemberTrackerModel>,
+        private dataExchangeCareMemberCreationForAllPDA: DataExchangeService<string>,
         private globalState: GlobalStateService,
         private communicationLogService: CommunicationLogService,
         private _router: Router,
@@ -101,6 +106,11 @@ export class AffectedPeopleListComponent implements OnInit {
         private passangerService: PassengerService) {
         this.downloadFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Affected People/';
         this.globalStateProxyOpen = injector.get(GlobalStateService);
+    }
+
+    openAffectedPersonCareMemberDetail(affectedPerson: AffectedPeopleToView): void {
+        this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.AffectedPersonSelected, affectedPerson.AffectedPersonId);
+        this.childModalForCareMembers.show();
     }
 
     openAffectedPersonDetail(affectedPerson: AffectedPeopleToView): void {
@@ -142,14 +152,14 @@ export class AffectedPeopleListComponent implements OnInit {
                                 this.childModal.show();
                             }
                         }, (error: any) => {
-                            console.log(`Error: ${error}`);
+                            console.log(`Error: ${error.message}`);
                         });
                 }
                 else {
                     this.childModal.show();
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -163,7 +173,7 @@ export class AffectedPeopleListComponent implements OnInit {
             .subscribe((response: DepartmentModel) => {
                 this.currentDepartmentName = response.DepartmentName;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -211,11 +221,11 @@ export class AffectedPeopleListComponent implements OnInit {
                             this.getAffectedPeople(this.currentIncident);
                             console.log(response);
                         }, (error: any) => {
-                            console.log(`Error: ${error}`);
+                            console.log(`Error: ${error.message}`);
                         });
 
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
     }
@@ -226,7 +236,7 @@ export class AffectedPeopleListComponent implements OnInit {
         this.affectedPersonToUpdate.MedicalStatus = affectedModifiedForm['MedicalStatusToshow'];
         this.affectedPersonToUpdate.Remarks = affectedModifiedForm.Remarks;
 
-        const additionalHeader: NameValue<string> 
+        const additionalHeader: NameValue<string>
             = new NameValue<string>('CurrentDepartmentName', this.currentDepartmentName);
 
         /*
@@ -248,7 +258,7 @@ export class AffectedPeopleListComponent implements OnInit {
                 this.childModal.hide();
 
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -273,7 +283,7 @@ export class AffectedPeopleListComponent implements OnInit {
                     }
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -300,7 +310,7 @@ export class AffectedPeopleListComponent implements OnInit {
         this.communicationLogService.CreateCommunicationLog(communicationLog)
             .subscribe((itemResult: CommunicationLogModel) => {
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -308,13 +318,13 @@ export class AffectedPeopleListComponent implements OnInit {
     cancelUpdate(affectedModifiedForm: AffectedPeopleToView): void {
         this.childModal.hide();
         this.affectedPersonModelForStatus = new AffectedPeopleToView();
-
     }
 
     getAffectedPeople(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
+                
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0])
                     .sort((a, b) => {
                         if (x => x.PassengerType) {
@@ -330,7 +340,7 @@ export class AffectedPeopleListComponent implements OnInit {
                     x['showDiv'] = false;
                 });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -344,7 +354,7 @@ export class AffectedPeopleListComponent implements OnInit {
                     x['showDiv'] = false;
                 });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -401,16 +411,40 @@ export class AffectedPeopleListComponent implements OnInit {
         this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard,
             (model: KeyValue) => this.departmentChangeHandler(model));
 
+        this.dataExchangeCareMemberCreation.Subscribe
+            (GlobalConstants.DataExchangeConstant.CareMemberCreated,
+            (response: CareMemberTrackerModel) => {
+                
+                if (this.affectedPeople.some(a => a.AffectedPersonId == response.AffectedPersonId)) {
+                    const selectedAffectedPersonIndex = this.affectedPeople
+                        .findIndex(x => x.AffectedPersonId == response.AffectedPersonId);
+
+                    if (selectedAffectedPersonIndex >= 0) {
+                        this.affectedPeople[selectedAffectedPersonIndex]
+                            .CurrentCareMemberName = response.CareMemberName;
+                    }
+                }
+            });
+
+        this.dataExchangeCareMemberCreationForAllPDA.Subscribe
+            (GlobalConstants.DataExchangeConstant.CareMemberForAllPDACreated,
+            (currentCareMemberName: string) => {
+                this.affectedPeople.forEach((affectedPeople: AffectedPeopleToView) => {
+                    affectedPeople.CurrentCareMemberName = currentCareMemberName;
+                })
+            });
+
         // Signal Notification
         this.globalState.Subscribe
             (GlobalConstants.NotificationConstant.ReceiveIncidentBorrowingCompletionResponse.Key, () => {
                 this.getAffectedPeople(this.currentIncident);
             });
 
-        this.globalState.Subscribe(GlobalConstants.NotificationConstant.ReceivePassengerImportCompletionResponse.Key, (count: number) => {
-            if (count > 0)
-                this.getAffectedPeople(this.currentIncident);
-        });
+        this.globalState.Subscribe
+            (GlobalConstants.NotificationConstant.ReceivePassengerImportCompletionResponse.Key, (count: number) => {
+                if (count > 0)
+                    this.getAffectedPeople(this.currentIncident);
+            });
     }
 
     IsNokInformed(event: any, id: number, name: string) {
@@ -423,12 +457,17 @@ export class AffectedPeopleListComponent implements OnInit {
                 this.toastrService.success(`NOK information status updated`)
                 this.getAffectedPeople(this.currentIncident);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
     ngOnDestroy(): void {
         //  this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard);
+        this.dataExchangeCareMemberCreationForAllPDA.Unsubscribe(GlobalConstants.DataExchangeConstant.CareMemberForAllPDACreated);
+        this.dataExchangeCareMemberCreation.Unsubscribe(GlobalConstants.DataExchangeConstant.CareMemberCreated);
+
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     openChatTrails(affectedPersonId: number): void {
@@ -442,12 +481,17 @@ export class AffectedPeopleListComponent implements OnInit {
                 this.communications = responseModel.CommunicationLogs;
                 this.childModalForTrail.show();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
     cancelTrailModal() {
         this.childModalForTrail.hide();
+    }
+
+    cancelCareTrailModal() {
+        this.childModalForCareMembers.hide();
+        this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.AffectedPersonSelected);
     }
 
     openCallerList(affectedperson): void {
@@ -463,7 +507,7 @@ export class AffectedPeopleListComponent implements OnInit {
                     x['isnok'] = false;
                 });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -491,7 +535,7 @@ export class AffectedPeopleListComponent implements OnInit {
                 .subscribe(() => {
                     this.toastrService.success('NOK updated.');
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
         else {
@@ -502,7 +546,7 @@ export class AffectedPeopleListComponent implements OnInit {
                 .subscribe(() => {
                     this.toastrService.success('NOK updated.');
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
     }

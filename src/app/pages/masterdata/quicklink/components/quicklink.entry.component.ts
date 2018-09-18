@@ -1,14 +1,14 @@
-import { Component, ViewEncapsulation, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import {
+    Component, ViewEncapsulation, OnInit,
+    OnDestroy, ViewChild, AfterViewInit
+} from '@angular/core';
 import {
     FormGroup,
     FormControl,
     FormBuilder,
-    AbstractControl,
-    Validators,
-    ReactiveFormsModule
+    Validators
 } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
-
 
 import { QuickLinkModel } from './quicklink.model';
 import { QuickLinkService } from './quicklink.service';
@@ -32,6 +32,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
 
     public form: FormGroup;
     public submitted: boolean;
+    public groupCaption: string= 'Group Name:';
     filesToUpload: File[];
     filepathWithLinks: string = null;
     fileName: string = null;
@@ -67,7 +68,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     ngAfterViewInit() {
-        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.QuickLinkModelEdited, 
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.QuickLinkModelEdited,
             (model: QuickLinkModel) => this.onQuickLinkEditSuccess(model));
     }
 
@@ -102,7 +103,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
                     const extension = result.replace(/^.*[\\\/]/, '').split('.').pop();
                     this.fileName = 'Quicklink' + `.${extension}`;
                 }, (error) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
         else {
@@ -113,7 +114,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
 
     ngOnDestroy(): void {
         this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.QuickLinkModelEdited);
-        this.ngUnsubscribe.next();	
+        this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
     }
 
@@ -172,7 +173,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
                             this.showAdd = false;
                             this.initiateQuickLinkModel();
                         }, (error: any) => {
-                            console.log(`Error: ${error}`);
+                            console.log(`Error: ${error.message}`);
                         });
                 }
 
@@ -210,7 +211,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
                             this.showAddRegion(this.showAdd);
                             this.showAdd = false;
                         }, (error: any) => {
-                            console.log(`Error: ${error}`);
+                            console.log(`Error: ${error.message}`);
                         });
                 }
             }

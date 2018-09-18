@@ -142,7 +142,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
                     this.currentOrganizationCode = this.orgLocalArray[0].OrganizationCode;
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -173,7 +173,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
                     this.disableUploadButton = true;
 
                 }, (error) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                     this.toastrService.error(error, 'Error', this.toastrConfig);
                 });
         }
@@ -194,7 +194,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
                     this.getCurrentLoadSheet(this.IncidentId);
                     this.toastrService.success('Load sheet document is uploaded successfully', 'Success', this.toastrConfig);
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
     }
@@ -266,7 +266,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
                     this.loadSheetPath = '';
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

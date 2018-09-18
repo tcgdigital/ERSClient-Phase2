@@ -105,7 +105,7 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit, OnDestroy {
                 this.BorrowedIncidentName = item.EmergencyName;
                 this.loadDataIncidentViewPopup();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -321,7 +321,7 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit, OnDestroy {
                         callback();
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -350,7 +350,7 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit, OnDestroy {
                     this.loadDataIncidentViewPopup();
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 }

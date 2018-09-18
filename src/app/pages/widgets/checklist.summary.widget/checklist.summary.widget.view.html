@@ -15,7 +15,8 @@
                     <span>{{checkListSummery.assignActionableCount | padding: '0': 2}}</span>
                 </span>
                 <span class="widget-text">Assigned</span>
-                <span *ngIf="isShowViewAll | accesibility:initiatedDepartmentId:'ChecklistKPIViewAll'" (click)="openViewAllChecklist()" class="widget-text view-all-style">View All</span>
+                <span *ngIf="isShowViewAll | accesibility:initiatedDepartmentId:'ChecklistKPIViewAll'" (click)="openViewAllChecklist()" class="widget-text view-all-style">View
+                    All</span>
             </div>
             <div class="col widget-block">
                 <span class="widget-number">
@@ -23,7 +24,8 @@
                     <span>{{checkListSummery.closeActionableCount | padding: '0': 2}}</span>
                 </span>
                 <span class="widget-text">Completed</span>
-                <span *ngIf="isShowViewAll | accesibility:initiatedDepartmentId:'ChecklistKPISubDept'" (click)="openViewSubDeptChecklist()" class="widget-text view-all-style">Sub-Dept</span>
+                <span *ngIf="isShowViewAll | accesibility:initiatedDepartmentId:'ChecklistKPISubDept'" (click)="openViewSubDeptChecklist()"
+                    class="widget-text view-all-style">Sub-Dept</span>
             </div>
         </div>
     </div>
@@ -58,19 +60,19 @@
                                     <tr *ngFor="let deptCheckList of deptCheckListsAll | async">
                                         <td data-title="Department">
                                             <a href="javascript:void(0);" (click)="graphDataFormationForChecklistWidget(deptCheckList.departmentId, $event)">
-                                            {{deptCheckList.departmentName}}
+                                                {{deptCheckList.departmentName}}&nbsp;
                                             </a>
                                         </td>
-                                        <td data-title="Assigned">{{deptCheckList.assigned}}</td>
+                                        <td data-title="Assigned">{{deptCheckList.assigned}}&nbsp;</td>
                                         <td data-title="Completed" *ngIf="deptCheckList.completed>0">
                                             <!-- <a href="{{baseLocationURl}}#showAllCompleted" (click)="showAllDeptSubTableCompleted(deptCheckList)">{{deptCheckList.completed}}</a> -->
-                                             <a href="javascript:void(0);" (click)="showAllDeptSubTableCompleted(deptCheckList)">{{deptCheckList.completed}}</a>
+                                            <a href="javascript:void(0);" (click)="showAllDeptSubTableCompleted(deptCheckList)">{{deptCheckList.completed}}&nbsp;</a>
                                         </td>
                                         <td data-title="Completed" *ngIf="deptCheckList.completed==0">
                                             <a href="javascript:void(0);">{{deptCheckList.completed}}</a></td>
                                         <td data-title="Pending" *ngIf="deptCheckList.pending>0">
                                             <!-- <a href="{{baseLocationURl}}#showAllPending" (click)="showAllDeptSubTablePending(deptCheckList)">{{deptCheckList.pending}}</a> -->
-                                            <a href="javascript:void(0);" (click)="showAllDeptSubTablePending(deptCheckList)">{{deptCheckList.pending}}</a>
+                                            <a href="javascript:void(0);" (click)="showAllDeptSubTablePending(deptCheckList)">{{deptCheckList.pending}}&nbsp;</a>
                                         </td>
                                         <td data-title="Pending" *ngIf="deptCheckList.pending==0">
                                             <a href="javascript:void(0);">{{deptCheckList.pending}}</a></td>
@@ -104,8 +106,9 @@
                                         <td data-title="Records" colspan="3">No demands to show.</td>
                                     </tr>
                                     <tr *ngFor="let subDeptCheckList of subDeptCompletedCheckLists | async">
-                                        <td data-title="Description">{{subDeptCheckList.checkListDesc}}</td>
-                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                                        <td data-title="Description">{{subDeptCheckList.checkListDesc}}&nbsp;</td>
+                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date:
+                                            'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
                                         <td data-title="RAG"><span [ngClass]="subDeptCheckList.RAG"></span></td>
                                     </tr>
                                 </tbody>
@@ -133,8 +136,9 @@
                                         <td data-title="Records" colspan="3">No records to show.</td>
                                     </tr>
                                     <tr *ngFor="let subDeptCheckList of subDeptPendingCheckLists">
-                                        <td data-title="Description">{{subDeptCheckList.checkListDesc}}</td>
-                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                                        <td data-title="Description">{{subDeptCheckList.checkListDesc}}&nbsp;</td>
+                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date:
+                                            'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
                                         <td data-title="RAG"><span [ngClass]="subDeptCheckList.RAG"></span></td>
                                     </tr>
                                 </tbody>
@@ -172,16 +176,16 @@
                                 <td data-title="Records" colspan="4">No records to show.</td>
                             </tr>
                             <tr *ngFor="let deptCheckList of deptCheckListsSubDept | async">
-                                <td data-title="Description">{{deptCheckList.departmentName}}</td>
-                                <td data-title="Assigned">{{deptCheckList.assigned}}</td>
+                                <td data-title="Description">{{deptCheckList.departmentName}}&nbsp;</td>
+                                <td data-title="Assigned">{{deptCheckList.assigned}}&nbsp;</td>
                                 <td data-title="Completed" *ngIf="deptCheckList.completed>0">
-                                    <span (click)="showSubDeptSubTableCompleted(deptCheckList)">{{deptCheckList.completed}}</span>
+                                    <span (click)="showSubDeptSubTableCompleted(deptCheckList)">{{deptCheckList.completed}}&nbsp;</span>
                                 </td>
-                                <td data-title="Completed" *ngIf="deptCheckList.completed==0">{{deptCheckList.completed}}</td>
+                                <td data-title="Completed" *ngIf="deptCheckList.completed==0">{{deptCheckList.completed}}&nbsp;</td>
                                 <td data-title="Pending" *ngIf="deptCheckList.pending>0">
-                                    <span (click)="showSubDeptSubTablePending(deptCheckList)">{{deptCheckList.pending}}</span>
+                                    <span (click)="showSubDeptSubTablePending(deptCheckList)">{{deptCheckList.pending}}&nbsp;</span>
                                 </td>
-                                <td data-title="Pending" *ngIf="deptCheckList.pending==0">{{deptCheckList.pending}}</td>
+                                <td data-title="Pending" *ngIf="deptCheckList.pending==0">{{deptCheckList.pending}}&nbsp;</td>
                             </tr>
                         </tbody>
                     </table>
@@ -194,7 +198,6 @@
                     <div class="card-block">
                         <responsive-table>
                             <table responsive-table-body>
-
                                 <thead>
                                     <tr>
                                         <th>Description</th>
@@ -207,8 +210,9 @@
                                         <td colspan="3">No demands to show.</td>
                                     </tr>
                                     <tr *ngFor="let subDeptCheckList of subDeptCompletedCheckLists | async">
-                                        <td data-title="Description">{{subDeptCheckList.checkListDesc}}</td>
-                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                                        <td data-title="Description">{{subDeptCheckList.checkListDesc}}&nbsp;</td>
+                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date:
+                                            'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
                                         <td data-title="RAG"><span [ngClass]="subDeptCheckList.RAG"></span></td>
                                     </tr>
                                 </tbody>
@@ -236,8 +240,9 @@
                                         <td colspan="3">No checklists to show.</td>
                                     </tr>
                                     <tr *ngFor="let subDeptCheckList of subDeptPendingCheckLists">
-                                        <td data-title="Description">{{subDeptCheckList.checkListDesc}}</td>
-                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date: 'dd-MMM-yyyy HH:mm'}}</td>
+                                        <td data-title="Description">{{subDeptCheckList.checkListDesc}}&nbsp;</td>
+                                        <td data-title="Schedule Close Time">{{subDeptCheckList.scheduleCloseTime | date:
+                                            'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
                                         <td data-title="RAG"><span [ngClass]="subDeptCheckList.RAG"></span></td>
                                     </tr>
                                 </tbody>

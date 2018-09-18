@@ -31,7 +31,7 @@ export class BroadCastDepartmentListComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<BroadCastDepartmentModel>) => {
                 this.BroadCastDepartments = response.Records;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

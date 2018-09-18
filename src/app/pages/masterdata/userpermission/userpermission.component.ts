@@ -41,7 +41,7 @@ export class UserPermissionComponent implements OnDestroy {
                     this.items.push(new KeyValue(userProfile.Name, userProfile.UserProfileId));
                 });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     };
 
@@ -86,7 +86,7 @@ export class UserPermissionComponent implements OnDestroy {
                 this.checkAllStatusHod();
                 this.checkAllStatusMember();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     };
 
@@ -167,7 +167,7 @@ export class UserPermissionComponent implements OnDestroy {
                     this.toastrService.success('User permissions saved Successfully.', 'Success', this.toastrConfig);
                     console.log("Success");
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
         else {
@@ -186,7 +186,7 @@ export class UserPermissionComponent implements OnDestroy {
                 this.departmentsToViewConstant = this.userPermissionService
                     .CreateDefaultDepartmentList(this.departments);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 }

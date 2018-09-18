@@ -17,6 +17,7 @@ import { CallerService } from '../caller';
 import { PassengerService } from '../passenger';
 import { SharedModule, DataExchangeService } from '../../../shared';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { CareMemberTrackerModule } from '../care.member.tracker';
 
 @NgModule({
     imports: [
@@ -26,8 +27,9 @@ import { ModalModule } from 'ngx-bootstrap/modal';
         HttpModule,
         MdCheckboxModule,
         SharedModule,
-        AffectedPeopleRouting,
-        ModalModule
+        ModalModule,
+        CareMemberTrackerModule,
+        AffectedPeopleRouting
     ],
     declarations: [
         AffectedPeopleComponent,

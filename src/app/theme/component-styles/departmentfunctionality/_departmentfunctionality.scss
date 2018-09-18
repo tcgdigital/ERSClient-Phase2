@@ -7,6 +7,74 @@
 .trimString {
     display: inline-block;
     width: 80%; //white-space: nowrap;
-    //overflow:hidden !important;
-    //text-overflow: ellipsis;
+}
+
+// .gj-tree-bootstrap-3 ul.gj-tree-bootstrap-list li [data-role=display] {
+//     padding: 3px;
+// }
+// .gj-checkbox-bootstrap {
+//     float: left;
+// }
+ul.gj-list-bootstrap li [data-role=display] {
+    padding: 4px 0 4px 4px;
+    >[data-role=hod-checkbox] {
+        display: inline-block;
+        border: 1px solid #afb2b5;
+        border-radius: 4px;
+        background-color: #afb2b5;
+        padding-left: 1px;
+        height: 21px;
+        >label {
+            float: left;
+            >span {
+                display: inline-block;
+            }
+        }
+    }
+    >span {
+        &.node-text {
+            padding-right: 7px;
+            padding-top: 1px;
+        }
+        &.node-caption {
+            color: #fff;
+            padding: 4px 7px;
+            border-radius: 20px;
+            font-size: 10px;
+            display: inline;
+            margin-right: 3px;
+            &.widget {
+                background-color: #2196F3;
+            }
+            &.page {
+                background-color: #009689;
+            }
+            &.tab {
+                background-color: #8BC34A;
+            }
+            &.action {
+                background-color: #bd5348;
+            }
+            &.widget:before {
+                content: '\f2bc';
+                font: normal normal normal 14px/1 FontAwesome;
+                font-size: 12px;
+            }
+            &.page:before {
+                content: '\f1ea';
+                font: normal normal normal 14px/1 FontAwesome;
+                font-size: 12px;
+            }
+            &.tab:before {
+                content: '\f2d0';
+                font: normal normal normal 14px/1 FontAwesome;
+                font-size: 12px;
+            }
+            &.action:before {
+                content: '\f25a';
+                font: normal normal normal 14px/1 FontAwesome;
+                font-size: 12px;
+            }
+        }
+    }
 }

@@ -82,7 +82,7 @@ export class ChecklistListComponent implements OnInit, OnDestroy {
                 });
                 this.initiateSearchConfigurations();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             }, () => {
                 this.checkLists.sort((a, b) => {
                     if (a.EmergencyType.EmergencyTypeName < b.EmergencyType.EmergencyTypeName) return -1;
@@ -101,7 +101,7 @@ export class ChecklistListComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<InvalidChecklistModel>) => {
                 this.invalidChecklists = response.Records;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -112,7 +112,7 @@ export class ChecklistListComponent implements OnInit, OnDestroy {
                 this.emergencyTypesForSearch = response.Records
                     .map((x) => new NameValue<number>(x.EmergencyTypeName, x.EmergencyTypeId));
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
 
         this.initiateSearchConfigurations();
@@ -132,7 +132,7 @@ export class ChecklistListComponent implements OnInit, OnDestroy {
                         a.StationList = [];
                 });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -201,7 +201,7 @@ export class ChecklistListComponent implements OnInit, OnDestroy {
             .subscribe((response: ChecklistModel) => {
                 this.getCheckLists(this.currentDepartmentId);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -225,7 +225,7 @@ export class ChecklistListComponent implements OnInit, OnDestroy {
                     });
                     this.checkLists = response.Records;
                 }, ((error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 }));
         }
         else {

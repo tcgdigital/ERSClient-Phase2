@@ -5,62 +5,69 @@
         </div>
     </div>
 </div>
-<responsive-table>
-    <table responsive-table-body>
-        <thead>
-            <tr>
-                <th>Demand Type</th>
-                <th>Demand Description</th>
-                <th>Requester Department</th>
-                <th>Requested By</th>
-                <th>Target Department</th>
-                <th>Required Location</th>
-                <th>Priority</th>
-                <th>Schedule Time Close</th>
-                <th>RAG</th>
-                <th>Remarks</th>
-                <th>Download File</th>
-                <th>Approve</th>
-                <th>Reject</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr [hidden]="demandsForApproval.length != 0">
-                <td colspan="13">No Demand is pending for Approval.</td>
-            </tr>
-            <tr *ngFor="let demand of demandsForApproval">
-                <td data-title="Demand Type">{{demand.DemandTypeName}}&nbsp;</td>
-                <td data-title="Demand Description"><a href="javascript:void(0);" (click)="openDemandDetails(demand.DemandId)">{{demand.DemandDesc}}</a>&nbsp;</td>
-                <td data-title="Requester Department">{{demand.RequesterDepartmentName}}&nbsp;</td>
-                <td data-title="Requested By">{{demand.RequestedBy}}&nbsp;</td>
-                <td data-title="Target Department">{{demand.TargetDepartmentName}}&nbsp;</td>
-                <td data-title="Required Location">{{demand.RequiredLocation}}&nbsp;</td>
-                <td data-title="Priority">{{demand.Priority}}&nbsp;</td>
-                <td data-title="Schedule Time Close">{{demand.ScheduleTimeToShow}}&nbsp;</td>
-                <td data-title="RAG"><span [ngClass]="demand.RagStatus"></span></td>
-                <td data-title="Remarks"><i class="fa fa-list-alt fa-2x" (click)="openDemandRemarks(demand)"></i></td>
-                <td data-title="Download File">
-                    <ul>
-                        <li *ngFor="let file of demand.FileStores">
-                            <a target="_self" href="{{demandFilePath + file.FileStoreID}}" *ngIf="isDashboradApprovedDemandDownloadLink | accesibility: currentDepartmentId :'DashboradApprovalPendingDownloadLink'"  download="file.UploadedFileName"><i
-                                    class="fa fa-download fa-2x" aria-hidden="true"></i></a>
-                        </li>
-                    </ul>
-                </td>
-                <td data-title="Approve">
-                    <md-checkbox *ngIf="!isArchive" class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsApproved" [disabled]="demand.IsRejected"
-                        aria-label="Done">
-                    </md-checkbox>
-                </td>
-                <td data-title="Reject">
-                    <md-checkbox *ngIf="!isArchive" class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsRejected" [disabled]="demand.IsApproved"
-                        aria-label="Done">
-                    </md-checkbox>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</responsive-table>
+
+<div class="row">
+    <div class="col-sm-12">
+        <responsive-table>
+            <table responsive-table-body>
+                <thead>
+                    <tr>
+                        <th>Demand Type</th>
+                        <th>Demand Description</th>
+                        <th>Requester Department</th>
+                        <th>Requested By</th>
+                        <th>Target Department</th>
+                        <th>Required Location</th>
+                        <th>Priority</th>
+                        <th>Schedule Time Close</th>
+                        <th>RAG</th>
+                        <th>Remarks</th>
+                        <th>Download File</th>
+                        <th>Approve</th>
+                        <th>Reject</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr [hidden]="demandsForApproval.length != 0">
+                        <td colspan="13">No Demand is pending for Approval.</td>
+                    </tr>
+                    <tr *ngFor="let demand of demandsForApproval">
+                        <td data-title="Demand Type">{{demand.DemandTypeName}}&nbsp;</td>
+                        <td data-title="Demand Description"><a href="javascript:void(0);" (click)="openDemandDetails(demand.DemandId)">{{demand.DemandDesc}}</a>&nbsp;</td>
+                        <td data-title="Requester Department">{{demand.RequesterDepartmentName}}&nbsp;</td>
+                        <td data-title="Requested By">{{demand.RequestedBy}}&nbsp;</td>
+                        <td data-title="Target Department">{{demand.TargetDepartmentName}}&nbsp;</td>
+                        <td data-title="Required Location">{{demand.RequiredLocation}}&nbsp;</td>
+                        <td data-title="Priority">{{demand.Priority}}&nbsp;</td>
+                        <td data-title="Schedule Time Close">{{demand.ScheduleTimeToShow}}&nbsp;</td>
+                        <td data-title="RAG"><span [ngClass]="demand.RagStatus"></span></td>
+                        <td data-title="Remarks"><i class="fa fa-list-alt fa-2x" (click)="openDemandRemarks(demand)"></i></td>
+                        <td data-title="Download File">
+                            <ul>
+                                <li *ngFor="let file of demand.FileStores">
+                                    <a target="_self" href="{{demandFilePath + file.FileStoreID}}" *ngIf="isDashboradApprovedDemandDownloadLink | accesibility: currentDepartmentId :'DashboradApprovalPendingDownloadLink'"
+                                        download="file.UploadedFileName">
+                                        <i class="fa fa-download fa-2x" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </td>
+                        <td data-title="Approve">
+                            <md-checkbox *ngIf="!isArchive" class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsApproved" [disabled]="demand.IsRejected"
+                                aria-label="Done">
+                            </md-checkbox>
+                        </td>
+                        <td data-title="Reject">
+                            <md-checkbox *ngIf="!isArchive" class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsRejected" [disabled]="demand.IsApproved"
+                                aria-label="Done">
+                            </md-checkbox>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </responsive-table>
+    </div>
+</div>
 
 
 <div bsModal #childModalRemarks="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
@@ -97,13 +104,13 @@
                             </thead>
                             <tbody>
                                 <tr [hidden]="demandRemarks.length != 0">
-                                    <td colspan="9">No Remark is added yet.</td>
+                                    <td colspan="4">No Remark is added yet.</td>
                                 </tr>
                                 <tr *ngFor="let remark of demandRemarks">
-                                    <td data-title="Requester Department">{{remark.RequesterDepartmentName}}</td>
-                                    <td data-title="Remarks added by">{{remark.CreatedByName}}</td>
-                                    <td data-title="Remarks added on">{{remark.CreatedOn | customDate: 'DD-MMM-YYYY HH:mm'}}</td>
-                                    <td data-title="Remarks">{{remark.Remark}}</td>
+                                    <td data-title="Requester Department">{{remark.RequesterDepartmentName}}&nbsp;</td>
+                                    <td data-title="Remarks added by">{{remark.CreatedByName}}&nbsp;</td>
+                                    <td data-title="Remarks added on">{{remark.CreatedOn | customDate: 'DD-MMM-YYYY HH:mm'}}&nbsp;</td>
+                                    <td data-title="Remarks">{{remark.Remark}}&nbsp;</td>
                                 </tr>
                             </tbody>
                         </table>

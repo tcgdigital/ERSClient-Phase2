@@ -186,7 +186,7 @@ export class PresidentMessageApprovalEntryComponent implements OnInit, OnDestroy
                 this.showAdd = false; 
                 this.InitiateForm();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

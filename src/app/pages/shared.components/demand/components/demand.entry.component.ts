@@ -17,14 +17,16 @@ import { DepartmentService, DepartmentModel } from '../../../masterdata/departme
 import { PageService } from '../../../masterdata/page.functionality';
 import {
     AffectedObjectsService, AffectedObjectsToView, AffectedPeopleService,
-    AffectedPeopleToView, InvolvePartyModel, CommunicationLogModel
+    AffectedPeopleToView, InvolvePartyModel, CommunicationLogModel, 
+    AffectedVictimToView
 } from '../../../shared.components';
+import {GroundVictimService, GroundVictimModel} from '../../../shared.components/ground.victim';
 import { InvolvePartyService } from '../../involveparties';
 import { CallerService, CallerModel } from '../../caller';
 import {
     ResponseModel, DataExchangeService, FileUploadService,
-    GlobalConstants, KeyValue, AutocompleteComponent,
-    UtilityService, GlobalStateService, AuthModel, DateTimePickerOptions
+    GlobalConstants, KeyValue, UtilityService, GlobalStateService, 
+    AuthModel, DateTimePickerOptions
 } from '../../../../shared';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import * as moment from 'moment/moment';
@@ -35,7 +37,8 @@ import { FileStoreService } from '../../../../shared/services/common.service';
 @Component({
     selector: 'demand-entry',
     encapsulation: ViewEncapsulation.None,
-    templateUrl: '../views/demand.entry.view.html'
+    templateUrl: '../views/demand.entry.view.html',
+    providers: [GroundVictimService]
 })
 export class DemandEntryComponent implements OnInit, OnDestroy {
     @ViewChild('childModal') public childModalEntry: ModalDirective;
@@ -54,6 +57,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     filtereddepartments: DepartmentModel[] = [];
     affectedPeople: AffectedPeopleToView[] = [];
     affectedObjects: AffectedObjectsToView[] = [];
+    groundVictims: AffectedVictimToView[] = [];
     pdas: KeyValue[] = [];
     awbs: KeyValue[] = [];
     currentIncidentId: number;
@@ -105,7 +109,8 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
      * @memberOf DemandEntryComponent
      */
     constructor(private demandService: DemandService,
-        private demandTypeService: DemandTypeService, private injector: Injector,
+        private demandTypeService: DemandTypeService,
+        private injector: Injector,
         private departmentService: DepartmentService,
         private pageService: PageService,
         private demandTrailService: DemandTrailService,
@@ -118,7 +123,9 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         private fileUploadService: FileUploadService,
         private toastrService: ToastrService,
         private fileStoreService: FileStoreService,
-        private toastrConfig: ToastrConfig, private _router: Router) {
+        private toastrConfig: ToastrConfig,
+        private groundVictimService: GroundVictimService,
+        private _router: Router) {
         this.showAdd = false;
         this.buttonValue = 'Create Demand';
         this.departments = [];
@@ -135,7 +142,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                     ? this.demandTypes[0].DemandTypeId
                     : this.demandModel.DemandTypeId;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -280,7 +287,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.affectedPeople = this.affectedPeople
                     .sort(function (a, b) { return (a.PassCrewNm.trim().toUpperCase() > b.PassCrewNm.trim().toUpperCase()) ? 1 : ((b.PassCrewNm.trim().toUpperCase() > a.PassCrewNm.trim().toUpperCase()) ? -1 : 0); });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -290,34 +297,81 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedObjects = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
+            });
+    }
+
+    getGroundVictims(currentIncident: number): void {
+        this.groundVictimService.GetAllGroundVictimsByIncident(currentIncident)
+            .takeUntil(this.ngUnsubscribe)
+            .subscribe((victim: GroundVictimModel) => {
+                debugger;
+
+                let viewModel: AffectedVictimToView = new AffectedVictimToView();
+                viewModel.AffectedId = victim.InvolvedParty.Affecteds[0].AffectedId;
+                viewModel.InvolvedPartyId = victim.InvolvedPartyId;
+                viewModel.GroundVictimId = victim.GroundVictimId;
+                viewModel.GroundVictimName = victim.GroundVictimName;
+                viewModel.GroundVictimType = victim.GroundVictimType;
+                viewModel.AffectedCount = victim.AffectedCount;
+                viewModel.NOKName = victim.NOKName;
+                viewModel.NOKContactNumber = victim.NOKContactNumber;
+
+                this.groundVictims.push(viewModel);
+            }, (error: any) => {
+                console.log(`Error: ${error.message}`);
             });
     }
 
     ChangeAffectedPeople(): void {
         this.demandModel.AffectedPersonId = this.form.controls['AffectedPersonId'].value;
+
         if (this.demandModel.AffectedPersonId != 0) {
             this.form.controls['AffectedObjectId'].reset({ value: '', disabled: true });
+            this.form.controls['GroundVictimId'].reset({ value: '', disabled: true });
+
             this.demandModel.PDATicketNumber = this.affectedPeople
                 .find((x) => x.AffectedPersonId == this.demandModel.AffectedPersonId).TicketNumber;
             this.form.controls['PDATicketNumber'].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
         }
         else {
             this.form.controls['AffectedObjectId'].reset({ value: '', disabled: false });
+            this.form.controls['GroundVictimId'].reset({ value: '', disabled: false });
             this.form.controls['PDATicketNumber'].reset({ value: '', disabled: true });
         }
     }
 
     ChangeAffectedObjects(): void {
         this.demandModel.AffectedObjectId = this.form.controls['AffectedObjectId'].value;
+
         if (this.demandModel.AffectedObjectId != 0) {
             this.form.controls['AffectedPersonId'].reset({ value: '', disabled: true });
+            this.form.controls['GroundVictimId'].reset({ value: '', disabled: true });
+
             this.demandModel.PDATicketNumber = this.affectedObjects
                 .find((x) => x.AffectedObjectId == this.demandModel.AffectedObjectId).TicketNumber;
             this.form.controls['PDATicketNumber'].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
         }
         else {
             this.form.controls['AffectedPersonId'].reset({ value: '', disabled: false });
+            this.form.controls['GroundVictimId'].reset({ value: '', disabled: false });
+            this.form.controls['PDATicketNumber'].reset({ value: '', disabled: true });
+        }
+    }
+
+    ChangeGroundVictims(): void {
+        this.demandModel.GroundVictimId = this.form.controls['GroundVictimId'].value;
+
+        if (this.demandModel.GroundVictimId != 0) {
+            this.form.controls['AffectedPersonId'].reset({ value: '', disabled: true });
+            this.form.controls['AffectedObjectId'].reset({ value: '', disabled: true });
+
+            this.demandModel.PDATicketNumber = 'NA';
+            this.form.controls['PDATicketNumber'].reset({ value: '', disabled: true });
+        }
+        else {
+            this.form.controls['AffectedPersonId'].reset({ value: '', disabled: false });
+            this.form.controls['AffectedObjectId'].reset({ value: '', disabled: false });
             this.form.controls['PDATicketNumber'].reset({ value: '', disabled: true });
         }
     }
@@ -342,6 +396,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.demandModel.RequesterDepartmentId = this.currentDepartmentId;
         this.demandModel.AffectedObjectId = 0;
         this.demandModel.AffectedPersonId = 0;
+        this.demandModel.GroundVictimId = 0;
         this.demandModel.DemandTypeId = 0;
         this.demandModel.Priority = '0';
         this.demandModel.RequesterType = '';
@@ -366,7 +421,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
             if (paramNames.length > 0) {
                 paramNames.forEach((x: string) => {
-                    this.form.controls[x].reset({ value: model[x].toString(), disabled: isDisable });
+                    this.form.controls[x].reset({ value: (model[x] ? model[x].toString() : ''), disabled: isDisable });
                 });
             }
         }
@@ -387,9 +442,16 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 if ((this.demandModel.ApprovedBy == null && this.demandModel.IsCompleted === false) || this.demandModel.IsRejected === true) {
                     this.freshDemand = true;
                 }
-                this.setModelFormGroup(response.Records[0], false, (x) => x.DemandId, (x) => x.DemandTypeId,
-                    (x) => x.Priority, (x) => x.DemandDesc, (x) => x.RequesterType,
-                    (x) => x.PDATicketNumber, (x) => x.TargetDepartmentId, (x) => x.ContactNumber, (x) => x.RequiredLocation);
+                this.setModelFormGroup(response.Records[0], false,
+                    (x) => x.DemandId,
+                    (x) => x.DemandTypeId,
+                    (x) => x.Priority,
+                    (x) => x.DemandDesc,
+                    (x) => x.RequesterType,
+                    (x) => x.PDATicketNumber,
+                    (x) => x.TargetDepartmentId,
+                    (x) => x.ContactNumber,
+                    (x) => x.RequiredLocation);
 
                 const scheduleTime = response.Records[0].ScheduleTime;
                 const createdOn = new Date(response.Records[0].CreatedOn);
@@ -410,10 +472,11 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.form.controls['PDATicketNumber'].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
                 this.form.controls['AffectedPersonId'].reset({ value: this.demandModel.AffectedPersonId, disabled: true });
                 this.form.controls['AffectedObjectId'].reset({ value: this.demandModel.AffectedObjectId, disabled: true });
+                this.form.controls['GroundVictimId'].reset({ value: this.demandModel.GroundVictimId, disabled: true });
                 this.form.controls['DemandTypeId'].reset({ value: +this.demandModel.DemandTypeId, disabled: true });
                 this.form.controls['RequestedBy'].reset({ value: this.demandModel.RequestedBy, disabled: false });  // this.caller.FirstName
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -446,10 +509,11 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.form.controls['PDATicketNumber'].reset({ value: this.demandModel.PDATicketNumber, disabled: true });
                 this.form.controls['AffectedPersonId'].reset({ value: this.demandModel.AffectedPersonId, disabled: true });
                 this.form.controls['AffectedObjectId'].reset({ value: this.demandModel.AffectedObjectId, disabled: true });
+                this.form.controls['GroundVictimId'].reset({ value: this.demandModel.GroundVictimId, disabled: true });
                 this.form.controls['DemandTypeId'].reset({ value: this.demandModel.DemandTypeId, disabled: true });
                 this.form.controls['RequestedBy'].reset({ value: this.demandModel.RequestedBy, disabled: true });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -474,6 +538,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             this.demandModel.IncidentId = this.currentIncidentId;
             this.getPassengersCrews(this.currentIncidentId);
             this.getCargo(this.currentIncidentId);
+            this.getGroundVictims(this.currentIncidentId);
         }
 
         this.credential = UtilityService.getCredentialDetails();
@@ -492,6 +557,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.demandModel.RequesterDepartmentId = this.currentDepartmentId;
         this.demandModel.AffectedObjectId = 0;
         this.demandModel.AffectedPersonId = 0;
+        this.demandModel.GroundVictimId = 0;
         this.demandModel.DemandTypeId = 0;
         this.demandModel.Priority = '0';
         this.demandModel.RequesterType = '0';
@@ -525,7 +591,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.parentDeptId = response.ParentDepartmentId;
                 this.demandModel.RequesterParentDepartmentId = this.parentDeptId;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -555,6 +621,11 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         else
             delete this.communicationLog.AffectedObjectId;
 
+        if (demand.GroundVictimId != null)
+            this.communicationLog.GroundVictimId = demand.GroundVictimId;
+        else
+            delete this.communicationLog.GroundVictimId;
+
         this.communicationLogs.push(this.communicationLog);
         return this.communicationLogs;
     }
@@ -574,6 +645,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             RequiredLocation: new FormControl({ value: '', disabled: false }, [Validators.required]),
             AffectedPersonId: new FormControl({ value: '', disabled: false }),
             AffectedObjectId: new FormControl({ value: '', disabled: false }),
+            GroundVictimId: new FormControl({ value: '', disabled: false }),
             FileInputDemand: new FormControl()
         });
     }
@@ -592,6 +664,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.form.controls['RequiredLocation'].reset({ value: '', disabled: false });
         this.form.controls['AffectedPersonId'].reset({ value: '', disabled: false });
         this.form.controls['AffectedObjectId'].reset({ value: '', disabled: false });
+        this.form.controls['GroundVictimId'].reset({ value: '', disabled: false });
     }
 
     formControlDirtyCheck(): void {
@@ -693,13 +766,13 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                                     this.filesToUpload = [];
                                 }
                             }, (error: any) => {
-                                console.log(`Error: ${error}`);
+                                console.log(`Error: ${error.message}`);
                             });
                     }
 
                     this.filesToUpload.length = null;
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
         else {
@@ -759,6 +832,10 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 if (this.demandModel.AffectedPersonId === 0) {
                     delete this.demandModel.AffectedPersonId;
                 }
+                if (this.demandModel.GroundVictimId === 0) {
+                    delete this.demandModel.GroundVictimId;
+                }
+                
                 this.demandModel.CommunicationLogs = this.SetCommunicationLog(this.demandModel);
                 this.demandModel.DemandTrails = this.createDemandTrailModel(this.demandModel, this.demandModel, true);
                 const resolutionTimeChanged = false;
@@ -793,7 +870,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                                 this.demandUpdate(resolutionTimeChanged);
                             }
                         }, (error: any) => {
-                            console.log(`Error: ${error}`);
+                            console.log(`Error: ${error.message}`);
                         });
                 }
                 else {
@@ -822,7 +899,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 this.submitted = false;
                 this.childModalEntry.hide();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -869,7 +946,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                     this.buttonValue = 'Create Demand';
                     this.submitted = false;
                     this.childModalEntry.hide();
-                    
+
                 }, (error: any) => {
                     console.log('Error');
                 });
@@ -900,6 +977,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.currentIncidentId = incident.Value;
         this.getPassengersCrews(this.currentIncidentId);
         this.getCargo(this.currentIncidentId);
+        this.getGroundVictims(this.currentIncidentId)
     }
 
     private departmentChangeHandler(department: KeyValue): void {

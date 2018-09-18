@@ -7,13 +7,13 @@
     </div>
 
     <div class="row">
-        <div class="col-12 butt-des">
+        <div class="col-sm-12 butt-des">
             <button class="btn btn-primary" type="button" (click)="save()">Submit</button>
         </div>
     </div>
 
-    <div class="row d-block d-lg-none">
-        <div class="col-12">
+    <div class="row">
+        <div class="col-sm-12 d-block d-lg-none">
             <md-checkbox id="IsAutoApproved" [(ngModel)]="allselect" (change)="slectAllDept($event)" aria-label="Add">Select
                 Department
             </md-checkbox>
@@ -21,7 +21,7 @@
     </div>
 
     <div class="row">
-        <div class="col-12">
+        <div class="col-sm-12">
             <responsive-table>
                 <table responsive-table-body>
                     <thead>
@@ -36,10 +36,10 @@
                     </thead>
                     <tbody>
                         <tr [hidden]="departmentsToBroadcastToShow.length != 0">
-                            <td colspan="6">No records found.</td>
+                            <td colspan="2">No records found.</td>
                         </tr>
                         <tr *ngFor="let department of departmentsToBroadcastToShow">
-                            <td data-title="Department Code">{{department.DepartmentName}}</td>
+                            <td data-title="Department Code">{{department.DepartmentName}}&nbsp;</td>
                             <td data-title="Select Department">
                                 <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="department.Isselected" (change)="onestatuschanged($event)" aria-label="Add"></md-checkbox>
                             </td>
@@ -49,7 +49,6 @@
             </responsive-table>
         </div>
     </div>
-
 
     <div class="row">
         <div class="col-12 butt-pos">

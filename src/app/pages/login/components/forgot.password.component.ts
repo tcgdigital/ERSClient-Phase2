@@ -48,7 +48,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy, AfterViewInit
                         .setValue(this.SecurityQuestion);
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
                 this.toastrService.error('The UserId or Email does not exist');
             });
     }
@@ -112,7 +112,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy, AfterViewInit
                         }
                     }
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
     }

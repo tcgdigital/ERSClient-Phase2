@@ -28,7 +28,6 @@ export class CargoQueryRecievedCallsListComponent implements OnInit, OnDestroy {
 
     allAssignedCalls: ExternalInputModel[] = [];
     currentIncidentId: number;
-    protected _onRouteChange: Subscription;
     callId: number;
     callcenterload: boolean = false;
     public isArchive: boolean = false;
@@ -93,7 +92,7 @@ export class CargoQueryRecievedCallsListComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -119,7 +118,7 @@ export class CargoQueryRecievedCallsListComponent implements OnInit, OnDestroy {
 
                 this.getAllCargoQueryCallsRecieved(this.currentIncidentId);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

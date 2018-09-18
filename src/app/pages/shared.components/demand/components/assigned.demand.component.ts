@@ -125,7 +125,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
                 this.demands = this.demandService.DemandMapper(response.Records);
                 UtilityService.SetRAGStatus(this.demands, 'Demand'); 
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -141,7 +141,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
                 this.demandRemarks = response.Records;
                 this.childModalRemarks.show();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -156,7 +156,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
                 this.departments = response.Records;
                 this.currentDepartmentName = this.getCurrentDepartmentName(this.currentDepartmentId);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -245,7 +245,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
                 this.getDemandRemarks(demand.DemandId);
                 this.Remarks = '';
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
                 alert('Error occured during saving the remark');
             });
     }
@@ -284,7 +284,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
                         this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
                         this.globalStateProxyOpen.NotifyDataChanged(GlobalConstants.DataExchangeConstant.DemandAssigned, null);
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
             }
         }
@@ -304,7 +304,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
                 this.demandTrails = response.Records;
                 this.childModalTrail.show();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

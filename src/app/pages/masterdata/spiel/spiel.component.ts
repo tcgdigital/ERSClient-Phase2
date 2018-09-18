@@ -54,7 +54,7 @@ export class SpileComponent implements OnInit, OnDestroy {
                     this.activeDepartments = departments.Records;
                 }
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -65,7 +65,7 @@ export class SpileComponent implements OnInit, OnDestroy {
                 this.activeKeyValues = response.Records;
                 this.generalform.controls["SpielText"].setValue('');
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -144,7 +144,7 @@ export class SpileComponent implements OnInit, OnDestroy {
                     this.getAllActiveKeyValues();
                     this.toastrService.success('Spiel Text Saved successfully.', 'Success', this.toastrConfig);
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 }
                 );
             }

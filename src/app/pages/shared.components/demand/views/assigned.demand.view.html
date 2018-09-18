@@ -27,25 +27,33 @@
                 </thead>
                 <tbody>
                     <tr [hidden]="demands.length != 0">
-                        <td colspan="11">No Demand is Assigned.</td>
+                        <td colspan="12">No Demand is Assigned.</td>
                     </tr>
                     <tr *ngFor="let demand of demands">
-                        <td data-title="Reference Number">{{demand.DemandTypeName}} </td>
-                        <td data-title="PDA Name"><a href="javascript:void(0);" (click)="openDemandDetails(demand.DemandId)">{{demand.DemandDesc}}
-                            </a></td>
-                        <td data-title="Trail"><i class="fa fa-info-circle fa-2x" (click)="openTrail(demand)"></i> </td>
-                        <td data-title="PDA Contact">{{demand.RequesterDepartmentName}} </td>
-                        <td data-title="PNR">{{demand.Priority}} </td>
-                        <td data-title="Passenger Type">{{demand.ScheduleTimeToShow}} </td>
-                        <td data-title="Medical Status">{{demand.ContactNumber}} </td>
-                        <td data-title="Medical Status">{{demand.RequiredLocation}} </td>
-                        <td><i class="fa fa-list-alt fa-2x" (click)="openDemandRemarks(demand)"></i></td>
-                        <td><span [ngClass]="demand.RagStatus"></span></td>
+                        <td data-title="Reference Number">{{demand.DemandTypeName}}&nbsp;</td>
+                        <td data-title="PDA Name">
+                            <a href="javascript:void(0);" (click)="openDemandDetails(demand.DemandId)">{{demand.DemandDesc}}&nbsp;</a>
+                        </td>
+                        <td data-title="Trail">
+                            <i class="fa fa-info-circle fa-2x" (click)="openTrail(demand)"></i>
+                        </td>
+                        <td data-title="PDA Contact">{{demand.RequesterDepartmentName}}&nbsp;</td>
+                        <td data-title="PNR">{{demand.Priority}}&nbsp;</td>
+                        <td data-title="Passenger Type">{{demand.ScheduleTimeToShow}}&nbsp;</td>
+                        <td data-title="Medical Status">{{demand.ContactNumber}}&nbsp;</td>
+                        <td data-title="Medical Status">{{demand.RequiredLocation}}&nbsp;</td>
+                        <td>
+                            <i class="fa fa-list-alt fa-2x" (click)="openDemandRemarks(demand)"></i>
+                        </td>
+                        <td>
+                            <span [ngClass]="demand.RagStatus"></span>
+                        </td>
                         <td data-title="Download File">
                             <ul>
                                 <li *ngFor="let file of demand.FileStores">
-                                    <a target="_self" href="{{demandFilePath + file.FileStoreID}}" *ngIf="isDashboradDemandAssignedDownloadLink | accesibility:currentDepartmentId:'DashboradDemandAssignedDownloadLink'" download="file.UploadedFileName"><i
-                                            class="fa fa-download fa-2x" aria-hidden="true"></i>
+                                    <a target="_self" href="{{demandFilePath + file.FileStoreID}}" *ngIf="isDashboradDemandAssignedDownloadLink | accesibility:currentDepartmentId:'DashboradDemandAssignedDownloadLink'"
+                                        download="file.UploadedFileName">
+                                        <i class="fa fa-download fa-2x" aria-hidden="true"></i>
                                     </a>
                                 </li>
                             </ul>
@@ -60,54 +68,6 @@
         </responsive-table>
     </div>
 </div>
-
-
-<!--<responsive-table>
-    <table responsive-table-body>
-        <thead>
-            <tr>
-                <th>Demand Type</th>
-                <th>Demand Description</th>
-                <th>Requester Department</th>
-                <th>Priority</th>
-                <th>Schedule Time Close</th>
-                <th>Requester Contact Number</th>
-                <th>Required Location</th>
-                <th>Remarks</th>
-                <th>RAG</th>
-                <th>Download File</th>
-                <th>Done</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr [hidden]="demands.length != 0">
-                <td colspan="9">No Demand is Assigned.</td>
-            </tr>
-            <tr *ngFor="let demand of demands">
-                <td data-title="Reference Number">{{demand.DemandTypeName}}&nbsp;</td>
-                <td data-title="PDA Name"><a href="javascript:void(0);" (click)="openDemandDetails(demand.DemandId)">{{demand.DemandDesc}}</a>&nbsp;</td>
-                <td data-title="PDA Contact">{{demand.RequesterDepartmentName}}&nbsp;</td>
-                <td data-title="PNR">{{demand.Priority}}&nbsp;</td>
-                <td data-title="Passenger Type">{{demand.ScheduleTimeToShow}}&nbsp;</td>
-                <td data-title="Medical Status">{{demand.ContactNumber}}&nbsp;</td>
-                <td data-title="Medical Status">{{demand.RequiredLocation}}&nbsp;</td>
-                <td><i class="fa fa-list-alt fa-2x" (click)="openDemandRemarks(demand)"></i></td>
-                <td><span [ngClass]="demand.RagStatus"></span></td>
-                <td data-title="Download File">
-                    <ul>
-                        <li *ngFor="let file of demand.FileStores">
-                            <a target="_self" href="{{demandFilePath + file.FileStoreID}}" download="file.UploadedFileName">{{file.UploadedFileName}}</a>
-                        </li>
-                    </ul>
-                </td>
-                <td>
-                    <md-checkbox class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsCompleted" aria-label="Done">
-                    </md-checkbox>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</responsive-table>-->
 
 
 <div bsModal #childModalRemarks="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
@@ -148,10 +108,10 @@
                                         <td colspan="4">No Remark is added yet.</td>
                                     </tr>
                                     <tr *ngFor="let remark of demandRemarks">
-                                        <td data-title="Requester Department">{{remark.RequesterDepartmentName}}</td>
-                                        <td data-title="Remarks added by">{{remark.CreatedByName}}</td>
-                                        <td data-title="Remarks added on">{{remark.CreatedOn | customDate: 'DD-MMM-YYYY HH:mm'}}</td>
-                                        <td data-title="Remarks">{{remark.Remark}}</td>
+                                        <td data-title="Requester Department">{{remark.RequesterDepartmentName}}&nbsp;</td>
+                                        <td data-title="Remarks added by">{{remark.CreatedByName}}&nbsp;</td>
+                                        <td data-title="Remarks added on">{{remark.CreatedOn | customDate: 'DD-MMM-YYYY HH:mm'}}&nbsp;</td>
+                                        <td data-title="Remarks">{{remark.Remark}}&nbsp;</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -266,28 +226,42 @@
             <div class="modal-body">
                 <div class="row modalBodyHeaderStyle">
                     <div class="col-sm-6 form-group">
-                        <label class="lebelHeaderStyle"><strong>Demand Type Name</strong></label> <br>
-                        <span class="form-control">{{demandTypeName}}</span> </div>
+                        <<<<<<< HEAD <label class="lebelHeaderStyle"><strong>Demand Type Name</strong></label> <br>
+                            <span class="form-control">{{demandTypeName}}</span> </div>
 
                     <div class="col-sm-6 form-group">
                         <label class="lebelHeaderStyle"><strong>Requester Department</strong></label> <br>
                         <span class="form-control">{{requesterDepartmentName}}</span> </div>
+                    =======
+                    <label class="lebelHeaderStyle">
+                        <strong>Demand Type Name</strong>
+                    </label> <br>
+                    <span class="form-control">{{demandTypeName}}</span>
                 </div>
-                <div class="row">
-                    <div class="col-12">
-                        <responsive-table>
-                            <table responsive-table-body>
-                                <tbody>
-                                    <tr *ngFor="let trail of demandTrails">
-                                        <td [innerHTML]="trail.Answers" type="text">
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </responsive-table>
-                    </div>
+
+                <div class="col-sm-6 form-group">
+                    <label class="lebelHeaderStyle">
+                        <strong>Requester Department</strong>
+                    </label> <br>
+                    <span class="form-control">{{requesterDepartmentName}}</span>
+                </div>
+                >>>>>>> master
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <responsive-table>
+                        <table responsive-table-body>
+                            <tbody>
+                                <tr *ngFor="let trail of demandTrails">
+                                    <td [innerHTML]="trail.Answers" type="text">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </responsive-table>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>

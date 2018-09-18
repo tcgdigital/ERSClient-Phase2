@@ -20,23 +20,23 @@
         </thead>
         <tbody>
             <tr *ngIf="invalidCrews.length<=0">
-                <td data-title="Records" colspan="11">No records to show.</td>
+                <td data-title="Records" colspan="12">No records to show.</td>
             </tr>
             <tr *ngFor="let affected of invalidCrews">
-                <td data-title="Employee Number">{{affected.EmployeeNumber}}</td>
-                <td data-title="Employee Name">{{affected.CrewName}}</td>
-                <td data-title="Assigned Category">{{affected.AsgCat}}</td>
-                <td data-title="Operating Crew">{{affected.DeadheadCrew.toString().trim()=="" ? "Yes":"No"}}</td>
-                <td data-title="Base Location">{{affected.BaseLocation}}</td>
-                <td data-title="Email Id">{{affected.Email}}</td>
-                <td data-title="Departure Station">{{affected.DepartureStationCode}}</td>
-                <td data-title="Arrival Station">{{affected.ArrivalStationCode}}</td>
+                <td data-title="Employee Number">{{affected.EmployeeNumber}}&nbsp;</td>
+                <td data-title="Employee Name">{{affected.CrewName}}&nbsp;</td>
+                <td data-title="Assigned Category">{{affected.AsgCat}}&nbsp;</td>
+                <td data-title="Operating Crew">{{affected.DeadheadCrew.toString().trim()=="" ? "Yes":"No"}}&nbsp;</td>
+                <td data-title="Base Location">{{affected.BaseLocation}}&nbsp;</td>
+                <td data-title="Email Id">{{affected.Email}}&nbsp;</td>
+                <td data-title="Departure Station">{{affected.DepartureStationCode}}&nbsp;</td>
+                <td data-title="Arrival Station">{{affected.ArrivalStationCode}}&nbsp;</td>
                 <!-- <td data-title="Flight Number">{{affected.FlightNo}}</td> -->
                 <!-- <td data-title="Work Position">{{affected.WorkPosition}}</td> -->
-                <td data-title="Contact Number">{{affected.ContactNumber}}</td>
-                <td data-title="License Records">{{affected.LicenseRecords}}</td>
-                <td data-title="Qualification Records">{{affected.QualificationRecords}}</td>
-                <td data-title="Error Reason">{{affected.QualificationRecords}}</td>
+                <td data-title="Contact Number">{{affected.ContactNumber}}&nbsp;</td>
+                <td data-title="License Records">{{affected.LicenseRecords}}&nbsp;</td>
+                <td data-title="Qualification Records">{{affected.QualificationRecords}}&nbsp;</td>
+                <td data-title="Error Reason">{{affected.QualificationRecords}}&nbsp;</td>
             </tr>
         </tbody>
     </table>

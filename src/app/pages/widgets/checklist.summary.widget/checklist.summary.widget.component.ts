@@ -114,7 +114,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
             .subscribe((checkListSummeryObservable) => {
                 this.checkListSummery = checkListSummeryObservable;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -130,7 +130,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
                 });
 
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             }, () => {
                 // Getting unique departments from the acctionable>checklist>target department.
                 data.forEach((itemActionable: ActionableModel) => {
@@ -186,7 +186,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
                 });
 
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             }, () => {
                 // Getting unique departments from the acctionable>checklist>target department.
                 data.forEach((itemActionable: ActionableModel) => {
@@ -240,7 +240,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
                 this.showGraph = true;
                 this.GetChecklistGraph(resultSet.Records, this.currentTarget);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -263,10 +263,10 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
                             'checklist-graph-container', 'Status', incidentModel.CreatedOn, resultSet[0].Department.DepartmentName);
                         this.showCheckListGraph = true;
                     }, (error: any) => {
-                        console.log(`Error: ${error}`);
+                        console.log(`Error: ${error.message}`);
                     });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 

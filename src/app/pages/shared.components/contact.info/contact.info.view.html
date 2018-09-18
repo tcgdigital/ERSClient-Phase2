@@ -4,11 +4,10 @@
             <div class="modal-header">
                 <h4 class="modal-title">Telephone Directory</h4>
                 <button type="button" class="close pull-right" aria-label="Close" (click)="cancelModal()">
-                  <span aria-hidden="true">&times;</span>
-                   </button>
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
-
                 <generic-search [filterConfigs]="searchConfigs" (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();">
                 </generic-search>
                 <responsive-table>
@@ -22,9 +21,9 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let user of userprofiles">
-                                <td data-title="Name">{{user.Name}}</td>
-                                <td data-title="Contact Number">{{user.MainContact}}</td>
-                                <td data-title="Alternate Contact Number">{{user.AlternateContact}}</td>
+                                <td data-title="Name">{{user.Name}}&nbsp;</td>
+                                <td data-title="Contact Number">{{user.MainContact}}&nbsp;</td>
+                                <td data-title="Alternate Contact Number">{{user.AlternateContact}}&nbsp;</td>
                             </tr>
                         </tbody>
                     </table>

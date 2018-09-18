@@ -164,7 +164,7 @@ export class PagesComponent implements OnInit {
             .subscribe((response: ResponseModel<KeyValueModel>) => {
                 this.activeKeyValues = response.Records;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -251,7 +251,7 @@ export class PagesComponent implements OnInit {
                 if (callback != null)
                     callback();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -263,7 +263,7 @@ export class PagesComponent implements OnInit {
                 if (callback != null)
                     callback();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -485,7 +485,7 @@ export class PagesComponent implements OnInit {
                     this.ListenCallbacks(c, x);
                 });
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -650,7 +650,7 @@ export class PagesComponent implements OnInit {
                 .subscribe((item: ResponseModel<RAGScaleModel>) => {
                     UtilityService.RAGScaleData = item.Records;
                 }, (error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 });
         }
     }

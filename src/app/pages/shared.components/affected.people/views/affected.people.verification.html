@@ -1,11 +1,15 @@
 <div class="row">
     <div class="col-md-5 col-lg-6 text-right">
-        <label>Verified PDA Manifest</label>
-        <a target="_blank" href="{{downloadPath}}" *ngIf="isAffectedPeopleVerifiedManifestLink | accesibility: currentDepartmentId :'AffectedPeopleVerifiedManifestLink' " download="PDAVerifiedManifest"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+        <a target="_blank" href="{{downloadPath}}" *ngIf="isAffectedPeopleVerifiedManifestLink | accesibility: currentDepartmentId :'AffectedPeopleVerifiedManifestLink' "
+            download="PDAVerifiedManifest">
+            <i class="fa fa-download" aria-hidden="true"></i>&nbsp; Verified Manifest (Pax)
+        </a>
     </div>
     <div class="col-md-4 col-lg-3 text-right">
-        <label>Verified Crew Manifest</label>
-        <a target="_blank" href="{{downloadURL}}" *ngIf="isAffectedPeopleCrewManifestLink | accesibility: currentDepartmentId:'AffectedPeopleCrewManifestLink'" download="CrewVerifiedManifest"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+        <a target="_blank" href="{{downloadURL}}" *ngIf="isAffectedPeopleCrewManifestLink | accesibility: currentDepartmentId:'AffectedPeopleCrewManifestLink'"
+            download="CrewVerifiedManifest">
+            <i class="fa fa-download" aria-hidden="true"></i>&nbsp; Verified Manifest (Crew)
+        </a>
     </div>
     <div class="col-md-3 col-lg-3 text-right">
         <button class="btn btn-primary" type="button" (click)="saveVerifiedAffectedPeople()" *ngIf="!isArchive">Verify</button>
@@ -14,6 +18,7 @@
         </div>
     </div>
 </div>
+
 <div class="row">
     <div class="col-12">
         <responsive-table>
@@ -21,7 +26,8 @@
                 <thead>
                     <tr>
                         <th>
-                            <md-checkbox [disabled] ="isArchive" class="Marght" id="IsAutoApproved" [(ngModel)]="allSelectVerify" (change)="selectAllVerify($event)" aria-label="Add">Verify</md-checkbox>
+                            <md-checkbox [disabled]="isArchive" class="Marght" id="IsAutoApproved" [(ngModel)]="allSelectVerify" (change)="selectAllVerify($event)"
+                                aria-label="Add">Verify</md-checkbox>
                         </th>
                         <th>Reference Number</th>
                         <th>PDA Name</th>
@@ -32,12 +38,12 @@
                 </thead>
                 <tbody>
                     <tr [hidden]="affectedPeopleForVerification.length != 0">
-                        <td colspan="9">No Verified PDA is available.</td>
+                        <td colspan="6">No Verified PDA is available.</td>
                     </tr>
                     <tr *ngFor="let affectedperson of affectedPeopleForVerification">
                         <td data-title="Verify">
-                            <md-checkbox [disabled] ="isArchive" class="Marght" id="IsVerified" [(ngModel)]="affectedperson.IsVerified" aria-label="Add" (change)="isVerfiedChange()"
-                                [disabled]="isArchive">
+                            <md-checkbox [disabled]="isArchive" class="Marght" id="IsVerified" [(ngModel)]="affectedperson.IsVerified" aria-label="Add"
+                                (change)="isVerfiedChange()" [disabled]="isArchive">
                             </md-checkbox>
                         </td>
                         <td data-title="Reference Number">{{affectedperson.TicketNumber}}&nbsp;</td>

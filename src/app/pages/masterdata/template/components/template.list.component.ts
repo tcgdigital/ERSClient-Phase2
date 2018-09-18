@@ -44,7 +44,7 @@ export class TemplateListComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<TemplateModel>) => {
                 this.templates = response.Records;
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -92,7 +92,7 @@ export class TemplateListComponent implements OnInit, OnDestroy {
             .subscribe((response: TemplateModel) => {
                 this.getTemplates();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -103,7 +103,7 @@ export class TemplateListComponent implements OnInit, OnDestroy {
                 .subscribe((response: ResponseModel<TemplateModel>) => {
                     this.templates = response.Records.filter(a => a.ActiveFlag == 'Active');
                 }, ((error: any) => {
-                    console.log(`Error: ${error}`);
+                    console.log(`Error: ${error.message}`);
                 }));
         }
     }

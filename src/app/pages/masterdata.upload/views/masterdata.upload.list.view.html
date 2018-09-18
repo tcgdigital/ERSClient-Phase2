@@ -21,7 +21,8 @@
                                 <tr>
                                     <td data-title="File Name">Passenger Manifest</td>
                                     <td data-title="Select File">
-                                        <input type="file" #inputFilePax id="file" formControlName="filePax" (change)="getFileDetails($event,'Passenger')" />
+                                        <input type="file" #inputFilePax id="file" formControlName="filePax" class="form-control-file"
+                                            (change)="getFileDetails($event,'Passenger')" />
                                     </td>
                                     <td data-title="Download Templates">
                                         <a target="_self" href="{{passengerTemplatePath}}" *ngIf="isPassengerTemplateLinkAvailable | accesibility:DepartmentId:'PDATemplateLink'" download="Passengers.xlsx">
@@ -30,12 +31,14 @@
                                     </td>
                                     <td data-title="View Records">
                                         <a href="javascript: void(0)" (click)="openPassenger()">
-                                            <i class="fa fa-file-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Valid Passenger Records
+                                            <i class="fa fa-file-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;
+                                            Valid Passenger Records
                                         </a>
                                     </td>
                                     <td data-title="View Invalid Records">
                                         <a href="javascript: void(0)" (click)="openInvalidPax()">
-                                            <i class="fa fa-file fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Invalid Passenger Records
+                                            <i class="fa fa-file fa-fw fa-lg" aria-hidden="true"></i>&nbsp;
+                                            Invalid Passenger Records
                                         </a>
                                     </td>
                                 </tr>
@@ -43,7 +46,8 @@
                                 <tr *ngIf="currentOrganizationCode == 'PAL'">
                                     <td data-title="File Name">Crew Manifest</td>
                                     <td data-title="Select File">
-                                        <input type="file" #inputFileCrewManifestPAL id="file" formControlName="fileCrewManifestPAL" (change)="getFileDetails($event,'Crew')" />
+                                        <input type="file" #inputFileCrewManifestPAL id="file" formControlName="fileCrewManifestPAL"
+                                            class="form-control-file" (change)="getFileDetails($event,'Crew')" />
                                     </td>
                                     <td data-title="Download Templates">
                                         <a target="_self" href="{{crewManifestPathPAL}}" *ngIf="isCrewTemplateLinkAvailable | accesibility:DepartmentId:'CrewManifestLink'">
@@ -52,12 +56,14 @@
                                     </td>
                                     <td data-title="View Records">
                                         <a href="javascript: void(0)" (click)="openCrew()">
-                                            <i class="fa fa-file-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Valid Crew Records
+                                            <i class="fa fa-file-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Valid Crew
+                                            Records
                                         </a>
                                     </td>
                                     <td data-title="View Invalid Records">
                                         <a href="javascript: void(0)" (click)="openInvalidCrew()">
-                                            <i class="fa fa-file fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Invalid Crew Records
+                                            <i class="fa fa-file fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Invalid Crew
+                                            Records
                                         </a>
                                     </td>
                                 </tr>
@@ -65,21 +71,26 @@
                                 <tr *ngIf="currentOrganizationCode == 'PAL EX'">
                                     <td data-title="File Name">Crew Manifest</td>
                                     <td data-title="Select File">
-                                        <input type="file" #inputFileCrewManifestPALEx id="file" formControlName="fileCrewManifestPALEx" (change)="getFileDetails($event,'Crew')" />
+                                        <input type="file" #inputFileCrewManifestPALEx id="file" formControlName="fileCrewManifestPALEx"
+                                            class="form-control-file" (change)="getFileDetails($event,'Crew')" />
                                     </td>
                                     <td data-title="Download Templates">
                                         <a target="_self" href="{{crewManifestPathPALEx}}">
-                                            <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Crew Manifest Template
+                                            <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Crew
+                                            Manifest
+                                            Template
                                         </a>
                                     </td>
                                     <td data-title="View Records">
                                         <a href="javascript: void(0)" (click)="openCrew()">
-                                            <i class="fa fa-file-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Valid Crew Records
+                                            <i class="fa fa-file-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Valid Crew
+                                            Records
                                         </a>
                                     </td>
                                     <td data-title="View Invalid Records">
                                         <a href="javascript: void(0)" (click)="openInvalidCrew()">
-                                            <i class="fa fa-file fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Invalid Crew Records
+                                            <i class="fa fa-file fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Invalid Crew
+                                            Records
                                         </a>
                                     </td>
                                 </tr>
@@ -87,7 +98,8 @@
                                 <tr *ngIf="currentOrganizationCode == 'PAL'">
                                     <td data-title="File Name">Crew Training Record</td>
                                     <td data-title="Select File">
-                                        <input type="file" #inputFileCrewTrainingPAL id="file" formControlName="fileCrewTrainingPAL" (change)="getFileDetails($event,'Crew')" />
+                                        <input type="file" #inputFileCrewTrainingPAL id="file" formControlName="fileCrewTrainingPAL"
+                                            class="form-control-file" (change)="getFileDetails($event,'Crew')" />
                                     </td>
                                     <td data-title="Download Templates">
                                         <a target="_self" href="{{crewTrainingPAL}}" *ngIf="isCrewTrainingTemplateLink | accesibility: DepartmentId :'CrewTrainingTemplateLink'" >
@@ -96,12 +108,14 @@
                                     </td>
                                     <td data-title="View Records">
                                         <a href="javascript: void(0)" (click)="openCrew()">
-                                            <i class="fa fa-file-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Valid Crew Records
+                                            <i class="fa fa-file-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Valid Crew
+                                            Records
                                         </a>
                                     </td>
                                     <td data-title="View Invalid Records">
                                         <a href="javascript: void(0)" (click)="openInvalidCrew()">
-                                            <i class="fa fa-file fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Invalid Crew Records
+                                            <i class="fa fa-file fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Invalid Crew
+                                            Records
                                         </a>
                                     </td>
                                 </tr>
@@ -109,7 +123,8 @@
                                 <tr *ngIf="currentOrganizationCode == 'PAL EX'">
                                     <td data-title="File Name">Crew Training Record(Air Crew)</td>
                                     <td data-title="Select File">
-                                        <input type="file" #inputFileCrewTrainingPALExAir id="file" formControlName="fileCrewTrainingPALExAir" (change)="getFileDetails($event,'Crew')" />
+                                        <input type="file" #inputFileCrewTrainingPALExAir id="file" formControlName="fileCrewTrainingPALExAir"
+                                            class="form-control-file" (change)="getFileDetails($event,'Crew')" />
                                     </td>
                                     <td data-title="Download Templates">
                                         <a target="_self" href="{{crewTrainingPALExAir}}" *ngIf="isAirCrewTrainingTemplateLinkAvailable | accesibility:DepartmentId:'CrewTrainingTemplateAirCrewLink'">
@@ -118,12 +133,14 @@
                                     </td>
                                     <td data-title="View Records">
                                         <a href="javascript: void(0)" (click)="openCrew()">
-                                            <i class="fa fa-file-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Valid Crew Records
+                                            <i class="fa fa-file-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Valid Crew
+                                            Records
                                         </a>
                                     </td>
                                     <td data-title="View Invalid Records">
                                         <a href="javascript: void(0)" (click)="openInvalidCrew()">
-                                            <i class="fa fa-file fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Invalid Crew Records
+                                            <i class="fa fa-file fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Invalid Crew
+                                            Records
                                         </a>
                                     </td>
                                 </tr>
@@ -131,7 +148,8 @@
                                 <tr *ngIf="currentOrganizationCode == 'PAL EX'">
                                     <td data-title="File Name">Crew Training Record(Cabin Crew)</td>
                                     <td data-title="Select File">
-                                        <input type="file" #inputFileCrewTrainingPALExCabin id="file" formControlName="fileCrewTrainingPALExCabin" (change)="getFileDetails($event,'Crew')" />
+                                        <input type="file" #inputFileCrewTrainingPALExCabin id="file" formControlName="fileCrewTrainingPALExCabin"
+                                            class="form-control-file" (change)="getFileDetails($event,'Crew')" />
                                     </td>
                                     <td data-title="Download Templates">
                                         <a target="_self" href="{{crewTrainingPALExCabin}}" *ngIf="isCabinCrewTrainingTemplateLinkAvailable | accesibility:DepartmentId:'CrewTrainingTemplateCabinCrewLink'" >
@@ -140,12 +158,14 @@
                                     </td>
                                     <td data-title="View Records">
                                         <a href="javascript: void(0)" (click)="openCrew()">
-                                            <i class="fa fa-file-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Valid Crew Records
+                                            <i class="fa fa-file-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Valid Crew
+                                            Records
                                         </a>
                                     </td>
                                     <td data-title="View Invalid Records">
                                         <a href="javascript: void(0)" (click)="openInvalidCrew()">
-                                            <i class="fa fa-file fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Invalid Crew Records
+                                            <i class="fa fa-file fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Invalid Crew
+                                            Records
                                         </a>
                                     </td>
                                 </tr>
@@ -153,7 +173,8 @@
                                 <tr *ngIf="currentOrganizationCode == 'PAL'">
                                     <td data-title="File Name">Cargo Manifest</td>
                                     <td data-title="Select File">
-                                        <input type="file" #inputFileCargo id="file" formControlName="fileCargo" (change)="getFileDetails($event,'Cargo')" />
+                                        <input type="file" #inputFileCargo id="file" formControlName="fileCargo" class="form-control-file"
+                                            (change)="getFileDetails($event,'Cargo')" />
                                     </td>
                                     <td data-title="Download Templates">
                                         <a target="_self" href="{{cargoTemplatePathPAL}}" *ngIf="isCargoTemplateLinkAvailable | accesibility:DepartmentId:'CargoManifestLink'">
@@ -162,12 +183,16 @@
                                     </td>
                                     <td data-title="View Records">
                                         <a href="javascript: void(0)" (click)="openCargo()">
-                                            <i class="fa fa-file-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Valid Cargo Records
+                                            <i class="fa fa-file-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Valid
+                                            Cargo
+                                            Records
                                         </a>
                                     </td>
                                     <td data-title="View Invalid Records">
                                         <a href="javascript: void(0)" (click)="openInvalidCargo()">
-                                            <i class="fa fa-file fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Invalid Cargo Records
+                                            <i class="fa fa-file fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Invalid
+                                            Cargo
+                                            Records
                                         </a>
                                     </td>
                                 </tr>
@@ -175,21 +200,27 @@
                                 <tr *ngIf="currentOrganizationCode == 'PAL EX'">
                                     <td data-title="File Name">Cargo Manifest</td>
                                     <td data-title="Select File">
-                                        <input type="file" #inputFileCargoPALEx id="file" formControlName="fileCargoPALEx" (change)="getFileDetails($event,'Cargo')" />
+                                        <input type="file" #inputFileCargoPALEx id="file" formControlName="fileCargoPALEx"
+                                            class="form-control-file" (change)="getFileDetails($event,'Cargo')" />
                                     </td>
                                     <td data-title="Download Templates">
                                         <a target="_self" href="{{CargoTemplatePathPALEx}}">
-                                            <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Cargo Template
+                                            <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Cargo
+                                            Template
                                         </a>
                                     </td>
                                     <td data-title="View Records">
                                         <a href="javascript: void(0)" (click)="openCargo()">
-                                            <i class="fa fa-file-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Valid Cargo Records
+                                            <i class="fa fa-file-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Valid
+                                            Cargo
+                                            Records
                                         </a>
                                     </td>
                                     <td data-title="View Invalid Records">
                                         <a href="javascript: void(0)" (click)="openInvalidCargo()">
-                                            <i class="fa fa-file fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Invalid Cargo Records
+                                            <i class="fa fa-file fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Invalid
+                                            Cargo
+                                            Records
                                         </a>
                                     </td>
                                 </tr>
@@ -197,7 +228,8 @@
                                 <tr>
                                     <td data-title="File Name">Ground Victim Manifest</td>
                                     <td data-title="Select File">
-                                        <input type="file" #inputFileGroundVictim id="file" formControlName="fileGroundVictim" (change)="getFileDetails($event,'GroundVictim')" />
+                                        <input type="file" #inputFileGroundVictim id="file" formControlName="fileGroundVictim"
+                                            class="form-control-file" (change)="getFileDetails($event,'GroundVictim')" />
                                     </td>
                                     <td data-title="Download Templates">
                                         <a target="_self" href="{{groundVictimTemplatePath}}" *ngIf="isGroundVictimTemplateLinkAvailable | accesibility:DepartmentId:'GroundVictimManifestLink'" download="GroundVictim.xlsx">
@@ -206,12 +238,16 @@
                                     </td>
                                     <td data-title="View Records">
                                         <a href="javascript: void(0)" (click)="openGroundVictims()">
-                                            <i class="fa fa-file-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Valid Ground Victim Records
+                                            <i class="fa fa-file-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Valid
+                                            Ground
+                                            Victim Records
                                         </a>
                                     </td>
                                     <td data-title="View Invalid Records">
                                         <a href="javascript: void(0)" (click)="openInvalidGroundVictims()">
-                                            <i class="fa fa-file fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Invalid Ground Victim Records
+                                            <i class="fa fa-file fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Invalid
+                                            Ground
+                                            Victim Records
                                         </a>
                                     </td>
                                 </tr>
@@ -219,11 +255,14 @@
                                 <tr>
                                     <td data-title="File Name">Load Sheet Document</td>
                                     <td data-title="Select File">
-                                        <input type="file" #inputFileLoadSheet id="file" (change)="getLoadSheetFileDetails($event,'LoadSheet')" />
+                                        <input type="file" #inputFileLoadSheet id="file" class="form-control-file"
+                                            (change)="getLoadSheetFileDetails($event,'LoadSheet')" />
                                     </td>
                                     <td colspan="3" data-title="Download Templates">
                                         <a *ngIf="currentLoadSheetAvailable" target="_self" href="{{loadSheetPath}}">
-                                            <i class="fa fa-download fa-lg" aria-hidden="true"></i>&nbsp;Download Loadsheet Document 
+                                            <i class="fa fa-download fa-lg" aria-hidden="true"></i>&nbsp;Download
+                                            Loadsheet
+                                            Document
                                         </a>
                                     </td>
                                 </tr>
@@ -233,9 +272,9 @@
                 </div>
                 <div class="col-12">
                     <br />
-                    <button class="btn btn-primary" type="submit" (click)="uploadFiles()" [disabled] = "disableUploadButton">Upload</button>
+                    <button class="btn btn-primary" type="submit" (click)="uploadFiles()" [disabled]="disableUploadButton">Upload</button>
                     <!--<button class="btn btn-warning" type="button">Back To DashBoard</button>-->
-                    
+
                 </div>
                 <div class="col-12">
                     <div class="row">
@@ -252,10 +291,12 @@
                                 <li>Do not keep any empty columns.</li>
                                 <li>Do not rearrange any column in the excel files.</li>
                                 <li>Do not save the files on any empty cells.</li>
-                                <li>Do not enter invalid data in any of the columns (invalid data e.g-date fields can not have
-                                    words written in them)</li>
-                                <li>Do not upload wrong excels for wrong manifest (e.g- PDA excel should be uploaded only for
-                                    PDA Manifest)</li>
+                                <li>Do not enter invalid data in any of the columns (invalid data e.g-date fields can
+                                    not
+                                    have words written in them)</li>
+                                <li>Do not upload wrong excels for wrong manifest (e.g- PDA excel should be uploaded
+                                    only
+                                    for PDA Manifest)</li>
                             </ol>
                         </div>
                         <div class="col-12">

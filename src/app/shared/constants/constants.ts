@@ -2,6 +2,20 @@ import { ITabLinkInterface } from '../components/tab.control/tab.control.interfa
 import { PagesPermissionMatrixModel } from '../../pages/masterdata/page.functionality';
 declare const CKEDITOR;
 
+export enum EnquiryType {
+    None = 0,
+    Passenger = 1,
+    Cargo = 2,
+    Crew = 3,
+    Media = 4,
+    FutureTravel = 5,
+    GeneralUpdate = 6,
+    Others = 7,
+    SituationalUpdates = 8,
+    CustomerDissatisfaction = 9,
+    GroundVictim = 10
+}
+
 export interface IEmergencySituationEnum {
     EmergencySituationId: number;
     enumtype: string;
@@ -142,23 +156,19 @@ export class GlobalConstants {
             value: '1',
             caption: 'Passenger',
             text: 'Passenger related'
-        },
-        {
+        }, {
             value: '2',
             caption: 'Cargo',
             text: 'Cargo related'
-        },
-        {
+        }, {
             value: '3',
             caption: 'Media',
             text: 'Media related',
-        },
-        {
+        }, {
             value: '4',
             caption: 'Others',
             text: 'Others',
-        },
-        {
+        }, {
             value: '5',
             caption: 'Crew',
             text: 'Crew',
@@ -167,49 +177,56 @@ export class GlobalConstants {
     public static ExternalInputEnquiryType: IEnquiryType[] = [
         {
             value: '1',
-            caption: 'Passenger',
-            text: 'Passenger enquiry'
-        },
-        {
+            // caption: 'Passenger',
+            caption: EnquiryType[1].toString(),
+            text: `${EnquiryType[1].replace(/([A-Z])/g, ' $1').trim()} enquiry` //'Passenger enquiry'
+        }, {
             value: '2',
-            caption: 'Cargo',
-            text: 'Cargo enquiry'
-        },
-        {
+            // caption: 'Cargo',
+            caption: EnquiryType[2].toString(),
+            text: `${EnquiryType[2].replace(/([A-Z])/g, ' $1').trim()} enquiry` //'Cargo enquiry'
+        }, {
             value: '3',
-            caption: 'Crew',
-            text: 'Crew enquiry',
-        },
-        {
+            // caption: 'Crew',
+            caption: EnquiryType[3].toString(),
+            text: `${EnquiryType[3].replace(/([A-Z])/g, ' $1').trim()} enquiry` //'Crew enquiry',
+        }, {
             value: '4',
-            caption: 'Media',
-            text: 'Media enquiry',
-        },
-        {
+            // caption: 'Media',
+            caption: EnquiryType[4].toString(),
+            text: `${EnquiryType[4].replace(/([A-Z])/g, ' $1').trim()} enquiry` //'Media enquiry',
+        }, {
             value: '5',
-            caption: 'FutureTravel',
-            text: 'Future Travel enquiry',
-        },
-        {
+            // caption: 'FutureTravel',
+            caption: EnquiryType[5].toString(),
+            text: `${EnquiryType[5].replace(/([A-Z])/g, ' $1').trim()} enquiry` //'Future Travel enquiry',
+        }, {
             value: '6',
-            caption: 'GeneralUpdate',
-            text: 'General Update enquiry',
-        },
-        {
+            // caption: 'GeneralUpdate',
+            caption: EnquiryType[6].toString(),
+            text: `${EnquiryType[6].replace(/([A-Z])/g, ' $1').trim()} enquiry` //'General Update enquiry',
+        }, {
             value: '7',
-            caption: 'Others',
-            text: 'Other enquiry',
-        },
-        {
+            // caption: 'Others',
+            caption: EnquiryType[7].toString(),
+            text: `${EnquiryType[7].replace(/([A-Z])/g, ' $1').trim()} enquiry` //'Other enquiry',
+        }, {
             value: '8',
-            caption: 'SituationalUpdates',
-            text: 'Situational Updates enquiry',
-        },
-        {
+            // caption: 'SituationalUpdates',
+            caption: EnquiryType[8].toString(),
+            text: `${EnquiryType[8].replace(/([A-Z])/g, ' $1').trim()} enquiry` //'Situational Updates enquiry',
+        }, {
             value: '9',
-            caption: 'CustomerDissatisfaction',
-            text: 'Customer Dissatisfaction',
-        }];
+            // caption: 'CustomerDissatisfaction',
+            caption: EnquiryType[9].toString(),
+            text: `${EnquiryType[9].replace(/([A-Z])/g, ' $1').trim()}` //'Customer Dissatisfaction',
+        }, {
+            value: '10',
+            // caption: 'CustomerDissatisfaction',
+            caption: EnquiryType[10].toString(),
+            text: `${EnquiryType[10].replace(/([A-Z])/g, ' $1').trim()} enquiry` //'Customer Dissatisfaction',
+        }
+    ];
 
 
     public static Priority: IPriority[] = [
@@ -217,13 +234,11 @@ export class GlobalConstants {
             value: '1',
             caption: 'High',
             text: 'High'
-        },
-        {
+        }, {
             value: '2',
             caption: 'Medium',
             text: 'Medium',
-        },
-        {
+        }, {
             value: '3',
             caption: 'Low',
             text: 'Low'
@@ -235,28 +250,23 @@ export class GlobalConstants {
             value: '1',
             caption: 'Notified',
             text: 'Notified'
-        },
-        {
+        }, {
             value: '2',
             caption: 'Assigned',
             text: 'Assigned',
-        },
-        {
+        }, {
             value: '3',
             caption: 'Delegated',
             text: 'Delegated'
-        },
-        {
+        }, {
             value: '4',
             caption: 'Accepted',
             text: 'Accepted'
-        },
-        {
+        }, {
             value: '5',
             caption: 'ReferredTo',
             text: 'Referred To'
-        },
-        {
+        }, {
             value: '6',
             caption: 'Closed',
             text: 'Closed'
@@ -268,8 +278,7 @@ export class GlobalConstants {
             value: '1',
             caption: 'ViewLessonsLearnt',
             text: 'Lessons Learnt'
-        },
-        {
+        }, {
             value: '2',
             caption: 'ViewAuditReport',
             text: 'Audit Report'
@@ -282,39 +291,31 @@ export class GlobalConstants {
             EmergencySituationId: 1,
             enumtype: 'EmergencyInitiationtoHoD',
             EmergencySituationName: 'Emergency Initiation to HoD'
-        },
-        {
+        }, {
             EmergencySituationId: 2,
             enumtype: 'EmergencyInitiationtoTeamMember',
             EmergencySituationName: 'Emergency Initiation to Team Member'
-        },
-        {
+        }, {
             EmergencySituationId: 3,
             enumtype: 'RequestAssignedtoDepartmentSPOC',
             EmergencySituationName: 'Request Assigned to Department SPOC'
-        },
-        {
+        }, {
             EmergencySituationId: 7,
             enumtype: 'RequestCompletedToRequesterDepartmentSPOC',
             EmergencySituationName: 'Request Completed To Requester Department SPOC'
-        },
-        {
+        }, {
             EmergencySituationId: 4,
             enumtype: 'ChecklistCompletedToDepartmentSPOC',
             EmergencySituationName: 'Checklist Completed To Department SPOC'
-        },
-        {
+        }, {
             EmergencySituationId: 5,
             enumtype: 'ChecklistReopenedToDepartmentSPOC',
             EmergencySituationName: 'Checklist Reopened To DepartmentSPOC'
-        },
-        {
+        }, {
             EmergencySituationId: 6,
             enumtype: 'EmergencyClosureToTeamMember',
             EmergencySituationName: 'Emergency Closure to Team Member'
-        }
-        ,
-        {
+        }, {
             EmergencySituationId: 8,
             enumtype: 'RequestApprovalToApproverDepartmentSPOC',
             EmergencySituationName: 'Request Approval To Approver Department SPOC'
@@ -341,29 +342,23 @@ export class GlobalConstants {
             key: 1,
             value: 'Uninjured',
             caption: 'Uninjured'
-        },
-        {
+        }, {
             key: 2,
             value: 'Injured',
             caption: 'Injured'
-        },
-        {
+        }, {
             key: 3,
             value: 'Missing',
             caption: 'Missing'
-        },
-        {
+        }, {
             key: 4,
             value: 'Deceased',
             caption: 'Deceased'
-        },
-        {
+        }, {
             key: 5,
             value: 'Others',
             caption: 'Others'
-
-        },
-        {
+        }, {
             key: 6,
             value: 'UnidentifiedPDA',
             caption: 'Unidentified PDA'
@@ -375,28 +370,23 @@ export class GlobalConstants {
             key: 1,
             value: 'Notified',
             caption: 'Notified'
-        },
-        {
+        }, {
             key: 2,
             value: 'Assigned',
             caption: 'Assigned'
-        },
-        {
+        }, {
             key: 3,
             value: 'Delegated',
             caption: 'Delegated'
-        },
-        {
+        }, {
             key: 4,
             value: 'Accepted',
             caption: 'Accepted'
-        },
-        {
+        }, {
             key: 5,
             value: 'Refferedto',
             caption: 'Reffered To'
-        },
-        {
+        }, {
             key: 6,
             value: 'Closed',
             caption: 'Closed'
@@ -409,18 +399,15 @@ export class GlobalConstants {
             value: '1',
             enumtype: 'PDA',
             caption: 'PDA'
-        },
-        {
+        }, {
             value: '2',
             enumtype: 'NOK',
             caption: 'NOK'
-        },
-        {
+        }, {
             value: '3',
             enumtype: 'Staff',
             caption: 'Staff'
-        },
-        {
+        }, {
             value: '4',
             enumtype: 'Others',
             caption: 'Others'
@@ -432,13 +419,11 @@ export class GlobalConstants {
             key: 1,
             value: 'Missing',
             caption: 'Missing'
-        },
-        {
+        }, {
             key: 2,
             value: 'Found',
             caption: 'Found'
-        },
-        {
+        }, {
             key: 3,
             value: 'Others',
             caption: 'Others'
@@ -845,6 +830,20 @@ export class GlobalConstants {
             Message: '',
             ErrorTitle: '',
             ErrorMessage: ''
+        }, {
+            Type: 'EnquiryNotification',
+            Key: 'ReceiveGroundVictimEnquiryCreationResponse',
+            Title: '',
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
+        }, {
+            Type: 'EnquiryNotification',
+            Key: 'AssignedGroundVictimEnquiryCreationResponse',
+            Title: '',
+            Message: '',
+            ErrorTitle: '',
+            ErrorMessage: ''
         }
     ];
 
@@ -913,7 +912,11 @@ export class GlobalConstants {
         PresidentMessageApprovalUpdated: 'PresidentMessageApprovalUpdated',
         OnPresidentMessageUpdate: 'OnPresidentMessageUpdate',
         PresidentMessageModelSaved: 'PresidentMessageModelSaved',
-        PresidentMessageModelUpdated: 'PresidentMessageModelUpdated'
+        PresidentMessageModelUpdated: 'PresidentMessageModelUpdated',
+
+        AffectedPersonSelected: 'AffectedPersonSelected',
+        CareMemberCreated: 'CareMemberCreated',
+        CareMemberForAllPDACreated: 'CareMemberForAllPDACreated'
     };
 
     public static NotificationConstant = {
@@ -973,13 +976,14 @@ export class GlobalConstants {
         AssignedSituationalUpdatesEnquiryCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'AssignedSituationalUpdatesEnquiryCreationResponse'),
         ReceiveCustomerDissatisfactionEnquiryCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveCustomerDissatisfactionEnquiryCreationResponse'),
         AssignedCustomerDissatisfactionEnquiryCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'AssignedCustomerDissatisfactionEnquiryCreationResponse'),
+        ReceiveGroundVictimEnquiryCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'ReceiveGroundVictimEnquiryCreationResponse'),
+        AssignedGroundVictimEnquiryCreationResponse: GlobalConstants.NotificationMessage.find(x => x.Key == 'AssignedGroundVictimEnquiryCreationResponse')
     };
 
     public static DashboardTabLinks: ITabLinkInterface[] = [
         {
             id: 'Checklist',
             title: 'Checklists',
-            // icon: 'fa fa-edge fa-2x',
             url: '/pages/dashboard/actionable',
             selected: true,
             hidden: false,
@@ -1004,7 +1008,6 @@ export class GlobalConstants {
         }, {
             id: 'Demand',
             title: 'Demand',
-            // icon: 'fa fa-linux fa-2x',
             url: '/pages/dashboard/demand',
             selected: false,
             hidden: false,
@@ -1043,7 +1046,6 @@ export class GlobalConstants {
         }, {
             id: 'AffectedPeople',
             title: 'Affected People',
-            // icon: 'fa fa-apple fa-2x',
             url: '/pages/dashboard/people',
             selected: false,
             hidden: false,
@@ -1066,13 +1068,19 @@ export class GlobalConstants {
                 }
             ]
         }, {
+            id: 'GroundVictims',
+            title: 'Ground Victims',
+            url: '/pages/dashboard/groundmembers',
+            selected: false,
+            hidden: false,
+            order: 4
+        }, {
             id: 'AffectedCargo',
             title: 'Affected Cargo',
-            // icon: 'fa fa-chrome fa-2x',
             url: '/pages/dashboard/cargo',
             selected: false,
             hidden: false,
-            order: 4,
+            order: 5,
             subtab: [
                 {
                     id: 'Cargo',
@@ -1097,15 +1105,14 @@ export class GlobalConstants {
             url: '/pages/dashboard/broadcast',
             selected: false,
             hidden: false,
-            order: 5
+            order: 6
         }, {
             id: 'PresidentMessage',
             title: 'President Messages',
-            // icon: 'fa fa-firefox fa-2x',
             url: '/pages/dashboard/presidentMessage',
             selected: false,
             hidden: false,
-            order: 6,
+            order: 7,
             subtab: [
                 {
                     id: 'PresidentMessageRelease',
@@ -1126,11 +1133,10 @@ export class GlobalConstants {
         }, {
             id: 'MediaMessage',
             title: 'Media Messages',
-            // icon: 'fa fa-medium fa-2x',
             url: '/pages/dashboard/media',
             selected: false,
             hidden: false,
-            order: 7,
+            order: 8,
             subtab: [
                 {
                     id: 'MediaMessageRelease',
@@ -1149,35 +1155,9 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'OtherQuery',
-            title: 'Other Query',
-            // icon: 'fa fa-windows fa-2x',
-            url: '/pages/dashboard/otherQuery',
-            selected: false,
-            hidden: false,
-            order: 8,
-            subtab: [
-                {
-                    id: 'ReceivedCalls',
-                    title: 'Received Calls',
-                    url: './receivedCalls',
-                    selected: false,
-                    hidden: false,
-                    order: 1
-                }, {
-                    id: 'AssignedCalls',
-                    title: 'Assigned Calls',
-                    url: './assignedcalls',
-                    selected: false,
-                    hidden: false,
-                    order: 2
-                }
-            ]
-        }, {
-            id: 'CrewQuery',
-            title: 'Crew Query',
-            // icon: 'fa fa-twitter fa-2x',
-            url: '/pages/dashboard/crewQuery',
+            id: 'PassengerQuery',
+            title: 'Passenger Query',
+            url: '/pages/dashboard/passengerquery',
             selected: false,
             hidden: false,
             order: 9,
@@ -1199,10 +1179,9 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'PassengerQuery',
-            title: 'Passenger Query',
-            // icon: 'fa fa-twitter fa-2x',
-            url: '/pages/dashboard/passengerquery',
+            id: 'GroundVictimQuery',
+            title: 'Ground Victim Query',
+            url: '/pages/dashboard/groundvictimquery',
             selected: false,
             hidden: false,
             order: 10,
@@ -1217,17 +1196,16 @@ export class GlobalConstants {
                 }, {
                     id: 'AssignedCalls',
                     title: 'Assigned Calls',
-                    url: './assignedcalls',
+                    url: './assignedCalls',
                     selected: false,
                     hidden: false,
                     order: 2
                 }
             ]
         }, {
-            id: 'CargoQuery',
-            title: 'Cargo Query',
-            // icon: 'fa fa-twitter fa-2x',
-            url: '/pages/dashboard/cargoquery',
+            id: 'CrewQuery',
+            title: 'Crew Query',
+            url: '/pages/dashboard/crewQuery',
             selected: false,
             hidden: false,
             order: 11,
@@ -1249,10 +1227,9 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'MediaQuery',
-            title: 'Media Query',
-            // icon: 'fa fa-twitter fa-2x',
-            url: '/pages/dashboard/mediaquery',
+            id: 'CargoQuery',
+            title: 'Cargo Query',
+            url: '/pages/dashboard/cargoquery',
             selected: false,
             hidden: false,
             order: 12,
@@ -1274,10 +1251,9 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'FutureTravelQuery',
-            title: 'Future Travel Query',
-            // icon: 'fa fa-twitter fa-2x',
-            url: '/pages/dashboard/futuretravelquery',
+            id: 'MediaQuery',
+            title: 'Media Query',
+            url: '/pages/dashboard/mediaquery',
             selected: false,
             hidden: false,
             order: 13,
@@ -1301,7 +1277,6 @@ export class GlobalConstants {
         }, {
             id: 'GeneralUpdateQuery',
             title: 'General Update Query',
-            // icon: 'fa fa-twitter fa-2x',
             url: '/pages/dashboard/generalupdatequery',
             selected: false,
             hidden: false,
@@ -1326,7 +1301,6 @@ export class GlobalConstants {
         }, {
             id: 'SituationalUpdatesQuery',
             title: 'Situational Updates Query',
-            // icon: 'fa fa-twitter fa-2x',
             url: '/pages/dashboard/situationalupdatesquery',
             selected: false,
             hidden: false,
@@ -1349,10 +1323,9 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'CustomerDissatisfactionQuery',
-            title: 'Customer Dissatisfaction Query',
-            // icon: 'fa fa-twitter fa-2x',
-            url: '/pages/dashboard/customerdissatisfactionquery',
+            id: 'FutureTravelQuery',
+            title: 'Future Travel Query',
+            url: '/pages/dashboard/futuretravelquery',
             selected: false,
             hidden: false,
             order: 16,
@@ -1374,15 +1347,54 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'GroundVictims',
-            title: 'Ground Victims',
-            // icon: 'fa fa-twitter fa-2x',
-            url: '/pages/dashboard/groundmembers',
+            id: 'CustomerDissatisfactionQuery',
+            title: 'Customer Dissatisfaction Query',
+            url: '/pages/dashboard/customerdissatisfactionquery',
             selected: false,
             hidden: false,
-            order: 17
+            order: 17,
+            subtab: [
+                {
+                    id: 'ReceivedCalls',
+                    title: 'Received Calls',
+                    url: './receivedCalls',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'AssignedCalls',
+                    title: 'Assigned Calls',
+                    url: './assignedcalls',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
+        }, {
+            id: 'OtherQuery',
+            title: 'Other Query',
+            url: '/pages/dashboard/otherQuery',
+            selected: false,
+            hidden: false,
+            order: 18,
+            subtab: [
+                {
+                    id: 'ReceivedCalls',
+                    title: 'Received Calls',
+                    url: './receivedCalls',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'AssignedCalls',
+                    title: 'Assigned Calls',
+                    url: './assignedcalls',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
         }
-
     ] as ITabLinkInterface[];
 
     public static ArchieveDashboardTabLinks: ITabLinkInterface[] = [
@@ -1791,10 +1803,33 @@ export class GlobalConstants {
             selected: false,
             hidden: false,
             order: 17
+        }, {
+            id: 'GroundVictimQuery',
+            title: 'Ground Victim Query',
+            url: '/pages/archivedashboard/groundvictimquery',
+            selected: false,
+            hidden: false,
+            order: 18,
+            subtab: [
+                {
+                    id: 'ReceivedCalls',
+                    title: 'Received Calls',
+                    url: './receivedCalls',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'AssignedCalls',
+                    title: 'Assigned Calls',
+                    url: './assignedCalls',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
         }
 
     ] as ITabLinkInterface[];
-
 
     public static MasterDataTAB_LINKS: ITabLinkInterface[] = [
         {

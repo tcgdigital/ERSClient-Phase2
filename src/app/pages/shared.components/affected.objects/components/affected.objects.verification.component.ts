@@ -57,7 +57,7 @@ export class AffectedObjectsVerificationComponent implements OnInit {
                 }
                 this.isVerifiedStatusChange();
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
@@ -82,7 +82,7 @@ export class AffectedObjectsVerificationComponent implements OnInit {
                 this.toastrService.success('Selected Objects are verified.', 'Success', this.toastrConfig);
                 this.getAffectedObjects(this.currentIncident);
             }, (error: any) => {
-                console.log(`Error: ${error}`);
+                console.log(`Error: ${error.message}`);
             });
     }
 
