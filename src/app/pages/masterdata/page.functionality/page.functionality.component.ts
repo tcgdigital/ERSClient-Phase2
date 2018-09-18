@@ -73,7 +73,7 @@ export class PageFunctionalityComponent implements OnInit, OnDestroy {
     isValidOnlyForHOD(item: PagesForDepartmentModel) {
         return (item.OnlyForHod == true);
     };
-    
+
     save(): void {
         /*
         const model = this.pagesForDepartment.filter(this.canViewd);
@@ -110,9 +110,8 @@ export class PageFunctionalityComponent implements OnInit, OnDestroy {
                 });
         }
     }
-    
+
     onNotify(message: KeyValue): void {
-        debugger;
         this.selectedDepartment = message.Value;
         this.pagePermissionService.GetFilter(message.Value.toString())
             .takeUntil(this.ngUnsubscribe)
@@ -177,15 +176,12 @@ export class PageFunctionalityComponent implements OnInit, OnDestroy {
     }
 
     checkAllStatusView(): void {
-
-        debugger;
         this.allSelectView = this.pagesForDepartment.length != 0 && this.pagesForDepartment.filter(x => {
             return x.AllowView == true;
         }).length == this.pagesForDepartment.length;
     }
 
     checkStatusView(event: any, elm: PagesForDepartmentModel): void {
-        debugger;
         elm.isOnlyHOD = event.checked;
         if (event.checked == false) {
             elm.OnlyForHod = false;

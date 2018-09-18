@@ -17,11 +17,10 @@ export class GroundVictimService extends ServiceBase<GroundVictimModel>
     public GetAllGroundVictimsByIncident(incidentId: number): Observable<GroundVictimModel> {
         return this.involvedPartyService.GetAllGroundVictimsByIncident(incidentId)
             .flatMap((involveParties) => {
-                debugger;
                 let response = involveParties.Records.map(x => x.GroundVictims);
                 let victims = ([] as GroundVictimModel[]).concat(...response);
-                if(victims.length>0 && involveParties.Records[0].Affecteds.length>0){
-                    victims.forEach(victim=>{
+                if (victims.length > 0 && involveParties.Records[0].Affecteds.length > 0) {
+                    victims.forEach(victim => {
                         victim.InvolvedParty = new InvolvePartyModel();
                         victim.InvolvedParty.Affecteds = involveParties.Records[0].Affecteds;
                     })
