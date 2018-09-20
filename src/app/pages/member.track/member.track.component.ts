@@ -49,6 +49,7 @@ export class MemberTrackComponent implements OnInit, OnDestroy, AfterViewChecked
     public isShowHistory: boolean = true;
     public isShowAllocationDeallocation: boolean = true;
     public isSelectedDept: boolean;
+    public isMemberTrackingReportLink: boolean=true;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(private globalState: GlobalStateService,

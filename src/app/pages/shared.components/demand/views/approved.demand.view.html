@@ -45,7 +45,8 @@
                         <td data-title="Download File">
                             <ul>
                                 <li *ngFor="let file of demand.FileStores">
-                                    <a target="_self" href="{{demandFilePath + file.FileStoreID}}" download="file.UploadedFileName">
+                                    <a target="_self" href="{{demandFilePath + file.FileStoreID}}" *ngIf="isDashboradApprovedDemandDownloadLink | accesibility: currentDepartmentId :'DashboradApprovalPendingDownloadLink'"
+                                        download="file.UploadedFileName">
                                         <i class="fa fa-download fa-2x" aria-hidden="true"></i>
                                     </a>
                                 </li>

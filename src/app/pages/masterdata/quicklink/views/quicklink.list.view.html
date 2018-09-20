@@ -31,14 +31,16 @@
                     </tr>
                     <tr *ngFor="let quicklink of quicklinks">
                         <td data-title="Group">{{(quicklink.QuickLinkGroup != null)? quicklink.QuickLinkGroup.GroupName:
-                            ''}}&nbsp;</td>
+                            ''}}&nbsp;
+                        </td>
                         <td data-title="Quick Link Name">{{quicklink.QuickLinkName}}&nbsp;</td>
                         <td data-title="Quick Link URL">
                             <a href="{{ quicklink.QuickLinkURL }}" target="_blank">{{ quicklink.QuickLinkURL }}&nbsp;
                             </a>
                         </td>
                         <td data-title="File">
-                            <a target="_self" *ngIf="quicklink.UploadURL!=null" href="{{quicklink.UploadURL}}" download="QuicklinkFile">
+                            <a target="_self" *ngIf="quicklink.UploadURL!=null  && (isFileDownload | accesibility:currentDepartmentId:'QuickLinksFileDownloadLink')"
+                                href="{{quicklink.UploadURL}}" download="QuicklinkFile">
                                 <i class="fa fa-download fa-2x" aria-hidden="true"></i>
                             </a>
                         </td>

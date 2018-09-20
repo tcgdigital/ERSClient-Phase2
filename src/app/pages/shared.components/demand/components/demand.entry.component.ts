@@ -17,15 +17,15 @@ import { DepartmentService, DepartmentModel } from '../../../masterdata/departme
 import { PageService } from '../../../masterdata/page.functionality';
 import {
     AffectedObjectsService, AffectedObjectsToView, AffectedPeopleService,
-    AffectedPeopleToView, InvolvePartyModel, CommunicationLogModel, 
+    AffectedPeopleToView, InvolvePartyModel, CommunicationLogModel,
     AffectedVictimToView
 } from '../../../shared.components';
-import {GroundVictimService, GroundVictimModel} from '../../../shared.components/ground.victim';
+import { GroundVictimService, GroundVictimModel } from '../../../shared.components/ground.victim';
 import { InvolvePartyService } from '../../involveparties';
 import { CallerService, CallerModel } from '../../caller';
 import {
     ResponseModel, DataExchangeService, FileUploadService,
-    GlobalConstants, KeyValue, UtilityService, GlobalStateService, 
+    GlobalConstants, KeyValue, UtilityService, GlobalStateService,
     AuthModel, DateTimePickerOptions
 } from '../../../../shared';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -305,7 +305,6 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         this.groundVictimService.GetAllGroundVictimsByIncident(currentIncident)
             .takeUntil(this.ngUnsubscribe)
             .subscribe((victim: GroundVictimModel) => {
-                debugger;
 
                 let viewModel: AffectedVictimToView = new AffectedVictimToView();
                 viewModel.AffectedId = victim.InvolvedParty.Affecteds[0].AffectedId;
@@ -835,7 +834,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                 if (this.demandModel.GroundVictimId === 0) {
                     delete this.demandModel.GroundVictimId;
                 }
-                
+
                 this.demandModel.CommunicationLogs = this.SetCommunicationLog(this.demandModel);
                 this.demandModel.DemandTrails = this.createDemandTrailModel(this.demandModel, this.demandModel, true);
                 const resolutionTimeChanged = false;

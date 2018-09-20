@@ -19,29 +19,26 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td data-title="File Name">PDA Manifest</td>
+                                    <td data-title="File Name">Passenger Manifest</td>
                                     <td data-title="Select File">
                                         <input type="file" #inputFilePax id="file" formControlName="filePax" class="form-control-file"
                                             (change)="getFileDetails($event,'Passenger')" />
                                     </td>
                                     <td data-title="Download Templates">
-                                        <a target="_self" href="{{passengerTemplatePath}}" download="Passengers.xlsx">
-                                            <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;PDA
-                                            Template
+                                        <a target="_self" href="{{passengerTemplatePath}}" *ngIf="isPassengerTemplateLinkAvailable | accesibility:DepartmentId:'PDATemplateLink'" download="Passengers.xlsx">
+                                            <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;PDA Template
                                         </a>
                                     </td>
                                     <td data-title="View Records">
                                         <a href="javascript: void(0)" (click)="openPassenger()">
-                                            <i class="fa fa-file-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Valid
-                                            Passenger
-                                            Records
+                                            <i class="fa fa-file-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;
+                                            Valid Passenger Records
                                         </a>
                                     </td>
                                     <td data-title="View Invalid Records">
                                         <a href="javascript: void(0)" (click)="openInvalidPax()">
-                                            <i class="fa fa-file fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Invalid
-                                            Passenger
-                                            Records
+                                            <i class="fa fa-file fa-fw fa-lg" aria-hidden="true"></i>&nbsp;
+                                            Invalid Passenger Records
                                         </a>
                                     </td>
                                 </tr>
@@ -53,10 +50,8 @@
                                             class="form-control-file" (change)="getFileDetails($event,'Crew')" />
                                     </td>
                                     <td data-title="Download Templates">
-                                        <a target="_self" href="{{crewManifestPathPAL}}">
-                                            <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Crew
-                                            Manifest
-                                            Template
+                                        <a target="_self" href="{{crewManifestPathPAL}}" *ngIf="isCrewTemplateLinkAvailable | accesibility:DepartmentId:'CrewManifestLink'">
+                                            <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Crew Manifest Template
                                         </a>
                                     </td>
                                     <td data-title="View Records">
@@ -107,10 +102,8 @@
                                             class="form-control-file" (change)="getFileDetails($event,'Crew')" />
                                     </td>
                                     <td data-title="Download Templates">
-                                        <a target="_self" href="{{crewTrainingPAL}}">
-                                            <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Crew
-                                            Training
-                                            Template
+                                        <a target="_self" href="{{crewTrainingPAL}}" *ngIf="isCrewTrainingTemplateLink | accesibility: DepartmentId :'CrewTrainingTemplateLink'" >
+                                            <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Crew Training Template
                                         </a>
                                     </td>
                                     <td data-title="View Records">
@@ -134,10 +127,8 @@
                                             class="form-control-file" (change)="getFileDetails($event,'Crew')" />
                                     </td>
                                     <td data-title="Download Templates">
-                                        <a target="_self" href="{{crewTrainingPALExAir}}">
-                                            <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Crew
-                                            Training
-                                            Template
+                                        <a target="_self" href="{{crewTrainingPALExAir}}" *ngIf="isAirCrewTrainingTemplateLinkAvailable | accesibility:DepartmentId:'CrewTrainingTemplateAirCrewLink'">
+                                            <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Crew Training Template
                                         </a>
                                     </td>
                                     <td data-title="View Records">
@@ -161,10 +152,8 @@
                                             class="form-control-file" (change)="getFileDetails($event,'Crew')" />
                                     </td>
                                     <td data-title="Download Templates">
-                                        <a target="_self" href="{{crewTrainingPALExCabin}}">
-                                            <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Crew
-                                            Training
-                                            Template
+                                        <a target="_self" href="{{crewTrainingPALExCabin}}" *ngIf="isCabinCrewTrainingTemplateLinkAvailable | accesibility:DepartmentId:'CrewTrainingTemplateCabinCrewLink'" >
+                                            <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Crew Training Template
                                         </a>
                                     </td>
                                     <td data-title="View Records">
@@ -188,9 +177,8 @@
                                             (change)="getFileDetails($event,'Cargo')" />
                                     </td>
                                     <td data-title="Download Templates">
-                                        <a target="_self" href="{{cargoTemplatePathPAL}}">
-                                            <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Cargo
-                                            Template
+                                        <a target="_self" href="{{cargoTemplatePathPAL}}" *ngIf="isCargoTemplateLinkAvailable | accesibility:DepartmentId:'CargoManifestLink'">
+                                            <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Cargo Template
                                         </a>
                                     </td>
                                     <td data-title="View Records">
@@ -244,9 +232,8 @@
                                             class="form-control-file" (change)="getFileDetails($event,'GroundVictim')" />
                                     </td>
                                     <td data-title="Download Templates">
-                                        <a target="_self" href="{{groundVictimTemplatePath}}" download="GroundVictim.xlsx">
-                                            <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Ground
-                                            Victim Template
+                                        <a target="_self" href="{{groundVictimTemplatePath}}" *ngIf="isGroundVictimTemplateLinkAvailable | accesibility:DepartmentId:'GroundVictimManifestLink'" download="GroundVictim.xlsx">
+                                            <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Ground Victim Template
                                         </a>
                                     </td>
                                     <td data-title="View Records">
@@ -271,7 +258,7 @@
                                         <input type="file" #inputFileLoadSheet id="file" class="form-control-file"
                                             (change)="getLoadSheetFileDetails($event,'LoadSheet')" />
                                     </td>
-                                    <td data-title="Download Templates">
+                                    <td colspan="3" data-title="Download Templates">
                                         <a *ngIf="currentLoadSheetAvailable" target="_self" href="{{loadSheetPath}}">
                                             <i class="fa fa-download fa-lg" aria-hidden="true"></i>&nbsp;Download
                                             Loadsheet

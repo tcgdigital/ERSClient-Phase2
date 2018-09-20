@@ -50,6 +50,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     demand: DemandModelToView = new DemandModelToView();
     public isShowApprovedDemand: boolean = true;
     public isInvalidRemarks: boolean = false;
+    public isDashboradApprovedDemandDownloadLink: boolean=true;
 
     private ngUnsubscribe: Subject<any> = new Subject<any>();
     

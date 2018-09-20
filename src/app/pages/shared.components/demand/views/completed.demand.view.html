@@ -32,7 +32,9 @@
                     </tr>
                     <tr *ngFor="let demand of completedDemands">
                         <td data-title="Demand Type">{{demand.DemandTypeName}}&nbsp;</td>
-                        <td data-title="Demand Description"><a href="javascript:void(0);" (click)="openDemandDetails(demand.DemandId)">{{demand.DemandDesc}}</a>&nbsp;</td>
+                        <td data-title="Demand Description">
+                            <a href="javascript:void(0);" (click)="openDemandDetails(demand.DemandId)">{{demand.DemandDesc}}</a>&nbsp;
+                        </td>
                         <td data-title="Requested By">{{demand.RequestedBy}}&nbsp;</td>
                         <td data-title="Target Department">{{demand.TargetDepartmentName}}&nbsp;</td>
                         <td data-title="Contact Number">{{demand.ContactNumber}}&nbsp;</td>
@@ -43,7 +45,8 @@
                         <td data-title="Download File">
                             <ul>
                                 <li *ngFor="let file of demand.FileStores">
-                                    <a target="_self" href="{{file.FilePath}}" download="file.UploadedFileName">
+                                    <a target="_self" href="{{file.FilePath}}" *ngIf="isDashboradCompletedDownloadLink | accesibility: currentDepartmentId :'DashboradCompletedDownloadLink'"
+                                        download="file.UploadedFileName">
                                         <i class="fa fa-download fa-2x" aria-hidden="true"></i>
                                     </a>
                                 </li>

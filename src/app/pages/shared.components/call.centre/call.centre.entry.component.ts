@@ -245,8 +245,6 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         this.groundVictimService.GetAllGroundVictimsByIncident(currentIncident)
             .takeUntil(this.ngUnsubscribe)
             .subscribe((victim: GroundVictimModel) => {
-                debugger;
-
                 let viewModel: AffectedVictimToView = new AffectedVictimToView();
                 viewModel.AffectedId = victim.InvolvedParty.Affecteds[0].AffectedId;
                 viewModel.InvolvedPartyId = victim.InvolvedPartyId;
@@ -518,7 +516,6 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         this.enquiry.AffectedObjectId = 0;
         this.enquiry.AffectedPersonId = 0;
 
-        debugger;
         this.affectedId = this.groundVictims
             .find(x => x.GroundVictimId == message.Value).AffectedId;
 
@@ -644,7 +641,6 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
     }
 
     private SetDemandEntity(isCallback, isTravelRequest, isAdmin, isCrew, affectedId, affectedPersonId?: number): void {
-        debugger;
         if (isCallback || isCrew || isTravelRequest || isAdmin) {
             let demand: DemandModel = new DemandModel();
 
@@ -674,7 +670,6 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
             this.selctedEnquiredVictim = (demand.GroundVictimId && demand.GroundVictimId !== 0) ?
                 this.groundVictims.find((x) => x.GroundVictimId === demand.GroundVictimId) : null;
 
-            debugger;
             const personName: string = (this.selctedEnquiredPerson !== null && this.enquiryType == +EnquiryType.Passenger) ?
                 this.selctedEnquiredPerson.PassengerName :
                 ((this.selctedEnquiredPerson !== null && this.enquiryType == +EnquiryType.Crew) ? this.selctedEnquiredPerson.CrewName :
@@ -813,7 +808,6 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
     }
 
     private CreateDemandsOnEnquery(affectedId: number, affectedPersonIds?: number[]): void {
-        debugger;
         if (this.enquiry.IsCallBack) {
             this.callSetDemands(true, false, false, false, affectedId, affectedPersonIds);
         }
@@ -974,7 +968,6 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
     }
 
     public SaveEnquiryDemandCaller(): void {
-        debugger;
         this.submitted = true;
 
         if (this.form.valid && (

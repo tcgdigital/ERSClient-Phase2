@@ -1,6 +1,7 @@
 <div class="row">
     <div class="col-lg-10 col-md-9 text-right">
-        <a target="_blank" href="{{downloadPath}}" download="VerifiedCargoManifest">
+        <a target="_blank" href="{{downloadPath}}" *ngIf="isVerifiedCargoManifestDownloadLink | accesibility: currentDepartmentId :'VerifiedCargoManifestDownloadLink'"
+            download="VerifiedCargoManifest">
             <i class="fa fa-download fa-2x" aria-hidden="true"></i>&nbsp; Verified Cargo Manifest
         </a>
     </div>
