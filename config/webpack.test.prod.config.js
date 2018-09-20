@@ -20,7 +20,7 @@ const ENV = process.env.ENV = process.env.NODE_ENV = 'testproduction';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 8080;
 const HMR = false;
-const API_URL = process.env.API_URL = 'http://172.20.23.110:99/';
+const API_URL = process.env.API_URL = 'http://172.20.23.110:84/';
 
 const METADATA = webpackMerge
     (webpackCommenConfig({
