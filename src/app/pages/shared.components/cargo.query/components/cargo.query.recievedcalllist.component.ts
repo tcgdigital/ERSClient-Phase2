@@ -13,7 +13,7 @@ import {
 } from '../../../callcenteronlypage/component';
 import { Router } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { 
+import {
     InvolvePartyModel, AffectedObjectsToView, AffectedObjectsService
 } from '../../../shared.components';
 
@@ -53,25 +53,25 @@ export class CargoQueryRecievedCallsListComponent implements OnInit, OnDestroy {
 
         //this.getAllCargoQueryCallsRecieved(this.currentIncidentId);
         this.getCargo();
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard,
             (model: KeyValue) => this.incidentChangeHandler(model));
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.CallRecieved, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.CallRecieved,
             (model: number) => this.getAllCargoQueryCallsRecieved(this.currentIncidentId));
 
         // SignalR Notification
         this.globalState.Subscribe
-        (GlobalConstants.NotificationConstant.AssignedCargoEnquiryCreationResponse.Key, (model: ExternalInputModel) => {
-            // this.getAllCargoQueryCallsRecieved(model.IncidentId);
-            const index: number = this.allAssignedCalls
-                .findIndex((x: ExternalInputModel) => x.ExternalInputId === model.ExternalInputId);
+            (GlobalConstants.NotificationConstant.AssignedCargoEnquiryCreationResponse.Key, (model: ExternalInputModel) => {
+                // this.getAllCargoQueryCallsRecieved(model.IncidentId);
+                const index: number = this.allAssignedCalls
+                    .findIndex((x: ExternalInputModel) => x.ExternalInputId === model.ExternalInputId);
 
-            if (index > -1) {
-                this.allAssignedCalls.splice(index, 1, model);
-            } else {
-                this.allAssignedCalls.unshift(model)
-            }
-        });
+                if (index > -1) {
+                    this.allAssignedCalls.splice(index, 1, model);
+                } else {
+                    this.allAssignedCalls.unshift(model)
+                }
+            });
     }
 
     public ngOnDestroy(): void {
@@ -122,11 +122,14 @@ export class CargoQueryRecievedCallsListComponent implements OnInit, OnDestroy {
             });
     }
 
-    getAWBS(AffectedObjectId): string {
-        let Nm: string = "";
-        Nm = this.awbs.find(x => x.Value == AffectedObjectId).Key;
-        return Nm;
+    getAWBS(affectedObjectId: number): string {
+        if (affectedObjectId != null && affectedObjectId != undefined) {
+            let Nm: string = "";
+            Nm = this.awbs.find(x => x.Value == affectedObjectId).Key;
+            return Nm;
+        } else {
+            return '';
+        }
     }
-
 }
 

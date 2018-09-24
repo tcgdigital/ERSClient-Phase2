@@ -96,10 +96,11 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
         this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.ClearAutoCompleteInput);
     }
 
-
     public ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
-        if (changes['initialvalue'] !== undefined && (changes['initialvalue'].currentValue !==
-            changes['initialvalue'].previousValue)) {
+        if (changes['initialvalue'] !== undefined
+            && changes['initialvalue'].currentValue != undefined
+            && changes['initialvalue'].currentValue !== changes['initialvalue'].previousValue
+            && changes['initialvalue'].currentValue.Key != '') {
             if (this.items.length > 0 && this.items.find(x => x.Value == this.initialvalue.Value) != null) {
                 this.query = this.initialvalue.Key;
             }

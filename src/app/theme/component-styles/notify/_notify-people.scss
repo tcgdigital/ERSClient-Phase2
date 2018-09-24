@@ -12,8 +12,15 @@ ul.gj-tree-bootstrap-list li [data-role=display] {
     columns: 135;
 }
 
-.leftspacing {
-    margin-left: 6px;
+.hod-marked {
+    background: #169b9c;
+    padding: 3px 5px;
+    color: #fff;
+    border-radius: 11px;
+    &:after {
+        content: 'HOD';
+        padding-left: 4px;
+    }
 }
 
 @media screen and (max-width: $resXS-E) {

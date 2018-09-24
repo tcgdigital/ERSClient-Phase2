@@ -8,7 +8,7 @@ import { ModalModule, ModalDirective } from 'ngx-bootstrap';
 import { NotifyPeopleRouting } from './notifypeople.routing';
 import { NotifyPeopleComponent } from './notifypeople.component';
 import { NotifyPeopleService } from './components';
-import { DataExchangeService, SharedModule } from '../../shared';
+import { DataExchangeService, SharedModule, MultiselectModule } from '../../shared';
 import { UserPermissionService } from '../masterdata/userpermission/components/userpermission.service';
 import { UserdepartmentNotificationMapperService } from '../shared.components/userdepartmentnotificationmapper';
 import { TemplateService } from '../masterdata/template';
@@ -25,6 +25,7 @@ import { DepartmentService } from '../masterdata/department';
         ModalModule.forRoot(),
         ReactiveFormsModule,
         SharedModule,
+        MultiselectModule,
         NotifyPeopleRouting
     ],
     declarations: [
