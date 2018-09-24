@@ -1,7 +1,7 @@
 import {
     Component, ViewEncapsulation,
     ElementRef, Input, Output,
-    EventEmitter, HostListener, OnDestroy, OnInit, SimpleChange
+    EventEmitter, HostListener, OnDestroy, OnInit, SimpleChange, AfterViewInit
 } from '@angular/core';
 import { KeyValue } from '../../models';
 import { DataExchangeService } from '../../services/data.exchange';
@@ -15,8 +15,10 @@ import { GlobalConstants } from '../../../shared';
     styleUrls: ['./autocomplete.style.scss']
 })
 export class AutocompleteComponent implements OnInit, OnDestroy {
+
     @Input('items') items: Array<KeyValue> = [];
     @Input('initialvalue') initialvalue: KeyValue = new KeyValue('', 0);
+    @Input('isEnabled') isEnabled: boolean = true;
     @Input() placeholder: string = 'Please select';
     @Input() actionLinks: IAutocompleteActions[] = [];
 
@@ -80,8 +82,14 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
             }
             clickedComponent = clickedComponent.parentNode;
         } while (clickedComponent);
+
         if (!inside) {
             this.filteredList = [];
+        }
+
+        if (!this.isEnabled) {
+            jQuery(this.elementRef.nativeElement)
+                .find('ul.multiselect-list').hide()
         }
     }
 
@@ -90,6 +98,12 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
         if (this.items.length > 0 && this.items.find(x => x.Value == this.initialvalue.Value) != null) {
             this.query = this.initialvalue.Key;
         }
+    }
+
+    private controlDisableEnable(isEnable: boolean): void {
+        jQuery(this.elementRef.nativeElement)
+            .find('input[type="text"]')
+            .prop('disabled', !isEnable);
     }
 
     ngOnDestroy() {
@@ -104,6 +118,15 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
                 this.query = this.initialvalue.Key;
             }
         }
+
+        if (changes['isEnabled'] !== undefined
+            && changes['isEnabled'].currentValue !== undefined
+            && (changes['isEnabled'].currentValue !==
+                changes['isEnabled'].previousValue)) {
+
+            this.controlDisableEnable(this.isEnabled);
+        }
     }
+
 }
 

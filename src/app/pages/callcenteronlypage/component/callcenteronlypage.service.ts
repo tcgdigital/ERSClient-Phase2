@@ -27,7 +27,7 @@ export class CallCenterOnlyPageService extends ServiceBase<ExternalInputModel> i
 
     public GetPassengerAndCrewQueryByIncident(incidentId: number, callId: number): Observable<ResponseModel<ExternalInputModel>> {
         // let enquiryprojection = 'Queries,AffectedPersonId,AffectedObjectId,IsCallBack,IsTravelRequest,IsAdminRequest,EnquiryId';
-        return this.CommonQueryExecution(incidentId, callId, 'AffectedPersonId', 'PDAEnquiry');
+        return this.CommonQueryExecution(incidentId, callId, 'AffectedPersonId', 'PDAEnquiry($expand=AffectedPerson($select=CurrentCareMemberName))');
     }
 
     public GetCargoQueryByIncident(incidentId: number, callId: number): Observable<ResponseModel<ExternalInputModel>> {

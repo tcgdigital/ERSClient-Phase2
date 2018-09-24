@@ -67,6 +67,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
 
     public form: FormGroup;
     public activeKeyValues: KeyValueModel[] = [];
+    public IsIdentified: boolean = true;
     enquiryTypes: any[] = GlobalConstants.ExternalInputEnquiryType;
 
     pdaenquery: PDAEnquiryModel = new PDAEnquiryModel();
@@ -307,7 +308,6 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         queryDetailService
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ExternalInputModel[]) => {
-
                 if (response[0].PDAEnquiry != null) {
                     this.pdaenquery = response[0].PDAEnquiry;
                     this.form.controls["Queries"].reset({ value: this.pdaenquery.Query, disabled: false });
@@ -858,7 +858,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): any {
         this.getAllActiveKeyValues();
-
+        this.IsIdentified = true;
         if (this._router.url.indexOf('archivedashboard') > -1) {
             this.isArchive = true;
             this.currentIncident = +UtilityService.GetFromSession('ArchieveIncidentId');
@@ -893,6 +893,8 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         this.enquiry.ExternalInputId = this.callid;
         this.createdBy = +this.credential.UserId;
         this.createdByName = this.credential.UserName;
+        this.form.controls["passengerName"].enable();
+        this.form.controls["Unidentified"].disable();
     }
 
     public ngOnDestroy(): void {
@@ -948,7 +950,9 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
             Queries: new FormControl('', [Validators.required, Validators.maxLength(1000)]),
             IsAdminRequest: new FormControl(false),
             IsCallBack: new FormControl(false),
-            IsTravelRequest: new FormControl(false)
+            IsTravelRequest: new FormControl(false),
+            passengerName: new FormControl(''),
+            Unidentified: new FormControl('')
         });
     }
 
@@ -1247,6 +1251,18 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
 
         }
         this.PopulateConsolidatedCoPassangers();
+    }
+
+    public onChange($event: any): void {
+        if ($event.checked) {
+            // this.form.controls["passengerName"].reset({ disabled: false });
+            this.form.controls["Unidentified"].disable();
+        }
+        else {
+            // this.form.controls["passengerName"].reset({ disabled: true });
+            this.form.controls["Unidentified"].enable();
+        }
+        this.IsIdentified = $event.checked;
     }
 
     public ShowListsOfSamePNR($event): void {
