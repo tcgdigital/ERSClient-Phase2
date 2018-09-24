@@ -1109,7 +1109,9 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
             else {
 
                 this.enquiryToUpdate.Queries = this.enquiry.Queries;
-                if (this.enquiry.AffectedPersonId == null) {
+                debugger;
+                if ((this.enquiryType == +EnquiryType.Passenger || this.enquiryType == +EnquiryType.Crew)
+                    && this.enquiry.AffectedPersonId && this.initialvalue.Value) {
                     this.enquiry.AffectedPersonId = this.initialvalue.Value;
                 }
 
@@ -1142,7 +1144,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                     }
                     delete this.enquiryToUpdate.CommunicationLogs;
 
-                    if (this.enquiryType < +EnquiryType.Media && this.enquiryType == +EnquiryType.GroundVictim) {
+                    if (this.enquiryType < +EnquiryType.Media || this.enquiryType == +EnquiryType.GroundVictim) {
                         communicationlogs[0].Queries = this.enquiryToUpdate.Queries;
                         communicationlogs[0].EnquiryId = this.enquiryToUpdate.EnquiryId;
                     }
@@ -1155,7 +1157,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                     this.enquiryService.Update(this.enquiryToUpdate, this.enquiryToUpdate.EnquiryId)
                         .subscribe((item) => {
 
-                            if (this.enquiryType < +EnquiryType.Media && this.enquiryType == +EnquiryType.GroundVictim) {
+                            if (this.enquiryType < +EnquiryType.Media || this.enquiryType == +EnquiryType.GroundVictim) {
                                 this.communicationlogservice
                                     .Update(communicationlogToDeactivate, this.communicationlogstoupdateId[0])
                                     .subscribe(() => {

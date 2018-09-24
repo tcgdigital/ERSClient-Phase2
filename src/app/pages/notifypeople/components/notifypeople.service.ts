@@ -74,6 +74,7 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
 
     public GetAllDepartmentMatrix(departmentId: number, incidentId: number, callback?: ((_: NotifyPeopleModel[]) => void)): void {
         this.userPermissionService.GetAllDepartmentMatrix()
+            .debounce(() => Observable.timer(5000))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((departments: ResponseModel<DepartmentModel>) => {
                 this.departmentIdProjection = '';
@@ -136,56 +137,65 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
             .flatMap((result) => this.userPermissionService.GetAllDepartmentUsersFromDepartmentIdProjection(departmentIdProjection))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((userPermissions: ResponseModel<UserPermissionModel>) => {
-                this.GetUserDepartmentNotificationMapperByIncident(incidentId, (resultUserdepartmentNotificationMapper: UserdepartmentNotificationMapperModel[]) => {
-                    // console.log(this.allDepartments);
-                    // console.log(userPermissions);
-                    count = 1;
-                    this.departmentArray.forEach((itemDepartmentId: number, index: number) => {
 
-                        let userPermissionsLocal: UserPermissionModel[] = userPermissions.Records.filter((item: UserPermissionModel) => {
-                            return item.DepartmentId == itemDepartmentId;
-                        });
-                        let notifyModel: NotifyPeopleModel = new NotifyPeopleModel();
-                        notifyModel.id = count;
-                        let departmentLocal = this.allDepartments.Records.filter((item: DepartmentModel) => {
-                            return item.DepartmentId == itemDepartmentId;
-                        });
-                        notifyModel.text = departmentLocal[0].DepartmentName;
-                        notifyModel.population = '';
-                        notifyModel.checked = false;
-                        notifyModel.DepartmentId = departmentLocal[0].DepartmentId;
-                        notifyModel.children = [];
-                        userPermissionsLocal.forEach((eachUserPermission: UserPermissionModel, index: number) => {
+                this.GetUserDepartmentNotificationMapperByIncident(incidentId,
+                    (resultUserdepartmentNotificationMapper: UserdepartmentNotificationMapperModel[]) => {
+                        count = 1;
+                        this.departmentArray.forEach((itemDepartmentId: number, index: number) => {
 
-                            let notifyModelInner: NotifyPeopleModel = new NotifyPeopleModel();
-                            count = count + 1;
-                            notifyModelInner.id = count;
-                            notifyModelInner.text = eachUserPermission.User.Email;
-                            notifyModelInner.population = '';
-                            if (eachUserPermission.IsHod) {
-                                notifyModelInner.population = 'true';
-                            }
-
-                            notifyModelInner.checked = false;
-                            let filterItems = resultUserdepartmentNotificationMapper.filter((itemFind: UserdepartmentNotificationMapperModel) => {
-                                return (itemFind.UserId == eachUserPermission.User.UserProfileId && itemFind.DepartmentId == departmentLocal[0].DepartmentId);
+                            let userPermissionsLocal: UserPermissionModel[] = userPermissions.Records.filter((item: UserPermissionModel) => {
+                                return item.DepartmentId == itemDepartmentId;
                             });
-                            if (filterItems.length > 0) {
-                                notifyModelInner.checked = true;
-                            }
-                            notifyModelInner.User = eachUserPermission.User;
-                            notifyModelInner.DepartmentId = departmentLocal[0].DepartmentId;
-                            notifyModelInner.children = [];
-                            notifyModel.children.push(notifyModelInner);
+                            let notifyModel: NotifyPeopleModel = new NotifyPeopleModel();
+                            notifyModel.id = count;
+                            let departmentLocal = this.allDepartments.Records.filter((item: DepartmentModel) => {
+                                return item.DepartmentId == itemDepartmentId;
+                            });
+
+                            notifyModel.text = departmentLocal[0].DepartmentName;
+                            notifyModel.population = '';
+                            notifyModel.checked = false;
+                            notifyModel.DepartmentId = departmentLocal[0].DepartmentId;
+                            notifyModel.children = [];
+
+                            userPermissionsLocal.forEach((eachUserPermission: UserPermissionModel, index: number) => {
+                                let notifyModelInner: NotifyPeopleModel = new NotifyPeopleModel();
+                                count = count + 1;
+
+                                notifyModelInner.id = count;
+                                notifyModelInner.text =''; //eachUserPermission.User.Email;
+                                notifyModelInner.population = '';
+
+                                if (eachUserPermission.IsHod) {
+                                    notifyModelInner.population = 'true';
+                                }
+
+                                notifyModelInner.checked = false;
+                                let filterItems = resultUserdepartmentNotificationMapper
+                                    .filter((itemFind: UserdepartmentNotificationMapperModel) => {
+                                        return (itemFind.UserId == eachUserPermission.User.UserProfileId
+                                            && itemFind.DepartmentId == departmentLocal[0].DepartmentId);
+                                    });
+
+                                if (filterItems.length > 0) {
+                                    notifyModelInner.checked = true;
+                                }
+
+                                notifyModelInner.User = eachUserPermission.User;
+                                notifyModelInner.DepartmentId = departmentLocal[0].DepartmentId;
+                                notifyModelInner.children = [];
+                                notifyModel.children.push(notifyModelInner);
+                            });
+
+                            this.allDepartmentUserPermission.push(notifyModel);
+                            count++;
                         });
-                        this.allDepartmentUserPermission.push(notifyModel);
-                        count++;
+
+                        if (callback) {
+                            callback(this.allDepartmentUserPermission);
+                        }
                     });
 
-                    if (callback) {
-                        callback(this.allDepartmentUserPermission);
-                    }
-                });
             }, (error: any) => {
                 console.log(`Error: ${error.message}`);
             });
