@@ -123,6 +123,7 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit, OnDestro
             observables.push(this.worldTimeWidgetService.GetEmergencyLicationByIncidentId(incidentId));
 
         Observable.forkJoin(observables)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((res) => {
                 this.timeZones = res[0] as ITimeZone[];
@@ -152,6 +153,7 @@ export class WorldTimeWidgetComponent implements OnInit, AfterViewInit, OnDestro
         observables.push(this.incidentService.GetOpenIncidents());
 
         Observable.forkJoin(observables)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((res) => {
                 const isAnyIncidentOpen: boolean = res[0] as boolean;

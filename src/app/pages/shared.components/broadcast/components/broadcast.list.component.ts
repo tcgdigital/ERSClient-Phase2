@@ -3,12 +3,12 @@ import {
     Input, OnDestroy
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription, Subject } from 'rxjs/Rx';
+import { Subscription, Subject, Observable } from 'rxjs/Rx';
 import { BroadCastModel } from './broadcast.model';
 import { BroadcastService } from './broadcast.service';
 import {
     ResponseModel, DataExchangeService,
-    GlobalStateService, KeyValue, UtilityService, 
+    GlobalStateService, KeyValue, UtilityService,
     GlobalConstants
 } from '../../../../shared';
 
@@ -29,7 +29,7 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
     currentDepartmentId: number;
     protected _onRouteChange: Subscription;
     isArchive: boolean = false;
-    public isShowAddEditBroadcast:boolean=true;
+    public isShowAddEditBroadcast: boolean = true;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(private broadCastService: BroadcastService,
@@ -38,6 +38,7 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
 
     getBroadCasts(departmentId, incidentId): void {
         this.broadCastService.Query(departmentId, incidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<BroadCastModel>) => {
                 this.broadcastMessages = response.Records;
@@ -70,28 +71,28 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
         }
         this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
 
-        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.BroadcastModelUpdated, 
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.BroadcastModelUpdated,
             (model: BroadCastModel) => this.onBroadcastSuccess(model));
 
-        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.BroadcastModelSaved, 
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.BroadcastModelSaved,
             (model: BroadCastModel) => this.onBroadcastSuccess(model));
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard,
             (model: KeyValue) => this.incidentChangeHandler(model));
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard,
             (model: KeyValue) => this.departmentChangeHandler(model));
 
         // SignalR Notification
         this.globalState.Subscribe
-        (GlobalConstants.NotificationConstant.ReceiveBroadcastCreationResponse.Key, (model: BroadCastModel) => {
-            this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
-        });
+            (GlobalConstants.NotificationConstant.ReceiveBroadcastCreationResponse.Key, (model: BroadCastModel) => {
+                this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
+            });
 
         this.globalState.Subscribe
-        (GlobalConstants.NotificationConstant.ReceiveBroadcastModificationResponse.Key, (model: BroadCastModel) => {
-            this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
-        });
+            (GlobalConstants.NotificationConstant.ReceiveBroadcastModificationResponse.Key, (model: BroadCastModel) => {
+                this.getBroadCasts(this.currentDepartmentId, this.currentIncidentId);
+            });
     }
 
     ngOnDestroy(): void {

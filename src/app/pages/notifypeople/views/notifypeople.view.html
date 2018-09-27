@@ -44,7 +44,7 @@
             <div class="col-sm-12 text-right">
                 <button type="button" class="btn btn-primary mr-2" aria-label="Notify On Event" (click)="notify()">Notify
                     On Event</button>
-                <button type="button" class="btn btn-primary mr-2" aria-label="Notify Message" (click)="notifyMessage()">Notify
+                <button type="button" class="btn btn-primary" aria-label="Notify Message" (click)="notifyMessage()">Notify
                     Message</button>
             </div>
         </div>
@@ -72,7 +72,10 @@
                                 formControlName="AdditionalData" placeholder="Additional Data" />
                         </div>
                         <div class="col-sm-12">
-                            <button type="submit" class="pull-right btn btn-primary" aria-label="Close">Send</button>
+                            <button type="submit" class="pull-right btn btn-primary" aria-label="Close">
+                                <i class="fa fa-paper-plane-o" aria-hidden="true"></i>&nbsp;
+                                Send Notification
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -97,7 +100,10 @@
                             <textarea class="form-control" formControlName="MessageData" rows="5"></textarea>
                         </div>
                         <div class="col-sm-12">
-                            <button type="submit" class="pull-right btn btn-primary" aria-label="Close">Send</button>
+                            <button type="submit" class="pull-right btn btn-primary" aria-label="Close">
+                                <i class="fa fa-paper-plane-o" aria-hidden="true"></i>&nbsp;
+                                Send Notification
+                            </button>
                         </div>
                     </div>
                 </div>

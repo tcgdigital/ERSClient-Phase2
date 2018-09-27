@@ -2,22 +2,23 @@ import {
     Component, ViewEncapsulation,
     OnInit, ElementRef, ViewChild
 } from '@angular/core';
-import { DepartmentModel } from '../masterdata/department/components/department.model';
-import { UserProfileModel } from '../masterdata/userprofile/components/userprofile.model';
+import { DepartmentModel } from '../masterdata/department';
+import { UserProfileModel } from '../masterdata/userprofile';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { NotifyPeopleService } from './components/notifypeople.service';
-import { NotifyPeopleModel } from './components/notifypeople.model';
+import { NotifyPeopleModel, MessageTemplate } from './components/notifypeople.model';
 import { TemplateModel } from '../masterdata/template/components';
-import { AppendedTemplateModel } from '../masterdata/appendedtemplate/components/appendedtemplate.model';
+import { AppendedTemplateModel } from '../masterdata/appendedtemplate';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import {
     FormGroup, FormControl, FormBuilder, Validators
 } from '@angular/forms';
 import {
     UtilityService, GlobalStateService,
-    KeyValue, GlobalConstants, DropdownSettings, ResponseModel
+    KeyValue, GlobalConstants, ResponseModel, TemplateMediaType, EmergencySituation
 } from '../../shared';
 import { UserPermissionService, UserPermissionModel } from '../masterdata';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'notify-people-main',
@@ -134,7 +135,6 @@ export class NotifyPeopleComponent implements OnInit {
                 })
 
                 this.allDepartmentUserPermission = result;
-                // this.allDepartmentUserPermissionString = JSON.stringify(this.allDepartmentUserPermission);
                 this.$tree = jQuery(this.elementRef.nativeElement).find('#tree');
 
                 if (this.tree !== undefined) {
@@ -146,7 +146,6 @@ export class NotifyPeopleComponent implements OnInit {
                     uiLibrary: 'bootstrap4',
                     iconsLibrary: 'fontawesome',
                     dataSource: this.allDepartmentUserPermission,
-                    // dataSource: jQuery.parseJSON(this.allDepartmentUserPermissionString),
                     checkboxes: true,
                     icons: {
                         expand: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
@@ -162,33 +161,61 @@ export class NotifyPeopleComponent implements OnInit {
 
     public notify(): void {
         const checkedIds: number[] = this.tree.getCheckedNodes();
+
         if (checkedIds.length > 0) {
             this.notifyPeopleService.NotifyPeopleCall
-                (checkedIds, this.currentDepartmentId, this.currentIncidentId, (item: TemplateModel) => {
-                    this.appendedTemplate.AppendedTemplateId = 0;
-                    this.appendedTemplate.TemplateId = item.TemplateId;
-                    this.appendedTemplate.EmergencySituationId = item.EmergencySituationId;
-                    this.appendedTemplate.TemplateMediaId = item.TemplateMediaId;
-                    this.appendedTemplate.Description = item.Description;
-                    this.appendedTemplate.Subject = item.Subject;
-                    this.appendedTemplate.ActiveFlag = 'Active';
-                    this.appendedTemplate.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
-                    this.appendedTemplate.CreatedOn = new Date();
+                (checkedIds, this.currentDepartmentId, this.currentIncidentId,
+                EmergencySituation.EmergencyInitiationtoTeamMember, TemplateMediaType.Email,
+                (item: TemplateModel) => {
+                    this.SetTemplateObject(item);
                     this.childModalEventNoificationMessage.show();
                 });
-        }
-        else {
-            this.toastrService.error('Select atleast one user before click notify.', 'Notify User', this.toastrConfig);
+        } else {
+            this.toastrService.error('Select at least one user before click "Notify On Event".', 'Notify User', this.toastrConfig);
         }
     }
 
     public notifyMessage(): void {
         const checkedIds: number[] = this.tree.getCheckedNodes();
-        if (checkedIds.length > 0) {
 
-            this.childModalCustomNoificationMessage.show();
+        if (checkedIds.length > 0) {
+            this.notifyPeopleService.NotifyPeopleCall
+                (checkedIds, this.currentDepartmentId, this.currentIncidentId,
+                EmergencySituation.GeneralNotification, TemplateMediaType.Email,
+                (item: TemplateModel) => {
+                    this.SetTemplateObject(item);
+                    this.customMessageForm.patchValue({
+                        MessageData: item.Description
+                    });
+                    this.childModalCustomNoificationMessage.show();
+                });
+        } else {
+            this.toastrService.error('Select at least one user before click "Notify Message".', 'Notify User', this.toastrConfig);
         }
     }
+
+    private SetTemplateObject(item: TemplateModel): void {
+        this.appendedTemplate.AppendedTemplateId = 0;
+        this.appendedTemplate.TemplateId = item.TemplateId;
+        this.appendedTemplate.EmergencySituationId = item.EmergencySituationId;
+        this.appendedTemplate.TemplateMediaId = item.TemplateMediaId;
+        this.appendedTemplate.Description = item.Description;
+        this.appendedTemplate.Subject = item.Subject;
+        this.appendedTemplate.ActiveFlag = 'Active';
+        this.appendedTemplate.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
+        this.appendedTemplate.CreatedOn = new Date();
+    }
+
+    // public CustomNoificationMessageHandler(type: string, $event: ModalDirective): void {
+    //     debugger;
+    //     this.notifyPeopleService.GetGeneralNotificationMessageTemplate()
+    //         .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+    //         .subscribe((data: MessageTemplate) => {
+    //             this.customMessageForm.patchValue({
+    //                 MessageData: data.GeneralMessageTemplate
+    //             });
+    //         });
+    // }
 
     public hideEventNoificationMessage(): void {
         this.childModalEventNoificationMessage.hide();
@@ -200,11 +227,24 @@ export class NotifyPeopleComponent implements OnInit {
 
     public saveNotificationMessage(): void {
         const additionalData: string = this.eventMessageForm.controls['AdditionalData'].value;
-        this.appendedTemplate.Description = this.appendedTemplate.Description + ' ' + additionalData;
+        this.appendedTemplate.Description = `${this.appendedTemplate.Description} ${additionalData}`;
+        this.saveNotificationProcess(() => {
+            this.hideEventNoificationMessage();
+        });
+    }
+
+    public saveCustomNotificationMessage(formData: any): void {
+        this.appendedTemplate.Description = this.customMessageForm.controls['MessageData'].value;
+        this.saveNotificationProcess(() => {
+            this.hideCustomNoificationMessage();
+        });
+    }
+
+    public saveNotificationProcess(callback?: (() => void)): void {
         this.notifyPeopleService.CreateAppendedTemplate(this.appendedTemplate,
             this.currentIncidentId, this.currentDepartmentId, (item: boolean) => {
                 if (item) {
-                    this.hideEventNoificationMessage();
+                    if (callback) callback()
                     this.toastrService.success('The respective user has been notified.', 'Notify User', this.toastrConfig);
                     console.log('Notify User Clicked');
                 }
@@ -213,28 +253,6 @@ export class NotifyPeopleComponent implements OnInit {
                     console.log('Notify User Clicked error');
                 }
             });
-    }
-
-    public saveCustomNotificationMessage(formData: any): void {
-
-    }
-
-    public onMultiselectItemSelect(item: any): void {
-        console.log(item);
-        console.log(this.selectedItems);
-    }
-
-    public onMultiselectItemDeSelect(item: any): void {
-        console.log(item);
-        console.log(this.selectedItems);
-    }
-
-    public onMultiselectSelectAll(items: any): void {
-        console.log(items);
-    }
-
-    public onMultiselectDeSelectAll(items: any): void {
-        console.log(items);
     }
 
     private resetNotificationForm(): void {

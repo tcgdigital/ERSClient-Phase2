@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { Subscription, Subject } from 'rxjs/Rx';
+import { Subscription, Subject, Observable } from 'rxjs/Rx';
 
 import { InvolvePartyModel } from '../../../shared.components';
 import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';
@@ -20,7 +20,7 @@ import { InvolvePartyService } from '../../involveparties';
 export class AffectedPeopleVerificationComponent implements OnInit, OnDestroy {
     public isShowVerifyAffectedPeople: boolean = true;
     public currentDepartmentId: number = 0;
-    public isAffectedPeopleVerifiedManifestLink: boolean= true;
+    public isAffectedPeopleVerifiedManifestLink: boolean = true;
     //public getCurrentDeptid: number;
     protected _onRouteChange: Subscription;
     affectedPeopleForVerification: AffectedPeopleToView[] = [];
@@ -44,6 +44,7 @@ export class AffectedPeopleVerificationComponent implements OnInit, OnDestroy {
 
     getAffectedPeople(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeopleForVerification = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0])

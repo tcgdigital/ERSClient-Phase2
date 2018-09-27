@@ -340,11 +340,14 @@ export class DemandRaisedSummaryWidgetComponent implements OnInit, OnDestroy {
             $currentRow.closest('tbody').find('tr').removeClass('bg-blue-color');
             $currentRow.closest('tr').addClass('bg-blue-color');
         }
+
         this.demandStatusLogService.GetAllByIncidentRequesterDepartment(this.incidentId, requesterDepartmentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((demandStatusLogModels: ResponseModel<DemandStatusLogModel>) => {
 
                 this.incidentService.GetIncidentById(this.incidentId)
+                    .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                     .takeUntil(this.ngUnsubscribe)
                     .subscribe((incidentModel: IncidentModel) => {
                         WidgetUtilityService.GetGraphDemand(requesterDepartmentId, Highcharts, demandStatusLogModels.Records,

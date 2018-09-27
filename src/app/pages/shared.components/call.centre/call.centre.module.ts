@@ -15,6 +15,7 @@ import { DataExchangeService, SharedModule, KeyValueService } from '../../../sha
 import { InvolvePartyService } from '../involveparties';
 import { CommunicationLogService } from '../communicationlogs';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { AffectedModule } from '../affected/affected.module';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
         HttpModule,
         SharedModule,
         MdCheckboxModule,
+        AffectedModule,
         ModalModule
     ],
     declarations: [

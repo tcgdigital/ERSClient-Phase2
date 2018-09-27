@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ExternalInputModel, CallCenterOnlyPageService } from '../../../callcenteronlypage';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { GlobalStateService, UtilityService, GlobalConstants, KeyValue, ResponseModel } from '../../../../shared';
 import { ModalDirective } from 'ngx-bootstrap';
@@ -82,6 +82,7 @@ export class GroundVictimQueryReceivedCallsComponent implements OnInit {
         this.childModalcallcenter.hide();
         this.callcenterload = false;
         this.callcenteronlypageservice.GetGroundVictimCallsRecievedByIncident(incidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allReceivedCalls = response.Records;
@@ -97,6 +98,7 @@ export class GroundVictimQueryReceivedCallsComponent implements OnInit {
 
     private getGroundVictims(): void {
         this.groundVictimService.GetAllGroundVictimsByIncident(this.currentIncidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: GroundVictimModel) => {
                 this.victims.push(new KeyValue(response.GroundVictimName, response.GroundVictimId));

@@ -5,7 +5,7 @@ import {
     FormGroup, FormControl, FormBuilder,
     AbstractControl, Validators, ReactiveFormsModule
 } from '@angular/forms';
-import { Subject } from 'rxjs/Rx';
+import { Subject, Observable } from 'rxjs/Rx';
 import {
     DataExchangeService, KeyValue,
     GlobalConstants, GlobalStateService
@@ -42,6 +42,7 @@ export class InvalidGroundVictimListComponent implements OnInit, OnDestroy {
     getInvalidGroundVictims(): void {
         this._invalidRecordService.GetAllInvalidGroundVictimsByIncidentId(this.IncidentId)
             .flatMap(x => x)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe(a => {
                 this.invalidGroundVictims.push(a);

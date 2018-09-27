@@ -6,7 +6,7 @@ import {
     PageService, PageHierarchyModel, PageModel,
     PagePermissionService, PagePermissionModel
 } from './components';
-import { ResponseModel, AuthModel, UtilityService } from '../../../shared';
+import { ResponseModel, AuthModel, UtilityService, GlobalConstants } from '../../../shared';
 import { Observable, Subject } from 'rxjs';
 
 @Component({
@@ -129,6 +129,7 @@ export class PageFunctionalityHierarchyComponent implements OnInit, OnChanges, O
         observables.push(this.pagePermissionService.GetPermissionByDepartmentId(departmentId));
 
         Observable.forkJoin(observables)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((responses: Array<ResponseModel<any>>) => {
                 if (responses.length == 2) {

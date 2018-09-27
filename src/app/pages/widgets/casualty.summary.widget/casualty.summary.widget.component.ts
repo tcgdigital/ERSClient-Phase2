@@ -8,6 +8,7 @@ import {
     GlobalStateService, GlobalConstants
 } from '../../../shared';
 import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     selector: 'casualty-summary-widget',
@@ -32,7 +33,9 @@ export class CasualtySummaryWidgetComponent implements OnInit, OnDestroy {
 
     getCausaltyStatusSummery(incidentId): void {
         this.casualtySummery = new CasualtySummeryModel();
+
         this.casualtySummaryWidgetService.GetCasualtyCount(incidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((casualtySummeryObservable) => {
                 this.casualtySummery = casualtySummeryObservable;

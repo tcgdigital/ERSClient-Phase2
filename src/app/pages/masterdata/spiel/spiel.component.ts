@@ -3,9 +3,9 @@ import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import {
     FormGroup, FormControl, Validators
 } from '@angular/forms';
-import { KeyValueService, KeyValueModel, ResponseModel } from '../../../shared';
+import { KeyValueService, KeyValueModel, ResponseModel, GlobalConstants } from '../../../shared';
 import { DepartmentService, DepartmentModel } from '../department';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 
 @Component({
     selector: 'dept-main',
@@ -48,6 +48,7 @@ export class SpileComponent implements OnInit, OnDestroy {
 
     getAllActiveDepartments(): void {
         this.departmentService.GetAllActiveDepartments()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((departments: ResponseModel<DepartmentModel>) => {
                 if (departments.Count > 0) {
@@ -60,6 +61,7 @@ export class SpileComponent implements OnInit, OnDestroy {
 
     getAllActiveKeyValues(): void {
         this.keyValueService.GetAll()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<KeyValueModel>) => {
                 this.activeKeyValues = response.Records;

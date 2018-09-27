@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { Subscription, Subject } from 'rxjs/Rx';
+import { Subscription, Subject, Observable } from 'rxjs/Rx';
 import { DemandService } from './demand.service';
 import { DemandTrailService } from './demandtrail.service';
 import { DemandModel } from './demand.model';
@@ -134,6 +134,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     getDemandType(): void {
         this.demandTypeService.GetAll()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandTypeModel>) => {
                 this.demandTypesAll = response.Records; //.filter((x) => x.DemandTypeId == 1)[0];
@@ -161,6 +162,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     getAllDepartments(): void {
         this.departmentService.GetAll()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records.filter(a => a.ActiveFlag == 'Active');
@@ -270,6 +272,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     getPassengersCrews(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
@@ -293,6 +296,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     getCargo(currentIncident): void {
         this.affectedObjectsService.GetFilterByIncidentId(currentIncident)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedObjects = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
@@ -303,6 +307,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     getGroundVictims(currentIncident: number): void {
         this.groundVictimService.GetAllGroundVictimsByIncident(currentIncident)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((victim: GroundVictimModel) => {
 
@@ -432,6 +437,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
         const idNum: number = +(id.split('!')[0]);
 
         this.demandService.GetByDemandId(idNum)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.freshDemand = false;
@@ -483,6 +489,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
     showDemandDetails(id: string) {
         const idNum: number = +(id.split('!')[0]);
         this.demandService.GetByDemandId(idNum)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demandModel = response.Records[0];
@@ -584,6 +591,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     getDepartmentNameAndParentDepartment(departmentId): void {
         this.departmentService.Get(departmentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: DepartmentModel) => {
                 this.currentDepartmentName = response.DepartmentName;
@@ -714,6 +722,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
             this.fileUploadService.uploadFiles<string>(baseUrl + './api/fileUpload/UploadFilesModuleWise/' + param,
                 this.filesToUpload, this.date.toString())
+                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((result: string) => {
                     const fileStore: FileStoreModel = new FileStoreModel();
@@ -748,6 +757,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                     }
                     else {
                         this.fileStoreService.Create(fileStore)
+                            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                             .takeUntil(this.ngUnsubscribe)
                             .subscribe((response: FileStoreModel) => {
                                 if (this.form.dirty) {
@@ -853,6 +863,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
                 if (this.resolutionTime) {
                     this.demandService.GetByDemandId(this.demandModelEdit.DemandId)
+                        .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                         .takeUntil(this.ngUnsubscribe)
                         .subscribe((response: ResponseModel<DemandModel>) => {
                             const createdOnDate = new Date(response.Records[0].CreatedOn);
@@ -886,6 +897,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
     demandCreate(): void {
         this.demandService.Create(this.demandModel)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: DemandModel) => {
                 this.toastrService.success('Demand successfully created.', 'Success', this.toastrConfig);
@@ -913,6 +925,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             }
 
             this.demandService.Update(this.demandModelEdit)
+                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: DemandModel) => {
                     this.toastrService.success('Demand successfully updated.', 'Success', this.toastrConfig);
@@ -924,6 +937,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
                     this.freshDemand = false;
 
                     this.demandTrailService.Create(demandTrail)
+                        .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                         .takeUntil(this.ngUnsubscribe)
                         .subscribe((resp: DemandTrailModel) => { },
                             (error: any) => {
@@ -932,6 +946,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
 
                     if (this.caller.CallerId !== 0) {
                         this.callerService.Update(this.caller)
+                            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                             .takeUntil(this.ngUnsubscribe)
                             .subscribe((resp: CallerModel) => { },
                                 (error: any) => {

@@ -15,6 +15,7 @@ import {
 
 import { TemplateMediaModel, TemplateMediaService } from '../../template.media/components';
 import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     selector: 'mediaRelease-entry',
@@ -48,7 +49,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     toolbarConfig: any = GlobalConstants.EditorToolbarConfig;
     toolbarConfigApproved: any = GlobalConstants.EditorToolbarConfig;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
-    
+
     /**
      * Creates an instance of MediaQueryEntryComponent.
      * @param {MediaQueryService} mediaQueryService
@@ -77,13 +78,13 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
         this.isInvalidForm = false;
         this.credential = UtilityService.getCredentialDetails();
 
-        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.OnMediaReleaseUpdate, 
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.OnMediaReleaseUpdate,
             (model: MediaModel) => this.onMediaReleaseUpdate(model));
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard,
             (model: KeyValue) => this.incidentChangeHandler(model));
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard,
             (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
@@ -99,6 +100,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
 
     getTemplateMedias(): void {
         this.templateMediaService.GetAll()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<TemplateMediaModel>) => {
                 this.templateMedias = response.Records
@@ -113,11 +115,12 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
             const templateId = evt.target.value;
             //this.toolbarConfig['readOnly'] = false;
             this.mediaQueryService.GetContentFromTemplate(this.currentIncidentId, this.currentDepartmentId, +templateId)
+                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: any) => {
                     this.templateContent = `${response.Subject}${response.Body}`;
                     this.media.Message = this.templateContent;
-                    this.applyReadOnlytextBox = false; 
+                    this.applyReadOnlytextBox = false;
                 }, (error: any) => {
                     console.log(`Error: ${error.message}`);
                 });
@@ -128,13 +131,12 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
         }
     }
 
-    onMediaReleaseUpdate(mediaModel: MediaModel): void {        
-        
+    onMediaReleaseUpdate(mediaModel: MediaModel): void {
+
         this.currentTemplateMediaId = this.templateMedias
             .find((a) => a.TemplatePurpose === mediaModel.MediaReleaseType).TemplateMediaId.toString();
 
-        if(mediaModel.MediaReleaseStatus === 'Approved' || mediaModel.MediaReleaseStatus === 'Published')
-        {
+        if (mediaModel.MediaReleaseStatus === 'Approved' || mediaModel.MediaReleaseStatus === 'Published') {
             // this.isApprovedContent = true;
             // this.isSavedContent = false;
             this.media = new MediaModel();
@@ -142,21 +144,20 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
             this.media.MediaqueryId = mediaModel.MediaqueryId;
             this.media.Message = this.media.ApprovedContent;
         }
-        else
-        {
+        else {
             this.media = new MediaModel();
             this.media = mediaModel;
             this.media.MediaqueryId = mediaModel.MediaqueryId;
             this.media.IsUpdated = true;
-        }            
-      
+        }
+
         if (this.media.MediaReleaseStatus === 'SentForApproval' || this.media.MediaReleaseStatus === 'Published') {
             this.form.controls['MediaReleaseType'].reset({ value: this.currentTemplateMediaId, disabled: true });
             this.applyReadOnlytextBox = true;
             this.applyReadOnlyButtons = true;
             this.appReadOnlyPublish = true;
             this.toolbarConfig['readOnly'] = true;
-        }        
+        }
         else if (this.media.MediaReleaseStatus === 'Approved') {
             this.appReadOnlyPublish = false;
             this.form.controls['MediaReleaseType'].reset({ value: this.currentTemplateMediaId, disabled: true });
@@ -176,35 +177,30 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     }
 
     validateForm(): boolean {
-        if((this.form.controls['Message'].value == "" || this.form.controls['Message'].value == undefined) 
-        && (this.form.controls['MediaReleaseType'].value == "" || this.form.controls['MediaReleaseType'].value == undefined ))
-        {
+        if ((this.form.controls['Message'].value == "" || this.form.controls['Message'].value == undefined)
+            && (this.form.controls['MediaReleaseType'].value == "" || this.form.controls['MediaReleaseType'].value == undefined)) {
             this.hideMessageError = false;
             this.hideRemarksError = false;
             return false;
         }
-        if(this.form.controls['Message'].value == "" || this.form.controls['Message'].value == null || this.form.controls['Message'].value == undefined)
-        {
+        if (this.form.controls['Message'].value == "" || this.form.controls['Message'].value == null || this.form.controls['Message'].value == undefined) {
             this.hideMessageError = false;
             return false;
-        } 
-        else if(this.form.controls['MediaReleaseType'].value == "" || this.form.controls['MediaReleaseType'].value == null || this.form.controls['MediaReleaseType'].value == undefined)
-        {
+        }
+        else if (this.form.controls['MediaReleaseType'].value == "" || this.form.controls['MediaReleaseType'].value == null || this.form.controls['MediaReleaseType'].value == undefined) {
             this.hideMessageError = true;
             this.hideRemarksError = false;
             return false;
-        } 
-        else
-        {               
+        }
+        else {
             this.hideMessageError = true;
-            this.hideRemarksError = true;    
+            this.hideRemarksError = true;
             return true;
         }
     }
-    
+
     save(): void {
-        if(this.validateForm())
-        {
+        if (this.validateForm()) {
             this.hideMessageError = true;
             this.hideRemarksError = true;
             this.media.IsPublished = false;
@@ -214,19 +210,17 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     }
 
     SentForApproval(): void {
-        if(this.validateForm())
-        {
+        if (this.validateForm()) {
             this.hideMessageError = true;
             this.hideRemarksError = true;
             this.media.IsPublished = false;
             this.Action = 'SentForApproval';
             this.CreateOrUpdateMediaQuery();
-        }        
+        }
     }
 
-    publish(): void {       
-       if(this.validateForm())
-        {
+    publish(): void {
+        if (this.validateForm()) {
             this.hideMessageError = true;
             this.hideRemarksError = true;
             this.media.IsPublished = true;
@@ -235,7 +229,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
             this.media.PublishedOn = this.date;
             this.Action = 'Publish';
             this.CreateOrUpdateMediaQuery();
-        }       
+        }
     }
 
     cancel(): void {
@@ -300,16 +294,16 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
             this.media.MediaReleaseStatus = 'Published';
             delete this.media.Message;
         }
-        
+
         if (this.media.MediaqueryId === 0) {
             this.media.CreatedBy = +this.credential.UserId;
             this.media.CreatedOn = new Date();
 
             this.mediaQueryService.Create(this.media)
                 .subscribe((response: MediaModel) => {
-                    if (this.Action === 'Save') 
+                    if (this.Action === 'Save')
                         this.toastrService.success('Media release is saved successfully.', 'Success', this.toastrConfig);
-                    
+
                     if (this.Action === 'SentForApproval') {
                         this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.MediaModelSentForApproval, response);
                         this.toastrService.success('Media release is successfully sent for approval.', 'Success', this.toastrConfig);
@@ -328,12 +322,12 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
         else {
             this.media.UpdatedBy = +this.credential.UserId;
             this.media.UpdatedOn = new Date();
-            
+
             this.mediaQueryService.Update(this.media)
                 .subscribe((response: MediaModel) => {
                     if (this.Action === 'Save')
                         this.toastrService.success('Media release is edited successfully.', 'Success', this.toastrConfig);
-                   
+
                     if (this.Action === 'SentForApproval') {
                         this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.MediaModelSentForApproval, response);
                         this.toastrService.success('Media release is successfully sent for approval.', 'Success', this.toastrConfig);
@@ -349,7 +343,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
                     console.log(`Error: ${error.message}`);
                 });
         }
-        
+
     }
 
     private formInit(): void {
