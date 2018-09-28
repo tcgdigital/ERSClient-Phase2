@@ -1,13 +1,14 @@
 import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
 
-import { 
-    EnquiryService, EnquiryModel, QueryModel 
+import {
+    EnquiryService, EnquiryModel, QueryModel
 } from '../../call.centre/components';
 import {
     ResponseModel, KeyValue,
     GlobalStateService, UtilityService, GlobalConstants
 } from '../../../../shared';
 import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'media-query',
@@ -25,12 +26,13 @@ export class MediaQueryListComponent implements OnInit, OnDestroy {
      * @param {GlobalStateService} globalState
      * @memberof MediaQueryListComponent
      */
-    constructor(private enquiryService: EnquiryService, 
+    constructor(private enquiryService: EnquiryService,
         private globalState: GlobalStateService) {
     }
 
     getMediaQueries(incidentId): void {
         this.enquiryService.getMediaQueryByIncident(incidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EnquiryModel>) => {
                 this.mediaQueries = this.enquiryService.MapQuery(response.Records);
@@ -42,8 +44,8 @@ export class MediaQueryListComponent implements OnInit, OnDestroy {
     ngOnInit(): any {
         this.currentincidentId = +UtilityService.GetFromSession('CurrentIncidentId');
         this.getMediaQueries(this.currentincidentId);
-        
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard,
             (model: KeyValue) => this.incidentChangeHandler(model));
     }
 

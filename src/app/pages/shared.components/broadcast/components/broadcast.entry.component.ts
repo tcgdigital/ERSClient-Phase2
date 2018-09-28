@@ -2,7 +2,7 @@ import {
     Component, ViewEncapsulation, OnDestroy, OnInit, Input
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription, Subject } from 'rxjs/Rx';
+import { Subscription, Subject, Observable } from 'rxjs/Rx';
 import {
     FormGroup, FormControl, FormBuilder, Validators
 } from '@angular/forms';
@@ -298,6 +298,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
 
     private getBroadcastDepartmentMappings(departmentId): void {
         this.broadcastDepartmentMappingService.Query(departmentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<BroadCastDepartmentModel>) => {
                 const broadcastmappingIds: number[] = this.BroadCastDepartmentMappings
@@ -312,6 +313,7 @@ export class BroadcastEntryComponent implements OnInit, OnDestroy {
                 this.currentDepartment.TargetDepartment.DepartmentId = departmentId;
 
                 this.departmentService.Get(departmentId)
+                    .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                     .takeUntil(this.ngUnsubscribe)
                     .subscribe((response1: DepartmentModel) => {
                         this.currentDepartment.TargetDepartment.DepartmentName = response1.DepartmentName;

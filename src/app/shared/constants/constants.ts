@@ -16,6 +16,42 @@ export enum EnquiryType {
     GroundVictim = 10
 }
 
+export enum EmergencySituation {
+    EmergencyInitiationtoHoD = 1,
+    EmergencyInitiationtoTeamMember = 2,
+    DemandAssignedToTargetDepartmentSPOC = 3,
+    DemandCompletedToRequesterDepartmentSPOC = 4,
+
+    //ChecklistCompletedToDepartmentSPOC = 5,
+    //ChecklistReopenedToDepartmentSPOC = 6,
+    EmergencyClosureToTeamMember = 7,
+    DemandApprovalToApproverDepartmentSPOC = 8,
+
+    BroadcastNotification = 9,
+    EmergencyClosureToDepartmentHOD = 11,
+    MemberDiscontinuationNotificationToHOD = 13,
+
+    RagStatusChangeNotificationForDemand = 14,
+    RagStatusChangeNotificationForChecklist = 15,
+
+    ChecklistNotifiedToDepartmentSPOC = 16,
+    ChecklistAssignedToDepartmentSPOC = 17,
+    ChecklistDelegatedToDepartmentSPOC = 18,
+    ChecklistAcceptedToDepartmentSPOC = 19,
+    ChecklistReferredToDepartmentSPOC = 20,
+    ChecklistClosedToDepartmentSPOC = 21,
+
+    UserCreationNotification = 22,
+    AlertForMediaReleaseOnCrisisNotification = 23,
+    GeneralNotification = 24
+}
+
+export enum TemplateMediaType {
+    Sms = 1,
+    PushNotification = 2,
+    Email = 3,
+    Pdf = 4
+}
 export interface IEmergencySituationEnum {
     EmergencySituationId: number;
     enumtype: string;
@@ -99,6 +135,7 @@ export class GlobalConstants {
     public static INTERCEPTOR_PERFORM: boolean = false;
     public static PRESERVE_DATA_FROM_CONVERSION: string[] = ['EmergencyDate'];
     public static SIGNAL_CONNECTION_DELAY: number = 100;
+    public static DEBOUNCE_TIMEOUT: number = 5000;
 
     public static EditorToolbarConfig: any = {
         // uiColor: '#99000',
@@ -289,36 +326,92 @@ export class GlobalConstants {
     public static EmergencySituationEnum: IEmergencySituationEnum[] = [
         {
             EmergencySituationId: 1,
-            enumtype: 'EmergencyInitiationtoHoD',
-            EmergencySituationName: 'Emergency Initiation to HoD'
+            enumtype: EmergencySituation[1].toString(),
+            EmergencySituationName: `${EmergencySituation[1].replace(/([a-z])([A-Z])/g, '$1 $2').trim()}`
         }, {
             EmergencySituationId: 2,
-            enumtype: 'EmergencyInitiationtoTeamMember',
-            EmergencySituationName: 'Emergency Initiation to Team Member'
+            enumtype: EmergencySituation[2].toString(),
+            EmergencySituationName: `${EmergencySituation[2].replace(/([a-z])([A-Z])/g, '$1 $2').trim()}`
         }, {
             EmergencySituationId: 3,
-            enumtype: 'RequestAssignedtoDepartmentSPOC',
-            EmergencySituationName: 'Request Assigned to Department SPOC'
-        }, {
-            EmergencySituationId: 7,
-            enumtype: 'RequestCompletedToRequesterDepartmentSPOC',
-            EmergencySituationName: 'Request Completed To Requester Department SPOC'
+            enumtype: EmergencySituation[3].toString(),
+            EmergencySituationName: `${EmergencySituation[3].replace(/([a-z])([A-Z])/g, '$1 $2').trim()}`
         }, {
             EmergencySituationId: 4,
-            enumtype: 'ChecklistCompletedToDepartmentSPOC',
-            EmergencySituationName: 'Checklist Completed To Department SPOC'
-        }, {
+            enumtype: EmergencySituation[4].toString(),
+            EmergencySituationName: `${EmergencySituation[4].replace(/([a-z])([A-Z])/g, '$1 $2').trim()}`
+        }, /*{
             EmergencySituationId: 5,
-            enumtype: 'ChecklistReopenedToDepartmentSPOC',
-            EmergencySituationName: 'Checklist Reopened To DepartmentSPOC'
+            enumtype: EmergencySituation[5].toString(),
+            EmergencySituationName: `${EmergencySituation[5].replace(/([a-z])([A-Z])/g, '$1 $2').trim()}`
         }, {
             EmergencySituationId: 6,
-            enumtype: 'EmergencyClosureToTeamMember',
-            EmergencySituationName: 'Emergency Closure to Team Member'
+            enumtype: EmergencySituation[6].toString(),
+            EmergencySituationName: `${EmergencySituation[6].replace(/([a-z])([A-Z])/g, '$1 $2').trim()}`
+        },*/ {
+            EmergencySituationId: 7,
+            enumtype: EmergencySituation[7].toString(),
+            EmergencySituationName: `${EmergencySituation[7].replace(/([a-z])([A-Z])/g, '$1 $2').trim()}`
         }, {
             EmergencySituationId: 8,
-            enumtype: 'RequestApprovalToApproverDepartmentSPOC',
-            EmergencySituationName: 'Request Approval To Approver Department SPOC'
+            enumtype: EmergencySituation[8].toString(),
+            EmergencySituationName: `${EmergencySituation[8].replace(/([a-z])([A-Z])/g, '$1 $2').trim()}`
+        }, {
+            EmergencySituationId: 9,
+            enumtype: EmergencySituation[9].toString(),
+            EmergencySituationName: `${EmergencySituation[9].replace(/([a-z])([A-Z])/g, '$1 $2').trim()}`
+        }, {
+            EmergencySituationId: 11,
+            enumtype: EmergencySituation[11].toString(),
+            EmergencySituationName: `${EmergencySituation[11].replace(/([a-z])([A-Z])/g, '$1 $2').trim()}`
+        }, {
+            EmergencySituationId: 13,
+            enumtype: EmergencySituation[13].toString(),
+            EmergencySituationName: `${EmergencySituation[13].replace(/([a-z])([A-Z])/g, '$1 $2').trim()}`
+        }, {
+            EmergencySituationId: 14,
+            enumtype: EmergencySituation[14].toString(),
+            EmergencySituationName: `${EmergencySituation[14].replace(/([a-z])([A-Z])/g, '$1 $2').trim()}`
+        }, {
+            EmergencySituationId: 15,
+            enumtype: EmergencySituation[15].toString(),
+            EmergencySituationName: `${EmergencySituation[15].replace(/([a-z])([A-Z])/g, '$1 $2').trim()}`
+        }, {
+            EmergencySituationId: 16,
+            enumtype: EmergencySituation[1].toString(),
+            EmergencySituationName: `${EmergencySituation[1].replace(/([a-z])([A-Z])/g, '$1 $2').trim()}`
+        }, {
+            EmergencySituationId: 17,
+            enumtype: EmergencySituation[17].toString(),
+            EmergencySituationName: `${EmergencySituation[17].replace(/([a-z])([A-Z])/g, '$1 $2').trim()}`
+        }, {
+            EmergencySituationId: 18,
+            enumtype: EmergencySituation[18].toString(),
+            EmergencySituationName: `${EmergencySituation[18].replace(/([a-z])([A-Z])/g, '$1 $2').trim()}`
+        }, {
+            EmergencySituationId: 19,
+            enumtype: EmergencySituation[19].toString(),
+            EmergencySituationName: `${EmergencySituation[19].replace(/([a-z])([A-Z])/g, '$1 $2').trim()}`
+        }, {
+            EmergencySituationId: 20,
+            enumtype: EmergencySituation[20].toString(),
+            EmergencySituationName: `${EmergencySituation[20].replace(/([a-z])([A-Z])/g, '$1 $2').trim()}`
+        }, {
+            EmergencySituationId: 21,
+            enumtype: EmergencySituation[21].toString(),
+            EmergencySituationName: `${EmergencySituation[21].replace(/([a-z])([A-Z])/g, '$1 $2').trim()}`
+        }, {
+            EmergencySituationId: 22,
+            enumtype: EmergencySituation[22].toString(),
+            EmergencySituationName: `${EmergencySituation[22].replace(/([a-z])([A-Z])/g, '$1 $2').trim()}`
+        }, {
+            EmergencySituationId: 23,
+            enumtype: EmergencySituation[23].toString(),
+            EmergencySituationName: `${EmergencySituation[23].replace(/([a-z])([A-Z])/g, '$1 $2').trim()}`
+        }, {
+            EmergencySituationId: 24,
+            enumtype: EmergencySituation[24].toString(),
+            EmergencySituationName: `${EmergencySituation[24].replace(/([a-z])([A-Z])/g, '$1 $2').trim()}`
         }
     ];
 

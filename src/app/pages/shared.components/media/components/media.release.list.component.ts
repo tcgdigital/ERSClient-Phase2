@@ -10,6 +10,7 @@ import {
     GlobalStateService, KeyValue, UtilityService
 } from '../../../../shared';
 import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     selector: 'mediaRelease-list',
@@ -41,6 +42,7 @@ export class MediaReleaseListComponent implements OnInit, OnDestroy {
 
     getMediaReleases(departmentId: number, incidentId: number): void {
         this.mediaService.Query(departmentId, incidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<MediaModel>) => {
                 this.mediaReleases = response.Records;

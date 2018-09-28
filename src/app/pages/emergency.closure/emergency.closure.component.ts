@@ -122,6 +122,7 @@ export class EmergencyClosureComponent implements OnInit {
 
 	GetIncident(incidentId: number): void {
 		this.incidentService.GetIncidentById(incidentId)
+			.debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
 			.takeUntil(this.ngUnsubscribe)
 			.subscribe((response: IncidentModel) => {
 				this.incident = response;
@@ -146,6 +147,7 @@ export class EmergencyClosureComponent implements OnInit {
 
 		Observable.merge(allActiveDepartments, emergencyDepartments, notifyDeptUsers, departmentClosures)
 			.flatMap((x: BaseModel[]) => x)
+			.debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
 			.takeUntil(this.ngUnsubscribe)
 			.subscribe((response: any) => {
 				if (Object.keys(response).some((x) => x === 'Department')) {
@@ -243,6 +245,7 @@ export class EmergencyClosureComponent implements OnInit {
 
 	getIsSubmittedFlagValue(departmentClosureModels: DepartmentClosureModel[]): void {
 		this.departmentClosureService.GetAllByIncident(this.currentIncident)
+			.debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
 			.takeUntil(this.ngUnsubscribe)
 			.subscribe((departmentClosures: ResponseModel<DepartmentClosureModel>) => {
 				departmentClosureModels.forEach((item: DepartmentClosureModel) => {
@@ -262,6 +265,7 @@ export class EmergencyClosureComponent implements OnInit {
 
 	openCurrentDepartmentClosureReadonlyDetail(departmentId): void {
 		this.departmentClosureService.getAllbyIncidentandDepartment(this.currentIncident, departmentId)
+			.debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
 			.takeUntil(this.ngUnsubscribe)
 			.subscribe((response: ResponseModel<DepartmentClosureModel>) => {
 				this.report = '';
@@ -340,6 +344,7 @@ export class EmergencyClosureComponent implements OnInit {
 						})
 						.flatMap(() => this.emergencyClosureService.sendNotificationToDepartmentHOD(this.UserDepartmentNotificationMappers))
 						.map(() => { })
+						.debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
 						.takeUntil(this.ngUnsubscribe)
 						.subscribe(() => {
 							this.toastrService.success('Notification has been sent to the users.', 'Success', this.toastrConfig);

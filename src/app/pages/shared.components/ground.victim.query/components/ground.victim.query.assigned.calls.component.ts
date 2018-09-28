@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ExternalInputModel, CallCenterOnlyPageService } from '../../../callcenteronlypage';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { UtilityService, GlobalStateService, GlobalConstants, KeyValue, ResponseModel } from '../../../../shared';
 import { Router } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap';
@@ -12,7 +12,7 @@ import { ModalDirective } from 'ngx-bootstrap';
 
 export class GroundVictimQueryAssignedCallsComponent implements OnInit, OnDestroy {
     @ViewChild(ModalDirective) public childModalcallcenter: ModalDirective;
-    
+
     public allAssignedCalls: ExternalInputModel[] = [];
     public currentIncidentId: number;
     public isArchive: boolean = false;
@@ -20,7 +20,7 @@ export class GroundVictimQueryAssignedCallsComponent implements OnInit, OnDestro
     // protected _onRouteChange: Subscription;
     private callId: number;
     private callcenterload: boolean = false;
-    
+
     private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(private callcenteronlypageservice: CallCenterOnlyPageService,
@@ -81,6 +81,7 @@ export class GroundVictimQueryAssignedCallsComponent implements OnInit, OnDestro
         this.callcenterload = false;
 
         this.callcenteronlypageservice.GetGroundVictimCallsByIncident(incidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;

@@ -15,7 +15,7 @@ import {
     ResponseModel, Severity, GlobalConstants
 } from '../../shared';
 import { ArchiveListService } from './archive.dashboard.list.service';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 
 @Component({
     selector: 'archive-dashboard-list',
@@ -74,7 +74,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
 
         this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
         this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
-        
+
         this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
             (model: KeyValue) => this.departmentChangeHandler(model));
     }
@@ -89,6 +89,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
 
     public GetAllClosedIncidents(): void {
         this.archiveListService.GetAllClosedIncidents()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((closedIncident: ResponseModel<IncidentModel>) => {
                 closedIncident.Records.forEach((itemIncident: IncidentModel) => {

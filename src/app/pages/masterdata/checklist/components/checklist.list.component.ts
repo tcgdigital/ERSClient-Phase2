@@ -63,6 +63,7 @@ export class ChecklistListComponent implements OnInit, OnDestroy {
 
     getCheckLists(departmentId): void {
         this.checkListService.GetAllByDepartment(departmentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ChecklistModel>) => {
                 response.Records.forEach((x) => {
@@ -97,6 +98,7 @@ export class ChecklistListComponent implements OnInit, OnDestroy {
 
     getInvalidChecklists(): void {
         this.checkListService.GetInvalidChecklists()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvalidChecklistModel>) => {
                 this.invalidChecklists = response.Records;
@@ -107,6 +109,7 @@ export class ChecklistListComponent implements OnInit, OnDestroy {
 
     getEmergencyTypes(): void {
         this.emergencytypeService.GetAll()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                 this.emergencyTypesForSearch = response.Records
@@ -120,6 +123,7 @@ export class ChecklistListComponent implements OnInit, OnDestroy {
 
     getAllActiveCheckLists(): void {
         this.checkListService.GetAllActiveCheckLists()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ChecklistModel>) => {
                 this.activeCheckLists = response.Records;
@@ -160,7 +164,7 @@ export class ChecklistListComponent implements OnInit, OnDestroy {
             (model: ChecklistModel) => this.onCheckListModelSavedSuccess(model));
 
         this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.CheckListListReload,
-            (model:ChecklistModel) => this.onCheckListModelReloadSuccess(model));
+            (model: ChecklistModel) => this.onCheckListModelReloadSuccess(model));
 
         this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
             (model: any) => this.departmentChangeHandler(model));
@@ -217,8 +221,9 @@ export class ChecklistListComponent implements OnInit, OnDestroy {
     invokeSearch(query: string): void {
         if (query !== '') {
             query = `${query} and DepartmentId eq ${this.currentDepartmentId}`;
-            
+
             this.checkListService.GetQuery(query)
+                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: ResponseModel<ChecklistModel>) => {
                     response.Records.forEach((x) => {

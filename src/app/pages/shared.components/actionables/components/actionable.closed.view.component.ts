@@ -5,7 +5,7 @@ import {
 import {
     FormGroup, FormControl, FormBuilder
 } from '@angular/forms';
-import { Subscription, Subject } from 'rxjs/Rx';
+import { Subscription, Subject, Observable } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department/components';
@@ -48,7 +48,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     public allDepartments: DepartmentModel[] = [];
     public listActionableSelected: any[] = [];
     public ChecklistMappers: ChecklistMapper[] = [];
-    public isDashboardChecklistCloseDownloadLink: boolean=true;
+    public isDashboardChecklistCloseDownloadLink: boolean = true;
     //actionableWithParentsChilds: ActionableModel[] = [];
 
     private ngUnsubscribe: Subject<any> = new Subject<any>();
@@ -79,20 +79,20 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
 
         this.form = this.resetActionableForm();
         this.actionableModelToUpdate = new ActionableModel();
-        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.CloseActionablePageInitiate, 
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.CloseActionablePageInitiate,
             (model) => this.onCloseActionablePageInitiate(model));
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChange, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChange,
             (model: KeyValue) => this.incidentChangeHandler(model));
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard,
             (model: KeyValue) => this.departmentChangeHandler(model));
 
         // Signalr Notifivation
         this.globalState.Subscribe
-        (GlobalConstants.NotificationConstant.ReceiveChecklistStatusChangeResponse.Key, (model: ActionableModel) => {
-            this.getAllCloseActionable(model.IncidentId, model.DepartmentId);
-        });
+            (GlobalConstants.NotificationConstant.ReceiveChecklistStatusChangeResponse.Key, (model: ActionableModel) => {
+                this.getAllCloseActionable(model.IncidentId, model.DepartmentId);
+            });
     }
 
     onCloseActionablePageInitiate(isClosed: boolean): void {
@@ -117,6 +117,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
 
     getAllCloseActionable(incidentId: number, departmentId: number): void {
         this.actionableService.GetClosedActionable(incidentId, departmentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((res: ResponseModel<ActionableModel>[]) => {
                 if (res && res.length > 1) {
@@ -144,6 +145,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
 
     getAllCloseActionableByIncident(incidentId): void {
         this.actionableService.GetAllCloseByIncidentId(incidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ActionableModel>) => {
                 this.actionableWithParents = response.Records;
@@ -170,6 +172,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
 
     getActionableTrails(actionaId: number): void {
         this.checklistTrailService.GetTrailByActionableId(actionaId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ChecklistTrailModel>) => {
                 this.checklistTrails = response.Records;
@@ -187,13 +190,14 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
         actionable['expanded'] = !actionable['expanded'];
 
         this.actionableService.GetChildActionables(actionable.ChklistId, this.currentIncident)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((responseActionable: ResponseModel<ActionableModel>) => {
-                
+
                 this.departmentService.GetDepartmentNameIds()
                     .takeUntil(this.ngUnsubscribe)
                     .subscribe((response: ResponseModel<DepartmentModel>) => {
-                        
+
                         actionable['actionableChilds'] = [];
                         responseActionable.Records[0].CheckList.CheckListChildrenMapper.forEach((item: ChecklistMapper) => {
                             this.GetListOfChildActionables(item.ChildCheckListId, this.currentIncident, (child: ActionableModel) => {
@@ -240,6 +244,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     batchUpdate(data: any[]) {
         this.listActionableSelected = data;
         this.actionableService.BatchOperation(data)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((x) => {
                 this.SaveChecklistTrails(this.listActionableSelected);
@@ -252,14 +257,16 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
     private SaveChecklistTrails(data: any[]): void {
         this.checklistTrails = [];
         this.departmentService.GetAllActiveDepartments()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((allResultDepartments: ResponseModel<DepartmentModel>) => {
-                
+
                 this.allDepartments = allResultDepartments.Records;
                 this.actionableService.GetAllByIncident(+UtilityService.GetFromSession('CurrentIncidentId'))
+                    .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                     .takeUntil(this.ngUnsubscribe)
                     .subscribe((resultsActionable: ResponseModel<ActionableModel>) => {
-                        
+
                         data.forEach((item: ActionableModel) => {
                             this.checklistTrail = new ChecklistTrailModel();
                             this.checklistTrail.ChecklistTrailId = 0;
@@ -286,6 +293,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
                         });
 
                         this.checklistTrailService.BatchOperation(this.checklistTrails)
+                            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                             .takeUntil(this.ngUnsubscribe)
                             .subscribe((result: ResponseModel<BaseModel>) => {
                                 this.toastrService.success('Actionables updated successfully.', 'Success', this.toastrConfig);
@@ -338,6 +346,7 @@ export class ActionableClosedComponent implements OnInit, OnDestroy {
 
     private GetListOfChildActionables(checkListId: number, incidentId: number, callback?: Function): void {
         this.actionableService.GetAcionableByIncidentIdandCheckListId(incidentId, checkListId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((res: ResponseModel<ActionableModel>) => {
                 if (callback) {

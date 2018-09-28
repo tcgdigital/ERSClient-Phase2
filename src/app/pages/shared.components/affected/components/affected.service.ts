@@ -8,10 +8,8 @@ import {
     ResponseModel,
     DataServiceFactory
 } from '../../../../shared';
-import {
-    InvolvePartyService,
-    InvolvePartyModel
-} from '../../../shared.components';
+import { InvolvePartyService, InvolvePartyModel } from '../../involveparties';
+
 
 @Injectable()
 

@@ -54,6 +54,7 @@ export class DepartmentEntryComponent implements OnInit, OnDestroy {
             = this.departmentService.GetAll();
 
         Observable.merge(activeUsers, parentDepts)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<BaseModel>) => {
                 if (response.Records.length > 0
@@ -128,12 +129,12 @@ export class DepartmentEntryComponent implements OnInit, OnDestroy {
             if (values.DepartmentId === 0) {
                 // ADD REGION
                 UtilityService.setModelFromFormGroup<DepartmentModel>(this.departmentModel, this.form,
-                    (x:DepartmentModel) => x.DepartmentId,
-                    (x:DepartmentModel) => x.DepartmentName,
-                    (x:DepartmentModel) => x.Description,
-                    (x:DepartmentModel) => x.ContactNo,
-                    (x:DepartmentModel) => x.DepartmentSpoc,
-                    (x:DepartmentModel) => x.ParentDepartmentId);
+                    (x: DepartmentModel) => x.DepartmentId,
+                    (x: DepartmentModel) => x.DepartmentName,
+                    (x: DepartmentModel) => x.Description,
+                    (x: DepartmentModel) => x.ContactNo,
+                    (x: DepartmentModel) => x.DepartmentSpoc,
+                    (x: DepartmentModel) => x.ParentDepartmentId);
 
                 this.departmentModel.ContactNo = this.departmentModel.ContactNo.toString().replace(/^\D+/g, '');
                 this.departmentModel.CreatedBy = +this.credential.UserId;

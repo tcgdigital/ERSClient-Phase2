@@ -6,7 +6,7 @@ import {
     ResponseModel, GlobalConstants, KeyValue,
     GlobalStateService, UtilityService
 } from '../../../../shared';
-import { Subscription, Subject } from 'rxjs/Rx';
+import { Subscription, Subject, Observable } from 'rxjs/Rx';
 
 import {
     CallCenterOnlyPageService,
@@ -47,25 +47,25 @@ export class MediaQueryRecievedCallsListComponent implements OnInit, OnDestroy {
         }
 
         this.getAllMediaQueryCallsRecieved(this.currentIncidentId);
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard,
             (model: KeyValue) => this.incidentChangeHandler(model));
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.CallRecieved, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.CallRecieved,
             (model: KeyValue) => this.getAllMediaQueryCallsRecieved(this.currentIncidentId));
 
         // SignalR Notification
         this.globalState.Subscribe
-        (GlobalConstants.NotificationConstant.AssignedMediaEnquiryCreationResponse.Key, (model: ExternalInputModel) => {
-            // this.getAllMediaQueryCallsRecieved(model.IncidentId);
-            const index: number = this.allAssignedCalls
-                .findIndex((x: ExternalInputModel) => x.ExternalInputId === model.ExternalInputId);
+            (GlobalConstants.NotificationConstant.AssignedMediaEnquiryCreationResponse.Key, (model: ExternalInputModel) => {
+                // this.getAllMediaQueryCallsRecieved(model.IncidentId);
+                const index: number = this.allAssignedCalls
+                    .findIndex((x: ExternalInputModel) => x.ExternalInputId === model.ExternalInputId);
 
-            if (index > -1) {
-                this.allAssignedCalls.splice(index, 1, model);
-            } else {
-                this.allAssignedCalls.unshift(model)
-            }
-        });
+                if (index > -1) {
+                    this.allAssignedCalls.splice(index, 1, model);
+                } else {
+                    this.allAssignedCalls.unshift(model)
+                }
+            });
     }
 
     public ngOnDestroy(): void {
@@ -81,7 +81,9 @@ export class MediaQueryRecievedCallsListComponent implements OnInit, OnDestroy {
     getAllMediaQueryCallsRecieved(incidentId): void {
         this.childModalcallcenter.hide();
         this.callcenterload = false;
+
         this.callcenteronlypageservice.GetMediaQueryCallsRecievedByIncident(incidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;

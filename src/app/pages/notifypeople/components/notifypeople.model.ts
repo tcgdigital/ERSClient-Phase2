@@ -69,6 +69,9 @@ export class UserDepartmentNotificationMapper extends BaseModel {
 
     public UserProfile?: UserProfileModel;
     public Department?: DepartmentModel;
-    //   public  Notification Notification : ;
     public Incident?: IncidentModel;
+}
+
+export class MessageTemplate {
+    public GeneralMessageTemplate: string;
 }

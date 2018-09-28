@@ -33,6 +33,7 @@ export class DemandTypeListComponent implements OnInit, OnDestroy {
 
     getDemandTypes(): void {
         this.demandTypeService.GetAll()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandTypeModel>) => {
 
@@ -83,7 +84,7 @@ export class DemandTypeListComponent implements OnInit, OnDestroy {
     ngOnInit(): any {
         this.getDemandTypes();
         this.initiateSearchConfigurations();
-        
+
         this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.DemandTypeModelSaved,
             (model: DemandTypeModel) => this.onDemandSuccess(model));
 
@@ -108,6 +109,7 @@ export class DemandTypeListComponent implements OnInit, OnDestroy {
                     query = query.replace("'false'", 'false');
             }
             this.demandTypeService.GetQuery(query)
+                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: ResponseModel<DemandTypeModel>) => {
                     this.demandTypes = response.Records;

@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation, Input } from '@angular/core';
 import { BroadCastDepartmentModel } from './broadcast.department.model';
 import { BroadcastDepartmentService } from './broadcast.department.service';
-import { ResponseModel, DataExchangeService } from '../../../../shared';
+import { ResponseModel, DataExchangeService, GlobalConstants } from '../../../../shared';
 import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'broadcastDepartment-detail',
@@ -27,6 +28,7 @@ export class BroadCastDepartmentListComponent implements OnInit, OnDestroy {
 
     getBroadCastDepartmentMappings(): void {
         this.broadCastDepartmentService.Query(+this.initiatedDepartmentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<BroadCastDepartmentModel>) => {
                 this.BroadCastDepartments = response.Records;
@@ -40,7 +42,7 @@ export class BroadCastDepartmentListComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-		this.ngUnsubscribe.next();
-		this.ngUnsubscribe.complete();
-	}
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
 }

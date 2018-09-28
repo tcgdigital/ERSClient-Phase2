@@ -5,8 +5,9 @@ import { DepartmentService, DepartmentModel } from '../department';
 import { EmergencyTypeService, EmergencyTypeModel } from '../emergencytype';
 import { EmergencyTypeDepartmentService } from './components/emergency.department.service';
 import { EmergencyDepartmentModel, DepartmesForEmergency } from './components/emergency.department.model';
-import { ResponseModel, KeyValue, AuthModel, UtilityService } from '../../../shared';
+import { ResponseModel, KeyValue, AuthModel, UtilityService, GlobalConstants } from '../../../shared';
 import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'emergency-department-main',
@@ -36,14 +37,15 @@ export class EmergencyDepartmentComponent implements OnInit, OnDestroy {
      * @param {ToastrConfig} toastrConfig
      * @memberof EmergencyDepartmentComponent
      */
-    constructor(private emergencyDepartmentService: EmergencyTypeDepartmentService, 
+    constructor(private emergencyDepartmentService: EmergencyTypeDepartmentService,
         private emergencyTypeService: EmergencyTypeService,
-        private departmentService: DepartmentService, 
+        private departmentService: DepartmentService,
         private toastrService: ToastrService,
         private toastrConfig: ToastrConfig) { };
 
     getEmergencyTypes(): void {
         this.emergencyTypeService.GetAll()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                 this.emergencyTypeItems = response.Records;
@@ -65,6 +67,7 @@ export class EmergencyDepartmentComponent implements OnInit, OnDestroy {
     onNotify(message: KeyValue): void {
         this.selectedEmergencyType = message.Value;
         this.emergencyDepartmentService.GetFilterByEmergencyType(message.Value)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EmergencyDepartmentModel>) => {
                 this.departmentsForEmergency = this.SetAllSelectedToFalse(this.departmentsForEmergencyConstant);
@@ -135,6 +138,7 @@ export class EmergencyDepartmentComponent implements OnInit, OnDestroy {
         this.credential = UtilityService.getCredentialDetails();
 
         this.departmentService.GetAll()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
@@ -151,7 +155,7 @@ export class EmergencyDepartmentComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-		this.ngUnsubscribe.next();
-		this.ngUnsubscribe.complete();
-	}
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
 }

@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { Subscription, Subject } from 'rxjs/Rx';
+import { Subscription, Subject, Observable } from 'rxjs/Rx';
 import { DemandModel, DemandModelToView, DemandRemarkLogModel } from './demand.model';
 import { DemandService } from './demand.service';
 import { CommunicationLogModel } from '../../communicationlogs';
@@ -52,7 +52,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
     public isShowAcceptRejectDemand: boolean = true;
     public isInvalidRemarks: boolean = false;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
-    public isDashboradCompletedDownloadLink: boolean=true;
+    public isDashboradCompletedDownloadLink: boolean = true;
 
     /**
      * Creates an instance of CompletedDemandComponent.
@@ -93,30 +93,30 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         this.getDepartmentName(this.currentDepartmentId);
         this.getCurrentDepartmentName(this.currentDepartmentId);
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard,
             (model: KeyValue) => this.incidentChangeHandler(model));
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard,
             (model: KeyValue) => this.departmentChangeHandler(model));
 
         // SignalR Notification
         this.globalState.Subscribe
-        (GlobalConstants.NotificationConstant.ReceiveDemandClosedResponse.Key, (model: DemandModel) => {
-            this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
-            // this.getCompletedDemands(model.RequesterDepartmentId, model.IncidentId);
-        });
+            (GlobalConstants.NotificationConstant.ReceiveDemandClosedResponse.Key, (model: DemandModel) => {
+                this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
+                // this.getCompletedDemands(model.RequesterDepartmentId, model.IncidentId);
+            });
 
         this.globalState.Subscribe
-        (GlobalConstants.NotificationConstant.ReceiveRejectedDemandsFromClosureResponse.Key, (model: DemandModel) => {
-            this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
-            // this.getCompletedDemands(model.RequesterDepartmentId, model.IncidentId);
-        });
+            (GlobalConstants.NotificationConstant.ReceiveRejectedDemandsFromClosureResponse.Key, (model: DemandModel) => {
+                this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
+                // this.getCompletedDemands(model.RequesterDepartmentId, model.IncidentId);
+            });
 
         this.globalState.Subscribe
-        (GlobalConstants.NotificationConstant.ReceiveCompletedDemandstoCloseResponse.Key, (model: DemandModel) => {
-            this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
-            // this.getCompletedDemands(model.RequesterDepartmentId, model.IncidentId);
-        });
+            (GlobalConstants.NotificationConstant.ReceiveCompletedDemandstoCloseResponse.Key, (model: DemandModel) => {
+                this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
+                // this.getCompletedDemands(model.RequesterDepartmentId, model.IncidentId);
+            });
     }
 
     public openDemandDetails(demandId: number): void {
@@ -126,6 +126,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
 
     public getCompletedDemands(deptId: number, incidentId: number): void {
         this.demandService.GetCompletedDemands(deptId, incidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.completedDemands = this.demandService.DemandMapper(response.Records);
@@ -141,6 +142,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
 
     public getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
                 this.demandRemarks = response.Records;
@@ -214,8 +216,9 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         this.RemarkToCreate.RequesterDepartmentName = this.currentDepartmentName;
         this.RemarkToCreate.TargetDepartmentName = demand.TargetDepartmentName;
         this.RemarkToCreate.CreatedByName = this.createdByName;
-        
+
         this.demandRemarkLogsService.Create(this.RemarkToCreate)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: DemandRemarkLogModel) => {
                 this.toastrService.success('Remark saved successfully.', 'Success', this.toastrConfig);
@@ -287,6 +290,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
             }
             else {
                 this.demandService.UpdateBulkForClosure(demandCompletion)
+                    .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                     .takeUntil(this.ngUnsubscribe)
                     .subscribe((response: DemandModel[]) => {
                         this.toastrService.success('Demand updated successfully.', 'Success', this.toastrConfig);
@@ -304,6 +308,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
 
     public getCurrentDepartmentName(departmentId): void {
         this.departmentService.Get(departmentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: DepartmentModel) => {
                 this.currentDepartmentName = response.DepartmentName;
@@ -322,6 +327,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
 
     private getDepartmentName(deptId): void {
         this.departmentService.Get(deptId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((department: DepartmentModel) => {
                 this.currentDepartmentName = department.DepartmentName;

@@ -73,8 +73,9 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
 
     getLatestPresidentsMessages(incidentId: number): void {
         let data: PresidentMessageWidgetModel[] = [];
-        this.presidentMessagewidgetService
-            .GetAllPresidentMessageByIncident(incidentId)
+
+        this.presidentMessagewidgetService.GetAllPresidentMessageByIncident(incidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .flatMap((x) => x)
             .take(3)
@@ -90,8 +91,9 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
 
     getAllPresidentsMessages(callback?: Function): void {
         let data: PresidentMessageWidgetModel[] = [];
-        this.presidentMessagewidgetService
-            .GetAllPresidentMessageByIncident(this.currentIncidentId)
+        
+        this.presidentMessagewidgetService.GetAllPresidentMessageByIncident(this.currentIncidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .flatMap((x) => x)
             .subscribe((x) => {

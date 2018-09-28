@@ -15,7 +15,7 @@ import { DepartmentService, DepartmentModel } from '../../../masterdata/departme
 import * as moment from 'moment/moment';
 import {
     ResponseModel, DataExchangeService, KeyValue,
-    GlobalConstants, GlobalStateService, UtilityService, 
+    GlobalConstants, GlobalStateService, UtilityService,
     AuthModel
 } from '../../../../shared';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -53,7 +53,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
     public isShowAssignToMeDemand: boolean = true;
     public isInvalidRemarks: boolean = false;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
-    public isDashboradDemandAssignedDownloadLink: boolean= true;
+    public isDashboradDemandAssignedDownloadLink: boolean = true;
     /**
      * Creates an instance of AssignedDemandComponent.
      * @param {DemandService} demandService
@@ -93,24 +93,24 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.createdByName = this.credential.UserName;
         this.getAllDepartments();
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard,
             (model: KeyValue) => this.incidentChangeHandler(model));
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard,
             (model: KeyValue) => this.departmentChangeHandler(model));
 
         // SignalR Notification
         this.globalState.Subscribe
-        (GlobalConstants.NotificationConstant.ReceiveDemandAssignedResponse.Key, (model: DemandModel) => {
-            // this.getAssignedDemands(model.TargetDepartmentId, model.IncidentId);
-            this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
-        });
+            (GlobalConstants.NotificationConstant.ReceiveDemandAssignedResponse.Key, (model: DemandModel) => {
+                // this.getAssignedDemands(model.TargetDepartmentId, model.IncidentId);
+                this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
+            });
 
         this.globalState.Subscribe
-        (GlobalConstants.NotificationConstant.ReceiveCompletedDemandAssignedResponse.Key, (model: DemandModel) => {
-            // this.getAssignedDemands(model.TargetDepartmentId, model.IncidentId);
-            this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
-        });
+            (GlobalConstants.NotificationConstant.ReceiveCompletedDemandAssignedResponse.Key, (model: DemandModel) => {
+                // this.getAssignedDemands(model.TargetDepartmentId, model.IncidentId);
+                this.getAssignedDemands(this.currentDepartmentId, this.currentIncidentId);
+            });
     }
 
     public openDemandDetails(demandId: number): void {
@@ -120,10 +120,11 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
 
     public getAssignedDemands(deptId: number, incidentId: number): void {
         this.demandService.GetForAssignedDept(deptId, incidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demands = this.demandService.DemandMapper(response.Records);
-                UtilityService.SetRAGStatus(this.demands, 'Demand'); 
+                UtilityService.SetRAGStatus(this.demands, 'Demand');
             }, (error: any) => {
                 console.log(`Error: ${error.message}`);
             });
@@ -136,6 +137,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
 
     public getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
                 this.demandRemarks = response.Records;
@@ -151,6 +153,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
 
     public getAllDepartments() {
         this.departmentService.GetAll()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
@@ -237,8 +240,9 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
         this.RemarkToCreate.RequesterDepartmentName = this.currentDepartmentName;
         this.RemarkToCreate.TargetDepartmentName = demand.TargetDepartmentName;
         this.RemarkToCreate.CreatedByName = this.createdByName;
-        
+
         this.demandRemarkLogsService.Create(this.RemarkToCreate)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: DemandRemarkLogModel) => {
                 this.toastrService.success('Remark saved successfully.', 'Success', this.toastrConfig);
@@ -277,6 +281,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
             }
             else {
                 this.demandService.UpdateBulkForCompletion(demandCompletion)
+                    .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                     .takeUntil(this.ngUnsubscribe)
                     .subscribe((response: DemandModel[]) => {
                         this.toastrService.success('Demand status updated successfully.', 'Success', this.toastrConfig);
@@ -298,6 +303,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
 
     public getDemandTrails(demandId): void {
         this.demandTrailService.getDemandTrailByDemandId(demandId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandTrailModel>) => {
                 this.demandTrails = response.Records;
