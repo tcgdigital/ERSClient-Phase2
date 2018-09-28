@@ -1113,9 +1113,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                 }
             }
             else {
-
                 this.enquiryToUpdate.Queries = this.enquiry.Queries;
-                debugger;
                 if ((this.enquiryType == +EnquiryType.Passenger || this.enquiryType == +EnquiryType.Crew)
                     && this.enquiry.AffectedPersonId && this.initialvalue.Value) {
                     this.enquiry.AffectedPersonId = this.initialvalue.Value;

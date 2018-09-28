@@ -336,7 +336,6 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
     public GetGeneralNotificationMessageTemplate(): Observable<MessageTemplate> {
         return this._externalNotification.SimpleGet()
             .Execute().map((resp) => {
-                debugger;
                 return <MessageTemplate>resp;
             });
     }
