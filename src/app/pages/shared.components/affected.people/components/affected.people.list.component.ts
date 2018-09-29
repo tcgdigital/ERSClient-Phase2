@@ -6,7 +6,7 @@ import { CommunicationLogModel, CommunicationLogService } from '../../../shared.
 import { InvolvePartyService, InvolvePartyModel } from '../../involveparties';
 import { EnquiryModel } from '../../call.centre/components/call.centre.model';
 import { CallerModel, CallerService } from '../../caller';
-import { PassengerService, CoPassengerMappingModel, PassengerModel } from '../../passenger/components';
+import { CoPassengerMappingModel, PassengerModel, CoPassengerService } from '../../passenger/components';
 import { NextOfKinModel } from '../../nextofkins';
 import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';
 import { AffectedPeopleService } from './affected.people.service';
@@ -103,7 +103,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
         private toastrConfig: ToastrConfig,
         private fileUploadService: FileUploadService,
         private fileStoreService: FileStoreService,
-        private passangerService: PassengerService) {
+        private copassangerService: CoPassengerService) {
         this.downloadFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Affected People/';
         this.globalStateProxyOpen = injector.get(GlobalStateService);
     }
@@ -132,8 +132,11 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
         }
 
         if (affectedPerson.MedicalStatus !== 'NA') {
-            this.affectedPersonModelForStatus['MedicalStatusToshow'] = this.medicalStatus
+            if(affectedPerson.MedicalStatus !== ''){
+                this.affectedPersonModelForStatus['MedicalStatusToshow'] = this.medicalStatus
                 .find((x) => x.value === affectedPerson.MedicalStatus).value;
+            }
+            
         }
         this.affectedPeopleService.GetCallerListForAffectedPerson(affectedPerson.AffectedPersonId)
             .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
@@ -144,7 +147,8 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
                 });
 
                 if (affectedPerson.PassengerId !== 0 && affectedPerson.GroupId !== 0) {
-                    this.passangerService.getCoPassengers(affectedPerson.GroupId)
+
+                    this.copassangerService.getCoPassengers(affectedPerson.GroupId)
                         .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                         .takeUntil(this.ngUnsubscribe)
                         .subscribe((response: ResponseModel<CoPassengerMappingModel>) => {
@@ -330,7 +334,6 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
             .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
-
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0])
                     .sort((a, b) => {
                         if (x => x.PassengerType) {

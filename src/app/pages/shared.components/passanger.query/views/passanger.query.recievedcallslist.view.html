@@ -16,10 +16,10 @@
                         <td colspan="5">No queries to show.</td>
                     </tr>
                     <tr *ngFor="let call of allAssignedCalls">
-                        <td data-title="Caller Name">{{call.Caller.FirstName + " "+ call.Caller.LastName}}&nbsp;</td>
-                        <td data-title="Caller Number">{{call.Caller.ContactNumber}}&nbsp;</td>
-                        <td data-title="PDA Name">{{getPDAName(call.PDAEnquiry.AffectedPersonId)}}&nbsp;</td>
-                        <td data-title="PDA Relation">{{call.Caller.Relationship}}&nbsp;</td>
+                        <td data-title="Caller Name"><span *ngIf="call.Caller">{{call.Caller.FirstName + " "+ call.Caller.LastName}}</span>&nbsp;</td>
+                        <td data-title="Caller Number"><span *ngIf="call.Caller">{{call.Caller.ContactNumber}}</span>&nbsp;</td>
+                        <td data-title="PDA Name"><span *ngIf="call.PDAEnquiry.AffectedPersonId">{{getPDAName(call.PDAEnquiry.AffectedPersonId)}}</span>&nbsp;</td>
+                        <td data-title="PDA Relation"><span *ngIf="call.Caller">{{call.Caller.Relationship}}</span>&nbsp;</td>
                         <td data-title="Action">
                             <i *ngIf="!isArchive" class="fa fa-edit fa-2x" (click)="openCallcenter(call.ExternalInputId)"></i>
                             &nbsp;

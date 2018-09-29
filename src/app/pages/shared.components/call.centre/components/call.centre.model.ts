@@ -53,6 +53,7 @@ export class EnquiryModel extends BaseModel {
         this.Queries = '';
         this.Remarks = '';
         this.IncidentId = 0;
+        //this.IsIdentified = true;
     }
 }
 

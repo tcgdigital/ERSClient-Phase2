@@ -27,7 +27,7 @@ export class CallCenterOnlyPageService extends ServiceBase<ExternalInputModel> i
 
     public GetPassengerAndCrewQueryByIncident(incidentId: number, callId: number): Observable<ResponseModel<ExternalInputModel>> {
         // let enquiryprojection = 'Queries,AffectedPersonId,AffectedObjectId,IsCallBack,IsTravelRequest,IsAdminRequest,EnquiryId';
-        return this.CommonQueryExecution(incidentId, callId, 'AffectedPersonId', 'PDAEnquiry');
+        return this.CommonQueryExecution(incidentId, callId, 'AffectedPersonId', 'PDAEnquiry($expand=AffectedPerson($select=CurrentCareMemberName))');
     }
 
     public GetCargoQueryByIncident(incidentId: number, callId: number): Observable<ResponseModel<ExternalInputModel>> {
@@ -171,6 +171,19 @@ export class CallCenterOnlyPageService extends ServiceBase<ExternalInputModel> i
         return this._dataService.Query()
             .Filter(`IncidentId eq ${incidentId} and ExternalInputId eq ${callId} `)
             .Expand(`Caller,${expandType},Enquiries($select=${enquiryprojection};$filter=${enquiryFilter};$expand=${comLogExpansion})`)
+            .Execute();
+    }
+
+    public GetAffectedPersonDetailFromExternalInput(incidentId:number,CallId:number):
+    Observable<ResponseModel<ExternalInputModel>>{
+        const pdaenquiryprojection = 'PDAEnquiryId';
+        const affectedpersonprojection = 'AffectedPersonId,CurrentCareMemberName,IsIdentified';
+        const passengerprojection = 'PassengerId,PassengerName';
+        return this._dataService.Query()
+            .Filter(`IncidentId eq ${incidentId} and ExternalInputId eq ${CallId}`)
+            .Expand(`PDAEnquiry($select=${pdaenquiryprojection};
+                $expand=AffectedPerson($select=${affectedpersonprojection};
+                    $expand=Passenger($select=${passengerprojection})))`)
             .Execute();
     }
 }
