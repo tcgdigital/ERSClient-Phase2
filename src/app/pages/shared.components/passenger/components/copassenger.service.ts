@@ -10,10 +10,11 @@ import {
 } from '../../../../shared';
 
 @Injectable()
-export class PassengerService extends ServiceBase<PassengerModel> {
-    private _bulkDataService: DataService<PassengerModel>;
+export class CoPassengerService extends ServiceBase<CoPassengerMappingModel>
+    implements IPassengerService {
+    private _bulkDataService: DataService<CoPassengerMappingModel>;
 
-    private _bulkDataServiceForUpdate: DataService<PassengerModel>;
+    private _bulkDataServiceForUpdate: DataService<CoPassengerMappingModel>;
 
     /**
      * Creates an instance of DepartmentService.
@@ -22,17 +23,32 @@ export class PassengerService extends ServiceBase<PassengerModel> {
      * @memberOf DepartmentService
      */
     constructor(private dataServiceFactory: DataServiceFactory) {
-        super(dataServiceFactory, 'Passengers');
+        super(dataServiceFactory, 'CoPassengerMappings');
         let option: DataProcessingService = new DataProcessingService();
-        
+        this._bulkDataService = this.dataServiceFactory
+            .CreateServiceWithOptionsAndActionSuffix<CoPassengerMappingModel>
+            ('CoPassengerMappingBatch', 'BatchPostAsync', option);
+
+        this._bulkDataServiceForUpdate = this.dataServiceFactory
+            .CreateServiceWithOptionsAndActionSuffix<CoPassengerMappingModel>
+            ('CoPassengerMappingBatch', 'BatchUpdateAsync', option);
     }
 
 
-   
-    public SavePassenger(entities: PassengerModel): Observable<PassengerModel> {
-        return this._dataService.Post(entities)
+    getGroupId(PassengerId: number): Observable<ResponseModel<CoPassengerMappingModel>> {
+        return this._dataService.Query()
+            .Filter(`PassengerId eq ${PassengerId}`)
+            .Select('GroupId')
             .Execute();
     }
+    getCoPassengers(GroupId: number): Observable<ResponseModel<CoPassengerMappingModel>> {
+        return this._dataService.Query()
+            .Filter(`GroupId eq ${GroupId}`)
+            .Expand('Passenger')
+            .Execute();
+    }
+
+    
 
     public setcopassangers(entities: CoPassengerMappingModel[]): Observable<CoPassengerMappingModel[]> {
         let option: DataProcessingService = new DataProcessingService();

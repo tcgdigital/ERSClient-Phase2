@@ -97,8 +97,11 @@
             </div>
             <div class="form-group col-lg-3 col-md-3 col-sm-12">
                 <label for="CurrentCareMemberName">Current CARE member name</label>
-                <label class="form-control grey-input text-truncate">
+                <label *ngIf="pdaenquery.AffectedPerson" class="form-control grey-input text-truncate">
                     {{pdaenquery.AffectedPerson.CurrentCareMemberName}}&nbsp;
+                </label>
+                <label *ngIf="!pdaenquery.AffectedPerson" class="form-control grey-input text-truncate">
+                    &nbsp;
                 </label>
             </div>
         </div>
@@ -198,7 +201,7 @@
                         class="text-danger pull-right">
                         Required (Max. Char 1000)
                     </small>
-                    <textarea rows="1" id="Query" class="form-control" name="Query" formControlName="Queries"
+                    <textarea rows="1" id="Query" class="form-control no-resize" name="Query" formControlName="Queries"
                         placeholder="Enter Discussion Notes"></textarea>
                 </div>
 
@@ -222,7 +225,7 @@
                                 class="text-danger pull-right">
                                 Required (Max. Char 1000)
                             </small>
-                            <textarea rows="1" id="Query" class="form-control" name="Query" formControlName="Queries"
+                            <textarea rows="1" id="Query" class="form-control no-resize" name="Query" formControlName="Queries"
                                 placeholder="Enter Discussion Notes"></textarea>
                         </div>
                     </div>
@@ -230,14 +233,14 @@
                         <div class="form-group col-md-4 col-sm-12">
                             <label for="Identified">Identified </label>
                             
-                            <md-checkbox id="Identified" [checked]="IsIdentified" (change)="onChange($event)" formControlName="IsIdentified"  aria-label="Add">
+                            <md-checkbox id="Identified" formControlName="IsIdentified" [checked]="IsIdentified" (change)="onChange($event)"   aria-label="Add">
                             </md-checkbox>
                             
                         </div>
                         <div class="form-group col-md-4 col-sm-12" [hidden]="enquiryType!=EnquiryType.Passenger">
                             <label for="Passengers">Passenger Name <span class="required">*</span></label>
 
-                            <autocomplete [items]="passengers" formControlName="passengerName" (notify)="onNotifyPassenger($event)"
+                            <autocomplete [items]="passengers" (notify)="onNotifyPassenger($event)"
                                 (InvokeAutoCompleteReset)="onResetPassenger()" [actionLinks]="actionLinks"
                                 [initialvalue]="initialvalue" [isEnabled]="IsIdentified" (actionClickHandler)="onPDAActionClick($event)">
                             </autocomplete>
@@ -245,8 +248,8 @@
                         <div class="form-group col-md-4 col-sm-12">
                             <label for="Unidentified">Unidentified <span class="required">*</span></label>
 
-                            <textarea rows="1" id="Unidentified" class="form-control" name="Unidentified"
-                                formControlName="Unidentified" placeholder="Enter Unidentified"></textarea>
+                            <textarea rows="1" id="Unidentified" formControlName="Unidentified" class="form-control no-resize" name="Unidentified"
+                                 placeholder="Enter Unidentified"></textarea>
                         </div>
                     </div>
 

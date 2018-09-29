@@ -11,7 +11,7 @@ import {
 import {
     InvolvePartyService,
     InvolvePartyModel
-} from '../../../shared.components';
+} from '../../involveparties';
 
 @Injectable()
 
@@ -26,7 +26,7 @@ export class AffectedService extends ServiceBase<AffectedModel> implements IAffe
      */
     constructor(private dataServiceFactory: DataServiceFactory,
         private involvedPartyService: InvolvePartyService) {
-            super(dataServiceFactory, 'Affecteds');
+        super(dataServiceFactory, 'Affecteds');
     }
 
     GetAll(): Observable<ResponseModel<AffectedModel>> {
@@ -47,10 +47,20 @@ export class AffectedService extends ServiceBase<AffectedModel> implements IAffe
             })
             .flatMap((data: AffectedModel) =>
                 this.involvedPartyService.Get(data.InvolvedPartyId))
-                    .map((data: InvolvePartyModel) => {
-                        affected.InvolvedParty = data;
-                        return affected;
+            .map((data: InvolvePartyModel) => {
+                affected.InvolvedParty = data;
+                return affected;
             });
+    }
+
+    GetAllActiveAffectedIdByIncidentId(incidentId: number): Observable<ResponseModel<AffectedModel>> {
+        let affected: AffectedModel;
+        return this._dataService.Query()
+            .Select('AffectedId')
+            .Expand("InvolvedParty($select=InvolvedPartyId;$expand=Flights($select=FlightId,FlightNo))")
+            .Filter(`ActiveFlag eq 'Active' and InvolvedParty/IncidentId eq ${incidentId}`)
+            .OrderBy("CreatedOn desc")
+            .Execute();
     }
 
     GetAllActiveAffecteds(): Observable<ResponseModel<AffectedModel>> {

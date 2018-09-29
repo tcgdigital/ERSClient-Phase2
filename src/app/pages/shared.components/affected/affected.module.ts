@@ -5,8 +5,9 @@ import { HttpModule } from '@angular/http';
 import { MdCheckboxModule } from '@angular2-material/checkbox';
 
 import { AffectedService } from './components';
-import { InvolvePartyService } from '../../shared.components';
+import { InvolvePartyService } from '../involveparties';
 import { DataExchangeService } from '../../../shared';
+
 
 @NgModule({
     imports: [

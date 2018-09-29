@@ -105,7 +105,6 @@ export class NotifyPeopleComponent implements OnInit {
     public PopulateNotifyDepartmentUsers(departmentId: number, incidentId: number): void {
         this.notifyPeopleService.GetAllDepartmentMatrix
             (departmentId, incidentId, (result: NotifyPeopleModel[]) => {
-                debugger;
                 let currentDeptItem: NotifyPeopleModel;
 
                 currentDeptItem = result.find(x => x.DepartmentId == departmentId);

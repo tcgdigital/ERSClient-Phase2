@@ -62,7 +62,6 @@ export class PageFunctionalityHierarchyComponent implements OnInit, OnChanges, O
     }
 
     public SearchAndExpandNodeByName(searchText: string): void {
-        debugger;
         let searchedText = jQuery(searchText).val();
         this.ClearAllHighLight();
 

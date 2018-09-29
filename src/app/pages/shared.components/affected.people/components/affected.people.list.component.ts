@@ -6,7 +6,7 @@ import { CommunicationLogModel, CommunicationLogService } from '../../../shared.
 import { InvolvePartyService, InvolvePartyModel } from '../../involveparties';
 import { EnquiryModel } from '../../call.centre/components/call.centre.model';
 import { CallerModel, CallerService } from '../../caller';
-import { PassengerService, CoPassengerMappingModel, PassengerModel } from '../../passenger/components';
+import { PassengerService, CoPassengerMappingModel, PassengerModel, CoPassengerService } from '../../passenger/components';
 import { NextOfKinModel } from '../../nextofkins';
 import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';
 import { AffectedPeopleService } from './affected.people.service';
@@ -103,7 +103,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
         private toastrConfig: ToastrConfig,
         private fileUploadService: FileUploadService,
         private fileStoreService: FileStoreService,
-        private passangerService: PassengerService) {
+        private copassangerService: CoPassengerService) {
         this.downloadFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Affected People/';
         this.globalStateProxyOpen = injector.get(GlobalStateService);
     }
@@ -143,7 +143,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
                 });
 
                 if (affectedPerson.PassengerId !== 0 && affectedPerson.GroupId !== 0) {
-                    this.passangerService.getCoPassengers(affectedPerson.GroupId)
+                    this.copassangerService.getCoPassengers(affectedPerson.GroupId)
                         .takeUntil(this.ngUnsubscribe)
                         .subscribe((response: ResponseModel<CoPassengerMappingModel>) => {
                             if (response.Records.length > 0) {

@@ -16,7 +16,7 @@ import { EnquiryModel, EnquiryService } from './components';
 import { AffectedPeopleModel } from "../affected.people/components";
 import { AffectedObjectModel } from '../affected.objects/components';
 import {
-    PassengerService, CoPassengerMappingModel, CoPassangerModelsGroupIdsModel
+    PassengerService, CoPassengerService, CoPassengerMappingModel, CoPassangerModelsGroupIdsModel, PassengerModel
 } from "../passenger/components";
 
 import {
@@ -42,24 +42,14 @@ import { IAutocompleteActions }
 import * as _ from 'underscore';
 import { PeopleOnBoardWidgetService } from '../../widgets';
 import { GroundVictimModel, GroundVictimService, AffectedVictimToView } from '../ground.victim';
+import { AffectedService, AffectedModel } from '../affected';
 
 @Component({
     selector: 'call-centre-main',
     encapsulation: ViewEncapsulation.None,
     templateUrl: './views/call.centre.view.html',
-    styleUrls: ['./styles/call.center.style.scss'],
-    providers: [
-        EnquiryService,
-        AffectedPeopleService,
-        AffectedObjectsService,
-        DepartmentService,
-        DemandService,
-        InvolvePartyService,
-        CommunicationLogService,
-        PassengerService,
-        GroundVictimService,
-        KeyValueService
-    ]
+    styleUrls: ['./styles/call.center.style.scss']
+
 })
 export class EnquiryEntryComponent implements OnInit, OnDestroy {
     @Input('callid') callid: number;
@@ -68,6 +58,14 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
     public form: FormGroup;
     public activeKeyValues: KeyValueModel[] = [];
     public IsIdentified: boolean = true;
+    public AffectedId: number = 0;
+    public PassengerId: number = 0;
+    public FlightId: number = 0;
+    public FlightNumber: string = '';
+    public UnidentifiedPassengerName: string = '';
+    public affectedObject: AffectedModel;
+    public affectedPersonObject: AffectedPeopleModel;
+    public passengerObject: PassengerModel;
     enquiryTypes: any[] = GlobalConstants.ExternalInputEnquiryType;
 
     pdaenquery: PDAEnquiryModel = new PDAEnquiryModel();
@@ -184,9 +182,12 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         private _router: Router,
         private callcenteronlypageservice: CallCenterOnlyPageService,
         private communicationlogservice: CommunicationLogService,
+        private copassangerService: CoPassengerService,
         private passangerService: PassengerService,
         private groundVictimService: GroundVictimService,
-        private keyValueService: KeyValueService) { }
+        private keyValueService: KeyValueService,
+        private affectedService: AffectedService
+    ) { }
 
     private getPassengersAndCrews(currentIncident: number): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
@@ -398,6 +399,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                         this.communicationlogstoupdateId
                             .push(this.enquiry.CommunicationLogs[0].InteractionDetailsId);
                 }
+
             }, (error: any) => {
                 console.log(`Error: ${error.message}`);
             });
@@ -893,7 +895,8 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         this.enquiry.ExternalInputId = this.callid;
         this.createdBy = +this.credential.UserId;
         this.createdByName = this.credential.UserName;
-        this.form.controls["passengerName"].enable();
+
+        this.IsIdentified = true;
         this.form.controls["Unidentified"].disable();
     }
 
@@ -951,7 +954,8 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
             IsAdminRequest: new FormControl(false),
             IsCallBack: new FormControl(false),
             IsTravelRequest: new FormControl(false),
-            passengerName: new FormControl(''),
+            // passengerName: new FormControl(''),
+            IsIdentified: new FormControl(true),
             Unidentified: new FormControl('')
         });
     }
@@ -971,7 +975,124 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         }
     }
 
+    private GetAffectedIdByIncidentId(incidentId: number): void {
+        this.affectedService.GetAllActiveAffectedIdByIncidentId(incidentId)
+            .map((response: ResponseModel<AffectedModel>) => {
+                this.affectedObject = response.Records[0];
+                this.AffectedId = this.affectedObject.AffectedId;
+                this.FlightId = this.affectedObject.InvolvedParty.Flights[0].FlightId;
+                this.FlightNumber = this.affectedObject.InvolvedParty.Flights[0].FlightNo;
+                this.UnidentifiedPassengerName = this.form.controls["Unidentified"].value;
+            })
+            .flatMap((_) => this.SavePassengerInfo())
+            .map((data: PassengerModel) => {
+                debugger;
+                this.PassengerId = data.PassengerId;
+            })
+            .flatMap((_) => this.SaveAffectedPerson())
+            .subscribe((data: AffectedPeopleModel) => {
+                debugger;
+                this.enquiry.AffectedPersonId = data.AffectedPersonId;
+                this.SaveEnquiry();
+
+            });
+    }
+
+    private InitializePassengerInfo(): void {
+        this.PassengerId = 0;
+        this.passengerObject = new PassengerModel();
+        this.passengerObject.PassengerId = 0;
+        this.passengerObject.FlightId = 0;
+        this.passengerObject.FlightNumber = '';
+        this.passengerObject.PassengerName = '';
+        this.passengerObject.Details = '';
+        this.passengerObject.PassengerGender = '';
+        this.passengerObject.PassengerNationality = '';
+        this.passengerObject.SpecialServiceRequestCode = '';
+        this.passengerObject.BaggageCount = 0;
+        this.passengerObject.Destination = '';
+        this.passengerObject.IsVip = false;
+        this.passengerObject.PassengerDob = null;
+        this.passengerObject.Seatno = '';
+        this.passengerObject.Passport = '';
+        this.passengerObject.Pnr = '';
+        this.passengerObject.SpokenLanguage = '';
+        this.passengerObject.Religion = '';
+        this.passengerObject.TravellingWith = '';
+        this.passengerObject.ContactNumber = '';
+        this.passengerObject.AlternateContactNumber = '';
+        this.passengerObject.PassengerType = '';
+        this.passengerObject.DepartureDateTime = null;
+        this.passengerObject.ArrivalDateTime = null;
+        this.passengerObject.Origin = '';
+        this.passengerObject.IdentificationDocType = '';
+        this.passengerObject.IdentificationDocNumber = '';
+        this.passengerObject.InboundFlightNumber = '';
+        this.passengerObject.OutBoundFlightNumber = '';
+        this.passengerObject.EmployeeId = '';
+        this.passengerObject.BaggageWeight = 0;
+    }
+
+    private InitializeAffectedPersonInfo(): void {
+
+        this.affectedPersonObject = new AffectedPeopleModel();
+        this.affectedPersonObject.PassengerId = 0;
+        this.affectedPersonObject.AffectedId = 0;
+        this.affectedPersonObject.PassengerId = 0;
+        this.affectedPersonObject.CrewId = null;
+        this.affectedPersonObject.IsLost = false;
+        this.affectedPersonObject.TicketNumber = '';
+        this.affectedPersonObject.Identification = '';
+        this.affectedPersonObject.LostFoundStatus = '';
+        this.affectedPersonObject.MedicalStatus = '';
+        this.affectedPersonObject.ReunionStatus = null;
+        this.affectedPersonObject.Remarks = '';
+        this.affectedPersonObject.IsStaff = false;
+        this.affectedPersonObject.IsCrew = false;
+        this.affectedPersonObject.IsVerified = false;
+        this.affectedPersonObject.IsNokInformed = false;
+        this.affectedPersonObject.CurrentCareMemberName = '';
+        this.affectedPersonObject.IsIdentified = false;
+    }
+
+    private SavePassengerInfo(): Observable<PassengerModel> {
+        //Also Store the Passenger into the Passenger table 
+        //(set all the not null field to NA) and get the PassengerId and store it in a variable.
+        this.InitializePassengerInfo();
+        this.passengerObject.FlightId = this.FlightId;
+        this.passengerObject.FlightNumber = this.FlightNumber;
+        this.passengerObject.PassengerName = this.UnidentifiedPassengerName;
+        this.passengerObject.CreatedOn=new Date();
+        this.passengerObject.CreatedBy=+UtilityService.GetFromSession('CurrentUserId');
+        //this.enquiry
+        return this.passangerService.Create(this.passengerObject);
+
+    }
+
+    private SaveAffectedPerson(): Observable<AffectedPeopleModel> {
+        this.InitializeAffectedPersonInfo();
+        this.affectedPersonObject.AffectedId = this.AffectedId;
+        this.affectedPersonObject.PassengerId = this.PassengerId;
+        this.affectedPersonObject.CurrentCareMemberName = this.UnidentifiedPassengerName;
+        this.affectedPersonObject.IsIdentified = false;
+        this.affectedPersonObject.CreatedOn=new Date();
+        this.affectedPersonObject.CreatedBy=+UtilityService.GetFromSession('CurrentUserId');
+        return this.affectedPeopleService.Create(this.affectedPersonObject);
+    }
+
     public SaveEnquiryDemandCaller(): void {
+        debugger;
+        if (this.form.controls["IsIdentified"].value) {
+            this.SaveEnquiry();
+        }
+        else {
+            //Get the AffectedId From IncidentId. And store it in a variable.
+            this.GetAffectedIdByIncidentId(this.currentIncident);
+        }
+    }
+
+    private SaveEnquiry(): void {
+        debugger;
         this.submitted = true;
 
         if (this.form.valid && (
@@ -1109,7 +1230,6 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
             else {
 
                 this.enquiryToUpdate.Queries = this.enquiry.Queries;
-                debugger;
                 if ((this.enquiryType == +EnquiryType.Passenger || this.enquiryType == +EnquiryType.Crew)
                     && this.enquiry.AffectedPersonId && this.initialvalue.Value) {
                     this.enquiry.AffectedPersonId = this.initialvalue.Value;
