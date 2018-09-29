@@ -3,7 +3,7 @@ import { AffectedPeopleService, AffectedPeopleModel } from '../../affected.peopl
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { CareMemberTrackerModel } from './care.member.tracker.model';
 import { AuthModel, UtilityService, ResponseModel, DataExchangeService, GlobalConstants } from '../../../../shared';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { CareMemberTrackerService } from './care.member.tracker.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -42,7 +42,7 @@ export class CareMemberTrackerForAllComponent implements OnInit, OnDestroy {
     private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(private affectedPeopleService: AffectedPeopleService,
-        private careMemberTrackerService: CareMemberTrackerService, 
+        private careMemberTrackerService: CareMemberTrackerService,
         private toastrService: ToastrService,
         private dataExchangeCareMemberCreationForAllPDA: DataExchangeService<string>) {
     }
@@ -65,6 +65,7 @@ export class CareMemberTrackerForAllComponent implements OnInit, OnDestroy {
             const careMemberName: string = this.careMemberForAllForm.controls['CareMemberName'].value;
 
             this.affectedPeopleService.GetAllAffectedPeopleIdsByIncidentId(this.currentIncidentId)
+                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((selectedAffectedPeople: ResponseModel<AffectedPeopleModel>) => {
 

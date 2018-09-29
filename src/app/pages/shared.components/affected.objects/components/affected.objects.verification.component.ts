@@ -1,13 +1,13 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { Subscription, Subject } from 'rxjs/Rx';
+import { Subscription, Subject, Observable } from 'rxjs/Rx';
 
 import { InvolvePartyModel } from '../../../shared.components';
 import { AffectedObjectModel, AffectedObjectsToView } from './affected.objects.model';
 import { AffectedObjectsService } from './affected.objects.service';
 import {
-    ResponseModel, GlobalStateService, UtilityService, 
+    ResponseModel, GlobalStateService, UtilityService,
     KeyValue, AuthModel, GlobalConstants
 } from '../../../../shared';
 
@@ -18,7 +18,7 @@ import {
 })
 export class AffectedObjectsVerificationComponent implements OnInit {
     public isShowVerifyAffectedCargo: boolean = true;
-    public isVerifiedCargoManifestDownloadLink: boolean= true;
+    public isVerifiedCargoManifestDownloadLink: boolean = true;
     public currentDepartmentId: number = 0;
     protected _onRouteChange: Subscription;
     affectedObjectsForVerification: AffectedObjectsToView[] = [];
@@ -50,6 +50,7 @@ export class AffectedObjectsVerificationComponent implements OnInit {
 
     getAffectedObjects(incidentId): void {
         this.affectedObjectsService.GetFilterByIncidentId(incidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 if (response.Records[0]) {
@@ -98,7 +99,7 @@ export class AffectedObjectsVerificationComponent implements OnInit {
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
 
         this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard,
-             (model: KeyValue) => this.departmentChangeHandler(model));
+            (model: KeyValue) => this.departmentChangeHandler(model));
 
         if (this._router.url.indexOf('archivedashboard') > -1) {
             this.isArchive = true;
@@ -112,20 +113,20 @@ export class AffectedObjectsVerificationComponent implements OnInit {
         this.credential = UtilityService.getCredentialDetails();
         this.userid = +this.credential.UserId;
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard,
             (model: KeyValue) => this.incidentChangeHandler(model));
 
         // SignalR Notification
         this.globalState.Subscribe
-        (GlobalConstants.NotificationConstant.ReceiveIncidentBorrowingCompletionResponse.Key, () => {
-            this.getAffectedObjects(this.currentIncident);
-        });
+            (GlobalConstants.NotificationConstant.ReceiveIncidentBorrowingCompletionResponse.Key, () => {
+                this.getAffectedObjects(this.currentIncident);
+            });
     }
 
     ngOnDestroy(): void {
-       // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard);
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard);
 
-       this.ngUnsubscribe.next();
+        this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
     }
 

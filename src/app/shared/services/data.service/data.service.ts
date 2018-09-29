@@ -64,7 +64,8 @@ export class DataService<T extends BaseModel> {
 
     /**
      * Get an instance of QueryOperation for API GET request
-     *
+     * The response returns simple un-typed object
+     * 
      * @param {string} key
      * @returns {GetOperation<T>}
      *
@@ -74,6 +75,14 @@ export class DataService<T extends BaseModel> {
         return new SimpleGetOperation<any>(this.dataProcessingService, this.httpService, this.httpInterceptorService, this.typeName, (param !== '') ? (this.actionSuffix + param) : this.actionSuffix);
     }
 
+    /**
+     * Get an instance of QueryOperation for API GET request
+     * The response returns collection or array of un-typed object
+     * 
+     * @param {string} [param='']
+     * @returns {BulkGetOperation<any[]>}
+     * @memberof DataService
+     */
     public BulkGet(param: string = ''): BulkGetOperation<any[]> {
         return new BulkGetOperation<any>(this.dataProcessingService, this.httpService, this.httpInterceptorService, this.typeName, (param !== '') ? (this.actionSuffix + param) : this.actionSuffix);
     }

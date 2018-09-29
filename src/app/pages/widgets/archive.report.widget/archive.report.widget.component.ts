@@ -2,7 +2,7 @@ import {
     Component, OnInit, Input, OnDestroy,
     ViewEncapsulation, ViewChild
 } from '@angular/core';
-import { Subject } from 'rxjs/Rx';
+import { Subject, Observable } from 'rxjs/Rx';
 import { ArchiveDocumentTypeService } from './archive.doument.type.service';
 import { DepartmentClosureService } from './department.closure.service';
 import { OtherReportModel, DepartmentClosureModel } from './archive.report.widget.model';
@@ -48,15 +48,16 @@ export class ArchiveReportWidgetComponent implements OnInit, OnDestroy {
         this.downloadUrl = GlobalConstants.EXTERNAL_URL + 'api/Report/CrisisSummaryReport/' + this.incidentId;
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/ActivityLogReport/' + this.incidentId;
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChange, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChange,
             (model: KeyValue) => this.incidentChangeHandler(model));
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
             (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
     public GetArchiveDocumentTypeData(incidentId: number, callback?: Function): void {
         this.archiveDocumentTypeService.GetByIncident(incidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<ArchiveDocumentTypeModel>) => {
                 this.otherReports = [];
@@ -83,6 +84,7 @@ export class ArchiveReportWidgetComponent implements OnInit, OnDestroy {
 
     public GetDepartmentClosureData(incidentId: number, callback?: Function): void {
         this.departmentClosureService.GetAllByIncident(incidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<DepartmentClosureModel>) => {
                 this.otherReports = [];

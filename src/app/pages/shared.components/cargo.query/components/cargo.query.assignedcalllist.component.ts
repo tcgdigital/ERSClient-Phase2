@@ -2,10 +2,10 @@ import { Component, ViewEncapsulation, OnInit, OnDestroy, ViewChild } from '@ang
 import {
     ResponseModel, KeyValue, GlobalStateService, UtilityService, GlobalConstants
 } from '../../../../shared';
-import { Subscription, Subject } from 'rxjs/Rx';
+import { Subscription, Subject, Observable } from 'rxjs/Rx';
 
-import { 
-    CallCenterOnlyPageService, ExternalInputModel 
+import {
+    CallCenterOnlyPageService, ExternalInputModel
 } from '../../../callcenteronlypage/component';
 import { Router, NavigationEnd } from '@angular/router';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -25,7 +25,7 @@ export class CargoQueryAssignedCallsListComponent implements OnInit, OnDestroy {
     public isArchive: boolean = false;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
 
-    constructor(private callcenteronlypageservice: CallCenterOnlyPageService, 
+    constructor(private callcenteronlypageservice: CallCenterOnlyPageService,
         private _router: Router,
         private globalState: GlobalStateService) {
     }
@@ -41,25 +41,25 @@ export class CargoQueryAssignedCallsListComponent implements OnInit, OnDestroy {
         }
         this.getAllCargoQueryCalls(this.currentIncidentId);
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard,
             (model: KeyValue) => this.incidentChangeHandler(model));
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.CallRecieved, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.CallRecieved,
             (model: number) => this.getAllCargoQueryCalls(this.currentIncidentId));
 
         // SignalR Notification
         this.globalState.Subscribe
-        (GlobalConstants.NotificationConstant.ReceiveCargoEnquiryCreationResponse.Key, (model: ExternalInputModel) => {
-            // this.getAllCargoQueryCalls(model.IncidentId);
-            const index: number = this.allAssignedCalls
-                .findIndex((x: ExternalInputModel) => x.ExternalInputId === model.ExternalInputId);
+            (GlobalConstants.NotificationConstant.ReceiveCargoEnquiryCreationResponse.Key, (model: ExternalInputModel) => {
+                // this.getAllCargoQueryCalls(model.IncidentId);
+                const index: number = this.allAssignedCalls
+                    .findIndex((x: ExternalInputModel) => x.ExternalInputId === model.ExternalInputId);
 
-            if (index > -1) {
-                this.allAssignedCalls.splice(index, 1, model);
-            } else {
-                this.allAssignedCalls.unshift(model)
-            }
-        });
+                if (index > -1) {
+                    this.allAssignedCalls.splice(index, 1, model);
+                } else {
+                    this.allAssignedCalls.unshift(model)
+                }
+            });
     }
 
     public ngOnDestroy(): void {
@@ -77,6 +77,7 @@ export class CargoQueryAssignedCallsListComponent implements OnInit, OnDestroy {
         this.callcenterload = false;
 
         this.callcenteronlypageservice.GetCargoQueryCallsByIncident(incidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;

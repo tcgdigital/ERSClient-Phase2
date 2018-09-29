@@ -5,7 +5,7 @@ import {
     FormGroup, FormControl, FormBuilder,
     AbstractControl, Validators, ReactiveFormsModule
 } from '@angular/forms';
-import { Subject } from 'rxjs/Rx';
+import { Subject, Observable } from 'rxjs/Rx';
 import {
     DataExchangeService, GlobalConstants, KeyValue, GlobalStateService
 } from '../../../../shared';
@@ -44,6 +44,7 @@ export class ValidPassengersListComponent implements OnInit, OnDestroy {
     getValidPassengerRecords(): void {
         this._validRecordService.GetAllPassengerByIncidentId(this.IncidentId)
             .flatMap(x => x)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe(a => {
                 this.passengers.push(a.Passenger);

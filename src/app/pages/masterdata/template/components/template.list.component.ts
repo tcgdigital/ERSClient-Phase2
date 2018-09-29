@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { TemplateModel } from './template.model';
 import { TemplateService } from './template.service';
-import { Subject } from 'rxjs/Rx';
+import { Subject, Observable } from 'rxjs/Rx';
 import { EmergencySituationService } from '../../emergency.situation';
 import {
     ResponseModel, DataExchangeService,
@@ -40,6 +40,7 @@ export class TemplateListComponent implements OnInit, OnDestroy {
 
     getTemplates(): void {
         this.templateService.GeAllEmailTemplates()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<TemplateModel>) => {
                 this.templates = response.Records;
@@ -99,6 +100,7 @@ export class TemplateListComponent implements OnInit, OnDestroy {
     invokeSearch(query: string): void {
         if (query !== '') {
             this.templateService.GetQuery(query.replace(/(\'\|)/ig, ''))
+                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: ResponseModel<TemplateModel>) => {
                     this.templates = response.Records.filter(a => a.ActiveFlag == 'Active');

@@ -2,7 +2,7 @@ import {
     Component, ViewEncapsulation, OnDestroy, Injector,
     OnInit, AfterContentInit, ViewChild
 } from '@angular/core';
-import { Subscription, Subject } from 'rxjs/Rx';
+import { Subscription, Subject, Observable } from 'rxjs/Rx';
 import * as moment from 'moment/moment';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router } from '@angular/router';
@@ -50,10 +50,10 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
     demand: DemandModelToView = new DemandModelToView();
     public isShowApprovedDemand: boolean = true;
     public isInvalidRemarks: boolean = false;
-    public isDashboradApprovedDemandDownloadLink: boolean=true;
+    public isDashboradApprovedDemandDownloadLink: boolean = true;
 
     private ngUnsubscribe: Subject<any> = new Subject<any>();
-    
+
     /**
      * Creates an instance of ApprovedDemandComponent.
      * @param {DemandService} demandService
@@ -92,39 +92,40 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.createdByName = this.credential.UserName;
 
         this.getCurrentDepartmentName(this.currentDepartmentId);
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard,
             (model: KeyValue) => this.incidentChangeHandler(model));
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard,
             (model: KeyValue) => this.departmentChangeHandler(model));
 
         // SignalR Notification
         this.globalState.Subscribe
-        (GlobalConstants.NotificationConstant.ReceiveDemandApprovalPendingResponse.Key, (model: DemandModel) => {
-            // this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId);
-            this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
-        });
+            (GlobalConstants.NotificationConstant.ReceiveDemandApprovalPendingResponse.Key, (model: DemandModel) => {
+                // this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId);
+                this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
+            });
 
         this.globalState.Subscribe
-        (GlobalConstants.NotificationConstant.ReceiveDemandApprovedResponse.Key, (model: DemandModel) => {
-            // this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId);
-            this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
-        });
+            (GlobalConstants.NotificationConstant.ReceiveDemandApprovedResponse.Key, (model: DemandModel) => {
+                // this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId);
+                this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
+            });
 
         this.globalState.Subscribe
-        (GlobalConstants.NotificationConstant.ReceiveDemandRejectedFromApprovalResponse.Key, (model: DemandModel) => {
-            // this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId);
-            this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
-        });
+            (GlobalConstants.NotificationConstant.ReceiveDemandRejectedFromApprovalResponse.Key, (model: DemandModel) => {
+                // this.getDemandsForApproval(model.ApproverDepartmentId, model.IncidentId);
+                this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
+            });
     }
 
     public ngAfterContentInit(): any {
         // this.setRagStatus();
         // UtilityService.SetRAGStatus(this.demandsForApproval, 'Demand');
     }
-    
+
     public getDemandsForApproval(deptId, incidentId): void {
         this.demandService.GetByApproverDepartment(deptId, incidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demandsForApproval = this.demandService.DemandMapper(response.Records);
@@ -141,6 +142,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
 
     public getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
                 this.demandRemarks = response.Records;
@@ -210,8 +212,9 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.RemarkToCreate.TargetDepartmentName = demand.TargetDepartmentName;
         this.RemarkToCreate.CreatedByName = this.createdByName;
         this.RemarkToCreate.CreatedBy = +this.credential.UserId;
-        
+
         this.demandRemarkLogsService.Create(this.RemarkToCreate)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: DemandRemarkLogModel) => {
                 this.getDemandRemarks(demand.DemandId);
@@ -278,6 +281,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
             }
             else {
                 this.demandService.UpdateBulkForApproval(demandCompletion)
+                    .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                     .takeUntil(this.ngUnsubscribe)
                     .subscribe((response: DemandModel[]) => {
                         this.toastrService.success('Demand status successfully updated.', 'Success', this.toastrConfig);
@@ -295,6 +299,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
 
     public getCurrentDepartmentName(departmentId): void {
         this.departmentService.Get(departmentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: DepartmentModel) => {
                 this.currentDepartmentName = response.DepartmentName;

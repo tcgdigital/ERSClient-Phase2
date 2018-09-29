@@ -5,7 +5,7 @@ import {
 import {
     ResponseModel, KeyValue, GlobalStateService, UtilityService, GlobalConstants
 } from '../../../../shared';
-import { Subscription, Subject } from 'rxjs/Rx';
+import { Subscription, Subject, Observable } from 'rxjs/Rx';
 
 import {
     CallCenterOnlyPageService,
@@ -89,6 +89,7 @@ export class PassangerQueryAssignedCallsListComponent implements OnInit, OnDestr
         this.callcenterload = false;
 
         this.callcenteronlypageservice.GetPassengerQueryCallsByIncident(incidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;

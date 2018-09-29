@@ -38,6 +38,7 @@ export class DepartmentListComponent implements OnInit, OnDestroy {
 
     getDepertments(): void {
         this.departmentService.GetAll()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 response.Records.forEach((x) => {
@@ -100,6 +101,7 @@ export class DepartmentListComponent implements OnInit, OnDestroy {
     invokeSearch(query: string): void {
         if (query !== '') {
             this.departmentService.GetQuery(query)
+                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: ResponseModel<DepartmentModel>) => {
                     response.Records.forEach((x) => {

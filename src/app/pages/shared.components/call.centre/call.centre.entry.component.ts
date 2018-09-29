@@ -22,7 +22,7 @@ import {
 import {
     CommunicationLogModel, InvolvePartyModel,
     AffectedPeopleService, AffectedPeopleToView,
-    AffectedObjectsService, AffectedObjectsToView, DemandModel
+    AffectedObjectsService, AffectedObjectsToView, DemandModel, AffectedModel
 } from '../../shared.components';
 
 import { DemandService } from '../demand';
@@ -42,14 +42,28 @@ import { IAutocompleteActions }
 import * as _ from 'underscore';
 import { PeopleOnBoardWidgetService } from '../../widgets';
 import { GroundVictimModel, GroundVictimService, AffectedVictimToView } from '../ground.victim';
-import { AffectedService, AffectedModel } from '../affected';
+
+import { AffectedService } from '../affected/components/affected.service';
 
 @Component({
     selector: 'call-centre-main',
     encapsulation: ViewEncapsulation.None,
     templateUrl: './views/call.centre.view.html',
-    styleUrls: ['./styles/call.center.style.scss']
 
+    styleUrls: ['./styles/call.center.style.scss'],
+    providers: [
+        EnquiryService,
+        AffectedPeopleService,
+        AffectedObjectsService,
+        DepartmentService,
+        DemandService,
+        InvolvePartyService,
+        CommunicationLogService,
+        PassengerService,
+        GroundVictimService,
+        KeyValueService,
+        AffectedService
+    ]
 })
 export class EnquiryEntryComponent implements OnInit, OnDestroy {
     @Input('callid') callid: number;
@@ -191,6 +205,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
 
     private getPassengersAndCrews(currentIncident: number): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
@@ -228,6 +243,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
 
     private getCargo(currentIncident: number): void {
         this.affectedObjectsService.GetFilterByIncidentId(currentIncident)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedObjects = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
@@ -245,6 +261,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
 
     private getGroundVictims(currentIncident: number): void {
         this.groundVictimService.GetAllGroundVictimsByIncident(currentIncident)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((victim: GroundVictimModel) => {
                 let viewModel: AffectedVictimToView = new AffectedVictimToView();
@@ -268,6 +285,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
 
     private getDepartments(): void {
         this.departmentService.GetAll()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
@@ -307,6 +325,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         }
 
         queryDetailService
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ExternalInputModel[]) => {
                 if (response[0].PDAEnquiry != null) {
@@ -806,7 +825,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         let copassangergroup: CoPassangerModelsGroupIdsModel = new CoPassangerModelsGroupIdsModel();
         copassangergroup.copassangers = copassangerModels;
         copassangergroup.groupIds = groupids;
-        return this.passangerService.deleteoldgroupsandaddcopassanger(copassangergroup)
+        return this.copassangerService.deleteoldgroupsandaddcopassanger(copassangergroup)
     }
 
     private CreateDemandsOnEnquery(affectedId: number, affectedPersonIds?: number[]): void {
@@ -850,6 +869,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
 
     private getAllActiveKeyValues(): void {
         this.keyValueService.GetAll()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<KeyValueModel>) => {
                 this.activeKeyValues = response.Records;
@@ -909,6 +929,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         let affectedPersonid = eventArgs.selectedItem.Value;
 
         this.affectedPeopleService.GetCommunicationByPDA(affectedPersonid)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<AffectedPeopleModel>) => {
                 let responseModel: AffectedPeopleModel = response.Records[0];
@@ -933,6 +954,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         let affectedCargoid = eventArgs.selectedItem.Value;
 
         this.affectedObjectsService.GetCommunicationByAWB(affectedCargoid)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<AffectedObjectModel>) => {
                 let responseModel: AffectedObjectModel = response.Records[0];
@@ -1228,7 +1250,6 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                 }
             }
             else {
-
                 this.enquiryToUpdate.Queries = this.enquiry.Queries;
                 if ((this.enquiryType == +EnquiryType.Passenger || this.enquiryType == +EnquiryType.Crew)
                     && this.enquiry.AffectedPersonId && this.initialvalue.Value) {
@@ -1330,7 +1351,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                                 return this.GetCoPassangersByAffectedPersonId(this.enquiry.AffectedPersonId);
                             }
                             else if (this.consolidatedCopassengers.length == 0 && this.initialgroupId != 0) {
-                                return this.passangerService.deleteoldgroups(this.initialgroupId);
+                                return this.copassangerService.deleteoldgroups(this.initialgroupId);
                             }
                             else {
                                 return Observable.of(new Array<CoPassengerMappingModel>());

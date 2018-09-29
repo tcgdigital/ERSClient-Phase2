@@ -18,6 +18,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { PassengerService, CoPassengerService } from '../passenger';
 import { GroundVictimService } from '../ground.victim';
 import { AffectedService } from '../affected';
+import { AffectedModule } from '../affected/affected.module';
+
 
 @NgModule({
     imports: [
@@ -27,6 +29,7 @@ import { AffectedService } from '../affected';
         HttpModule,
         SharedModule,
         MdCheckboxModule,
+        AffectedModule,
         ModalModule
     ],
     declarations: [

@@ -17,7 +17,7 @@ import {
 import { UserProfileService, UserProfileModel } from '../masterdata/userprofile/components';
 import { UserPermissionService, UserPermissionModel } from '../masterdata/userpermission/components';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 
 @Component({
     selector: 'member-track-main',
@@ -49,7 +49,7 @@ export class MemberTrackComponent implements OnInit, OnDestroy, AfterViewChecked
     public isShowHistory: boolean = true;
     public isShowAllocationDeallocation: boolean = true;
     public isSelectedDept: boolean;
-    public isMemberTrackingReportLink: boolean=true;
+    public isMemberTrackingReportLink: boolean = true;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(private globalState: GlobalStateService,
@@ -224,6 +224,7 @@ export class MemberTrackComponent implements OnInit, OnDestroy, AfterViewChecked
             })
             .flatMap((_) => this.membertrackService.GetAllByIncidentDepartment(departmentId, incidentId))
             .map((response1: ResponseModel<MemberCurrentEngagementModel>) => { this.memberTracks = response1.Records; })
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe(() => {
                 this.isChecked = false;
@@ -261,12 +262,14 @@ export class MemberTrackComponent implements OnInit, OnDestroy, AfterViewChecked
 
     open(id) {
         this.membertrackService.GetAllHistory(id, this.currentDepartmentId, this.currentIncidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<MemberEngagementTrackModel>) => {
                 this.memberHistory = response.Records;
 
                 this.memberHistory.forEach((x) => {
                     this.userProfileService.Get(x.CreatedBy)
+                        .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                         .takeUntil(this.ngUnsubscribe)
                         .subscribe((response1: UserProfileModel) => {
                             x['createdby'] = response1.Name;

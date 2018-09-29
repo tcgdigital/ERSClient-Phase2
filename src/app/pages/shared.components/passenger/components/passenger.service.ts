@@ -34,41 +34,41 @@ export class PassengerService extends ServiceBase<PassengerModel> {
             .Execute();
     }
 
-    public setcopassangers(entities: CoPassengerMappingModel[]): Observable<CoPassengerMappingModel[]> {
-        let option: DataProcessingService = new DataProcessingService();
-        let setcopassangerdataservice: DataService<CoPassengerMappingModel> = this.dataServiceFactory
-            .CreateServiceWithOptionsAndActionSuffix<CoPassengerMappingModel>
-            ('CoPassengerMappingBatch', 'BatchPostAsync', option);
-        return setcopassangerdataservice.BulkPost(entities).Execute();
-    };
+    // public setcopassangers(entities: CoPassengerMappingModel[]): Observable<CoPassengerMappingModel[]> {
+    //     let option: DataProcessingService = new DataProcessingService();
+    //     let setcopassangerdataservice: DataService<CoPassengerMappingModel> = this.dataServiceFactory
+    //         .CreateServiceWithOptionsAndActionSuffix<CoPassengerMappingModel>
+    //         ('CoPassengerMappingBatch', 'BatchPostAsync', option);
+    //     return setcopassangerdataservice.BulkPost(entities).Execute();
+    // };
 
-    public deleteoldgroups(groupid : number): Observable<CoPassengerMappingModel[]> {
-         let option: DataProcessingService = new DataProcessingService();
-        let setcopassangerdataservice: DataService<CoPassengerMappingModel> = this.dataServiceFactory
-            .CreateServiceWithOptionsAndActionSuffix<CoPassengerMappingModel>
-            ('CoPassengerMappingBatch', `BatchDeleteCoPassangers/${groupid}`, option);
-        return setcopassangerdataservice.JsonPost(groupid).Execute();
-    };
+    // public deleteoldgroups(groupid : number): Observable<CoPassengerMappingModel[]> {
+    //      let option: DataProcessingService = new DataProcessingService();
+    //     let setcopassangerdataservice: DataService<CoPassengerMappingModel> = this.dataServiceFactory
+    //         .CreateServiceWithOptionsAndActionSuffix<CoPassengerMappingModel>
+    //         ('CoPassengerMappingBatch', `BatchDeleteCoPassangers/${groupid}`, option);
+    //     return setcopassangerdataservice.JsonPost(groupid).Execute();
+    // };
 
-    public updatecopassangerstogroup(entities: CoPassengerMappingModel[]): Observable<CoPassengerMappingModel[]> {
-         let option: DataProcessingService = new DataProcessingService();
-        let setcopassangerdataservice: DataService<CoPassengerMappingModel> = this.dataServiceFactory
-            .CreateServiceWithOptionsAndActionSuffix<CoPassengerMappingModel>
-            ('CoPassengerMappingBatch', 'BatchUpdateCoPassangersToGroupAsync', option);
-        return setcopassangerdataservice.BulkPost(entities).Execute();
-    };
+    // public updatecopassangerstogroup(entities: CoPassengerMappingModel[]): Observable<CoPassengerMappingModel[]> {
+    //      let option: DataProcessingService = new DataProcessingService();
+    //     let setcopassangerdataservice: DataService<CoPassengerMappingModel> = this.dataServiceFactory
+    //         .CreateServiceWithOptionsAndActionSuffix<CoPassengerMappingModel>
+    //         ('CoPassengerMappingBatch', 'BatchUpdateCoPassangersToGroupAsync', option);
+    //     return setcopassangerdataservice.BulkPost(entities).Execute();
+    // };
 
-    public deleteoldgroupsandupdatecopassanger(entity: CoPassangerModelsGroupIdsModel): Observable<CoPassengerMappingModel[]> {
-         let option: DataProcessingService = new DataProcessingService();
-        let setcopassangerdataservice: DataService<any> = this.dataServiceFactory
-            .CreateServiceWithOptionsAndActionSuffix('CoPassengerMappingBatch', 'BatchDeleteOldGroupsUpdateCoPassangers', option);
-        return setcopassangerdataservice.JsonPost(entity).Execute();
-    };
+    // public deleteoldgroupsandupdatecopassanger(entity: CoPassangerModelsGroupIdsModel): Observable<CoPassengerMappingModel[]> {
+    //      let option: DataProcessingService = new DataProcessingService();
+    //     let setcopassangerdataservice: DataService<any> = this.dataServiceFactory
+    //         .CreateServiceWithOptionsAndActionSuffix('CoPassengerMappingBatch', 'BatchDeleteOldGroupsUpdateCoPassangers', option);
+    //     return setcopassangerdataservice.JsonPost(entity).Execute();
+    // };
 
-    public deleteoldgroupsandaddcopassanger(entity: CoPassangerModelsGroupIdsModel): Observable<CoPassengerMappingModel[]> {
-         let option: DataProcessingService = new DataProcessingService();
-        let setcopassangerdataservice: DataService<any> = this.dataServiceFactory
-            .CreateServiceWithOptionsAndActionSuffix('CoPassengerMappingBatch', 'BatchDeleteOldGroupsAddCoPassangers', option);
-        return setcopassangerdataservice.JsonPost(entity).Execute();
-    };
+    // public deleteoldgroupsandaddcopassanger(entity: CoPassangerModelsGroupIdsModel): Observable<CoPassengerMappingModel[]> {
+    //      let option: DataProcessingService = new DataProcessingService();
+    //     let setcopassangerdataservice: DataService<any> = this.dataServiceFactory
+    //         .CreateServiceWithOptionsAndActionSuffix('CoPassengerMappingBatch', 'BatchDeleteOldGroupsAddCoPassangers', option);
+    //     return setcopassangerdataservice.JsonPost(entity).Execute();
+    // };
 }
