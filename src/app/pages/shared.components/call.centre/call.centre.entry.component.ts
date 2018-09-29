@@ -203,7 +203,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         private affectedService: AffectedService
     ) { }
 
-    private getPassengersAndCrews(currentIncident: number): void {
+    private getPassengersAndCrews(currentIncident: number, isIdentified: boolean): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
@@ -221,11 +221,12 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                     return (a.CrewName.toUpperCase() > b.CrewName.toUpperCase()) ?
                         1 : ((b.CrewName.toUpperCase() > a.CrewName.toUpperCase()) ? -1 : 0);
                 });
+                if (isIdentified) {
+                    for (const affectedPerson of passengerModels) {
+                        this.passengers.push(new KeyValue(`${affectedPerson.PassengerName} (${affectedPerson.TicketNumber})`, affectedPerson.AffectedPersonId));
+                        this.copassengerlistPassenger.push(Object.assign({}, affectedPerson));
+                    }
 
-                for (const affectedPerson of passengerModels) {
-                    // this.passengers.push(new KeyValue(affectedPerson.PassengerName + ' (' + affectedPerson.TicketNumber + ')', affectedPerson.AffectedPersonId));
-                    this.passengers.push(new KeyValue(`${affectedPerson.PassengerName} (${affectedPerson.TicketNumber})`, affectedPerson.AffectedPersonId));
-                    this.copassengerlistPassenger.push(Object.assign({}, affectedPerson));
                 }
 
                 this.copassengerlistPassenger.forEach(x => x.IsSelected = false);
@@ -384,32 +385,32 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                                     (this.enquiryType == +EnquiryType.GroundVictim ? this.victims.find(x => x.Value == this.enquiry.GroundVictimId) :
                                         new KeyValue("", 0))));
                     }
+                    if (this.initialvalue) {
+                        if (this.enquiryType == +EnquiryType.Passenger && this.initialvalue.Value != 0) {
+                            this.enquiriesToUpdate = response[0].Enquiries;
+                            this.showCoPassangerPannel = true;
 
-                    if (this.enquiryType == +EnquiryType.Passenger && this.initialvalue.Value != 0) {
-                        this.enquiriesToUpdate = response[0].Enquiries;
-                        this.showCoPassangerPannel = true;
+                            let obj = this.affectedPeople.find(x => x.AffectedPersonId == this.initialvalue.Value);
+                            this.affectedId = obj.AffectedId;
+                            this.CoPassangerListPopulation(obj);
 
-                        let obj = this.affectedPeople.find(x => x.AffectedPersonId == this.initialvalue.Value);
-                        this.affectedId = obj.AffectedId;
-                        this.CoPassangerListPopulation(obj);
+                            if (obj.GroupId > 0) {
+                                this.SelectPeopleWithSameGroupId(obj.GroupId, true, true);
+                                this.initialgroupId = obj.GroupId;
+                            }
+                            this.PopulateConsolidatedCoPassangers();
+                            this.consolidatedCopassengers.map(x => this.initialgrouidlist.push(x.PassengerId))
 
-                        if (obj.GroupId > 0) {
-                            this.SelectPeopleWithSameGroupId(obj.GroupId, true, true);
-                            this.initialgroupId = obj.GroupId;
-                        }
-                        this.PopulateConsolidatedCoPassangers();
-                        this.consolidatedCopassengers.map(x => this.initialgrouidlist.push(x.PassengerId))
-
-                        this.consolidatedCopassengers.forEach(x => {
-                            x.IsSelected = false;
-                            response[0].Enquiries.forEach(y => {
-                                if (x.AffectedPersonId == y.AffectedPersonId) {
-                                    x.IsSelected = true;
-                                }
+                            this.consolidatedCopassengers.forEach(x => {
+                                x.IsSelected = false;
+                                response[0].Enquiries.forEach(y => {
+                                    if (x.AffectedPersonId == y.AffectedPersonId) {
+                                        x.IsSelected = true;
+                                    }
+                                });
                             });
-                        });
+                        }
                     }
-
                     if (this.enquiriesToUpdate.length > 0) {
                         this.communicationlogstoupdateId = _.pluck(_.flatten(_.pluck
                             (this.enquiriesToUpdate, 'CommunicationLogs')), 'InteractionDetailsId');
@@ -896,7 +897,8 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         this.credential = UtilityService.getCredentialDetails();
 
         if (this.enquiryType == +EnquiryType.Passenger || this.enquiryType == +EnquiryType.Crew) {
-            this.getPassengersAndCrews(this.currentIncident);
+            this.GetPassengerInfo();
+
         }
         else if (this.enquiryType == +EnquiryType.Cargo) {
             this.getCargo(this.currentIncident);
@@ -916,8 +918,25 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         this.createdBy = +this.credential.UserId;
         this.createdByName = this.credential.UserName;
 
-        this.IsIdentified = true;
-        this.form.controls["Unidentified"].disable();
+
+    }
+
+    private GetPassengerInfo(): void {
+        this.callcenteronlypageservice.GetAffectedPersonDetailFromExternalInput(this.currentIncident, this.callid)
+            .subscribe((result: ResponseModel<ExternalInputModel>) => {
+                if (result.Records[0].PDAEnquiry.AffectedPerson.IsIdentified) {
+                    this.IsIdentified = true;
+                    this.form.controls["Unidentified"].disable();
+                }
+                else {
+
+                    this.IsIdentified = false;
+                    this.form.controls["Unidentified"].enable();
+                    this.form.controls['Unidentified'].reset({ value: result.Records[0].PDAEnquiry.AffectedPerson.Passenger.PassengerName, disabled: true });
+
+                }
+                this.getPassengersAndCrews(this.currentIncident, result.Records[0].PDAEnquiry.AffectedPerson.IsIdentified);
+            });
     }
 
     public ngOnDestroy(): void {
@@ -1008,12 +1027,10 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
             })
             .flatMap((_) => this.SavePassengerInfo())
             .map((data: PassengerModel) => {
-                debugger;
                 this.PassengerId = data.PassengerId;
             })
             .flatMap((_) => this.SaveAffectedPerson())
             .subscribe((data: AffectedPeopleModel) => {
-                debugger;
                 this.enquiry.AffectedPersonId = data.AffectedPersonId;
                 this.SaveEnquiry();
 
@@ -1025,33 +1042,33 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         this.passengerObject = new PassengerModel();
         this.passengerObject.PassengerId = 0;
         this.passengerObject.FlightId = 0;
-        this.passengerObject.FlightNumber = '';
+        this.passengerObject.FlightNumber = 'NA';
         this.passengerObject.PassengerName = '';
-        this.passengerObject.Details = '';
-        this.passengerObject.PassengerGender = '';
-        this.passengerObject.PassengerNationality = '';
-        this.passengerObject.SpecialServiceRequestCode = '';
+        this.passengerObject.Details = 'NA';
+        this.passengerObject.PassengerGender = 'NA';
+        this.passengerObject.PassengerNationality = 'NA';
+        this.passengerObject.SpecialServiceRequestCode = 'NA';
         this.passengerObject.BaggageCount = 0;
-        this.passengerObject.Destination = '';
+        this.passengerObject.Destination = 'NA';
         this.passengerObject.IsVip = false;
         this.passengerObject.PassengerDob = null;
-        this.passengerObject.Seatno = '';
-        this.passengerObject.Passport = '';
-        this.passengerObject.Pnr = '';
-        this.passengerObject.SpokenLanguage = '';
-        this.passengerObject.Religion = '';
-        this.passengerObject.TravellingWith = '';
-        this.passengerObject.ContactNumber = '';
-        this.passengerObject.AlternateContactNumber = '';
-        this.passengerObject.PassengerType = '';
+        this.passengerObject.Seatno = 'NA';
+        this.passengerObject.Passport = 'NA';
+        this.passengerObject.Pnr = 'NA';
+        this.passengerObject.SpokenLanguage = 'NA';
+        this.passengerObject.Religion = 'NA';
+        this.passengerObject.TravellingWith = 'NA';
+        this.passengerObject.ContactNumber = 'NA';
+        this.passengerObject.AlternateContactNumber = 'NA';
+        this.passengerObject.PassengerType = 'NA';
         this.passengerObject.DepartureDateTime = null;
         this.passengerObject.ArrivalDateTime = null;
-        this.passengerObject.Origin = '';
-        this.passengerObject.IdentificationDocType = '';
-        this.passengerObject.IdentificationDocNumber = '';
-        this.passengerObject.InboundFlightNumber = '';
-        this.passengerObject.OutBoundFlightNumber = '';
-        this.passengerObject.EmployeeId = '';
+        this.passengerObject.Origin = 'NA';
+        this.passengerObject.IdentificationDocType = 'NA';
+        this.passengerObject.IdentificationDocNumber = 'NA';
+        this.passengerObject.InboundFlightNumber = 'NA';
+        this.passengerObject.OutBoundFlightNumber = 'NA';
+        this.passengerObject.EmployeeId = 'NA';
         this.passengerObject.BaggageWeight = 0;
     }
 
@@ -1084,8 +1101,8 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         this.passengerObject.FlightId = this.FlightId;
         this.passengerObject.FlightNumber = this.FlightNumber;
         this.passengerObject.PassengerName = this.UnidentifiedPassengerName;
-        this.passengerObject.CreatedOn=new Date();
-        this.passengerObject.CreatedBy=+UtilityService.GetFromSession('CurrentUserId');
+        this.passengerObject.CreatedOn = new Date();
+        this.passengerObject.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
         //this.enquiry
         return this.passangerService.Create(this.passengerObject);
 
@@ -1095,15 +1112,14 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         this.InitializeAffectedPersonInfo();
         this.affectedPersonObject.AffectedId = this.AffectedId;
         this.affectedPersonObject.PassengerId = this.PassengerId;
-        this.affectedPersonObject.CurrentCareMemberName = this.UnidentifiedPassengerName;
+        this.affectedPersonObject.CurrentCareMemberName = this.pdaenquery.AffectedPerson.CurrentCareMemberName;
         this.affectedPersonObject.IsIdentified = false;
-        this.affectedPersonObject.CreatedOn=new Date();
-        this.affectedPersonObject.CreatedBy=+UtilityService.GetFromSession('CurrentUserId');
+        this.affectedPersonObject.CreatedOn = new Date();
+        this.affectedPersonObject.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
         return this.affectedPeopleService.Create(this.affectedPersonObject);
     }
 
     public SaveEnquiryDemandCaller(): void {
-        debugger;
         if (this.form.controls["IsIdentified"].value) {
             this.SaveEnquiry();
         }
@@ -1114,7 +1130,6 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
     }
 
     private SaveEnquiry(): void {
-        debugger;
         this.submitted = true;
 
         if (this.form.valid && (

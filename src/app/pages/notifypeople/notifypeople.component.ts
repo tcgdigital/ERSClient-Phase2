@@ -205,17 +205,6 @@ export class NotifyPeopleComponent implements OnInit {
         this.appendedTemplate.CreatedOn = new Date();
     }
 
-    // public CustomNoificationMessageHandler(type: string, $event: ModalDirective): void {
-    //     debugger;
-    //     this.notifyPeopleService.GetGeneralNotificationMessageTemplate()
-    //         .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
-    //         .subscribe((data: MessageTemplate) => {
-    //             this.customMessageForm.patchValue({
-    //                 MessageData: data.GeneralMessageTemplate
-    //             });
-    //         });
-    // }
-
     public hideEventNoificationMessage(): void {
         this.childModalEventNoificationMessage.hide();
     }

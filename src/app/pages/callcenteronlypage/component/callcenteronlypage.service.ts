@@ -173,4 +173,17 @@ export class CallCenterOnlyPageService extends ServiceBase<ExternalInputModel> i
             .Expand(`Caller,${expandType},Enquiries($select=${enquiryprojection};$filter=${enquiryFilter};$expand=${comLogExpansion})`)
             .Execute();
     }
+
+    public GetAffectedPersonDetailFromExternalInput(incidentId:number,CallId:number):
+    Observable<ResponseModel<ExternalInputModel>>{
+        const pdaenquiryprojection = 'PDAEnquiryId';
+        const affectedpersonprojection = 'AffectedPersonId,CurrentCareMemberName,IsIdentified';
+        const passengerprojection = 'PassengerId,PassengerName';
+        return this._dataService.Query()
+            .Filter(`IncidentId eq ${incidentId} and ExternalInputId eq ${CallId}`)
+            .Expand(`PDAEnquiry($select=${pdaenquiryprojection};
+                $expand=AffectedPerson($select=${affectedpersonprojection};
+                    $expand=Passenger($select=${passengerprojection})))`)
+            .Execute();
+    }
 }
