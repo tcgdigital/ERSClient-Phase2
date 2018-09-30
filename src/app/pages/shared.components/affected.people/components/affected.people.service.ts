@@ -150,7 +150,8 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     public GetAllAffectedPeopleIdsByIncidentId(incidentId: number): Observable<ResponseModel<AffectedPeopleModel>>{
         return this._dataService.Query()
             .Expand(`Affected($select=AffectedId;$expand=InvolvedParty($select=IncidentId))`)
-            .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
+            .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} 
+            and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and IsIdentified eq 1`)
             .Select(`AffectedPersonId`)
             .Execute();
     }
@@ -162,7 +163,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     public GetAffectedPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
             .Filter(`IsCrew eq false and Affected/InvolvedParty/IncidentId eq ${incidentId}
-                and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
+                and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and IsIdentified eq 1`)
             .Execute();
     }
 
@@ -191,35 +192,40 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     public GetDeceasedPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
             .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
-                ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and tolower(MedicalStatus) eq 'deceased'`)
+                ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' 
+                and tolower(MedicalStatus) eq 'deceased' and IsIdentified eq 1`)
             .Execute();
     }
 
     public GetMissingPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
             .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
-                ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and tolower(MedicalStatus) eq 'missing'`)
+                ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' 
+                and tolower(MedicalStatus) eq 'missing' and IsIdentified eq 1`)
             .Execute();
     }
 
     public GetInjuredPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
             .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
-                ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and tolower(MedicalStatus) eq 'injured'`)
+                ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' 
+                and tolower(MedicalStatus) eq 'injured' and IsIdentified eq 1`)
             .Execute();
     }
 
     public GetUninjuredPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
             .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
-                ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and tolower(MedicalStatus) eq 'uninjured'`)
+                ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' 
+                and tolower(MedicalStatus) eq 'uninjured' and IsIdentified eq 1`)
             .Execute();
     }
 
     public GetOtherPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
             .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
-                ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and tolower(MedicalStatus) eq 'others'`)
+                ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' 
+                and tolower(MedicalStatus) eq 'others' and IsIdentified eq 1`)
             .Execute();
     }
 
@@ -254,14 +260,14 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
 
     public GetCommunicationByPDA(id: number): Observable<ResponseModel<AffectedPeopleModel>> {
         return this._dataService.Query()
-            .Filter(`AffectedPersonId eq ${id}`)
+            .Filter(`AffectedPersonId eq ${id} and IsIdentified eq 1`)
             .Expand("Passenger,Crew,CommunicationLogs($filter=ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active';$orderby=CreatedOn desc)")
             .Execute();
     }
 
     public GetCallerListForAffectedPerson(affectedPersonId: number): Observable<ResponseModel<EnquiryModel>> {
         return this._enquiryService.Query()
-            .Filter(`AffectedPersonId eq ${affectedPersonId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
+            .Filter(`AffectedPersonId eq ${affectedPersonId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and IsIdentified eq 1`)
             .Expand(`Caller`)
             .Execute();
     }
