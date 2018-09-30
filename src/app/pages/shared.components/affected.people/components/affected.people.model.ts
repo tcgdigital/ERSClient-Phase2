@@ -28,7 +28,7 @@ export class AffectedPeopleModel extends BaseModel {
 	public IsVerified: boolean;
 	public IsNokInformed: boolean;
 	public CurrentCareMemberName: string;
-
+	public IsIdentified: boolean;
 	public Affected: AffectedModel;
 	public Passenger?: PassengerModel;
 	public Crew?: CrewModel;
@@ -59,6 +59,7 @@ export class AffectedPeopleModel extends BaseModel {
 			this.IsCrew = false;
 			this.IsVerified = false;
 			this.CurrentCareMemberName = '';
+			this.IsIdentified = true;
 		}
 	}
 }
@@ -99,4 +100,5 @@ export class AffectedPeopleToView extends BaseModel {
 	public PNRdisabled: string;
 	public PassCrewNm: string;
 	public CurrentCareMemberName: string;
+	public IsIdentified: boolean;
 }

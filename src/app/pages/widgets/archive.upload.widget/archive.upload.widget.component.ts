@@ -2,7 +2,7 @@ import {
     Component, OnInit, Input, OnDestroy,
     ViewEncapsulation, ViewChild
 } from '@angular/core';
-import { Subject } from 'rxjs/Rx';
+import { Subject, Observable } from 'rxjs/Rx';
 import {
     FormGroup, FormControl, FormBuilder
 } from '@angular/forms';
@@ -79,6 +79,7 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
             const baseUrl = GlobalConstants.EXTERNAL_URL;
 
             this.fileUploadService.uploadFiles<string>(baseUrl + 'api/fileUpload/upload', this.filesToUpload)
+                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((result: string) => {
                     this.filepathWithLinks = `${GlobalConstants.EXTERNAL_URL}UploadFiles/${result.replace(/^.*[\\\/]/, '')}`;
@@ -104,6 +105,7 @@ export class ArchiveUploadWidgetComponent implements OnInit, OnDestroy {
     public OnDocumentUploaded(dropdownselected: string): void {
 
         this.archiveDocumentTypeService.GetByIncident(this.incidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((returnResult: ResponseModel<ArchiveDocumentTypeModel>) => {
                 if (returnResult.Records.length === 0) {

@@ -6,7 +6,7 @@ import {
     PageService, PageHierarchyModel, PageModel,
     PagePermissionService, PagePermissionModel
 } from './components';
-import { ResponseModel, AuthModel, UtilityService } from '../../../shared';
+import { ResponseModel, AuthModel, UtilityService, GlobalConstants } from '../../../shared';
 import { Observable, Subject } from 'rxjs';
 
 @Component({
@@ -63,6 +63,8 @@ export class PageFunctionalityHierarchyComponent implements OnInit, OnChanges, O
 
     public SearchAndExpandNodeByName(searchText: string): void {
         let searchedText = jQuery(searchText).val();
+        this.ClearAllHighLight();
+
         if (this.pages.length > 0 && searchedText != '') {
             const re = new RegExp(searchedText, 'gi'); ///${searchText}/gi; 
             const scearchedNodes: PageModel[] = this.pages.filter(p => re.test(p.PageName));
@@ -78,7 +80,8 @@ export class PageFunctionalityHierarchyComponent implements OnInit, OnChanges, O
                         if ($node != undefined) {
                             $tree.expand($node);
                             let $nodeTextElement = $node.find('> [data-role="wrapper"] > [data-role="display"]');
-                            $nodeTextElement.css('background-color', 'yellow');
+                            // $nodeTextElement.css('background-color', 'yellow');
+                            $nodeTextElement.addClass('node-highlighted')
                         }
                     });
                 }
@@ -89,18 +92,24 @@ export class PageFunctionalityHierarchyComponent implements OnInit, OnChanges, O
     public ClearSearchHighlights(searchText: string): void {
         jQuery(searchText).val('');
         this.ExpandCollapsTree(false);
+        this.ClearAllHighLight();
 
+        /*
         let terrObj = this.treeObject;
         if (terrObj != undefined && this.currentSelectedPageIds != undefined && this.currentSelectedPageIds.length > 0) {
             this.currentSelectedPageIds.forEach(x => {
                 const $node = terrObj.getNodeById(x);
-                
+
                 if ($node != undefined) {
                     let $nodeTextElement = $node.find('> [data-role="wrapper"] > [data-role="display"]');
                     $nodeTextElement.removeAttr('style');
                 }
             });
-        }
+        }*/
+    }
+
+    private ClearAllHighLight(): void {
+        jQuery('.node-highlighted').removeClass();
     }
 
     private ExpandCollapsTree(isExpand: boolean): void {
@@ -119,6 +128,7 @@ export class PageFunctionalityHierarchyComponent implements OnInit, OnChanges, O
         observables.push(this.pagePermissionService.GetPermissionByDepartmentId(departmentId));
 
         Observable.forkJoin(observables)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((responses: Array<ResponseModel<any>>) => {
                 if (responses.length == 2) {

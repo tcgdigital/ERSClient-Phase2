@@ -1,6 +1,4 @@
-import { NgModule } from '@angular/core';
-import { BaseModel, KeyValue } from '../../../shared';
-
+import { BaseModel } from '../../../shared';
 import { UserProfileModel } from '../../masterdata/userprofile';
 import { DepartmentModel } from '../../masterdata/department';
 import { IncidentModel } from '../../incident';
@@ -13,6 +11,7 @@ export class NotifyPeopleModel extends BaseModel {
     public children: NotifyPeopleModel[];
     public User: UserProfileModel;
     public DepartmentId: number;
+    public DepartmantName: string;
 
     constructor() {
         super();
@@ -23,6 +22,7 @@ export class NotifyPeopleModel extends BaseModel {
         this.children = [];
         this.User = new UserProfileModel();
         this.DepartmentId = 0;
+        this.DepartmantName = '';
     }
 }
 
@@ -39,8 +39,6 @@ export class NotificationContactsWithTemplateModel extends BaseModel {
     public AlternetContactNumber: string;
     public EmailId: string;
     public Message: string;
-    // public Attachment: string;
-    // public Data: string;
 
     constructor() {
         super();
@@ -61,7 +59,6 @@ export class NotificationContactsWithTemplateModel extends BaseModel {
     }
 }
 
-
 export class UserDepartmentNotificationMapper extends BaseModel {
     public UserDepartmentNotificationMapperId: number;
     public UserId: number;
@@ -72,9 +69,9 @@ export class UserDepartmentNotificationMapper extends BaseModel {
 
     public UserProfile?: UserProfileModel;
     public Department?: DepartmentModel;
-    //   public  Notification Notification : ;
     public Incident?: IncidentModel;
 }
 
-
-
+export class MessageTemplate {
+    public GeneralMessageTemplate: string;
+}

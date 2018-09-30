@@ -9,6 +9,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { UserProfileService } from '../../masterdata/userprofile/components/userprofile.service';
 import { UserProfileModel } from '../../masterdata/userprofile/components';
 import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'contactinfo',
@@ -48,6 +49,7 @@ export class ContactInfoComponent implements OnInit, OnDestroy {
 
     contactClicked(): void {
         this.userprofileService.GetForDirectory()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<UserProfileModel>) => {
                 this.userprofiles = response.Records;
@@ -64,6 +66,7 @@ export class ContactInfoComponent implements OnInit, OnDestroy {
     invokeSearch(query: string): void {
         if (query !== '') {
             this.userprofileService.GetQuery(query)
+                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: ResponseModel<UserProfileModel>) => {
                     this.userprofiles = response.Records;
@@ -75,6 +78,7 @@ export class ContactInfoComponent implements OnInit, OnDestroy {
 
     invokeReset(): void {
         this.userprofileService.GetForDirectory()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<UserProfileModel>) => {
                 this.userprofiles = response.Records;

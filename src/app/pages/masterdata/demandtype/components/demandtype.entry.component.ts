@@ -14,6 +14,7 @@ import {
     AuthModel, UtilityService, GlobalConstants
 } from '../../../../shared';
 import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'demandtype-entry',
@@ -52,6 +53,7 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
 
     getAllDepartments(): void {
         this.departmentService.GetAll()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;

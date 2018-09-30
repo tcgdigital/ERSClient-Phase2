@@ -40,6 +40,7 @@ export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
      */
     getEmergencyTypes(): void {
         this.emergencyTypeService.GetAll()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                 this.emergencyTypes = response.Records;
@@ -75,10 +76,10 @@ export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
         this.getEmergencyTypes();
         this.initiateSearchConfigurations();
 
-        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.EmergencyTypeModelSaved, 
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.EmergencyTypeModelSaved,
             (model: EmergencyTypeModel) => this.onSuccess(model));
 
-        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.EmergencyTypeModelUpdated, 
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.EmergencyTypeModelUpdated,
             (model: EmergencyTypeModel) => this.onSuccess(model))
     }
 
@@ -93,7 +94,7 @@ export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
         this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.EmergencyTypeModelUpdated);
 
         this.ngUnsubscribe.next();
-		this.ngUnsubscribe.complete();
+        this.ngUnsubscribe.complete();
     }
 
     IsActive(event: any, editedEmergencyType: EmergencyTypeModel): void {
@@ -149,6 +150,7 @@ export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
     invokeSearch(query: string): void {
         if (query !== '') {
             this.emergencyTypeService.GetQuery(query)
+                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                     this.emergencyTypes = response.Records;

@@ -14,12 +14,13 @@ import {
     KeyValue,
     IncidentStatus,
     UtilityService,
-    DateTimePickerOptions
+    DateTimePickerOptions,
+    GlobalConstants
 } from '../../../shared';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { FlightModel, InvolvePartyModel } from '../../shared.components';
 import { IncidentDataExchangeModel } from './incidentDataExchange.model';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 
 
 @Component({
@@ -85,6 +86,7 @@ export class IncidentViewComponent implements OnInit, OnDestroy {
         this.resetIncidentViewForm();
 
         this.emergencyLocationService.GetAllActiveEmergencyLocations()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<EmergencyLocationModel>) => {
                 result.Records.forEach((item: EmergencyLocationModel) => {
@@ -152,6 +154,7 @@ export class IncidentViewComponent implements OnInit, OnDestroy {
 
     getAllActiveEmergencyTypes(): void {
         this.emergencyTypeService.GetAll()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                 this.activeEmergencyTypes = response.Records;

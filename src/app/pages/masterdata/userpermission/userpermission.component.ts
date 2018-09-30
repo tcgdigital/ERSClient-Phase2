@@ -5,8 +5,9 @@ import { DepartmentService, DepartmentModel } from '../department';
 import { UserProfileService, UserProfileModel } from '../userprofile';
 import { UserPermissionService } from './components/userpermission.service';
 import { UserPermissionModel, DepartmentsToView } from './components/userpermission.model';
-import { ResponseModel, KeyValue } from '../../../shared';
+import { ResponseModel, KeyValue, GlobalConstants } from '../../../shared';
 import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'user-permission-main',
@@ -26,7 +27,7 @@ export class UserPermissionComponent implements OnDestroy {
     allSelectMember: boolean;
     allSelectHOD: boolean;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
-    
+
     constructor(private userPermissionService: UserPermissionService,
         private userProfileService: UserProfileService,
         private departmentService: DepartmentService, private toastrService: ToastrService,
@@ -34,6 +35,7 @@ export class UserPermissionComponent implements OnDestroy {
 
     getUserProfiles(): void {
         this.userProfileService.GetForDirectory()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<UserProfileModel>) => {
                 this.userProfileItems = response.Records;
@@ -47,7 +49,7 @@ export class UserPermissionComponent implements OnDestroy {
 
     ngOnDestroy(): void {
         this.ngUnsubscribe.next();
-		this.ngUnsubscribe.complete();
+        this.ngUnsubscribe.complete();
     }
 
     SetAllSelectedToFalse(departmentsToViewModel: DepartmentsToView[]): void {
@@ -66,6 +68,7 @@ export class UserPermissionComponent implements OnDestroy {
     onNotify(message: KeyValue): void {
         this.selectedUser = message.Value;
         this.userPermissionService.GetFilterByUsers(message.Value)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<UserPermissionModel>) => {
                 this.SetAllSelectedToFalse(this.departmentsToViewConstant);
@@ -180,6 +183,7 @@ export class UserPermissionComponent implements OnDestroy {
         this.allSelectHOD = false;
         this.getUserProfiles();
         this.departmentService.GetAll()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;

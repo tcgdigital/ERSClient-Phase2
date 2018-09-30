@@ -12,7 +12,7 @@ import { ToastrService, ToastrConfig } from 'ngx-toastr';
     encapsulation: ViewEncapsulation.None,
     template: `
     <div class="row">
-        <div class="col-sm-10">
+        <div class="col-sm-8 form-group">
             <label *ngIf="caption != ''">{{caption}}</label>
             <autocomplete [items]="quickLinkGroups" (notify)="onNotify($event)" (InvokeAutoCompleteReset)="invokeReset();"></autocomplete>
         </div>

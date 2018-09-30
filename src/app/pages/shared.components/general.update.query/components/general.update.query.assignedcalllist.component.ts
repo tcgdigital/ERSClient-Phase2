@@ -5,7 +5,7 @@ import {
 import {
     ResponseModel, KeyValue, GlobalStateService, UtilityService, GlobalConstants
 } from '../../../../shared';
-import { Subscription, Subject } from 'rxjs/Rx';
+import { Subscription, Subject, Observable } from 'rxjs/Rx';
 
 import {
     CallCenterOnlyPageService,
@@ -53,25 +53,25 @@ export class GeneralUpdateQueryAssignedCallsListComponent implements OnInit {
         }
 
         this.getAllGeneralUpdatesCalls(this.currentIncidentId);
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard,
             (model: KeyValue) => this.incidentChangeHandler(model));
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.CallRecieved, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.CallRecieved,
             (model: number) => this.getAllGeneralUpdatesCalls(this.currentIncidentId));
 
         // SignalR Notification
         this.globalState.Subscribe
-        (GlobalConstants.NotificationConstant.ReceiveGeneralUpdateEnquiryCreationResponse.Key, (model: ExternalInputModel) => {
-            // this.getAllGeneralUpdatesCallsRecieved(model.IncidentId);
-            const index: number = this.allAssignedCalls
-                .findIndex((x: ExternalInputModel) => x.ExternalInputId === model.ExternalInputId);
+            (GlobalConstants.NotificationConstant.ReceiveGeneralUpdateEnquiryCreationResponse.Key, (model: ExternalInputModel) => {
+                // this.getAllGeneralUpdatesCallsRecieved(model.IncidentId);
+                const index: number = this.allAssignedCalls
+                    .findIndex((x: ExternalInputModel) => x.ExternalInputId === model.ExternalInputId);
 
-            if (index > -1) {
-                this.allAssignedCalls.splice(index, 1, model);
-            } else {
-                this.allAssignedCalls.unshift(model)
-            }
-        });
+                if (index > -1) {
+                    this.allAssignedCalls.splice(index, 1, model);
+                } else {
+                    this.allAssignedCalls.unshift(model)
+                }
+            });
     }
 
     public ngOnDestroy(): void {
@@ -88,6 +88,7 @@ export class GeneralUpdateQueryAssignedCallsListComponent implements OnInit {
         this.childModalcallcenter.hide();
         this.callcenterload = false;
         this.callcenteronlypageservice.GetGeneralUpdateCallsByIncident(incidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;

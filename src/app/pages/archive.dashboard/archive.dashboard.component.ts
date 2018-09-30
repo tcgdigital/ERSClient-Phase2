@@ -9,7 +9,7 @@ import {
 import { IncidentService, IncidentModel } from '../incident';
 import { DepartmentService, DepartmentModel } from '../masterdata/department';
 import { PagesPermissionMatrixModel } from '../masterdata';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 
 @Component({
     selector: 'archive-dashboard',
@@ -139,6 +139,7 @@ export class ArchiveDashboardComponent implements OnInit, OnDestroy {
      */
     private GetIncidentAndDepartment(): void {
         this.incidentService.Get(this.archievedIncidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .map((record: IncidentModel) => {
                 this.currentIncident = new KeyValue(record.EmergencyName, record.IncidentId);

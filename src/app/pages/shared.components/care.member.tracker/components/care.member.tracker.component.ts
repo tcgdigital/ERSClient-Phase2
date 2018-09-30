@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation, Input } from '@angular/core';
 import { CareMemberTrackerService } from './care.member.tracker.service';
 import { CareMemberTrackerModel } from './care.member.tracker.model';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import {
     ResponseModel, DataExchangeService,
     GlobalConstants, AuthModel, UtilityService, NameValue
@@ -107,6 +107,7 @@ export class CareMemberTrackerComponent implements OnInit, OnDestroy {
 
                 this.careMemberTrackerService.GetCareMembersByAffectedPersonId
                     (this.currentIncidentId, affectedPersonId)
+                    .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                     .takeUntil(this.ngUnsubscribe)
                     .subscribe((response: ResponseModel<CareMemberTrackerModel>) => {
                         this.careMembers = response.Records;
@@ -137,10 +138,11 @@ export class CareMemberTrackerComponent implements OnInit, OnDestroy {
 
                     this.affectedPeopleService.GetCurrentCareMember
                         (createdCareresponse.AffectedPersonId, createdCareresponse.CareEngagementTrackId)
+                        .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                         .takeUntil(this.ngUnsubscribe)
                         .subscribe((affectedPersonResponse: ResponseModel<AffectedPeopleModel>) => {
 
-        
+
                             if (affectedPersonResponse.Records.length > 0
                                 && affectedPersonResponse.Records[0].CareMembers.length > 0) {
                                 this.careMembers.unshift(...affectedPersonResponse.Records[0].CareMembers);
@@ -153,7 +155,7 @@ export class CareMemberTrackerComponent implements OnInit, OnDestroy {
                                 this.affectedPeopleService
                                     .UpdateWithHeader(affectedPerson, new NameValue<string>('CurrentDepartmentName', currentDepartmentName))
                                     .subscribe((response: AffectedPeopleModel) => {
-                    
+
                                         this.dataExchangeCareMemberCreation.Publish
                                             (GlobalConstants.DataExchangeConstant.CareMemberCreated, createdCareresponse);
                                     }, (error: any) => {

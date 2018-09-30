@@ -14,7 +14,7 @@ import {
 } from './components';
 import { InvolvePartyService } from '../involveparties';
 import { CallerService } from '../caller';
-import { PassengerService } from '../passenger';
+import { PassengerService,CoPassengerService } from '../passenger';
 import { SharedModule, DataExchangeService } from '../../../shared';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { CareMemberTrackerModule } from '../care.member.tracker';
@@ -42,6 +42,7 @@ import { CareMemberTrackerModule } from '../care.member.tracker';
         InvolvePartyService,
         CallerService,
         PassengerService,
+        CoPassengerService,
         DepartmentService,
         CommunicationLogService
     ]

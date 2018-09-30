@@ -6,7 +6,7 @@ import { ForgotPasswordModel } from './auth.model';
 import { AccountResponse } from '../../../shared/models';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 
 @Component({
     selector: 'forgot-password',
@@ -34,6 +34,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy, AfterViewInit
 
     public onBlurMethod(value): void {
         this.forgotPasswordService.GetEecurityQuestion(value)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((x) => {
                 this.SecurityQuestion = x;

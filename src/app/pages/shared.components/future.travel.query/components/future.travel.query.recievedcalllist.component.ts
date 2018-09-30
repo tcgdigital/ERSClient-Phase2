@@ -5,7 +5,7 @@ import {
 import {
     ResponseModel, KeyValue, GlobalStateService, UtilityService, GlobalConstants
 } from '../../../../shared';
-import { Subscription, Subject } from 'rxjs/Rx';
+import { Subscription, Subject, Observable } from 'rxjs/Rx';
 
 import {
     CallCenterOnlyPageService,
@@ -53,25 +53,25 @@ export class FutureTravelQueryRecievedCallsListComponent implements OnInit, OnDe
         }
 
         this.getAllFutureTravelQueryCallsRecieved(this.currentIncidentId);
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard,
             (model: KeyValue) => this.incidentChangeHandler(model));
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.CallRecieved, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.CallRecieved,
             (model: number) => this.getAllFutureTravelQueryCallsRecieved(this.currentIncidentId));
 
         // SignalR Notification
         this.globalState.Subscribe
-        (GlobalConstants.NotificationConstant.AssignedFutureTravelEnquiryCreationResponse.Key, (model: ExternalInputModel) => {
-            // this.getAllFutureTravelQueryCallsRecieved(model.IncidentId);
-            const index: number = this.allAssignedCalls
-                .findIndex((x: ExternalInputModel) => x.ExternalInputId === model.ExternalInputId);
+            (GlobalConstants.NotificationConstant.AssignedFutureTravelEnquiryCreationResponse.Key, (model: ExternalInputModel) => {
+                // this.getAllFutureTravelQueryCallsRecieved(model.IncidentId);
+                const index: number = this.allAssignedCalls
+                    .findIndex((x: ExternalInputModel) => x.ExternalInputId === model.ExternalInputId);
 
-            if (index > -1) {
-                this.allAssignedCalls.splice(index, 1, model);
-            } else {
-                this.allAssignedCalls.unshift(model)
-            }
-        });
+                if (index > -1) {
+                    this.allAssignedCalls.splice(index, 1, model);
+                } else {
+                    this.allAssignedCalls.unshift(model)
+                }
+            });
     }
 
     public ngOnDestroy(): void {
@@ -87,8 +87,9 @@ export class FutureTravelQueryRecievedCallsListComponent implements OnInit, OnDe
     getAllFutureTravelQueryCallsRecieved(incidentId): void {
         this.childModalcallcenter.hide();
         this.callcenterload = false;
-        
+
         this.callcenteronlypageservice.GetFutureTravelCallsRecievedByIncident(incidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;

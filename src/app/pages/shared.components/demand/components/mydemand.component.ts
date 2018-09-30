@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { Subscription, Subject } from 'rxjs/Rx';
+import { Subscription, Subject, Observable } from 'rxjs/Rx';
 import { DemandModel, DemandModelToView, DemandRemarkLogModel } from './demand.model';
 import { DemandService } from './demand.service';
 import { DemandRemarkLogService } from './demand.remarklogs.service';
@@ -47,7 +47,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     public globalStateProxy: GlobalStateService;
     public isInvalidRemarks: boolean = false;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
-    public isDashboradMyDemandDownloadLink: boolean= true;
+    public isDashboradMyDemandDownloadLink: boolean = true;
 
 
     /**
@@ -93,27 +93,27 @@ export class MyDemandComponent implements OnInit, OnDestroy {
         this.createdByName = this.credential.UserName;
         this.Remarks = '';
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DemandAddedUpdated, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DemandAddedUpdated,
             (model) => this.demandUpdated(model));
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChangefromDashboard,
             (model: KeyValue) => this.incidentChangeHandler(model));
 
-        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard, 
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChangeFromDashboard,
             (model: KeyValue) => this.departmentChangeHandler(model));
 
         // SignalR Notification
         this.globalState.Subscribe
-        (GlobalConstants.NotificationConstant.ReceiveDemandCreationResponse.Key, (model: DemandModel) => {
-            // this.getMyDemands(model.RequesterDepartmentId, model.IncidentId);
-            this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
-        });
+            (GlobalConstants.NotificationConstant.ReceiveDemandCreationResponse.Key, (model: DemandModel) => {
+                // this.getMyDemands(model.RequesterDepartmentId, model.IncidentId);
+                this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
+            });
 
         this.globalState.Subscribe
-        (GlobalConstants.NotificationConstant.ReceiveDemandStatusUpdateResponse.Key, (model: DemandModel) => {
-            // this.getMyDemands(model.RequesterDepartmentId, model.IncidentId);
-            this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
-        });
+            (GlobalConstants.NotificationConstant.ReceiveDemandStatusUpdateResponse.Key, (model: DemandModel) => {
+                // this.getMyDemands(model.RequesterDepartmentId, model.IncidentId);
+                this.getMyDemands(this.currentDepartmentId, this.currentIncidentId);
+            });
     }
 
     public ngAfterContentInit(): any {
@@ -124,11 +124,10 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     public getMyDemands(deptId, incidentId): void {
         this.mydemands.length = 0;
         this.demandService.GetByRequesterDepartment(deptId, incidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandModel>) => {
-                // console.log(response);
                 this.mydemands = this.demandService.DemandMapper(response.Records);
-                // console.log(this.mydemands);
                 this.mydemands.forEach((x) => {
                     const scheduleTime = x.ScheduleTime;
                     const createdOn = new Date(x.CreatedOn);
@@ -139,7 +138,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
                     x.RagStatus = "";
                 });
 
-                UtilityService.SetRAGStatus(this.mydemands, 'Demand'); 
+                UtilityService.SetRAGStatus(this.mydemands, 'Demand');
 
             }, (error: any) => {
                 console.log(`Error: ${error.message}`);
@@ -154,6 +153,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
 
     public getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
                 this.demandRemarks = response.Records;
@@ -165,6 +165,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
 
     public getDemandTrails(demandId): void {
         this.demandTrailService.getDemandTrailByDemandId(demandId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandTrailModel>) => {
                 this.demandTrails = response.Records;

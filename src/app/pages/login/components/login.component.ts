@@ -18,7 +18,7 @@ import { PagePermissionService } from '../../../pages/masterdata/page.functional
 import { PagesPermissionMatrixModel } from '../../../pages/masterdata/page.functionality/components/page.functionality.model';
 import * as _ from 'underscore';
 import { TimeZoneModels, TimeZoneService } from "../../shared.components/timezone";
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 
 @Component({
     selector: 'login',
@@ -65,6 +65,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         this.licensingService.VerifyLicense()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: LicenseVerificationResponse) => {
                 if (response.Code === 105) {
@@ -72,6 +73,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 }
                 else if (response.Code === 101) {
                     this.licensingService.GetLicenseInfo()
+                        .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                         .takeUntil(this.ngUnsubscribe)
                         .subscribe((data: LicenseInformationModel) => {
                             UtilityService.licenseInfo = data;
@@ -94,10 +96,12 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     public Login(userid: string, password: string): void {
         this.authService.Login(userid, password)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((data: AuthResponseModel) => {
 
                 this.keyValueService.GetAll()
+                    .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                     .takeUntil(this.ngUnsubscribe)
                     .subscribe((response: ResponseModel<KeyValueModel>) => {
                         this.activeKeyValues = response.Records;
@@ -105,6 +109,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                         const loginCredentialBasic: any = jwtDecode(data.access_token);
 
                         this.pagePermissionService.GetPagePermissionMatrix(loginCredentialBasic.UserId)
+                            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                             .takeUntil(this.ngUnsubscribe)
                             .subscribe((item: PagesPermissionMatrixModel[]) => {
                                 GlobalConstants.PagePermissionMatrix = [];
@@ -176,6 +181,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 if (a.Department.DepartmentName.trim().toLowerCase() > b.Department.DepartmentName.trim().toLowerCase()) return 1;
                 return 0;
             }))
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((x: UserPermissionModel[]) => {
                 this.departments = x.map((y: UserPermissionModel) =>
@@ -218,6 +224,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     private getTimeZones(): void {
         this.timeZoneService.GetTimeZones(this.currentIncidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: TimeZoneModels) => {
             }, (error: any) => {
@@ -227,6 +234,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     private getRAGScaleData() {
         this.ragScaleService.GetAllActive()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((item: ResponseModel<RAGScaleModel>) => {
                 UtilityService.RAGScaleData = item.Records;
@@ -237,6 +245,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     private GetUserInfoFromUserProfileByUserProfileId(id: number): void {
         this.userProfileService.Get(id)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((item: UserProfileModel) => {
                 localStorage.setItem('CurrentLoggedInUserName', item.Name);
@@ -248,6 +257,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     private CheckDepartmentPages(UserProfileId: number): void {
         this.userProfileService.CheckUserHasPermission(UserProfileId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((res: number) => {
                 if (res == 1)
@@ -264,6 +274,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     private CheckClosedIncident(): void {
         this.incidentService.GetOpenIncidents()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((item: ResponseModel<IncidentModel>) => {
                 if (item.Count > 0) {

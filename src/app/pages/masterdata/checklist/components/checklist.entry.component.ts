@@ -167,6 +167,7 @@ export class ChecklistEntryComponent implements OnInit, OnDestroy {
             = this.emergencyTypeService.GetAll();
 
         Observable.merge(allChecklists, activeDepartments, activeEmergencyTypes)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<BaseModel>) => {
                 if (response.Records.length > 0 && Object.keys(response.Records[0]).some((x) => x === 'CheckListId')) {
@@ -222,6 +223,7 @@ export class ChecklistEntryComponent implements OnInit, OnDestroy {
 
     getAllActiveDepartments(): void {
         this.departmentService.GetAllActiveDepartments()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((item: ResponseModel<DepartmentModel>) => {
                 this.allDepartments = item.Records;
@@ -269,6 +271,7 @@ export class ChecklistEntryComponent implements OnInit, OnDestroy {
 
     getAllActiveOrganizations(): void {
         this.organizationService.GetAllActiveOrganizations()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<OrganizationModel>) => {
                 this.activeOrganizations = response.Records;

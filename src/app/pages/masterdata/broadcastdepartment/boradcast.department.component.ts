@@ -2,10 +2,10 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { BroadCastDepartmentModel, BroadcastDepartmentService } from './components';
 
 import { DepartmentService, DepartmentModel } from '../department';
-import { ResponseModel, KeyValue, AuthModel, UtilityService } from '../../../shared';
+import { ResponseModel, KeyValue, AuthModel, UtilityService, GlobalConstants } from '../../../shared';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import * as _ from 'underscore';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 
 @Component({
     selector: 'broadcastDepartment-main',
@@ -32,6 +32,7 @@ export class BroadcastDepartmentComponent {
 
     getAlldepartments(): void {
         this.departmentService.GetAll()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((departments: ResponseModel<DepartmentModel>) => {
                 this.departments = departments.Records;
@@ -87,7 +88,7 @@ export class BroadcastDepartmentComponent {
     }
 
     onestatuschanged(value: any): void {
-        this.allselect = this.departmentsToBroadcastToShow.length != 0 
+        this.allselect = this.departmentsToBroadcastToShow.length != 0
             && (this.departmentsToBroadcastToShow.filter(x => x['Isselected']).length == this.departmentsToBroadcastToShow.length);
     }
 

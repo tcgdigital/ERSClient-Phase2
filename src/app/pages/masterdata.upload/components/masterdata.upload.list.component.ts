@@ -5,7 +5,7 @@ import {
 import {
     FormGroup, FormControl, FormBuilder
 } from '@angular/forms';
-import { Subject } from 'rxjs/Rx';
+import { Subject, Observable } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
@@ -103,7 +103,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
         this.credential = UtilityService.getCredentialDetails();
         this.currentOrganizationId = +UtilityService.GetFromSession('CurrentOrganizationId');
         this.populateCurrentOrganization();
-        
+
         this.getCurrentLoadSheet(this.IncidentId);
 
         this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.IncidentChange,
@@ -135,6 +135,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
 
     populateCurrentOrganization(): void {
         this.organizationService.GetAllActiveOrganizations()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<OrganizationModel>) => {
                 this.orgLocalArray = response.Records.filter(a => a.OrganizationId == this.currentOrganizationId);
@@ -241,6 +242,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
 
     getCurrentLoadSheet(incidentId: number): void {
         this._validRecordService.GetCurrentIncidentWithLoadSheet(incidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<IncidentModel>) => {
                 const currentIncidentObject = response.Records[0];

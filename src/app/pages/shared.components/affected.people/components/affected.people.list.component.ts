@@ -6,7 +6,7 @@ import { CommunicationLogModel, CommunicationLogService } from '../../../shared.
 import { InvolvePartyService, InvolvePartyModel } from '../../involveparties';
 import { EnquiryModel } from '../../call.centre/components/call.centre.model';
 import { CallerModel, CallerService } from '../../caller';
-import { PassengerService, CoPassengerMappingModel, PassengerModel } from '../../passenger/components';
+import { CoPassengerMappingModel, PassengerModel, CoPassengerService } from '../../passenger/components';
 import { NextOfKinModel } from '../../nextofkins';
 import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';
 import { AffectedPeopleService } from './affected.people.service';
@@ -68,7 +68,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
     public userName: string;
     public currentDepartmentName: string;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
-    public isAffectedPeopleCrewStatusDownloadLink: boolean=true;
+    public isAffectedPeopleCrewStatusDownloadLink: boolean = true;
 
     /**
      *Creates an instance of AffectedPeopleListComponent.
@@ -103,7 +103,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
         private toastrConfig: ToastrConfig,
         private fileUploadService: FileUploadService,
         private fileStoreService: FileStoreService,
-        private passangerService: PassengerService) {
+        private copassangerService: CoPassengerService) {
         this.downloadFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Affected People/';
         this.globalStateProxyOpen = injector.get(GlobalStateService);
     }
@@ -132,10 +132,14 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
         }
 
         if (affectedPerson.MedicalStatus !== 'NA') {
-            this.affectedPersonModelForStatus['MedicalStatusToshow'] = this.medicalStatus
+            if(affectedPerson.MedicalStatus !== ''){
+                this.affectedPersonModelForStatus['MedicalStatusToshow'] = this.medicalStatus
                 .find((x) => x.value === affectedPerson.MedicalStatus).value;
+            }
+            
         }
         this.affectedPeopleService.GetCallerListForAffectedPerson(affectedPerson.AffectedPersonId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EnquiryModel>) => {
                 this.callers = response.Records.map((x) => {
@@ -143,7 +147,9 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
                 });
 
                 if (affectedPerson.PassengerId !== 0 && affectedPerson.GroupId !== 0) {
-                    this.passangerService.getCoPassengers(affectedPerson.GroupId)
+
+                    this.copassangerService.getCoPassengers(affectedPerson.GroupId)
+                        .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                         .takeUntil(this.ngUnsubscribe)
                         .subscribe((response: ResponseModel<CoPassengerMappingModel>) => {
                             if (response.Records.length > 0) {
@@ -169,6 +175,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
 
     getCurrentDepartmentName(departmentId): void {
         this.departmentService.Get(departmentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: DepartmentModel) => {
                 this.currentDepartmentName = response.DepartmentName;
@@ -200,6 +207,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
             this.date = new Date();
             this.fileUploadService.uploadFiles<string>(baseUrl + './api/fileUpload/UploadFilesModuleWise/' + param,
                 this.filesToUpload, this.date.toString())
+                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((result: string) => {
                     console.log(result);
@@ -264,6 +272,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
 
     createCommunicationLogModel(affectedPersonToUpdate: AffectedPeopleModel, createdBy: number): void {
         this.communicationLogService.GetLogByAffectedPersonId(affectedPersonToUpdate.AffectedPersonId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<CommunicationLogModel>) => {
                 if (result.Count == 0) {
@@ -322,9 +331,9 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
 
     getAffectedPeople(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
-                
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0])
                     .sort((a, b) => {
                         if (x => x.PassengerType) {
@@ -346,6 +355,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
 
     searchAffectedPeople(query: string, incidentId: number): void {
         this.involvedPartyService.GetQuery(query, incidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
@@ -414,7 +424,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
         this.dataExchangeCareMemberCreation.Subscribe
             (GlobalConstants.DataExchangeConstant.CareMemberCreated,
             (response: CareMemberTrackerModel) => {
-                
+
                 if (this.affectedPeople.some(a => a.AffectedPersonId == response.AffectedPersonId)) {
                     const selectedAffectedPersonIndex = this.affectedPeople
                         .findIndex(x => x.AffectedPersonId == response.AffectedPersonId);
@@ -472,6 +482,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
 
     openChatTrails(affectedPersonId: number): void {
         this.affectedPeopleService.GetCommunicationByPDA(affectedPersonId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<AffectedPeopleModel>) => {
                 let responseModel: AffectedPeopleModel = response.Records[0];
@@ -498,6 +509,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
         this.affectedPersonModel = affectedperson;
 
         this.affectedPeopleService.GetCallerListForAffectedPerson(affectedperson.AffectedPersonId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EnquiryModel>) => {
                 this.callers = response.Records.map((x) => {

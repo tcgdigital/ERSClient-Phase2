@@ -5,7 +5,7 @@ import {
 import {
     ResponseModel, KeyValue, GlobalStateService, UtilityService, GlobalConstants
 } from '../../../../shared';
-import { Subscription, Subject } from 'rxjs/Rx';
+import { Subscription, Subject, Observable } from 'rxjs/Rx';
 
 import {
     CallCenterOnlyPageService, ExternalInputModel
@@ -101,6 +101,7 @@ export class PassangerQueryRecievedCallsListComponent implements OnInit, OnDestr
         this.childModalcallcenter.hide();
         this.callcenterload = false;
         this.callcenteronlypageservice.GetPassengerQueryCallsRecievedByIncident(incidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;
@@ -122,6 +123,7 @@ export class PassangerQueryRecievedCallsListComponent implements OnInit, OnDestr
 
     getPassengersCrews(): void {
         this.involvedPartyService.GetFilterByIncidentId(this.currentIncidentId)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);

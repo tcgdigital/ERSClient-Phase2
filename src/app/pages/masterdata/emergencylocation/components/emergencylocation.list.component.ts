@@ -69,6 +69,7 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
 
     getAllEmergencyLocations(): void {
         this.emergencyLocationService.GetAllEmergencyLocations()
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EmergencyLocationModel>) => {
                 this.emergencyLocations = response.Records;
@@ -90,6 +91,7 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
                     query = query.replace("'false'", 'false');
             }
             this.emergencyLocationService.GetQuery(query)
+                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: ResponseModel<EmergencyLocationModel>) => {
                     this.emergencyLocations = response.Records;
@@ -125,7 +127,7 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
         delete emergencyLocation.Active;
         if (confirm('Do you want to delete station: ' + emergencyLocation.IATA + '?')) {
             const IATA = emergencyLocation.IATA;
-            
+
             this.emergencyLocationService.Delete(emergencyLocation.EmergencyLocationId, emergencyLocation)
                 .subscribe((response: any) => {
                     this.toastrService.success('Station: ' + IATA + ' is deleted successfully', 'Success', this.toastrConfig);

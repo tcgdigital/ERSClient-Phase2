@@ -52,4 +52,6 @@ export interface ICallCenterService extends IServiceInretface<ExternalInputModel
     GetGroundVictimCallsByIncident(IncidentId: number): Observable<ResponseModel<ExternalInputModel>>;
 
     GetGroundVictimCallsRecievedByIncident(IncidentId: number): Observable<ResponseModel<ExternalInputModel>>;
+
+    GetAffectedPersonDetailFromExternalInput(incidentId:number,CallId:number): Observable<ResponseModel<ExternalInputModel>>;
 }

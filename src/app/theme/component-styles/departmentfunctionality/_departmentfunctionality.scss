@@ -6,15 +6,9 @@
 
 .trimString {
     display: inline-block;
-    width: 80%; //white-space: nowrap;
+    width: 80%;
 }
 
-// .gj-tree-bootstrap-3 ul.gj-tree-bootstrap-list li [data-role=display] {
-//     padding: 3px;
-// }
-// .gj-checkbox-bootstrap {
-//     float: left;
-// }
 ul.gj-list-bootstrap li [data-role=display] {
     padding: 4px 0 4px 4px;
     >[data-role=hod-checkbox] {
@@ -76,5 +70,28 @@ ul.gj-list-bootstrap li [data-role=display] {
                 font-size: 12px;
             }
         }
+    }
+}
+
+.node-highlighted {
+    border-radius: 5px;
+    animation: blinkingText 2s infinite;
+}
+
+@keyframes blinkingText {
+    0% {
+        background-color: #f9f900;
+    }
+    49% {
+        background-color: #e6e67e;
+    }
+    50% {
+        background-color: #e6e6ac;
+    }
+    99% {
+        background-color: #e6e67e;
+    }
+    100% {
+        background-color: #f9f900;
     }
 }

@@ -7,7 +7,7 @@ import { ActionableModel, ActionableService } from "../../shared.components/acti
 import { DemandModel } from "../../shared.components/demand/components/demand.model";
 import {
     ResponseModel, DataService,
-    DataServiceFactory, DataProcessingService, ServiceBase
+    DataServiceFactory, DataProcessingService, ServiceBase, GlobalConstants
 } from '../../../shared';
 
 
@@ -71,6 +71,7 @@ export class DepartmentClosureService extends ServiceBase<DepartmentClosureModel
             .flatMap((x) => this._dataServiceForDemand.Query()
                 .Filter(`IncidentId eq ${incidentId} and TargetDepartmentId eq ${departmentId} and IsCompleted ne true`)
                 .Execute())
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((demands: ResponseModel<DemandModel>) => {
                 if (this.IsDepartmentClosureSubmit == false) {
