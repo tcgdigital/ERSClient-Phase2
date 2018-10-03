@@ -68,8 +68,10 @@
                                     <tr>
                                         <td data-title=""><strong>Gender Wise Passengers:</strong></td>
                                         <td data-title="">
-                                            <span><strong>M:</strong> {{peopleOnBoard.totalGenderTypeCount | mfcicount:'M'}}&nbsp;</span>
-                                            <span><strong>F:</strong> {{peopleOnBoard.totalGenderTypeCount | mfcicount:'F'}}&nbsp;</span>
+                                            <span *ngIf="peopleOnBoard.totalGenderTypeCount | mfcicount:'Male'"><strong>M:</strong>{{peopleOnBoard.totalGenderTypeCount | mfcicount:'Male'}}&nbsp;</span>
+                                            <span *ngIf="peopleOnBoard.totalGenderTypeCount | mfcicount:'M'"><strong>M:</strong>{{peopleOnBoard.totalGenderTypeCount | mfcicount:'M'}}&nbsp;</span>
+                                            <span *ngIf="peopleOnBoard.totalGenderTypeCount | mfcicount:'Female'"><strong>F:</strong> {{peopleOnBoard.totalGenderTypeCount | mfcicount:'Female'}}&nbsp;</span>
+                                            <span *ngIf="peopleOnBoard.totalGenderTypeCount | mfcicount:'F'"><strong>F:</strong> {{peopleOnBoard.totalGenderTypeCount | mfcicount:'F'}}&nbsp;</span>
                                             <span><strong>C:</strong> {{peopleOnBoard.totalGenderTypeCount | mfcicount:'CHD'}}&nbsp;</span>
                                             <span><strong>I:</strong> {{peopleOnBoard.totalGenderTypeCount | mfcicount:'INF'}}&nbsp;</span>
                                             <!-- <span *ngFor="let gender of peopleOnBoard.totalGenderTypeCount">
