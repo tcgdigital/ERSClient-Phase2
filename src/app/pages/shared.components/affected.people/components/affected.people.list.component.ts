@@ -112,8 +112,11 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
         this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.AffectedPersonSelected, affectedPerson.AffectedPersonId);
         this.childModalForCareMembers.show();
     }
+    
+    
 
     openAffectedPersonDetail(affectedPerson: AffectedPeopleToView): void {
+        
         this.copassangers = [];
         if (affectedPerson.Crew) {
             affectedPerson.Crew.FileStores = [];

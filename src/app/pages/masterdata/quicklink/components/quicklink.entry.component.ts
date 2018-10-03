@@ -99,6 +99,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
             const baseUrl = GlobalConstants.EXTERNAL_URL;
             this.fileUploadService.uploadFiles<string>(baseUrl + 'api/fileUpload/upload', this.filesToUpload)
                 .subscribe((result: string) => {
+                    
                     this.filepathWithLinks = `${GlobalConstants.EXTERNAL_URL}UploadFiles/${result.replace(/^.*[\\\/]/, '')}`;
                     const extension = result.replace(/^.*[\\\/]/, '').split('.').pop();
                     this.fileName = 'Quicklink' + `.${extension}`;
@@ -126,6 +127,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     onSubmit(values: Object): void {
+        
         this.submitted = true;
         if (this.form.valid) {
             if (this.form.controls['QuickLinkURL'].value != '') { //URL Validation Region

@@ -40,9 +40,11 @@ export class PeopleOnBoardWidgetService {
                 let genKPIData = _.countBy(passengerListLocal, "PassengerGender");
                 let natiionalityKPIData = _.countBy(passengerListLocal, "PassengerNationality");
                 let paxTypeKPIData = _.countBy(passengerListLocal, "PassengerType");
-
+                
+                //let temp: number;
                 this.peopleOnBoard.totalGenderTypeCount = Object.keys(genKPIData)
                     .map(x => { return { Key: x, Value: genKPIData[x] }; });
+
                 this.peopleOnBoard.totalNationalityTypeCount = Object.keys(natiionalityKPIData)
                     .map(x => { return { Key: x, Value: natiionalityKPIData[x] }; });
                 this.peopleOnBoard.totalPaxTypeCount = Object.keys(paxTypeKPIData)

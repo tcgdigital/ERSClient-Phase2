@@ -59,6 +59,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
     currentDepartmentId: number;
     currentIncidentIdLocal: number;
+   // public temp: number;
 
     private ngUnsubscribe: Subject<any> = new Subject<any>();
 
