@@ -116,7 +116,6 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
     
 
     openAffectedPersonDetail(affectedPerson: AffectedPeopleToView): void {
-        
         this.copassangers = [];
         if (affectedPerson.Crew) {
             affectedPerson.Crew.FileStores = [];
