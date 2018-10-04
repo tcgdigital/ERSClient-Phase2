@@ -34,6 +34,8 @@ export class PassengerService extends ServiceBase<PassengerModel> {
             .Execute();
     }
 
+    
+
     // public setcopassangers(entities: CoPassengerMappingModel[]): Observable<CoPassengerMappingModel[]> {
     //     let option: DataProcessingService = new DataProcessingService();
     //     let setcopassangerdataservice: DataService<CoPassengerMappingModel> = this.dataServiceFactory

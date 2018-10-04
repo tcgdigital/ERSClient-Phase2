@@ -4,14 +4,14 @@ import { Observable } from 'rxjs/Rx';
 import { InvolvePartyModel, AffectedModel } from '../../../shared.components';
 import { EnquiryModel } from '../../call.centre';
 import { NextOfKinModel } from '../../nextofkins';
-import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';
+import { AffectedPeopleToView, AffectedPeopleModel, AffectedPersonInvolvementResponse, AffectedPersonInvolvementModel } from './affected.people.model';
 import { PassengerModel } from '../../passenger/components';
 import { IAffectedPeopleService } from './IAffectedPeopleService';
 import { CasualtySummeryModel } from '../../../widgets/casualty.summary.widget/casualty.summary.widget.model';
 import {
     ResponseModel, DataService, ServiceBase,
     DataServiceFactory, DataProcessingService,
-    IServiceInretface, UtilityService
+    GlobalConstants, UtilityService
 } from '../../../../shared';
 import * as moment from 'moment/moment';
 import { CountOperation } from '../../../../shared/services/data.service/operations';
@@ -21,14 +21,15 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     implements IAffectedPeopleService {
 
     public affectedPeoples: ResponseModel<AffectedPeopleModel>;
-    private _dataServiceAffectedPeople: DataService<AffectedPeopleModel>;
+    //public affectedPersonInvolvementModel: AffectedPersonInvolvementModel;
+    //private _dataServiceAffectedPeople: DataService<AffectedPeopleModel>;
     private _bulkDataService: DataService<AffectedPeopleModel>;
     private _casualtySummery: CasualtySummeryModel;
     private _enquiryService: DataService<EnquiryModel>;
     private _nokService: DataService<NextOfKinModel>;
     private _passengerService: DataService<PassengerModel>;
 
-
+    private _dataServiceForReplaceAffectedInvolvement: DataService<any>;
     /**
      * Creates an instance of AffectedPeopleService.
      * @param {DataServiceFactory} dataServiceFactory
@@ -38,6 +39,10 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     constructor(private dataServiceFactory: DataServiceFactory) {
         super(dataServiceFactory, 'AffectedPeople');
         const option: DataProcessingService = new DataProcessingService();
+
+        this._dataServiceForReplaceAffectedInvolvement = this.dataServiceFactory
+            .CreateServiceWithOptionsAndActionSuffix('AffectedPersonInvolvementReplace', 'ReplaceAffectedPersonInvolvement', option);
+
 
         this._bulkDataService = this.dataServiceFactory
             .CreateServiceWithOptions<AffectedPeopleModel>('AffectedPersonBatch', option);
@@ -53,19 +58,23 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
             ('Passengers', option);
     }
 
-    public FlattenAffectedPeople(involvedParty: InvolvePartyModel): any {
+    public FlattenAffectedPeople(involvedParty: InvolvePartyModel): AffectedPeopleToView[] {
         let affectedPeopleForView: AffectedPeopleToView[] = [];
         let affectedPeople: AffectedPeopleModel[];
         let affected: AffectedModel;
-        
+
         if (involvedParty != null) {
             affected = UtilityService.pluck(involvedParty, ['Affecteds'])[0][0];
 
             if (affected != null) {
                 affectedPeople = UtilityService.pluck(affected, ['AffectedPeople'])[0];
                 affectedPeopleForView = affectedPeople.map((dataItem) => {
-                    
-                    const item = new AffectedPeopleToView();
+
+                    let item = new AffectedPeopleToView();
+                    item = this.FlattenAffectedPerson(dataItem);
+                    return item;
+
+                    /*
                     item.AffectedId = dataItem.AffectedId;
                     item.AffectedPersonId = dataItem.AffectedPersonId;
                     item.CurrentCareMemberName = dataItem.CurrentCareMemberName;
@@ -123,9 +132,73 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
                     item.commlength = dataItem.CommunicationLogs.length > 0;
 
                     return item;
+                    */
                 });
             }
         }
+        return affectedPeopleForView;
+    }
+
+    public FlattenAffectedPerson(affectedPerson: AffectedPeopleModel): AffectedPeopleToView {
+        let affectedPeopleForView = new AffectedPeopleToView();
+
+        affectedPeopleForView.AffectedId = affectedPerson.AffectedId;
+        affectedPeopleForView.AffectedPersonId = affectedPerson.AffectedPersonId;
+        affectedPeopleForView.CurrentCareMemberName = affectedPerson.CurrentCareMemberName;
+        affectedPeopleForView.PassengerName = affectedPerson.Passenger != null ? affectedPerson.Passenger.PassengerName : '';
+        affectedPeopleForView.Pnr = affectedPerson.Passenger != null ? (affectedPerson.Passenger.Pnr == null ? 'NA' : affectedPerson.Passenger.Pnr) : 'NA';
+        affectedPeopleForView.CrewName = affectedPerson.Crew != null ? affectedPerson.Crew.CrewName : '';
+        affectedPeopleForView.CrewNameWithCategory = affectedPerson.Crew != null ? affectedPerson.Crew.CrewName + '(' + affectedPerson.Crew.AsgCat + ')' : '';
+        affectedPeopleForView.ContactNumber = affectedPerson.Passenger != null ? (affectedPerson.Passenger.ContactNumber == null ? 'NA' : affectedPerson.Passenger.ContactNumber) : (affectedPerson.Crew == null ? 'NA' : affectedPerson.Crew.ContactNumber);
+        affectedPeopleForView.Gender = affectedPerson.Passenger != null ? (affectedPerson.Passenger.PassengerGender == null ? 'NA' : affectedPerson.Passenger.PassengerGender)
+            : (affectedPerson.Crew == null ? 'NA' : affectedPerson.Crew.CrewGender);
+        affectedPeopleForView.Nationality = affectedPerson.Passenger != null ? (affectedPerson.Passenger.PassengerNationality == null ? 'NA' : affectedPerson.Passenger.PassengerNationality)
+            : (affectedPerson.Crew == null ? 'NA' : affectedPerson.Crew.CrewNationality);
+        const now = moment(new Date());
+        const dob = affectedPerson.Passenger != null ? moment(affectedPerson.Passenger.PassengerDob) : moment(affectedPerson.Crew.CrewDob);
+        if (dob == null || dob == undefined) {
+            affectedPeopleForView.Age = '';
+        }
+        else {
+            const duration = moment.duration(now.diff(dob));
+            const age = duration.asYears();
+            affectedPeopleForView.Age = Math.floor(age).toString();
+        }
+        affectedPeopleForView.TicketNumber = affectedPerson.TicketNumber;
+        affectedPeopleForView.IsVerified = affectedPerson.IsVerified;
+        affectedPeopleForView.IsCrew = affectedPerson.IsCrew;
+        affectedPeopleForView.BaggageCount = affectedPerson.Passenger != null ? (affectedPerson.Passenger.BaggageCount == null ? 0 : affectedPerson.Passenger.BaggageCount) : 0;
+        affectedPeopleForView.BaggageWeight = affectedPerson.Passenger != null ? (affectedPerson.Passenger.BaggageWeight == null ? 0 : affectedPerson.Passenger.BaggageWeight) : 0;
+        affectedPeopleForView.PassengerSpecialServiceRequestCode = affectedPerson.Passenger != null ? (affectedPerson.Passenger.SpecialServiceRequestCode == null ? 'NA' : affectedPerson.Passenger.SpecialServiceRequestCode) : 'NA';
+        affectedPeopleForView.PassengerEmployeeId = affectedPerson.Passenger != null ? (affectedPerson.Passenger.EmployeeId == null ? 'NA' : affectedPerson.Passenger.EmployeeId) : 'NA';
+        affectedPeopleForView.CrewIdCode = affectedPerson.Crew != null ? (affectedPerson.Crew.EmployeeNumber == null ? 'NA' : affectedPerson.Crew.EmployeeNumber) : 'NA';
+        affectedPeopleForView.IsStaff = affectedPerson.IsStaff != null ? affectedPerson.IsStaff : false;
+        affectedPeopleForView.MedicalStatus = affectedPerson.MedicalStatus != null ? affectedPerson.MedicalStatus : 'NA';
+        affectedPeopleForView.Remarks = affectedPerson.Remarks != null ? affectedPerson.Remarks : 'NA';
+        affectedPeopleForView.Identification = affectedPerson.Identification != null ? affectedPerson.Identification : 'NA';
+        affectedPeopleForView.SeatNo = affectedPerson.Passenger != null ? affectedPerson.Passenger.Seatno : 'No Seat Number Available';
+        affectedPeopleForView.PaxType = affectedPerson.Passenger != null ? affectedPerson.Passenger.PassengerType : affectedPerson.Crew != null ? 'Crew' : '';
+        if (affectedPerson.Crew) {
+            affectedPeopleForView.CrewId = affectedPerson.CrewId;
+            affectedPeopleForView.Crew = affectedPerson.Crew;
+        }
+        if (affectedPerson.Passenger) {
+            affectedPeopleForView.PassengerId = affectedPerson.PassengerId;
+            if (affectedPerson.Passenger.CoPassengerMappings
+                && affectedPerson.Passenger.CoPassengerMappings.length > 0) {
+                affectedPeopleForView.GroupId = affectedPerson.Passenger.CoPassengerMappings[0].GroupId;
+            }
+            else {
+                affectedPeopleForView.GroupId = 0;
+            }
+        }
+        else {
+            affectedPeopleForView.PassengerId = 0;
+        }
+        affectedPeopleForView.IsNokInformed = affectedPerson.IsNokInformed;
+        affectedPeopleForView.commlength = (affectedPerson.CommunicationLogs) ?
+            affectedPerson.CommunicationLogs.length > 0 : false;
+
         return affectedPeopleForView;
     }
 
@@ -147,11 +220,10 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
             .Execute();
     }
 
-    public GetAllAffectedPeopleIdsByIncidentId(incidentId: number): Observable<ResponseModel<AffectedPeopleModel>>{
+    public GetAllAffectedPeopleIdsByIncidentId(incidentId: number): Observable<ResponseModel<AffectedPeopleModel>> {
         return this._dataService.Query()
             .Expand(`Affected($select=AffectedId;$expand=InvolvedParty($select=IncidentId))`)
-            .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} 
-            and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and IsIdentified eq 1`)
+            .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and IsIdentified eq 1`)
             .Select(`AffectedPersonId`)
             .Execute();
     }
@@ -162,15 +234,13 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
 
     public GetAffectedPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
-            .Filter(`IsCrew eq false and Affected/InvolvedParty/IncidentId eq ${incidentId}
-                and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and IsIdentified eq 1`)
+            .Filter(`IsCrew eq false and Affected/InvolvedParty/IncidentId eq ${incidentId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and IsIdentified eq 1`)
             .Execute();
     }
 
     public GetAffectedCrewCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
-            .Filter(`IsCrew eq true and Affected/InvolvedParty/IncidentId eq ${incidentId}
-                and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
+            .Filter(`IsCrew eq true and Affected/InvolvedParty/IncidentId eq ${incidentId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
             .Execute();
     }
 
@@ -191,41 +261,31 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
 
     public GetDeceasedPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
-            .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
-                ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' 
-                and tolower(MedicalStatus) eq 'deceased' and IsIdentified eq 1`)
+            .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and tolower(MedicalStatus) eq 'deceased'`)
             .Execute();
     }
 
     public GetMissingPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
-            .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
-                ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' 
-                and tolower(MedicalStatus) eq 'missing' and IsIdentified eq 1`)
+            .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and tolower(MedicalStatus) eq 'missing'`)
             .Execute();
     }
 
     public GetInjuredPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
-            .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
-                ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' 
-                and tolower(MedicalStatus) eq 'injured' and IsIdentified eq 1`)
+            .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and tolower(MedicalStatus) eq 'injured'`)
             .Execute();
     }
 
     public GetUninjuredPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
-            .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
-                ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' 
-                and tolower(MedicalStatus) eq 'uninjured' and IsIdentified eq 1`)
+            .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and tolower(MedicalStatus) eq 'uninjured'`)
             .Execute();
     }
 
     public GetOtherPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
-            .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and
-                ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' 
-                and tolower(MedicalStatus) eq 'others' and IsIdentified eq 1`)
+            .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and tolower(MedicalStatus) eq 'others'`)
             .Execute();
     }
 
@@ -267,7 +327,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
 
     public GetCallerListForAffectedPerson(affectedPersonId: number): Observable<ResponseModel<EnquiryModel>> {
         return this._enquiryService.Query()
-            .Filter(`AffectedPersonId eq ${affectedPersonId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and IsIdentified eq 1`)
+            .Filter(`AffectedPersonId eq ${affectedPersonId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
             .Expand(`Caller`)
             .Execute();
     }
@@ -285,5 +345,45 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
             .Expand(`Passenger($expand=CoPassengerMappings($select=GroupId);$select=PassengerId;)`)
             .Select('AffectedPersonId')
             .Execute();
+    }
+
+    public GetActiveIdentifiedPassengerByIncident(incidentId: number): Observable<ResponseModel<AffectedPeopleModel>> {
+        return this._dataService.Query()
+            .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} 
+            and IsIdentified eq true and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
+            .Expand(`Passenger`)
+            .Select('AffectedPersonId,IsIdentified')
+            .Execute();
+    }
+
+    public GetActiveUnIdentifiedPassengerByIncident(incidentId: number): Observable<ResponseModel<AffectedPeopleModel>> {
+        debugger;
+        return this._dataService.Query()
+            .Select('AffectedPersonId,IsIdentified')
+            .Expand(`Passenger`)
+            .Filter(`Passenger ne null and IsIdentified eq false and Affected/InvolvedParty/IncidentId eq ${incidentId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
+            .Execute();
+    }
+
+    public GetAffectedPersonIdByPassengerId(passengerId: number): Observable<ResponseModel<AffectedPeopleModel>> {
+        return this._dataService.Query()
+            .Select('AffectedPersonId')
+            .Filter(`PassengerId eq ${passengerId}`)
+            .Execute();
+    }
+
+    public ReplaceAffectedPersonInvolvement(currentAffectedPersonId: number, replaceWithAffectedPersonId: number): Observable<AffectedPersonInvolvementResponse> {
+        debugger;
+        let affectedPersonInvolvementModel = new AffectedPersonInvolvementModel
+        (currentAffectedPersonId,replaceWithAffectedPersonId);
+        
+
+        return this._dataServiceForReplaceAffectedInvolvement.JsonPost(affectedPersonInvolvementModel)
+            .Execute()
+            .map((response: any) => {
+                return response as AffectedPersonInvolvementResponse;
+            }).catch((error: any) => {
+                return Observable.of(error as AffectedPersonInvolvementResponse);
+            });
     }
 }

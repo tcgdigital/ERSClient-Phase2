@@ -179,6 +179,7 @@ export class CallCenterOnlyPageService extends ServiceBase<ExternalInputModel> i
         const pdaenquiryprojection = 'PDAEnquiryId';
         const affectedpersonprojection = 'AffectedPersonId,CurrentCareMemberName,IsIdentified';
         const passengerprojection = 'PassengerId,PassengerName';
+        debugger;
         return this._dataService.Query()
             .Filter(`IncidentId eq ${incidentId} and ExternalInputId eq ${CallId}`)
             .Expand(`PDAEnquiry($select=${pdaenquiryprojection};

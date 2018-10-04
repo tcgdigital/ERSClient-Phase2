@@ -8,9 +8,10 @@ import { EnquiryModel } from '../../call.centre/components/call.centre.model';
 import { CallerModel, CallerService } from '../../caller';
 import { CoPassengerMappingModel, PassengerModel, CoPassengerService } from '../../passenger/components';
 import { NextOfKinModel } from '../../nextofkins';
-import { AffectedPeopleToView, AffectedPeopleModel } from './affected.people.model';
+import { AffectedPeopleToView, AffectedPeopleModel, AffectedPersonInvolvementResponse } from './affected.people.model';
 import { AffectedPeopleService } from './affected.people.service';
 import { DepartmentService, DepartmentModel } from '../../../masterdata/department';
+
 import * as jwtDecode from 'jwt-decode';
 import {
     ResponseModel, DataExchangeService, GlobalConstants, AuthModel,
@@ -41,6 +42,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
     affectedPersonToUpdate: AffectedPeopleModel = new AffectedPeopleModel();
     IsDestroyed: boolean;
     affectedPersonModelForStatus: AffectedPeopleToView = new AffectedPeopleToView();
+
     medicalStatus: any[] = GlobalConstants.MedicalStatus;
     pdaNameForTrail: string = '';
     pdaReferenceNumberForTrail: string = '';
@@ -69,7 +71,8 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
     public currentDepartmentName: string;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
     public isAffectedPeopleCrewStatusDownloadLink: boolean = true;
-
+    public unidentifiedPersons: PassengerModel[] = [];
+    public isUnidentifiedShow: boolean = true;
     /**
      *Creates an instance of AffectedPeopleListComponent.
      * @param {AffectedPeopleService} affectedPeopleService
@@ -124,6 +127,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
         }
 
         this.affectedPersonModelForStatus = affectedPerson;
+        this.affectedPersonModelForStatus.UnidentifiedPassengerId = 0;
         if (this.affectedPersonModelForStatus.Age == "NaN") {
             this.affectedPersonModelForStatus.Age = "Not Available";
         }
@@ -132,11 +136,11 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
         }
 
         if (affectedPerson.MedicalStatus !== 'NA') {
-            if(affectedPerson.MedicalStatus !== ''){
+            if (affectedPerson.MedicalStatus !== '') {
                 this.affectedPersonModelForStatus['MedicalStatusToshow'] = this.medicalStatus
-                .find((x) => x.value === affectedPerson.MedicalStatus).value;
+                    .find((x) => x.value === affectedPerson.MedicalStatus).value;
             }
-            
+
         }
         this.affectedPeopleService.GetCallerListForAffectedPerson(affectedPerson.AffectedPersonId)
             .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
@@ -171,6 +175,48 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
 
     cancelModal() {
         this.childModal.hide();
+    }
+
+    getUnidentfiedPersonList(incidentId: number): void {
+        this.affectedPeopleService.GetActiveUnIdentifiedPassengerByIncident(incidentId)
+            .subscribe((response: ResponseModel<AffectedPeopleModel>) => {
+                debugger;
+                this.unidentifiedPersons = _.flatten(_.pluck(response.Records, 'Passenger'));
+                if (this.unidentifiedPersons == undefined) {
+                    this.isUnidentifiedShow = false;
+                }
+                else {
+                    this.isUnidentifiedShow = true;
+                }
+            })
+
+    }
+
+    mergeUnidentifiedWithPDA(affectedPeopleToView: AffectedPeopleToView): void {
+        debugger;
+        var result = confirm(`Do you Want to merge this unidentified person with this passenger ${affectedPeopleToView.PassengerName}?`);
+        if (result) {
+            debugger;
+            if (affectedPeopleToView.UnidentifiedPassengerId > 0) {
+                this.affectedPeopleService.GetAffectedPersonIdByPassengerId(affectedPeopleToView.UnidentifiedPassengerId)
+                    .subscribe((response: ResponseModel<AffectedPeopleModel>) => {
+                        debugger;
+                        if (response.Count > 0) {
+                            this.affectedPeopleService.ReplaceAffectedPersonInvolvement(response.Records[0].AffectedPersonId, affectedPeopleToView.AffectedPersonId)
+                                .subscribe((response: AffectedPersonInvolvementResponse) => {
+                                    debugger;
+                                    if (response.toString() == 'success') {
+                                        /////toast message for success.
+                                        this.isUnidentifiedShow=false;
+                                    }
+                                    else {
+                                        this.isUnidentifiedShow=true;
+                                    }
+                                });
+                        }
+                    });
+            }
+        }
     }
 
     getCurrentDepartmentName(departmentId): void {
@@ -334,6 +380,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
             .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
+                debugger;
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0])
                     .sort((a, b) => {
                         if (x => x.PassengerType) {
@@ -387,6 +434,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): any {
+        debugger;
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         const token = UtilityService.GetFromSession('access_token');
         if (token) {
@@ -407,6 +455,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
             this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
             this.getAffectedPeople(this.currentIncident);
         }
+        this.getUnidentfiedPersonList(this.currentIncident);
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/PassengerStatusInfo/' + this.currentIncident;
         this.downloadRoute = GlobalConstants.EXTERNAL_URL + 'api/Report/CrewStatusInfo/' + this.currentIncident;
 
