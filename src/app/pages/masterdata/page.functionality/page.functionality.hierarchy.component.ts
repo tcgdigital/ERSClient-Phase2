@@ -236,7 +236,6 @@ export class PageFunctionalityHierarchyComponent implements OnInit, OnChanges, O
     }
 
     public CheckUncheckAllTreeviewNodes(isChecked: boolean): void {
-        debugger;
         let terrObj = this.treeObject;
         if (terrObj !== undefined) {
             if (isChecked)

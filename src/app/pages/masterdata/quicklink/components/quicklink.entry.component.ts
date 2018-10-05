@@ -187,7 +187,6 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
                     this.quickLinkModelEdit.deleteAttributes();
 
                     if (this.selectedGroup) {
-                        debugger;
                         if(this.selectedGroup.Value==undefined)
                         {
                             this.quickLinkModelEdit.QuickLinkGroupId = this.quickLinkModel.QuickLinkGroupId;
@@ -282,7 +281,6 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
         window.scrollTo(0, 0);
 
         window.setTimeout(() => {
-            debugger;
             this.quickLinkGroupComponent.setInitialValue
                 (new KeyValue(data.QuickLinkGroup.GroupName, data.QuickLinkGroup.QuickLinkGroupId));
         }, 100);

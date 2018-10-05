@@ -91,7 +91,6 @@ export class QuickLinkListComponent implements OnInit, OnDestroy {
     }
 
     editQuickLink(editedQuickLink: QuickLinkModel): void {
-        debugger;
         this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.QuickLinkModelEdited, editedQuickLink);
     }
 
