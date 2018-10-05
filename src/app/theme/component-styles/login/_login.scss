@@ -217,8 +217,25 @@ input:-webkit-autofill:active {
 
 .error_white {
     background: #fff;
-    padding: 10px;
+    padding: 6px;
     margin: 2px 0;
+    border-radius: 3px;
+    li {
+        &:first-child {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        padding-bottom: 5px;
+        line-height: 11px;
+        &:not(:first-child):before {
+            content: "\f00d";
+            font: normal normal normal 14px/1 FontAwesome;
+            margin-right: 5px;
+        }
+    }
+    small {
+        line-height: 11px;
+    }
 }
 
 .error-login {

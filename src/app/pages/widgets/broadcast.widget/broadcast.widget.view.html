@@ -1,18 +1,22 @@
 <div class="row messaging-widget-container no-gutters">
     <div class="col-3 col-md-12 col-lg-3 border-seperator">
         <div class="message-icon">
-            <!-- <a href="javascript:void(0);" (click)="openBroadcastMessages()"> -->
             <i *ngIf="isShowViewAll | accesibility:currentDepartmentId:'BroadcastMessageWidgetViewAll'" class="fa fa-bullhorn fa-3x hover"
-                aria-hidden="true" (click)="openBroadcastMessages()"></i>
-            <span class="hover" *ngIf="isShowViewAll | accesibility:currentDepartmentId:'BroadcastMessageWidgetViewAll'" (click)="openBroadcastMessages()">broadcast
-                message</span>
-            <!-- </a> -->
-            <a *ngIf="isShowViewAll | accesibility:currentDepartmentId:'BroadcastMessageWidgetViewAll'" href="javascript:void(0);" (click)="openBroadcastMessagesByDepartment()">view
-                all</a>
+                aria-hidden="true" (click)="openBroadcastMessages()">
+            </i>
+            <span class="hover" *ngIf="isShowViewAll | accesibility:currentDepartmentId:'BroadcastMessageWidgetViewAll'"
+                (click)="openBroadcastMessages()">
+                broadcast message
+            </span>
+            <a *ngIf="isShowViewAll | accesibility:currentDepartmentId:'BroadcastMessageWidgetViewAll'" href="javascript:void(0);"
+                (click)="openBroadcastMessagesByDepartment()">
+                view all
+            </a>
         </div>
     </div>
     <div class="col-9 col-md-12 col-lg-9">
-        <text-accordion *ngIf="isShow | accesibility:currentDepartmentId:'BroadcastMessageWidget'" [accordionItems]="LatestBroadcasts"></text-accordion>
+        <text-accordion *ngIf="isShow | accesibility:currentDepartmentId:'BroadcastMessageWidget'" [accordionItems]="LatestBroadcasts">
+        </text-accordion>
         <div class="row no-gutters" *ngIf="!(isShow | accesibility:currentDepartmentId:'BroadcastMessageWidget')">
             <ul class="cd-container">
                 <li>
@@ -25,7 +29,8 @@
     </div>
 </div>
 
-<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -47,10 +52,18 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let broadcast of AllPublishedBroadcasts">
-                                <td data-title="Broadcast Messages" width="50%">{{broadcast.Message}}&nbsp;</td>
-                                <td data-title="Priority">{{broadcast.Priority}}&nbsp;</td>
-                                <td data-title="Initiated Department">{{broadcast.InitiateDepartment.DepartmentName}}&nbsp;</td>
-                                <td data-title="Published On">{{broadcast.SubmittedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
+                                <td data-title="Broadcast Messages" width="50%">
+                                    {{broadcast.Message}}&nbsp;
+                                </td>
+                                <td data-title="Priority">
+                                    {{broadcast.Priority}}&nbsp;
+                                </td>
+                                <td data-title="Initiated Department">
+                                    {{broadcast.InitiateDepartment.DepartmentName}}&nbsp;
+                                </td>
+                                <td data-title="Published On">
+                                    {{broadcast.SubmittedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -82,9 +95,15 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let broadcast of AllBroadCastByIncidentAndDepartment">
-                                <td data-title="Broadcast Messages" width="50%">{{broadcast.Message}}&nbsp;</td>
-                                <td data-title="Priority">{{broadcast.Priority}}&nbsp;</td>
-                                <td data-title="Published On">{{broadcast.SubmittedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
+                                <td data-title="Broadcast Messages" width="50%">
+                                    {{broadcast.Message}}&nbsp;
+                                </td>
+                                <td data-title="Priority">
+                                    {{broadcast.Priority}}&nbsp;
+                                </td>
+                                <td data-title="Published On">
+                                    {{broadcast.SubmittedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;
+                                </td>
                             </tr>
                         </tbody>
                     </table>
