@@ -180,7 +180,6 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
     getUnidentfiedPersonList(incidentId: number): void {
         this.affectedPeopleService.GetActiveUnIdentifiedPassengerByIncident(incidentId)
             .subscribe((response: ResponseModel<AffectedPeopleModel>) => {
-                debugger;
                 this.unidentifiedPersons = _.flatten(_.pluck(response.Records, 'Passenger'));
                 if (this.unidentifiedPersons == undefined) {
                     this.isUnidentifiedShow = false;
@@ -193,18 +192,14 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
     }
 
     mergeUnidentifiedWithPDA(affectedPeopleToView: AffectedPeopleToView): void {
-        debugger;
         var result = confirm(`Do you Want to merge this unidentified person with this passenger ${affectedPeopleToView.PassengerName}?`);
         if (result) {
-            debugger;
             if (affectedPeopleToView.UnidentifiedPassengerId > 0) {
                 this.affectedPeopleService.GetAffectedPersonIdByPassengerId(affectedPeopleToView.UnidentifiedPassengerId)
                     .subscribe((response: ResponseModel<AffectedPeopleModel>) => {
-                        debugger;
                         if (response.Count > 0) {
                             this.affectedPeopleService.ReplaceAffectedPersonInvolvement(response.Records[0].AffectedPersonId, affectedPeopleToView.AffectedPersonId)
                                 .subscribe((response: AffectedPersonInvolvementResponse) => {
-                                    debugger;
                                     if (response.toString() == 'success') {
                                         /////toast message for success.
                                         this.isUnidentifiedShow=false;
@@ -380,7 +375,6 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
             .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
-                debugger;
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0])
                     .sort((a, b) => {
                         if (x => x.PassengerType) {
@@ -434,7 +428,6 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): any {
-        debugger;
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         const token = UtilityService.GetFromSession('access_token');
         if (token) {

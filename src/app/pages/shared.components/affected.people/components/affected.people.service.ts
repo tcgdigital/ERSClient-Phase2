@@ -357,7 +357,6 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     }
 
     public GetActiveUnIdentifiedPassengerByIncident(incidentId: number): Observable<ResponseModel<AffectedPeopleModel>> {
-        debugger;
         return this._dataService.Query()
             .Select('AffectedPersonId,IsIdentified')
             .Expand(`Passenger`)
@@ -373,7 +372,6 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     }
 
     public ReplaceAffectedPersonInvolvement(currentAffectedPersonId: number, replaceWithAffectedPersonId: number): Observable<AffectedPersonInvolvementResponse> {
-        debugger;
         let affectedPersonInvolvementModel = new AffectedPersonInvolvementModel
         (currentAffectedPersonId,replaceWithAffectedPersonId);
         

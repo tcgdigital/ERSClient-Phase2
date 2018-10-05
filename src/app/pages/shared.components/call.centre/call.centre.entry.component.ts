@@ -1,6 +1,6 @@
 import {
     Component, ViewEncapsulation, OnInit,
-    Input, OnDestroy, HostListener
+    Input, OnDestroy, HostListener, ViewChild
 } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
@@ -10,7 +10,7 @@ import { DemandTrailModel } from '../demand/components/demand.trail.model';
 import {
     ResponseModel, DataExchangeService, KeyValue,
     GlobalConstants, UtilityService, GlobalStateService,
-    AuthModel, KeyValueService, KeyValueModel, EnquiryType
+    AuthModel, KeyValueService, KeyValueModel, EnquiryType, AutocompleteComponent
 } from '../../../shared';
 import { EnquiryModel, EnquiryService } from './components';
 import { AffectedPeopleModel } from "../affected.people/components";
@@ -66,9 +66,13 @@ import { AffectedService } from '../affected/components/affected.service';
     ]
 })
 export class EnquiryEntryComponent implements OnInit, OnDestroy {
+    @ViewChild('passengerAutocomplete') public passengerAutocomplete: AutocompleteComponent;
+    @ViewChild('crewAutocomplete') public crewAutocomplete: AutocompleteComponent;
+    @ViewChild('cargoAutocomplete') public cargoAutocomplete: AutocompleteComponent;
     @Input('callid') callid: number;
     @Input('enquiryType') enquiryType: number;
 
+    
     public form: FormGroup;
     public activeKeyValues: KeyValueModel[] = [];
     public IsIdentified: boolean = true;
@@ -924,7 +928,6 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
     private GetPassengerInfo(): void {
         this.callcenteronlypageservice.GetAffectedPersonDetailFromExternalInput(this.currentIncident, this.callid)
             .subscribe((result: ResponseModel<ExternalInputModel>) => {
-                debugger;
                 const pdaEnquery: PDAEnquiryModel = result.Records[0].PDAEnquiry;
 
                 if (pdaEnquery && pdaEnquery.AffectedPerson) {
@@ -1036,7 +1039,6 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
             })
             .flatMap((_) => this.SaveAffectedPerson())
             .subscribe((data: AffectedPeopleModel) => {
-                debugger;
                 this.PassengerId = data.PassengerId;
                 this.enquiry.AffectedPersonId = data.AffectedPersonId;
 
@@ -1474,6 +1476,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
             this.copassengerlistPassengerForMappedPerson=[];
             this.copassengerlistpnr=[];
             this.selectedcountpnr=0;
+            this.passengerAutocomplete.query = '';
         }
         this.IsIdentified = $event.checked;
     }
