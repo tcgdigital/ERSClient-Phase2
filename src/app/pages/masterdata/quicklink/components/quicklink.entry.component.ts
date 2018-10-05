@@ -99,6 +99,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
             const baseUrl = GlobalConstants.EXTERNAL_URL;
             this.fileUploadService.uploadFiles<string>(baseUrl + 'api/fileUpload/upload', this.filesToUpload)
                 .subscribe((result: string) => {
+                    
                     this.filepathWithLinks = `${GlobalConstants.EXTERNAL_URL}UploadFiles/${result.replace(/^.*[\\\/]/, '')}`;
                     const extension = result.replace(/^.*[\\\/]/, '').split('.').pop();
                     this.fileName = 'Quicklink' + `.${extension}`;
@@ -126,6 +127,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     onSubmit(values: Object): void {
+        
         this.submitted = true;
         if (this.form.valid) {
             if (this.form.controls['QuickLinkURL'].value != '') { //URL Validation Region
@@ -150,7 +152,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
                     this.quickLinkModel.QuickLinkURL = this.form.controls['QuickLinkURL'].value;
                     this.quickLinkModel.UploadURL = this.filepathWithLinks;
                     if (this.selectedGroup) {
-                        this.quickLinkModel.QuickLinkGroupId = this.selectedGroup.Value;
+                        this.quickLinkModelEdit.QuickLinkGroupId = this.selectedGroup.Value;
                     }
                     if ((this.quickLinkModel.QuickLinkGroupId == 0 || this.quickLinkModel.QuickLinkGroupId == undefined)
                         && this.quickLinkGroupComponent.getCurrentText() != '') {
@@ -185,7 +187,15 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
                     this.quickLinkModelEdit.deleteAttributes();
 
                     if (this.selectedGroup) {
-                        this.quickLinkModelEdit.QuickLinkGroupId = this.selectedGroup.Value;
+                        if(this.selectedGroup.Value==undefined)
+                        {
+                            this.quickLinkModelEdit.QuickLinkGroupId = this.quickLinkModel.QuickLinkGroupId;
+                        }
+                        else
+                        {
+                            this.quickLinkModelEdit.QuickLinkGroupId = this.selectedGroup.Value;
+                        }
+                        
                     }
                     if ((this.quickLinkModelEdit.QuickLinkGroupId == 0 || this.quickLinkModelEdit.QuickLinkGroupId == undefined)
                         && this.quickLinkGroupComponent.getCurrentText() != '') {
