@@ -50,6 +50,10 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     @ViewChild('childModalViewWeatherLocation') public childModalViewWeatherLocation: ModalDirective;
     @ViewChild('departuredatepicker') public departuredatepicker: DateTimePickerDirective;
     @ViewChild('arrivaldatepicker') public arrivaldatepicker: DateTimePickerDirective;
+    @ViewChild('emergencyDateTimePicker') public emergencyDateTimePicker: DateTimePickerDirective;
+    @ViewChild('reportedDateTimePicker') public reportedDateTimePicker: DateTimePickerDirective;
+    @ViewChild('scheduledDepartureDateTimePicker') public scheduledDepartureDateTimePicker: DateTimePickerDirective;
+    @ViewChild('scheduledArrivalDateTimePicker') public scheduledArrivalDateTimePicker: DateTimePickerDirective;
 
     incident: IncidentModel;
     lat: number = 51.678418;
@@ -451,12 +455,10 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             WhatHappened: new FormControl('', [Validators.required]),
             WhereHappened: new FormControl(''),
             OtherConfirmationInformation: new FormControl(''),
-            // Latitude: new FormControl(''),
-            // Longitude: new FormControl(''),
-            ReportedDate: new FormControl('', [Validators.required]),
+            ReportedDate: new FormControl('', [Validators.required, this.validateDate]),
             ReportedDateLocal: new FormControl(''),
             Description: new FormControl('', [Validators.required]),
-            EmergencyDate: new FormControl('', [Validators.required]),
+            EmergencyDate: new FormControl('', [Validators.required, this.validateEmergencyDate]),
             Severity: new FormControl(''),
             OrganizationId: new FormControl('', [Validators.required]),
             SourceInformation: new FormControl('', [Validators.maxLength(100)]),
@@ -470,13 +472,81 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         });
     }
 
+    private validateEmergencyDate(control: FormControl): any {
+        //Check he date is valid or not
+        let validDate: Date;
+        try {
+            validDate = new Date(Date.parse(control.value));
+            if (validDate.toString() == 'Invalid Date') {
+                return { InvalidEmergencyDate: true };
+            } else {
+                //If the date is valid then check that the date is in future date or not.
+                let currentDateTime = new Date();
+                if (currentDateTime < validDate) {
+                    return { FutureEmergencyDate: true };
+                } else {
+                    return null
+                }
+            }
+        } catch (ex) {
+            return { InvalidEmergencyDate: true };
+        }
+    }
+
+    private validateDate(control: FormControl): any {
+        //Check he date is valid or not
+        let validDate: Date;
+        try {
+            validDate = new Date(Date.parse(control.value));
+            if (validDate.toString() == 'Invalid Date') {
+                return { InvalidDate: true };
+            } else {
+                return null
+            }
+        } catch (ex) {
+            return { InvalidDate: true };
+        }
+    }
+
+    public onBlue_EmergencyDate($event): void {
+        let emergencyDate: Date = new Date();
+        if (this.form.get('EmergencyDate').valid) {
+            emergencyDate = new Date(this.form.get('EmergencyDate').value);
+        }
+        this.emergencyDateTimePicker.setDate(emergencyDate);
+    }
+
+    public onBlue_ReportedDate($event): void {
+        let reportedDate: Date = new Date();
+        if (this.form.get('ReportedDate').valid) {
+            reportedDate = new Date(this.form.get('ReportedDate').value);
+        }
+        this.reportedDateTimePicker.setDate(reportedDate);
+    }
+
+    public onBlue_ScheduledDepartureDate($event): void {
+        let scheduledDepartureDate: Date = new Date();
+        if (this.formFlight.get('Scheduleddeparture').valid) {
+            scheduledDepartureDate = new Date(this.formFlight.get('Scheduleddeparture').value);
+        }
+        this.scheduledDepartureDateTimePicker.setDate(scheduledDepartureDate);
+    }
+
+    public onBlue_ScheduledArrivalDate($event): void {
+        let scheduledArrivalDate: Date = new Date();
+        if (this.formFlight.get('Scheduledarrival').valid) {
+            scheduledArrivalDate = new Date(this.formFlight.get('Scheduledarrival').value);
+        }
+        this.scheduledArrivalDateTimePicker.setDate(scheduledArrivalDate);
+    }
+
     resetFlightForm(): void {
         this.formFlight = new FormGroup({
             FlightNumber: new FormControl('', [Validators.required, Validators.maxLength(50)]),
             Origin: new FormControl('', [Validators.required]),
             Destination: new FormControl('', [Validators.required]),
-            Scheduleddeparture: new FormControl('', [Validators.required]),
-            Scheduledarrival: new FormControl('', [Validators.required]),
+            Scheduleddeparture: new FormControl('', [Validators.required, this.validateDate]),
+            Scheduledarrival: new FormControl('', [Validators.required, this.validateDate]),
             FlightTailNumber: new FormControl('', [Validators.required, Validators.maxLength(50)]),
             AircraftTypeId: new FormControl('', [Validators.required]),
             ScheduleddepartureLOC: new FormControl(''),
@@ -574,8 +644,6 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             WhatHappenedPopup: new FormControl(''),
             WhereHappenedPopup: new FormControl(''),
             OtherConfirmationInformationPopup: new FormControl(''),
-            // LatitudePopup: new FormControl(''),
-            // LongitudePopup: new FormControl(''),
             ReportedDatePopup: new FormControl(''),
             ReportedDateLocalPopup: new FormControl(''),
             DescriptionPopup: new FormControl(''),
@@ -833,6 +901,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         let departurearrivalDate: string = this.DateFormat(date.SelectedDate as Date);
         let utc = (date.SelectedDate as Date).getTime();
         let localDepartureArrivalDate: string = '';
+
         if (controlName === 'EmergencyDate') {
             this.form.get('EmergencyDate')
                 .setValue(moment(date.SelectedDate as Date).format('DD-MMM-YYYY HH:mm'));
@@ -845,6 +914,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             this.form.get('ReportedDateLocal')
                 .setValue(moment(date.SelectedDate as Date).utc().format('DD-MMM-YYYY HH:mm'));
         }
+
         else if (controlName === 'Scheduleddeparture') {
             //localDepartureArrivalDate = this.DateFormat(new Date(utc + (this.GetUTCOffsetHours(true))));
             this.GetLocalDateTime(date.SelectedDate as Date, true, (dt: Date) => {
@@ -855,18 +925,21 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             // localDepartureArrivalDate = this.DateFormat(this.GetLocalDateTime(date.SelectedDate as Date, true));
             // this.formFlight.get('Scheduleddeparture').setValue(departurearrivalDate);
             // this.formFlight.get('ScheduleddepartureLOC').setValue(localDepartureArrivalDate);
-
-            this.arrivaldatepicker.updateConfig({
-                minDate: new Date(date.SelectedDate.toLocaleString())
-            });
+            if (this.arrivaldatepicker) {
+                this.arrivaldatepicker.updateConfig({
+                    minDate: new Date(date.SelectedDate.toLocaleString())
+                });
+            }
         }
-        else if (controlName === 'Scheduledarrival') {
 
+        else if (controlName === 'Scheduledarrival') {
             this.GetLocalDateTime(date.SelectedDate as Date, false, (dt: Date) => {
                 localDepartureArrivalDate = this.DateFormat(dt);
                 this.formFlight.get('Scheduledarrival').setValue(departurearrivalDate);
                 this.formFlight.get('ScheduledarrivalLOC').setValue(localDepartureArrivalDate);
             });
+
+
 
             //localDepartureArrivalDate = this.DateFormat(new Date(utc + (this.GetUTCOffsetHours(false))));
             // localDepartureArrivalDate = this.DateFormat(this.GetLocalDateTime(date.SelectedDate as Date, false));
@@ -906,6 +979,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         let localDate = new Date();
 
         this.timeZoneService.GetLocalTime(zi)
+            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .subscribe((result: ZoneIndicator) => {
                 localDate = new Date(result.CurrentTime);
 
@@ -927,10 +1001,17 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     private DateFormat(date: Date): string {
         let hours = (date.getHours());
         // let mid = (hours > 12) ? 'PM' : 'AM';
-        const months: string[] = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-        // return `${date.getDate()}-${months[date.getMonth()]}-${date.getFullYear()} ${((date.getHours() % 12) < 10) ? ("0" + (date.getHours() % 12)) : (date.getHours() % 12)}:${((date.getMinutes()) < 10) ? ("0" + (date.getMinutes())) : (date.getMinutes())} ${mid}`;
-        return `${date.getDate()}-${months[date.getMonth()]}-${date.getFullYear()} ${((date.getHours()) < 10) ? ("0" + (date.getHours())) : (date.getHours())}:${(date.getMinutes() < 10) ? ("0" + (date.getMinutes())) : (date.getMinutes())}`;
+        const months: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const day: string = this.padChr(date.getDate(), 2, '0');
+        return `${day}-${months[date.getMonth()]}-${date.getFullYear()} ${((date.getHours()) < 10) ? ("0" + (date.getHours())) : (date.getHours())}:${(date.getMinutes() < 10) ? ("0" + (date.getMinutes())) : (date.getMinutes())}`;
     }
 
+    private padChr(value: number, size: number, char: string): string {
+        let str: string = value.toString();
+        while (str.length < size) {
+            str = `${char}${str}`;
+        }
+        return str;
+    }
 
 }

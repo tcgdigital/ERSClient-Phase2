@@ -98,7 +98,7 @@ export class InvolvePartyService
         let affectedPeopleProjection: string = 'AffectedPersonId,TicketNumber,IsStaff,IsCrew,IsVerified,Identification,CurrentCareMemberName';
         let passengerPrjection: string = 'PassengerId,FlightNumber,PassengerName,PassengerGender,BaggageCount,Destination,PassengerDob,Pnr,PassengerType,PassengerNationality,DepartureDateTime,ArrivalDateTime,ContactNumber,Seatno';
         return this._dataService.Query()
-            .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=PassengerId ne null;$select=${affectedPeopleProjection};$expand=Passenger($select=${passengerPrjection}),NextOfKins))`)
+            .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=PassengerId ne null and IsIdentified eq true;$select=${affectedPeopleProjection};$expand=Passenger($select=${passengerPrjection}),NextOfKins))`)
             .Filter(`IncidentId eq ${incidentId}`)
             .Select(`${involvePartyProjection}`)
             .OrderBy("CreatedOn desc")
@@ -124,7 +124,7 @@ export class InvolvePartyService
         let affectedPeopleProjection: string = 'AffectedPersonId,TicketNumber,IsStaff,IsCrew,IsVerified,Identification,CurrentCareMemberName';
         let passengerPrjection: string = 'PassengerId,FlightNumber,PassengerName,PassengerGender,BaggageCount,Destination,PassengerDob,Pnr,PassengerType,PassengerNationality,DepartureDateTime,ArrivalDateTime,ContactNumber,Seatno';
         return this._dataService.Query()
-            .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=PassengerId ne null and ${query};$select=${affectedPeopleProjection};$expand=Passenger($select=${passengerPrjection}),NextOfKins))`)
+            .Expand(`Affecteds($select=${affectedProjection};$expand=AffectedPeople($filter=PassengerId ne null and IsIdentified eq true and ${query};$select=${affectedPeopleProjection};$expand=Passenger($select=${passengerPrjection}),NextOfKins))`)
             .Filter(`IncidentId eq ${incidentId}`)
             .Select(`${involvePartyProjection}`)
             .Execute();
