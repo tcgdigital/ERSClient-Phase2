@@ -106,6 +106,7 @@ export class IncidentViewComponent implements OnInit, OnDestroy {
     }
 
     loadDataIncidentViewPopup() {
+        
         const offsetVal: string = '';
         this.disableIsDrill = true;
         this.isOffSetPopup = false;
@@ -147,8 +148,9 @@ export class IncidentViewComponent implements OnInit, OnDestroy {
             this.isFlightRelatedPopup = true;
         }
     }
-
+    
     hideIncidentView(): void {
+        
         this.childModalViewIncident.hide();
     }
 
