@@ -78,15 +78,17 @@ export class InvolvePartyService
     GetFilterByIncidentId(IncidentId): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
             .Filter(`IncidentId eq  ${IncidentId}`)
-            .Expand(`Affecteds($expand=AffectedPeople($filter=IsIdentified eq true;$expand=Passenger($expand=CoPassengerMappings),Crew($expand=FileStores),CommunicationLogs($select=InteractionDetailsId,ActiveFlag;$filter=ActiveFlag eq 'Active')))`)
+            .Expand(`Affecteds($expand=AffectedPeople($filter=IsIdentified eq true;
+                $expand=Passenger($expand=CoPassengerMappings),Crew($expand=FileStores),
+                CommunicationLogs($select=InteractionDetailsId,ActiveFlag;$filter=ActiveFlag eq 'Active')))`)
             .Execute();
     }
 
     GetQuery(query: string, incidentId: number): Observable<ResponseModel<InvolvePartyModel>> {
         return this._dataService.Query()
-            .Filter(`IncidentId eq  ${incidentId}`)
-            .Expand(`Affecteds($expand=AffectedPeople($expand=Passenger($expand=CoPassengerMappings),Crew($expand=FileStores),CommunicationLogs($select=InteractionDetailsId;);$filter=${query}))`)
-            //.Filter(query)
+            .Filter(`IncidentId eq ${incidentId}`)
+            .Expand(`Affecteds($expand=AffectedPeople($expand=Passenger($expand=CoPassengerMappings),
+                Crew($expand=FileStores),CommunicationLogs($select=InteractionDetailsId;);$filter=${query}))`)
             .Execute();
     }
 

@@ -21,8 +21,6 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     implements IAffectedPeopleService {
 
     public affectedPeoples: ResponseModel<AffectedPeopleModel>;
-    //public affectedPersonInvolvementModel: AffectedPersonInvolvementModel;
-    //private _dataServiceAffectedPeople: DataService<AffectedPeopleModel>;
     private _bulkDataService: DataService<AffectedPeopleModel>;
     private _casualtySummery: CasualtySummeryModel;
     private _enquiryService: DataService<EnquiryModel>;
@@ -69,70 +67,9 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
             if (affected != null) {
                 affectedPeople = UtilityService.pluck(affected, ['AffectedPeople'])[0];
                 affectedPeopleForView = affectedPeople.map((dataItem) => {
-
                     let item = new AffectedPeopleToView();
                     item = this.FlattenAffectedPerson(dataItem);
                     return item;
-
-                    /*
-                    item.AffectedId = dataItem.AffectedId;
-                    item.AffectedPersonId = dataItem.AffectedPersonId;
-                    item.CurrentCareMemberName = dataItem.CurrentCareMemberName;
-                    item.PassengerName = dataItem.Passenger != null ? dataItem.Passenger.PassengerName : '';
-                    item.Pnr = dataItem.Passenger != null ? (dataItem.Passenger.Pnr == null ? 'NA' : dataItem.Passenger.Pnr) : 'NA';
-                    item.CrewName = dataItem.Crew != null ? dataItem.Crew.CrewName : '';
-                    item.CrewNameWithCategory = dataItem.Crew != null ? dataItem.Crew.CrewName + '(' + dataItem.Crew.AsgCat + ')' : '';
-                    item.ContactNumber = dataItem.Passenger != null ? (dataItem.Passenger.ContactNumber == null ? 'NA' : dataItem.Passenger.ContactNumber) : (dataItem.Crew == null ? 'NA' : dataItem.Crew.ContactNumber);
-                    item.Gender = dataItem.Passenger != null ? (dataItem.Passenger.PassengerGender == null ? 'NA' : dataItem.Passenger.PassengerGender)
-                        : (dataItem.Crew == null ? 'NA' : dataItem.Crew.CrewGender);
-                    item.Nationality = dataItem.Passenger != null ? (dataItem.Passenger.PassengerNationality == null ? 'NA' : dataItem.Passenger.PassengerNationality)
-                        : (dataItem.Crew == null ? 'NA' : dataItem.Crew.CrewNationality);
-                    const now = moment(new Date());
-                    const dob = dataItem.Passenger != null ? moment(dataItem.Passenger.PassengerDob) : moment(dataItem.Crew.CrewDob);
-                    if (dob == null || dob == undefined) {
-                        item.Age = '';
-                    }
-                    else {
-                        const duration = moment.duration(now.diff(dob));
-                        const age = duration.asYears();
-                        item.Age = Math.floor(age).toString();
-                    }
-                    item.TicketNumber = dataItem.TicketNumber;
-                    item.IsVerified = dataItem.IsVerified;
-                    item.IsCrew = dataItem.IsCrew;
-                    item.BaggageCount = dataItem.Passenger != null ? (dataItem.Passenger.BaggageCount == null ? 0 : dataItem.Passenger.BaggageCount) : 0;
-                    item.BaggageWeight = dataItem.Passenger != null ? (dataItem.Passenger.BaggageWeight == null ? 0 : dataItem.Passenger.BaggageWeight) : 0;
-                    item.PassengerSpecialServiceRequestCode = dataItem.Passenger != null ? (dataItem.Passenger.SpecialServiceRequestCode == null ? 'NA' : dataItem.Passenger.SpecialServiceRequestCode) : 'NA';
-                    item.PassengerEmployeeId = dataItem.Passenger != null ? (dataItem.Passenger.EmployeeId == null ? 'NA' : dataItem.Passenger.EmployeeId) : 'NA';
-                    item.CrewIdCode = dataItem.Crew != null ? (dataItem.Crew.EmployeeNumber == null ? 'NA' : dataItem.Crew.EmployeeNumber) : 'NA';
-                    item.IsStaff = dataItem.IsStaff != null ? dataItem.IsStaff : false;
-                    item.MedicalStatus = dataItem.MedicalStatus != null ? dataItem.MedicalStatus : 'NA';
-                    item.Remarks = dataItem.Remarks != null ? dataItem.Remarks : 'NA';
-                    item.Identification = dataItem.Identification != null ? dataItem.Identification : 'NA';
-                    item.SeatNo = dataItem.Passenger != null ? dataItem.Passenger.Seatno : 'No Seat Number Available';
-                    item.PaxType = dataItem.Passenger != null ? dataItem.Passenger.PassengerType : dataItem.Crew != null ? 'Crew' : '';
-                    if (dataItem.Crew) {
-                        item.CrewId = dataItem.CrewId;
-                        item.Crew = dataItem.Crew;
-                    }
-                    if (dataItem.Passenger) {
-                        item.PassengerId = dataItem.PassengerId;
-                        if (dataItem.Passenger.CoPassengerMappings.length > 0) {
-                            item.GroupId = dataItem.Passenger.CoPassengerMappings[0].GroupId;
-                        }
-                        else {
-                            item.GroupId = 0;
-                        }
-                    }
-                    else {
-                        item.PassengerId = 0;
-                    }
-                    item.IsNokInformed = dataItem.IsNokInformed;
-
-                    item.commlength = dataItem.CommunicationLogs.length > 0;
-
-                    return item;
-                    */
                 });
             }
         }
@@ -212,8 +149,8 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     public GetCurrentCareMember(affectedPersonId: number, careMemberId: number)
         : Observable<ResponseModel<AffectedPeopleModel>> {
         return this._dataService.Query()
-            .Expand(`CareMembers($expand=UserProfile($select=Name), Department($select=DepartmentName); 
-                $select=CareEngagementTrackId, CareMemberName, EffectedFrom, IncidentId, AffectedPersonId;
+            .Expand(`CareMembers($expand=UserProfile($select=Name),Department($select=DepartmentName); 
+                $select=CareEngagementTrackId,CareMemberName,EffectedFrom,IncidentId,AffectedPersonId;
                 $filter=CareEngagementTrackId eq ${careMemberId})`)
             .Filter(`AffectedPersonId eq ${affectedPersonId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
             .Select(`AffectedPersonId, CurrentCareMemberName`)
@@ -223,7 +160,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
     public GetAllAffectedPeopleIdsByIncidentId(incidentId: number): Observable<ResponseModel<AffectedPeopleModel>> {
         return this._dataService.Query()
             .Expand(`Affected($select=AffectedId;$expand=InvolvedParty($select=IncidentId))`)
-            .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and IsIdentified eq 1`)
+            .Filter(`Affected/InvolvedParty/IncidentId eq ${incidentId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and IsIdentified eq true`)
             .Select(`AffectedPersonId`)
             .Execute();
     }
@@ -234,7 +171,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
 
     public GetAffectedPeopleCount(incidentId: number): Observable<number> {
         return this._dataService.Count()
-            .Filter(`IsCrew eq false and Affected/InvolvedParty/IncidentId eq ${incidentId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and IsIdentified eq 1`)
+            .Filter(`IsCrew eq false and Affected/InvolvedParty/IncidentId eq ${incidentId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active' and IsIdentified eq true`)
             .Execute();
     }
 
@@ -320,7 +257,7 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
 
     public GetCommunicationByPDA(id: number): Observable<ResponseModel<AffectedPeopleModel>> {
         return this._dataService.Query()
-            .Filter(`AffectedPersonId eq ${id} and IsIdentified eq 1`)
+            .Filter(`AffectedPersonId eq ${id} and IsIdentified eq true`)
             .Expand("Passenger,Crew,CommunicationLogs($filter=ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active';$orderby=CreatedOn desc)")
             .Execute();
     }
