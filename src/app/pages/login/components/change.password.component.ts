@@ -51,7 +51,6 @@ export class ChangePasswordComponent implements OnInit, AfterViewInit {
         const $self: JQuery = jQuery(this.elementRef.nativeElement);
 
         $self.find('.input-group-addon').on('mousedown mouseup', (event) => {
-            debugger;
             const $btn: JQuery = $(event.currentTarget);
             const $input: JQuery = $btn.siblings('input');
 
