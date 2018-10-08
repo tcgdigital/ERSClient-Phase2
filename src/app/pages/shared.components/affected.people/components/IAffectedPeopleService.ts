@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs/Rx';
-import { AffectedPeopleModel, AffectedPeopleToView } from './affected.people.model';
+import { AffectedPeopleModel, AffectedPeopleToView, AffectedPersonInvolvementResponse } from './affected.people.model';
 import { } from '../../../shared.components';
 import { IServiceInretface, ResponseModel } from '../../../../shared';
 import { InvolvePartyModel } from '../../../shared.components';
@@ -8,6 +8,8 @@ import { CasualtySummeryModel } from '../../../widgets/casualty.summary.widget';
 
 export interface IAffectedPeopleService extends IServiceInretface<AffectedPeopleModel> {
     FlattenAffectedPeople(involvedParty: InvolvePartyModel): AffectedPeopleToView[];
+
+    FlattenAffectedPerson(affectedPerson: AffectedPeopleModel): AffectedPeopleToView;
 
     MapAffectedPeople(affectedPeopleForVerification, userid: number): AffectedPeopleModel[];
 
@@ -39,5 +41,11 @@ export interface IAffectedPeopleService extends IServiceInretface<AffectedPeople
         : Observable<ResponseModel<AffectedPeopleModel>>;
 
     GetAllAffectedPeopleIdsByIncidentId(incidentId: number)
+        : Observable<ResponseModel<AffectedPeopleModel>>;
+
+    ReplaceAffectedPersonInvolvement(oldAffectedPersonId: number, newAffectedPersonId: number)
+        : Observable<AffectedPersonInvolvementResponse>;
+
+    GetAffectedPersonIdByPassengerId(passengerId: number)
         : Observable<ResponseModel<AffectedPeopleModel>>;
 }

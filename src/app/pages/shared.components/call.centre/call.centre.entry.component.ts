@@ -1,6 +1,6 @@
 import {
     Component, ViewEncapsulation, OnInit,
-    Input, OnDestroy, HostListener
+    Input, OnDestroy, HostListener, ViewChild
 } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
@@ -10,7 +10,7 @@ import { DemandTrailModel } from '../demand/components/demand.trail.model';
 import {
     ResponseModel, DataExchangeService, KeyValue,
     GlobalConstants, UtilityService, GlobalStateService,
-    AuthModel, KeyValueService, KeyValueModel, EnquiryType
+    AuthModel, KeyValueService, KeyValueModel, EnquiryType, AutocompleteComponent
 } from '../../../shared';
 import { EnquiryModel, EnquiryService } from './components';
 import { AffectedPeopleModel } from "../affected.people/components";
@@ -66,9 +66,13 @@ import { AffectedService } from '../affected/components/affected.service';
     ]
 })
 export class EnquiryEntryComponent implements OnInit, OnDestroy {
+    @ViewChild('passengerAutocomplete') public passengerAutocomplete: AutocompleteComponent;
+    @ViewChild('crewAutocomplete') public crewAutocomplete: AutocompleteComponent;
+    @ViewChild('cargoAutocomplete') public cargoAutocomplete: AutocompleteComponent;
     @Input('callid') callid: number;
     @Input('enquiryType') enquiryType: number;
 
+    
     public form: FormGroup;
     public activeKeyValues: KeyValueModel[] = [];
     public IsIdentified: boolean = true;
@@ -203,7 +207,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         private affectedService: AffectedService
     ) { }
 
-    private getPassengersAndCrews(currentIncident: number, isIdentified: boolean): void {
+    private getPassengersAndCrews(currentIncident: number, isIdentified: boolean = true): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
             .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
@@ -924,18 +928,26 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
     private GetPassengerInfo(): void {
         this.callcenteronlypageservice.GetAffectedPersonDetailFromExternalInput(this.currentIncident, this.callid)
             .subscribe((result: ResponseModel<ExternalInputModel>) => {
-                if (result.Records[0].PDAEnquiry.AffectedPerson.IsIdentified) {
+                const pdaEnquery: PDAEnquiryModel = result.Records[0].PDAEnquiry;
+
+                if (pdaEnquery && pdaEnquery.AffectedPerson) {
+                    if (pdaEnquery.AffectedPerson.IsIdentified) {
+                        this.IsIdentified = true;
+                        this.form.controls["Unidentified"].disable();
+                    }
+                    else {
+
+                        this.IsIdentified = false;
+                        this.form.controls["Unidentified"].enable();
+                        this.form.controls['Unidentified'].reset({ value: pdaEnquery.AffectedPerson.Passenger.PassengerName, disabled: true });
+
+                    }
+                    this.getPassengersAndCrews(this.currentIncident, pdaEnquery.AffectedPerson.IsIdentified);
+                } else {
                     this.IsIdentified = true;
                     this.form.controls["Unidentified"].disable();
+                    this.getPassengersAndCrews(this.currentIncident);
                 }
-                else {
-
-                    this.IsIdentified = false;
-                    this.form.controls["Unidentified"].enable();
-                    this.form.controls['Unidentified'].reset({ value: result.Records[0].PDAEnquiry.AffectedPerson.Passenger.PassengerName, disabled: true });
-
-                }
-                this.getPassengersAndCrews(this.currentIncident, result.Records[0].PDAEnquiry.AffectedPerson.IsIdentified);
             });
     }
 
@@ -1025,16 +1037,33 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                 this.FlightNumber = this.affectedObject.InvolvedParty.Flights[0].FlightNo;
                 this.UnidentifiedPassengerName = this.form.controls["Unidentified"].value;
             })
-            .flatMap((_) => this.SavePassengerInfo())
-            .map((data: PassengerModel) => {
-                this.PassengerId = data.PassengerId;
-            })
             .flatMap((_) => this.SaveAffectedPerson())
             .subscribe((data: AffectedPeopleModel) => {
+                this.PassengerId = data.PassengerId;
                 this.enquiry.AffectedPersonId = data.AffectedPersonId;
-                this.SaveEnquiry();
 
+                if(this.affectedPersonObject && this.affectedPersonObject.Passenger){
+                    this.affectedPersonObject.Passenger.PassengerId = data.PassengerId;
+                    this.affectedPersonObject.AffectedPersonId = data.AffectedPersonId;
+
+                    if(this.affectedPeople && this.affectedPeople.length>0){
+                        this.affectedPeople.push(this.affectedPeopleService.FlattenAffectedPerson(this.affectedPersonObject));
+                    }
+                }
+
+                this.SaveEnquiry();
             });
+
+        // .flatMap((_) => this.SavePassengerInfo())
+        // .map((data: PassengerModel) => {
+        //     this.PassengerId = data.PassengerId;
+        // })
+        // .flatMap((_) => this.SaveAffectedPerson())
+        // .subscribe((data: AffectedPeopleModel) => {
+        //     this.enquiry.AffectedPersonId = data.AffectedPersonId;
+        //     this.SaveEnquiry();
+
+        // });
     }
 
     private InitializePassengerInfo(): void {
@@ -1070,10 +1099,10 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         this.passengerObject.OutBoundFlightNumber = 'NA';
         this.passengerObject.EmployeeId = 'NA';
         this.passengerObject.BaggageWeight = 0;
+        this.passengerObject.PassengerDob = new Date('1900-01-01');
     }
 
     private InitializeAffectedPersonInfo(): void {
-
         this.affectedPersonObject = new AffectedPeopleModel();
         this.affectedPersonObject.PassengerId = 0;
         this.affectedPersonObject.AffectedId = 0;
@@ -1092,6 +1121,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         this.affectedPersonObject.IsNokInformed = false;
         this.affectedPersonObject.CurrentCareMemberName = '';
         this.affectedPersonObject.IsIdentified = false;
+        this.affectedPersonObject.ActiveFlag = 'Active';
     }
 
     private SavePassengerInfo(): Observable<PassengerModel> {
@@ -1109,13 +1139,38 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
     }
 
     private SaveAffectedPerson(): Observable<AffectedPeopleModel> {
-        this.InitializeAffectedPersonInfo();
+        // this.affectedPersonObject = this.InitializeUnidentifiedAffectedPerson();
+
+        // this.affectedPersonObject.AffectedId = this.AffectedId;
+        // this.affectedPersonObject.PassengerId = this.PassengerId;
+        // this.affectedPersonObject.CurrentCareMemberName = (this.pdaenquery.AffectedPerson) ?
+        //     this.pdaenquery.AffectedPerson.CurrentCareMemberName : '';
+        // this.affectedPersonObject.IsIdentified = false;
+        // this.affectedPersonObject.CreatedOn = new Date();
+        // this.affectedPersonObject.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
+
+        // this.affectedPersonObject.Passenger.FlightId = this.FlightId;
+        // this.affectedPersonObject.Passenger.FlightNumber = this.FlightNumber;
+        // this.affectedPersonObject.Passenger.PassengerName = this.UnidentifiedPassengerName;
+        // this.affectedPersonObject.Passenger.CreatedOn = new Date();
+        // this.affectedPersonObject.Passenger.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
+
+        this.affectedPersonObject = this.InitializeUnidentifiedAffectedPerson();
+
         this.affectedPersonObject.AffectedId = this.AffectedId;
         this.affectedPersonObject.PassengerId = this.PassengerId;
-        this.affectedPersonObject.CurrentCareMemberName = this.pdaenquery.AffectedPerson.CurrentCareMemberName;
+        this.affectedPersonObject.CurrentCareMemberName = (this.pdaenquery.AffectedPerson) ?
+            this.pdaenquery.AffectedPerson.CurrentCareMemberName : '';
         this.affectedPersonObject.IsIdentified = false;
         this.affectedPersonObject.CreatedOn = new Date();
         this.affectedPersonObject.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
+
+        this.affectedPersonObject.Passenger.FlightId = this.FlightId;
+        this.affectedPersonObject.Passenger.FlightNumber = this.FlightNumber;
+        this.affectedPersonObject.Passenger.PassengerName = this.UnidentifiedPassengerName;
+        this.affectedPersonObject.Passenger.CreatedOn = new Date();
+        this.affectedPersonObject.Passenger.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
+
         return this.affectedPeopleService.Create(this.affectedPersonObject);
     }
 
@@ -1413,17 +1468,23 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
 
     public onChange($event: any): void {
         if ($event.checked) {
-            // this.form.controls["passengerName"].reset({ disabled: false });
             this.form.controls["Unidentified"].disable();
         }
         else {
-            // this.form.controls["passengerName"].reset({ disabled: true });
             this.form.controls["Unidentified"].enable();
+            this.consolidatedCopassengers = [];
+            this.copassengerlistPassengerForMappedPerson=[];
+            this.copassengerlistpnr=[];
+            this.selectedcountpnr=0;
+            this.passengerAutocomplete.query = '';
         }
         this.IsIdentified = $event.checked;
     }
 
     public ShowListsOfSamePNR($event): void {
+        if(!this.IsIdentified){
+            return;
+        }
         this.isPaxWithSamePNRSelected = !this.isPaxWithSamePNRSelected;
         jQuery('ul.dropdown-menu-down').hide();
         jQuery($event.currentTarget).siblings('ul.dropdown-menu-down').show();
@@ -1439,6 +1500,9 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
     }
 
     public ShowPassengers($event): void {
+        if(!this.IsIdentified){
+            return;
+        }
         this.isCoPaxSelected = !this.isCoPaxSelected;
         jQuery('ul.dropdown-menu-down').hide();
         jQuery($event.currentTarget).siblings('ul.dropdown-menu-down').show();
@@ -1458,5 +1522,69 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
             str = '0' + str;
         }
         return str;
+    }
+
+    private InitializeUnidentifiedPassenger(): PassengerModel {
+        let passenger: PassengerModel = new PassengerModel();
+
+        passenger = new PassengerModel();
+        passenger.PassengerId = 0;
+        passenger.FlightId = 0;
+        passenger.FlightNumber = 'NA';
+        passenger.PassengerName = '';
+        passenger.Details = 'NA';
+        passenger.PassengerGender = 'NA';
+        passenger.PassengerNationality = 'NA';
+        passenger.SpecialServiceRequestCode = 'NA';
+        passenger.BaggageCount = 0;
+        passenger.Destination = 'NA';
+        passenger.IsVip = false;
+        passenger.PassengerDob = null;
+        passenger.Seatno = 'NA';
+        passenger.Passport = 'NA';
+        passenger.Pnr = 'NA';
+        passenger.SpokenLanguage = 'NA';
+        passenger.Religion = 'NA';
+        passenger.TravellingWith = 'NA';
+        passenger.ContactNumber = 'NA';
+        passenger.AlternateContactNumber = 'NA';
+        passenger.PassengerType = 'NA';
+        passenger.DepartureDateTime = null;
+        passenger.ArrivalDateTime = null;
+        passenger.Origin = 'NA';
+        passenger.IdentificationDocType = 'NA';
+        passenger.IdentificationDocNumber = 'NA';
+        passenger.InboundFlightNumber = 'NA';
+        passenger.OutBoundFlightNumber = 'NA';
+        passenger.EmployeeId = 'NA';
+        passenger.BaggageWeight = 0;
+
+        return passenger;
+    }
+
+    private InitializeUnidentifiedAffectedPerson(): AffectedPeopleModel {
+        let affectedPerson: AffectedPeopleModel = new AffectedPeopleModel();
+        let unidentifiedPassenger: PassengerModel = this.InitializeUnidentifiedPassenger();
+
+        affectedPerson.PassengerId = 0;
+        affectedPerson.AffectedId = 0;
+        affectedPerson.PassengerId = 0;
+        affectedPerson.CrewId = null;
+        affectedPerson.IsLost = false;
+        affectedPerson.TicketNumber = '';
+        affectedPerson.Identification = '';
+        affectedPerson.LostFoundStatus = '';
+        affectedPerson.MedicalStatus = '';
+        affectedPerson.ReunionStatus = null;
+        affectedPerson.Remarks = '';
+        affectedPerson.IsStaff = false;
+        affectedPerson.IsCrew = false;
+        affectedPerson.IsVerified = false;
+        affectedPerson.IsNokInformed = false;
+        affectedPerson.CurrentCareMemberName = '';
+        affectedPerson.IsIdentified = false;
+        affectedPerson.Passenger = unidentifiedPassenger;
+        affectedPerson.ActiveFlag='Active';
+        return affectedPerson;
     }
 }

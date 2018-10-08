@@ -140,7 +140,9 @@ export class PassangerQueryRecievedCallsListComponent implements OnInit, OnDestr
 
     getPDAName(AffectedPersonId): string {
         let Nm: string = "";
-        Nm = this.passengers.find(x => x.Value == AffectedPersonId).Key;
+        if (this.passengers.length > 0) {
+            Nm = this.passengers.find(x => x.Value == AffectedPersonId).Key;
+        }
         return Nm;
     }
 

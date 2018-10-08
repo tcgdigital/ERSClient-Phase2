@@ -240,7 +240,7 @@
                         <div class="form-group col-md-4 col-sm-12" [hidden]="enquiryType!=EnquiryType.Passenger">
                             <label for="Passengers">Passenger Name <span class="required">*</span></label>
 
-                            <autocomplete [items]="passengers" (notify)="onNotifyPassenger($event)"
+                            <autocomplete #passengerAutocomplete [items]="passengers" (notify)="onNotifyPassenger($event)"
                                 (InvokeAutoCompleteReset)="onResetPassenger()" [actionLinks]="actionLinks"
                                 [initialvalue]="initialvalue" [isEnabled]="IsIdentified" (actionClickHandler)="onPDAActionClick($event)">
                             </autocomplete>
@@ -257,7 +257,7 @@
                         <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=EnquiryType.Crew">
                             <label for="Passengers">Crew Name <span class="required">*</span></label>
 
-                            <autocomplete [items]="crews" (notify)='onNotifyCrew($event)' (InvokeAutoCompleteReset)="onResetCrew()"
+                            <autocomplete #crewAutocomplete [items]="crews" (notify)='onNotifyCrew($event)' (InvokeAutoCompleteReset)="onResetCrew()"
                                 [initialvalue]="initialvalue" [actionLinks]="actionLinks" (actionClickHandler)="onPDAActionClick($event)">
                             </autocomplete>
                         </div>
@@ -265,7 +265,7 @@
                         <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=EnquiryType.Cargo">
                             <label for="awb">AWB <span class="required">*</span></label>
 
-                            <autocomplete [items]="awbs" (notify)='onNotifyCargo($event)' (InvokeAutoCompleteReset)="onResetCargo()"
+                            <autocomplete #cargoAutocomplete [items]="awbs" (notify)='onNotifyCargo($event)' (InvokeAutoCompleteReset)="onResetCargo()"
                                 [initialvalue]="initialvalue" [actionLinks]="actionLinks" (actionClickHandler)="onCargoActionClick($event)">
                             </autocomplete>
                         </div>
@@ -273,7 +273,7 @@
                         <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=EnquiryType.GroundVictim">
                             <label for="awb">Ground Victim <span class="required">*</span></label>
 
-                            <autocomplete [items]="victims" (notify)='onNotifyGroundVictim($event)'
+                            <autocomplete #victimAutocomplete [items]="victims" (notify)='onNotifyGroundVictim($event)'
                                 (InvokeAutoCompleteReset)="onResetGroundVictim()" [initialvalue]="initialvalue">
                             </autocomplete>
                         </div>
