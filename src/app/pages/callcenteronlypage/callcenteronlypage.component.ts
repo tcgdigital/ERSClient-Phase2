@@ -244,4 +244,13 @@ export class CallCenterOnlyPageComponent implements OnInit {
         this.enquiryType = +this.generalform.controls["EnquiryType"].value;
         this.initiateEnquiryForms();
     }
+
+    private cancel(): void {
+        this.isSubmitted = false;
+        this.generalform.reset();
+        this.cargoform.reset();
+        this.pdacrewform.reset();
+        this.otherform.reset();
+        this.victimform.reset();
+    }
 }
