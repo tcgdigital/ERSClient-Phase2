@@ -51,9 +51,11 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
     enableAddButtonOnGroupSelection: boolean = true;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
 
-    constructor(formBuilder: FormBuilder, private quickLinkService: QuickLinkService,
+    constructor(private formBuilder: FormBuilder, 
+        private quickLinkService: QuickLinkService,
         private dataExchange: DataExchangeService<QuickLinkModel>,
-        private fileUploadService: FileUploadService, private toastrService: ToastrService,
+        private fileUploadService: FileUploadService, 
+        private toastrService: ToastrService,
         private toastrConfig: ToastrConfig) {
         this.showAdd = false;
         this.buttonValue = "Add QuickLink";

@@ -290,17 +290,18 @@
                                     [ngClass]="flightClass" type="text" name="Scheduleddeparture" formControlName="Scheduleddeparture"
                                     placeholder="Scheduled Departure" datetime-picker [options]="datepickerOptionDeparture"
                                     (selectHandler)="dateTimeSet($event,'Scheduleddeparture');" /> -->
+
                                 <input id="Scheduleddeparture" class="form-control" type="text" name="Scheduleddeparture"
                                     [dropSpecialCharacters]="false" specialCharacters="[ '-' ,':' ]" mask="00-SSS-0000 00:00"
                                     formControlName="Scheduleddeparture" placeholder="Scheduled Departure Date"
-                                    datetime-picker #scheduledDepartureDateTimePicker="datetimepicker" 
-                                    [options]="datepickerOptionED" (selectHandler)="dateTimeSet($event,'Scheduleddeparture');" />
+                                    datetime-picker #scheduledDepartureDateTimePicker="datetimepicker" [options]="datepickerOptionED"
+                                    (selectHandler)="dateTimeSet($event,'Scheduleddeparture');" (blur)="onBlue_ScheduledDepartureDate($event)" />
 
                                 <small *ngIf="formFlight.controls.Scheduleddeparture.hasError('required')" [hidden]="formFlight.controls.Scheduleddeparture.valid || (formFlight.controls.Scheduleddeparture.pristine && !submittedFlight)"
                                     class="text-danger">Required</small>
+
                                 <small *ngIf="formFlight.controls.Scheduleddeparture.hasError('InvalidDate')" [hidden]="formFlight.controls.Scheduleddeparture.valid || (formFlight.controls.Scheduleddeparture.pristine && !submitted)"
                                     class="text-danger">Scheduled departure date is invalid</small>
-
                             </div>
                         </div>
                         <div class="row">
@@ -317,14 +318,16 @@
                                     [ngClass]="flightClass" type="text" name="Scheduledarrival" formControlName="Scheduledarrival"
                                     placeholder="Sched. Arrival (UTC)" datetime-picker [options]="datepickerOptionArrival"
                                     (selectHandler)="dateTimeSet($event,'Scheduledarrival');" /> -->
+
                                 <input id="Scheduledarrival" [dropSpecialCharacters]="false" specialCharacters="[ '-' ,':' ]"
                                     mask="00-SSS-0000 00:00" class="form-control" type="text" name="Scheduledarrival"
                                     formControlName="Scheduledarrival" placeholder="Scheduled Arrival Date"
-                                    datetime-picker #scheduledArrivalDateTimePicker="datetimepicker" 
-                                    [options]="datepickerOptionED" (selectHandler)="dateTimeSet($event,'Scheduledarrival');" />
+                                    datetime-picker #scheduledArrivalDateTimePicker="datetimepicker" [options]="datepickerOptionED"
+                                    (selectHandler)="dateTimeSet($event,'Scheduledarrival');" (blur)="onBlue_ScheduledArrivalDate($event)" />
 
                                 <small *ngIf="formFlight.controls.Scheduledarrival.hasError('required')" [hidden]="formFlight.controls.Scheduledarrival.valid || (formFlight.controls.Scheduledarrival.pristine && !submittedFlight)"
                                     class="text-danger">Required</small>
+
                                 <small *ngIf="formFlight.controls.Scheduledarrival.hasError('InvalidDate')" [hidden]="formFlight.controls.Scheduledarrival.valid || (formFlight.controls.Scheduledarrival.pristine && !submitted)"
                                     class="text-danger">Scheduled arrival date is invalid</small>
 

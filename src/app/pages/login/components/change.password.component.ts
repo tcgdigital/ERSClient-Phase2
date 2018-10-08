@@ -4,12 +4,11 @@ import {
 } from '@angular/core';
 import {
     FormGroup, FormBuilder,
-    FormControl, Validators
+    FormControl, Validators, ValidationErrors
 } from '@angular/forms';
 import { UtilityService } from '../../../shared/services';
 import { ChangePasswordModel } from './auth.model';
 import { AccountResponse } from '../../../shared/models';
-import { GlobalConstants } from '../../../shared/constants';
 import { ChangePasswordService } from './change.password.service';
 import { Router } from '@angular/router';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
@@ -29,6 +28,15 @@ export class ChangePasswordComponent implements OnInit, AfterViewInit {
     public submitted: boolean = false;
     public errorMessage: string = '';
 
+    /**
+     *Creates an instance of ChangePasswordComponent.
+     * @param {ElementRef} elementRef
+     * @param {Router} router
+     * @param {ToastrService} toastrService
+     * @param {ToastrConfig} toastrConfig
+     * @param {ChangePasswordService} changePasswordService
+     * @memberof ChangePasswordComponent
+     */
     constructor(private elementRef: ElementRef,
         private router: Router,
         private toastrService: ToastrService,
@@ -41,7 +49,8 @@ export class ChangePasswordComponent implements OnInit, AfterViewInit {
 
     public ngAfterViewInit(): void {
         const $self: JQuery = jQuery(this.elementRef.nativeElement);
-        $self.find('.input-group-addon').on('click', (event) => {
+
+        $self.find('.input-group-addon').on('mousedown mouseup', (event) => {
             const $btn: JQuery = $(event.currentTarget);
             const $input: JQuery = $btn.siblings('input');
 
@@ -64,9 +73,9 @@ export class ChangePasswordComponent implements OnInit, AfterViewInit {
     public onSubmit(changePasswordModel: ChangePasswordModel): void {
         this.submitted = true;
         this.errorMessage = '';
+        this.getFormValidationErrors();
 
         if (this.changePasswordForm.valid) {
-            // console.log(changePasswordModel);
             this.changePasswordService.ChangePassword(changePasswordModel)
                 .subscribe((response: AccountResponse) => {
                     if (response) {
@@ -92,6 +101,17 @@ export class ChangePasswordComponent implements OnInit, AfterViewInit {
         }
     }
 
+    ValidatePassword(control: FormControl) {
+        const PASSWORD_REGEXP: RegExp = new RegExp("^(?!.*[\s])(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,20}$");
+        const password: string = control.value;
+
+        return PASSWORD_REGEXP.test(password) ? null : {
+            ValidatePassword: {
+                valid: true
+            }
+        };
+    }
+
     private setChangePasswordForm(changePasswordModel?: ChangePasswordModel): FormGroup {
         this.compareValidator = this.compareValidator.bind(this);
         const formGroup: FormGroup = new FormGroup({
@@ -99,9 +119,30 @@ export class ChangePasswordComponent implements OnInit, AfterViewInit {
             SecurityAnswer: new FormControl(changePasswordModel ? changePasswordModel.SecurityAnswer : '', [Validators.required]),
             OldPassword: new FormControl(changePasswordModel ? changePasswordModel.OldPassword : '', [Validators.required]),
             NewPassword: new FormControl(changePasswordModel ? changePasswordModel.NewPassword : '',
-                [Validators.required, Validators.minLength(8), Validators.maxLength(20), Validators.pattern(GlobalConstants.PASSWORD_PATTERN)]),
-            ConfirmPassword: new FormControl(changePasswordModel ? changePasswordModel.ConfirmPassword : '', [Validators.required, this.compareValidator]),
+                [
+                    Validators.required,
+                    Validators.minLength(8),
+                    Validators.maxLength(20),
+                    Validators.pattern(/^(?!.*[\s])(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,20}$/)
+                ]),
+            ConfirmPassword: new FormControl(changePasswordModel ? changePasswordModel.ConfirmPassword : '',
+                [
+                    Validators.required,
+                    this.compareValidator
+                ]),
         });
         return formGroup;
+    }
+
+    private getFormValidationErrors(): void {
+        Object.keys(this.changePasswordForm.controls).forEach(key => {
+
+            const controlErrors: ValidationErrors = this.changePasswordForm.get(key).errors;
+            if (controlErrors != null) {
+                Object.keys(controlErrors).forEach(keyError => {
+                    console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
+                });
+            }
+        });
     }
 }
