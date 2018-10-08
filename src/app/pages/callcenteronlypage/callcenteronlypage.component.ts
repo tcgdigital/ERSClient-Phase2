@@ -247,7 +247,6 @@ export class CallCenterOnlyPageComponent implements OnInit {
 
     private cancel(): void {
         this.isSubmitted = false;
-        debugger;
         this.generalform.reset();
         this.cargoform.reset();
         this.pdacrewform.reset();
