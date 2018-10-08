@@ -101,4 +101,22 @@ export class AffectedPeopleToView extends BaseModel {
 	public PassCrewNm: string;
 	public CurrentCareMemberName: string;
 	public IsIdentified: boolean;
+	public UnidentifiedPassengerId?: number;
+}
+
+export class AffectedPersonInvolvementModel {
+	public replaceWithAffectedPersonId: number;
+	public currentAffectedPersonId: number;
+
+	constructor(currentId:number, replaceWithId:number) {
+		this.currentAffectedPersonId=currentId;
+		this.replaceWithAffectedPersonId=replaceWithId;
+	}
+}
+
+export class AffectedPersonInvolvementResponse {
+    public Code: number;
+    public Message: string;
+    public Data: any;
+    public Url: string;
 }

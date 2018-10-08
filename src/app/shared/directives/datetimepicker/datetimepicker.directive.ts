@@ -110,6 +110,12 @@ export class DateTimePickerDirective implements AfterViewInit {
         });
     }
 
+    public setDate(datetime:Date):void{
+        debugger;
+        this.datepickerInstance.date=datetime;
+        this.datepickerInstance.selectDate(datetime);
+    }
+
     public updateConfig(config: any) {
         this.datepickerInstance.update(config);
     }
