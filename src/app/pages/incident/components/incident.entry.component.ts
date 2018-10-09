@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 
 import {
-    FormGroup, FormControl, FormBuilder, Validators
+    FormGroup, FormControl, Validators
 } from '@angular/forms';
 import * as moment from 'moment/moment';
 import { IncidentModel } from './incident.model';
@@ -27,7 +27,6 @@ import {
     IncidentStatus,
     InvolvedPartyType,
     UtilityService,
-    LocationService,
     Location,
     DateTimePickerOptions,
     DateTimePickerDirective,
@@ -48,8 +47,7 @@ import { Subject, Observable } from 'rxjs';
 export class IncidentEntryComponent implements OnInit, OnDestroy {
     @ViewChild('childModalViewIncident') public childModalViewIncident: ModalDirective;
     @ViewChild('childModalViewWeatherLocation') public childModalViewWeatherLocation: ModalDirective;
-    @ViewChild('departuredatepicker') public departuredatepicker: DateTimePickerDirective;
-    @ViewChild('arrivaldatepicker') public arrivaldatepicker: DateTimePickerDirective;
+
     @ViewChild('emergencyDateTimePicker') public emergencyDateTimePicker: DateTimePickerDirective;
     @ViewChild('reportedDateTimePicker') public reportedDateTimePicker: DateTimePickerDirective;
     @ViewChild('scheduledDepartureDateTimePicker') public scheduledDepartureDateTimePicker: DateTimePickerDirective;
@@ -125,6 +123,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
     credential: AuthModel;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
+    private preventOnBlurExecution: boolean = false;
 
     /**
      * Creates an instance of IncidentEntryComponent.
@@ -142,7 +141,10 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         private emergencyLocationService: EmergencyLocationService,
         private timeZoneService: TimeZoneService,
         private organizationService: OrganizationService,
-        private aircraftTypeService: AircraftTypeService) {
+        private aircraftTypeService: AircraftTypeService,
+        private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig) {
+
         this.severities = UtilityService.GetKeyValues(Severity);
         this.incidentStatuses = UtilityService.GetKeyValues(IncidentStatus);
         this.affectedStations = [];
@@ -371,8 +373,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                     .subscribe((itemFlight: FlightModel) => {
                         this.FillFlightFields(itemFlight);
                         jQuery('#Scheduleddeparture, #Scheduledarrival').attr('data-disable', 'true');
-                        this.departuredatepicker.toggleControl();
-                        this.arrivaldatepicker.toggleControl();
+                        this.scheduledDepartureDateTimePicker.toggleControl();
+                        this.scheduledArrivalDateTimePicker.toggleControl();
                         this.isBorrowedIncidentPopup = true;
                     }, (error: any) => {
                         console.log(`Error: ${error.message}`);
@@ -381,8 +383,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             else {
                 this.ResetFlightFields();
                 jQuery('#Scheduleddeparture, #Scheduledarrival').removeAttr('data-disable');
-                this.departuredatepicker.toggleControl();
-                this.arrivaldatepicker.toggleControl();
+                this.scheduledDepartureDateTimePicker.toggleControl();
+                this.scheduledArrivalDateTimePicker.toggleControl();
             }
         }
     }
@@ -525,6 +527,10 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     public onBlue_ScheduledDepartureDate($event): void {
+        if (this.preventOnBlurExecution) {
+            this.preventOnBlurExecution = false;
+            return;
+        }
         let scheduledDepartureDate: Date = new Date();
         if (this.formFlight.get('Scheduleddeparture').valid) {
             scheduledDepartureDate = new Date(this.formFlight.get('Scheduleddeparture').value);
@@ -533,6 +539,10 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     public onBlue_ScheduledArrivalDate($event): void {
+        if (this.preventOnBlurExecution) {
+            this.preventOnBlurExecution = false;
+            return;
+        }
         let scheduledArrivalDate: Date = new Date();
         if (this.formFlight.get('Scheduledarrival').valid) {
             scheduledArrivalDate = new Date(this.formFlight.get('Scheduledarrival').value);
@@ -898,6 +908,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     public dateTimeSet(date: DateTimePickerSelectEventArgs, controlName: string): void {
+        this.preventOnBlurExecution = true;
         let departurearrivalDate: string = this.DateFormat(date.SelectedDate as Date);
         let utc = (date.SelectedDate as Date).getTime();
         let localDepartureArrivalDate: string = '';
@@ -905,31 +916,30 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         if (controlName === 'EmergencyDate') {
             this.form.get('EmergencyDate')
                 .setValue(moment(date.SelectedDate as Date).format('DD-MMM-YYYY HH:mm'));
+
             this.form.get('EmergencyDateLocal')
                 .setValue(moment(date.SelectedDate as Date).utc().format('DD-MMM-YYYY HH:mm'));
         }
         else if (controlName === 'ReportedDate') {
             this.form.get('ReportedDate')
                 .setValue(moment(date.SelectedDate as Date).format('DD-MMM-YYYY HH:mm'));
+
             this.form.get('ReportedDateLocal')
                 .setValue(moment(date.SelectedDate as Date).utc().format('DD-MMM-YYYY HH:mm'));
         }
 
         else if (controlName === 'Scheduleddeparture') {
-            //localDepartureArrivalDate = this.DateFormat(new Date(utc + (this.GetUTCOffsetHours(true))));
             this.GetLocalDateTime(date.SelectedDate as Date, true, (dt: Date) => {
                 localDepartureArrivalDate = this.DateFormat(dt);
                 this.formFlight.get('Scheduleddeparture').setValue(departurearrivalDate);
                 this.formFlight.get('ScheduleddepartureLOC').setValue(localDepartureArrivalDate);
+
+                if (this.scheduledArrivalDateTimePicker) {
+                    this.scheduledArrivalDateTimePicker.updateConfig({
+                        minDate: new Date(date.SelectedDate.toLocaleString())
+                    });
+                }
             });
-            // localDepartureArrivalDate = this.DateFormat(this.GetLocalDateTime(date.SelectedDate as Date, true));
-            // this.formFlight.get('Scheduleddeparture').setValue(departurearrivalDate);
-            // this.formFlight.get('ScheduleddepartureLOC').setValue(localDepartureArrivalDate);
-            if (this.arrivaldatepicker) {
-                this.arrivaldatepicker.updateConfig({
-                    minDate: new Date(date.SelectedDate.toLocaleString())
-                });
-            }
         }
 
         else if (controlName === 'Scheduledarrival') {
@@ -938,54 +948,52 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                 this.formFlight.get('Scheduledarrival').setValue(departurearrivalDate);
                 this.formFlight.get('ScheduledarrivalLOC').setValue(localDepartureArrivalDate);
             });
-
-
-
-            //localDepartureArrivalDate = this.DateFormat(new Date(utc + (this.GetUTCOffsetHours(false))));
-            // localDepartureArrivalDate = this.DateFormat(this.GetLocalDateTime(date.SelectedDate as Date, false));
-            // this.formFlight.get('Scheduledarrival').setValue(departurearrivalDate);
-            // this.formFlight.get('ScheduledarrivalLOC').setValue(localDepartureArrivalDate);
         }
     }
 
     public GetUTCOffsetHours(isOrigin: boolean): string {
         let originOrDestinationIATA: string = '';
         let UTC_TimeZone: string = '';
-        let UTC_OffsetNumber: number = 0.0;
-        let isNegative: boolean = false;
-        if (isOrigin) {
-            originOrDestinationIATA = this.formFlight.get('Origin').value;
+
+        originOrDestinationIATA = (isOrigin) ?
+            this.formFlight.get('Origin').value :
+            this.formFlight.get('Destination').value;
+
+        if (originOrDestinationIATA != '') {
+            UTC_TimeZone = this.affectedStations.find((item: EmergencyLocationModel) =>
+                item.IATA == originOrDestinationIATA
+            ).TimeZone;
+        } else {
+            this.toastrService.error('Flight Origin or Destination should not be empty. Please select some value.', 'Error', this.toastrConfig);
         }
-        else {
-            originOrDestinationIATA = this.formFlight.get('Destination').value;
-        }
-        UTC_TimeZone = this.affectedStations.find((item: EmergencyLocationModel) =>
-            item.IATA == originOrDestinationIATA
-        ).TimeZone;
+
         return UTC_TimeZone;
     }
 
     private GetLocalDateTime(utc: Date, isOrigin: boolean, callback?: ((_: Date) => void)): void {
         let timeZone: string = this.GetUTCOffsetHours(isOrigin);
-        let zi = new ZoneIndicator();
-        zi.Year = utc.getFullYear().toString();
-        zi.Month = (utc.getMonth() + 1).toString();
-        zi.Day = utc.getDate().toString();
-        zi.Hour = utc.getHours().toString();
-        zi.Minute = utc.getMinutes().toString();
-        zi.Second = utc.getSeconds().toString();
-        zi.CurrentTime = new Date();
-        zi.ZoneName = timeZone;
-        let localDate = new Date();
+        if (timeZone != '') {
+            let zi = new ZoneIndicator();
 
-        this.timeZoneService.GetLocalTime(zi)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
-            .subscribe((result: ZoneIndicator) => {
-                localDate = new Date(result.CurrentTime);
+            zi.Year = utc.getFullYear().toString();
+            zi.Month = (utc.getMonth() + 1).toString();
+            zi.Day = utc.getDate().toString();
+            zi.Hour = utc.getHours().toString();
+            zi.Minute = utc.getMinutes().toString();
+            zi.Second = utc.getSeconds().toString();
+            zi.CurrentTime = new Date();
+            zi.ZoneName = timeZone;
+            let localDate = new Date();
 
-                if (callback)
-                    callback(localDate);
-            });
+            this.timeZoneService.GetLocalTime(zi)
+                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                .subscribe((result: ZoneIndicator) => {
+                    localDate = new Date(result.CurrentTime);
+                    if (callback) {
+                        callback(localDate);
+                    }
+                });
+        }
     }
 
     private stdTimezoneOffset(dt: Date): number {

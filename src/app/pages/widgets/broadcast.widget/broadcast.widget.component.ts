@@ -21,8 +21,9 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
     encapsulation: ViewEncapsulation.None
 })
 export class BroadcastWidgetComponent implements OnInit, OnDestroy {
-    @Input('initiatedDepartmentId') initiatedDepartmentId: number;
-    @Input('currentIncidentId') incidentId: number;
+    @Input('initiatedDepartmentId') public initiatedDepartmentId: number;
+    @Input('currentIncidentId') public incidentId: number;
+
     @ViewChild('childModal') public childModal: ModalDirective;
     @ViewChild('childBroadcastByDept') public childBroadcastByDept: ModalDirective;
 
@@ -97,8 +98,9 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
             .flatMap(x => x)
             .subscribe(a => {
                 let existingIndex = this.LatestBroadcastModels.findIndex(b => b.BroadcastId == a.BroadcastId);
-                if (existingIndex == -1)
+                if (existingIndex == -1) {
                     this.LatestBroadcastModels.push(a);
+                }
             }, (error: any) => {
                 console.log(`Error: ${error.message}`);
             }, () => {
@@ -126,7 +128,7 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
             });
     }
 
-    getAllBroadcastByIncidentAndDepartment(callback?: Function): void {
+    public getAllBroadcastByIncidentAndDepartment(callback?: Function): void {
         const data: BroadcastWidgetModel[] = [];
 
         this.broadcastWidgetService.GetAllBroadcastsByIncidentAndDepartment
@@ -148,10 +150,6 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
     }
 
     public openBroadcastMessagesByDepartment(): void {
-        // this.getAllPublishedBroadcasts(() => {
-        //     this.childModal.show();
-        // });
-
         this.getAllBroadcastByIncidentAndDepartment(() => {
             this.childBroadcastByDept.show();
         })
@@ -171,7 +169,7 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
         this.childBroadcastByDept.hide();
     }
 
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChange);
         // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.DepartmentChange);
         // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.BroadcastPublished);

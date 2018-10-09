@@ -1,4 +1,7 @@
-import { Component, OnInit, OnDestroy, ViewEncapsulation, ElementRef, AfterViewInit } from '@angular/core';
+import {
+    Component, OnInit, OnDestroy,
+    ViewEncapsulation, ElementRef, AfterViewInit
+} from '@angular/core';
 import { ForgotPasswordService } from './forgot.password.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { GlobalConstants } from '../../../shared/constants/constants';
@@ -22,6 +25,15 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy, AfterViewInit
     public SecurityQuestion: string = '';
     private ngUnsubscribe: Subject<any> = new Subject<any>();
 
+    /**
+     *Creates an instance of ForgotPasswordComponent.
+     * @param {ElementRef} elementRef
+     * @param {Router} router
+     * @param {ToastrService} toastrService
+     * @param {ToastrConfig} toastrConfig
+     * @param {ForgotPasswordService} forgotPasswordService
+     * @memberof ForgotPasswordComponent
+     */
     constructor(private elementRef: ElementRef,
         private router: Router,
         private toastrService: ToastrService,
@@ -97,7 +109,6 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy, AfterViewInit
         this.errorMessage = '';
 
         if (this.forgotPasswordForm.valid) {
-            // console.log(forgotPasswordModel);
             this.forgotPasswordService.ResetPassword(forgotPasswordModel)
                 .subscribe((response: AccountResponse) => {
                     if (response) {
@@ -131,8 +142,15 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy, AfterViewInit
             SecurityAnswer: new FormControl(forgotPasswordModel ? forgotPasswordModel.SecurityAnswer : '', [Validators.required]),
             EmailOrUserName: new FormControl(forgotPasswordModel ? forgotPasswordModel.EmailOrUserName : '', [Validators.required]),
             NewPassword: new FormControl(forgotPasswordModel ? forgotPasswordModel.NewPassword : '',
-                [Validators.required, Validators.minLength(8), Validators.maxLength(20), Validators.pattern(GlobalConstants.PASSWORD_PATTERN)]),
-            ConfirmPassword: new FormControl(forgotPasswordModel ? forgotPasswordModel.ConfirmPassword : '', [Validators.required, this.compareValidator]),
+                [
+                    Validators.required,
+                    Validators.minLength(8),
+                    Validators.maxLength(20),
+                    Validators.pattern(/^(?!.*[\s])(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,20}$/)
+                ]),
+            ConfirmPassword: new FormControl(forgotPasswordModel ? forgotPasswordModel.ConfirmPassword : '',
+                [Validators.required,
+                this.compareValidator]),
         });
         return formGroup;
     }

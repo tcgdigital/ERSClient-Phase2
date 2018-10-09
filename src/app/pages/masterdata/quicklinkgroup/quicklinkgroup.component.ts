@@ -5,7 +5,7 @@ import {
 import { QuickLinkGroupModel } from './quicklinkgroup.model';
 import { KeyValue, AutocompleteComponent } from '../../../shared';
 import { QuickLinkGroupService } from './quicklinkgroup.service';
-import { ToastrService, ToastrConfig } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'quick-link-group',
@@ -14,17 +14,15 @@ import { ToastrService, ToastrConfig } from 'ngx-toastr';
     <div class="row">
         <div class="col-sm-8 form-group">
             <label *ngIf="caption != ''">{{caption}}</label>
-            <autocomplete [items]="quickLinkGroups" (notify)="onNotify($event)" (InvokeAutoCompleteReset)="invokeReset();"></autocomplete>
+            <autocomplete #quickLinkGroup [items]="quickLinkGroups" (notify)="onNotify($event)" (InvokeAutoCompleteReset)="invokeReset();"></autocomplete>
         </div>
         <div class="col-sm-2 pl-md-0" style="margin-top: 19px;" *ngIf="enableAddButton">
             <button class="btn btn-primary" type="button" (click)="onAddGroupClick()">Add Group</button>
         </div>
-    </div>
-    `
-    //templateUrl: './quicklinkgroup.view.html'
+    </div>`
 })
 export class QuickLinkGroupComponent implements OnInit {
-    @ViewChild(AutocompleteComponent) autocompleteComponent: AutocompleteComponent;
+    @ViewChild('quickLinkGroup') autocompleteComponent: AutocompleteComponent;
 
     @Output() notifyOnChange: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
     @Output() notifyOnReset: EventEmitter<KeyValue> = new EventEmitter<KeyValue>();
@@ -40,7 +38,7 @@ export class QuickLinkGroupComponent implements OnInit {
         private toastrService: ToastrService) {
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.quickLinkGroupService.GetAll()
             .subscribe(x => {
                 this.quickLinkGroups = x.Records
@@ -48,23 +46,23 @@ export class QuickLinkGroupComponent implements OnInit {
             });
     }
 
-    getCurrentText(): string {
+    public getCurrentText(): string {
         return this.autocompleteComponent.query;
     }
 
-    setInitialValue(selectedItem: KeyValue): void {
+    public setInitialValue(selectedItem: KeyValue): void {
         this.autocompleteComponent.select(selectedItem);
     }
 
-    invokeReset(): void {
+    public invokeReset(): void {
         this.notifyOnReset.emit();
     }
 
-    onNotify(message: KeyValue): void {
+    public onNotify(message: KeyValue): void {
         this.notifyOnChange.emit(message);
     }
 
-    onAddGroupClick(): void {
+    public onAddGroupClick(): void {
         let groupName = this.autocompleteComponent.query;
         console.log(`New Group Name: ${groupName}`);
         this.InsertQuicklinkGroup(groupName);
