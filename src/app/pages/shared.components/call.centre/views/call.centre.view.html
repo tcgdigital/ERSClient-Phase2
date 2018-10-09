@@ -197,12 +197,10 @@
 
                 <div class="form-group col-md-6 col-sm-12">
                     <label for="Query">Discussion Notes <span class="required">*</span></label>
-                    <small [hidden]="form.controls.Queries.valid || (form.controls.Queries.pristine && !submitted)"
-                        class="text-danger pull-right">
+                    <small [hidden]="form.controls.Queries.valid || (form.controls.Queries.pristine && !submitted)" class="text-danger pull-right">
                         Required (Max. Char 1000)
                     </small>
-                    <textarea rows="1" id="Query" class="form-control no-resize" name="Query" formControlName="Queries"
-                        placeholder="Enter Discussion Notes"></textarea>
+                    <textarea rows="1" id="Query" class="form-control no-resize" name="Query" formControlName="Queries" placeholder="Enter Discussion Notes"></textarea>
                 </div>
 
                 <div class="form-group col-md-2 col-sm-12">
@@ -221,34 +219,29 @@
                     <div class="row">
                         <div class="form-group col-md-12 col-sm-12">
                             <label for="Query">Discussion Notes <span class="required">*</span></label>
-                            <small [hidden]="form.controls.Queries.valid || (form.controls.Queries.pristine && !submitted)"
-                                class="text-danger pull-right">
+                            <small [hidden]="form.controls.Queries.valid || (form.controls.Queries.pristine && !submitted)" class="text-danger pull-right">
                                 Required (Max. Char 1000)
                             </small>
-                            <textarea rows="1" id="Query" class="form-control no-resize" name="Query" formControlName="Queries"
-                                placeholder="Enter Discussion Notes"></textarea>
+                            <textarea rows="1" id="Query" class="form-control no-resize" name="Query" formControlName="Queries" placeholder="Enter Discussion Notes"></textarea>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="form-group col-md-4 col-sm-12 pt-3">
-                            <md-checkbox id="Identified" formControlName="IsIdentified" [checked]="IsIdentified"
-                                (change)="onChange($event)" aria-label="Add">
+                        <div class="form-group col-md-4 col-sm-12" [hidden]="enquiryType!=EnquiryType.Passenger">
+                            <md-checkbox id="Identified" formControlName="IsIdentified" [checked]="IsIdentified" (change)="onChange($event)" aria-label="Add">
                                 Identified
                             </md-checkbox>
                         </div>
                         <div class="form-group col-md-4 col-sm-12" [hidden]="enquiryType!=EnquiryType.Passenger">
                             <label for="Passengers">Passenger Name <span class="required">*</span></label>
 
-                            <autocomplete #passengerAutocomplete [items]="passengers" (notify)="onNotifyPassenger($event)"
-                                (InvokeAutoCompleteReset)="onResetPassenger()" [actionLinks]="actionLinks"
-                                [initialvalue]="initialvalue" [isEnabled]="IsIdentified" (actionClickHandler)="onPDAActionClick($event)">
+                            <autocomplete #passengerAutocomplete [items]="passengers" (notify)="onNotifyPassenger($event)" (InvokeAutoCompleteReset)="onResetPassenger()"
+                                [actionLinks]="actionLinks" [initialvalue]="initialvalue" [isEnabled]="IsIdentified" (actionClickHandler)="onPDAActionClick($event)">
                             </autocomplete>
                         </div>
-                        <div class="form-group col-md-4 col-sm-12">
+                        <div class="form-group col-md-4 col-sm-12" [hidden]="enquiryType!=EnquiryType.Passenger">
                             <label for="Unidentified">Unidentified <span class="required">*</span></label>
 
-                            <textarea rows="1" id="Unidentified" formControlName="Unidentified" class="form-control no-resize"
-                                name="Unidentified" placeholder="Enter Unidentified"></textarea>
+                            <textarea rows="1" id="Unidentified" formControlName="Unidentified" class="form-control no-resize" name="Unidentified" placeholder="Enter Unidentified"></textarea>
                         </div>
                     </div>
 
@@ -256,26 +249,24 @@
                         <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=EnquiryType.Crew">
                             <label for="Passengers">Crew Name <span class="required">*</span></label>
 
-                            <autocomplete #crewAutocomplete [items]="crews" (notify)='onNotifyCrew($event)'
-                                (InvokeAutoCompleteReset)="onResetCrew()" [initialvalue]="initialvalue" [actionLinks]="actionLinks"
-                                (actionClickHandler)="onPDAActionClick($event)">
+                            <autocomplete #crewAutocomplete [items]="crews" (notify)='onNotifyCrew($event)' (InvokeAutoCompleteReset)="onResetCrew()"
+                                [initialvalue]="initialvalue" [actionLinks]="actionLinks" (actionClickHandler)="onPDAActionClick($event)">
                             </autocomplete>
                         </div>
 
                         <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=EnquiryType.Cargo">
                             <label for="awb">AWB <span class="required">*</span></label>
 
-                            <autocomplete #cargoAutocomplete [items]="awbs" (notify)='onNotifyCargo($event)'
-                                (InvokeAutoCompleteReset)="onResetCargo()" [initialvalue]="initialvalue" [actionLinks]="actionLinks"
-                                (actionClickHandler)="onCargoActionClick($event)">
+                            <autocomplete #cargoAutocomplete [items]="awbs" (notify)='onNotifyCargo($event)' (InvokeAutoCompleteReset)="onResetCargo()"
+                                [initialvalue]="initialvalue" [actionLinks]="actionLinks" (actionClickHandler)="onCargoActionClick($event)">
                             </autocomplete>
                         </div>
 
                         <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=EnquiryType.GroundVictim">
                             <label for="awb">Ground Victim <span class="required">*</span></label>
 
-                            <autocomplete #victimAutocomplete [items]="victims" (notify)='onNotifyGroundVictim($event)'
-                                (InvokeAutoCompleteReset)="onResetGroundVictim()" [initialvalue]="initialvalue">
+                            <autocomplete #victimAutocomplete [items]="victims" (notify)='onNotifyGroundVictim($event)' (InvokeAutoCompleteReset)="onResetGroundVictim()"
+                                [initialvalue]="initialvalue">
                             </autocomplete>
                         </div>
                     </div>
@@ -286,14 +277,11 @@
 
                             <div class="multiselect-container">
                                 <div class="multiselect-selector" (click)="ShowListsOfSamePNR($event); $event.stopPropagation();">
-                                    <i class="fa fa-pull-right expandStyle" [ngClass]="isPaxWithSamePNRSelected ? 'fa-times text-danger' : 'fa-caret-down'"
-                                        aria-hidden="true"></i>
-                                    {{selectedcountpnr > 0 ? selectedcountpnr + ' Passengers(s) selected' : 'View
-                                    Co-Passenger'}}
+                                    <i class="fa fa-pull-right expandStyle" [ngClass]="isPaxWithSamePNRSelected ? 'fa-times text-danger' : 'fa-caret-down'" aria-hidden="true"></i>
+                                    {{selectedcountpnr > 0 ? selectedcountpnr + ' Passengers(s) selected' : 'View Co-Passenger'}}
                                 </div>
 
-                                <ul class="multiselect-list1 dropdown-menu-down" [hidden]="!isPaxWithSamePNRSelected"
-                                    (click)="$event.stopPropagation();">
+                                <ul class="multiselect-list1 dropdown-menu-down" [hidden]="!isPaxWithSamePNRSelected" (click)="$event.stopPropagation();">
                                     <li *ngFor="let copassenger of copassengerlistpnr">
                                         <span>{{copassenger.PassengerName}}</span>
                                     </li>
@@ -306,16 +294,14 @@
 
                             <div class="multiselect-container">
                                 <div class="multiselect-selector" (click)="ShowPassengers($event); $event.stopPropagation();">
-                                    <i class="fa fa-pull-right expandStyle" [ngClass]="isCoPaxSelected ? 'fa-times text-danger' : 'fa-caret-down'"
-                                        aria-hidden="true"></i>
-                                    {{consolidatedCopassengers.length > 0 ? consolidatedCopassengers.length + '
-                                    Passengers(s) selected' : 'Select Co-passenger'}}
+                                    <i class="fa fa-pull-right expandStyle" [ngClass]="isCoPaxSelected ? 'fa-times text-danger' : 'fa-caret-down'" aria-hidden="true"></i>
+                                    {{consolidatedCopassengers.length > 0 ? consolidatedCopassengers.length + ' Passengers(s) selected' : 'Select Co-passenger'}}
                                 </div>
 
                                 <ul class="multiselect-list1 dropdown-menu-down" [hidden]="!isCoPaxSelected" (click)="$event.stopPropagation();">
                                     <li *ngFor="let copassenger of copassengerlistPassengerForMappedPerson">
-                                        <input type="checkbox" disabled="{{copassenger.PNRdisabled}}" aria-label="Callback"
-                                            [checked]="copassenger.IsSelected" (change)="SelectCoPassengerFromSelectedPassenger($event,copassenger)" />
+                                        <input type="checkbox" disabled="{{copassenger.PNRdisabled}}" aria-label="Callback" [checked]="copassenger.IsSelected" (change)="SelectCoPassengerFromSelectedPassenger($event,copassenger)"
+                                        />
                                         <span>{{copassenger.PassengerName}}</span>
                                     </li>
                                 </ul>
@@ -339,8 +325,8 @@
 
                                 <tr *ngFor="let copassenger of consolidatedCopassengers">
                                     <td data-title="Select Co-Passenger">
-                                        <input type="checkbox" aria-label="Callback" [checked]="copassenger.IsSelected"
-                                            (change)="SelectAllCoPassengers($event,copassenger)" />
+                                        <input type="checkbox" aria-label="Callback" [checked]="copassenger.IsSelected" (change)="SelectAllCoPassengers($event,copassenger)"
+                                        />
                                     </td>
                                     <td data-title="Co-Passenger Name">{{copassenger.PassengerName}}</td>
                                 </tr>
@@ -356,22 +342,19 @@
                 </div>
 
                 <div class="col-md-4 col-sm-12">
-                    <md-checkbox [disabled]="isArchive" id="IsCallBack" formControlName="IsCallBack" aria-label="Add"
-                        disabled="{{DemandCheckDisabled}}">
+                    <md-checkbox [disabled]="isArchive" id="IsCallBack" formControlName="IsCallBack" aria-label="Add" disabled="{{DemandCheckDisabled}}">
                         Call back Request &nbsp;
                     </md-checkbox>
                 </div>
 
                 <div class="col-md-4 col-sm-12">
-                    <md-checkbox [disabled]="isArchive" id="IsTravelRequest" formControlName="IsTravelRequest"
-                        aria-label="Add" disabled="{{DemandCheckDisabled}}">
+                    <md-checkbox [disabled]="isArchive" id="IsTravelRequest" formControlName="IsTravelRequest" aria-label="Add" disabled="{{DemandCheckDisabled}}">
                         Travel Request &nbsp;
                     </md-checkbox>
                 </div>
 
                 <div class="col-md-4 col-sm-12">
-                    <md-checkbox [disabled]="isArchive" id="IsAdminRequest" formControlName="IsAdminRequest" aria-label="Add"
-                        disabled="{{DemandCheckDisabled}}">
+                    <md-checkbox [disabled]="isArchive" id="IsAdminRequest" formControlName="IsAdminRequest" aria-label="Add" disabled="{{DemandCheckDisabled}}">
                         Admin Request &nbsp;
                     </md-checkbox>
                 </div>
@@ -427,8 +410,8 @@
                                         <tr *ngFor="let comm of communications">
                                             <td data-title="comm"><strong>{{comm.RequesterType}}</strong> logged by
                                                 <span [hidden]="comm.RequesterDepartment.length==0">
-                                                    <strong>{{comm.RequesterName}} (Dept:
-                                                        {{comm.RequesterDepartment}})&nbsp;</strong>
+                                                    <strong>{{comm.RequesterName}} (Dept: {{comm.RequesterDepartment}})&nbsp;
+                                                    </strong>
                                                 </span>
                                                 <span> on
                                                     <strong>{{comm.CreatedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;:</strong>
@@ -484,8 +467,8 @@
                                         <tr *ngFor="let comm of communications">
                                             <td data-title="comm"><strong>{{comm.RequesterType}}</strong> logged by
                                                 <span [hidden]="comm.RequesterDepartment.length==0">
-                                                    <strong>{{comm.RequesterName}} (Dept:
-                                                        {{comm.RequesterDepartment}})&nbsp;</strong>
+                                                    <strong>{{comm.RequesterName}} (Dept: {{comm.RequesterDepartment}})&nbsp;
+                                                    </strong>
                                                 </span>
                                                 <span> on
                                                     <strong>{{comm.CreatedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;:</strong>
@@ -537,8 +520,8 @@
                                         <tr *ngFor="let comm of communications">
                                             <td data-title="comm"><strong>{{comm.RequesterType}}</strong> logged by
                                                 <span [hidden]="comm.RequesterDepartment.length==0">
-                                                    <strong>{{comm.RequesterName}} (Dept:
-                                                        {{comm.RequesterDepartment}})&nbsp;</strong>
+                                                    <strong>{{comm.RequesterName}} (Dept: {{comm.RequesterDepartment}})&nbsp;
+                                                    </strong>
                                                 </span>
                                                 <span> on
                                                     <strong>{{comm.CreatedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;:</strong>

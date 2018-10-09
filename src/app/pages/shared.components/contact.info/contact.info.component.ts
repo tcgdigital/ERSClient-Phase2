@@ -41,7 +41,7 @@ export class ContactInfoComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        //this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.ContactClicked);
+        this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.ContactClicked);
 
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();

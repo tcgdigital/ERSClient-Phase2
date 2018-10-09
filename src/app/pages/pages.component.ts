@@ -180,7 +180,7 @@ export class PagesComponent implements OnInit {
     }
 
     public onContactClicked($event): void {
-        this.globalState.NotifyDataChanged(GlobalConstants.DataExchangeConstant.ContactClicked, '');
+        this.globalState.NotifyDataChanged(GlobalConstants.DataExchangeConstant.ContactClicked, (new Date().getTime()));
     }
 
     public onHelpClicked($event): void {

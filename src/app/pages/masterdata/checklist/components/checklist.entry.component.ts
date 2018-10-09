@@ -86,7 +86,6 @@ export class ChecklistEntryComponent implements OnInit, OnDestroy {
         x.CheckListCode = 'No Checklist Selected.';
         x.CheckListDetails = '';
         this.noDtaList.push(x);
-        // this.parentChecklists = this.noDtaList;
     }
 
     showList(): void {
@@ -189,9 +188,12 @@ export class ChecklistEntryComponent implements OnInit, OnDestroy {
                     this.checkListModel.EmergencyTypeId = this.activeEmergencyTypes[0].EmergencyTypeId;
                 }
             }, (error) => { console.log(error); }, () => {
-                this.currentDepartmentName = this.activeDepartments.find((x) => {
-                    return x.DepartmentId === this.currentDepartmentId;
-                }).DepartmentName;
+                if (this.activeDepartments.length) {
+                    this.currentDepartmentName = this.activeDepartments.find((x) => {
+                        return (x.DepartmentId === this.currentDepartmentId);
+                    }).DepartmentName;
+                }
+
                 this.resetCheckListForm();
                 this.initiateCheckListModel();
                 this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.ChecklistModelEdited,
@@ -305,7 +307,6 @@ export class ChecklistEntryComponent implements OnInit, OnDestroy {
             });
             this.checkListModel.CheckListParentMapper = _.unique(intermediate);
             if (this.form.controls['URL'].value != '') {
-                // const bolValid = /^(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:\~\+#]*[\w\-\@?^=%&amp;\~\+#])?$/.test(this.form.controls['URL'].value);
                 const bolValid = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/.test(this.form.controls['URL'].value);
                 if (!bolValid) {
                     this.isURLInvalid = true;
@@ -358,7 +359,6 @@ export class ChecklistEntryComponent implements OnInit, OnDestroy {
                     delete this.checkListModelEdit.StationList;
                     delete this.checkListModelEdit.EmergencyType;
                     delete this.checkListModelEdit.Active;
-                    //  this.checkListModelEdit= this.deleteattributeschecklist(this.checkListModelEdit);
                     this.formControlDirtyCheck();
                     this.checkListModelEdit.CheckListParentMapper = _.unique(intermediate);
                     this.checkListModelEdit.CheckListParentMapper.forEach((x) => x.ChildCheckListId = this.checkListModelEdit.CheckListId);
@@ -427,7 +427,6 @@ export class ChecklistEntryComponent implements OnInit, OnDestroy {
                     if (x.CheckListId == obj.CheckListId)
                         x.IsSelected = true;
                 });
-
             });
             this.parentChecklists = this.addDepartmentName(this.parentChecklists);
             this.oldparents = _.pluck(data.CheckListParentMapper, 'ParentCheckListId');
