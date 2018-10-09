@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 
 import {
-    FormGroup, FormControl, FormBuilder, Validators
+    FormGroup, FormControl, Validators
 } from '@angular/forms';
 import * as moment from 'moment/moment';
 import { IncidentModel } from './incident.model';
@@ -27,7 +27,6 @@ import {
     IncidentStatus,
     InvolvedPartyType,
     UtilityService,
-    LocationService,
     Location,
     DateTimePickerOptions,
     DateTimePickerDirective,
@@ -48,8 +47,7 @@ import { Subject, Observable } from 'rxjs';
 export class IncidentEntryComponent implements OnInit, OnDestroy {
     @ViewChild('childModalViewIncident') public childModalViewIncident: ModalDirective;
     @ViewChild('childModalViewWeatherLocation') public childModalViewWeatherLocation: ModalDirective;
-    @ViewChild('departuredatepicker') public departuredatepicker: DateTimePickerDirective;
-    @ViewChild('arrivaldatepicker') public arrivaldatepicker: DateTimePickerDirective;
+
     @ViewChild('emergencyDateTimePicker') public emergencyDateTimePicker: DateTimePickerDirective;
     @ViewChild('reportedDateTimePicker') public reportedDateTimePicker: DateTimePickerDirective;
     @ViewChild('scheduledDepartureDateTimePicker') public scheduledDepartureDateTimePicker: DateTimePickerDirective;
@@ -375,8 +373,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                     .subscribe((itemFlight: FlightModel) => {
                         this.FillFlightFields(itemFlight);
                         jQuery('#Scheduleddeparture, #Scheduledarrival').attr('data-disable', 'true');
-                        this.departuredatepicker.toggleControl();
-                        this.arrivaldatepicker.toggleControl();
+                        this.scheduledDepartureDateTimePicker.toggleControl();
+                        this.scheduledArrivalDateTimePicker.toggleControl();
                         this.isBorrowedIncidentPopup = true;
                     }, (error: any) => {
                         console.log(`Error: ${error.message}`);
@@ -385,8 +383,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             else {
                 this.ResetFlightFields();
                 jQuery('#Scheduleddeparture, #Scheduledarrival').removeAttr('data-disable');
-                this.departuredatepicker.toggleControl();
-                this.arrivaldatepicker.toggleControl();
+                this.scheduledDepartureDateTimePicker.toggleControl();
+                this.scheduledArrivalDateTimePicker.toggleControl();
             }
         }
     }
@@ -936,8 +934,8 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                 this.formFlight.get('Scheduleddeparture').setValue(departurearrivalDate);
                 this.formFlight.get('ScheduleddepartureLOC').setValue(localDepartureArrivalDate);
 
-                if (this.arrivaldatepicker) {
-                    this.arrivaldatepicker.updateConfig({
+                if (this.scheduledArrivalDateTimePicker) {
+                    this.scheduledArrivalDateTimePicker.updateConfig({
                         minDate: new Date(date.SelectedDate.toLocaleString())
                     });
                 }
