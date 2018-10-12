@@ -28,7 +28,7 @@
                 </thead>
                 <tbody>
                     <tr [hidden]="mydemands.length != 0">
-                        <td colspan="isArchive? 13: 12">No Demand is created yet.</td>
+                        <td colspan="12">No Demand is created yet.</td>
                     </tr>
                     <tr *ngFor="let demand of mydemands">
                         <td data-title="Demand Type">{{demand.DemandTypeName}}&nbsp;</td>

@@ -154,7 +154,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
                     this.quickLinkModel.QuickLinkURL = this.form.controls['QuickLinkURL'].value;
                     this.quickLinkModel.UploadURL = this.filepathWithLinks;
                     if (this.selectedGroup) {
-                        this.quickLinkModelEdit.QuickLinkGroupId = this.selectedGroup.Value;
+                         this.quickLinkModel.QuickLinkGroupId = this.selectedGroup.Value;
                     }
                     if ((this.quickLinkModel.QuickLinkGroupId == 0 || this.quickLinkModel.QuickLinkGroupId == undefined)
                         && this.quickLinkGroupComponent.getCurrentText() != '') {
