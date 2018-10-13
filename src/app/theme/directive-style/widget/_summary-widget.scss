@@ -30,6 +30,11 @@ incident-header-widget a {
 .widget-block {
     margin-right: 10px;
     text-align: right;
+    height: 69px;
+    width: 20%;
+    &.widget-seperator {
+        border-left: 1px solid;
+    }
 }
 
 .widget-number {

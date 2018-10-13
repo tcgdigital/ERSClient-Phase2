@@ -222,15 +222,31 @@ export class NotifyPeopleComponent implements OnInit {
     }
 
     public saveCustomNotificationMessage(formData: any): void {
+        debugger;
         this.appendedTemplate.Description = this.customMessageForm.controls['MessageData'].value;
-        this.saveNotificationProcess(() => {
+        this.saveCustomNotificationProcess(() => {
             this.hideCustomNoificationMessage();
         });
     }
 
-    public saveNotificationProcess(callback?: (() => void)): void {
+    private saveNotificationProcess(callback?: (() => void)): void {
         this.notifyPeopleService.CreateAppendedTemplate(this.appendedTemplate,
-            this.currentIncidentId, this.currentDepartmentId, (item: boolean) => {
+            this.currentIncidentId, (item: boolean) => {
+                if (item) {
+                    if (callback) callback()
+                    this.toastrService.success('The respective user has been notified.', 'Notify User', this.toastrConfig);
+                    console.log('Notify User Clicked');
+                }
+                else {
+                    this.toastrService.error('Some Error Occured.', 'Notify User', this.toastrConfig);
+                    console.log('Notify User Clicked error');
+                }
+            });
+    }
+
+    private saveCustomNotificationProcess(callback?: (() => void)): void {
+        this.notifyPeopleService.NotifyTemplate(this.appendedTemplate,
+            this.currentIncidentId, (item: boolean) => {
                 if (item) {
                     if (callback) callback()
                     this.toastrService.success('The respective user has been notified.', 'Notify User', this.toastrConfig);

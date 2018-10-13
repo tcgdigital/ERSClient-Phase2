@@ -293,10 +293,14 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
     }
 
     public CreateAppendedTemplate(appendedTemplate: AppendedTemplateModel,
-        incidentId: number, departmentId: number, callback?: ((_: boolean) => void)): void {
+        incidentId: number, callback?: ((_: boolean) => void)): void {
+        debugger;
         delete appendedTemplate.Active;
         this.appendedTemplateService.CreateAppendedTemplate(appendedTemplate)
             .subscribe((appendedTemplate: AppendedTemplateModel) => {
+                this.NotifyTemplate(appendedTemplate, incidentId, callback);
+
+                /*
                 this.notificationContactsWithTemplates = [];
 
                 this.notifyPeopleModels.forEach((item: NotifyPeopleModel, index: number) => {
@@ -328,7 +332,45 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
                         }
                         console.log(`Error: ${error.message}`);
                     });
+                */
+
             }, (error: any) => {
+                console.log(`Error: ${error.message}`);
+            });
+    }
+
+    public NotifyTemplate(template: AppendedTemplateModel, incidentId: number,
+        callback?: ((_: boolean) => void)): void {
+        debugger;
+        this.notificationContactsWithTemplates = [];
+
+        this.notifyPeopleModels.forEach((item: NotifyPeopleModel, index: number) => {
+            let notificationContactsWithTemplate: NotificationContactsWithTemplateModel = new NotificationContactsWithTemplateModel();
+            notificationContactsWithTemplate.UserId = item.User.UserProfileId;
+            notificationContactsWithTemplate.IsActive = true;
+            notificationContactsWithTemplate.IncidentId = incidentId;
+            notificationContactsWithTemplate.DepartmentId = item.DepartmentId;
+            notificationContactsWithTemplate.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
+            notificationContactsWithTemplate.UserName = item.User.Name;
+            notificationContactsWithTemplate.SituationId = GlobalConstants.EmergencySituationEnum
+                .find(x => x.EmergencySituationId === template.EmergencySituationId).enumtype;
+            notificationContactsWithTemplate.AttachmentSingle = '';
+            notificationContactsWithTemplate.ContactNumber = item.User.MainContact;
+            notificationContactsWithTemplate.AlternetContactNumber = item.User.AlternateContact;
+            notificationContactsWithTemplate.EmailId = item.User.Email;
+            notificationContactsWithTemplate.Message = template.Description;
+            this.notificationContactsWithTemplates.push(notificationContactsWithTemplate);
+        });
+
+        this.CreateBulkInsert(incidentId, this.notificationContactsWithTemplates)
+            .subscribe((response: NotificationContactsWithTemplateModel[]) => {
+                if (callback) {
+                    callback(true);
+                }
+            }, (error: any) => {
+                if (callback) {
+                    callback(false);
+                }
                 console.log(`Error: ${error.message}`);
             });
     }
