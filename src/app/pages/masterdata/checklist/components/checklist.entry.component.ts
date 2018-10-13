@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, OnDestroy, ViewChild, HostListener } from '@angular/core';
 import {
     FormGroup,
     FormControl,
@@ -40,7 +40,7 @@ export class ChecklistEntryComponent implements OnInit, OnDestroy {
     activeDepartments: DepartmentModel[] = [];
     activeEmergencyTypes: EmergencyTypeModel[] = [];
     showAdd: boolean = false;
-    isParentChecklistSelected: boolean;
+    isParentChecklistSelected: boolean = true;
     buttonValue: string = '';
     currentDepartmentId: number;
     currentDepartmentName: string;
@@ -64,6 +64,7 @@ export class ChecklistEntryComponent implements OnInit, OnDestroy {
     public showAddText: string = 'ADD CHECKLIST';
     ChecklistTemplatePath: string = './assets/static-content/ChecklistTemplate.xlsx';
     private ngUnsubscribe: Subject<any> = new Subject<any>();
+    public isParentChecklist: boolean = true;
 
     @ViewChild('inputFileChecklist') inputFileChecklist: any;
 
@@ -90,6 +91,8 @@ export class ChecklistEntryComponent implements OnInit, OnDestroy {
 
     showList(): void {
         this.isParentChecklistSelected = !this.isParentChecklistSelected;
+        jQuery('ul.dropdown-menu-down').hide();
+        jQuery(event.currentTarget).siblings('ul.dropdown-menu-down').show();
     }
 
     selectParentChecklist(checklistParent: ChecklistModel): void {
@@ -166,7 +169,7 @@ export class ChecklistEntryComponent implements OnInit, OnDestroy {
             = this.emergencyTypeService.GetAll();
 
         Observable.merge(allChecklists, activeDepartments, activeEmergencyTypes)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<BaseModel>) => {
                 if (response.Records.length > 0 && Object.keys(response.Records[0]).some((x) => x === 'CheckListId')) {
@@ -484,6 +487,13 @@ export class ChecklistEntryComponent implements OnInit, OnDestroy {
             this.inputFileChecklist.nativeElement.value = '';
             this.disableUploadButton = true;
         }
+    }
+
+    @HostListener('document:click', ['$event'])
+    onDocunentClick(event) {
+        jQuery('ul.dropdown-menu-down').hide();
+        this.isParentChecklistSelected = false;
+        //this.isCoPaxSelected = false;
     }
 
     private resetCheckListForm(checkList?: ChecklistModel): void {

@@ -28,22 +28,10 @@
     }
 }
 
-// .addbuttonHolder {
-//     padding: 5px 15px;
-//     float: right;
-// }
-// .formStyle{
-//     width : 97%;
-// }
 .heightFix {
     height: 94px;
 }
 
-// .buttonholder {
-//     float: right;
-//     vertical-align: middle;
-//     padding-top: 27px;
-// }
 .multiselect-selector {
     background: $multiselect-background none repeat scroll 0 0;
     border: $multiselect-border solid 1px;
@@ -52,6 +40,28 @@
     padding: 4px 5px;
     width: 100%;
     font-size: 12px;
+}
+
+.multiselect-list1 {
+    background: $multiselect-background none repeat scroll 0 0;
+    border: $multiselect-border solid 1px;
+    border-radius: 0 0 6px 6px;
+    color: $multiselect-color;
+    padding: 5px 0;
+    width: 91.3%;
+    font-size: 12px;
+    max-height: 120px;
+    position: absolute;
+    z-index: 999;
+    overflow-x: hidden;
+    overflow-y: auto;
+    top: 46px;
+    >li {
+        padding: 5px;
+    }
+    >li:hover {
+        background-color: #b3e5fc;
+    }
 }
 
 // .multiselect-list {
