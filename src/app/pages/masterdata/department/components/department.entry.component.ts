@@ -54,7 +54,7 @@ export class DepartmentEntryComponent implements OnInit, OnDestroy {
             = this.departmentService.GetAll();
 
         Observable.merge(activeUsers, parentDepts)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<BaseModel>) => {
                 if (response.Records.length > 0

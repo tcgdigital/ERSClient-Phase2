@@ -147,7 +147,7 @@ export class EmergencyClosureComponent implements OnInit {
 
 		Observable.merge(allActiveDepartments, emergencyDepartments, notifyDeptUsers, departmentClosures)
 			.flatMap((x: BaseModel[]) => x)
-			.debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+			// .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
 			.takeUntil(this.ngUnsubscribe)
 			.subscribe((response: any) => {
 				if (Object.keys(response).some((x) => x === 'Department')) {
