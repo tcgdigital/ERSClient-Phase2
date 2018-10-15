@@ -298,7 +298,7 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit, OnDestroy {
         observables.push(this.emergencyLocationService.GetAllActiveEmergencyLocations());
 
         Observable.forkJoin(observables)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            //.debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<any>[]) => {
                 if (response && response.length > 0) {

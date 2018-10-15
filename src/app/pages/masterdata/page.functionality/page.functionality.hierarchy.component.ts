@@ -128,7 +128,7 @@ export class PageFunctionalityHierarchyComponent implements OnInit, OnChanges, O
         observables.push(this.pagePermissionService.GetPermissionByDepartmentId(departmentId));
 
         Observable.forkJoin(observables)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            //.debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((responses: Array<ResponseModel<any>>) => {
                 if (responses.length == 2) {

@@ -29,6 +29,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
     @Input() DepartmentId: number;
     @Input() IncidentId: number;
     @Input() CreatedBy: string;
+
     @ViewChild('inputFilePax') inputFilePax: any;
     @ViewChild('inputFileCrewManifestPAL') inputFileCrewManifestPAL: any;
     @ViewChild('inputFileCrewManifestPALEx') inputFileCrewManifestPALEx: any;
@@ -83,6 +84,17 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
     public isAirCrewTrainingTemplateLinkAvailable: boolean = true;
     public isCrewTrainingTemplateLink: boolean = true;
 
+    /**
+     *Creates an instance of MasterDataUploadListComponent.
+     * @param {FileUploadService} fileUploadService
+     * @param {DataExchangeService<boolean>} dataExchange
+     * @param {ToastrService} toastrService
+     * @param {ToastrConfig} toastrConfig
+     * @param {GlobalStateService} globalState
+     * @param {OrganizationService} organizationService
+     * @param {MasterDataUploadForValidService} _validRecordService
+     * @memberof MasterDataUploadListComponent
+     */
     constructor(private fileUploadService: FileUploadService,
         private dataExchange: DataExchangeService<boolean>,
         private toastrService: ToastrService,
@@ -115,7 +127,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy(): void {
         // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.IncidentChange);
-        //this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.DepartmentChange);
+        // this.globalState.Unsubscribe(GlobalConstants.DataExchangeConstant.DepartmentChange);
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
     }
@@ -152,7 +164,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
             this.uploadLoadSheet();
         }
         if (this.filesToUpload.length > 0) {
-            this.disableUploadButton = false;
+            this.disableUploadButton = true;
             const baseUrl = GlobalConstants.EXTERNAL_URL;
             const param = 'IncidentId=' + this.IncidentId + '&CreatedBy=' + this.CreatedBy;
 
@@ -160,8 +172,6 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
                 .subscribe((result: ValidationResultModel[]) => {
                     console.log('success');
                     this.filesToUpload = [];
-                    //this.toastrService.success('Uploaded Data is processed successfully.' + '\n'
-                    //+ 'To check any invalid records, please refer \'View Invalid Records\' link for the current timestamp.', 'Success', this.toastrConfig);
                     result.forEach(item => {
                         if (item.ResultType == 1) {
                             this.toastrService.error(item.Message, 'Error', this.toastrConfig);
@@ -170,12 +180,12 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
                             this.toastrService.success(item.Message, 'Success', this.toastrConfig);
                         }
                     });
-                    this.form.reset();
-                    this.disableUploadButton = true;
-
                 }, (error) => {
                     console.log(`Error: ${error.message}`);
                     this.toastrService.error(error, 'Error', this.toastrConfig);
+                }, ()=>{
+                    this.form.reset();
+                    this.disableUploadButton = false;
                 });
         }
     }
@@ -206,7 +216,9 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
         for (let i = 0; i < e.target.files.length; i++) {
             const extension = e.target.files[i].name.split('.').pop();
 
-            if (extension.toLowerCase() == 'xls' || extension.toLowerCase() == 'xlsx' || extension.toLowerCase() == 'csv') {
+            if (extension.toLowerCase() == 'xls' 
+            || extension.toLowerCase() == 'xlsx' 
+            || extension.toLowerCase() == 'csv') {
                 this.objFileData = new FileData();
                 this.objFileData.field = type;
                 this.objFileData.file = e.target.files[i];
@@ -247,9 +259,11 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
             .subscribe((response: ResponseModel<IncidentModel>) => {
                 const currentIncidentObject = response.Records[0];
                 let localFileStoreLoadSheet = [];
+
                 if (currentIncidentObject.FileStores.length > 0) {
                     localFileStoreLoadSheet = currentIncidentObject.FileStores
                         .filter(a => a.ModuleName.toLowerCase() == this.loadSheetModuleName.toLowerCase());
+
                     if (localFileStoreLoadSheet.length > 0) {
                         this.currentLoadSheet = localFileStoreLoadSheet[0];
                         this.currentLoadSheetAvailable = true;
