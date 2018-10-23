@@ -215,7 +215,9 @@ export class NotifyPeopleComponent implements OnInit {
 
     public saveNotificationMessage(): void {
         const additionalData: string = this.eventMessageForm.controls['AdditionalData'].value;
-        this.appendedTemplate.Description = `${this.appendedTemplate.Description} ${additionalData}`;
+        this.appendedTemplate.Description = this.appendedTemplate.Description.replace('{{ADDITIONAL_TEXT}}', additionalData);
+        this.appendedTemplate.AdditionalText = additionalData;
+
         this.saveNotificationProcess(() => {
             this.hideEventNoificationMessage();
         });

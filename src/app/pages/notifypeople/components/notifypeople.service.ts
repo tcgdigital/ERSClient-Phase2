@@ -3,7 +3,7 @@ import { Observable, Subject } from 'rxjs/Rx';
 import { UserPermissionModel, UserPermissionService } from "../../masterdata/userpermission";
 import {
     NotifyPeopleModel, NotificationContactsWithTemplateModel,
-    UserDepartmentNotificationMapper, MessageTemplate
+    UserDepartmentNotificationMapper, MessageTemplate, TemplateMessage
 } from "./notifypeople.model";
 import {
     AppendedTemplateModel,
@@ -298,41 +298,6 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
         this.appendedTemplateService.CreateAppendedTemplate(appendedTemplate)
             .subscribe((appendedTemplate: AppendedTemplateModel) => {
                 this.NotifyTemplate(appendedTemplate, incidentId, callback);
-
-                /*
-                this.notificationContactsWithTemplates = [];
-
-                this.notifyPeopleModels.forEach((item: NotifyPeopleModel, index: number) => {
-                    let notificationContactsWithTemplate: NotificationContactsWithTemplateModel = new NotificationContactsWithTemplateModel();
-                    notificationContactsWithTemplate.UserId = item.User.UserProfileId;
-                    notificationContactsWithTemplate.IsActive = true;
-                    notificationContactsWithTemplate.IncidentId = incidentId;
-                    notificationContactsWithTemplate.DepartmentId = item.DepartmentId;
-                    notificationContactsWithTemplate.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
-                    notificationContactsWithTemplate.UserName = item.User.Name;
-                    notificationContactsWithTemplate.SituationId = GlobalConstants.EmergencySituationEnum
-                        .find(x => x.EmergencySituationId === appendedTemplate.EmergencySituationId).enumtype;
-                    notificationContactsWithTemplate.AttachmentSingle = '';
-                    notificationContactsWithTemplate.ContactNumber = item.User.MainContact;
-                    notificationContactsWithTemplate.AlternetContactNumber = item.User.AlternateContact;
-                    notificationContactsWithTemplate.EmailId = item.User.Email;
-                    notificationContactsWithTemplate.Message = appendedTemplate.Description;
-                    this.notificationContactsWithTemplates.push(notificationContactsWithTemplate);
-                });
-
-                this.CreateBulkInsert(incidentId, this.notificationContactsWithTemplates)
-                    .subscribe((response: NotificationContactsWithTemplateModel[]) => {
-                        if (callback) {
-                            callback(true);
-                        }
-                    }, (error: any) => {
-                        if (callback) {
-                            callback(false);
-                        }
-                        console.log(`Error: ${error.message}`);
-                    });
-                */
-
             }, (error: any) => {
                 console.log(`Error: ${error.message}`);
             });
@@ -356,7 +321,7 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
             notificationContactsWithTemplate.ContactNumber = item.User.MainContact;
             notificationContactsWithTemplate.AlternetContactNumber = item.User.AlternateContact;
             notificationContactsWithTemplate.EmailId = item.User.Email;
-            notificationContactsWithTemplate.Message = template.Description;
+            notificationContactsWithTemplate.Message = new TemplateMessage(0, '', template.Description, template.AdditionalText);
             this.notificationContactsWithTemplates.push(notificationContactsWithTemplate);
         });
 
