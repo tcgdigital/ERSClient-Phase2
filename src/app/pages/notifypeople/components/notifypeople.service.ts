@@ -297,7 +297,6 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
         delete appendedTemplate.Active;
         this.appendedTemplateService.CreateAppendedTemplate(appendedTemplate)
             .subscribe((appendedTemplate: AppendedTemplateModel) => {
-                debugger;
                 this.NotifyTemplate(appendedTemplate, incidentId, callback);
             }, (error: any) => {
                 console.log(`Error: ${error.message}`);
