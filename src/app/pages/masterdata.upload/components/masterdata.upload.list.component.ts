@@ -147,7 +147,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
 
     populateCurrentOrganization(): void {
         this.organizationService.GetAllActiveOrganizations()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<OrganizationModel>) => {
                 this.orgLocalArray = response.Records.filter(a => a.OrganizationId == this.currentOrganizationId);
@@ -254,7 +254,7 @@ export class MasterDataUploadListComponent implements OnInit, OnDestroy {
 
     getCurrentLoadSheet(incidentId: number): void {
         this._validRecordService.GetCurrentIncidentWithLoadSheet(incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<IncidentModel>) => {
                 const currentIncidentObject = response.Records[0];

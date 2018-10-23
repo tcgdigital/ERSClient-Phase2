@@ -57,7 +57,7 @@ export class ArchiveReportWidgetComponent implements OnInit, OnDestroy {
 
     public GetArchiveDocumentTypeData(incidentId: number, callback?: Function): void {
         this.archiveDocumentTypeService.GetByIncident(incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<ArchiveDocumentTypeModel>) => {
                 this.otherReports = [];
@@ -84,7 +84,7 @@ export class ArchiveReportWidgetComponent implements OnInit, OnDestroy {
 
     public GetDepartmentClosureData(incidentId: number, callback?: Function): void {
         this.departmentClosureService.GetAllByIncident(incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<DepartmentClosureModel>) => {
                 this.otherReports = [];

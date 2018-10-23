@@ -55,7 +55,7 @@ export class InvalidCrewListComponent implements OnInit, OnDestroy {
     getInvalidCrewRecords(): void {
         this._invalidRecordService.GetAllInvalidCrewsByIncident(+this.IncidentId)
             .flatMap(x => x)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe(a => {
                 this.invalidCrews.push(a);

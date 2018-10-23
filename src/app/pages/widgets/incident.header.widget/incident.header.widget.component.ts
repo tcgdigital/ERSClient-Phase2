@@ -55,7 +55,7 @@ export class IncidentHeaderWidgetComponent implements OnInit, OnChanges, OnDestr
 
     getIncident(incidentId: number): void {
         this.incidentService.GetIncidentById(incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((item: IncidentModel) => {
                 this.IsDrillIndicator = item.IsDrill;
@@ -66,7 +66,7 @@ export class IncidentHeaderWidgetComponent implements OnInit, OnChanges, OnDestr
 
     getDepartment(departmentId: number): void {
         this.departmentService.GetDepartmentById(departmentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((item: ResponseModel<DepartmentModel>) => {
                 this.currentDepartment.Key = item.Records[0].DepartmentName;

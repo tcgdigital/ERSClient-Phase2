@@ -83,7 +83,7 @@ export class MediaQueryRecievedCallsListComponent implements OnInit, OnDestroy {
         this.callcenterload = false;
 
         this.callcenteronlypageservice.GetMediaQueryCallsRecievedByIncident(incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;

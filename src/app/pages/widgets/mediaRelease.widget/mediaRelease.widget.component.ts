@@ -72,7 +72,7 @@ export class MediaReleaseWidgetComponent implements OnInit, OnDestroy {
         let data: MediaReleaseWidgetModel[] = [];
 
         this.mediaReleaseWidgetService.GetAllMediaReleaseByIncident(incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .flatMap((x) => x)
             .take(3)
@@ -91,7 +91,7 @@ export class MediaReleaseWidgetComponent implements OnInit, OnDestroy {
         let data: MediaReleaseWidgetModel[] = [];
 
         this.mediaReleaseWidgetService.GetAllMediaReleaseByIncident(this.currentIncidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .flatMap((x) => x)
             .subscribe((x) => {

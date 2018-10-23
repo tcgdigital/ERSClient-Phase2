@@ -53,7 +53,7 @@ export class InvalidPassengersListComponent implements OnInit, OnDestroy {
         this.invalidPassengers = [];
         this._invalidRecordService.GetAllInvalidPassengersByIncident(this.IncidentId)
             .flatMap(x => x)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe(a => {
                 this.invalidPassengers.push(a);

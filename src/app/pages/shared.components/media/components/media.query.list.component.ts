@@ -32,7 +32,7 @@ export class MediaQueryListComponent implements OnInit, OnDestroy {
 
     getMediaQueries(incidentId): void {
         this.enquiryService.getMediaQueryByIncident(incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EnquiryModel>) => {
                 this.mediaQueries = this.enquiryService.MapQuery(response.Records);

@@ -125,7 +125,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
 
     public getDemandsForApproval(deptId, incidentId): void {
         this.demandService.GetByApproverDepartment(deptId, incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.demandsForApproval = this.demandService.DemandMapper(response.Records);
@@ -142,7 +142,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
 
     public getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
                 this.demandRemarks = response.Records;
@@ -214,7 +214,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.RemarkToCreate.CreatedBy = +this.credential.UserId;
 
         this.demandRemarkLogsService.Create(this.RemarkToCreate)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: DemandRemarkLogModel) => {
                 this.getDemandRemarks(demand.DemandId);
@@ -281,7 +281,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
             }
             else {
                 this.demandService.UpdateBulkForApproval(demandCompletion)
-                    .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                    // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                     .takeUntil(this.ngUnsubscribe)
                     .subscribe((response: DemandModel[]) => {
                         this.toastrService.success('Demand status successfully updated.', 'Success', this.toastrConfig);
@@ -299,7 +299,7 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
 
     public getCurrentDepartmentName(departmentId): void {
         this.departmentService.Get(departmentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: DepartmentModel) => {
                 this.currentDepartmentName = response.DepartmentName;

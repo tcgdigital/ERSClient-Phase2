@@ -77,7 +77,7 @@ export class GroundVictimsComponent implements OnInit, OnDestroy, AfterContentIn
     public openAllGroundVictims(): void {
         let groundVictimListLocal: GroundVictimModel[] = [];
         this.peopleOnBoardWidgetService.GetAllGroundVictimsByIncident(this.currentIncidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<InvolvePartyModel>) => {
                 groundVictimListLocal = result.Records[0].GroundVictims;
@@ -103,7 +103,7 @@ export class GroundVictimsComponent implements OnInit, OnDestroy, AfterContentIn
         if (query !== '') {
             query = `${query}`;
             this.peopleOnBoardWidgetService.GetGroundVictimsByQuery(query, this.currentIncidentId)
-                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                     response.Records.forEach((x) => {
@@ -117,7 +117,7 @@ export class GroundVictimsComponent implements OnInit, OnDestroy, AfterContentIn
         }
         else {
             this.peopleOnBoardWidgetService.GetAllGroundVictimsByIncident(this.currentIncidentId)
-                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((result: ResponseModel<InvolvePartyModel>) => {
                     groundVictimListLocal = result.Records[0].GroundVictims;
@@ -131,7 +131,7 @@ export class GroundVictimsComponent implements OnInit, OnDestroy, AfterContentIn
     invokeReset(): void {
         let groundVictimListLocal: GroundVictimModel[] = [];
         this.peopleOnBoardWidgetService.GetAllGroundVictimsByIncident(this.currentIncidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<InvolvePartyModel>) => {
                 groundVictimListLocal = result.Records[0].GroundVictims;

@@ -126,7 +126,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
 
     public getCompletedDemands(deptId: number, incidentId: number): void {
         this.demandService.GetCompletedDemands(deptId, incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.completedDemands = this.demandService.DemandMapper(response.Records);
@@ -142,7 +142,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
 
     public getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
                 this.demandRemarks = response.Records;
@@ -218,7 +218,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         this.RemarkToCreate.CreatedByName = this.createdByName;
 
         this.demandRemarkLogsService.Create(this.RemarkToCreate)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: DemandRemarkLogModel) => {
                 this.toastrService.success('Remark saved successfully.', 'Success', this.toastrConfig);
@@ -290,7 +290,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
             }
             else {
                 this.demandService.UpdateBulkForClosure(demandCompletion)
-                    .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                    // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                     .takeUntil(this.ngUnsubscribe)
                     .subscribe((response: DemandModel[]) => {
                         this.toastrService.success('Demand updated successfully.', 'Success', this.toastrConfig);
@@ -308,7 +308,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
 
     public getCurrentDepartmentName(departmentId): void {
         this.departmentService.Get(departmentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: DepartmentModel) => {
                 this.currentDepartmentName = response.DepartmentName;
@@ -327,7 +327,7 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
 
     private getDepartmentName(deptId): void {
         this.departmentService.Get(deptId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((department: DepartmentModel) => {
                 this.currentDepartmentName = department.DepartmentName;

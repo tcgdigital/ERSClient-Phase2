@@ -44,7 +44,7 @@ export class PageFunctionalityComponent implements OnInit, OnDestroy {
 
     getDepartments(): void {
         this.departmentService.GetAll()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
@@ -116,7 +116,7 @@ export class PageFunctionalityComponent implements OnInit, OnDestroy {
     onNotify(message: KeyValue): void {
         this.selectedDepartment = message.Value;
         this.pagePermissionService.GetFilter(message.Value.toString())
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<PagePermissionModel>) => {
                 this.pagesForDepartment = this.SetAllSelectedToFalse(this.pagesForDepartmentConstant);
@@ -260,7 +260,7 @@ export class PageFunctionalityComponent implements OnInit, OnDestroy {
         this.credential = UtilityService.getCredentialDetails();
 
         this.pageService.GetPagesOrderBySortOrder()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<PageModel>) => {
                 this.pages = response.Records;

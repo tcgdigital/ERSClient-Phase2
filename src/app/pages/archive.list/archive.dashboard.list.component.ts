@@ -89,7 +89,7 @@ export class ArchiveDashboardListComponent implements OnInit, OnDestroy {
 
     public GetAllClosedIncidents(): void {
         this.archiveListService.GetAllClosedIncidents()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((closedIncident: ResponseModel<IncidentModel>) => {
                 closedIncident.Records.forEach((itemIncident: IncidentModel) => {

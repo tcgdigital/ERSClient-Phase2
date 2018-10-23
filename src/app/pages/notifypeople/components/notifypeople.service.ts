@@ -67,7 +67,7 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
     public GetUserDepartmentNotificationMapperByIncident(incidentId: number,
         callback?: ((_: UserdepartmentNotificationMapperModel[]) => void)): void {
         this.userdepartmentNotificationMapperService.GetUserDepartmentNotificationMapperFromIncident(incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<UserdepartmentNotificationMapperModel>) => {
                 response.Records.forEach((item: UserdepartmentNotificationMapperModel) => {
@@ -84,7 +84,7 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
     public GetAllDepartmentMatrix(departmentId: number, incidentId: number,
         callback?: ((_: NotifyPeopleModel[]) => void)): void {
         this.userPermissionService.GetAllDepartmentMatrix()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((departments: ResponseModel<DepartmentModel>) => {
                 this.departmentIdProjection = '';
@@ -148,7 +148,7 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
                 this.allDepartments = item;
             })
             .flatMap((result) => this.userPermissionService.GetAllDepartmentUsersFromDepartmentIdProjection(departmentIdProjection))
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((userPermissions: ResponseModel<UserPermissionModel>) => {
 
@@ -257,7 +257,7 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
                 this.currentDepartment = departmentResponse;
             })
             .flatMap(() => this.templateService.GetByEmergencySituationId(+emargencySituation))
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<TemplateModel>) => {
                 let template: TemplateModel = result.Records.find((item: TemplateModel) => {

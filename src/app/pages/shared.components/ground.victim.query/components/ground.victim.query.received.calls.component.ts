@@ -82,7 +82,7 @@ export class GroundVictimQueryReceivedCallsComponent implements OnInit {
         this.childModalcallcenter.hide();
         this.callcenterload = false;
         this.callcenteronlypageservice.GetGroundVictimCallsRecievedByIncident(incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            //.debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allReceivedCalls = response.Records;
@@ -98,7 +98,7 @@ export class GroundVictimQueryReceivedCallsComponent implements OnInit {
 
     private getGroundVictims(): void {
         this.groundVictimService.GetAllGroundVictimsByIncident(this.currentIncidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: GroundVictimModel) => {
                 this.victims.push(new KeyValue(response.GroundVictimName, response.GroundVictimId));

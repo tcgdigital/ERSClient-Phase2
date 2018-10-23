@@ -48,7 +48,7 @@ export class SpileComponent implements OnInit, OnDestroy {
 
     getAllActiveDepartments(): void {
         this.departmentService.GetAllActiveDepartments()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((departments: ResponseModel<DepartmentModel>) => {
                 if (departments.Count > 0) {
@@ -61,7 +61,7 @@ export class SpileComponent implements OnInit, OnDestroy {
 
     getAllActiveKeyValues(): void {
         this.keyValueService.GetAll()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<KeyValueModel>) => {
                 this.activeKeyValues = response.Records;

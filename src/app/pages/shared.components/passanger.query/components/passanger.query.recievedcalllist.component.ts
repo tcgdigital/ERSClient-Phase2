@@ -101,7 +101,7 @@ export class PassangerQueryRecievedCallsListComponent implements OnInit, OnDestr
         this.childModalcallcenter.hide();
         this.callcenterload = false;
         this.callcenteronlypageservice.GetPassengerQueryCallsRecievedByIncident(incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;
@@ -123,7 +123,7 @@ export class PassangerQueryRecievedCallsListComponent implements OnInit, OnDestr
 
     getPassengersCrews(): void {
         this.involvedPartyService.GetFilterByIncidentId(this.currentIncidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
@@ -138,10 +138,10 @@ export class PassangerQueryRecievedCallsListComponent implements OnInit, OnDestr
             });
     }
 
-    getPDAName(AffectedPersonId): string {
+    getPDAName(affectedPersonId): string {
         let Nm: string = "";
-        if (this.passengers.length > 0) {
-            Nm = this.passengers.find(x => x.Value == AffectedPersonId).Key;
+        if (this.passengers.length > 0 && this.passengers.some(x => x.Value == affectedPersonId)) {
+            Nm = this.passengers.find(x => x.Value == affectedPersonId).Key;
         }
         return Nm;
     }
