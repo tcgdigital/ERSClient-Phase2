@@ -1,113 +1,120 @@
 <div class="row messaging-widget-container no-gutters">
-    <div class="col-3 col-md-12 col-lg-3 border-seperator">
-        <div class="message-icon">
-            <i *ngIf="isShowViewAll | accesibility:currentDepartmentId:'BroadcastMessageWidgetViewAll'" class="fa fa-bullhorn fa-3x hover"
-                aria-hidden="true" (click)="openBroadcastMessages()">
-            </i>
-            <span class="hover" *ngIf="isShowViewAll | accesibility:currentDepartmentId:'BroadcastMessageWidgetViewAll'"
-                (click)="openBroadcastMessages()">
-                broadcast message
-            </span>
-            <a *ngIf="isShowViewAll | accesibility:currentDepartmentId:'BroadcastMessageWidgetViewAll'" href="javascript:void(0);"
-                (click)="openBroadcastMessagesByDepartment()">
-                view all
-            </a>
+    <ng-template [ngIf]="!(isShowViewAll | accesibility:initiatedDepartmentId:'BroadcastMessageWidget')">
+        <div class="col-lg-12">
+            <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
         </div>
-    </div>
-    <div class="col-9 col-md-12 col-lg-9">
-        <text-accordion *ngIf="isShow | accesibility:currentDepartmentId:'BroadcastMessageWidget'" [accordionItems]="LatestBroadcasts">
-        </text-accordion>
-        <div class="row no-gutters" *ngIf="!(isShow | accesibility:currentDepartmentId:'BroadcastMessageWidget')">
-            <ul class="cd-container">
-                <li>
-                    <ul class="cd-item-wrapper widgetDefaultStyle">
-                        <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
+    </ng-template>
 
-<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Broadcast Messages</h4>
-                <button type="button" class="close pull-right" aria-label="Close" (click)="hideAllBroadcastMessages()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+    <ng-template [ngIf]="(isShowViewAll | accesibility:initiatedDepartmentId:'BroadcastMessageWidget')">
+        <div class="col-3 col-md-12 col-lg-3 border-seperator">
+            <div class="message-icon">
+                <i *ngIf="isShowViewAll | accesibility:currentDepartmentId:'BroadcastMessageWidgetViewAll'" class="fa fa-bullhorn fa-3x hover"
+                    aria-hidden="true" (click)="openBroadcastMessages()">
+                </i>
+                <span class="hover" *ngIf="isShowViewAll | accesibility:currentDepartmentId:'BroadcastMessageWidgetViewAll'" (click)="openBroadcastMessages()">
+                    broadcast message
+                </span>
+                <a *ngIf="isShowViewAll | accesibility:currentDepartmentId:'BroadcastMessageWidgetViewAll'" href="javascript:void(0);" (click)="openBroadcastMessagesByDepartment()">
+                    view all
+                </a>
             </div>
-            <div class="modal-body">
-                <responsive-table>
-                    <table responsive-table-body>
-                        <thead>
-                            <tr>
-                                <th>Broadcast Messages</th>
-                                <th>Priority</th>
-                                <th>Initiated Department</th>
-                                <th>Published On</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let broadcast of AllPublishedBroadcasts">
-                                <td data-title="Broadcast Messages" width="50%">
-                                    {{broadcast.Message}}&nbsp;
-                                </td>
-                                <td data-title="Priority">
-                                    {{broadcast.Priority}}&nbsp;
-                                </td>
-                                <td data-title="Initiated Department">
-                                    {{broadcast.InitiateDepartment.DepartmentName}}&nbsp;
-                                </td>
-                                <td data-title="Published On">
-                                    {{broadcast.SubmittedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </responsive-table>
+        </div>
+
+        <div class="col-9 col-md-12 col-lg-9">
+            <text-accordion *ngIf="isShow | accesibility:currentDepartmentId:'BroadcastMessageWidget'" [accordionItems]="LatestBroadcasts">
+            </text-accordion>
+            <div class="row no-gutters" *ngIf="!(isShow | accesibility:currentDepartmentId:'BroadcastMessageWidget')">
+                <ul class="cd-container">
+                    <li>
+                        <ul class="cd-item-wrapper widgetDefaultStyle">
+                            <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </ng-template>
+
+    <div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Broadcast Messages</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="hideAllBroadcastMessages()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <responsive-table>
+                        <table responsive-table-body>
+                            <thead>
+                                <tr>
+                                    <th>Broadcast Messages</th>
+                                    <th>Priority</th>
+                                    <th>Initiated Department</th>
+                                    <th>Published On</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let broadcast of AllPublishedBroadcasts">
+                                    <td data-title="Broadcast Messages" width="50%">
+                                        {{broadcast.Message}}&nbsp;
+                                    </td>
+                                    <td data-title="Priority">
+                                        {{broadcast.Priority}}&nbsp;
+                                    </td>
+                                    <td data-title="Initiated Department">
+                                        {{broadcast.InitiateDepartment.DepartmentName}}&nbsp;
+                                    </td>
+                                    <td data-title="Published On">
+                                        {{broadcast.SubmittedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </responsive-table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div bsModal #childBroadcastByDept="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Broadcast Messages</h4>
-                <button type="button" class="close pull-right" aria-label="Close" (click)="hideAllBroadcastMessageByDept()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <responsive-table>
-                    <table responsive-table-body>
-                        <thead>
-                            <tr>
-                                <th>Broadcast Messages</th>
-                                <th>Priority</th>
-                                <th>Published On</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let broadcast of AllBroadCastByIncidentAndDepartment">
-                                <td data-title="Broadcast Messages" width="50%">
-                                    {{broadcast.Message}}&nbsp;
-                                </td>
-                                <td data-title="Priority">
-                                    {{broadcast.Priority}}&nbsp;
-                                </td>
-                                <td data-title="Published On">
-                                    {{broadcast.SubmittedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </responsive-table>
+    <div bsModal #childBroadcastByDept="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Broadcast Messages</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="hideAllBroadcastMessageByDept()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <responsive-table>
+                        <table responsive-table-body>
+                            <thead>
+                                <tr>
+                                    <th>Broadcast Messages</th>
+                                    <th>Priority</th>
+                                    <th>Published On</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let broadcast of AllBroadCastByIncidentAndDepartment">
+                                    <td data-title="Broadcast Messages" width="50%">
+                                        {{broadcast.Message}}&nbsp;
+                                    </td>
+                                    <td data-title="Priority">
+                                        {{broadcast.Priority}}&nbsp;
+                                    </td>
+                                    <td data-title="Published On">
+                                        {{broadcast.SubmittedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </responsive-table>
+                </div>
             </div>
         </div>
     </div>

@@ -224,7 +224,6 @@ export class NotifyPeopleComponent implements OnInit {
     }
 
     public saveCustomNotificationMessage(formData: any): void {
-        debugger;
         this.appendedTemplate.Description = this.customMessageForm.controls['MessageData'].value;
         this.saveCustomNotificationProcess(() => {
             this.hideCustomNoificationMessage();

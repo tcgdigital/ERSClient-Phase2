@@ -1,62 +1,72 @@
 <div class="row messaging-widget-container no-gutters">
-    <div class="col-3 col-md-12 col-lg-3 border-seperator">
-        <div class="message-icon">
-            <i class="fa fa-envelope-o fa-3x" aria-hidden="true"></i>
-            <span>president message</span>
-            <a *ngIf="isShowViewAll | accesibility:initiatedDepartmentId:'PresidentMessageViewAll'" href="javascript: void(0)" (click)="openPresidentMessages()">view
-                all</a>
-        </div>
-    </div>
-    <div class="col-9 col-md-12 col-lg-9">
-        <text-accordion *ngIf="isShow | accesibility:initiatedDepartmentId:'PresidentMessage'" [accordionItems]="presidentMessages"></text-accordion>
-        <div class="row no-gutters" *ngIf="!(isShow | accesibility:initiatedDepartmentId:'PresidentMessage')">
-            <ul class="cd-container">
-                <li>
-                    <ul class="cd-item-wrapper widgetDefaultStyle">
-                        <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
 
-<div bsModal #childModalPresidentMsg="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">All President's' Messages</h4>
-                <button type="button" class="close pull-right" aria-label="Close" (click)="hidePresidentMessages()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <responsive-table>
-                    <table responsive-table-body>
-                        <thead>
-                            <tr>
-                                <th>President's Messages</th>
-                                <th>Status</th>
-                                <th>Published On</th>
-                                <th>Download Report</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let presidentMessage of AllPresidentMessages | async">
-                                <td data-title="President's Message Releases" width="30%">{{presidentMessage.PresidentMessageType}}&nbsp;</td>
-                                <td data-title="Status">{{presidentMessage.PresidentMessageStatus}}&nbsp;</td>
-                                <td data-title="Published On">{{presidentMessage.PublishedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
-                                <td data-title="Download Report">
-                                    <a *ngIf="presidentMessage.IsPublished" target="_blank" href="{{downloadPath + presidentMessage.PresidentsMessageId}}">
-                                        <i class="fa fa-download fa-2x" aria-hidden="true"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </responsive-table>
+    <ng-template [ngIf]="!(isShowViewAll | accesibility:initiatedDepartmentId:'PresidentMessageWidget')">
+        <div class="col-lg-12">
+            <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
+        </div>
+    </ng-template>
+    <ng-template [ngIf]="(isShowViewAll | accesibility:initiatedDepartmentId:'PresidentMessageWidget')">
+        <div class="col-3 col-md-12 col-lg-3 border-seperator">
+            <div class="message-icon">
+                <i class="fa fa-envelope-o fa-3x" aria-hidden="true"></i>
+                <span>president message</span>
+                <a *ngIf="isShowViewAll | accesibility:initiatedDepartmentId:'PresidentMessageViewAll'" href="javascript: void(0)" (click)="openPresidentMessages()">view
+                    all
+                </a>
             </div>
         </div>
+
+        <div class="col-9 col-md-12 col-lg-9">
+            <text-accordion *ngIf="isShow | accesibility:initiatedDepartmentId:'PresidentMessage'" [accordionItems]="presidentMessages"></text-accordion>
+            <div class="row no-gutters" *ngIf="!(isShow | accesibility:initiatedDepartmentId:'PresidentMessage')">
+                <ul class="cd-container">
+                    <li>
+                        <ul class="cd-item-wrapper widgetDefaultStyle">
+                            <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </ng-template>
+    <div bsModal #childModalPresidentMsg="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" *ngIf="(isShowViewAll | accesibility:initiatedDepartmentId:'PresidentMessageWidget')">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">All President's' Messages</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="hidePresidentMessages()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <responsive-table>
+                        <table responsive-table-body>
+                            <thead>
+                                <tr>
+                                    <th>President's Messages</th>
+                                    <th>Status</th>
+                                    <th>Published On</th>
+                                    <th>Download Report</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let presidentMessage of AllPresidentMessages | async">
+                                    <td data-title="President's Message Releases" width="30%">{{presidentMessage.PresidentMessageType}}&nbsp;</td>
+                                    <td data-title="Status">{{presidentMessage.PresidentMessageStatus}}&nbsp;</td>
+                                    <td data-title="Published On">{{presidentMessage.PublishedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
+                                    <td data-title="Download Report">
+                                        <a *ngIf="presidentMessage.IsPublished" target="_blank" href="{{downloadPath + presidentMessage.PresidentsMessageId}}">
+                                            <i class="fa fa-download fa-2x" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </responsive-table>
+                </div>
+            </div>
+        </div>
+
+
     </div>
-</div>

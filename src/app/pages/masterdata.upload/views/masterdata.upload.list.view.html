@@ -78,7 +78,7 @@
                                             formControlName="fileCrewManifestPALEx" class="form-control-file" (change)="getFileDetails($event,'Crew')" />
                                     </td>
                                     <td data-title="Download Templates">
-                                        <a target="_self" href="{{crewManifestPathPALEx}}">
+                                        <a target="_self" href="{{crewManifestPathPALEx}}" *ngIf="isCrewTemplateLinkAvailable | accesibility:DepartmentId:'CrewManifestLink'">
                                             <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Crew
                                             Manifest
                                             Template
@@ -213,7 +213,7 @@
                                             class="form-control-file" (change)="getFileDetails($event,'Cargo')" />
                                     </td>
                                     <td data-title="Download Templates">
-                                        <a target="_self" href="{{CargoTemplatePathPALEx}}">
+                                        <a target="_self" href="{{CargoTemplatePathPALEx}}" *ngIf="isCargoTemplateLinkAvailable | accesibility:DepartmentId:'CargoManifestLink'">
                                             <i class="fa fa-file-excel-o fa-fw fa-lg" aria-hidden="true"></i>&nbsp;Cargo
                                             Template
                                         </a>
