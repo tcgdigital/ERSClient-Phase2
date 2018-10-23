@@ -294,7 +294,6 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
 
     public CreateAppendedTemplate(appendedTemplate: AppendedTemplateModel,
         incidentId: number, callback?: ((_: boolean) => void)): void {
-        debugger;
         delete appendedTemplate.Active;
         this.appendedTemplateService.CreateAppendedTemplate(appendedTemplate)
             .subscribe((appendedTemplate: AppendedTemplateModel) => {
@@ -341,7 +340,6 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
 
     public NotifyTemplate(template: AppendedTemplateModel, incidentId: number,
         callback?: ((_: boolean) => void)): void {
-        debugger;
         this.notificationContactsWithTemplates = [];
 
         this.notifyPeopleModels.forEach((item: NotifyPeopleModel, index: number) => {

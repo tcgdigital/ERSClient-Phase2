@@ -1,58 +1,71 @@
 <div class="row messaging-widget-container no-gutters">
-    <div class="col-3 col-md-12 col-lg-3 border-seperator">
-        <div class="message-icon">
-            <i class="fa fa-newspaper-o fa-3x" aria-hidden="true"></i>
-            <span>media release</span>
-            <a *ngIf="isShowViewAll | accesibility:initiatedDepartmentId:'MediaMessageViewAll'"  href="javascript: void(0)" (click)="openMediaReleases()">view all</a>
-        </div>
-    </div>
-    <div class="col-9 col-md-12 col-lg-9">
-        <text-accordion *ngIf="isShow | accesibility:initiatedDepartmentId:'MediaMessage'" [accordionItems]="mediaReleases"></text-accordion>
-        <div class="row no-gutters" *ngIf="!(isShow | accesibility:initiatedDepartmentId:'MediaMessage')">
-            <ul class="cd-container">
-                <li>
-                    <ul class="cd-item-wrapper widgetDefaultStyle">
-                        <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
 
-<div bsModal #childModalMediaRelease="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Media Releases</h4>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideMediaReleases()">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <responsive-table>
-            <table responsive-table-body>
-                <thead>
-                    <tr>
-                        <th>Media Releases</th>
-                        <th>Status</th>
-                        <th>Published On</th>
-                        <th>Download Report</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let mediaRelease of AllMediaReleases | async">
-                        <td data-title="Media Releases" width="30%">{{mediaRelease.MediaReleaseType}}&nbsp;</td>
-                        <td data-title="Status">{{mediaRelease.MediaReleaseStatus}}&nbsp;</td>
-                        <td data-title="Date">{{mediaRelease.PublishedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
-                        <td data-title="Download Report">
-                            <a *ngIf = "mediaRelease.IsPublished" target = "_blank" href="{{downloadPath + mediaRelease.MediaqueryId}}"><i class="fa fa-download fa-2x" aria-hidden="true"></i></a>                                                  
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </responsive-table>
-      </div>
+    <ng-template [ngIf]="!(isShowViewAll | accesibility:initiatedDepartmentId:'MediaMessageWidget')">
+        <div class="col-lg-12">
+            <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
+        </div>
+    </ng-template>
+    <ng-template [ngIf]="(isShowViewAll | accesibility:initiatedDepartmentId:'MediaMessageWidget')">
+        <div class="col-3 col-md-12 col-lg-3 border-seperator">
+            <div class="message-icon">
+                <i class="fa fa-newspaper-o fa-3x" aria-hidden="true"></i>
+                <span>media release</span>
+                <a *ngIf="isShowViewAll | accesibility:initiatedDepartmentId:'MediaMessageViewAll'" href="javascript: void(0)" (click)="openMediaReleases()">view
+                    all
+                </a>
+            </div>
+        </div>
+        <div class="col-9 col-md-12 col-lg-9">
+            <text-accordion *ngIf="isShow | accesibility:initiatedDepartmentId:'MediaMessage'" [accordionItems]="mediaReleases"></text-accordion>
+            <div class="row no-gutters" *ngIf="!(isShow | accesibility:initiatedDepartmentId:'MediaMessage')">
+                <ul class="cd-container">
+                    <li>
+                        <ul class="cd-item-wrapper widgetDefaultStyle">
+                            <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </ng-template>
+
+
+    <div bsModal #childModalMediaRelease="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Media Releases</h4>
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="hideMediaReleases()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <responsive-table>
+                        <table responsive-table-body>
+                            <thead>
+                                <tr>
+                                    <th>Media Releases</th>
+                                    <th>Status</th>
+                                    <th>Published On</th>
+                                    <th>Download Report</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let mediaRelease of AllMediaReleases | async">
+                                    <td data-title="Media Releases" width="30%">{{mediaRelease.MediaReleaseType}}&nbsp;</td>
+                                    <td data-title="Status">{{mediaRelease.MediaReleaseStatus}}&nbsp;</td>
+                                    <td data-title="Date">{{mediaRelease.PublishedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
+                                    <td data-title="Download Report">
+                                        <a *ngIf="mediaRelease.IsPublished" target="_blank" href="{{downloadPath + mediaRelease.MediaqueryId}}"><i
+                                                class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </responsive-table>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

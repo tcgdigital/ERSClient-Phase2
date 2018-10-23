@@ -185,10 +185,8 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
     }
 
     getUnidentfiedPersonList(incidentId: number): void {
-        debugger;
         this.affectedPeopleService.GetActiveUnIdentifiedPassengerByIncident(incidentId)
             .subscribe((response: ResponseModel<AffectedPeopleModel>) => {
-                debugger;
                 this.unidentifiedPersons = _.flatten(_.pluck(response.Records, 'Passenger'));
                 if (this.unidentifiedPersons == undefined) {
                     this.isUnidentifiedShow = false;
@@ -457,7 +455,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
             this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
             this.getAffectedPeople(this.currentIncident);
         }
-        this.getUnidentfiedPersonList(this.currentIncident);
+        //this.getUnidentfiedPersonList(this.currentIncident);
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/PassengerStatusInfo/' + this.currentIncident;
         this.downloadRoute = GlobalConstants.EXTERNAL_URL + 'api/Report/CrewStatusInfo/' + this.currentIncident;
 

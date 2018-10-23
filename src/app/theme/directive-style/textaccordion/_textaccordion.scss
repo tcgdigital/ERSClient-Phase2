@@ -50,6 +50,7 @@
 .accessibility-error {
     padding: 50px 13px 5px 42px !important;
     height: 118px !important;
+    display: inherit;
     &.accessibility-error:before {
         content: "\f071";
         font-family: FontAwesome;
