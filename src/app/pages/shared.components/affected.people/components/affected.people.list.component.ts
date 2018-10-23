@@ -455,7 +455,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
             this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
             this.getAffectedPeople(this.currentIncident);
         }
-        this.getUnidentfiedPersonList(this.currentIncident);
+        //this.getUnidentfiedPersonList(this.currentIncident);
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/PassengerStatusInfo/' + this.currentIncident;
         this.downloadRoute = GlobalConstants.EXTERNAL_URL + 'api/Report/CrewStatusInfo/' + this.currentIncident;
 
