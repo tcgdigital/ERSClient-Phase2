@@ -209,7 +209,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
 
     private getPassengersAndCrews(currentIncident: number, isIdentified: boolean = true): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
@@ -248,7 +248,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
 
     private getCargo(currentIncident: number): void {
         this.affectedObjectsService.GetFilterByIncidentId(currentIncident)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedObjects = this.affectedObjectsService.FlattenAffactedObjects(response.Records[0]);
@@ -266,7 +266,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
 
     private getGroundVictims(currentIncident: number): void {
         this.groundVictimService.GetAllGroundVictimsByIncident(currentIncident)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((victim: GroundVictimModel) => {
                 let viewModel: AffectedVictimToView = new AffectedVictimToView();
@@ -290,7 +290,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
 
     private getDepartments(): void {
         this.departmentService.GetAll()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;
@@ -330,7 +330,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         }
 
         queryDetailService
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ExternalInputModel[]) => {
                 if (response[0].PDAEnquiry != null) {
@@ -874,7 +874,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
 
     private getAllActiveKeyValues(): void {
         this.keyValueService.GetAll()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<KeyValueModel>) => {
                 this.activeKeyValues = response.Records;
@@ -960,7 +960,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         let affectedPersonid = eventArgs.selectedItem.Value;
 
         this.affectedPeopleService.GetCommunicationByPDA(affectedPersonid)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<AffectedPeopleModel>) => {
                 let responseModel: AffectedPeopleModel = response.Records[0];
@@ -985,7 +985,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         let affectedCargoid = eventArgs.selectedItem.Value;
 
         this.affectedObjectsService.GetCommunicationByAWB(affectedCargoid)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<AffectedObjectModel>) => {
                 let responseModel: AffectedObjectModel = response.Records[0];

@@ -78,7 +78,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
     getPeopleOnboardCounts(incident): void {
         this.peopleOnBoard = new PeopleOnBoardModel();
         this.peopleOnBoardWidgetService.GetPeopleOnBoardDataCount(incident)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((peopleOnBoardObservable) => {
                 console.log(peopleOnBoardObservable);
@@ -147,7 +147,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
         const passengerListLocal: PassengerModel[] = [];
 
         this.peopleOnBoardWidgetService.GetAllPassengersByIncident(this.currentIncidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<InvolvePartyModel>) => {
                 let affectedPeoples: AffectedPeopleModel[];
@@ -178,7 +178,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
         let cargoListLocal: CargoModel[] = [];
 
         this.peopleOnBoardWidgetService.GetAllCargosByIncident(incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<InvolvePartyModel>) => {
                 cargoListLocal = result.Records[0].Flights[0].Cargoes;
@@ -192,7 +192,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
         let groundVictimListLocal: GroundVictimModel[] = [];
 
         this.peopleOnBoardWidgetService.GetAllGroundVictimsByIncident(this.currentIncidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<InvolvePartyModel>) => {
                 groundVictimListLocal = result.Records[0].GroundVictims.sort((a, b) => {
@@ -218,7 +218,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
         this.passengerListByNationality = [];
 
         this.peopleOnBoardWidgetService.GetAllPassengersByIncident(this.currentIncidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<InvolvePartyModel>) => {
                 let affectedPeoples: AffectedPeopleModel[];
@@ -266,7 +266,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
         let AffectedPersonIds: number[];
 
         this.peopleOnBoardWidgetService.GetEnquiredAffectedPeople(this.currentIncidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .map((dataEnquiryModels: ResponseModel<EnquiryModel>) => {
                 this.enquiries = dataEnquiryModels;
@@ -313,7 +313,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
         const crewListLocal: CrewModel[] = [];
 
         this.peopleOnBoardWidgetService.GetAllCrewsByIncident(this.currentIncidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<InvolvePartyModel>) => {
                 let affectedPeoples: AffectedPeopleModel[];
@@ -346,7 +346,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
         let AffectedPersonIds: number[];
 
         this.peopleOnBoardWidgetService.GetEnquiredAffectedCrew(this.currentIncidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .map((dataEnquiryModels: ResponseModel<EnquiryModel>) => {
                 this.enquiries = dataEnquiryModels;
@@ -405,7 +405,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
 
         if (query !== '') {
             this.peopleOnBoardWidgetService.GetQueryForPassenger(query, this.currentIncidentId)
-                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((result: ResponseModel<InvolvePartyModel>) => {
                     let affectedPeoples: AffectedPeopleModel[];
@@ -436,7 +436,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
 
         if (query !== '') {
             this.peopleOnBoardWidgetService.GetQueryForCrew(query, this.currentIncidentId)
-                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((result: ResponseModel<InvolvePartyModel>) => {
                     let affectedPeoples: AffectedPeopleModel[];
@@ -466,7 +466,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
         let cargoListLocal: CargoModel[] = [];
         if (query !== '') {
             this.peopleOnBoardWidgetService.GetQueryForCargo(query, this.currentIncidentId)
-                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((result: ResponseModel<InvolvePartyModel>) => {
                     cargoListLocal = result.Records[0].Flights[0].Cargoes;
@@ -494,7 +494,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
         let cargoListLocal: CargoModel[] = [];
 
         this.peopleOnBoardWidgetService.GetAllCargosByIncident(this.currentIncidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<InvolvePartyModel>) => {
                 cargoListLocal = result.Records[0].Flights[0].Cargoes.sort((a, b) => {

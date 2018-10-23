@@ -145,7 +145,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
 
         }
         this.affectedPeopleService.GetCallerListForAffectedPerson(affectedPerson.AffectedPersonId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EnquiryModel>) => {
                 this.callers = response.Records.map((x) => {
@@ -155,7 +155,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
                 if (affectedPerson.PassengerId !== 0 && affectedPerson.GroupId !== 0) {
 
                     this.copassangerService.getCoPassengers(affectedPerson.GroupId)
-                        .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                        // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                         .takeUntil(this.ngUnsubscribe)
                         .subscribe((response: ResponseModel<CoPassengerMappingModel>) => {
                             if (response.Records.length > 0) {
@@ -175,13 +175,20 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
             });
     }
 
+    OnShowPaxEditWindow(){
+        this.getUnidentfiedPersonList(this.currentIncident);
+        //console.log('childModal displayed');
+    }
+
     cancelModal() {
         this.childModal.hide();
     }
 
     getUnidentfiedPersonList(incidentId: number): void {
+        debugger;
         this.affectedPeopleService.GetActiveUnIdentifiedPassengerByIncident(incidentId)
             .subscribe((response: ResponseModel<AffectedPeopleModel>) => {
+                debugger;
                 this.unidentifiedPersons = _.flatten(_.pluck(response.Records, 'Passenger'));
                 if (this.unidentifiedPersons == undefined) {
                     this.isUnidentifiedShow = false;
@@ -218,7 +225,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
 
     getCurrentDepartmentName(departmentId): void {
         this.departmentService.Get(departmentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: DepartmentModel) => {
                 this.currentDepartmentName = response.DepartmentName;
@@ -250,7 +257,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
             this.date = new Date();
             this.fileUploadService.uploadFiles<string>(baseUrl + './api/fileUpload/UploadFilesModuleWise/' + param,
                 this.filesToUpload, this.date.toString())
-                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((result: string) => {
                     console.log(result);
@@ -315,7 +322,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
 
     createCommunicationLogModel(affectedPersonToUpdate: AffectedPeopleModel, createdBy: number): void {
         this.communicationLogService.GetLogByAffectedPersonId(affectedPersonToUpdate.AffectedPersonId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<CommunicationLogModel>) => {
                 if (result.Count == 0) {
@@ -374,7 +381,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
 
     getAffectedPeople(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0])
@@ -398,7 +405,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
 
     searchAffectedPeople(query: string, incidentId: number): void {
         this.involvedPartyService.GetQuery(query, incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeople = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0]);
@@ -526,7 +533,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
 
     openChatTrails(affectedPersonId: number): void {
         this.affectedPeopleService.GetCommunicationByPDA(affectedPersonId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<AffectedPeopleModel>) => {
                 let responseModel: AffectedPeopleModel = response.Records[0];
@@ -553,7 +560,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
         this.affectedPersonModel = affectedperson;
 
         this.affectedPeopleService.GetCallerListForAffectedPerson(affectedperson.AffectedPersonId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EnquiryModel>) => {
                 this.callers = response.Records.map((x) => {

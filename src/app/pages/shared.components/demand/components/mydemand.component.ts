@@ -124,7 +124,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
     public getMyDemands(deptId, incidentId): void {
         this.mydemands.length = 0;
         this.demandService.GetByRequesterDepartment(deptId, incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandModel>) => {
                 this.mydemands = this.demandService.DemandMapper(response.Records);
@@ -153,7 +153,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
 
     public getDemandRemarks(demandId): void {
         this.demandRemarkLogsService.GetDemandRemarksByDemandId(demandId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandRemarkLogModel>) => {
                 this.demandRemarks = response.Records;
@@ -165,7 +165,7 @@ export class MyDemandComponent implements OnInit, OnDestroy {
 
     public getDemandTrails(demandId): void {
         this.demandTrailService.getDemandTrailByDemandId(demandId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandTrailModel>) => {
                 this.demandTrails = response.Records;

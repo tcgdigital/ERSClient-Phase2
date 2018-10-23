@@ -50,7 +50,7 @@ export class AffectedObjectsVerificationComponent implements OnInit {
 
     getAffectedObjects(incidentId): void {
         this.affectedObjectsService.GetFilterByIncidentId(incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 if (response.Records[0]) {

@@ -89,7 +89,7 @@ export class FutureTravelQueryRecievedCallsListComponent implements OnInit, OnDe
         this.callcenterload = false;
 
         this.callcenteronlypageservice.GetFutureTravelCallsRecievedByIncident(incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;

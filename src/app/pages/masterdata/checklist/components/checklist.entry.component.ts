@@ -228,7 +228,7 @@ export class ChecklistEntryComponent implements OnInit, OnDestroy {
 
     getAllActiveDepartments(): void {
         this.departmentService.GetAllActiveDepartments()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((item: ResponseModel<DepartmentModel>) => {
                 this.allDepartments = item.Records;
@@ -276,7 +276,7 @@ export class ChecklistEntryComponent implements OnInit, OnDestroy {
 
     getAllActiveOrganizations(): void {
         this.organizationService.GetAllActiveOrganizations()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<OrganizationModel>) => {
                 this.activeOrganizations = response.Records;

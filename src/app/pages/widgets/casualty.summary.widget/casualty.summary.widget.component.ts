@@ -35,7 +35,7 @@ export class CasualtySummaryWidgetComponent implements OnInit, OnDestroy {
         this.casualtySummery = new CasualtySummeryModel();
 
         this.casualtySummaryWidgetService.GetCasualtyCount(incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((casualtySummeryObservable) => {
                 this.casualtySummery = casualtySummeryObservable;

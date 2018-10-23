@@ -44,7 +44,7 @@ export class AffectedPeopleVerificationComponent implements OnInit, OnDestroy {
 
     getAffectedPeople(currentIncident): void {
         this.involvedPartyService.GetFilterByIncidentId(currentIncident)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedPeopleForVerification = this.affectedPeopleService.FlattenAffectedPeople(response.Records[0])

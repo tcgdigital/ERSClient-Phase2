@@ -33,7 +33,7 @@ export class DemandTypeListComponent implements OnInit, OnDestroy {
 
     getDemandTypes(): void {
         this.demandTypeService.GetAll()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DemandTypeModel>) => {
 
@@ -109,7 +109,7 @@ export class DemandTypeListComponent implements OnInit, OnDestroy {
                     query = query.replace("'false'", 'false');
             }
             this.demandTypeService.GetQuery(query)
-                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: ResponseModel<DemandTypeModel>) => {
                     this.demandTypes = response.Records;

@@ -65,7 +65,7 @@ export class CareMemberTrackerForAllComponent implements OnInit, OnDestroy {
             const careMemberName: string = this.careMemberForAllForm.controls['CareMemberName'].value;
 
             this.affectedPeopleService.GetAllAffectedPeopleIdsByIncidentId(this.currentIncidentId)
-                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((selectedAffectedPeople: ResponseModel<AffectedPeopleModel>) => {
 

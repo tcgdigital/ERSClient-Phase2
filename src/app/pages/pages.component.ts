@@ -160,7 +160,7 @@ export class PagesComponent implements OnInit {
 
     public getAllActiveKeyValues(): void {
         this.keyValueService.GetAll()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<KeyValueModel>) => {
                 this.activeKeyValues = response.Records;
@@ -246,7 +246,7 @@ export class PagesComponent implements OnInit {
 
     private getDepartments(callback: () => void = null): void {
         this.GetUserDepartments()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((userDepartments: UserPermissionModel[]) => {
                 this.ProcessUserDepartments(userDepartments);
@@ -259,7 +259,7 @@ export class PagesComponent implements OnInit {
 
     private getIncidents(callback: () => void = null): void {
         this.GetIncidents()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((incidents: IncidentModel[]) => {
                 this.ProcessIncidents(incidents);
@@ -649,7 +649,7 @@ export class PagesComponent implements OnInit {
     private getRAGScaleData() {
         if (UtilityService.RAGScaleData.length == 0) {
             this.ragScaleService.GetAllActive()
-                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((item: ResponseModel<RAGScaleModel>) => {
                     UtilityService.RAGScaleData = item.Records;

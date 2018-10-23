@@ -40,7 +40,7 @@ export class ValidGroundVictimListComponent implements OnInit, OnDestroy {
 
     getValidGroundVictims(): void {
         this._validRecordService.GetAllGroundVictimsByIncidentId(this.IncidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .flatMap(x => x)
             .subscribe(a => {

@@ -86,7 +86,7 @@ export class IncidentViewComponent implements OnInit, OnDestroy {
         this.resetIncidentViewForm();
 
         this.emergencyLocationService.GetAllActiveEmergencyLocations()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<EmergencyLocationModel>) => {
                 result.Records.forEach((item: EmergencyLocationModel) => {
@@ -156,7 +156,7 @@ export class IncidentViewComponent implements OnInit, OnDestroy {
 
     getAllActiveEmergencyTypes(): void {
         this.emergencyTypeService.GetAll()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                 this.activeEmergencyTypes = response.Records;

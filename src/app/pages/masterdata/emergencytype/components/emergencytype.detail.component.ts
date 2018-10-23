@@ -40,7 +40,7 @@ export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
      */
     getEmergencyTypes(): void {
         this.emergencyTypeService.GetAll()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                 this.emergencyTypes = response.Records;
@@ -150,7 +150,7 @@ export class EmergencyTypeDetailComponent implements OnInit, OnDestroy {
     invokeSearch(query: string): void {
         if (query !== '') {
             this.emergencyTypeService.GetQuery(query)
-                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                     this.emergencyTypes = response.Records;

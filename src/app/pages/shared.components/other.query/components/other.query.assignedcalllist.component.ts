@@ -88,7 +88,7 @@ export class OtherQueryAssignedCallsListComponent implements OnInit, OnDestroy {
         this.childModalcallcenter.hide();
         this.callcenterload = false;
         this.callcenteronlypageservice.GetOtherQueryCallsByIncident(incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;

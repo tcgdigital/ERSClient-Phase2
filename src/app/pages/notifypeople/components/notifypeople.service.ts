@@ -67,7 +67,7 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
     public GetUserDepartmentNotificationMapperByIncident(incidentId: number,
         callback?: ((_: UserdepartmentNotificationMapperModel[]) => void)): void {
         this.userdepartmentNotificationMapperService.GetUserDepartmentNotificationMapperFromIncident(incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<UserdepartmentNotificationMapperModel>) => {
                 response.Records.forEach((item: UserdepartmentNotificationMapperModel) => {
@@ -84,7 +84,7 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
     public GetAllDepartmentMatrix(departmentId: number, incidentId: number,
         callback?: ((_: NotifyPeopleModel[]) => void)): void {
         this.userPermissionService.GetAllDepartmentMatrix()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((departments: ResponseModel<DepartmentModel>) => {
                 this.departmentIdProjection = '';
@@ -148,7 +148,7 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
                 this.allDepartments = item;
             })
             .flatMap((result) => this.userPermissionService.GetAllDepartmentUsersFromDepartmentIdProjection(departmentIdProjection))
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((userPermissions: ResponseModel<UserPermissionModel>) => {
 
@@ -257,7 +257,7 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
                 this.currentDepartment = departmentResponse;
             })
             .flatMap(() => this.templateService.GetByEmergencySituationId(+emargencySituation))
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<TemplateModel>) => {
                 let template: TemplateModel = result.Records.find((item: TemplateModel) => {
@@ -293,10 +293,14 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
     }
 
     public CreateAppendedTemplate(appendedTemplate: AppendedTemplateModel,
-        incidentId: number, departmentId: number, callback?: ((_: boolean) => void)): void {
+        incidentId: number, callback?: ((_: boolean) => void)): void {
+        debugger;
         delete appendedTemplate.Active;
         this.appendedTemplateService.CreateAppendedTemplate(appendedTemplate)
             .subscribe((appendedTemplate: AppendedTemplateModel) => {
+                this.NotifyTemplate(appendedTemplate, incidentId, callback);
+
+                /*
                 this.notificationContactsWithTemplates = [];
 
                 this.notifyPeopleModels.forEach((item: NotifyPeopleModel, index: number) => {
@@ -328,7 +332,45 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
                         }
                         console.log(`Error: ${error.message}`);
                     });
+                */
+
             }, (error: any) => {
+                console.log(`Error: ${error.message}`);
+            });
+    }
+
+    public NotifyTemplate(template: AppendedTemplateModel, incidentId: number,
+        callback?: ((_: boolean) => void)): void {
+        debugger;
+        this.notificationContactsWithTemplates = [];
+
+        this.notifyPeopleModels.forEach((item: NotifyPeopleModel, index: number) => {
+            let notificationContactsWithTemplate: NotificationContactsWithTemplateModel = new NotificationContactsWithTemplateModel();
+            notificationContactsWithTemplate.UserId = item.User.UserProfileId;
+            notificationContactsWithTemplate.IsActive = true;
+            notificationContactsWithTemplate.IncidentId = incidentId;
+            notificationContactsWithTemplate.DepartmentId = item.DepartmentId;
+            notificationContactsWithTemplate.CreatedBy = +UtilityService.GetFromSession('CurrentUserId');
+            notificationContactsWithTemplate.UserName = item.User.Name;
+            notificationContactsWithTemplate.SituationId = GlobalConstants.EmergencySituationEnum
+                .find(x => x.EmergencySituationId === template.EmergencySituationId).enumtype;
+            notificationContactsWithTemplate.AttachmentSingle = '';
+            notificationContactsWithTemplate.ContactNumber = item.User.MainContact;
+            notificationContactsWithTemplate.AlternetContactNumber = item.User.AlternateContact;
+            notificationContactsWithTemplate.EmailId = item.User.Email;
+            notificationContactsWithTemplate.Message = template.Description;
+            this.notificationContactsWithTemplates.push(notificationContactsWithTemplate);
+        });
+
+        this.CreateBulkInsert(incidentId, this.notificationContactsWithTemplates)
+            .subscribe((response: NotificationContactsWithTemplateModel[]) => {
+                if (callback) {
+                    callback(true);
+                }
+            }, (error: any) => {
+                if (callback) {
+                    callback(false);
+                }
                 console.log(`Error: ${error.message}`);
             });
     }

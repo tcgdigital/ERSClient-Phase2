@@ -40,7 +40,7 @@ export class TemplateListComponent implements OnInit, OnDestroy {
 
     getTemplates(): void {
         this.templateService.GeAllEmailTemplates()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<TemplateModel>) => {
                 this.templates = response.Records;
@@ -100,7 +100,7 @@ export class TemplateListComponent implements OnInit, OnDestroy {
     invokeSearch(query: string): void {
         if (query !== '') {
             this.templateService.GetQuery(query.replace(/(\'\|)/ig, ''))
-                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: ResponseModel<TemplateModel>) => {
                     this.templates = response.Records.filter(a => a.ActiveFlag == 'Active');

@@ -107,7 +107,7 @@ export class CareMemberTrackerComponent implements OnInit, OnDestroy {
 
                 this.careMemberTrackerService.GetCareMembersByAffectedPersonId
                     (this.currentIncidentId, affectedPersonId)
-                    .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                    // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                     .takeUntil(this.ngUnsubscribe)
                     .subscribe((response: ResponseModel<CareMemberTrackerModel>) => {
                         this.careMembers = response.Records;
@@ -138,7 +138,7 @@ export class CareMemberTrackerComponent implements OnInit, OnDestroy {
 
                     this.affectedPeopleService.GetCurrentCareMember
                         (createdCareresponse.AffectedPersonId, createdCareresponse.CareEngagementTrackId)
-                        .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                        // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                         .takeUntil(this.ngUnsubscribe)
                         .subscribe((affectedPersonResponse: ResponseModel<AffectedPeopleModel>) => {
 

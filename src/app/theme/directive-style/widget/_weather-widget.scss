@@ -1,6 +1,8 @@
 @import '../../config/config';
-@import url(../../../../assets/css/weather-icons.css);
-@import url(../../../../assets/css/weather-icons-wind.css);
+// @import '../../../../assets/css/weather-icons';
+// @import '../../../../assets/css/weather-icons-wind';
+@import url(./assets/css/weather-icons.css);
+@import url(./assets/css/weather-icons-wind.css);
 .weather-container {
     padding-left: 10px;
     .current-weather {

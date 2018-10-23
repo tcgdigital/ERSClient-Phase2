@@ -93,7 +93,7 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
         this.LatestBroadcastModels = new Array<BroadcastWidgetModel>();
 
         this.broadcastWidgetService.GetLatestBroadcastsByIncidentAndDepartment(departmentId, incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .flatMap(x => x)
             .subscribe(a => {
@@ -113,7 +113,7 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
         const data: BroadcastWidgetModel[] = [];
 
         this.broadcastWidgetService.GetAllPublishedBroadcastsByIncident(this.currentIncidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .flatMap((x) => x)
             .subscribe((x) => {
@@ -133,7 +133,7 @@ export class BroadcastWidgetComponent implements OnInit, OnDestroy {
 
         this.broadcastWidgetService.GetAllBroadcastsByIncidentAndDepartment
             (this.currentDepartmentId, this.currentIncidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .flatMap((x) => x)
             .subscribe((x) => {

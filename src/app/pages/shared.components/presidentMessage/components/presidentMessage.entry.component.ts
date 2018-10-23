@@ -100,7 +100,7 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
 
     getTemplateMedias(): void {
         this.templateMediaService.GetAll()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<TemplateMediaModel>) => {
                 this.templateMedias = response.Records
@@ -115,7 +115,7 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
             const templateId = evt.target.value;
 
             this.presidentMessageService.GetContentFromTemplate(this.currentIncidentId, this.currentDepartmentId, +templateId)
-                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: any) => {
                     this.templateContent = `${response.Body}`;

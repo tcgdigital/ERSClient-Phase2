@@ -139,7 +139,7 @@ export class ArchiveDashboardComponent implements OnInit, OnDestroy {
      */
     private GetIncidentAndDepartment(): void {
         this.incidentService.Get(this.archievedIncidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            //.debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .map((record: IncidentModel) => {
                 this.currentIncident = new KeyValue(record.EmergencyName, record.IncidentId);

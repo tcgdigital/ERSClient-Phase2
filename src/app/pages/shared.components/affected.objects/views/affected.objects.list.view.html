@@ -53,8 +53,10 @@
                             <i class="fa fa-check fa-lg fontGreen" aria-hidden="true" [hidden]="affectedObject.IsVerified == false"></i>
                             <i class="fa fa-question fa-lg fontAmber" aria-hidden="true" [hidden]="affectedObject.IsVerified == true"></i>
                         </td>
-                        <td data-title="Interaction Details"><i class="fa fa-comments" [ngClass]="{'trailActiveButtonStyle': affectedObject.commlength, 'trailNormalButtonStyle': !affectedObject.commlength}"
-                                (click)="openChatTrails(affectedObject.AffectedObjectId)"></i>
+                        <td data-title="Interaction Details">
+                            <i class="fa fa-comments" [ngClass]="{'trailActiveButtonStyle': affectedObject.commlength, 'trailNormalButtonStyle': !affectedObject.commlength}"
+                                (click)="openChatTrails(affectedObject.AffectedObjectId)">
+                            </i>
                         </td>
                         <td data-title="Interaction Details">
                             <span *ngIf="!isArchive">
@@ -70,7 +72,8 @@
 
 
 
-<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -128,7 +131,6 @@
                 </button>
             </div>
             <div class="modal-body">
-                <!-- <div class="holderStyle"> -->
                 <div class="row modalBodyHeaderStyle">
                     <div class="col-md-6 col-sm-12 form-group">
                         <label class="lebelHeaderStyle"><strong>AWB</strong></label>
@@ -168,7 +170,8 @@
 
                         <div class="row">
                             <div class="form-group col-md-6 col-sm-12">
-                                <md-checkbox id="IsVerified" [disabled]="true" [(ngModel)]="affectedObjectDetails.IsVerified" aria-label="Add" ng-disabled="true">
+                                <md-checkbox id="IsVerified" [disabled]="true" [(ngModel)]="affectedObjectDetails.IsVerified"
+                                    aria-label="Add" ng-disabled="true">
                                     Verification Status:
                                 </md-checkbox>
                             </div>
@@ -205,7 +208,8 @@
                                             <strong>{{caller.ContactNumber}}&nbsp;</strong>
                                         </td>
                                         <td data-title="Select as NOK">
-                                            <md-checkbox [(ngModel)]="caller.IsNok" (change)="saveNok(affectedObjectDetails.AffectedObjectId,caller,$event)" aria-label="Add"></md-checkbox>
+                                            <md-checkbox [(ngModel)]="caller.IsNok" (change)="saveNok(affectedObjectDetails.AffectedObjectId,caller,$event)"
+                                                aria-label="Add"></md-checkbox>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -217,14 +221,14 @@
                 <div class="row">
                     <div class="form-group col-sm-12 col-md-6">
                         <label for="DiscussionNote">Identification Details:</label>
-                        <input value="{{affectedObjectDetails.IdentificationDesc}}" [(ngModel)]="affectedObjectDetails.IdentificationDesc" type="text"
-                            class="form-control" />
+                        <input value="{{affectedObjectDetails.IdentificationDesc}}" [(ngModel)]="affectedObjectDetails.IdentificationDesc"
+                            type="text" class="form-control" />
                     </div>
 
                     <div class="form-group col-sm-12 col-md-6">
                         <label for="DiscussionNote">Remarks:</label>
-                        <input value="{{affectedObjectDetails.Remarks}}" [(ngModel)]="affectedObjectDetails.Remarks" type="text" class="form-control"
-                        />
+                        <input value="{{affectedObjectDetails.Remarks}}" [(ngModel)]="affectedObjectDetails.Remarks"
+                            type="text" class="form-control" />
                     </div>
                 </div>
 

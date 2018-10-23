@@ -518,6 +518,10 @@ export class GlobalConstants {
             caption: 'Found'
         }, {
             key: 3,
+            value: 'Damaged',
+            caption: 'Damaged'
+        }, {
+            key: 4,
             value: 'Others',
             caption: 'Others'
         }

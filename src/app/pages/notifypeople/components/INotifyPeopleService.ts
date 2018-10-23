@@ -19,11 +19,15 @@ export interface INotifyPeopleService extends IServiceInretface<UserDepartmentNo
 
     FindIdRecursively(notifyPeopleModel: NotifyPeopleModel[], id: number): void;
 
-    NotifyPeopleCall(checkedIds: number[], departmentId: number, incidentId: number, 
+    NotifyPeopleCall(checkedIds: number[], departmentId: number, incidentId: number,
         emargencySituation: EmergencySituation, mediaType: TemplateMediaType,
         callback?: ((_: TemplateModel) => void)): void;
 
-    CreateAppendedTemplate(appendedTemplate: AppendedTemplateModel, incidentId: number, departmentId: number, callback?: ((_: boolean) => void)): void
+    CreateAppendedTemplate(appendedTemplate: AppendedTemplateModel, incidentId: number,
+        callback?: ((_: boolean) => void)): void
+
+    NotifyTemplate(template: AppendedTemplateModel, incidentId: number,
+        callback?: ((_: boolean) => void)): void
 
     GetGeneralNotificationMessageTemplate(): Observable<MessageTemplate>;
 }

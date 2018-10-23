@@ -276,6 +276,9 @@ module.exports = function (options) {
                 from: 'src/assets/images',
                 to: 'assets/images'
             }, {
+                from: 'src/assets/css',
+                to: 'assets/css'
+            }, {
                 from: 'src/assets/sounds',
                 to: 'assets/sounds'
             }, {

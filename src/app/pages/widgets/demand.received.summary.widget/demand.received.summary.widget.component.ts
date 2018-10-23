@@ -309,12 +309,12 @@ export class DemandReceivedSummaryWidgetComponent implements OnInit, OnDestroy, 
         }
 
         this.demandStatusLogService.GetAllByIncidentTargetDepartment(this.incidentId, targetDepartmentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((demandStatusLogModels: ResponseModel<DemandStatusLogModel>) => {
 
                 this.incidentService.GetIncidentById(this.incidentId)
-                    .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                    // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                     .takeUntil(this.ngUnsubscribe)
                     .subscribe((incidentModel: IncidentModel) => {
                         WidgetUtilityService.GetGraphDemand(targetDepartmentId, Highcharts,
