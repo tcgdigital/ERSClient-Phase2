@@ -33,7 +33,7 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
 
     getUserProfiles(): void {
         this.userProfileService.GetAllUsers()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<UserProfileModel>) => {
                 this.userProfiles = response.Records;
@@ -48,7 +48,7 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
 
     getInvalidUserProfiles(callback: () => void = null): void {
         this.userProfileService.GetAllInvalidRecords()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvalidUserProfileModel>) => {
                 this.invalidUserProfiles = response.Records;
@@ -146,7 +146,7 @@ export class UserProfileListComponent implements OnInit, OnDestroy {
                     query = query.replace("'false'", "false");
             }
             this.userProfileService.GetQuery(query)
-                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: ResponseModel<UserProfileModel>) => {
                     this.userProfiles = response.Records;

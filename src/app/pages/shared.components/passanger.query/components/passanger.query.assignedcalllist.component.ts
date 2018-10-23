@@ -89,7 +89,7 @@ export class PassangerQueryAssignedCallsListComponent implements OnInit, OnDestr
         this.callcenterload = false;
 
         this.callcenteronlypageservice.GetPassengerQueryCallsByIncident(incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ExternalInputModel>) => {
                 this.allAssignedCalls = response.Records;

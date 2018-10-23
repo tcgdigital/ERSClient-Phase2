@@ -100,7 +100,7 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit, OnDestroy {
 
     public fetchBorrowedIncident(incidentId: number): void {
         this.readOnlyIncidentWidgetService.GetIncidentByIncidentId(incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((item: IncidentModel) => {
                 this.BorrowedIncidentName = item.EmergencyName;
@@ -329,7 +329,7 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit, OnDestroy {
 
     private FetchIncident(): void {
         this.readOnlyIncidentWidgetService.GetIncidentByIncidentId(this.incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((item: IncidentModel) => {
                 this.incidentDataExchangeModel = new IncidentDataExchangeModel();

@@ -32,7 +32,7 @@ export class BroadcastDepartmentComponent {
 
     getAlldepartments(): void {
         this.departmentService.GetAll()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((departments: ResponseModel<DepartmentModel>) => {
                 this.departments = departments.Records;

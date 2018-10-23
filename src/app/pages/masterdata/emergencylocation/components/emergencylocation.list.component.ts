@@ -69,7 +69,7 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
 
     getAllEmergencyLocations(): void {
         this.emergencyLocationService.GetAllEmergencyLocations()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EmergencyLocationModel>) => {
                 this.emergencyLocations = response.Records;
@@ -91,7 +91,7 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
                     query = query.replace("'false'", 'false');
             }
             this.emergencyLocationService.GetQuery(query)
-                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((response: ResponseModel<EmergencyLocationModel>) => {
                     this.emergencyLocations = response.Records;

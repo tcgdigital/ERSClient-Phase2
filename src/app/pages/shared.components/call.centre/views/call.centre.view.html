@@ -226,19 +226,19 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="form-group col-md-4 col-sm-12" [hidden]="enquiryType!=EnquiryType.Passenger">
+                        <div class="form-group col-md-2 pt-md-3 col-sm-12" [hidden]="enquiryType!=EnquiryType.Passenger">
                             <md-checkbox id="Identified" formControlName="IsIdentified" [checked]="IsIdentified" (change)="onChange($event)" aria-label="Add">
                                 Identified
                             </md-checkbox>
                         </div>
-                        <div class="form-group col-md-4 col-sm-12" [hidden]="enquiryType!=EnquiryType.Passenger">
+                        <div class="form-group col-md-5 col-sm-12" [hidden]="enquiryType!=EnquiryType.Passenger">
                             <label for="Passengers">Passenger Name <span class="required">*</span></label>
 
                             <autocomplete #passengerAutocomplete [items]="passengers" (notify)="onNotifyPassenger($event)" (InvokeAutoCompleteReset)="onResetPassenger()"
                                 [actionLinks]="actionLinks" [initialvalue]="initialvalue" [isEnabled]="IsIdentified" (actionClickHandler)="onPDAActionClick($event)">
                             </autocomplete>
                         </div>
-                        <div class="form-group col-md-4 col-sm-12" [hidden]="enquiryType!=EnquiryType.Passenger">
+                        <div class="form-group col-md-5 col-sm-12" [hidden]="enquiryType!=EnquiryType.Passenger">
                             <label for="Unidentified">Unidentified <span class="required">*</span></label>
 
                             <textarea rows="1" id="Unidentified" formControlName="Unidentified" class="form-control no-resize" name="Unidentified" placeholder="Enter Unidentified"></textarea>

@@ -45,7 +45,7 @@ export class EmergencyDepartmentComponent implements OnInit, OnDestroy {
 
     getEmergencyTypes(): void {
         this.emergencyTypeService.GetAll()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                 this.emergencyTypeItems = response.Records;
@@ -67,7 +67,7 @@ export class EmergencyDepartmentComponent implements OnInit, OnDestroy {
     onNotify(message: KeyValue): void {
         this.selectedEmergencyType = message.Value;
         this.emergencyDepartmentService.GetFilterByEmergencyType(message.Value)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EmergencyDepartmentModel>) => {
                 this.departmentsForEmergency = this.SetAllSelectedToFalse(this.departmentsForEmergencyConstant);
@@ -138,7 +138,7 @@ export class EmergencyDepartmentComponent implements OnInit, OnDestroy {
         this.credential = UtilityService.getCredentialDetails();
 
         this.departmentService.GetAll()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;

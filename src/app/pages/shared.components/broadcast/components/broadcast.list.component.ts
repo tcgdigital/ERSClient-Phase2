@@ -38,7 +38,7 @@ export class BroadcastListComponent implements OnInit, OnDestroy {
 
     getBroadCasts(departmentId, incidentId): void {
         this.broadCastService.Query(departmentId, incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<BroadCastModel>) => {
                 this.broadcastMessages = response.Records;

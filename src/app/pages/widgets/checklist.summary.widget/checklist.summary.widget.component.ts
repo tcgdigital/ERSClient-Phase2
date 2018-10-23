@@ -111,7 +111,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
         this.checkListSummery = new CheckListSummeryModel();
 
         this.checklistSummaryWidgetService.GetActionableCount(incidentId, departmentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((checkListSummeryObservable) => {
                 this.checkListSummery = checkListSummeryObservable;
@@ -126,7 +126,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
         const uniqueDepartments: DepartmentModel[] = [];
 
         this.checklistSummaryWidgetService.GetAllDepartmentChecklists(this.incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<ActionableModel>) => {
                 result.Records.forEach((record) => {
@@ -184,7 +184,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
         const uniqueDepartments: DepartmentModel[] = [];
 
         this.checklistSummaryWidgetService.GetAllSubDepartmentChecklists(this.incidentId, this.initiatedDepartmentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<ActionableModel>) => {
                 result.Records.forEach((record) => {
@@ -241,7 +241,7 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
         }
 
         this.checklistTrailService.GetChecklistTrailByDepartmentIdandIncidentId(departmentId, this.currentIncidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((resultSet: ResponseModel<ChecklistTrailModel>) => {
                 this.showGraph = true;
@@ -260,12 +260,12 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
         const requesterDepartmentId: number = resultSet[0].DepartmentId;
 
         this.actionableStatusLogService.GetAllByIncidentDepartment(this.incidentId, requesterDepartmentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((actionableStatusLogModels: ResponseModel<ActionableStatusLogModel>) => {
 
                 this.incidentService.GetIncidentById(this.incidentId)
-                    .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                    // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                     .takeUntil(this.ngUnsubscribe)
                     .subscribe((incidentModel: IncidentModel) => {
                         WidgetUtilityService.GetGraphCheckList(requesterDepartmentId, Highcharts, actionableStatusLogModels.Records,

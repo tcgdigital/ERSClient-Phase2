@@ -123,12 +123,12 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     openChildActionable(actionable: ActionableModel): void {
         actionable['expanded'] = !actionable['expanded'];
         this.actionableService.GetChildActionables(actionable.ChklistId, this.currentIncident)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((responseActionable: ResponseModel<ActionableModel>) => {
 
                 this.departmentService.GetDepartmentNameIds()
-                    .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                    // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                     .takeUntil(this.ngUnsubscribe)
                     .subscribe((response: ResponseModel<DepartmentModel>) => {
 
@@ -171,7 +171,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
 
     getActionableTrails(actionaId: number): void {
         this.checklistTrailService.GetTrailByActionableId(actionaId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ChecklistTrailModel>) => {
                 this.checklistTrails = response.Records;
@@ -202,7 +202,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
             const baseUrl = GlobalConstants.EXTERNAL_URL;
 
             this.fileUploadService.uploadFiles<string>(baseUrl + 'api/fileUpload/upload', this.filesToUpload)
-                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((result: string) => {
                     this.filepathWithLinks = `${GlobalConstants.EXTERNAL_URL}UploadFiles/${result.replace(/^.*[\\\/]/, '')}`;
@@ -280,7 +280,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         const mappers: ChecklistMapper[] = [];
 
         this.actionableService.GetAllOpenByIncidentId(incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<ActionableModel>) => {
                 this.actionableWithParentsChilds = response.Records;
@@ -325,7 +325,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
         }
 
         this.actionableService.Update(this.editActionableModel)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ActionableModel) => {
                 this.toastrService.success('Actionable comments updated successfully.', 'Success', this.toastrConfig);
@@ -368,7 +368,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     private batchUpdate(data: any[]) {
         this.listActionableSelected = data;
         this.actionableService.BatchOperation(data)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((x) => {
                 this.SaveChecklistTrails(this.listActionableSelected);
@@ -380,13 +380,13 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     private SaveChecklistTrails(data: any[]): void {
         this.checklistTrails = [];
         this.departmentService.GetAllActiveDepartments()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((allResultDepartments: ResponseModel<DepartmentModel>) => {
                 this.allDepartments = allResultDepartments.Records;
 
                 this.actionableService.GetAllByIncident(+UtilityService.GetFromSession('CurrentIncidentId'))
-                    .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                    // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                     .takeUntil(this.ngUnsubscribe)
                     .subscribe((resultsActionable: ResponseModel<ActionableModel>) => {
                         data.forEach((item: ActionableModel) => {
@@ -415,7 +415,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                         });
 
                         this.checklistTrailService.BatchOperation(this.checklistTrails)
-                            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                             .takeUntil(this.ngUnsubscribe)
                             .subscribe((result: ResponseModel<BaseModel>) => {
                                 this.toastrService.success('Actionables updated successfully.', 'Success', this.toastrConfig);
@@ -480,7 +480,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
 
     private GetListOfChildActionables(checkListId: number, incidentId: number, callback?: Function): void {
         this.actionableService.GetAcionableByIncidentIdandCheckListId(incidentId, checkListId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((res: ResponseModel<ActionableModel>) => {
                 if (callback) {

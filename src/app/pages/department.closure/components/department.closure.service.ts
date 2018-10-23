@@ -71,7 +71,7 @@ export class DepartmentClosureService extends ServiceBase<DepartmentClosureModel
             .flatMap((x) => this._dataServiceForDemand.Query()
                 .Filter(`IncidentId eq ${incidentId} and TargetDepartmentId eq ${departmentId} and IsCompleted ne true`)
                 .Execute())
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((demands: ResponseModel<DemandModel>) => {
                 if (this.IsDepartmentClosureSubmit == false) {

@@ -113,7 +113,7 @@ export class AffectedObjectsListComponent implements OnInit {
 
     openChatTrails(affectedObjectId): void {
         this.affectedObjectService.GetCommunicationByAWB(affectedObjectId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<AffectedObjectModel>) => {
                 const responseModel: AffectedObjectModel = response.Records[0];
@@ -156,7 +156,7 @@ export class AffectedObjectsListComponent implements OnInit {
         }
 
         this.affectedObjectService.GetCallerListForAffectedObject(affectedObject.AffectedObjectId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EnquiryModel>) => {
                 this.callers = response.Records.map((x) => {
@@ -206,7 +206,7 @@ export class AffectedObjectsListComponent implements OnInit {
 
     searchAffectedObject(query: string, incidentId: number): void {
         this.affectedObjectService.GetAffectedObjectQuery(incidentId, query)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<InvolvePartyModel>) => {
                 this.affectedObjects = this.affectedObjectService.FlattenAffactedObjects(response.Records[0]);
@@ -236,7 +236,7 @@ export class AffectedObjectsListComponent implements OnInit {
 
     getCurrentDepartmentName(departmentId): void {
         this.departmentService.Get(departmentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: DepartmentModel) => {
                 this.currentDepartmentName = response.DepartmentName;

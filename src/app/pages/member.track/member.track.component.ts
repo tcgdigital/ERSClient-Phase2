@@ -224,7 +224,7 @@ export class MemberTrackComponent implements OnInit, OnDestroy, AfterViewChecked
             })
             .flatMap((_) => this.membertrackService.GetAllByIncidentDepartment(departmentId, incidentId))
             .map((response1: ResponseModel<MemberCurrentEngagementModel>) => { this.memberTracks = response1.Records; })
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe(() => {
                 this.isChecked = false;
@@ -262,14 +262,14 @@ export class MemberTrackComponent implements OnInit, OnDestroy, AfterViewChecked
 
     open(id) {
         this.membertrackService.GetAllHistory(id, this.currentDepartmentId, this.currentIncidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<MemberEngagementTrackModel>) => {
                 this.memberHistory = response.Records;
 
                 this.memberHistory.forEach((x) => {
                     this.userProfileService.Get(x.CreatedBy)
-                        .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                        // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                         .takeUntil(this.ngUnsubscribe)
                         .subscribe((response1: UserProfileModel) => {
                             x['createdby'] = response1.Name;

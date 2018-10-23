@@ -91,7 +91,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.isShowViewReadonlyCrisis = UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'ViewReadonlyCrisis');
 
         this.emergencyLocationService.GetAllActiveEmergencyLocations()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<EmergencyLocationModel>) => {
                 result.Records.forEach((item: EmergencyLocationModel) => {
@@ -189,7 +189,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     getAllActiveOrganizations(): void {
         this.organizationService.GetAllActiveOrganizations()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<OrganizationModel>) => {
                 this.activeOrganizations = response.Records;
@@ -200,7 +200,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     getAllActiveAircraftTypes(): void {
         this.aircraftTypeService.GetAllActiveAircraftTypes()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<AircraftTypeModel>) => {
                 this.activeAircraftTypes = response.Records;
@@ -211,7 +211,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     getIncidentsToPickForReplication(): void {
         this.incidentService.GetLastConfiguredCountIncidents()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<IncidentModel>) => {
                 this.incidentsToPickForReplication = response.Records;
@@ -227,7 +227,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     public getAllActiveEmergencyTypes(): void {
         this.emergencyTypeService.GetAll()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                 this.activeEmergencyTypes = response.Records;

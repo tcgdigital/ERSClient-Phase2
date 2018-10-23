@@ -204,7 +204,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             .setValue(moment(new Date()).utc().format('DD-MMM-YYYY HH:mm'));
 
         this.emergencyLocationService.GetAllActiveEmergencyLocations()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((result: ResponseModel<EmergencyLocationModel>) => {
                 result.Records.forEach((item: EmergencyLocationModel) => {
@@ -230,7 +230,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
 
     getAllActiveEmergencyTypes(): void {
         this.emergencyTypeService.GetAllActive()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<EmergencyTypeModel>) => {
                 this.activeEmergencyTypes = response.Records;
@@ -241,7 +241,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
 
     getAllActiveOrganizations(): void {
         this.organizationService.GetAllActiveOrganizations()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<OrganizationModel>) => {
                 const org: OrganizationModel = response.Records.find((item: OrganizationModel) => {
@@ -264,7 +264,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             return false;
         }
         this.incidentService.GetLastConfiguredCountIncidents()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<IncidentModel>) => {
                 this.incidentsToPickForReplication = [];
@@ -308,7 +308,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
 
     getAllActiveAircraftTypes(): void {
         this.aircraftTypeService.GetAllActiveAircraftTypes()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<AircraftTypeModel>) => {
                 this.activeAircraftTypes = response.Records;
@@ -368,7 +368,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                     .find((x: IncidentModel) => x.IncidentId === +incidentId);
 
                 this.incidentService.GetFlightInfoFromIncident(+incidentId)
-                    .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                    // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                     .takeUntil(this.ngUnsubscribe)
                     .subscribe((itemFlight: FlightModel) => {
                         this.FillFlightFields(itemFlight);
@@ -986,7 +986,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             let localDate = new Date();
 
             this.timeZoneService.GetLocalTime(zi)
-                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .subscribe((result: ZoneIndicator) => {
                     localDate = new Date(result.CurrentTime);
                     if (callback) {

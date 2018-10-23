@@ -28,7 +28,7 @@ export class BroadCastDepartmentListComponent implements OnInit, OnDestroy {
 
     getBroadCastDepartmentMappings(): void {
         this.broadCastDepartmentService.Query(+this.initiatedDepartmentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<BroadCastDepartmentModel>) => {
                 this.BroadCastDepartments = response.Records;

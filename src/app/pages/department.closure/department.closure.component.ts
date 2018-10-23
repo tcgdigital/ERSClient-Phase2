@@ -125,7 +125,7 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
                 this.FillFormControls(this.departmentClosureModel);
             })
             .flatMap(_ => this.departmentClosureService.GetAllByIncidentDepartment(incidentId, this.currentDepartmentId))
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((resultDepartmentClosureModel: ResponseModel<DepartmentClosureModel>) => {
                 if (resultDepartmentClosureModel.Count > 0) {
@@ -146,7 +146,7 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
         this.submited = true;
         if (this.form.valid) {
             this.departmentClosureService.GetAllByIncidentDepartment(this.currentIncidentId, this.currentDepartmentId)
-                .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                 .takeUntil(this.ngUnsubscribe)
                 .subscribe((result: ResponseModel<DepartmentClosureModel>) => {
                     if (result.Count == 0) {
@@ -211,7 +211,7 @@ export class DepartmentClosureComponent implements OnInit, OnDestroy {
                     }
                     else {
                         this.departmentClosureService.GetAllByIncidentDepartment(this.currentIncidentId, this.currentDepartmentId)
-                            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                             .takeUntil(this.ngUnsubscribe)
                             .subscribe((result: ResponseModel<DepartmentClosureModel>) => {
                                 if (result.Count == 0) {

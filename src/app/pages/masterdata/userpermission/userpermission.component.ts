@@ -35,7 +35,7 @@ export class UserPermissionComponent implements OnDestroy {
 
     getUserProfiles(): void {
         this.userProfileService.GetForDirectory()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<UserProfileModel>) => {
                 this.userProfileItems = response.Records;
@@ -68,7 +68,7 @@ export class UserPermissionComponent implements OnDestroy {
     onNotify(message: KeyValue): void {
         this.selectedUser = message.Value;
         this.userPermissionService.GetFilterByUsers(message.Value)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<UserPermissionModel>) => {
                 this.SetAllSelectedToFalse(this.departmentsToViewConstant);
@@ -183,7 +183,7 @@ export class UserPermissionComponent implements OnDestroy {
         this.allSelectHOD = false;
         this.getUserProfiles();
         this.departmentService.GetAll()
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<DepartmentModel>) => {
                 this.departments = response.Records;

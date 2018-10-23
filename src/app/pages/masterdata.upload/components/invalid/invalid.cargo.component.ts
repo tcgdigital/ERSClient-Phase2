@@ -53,7 +53,7 @@ export class InvalidCargoListComponent implements OnInit, OnDestroy {
     getInvalidCargoRecords(): void {
         this._invalidRecordService.GetAllInvalidCargosByIncident(+this.IncidentId)
             .flatMap(x => x)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe(a => {
                 this.invalidCargoes.push(a);

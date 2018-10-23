@@ -42,7 +42,7 @@ export class InvalidGroundVictimListComponent implements OnInit, OnDestroy {
     getInvalidGroundVictims(): void {
         this._invalidRecordService.GetAllInvalidGroundVictimsByIncidentId(this.IncidentId)
             .flatMap(x => x)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe(a => {
                 this.invalidGroundVictims.push(a);

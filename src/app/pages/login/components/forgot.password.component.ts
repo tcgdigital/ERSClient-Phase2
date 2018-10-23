@@ -46,7 +46,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy, AfterViewInit
 
     public onBlurMethod(value): void {
         this.forgotPasswordService.GetEecurityQuestion(value)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((x) => {
                 this.SecurityQuestion = x;

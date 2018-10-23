@@ -39,7 +39,7 @@ export class PresidentMessageListComponent implements OnInit, OnDestroy {
 
     getPresidentMessages(departmentId: number, incidentId: number): void {
         this.presidentMessageService.Query(departmentId, incidentId)
-            .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: ResponseModel<PresidentMessageModel>) => {
                 this.PresidentsMessages = response.Records;
