@@ -6,8 +6,8 @@
             <div class="col-lg-2 col-md-6 col-12">
                 <div class="form-group">
                     <label for="IATA">IATA<span class="required">*</span></label>
-                    <input class="form-control" id="txtIATA" type="text" formControlName="IATA" ngControl="IATA"
-                        placeholder="Enter IATA" [(ngModel)]="emergencyLocation.IATA" autofocus />
+                    <input class="form-control" id="txtIATA" type="text" formControlName="IATA" ngControl="IATA" placeholder="Enter IATA" [(ngModel)]="emergencyLocation.IATA"
+                        autofocus />
                     <small *ngIf="!form.controls.IATA.valid" class="text-danger" [hidden]="!isInvalidForm">
                         Required.
                     </small>
@@ -16,8 +16,8 @@
             <div class="col-lg-2 col-md-6 col-12">
                 <div class="form-group">
                     <label for="Station">Airport Name<span class="required">*</span></label>
-                    <input class="form-control" id="txtAirportName" type="text" formControlName="AirportName"
-                        placeholder="Enter Airport Name" [(ngModel)]="emergencyLocation.AirportName" />
+                    <input class="form-control" id="txtAirportName" type="text" formControlName="AirportName" placeholder="Enter Airport Name"
+                        [(ngModel)]="emergencyLocation.AirportName" />
                     <small class="text-danger" *ngIf="!form.controls.AirportName.valid" [hidden]="!isInvalidForm">
                         Required.
                     </small>
@@ -27,8 +27,8 @@
             <div class="col-lg-2 col-md-6 col-12">
                 <div class="form-group">
                     <label for="City">City:<span class="required">*</span></label>
-                    <input class="form-control" id="txtCity" type="text" formControlName="City" placeholder="Enter City"
-                        [(ngModel)]="emergencyLocation.City" />
+                    <input class="form-control" id="txtCity" type="text" formControlName="City" placeholder="Enter City" [(ngModel)]="emergencyLocation.City"
+                    />
                     <small class="text-danger" *ngIf="!form.controls.City.valid" [hidden]="!isInvalidForm">
                         Required.
                     </small>
@@ -37,8 +37,8 @@
             <div class="col-lg-2 col-md-6 col-12">
                 <div class="form-group">
                     <label for="City">Country:<span class="required">*</span></label>
-                    <input class="form-control" id="txtCountry" type="text" formControlName="Country" placeholder="Enter Country"
-                        [(ngModel)]="emergencyLocation.Country" />
+                    <input class="form-control" id="txtCountry" type="text" formControlName="Country" placeholder="Enter Country" [(ngModel)]="emergencyLocation.Country"
+                    />
                     <small class="text-danger" *ngIf="!form.controls.Country.valid" [hidden]="!isInvalidForm">
                         Required.
                     </small>
@@ -47,8 +47,8 @@
             <div class="col-lg-3 col-md-6 col-sm-12">
                 <div style="margin-top: 20px;">
                     <!--<label for="Active"><span class="required"></span></label>-->
-                    <md-checkbox class="Marght" id="IsActive" formControlName="isActive" aria-label="IsActive"
-                        [(ngModel)]="emergencyLocation.Active" [checked]>
+                    <md-checkbox class="Marght" id="IsActive" formControlName="isActive" aria-label="IsActive" [(ngModel)]="emergencyLocation.Active"
+                        [checked]>
                         Active
                     </md-checkbox>
                 </div>
@@ -93,8 +93,8 @@
         <hr>
         <div class="row">
             <div class="col-lg-4 col-md-4 col-sm-12">
-                <input class="input_station" type="file" #inputFileStations id="fileuploadStations" formControlName="fileStation"
-                    class="form-control-file" (change)="getFileDetails($event)" />
+                <input class="input_station" type="file" #inputFileStations id="fileuploadStations" formControlName="fileStation" class="form-control-file"
+                    (change)="getFileDetails($event)" />
             </div>
             <div class="col-lg-4 col-md-4 col-sm-12">
                 <button class="btn btn-primary" type="button" [disabled]="isDisabledUpload" (click)="Upload()">Upload</button>
@@ -110,5 +110,6 @@
 </div>
 
 <div class="addbuttonHolder">
-    <a href="javascript:void(0);" (click)="showAddRegion(showAdd)"><strong>{{showAddText}}</strong></a>
+    <a href="javascript:void(0);" (click)="showAddRegion(showAdd)" *ngIf="(isShowAddEdit | accesibility:currentDepartmentId:'AddEditResponsibleStation')">
+        <strong>{{showAddText}}</strong></a>
 </div>

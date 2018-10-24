@@ -37,6 +37,7 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
     public showAddText: string = 'ADD RESPONSIBLE STATION';
     public timeZones: ITimeZone[];
     private ngUnsubscribe: Subject<any> = new Subject<any>();
+    public currentDepartmentId: number;
 
     constructor(private emergencyLocationService: EmergencyLocationService,
         private dataExchange: DataExchangeService<EmergencyLocationModel>,
@@ -54,6 +55,7 @@ export class EmergencyLocationEntryComponent implements OnInit, OnDestroy {
         this.isInvalidForm = false;
         this.initiateForm();
         this.credential = UtilityService.getCredentialDetails();
+        this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
 
         this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.OnEmergencyLocationUpdate,
             (model: EmergencyLocationModel) => this.onEmergencyLocationUpdate(model));

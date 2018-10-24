@@ -57,8 +57,9 @@
                                     <td data-title="Status">{{mediaRelease.MediaReleaseStatus}}&nbsp;</td>
                                     <td data-title="Date">{{mediaRelease.PublishedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
                                     <td data-title="Download Report">
-                                        <a *ngIf="mediaRelease.IsPublished" target="_blank" href="{{downloadPath + mediaRelease.MediaqueryId}}"><i
-                                                class="fa fa-download fa-2x" aria-hidden="true"></i></a>
+                                        <a *ngIf="mediaRelease.IsPublished" target="_blank" href="{{downloadPath + mediaRelease.MediaqueryId}}" *ngIf="(isShowDownload | accesibility:currentDepartmentId:'DownloadMediaRelease')">
+                                            <i class="fa fa-download fa-2x" aria-hidden="true"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             </tbody>
