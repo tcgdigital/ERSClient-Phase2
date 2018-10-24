@@ -29,6 +29,8 @@ export class MediaReleaseWidgetComponent implements OnInit, OnDestroy {
     public isShowViewAll: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
+    public isShowDownload: boolean = true;
+    public downloadMediaReleaseAccessCode: string = 'DownloadMediaRelease';
 
     /**
      * Creates an instance of MediaReleaseWidgetComponent.

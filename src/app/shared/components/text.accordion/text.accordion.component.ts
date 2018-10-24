@@ -12,7 +12,11 @@ import { TextAccordionModel } from './text.accordion.model';
     encapsulation: ViewEncapsulation.None
 })
 export class TextAccordionComponent implements OnInit, AfterViewInit {
-    @Input() accordionItems: Observable<TextAccordionModel[]>;
+    @Input() public accordionItems: Observable<TextAccordionModel[]>;
+    @Input() public currentDepartmentId: number = 0;
+    @Input() public accessibilityCodeForDownloadLink: string = '';
+
+    public isDownloadIconDisplayed: boolean = true;
 
     constructor(private _elementRef: ElementRef) {
     }
