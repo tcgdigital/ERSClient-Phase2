@@ -11,18 +11,20 @@
         margin-top: 19px;
         margin-left: 16px;
         border: none;
-        ul{
+        ul {
             box-shadow: 0 3px 4px rgba(0, 0, 0, 0.31);
             border-radius: 5px;
-        }
-        ul li>a {
-            font-size: 12px;
-        }
-        ul li>a:hover {
-            background-color: $sidemenu-active;
-        }
-        &:first-child{
-            padding-left: 10px;
+            li {
+                >a {
+                    font-size: 12px;
+                    &:hover {
+                        background-color: $sidemenu-active;
+                    }
+                }
+                &:first-child {
+                    padding-left: 10px;
+                }
+            }
         }
         li.disable-hover>a:hover {
             background-color: $default !important;
@@ -47,9 +49,6 @@
 @media screen and (min-width: $resSM-S) and (max-width: $resSM-E) {}
 
 @media screen and (min-width: $resMD-S) and (max-width: $resMD-E) {
-    .branding .command-icons {
-        // max-width: 12%;
-    }
     .command-menu {
         position: fixed;
         z-index: 100;
