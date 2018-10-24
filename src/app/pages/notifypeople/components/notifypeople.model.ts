@@ -82,9 +82,9 @@ export class TemplateMessage {
     public AdditionalText: string;
 
     constructor(templateId: number, subject: string, body: string, additionalText: string){
-        this.TemplateId = templateId;
-        this.Subject = subject;
-        this.Body = body;
-        this.AdditionalText = additionalText;
+        this.TemplateId = (templateId == undefined)? 0: templateId;
+        this.Subject = (subject == undefined)? '': subject;
+        this.Body = (body == undefined)? '': body;
+        this.AdditionalText = (additionalText == undefined)? '': additionalText;
     }
 }

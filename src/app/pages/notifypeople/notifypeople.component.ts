@@ -182,8 +182,10 @@ export class NotifyPeopleComponent implements OnInit {
                 (checkedIds, this.currentDepartmentId, this.currentIncidentId,
                 EmergencySituation.GeneralNotification, TemplateMediaType.Email,
                 (item: TemplateModel) => {
+                    debugger;
                     this.SetTemplateObject(item);
                     this.customMessageForm.patchValue({
+                        MessageTemplateId: item.TemplateId,
                         MessageData: item.Description
                     });
                     this.childModalCustomNoificationMessage.show();
@@ -224,7 +226,9 @@ export class NotifyPeopleComponent implements OnInit {
     }
 
     public saveCustomNotificationMessage(formData: any): void {
+        this.appendedTemplate.TemplateId = this.customMessageForm.controls['MessageTemplateId'].value;
         this.appendedTemplate.Description = this.customMessageForm.controls['MessageData'].value;
+
         this.saveCustomNotificationProcess(() => {
             this.hideCustomNoificationMessage();
         });
@@ -262,10 +266,12 @@ export class NotifyPeopleComponent implements OnInit {
 
     private resetNotificationForm(): void {
         this.eventMessageForm = this.formBuilder.group({
+            MessageTemplateId: new FormControl('0'),
             AdditionalData: new FormControl('', [Validators.required, Validators.maxLength(1000)])
         });
 
         this.customMessageForm = this.formBuilder.group({
+            MessageTemplateId: new FormControl('0'),
             MessageData: new FormControl('', [Validators.required, Validators.maxLength(1000)])
         })
     }
