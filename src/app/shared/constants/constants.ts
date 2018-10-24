@@ -1979,7 +1979,8 @@ export class GlobalConstants {
             order: 6
         }, {
 
-            id: 'emergencylocation',
+            id: 'ResponsibleStation',
+            //id: 'emergencylocation',
             title: 'Responsible Station',
             // icon: 'fa fa-twitter fa-2x',
             url: '/pages/masterdata/affectedstation',

@@ -5,7 +5,7 @@ import {
     ResponseModel, DataExchangeService, SearchConfigModel,
     SearchTextBox, SearchDropdown,
     NameValue,
-    GlobalConstants,
+    GlobalConstants,UtilityService
 } from '../../../../shared';
 import { Observable, Subject } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
@@ -22,6 +22,9 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
     expandSearch: boolean = false;
     searchValue: string = 'Expand Search';
     private ngUnsubscribe: Subject<any> = new Subject<any>();
+    public isShowAddEdit: boolean = true;
+    public isShowDelete : boolean = true;
+    public currentDepartmentId: number;
 
     constructor(private emergencyLocationService: EmergencyLocationService,
         private dataExchange: DataExchangeService<EmergencyLocationModel>,
@@ -41,6 +44,7 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.getAllEmergencyLocations();
         this.initiateSearchConfigurations();
+        this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
 
         this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.EmergencyLocationModelSaved,
             (model: EmergencyLocationModel) => {
