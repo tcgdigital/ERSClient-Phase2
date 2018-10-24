@@ -38,7 +38,7 @@ export class NotificationContactsWithTemplateModel extends BaseModel {
     public ContactNumber: string;
     public AlternetContactNumber: string;
     public EmailId: string;
-    public Message: string;
+    public Message: TemplateMessage;
 
     constructor() {
         super();
@@ -54,8 +54,7 @@ export class NotificationContactsWithTemplateModel extends BaseModel {
         this.ContactNumber = '';
         this.AlternetContactNumber = '';
         this.EmailId = '';
-        this.Message = '';
-
+        this.Message = new TemplateMessage(0, '', '', '');
     }
 }
 
@@ -74,4 +73,18 @@ export class UserDepartmentNotificationMapper extends BaseModel {
 
 export class MessageTemplate {
     public GeneralMessageTemplate: string;
+}
+
+export class TemplateMessage {
+    public TemplateId: number;
+    public Subject: string;
+    public Body: string;
+    public AdditionalText: string;
+
+    constructor(templateId: number, subject: string, body: string, additionalText: string){
+        this.TemplateId = templateId;
+        this.Subject = subject;
+        this.Body = body;
+        this.AdditionalText = additionalText;
+    }
 }
