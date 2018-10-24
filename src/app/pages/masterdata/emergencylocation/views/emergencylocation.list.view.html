@@ -43,10 +43,10 @@
                             </md-checkbox>
                         </td>
                         <td data-title="Edit">
-                            <i class="fa fa-edit fa-2x" (click)="UpdateEmergencyLocation(emergencyloc)"></i>
+                            <i class="fa fa-edit fa-2x" (click)="UpdateEmergencyLocation(emergencyloc)" *ngIf="(isShowAddEdit | accesibility:currentDepartmentId:'AddEditResponsibleStation')"></i>
                         </td>
                         <td data-title="Delete">
-                            <i class="fa fa-trash-o fa-2x" aria-hidden="true" (click)="deleteStation(emergencyloc)"></i>
+                            <i class="fa fa-trash-o fa-2x" aria-hidden="true" (click)="deleteStation(emergencyloc)" *ngIf="(isShowDelete | accesibility:currentDepartmentId:'DeleteResponsibleStation')"></i>
                         </td>
                     </tr>
                 </tbody>
