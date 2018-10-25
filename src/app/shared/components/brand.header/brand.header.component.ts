@@ -2,11 +2,12 @@ import {
     Component, ViewEncapsulation,
     Output, EventEmitter, Input, OnInit
 } from '@angular/core';
-import { GlobalStateService, UtilityService } from '../../services';
+import { GlobalStateService, UtilityService, } from '../../services';
 import { Router } from '@angular/router';
 import * as jwtDecode from 'jwt-decode';
 import { AuthenticationService } from '../../../pages/login/components/authentication.service';
 import { GlobalConstants } from '../../constants/constants';
+import { KeyValue } from '../../models/base.model';
 
 @Component({
     selector: '[brand-header]',
@@ -30,20 +31,27 @@ export class BrandHeaderComponent implements OnInit {
     public logoImage: string = 'assets/images/logo_pal1.png';
     public logoUrl: string = '#';
     public enabledPassword: boolean = !GlobalConstants.AD_AUTH_ENABLED;
-    constructor(private router: Router, private authenticationService: AuthenticationService) {
+    public isShow: boolean = true;
+    public currentDepartmentId: number;
+
+    constructor(private router: Router, private authenticationService: AuthenticationService,
+        private globalState: GlobalStateService) {
     }
 
     ngOnInit(): void {
         const DocumentFilePath = 'CMS Guide.pdf';
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.HelpFileFath = './assets/static-content/' + DocumentFilePath.replace(/^.*[\\\/]/, '');
         const Extension = DocumentFilePath.replace(/^.*[\\\/]/, '').split('.').pop();
         this.FileName = 'HelpFile.' + Extension;
         const token = UtilityService.GetFromSession('access_token');
-        if(token){
+        if (token) {
             const tokenData = jwtDecode(token);
-            if(tokenData && tokenData.UserName)
+            if (tokenData && tokenData.UserName)
                 this.userName = tokenData.UserName;
         }
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
+            (model: KeyValue) => { this.currentDepartmentId = model.Value; });
     }
 
     public onHambargerClicked($event): void {
@@ -68,4 +76,5 @@ export class BrandHeaderComponent implements OnInit {
     public onChangePasswordClicked($event): void {
         this.changePasswordClicked.emit($event);
     }
+
 }

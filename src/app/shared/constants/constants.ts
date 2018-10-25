@@ -1132,7 +1132,7 @@ export class GlobalConstants {
                     hidden: false,
                     order: 3
                 }, {
-                    id: 'CompleteDemand',
+                    id: 'CompletedDemand',
                     title: 'Completed',
                     url: './completed',
                     selected: false,

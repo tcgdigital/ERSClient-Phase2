@@ -182,7 +182,6 @@ export class NotifyPeopleComponent implements OnInit {
                 (checkedIds, this.currentDepartmentId, this.currentIncidentId,
                 EmergencySituation.GeneralNotification, TemplateMediaType.Email,
                 (item: TemplateModel) => {
-                    debugger;
                     this.SetTemplateObject(item);
                     this.customMessageForm.patchValue({
                         MessageTemplateId: item.TemplateId,

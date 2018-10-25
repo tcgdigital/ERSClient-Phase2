@@ -12,7 +12,7 @@
         </a>
     </div>
     <div class="col-md-3 col-lg-3 text-right">
-        <button class="btn btn-primary" type="button" (click)="saveVerifiedAffectedPeople()" *ngIf="!isArchive">Verify</button>
+        <button class="btn btn-primary" type="button" (click)="saveVerifiedAffectedPeople()" *ngIf="(!isArchive) && (isShow | accesibility: currentDepartmentId :'VerifyVerifyAffectedPeople')">Verify</button>
         <div class="d-block d-lg-none">
             <md-checkbox id="IsAutoApproved" [(ngModel)]="allSelectVerify" (change)="selectAllVerify($event)" aria-label="Add">Verify</md-checkbox>
         </div>
@@ -27,7 +27,7 @@
                     <tr>
                         <th>
                             <md-checkbox [disabled]="isArchive" class="Marght" id="IsAutoApproved" [(ngModel)]="allSelectVerify" (change)="selectAllVerify($event)"
-                                aria-label="Add">Verify</md-checkbox>
+                                aria-label="Add" *ngIf="isShow | accesibility: currentDepartmentId :'VerifyVerifyAffectedPeople'">Verify</md-checkbox>
                         </th>
                         <th>Reference Number</th>
                         <th>PDA Name</th>
@@ -43,7 +43,7 @@
                     <tr *ngFor="let affectedperson of affectedPeopleForVerification">
                         <td data-title="Verify">
                             <md-checkbox [disabled]="isArchive" class="Marght" id="IsVerified" [(ngModel)]="affectedperson.IsVerified" aria-label="Add"
-                                (change)="isVerfiedChange()" [disabled]="isArchive">
+                                (change)="isVerfiedChange()" [disabled]="isArchive" *ngIf="isShow | accesibility: currentDepartmentId :'VerifyVerifyAffectedPeople'">
                             </md-checkbox>
                         </td>
                         <td data-title="Reference Number">{{affectedperson.TicketNumber}}&nbsp;</td>

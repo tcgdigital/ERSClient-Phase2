@@ -101,7 +101,6 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
             const baseUrl = GlobalConstants.EXTERNAL_URL;
             this.fileUploadService.uploadFiles<string>(baseUrl + 'api/fileUpload/upload', this.filesToUpload)
                 .subscribe((result: string) => {
-                    debugger;
                     this.filepathWithLinks = `${GlobalConstants.EXTERNAL_URL}api/FileDownload/GetFileByName/QuickLinks/${result.replace(/^.*[\\\/]/, '')}/`;
                     const extension = result.replace(/^.*[\\\/]/, '').split('.').pop();
                     this.fileName = 'Quicklink' + `.${extension}`;
