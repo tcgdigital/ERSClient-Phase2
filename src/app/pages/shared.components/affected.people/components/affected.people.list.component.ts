@@ -115,8 +115,8 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
         this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.AffectedPersonSelected, affectedPerson.AffectedPersonId);
         this.childModalForCareMembers.show();
     }
-    
-    
+
+
 
     openAffectedPersonDetail(affectedPerson: AffectedPeopleToView): void {
         this.copassangers = [];
@@ -175,9 +175,8 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
             });
     }
 
-    OnShowPaxEditWindow(){
+    OnShowPaxEditWindow() {
         this.getUnidentfiedPersonList(this.currentIncident);
-        //console.log('childModal displayed');
     }
 
     cancelModal() {
@@ -195,7 +194,6 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
                     this.isUnidentifiedShow = true;
                 }
             })
-
     }
 
     mergeUnidentifiedWithPDA(affectedPeopleToView: AffectedPeopleToView): void {
@@ -209,10 +207,10 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
                                 .subscribe((response: AffectedPersonInvolvementResponse) => {
                                     if (response.toString() == 'success') {
                                         /////toast message for success.
-                                        this.isUnidentifiedShow=false;
+                                        this.isUnidentifiedShow = false;
                                     }
                                     else {
-                                        this.isUnidentifiedShow=true;
+                                        this.isUnidentifiedShow = true;
                                     }
                                 });
                         }
@@ -287,35 +285,35 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
     }
 
     saveUpdateAffectedPerson(affectedModifiedForm: AffectedPeopleToView): void {
-        this.affectedPersonToUpdate.AffectedPersonId = affectedModifiedForm.AffectedPersonId;
-        this.affectedPersonToUpdate.Identification = affectedModifiedForm.Identification;
-        this.affectedPersonToUpdate.MedicalStatus = affectedModifiedForm['MedicalStatusToshow'];
-        this.affectedPersonToUpdate.Remarks = affectedModifiedForm.Remarks;
+        if (this.affectedPersonModelForStatus
+            && this.affectedPersonModelForStatus.UnidentifiedPassengerId != 0 && this.isUnidentifiedShow == true) {
+            this.toastrService.error('Please merge the selected unidentified passenger before submission', 'Error', this.toastrConfig);
+        } else {
+            this.affectedPersonToUpdate.AffectedPersonId = affectedModifiedForm.AffectedPersonId;
+            this.affectedPersonToUpdate.Identification = affectedModifiedForm.Identification;
+            this.affectedPersonToUpdate.MedicalStatus = affectedModifiedForm['MedicalStatusToshow'];
+            this.affectedPersonToUpdate.Remarks = affectedModifiedForm.Remarks;
 
-        const additionalHeader: NameValue<string>
-            = new NameValue<string>('CurrentDepartmentName', this.currentDepartmentName);
+            const additionalHeader: NameValue<string>
+                = new NameValue<string>('CurrentDepartmentName', this.currentDepartmentName);
 
-        /*
-        if (this.affectedPersonToUpdate.MedicalStatus != '')
-            this.createCommunicationLogModel(this.affectedPersonToUpdate, affectedModifiedForm.CreatedBy);
-        */
+            this.affectedPeopleService.UpdateWithHeader(this.affectedPersonToUpdate, additionalHeader)
+                .subscribe((response: AffectedPeopleModel) => {
+                    this.toastrService.success('Additional Information updated.')
+                    if (this.filesToUpload.length) {
+                        this.uploadFile();
+                    }
 
-        this.affectedPeopleService.UpdateWithHeader(this.affectedPersonToUpdate, additionalHeader)
-            .subscribe((response: AffectedPeopleModel) => {
-                this.toastrService.success('Additional Information updated.')
-                if (this.filesToUpload.length) {
-                    this.uploadFile();
-                }
+                    this.getAffectedPeople(this.currentIncident);
+                    affectedModifiedForm['MedicalStatusToshow'] = affectedModifiedForm.MedicalStatus;
+                    let num = UtilityService.UUID();
+                    this.globalStateProxyOpen.NotifyDataChanged('AffectedPersonStatusChanged', num);
+                    this.childModal.hide();
 
-                this.getAffectedPeople(this.currentIncident);
-                affectedModifiedForm['MedicalStatusToshow'] = affectedModifiedForm.MedicalStatus;
-                let num = UtilityService.UUID();
-                this.globalStateProxyOpen.NotifyDataChanged('AffectedPersonStatusChanged', num);
-                this.childModal.hide();
-
-            }, (error: any) => {
-                console.log(`Error: ${error.message}`);
-            });
+                }, (error: any) => {
+                    console.log(`Error: ${error.message}`);
+                });
+        }
     }
 
     createCommunicationLogModel(affectedPersonToUpdate: AffectedPeopleModel, createdBy: number): void {

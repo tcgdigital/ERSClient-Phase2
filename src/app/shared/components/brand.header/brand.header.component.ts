@@ -40,7 +40,6 @@ export class BrandHeaderComponent implements OnInit {
 
     ngOnInit(): void {
         const DocumentFilePath = 'CMS Guide.pdf';
-        debugger;
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.HelpFileFath = './assets/static-content/' + DocumentFilePath.replace(/^.*[\\\/]/, '');
         const Extension = DocumentFilePath.replace(/^.*[\\\/]/, '').split('.').pop();
