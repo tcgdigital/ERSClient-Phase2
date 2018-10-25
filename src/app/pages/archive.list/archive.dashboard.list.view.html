@@ -58,7 +58,7 @@
                         </td>
                         <td data-title="Active">
                             <md-checkbox md-no-ink id="IsActive" [ngModel]="closedCrisis.isReopen" name="IsActive" (change)="IsReopenCheckedChange($event,closedCrisis)"
-                                aria-label="ActiveFlag">
+                                aria-label="ActiveFlag" *ngIf="(isShow | accesibility:currentIncidentId:'ReopenACrisis')">
                             </md-checkbox>
                         </td>
                     </tr>

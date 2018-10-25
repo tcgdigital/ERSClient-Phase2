@@ -34,6 +34,7 @@ export class AffectedPeopleVerificationComponent implements OnInit, OnDestroy {
     downloadPath: string;
     downloadURL: string;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
+    public isShow: boolean=true;
 
     constructor(private affectedPeopleService: AffectedPeopleService,
         private involvedPartyService: InvolvePartyService,

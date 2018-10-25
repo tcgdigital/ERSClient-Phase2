@@ -59,6 +59,7 @@ export class ArchiveDashboardComponent implements OnInit, OnDestroy {
         this.archievedIncidentId = +UtilityService.GetFromSession('ArchieveIncidentId');
         this.isReopened = (UtilityService.GetFromSession('IsReopened') == 'true');
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+        debugger;
         this.getPagePermission();
         this.isShowViewReadonlyCrisis = UtilityService.GetNecessaryPageLevelPermissionValidation(this.currentDepartmentId, 'ViewReadonlyCrisisInformationforArchive');
 
