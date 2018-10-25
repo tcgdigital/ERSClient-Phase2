@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 
 import {
     GlobalStateService, ResponseModel, SearchConfigModel,
@@ -23,7 +23,7 @@ export class ContactInfoComponent implements OnInit, OnDestroy {
     userprofiles: UserProfileModel[] = [];
     searchConfigs: SearchConfigModel<any>[] = [];
     private ngUnsubscribe: Subject<any> = new Subject<any>();
-
+    
     /**
      *Creates an instance of ContactInfoComponent.
      * @param {GlobalStateService} globalState
