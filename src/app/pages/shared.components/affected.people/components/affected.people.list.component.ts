@@ -285,7 +285,6 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
     }
 
     saveUpdateAffectedPerson(affectedModifiedForm: AffectedPeopleToView): void {
-        debugger;
         if (this.affectedPersonModelForStatus
             && this.affectedPersonModelForStatus.UnidentifiedPassengerId != 0 && this.isUnidentifiedShow == true) {
             this.toastrService.error('Please merge the selected unidentified passenger before submission', 'Error', this.toastrConfig);
