@@ -56,7 +56,7 @@
                                     <td data-title="Status">{{presidentMessage.PresidentMessageStatus}}&nbsp;</td>
                                     <td data-title="Published On">{{presidentMessage.PublishedOn | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
                                     <td data-title="Download Report">
-                                        <a *ngIf="presidentMessage.IsPublished" target="_blank" href="{{downloadPath + presidentMessage.PresidentsMessageId}}">
+                                        <a *ngIf="(presidentMessage.IsPublished) && (isShowDownload | accesibility:currentDepartmentId:'DownloadPresidentMessage')" target="_blank" href="{{downloadPath + presidentMessage.PresidentsMessageId}}">
                                             <i class="fa fa-download fa-2x" aria-hidden="true"></i>
                                         </a>
                                     </td>

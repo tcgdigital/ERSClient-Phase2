@@ -31,7 +31,7 @@
                             </span>
                         </td>
                         <td data-title="Download Report">
-                            <a *ngIf="query.MediaReleaseStatus === 'Published'" target="_blank" href="{{downloadPath + query.MediaqueryId}}">
+                            <a *ngIf="(query.MediaReleaseStatus === 'Published') && (isShowDownload | accesibility:currentDepartmentId:'DownloadMediaRelease')" target="_blank" href="{{downloadPath + query.MediaqueryId}}">
                                 <i class="fa fa-download fa-2x" aria-hidden="true"></i>
                             </a>
                         </td>

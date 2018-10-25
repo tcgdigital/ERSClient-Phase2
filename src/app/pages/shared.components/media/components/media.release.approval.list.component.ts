@@ -27,6 +27,7 @@ export class MediaReleaseApprovalListComponent implements OnInit, OnDestroy {
     downloadPath: string;
     isArchive: boolean = false;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
+    public isShowDownload: boolean=true;
 
     /**
      * Creates an instance of MediaReleaseListComponent.
