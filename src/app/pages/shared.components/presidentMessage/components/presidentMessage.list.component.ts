@@ -24,6 +24,7 @@ export class PresidentMessageListComponent implements OnInit, OnDestroy {
     downloadPath: string;
     protected _onRouteChange: Subscription;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
+    public isShowDownload: boolean = true;
 
     /**
      * Creates an instance of PresidentMessageListComponent.

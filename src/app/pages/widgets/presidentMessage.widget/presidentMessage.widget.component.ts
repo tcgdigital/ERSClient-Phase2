@@ -30,6 +30,7 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
     presidentMessages: Observable<TextAccordionModel[]>;
     AllPresidentMessages: Observable<PresidentMessageWidgetModel[]>;
     downloadPath: string;
+    public isShowDownload: boolean=true;
 
     private ngUnsubscribe: Subject<any> = new Subject<any>();
 
