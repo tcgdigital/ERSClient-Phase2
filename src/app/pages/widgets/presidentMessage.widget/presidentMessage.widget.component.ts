@@ -26,6 +26,7 @@ export class PresidentMessageWidgetComponent implements OnInit, OnDestroy {
     public isShow: boolean = true;
     public isShowViewAll: boolean = true;
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
+    public downloadPresidentMessageAccessCode: string = 'DownloadPresidentMessage';
     presidentMessages: Observable<TextAccordionModel[]>;
     AllPresidentMessages: Observable<PresidentMessageWidgetModel[]>;
     downloadPath: string;

@@ -321,7 +321,8 @@ export class NotifyPeopleService extends ServiceBase<UserdepartmentNotificationM
             notificationContactsWithTemplate.ContactNumber = item.User.MainContact;
             notificationContactsWithTemplate.AlternetContactNumber = item.User.AlternateContact;
             notificationContactsWithTemplate.EmailId = item.User.Email;
-            notificationContactsWithTemplate.Message = new TemplateMessage(0, '', template.Description, template.AdditionalText);
+            notificationContactsWithTemplate.Message = new TemplateMessage
+                (template.TemplateId, template.Subject, template.Description, template.AdditionalText);
             this.notificationContactsWithTemplates.push(notificationContactsWithTemplate);
         });
 

@@ -101,8 +101,8 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
             const baseUrl = GlobalConstants.EXTERNAL_URL;
             this.fileUploadService.uploadFiles<string>(baseUrl + 'api/fileUpload/upload', this.filesToUpload)
                 .subscribe((result: string) => {
-                    
-                    this.filepathWithLinks = `${GlobalConstants.EXTERNAL_URL}UploadFiles/${result.replace(/^.*[\\\/]/, '')}`;
+                    debugger;
+                    this.filepathWithLinks = `${GlobalConstants.EXTERNAL_URL}api/FileDownload/GetFileByName/QuickLinks/${result.replace(/^.*[\\\/]/, '')}/`;
                     const extension = result.replace(/^.*[\\\/]/, '').split('.').pop();
                     this.fileName = 'Quicklink' + `.${extension}`;
                 }, (error) => {
@@ -153,6 +153,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
                     this.quickLinkModel.QuickLinkName = this.form.controls['QuickLinkName'].value;
                     this.quickLinkModel.QuickLinkURL = this.form.controls['QuickLinkURL'].value;
                     this.quickLinkModel.UploadURL = this.filepathWithLinks;
+
                     if (this.selectedGroup) {
                          this.quickLinkModel.QuickLinkGroupId = this.selectedGroup.Value;
                     }
@@ -247,6 +248,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
         this.quickLinkModelEdit.QuickLinkId = this.form.controls['QuickLinkId'].value;
         this.quickLinkModel.QuickLinkId = this.form.controls['QuickLinkId'].value;
         this.quickLinkModel.UploadURL = this.filepathWithLinks;
+
         if (this.form.controls['QuickLinkName'].touched) {
             this.quickLinkModelEdit.QuickLinkName = this.form.controls['QuickLinkName'].value;
             this.quickLinkModel.QuickLinkName = this.form.controls['QuickLinkName'].value;
