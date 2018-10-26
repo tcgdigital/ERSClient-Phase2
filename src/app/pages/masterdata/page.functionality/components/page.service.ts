@@ -63,6 +63,7 @@ export class PageService implements IServiceInretface<PageModel>{
             let pageHierarchy = new PageHierarchyModel();
             pageHierarchy.id = parent.PageId;
             pageHierarchy.text = parent.PageName;
+            pageHierarchy.pageCode = parent.PageCode;
             pageHierarchy.Type = parent.Type;
             pageHierarchy.ModuleName = parent.ModuleName;
             //pageHierarchy.Page = page;

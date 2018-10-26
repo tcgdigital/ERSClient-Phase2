@@ -59,7 +59,7 @@
                             </i>
                         </td>
                         <td data-title="Interaction Details">
-                            <span *ngIf="!isArchive">
+                            <span *ngIf="(!isArchive) && (isUpdtStatusDisplayed | accesibility:currentDepartmentId:'AffectedCargoUpdateAdditionalInfo')">
                                 <i class="fa fa-edit fa-2x" (click)="openAffectedObjectDetail(affectedObject)"></i>
                             </span>
                         </td>

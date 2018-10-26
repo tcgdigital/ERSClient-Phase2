@@ -70,7 +70,7 @@
                             </i>
                         </td>
                         <td data-title="View Com. Trail">
-                            <i class="fa fa-edit fa-2x pt-2" (click)="openAffectedPersonDetail(affectedperson)"></i>
+                            <i class="fa fa-edit fa-2x pt-2" *ngIf="isEditBtnDisplayed | accesibility:currentDepartmentId:'AffectedPeopleSearch'" (click)="openAffectedPersonDetail(affectedperson)"></i>
                         </td>
                         <td data-title="Is NOK Informed">
                             <md-checkbox [disabled]="isArchive" *ngIf="isShowIsNOKInvolved | accesibility:currentDepartmentId:'ShowIsNOKInformed'"
@@ -96,8 +96,8 @@
 
 
 
-<div bsModal #childModal="bs-modal" (onShow)="OnShowPaxEditWindow()" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-    aria-hidden="true">
+<div bsModal #childModal="bs-modal" (onShow)="OnShowPaxEditWindow()" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="mySmallModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -206,6 +206,7 @@
                             <label for="DiscussionNote">Status:</label>
                             <select id="selectStatus" [(ngModel)]="affectedPersonModelForStatus.MedicalStatusToshow"
                                 class="form-control">
+                                <!-- <option value=''>Select Status</option> -->
                                 <option *ngFor="let status of medicalStatus" [value]="status.value">{{status.caption}}
                                 </option>
                             </select>
@@ -261,14 +262,14 @@
                             <div class="row" *ngIf="isUnidentifiedShow">
                                 <div class="form-group col-md-8 col-sm-12">
                                     <label for="MedicalStatusToshow">Unidentified Passengers:</label>
-                                    <select id="selectStatus" [(ngModel)]="affectedPersonModelForStatus.UnidentifiedPassengerId"
+                                    <select id="UnidentifiedPassenger" [(ngModel)]="affectedPersonModelForStatus.UnidentifiedPassengerId"
                                         class="form-control">
+                                        <option value='0'>Select Unidentified Pax</option>
                                         <option *ngFor="let uperson of unidentifiedPersons" [value]="uperson.PassengerId">{{uperson.PassengerName}}
                                         </option>
                                     </select>
                                 </div>
                                 <div class="form-group col-md-4 col-sm-12">
-
                                     <button class="btn btn-primary mt-3" type="button" (click)="mergeUnidentifiedWithPDA(affectedPersonModelForStatus)">Merge</button>
                                 </div>
                             </div>
@@ -346,6 +347,7 @@
                             <label for="MedicalStatusToshow">Status:</label>
                             <select id="selectStatus" [(ngModel)]="affectedPersonModelForStatus.MedicalStatusToshow"
                                 class="form-control">
+                                <!-- <option value=''>Select Status</option> -->
                                 <option *ngFor="let status of medicalStatus" [value]="status.value">{{status.caption}}
                                 </option>
                             </select>
