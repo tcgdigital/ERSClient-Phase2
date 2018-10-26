@@ -17,7 +17,6 @@ export class GlobalStateService {
     }
 
     NotifyDataChanged(_event: string, value: any) {
-        debugger;
         let current = this._data[_event];
         if (current == null) {
             current = undefined;
