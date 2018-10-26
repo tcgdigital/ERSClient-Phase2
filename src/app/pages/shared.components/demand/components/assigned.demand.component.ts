@@ -260,10 +260,13 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
 
     public submit(): void {
         if (this.demands.length > 0) {
+            debugger;
             const demandCompletion: DemandModel[] = this.demands
                 .filter(this.isCompleted).map((x) => {
+                    debugger;
                     const item: DemandModel = new DemandModel();
                     item.DemandId = x.DemandId;
+                    debugger;
                     item.ScheduledClose = new Date(),
                         item.ClosedByDepartmentId = this.currentDepartmentId;
                     item.DemandStatusDescription = `Completed by ${this.currentDepartmentName}`,
@@ -280,6 +283,7 @@ export class AssignedDemandComponent implements OnInit, AfterContentInit, OnDest
                 this.toastrService.error('Please select at least one request');
             }
             else {
+                debugger;
                 this.demandService.UpdateBulkForCompletion(demandCompletion)
                     // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                     .takeUntil(this.ngUnsubscribe)

@@ -1,4 +1,4 @@
-<div class="row" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'ArchiveListing')">
+<div class="row" *ngIf="!(isShowPage | accesibility:currentDepartmentId:'Archive')">
     <div class="col-12">
         <div class="card">
             <div class="card-header">
@@ -13,7 +13,7 @@
     </div>
 </div>
 
-<div *ngIf="isShowPage | accesibility:currentDepartmentId:'ArchiveListing'" class="card">
+<div *ngIf="isShowPage | accesibility:currentDepartmentId:'Archive'" class="card">
     <div class="card-header">
         <strong>Closed Event</strong>
         <div class="pull-right margin-top-21px">
