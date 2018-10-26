@@ -1,6 +1,6 @@
 import {
     Component, ViewEncapsulation, ElementRef,
-    OnInit, OnDestroy
+    OnInit, OnDestroy, AfterViewInit
 } from '@angular/core';
 import {
     IncidentModel, IncidentService,
@@ -39,7 +39,7 @@ import { Subject, Observable } from 'rxjs';
     styleUrls: ['./dashboard.style.scss'],
     encapsulation: ViewEncapsulation.None,
 })
-export class DashboardComponent implements OnInit, OnDestroy {
+export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     public incidentDate: Date;
     public tablinks: ITabLinkInterface[];
     incidentDataExchangeModel: IncidentDataExchangeModel = null;
@@ -116,6 +116,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
         this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
             (model: KeyValue) => this.departmentChangeHandler(model));
+    }
+
+    public ngAfterViewInit(): void {
+        jQuery('li.tab-item').on('click', () => {
+            const firstVisibleNestedTab: any = jQuery('.tab-containet li.nav-item:visible:first-child a');
+            if (firstVisibleNestedTab.length > 0) {
+                const url: string = jQuery('.tab-containet li.nav-item:visible:first-child a').attr('href');
+                this.router.navigateByUrl(url);
+            }
+        });
     }
 
     getPagePermission(): void {

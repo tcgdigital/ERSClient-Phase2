@@ -70,7 +70,7 @@
                             </i>
                         </td>
                         <td data-title="View Com. Trail">
-                            <i class="fa fa-edit fa-2x pt-2" (click)="openAffectedPersonDetail(affectedperson)"></i>
+                            <i class="fa fa-edit fa-2x pt-2" *ngIf="isEditBtnDisplayed | accesibility:currentDepartmentId:'AffectedPeopleSearch'" (click)="openAffectedPersonDetail(affectedperson)"></i>
                         </td>
                         <td data-title="Is NOK Informed">
                             <md-checkbox [disabled]="isArchive" *ngIf="isShowIsNOKInvolved | accesibility:currentDepartmentId:'ShowIsNOKInformed'"

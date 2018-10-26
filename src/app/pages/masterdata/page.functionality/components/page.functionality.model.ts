@@ -75,6 +75,7 @@ export class PagesPermissionMatrixModel extends BaseModel {
 export class PageHierarchyModel {
     public id: number;
     public text: string;
+    public pageCode: string;
     public checked: boolean;
     public hasChildren: boolean;
     public children: PageHierarchyModel[];

@@ -32,6 +32,7 @@ export class AffectedObjectsListComponent implements OnInit {
     AWBNumber: string = '';
     ticketNumber: string = '';
     isArchive: boolean = false;
+    public isUpdtStatusDisplayed= true;
     protected _onRouteChange: Subscription;
     allcargostatus: any[] = GlobalConstants.CargoStatus;
     affectedObjId: number;

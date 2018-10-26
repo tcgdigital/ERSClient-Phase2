@@ -67,6 +67,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
     expandSearch: boolean = false;
     searchValue: string = "Expand Search";
     public isShowIsNOKInvolved: boolean = true;
+    public isEditBtnDisplayed: boolean = true;
     public userName: string;
     public currentDepartmentName: string;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
