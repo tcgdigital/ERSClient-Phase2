@@ -1498,7 +1498,6 @@ export class GlobalConstants {
         {
             id: 'Checklist',
             title: 'Checklists',
-            // icon: 'fa fa-edge fa-2x',
             url: '/pages/archivedashboard/actionable',
             selected: true,
             hidden: false,
@@ -1523,7 +1522,6 @@ export class GlobalConstants {
         }, {
             id: 'Demand',
             title: 'Demand',
-            // icon: 'fa fa-linux fa-2x',
             url: '/pages/archivedashboard/demand',
             selected: false,
             hidden: false,
@@ -1551,7 +1549,7 @@ export class GlobalConstants {
                     hidden: false,
                     order: 3
                 }, {
-                    id: 'CompleteDemand',
+                    id: 'CompletedDemand',
                     title: 'Completed',
                     url: './completed',
                     selected: false,
@@ -1562,7 +1560,6 @@ export class GlobalConstants {
         }, {
             id: 'AffectedPeople',
             title: 'Affected People',
-            // icon: 'fa fa-apple fa-2x',
             url: '/pages/archivedashboard/people',
             selected: false,
             hidden: false,
@@ -1585,13 +1582,19 @@ export class GlobalConstants {
                 }
             ]
         }, {
+            id: 'GroundVictims',
+            title: 'Ground Victims',
+            url: '/pages/archivedashboard/groundmembers',
+            selected: false,
+            hidden: false,
+            order: 4
+        }, {
             id: 'AffectedCargo',
             title: 'Affected Cargo',
-            // icon: 'fa fa-chrome fa-2x',
             url: '/pages/archivedashboard/cargo',
             selected: false,
             hidden: false,
-            order: 4,
+            order: 5,
             subtab: [
                 {
                     id: 'Cargo',
@@ -1616,15 +1619,14 @@ export class GlobalConstants {
             url: '/pages/archivedashboard/broadcast',
             selected: false,
             hidden: false,
-            order: 5
+            order: 6
         }, {
             id: 'PresidentMessage',
             title: 'President Messages',
-            // icon: 'fa fa-firefox fa-2x',
             url: '/pages/archivedashboard/presidentMessage',
             selected: false,
             hidden: false,
-            order: 6,
+            order: 7,
             subtab: [
                 {
                     id: 'PresidentMessageRelease',
@@ -1645,11 +1647,10 @@ export class GlobalConstants {
         }, {
             id: 'MediaMessage',
             title: 'Media Messages',
-            // icon: 'fa fa-medium fa-2x',
             url: '/pages/archivedashboard/media',
             selected: false,
             hidden: false,
-            order: 7,
+            order: 8,
             subtab: [
                 {
                     id: 'MediaMessageRelease',
@@ -1668,35 +1669,9 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'OtherQuery',
-            title: 'Other Query',
-            // icon: 'fa fa-windows fa-2x',
-            url: '/pages/archivedashboard/otherQuery',
-            selected: false,
-            hidden: false,
-            order: 8,
-            subtab: [
-                {
-                    id: 'ReceivedCalls',
-                    title: 'Received Calls',
-                    url: './receivedCalls',
-                    selected: false,
-                    hidden: false,
-                    order: 1
-                }, {
-                    id: 'AssignedCalls',
-                    title: 'Assigned Calls',
-                    url: './assignedcalls',
-                    selected: false,
-                    hidden: false,
-                    order: 2
-                }
-            ]
-        }, {
-            id: 'CrewQuery',
-            title: 'Crew Query',
-            // icon: 'fa fa-twitter fa-2x',
-            url: '/pages/archivedashboard/crewQuery',
+            id: 'PassengerQuery',
+            title: 'Passenger Query',
+            url: '/pages/archivedashboard/passengerquery',
             selected: false,
             hidden: false,
             order: 9,
@@ -1718,10 +1693,9 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'PassengerQuery',
-            title: 'Passenger Query',
-            // icon: 'fa fa-twitter fa-2x',
-            url: '/pages/archivedashboard/passengerquery',
+            id: 'GroundVictimQuery',
+            title: 'Ground Victim Query',
+            url: '/pages/archivedashboard/groundvictimquery',
             selected: false,
             hidden: false,
             order: 10,
@@ -1736,17 +1710,16 @@ export class GlobalConstants {
                 }, {
                     id: 'AssignedCalls',
                     title: 'Assigned Calls',
-                    url: './assignedcalls',
+                    url: './assignedCalls',
                     selected: false,
                     hidden: false,
                     order: 2
                 }
             ]
         }, {
-            id: 'CargoQuery',
-            title: 'Cargo Query',
-            // icon: 'fa fa-twitter fa-2x',
-            url: '/pages/archivedashboard/cargoquery',
+            id: 'CrewQuery',
+            title: 'Crew Query',
+            url: '/pages/archivedashboard/crewQuery',
             selected: false,
             hidden: false,
             order: 11,
@@ -1768,10 +1741,9 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'MediaQuery',
-            title: 'Media Query',
-            // icon: 'fa fa-twitter fa-2x',
-            url: '/pages/archivedashboard/mediaquery',
+            id: 'CargoQuery',
+            title: 'Cargo Query',
+            url: '/pages/archivedashboard/cargoquery',
             selected: false,
             hidden: false,
             order: 12,
@@ -1793,10 +1765,9 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'FutureTravelQuery',
-            title: 'Future Travel Query',
-            // icon: 'fa fa-twitter fa-2x',
-            url: '/pages/archivedashboard/futuretravelquery',
+            id: 'MediaQuery',
+            title: 'Media Query',
+            url: '/pages/archivedashboard/mediaquery',
             selected: false,
             hidden: false,
             order: 13,
@@ -1820,7 +1791,6 @@ export class GlobalConstants {
         }, {
             id: 'GeneralUpdateQuery',
             title: 'General Update Query',
-            // icon: 'fa fa-twitter fa-2x',
             url: '/pages/archivedashboard/generalupdatequery',
             selected: false,
             hidden: false,
@@ -1845,7 +1815,6 @@ export class GlobalConstants {
         }, {
             id: 'SituationalUpdatesQuery',
             title: 'Situational Updates Query',
-            // icon: 'fa fa-twitter fa-2x',
             url: '/pages/archivedashboard/situationalupdatesquery',
             selected: false,
             hidden: false,
@@ -1868,10 +1837,9 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'CustomerDissatisfactionQuery',
-            title: 'Customer Dissatisfaction Query',
-            // icon: 'fa fa-twitter fa-2x',
-            url: '/pages/archivedashboard/customerdissatisfactionquery',
+            id: 'FutureTravelQuery',
+            title: 'Future Travel Query',
+            url: '/pages/archivedashboard/futuretravelquery',
             selected: false,
             hidden: false,
             order: 16,
@@ -1893,17 +1861,33 @@ export class GlobalConstants {
                 }
             ]
         }, {
-            id: 'GroundVictims',
-            title: 'Ground Victims',
-            // icon: 'fa fa-twitter fa-2x',
-            url: '/pages/archivedashboard/groundmembers',
+            id: 'CustomerDissatisfactionQuery',
+            title: 'Customer Dissatisfaction Query',
+            url: '/pages/archivedashboard/customerdissatisfactionquery',
             selected: false,
             hidden: false,
-            order: 17
+            order: 17,
+            subtab: [
+                {
+                    id: 'ReceivedCalls',
+                    title: 'Received Calls',
+                    url: './receivedCalls',
+                    selected: false,
+                    hidden: false,
+                    order: 1
+                }, {
+                    id: 'AssignedCalls',
+                    title: 'Assigned Calls',
+                    url: './assignedcalls',
+                    selected: false,
+                    hidden: false,
+                    order: 2
+                }
+            ]
         }, {
-            id: 'GroundVictimQuery',
-            title: 'Ground Victim Query',
-            url: '/pages/archivedashboard/groundvictimquery',
+            id: 'OtherQuery',
+            title: 'Other Query',
+            url: '/pages/archivedashboard/otherQuery',
             selected: false,
             hidden: false,
             order: 18,
@@ -1918,14 +1902,13 @@ export class GlobalConstants {
                 }, {
                     id: 'AssignedCalls',
                     title: 'Assigned Calls',
-                    url: './assignedCalls',
+                    url: './assignedcalls',
                     selected: false,
                     hidden: false,
                     order: 2
                 }
             ]
         }
-
     ] as ITabLinkInterface[];
 
     public static MasterDataTAB_LINKS: ITabLinkInterface[] = [

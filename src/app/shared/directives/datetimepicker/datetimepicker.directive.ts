@@ -48,6 +48,10 @@ export class DateTimePickerDirective implements AfterViewInit {
         this.addPickerIcon($self);
         const options: DateTimePickerOptions = Object.assign(new DateTimePickerOptions(), this.options);
 
+        if(!$self.is('[readonly]')){
+            options.showEvent = '';
+        }
+
         options.onSelect = (formattedDate: string, date: Date | Date[], inst: object) => {
             const args: DateTimePickerSelectEventArgs = new DateTimePickerSelectEventArgs();
             args.FormattedDate = formattedDate;
