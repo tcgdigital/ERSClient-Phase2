@@ -69,10 +69,11 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
     @ViewChild('passengerAutocomplete') public passengerAutocomplete: AutocompleteComponent;
     @ViewChild('crewAutocomplete') public crewAutocomplete: AutocompleteComponent;
     @ViewChild('cargoAutocomplete') public cargoAutocomplete: AutocompleteComponent;
-    @Input('callid') callid: number;
-    @Input('enquiryType') enquiryType: number;
 
-    
+    @Input('callid') public callid: number;
+    @Input('enquiryType') public enquiryType: number;
+    @Input('modalType') public modalType: string = 'received';
+
     public form: FormGroup;
     public activeKeyValues: KeyValueModel[] = [];
     public IsIdentified: boolean = true;
@@ -1042,11 +1043,11 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                 this.PassengerId = data.PassengerId;
                 this.enquiry.AffectedPersonId = data.AffectedPersonId;
 
-                if(this.affectedPersonObject && this.affectedPersonObject.Passenger){
+                if (this.affectedPersonObject && this.affectedPersonObject.Passenger) {
                     this.affectedPersonObject.Passenger.PassengerId = data.PassengerId;
                     this.affectedPersonObject.AffectedPersonId = data.AffectedPersonId;
 
-                    if(this.affectedPeople && this.affectedPeople.length>0){
+                    if (this.affectedPeople && this.affectedPeople.length > 0) {
                         this.affectedPeople.push(this.affectedPeopleService.FlattenAffectedPerson(this.affectedPersonObject));
                     }
                 }
@@ -1473,16 +1474,16 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         else {
             this.form.controls["Unidentified"].enable();
             this.consolidatedCopassengers = [];
-            this.copassengerlistPassengerForMappedPerson=[];
-            this.copassengerlistpnr=[];
-            this.selectedcountpnr=0;
+            this.copassengerlistPassengerForMappedPerson = [];
+            this.copassengerlistpnr = [];
+            this.selectedcountpnr = 0;
             this.passengerAutocomplete.query = '';
         }
         this.IsIdentified = $event.checked;
     }
 
     public ShowListsOfSamePNR($event): void {
-        if(!this.IsIdentified){
+        if (!this.IsIdentified) {
             return;
         }
         this.isPaxWithSamePNRSelected = !this.isPaxWithSamePNRSelected;
@@ -1500,7 +1501,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
     }
 
     public ShowPassengers($event): void {
-        if(!this.IsIdentified){
+        if (!this.IsIdentified) {
             return;
         }
         this.isCoPaxSelected = !this.isCoPaxSelected;
@@ -1584,7 +1585,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         affectedPerson.CurrentCareMemberName = '';
         affectedPerson.IsIdentified = false;
         affectedPerson.Passenger = unidentifiedPassenger;
-        affectedPerson.ActiveFlag='Active';
+        affectedPerson.ActiveFlag = 'Active';
         return affectedPerson;
     }
 }

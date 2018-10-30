@@ -70,7 +70,8 @@
                             </i>
                         </td>
                         <td data-title="View Com. Trail">
-                            <i class="fa fa-edit fa-2x pt-2" *ngIf="isEditBtnDisplayed | accesibility:currentDepartmentId:'AffectedPeopleSearch'" (click)="openAffectedPersonDetail(affectedperson)"></i>
+                            <i class="fa fa-edit fa-2x pt-2" *ngIf="isEditBtnDisplayed | accesibility:currentDepartmentId:'AffectedPeopleSearch'"
+                                (click)="openAffectedPersonDetail(affectedperson)"></i>
                         </td>
                         <td data-title="Is NOK Informed">
                             <md-checkbox [disabled]="isArchive" *ngIf="isShowIsNOKInvolved | accesibility:currentDepartmentId:'ShowIsNOKInformed'"
@@ -235,32 +236,146 @@
                 </ng-container>
 
                 <ng-container *ngIf="!affectedPersonModelForStatus.IsCrew">
-                    <div class="row rowpadding">
-                        <div class="col-lg-6 col-md-12 col-sm-12">
-                            <div class="row">
-                                <div class="form-group col-lg-8 col-md-8 col-sm-12">
-                                    <label for="DiscussionNote">Gender:</label>
-                                    <label class="form-control">{{affectedPersonModelForStatus.Gender}}</label>
-                                </div>
-                                <div class="form-group col-lg-4 col-md-4 col-sm-12">
-                                    <label for="Age">Age:</label>
-                                    <label class="form-control">{{affectedPersonModelForStatus.Age}}</label>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card pl-1 pr-1 mt-2">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-12 col-sm-12">
+                                            <div class="row">
+                                                <div class="form-group col-lg-8 col-md-8 col-sm-12">
+                                                    <label for="DiscussionNote">Gender:</label>
+                                                    <label class="form-control">{{affectedPersonModelForStatus.Gender}}</label>
+                                                </div>
+                                                <div class="form-group col-lg-4 col-md-4 col-sm-12">
+                                                    <label for="Age">Age:</label>
+                                                    <label class="form-control">{{affectedPersonModelForStatus.Age}}</label>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-lg-8 col-md-8 col-sm-12">
+                                                    <label for="Nationality">Nationality:</label>
+                                                    <label class="form-control">{{affectedPersonModelForStatus.Nationality}}</label>
+                                                </div>
+                                                <div class="form-group col-lg-4 col-md-4 col-sm-12 pt-lg-2 pt-md-4 pt-sm-0">
+                                                    <md-checkbox id="VerificationStatus" [disabled]="true" [(ngModel)]="affectedPersonModelForStatus.IsVerified"
+                                                        aria-label="Add" ng-disabled="true">
+                                                        Verification Status
+                                                    </md-checkbox>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="row" *ngIf="isUnidentifiedShow">
+                                                <div class="form-group col-md-8 col-sm-12">
+                                                    <label for="MedicalStatusToshow">Unidentified Passengers:</label>
+                                                    <select id="UnidentifiedPassenger" [(ngModel)]="affectedPersonModelForStatus.UnidentifiedPassengerId"
+                                                        class="form-control">
+                                                        <option value='0'>Select Unidentified Pax</option>
+                                                        <option *ngFor="let uperson of unidentifiedPersons" [value]="uperson.PassengerId">{{uperson.PassengerName}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-4 col-sm-12">
+                                                    <button class="btn btn-primary mt-3" type="button" (click)="mergeUnidentifiedWithPDA(affectedPersonModelForStatus)">Merge</button>
+                                                </div>
+                                            </div> -->
+                                            <div class="row">
+                                                <div class="form-group col-lg-6 col-md-6 col-sm-12">
+                                                    <label for="Baggage">Baggage checked in(wt):</label>
+                                                    <label class="form-control">{{affectedPersonModelForStatus.BaggageWeight}}</label>
+                                                </div>
+                                                <div class="form-group col-lg-6 col-md-6 col-sm-12">
+                                                    <label for="Baggage">Baggage checked in(PCS):</label>
+                                                    <label class="form-control">{{affectedPersonModelForStatus.BaggageCount}}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-3 col-md-6 col-sm-12">
+                                            <responsive-table [scrollableclass]="true">
+                                                <table responsive-table-body>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Caller Name</th>
+                                                            <th>Contact Number</th>
+                                                            <th>Select as NOK</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr [hidden]="callers.length != 0">
+                                                            <td data-title="&#9785;" colspan="3">No Call has been made
+                                                                yet.</td>
+                                                        </tr>
+                                                        <tr *ngFor="let caller of callers">
+                                                            <td data-title="Caller Name"><strong>{{caller.FirstName + "
+                                                                    "+
+                                                                    caller.LastName}}&nbsp;
+                                                                </strong></td>
+                                                            <td data-title="Contact Number"><strong>{{caller.ContactNumber}}&nbsp;</strong></td>
+                                                            <td data-title="Select NOK">
+                                                                <md-checkbox [disabled]="isArchive" [(ngModel)]="caller.IsNok"
+                                                                    (change)="saveNok(affectedPersonModel.AffectedPersonId,caller,$event)"
+                                                                    aria-label="Add"></md-checkbox>
+                                                                <br /><span>Relation: {{caller.Relationship}}</span>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </responsive-table>
+                                        </div>
+
+                                        <div class="col-lg-3 col-md-6 col-sm-12">
+                                            <responsive-table [scrollableclass]="true">
+                                                <table responsive-table-body>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Co Passengers</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr [hidden]="copassangers.length > 1">
+                                                            <td data-title="&#9785;">No copassengers mapped yet</td>
+                                                        </tr>
+                                                        <tr *ngFor="let copassenger of copassangers">
+                                                            <td data-title="Co Passenger">{{copassenger.PassengerName}}&nbsp;</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </responsive-table>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="form-group col-md-4 col-sm-12">
+                                            <label for="Identification">Identification Details:</label>
+                                            <input value="{{affectedPersonModelForStatus.Identification}}" [(ngModel)]="affectedPersonModelForStatus.Identification"
+                                                type="text" class="form-control" />
+                                        </div>
+
+                                        <div class="form-group col-md-4 col-sm-12">
+                                            <label for="MedicalStatusToshow">Status:</label>
+                                            <select id="selectStatus" [(ngModel)]="affectedPersonModelForStatus.MedicalStatusToshow"
+                                                class="form-control">
+                                                <!-- <option value=''>Select Status</option> -->
+                                                <option *ngFor="let status of medicalStatus" [value]="status.value">{{status.caption}}
+                                                </option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group col-md-4 col-sm-12">
+                                            <label for="Remarks">Remarks:</label>
+                                            <input value="{{affectedPersonModelForStatus.Remarks}}" [(ngModel)]="affectedPersonModelForStatus.Remarks"
+                                                class="form-control" type="text" />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-lg-8 col-md-8 col-sm-12">
-                                    <label for="Nationality">Nationality:</label>
-                                    <label class="form-control">{{affectedPersonModelForStatus.Nationality}}</label>
-                                </div>
-                                <div class="form-group col-lg-4 col-md-4 col-sm-12 pt-lg-2 pt-md-4 pt-sm-0">
-                                    <md-checkbox id="VerificationStatus" [disabled]="true" [(ngModel)]="affectedPersonModelForStatus.IsVerified"
-                                        aria-label="Add" ng-disabled="true">
-                                        Verification Status
-                                    </md-checkbox>
-                                </div>
-                            </div>
-                            <div class="row" *ngIf="isUnidentifiedShow">
-                                <div class="form-group col-md-8 col-sm-12">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <ng-template [ngIf]="!affectedPersonModelForStatus.IsCrew">
+                            <div class="form-group col-lg-6" *ngIf="isUnidentifiedShow">
+                                <div class="col-md-8 col-sm-12">
                                     <label for="MedicalStatusToshow">Unidentified Passengers:</label>
                                     <select id="UnidentifiedPassenger" [(ngModel)]="affectedPersonModelForStatus.UnidentifiedPassengerId"
                                         class="form-control">
@@ -269,101 +384,23 @@
                                         </option>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-4 col-sm-12">
+                                <div class="col-md-4 col-sm-12">
                                     <button class="btn btn-primary mt-3" type="button" (click)="mergeUnidentifiedWithPDA(affectedPersonModelForStatus)">Merge</button>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-lg-6 col-md-6 col-sm-12">
-                                    <label for="Baggage">Baggage checked in(wt):</label>
-                                    <label class="form-control">{{affectedPersonModelForStatus.BaggageWeight}}</label>
-                                </div>
-                                <div class="form-group col-lg-6 col-md-6 col-sm-12">
-                                    <label for="Baggage">Baggage checked in(PCS):</label>
-                                    <label class="form-control">{{affectedPersonModelForStatus.BaggageCount}}</label>
-                                </div>
+                            <div class="form-group col-lg-6 text-right" *ngIf="!isArchive">
+                                <button class="btn btn-primary mt-3" type="button" (click)="saveUpdateAffectedPerson(affectedPersonModelForStatus)">Submit</button>
                             </div>
-                        </div>
+                        </ng-template>
 
-                        <div class="col-lg-3 col-md-6 col-sm-12">
-                            <responsive-table [scrollableclass]="true">
-                                <table responsive-table-body>
-                                    <thead>
-                                        <tr>
-                                            <th>Caller Name</th>
-                                            <th>Contact Number</th>
-                                            <th>Select as NOK</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr [hidden]="callers.length != 0">
-                                            <td data-title="&#9785;" colspan="3">No Call has been made yet.</td>
-                                        </tr>
-                                        <tr *ngFor="let caller of callers">
-                                            <td data-title="Caller Name"><strong>{{caller.FirstName + " "+
-                                                    caller.LastName}}&nbsp;
-                                                </strong></td>
-                                            <td data-title="Contact Number"><strong>{{caller.ContactNumber}}&nbsp;</strong></td>
-                                            <td data-title="Select NOK">
-                                                <md-checkbox [disabled]="isArchive" [(ngModel)]="caller.IsNok" (change)="saveNok(affectedPersonModel.AffectedPersonId,caller,$event)"
-                                                    aria-label="Add"></md-checkbox>
-                                                <br /><span>Relation: {{caller.Relationship}}</span>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </responsive-table>
-                        </div>
-
-                        <div class="col-lg-3 col-md-6 col-sm-12">
-                            <responsive-table [scrollableclass]="true">
-                                <table responsive-table-body>
-                                    <thead>
-                                        <tr>
-                                            <th>Co Passengers</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr [hidden]="copassangers.length > 1">
-                                            <td data-title="&#9785;">No copassengers mapped yet</td>
-                                        </tr>
-                                        <tr *ngFor="let copassenger of copassangers">
-                                            <td data-title="Co Passenger">{{copassenger.PassengerName}}&nbsp;</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </responsive-table>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-md-4 col-sm-12">
-                            <label for="Identification">Identification Details:</label>
-                            <input value="{{affectedPersonModelForStatus.Identification}}" [(ngModel)]="affectedPersonModelForStatus.Identification"
-                                type="text" class="form-control" />
-                        </div>
-
-                        <div class="form-group col-md-4 col-sm-12">
-                            <label for="MedicalStatusToshow">Status:</label>
-                            <select id="selectStatus" [(ngModel)]="affectedPersonModelForStatus.MedicalStatusToshow"
-                                class="form-control">
-                                <!-- <option value=''>Select Status</option> -->
-                                <option *ngFor="let status of medicalStatus" [value]="status.value">{{status.caption}}
-                                </option>
-                            </select>
-                        </div>
-
-                        <div class="form-group col-md-4 col-sm-12">
-                            <label for="Remarks">Remarks:</label>
-                            <input value="{{affectedPersonModelForStatus.Remarks}}" [(ngModel)]="affectedPersonModelForStatus.Remarks"
-                                class="form-control" type="text" />
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-md-4 col-sm-12" *ngIf="!isArchive">
+                        <ng-template [ngIf]="affectedPersonModelForStatus.IsCrew">
+                            <div class="form-group col-md-4 col-sm-12" *ngIf="!isArchive">
+                                <button class="btn btn-primary" type="button" (click)="saveUpdateAffectedPerson(affectedPersonModelForStatus)">Submit</button>
+                            </div>
+                        </ng-template>
+                        <!-- <div class="form-group col-md-4 col-sm-12" *ngIf="!isArchive">
                             <button class="btn btn-primary" type="button" (click)="saveUpdateAffectedPerson(affectedPersonModelForStatus)">Submit</button>
-                        </div>
+                        </div> -->
                     </div>
                 </ng-container>
             </div>
