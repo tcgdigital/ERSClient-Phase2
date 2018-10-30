@@ -93,19 +93,6 @@ export class PageFunctionalityHierarchyComponent implements OnInit, OnChanges, O
         jQuery(searchText).val('');
         this.ExpandCollapsTree(false);
         this.ClearAllHighLight();
-
-        /*
-        let terrObj = this.treeObject;
-        if (terrObj != undefined && this.currentSelectedPageIds != undefined && this.currentSelectedPageIds.length > 0) {
-            this.currentSelectedPageIds.forEach(x => {
-                const $node = terrObj.getNodeById(x);
-
-                if ($node != undefined) {
-                    let $nodeTextElement = $node.find('> [data-role="wrapper"] > [data-role="display"]');
-                    $nodeTextElement.removeAttr('style');
-                }
-            });
-        }*/
     }
 
     private ClearAllHighLight(): void {
@@ -173,8 +160,8 @@ export class PageFunctionalityHierarchyComponent implements OnInit, OnChanges, O
                         <span class="node-caption ${record.Type.toLocaleLowerCase()}"> 
                             ${record.Type.toLocaleUpperCase()} (${record.ModuleName})
                         </span>
-                        <!--<span class="node-text">${record.text}</span>-->
-                        <span class="node-text">${record.text} (${record.pageCode})</span>
+                        <span class="node-text">${record.text}</span>
+                        <!--<span class="node-text">${record.text} (${record.pageCode})</span>-->
                         <span data-role="hod-checkbox" title="Apply for HOD only">
                             <label class="gj-checkbox-bootstrap gj-checkbox-bootstrap-4 gj-checkbox-fontawesome">
                                 <input type="checkbox" class="chk-hod-only" ${record.CanView ? '' : 'disabled'} data-page-id="${id}" ${isHodChecked}>
