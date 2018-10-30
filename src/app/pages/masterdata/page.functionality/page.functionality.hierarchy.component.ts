@@ -66,8 +66,8 @@ export class PageFunctionalityHierarchyComponent implements OnInit, OnChanges, O
         this.ClearAllHighLight();
 
         if (this.pages.length > 0 && searchedText != '') {
-            const re = new RegExp(searchedText, 'gi'); ///${searchText}/gi; 
-            const scearchedNodes: PageModel[] = this.pages.filter(p => re.test(p.PageName));
+            const scearchedNodes: PageModel[] = this.pages
+                .filter(p => (new RegExp(searchedText, 'ig')).test(p.PageName));
             const $tree: any = jQuery(this.elementRef.nativeElement).find(`#pageTree`).tree();
 
             if (scearchedNodes.length > 0 && $tree !== undefined) {
