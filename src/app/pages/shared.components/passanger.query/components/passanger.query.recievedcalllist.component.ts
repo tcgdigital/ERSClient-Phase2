@@ -37,6 +37,7 @@ export class PassangerQueryRecievedCallsListComponent implements OnInit, OnDestr
     affectedPeople: AffectedPeopleToView[];
     passengers: KeyValue[] = [];
     private ngUnsubscribe: Subject<any> = new Subject<any>();
+    public modalType :string = 'assigned';
 
     /**
      *Creates an instance of PassangerQueryRecievedCallsListComponent.
