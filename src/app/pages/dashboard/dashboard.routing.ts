@@ -11,7 +11,6 @@ const dashboardRoutes: Routes = [
         children: [
             { path: 'people', loadChildren: '../shared.components/affected.people/affected.people.module#AffectedPeopleModule' },
             { path: 'cargo', loadChildren: '../shared.components/affected.objects/affected.objects.module#AffectedObjectsModule' },
-            // { path: 'callCentre', loadChildren: '../shared.components/call.centre/call.centre.module#CallCentreModule' },
             { path: 'actionable', loadChildren: '../shared.components/actionables/actionable.module#ActionableModule' },
             { path: 'broadcast', loadChildren: '../shared.components/broadcast/broadcast.module#BroadcastModule' },
             { path: 'presidentMessage', loadChildren: '../shared.components/presidentMessage/presidentMessage.module#PrecidentMessageModule' },
@@ -20,8 +19,6 @@ const dashboardRoutes: Routes = [
             { path: 'passengerquery', loadChildren: '../shared.components/passanger.query/passanger.query.module#PassengerQueryModule' },
             { path: 'cargoquery', loadChildren: '../shared.components/cargo.query/cargo.query.module#CargoQueryModule' },
             { path: 'crewQuery', loadChildren: '../shared.components/crew.query/crew.query.module#CrewQueryModule' },
-
-
             { path: 'mediaquery', loadChildren: '../shared.components/media.query/media.query.module#MediaQueryModule' },
             { path: 'futuretravelquery', loadChildren: '../shared.components/future.travel.query/future.travel.query.module#FutureTravelQueryModule' },
             { path: 'generalupdatequery', loadChildren: '../shared.components/general.update.query/general.update.query.module#GeneralUpdateQueryModule' },
