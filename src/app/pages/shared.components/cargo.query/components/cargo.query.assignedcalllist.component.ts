@@ -23,6 +23,7 @@ export class CargoQueryAssignedCallsListComponent implements OnInit, OnDestroy {
     callId: number;
     callcenterload: boolean = false;
     public isArchive: boolean = false;
+    public modalType :string = 'received';
     private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(private callcenteronlypageservice: CallCenterOnlyPageService,

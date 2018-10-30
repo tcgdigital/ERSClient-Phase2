@@ -20,6 +20,7 @@ export class GroundVictimQueryReceivedCallsComponent implements OnInit {
     public isArchive: boolean = false;
     private callId: number;
     private callcenterload: boolean = false;
+    public modalType :string = 'assigned';
     private victims: KeyValue[] = [];
 
     private ngUnsubscribe: Subject<any> = new Subject<any>();
