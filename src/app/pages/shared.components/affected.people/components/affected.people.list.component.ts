@@ -194,7 +194,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
                 else {
                     this.isUnidentifiedShow = true;
                 }
-            })
+            });
     }
 
     mergeUnidentifiedWithPDA(affectedPeopleToView: AffectedPeopleToView): void {
@@ -207,7 +207,8 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
                             this.affectedPeopleService.ReplaceAffectedPersonInvolvement(response.Records[0].AffectedPersonId, affectedPeopleToView.AffectedPersonId)
                                 .subscribe((response: AffectedPersonInvolvementResponse) => {
                                     if (response.toString() == 'success') {
-                                        /////toast message for success.
+                                        this.toastrService.success(`The Passenger "${affectedPeopleToView.PassengerName}"
+                                        has been successfully merged with the selected unidentified passenger`, 'Success', this.toastrConfig);
                                         this.isUnidentifiedShow = false;
                                     }
                                     else {
@@ -215,6 +216,8 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
                                     }
                                 });
                         }
+                    }, (error: any) => {
+                        console.log(`Error: ${error.message}`);
                     });
             }
         }
@@ -233,7 +236,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
 
     getFileDetails(e: any): void {
         this.filesToUpload = [];
-        for (var i = 0; i < e.target.files.length; i++) {
+        for (let i = 0; i < e.target.files.length; i++) {
             const extension = e.target.files[i].name.split('.').pop();
             if (extension !== 'exe' && extension !== 'dll')
                 this.filesToUpload.push(e.target.files[i]);

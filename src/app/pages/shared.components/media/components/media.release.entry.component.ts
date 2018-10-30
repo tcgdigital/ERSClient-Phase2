@@ -45,6 +45,7 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
     isInvalidForm: boolean = false;
     isApprovedContent: boolean = false;
     isSavedContent: boolean = true;
+    public isShowSndForApprvl: boolean = true;
 
     toolbarConfig: any = GlobalConstants.EditorToolbarConfig;
     toolbarConfigApproved: any = GlobalConstants.EditorToolbarConfig;

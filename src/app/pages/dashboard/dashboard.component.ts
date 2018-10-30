@@ -118,6 +118,8 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
             (model: KeyValue) => this.departmentChangeHandler(model));
     }
 
+    // This has been implemented for selecting the first visible tab by default
+
     public ngAfterViewInit(): void {
         jQuery('li.tab-item').on('click', () => {
             const firstVisibleNestedTab: any = jQuery('.tab-containet li.nav-item:visible:first-child a');
