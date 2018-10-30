@@ -29,6 +29,7 @@ export class PassangerQueryAssignedCallsListComponent implements OnInit, OnDestr
     callcenterload: boolean = false;
     public isArchive: boolean = false;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
+    public modalType :string = 'received';
 
     /**
      *Creates an instance of PassangerQueryAssignedCallsListComponent.
