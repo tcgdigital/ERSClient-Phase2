@@ -59,7 +59,7 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
     public accessibilityErrorMessage: string = GlobalConstants.accessibilityErrorMessage;
     currentDepartmentId: number;
     currentIncidentIdLocal: number;
-   // public temp: number;
+    // public temp: number;
 
     private ngUnsubscribe: Subject<any> = new Subject<any>();
 
@@ -110,10 +110,11 @@ export class PeopleOnBoardWidgetComponent implements OnInit, OnDestroy {
 
         this.globalState.Subscribe
             (GlobalConstants.NotificationConstant.ReceivePassengerImportCompletionResponse.Key, (count: number) => {
-                if (count > 0)
+                if (count > 0) {
                     Observable.timer(1000).subscribe(() => {
                         this.getPeopleOnboardCounts(this.currentIncidentId);
                     });
+                }
                 else
                     this.toastrService.error(GlobalConstants.NotificationConstant.ReceivePassengerImportCompletionResponse.ErrorMessage,
                         GlobalConstants.NotificationConstant.ReceivePassengerImportCompletionResponse.ErrorTitle);

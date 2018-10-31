@@ -237,16 +237,17 @@
                             </md-checkbox>
                         </div>
                         <div class="form-group col-md-5 col-sm-12" [hidden]="enquiryType!=EnquiryType.Passenger">
-                            <label for="Passengers">Passenger Name <span class="required">*</span></label>
-
+                            <label *ngIf="IsIdentified==true" for="Passengers">Passenger Name <span class="required">*</span></label>
+                            <label *ngIf="IsIdentified!=true" for="Passengers">Passenger Name </label>
+                            
                             <autocomplete #passengerAutocomplete [items]="passengers" (notify)="onNotifyPassenger($event)"
                                 (InvokeAutoCompleteReset)="onResetPassenger()" [actionLinks]="actionLinks"
                                 [initialvalue]="initialvalue" [isEnabled]="IsIdentified" (actionClickHandler)="onPDAActionClick($event)">
                             </autocomplete>
                         </div>
                         <div class="form-group col-md-5 col-sm-12" [hidden]="enquiryType!=EnquiryType.Passenger">
-                            <label for="Unidentified">Unidentified <span class="required">*</span></label>
-
+                            <label for="Unidentified" *ngIf="IsIdentified==false">Unidentified PDA<span class="required" id="uid-required-tag">*</span></label>
+                            <label for="Unidentified" *ngIf="IsIdentified!=false">Unidentified PDA</label>
                             <textarea rows="1" id="Unidentified" formControlName="Unidentified" class="form-control no-resize"
                                 name="Unidentified" placeholder="Enter Unidentified"></textarea>
                         </div>
