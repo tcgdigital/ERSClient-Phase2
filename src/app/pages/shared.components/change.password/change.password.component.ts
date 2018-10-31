@@ -36,20 +36,7 @@ export class ChangePasswordComponent implements OnInit, AfterViewInit {
     }
 
     public ngAfterViewInit(): void {
-        const $self: JQuery = jQuery(this.elementRef.nativeElement);
-        $self.find('.input-group-addon').on('click', (event) => {
-            const $btn: JQuery = $(event.currentTarget);
-            const $input: JQuery = $btn.siblings('input');
-
-            if ($input.text() !== 'empty') {
-                $btn.find('i').toggleClass('fa-eye fa-eye-slash');
-                if ($btn.find('i').hasClass('fa-eye')) {
-                    $input.attr('type', 'text');
-                } else {
-                    $input.attr('type', 'password');
-                }
-            }
-        });
+        this.showHidePassword();
     }
 
     public onCancelClick($event): void {
@@ -90,9 +77,32 @@ export class ChangePasswordComponent implements OnInit, AfterViewInit {
         const formGroup: FormGroup = new FormGroup({
             OldPassword: new FormControl(changePasswordModel ? changePasswordModel.OldPassword : '', [Validators.required]),
             NewPassword: new FormControl(changePasswordModel ? changePasswordModel.NewPassword : '',
-                [Validators.required, Validators.minLength(8), Validators.maxLength(20), Validators.pattern(GlobalConstants.PASSWORD_PATTERN)]),
+                [
+                    Validators.required, 
+                    Validators.minLength(8), 
+                    Validators.maxLength(20), 
+                    // Validators.pattern(GlobalConstants.PASSWORD_PATTERN)
+                    Validators.pattern(/^(?!.*[\s])(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,20}$/)
+                ]),
             ConfirmPassword: new FormControl(changePasswordModel ? changePasswordModel.ConfirmPassword : '', [Validators.required, this.compareValidator]),
         });
         return formGroup;
     }
+
+    private showHidePassword(): void {
+        const $self: JQuery = jQuery(this.elementRef.nativeElement);
+        $self.find('.input-group-append').on('mousedown mouseup', (event) => {
+            const $btn: JQuery = $(event.currentTarget);
+            const $input: JQuery = $btn.siblings('input');
+            if ($input.text() !== 'empty') {
+                $btn.find('i').toggleClass('fa-eye fa-eye-slash');
+                if ($btn.find('i').hasClass('fa-eye')) {
+                    $input.attr('type', 'text');
+                } else {
+                    $input.attr('type', 'password');
+                }
+            }
+        });
+    }
 }
+
