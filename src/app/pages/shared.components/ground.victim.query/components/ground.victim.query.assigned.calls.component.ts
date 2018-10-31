@@ -16,6 +16,7 @@ export class GroundVictimQueryAssignedCallsComponent implements OnInit, OnDestro
     public allAssignedCalls: ExternalInputModel[] = [];
     public currentIncidentId: number;
     public isArchive: boolean = false;
+    public modalType :string = 'received';
 
     // protected _onRouteChange: Subscription;
     private callId: number;

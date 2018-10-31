@@ -34,6 +34,7 @@ export class CrewQueryRecievedCallsListComponent implements OnInit, OnDestroy {
     callId: number;
     callcenterload: boolean = false;
     public isArchive: boolean = false;
+    public modalType :string = 'assigned';
     affectedPeople: AffectedPeopleToView[];
     crews: KeyValue[] = [];
     private ngUnsubscribe: Subject<any> = new Subject<any>();

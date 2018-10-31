@@ -29,6 +29,8 @@ export class MediaQueryRecievedCallsListComponent implements OnInit, OnDestroy {
     callId: number;
     callcenterload: boolean = false;
     public isArchive: boolean = false;
+    public modalType :string = 'assigned';
+
     private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(private callcenteronlypageservice: CallCenterOnlyPageService,

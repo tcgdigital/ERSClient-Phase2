@@ -28,6 +28,7 @@ export class OtherQueryRecievedCallsListComponent implements OnInit, OnDestroy {
     callId: number;
     callcenterload: boolean = false;
     public isArchive: boolean = false;
+    public modalType :string = 'assigned';
     private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     /**
