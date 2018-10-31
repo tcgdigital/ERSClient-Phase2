@@ -180,7 +180,6 @@ export class PresidentMessageApprovalEntryComponent implements OnInit, OnDestroy
                     this.toastrService.success('President Message is approved successfully.', 'Success', this.toastrConfig);
                 if(this.Action === "Reject")
                      this.toastrService.success('President Message is rejected successfully.', 'Success', this.toastrConfig);
-                     
                 this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.PresidentMessageApprovalUpdated, response);                                                
                
                 this.showAdd = false; 
