@@ -900,7 +900,7 @@ export class DemandEntryComponent implements OnInit, OnDestroy {
             // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
             .subscribe((response: DemandModel) => {
-                this.toastrService.success('Demand successfully created.', 'Success', this.toastrConfig);
+                this.toastrService.success(`Demand successfully created with Demand Code: ${this.demandModel.DemandCode}.`, 'Success', this.toastrConfig);
                 const num = UtilityService.UUID();
                 this.globalStateProxyOpen.NotifyDataChanged(GlobalConstants.DataExchangeConstant.DemandAddedUpdated, num);
                 this.initializeForm();

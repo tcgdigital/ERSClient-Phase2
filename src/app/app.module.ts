@@ -11,7 +11,7 @@ import {
 import { Ng2BootstrapModule, ModalModule } from 'ngx-bootstrap';
 import { ToastrModule } from 'ngx-toastr';
 import { AgmCoreModule } from '@agm/core';
-import { NgxMaskModule } from 'ngx-mask'
+import { NgxMaskModule } from 'ngx-mask';
 
 import { routing } from './app.routing';
 import { SharedModule } from './shared';
