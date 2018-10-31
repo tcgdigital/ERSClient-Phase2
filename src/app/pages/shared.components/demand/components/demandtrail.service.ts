@@ -20,8 +20,7 @@ export class DemandTrailService extends ServiceBase<DemandTrailModel> implements
 
     getDemandTrailByDemandId(demandId): Observable<ResponseModel<DemandTrailModel>> {
         return this._dataService.Query()
-            .Filter(`DemandId eq  ${demandId}`)
+            .Filter(`DemandId eq ${demandId}`)
             .Execute();
-
     }
 }
