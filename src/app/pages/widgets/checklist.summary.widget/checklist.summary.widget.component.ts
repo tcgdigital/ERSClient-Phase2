@@ -92,8 +92,9 @@ export class ChecklistSummaryWidgetComponent implements OnInit, OnDestroy {
 
         this.globalState.Subscribe
             (GlobalConstants.NotificationConstant.ReceiveChecklistCreationResponse.Key, (count: number) => {
-                if (count > 0)
+                if (count > 0) {
                     this.getActionableCount(this.currentIncidentId, this.currentDepartmentId);
+                }
             });
     }
 
