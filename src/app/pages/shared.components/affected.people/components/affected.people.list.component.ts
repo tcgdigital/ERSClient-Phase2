@@ -503,8 +503,9 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
 
         this.globalState.Subscribe
             (GlobalConstants.NotificationConstant.ReceivePassengerImportCompletionResponse.Key, (count: number) => {
-                if (count > 0)
+                if (count > 0) {
                     this.getAffectedPeople(this.currentIncident);
+                }
             });
     }
 
