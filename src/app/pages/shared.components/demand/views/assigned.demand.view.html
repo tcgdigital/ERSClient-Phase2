@@ -143,7 +143,7 @@
                         <div class="row">
                             <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                 <label for="DemandTypeId">Demand Type</label>
-                                <span class="form-control" for="DemandTypeId">{{demand.DemandTypeName}}</span>
+                                <span class="form-control text-truncate" [attr.title]="demand.DemandTypeName" for="DemandTypeId">{{demand.DemandTypeName}}</span>
                             </div>
                             <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                 <label for="Priority">Priority</label>
@@ -153,7 +153,7 @@
                         <div class="row">
                             <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                 <label for="DemandDesc">Demand Description:</label>
-                                <span class="form-control" for="DemandTypeId">{{demand.DemandDesc}}</span>
+                                <span class="form-control text-truncate" [attr.title]="demand.DemandDesc" for="DemandTypeId">{{demand.DemandDesc}}</span>
                             </div>
                             <div class="form-group col-lg-6 col-md-6 col-sm-4">
                                 <div class="row">
