@@ -7,7 +7,7 @@
         </div>
         <div class="row no-gutters">
             <div *ngIf="!(isShowUploadOtherReport | accesibility:departmentId:'UploadOtherReport')" class="row no-gutters">
-                <span class="accessibility-error">{{accessibilityErrorMessage}}</span>
+                <span class="accessibility-error-small-widget">{{accessibilityErrorMessage}}</span>
             </div>
             <div class="col widget-block reportform" *ngIf="isShowUploadOtherReport | accesibility:departmentId:'UploadOtherReport'">
                 <form [formGroup]="form">

@@ -63,6 +63,22 @@
     }
 }
 
+.accessibility-error-small-widget {
+    height: 118px !important;
+    display: inherit;
+    &.accessibility-error-small-widget:before {
+        content: "\f071";
+        font-family: FontAwesome;
+        height: 17px;
+        position: absolute;
+        margin-top: 20px;
+        left: 20px;
+        font-size: 18px;
+        color: #ff0000;
+    }
+}
+
+
 .clock-container>div>span.accessibility-error {
     font-size: 12px;
     padding: 20px 13px 5px 35px !important;

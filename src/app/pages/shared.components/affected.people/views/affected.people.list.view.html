@@ -374,8 +374,8 @@
 
                     <div class="row">
                         <ng-template [ngIf]="!affectedPersonModelForStatus.IsCrew">
-                            <div class="form-group col-lg-6" *ngIf="isUnidentifiedShow">
-                                <div class="col-md-8 col-sm-12">
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12" >
+                                <div class="col-md-8 col-sm-12" *ngIf="isUnidentifiedShow">
                                     <label for="MedicalStatusToshow">Unidentified Passengers:</label>
                                     <select id="UnidentifiedPassenger" [(ngModel)]="affectedPersonModelForStatus.UnidentifiedPassengerId"
                                         class="form-control">
@@ -384,11 +384,11 @@
                                         </option>
                                     </select>
                                 </div>
-                                <div class="col-md-4 col-sm-12">
+                                <div class="col-md-4 col-sm-12" *ngIf="isUnidentifiedShow">
                                     <button class="btn btn-primary mt-3" type="button" (click)="mergeUnidentifiedWithPDA(affectedPersonModelForStatus)">Merge</button>
                                 </div>
                             </div>
-                            <div class="form-group col-lg-6 text-right" *ngIf="!isArchive">
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12 text-right" *ngIf="!isArchive">
                                 <button class="btn btn-primary mt-3" type="button" (click)="saveUpdateAffectedPerson(affectedPersonModelForStatus)">Submit</button>
                             </div>
                         </ng-template>
