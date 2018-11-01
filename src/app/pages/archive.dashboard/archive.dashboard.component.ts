@@ -1,5 +1,5 @@
 import {
-    Component, ViewEncapsulation, ElementRef, OnInit, OnDestroy
+    Component, ViewEncapsulation, ElementRef, OnInit, OnDestroy, AfterViewInit
 } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import {
@@ -17,7 +17,7 @@ import { Subject, Observable } from 'rxjs';
     styleUrls: ['./archive.dashboard.style.scss'],
     encapsulation: ViewEncapsulation.None,
 })
-export class ArchiveDashboardComponent implements OnInit, OnDestroy {
+export class ArchiveDashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     public tablinks: ITabLinkInterface[];
     archievedIncidentId: number;
     currentDepartmentId: number;
@@ -65,6 +65,25 @@ export class ArchiveDashboardComponent implements OnInit, OnDestroy {
         this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
             (model: KeyValue) => this.departmentChangeHandler(model));
         this.GetIncidentAndDepartment();
+    }
+
+    public ngAfterViewInit(): void {
+        jQuery('#dashboard-tabs .tab-control li.tab-item').on('click', () => {
+            const firstVisibleNestedTab: any = jQuery('#dashboard-tabs .tab-containet li.nav-item:visible:first-child a');
+            if (firstVisibleNestedTab.length > 0) {
+                const url: string = jQuery('#dashboard-tabs .tab-containet li.nav-item:visible:first-child a').attr('href');
+                if (this.routerObj.url != url) {
+                    setTimeout(() => {
+                        this.routerObj.navigateByUrl(url)
+                            .then((status: Boolean) => {
+                                console.log(`Successfully navigated to ${url}, Status: ${status}`);
+                            }).catch(reason => {
+                                console.log(`Failed to navigate to ${url}, Reason: ${reason}`);
+                            });
+                    }, 10);
+                }
+            }
+        });
     }
 
     ngOnDestroy(): void {
