@@ -71,7 +71,6 @@
     </div>
 </div>
 
-
 <div bsModal #childModalRemarks="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -83,7 +82,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="row holderRemark" *ngIf="!isArchive">
+                <div class="row" *ngIf="!isArchive">
                     <div class="col-lg-8 col-sm-12 col-md-6 form-group">
                         <label>Remarks</label><span class="required">*</span>
                         <input [(ngModel)]="Remarks" class="form-control" type="text" />
@@ -94,7 +93,9 @@
                             <button class="btn btn-primary" type="button" (click)="saveRemark(Remarks)" *ngIf="!isArchive">Submit</button>
                         </div>
                     </div>
-                    <div class="card-block">
+                </div>
+                <div class="row">
+                    <div class="col-12">
                         <responsive-table>
                             <table responsive-table-body>
                                 <thead>
@@ -110,7 +111,8 @@
                                     <tr *ngFor="let remark of demandRemarks">
                                         <td data-title="Requester Department">{{remark.RequesterDepartmentName}}&nbsp;</td>
                                         <td data-title="Remarks added by">{{remark.CreatedByName}}&nbsp;</td>
-                                        <td data-title="Remarks added on">{{remark.CreatedOn | customDate: 'DD-MMM-YYYY HH:mm'}}&nbsp;</td>
+                                        <td data-title="Remarks added on">{{remark.CreatedOn | customDate: 'DD-MMM-YYYY HH:mm'}}&nbsp;
+                                        </td>
                                         <td data-title="Remarks">{{remark.Remark}}&nbsp;</td>
                                     </tr>
                                 </tbody>
@@ -122,7 +124,6 @@
         </div>
     </div>
 </div>
-
 
 
 <div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
