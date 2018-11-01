@@ -1,76 +1,80 @@
-<div *ngIf="showAdd" class="formStyle card-block entryHolder">
-    <form [formGroup]="form">
-        <div class="panel panel-default panel-minimal">
-            <div class="panel-body InnerHolder">
-                <input type="hidden" *ngIf="PresidentsMessage.PresidentsMessageId != undefined" [(ngModel)]="PresidentsMessage.PresidentsMessageId"
-                    formControlName="PresidentsMessageId">
-                <div class="AllSearchHolder">
-
-                    <div class="row">
-                        <div class="col-sm-12 col-lg-4 col-md-6">
-                            <div class="form-group">
-                                <label for="Media Release Type">Select President Message Type:<span class="required">*</span></label>
-                                <select id="selectMediaRelease" formControlName="PresidentMessageType" name="PresidentMessageType"
-                                    [ngModel]="currentTemplateMediaId" class="form-control" (change)="getContentFromTemplate($event)">
-                                    <option value=''>Select President Message Type</option>
-                                    <option *ngFor="let template of templateMedias" [value]="template.TemplateMediaId">
-                                        {{template.TemplatePurpose}}
-                                    </option>
-                                </select>
-                                <small class="text-danger" [hidden]="hideRemarksError">
-                                    Required.
-                                </small>
+<div class="row">
+    <div class="col-lg-12">
+        <div *ngIf="showAdd" class="formStyle card-block entryHolder">
+            <form [formGroup]="form">
+                <div class="panel panel-default panel-minimal">
+                    <div class="panel-body InnerHolder">
+                        <input type="hidden" *ngIf="PresidentsMessage.PresidentsMessageId != undefined" [(ngModel)]="PresidentsMessage.PresidentsMessageId"
+                            formControlName="PresidentsMessageId">
+                        <div class="AllSearchHolder">
+        
+                            <div class="row">
+                                <div class="col-sm-12 col-lg-4 col-md-6">
+                                    <div class="form-group">
+                                        <label for="Media Release Type">Select President Message Type:<span class="required">*</span></label>
+                                        <select id="selectMediaRelease" formControlName="PresidentMessageType" name="PresidentMessageType"
+                                            [ngModel]="currentTemplateMediaId" class="form-control" (change)="getContentFromTemplate($event)">
+                                            <option value=''>Select President Message Type</option>
+                                            <option *ngFor="let template of templateMedias" [value]="template.TemplateMediaId">
+                                                {{template.TemplatePurpose}}
+                                            </option>
+                                        </select>
+                                        <small class="text-danger" [hidden]="hideRemarksError">
+                                            Required.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row"></div>
+                            <br />
+        
+                            <div class="row">
+                                <div class="col-sm-12 col-lg-6 col-md-6">
+                                    <div class="form-group">
+                                        <label for="Message">President's Message:<span class="required">*</span></label>
+                                        <ckeditor formControlName="Message" [(ngModel)]="PresidentsMessage.Message" debounce="500"
+                                            (change)="onMessageChange($event)" (blur)="onMessageBlur($event)" (focus)="onMessageFocus($event)"
+                                            (ready)="onMessageReady($event)" [config]="toolbarConfig">
+                                        </ckeditor>
+        
+                                        <small class="text-danger" [hidden]="hideMessageError">
+                                            Required.
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-lg-6 col-md-6">
+                                    <div class="form-group">
+                                        <label for="Remarks">Remarks:</label>
+                                        <textarea class="form-control" id="Remarks" formControlName="Remarks" [readOnly]="PresidentsMessage.IsPublished"
+                                            placeholder="Enter Remarks" [(ngModel)]="PresidentsMessage.Remarks" required
+                                            autofocus rows="16">
+                                        </textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 col-lg-12 col-md-12">
+                                    <div class="buttonholder">
+                                        <button class="btn btn-primary" (click)="SentForApproval()" *ngIf="isShowSndForApprvl | accesibility:initiatedDepartmentId:'SendPresidentMessageforApproval'"
+                                            [disabled]="applyReadOnlyButtons">Send for Approval</button>
+                                        <button class="btn btn-primary" (click)="publish()" [disabled]="appReadOnlyPublish">Publish</button>
+                                        <button class="btn btn-primary" (click)="save()" [disabled]="applyReadOnlyButtons">Save</button>
+                                        <button class="btn btn-warning" (click)="cancel()">Cancel</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row"></div>
-                    <br />
-
-                    <div class="row">
-                        <div class="col-sm-12 col-lg-6 col-md-6">
-                            <div class="form-group">
-                                <label for="Message">President's Message:<span class="required">*</span></label>
-                                <ckeditor formControlName="Message" [(ngModel)]="PresidentsMessage.Message" debounce="500"
-                                    (change)="onMessageChange($event)" (blur)="onMessageBlur($event)" (focus)="onMessageFocus($event)"
-                                    (ready)="onMessageReady($event)" [config]="toolbarConfig">
-                                </ckeditor>
-
-                                <small class="text-danger" [hidden]="hideMessageError">
-                                    Required.
-                                </small>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-lg-6 col-md-6">
-                            <div class="form-group">
-                                <label for="Remarks">Remarks:</label>
-                                <textarea class="form-control" id="Remarks" formControlName="Remarks" [readOnly]="PresidentsMessage.IsPublished"
-                                    placeholder="Enter Remarks" [(ngModel)]="PresidentsMessage.Remarks" required
-                                    autofocus></textarea>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12 col-lg-12 col-md-12">
-                            <div class="buttonholder">
-                                <button class="btn btn-primary" (click)="SentForApproval()" *ngIf="isShowSndForApprvl | accesibility:initiatedDepartmentId:'SendPresidentMessageforApproval'"
-                                    [disabled]="applyReadOnlyButtons">Send for Approval</button>
-                                <button class="btn btn-primary" (click)="publish()" [disabled]="appReadOnlyPublish">Publish</button>
-                                <button class="btn btn-primary" (click)="save()" [disabled]="applyReadOnlyButtons">Save</button>
-                                <button class="btn btn-warning" (click)="cancel()">Cancel</button>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
-            </div>
+            </form>
         </div>
-    </form>
-
+    </div>
 </div>
 
-
-<div class="addbuttonHolder">
-    <button class="btn btn-primary" type="submit" (click)="showAddRegion(showAdd)" [disabled]="PresidentsMessage.IsPublished && showAdd">Add
-        New President's Message to publish</button>
+<div class="row">
+    <div class="col-lg-12 text-right mb-2">
+        <button class="btn btn-primary" type="submit" (click)="showAddRegion(showAdd)" [disabled]="PresidentsMessage.IsPublished && showAdd">Add
+            New President's Message to publish
+        </button>
+    </div>
 </div>
