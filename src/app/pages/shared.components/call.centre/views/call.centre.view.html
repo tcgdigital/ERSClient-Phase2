@@ -249,7 +249,7 @@
                             <label for="Unidentified" *ngIf="IsIdentified==false">Unidentified PDA<span class="required" id="uid-required-tag">*</span></label>
                             <label for="Unidentified" *ngIf="IsIdentified!=false">Unidentified PDA</label>
                             <textarea rows="1" id="Unidentified" formControlName="Unidentified" class="form-control no-resize"
-                                name="Unidentified" placeholder="Enter Unidentified"></textarea>
+                                name="Unidentified" [(ngModel)]="defaultvalue" placeholder="Enter Unidentified PDA"></textarea>
                         </div>
                     </div>
 

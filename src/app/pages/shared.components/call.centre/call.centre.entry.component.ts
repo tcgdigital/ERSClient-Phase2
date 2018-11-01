@@ -44,6 +44,8 @@ import { PeopleOnBoardWidgetService } from '../../widgets';
 import { GroundVictimModel, GroundVictimService, AffectedVictimToView } from '../ground.victim';
 
 import { AffectedService } from '../affected/components/affected.service';
+import { FormsModule } from '@angular/forms';
+
 
 @Component({
     selector: 'call-centre-main',
@@ -73,6 +75,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
     @Input('callid') public callid: number;
     @Input('enquiryType') public enquiryType: number;
     @Input('modalType') public modalType: string = 'received';
+    
 
     public form: FormGroup;
     public activeKeyValues: KeyValueModel[] = [];
@@ -168,6 +171,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
     public EnquiryType: typeof EnquiryType = EnquiryType;
 
     private ngUnsubscribe: Subject<any> = new Subject<any>();
+    public defaultvalue: string;
 
     /**
      *Creates an instance of EnquiryEntryComponent.
@@ -1470,6 +1474,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
     public onChange($event: any): void {
         if ($event.checked) {
             this.form.controls["Unidentified"].disable();
+            this.defaultvalue='';
         }
         else {
             this.form.controls["Unidentified"].enable();
@@ -1478,6 +1483,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
             this.copassengerlistpnr = [];
             this.selectedcountpnr = 0;
             this.passengerAutocomplete.query = '';
+            this.defaultvalue='';
         }
         this.IsIdentified = $event.checked;
     }
