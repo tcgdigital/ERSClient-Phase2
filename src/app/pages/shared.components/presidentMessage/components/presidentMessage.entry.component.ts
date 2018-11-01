@@ -258,6 +258,12 @@ export class PresidentMessageEntryComponent implements OnInit, OnDestroy {
             this.PresidentsMessage.SentForApprovalContent = this.form.controls['Message'].value;
             this.PresidentsMessage.PresidentMessageStatus = 'SentForApproval';
             this.PresidentsMessage.SentForApprovalOn = new Date();
+
+            // This has been implemented to clear the values so that once it gets rejected and goes for re-approval the data model has the values assigned properly
+            this.PresidentsMessage.ApprovedBy = null;
+            this.PresidentsMessage.ApprovedOn = null;
+            this.PresidentsMessage.RejectedBy = null;
+            this.PresidentsMessage.RejectedOn = null;
         }
 
         if (this.Action === 'Publish') {
