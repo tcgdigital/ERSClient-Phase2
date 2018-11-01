@@ -289,6 +289,12 @@ export class MediaReleaseEntryComponent implements OnInit, OnDestroy {
             this.media.SentForApprovalContent = this.form.controls['Message'].value;
             this.media.MediaReleaseStatus = 'SentForApproval';
             this.media.SentForApprovalOn = new Date();
+
+             // This has been implemented to clear the values so that once it gets rejected and goes for re-approval the data model has the values assigned properly
+             this.media.ApprovedBy = null;
+             this.media.ApprovedOn = null;
+             this.media.RejectedBy = null;
+             this.media.RejectedOn = null;
         }
 
         if (this.Action === 'Publish') {
