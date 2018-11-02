@@ -8,12 +8,12 @@ import {
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { UserProfileService } from './userprofile.service';
 import { UserProfileModel, UserAuthenticationModel } from './userprofile.model';
-import { ValidationResultModel } from '../../../../shared/models';
+import { ValidationResultModel, KeyValue } from '../../../../shared/models';
 
 import {
     DataExchangeService, GlobalConstants,
     UtilityService, AuthModel, UserIdValidator,
-    FileData, FileUploadService
+    FileData, FileUploadService, GlobalStateService
 } from '../../../../shared';
 import { Subject } from 'rxjs/Subject';
 
@@ -42,12 +42,16 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
     HRTrainingTemplatePath: string = './assets/static-content/PRHR_Training_YYYYMMDD.csv';
     public showAddText: string = 'ADD USER';
     private ngUnsubscribe: Subject<any> = new Subject<any>();
+    public isShow: boolean = true;
+    public currentDepartmentId: number;
 
     constructor(private userProfileService: UserProfileService,
         private dataExchange: DataExchangeService<UserProfileModel>,
         private fileUploadService: FileUploadService,
         private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig) {
+        private toastrConfig: ToastrConfig,
+        private globalState: GlobalStateService
+    ) {
     }
 
     ngOnInit(): void {
@@ -55,6 +59,10 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
         this.showAdd = false;
         this.initiateForm();
         this.credential = UtilityService.getCredentialDetails();
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
+            (model: KeyValue) => { this.currentDepartmentId = model.Value; });
 
         this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.UserProfileModelToBeModified,
             (model: UserProfileModel) => this.onUserProfileModified(model));

@@ -13,10 +13,9 @@ import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import { QuickLinkModel } from './quicklink.model';
 import { QuickLinkService } from './quicklink.service';
 import {
-    ResponseModel, DataExchangeService,
+    DataExchangeService, GlobalStateService,
     AuthModel, UtilityService, FileUploadService, GlobalConstants,
-    IUploadDocuments,
-    KeyValue
+    IUploadDocuments, KeyValue
 } from '../../../../shared';
 import { QuickLinkGroupModel, QuickLinkGroupComponent } from '../../quicklinkgroup';
 import { Subject } from 'rxjs';
@@ -32,7 +31,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
 
     public form: FormGroup;
     public submitted: boolean;
-    public groupCaption: string= 'Group Name:';
+    public groupCaption: string = 'Group Name:';
     filesToUpload: File[];
     filepathWithLinks: string = null;
     fileName: string = null;
@@ -50,13 +49,17 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
     selectedGroup: KeyValue;
     enableAddButtonOnGroupSelection: boolean = true;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
+    public isShow: boolean = true;
+    public currentDepartmentId: number;
 
-    constructor(private formBuilder: FormBuilder, 
+    constructor(private formBuilder: FormBuilder,
         private quickLinkService: QuickLinkService,
         private dataExchange: DataExchangeService<QuickLinkModel>,
-        private fileUploadService: FileUploadService, 
+        private fileUploadService: FileUploadService,
         private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig) {
+        private toastrConfig: ToastrConfig,
+        private globalState: GlobalStateService
+    ) {
         this.showAdd = false;
         this.buttonValue = "Add QuickLink";
     }
@@ -65,6 +68,11 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
         this.fileName = null;
         this.submitted = false;
         this.credential = UtilityService.getCredentialDetails();
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
+            (model: KeyValue) => { this.currentDepartmentId = model.Value; });
+
         this.initializeInputForm();
         this.initiateQuickLinkModel();
     }
@@ -128,7 +136,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     onSubmit(values: Object): void {
-        
+
         this.submitted = true;
         if (this.form.valid) {
             if (this.form.controls['QuickLinkURL'].value != '') { //URL Validation Region
@@ -154,7 +162,7 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
                     this.quickLinkModel.UploadURL = this.filepathWithLinks;
 
                     if (this.selectedGroup) {
-                         this.quickLinkModel.QuickLinkGroupId = this.selectedGroup.Value;
+                        this.quickLinkModel.QuickLinkGroupId = this.selectedGroup.Value;
                     }
                     if ((this.quickLinkModel.QuickLinkGroupId == 0 || this.quickLinkModel.QuickLinkGroupId == undefined)
                         && this.quickLinkGroupComponent.getCurrentText() != '') {
@@ -189,15 +197,13 @@ export class QuickLinkEntryComponent implements OnInit, OnDestroy, AfterViewInit
                     this.quickLinkModelEdit.deleteAttributes();
 
                     if (this.selectedGroup) {
-                        if(this.selectedGroup.Value==undefined)
-                        {
+                        if (this.selectedGroup.Value == undefined) {
                             this.quickLinkModelEdit.QuickLinkGroupId = this.quickLinkModel.QuickLinkGroupId;
                         }
-                        else
-                        {
+                        else {
                             this.quickLinkModelEdit.QuickLinkGroupId = this.selectedGroup.Value;
                         }
-                        
+
                     }
                     if ((this.quickLinkModelEdit.QuickLinkGroupId == 0 || this.quickLinkModelEdit.QuickLinkGroupId == undefined)
                         && this.quickLinkGroupComponent.getCurrentText() != '') {

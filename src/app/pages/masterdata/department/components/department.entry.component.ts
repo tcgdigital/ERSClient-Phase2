@@ -12,7 +12,7 @@ import { DepartmentModel } from './department.model';
 import { UserProfileService, UserProfileModel } from '../../userprofile';
 import {
     ResponseModel, UtilityService, GlobalConstants,
-    DataExchangeService, BaseModel, AuthModel
+    DataExchangeService, BaseModel, AuthModel, KeyValue, GlobalStateService
 } from '../../../../shared';
 
 @Component({
@@ -30,6 +30,8 @@ export class DepartmentEntryComponent implements OnInit, OnDestroy {
     submitted: boolean = false;
     public showAddText: string = 'ADD DEPARTMENT';
     private ngUnsubscribe: Subject<any> = new Subject<any>();
+    public isShow: boolean = true;
+    public currentDepartmentId: number;
 
     /**
      *Creates an instance of DepartmentEntryComponent.
@@ -44,7 +46,9 @@ export class DepartmentEntryComponent implements OnInit, OnDestroy {
         private userService: UserProfileService,
         private dataExchange: DataExchangeService<DepartmentModel>,
         private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig) { }
+        private toastrConfig: ToastrConfig,
+        private globalState: GlobalStateService
+    ) { }
 
     mergeResponses(): void {
         const activeUsers: Observable<ResponseModel<UserProfileModel>>
@@ -85,6 +89,10 @@ export class DepartmentEntryComponent implements OnInit, OnDestroy {
         this.departmentModel.CreatedBy = +this.credential.UserId;
         this.departmentModel.DepartmentId = 0;
         this.showAdd = false;
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
+            (model: KeyValue) => { this.currentDepartmentId = model.Value; });
     }
 
     ngOnDestroy(): void {

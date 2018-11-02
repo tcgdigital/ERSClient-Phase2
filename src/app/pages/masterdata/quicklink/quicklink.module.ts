@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QuickLinkRouting } from './quicklink.routing';
 import { QuickLinkComponent } from './quicklink.component';
 import { QuickLinkEntryComponent, QuickLinkListComponent, QuickLinkService } from './components';
-import { DataExchangeService , SharedModule,FileUploadService } from '../../../shared';
+import { DataExchangeService , SharedModule,FileUploadService, GlobalStateService } from '../../../shared';
 import { MdCheckboxModule } from '@angular2-material/checkbox';
 import { QuickLinkGroupModule } from '../quicklinkgroup';
 
@@ -31,6 +31,7 @@ import { QuickLinkGroupModule } from '../quicklinkgroup';
         QuickLinkService,
         DataExchangeService,
         FileUploadService,
+        GlobalStateService
     ]
 })
 export class QuickLinkModule { }

@@ -11,10 +11,9 @@ import { DepartmentModel, DepartmentService } from '../../department';
 import { DemandTypeModel } from './demandtype.model';
 import {
     ResponseModel, DataExchangeService,
-    AuthModel, UtilityService, GlobalConstants
+    AuthModel, UtilityService, GlobalConstants,KeyValue,GlobalStateService
 } from '../../../../shared';
 import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs';
 
 @Component({
     selector: 'demandtype-entry',
@@ -35,7 +34,8 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
     public submitted: boolean;
     public showAddText: string = 'ADD DEMAND TYPE';
     private ngUnsubscribe: Subject<any> = new Subject<any>();
-
+    public currentDepartmentId: number;
+    public isShow: boolean = true;
     /**
      *Creates an instance of DemandTypeEntryComponent.
      * @param {DemandTypeService} demandTypeService
@@ -49,7 +49,9 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         private departmentService: DepartmentService,
         private dataExchange: DataExchangeService<DemandTypeModel>,
         private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig) { }
+        private toastrConfig: ToastrConfig,
+        private globalState: GlobalStateService
+    ) { }
 
     getAllDepartments(): void {
         this.departmentService.GetAll()
@@ -134,6 +136,10 @@ export class DemandTypeEntryComponent implements OnInit, OnDestroy {
         this.demandTypeModel.CreatedOn = this.date;
         this.demandTypeModel.DemandTypeId = 0;
         this.Action = 'Submit';
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
+            (model: KeyValue) => { this.currentDepartmentId = model.Value; });
 
         this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.OnDemandUpdate,
             (model: DemandTypeModel) => this.onDemandTypeUpdate(model));
