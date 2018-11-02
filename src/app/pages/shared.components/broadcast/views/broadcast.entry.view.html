@@ -1,71 +1,80 @@
-<div *ngIf="showAdd" (click)="showList1(); $event.stopPropagation();" class="formStyle card-block entryHolder">
-    <form [formGroup]="form">
-        <input type="hidden" *ngIf="broadcast.BroadcastId != undefined" [(ngModel)]="broadcast.BroadcastId" formControlName="BroadcastId">
-
-        <div class="row">
-            <div class="col-lg-6 col-sm-12">
-                <div class="form-group">
-                    <label for="Message">Broadcast Message:<span class="required">*</span></label><span class="MaxChartr">Max 1000 chars</span>
-                    <textarea class="form-control" id="Message" formControlName="Message" [readOnly]="broadcast.IsSubmitted" maxlength="1000"
-                        placeholder="Enter Broadcast Message" [(ngModel)]="broadcast.Message" required autofocus></textarea>
-                    <small *ngIf="!form.controls.Message.valid" class="text-danger">
+<div class="row">
+    <div class="col-lg-12">
+        <div *ngIf="showAdd" (click)="showList1(); $event.stopPropagation();" class="formStyle card-block entryHolder">
+            <form [formGroup]="form">
+                <input type="hidden" *ngIf="broadcast.BroadcastId != undefined" [(ngModel)]="broadcast.BroadcastId"
+                    formControlName="BroadcastId">
+        
+                <div class="row">
+                    <div class="col-lg-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="Message">Broadcast Message:<span class="required">*</span></label><span class="MaxChartr">Max
+                                1000 chars</span>
+                            <textarea class="form-control" id="Message" formControlName="Message" [readOnly]="broadcast.IsSubmitted"
+                                maxlength="1000" placeholder="Enter Broadcast Message" [(ngModel)]="broadcast.Message" required
+                                autofocus></textarea>
+                            <small *ngIf="!form.controls.Message.valid" class="text-danger">
+                                Required.
+                            </small>
+                        </div>
+                    </div>
+        
+                    <div class="col-sm-6 col-lg-3">
+                        <label for="ParentCheckListId">Select Department: <span class="required">*</span></label>
+                        <div class="multiselect-container">
+                            <div class="multiselect-selector" (click)="showList(); $event.stopPropagation();">
+                                <i class="fa fa-pull-right expandStyle" [ngClass]="isDepartmentSelected ? 'fa-times text-danger' : 'fa-caret-down'"
+                                    aria-hidden="true"></i>
+                                {{selectedcount>0 ? selectedcount + ' Department(s) selected' : 'Select Department'}}
+                            </div>
+                            <ul class="multiselect-list" [hidden]="!isDepartmentSelected" (click)="$event.stopPropagation();">
+                                <li>
+                                    <input type="checkbox" [(ngModel)]="IsAllSelected" formControlName="SelectAllDepartment"
+                                        aria-label="Callback" (change)="selectAllDepartment(IsAllSelected)" [readOnly]="broadcast.IsSubmitted" />
+                                    <span>Select All</span>
+                                </li>
+                                <li *ngFor="let BroadCastDepartmentMappingModel of BroadCastDepartmentMappings">
+                                    <input type="checkbox" formControlName="BroadCastDepartmentMappings" aria-label="Callback"
+                                        [checked]="BroadCastDepartmentMappingModel.IsSelected" (change)="selectDepartment($event,BroadCastDepartmentMappingModel)"
+                                        [readOnly]="broadcast.IsSubmitted" />
+                                    <span>{{BroadCastDepartmentMappingModel.TargetDepartment.DepartmentName}}</span>
+                                </li>
+                            </ul>
+                            <span [hidden]="hideDeptError">Please Select Department</span>
+                            <small *ngIf="selectedcount==0" class="text-danger">
+                                Required.
+                            </small>
+                        </div>
+                    </div>
+        
+                    <div class="col-sm-6 col-lg-3">
+                        <label for="Priority">Priority<span class="required">*</span></label>
+                        <select id="selectPriority" class="form-control" [(ngModel)]="broadcast.Priority" formControlName="Priority">
+                            <option value=''>Select Priority</option>
+                            <option *ngFor="let priority of priorities" [value]="priority.caption">
+                                {{priority.caption}}
+                            </option>
+                        </select>
+                        <small *ngIf="!form.controls.Priority.valid" class="text-danger">
                             Required.
                         </small>
-                </div>
-            </div>
-            <div class="col-sm-6 col-lg-3">
-                <label for="ParentCheckListId">Select Department: <span class="required">*</span></label>
-                <div class="multiselect-container">
-                    <div class="multiselect-selector" (click)="showList(); $event.stopPropagation();">
-                        <i class="fa fa-pull-right expandStyle" [ngClass]="isDepartmentSelected ? 'fa-times text-danger' : 'fa-caret-down'" aria-hidden="true"></i> 
-                        {{selectedcount>0 ? selectedcount + ' Department(s) selected' : 'Select Department'}}
                     </div>
-                    <ul class="multiselect-list" [hidden]="!isDepartmentSelected" (click)="$event.stopPropagation();">
-                        <li>
-                            <input type="checkbox" [(ngModel)]="IsAllSelected" formControlName="SelectAllDepartment" aria-label="Callback" (change)="selectAllDepartment(IsAllSelected)"
-                                [readOnly]="broadcast.IsSubmitted" />
-                            <span>Select All</span>
-                        </li>
-                        <li *ngFor="let BroadCastDepartmentMappingModel of BroadCastDepartmentMappings">
-                            <input type="checkbox" formControlName="BroadCastDepartmentMappings" aria-label="Callback" [checked]="BroadCastDepartmentMappingModel.IsSelected"
-                                (change)="selectDepartment($event,BroadCastDepartmentMappingModel)" [readOnly]="broadcast.IsSubmitted"
-                            />
-                            <span>{{BroadCastDepartmentMappingModel.TargetDepartment.DepartmentName}}</span>                            
-                        </li>
-                    </ul>
-                    <span [hidden]="hideDeptError">Please Select Department</span>
-                    <small *ngIf="selectedcount==0" class="text-danger">
-                        Required.
-                    </small>
                 </div>
-            </div>
-            <div class="col-sm-6 col-lg-3">
-                <label for="Priority">Priority<span class="required">*</span></label>
-                <select id="selectPriority" class="form-control" [(ngModel)]="broadcast.Priority" formControlName="Priority">
-            <option value=''>Select Priority</option>
-            <option *ngFor="let priority of priorities" [value]="priority.caption">
-                    {{priority.caption}}
-            </option>
-        </select>
-        <small *ngIf="!form.controls.Priority.valid" class="text-danger">
-            Required.
-        </small>
-            </div>
+        
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button class="btn btn-primary" type="submit" (click)="save(true)" [disabled]="broadcast.IsSubmitted">Submit</button>
+                        <button class="btn btn-primary" type="submit" (click)="save(false)" [disabled]="broadcast.IsSubmitted">Save</button>
+                        <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
+                    </div>
+                </div>
+            </form>
         </div>
-        <div><br/></div>
-        <div class="col-sm-12">
-            <div class="TxtAlRght">
-                <button class="btn btn-primary" type="submit" (click)="save(true)" [disabled]="broadcast.IsSubmitted">Submit</button>
-                <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
-                <button class="btn btn-primary" type="submit" (click)="save(false)" [disabled]="broadcast.IsSubmitted">Save</button>
-            </div>
-        </div>
-        <br/>
-    </form>
+    </div>
 </div>
 
-
-
-<div class="addbuttonHolder" *ngIf="!isArchive">
-    <button class="btn btn-primary" type="submit" (click)="showAddRegion(showAdd)" [disabled]="broadcast.IsSubmitted && showAdd">{{buttonValue}}</button>
+<div class="row" *ngIf="!isArchive">
+    <div class="col-lg-12 text-right">
+        <button class="btn btn-primary" type="submit" (click)="showAddRegion(showAdd)" [disabled]="broadcast.IsSubmitted && showAdd">{{buttonValue}}</button>
+    </div>
 </div>

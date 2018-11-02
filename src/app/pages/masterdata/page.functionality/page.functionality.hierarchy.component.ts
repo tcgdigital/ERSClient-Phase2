@@ -6,7 +6,10 @@ import {
     PageService, PageHierarchyModel, PageModel,
     PagePermissionService, PagePermissionModel
 } from './components';
-import { ResponseModel, AuthModel, UtilityService, GlobalConstants } from '../../../shared';
+import {
+    ResponseModel, AuthModel, UtilityService,
+    GlobalConstants, GlobalStateService, KeyValue
+} from '../../../shared';
 import { Observable, Subject } from 'rxjs';
 
 @Component({
@@ -26,16 +29,26 @@ export class PageFunctionalityHierarchyComponent implements OnInit, OnChanges, O
     public pageHierarchies: PageHierarchyModel[];
     public pages: PageModel[];
     public currentSelectedPageIds: number[];
+    public isCanViewDisplay: boolean = true;
+    public isOnlyHodDisplay: boolean = true;
+
     private ngUnsubscribe: Subject<any> = new Subject<any>();
     private credential: AuthModel;
-    private pagePermissions: PagePermissionModel[]
+    private pagePermissions: PagePermissionModel[];
+
 
     constructor(private pageService: PageService,
         private pagePermissionService: PagePermissionService,
-        private elementRef: ElementRef) { }
+        private elementRef: ElementRef,
+        private globalState: GlobalStateService) { }
 
     public ngOnInit(): void {
         this.credential = UtilityService.getCredentialDetails();
+
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
+            (model: KeyValue) => { this.currentDepartmentId = model.Value; });
     }
 
     public ngOnDestroy(): void {

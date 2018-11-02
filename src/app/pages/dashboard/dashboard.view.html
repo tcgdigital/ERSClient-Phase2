@@ -1,6 +1,7 @@
 <div class="row">
-    <incident-header-widget [currentIncident]="currentIncident" [currentDepartment]="currentDepartment" [isShowViewReadonlyCrisis]="isShowViewReadonlyCrisis"
-        (viewIncidentHandler)="onViewIncidentClick(currentIncident.Value)" class="col-12 widget-layout-fix">
+    <incident-header-widget [currentIncident]="currentIncident" [currentDepartment]="currentDepartment"
+        [isShowViewReadonlyCrisis]="isShowViewReadonlyCrisis" (viewIncidentHandler)="onViewIncidentClick(currentIncident.Value)"
+        class="col-12 widget-layout-fix">
     </incident-header-widget>
 </div>
 <!-- KPI Section Starts-->
@@ -16,16 +17,20 @@
     <peopleOnBoard-widget [initiatedDepartmentId]="currentDepartmentId" [currentIncidentId]="currentIncidentId" class="col-12 col-md-6 col-lg-4 col-xl-3 people-onboard-layout widget-layout-fix">
     </peopleOnBoard-widget>
 
-    <casualty-summary-widget [initiatedDepartmentId]="currentDepartmentId" [currentIncidentId]="currentIncidentId" class="col-12 col-md-6 col-lg-4 col-xl-3 casualty-layout widget-layout-fix">
+    <casualty-summary-widget [initiatedDepartmentId]="currentDepartmentId" [currentIncidentId]="currentIncidentId"
+        class="col-12 col-md-6 col-lg-4 col-xl-3 casualty-layout widget-layout-fix">
     </casualty-summary-widget>
 
-    <demand-received-summary-widget [initiatedDepartmentId]="currentDepartmentId" [currentIncidentId]="currentIncidentId" class="col-12 col-md-3 col-lg-4 col-xl-2 demand-received-layout widget-layout-fix">
+    <demand-received-summary-widget [initiatedDepartmentId]="currentDepartmentId" [currentIncidentId]="currentIncidentId"
+        class="col-12 col-md-3 col-lg-4 col-xl-2 demand-received-layout widget-layout-fix">
     </demand-received-summary-widget>
 
-    <demand-raised-summary-widget [initiatedDepartmentId]="currentDepartmentId" [currentIncidentId]="currentIncidentId" class="col-6 col-md-3 col-lg-4 col-xl-2 demand-raised-layout widget-layout-fix">
+    <demand-raised-summary-widget [initiatedDepartmentId]="currentDepartmentId" [currentIncidentId]="currentIncidentId"
+        class="col-6 col-md-3 col-lg-4 col-xl-2 demand-raised-layout widget-layout-fix">
     </demand-raised-summary-widget>
 
-    <checklist-summary-widget [initiatedDepartmentId]="currentDepartmentId" [currentIncidentId]="currentIncidentId" class="col-6 col-md col-md-3 col-lg-4 col-xl-2 checklist-layout widget-layout-fix">
+    <checklist-summary-widget [initiatedDepartmentId]="currentDepartmentId" [currentIncidentId]="currentIncidentId"
+        class="col-6 col-md col-md-3 col-lg-4 col-xl-2 checklist-layout widget-layout-fix">
     </checklist-summary-widget>
 </div>
 
@@ -33,7 +38,8 @@
     <broadcast-widget [initiatedDepartmentId]="currentDepartmentId" [currentIncidentId]="currentIncidentId" class="col-12 col-md-4 messaging-widget widget-layout-fix">
     </broadcast-widget>
 
-    <presidentMessage-widget [initiatedDepartmentId]="currentDepartmentId" [currentIncidentId]="currentIncidentId" class="col-12 col-md-4 messaging-widget widget-layout-fix">
+    <presidentMessage-widget [initiatedDepartmentId]="currentDepartmentId" [currentIncidentId]="currentIncidentId"
+        class="col-12 col-md-4 messaging-widget widget-layout-fix">
     </presidentMessage-widget>
 
     <mediaRelease-widget [initiatedDepartmentId]="currentDepartmentId" [currentIncidentId]="currentIncidentId" class="col-12 col-md-4 messaging-widget widget-layout-fix">
@@ -45,7 +51,7 @@
 <div class="row row-fix">
     <div class="col-12 widget-layout-fix">
         <div id="tab-container" class="row tab-root-container no-gutters">
-            <div class="col-12">
+            <div class="col-12" id="dashboard-tabs">
                 <div tab-control [tabLinks]="tablinks" class="tab-control"></div>
                 <div class="tab-containet">
                     <router-outlet></router-outlet>

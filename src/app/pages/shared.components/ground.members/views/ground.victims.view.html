@@ -1,49 +1,46 @@
 <div class="card">
-    <div class="card-content">
+    <div class="card-body">
         <div class="row">
-            <div class="col-12 victims-butt">
+            <div class="col-lg-12 text-right mb-2">
                 <input type="button" class="btn btn-primary" (click)="expandSearchPanel(expandSearch)" [ngModel]="searchValue" />
             </div>
         </div>
+
         <div class="row">
             <div class="col-12" *ngIf="expandSearch">
                 <generic-search [filterConfigs]="searchConfigs" (InvokeSearch)="invokeSearch($event);" (InvokeReset)="invokeReset();">
                 </generic-search>
             </div>
         </div>
-        <div class="card-block">
-            <responsive-table>
-                <table responsive-table-body>
-                    <thead>
-                        <tr>
-                            <th>Ground Victim Type</th>
-                            <th>Victim Name</th>
-                            <!-- <th>Affected Count</th> -->
-                            <th>Status</th>
-                            <th>NOK Name</th>
-                            <th>NOK Contact Number</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngIf="!(groundVictimList | async)?.length>0">
-                            <td data-title="Records" colspan="5">No ground victim to show.</td>
-                        </tr>
-                        <tr *ngFor="let affected of groundVictimList | async">
-                            <td data-title="Ground Victim Type">{{affected.GroundVictimType}}&nbsp;</td>
-                            <td data-title="Victim Name">{{affected.GroundVictimName}}&nbsp;</td>
-                            <!-- <td data-title="Affected Count">{{affected.AffectedCount}}</td> -->
-                            <td data-title="Status">{{affected.Status}}&nbsp;</td>
-                            <td data-title="NOK Name">{{affected.NOKName}}&nbsp;</td>
-                            <td data-title="NOK Contact Number">{{affected.NOKContactNumber}}&nbsp;</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </responsive-table>
-            <!--<div class="pull-right">
-                    <button type="submit" class="pull-right btn btn-primary" aria-label="Close" (click)="hideAllCrews()">Close</button>
-                </div>-->
+
+        <div class="row">
+            <div class="col-lg-12">
+                <responsive-table>
+                    <table responsive-table-body>
+                        <thead>
+                            <tr>
+                                <th>Ground Victim Type</th>
+                                <th>Victim Name</th>
+                                <th>Status</th>
+                                <th>NOK Name</th>
+                                <th>NOK Contact Number</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngIf="!(groundVictimList | async)?.length>0">
+                                <td data-title="Records" colspan="5">No ground victim to show.</td>
+                            </tr>
+                            <tr *ngFor="let affected of groundVictimList | async">
+                                <td data-title="Ground Victim Type">{{affected.GroundVictimType}}&nbsp;</td>
+                                <td data-title="Victim Name">{{affected.GroundVictimName}}&nbsp;</td>
+                                <td data-title="Status">{{affected.Status}}&nbsp;</td>
+                                <td data-title="NOK Name">{{affected.NOKName}}&nbsp;</td>
+                                <td data-title="NOK Contact Number">{{affected.NOKContactNumber}}&nbsp;</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </responsive-table>
+            </div>
         </div>
-
     </div>
-
 </div>

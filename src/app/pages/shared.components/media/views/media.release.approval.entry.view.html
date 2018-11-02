@@ -2,55 +2,46 @@
     <form [formGroup]="form">
         <div class="panel panel-default panel-minimal">
             <div class="panel-body InnerHolder">
-                <input type="hidden" *ngIf="media.MediaqueryId != undefined" [(ngModel)]="media.MediaqueryId" formControlName="MediaqueryId">
+                <input type="hidden" *ngIf="media.MediaqueryId != undefined" [(ngModel)]="media.MediaqueryId"
+                    formControlName="MediaqueryId">
                 <div class="AllSearchHolder">
-                    <!--<div class="row">
-                        <div class="col-sm-6 col-lg-4 col-md-6">
-                            <div class="form-group">
-                                <label for="Media Release Type">Select Media Release Type:<span class="red">*</span></label>
-                                <select id="selectMediaRelease" formControlName="MediaReleaseType" name="MediaReleaseType"
-                                    [ngModel] = "currentTemplateMediaId" class="form-control" (change)= "getContentFromTemplate($event)">
-                                    <option value=''>Select Media Release Type</option>
-                                    <option *ngFor="let template of templateMedias" [value]="template.TemplateMediaId" >
-                                        {{template.TemplatePurpose}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>                        
-                    </div>-->
                     <div class="row"></div>
-                    <br/>
+                    <br />
                     <div class="row">
                         <div class="col-sm-6 col-lg-6 col-md-6">
                             <div class="form-group">
                                 <label for="Message">Media Release Message:<span class="required">*</span></label>
-                                <!--<textarea class="form-control" id="Message" formControlName="Message" [readOnly]="applyReadOnlytextBox" placeholder="Enter Media Release Message"
-                                    [(ngModel)]="media.SentForApprovalContent" required autofocus></textarea>-->
-                                  <ckeditor formControlName="Message" [(ngModel)]="media.SentForApprovalContent" (change)="onMessageChange($event)" (blur)="onMessageBlur($event)" (focus)="onMessageFocus($event)" (ready)="onMessageReady($event)" debounce="500" [config]="toolbarConfig">
-                                  </ckeditor>
-                                  <small class="text-danger" [hidden] = "hideMessageError">
+                                <ckeditor formControlName="Message" [(ngModel)]="media.SentForApprovalContent" (change)="onMessageChange($event)"
+                                    (blur)="onMessageBlur($event)" (focus)="onMessageFocus($event)" (ready)="onMessageReady($event)"
+                                    debounce="500" [config]="toolbarConfig">
+                                </ckeditor>
+                                <small class="text-danger" [hidden]="hideMessageError">
                                     Required.
-                                  </small>
+                                </small>
                             </div>
                         </div>
                         <div class="col-sm-6 col-lg-6 col-md-6">
                             <div class="form-group">
                                 <label for="Remarks">Remarks:</label>
-                                <textarea class="form-control" id="Remarks" formControlName="Remarks" maxlength="500" [readOnly]="applyReadOnlytextBox" placeholder="Enter Remarks"
-                                    [(ngModel)]="media.Remarks"></textarea>
-                                <small class="text-danger" [hidden] = "hideRemarksError">
+                                <textarea class="form-control" id="Remarks" formControlName="Remarks" maxlength="500"
+                                    [readOnly]="applyReadOnlytextBox" placeholder="Enter Remarks" [(ngModel)]="media.Remarks"></textarea>
+                                <small class="text-danger" [hidden]="hideRemarksError">
                                     Required.
                                 </small>
                             </div>
                         </div>
 
                     </div>
-                    <div class ="row">
+                    <div class="row">
                         <div class="col-sm-12 col-lg-12 col-md-12">
-                            <div class="buttonholder">                               
-                                <button *ngIf="isShowApproveRejectMediaMessage | accesibility:currentDepartmentId:'ApproveRejectMediaMessage'" class="btn btn-primary" (click)="approve()" [disabled] = "media.IsPublished">Approve</button>
+                            <div class="buttonholder">
+                                <button *ngIf="isShowApproveRejectMediaMessage | accesibility:currentDepartmentId:'ApproveRejectMediaMessage'"
+                                    class="btn btn-primary" (click)="approve()" [disabled]="media.IsPublished">Approve</button>
+
+                                <button *ngIf="isShowApproveRejectMediaMessage | accesibility:currentDepartmentId:'ApproveRejectMediaMessage'"
+                                    class="btn btn-primary" (click)="reject()" [disabled]="media.IsPublished">Reject</button>
+
                                 <button class="btn btn-warning" (click)="cancel()">Cancel</button>
-                                <button *ngIf="isShowApproveRejectMediaMessage | accesibility:currentDepartmentId:'ApproveRejectMediaMessage'" class="btn btn-primary" (click)="reject()" [disabled] = "media.IsPublished">Reject</button>
                             </div>
                         </div>
                     </div>

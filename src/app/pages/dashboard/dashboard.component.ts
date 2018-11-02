@@ -121,11 +121,20 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     // This has been implemented for selecting the first visible tab by default
 
     public ngAfterViewInit(): void {
-        jQuery('li.tab-item').on('click', () => {
-            const firstVisibleNestedTab: any = jQuery('.tab-containet li.nav-item:visible:first-child a');
+        jQuery('#dashboard-tabs .tab-control li.tab-item').on('click', () => {
+            const firstVisibleNestedTab: any = jQuery('#dashboard-tabs .tab-containet li.nav-item:visible:first-child a');
             if (firstVisibleNestedTab.length > 0) {
-                const url: string = jQuery('.tab-containet li.nav-item:visible:first-child a').attr('href');
-                this.router.navigateByUrl(url);
+                const url: string = jQuery('#dashboard-tabs .tab-containet li.nav-item:visible:first-child a').attr('href');
+                if (this.router.url != url) {
+                    setTimeout(() => {
+                        this.router.navigateByUrl(url)
+                            .then((status: Boolean) => {
+                                console.log(`Successfully navigated to ${url}, Status: ${status}`);
+                            }).catch(reason => {
+                                console.log(`Failed to navigate to ${url}, Reason: ${reason}`);
+                            });
+                    }, 10);
+                }
             }
         });
     }
