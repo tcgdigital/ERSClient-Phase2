@@ -35,7 +35,7 @@
                             <tr>
                                 <th>Department Code</th>
                                 <th>
-                                    <ng-template [*ngIf]="isCanViewDisplay | accesibility: currentDepartmentId : 'SelectMemberOf'">
+                                    <ng-template [ngIf]="isCanViewDisplay | accesibility: currentDepartmentId : 'SelectMemberOf'">
                                         <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="allSelectMember"
                                             (change)="selectAllMember($event)" aria-label="Add">
                                             Select Member Of
@@ -43,7 +43,7 @@
                                     </ng-template>
                                 </th>
                                 <th>
-                                    <ng-template [*ngIf]="isOnlyHodDisplay | accesibility: currentDepartmentId : 'SelectHOD'">
+                                    <ng-template [ngIf]="isOnlyHodDisplay | accesibility: currentDepartmentId : 'SelectHOD'">
                                         <md-checkbox class="Marght" id="IsAutoApproved" [(ngModel)]="allSelectHOD"
                                             (change)="selectAllHOD($event)" aria-label="Add">
                                             Select HOD
