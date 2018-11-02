@@ -5,9 +5,11 @@ import { DepartmentService, DepartmentModel } from '../department';
 import { UserProfileService, UserProfileModel } from '../userprofile';
 import { UserPermissionService } from './components/userpermission.service';
 import { UserPermissionModel, DepartmentsToView } from './components/userpermission.model';
-import { ResponseModel, KeyValue, GlobalConstants } from '../../../shared';
+import {
+    ResponseModel, KeyValue, GlobalStateService,
+    GlobalConstants, UtilityService
+} from '../../../shared';
 import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs';
 
 @Component({
     selector: 'user-permission-main',
@@ -15,7 +17,7 @@ import { Observable } from 'rxjs';
     templateUrl: './views/userpermission.view.html',
     styleUrls: ['./styles/userpermission.style.scss']
 })
-export class UserPermissionComponent implements OnDestroy {
+export class UserPermissionComponent implements OnInit, OnDestroy {
     userProfileItems: UserProfileModel[] = [];
     departments: DepartmentModel[] = [];
     departmentsToView: DepartmentsToView[] = [];
@@ -28,10 +30,27 @@ export class UserPermissionComponent implements OnDestroy {
     allSelectHOD: boolean;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
 
+    public currentDepartmentId: number;
+    public isCanViewDisplay: boolean = true;
+    public isOnlyHodDisplay: boolean = true;
+
+
+    /**
+     *Creates an instance of UserPermissionComponent.
+     * @param {UserPermissionService} userPermissionService
+     * @param {UserProfileService} userProfileService
+     * @param {DepartmentService} departmentService
+     * @param {ToastrService} toastrService
+     * @param {ToastrConfig} toastrConfig
+     * @param {GlobalStateService} globalState
+     * @memberof UserPermissionComponent
+     */
     constructor(private userPermissionService: UserPermissionService,
         private userProfileService: UserProfileService,
-        private departmentService: DepartmentService, private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig) { };
+        private departmentService: DepartmentService,
+        private toastrService: ToastrService,
+        private toastrConfig: ToastrConfig,
+        private globalState: GlobalStateService) { };
 
     getUserProfiles(): void {
         this.userProfileService.GetForDirectory()
@@ -100,6 +119,7 @@ export class UserPermissionComponent implements OnDestroy {
     isMemberOf(item: DepartmentsToView) {
         return item.IsMemberOf == true;
     }
+
     selectAllMember(value: any): void {
         this.departmentsToView.forEach(x => {
             x.IsMemberOf = value.checked;
@@ -109,6 +129,7 @@ export class UserPermissionComponent implements OnDestroy {
             }
         });
     }
+
     selectAllHOD(value: any): void {
         this.departmentsToView.forEach(x => {
             x.IsHod = value.checked;
@@ -118,6 +139,7 @@ export class UserPermissionComponent implements OnDestroy {
             }
         });
     }
+
     checkAllStatusHod(event: any = '', model: DepartmentsToView = null): void {
         if (event != '' && model != null) {
             if (event.checked == true) {
@@ -132,6 +154,7 @@ export class UserPermissionComponent implements OnDestroy {
             return (x.IsHod == true && x.IsMemberOf == true);
         }).length == this.departmentsToView.length;
     }
+
     checkAllStatusMember(event: any = '', model: DepartmentsToView = null): void {
         if (event != '' && model != null) {
             if (event.checked == false) {
@@ -147,6 +170,7 @@ export class UserPermissionComponent implements OnDestroy {
             return (x.IsMemberOf == true && x.IsHod == true);
         }).length == this.departmentsToView.length;
     }
+
     save(): void {
         let model = this.departmentsToView.filter(this.isMemberOf);
         let selectedUser = this.selectedUser;
@@ -178,9 +202,15 @@ export class UserPermissionComponent implements OnDestroy {
         }
     }
 
-    ngOnInit(): any {
+    public ngOnInit(): void {
         this.allSelectMember = false;
         this.allSelectHOD = false;
+
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
+            (model: KeyValue) => { this.currentDepartmentId = model.Value; });
+
         this.getUserProfiles();
         this.departmentService.GetAll()
             // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
