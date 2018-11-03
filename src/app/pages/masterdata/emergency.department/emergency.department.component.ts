@@ -5,7 +5,7 @@ import { DepartmentService, DepartmentModel } from '../department';
 import { EmergencyTypeService, EmergencyTypeModel } from '../emergencytype';
 import { EmergencyTypeDepartmentService } from './components/emergency.department.service';
 import { EmergencyDepartmentModel, DepartmesForEmergency } from './components/emergency.department.model';
-import { ResponseModel, KeyValue, AuthModel, UtilityService, GlobalConstants } from '../../../shared';
+import { ResponseModel, KeyValue, AuthModel, UtilityService, GlobalConstants, GlobalStateService } from '../../../shared';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs';
 
@@ -27,6 +27,8 @@ export class EmergencyDepartmentComponent implements OnInit, OnDestroy {
     credential: AuthModel;
     allselect: boolean = false;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
+    public isCanViewDisplay: boolean = true;
+    public currentDepartmentId: number;
 
     /**
      *Creates an instance of EmergencyDepartmentComponent.
@@ -41,7 +43,8 @@ export class EmergencyDepartmentComponent implements OnInit, OnDestroy {
         private emergencyTypeService: EmergencyTypeService,
         private departmentService: DepartmentService,
         private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig) { };
+        private toastrConfig: ToastrConfig,
+        private globalState: GlobalStateService) { };
 
     getEmergencyTypes(): void {
         this.emergencyTypeService.GetAll()
@@ -136,6 +139,11 @@ export class EmergencyDepartmentComponent implements OnInit, OnDestroy {
     ngOnInit(): any {
         this.getEmergencyTypes();
         this.credential = UtilityService.getCredentialDetails();
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
+            (model: KeyValue) => { this.currentDepartmentId = model.Value; });
+
 
         this.departmentService.GetAll()
             // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
