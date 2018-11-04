@@ -107,13 +107,13 @@
                     <form [formGroup]="form">
                         <div class="row">
                             <div class="col-sm-6">
-                                <label><i>Comments:</i></label>
-                                <input type="text" [ngModel]="actionableModelToUpdate.Comments" [readonly]="isArchive" formControlName="Comments" value="{{actionableModelToUpdate.Comments}}"
-                                    placeholder="" />
+                                <label><strong><i>Comments:</i></strong></label>
+                                <input type="text" [ngModel]="actionableModelToUpdate.Comments" [readonly]="isArchive" class="form-control" formControlName="Comments"
+                                    value="{{actionableModelToUpdate.Comments}}" placeholder="" />
                             </div>
                             <div class="col-sm-6">
-                                <label><i>URL:</i></label>
-                                <input disabled type="text" [ngModel]="actionableModelToUpdate.URL" formControlName="URL" value="{{actionableModelToUpdate.URL}}"
+                                <label><strong><i>URL:</i></strong></label>
+                                <input disabled type="text" [ngModel]="actionableModelToUpdate.URL" class="form-control" formControlName="URL" value="{{actionableModelToUpdate.URL}}"
                                     placeholder="URL" />
                             </div>
                         </div>

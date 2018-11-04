@@ -62,7 +62,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     private currentDepartmentId: number = null;
     private currentIncident: number = null;
     public isDashboardOpenChecklistDownloadLink: boolean = true;
-    isSubmitted: boolean = false;
+    isSubmitted: boolean=false;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(formBuilder: FormBuilder, private actionableService: ActionableService,
@@ -121,6 +121,10 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
             });
     }
 
+    public onShowChildModel(){
+        this.form = this.resetActionableForm();
+    }
+    
     openChildActionable(actionable: ActionableModel): void {
         actionable['expanded'] = !actionable['expanded'];
         this.actionableService.GetChildActionables(actionable.ChklistId, this.currentIncident)
@@ -318,28 +322,42 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     updateCommentAndURL(values: object, editedActionableModel: ActionableModel): void {
-        this.editActionableModel = new ActionableModel();
-        this.editActionableModel.ActionId = editedActionableModel.ActionId;
-        this.editActionableModel.Comments = this.form.controls['Comments'].value;
-        if (this.filepathWithLinks !== '') {
-            this.editActionableModel.UploadLinks = this.filepathWithLinks;
-        }
+        this.isSubmitted=true;
+        if (this.form.valid) {
+            //this.isSubmitted=true;
+            if (this.form.controls['Comments'].value != null) {
+                this.editActionableModel = new ActionableModel();
+                this.editActionableModel.ActionId = editedActionableModel.ActionId;
+                this.editActionableModel.Comments = this.form.controls['Comments'].value;
+                if (this.filepathWithLinks !== '') {
+                    this.editActionableModel.UploadLinks = this.filepathWithLinks;
+                }
 
-        this.actionableService.Update(this.editActionableModel)
-            // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
-            .takeUntil(this.ngUnsubscribe)
-            .subscribe((response: ActionableModel) => {
-                this.toastrService.success('Actionable comments updated successfully.', 'Success', this.toastrConfig);
-                editedActionableModel.show = false;
-                this.tempActionable = this.activeActionables
-                    .find((item: ActionableModel) => item.ActionId === editedActionableModel.ActionId);
-                this.tempActionable.Comments = this.editActionableModel.Comments;
-                this.tempActionable.UploadLinks = this.filepathWithLinks;
-                this.tempActionable.FileName = this.fileName;
-                this.childModal.hide();
-            }, (error: any) => {
-                console.log(`Error: ${error.message}`);
-            });
+                this.actionableService.Update(this.editActionableModel)
+                    // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                    .takeUntil(this.ngUnsubscribe)
+                    .subscribe((response: ActionableModel) => {
+                        this.toastrService.success('Actionable comments updated successfully.', 'Success', this.toastrConfig);
+                        editedActionableModel.show = false;
+                        this.tempActionable = this.activeActionables
+                            .find((item: ActionableModel) => item.ActionId === editedActionableModel.ActionId);
+                        this.tempActionable.Comments = this.editActionableModel.Comments;
+                        this.tempActionable.UploadLinks = this.filepathWithLinks;
+                        this.tempActionable.FileName = this.fileName;
+                        this.childModal.hide();
+                    }, (error: any) => {
+                        console.log(`Error: ${error.message}`);
+                    });
+            }
+            // else {
+            //     if (this.form.controls['Comments'].value == null) {
+            //         this.isSubmitted = true;
+            //        this.toastrService.error('Comment is required', 'Error', this.toastrConfig);
+            //         return;
+            //     }
+            //}
+
+        }
     }
 
     activeActionableClick(activeActionablesUpdate: ActionableModel[]): void {
@@ -452,9 +470,15 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
 
     private resetActionableForm(actionable?: ActionableModel): FormGroup {
         return new FormGroup({
-            Comments: new FormControl(''),
+            Comments: new FormControl('', [Validators.required, this.noWhitespaceValidator]),
             URL: new FormControl('')
         });
+    }
+
+    private noWhitespaceValidator(control: FormControl) {
+        const isWhitespace = (control.value || '').trim().length === 0;
+        const isValid = !isWhitespace;
+        return isValid ? null : { 'whitespace': true };
     }
 
     private incidentChangeHandler(incident: KeyValue): void {
