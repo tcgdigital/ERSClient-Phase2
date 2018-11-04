@@ -89,7 +89,8 @@
     </table>
 </responsive-table>
 
-<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true"
+    (onShow)="onShowChildModel()">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -102,41 +103,49 @@
                 <div class="holderStyle">
                     <form [formGroup]="form" (ngSubmit)="updateCommentAndURL(form.value,actionableModelToUpdate)">
                         <div class="row">
-                            <div class="form-group col-lg-6 col-sm-12 col-md-6">
-                                <label><i>Comments:</i><span class="required">*</span></label>
-                                <input type="text" [ngModel]="actionableModelToUpdate.Comments" [readonly]="isArchive" class="form-control" formControlName="Comments"
-                                    value="{{actionableModelToUpdate.Comments}}" placeholder="" />
-                                <!-- <small *ngIf="!form.controls.value.valid && isSubmitted" class="text-danger">
-                                    Required.
-                                </small> -->
-                            </div>
-                            <div class="form-group col-lg-6 col-sm-12 col-md-6">
-                                <label><i>URL:</i></label>
-                                <!--<input disabled type="text" [ngModel]="actionableModelToUpdate.URL" class="form-control" formControlName="URL" value="{{actionableModelToUpdate.URL}}"
-                                    placeholder="URL" />-->
-                                <label class="form-control"  readonly>
-                                    <a href=" {{actionableModelToUpdate.URL}}"  target=" _blank">{{actionableModelToUpdate.URL}}</a>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="row" *ngIf="!isArchive">
-                            <!-- <a class="glyphicon glyphicon-download-alt" target="_self" *ngIf="filepathWithLinks!=null" href="{{filepathWithLinks}}" download="{{fileName}}">Download</a> -->
-                            <div class="buttonholder col-sm-10">
-                                <input #myFileInput type="file" class="form-control-file" (change)="fileChangeEvent($event)" placeholder="Upload file..."
-                                />
-                                <button type="button" class="btn btn-primary" (click)="upload(actionableModelToUpdate)" [disabled]="disableUploadButton">Upload</button>
-                                <button type="button" class="btn btn-primary" (click)="clearFileUpload($event)">Clear</button>
-                                <a *ngIf="filepathWithLinks!=null" class="down-icon" target="_self" href="{{filepathWithLinks}}" download="{{fileName}}">
-                                    <i class="fa fa-download fa" aria-hidden="true"></i>
-                                </a>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="row buttonholder" *ngIf="!isArchive">
-                                    <button *ngIf="isShowUpdateAdditionalInfo | accesibility:currentDepartmentId:'UpdateChecklistAdditionalInfo'" class="btn btn-primary"
-                                        type="submit">Submit</button>&nbsp;
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="form-group col-lg-6 col-sm-12 col-md-6">
+                                                <label><i>Comments:</i><span class="required">*</span></label>
+                                                <input type="text" [ngModel]="actionableModelToUpdate.Comments" [readonly]="isArchive" class="form-control" formControlName="Comments"
+                                                    value="{{actionableModelToUpdate.Comments}}" placeholder="" />
+
+                                                <small *ngIf="!form.controls.Comments.valid" [hidden]="form.controls.Comments.valid || (form.controls.Comments.pristine && !isSubmitted)"
+                                                    class="text-danger">
+                                                    Required.
+                                                </small>
+                                            </div>
+                                            <div class="form-group col-lg-6 col-sm-12 col-md-6">
+                                                <label><i>URL:</i></label>
+                                                <label class="form-control"  readonly>
+                                                    <a href=" {{actionableModelToUpdate.URL}}"  target=" _blank">{{actionableModelToUpdate.URL}}</a>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="row" *ngIf="!isArchive">
+                                            <div class="col-lg-12">
+                                                <input #myFileInput type="file" class="form-control-file" (change)="fileChangeEvent($event)" placeholder="Upload file..."
+                                                />
+                                                <br/>
+                                                <button type="button" class="btn btn-primary" (click)="upload(actionableModelToUpdate)" [disabled]="disableUploadButton">Upload</button>
+                                                <button type="button" class="btn btn-primary" (click)="clearFileUpload($event)">Clear</button>
+                                                <a *ngIf="filepathWithLinks!=null" class="down-icon" target="_self" href="{{filepathWithLinks}}" download="{{fileName}}">
+                                                    <i class="fa fa-download fa" aria-hidden="true"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
+                        </div>
+                        <br/>
+                        <div class="row" *ngIf="!isArchive">
+                            <div class="col-lg-12 text-right">
+                                    <button *ngIf="isShowUpdateAdditionalInfo | accesibility:currentDepartmentId:'UpdateChecklistAdditionalInfo'" class="btn btn-primary"
+                                    type="submit">Submit</button>&nbsp;
+                            </div>
                         </div>
                     </form>
                 </div>
