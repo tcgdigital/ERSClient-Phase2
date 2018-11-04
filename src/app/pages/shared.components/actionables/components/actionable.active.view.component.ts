@@ -349,14 +349,6 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
                         console.log(`Error: ${error.message}`);
                     });
             }
-            // else {
-            //     if (this.form.controls['Comments'].value == null) {
-            //         this.isSubmitted = true;
-            //        this.toastrService.error('Comment is required', 'Error', this.toastrConfig);
-            //         return;
-            //     }
-            //}
-
         }
     }
 
