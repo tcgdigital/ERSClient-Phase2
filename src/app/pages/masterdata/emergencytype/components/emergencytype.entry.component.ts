@@ -7,7 +7,7 @@ import { EmergencyTypeService } from './emergencytype.service';
 import { EmergencyTypeModel } from './emergencytype.model';
 import {
     DataExchangeService, GlobalConstants,
-    UtilityService, AuthModel
+    UtilityService, AuthModel, GlobalStateService, KeyValue
 } from '../../../../shared';
 import { Subject } from 'rxjs/Subject';
 
@@ -28,8 +28,9 @@ export class EmergencyTypeEntryComponent implements OnInit, OnDestroy {
     public submitted: boolean;
     public showAddText: string = 'ADD CRISIS TYPE';
     private ngUnsubscribe: Subject<any> = new Subject<any>();
-
     emergencyCategory: Object = GlobalConstants.EmergencyCategories;
+    public isShow: boolean = true;
+    public currentDepartmentId: number;
 
     /**
      *Creates an instance of EmergencyTypeEntryComponent.
@@ -40,9 +41,11 @@ export class EmergencyTypeEntryComponent implements OnInit, OnDestroy {
      * @memberof EmergencyTypeEntryComponent
      */
     constructor(private emergencyTypeService: EmergencyTypeService,
-        private dataExchange: DataExchangeService<EmergencyTypeModel>, 
+        private dataExchange: DataExchangeService<EmergencyTypeModel>,
         private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig) { }
+        private toastrConfig: ToastrConfig,
+        private globalState: GlobalStateService
+    ) { }
 
     onEmergencyTypeUpdate(model: EmergencyTypeModel): void {
         this.emergencyTypeModel = new EmergencyTypeModel();
@@ -58,7 +61,7 @@ export class EmergencyTypeEntryComponent implements OnInit, OnDestroy {
             ActiveFlag: new FormControl(model.ActiveFlag)
         });
 
-        window.scrollTo(0,0);
+        window.scrollTo(0, 0);
     }
 
     ngOnInit(): void {
@@ -68,16 +71,20 @@ export class EmergencyTypeEntryComponent implements OnInit, OnDestroy {
         this.emergencyTypeModel = new EmergencyTypeModel();
         this.credential = UtilityService.getCredentialDetails();
         this.emergencyTypeModel.EmergencyCategory = "FlightRelated";
-        
-        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.OnEmergencyTypeUpdate, 
+        this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+
+        this.globalState.Subscribe(GlobalConstants.DataExchangeConstant.DepartmentChange,
+            (model: KeyValue) => { this.currentDepartmentId = model.Value; });
+
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.OnEmergencyTypeUpdate,
             (model: EmergencyTypeModel) => this.onEmergencyTypeUpdate(model));
     }
 
     ngOnDestroy(): void {
-		this.ngUnsubscribe.next();
-		this.ngUnsubscribe.complete();
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
-    
+
     onSubmit(): void {
         this.submitted = true;
         if (this.form.controls['EmergencyTypeName'].value == '') {
@@ -111,7 +118,7 @@ export class EmergencyTypeEntryComponent implements OnInit, OnDestroy {
                 });
         }
         else {
-            
+
             this.emergencyTypeModelWithoutActive = this.emergencyTypeModel;
             delete this.emergencyTypeModelWithoutActive.Active;
             this.emergencyTypeService.Update(this.emergencyTypeModelWithoutActive)
@@ -169,10 +176,10 @@ export class EmergencyTypeEntryComponent implements OnInit, OnDestroy {
             this.showAddText = "ADD CRISIS TYPE";
         }
 
-        window.setInterval(()=>{
+        window.setInterval(() => {
             jQuery(window).scroll();
         }, 100);
-        
+
         this.showAdd = !value;
     }
 }

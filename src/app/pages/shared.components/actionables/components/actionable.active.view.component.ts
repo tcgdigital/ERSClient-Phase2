@@ -62,7 +62,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     private currentDepartmentId: number = null;
     private currentIncident: number = null;
     public isDashboardOpenChecklistDownloadLink: boolean = true;
-
+    isSubmitted: boolean = false;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
 
     constructor(formBuilder: FormBuilder, private actionableService: ActionableService,

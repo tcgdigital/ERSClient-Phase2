@@ -1,64 +1,71 @@
-<div *ngIf="showAdd" class="formStyle card-block entryHolder">
-    <form (ngSubmit)="onSubmit()" #demandTypeForm="ngForm" [formGroup]="form">
-         <input type="hidden" *ngIf="emergencyTypeModel.EmergencyTypeId != undefined" [(ngModel)]="emergencyTypeModel.EmergencyTypeId"
-            formControlName="EmergencyTypeId" /> 
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <div class="form-group">
-                    <label for="EmergencyTypeName">Crisis Type Name:<span class="required">*</span></label>
-                    <input id="txtEmergencyTypeName" type="text" formControlName="EmergencyTypeName" class="form-control" placeholder="Enter Crisis Type Name"
-                        autofocus />
+<div class="row">
+    <div class="col-lg">
+        <div *ngIf="showAdd" class="formStyle card-block entryHolder">
+            <form (ngSubmit)="onSubmit()" #demandTypeForm="ngForm" [formGroup]="form">
+                <input type="hidden" *ngIf="emergencyTypeModel.EmergencyTypeId != undefined" [(ngModel)]="emergencyTypeModel.EmergencyTypeId"
+                    formControlName="EmergencyTypeId" />
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="EmergencyTypeName">Crisis Type Name:<span class="required">*</span></label>
+                            <input id="txtEmergencyTypeName" type="text" formControlName="EmergencyTypeName" class="form-control" placeholder="Enter Crisis Type Name"
+                                autofocus />
 
-                    <small *ngIf="form.controls.EmergencyTypeName.hasError('required')" [hidden]="form.controls.EmergencyTypeName.valid || (form.controls.EmergencyTypeName.pristine && !submitted)"
-                        class="text-danger">
-                    Required.
-                    </small>
-                    <small *ngIf="form.controls.EmergencyTypeName.hasError('validateName')" 
-                        [hidden]="form.controls.EmergencyTypeName.valid || (form.controls.EmergencyTypeName.pristine && !submitted)"
+                            <small *ngIf="form.controls.EmergencyTypeName.hasError('required')" [hidden]="form.controls.EmergencyTypeName.valid || (form.controls.EmergencyTypeName.pristine && !submitted)"
+                                class="text-danger">
+                                Required.
+                            </small>
+                            <small *ngIf="form.controls.EmergencyTypeName.hasError('validateName')" [hidden]="form.controls.EmergencyTypeName.valid || (form.controls.EmergencyTypeName.pristine && !submitted)"
                                 class="text-danger">Invalid Input</small>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <div class="form-group">
-                    <label for="EmergencyTypeCategory">Crisis Type Category:<span class="required">*</span></label>
-                    <select id="selectEmergencyCategory" class="form-control" formControlName="EmergencyCategory">
-                        <option value=''>Select Crisis Type Category</option>
-                        <option *ngFor="let category of emergencyCategory" [value]="category.value">
-                                {{category.value}}
-                        </option>
-                   </select>
-                    <small *ngIf="!form.controls.EmergencyCategory.valid" [hidden]="form.controls.EmergencyCategory.valid || (form.controls.EmergencyCategory.pristine && !submitted)"
-                        class="text-danger">
-                    Required.
-                    </small>
-                </div>
-            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="EmergencyTypeCategory">Crisis Type Category:<span class="required">*</span></label>
+                            <select id="selectEmergencyCategory" class="form-control" formControlName="EmergencyCategory">
+                                <option value=''>Select Crisis Type Category</option>
+                                <option *ngFor="let category of emergencyCategory" [value]="category.value">
+                                    {{category.value}}
+                                </option>
+                            </select>
+                            <small *ngIf="!form.controls.EmergencyCategory.valid" [hidden]="form.controls.EmergencyCategory.valid || (form.controls.EmergencyCategory.pristine && !submitted)"
+                                class="text-danger">
+                                Required.
+                            </small>
+                        </div>
+                    </div>
 
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <div class="form-group">
-                    <label for="Status">Status:<span class="required">*</span></label>
-                    <select class="form-control" id="selectStatus" formControlName="ActiveFlag" [(ngModel)]="emergencyTypeModel.ActiveFlag">                                           
-                        <option value=''>Select Status</option>
-                        <option value="Active">Active </option>
-                        <option Value="InActive">InActive </option>> 
-                    </select>
-                    <small *ngIf="!form.controls.ActiveFlag.valid" [hidden]="form.controls.ActiveFlag.valid || (form.controls.ActiveFlag.pristine && !submitted)"
-                        class="text-danger">
-                    Required.
-                    </small>
-                </div>
-            </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="Status">Status:<span class="required">*</span></label>
+                            <select class="form-control" id="selectStatus" formControlName="ActiveFlag" [(ngModel)]="emergencyTypeModel.ActiveFlag">
+                                <option value=''>Select Status</option>
+                                <option value="Active">Active </option>
+                                <option Value="InActive">InActive </option>>
+                            </select>
+                            <small *ngIf="!form.controls.ActiveFlag.valid" [hidden]="form.controls.ActiveFlag.valid || (form.controls.ActiveFlag.pristine && !submitted)"
+                                class="text-danger">
+                                Required.
+                            </small>
+                        </div>
+                    </div>
 
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <div class="buttonholder">
-                    <button class="btn btn-primary" type="submit">Submit</button>
-                    <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
+                    <div class="col-lg-3 col-md-6 col-sm-12">
+                        <div class="buttonholder">
+                            <button class="btn btn-primary" type="submit">Submit</button>
+                            <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
-    </form>
+    </div>
 </div>
 
-<div class="addbuttonHolder">
-    <a href="javascript:void(0);" (click)="showAddRegion(showAdd)"><strong>{{showAddText}}</strong></a>
+
+<div class="row" *ngIf="isShow | accesibility: currentDepartmentId : 'AddEditCrisisType'">
+    <div class="col-lg-12 text-right">
+        <a class="mr-2" href="javascript:void(0);" (click)="showAddRegion(showAdd)">
+            <strong>{{showAddText}}</strong></a>
+    </div>
 </div>

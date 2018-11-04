@@ -58,7 +58,7 @@
                             <td data-title="Trail">
                                 <i class="fa fa-info-circle fa-2x" (click)="openTrail(actionable)"></i>
                             </td>
-                            <td data-title="View">
+                            <td data-title="View" *ngIf="isShow | accesibility: currentDepartmentId : 'UpdateCloseChecklist'">
                                 <i class="fa fa-edit fa-2x" (click)="openActionableDetail(actionable)"></i></td>
                         </tr>
                         <tr *ngIf="actionable.expanded">

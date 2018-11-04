@@ -8,7 +8,7 @@
 
     <div class="row">
         <div class="col-12 butt-align">
-            <button class="btn btn-primary" type="button" (click)="save()">Submit</button>
+            <button class="btn btn-primary" type="button" (click)="save()" *ngIf="isCanViewDisplay | accesibility: currentDepartmentId : 'AddCrisis-DeptMapping'">Submit</button>
         </div>
     </div>
 
@@ -52,7 +52,7 @@
 
     <div class="row">
         <div class="col-12 butt-align">
-            <button class="btn btn-primary" type="button" (click)="save()">Submit</button>
+            <button class="btn btn-primary" type="button" (click)="save()" *ngIf="isCanViewDisplay | accesibility: currentDepartmentId : 'AddCrisis-DeptMapping'">Submit</button>
         </div>
     </div>
 </div>
