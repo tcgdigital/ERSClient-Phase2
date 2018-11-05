@@ -198,13 +198,14 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
     }
 
     mergeUnidentifiedWithPDA(affectedPeopleToView: AffectedPeopleToView): void {
-        var result = confirm(`Do you Want to merge this unidentified person with this passenger ${affectedPeopleToView.PassengerName}?`);
+        let result = confirm(`Do you Want to merge this unidentified person with this passenger ${affectedPeopleToView.PassengerName}?`);
         if (result) {
             if (affectedPeopleToView.UnidentifiedPassengerId > 0) {
                 this.affectedPeopleService.GetAffectedPersonIdByPassengerId(affectedPeopleToView.UnidentifiedPassengerId)
                     .subscribe((response: ResponseModel<AffectedPeopleModel>) => {
                         if (response.Count > 0) {
-                            this.affectedPeopleService.ReplaceAffectedPersonInvolvement(response.Records[0].AffectedPersonId, affectedPeopleToView.AffectedPersonId)
+                            this.affectedPeopleService.ReplaceAffectedPersonInvolvement
+                                (response.Records[0].AffectedPersonId, affectedPeopleToView.AffectedPersonId, this.currentDepartmentName)
                                 .subscribe((response: AffectedPersonInvolvementResponse) => {
                                     if (response.toString() == 'success') {
                                         this.toastrService.success(`The Passenger "${affectedPeopleToView.PassengerName}"
@@ -303,7 +304,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
 
             this.affectedPeopleService.UpdateWithHeader(this.affectedPersonToUpdate, additionalHeader)
                 .subscribe((response: AffectedPeopleModel) => {
-                    this.toastrService.success('Additional Information updated.')
+                    this.toastrService.success('Additional Information updated.');
                     if (this.filesToUpload.length) {
                         this.uploadFile();
                     }

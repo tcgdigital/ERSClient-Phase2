@@ -308,10 +308,10 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
             .Execute();
     }
 
-    public ReplaceAffectedPersonInvolvement(currentAffectedPersonId: number, replaceWithAffectedPersonId: number): Observable<AffectedPersonInvolvementResponse> {
+    public ReplaceAffectedPersonInvolvement(currentAffectedPersonId: number,
+        replaceWithAffectedPersonId: number, currentDepartmentName: string): Observable<AffectedPersonInvolvementResponse> {
         let affectedPersonInvolvementModel = new AffectedPersonInvolvementModel
-        (currentAffectedPersonId,replaceWithAffectedPersonId);
-        
+            (currentAffectedPersonId, replaceWithAffectedPersonId, currentDepartmentName);
 
         return this._dataServiceForReplaceAffectedInvolvement.JsonPost(affectedPersonInvolvementModel)
             .Execute()
