@@ -107,10 +107,12 @@ export class AffectedPeopleToView extends BaseModel {
 export class AffectedPersonInvolvementModel {
 	public replaceWithAffectedPersonId: number;
 	public currentAffectedPersonId: number;
+	public CurrentDepartmentName: string;
 
-	constructor(currentId:number, replaceWithId:number) {
-		this.currentAffectedPersonId=currentId;
-		this.replaceWithAffectedPersonId=replaceWithId;
+	constructor(currentId: number, replaceWithId: number, departmentName: string) {
+		this.currentAffectedPersonId = currentId;
+		this.replaceWithAffectedPersonId = replaceWithId;
+		this.CurrentDepartmentName = departmentName;
 	}
 }
 

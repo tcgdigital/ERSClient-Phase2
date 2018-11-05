@@ -43,7 +43,7 @@ export interface IAffectedPeopleService extends IServiceInretface<AffectedPeople
     GetAllAffectedPeopleIdsByIncidentId(incidentId: number)
         : Observable<ResponseModel<AffectedPeopleModel>>;
 
-    ReplaceAffectedPersonInvolvement(oldAffectedPersonId: number, newAffectedPersonId: number)
+    ReplaceAffectedPersonInvolvement(oldAffectedPersonId: number, newAffectedPersonId: number, currentDepartmentName: string)
         : Observable<AffectedPersonInvolvementResponse>;
 
     GetAffectedPersonIdByPassengerId(passengerId: number)
