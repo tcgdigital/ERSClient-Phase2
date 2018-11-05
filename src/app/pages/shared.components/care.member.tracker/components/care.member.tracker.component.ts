@@ -22,7 +22,7 @@ import { AffectedPeopleService, AffectedPeopleModel } from '../../affected.peopl
                         <form [formGroup]="careMemberForm" (ngSubmit)="onSubmitCareMember(careMemberForm.value)">
                             <div class="row">
                                 <div class="col-sm-12 form-group">
-                                    <label for="CareMemberName">Care Member Name:</label>
+                                    <label for="CareMemberName">CARE Member Name:</label>
                                     <div class="input-group">
                                         <input type="text" id="CareMemberName" formControlName="CareMemberName" class="form-control">
                                         <div class="input-group-append">
@@ -46,7 +46,7 @@ import { AffectedPeopleService, AffectedPeopleModel } from '../../affected.peopl
                                 <responsive-table>
                                     <table responsive-table-body>
                                         <thead>
-                                            <th>Care Member Name</th>
+                                            <th>CARE Member Name</th>
                                             <th>Assigned On</th>
                                             <th>Assigned By</th>
                                             <th>Department</th>
@@ -56,7 +56,7 @@ import { AffectedPeopleService, AffectedPeopleModel } from '../../affected.peopl
                                                 <td colspan="4">No Care Members are available.</td>
                                             </tr>
                                             <tr *ngFor="let careMember of careMembers">
-                                                <td data-title="Care Member Name">{{careMember.CareMemberName}}&nbsp;</td>
+                                                <td data-title="CARE Member Name">{{careMember.CareMemberName}}&nbsp;</td>
                                                 <td data-title="Assigned On">{{careMember.EffectedFrom | date: 'dd-MMM-yyyy HH:mm'}}&nbsp;</td>
                                                 <td data-title="Assigned By">{{careMember.UserProfile.Name}}&nbsp;</td>
                                                 <td data-title="Department">{{careMember.Department.DepartmentName}}&nbsp;</td>
