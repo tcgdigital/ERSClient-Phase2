@@ -28,7 +28,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="card-block">
                     <div class="row">
                         <div class="form-group col-lg-3 col-sm-12 col-md-6">
@@ -94,9 +94,11 @@
                                         formControlName="EmergencyDate" placeholder="Crisis Date" datetime-picker
                                         #emergencyDateTimePicker="datetimepicker" (blur)="onBlue_EmergencyDate($event)"
                                         [options]="datepickerOptionED" (selectHandler)="dateTimeSet($event,'EmergencyDate');" />
-                                    <!-- <input id="EmergencyDate" readonly class="form-control" type="text" name="EmergencyDate" formControlName="EmergencyDate"
-                                        placeholder="Crisis Date" datetime-picker [options]="datepickerOptionED" (selectHandler)="dateTimeSet($event,'EmergencyDate');"
-                                    /> -->
+
+                                    <!-- <input id="EmergencyDate" readonly class="form-control" type="text" name="EmergencyDate"
+                                        formControlName="EmergencyDate" placeholder="Crisis Date" datetime-picker
+                                        [options]="datepickerOptionED" (selectHandler)="dateTimeSet($event,'EmergencyDate');" /> -->
+                                        
                                     <small *ngIf="form.controls.EmergencyDate.hasError('required')" [hidden]="form.controls.EmergencyDate.valid || (form.controls.EmergencyDate.pristine && !submitted)"
                                         class="text-danger">Required</small>
                                     <small *ngIf="form.controls.EmergencyDate.hasError('InvalidEmergencyDate')"

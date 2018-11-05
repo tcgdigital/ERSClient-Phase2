@@ -17,21 +17,22 @@ export class DateTimePickerDirective implements AfterViewInit {
     @Input() options: DateTimePickerOptions;
 
     @Output() selectHandler: EventEmitter<DateTimePickerSelectEventArgs>
-    = new EventEmitter<DateTimePickerSelectEventArgs>();
+        = new EventEmitter<DateTimePickerSelectEventArgs>();
 
     @Output() showHandler: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() hideHandler: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     @Output() changeMonthHandler: EventEmitter<DateTimePickerChangeMonthEventArgs>
-    = new EventEmitter<DateTimePickerChangeMonthEventArgs>();
+        = new EventEmitter<DateTimePickerChangeMonthEventArgs>();
     @Output() changeYearHandler: EventEmitter<number> = new EventEmitter<number>();
     @Output() changeViewHandler: EventEmitter<string> = new EventEmitter<string>();
     @Output() renderCellHandler: EventEmitter<DateTimePickerRenderCellEventArgs>
-    = new EventEmitter<DateTimePickerRenderCellEventArgs>();
+        = new EventEmitter<DateTimePickerRenderCellEventArgs>();
 
     datepickerInstance: any;
     selectedDate: Date;
     formatedDate: string;
+    isReadonly: boolean = true;
 
     /**
      * Creates an instance of DateTimePickerDirective.
@@ -48,8 +49,9 @@ export class DateTimePickerDirective implements AfterViewInit {
         this.addPickerIcon($self);
         const options: DateTimePickerOptions = Object.assign(new DateTimePickerOptions(), this.options);
 
-        if(!$self.is('[readonly]')){
+        if (!$self.is('[readonly]')) {
             options.showEvent = '';
+            this.isReadonly = false;
         }
 
         options.onSelect = (formattedDate: string, date: Date | Date[], inst: object) => {
@@ -64,10 +66,10 @@ export class DateTimePickerDirective implements AfterViewInit {
                 if (this.elementRef.nativeElement) {
                     this.renderer.setElementProperty(this.elementRef.nativeElement, 'value', args.FormattedDate);
                 }
-                
+
             } else {
-                 args.SelectedDate = this.selectedDate;
-                 args.FormattedDate = this.formatedDate;
+                args.SelectedDate = this.selectedDate;
+                args.FormattedDate = this.formatedDate;
                 if (this.elementRef.nativeElement) {
                     this.renderer.setElementProperty(this.elementRef.nativeElement, 'value', this.formatedDate);
                 }
@@ -77,11 +79,17 @@ export class DateTimePickerDirective implements AfterViewInit {
         };
 
         options.onShow = (inst: object, animationCompleted: boolean) => {
+            if (!this.isReadonly)
+                $self.prop("readonly", true);
+
             this.showHandler.emit(animationCompleted);
         };
 
         options.onHide = (inst: object, animationCompleted: boolean) => {
             this.hideHandler.emit(animationCompleted);
+
+            if (!this.isReadonly)
+                $self.prop("readonly", false);
         };
 
         options.onChangeMonth = (month: number, year: number) => {
@@ -114,9 +122,15 @@ export class DateTimePickerDirective implements AfterViewInit {
         });
     }
 
-    public setDate(datetime:Date):void{
-        this.datepickerInstance.date=datetime;
+    public setDate(datetime: Date): void {
+        this.datepickerInstance.date = datetime;
         this.datepickerInstance.selectDate(datetime);
+    }
+
+    public getDate(): Date {
+        let currentDate = (this.datepickerInstance.focused == '') ?
+            this.datepickerInstance.currentDate : this.datepickerInstance.focused;
+        return currentDate;
     }
 
     public updateConfig(config: any) {
