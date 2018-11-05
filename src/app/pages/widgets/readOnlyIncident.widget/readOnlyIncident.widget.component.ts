@@ -192,6 +192,18 @@ export class ReadOnlyIncidentWidgetComponent implements OnInit, OnDestroy {
             let localArrivalDateLoc: string = this.DateFormat(this.incidentDataExchangeModel.FLightModel.ArrivalDateLocal);
             this.formPopup.get('ScheduledarrivalLOCPopup').setValue(localArrivalDateLoc);
 
+            let manila: string = this.DateFormat(this.incidentDataExchangeModel.FLightModel.ArrivalDateLocal);
+            this.formPopup.get('ReportedDatePopup').setValue(manila);
+
+            let reportedUtc: string = this.DateFormat(this.incidentDataExchangeModel.FLightModel.ArrivalDateLocal);
+            this.formPopup.get('ReportedDateLocalPopup').setValue(reportedUtc);
+
+            let dateLOC: string = this.DateFormat(this.incidentDataExchangeModel.FLightModel.ArrivalDateLocal);
+            this.formPopup.get('EmergencyDatePopup').setValue(dateLOC);
+
+            let dateUTC: string = this.DateFormat(this.incidentDataExchangeModel.FLightModel.ArrivalDateLocal);
+            this.formPopup.get('EmergencyDateLocalPopup').setValue(dateUTC);
+
             this.IsDrillPopup = this.incidentDataExchangeModel.IncidentModel.IsDrill;
             this.isFlightRelatedPopup = true;
         }
