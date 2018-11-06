@@ -408,17 +408,15 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         this.flightClass = { 'is-disabled': true };
         this.ScheduleDepartureLocal = new Date(new Date(itemFlight.DepartureDate).toLocaleString() + ' UTC');
         this.ScheduleArrivalLocal = new Date(new Date(itemFlight.ArrivalDate).toLocaleString() + ' UTC');
-        this.formFlight = new FormGroup({
-            FlightNumber: new FormControl(itemFlight.FlightNo),
-            Origin: new FormControl(itemFlight.OriginCode),
-            Destination: new FormControl(itemFlight.DestinationCode),
-            Scheduleddeparture: new FormControl(moment(itemFlight.DepartureDate).format('DD-MMM-YYYY HH:mm')),
-            Scheduledarrival: new FormControl(moment(itemFlight.ArrivalDate).format('DD-MMM-YYYY HH:mm')),
-            FlightTailNumber: new FormControl(itemFlight.FlightTaleNumber),
-            AircraftTypeId: new FormControl(itemFlight.AircraftTypeId),
-            ScheduleddepartureLOC: new FormControl(moment(this.ScheduleDepartureLocal).format('DD-MMM-YYYY HH:mm')),
-            ScheduledarrivalLOC: new FormControl(moment(this.ScheduleArrivalLocal).format('DD-MMM-YYYY HH:mm'))
-        });
+        this.formFlight.controls["FlightNumber"].setValue(itemFlight.FlightNo);
+        this.formFlight.controls["Origin"].setValue(itemFlight.OriginCode);
+        this.formFlight.controls["Destination"].setValue(itemFlight.DestinationCode);
+        this.formFlight.controls["Scheduleddeparture"].setValue(moment(itemFlight.DepartureDate).format('DD-MMM-YYYY HH:mm'));
+        this.formFlight.controls["Scheduledarrival"].setValue(moment(itemFlight.ArrivalDate).format('DD-MMM-YYYY HH:mm'));
+        this.formFlight.controls["FlightTailNumber"].setValue(itemFlight.FlightTaleNumber);
+        this.formFlight.controls["AircraftTypeId"].setValue(itemFlight.AircraftTypeId);
+        this.formFlight.controls["ScheduleddepartureLOC"].setValue(moment(this.ScheduleDepartureLocal).format('DD-MMM-YYYY HH:mm'));
+        this.formFlight.controls["ScheduledarrivalLOC"].setValue(moment(this.ScheduleArrivalLocal).format('DD-MMM-YYYY HH:mm'));
     }
 
     public IsDrill(event: any): void {
