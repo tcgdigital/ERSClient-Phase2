@@ -512,43 +512,51 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     public onBlue_EmergencyDate($event): void {
-        let emergencyDate: Date = new Date();
-        if (this.form.get('EmergencyDate').valid) {
-            emergencyDate = new Date(this.form.get('EmergencyDate').value);
+        if (!jQuery($event.currentTarget).prop('readonly')) {
+            let emergencyDate: Date = new Date();
+            if (this.form.get('EmergencyDate').valid) {
+                emergencyDate = new Date(this.form.get('EmergencyDate').value);
+            }
+            this.emergencyDateTimePicker.setDate(emergencyDate);
         }
-        this.emergencyDateTimePicker.setDate(emergencyDate);
     }
 
     public onBlue_ReportedDate($event): void {
-        let reportedDate: Date = new Date();
-        if (this.form.get('ReportedDate').valid) {
-            reportedDate = new Date(this.form.get('ReportedDate').value);
+        if (!jQuery($event.currentTarget).prop('readonly')) {
+            let reportedDate: Date = new Date();
+            if (this.form.get('ReportedDate').valid) {
+                reportedDate = new Date(this.form.get('ReportedDate').value);
+            }
+            this.reportedDateTimePicker.setDate(reportedDate);
         }
-        this.reportedDateTimePicker.setDate(reportedDate);
     }
 
     public onBlue_ScheduledDepartureDate($event): void {
-        if (this.preventOnBlurExecution) {
-            this.preventOnBlurExecution = false;
-            return;
+        if (!jQuery($event.currentTarget).prop('readonly')) {
+            // if (this.preventOnBlurExecution) {
+            //     this.preventOnBlurExecution = false;
+            //     return;
+            // }
+            let scheduledDepartureDate: Date = new Date();
+            if (this.formFlight.get('Scheduleddeparture').valid) {
+                scheduledDepartureDate = new Date(this.formFlight.get('Scheduleddeparture').value);
+            }
+            this.scheduledDepartureDateTimePicker.setDate(scheduledDepartureDate);
         }
-        let scheduledDepartureDate: Date = new Date();
-        if (this.formFlight.get('Scheduleddeparture').valid) {
-            scheduledDepartureDate = new Date(this.formFlight.get('Scheduleddeparture').value);
-        }
-        this.scheduledDepartureDateTimePicker.setDate(scheduledDepartureDate);
     }
 
     public onBlue_ScheduledArrivalDate($event): void {
-        if (this.preventOnBlurExecution) {
-            this.preventOnBlurExecution = false;
-            return;
+        if (!jQuery($event.currentTarget).prop('readonly')) {
+            // if (this.preventOnBlurExecution) {
+            //     this.preventOnBlurExecution = false;
+            //     return;
+            // }
+            let scheduledArrivalDate: Date = new Date();
+            if (this.formFlight.get('Scheduledarrival').valid) {
+                scheduledArrivalDate = new Date(this.formFlight.get('Scheduledarrival').value);
+            }
+            this.scheduledArrivalDateTimePicker.setDate(scheduledArrivalDate);
         }
-        let scheduledArrivalDate: Date = new Date();
-        if (this.formFlight.get('Scheduledarrival').valid) {
-            scheduledArrivalDate = new Date(this.formFlight.get('Scheduledarrival').value);
-        }
-        this.scheduledArrivalDateTimePicker.setDate(scheduledArrivalDate);
     }
 
     resetFlightForm(): void {
