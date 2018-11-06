@@ -160,6 +160,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        debugger;
         this.submitted = false;
         this.EmergencyDateLocal = new Date();
         this.submittedFlight = false;
@@ -572,6 +573,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
         }
     }
     onSubmit(): void {
+        debugger;
         this.submitted = true;
         this.submittedFlight = true;
         if (this.form.valid && this.isFlightRelated === false) {
