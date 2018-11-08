@@ -79,17 +79,22 @@ export class DateTimePickerDirective implements AfterViewInit {
         };
 
         options.onShow = (inst: object, animationCompleted: boolean) => {
-            if (!this.isReadonly)
-                $self.prop("readonly", true);
+            while (animationCompleted === true) {
+                if (!this.isReadonly)
+                    $self.prop("readonly", true);
 
-            this.showHandler.emit(animationCompleted);
+                this.showHandler.emit(animationCompleted);
+                break;
+            }
         };
 
         options.onHide = (inst: object, animationCompleted: boolean) => {
-            this.hideHandler.emit(animationCompleted);
-
-            if (!this.isReadonly)
-                $self.prop("readonly", false);
+            while (animationCompleted === true) {
+                this.hideHandler.emit(animationCompleted);
+                if (!this.isReadonly)
+                    $self.prop("readonly", false);
+                break;
+            }
         };
 
         options.onChangeMonth = (month: number, year: number) => {
