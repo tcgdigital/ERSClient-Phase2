@@ -615,7 +615,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
     }
 
     onPOPUPSubmit(values: object): void {
-        console.log('Incident Created.');
+        //console.log('Incident Created.');
         // console.log(this.incidentDataExchangeModel);
         if (this.incidentDataExchangeModel.IncidentModel.EmergencyLocation === 'Offsite') {
             this.incidentDataExchangeModel.IncidentModel.EmergencyLocation = this.incidentDataExchangeModel.IncidentModel.OffSetLocation;
@@ -841,13 +841,13 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
                 this.flightModel.DestinationCode_Extended = this.flightModel.DestinationCode;
             }
             this.flightModel.DepartureDate = (isFlightRelated === true) ?
-                new Date(this.formFlight.controls['Scheduleddeparture'].value) : new Date('01/01/2001');
+                new Date(this.formFlight.controls['Scheduleddeparture'].value.replace(/-/g, ' ')) : new Date('01/01/2001');
 
             this.flightModel.DepartureDateLocal = (isFlightRelated === true) ?
-                new Date(this.formFlight.controls['ScheduleddepartureLOC'].value) : new Date('01/01/2001');
+                new Date(this.formFlight.controls['ScheduleddepartureLOC'].value.replace(/-/g, ' ')) : new Date('01/01/2001');
 
             this.flightModel.ArrivalDate = (isFlightRelated === true) ?
-                new Date(this.formFlight.controls['Scheduledarrival'].value) : new Date('01/02/2001');
+                new Date(this.formFlight.controls['Scheduledarrival'].value.replace(/-/g, ' ')) : new Date('01/02/2001');
 
             this.flightModel.ArrivalDateLocal = (isFlightRelated === true) ?
                 new Date(this.formFlight.controls['ScheduledarrivalLOC'].value) : new Date('01/02/2001');
@@ -880,10 +880,10 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             this.incidentModel.OtherConfirmationInformation = this.form.controls['OtherConfirmationInformation'].value;
             // this.incidentModel.Latitude = this.form.controls['Latitude'].value;
             // this.incidentModel.Longitude = this.form.controls['Longitude'].value;
-            this.incidentModel.ReportedDate = new Date(this.form.controls['ReportedDate'].value);
+            this.incidentModel.ReportedDate = new Date(this.form.controls['ReportedDate'].value.replace(/-/g, ' '));
 
             this.incidentModel.Description = this.form.controls['Description'].value;
-            this.incidentModel.EmergencyDate = new Date(this.form.controls['EmergencyDate'].value);
+            this.incidentModel.EmergencyDate = new Date(this.form.controls['EmergencyDate'].value.replace(/-/g, ' '));
             this.incidentModel.Severity = this.form.controls['Severity'].value === '' ? null : this.form.controls['Severity'].value;
             if (this.form.controls['AffectedStationId'].value !== 'Offsite') {
                 this.incidentModel.EmergencyLocation = this.form.controls['AffectedStationId'].value;
@@ -961,7 +961,9 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
 
                 if (this.scheduledArrivalDateTimePicker) {
                     this.scheduledArrivalDateTimePicker.updateConfig({
-                        minDate: new Date(date.SelectedDate.toLocaleString())
+                        // minDate: new Date(date.SelectedDate.toLocaleString())
+                        minDate: (date.SelectedDate instanceof Date) ? date.SelectedDate :
+                            new Date(date.SelectedDate.toLocaleString())
                     });
                 }
             });
