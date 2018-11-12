@@ -17,7 +17,8 @@ import {
     PaddingFormatterPipe,
     AccessibilityPipe,
     DateFormatterPipe,
-    MfciCountPipe
+    MfciCountPipe,
+    DatexPipe
 } from './pipes';
 
 import {
@@ -147,6 +148,7 @@ const SHARED_PIPES: any[] = [
     PaddingFormatterPipe,
     AccessibilityPipe,
     DateFormatterPipe,
+    DatexPipe,
     MfciCountPipe
 ];
 

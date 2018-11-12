@@ -23,6 +23,7 @@ import {
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import * as _ from 'underscore';
 import { ChecklistTrailModel, ChecklistTrailService } from "../../checklist.trail";
+import { debug } from 'util';
 
 @Component({
     selector: 'actionable-active',
@@ -122,7 +123,7 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     public onShowChildModel(){
-        this.form = this.resetActionableForm();
+        // this.form = this.resetActionableForm();
     }
     
     openChildActionable(actionable: ActionableModel): void {
@@ -305,10 +306,8 @@ export class ActionableActiveComponent implements OnInit, OnDestroy, AfterConten
     }
 
     openActionableDetail(editedActionableModel: ActionableModel): void {
-        this.form = new FormGroup({
-            Comments: new FormControl(editedActionableModel.Comments),
-            URL: new FormControl(editedActionableModel.URL)
-        });
+        this.form.controls["Comments"].setValue(editedActionableModel.Comments);
+        this.form.controls["URL"].setValue(editedActionableModel.URL);
         this.actionableModelToUpdate = editedActionableModel;
         this.childModal.show();
     }

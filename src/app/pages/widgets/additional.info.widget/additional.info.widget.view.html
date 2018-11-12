@@ -4,7 +4,9 @@
             <div class="col-md-2 col-sm-2 col-xxs-12 no-gutters flight-panel">
                 <span class="clock-text">FLIGHT NUMBER:</span><span class=""> {{additionalInfoModel.FlightNo}}</span></div>
             <div class="col-md-3 col-sm-2 col-xxs-12 flight-panel">
-                <span class="clock-text">FLIGHT DATE:</span><span class=""> {{additionalInfoModel.DepartureDate | date: 'dd-MMM-yyyy HH:mm'}} (UTC)</span></div>
+                <!-- <span class="clock-text">FLIGHT DATE:</span><span class=""> {{additionalInfoModel.DepartureDate | date: 'dd-MMM-yyyy HH:mm'}} (UTC)</span></div> -->
+                <span class="clock-text">FLIGHT DATE:</span><span class=""> {{additionalInfoModel.DepartureDate | datex:
+                    'DD-MMM-YYYY HH:mm'}} (UTC)</span></div>
             <div class="col-md-3 col-sm-2 col-xxs-12 flight-panel">
                 <span class="clock-text">ROUTE:</span><span class=""> From {{additionalInfoModel.OriginCode}} To {{additionalInfoModel.DestinationCode}}</span></div>
             <div class="col-md-2 col-sm-2 col-xxs-12 flight-panel">
@@ -13,5 +15,4 @@
                 <span class="clock-text">EVENT LOCATION:</span><span class=""> {{additionalInfoModel.EmergencyLocation}}</span></div>
         </div>
     </div>
-
 </div>
