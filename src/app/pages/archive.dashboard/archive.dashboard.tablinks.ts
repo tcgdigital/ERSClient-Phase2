@@ -18,7 +18,7 @@ export const TAB_LINKS: ITabLinkInterface[] = [
                 order: 1
             }, {
                 id: 'ClosedChecklist',
-                title: 'Close Checklist',
+                title: 'Closed Checklist',
                 url: './close',
                 selected: false,
                 hidden: false,

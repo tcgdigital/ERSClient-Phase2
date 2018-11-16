@@ -24,9 +24,12 @@ export class CareMemberTrackerService extends ServiceBase<CareMemberTrackerModel
 
         const option: DataProcessingService = new DataProcessingService();
 
+        // this._bulkCareMemberService = this.dataServiceFactory
+        //     .CreateServiceWithOptionsAndActionSuffix<CareMemberTrackerModel>
+        //     ('CareMemberBatch', 'InsertCareMemberBulk', option);
+
         this._bulkCareMemberService = this.dataServiceFactory
-            .CreateServiceWithOptionsAndActionSuffix<CareMemberTrackerModel>
-            ('CareMemberBatch', 'InsertCareMemberBulk', option);
+            .CreateServiceWithOptions<CareMemberTrackerModel>('CareMemberBatch/InsertCareMemberBulk', option);
     }
 
     /**
@@ -40,10 +43,9 @@ export class CareMemberTrackerService extends ServiceBase<CareMemberTrackerModel
     GetCareMembersByAffectedPersonId(incidentId: number, affectedPersonId: number)
         : Observable<ResponseModel<CareMemberTrackerModel>> {
         return this._dataService.Query()
-            .Filter(`IncidentId eq ${incidentId} and AffectedPersonId 
-                eq ${affectedPersonId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
-            .Expand(`UserProfile($select=Name), Department($select=DepartmentName)`)
-            .Select(`CareEngagementTrackId, CareMemberName, EffectedFrom, IncidentId, AffectedPersonId`)
+            .Filter(`IncidentId eq ${incidentId} and AffectedPersonId eq ${affectedPersonId} and ActiveFlag eq CMS.DataModel.Enum.ActiveFlag'Active'`)
+            .Expand(`UserProfile($select=Name),Department($select=DepartmentName)`)
+            .Select(`CareEngagementTrackId,CareMemberName,EffectedFrom,IncidentId,AffectedPersonId`)
             .OrderBy(`EffectedFrom desc`)
             .Execute();
     }
@@ -57,9 +59,12 @@ export class CareMemberTrackerService extends ServiceBase<CareMemberTrackerModel
             .Execute();
     }
 
-    CreateBulk(entities: CareMemberTrackerModel[]): Observable<CareMemberTrackerModel[]> {
-        return this._bulkCareMemberService
-            .BulkPost(entities)
-            .Execute();
+    CreateBulkCareMember(departmentId: number, entities: CareMemberTrackerModel[]): Observable<CareMemberTrackerModel[]> {
+        // return this._bulkCareMemberService
+        //     .BulkPost(entities)
+        //     .Execute();
+        console.log(this._bulkCareMemberService.TypeName);
+        let additionalParam = `${this._bulkCareMemberService.TypeName}/${departmentId}`
+        return this._bulkCareMemberService.BulkPostWithAdditionalParam(entities, additionalParam).Execute();
     }
 }

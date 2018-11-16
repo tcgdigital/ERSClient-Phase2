@@ -9,6 +9,7 @@ import {
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService, ToastConfig } from 'ngx-toastr';
 import { AffectedPeopleService, AffectedPeopleModel } from '../../affected.people';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'care-member-tracker',
@@ -18,9 +19,9 @@ import { AffectedPeopleService, AffectedPeopleModel } from '../../affected.peopl
         <div class="row">
             <div class="col-sm-12">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header" *ngIf="!isArchive">
                         <form [formGroup]="careMemberForm" (ngSubmit)="onSubmitCareMember(careMemberForm.value)">
-                            <div class="row">
+                            <div class="row" >
                                 <div class="col-sm-12 form-group">
                                     <label for="CareMemberName">CARE Member Name:</label>
                                     <div class="input-group">
@@ -84,6 +85,7 @@ export class CareMemberTrackerComponent implements OnInit, OnDestroy {
 
     private credential: AuthModel;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
+    public isArchive: boolean = false;
 
     /**
      *Creates an instance of CareMemberTrackerComponent.
@@ -94,12 +96,24 @@ export class CareMemberTrackerComponent implements OnInit, OnDestroy {
         private dataExchange: DataExchangeService<number>,
         private toastrService: ToastrService,
         private affectedPeopleService: AffectedPeopleService,
-        private dataExchangeCareMemberCreation: DataExchangeService<CareMemberTrackerModel>) { }
+        private dataExchangeCareMemberCreation: DataExchangeService<CareMemberTrackerModel>,
+        private _router: Router) { }
 
     ngOnInit(): void {
         this.credential = UtilityService.getCredentialDetails();
         this.submitted = false;
         this.initializeInputForm();
+
+        if (this._router.url.indexOf('archivedashboard') > -1) {
+            this.isArchive = true;
+            this.currentIncidentId = +UtilityService.GetFromSession('ArchieveIncidentId');
+            this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+        }
+        else {
+            this.isArchive = false;
+            this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
+            this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+        }
 
         this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.AffectedPersonSelected,
             (affectedPersonId: number) => {
@@ -107,7 +121,7 @@ export class CareMemberTrackerComponent implements OnInit, OnDestroy {
 
                 this.careMemberTrackerService.GetCareMembersByAffectedPersonId
                     (this.currentIncidentId, affectedPersonId)
-                    // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+                    .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
                     .takeUntil(this.ngUnsubscribe)
                     .subscribe((response: ResponseModel<CareMemberTrackerModel>) => {
                         this.careMembers = response.Records;
@@ -118,6 +132,9 @@ export class CareMemberTrackerComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.dataExchangeCareMemberCreation.Unsubscribe
             (GlobalConstants.DataExchangeConstant.CareMemberCreated);
+            
+        this.dataExchange.Unsubscribe
+            (GlobalConstants.DataExchangeConstant.AffectedPersonSelected);
 
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();

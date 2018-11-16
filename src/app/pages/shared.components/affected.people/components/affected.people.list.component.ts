@@ -74,6 +74,8 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
     public isAffectedPeopleCrewStatusDownloadLink: boolean = true;
     public unidentifiedPersons: PassengerModel[] = [];
     public isUnidentifiedShow: boolean = true;
+    public RequesterType: string = '';
+    public RequesterName: string = '';
     /**
      *Creates an instance of AffectedPeopleListComponent.
      * @param {AffectedPeopleService} affectedPeopleService
@@ -512,10 +514,14 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
 
     IsNokInformed(event: any, id: number, name: string) {
         let affectedpersonToUpdate = new AffectedPeopleModel();
-        affectedpersonToUpdate.IsNokInformed = event.checked;
         affectedpersonToUpdate.AffectedPersonId = id;
+        affectedpersonToUpdate.IsNokInformed = event.checked;
+        
+        const additionalHeader: NameValue<string>
+            = new NameValue<string>('CurrentDepartmentName', this.currentDepartmentName);
 
-        this.affectedPeopleService.Update(affectedpersonToUpdate, id)
+        this.affectedPeopleService.UpdateWithHeader(affectedpersonToUpdate, additionalHeader)
+        //this.affectedPeopleService.Update(affectedpersonToUpdate, id)
             .subscribe((response: AffectedPeopleModel) => {
                 this.toastrService.success(`NOK information status updated`)
                 this.getAffectedPeople(this.currentIncident);

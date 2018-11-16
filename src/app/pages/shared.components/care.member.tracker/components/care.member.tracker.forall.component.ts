@@ -6,6 +6,7 @@ import { AuthModel, UtilityService, ResponseModel, DataExchangeService, GlobalCo
 import { Subject, Observable } from 'rxjs';
 import { CareMemberTrackerService } from './care.member.tracker.service';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'care-member-for-all',
@@ -14,7 +15,7 @@ import { ToastrService } from 'ngx-toastr';
     template: `
     <form [formGroup]="careMemberForAllForm" (ngSubmit)="onSubmitCareMemberForAll(careMemberForAllForm.value)">
         <div class="row">
-            <div class="col-sm-12 form-group">
+            <div class="col-sm-12 form-group" *ngIf="!isArchive">
                 <div class="input-group">
                     <input type="text" formControlName="CareMemberName" class="form-control">
                     <div class="input-group-append">
@@ -40,17 +41,30 @@ export class CareMemberTrackerForAllComponent implements OnInit, OnDestroy {
     public submitted: boolean;
     private credential: AuthModel;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
+    public isArchive: boolean=false;
+    //public currentIncident: number;
 
     constructor(private affectedPeopleService: AffectedPeopleService,
         private careMemberTrackerService: CareMemberTrackerService,
         private toastrService: ToastrService,
-        private dataExchangeCareMemberCreationForAllPDA: DataExchangeService<string>) {
+        private dataExchangeCareMemberCreationForAllPDA: DataExchangeService<string>,
+        private _router: Router) {
     }
 
     public ngOnInit(): void {
         this.credential = UtilityService.getCredentialDetails();
         this.submitted = false;
         this.initializeInputForm();
+        if (this._router.url.indexOf('archivedashboard') > -1) {
+            this.isArchive = true;
+            this.currentIncidentId = +UtilityService.GetFromSession('ArchieveIncidentId');
+            this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+        }
+        else {
+            this.isArchive = false;
+            this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
+            this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
+        }
     }
 
     public ngOnDestroy(): void {
@@ -77,7 +91,7 @@ export class CareMemberTrackerForAllComponent implements OnInit, OnDestroy {
                             (this.currentIncidentId, this.currentDepartmentId, careMemberName, selectedAffectedPeopleIds);
 
 
-                        this.careMemberTrackerService.CreateBulk(careMembersForAllToInsert)
+                        this.careMemberTrackerService.CreateBulkCareMember(this.currentDepartmentId,careMembersForAllToInsert)
                             .subscribe((createdCareMembers: CareMemberTrackerModel[]) => {
                                 this.initializeInputForm();
                                 this.toastrService.success('Care member has been successfully applied for all affected people.', 'Success');

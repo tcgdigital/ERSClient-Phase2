@@ -124,8 +124,9 @@ export class ArchiveDashboardComponent implements OnInit, OnDestroy, AfterViewIn
                             item.subtab.forEach((itemSubTab: ITabLinkInterface, index: number) => {
                                 const subPageModel: PagesPermissionMatrixModel = GlobalConstants.PagePermissionMatrix
                                     .find((x: PagesPermissionMatrixModel) => {
-                                        return (x.PageCode == itemSubTab.id && x.ParentPageId == parent.PageId &&
-                                            x.DepartmentId === this.currentDepartmentId);
+                                        return (x.PageCode == itemSubTab.id
+                                            //&& x.ParentPageId == parent.PageId 
+                                            && x.DepartmentId === this.currentDepartmentId);
                                     });
                                 if (subPageModel == undefined) {
                                     itemSubTab.selected = false;

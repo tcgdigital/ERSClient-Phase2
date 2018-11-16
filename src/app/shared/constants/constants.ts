@@ -1095,7 +1095,7 @@ export class GlobalConstants {
                     order: 1
                 }, {
                     id: 'ClosedChecklist',
-                    title: 'Close Checklist',
+                    title: 'Closed Checklist',
                     url: './close',
                     selected: false,
                     hidden: false,
@@ -1152,7 +1152,7 @@ export class GlobalConstants {
                     id: 'AffectedPeople',
                     title: 'Affected People',
                     url: './detail',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1183,7 +1183,7 @@ export class GlobalConstants {
                     id: 'Cargo',
                     title: 'Cargo',
                     url: './detail',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1215,7 +1215,7 @@ export class GlobalConstants {
                     id: 'PresidentMessageRelease',
                     title: 'President Message Release',
                     url: './release',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1239,7 +1239,7 @@ export class GlobalConstants {
                     id: 'MediaMessageRelease',
                     title: 'Media Release',
                     url: './release',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1263,7 +1263,7 @@ export class GlobalConstants {
                     id: 'ReceivedCalls',
                     title: 'Received Calls',
                     url: './receivedCalls',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1287,7 +1287,7 @@ export class GlobalConstants {
                     id: 'ReceivedCalls',
                     title: 'Received Calls',
                     url: './receivedCalls',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1311,7 +1311,7 @@ export class GlobalConstants {
                     id: 'ReceivedCalls',
                     title: 'Received Calls',
                     url: './receivedCalls',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1335,7 +1335,7 @@ export class GlobalConstants {
                     id: 'ReceivedCalls',
                     title: 'Received Calls',
                     url: './receivedCalls',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1359,7 +1359,7 @@ export class GlobalConstants {
                     id: 'ReceivedCalls',
                     title: 'Received Calls',
                     url: './receivedCalls',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1383,7 +1383,7 @@ export class GlobalConstants {
                     id: 'ReceivedCalls',
                     title: 'Received Calls',
                     url: './receivedCalls',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1407,7 +1407,7 @@ export class GlobalConstants {
                     id: 'ReceivedCalls',
                     title: 'Received Calls',
                     url: './receivedCalls',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1431,7 +1431,7 @@ export class GlobalConstants {
                     id: 'ReceivedCalls',
                     title: 'Received Calls',
                     url: './receivedCalls',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1455,7 +1455,7 @@ export class GlobalConstants {
                     id: 'ReceivedCalls',
                     title: 'Received Calls',
                     url: './receivedCalls',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1479,7 +1479,7 @@ export class GlobalConstants {
                     id: 'ReceivedCalls',
                     title: 'Received Calls',
                     url: './receivedCalls',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1512,7 +1512,7 @@ export class GlobalConstants {
                     order: 1
                 }, {
                     id: 'ClosedChecklist',
-                    title: 'Close Checklist',
+                    title: 'Closed Checklist',
                     url: './close',
                     selected: false,
                     hidden: false,
@@ -1569,7 +1569,7 @@ export class GlobalConstants {
                     id: 'AffectedPeople',
                     title: 'Affected People',
                     url: './detail',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1600,7 +1600,7 @@ export class GlobalConstants {
                     id: 'Cargo',
                     title: 'Cargo',
                     url: './detail',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1632,7 +1632,7 @@ export class GlobalConstants {
                     id: 'PresidentMessageRelease',
                     title: 'President Message Release',
                     url: './release',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1656,7 +1656,7 @@ export class GlobalConstants {
                     id: 'MediaMessageRelease',
                     title: 'Media Release',
                     url: './release',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1680,7 +1680,7 @@ export class GlobalConstants {
                     id: 'ReceivedCalls',
                     title: 'Received Calls',
                     url: './receivedCalls',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1704,7 +1704,7 @@ export class GlobalConstants {
                     id: 'ReceivedCalls',
                     title: 'Received Calls',
                     url: './receivedCalls',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1728,7 +1728,7 @@ export class GlobalConstants {
                     id: 'ReceivedCalls',
                     title: 'Received Calls',
                     url: './receivedCalls',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1752,7 +1752,7 @@ export class GlobalConstants {
                     id: 'ReceivedCalls',
                     title: 'Received Calls',
                     url: './receivedCalls',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1776,7 +1776,7 @@ export class GlobalConstants {
                     id: 'ReceivedCalls',
                     title: 'Received Calls',
                     url: './receivedCalls',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1800,7 +1800,7 @@ export class GlobalConstants {
                     id: 'ReceivedCalls',
                     title: 'Received Calls',
                     url: './receivedCalls',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1824,7 +1824,7 @@ export class GlobalConstants {
                     id: 'ReceivedCalls',
                     title: 'Received Calls',
                     url: './receivedCalls',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1848,7 +1848,7 @@ export class GlobalConstants {
                     id: 'ReceivedCalls',
                     title: 'Received Calls',
                     url: './receivedCalls',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1872,7 +1872,7 @@ export class GlobalConstants {
                     id: 'ReceivedCalls',
                     title: 'Received Calls',
                     url: './receivedCalls',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {
@@ -1896,7 +1896,7 @@ export class GlobalConstants {
                     id: 'ReceivedCalls',
                     title: 'Received Calls',
                     url: './receivedCalls',
-                    selected: false,
+                    selected: true,
                     hidden: false,
                     order: 1
                 }, {

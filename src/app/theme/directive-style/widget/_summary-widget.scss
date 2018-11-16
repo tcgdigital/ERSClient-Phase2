@@ -27,6 +27,12 @@ incident-header-widget a {
     }
 }
 
+@-moz-document url-prefix() {
+    .widget-block {
+        margin-right: 4px !important;
+    }
+   }
+
 .widget-block {
     margin-right: 10px;
     text-align: right;

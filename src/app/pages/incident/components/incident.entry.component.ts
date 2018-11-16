@@ -548,7 +548,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             if (this.formFlight.get('Scheduleddeparture').valid) {
                 //To make it work in all the browsers
                 //scheduledDepartureDate = new Date(this.formFlight.get('Scheduleddeparture').value);
-                scheduledDepartureDate=new Date(Date.parse(this.form.get('Scheduleddeparture').value.replace(/-/g, ' ')))
+                scheduledDepartureDate=new Date(Date.parse(this.formFlight.get('Scheduleddeparture').value.replace(/-/g, ' ')));
             }
             this.scheduledDepartureDateTimePicker.setDate(scheduledDepartureDate);
         }
@@ -564,7 +564,7 @@ export class IncidentEntryComponent implements OnInit, OnDestroy {
             if (this.formFlight.get('Scheduledarrival').valid) {
                 //To make it work in all the browsers
                 //scheduledArrivalDate = new Date(this.formFlight.get('Scheduledarrival').value);
-                scheduledArrivalDate=new Date(Date.parse(this.form.get('Scheduledarrival').value.replace(/-/g, ' ')))
+                scheduledArrivalDate=new Date(Date.parse(this.formFlight.get('Scheduledarrival').value.replace(/-/g, ' ')));
             }
             this.scheduledArrivalDateTimePicker.setDate(scheduledArrivalDate);
         }

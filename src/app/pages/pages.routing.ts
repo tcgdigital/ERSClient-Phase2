@@ -19,7 +19,7 @@ const pageRoutes: Routes = [
         canActivate: [AuthGuardService],
         canActivateChild: [AuthGuardService],
         children: [
-            { path: '', redirectTo: 'pages/dashboard/people/detail', pathMatch: 'full' },
+            { path: '', redirectTo: 'pages/dashboard', pathMatch: 'full' },
             { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule', canActivate: [RouteGuardService] },
             { path: 'landing', loadChildren: './landing/landing.module#LandingModule' },
             { path: 'archivelist', loadChildren: './archive.list/archive.dashboard.list.module#ArchiveDashboardListModule' },
@@ -30,13 +30,10 @@ const pageRoutes: Routes = [
             { path: 'notifypeople', loadChildren: './notifypeople/notifypeople.module#NotifyPeopleModule', canActivate: [RouteGuardService] },
             { path: 'departmentclosure', loadChildren: './department.closure/department.closure.module#DepartmentClosureModule', canActivate: [RouteGuardService] },
             { path: 'emergencyclosure', loadChildren: './emergency.closure/emergency.closure.module#EmergencyClosureModule', canActivate: [RouteGuardService] },
-            //{ path: 'notifypeople', loadChildren: './notifypeople/notifypeople.module#NotifyPeopleModule',canActivate:[RouteGuardService]  },
-            //{ path: 'archivedashboard', loadChildren: './archive.dashboard/archive.dashboard.module#ArchiveDashboardModule' },
             { path: 'callcenteronlypage', loadChildren: './callcenteronlypage/callcenteronlypage.module#CallCenterOnlyPageModule', canActivate: [RouteGuardService] },
             { path: 'membertrack', loadChildren: './member.track/member.track.module#MemberTrackModule', canActivate: [RouteGuardService] },
             { path: 'javascript:alert("Hello");', loadChildren: '' }
         ]
     }
 ];
-
 export const PagesRouting: ModuleWithProviders = RouterModule.forChild(pageRoutes);

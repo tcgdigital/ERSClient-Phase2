@@ -6,4 +6,6 @@ export interface ICareMemberTrackerService extends IServiceInretface<CareMemberT
     GetCareMembersByAffectedPersonId(incidentId: number, affectedPersonId: number): Observable<ResponseModel<CareMemberTrackerModel>>;
 
     GetCareMembersById(careMemberId: number) : Observable<ResponseModel<CareMemberTrackerModel>>;
+
+    CreateBulkCareMember(departmentId:number,entities: CareMemberTrackerModel[]): Observable<CareMemberTrackerModel[]> ;
 }
