@@ -130,7 +130,6 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
         if (this.inputFileCrew) {
             this.inputFileCrew.nativeElement.value = '';
         }
-
         this.affectedPersonModelForStatus = affectedPerson;
         this.affectedPersonModelForStatus.UnidentifiedPassengerId = 0;
         if (this.affectedPersonModelForStatus.Age == "NaN") {
@@ -200,6 +199,10 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
     }
 
     mergeUnidentifiedWithPDA(affectedPeopleToView: AffectedPeopleToView): void {
+        // if (affectedPeopleToView.UnidentifiedPassengerId == 0) {
+        //     this.toastrService.error('There is no unidentified passenger', 'Error', this.toastrConfig);
+        // }
+        // else {
         let result = confirm(`Do you Want to merge this unidentified person with this passenger ${affectedPeopleToView.PassengerName}?`);
         if (result) {
             if (affectedPeopleToView.UnidentifiedPassengerId > 0) {
@@ -225,6 +228,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
             }
         }
     }
+    // }
 
     getCurrentDepartmentName(departmentId): void {
         this.departmentService.Get(departmentId)
@@ -295,7 +299,9 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
         if (this.affectedPersonModelForStatus
             && this.affectedPersonModelForStatus.UnidentifiedPassengerId != 0 && this.isUnidentifiedShow == true) {
             this.toastrService.error('Please merge the selected unidentified passenger before submission', 'Error', this.toastrConfig);
-        } else {
+        }
+
+        else {
             this.affectedPersonToUpdate.AffectedPersonId = affectedModifiedForm.AffectedPersonId;
             this.affectedPersonToUpdate.Identification = affectedModifiedForm.Identification;
             this.affectedPersonToUpdate.MedicalStatus = affectedModifiedForm['MedicalStatusToshow'];
@@ -320,7 +326,10 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
                 }, (error: any) => {
                     console.log(`Error: ${error.message}`);
                 });
+
         }
+
+
     }
 
     createCommunicationLogModel(affectedPersonToUpdate: AffectedPeopleModel, createdBy: number): void {
@@ -516,12 +525,12 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
         let affectedpersonToUpdate = new AffectedPeopleModel();
         affectedpersonToUpdate.AffectedPersonId = id;
         affectedpersonToUpdate.IsNokInformed = event.checked;
-        
+
         const additionalHeader: NameValue<string>
             = new NameValue<string>('CurrentDepartmentName', this.currentDepartmentName);
 
         this.affectedPeopleService.UpdateWithHeader(affectedpersonToUpdate, additionalHeader)
-        //this.affectedPeopleService.Update(affectedpersonToUpdate, id)
+            //this.affectedPeopleService.Update(affectedpersonToUpdate, id)
             .subscribe((response: AffectedPeopleModel) => {
                 this.toastrService.success(`NOK information status updated`)
                 this.getAffectedPeople(this.currentIncident);
