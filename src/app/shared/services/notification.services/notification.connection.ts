@@ -78,9 +78,9 @@ export class NotificationConnection implements INotificationConnection {
             this.stop();
             this._connection.qs = connectionStore.QuesyString;
             this._connection.start();
-            // this.start().then((connection: INotificationConnection) => {
-            //     callbackFunc(connection, connectionStore);
-            // });
+            /* this.start().then((connection: INotificationConnection) => {
+                callbackFunc(connection, connectionStore);
+            });*/
         } catch (ex) {
             console.log(ex);
         }
@@ -143,7 +143,7 @@ export class NotificationConnection implements INotificationConnection {
     }
 
     private wireUpErrorsAsObservable(): Observable<any> {
-        const sError = new Subject<any>();
+        const sError: Subject<any> = new Subject<any>();
 
         this._connection.error((error: any) => {
             // this._zone.run(() => {
@@ -154,7 +154,8 @@ export class NotificationConnection implements INotificationConnection {
     }
 
     private wireUpStatusEventsAsObservable(): Observable<ConnectionStatus> {
-        const sStatus = new Subject<ConnectionStatus>();
+        const sStatus: Subject<any> = new Subject<ConnectionStatus>();
+
         // aggregate all signalr connection status handlers into 1 observable.
         // handler wire up, for signalr connection status callback.
         this._connection.stateChanged((change: any) => {
@@ -162,6 +163,7 @@ export class NotificationConnection implements INotificationConnection {
                 sStatus.next(new ConnectionStatus(change.newState));
             });
         });
+
         return sStatus;
     }
 

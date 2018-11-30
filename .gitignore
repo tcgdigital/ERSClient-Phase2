@@ -2,6 +2,10 @@
 logs
 *.log
 
+# Archives
+*.zip
+*.rar
+
 # Runtime data
 pids
 *.pid

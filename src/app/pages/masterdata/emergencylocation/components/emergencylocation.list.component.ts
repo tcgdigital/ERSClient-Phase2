@@ -3,9 +3,9 @@ import { EmergencyLocationService } from './emergencylocation.service';
 import { EmergencyLocationModel } from './emergencylocation.model';
 import {
     ResponseModel, DataExchangeService, SearchConfigModel,
-    SearchTextBox, SearchDropdown,
-    NameValue,
-    GlobalConstants,UtilityService
+    SearchTextBox, SearchDropdown, NameValue,
+    GlobalConstants, UtilityService,
+    CustomDialogResult, CustomDialogService, CustomDialogTheme
 } from '../../../../shared';
 import { Observable, Subject } from 'rxjs/Rx';
 import { ToastrService, ToastrConfig } from 'ngx-toastr';
@@ -21,15 +21,18 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
     emergencyLocationPatch: EmergencyLocationModel = null;
     expandSearch: boolean = false;
     searchValue: string = 'Expand Search';
+    activeTheme: string = 'Default';
+
     private ngUnsubscribe: Subject<any> = new Subject<any>();
     public isShowAddEdit: boolean = true;
-    public isShowDelete : boolean = true;
+    public isShowDelete: boolean = true;
     public currentDepartmentId: number;
 
     constructor(private emergencyLocationService: EmergencyLocationService,
         private dataExchange: DataExchangeService<EmergencyLocationModel>,
         private toastrService: ToastrService,
-        private toastrConfig: ToastrConfig) { }
+        private toastrConfig: ToastrConfig,
+        private customDialogService: CustomDialogService) { }
 
     expandSearchPanel(value): void {
         if (!value) {
@@ -128,18 +131,44 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
     }
 
     deleteStation(emergencyLocation: EmergencyLocationModel): void {
-        delete emergencyLocation.Active;
-        if (confirm('Do you want to delete station: ' + emergencyLocation.IATA + '?')) {
-            const IATA = emergencyLocation.IATA;
+        this.deleteStstionNew(emergencyLocation);
 
-            this.emergencyLocationService.Delete(emergencyLocation.EmergencyLocationId, emergencyLocation)
-                .subscribe((response: any) => {
-                    this.toastrService.success('Station: ' + IATA + ' is deleted successfully', 'Success', this.toastrConfig);
-                    this.getAllEmergencyLocations();
-                }, (error: any) => {
-                    console.log(`Error: ${error.message}`);
-                });
-        }
+        // delete emergencyLocation.Active;
+        // if (confirm('Do you want to delete station: ' + emergencyLocation.IATA + '?')) {
+        //     const IATA = emergencyLocation.IATA;
+
+        //     this.emergencyLocationService.Delete(emergencyLocation.EmergencyLocationId, emergencyLocation)
+        //         .subscribe((response: any) => {
+        //             this.toastrService.success('Station: ' + IATA + ' is deleted successfully', 'Success', this.toastrConfig);
+        //             this.getAllEmergencyLocations();
+        //         }, (error: any) => {
+        //             console.log(`Error: ${error.message}`);
+        //         });
+        // }
+    }
+
+    deleteStstionNew(emergencyLocation: EmergencyLocationModel): void {
+        debugger;
+        delete emergencyLocation.Active;
+        let dialog: CustomDialogResult;
+        const currentTheme = this.activeTheme.toLowerCase() as CustomDialogTheme;
+
+        dialog = this.customDialogService.confirm(`Do you want to delete station: ${emergencyLocation.IATA}?`,
+            { title: 'Station delete confirmation', theme: currentTheme });
+
+        dialog.subscribe(res => {
+            if(res==true)            { 
+                const IATA = emergencyLocation.IATA;
+
+                this.emergencyLocationService.Delete(emergencyLocation.EmergencyLocationId, emergencyLocation)
+                    .subscribe((response: any) => {
+                        this.toastrService.success('Station: ' + IATA + ' is deleted successfully', 'Success', this.toastrConfig);
+                        this.getAllEmergencyLocations();
+                    }, (error: any) => {
+                        console.log(`Error: ${error.message}`);
+                    });
+            }
+        });
     }
 
     invokeReset(): void {

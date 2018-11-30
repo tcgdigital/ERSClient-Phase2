@@ -18,3 +18,4 @@ export * from './map.widget';
 export * from './weather.widget';
 export * from './progressbar';
 export * from './multiselect';
+export * from './custom.dialog';
