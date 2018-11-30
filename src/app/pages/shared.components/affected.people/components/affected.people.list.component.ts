@@ -16,7 +16,7 @@ import * as jwtDecode from 'jwt-decode';
 import {
     ResponseModel, DataExchangeService, GlobalConstants, AuthModel,
     GlobalStateService, UtilityService, KeyValue, FileUploadService, SearchConfigModel,
-    SearchTextBox, SearchDropdown, NameValue
+    SearchTextBox, SearchDropdown, NameValue, CustomDialogResult, CustomDialogTheme, CustomDialogService
 } from '../../../../shared';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { FileStoreModel } from '../../../../shared/models/file.store.model';
@@ -30,13 +30,13 @@ import { CareMemberTrackerModel } from '../../care.member.tracker';
     templateUrl: '../views/affected.people.list.view.html'
 })
 export class AffectedPeopleListComponent implements OnInit, OnDestroy {
-
     @ViewChild('childModal') public childModal: ModalDirective;
     @ViewChild('childModalForTrail') public childModalForTrail: ModalDirective;
     @ViewChild('childModalForCallers') public childModalForCallers: ModalDirective;
     @ViewChild('childModalForCareMembers') public childModalForCareMembers: ModalDirective;
     @ViewChild('inputFileCrew') inputFileCrew: any;
 
+    activeTheme: string = 'Default';
     affectedPeople: AffectedPeopleToView[] = [];
     currentIncident: number;
     affectedPersonToUpdate: AffectedPeopleModel = new AffectedPeopleModel();
@@ -109,7 +109,8 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
         private toastrConfig: ToastrConfig,
         private fileUploadService: FileUploadService,
         private fileStoreService: FileStoreService,
-        private copassangerService: CoPassengerService) {
+        private copassangerService: CoPassengerService,
+        private customDialogService: CustomDialogService) {
         this.downloadFilePath = GlobalConstants.EXTERNAL_URL + 'api/FileDownload/GetFile/Affected People/';
         this.globalStateProxyOpen = injector.get(GlobalStateService);
     }
@@ -118,8 +119,6 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
         this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.AffectedPersonSelected, affectedPerson.AffectedPersonId);
         this.childModalForCareMembers.show();
     }
-
-
 
     openAffectedPersonDetail(affectedPerson: AffectedPeopleToView): void {
         this.copassangers = [];
@@ -199,10 +198,45 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
     }
 
     mergeUnidentifiedWithPDA(affectedPeopleToView: AffectedPeopleToView): void {
-        // if (affectedPeopleToView.UnidentifiedPassengerId == 0) {
-        //     this.toastrService.error('There is no unidentified passenger', 'Error', this.toastrConfig);
-        // }
-        // else {
+        if (affectedPeopleToView.UnidentifiedPassengerId <= 0) {
+            this.toastrService.warning(`Please select any unidentified passenger to be merged`, 'Warning', this.toastrConfig);
+            return;
+        }
+
+        let dialog: CustomDialogResult;
+        const currentTheme = this.activeTheme.toLowerCase() as CustomDialogTheme;
+
+        dialog = this.customDialogService.confirm
+            (`Do you Want to merge this unidentified person with this passenger ${affectedPeopleToView.PassengerName}?`,
+            { title: 'PDA Merge Confirmation', theme: currentTheme });
+
+        dialog.subscribe(res => {
+            if (res == true) {
+                if (affectedPeopleToView.UnidentifiedPassengerId > 0) {
+                    this.affectedPeopleService.GetAffectedPersonIdByPassengerId(affectedPeopleToView.UnidentifiedPassengerId)
+                        .subscribe((response: ResponseModel<AffectedPeopleModel>) => {
+                            if (response.Count > 0) {
+                                this.affectedPeopleService.ReplaceAffectedPersonInvolvement
+                                    (response.Records[0].AffectedPersonId, affectedPeopleToView.AffectedPersonId, this.currentDepartmentName)
+                                    .subscribe((response: AffectedPersonInvolvementResponse) => {
+                                        if (response.toString() == 'success') {
+                                            this.toastrService.success(`The Passenger "${affectedPeopleToView.PassengerName}"
+                                            has been successfully merged with the selected unidentified passenger`, 'Success', this.toastrConfig);
+                                            this.isUnidentifiedShow = false;
+                                        }
+                                        else {
+                                            this.isUnidentifiedShow = true;
+                                        }
+                                    });
+                            }
+                        }, (error: any) => {
+                            console.log(`Error: ${error.message}`);
+                        });
+                }
+            }
+        });
+
+        /*
         let result = confirm(`Do you Want to merge this unidentified person with this passenger ${affectedPeopleToView.PassengerName}?`);
         if (result) {
             if (affectedPeopleToView.UnidentifiedPassengerId > 0) {
@@ -227,6 +261,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
                     });
             }
         }
+        */
     }
     // }
 
