@@ -42,7 +42,8 @@ import {
     ProgressComponent,
     ProgressBarComponent,
     ProgressService,
-    ProgressBrowserXhr
+    ProgressBrowserXhr,
+    CustomDialogModule
 } from './components';
 
 import {
@@ -82,6 +83,8 @@ import {
     LayoutSizes,
     decorateModuleRef
 } from './constants';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserModule } from '@angular/platform-browser';
 
 const SHARED_COMPONENTS: any[] = [
     PageHeaderComponent,
@@ -170,11 +173,14 @@ export function createConfig(): ConnectionConfig {
     ],
     imports: [
         CommonModule,
+        // BrowserAnimationsModule,
+        // BrowserModule,
         RouterModule,
         FormsModule,
         ReactiveFormsModule,
         HttpModule,
         NgSelectizeModule,
+        CustomDialogModule.forRoot(),
         Ng2BootstrapModule.forRoot(),
         NotificationModule.forRoot(createConfig)
     ],
