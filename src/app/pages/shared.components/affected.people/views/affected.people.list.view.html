@@ -190,7 +190,7 @@
                                                 </strong></td>
                                             <td data-title="Contact Number"><strong>{{caller.ContactNumber}}&nbsp;</strong></td>
                                             <td data-title="Select NOK">
-                                                <md-checkbox [disabled]="isArchive" [(ngModel)]="caller.IsNok" (change)="saveNok(affectedPersonModel.AffectedPersonId,caller,$event)"
+                                                <md-checkbox [disabled]="isArchive" [(ngModel)]="caller.IsNok" (change)="saveNok(affectedPeople.AffectedPersonId,caller,$event)"
                                                     aria-label="Add"></md-checkbox>
                                                 <br /><span>Relation: {{caller.Relationship}}</span>
                                             </td>
@@ -318,7 +318,7 @@
                                                             <td data-title="Contact Number"><strong>{{caller.ContactNumber}}&nbsp;</strong></td>
                                                             <td data-title="Select NOK">
                                                                 <md-checkbox [disabled]="isArchive" [(ngModel)]="caller.IsNok"
-                                                                    (change)="saveNok(affectedPersonModel.AffectedPersonId,caller,$event)"
+                                                                    (change)="saveNok(affectedPeople.AffectedPersonId,caller,$event)"
                                                                     aria-label="Add"></md-checkbox>
                                                                 <br /><span>Relation: {{caller.Relationship}}</span>
                                                             </td>

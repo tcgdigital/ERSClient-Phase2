@@ -1,6 +1,6 @@
 import {
     Component, ViewEncapsulation, OnInit, AfterViewChecked,
-    ElementRef, ViewChild, OnDestroy
+    ElementRef, ViewChild, OnDestroy, Injectable
 } from '@angular/core';
 import {
     MemberEngagementTrackModel, MemberCurrentEngagementModel,
@@ -18,6 +18,7 @@ import { UserProfileService, UserProfileModel } from '../masterdata/userprofile/
 import { UserPermissionService, UserPermissionModel } from '../masterdata/userpermission/components';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Subject, Observable } from 'rxjs';
+import { DOCUMENT } from '@angular/platform-browser';
 
 @Component({
     selector: 'member-track-main',
@@ -25,6 +26,8 @@ import { Subject, Observable } from 'rxjs';
     templateUrl: './views/member.track.views.html',
     styleUrls: ['./styles/member.track.styles.scss']
 })
+
+
 export class MemberTrackComponent implements OnInit, OnDestroy, AfterViewChecked {
     @ViewChild('childModalHistory')
     public childModalHistory: ModalDirective;
@@ -64,6 +67,8 @@ export class MemberTrackComponent implements OnInit, OnDestroy, AfterViewChecked
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
         this.pageInitialCall(this.currentDepartmentId, this.currentIncidentId);
+        //$('body').scrollTop(0);
+        window.scrollTo(0,0);
     }
 
     ngOnDestroy(): void {
@@ -107,6 +112,7 @@ export class MemberTrackComponent implements OnInit, OnDestroy, AfterViewChecked
                 self.datachanged($event);
             });
         });
+        window.scrollTo(0,0);
     }
 
     public datachanged($event: any): void {

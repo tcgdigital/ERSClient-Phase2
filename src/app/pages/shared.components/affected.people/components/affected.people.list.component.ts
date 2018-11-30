@@ -129,7 +129,6 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
         if (this.inputFileCrew) {
             this.inputFileCrew.nativeElement.value = '';
         }
-
         this.affectedPersonModelForStatus = affectedPerson;
         this.affectedPersonModelForStatus.UnidentifiedPassengerId = 0;
         if (this.affectedPersonModelForStatus.Age == "NaN") {
@@ -199,7 +198,6 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
     }
 
     mergeUnidentifiedWithPDA(affectedPeopleToView: AffectedPeopleToView): void {
-        debugger;
         if (affectedPeopleToView.UnidentifiedPassengerId <= 0) {
             this.toastrService.warning(`Please select any unidentified passenger to be merged`, 'Warning', this.toastrConfig);
             return;
@@ -265,6 +263,7 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
         }
         */
     }
+    // }
 
     getCurrentDepartmentName(departmentId): void {
         this.departmentService.Get(departmentId)
@@ -335,7 +334,9 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
         if (this.affectedPersonModelForStatus
             && this.affectedPersonModelForStatus.UnidentifiedPassengerId != 0 && this.isUnidentifiedShow == true) {
             this.toastrService.error('Please merge the selected unidentified passenger before submission', 'Error', this.toastrConfig);
-        } else {
+        }
+
+        else {
             this.affectedPersonToUpdate.AffectedPersonId = affectedModifiedForm.AffectedPersonId;
             this.affectedPersonToUpdate.Identification = affectedModifiedForm.Identification;
             this.affectedPersonToUpdate.MedicalStatus = affectedModifiedForm['MedicalStatusToshow'];
@@ -360,7 +361,10 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
                 }, (error: any) => {
                     console.log(`Error: ${error.message}`);
                 });
+
         }
+
+
     }
 
     createCommunicationLogModel(affectedPersonToUpdate: AffectedPeopleModel, createdBy: number): void {
