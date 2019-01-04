@@ -753,6 +753,11 @@ export class AffectedPeopleListComponent implements OnInit, OnDestroy {
                 PlaceHolder: 'Select Status',
                 Value: '',
                 ListData: Observable.of(status)
+            }),
+            new SearchTextBox({
+                Name: 'CurrentCareMemberName',
+                Description: 'CARE Name',
+                Value: ''
             })
         ];
     }

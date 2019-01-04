@@ -63,7 +63,6 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
 
         if (involvedParty != null) {
             affected = UtilityService.pluck(involvedParty, ['Affecteds'])[0][0];
-
             if (affected != null) {
                 affectedPeople = UtilityService.pluck(affected, ['AffectedPeople'])[0];
                 affectedPeopleForView = affectedPeople.map((dataItem) => {
@@ -91,6 +90,8 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
             : (affectedPerson.Crew == null ? 'NA' : affectedPerson.Crew.CrewGender);
         affectedPeopleForView.Nationality = affectedPerson.Passenger != null ? (affectedPerson.Passenger.PassengerNationality == null ? 'NA' : affectedPerson.Passenger.PassengerNationality)
             : (affectedPerson.Crew == null ? 'NA' : affectedPerson.Crew.CrewNationality);
+        affectedPeopleForView.PassportNumber = affectedPerson.Passenger != null ? (affectedPerson.Passenger.Passport == null ? 'NA' : affectedPerson.Passenger.Passport) :
+            (affectedPerson.Crew == null ? 'NA' : affectedPerson.Crew.PassportNumber);
         const now = moment(new Date());
         const dob = affectedPerson.Passenger != null ? moment(affectedPerson.Passenger.PassengerDob) : moment(affectedPerson.Crew.CrewDob);
         if (dob == null || dob == undefined) {

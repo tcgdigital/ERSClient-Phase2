@@ -102,6 +102,7 @@ export class AffectedPeopleToView extends BaseModel {
 	public CurrentCareMemberName: string;
 	public IsIdentified: boolean;
 	public UnidentifiedPassengerId?: number;
+	public PassportNumber: string;
 }
 
 export class AffectedPersonInvolvementModel {

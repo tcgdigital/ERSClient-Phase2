@@ -8,11 +8,14 @@ import {
     DataServiceFactory, DataProcessingService, DataService,
     ServiceBase, UtilityService
 } from '../../../../shared';
+import { AffectedPeopleModel } from '../../affected.people';
+import { CareMemberTrackerModel } from '../../care.member.tracker';
 
 @Injectable()
 export class EnquiryService extends ServiceBase<EnquiryModel>
     implements IEnquiryService {
     private _bulkDataService: DataService<EnquiryModel>;
+    private _careDataService: DataService<CareMemberTrackerModel>;
     /**
      * Creates an instance of DepartmentService.
      * @param {DataServiceFactory} dataServiceFactory 
@@ -25,6 +28,9 @@ export class EnquiryService extends ServiceBase<EnquiryModel>
         this._bulkDataService = this.dataServiceFactory
             .CreateServiceWithOptionsAndActionSuffix<EnquiryModel>
             ('EnquiryBatch', '', option);
+
+        this._careDataService = this.dataServiceFactory.CreateServiceWithOptions<CareMemberTrackerModel>('CareEngagementTracks', option);
+
     }
 
     public getOtherQueryByIncident(IncidentId: number): Observable<ResponseModel<EnquiryModel>> {
@@ -112,4 +118,11 @@ export class EnquiryService extends ServiceBase<EnquiryModel>
         return bulkDataServiceToDeactivate.JsonPost(externalInputId).Execute();
     };
 
+    public CareMemberName(incidentId: number, AffectedPersonId: number): Observable<ResponseModel<CareMemberTrackerModel>> {
+        return this._careDataService.Query()
+            .Filter(`AffectedPersonId eq ${AffectedPersonId} and IncidentId eq ${incidentId} and ActiveFlag eq 'Active'`)
+            .Top(`1`)
+            .Select(`CareMemberName`)
+            .Execute();
+    }
 }

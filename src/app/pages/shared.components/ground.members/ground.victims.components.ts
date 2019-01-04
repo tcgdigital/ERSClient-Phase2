@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnInit, AfterContentInit, OnDestroy } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, AfterContentInit, OnDestroy, ViewChild } from '@angular/core';
 import { ITabLinkInterface } from '../../../shared/components/tab.control';
 import { Observable, Subject } from 'rxjs/Rx';
 import { GroundVictimModel } from '../ground.victim/components/ground.victim.model';
@@ -9,6 +9,10 @@ import {
     GlobalStateService, KeyValue, SearchConfigModel,
     SearchTextBox, NameValue, GlobalConstants
 } from '../../../shared';
+import { GroundVictimService } from '../ground.victim/components/ground.victim.service';
+import { ModalDirective } from 'ngx-bootstrap/modal';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
     selector: 'crew-query',
@@ -16,7 +20,10 @@ import {
     templateUrl: './views/ground.victims.view.html',
     styleUrls: ['./styles/ground.victims.scss']
 })
+
+
 export class GroundVictimsComponent implements OnInit, OnDestroy, AfterContentInit {
+    @ViewChild('childModal') public childModal: ModalDirective;
     public currentIncidentId: number;
     public currentDepartmentId: number;
     public groundVictimList: Observable<GroundVictimModel[]>;
@@ -25,6 +32,9 @@ export class GroundVictimsComponent implements OnInit, OnDestroy, AfterContentIn
     expandSearch: boolean = false;
     searchValue: string = 'Expand Search';
     private ngUnsubscribe: Subject<any> = new Subject<any>();
+    groundVictimInfo: GroundVictimModel = new GroundVictimModel();
+    public currentDepartmentName: string;
+
 
     /**
      *Creates an instance of GroundVictimsComponent.
@@ -33,7 +43,9 @@ export class GroundVictimsComponent implements OnInit, OnDestroy, AfterContentIn
      * @memberof GroundVictimsComponent
      */
     constructor(private peopleOnBoardWidgetService: PeopleOnBoardWidgetService,
-        private globalState: GlobalStateService) { }
+        private globalState: GlobalStateService,
+        private toastrService: ToastrService,
+        private groundVictimService: GroundVictimService) { }
 
     public ngOnInit(): void {
         this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
@@ -141,7 +153,46 @@ export class GroundVictimsComponent implements OnInit, OnDestroy, AfterContentIn
             });
     }
 
+    cancelModal(): void {
+        this.childModal.hide();
+    }
 
+    openGroundVictimDetail(ground: GroundVictimModel): void {
+        this.groundVictimService.GetAllGroundVictim(ground.GroundVictimId)
+            .takeUntil(this.ngUnsubscribe)
+            .subscribe((response: ResponseModel<GroundVictimModel>) => {
+                const responseModel: GroundVictimModel = response.Records[0];
+                this.groundVictimInfo.GroundVictimId = responseModel.GroundVictimId;
+                this.groundVictimInfo.GroundVictimName = responseModel.GroundVictimName;
+                this.groundVictimInfo.GroundVictimType = responseModel.GroundVictimType;
+                this.groundVictimInfo.NOKName = responseModel.NOKName;
+                this.groundVictimInfo.NOKContactNumber = responseModel.NOKContactNumber;
+                this.groundVictimInfo.Status = responseModel.Status;
+                this.childModal.show();
+            }, (error: any) => {
+                console.log(`Error: ${error.message}`);
+            });
+    }
+
+    saveUpdatedGroundVictim(UpdateGround: GroundVictimModel): void {
+        const updateGround = new GroundVictimModel();
+        updateGround.GroundVictimName = UpdateGround.GroundVictimName;
+        updateGround.GroundVictimType = UpdateGround.GroundVictimType;
+        updateGround.Status = UpdateGround.Status;
+        updateGround.NOKContactNumber = UpdateGround.NOKContactNumber;
+        updateGround.NOKName = UpdateGround.NOKName;
+        const additionalHeader: NameValue<string>
+            = new NameValue<string>('CurrentDepartmentName', this.currentDepartmentName);
+        this.groundVictimService.UpdateGroundVictim
+            (updateGround, UpdateGround.GroundVictimId)
+            .subscribe((response: GroundVictimModel) => {
+                this.openAllGroundVictims();
+                this.toastrService.success('Adiitional Information updated.');
+                this.childModal.hide();
+            }, (error: any) => {
+                console.log(`Error: ${error.message}`);
+            });
+    }
 
     private initiateSearchConfigurations(): void {
         const status: Array<NameValue<string>> = [

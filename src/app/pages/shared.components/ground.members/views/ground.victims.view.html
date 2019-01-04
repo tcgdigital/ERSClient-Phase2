@@ -24,6 +24,7 @@
                                 <th>Status</th>
                                 <th>NOK Name</th>
                                 <th>NOK Contact Number</th>
+                                <th>Edit</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -36,10 +37,63 @@
                                 <td data-title="Status">{{affected.Status}}&nbsp;</td>
                                 <td data-title="NOK Name">{{affected.NOKName}}&nbsp;</td>
                                 <td data-title="NOK Contact Number">{{affected.NOKContactNumber}}&nbsp;</td>
+                                <td data-title="Edit">
+                                    <i class="fa fa-edit fa-2x pt-2" (click)="openGroundVictimDetail(affected)" *ngIf="isShow | accesibility: currentDepartmentId : 'GroundVictimEdit'"></i>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </responsive-table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Additional Information</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="cancelModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-6 col-sm-12">
+                        <label for="GroundVictimType">Ground Victim Type:</label>
+                        <input value="{{groundVictimInfo.GroundVictimType}}" [(ngModel)]="groundVictimInfo.GroundVictimType" maxlength="100" type="text" class="form-control"
+                        />
+                    </div>
+                    <div class="form-group col-md-6 col-sm-12">
+                        <label for="GroundVictimName">Ground Victim Name:</label>
+                        <input value="{{groundVictimInfo.GroundVictimName}}" [(ngModel)]="groundVictimInfo.GroundVictimName" maxlength="100" type="text" class="form-control"
+                        />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6 col-sm-12">
+                        <label for="NOKName">NOK Name:</label>
+                        <input value="{{groundVictimInfo.NOKName}}" [(ngModel)]="groundVictimInfo.NOKName" maxlength="100" type="text" class="form-control" />
+                    </div>
+                    <div class="form-group col-md-6 col-sm-12">
+                        <label for="NOKContactNumber">NOK Contact Number:</label>
+                        <input value="{{groundVictimInfo.NOKContactNumber}}" [(ngModel)]="groundVictimInfo.NOKContactNumber" maxlength="100" type="text" class="form-control"
+                        />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6 col-sm-12">
+                        <label for="Status">Status:</label>
+                        <input value="{{groundVictimInfo.Status}}" [(ngModel)]="groundVictimInfo.Status" maxlength="100" type="text" class="form-control"
+                        />
+                    </div>
+                    <div class="form-group col-md-6 col-sm-12">
+                        <div class="buttonholder">
+                            <button class="btn btn-primary" type="button" (click)="saveUpdatedGroundVictim(groundVictimInfo)">Submit</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
