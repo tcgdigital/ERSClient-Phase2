@@ -45,6 +45,8 @@ import { GroundVictimModel, GroundVictimService, AffectedVictimToView } from '..
 
 import { AffectedService } from '../affected/components/affected.service';
 import { FormsModule } from '@angular/forms';
+import { CareMemberTrackerService } from '../care.member.tracker/components/care.member.tracker.service';
+import { CareMemberTrackerModel } from '../care.member.tracker/components/care.member.tracker.model';
 
 
 @Component({
@@ -64,7 +66,8 @@ import { FormsModule } from '@angular/forms';
         PassengerService,
         GroundVictimService,
         KeyValueService,
-        AffectedService
+        AffectedService,
+        CareMemberTrackerService
     ]
 })
 export class EnquiryEntryComponent implements OnInit, OnDestroy {
@@ -75,7 +78,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
     @Input('callid') public callid: number;
     @Input('enquiryType') public enquiryType: number;
     @Input('modalType') public modalType: string = 'received';
-    
+
 
     public form: FormGroup;
     public activeKeyValues: KeyValueModel[] = [];
@@ -172,7 +175,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
 
     private ngUnsubscribe: Subject<any> = new Subject<any>();
     public defaultvalue: string;
-
+    public SelectedPassengerCurrentCareMemberName : String;
     /**
      *Creates an instance of EnquiryEntryComponent.
      * @param {AffectedPeopleService} affectedPeopleService
@@ -209,7 +212,8 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         private passangerService: PassengerService,
         private groundVictimService: GroundVictimService,
         private keyValueService: KeyValueService,
-        private affectedService: AffectedService
+        private affectedService: AffectedService,
+        private dataExchangeCareMemberCreation: DataExchangeService<CareMemberTrackerModel>
     ) { }
 
     private getPassengersAndCrews(currentIncident: number, isIdentified: boolean = true): void {
@@ -490,7 +494,6 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         this.enquiry.AffectedPersonId = message.Value;
         this.enquiry.AffectedObjectId = 0;
         this.enquiry.GroundVictimId = 0;
-
         this.communicationLog.AffectedPersonId = message.Value;
         delete this.communicationLog.AffectedObjectId;
         delete this.communicationLog.GroundVictimId;
@@ -500,7 +503,6 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         let obj = this.affectedPeople
             .find(x => x.AffectedPersonId == message.Value);
 
-        this.affectedId = obj.AffectedId;
         this.copassengerlistPassengerForMappedPerson.length = 0;
         this.CoPassangerListPopulation(obj);
         this.showCoPassangerPannel = true;
@@ -508,8 +510,19 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         if (obj.GroupId > 0) {
             this.SelectPeopleWithSameGroupId(obj.GroupId, true, true);
         }
+
         this.PopulateConsolidatedCoPassangers();
         this.resetallcopassangers();
+        this.enquiryService.CareMemberName(this.currentIncident, this.enquiry.AffectedPersonId)
+            //.debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            .takeUntil(this.ngUnsubscribe)
+            .subscribe((response: ResponseModel<CareMemberTrackerModel>) => {
+                if (response != null && response.Records.length > 0) {
+                    this.SelectedPassengerCurrentCareMemberName = response.Records[0].CareMemberName;
+                }
+
+            });
+
     }
 
     public onNotifyCrew(message: KeyValue): void {
@@ -568,6 +581,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         this.copassengerlistpnr = [];
         this.copassengerlistPassengerForMappedPerson = [];
         this.consolidatedCopassengers = [];
+        this.SelectedPassengerCurrentCareMemberName = '';
     }
 
     public onResetCrew(): void {
@@ -963,7 +977,6 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
 
     public onPDAActionClick(eventArgs: any) {
         let affectedPersonid = eventArgs.selectedItem.Value;
-
         this.affectedPeopleService.GetCommunicationByPDA(affectedPersonid)
             // .debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
             .takeUntil(this.ngUnsubscribe)
@@ -1474,7 +1487,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
     public onChange($event: any): void {
         if ($event.checked) {
             this.form.controls["Unidentified"].disable();
-            this.defaultvalue='';
+            this.defaultvalue = '';
         }
         else {
             this.form.controls["Unidentified"].enable();
@@ -1483,7 +1496,8 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
             this.copassengerlistpnr = [];
             this.selectedcountpnr = 0;
             this.passengerAutocomplete.query = '';
-            this.defaultvalue='';
+            this.defaultvalue = '';
+            this.SelectedPassengerCurrentCareMemberName= '';
         }
         this.IsIdentified = $event.checked;
     }

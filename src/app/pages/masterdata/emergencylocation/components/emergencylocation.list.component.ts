@@ -148,7 +148,6 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
     }
 
     deleteStstionNew(emergencyLocation: EmergencyLocationModel): void {
-        debugger;
         delete emergencyLocation.Active;
         let dialog: CustomDialogResult;
         const currentTheme = this.activeTheme.toLowerCase() as CustomDialogTheme;
@@ -157,7 +156,7 @@ export class EmergencyLocationListComponent implements OnInit, OnDestroy {
             { title: 'Station delete confirmation', theme: currentTheme });
 
         dialog.subscribe(res => {
-            if(res==true)            { 
+            if (res == true) {
                 const IATA = emergencyLocation.IATA;
 
                 this.emergencyLocationService.Delete(emergencyLocation.EmergencyLocationId, emergencyLocation)
