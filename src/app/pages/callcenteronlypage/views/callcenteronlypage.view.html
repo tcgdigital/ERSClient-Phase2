@@ -24,8 +24,7 @@
             <div class="row">
                 <div class="form-group col-lg-2 col-sm-6 col-md-4">
                     <label for="EnquiryType">Enquiry Type<span class="required">*</span></label>
-                    <select id="EnquiryType" class="form-control" formControlName="EnquiryType" name="EnquiryType"
-                        (change)="enquiryChanged()">
+                    <select id="EnquiryType" class="form-control" formControlName="EnquiryType" name="EnquiryType" (change)="enquiryChanged()">
                         <option value=''>Select Enquiry Type</option>
                         <option *ngFor="let enquiry of enquirytypes" [value]="enquiry.value">
                             {{enquiry.text}}
@@ -38,8 +37,8 @@
 
                 <div class="form-group col-lg-2 col-sm-6 col-md-4">
                     <label for="CallerFirstName">Caller First Name<span class="required">*</span></label>
-                    <input id="CallerFirstName" class="form-control" type="text" name="CallerFirstName" formControlName="CallerFirstName"
-                        placeholder="Enter Caller First Name" />
+                    <input id="CallerFirstName" class="form-control" type="text" name="CallerFirstName" formControlName="CallerFirstName" placeholder="Enter Caller First Name"
+                    />
                     <small *ngIf="!generalform.controls.CallerFirstName.valid  && isSubmitted" class="text-danger">
                         Required.
                     </small>
@@ -47,8 +46,8 @@
 
                 <div class="form-group col-lg-2 col-sm-6 col-md-4">
                     <label for="CallerLastName">Caller Last Name<span class="required">*</span></label>
-                    <input id="CallerLastName" class="form-control" type="text" name="CallerLastName" formControlName="CallerLastName"
-                        placeholder="Enter Caller Last Name" />
+                    <input id="CallerLastName" class="form-control" type="text" name="CallerLastName" formControlName="CallerLastName" placeholder="Enter Caller Last Name"
+                    />
                     <small *ngIf="!generalform.controls.CallerLastName.valid && isSubmitted" class="text-danger">
                         Required.
                     </small>
@@ -56,23 +55,26 @@
 
                 <div class="form-group col-lg-2 col-sm-6 col-md-4">
                     <label for="ContactNumber">Contact Number<span class="required">*</span></label>
-                    <input id="ContactNumber" class="form-control" type="text" name="ContactNumber" formControlName="ContactNumber"
-                        placeholder="Enter Contact Number" />
+                    <input id="ContactNumber" class="form-control" type="text" name="ContactNumber" formControlName="ContactNumber" placeholder="Enter Contact Number"
+                    />
                     <small *ngIf="!generalform.controls.ContactNumber.valid && isSubmitted" class="text-danger">
-                        Required.
+                        Invalid contact number.
                     </small>
                 </div>
 
                 <div class="form-group col-lg-2 col-sm-6 col-md-4">
                     <label for="AlternateContactNumber">Alternate Number</label>
-                    <input id="AlternateContactNumber" class="form-control" type="text" name="AlternateContactNumber"
+                    <input id="AlternateContactNumber" class="form-control" type="text" pattern="^([+-\\ ]?[0-9]*)$" name="AlternateContactNumber"
                         formControlName="AlternateContactNumber" placeholder="Enter Alternate Contact Number" />
+                    <small *ngIf="!generalform.controls.AlternateContactNumber.valid && isSubmitted" class="text-danger">
+                        Invalid contact number.
+                    </small>
                 </div>
 
                 <div class="form-group col-lg-2 col-sm-6 col-md-4">
                     <label for="Relationship">Relationship</label>
-                    <input id="Relationship" class="form-control" type="text" name="Relationship" formControlName="Relationship"
-                        placeholder="Enter Relationship" />
+                    <input id="Relationship" class="form-control" type="text" name="Relationship" formControlName="Relationship" placeholder="Enter Relationship"
+                    />
                 </div>
             </div>
         </form>
@@ -82,8 +84,8 @@
                 <div class="row">
                     <div class="form-group col-lg-2 col-md-4 col-sm-6">
                         <label for="FirstName">PDA First Name<span class="required">*</span></label>
-                        <input id="FirstName" class="form-control" type="text" name="FirstName" formControlName="FirstName"
-                            placeholder="Enter First Name" />
+                        <input id="FirstName" class="form-control" type="text" name="FirstName" formControlName="FirstName" placeholder="Enter First Name"
+                        />
                         <small *ngIf="!pdacrewform.controls.FirstName.valid && isSubmitted" class="text-danger">
                             Required.
                         </small>
@@ -91,8 +93,8 @@
 
                     <div class="form-group col-lg-2 col-md-4 col-sm-6">
                         <label for="LastName">PDA Last Name<span class="required">*</span></label>
-                        <input id="LastName" class="form-control" type="text" name="LastName" formControlName="LastName"
-                            placeholder="Enter Last Name" />
+                        <input id="LastName" class="form-control" type="text" name="LastName" formControlName="LastName" placeholder="Enter Last Name"
+                        />
                         <small *ngIf="!pdacrewform.controls.LastName.valid && isSubmitted" class="text-danger">
                             Required.
                         </small>
@@ -100,8 +102,8 @@
 
                     <div class="form-group col-lg-2 col-md-4 col-sm-6">
                         <label for="Nationality">Nationality</label>
-                        <input id="Nationality" class="form-control" type="text" name="Nationality" formControlName="Nationality"
-                            placeholder="Enter Nationality" />
+                        <input id="Nationality" class="form-control" type="text" name="Nationality" formControlName="Nationality" placeholder="Enter Nationality"
+                        />
                         <small *ngIf="!pdacrewform.controls.Nationality.valid && isSubmitted" class="text-danger">
                             Required.
                         </small>
@@ -109,7 +111,8 @@
 
                     <div class="form-group col-lg-2 col-md-4 col-sm-6">
                         <label for="Age">Age</label>
-                        <input id="Age" class="form-control" type="text" pattern="[0-9]{0,2}" name="Age" formControlName="Age" placeholder="Enter Age" />
+                        <input id="Age" class="form-control" type="text" pattern="[0-9]{0,2}" name="Age" formControlName="Age" placeholder="Enter Age"
+                        />
                         <small *ngIf="!pdacrewform.controls.Age.valid && isSubmitted" class="text-danger">
                             Wrong Age.
                         </small>
@@ -117,16 +120,16 @@
 
                     <div class="form-group col-lg-4 col-md-8 col-sm-12">
                         <label for="PermanentAddress">Permanent Address</label>
-                        <input id="PermanentAddress" class="form-control" type="text" name="PermanentAddress"
-                            formControlName="PermanentAddress" placeholder="Enter Permanent Address" />
+                        <input id="PermanentAddress" class="form-control" type="text" name="PermanentAddress" formControlName="PermanentAddress"
+                            placeholder="Enter Permanent Address" />
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-lg-2 col-sm-6 col-md-4">
                         <label for="FlightNumber">Flight Number</label>
-                        <input id="FlightNumber" class="form-control" type="text" name="FlightNumber" formControlName="FlightNumber"
-                            placeholder="Enter Flight Number" />
+                        <input id="FlightNumber" class="form-control" type="text" name="FlightNumber" formControlName="FlightNumber" placeholder="Enter Flight Number"
+                        />
                         <small *ngIf="!pdacrewform.controls.FlightNumber.valid && isSubmitted" class="text-danger">
                             Required.
                         </small>
@@ -134,8 +137,8 @@
 
                     <div class="form-group col-lg-2 col-sm-6 col-md-4">
                         <label for="DepartedFrom">Departed From<span class="required">*</span></label>
-                        <input id="DepartedFrom" class="form-control" type="text" name="DepartedFrom" formControlName="DepartedFrom"
-                            placeholder="Enter Departed From" />
+                        <input id="DepartedFrom" class="form-control" type="text" name="DepartedFrom" formControlName="DepartedFrom" placeholder="Enter Departed From"
+                        />
                         <small *ngIf="!pdacrewform.controls.DepartedFrom.valid && isSubmitted" class="text-danger">
                             Required.
                         </small>
@@ -143,8 +146,8 @@
 
                     <div class="form-group col-lg-2 col-sm-6 col-md-4">
                         <label for="TravellingTo">Travelling To<span class="required">*</span></label>
-                        <input id="TravellingTo" class="form-control" type="text" name="TravellingTo" formControlName="TravellingTo"
-                            placeholder="Enter Travelling To" />
+                        <input id="TravellingTo" class="form-control" type="text" name="TravellingTo" formControlName="TravellingTo" placeholder="Enter Travelling To"
+                        />
                         <small *ngIf="!pdacrewform.controls.TravellingTo.valid && isSubmitted" class="text-danger">
                             Required.
                         </small>
@@ -152,8 +155,8 @@
 
                     <div class="form-group col-lg-2 col-sm-6 col-md-4" [hidden]="enquiryType!=1 && enquiryType!=3">
                         <label for="FinalDestination">Final Destination<span class="required">*</span></label>
-                        <input id="FinalDestination" class="form-control" type="text" name="FinalDestination"
-                            formControlName="FinalDestination" placeholder="Enter Final Destination" />
+                        <input id="FinalDestination" class="form-control" type="text" name="FinalDestination" formControlName="FinalDestination"
+                            placeholder="Enter Final Destination" />
                         <small *ngIf="!pdacrewform.controls.FinalDestination.valid && isSubmitted" class="text-danger">
                             Required or Invalid.
                         </small>
@@ -161,8 +164,8 @@
 
                     <div class="form-group col-lg-4 col-sm-12 col-md-8">
                         <label for="EnquiryReason">Enquiry Reason<span class="required">*</span></label>
-                        <input id="EnquiryReason" class="form-control" type="text" name="EnquiryReason" formControlName="EnquiryReason"
-                            placeholder="Enter Enquiry Reason" />
+                        <input id="EnquiryReason" class="form-control" type="text" name="EnquiryReason" formControlName="EnquiryReason" placeholder="Enter Enquiry Reason"
+                        />
                         <small *ngIf="!pdacrewform.controls.EnquiryReason.valid && isSubmitted" class="text-danger">
                             Required.
                         </small>
@@ -175,28 +178,31 @@
                 <div class="row">
                     <div class="form-group col-lg-2 col-sm-6 col-md-4">
                         <label for="KINFirstName">NOK First Name</label>
-                        <input id="KINFirstName" class="form-control" type="text" name="KINFirstName" formControlName="KINFirstName"
-                            placeholder="Enter NOK First Name" />
+                        <input id="KINFirstName" class="form-control" type="text" name="KINFirstName" formControlName="KINFirstName" placeholder="Enter NOK First Name"
+                        />
                     </div>
                     <div class="form-group col-lg-2 col-sm-6 col-md-4">
                         <label for="KINLastName">NOK Last Name</label>
-                        <input id="KINLastName" class="form-control" type="text" name="KINLastName" formControlName="KINLastName"
-                            placeholder="Enter NOK Last Name" />
+                        <input id="KINLastName" class="form-control" type="text" name="KINLastName" formControlName="KINLastName" placeholder="Enter NOK Last Name"
+                        />
                     </div>
                     <div class="form-group col-lg-2 col-sm-6 col-md-4">
                         <label for="KINContactNumber">NOK Contact No</label>
-                        <input id="KINContactNumber" class="form-control" type="text" name="KINContactNumber"
-                            formControlName="KINContactNumber" placeholder="Enter NOK Contact Number" />
+                        <input id="KINContactNumber" class="form-control" type="text" pattern="^([+-\\ ]?[0-9]*)$" name="KINContactNumber" formControlName="KINContactNumber"
+                            placeholder="Enter NOK Contact Number" />
+                        <small *ngIf="!pdacrewform.controls.KINContactNumber.valid && isSubmitted" class="text-danger">
+                            Invalid contact number.
+                        </small>
                     </div>
                     <div class="form-group col-lg-2 col-sm-6 col-md-4">
                         <label for="KINRelationShip">NOK Relationship</label>
-                        <input id="KINRelationShip" class="form-control" type="text" name="KINRelationShip"
-                            formControlName="KINRelationShip" placeholder="Enter NOK Relationship" />
+                        <input id="KINRelationShip" class="form-control" type="text" name="KINRelationShip" formControlName="KINRelationShip" placeholder="Enter NOK Relationship"
+                        />
                     </div>
                     <div class="form-group col-lg-4 col-sm-12 col-md-8">
                         <label for="TravellingWith">Travelling With</label>
-                        <input id="TravellingWith" class="form-control" type="text" name="TravellingWith"
-                            formControlName="TravellingWith" placeholder="Enter Travelling With" />
+                        <input id="TravellingWith" class="form-control" type="text" name="TravellingWith" formControlName="TravellingWith" placeholder="Enter Travelling With"
+                        />
                     </div>
                 </div>
 
@@ -223,8 +229,8 @@
                 <div class="row">
                     <div class="form-group col-lg-3 col-md-6 col-sm-12">
                         <label for="ShippersName">Shipper's Name<span class="required">*</span></label>
-                        <input id="ShippersName" class="form-control" type="text" name="ShippersName" formControlName="ShippersName"
-                            placeholder="Enter Shipper's Name" />
+                        <input id="ShippersName" class="form-control" type="text" name="ShippersName" formControlName="ShippersName" placeholder="Enter Shipper's Name"
+                        />
                         <small *ngIf="!cargoform.controls.ShippersName.valid && isSubmitted" class="text-danger">
                             Required.
                         </small>
@@ -232,8 +238,8 @@
 
                     <div class="form-group col-lg-3 col-md-6 col-sm-12">
                         <label for="ShippersAddress">Shipper's Address<span class="required">*</span></label>
-                        <input id="ShippersAddress" class="form-control" type="text" name="ShippersAddress"
-                            formControlName="ShippersAddress" placeholder="Enter Shipper's Address" />
+                        <input id="ShippersAddress" class="form-control" type="text" name="ShippersAddress" formControlName="ShippersAddress" placeholder="Enter Shipper's Address"
+                        />
                         <small *ngIf="!cargoform.controls.ShippersAddress.valid && isSubmitted" class="text-danger">
                             Required.
                         </small>
@@ -241,17 +247,17 @@
 
                     <div class="form-group col-lg-3 col-md-6 col-sm-12">
                         <label for="ShippersContactNumber">Shipper's Contact Number<span class="required">*</span></label>
-                        <input id="ShippersContactNumber" class="form-control" type="text" name="ShippersContactNumber"
-                            formControlName="ShippersContactNumber" placeholder="Enter Shipper's Contact Number" />
+                        <input id="ShippersContactNumber" class="form-control" type="text" name="ShippersContactNumber" formControlName="ShippersContactNumber"
+                            placeholder="Enter Shipper's Contact Number" />
                         <small *ngIf="!cargoform.controls.ShippersContactNumber.valid && isSubmitted" class="text-danger">
-                            Required.
+                            Invalid Contact Number.
                         </small>
                     </div>
 
                     <div class="form-group col-lg-3 col-md-6 col-sm-12">
                         <label for="EnquiryReason">Enquiry Reason<span class="required">*</span></label>
-                        <input id="EnquiryReason" class="form-control" type="text" name="EnquiryReason" formControlName="EnquiryReason"
-                            placeholder="Enter Enquiry Reason" />
+                        <input id="EnquiryReason" class="form-control" type="text" name="EnquiryReason" formControlName="EnquiryReason" placeholder="Enter Enquiry Reason"
+                        />
                         <small *ngIf="!cargoform.controls.EnquiryReason.valid && isSubmitted" class="text-danger">
                             Required.
                         </small>
@@ -261,8 +267,8 @@
                 <div class="row">
                     <div class="form-group col-lg-3 col-md-6 col-sm-12">
                         <label for="ConsigneesName">Consignee's Name<span class="required">*</span></label>
-                        <input id="ConsigneesName" class="form-control" type="text" name="ConsigneesName"
-                            formControlName="ConsigneesName" placeholder="Enter Consignee's Name" />
+                        <input id="ConsigneesName" class="form-control" type="text" name="ConsigneesName" formControlName="ConsigneesName" placeholder="Enter Consignee's Name"
+                        />
                         <small *ngIf="!cargoform.controls.ConsigneesName.valid && isSubmitted" class="text-danger">
                             Required.
                         </small>
@@ -270,8 +276,8 @@
 
                     <div class="form-group col-lg-3 col-md-6 col-sm-12">
                         <label for="ConsigneesAddress">Consignee's Address<span class="required">*</span></label>
-                        <input id="ConsigneesAddress" class="form-control" type="text" name="ConsigneesAddress"
-                            formControlName="ConsigneesAddress" placeholder="Enter Consignee's Address" />
+                        <input id="ConsigneesAddress" class="form-control" type="text" name="ConsigneesAddress" formControlName="ConsigneesAddress"
+                            placeholder="Enter Consignee's Address" />
                         <small *ngIf="!cargoform.controls.ConsigneesAddress.valid && isSubmitted" class="text-danger">
                             Required.
                         </small>
@@ -279,10 +285,10 @@
 
                     <div class="form-group col-lg-3 col-md-6 col-sm-12">
                         <label for="ConsigneesContactNumber">Consignee's Contact Number<span class="required">*</span></label>
-                        <input id="ConsigneesContactNumber" class="form-control" type="text" name="ConsigneesContactNumber"
-                            formControlName="ConsigneesContactNumber" placeholder="Enter Consignee's Contact Number" />
+                        <input id="ConsigneesContactNumber" class="form-control" type="text" name="ConsigneesContactNumber" formControlName="ConsigneesContactNumber"
+                            placeholder="Enter Consignee's Contact Number" />
                         <small *ngIf="!cargoform.controls.ConsigneesContactNumber.valid && isSubmitted" class="text-danger">
-                            Required.
+                            Invalid Contact Number.
                         </small>
                     </div>
 
@@ -312,8 +318,7 @@
                     <div class="form-group col-lg-4 col-md-6 col-sm-12">
                         <label for="source" [hidden]="enquiryType==4">Source<span class="required">*</span></label>
                         <label for="source" [hidden]="enquiryType!=4">Media Name<span class="required">*</span></label>
-                        <input id="source" class="form-control" type="text" name="source" formControlName="source"
-                            placeholder="Enter Source" />
+                        <input id="source" class="form-control" type="text" name="source" formControlName="source" placeholder="Enter Source" />
                         <small *ngIf="!otherform.controls.source.valid && isSubmitted" class="text-danger">
                             Required.
                         </small>
@@ -342,8 +347,8 @@
                 <div class="row">
                     <div class="form-group col-lg-3 col-md-6 col-sm-12">
                         <label for="VictimName">Victim's Name<span class="required">*</span></label>
-                        <input id="VictimName" class="form-control" type="text" name="VictimName" formControlName="VictimName"
-                            placeholder="Enter Victim's Name" />
+                        <input id="VictimName" class="form-control" type="text" name="VictimName" formControlName="VictimName" placeholder="Enter Victim's Name"
+                        />
                         <small *ngIf="!victimform.controls.VictimName.valid && isSubmitted" class="text-danger">
                             Required.
                         </small>
@@ -351,8 +356,8 @@
 
                     <div class="form-group col-lg-3 col-md-6 col-sm-12">
                         <label for="VictimAddress">Victim's Address<span class="required">*</span></label>
-                        <input id="VictimAddress" class="form-control" type="text" name="VictimAddress" formControlName="VictimAddress"
-                            placeholder="Enter Victim's Address" />
+                        <input id="VictimAddress" class="form-control" type="text" name="VictimAddress" formControlName="VictimAddress" placeholder="Enter Victim's Address"
+                        />
                         <small *ngIf="!victimform.controls.VictimAddress.valid && isSubmitted" class="text-danger">
                             Required.
                         </small>
@@ -360,10 +365,10 @@
 
                     <div class="form-group col-lg-3 col-md-6 col-sm-12">
                         <label for="VictimContactNumber">Victim's Contact Number<span class="required">*</span></label>
-                        <input id="VictimContactNumber" class="form-control" type="text" name="VictimContactNumber"
-                            formControlName="VictimContactNumber" placeholder="Enter Victim's Contact Number" />
+                        <input id="VictimContactNumber" class="form-control" type="text" name="VictimContactNumber" formControlName="VictimContactNumber"
+                            placeholder="Enter Victim's Contact Number" />
                         <small *ngIf="!victimform.controls.VictimContactNumber.valid && isSubmitted" class="text-danger">
-                            Required.
+                            Invalid Contact Number.
                         </small>
                     </div>
 
