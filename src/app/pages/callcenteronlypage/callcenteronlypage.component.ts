@@ -98,7 +98,7 @@ export class CallCenterOnlyPageComponent implements OnInit {
             CallerFirstName: new FormControl('', [Validators.required]),
             CallerLastName: new FormControl('', [Validators.required]),
             ContactNumber: new FormControl('', [Validators.required,
-                Validators.pattern(/^([+-\\ ]?[0-9]*)$/)]),
+                Validators.pattern(/^([+-\\,.]?[0-9]*)$/)]),
             AlternateContactNumber: new FormControl(''),
             Relationship: new FormControl('')
         });
@@ -127,10 +127,10 @@ export class CallCenterOnlyPageComponent implements OnInit {
         this.cargoform = new FormGroup({
             ShippersName: new FormControl('', [Validators.required]),
             ShippersAddress: new FormControl('', [Validators.required]),
-            ShippersContactNumber: new FormControl('', [Validators.required, Validators.pattern(/^([+-\\ ]?[0-9]*)$/)]),
+            ShippersContactNumber: new FormControl('', [Validators.required, Validators.pattern(/^([+-\\,.]?[0-9]*)$/)]),
             ConsigneesName: new FormControl('', [Validators.required]),
             ConsigneesAddress: new FormControl('', [Validators.required]),
-            ConsigneesContactNumber: new FormControl('', [Validators.required, Validators.pattern(/^([+-\\ ]?[0-9]*)$/)]),
+            ConsigneesContactNumber: new FormControl('', [Validators.required, Validators.pattern(/^([+-\\,.]?[0-9]*)$/)]),
             EnquiryReason: new FormControl('', [Validators.required]),
             Query: new FormControl('', [Validators.required])
         });
@@ -138,7 +138,7 @@ export class CallCenterOnlyPageComponent implements OnInit {
         this.victimform = new FormGroup({
             VictimName: new FormControl('', [Validators.required]),
             VictimAddress: new FormControl('', [Validators.required]),
-            VictimContactNumber: new FormControl('', [Validators.required, Validators.pattern(/^([+-\\ ]?[0-9]*)$/)]),
+            VictimContactNumber: new FormControl('', [Validators.required, Validators.pattern(/^([+-\\,.]?[0-9]*)$/)]),
             Query: new FormControl('', [Validators.required])
         });
 

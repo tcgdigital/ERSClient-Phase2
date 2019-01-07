@@ -64,7 +64,7 @@
 
                 <div class="form-group col-lg-2 col-sm-6 col-md-4">
                     <label for="AlternateContactNumber">Alternate Number</label>
-                    <input id="AlternateContactNumber" class="form-control" type="text" pattern="^([+-\\ ]?[0-9]*)$" name="AlternateContactNumber"
+                    <input id="AlternateContactNumber" class="form-control" type="text" pattern="^([+-\\,.]?[0-9]*)$" name="AlternateContactNumber"
                         formControlName="AlternateContactNumber" placeholder="Enter Alternate Contact Number" />
                     <small *ngIf="!generalform.controls.AlternateContactNumber.valid && isSubmitted" class="text-danger">
                         Invalid contact number.
@@ -188,7 +188,7 @@
                     </div>
                     <div class="form-group col-lg-2 col-sm-6 col-md-4">
                         <label for="KINContactNumber">NOK Contact No</label>
-                        <input id="KINContactNumber" class="form-control" type="text" pattern="^([+-\\ ]?[0-9]*)$" name="KINContactNumber" formControlName="KINContactNumber"
+                        <input id="KINContactNumber" class="form-control" type="text" pattern="^([+-\\,.]?[0-9]*)$" name="KINContactNumber" formControlName="KINContactNumber"
                             placeholder="Enter NOK Contact Number" />
                         <small *ngIf="!pdacrewform.controls.KINContactNumber.valid && isSubmitted" class="text-danger">
                             Invalid contact number.

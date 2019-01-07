@@ -123,6 +123,7 @@ export class EnquiryService extends ServiceBase<EnquiryModel>
             .Filter(`AffectedPersonId eq ${AffectedPersonId} and IncidentId eq ${incidentId} and ActiveFlag eq 'Active'`)
             .Top(`1`)
             .Select(`CareMemberName`)
+            .OrderBy(`CreatedOn desc`)
             .Execute();
     }
 }
