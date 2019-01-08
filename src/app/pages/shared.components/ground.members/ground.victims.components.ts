@@ -12,6 +12,7 @@ import {
 import { GroundVictimService } from '../ground.victim/components/ground.victim.service';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -34,6 +35,8 @@ export class GroundVictimsComponent implements OnInit, OnDestroy, AfterContentIn
     private ngUnsubscribe: Subject<any> = new Subject<any>();
     groundVictimInfo: GroundVictimModel = new GroundVictimModel();
     public currentDepartmentName: string;
+    public isArchive: boolean = false;
+
 
 
     /**
@@ -45,10 +48,19 @@ export class GroundVictimsComponent implements OnInit, OnDestroy, AfterContentIn
     constructor(private peopleOnBoardWidgetService: PeopleOnBoardWidgetService,
         private globalState: GlobalStateService,
         private toastrService: ToastrService,
-        private groundVictimService: GroundVictimService) { }
+        private groundVictimService: GroundVictimService,
+        private _router: Router) { }
 
     public ngOnInit(): void {
-        this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
+        if (this._router.url.indexOf('archivedashboard') > -1) {
+            this.isArchive = true;
+            this.currentIncidentId = +UtilityService.GetFromSession('ArchieveIncidentId');
+        }
+        else {
+            this.isArchive = false;
+            this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
+        }
+
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.openAllGroundVictims();
         this.initiateSearchConfigurations();
