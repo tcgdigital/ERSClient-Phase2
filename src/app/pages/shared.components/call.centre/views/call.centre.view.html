@@ -195,12 +195,16 @@
                     </label>
                 </div>
 
+
                 <div class="form-group col-md-6 col-sm-12">
                     <label for="Query">Discussion Notes <span class="required">*</span></label>
                     <small [hidden]="form.controls.Queries.valid || (form.controls.Queries.pristine && !submitted)" class="text-danger pull-right">
                         Required (Max. Char 1000)
                     </small>
-                    <textarea rows="1" id="Query" class="form-control no-resize" name="Query" formControlName="Queries" placeholder="Enter Discussion Notes"></textarea>
+                    <textarea rows="1" id="Query" class="form-control no-resize" name="Query" formControlName="Queries" placeholder="Enter Discussion Notes"
+                        *ngIf="modalType=='received'"></textarea>
+                    <textarea rows="1" id="Query" class="form-control no-resize" name="Query" formControlName="Queries" placeholder="Enter Discussion Notes"
+                        *ngIf="modalType!='received'" readonly></textarea>
                 </div>
 
                 <div class="form-group col-md-2 col-sm-12" *ngIf="modalType=='received'">
@@ -320,7 +324,7 @@
                             </autocomplete>
                         </div>
 
-                        <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=EnquiryType.GroundVictim" *ngIf= "modalType=='received'">
+                        <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=EnquiryType.GroundVictim" *ngIf="modalType=='received'">
                             <label for="awb">Ground Victim <span class="required">*</span></label>
 
                             <autocomplete #victimAutocomplete [items]="victims" (notify)='onNotifyGroundVictim($event)' (InvokeAutoCompleteReset)="onResetGroundVictim()"
@@ -328,7 +332,8 @@
                             </autocomplete>
                         </div>
 
-                        <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=EnquiryType.GroundVictim" style="pointer-events: none;" *ngIf= "!(modalType=='received')">
+                        <div class="form-group col-md-6 col-sm-12" [hidden]="enquiryType!=EnquiryType.GroundVictim" style="pointer-events: none;"
+                            *ngIf="!(modalType=='received')">
                             <label for="awb">Ground Victim <span class="required">*</span></label>
 
                             <autocomplete #victimAutocomplete [items]="victims" (notify)='onNotifyGroundVictim($event)' (InvokeAutoCompleteReset)="onResetGroundVictim()"

@@ -175,7 +175,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
 
     private ngUnsubscribe: Subject<any> = new Subject<any>();
     public defaultvalue: string;
-    public SelectedPassengerCurrentCareMemberName : String;
+    public SelectedPassengerCurrentCareMemberName: String;
     /**
      *Creates an instance of EnquiryEntryComponent.
      * @param {AffectedPeopleService} affectedPeopleService
@@ -367,8 +367,8 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                 this.caller = response[0].Caller;
                 this.isCallrecieved = response[0].IsCallRecieved;
 
-               // if (enquirytype == +EnquiryType.Passenger) {
-                if (enquirytype == +EnquiryType.Passenger || enquirytype==+EnquiryType.Crew) {
+                // if (enquirytype == +EnquiryType.Passenger) {
+                if (enquirytype == +EnquiryType.Passenger || enquirytype == +EnquiryType.Crew) {
                     this.pdaenquiryid = this.pdaenquery.PDAEnquiryId;
                 }
 
@@ -526,6 +526,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
 
     }
 
+
     public onNotifyCrew(message: KeyValue): void {
         this.enquiry.AffectedPersonId = message.Value;
         this.enquiry.AffectedObjectId = 0;
@@ -540,14 +541,14 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
         delete this.enquiry.AffectedObjectId;
         delete this.enquiry.GroundVictimId
         this.enquiryService.CareMemberName(this.currentIncident, this.enquiry.AffectedPersonId)
-        //.debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
-        .takeUntil(this.ngUnsubscribe)
-        .subscribe((response: ResponseModel<CareMemberTrackerModel>) => {
-            if (response != null && response.Records.length > 0) {
-                this.SelectedPassengerCurrentCareMemberName = response.Records[0].CareMemberName;
-            }
+            //.debounce(() => Observable.timer(GlobalConstants.DEBOUNCE_TIMEOUT))
+            .takeUntil(this.ngUnsubscribe)
+            .subscribe((response: ResponseModel<CareMemberTrackerModel>) => {
+                if (response != null && response.Records.length > 0) {
+                    this.SelectedPassengerCurrentCareMemberName = response.Records[0].CareMemberName;
+                }
 
-        });
+            });
     }
 
     public onNotifyCargo(message: KeyValue): void {
@@ -1320,8 +1321,8 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                     this.enquiryService.Create(this.enquiry)
                         .flatMap(_ => this.callcenteronlypageservice.Update(this.externalInput, this.callid))
                         .flatMap(_ => {
-                           // if (this.enquiryType == +EnquiryType.Passenger) {
-                                if (this.enquiryType == +EnquiryType.Passenger || this.enquiryType==+EnquiryType.Crew) {
+                            // if (this.enquiryType == +EnquiryType.Passenger) {
+                            if (this.enquiryType == +EnquiryType.Passenger || this.enquiryType == +EnquiryType.Crew) {
                                 return this.callcenteronlypageservice.updatepdaenquiry(PDAEnquiryToUpdate, this.pdaenquiryid)
                             } else {
                                 return Observable.of(new PDAEnquiryModel());
@@ -1507,7 +1508,7 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
             this.selectedcountpnr = 0;
             this.passengerAutocomplete.query = '';
             this.defaultvalue = '';
-            this.SelectedPassengerCurrentCareMemberName= '';
+            this.SelectedPassengerCurrentCareMemberName = '';
         }
         this.IsIdentified = $event.checked;
     }

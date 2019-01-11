@@ -44,7 +44,8 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
             this.filteredList = this.items;
         }
         if (this.filteredList.length == 0) {
-            this.filteredList.push(new KeyValue("No Value found", 0));
+            // this.filteredList.push(new KeyValue("No Value found", 0));
+             this.placeholder="No Value found";
         }
     }
 
