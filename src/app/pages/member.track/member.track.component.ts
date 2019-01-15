@@ -67,8 +67,7 @@ export class MemberTrackComponent implements OnInit, OnDestroy, AfterViewChecked
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
         this.pageInitialCall(this.currentDepartmentId, this.currentIncidentId);
-        //$('body').scrollTop(0);
-        window.scrollTo(0,0);
+        window.scrollTo(0, 0);
     }
 
     ngOnDestroy(): void {
@@ -89,6 +88,7 @@ export class MemberTrackComponent implements OnInit, OnDestroy, AfterViewChecked
         this.credential = UtilityService.getCredentialDetails();
         this.createdBy = +this.credential.UserId;
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/MemberEngagementReport/' + this.currentIncidentId;
+        window.scrollTo(0, 0);
     }
 
     ngAfterViewChecked() {
@@ -112,7 +112,6 @@ export class MemberTrackComponent implements OnInit, OnDestroy, AfterViewChecked
                 self.datachanged($event);
             });
         });
-        window.scrollTo(0,0);
     }
 
     public datachanged($event: any): void {
