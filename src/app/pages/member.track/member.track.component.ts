@@ -67,7 +67,7 @@ export class MemberTrackComponent implements OnInit, OnDestroy, AfterViewChecked
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
         this.pageInitialCall(this.currentDepartmentId, this.currentIncidentId);
-        window.scrollTo(0, 0);
+        //$(window).scrollTop(0);
     }
 
     ngOnDestroy(): void {
@@ -88,37 +88,42 @@ export class MemberTrackComponent implements OnInit, OnDestroy, AfterViewChecked
         this.credential = UtilityService.getCredentialDetails();
         this.createdBy = +this.credential.UserId;
         this.downloadPath = GlobalConstants.EXTERNAL_URL + 'api/Report/MemberEngagementReport/' + this.currentIncidentId;
-        window.scrollTo(0, 0);
     }
 
     ngAfterViewChecked() {
         if (!this.isChecked && this.memberEngagementsToView.length > 0) {
             this.isChecked = true;
             this.GenerateToggle();
+            this.scrollpos();
+
         }
+    }
+
+    public scrollpos(): void {
+        $('input[type=checkbox]').change(function () {
+            var pos = $(this).closest('tr').position();
+            $(window).scrollTop(pos.top);
+        })
+
     }
 
     public GenerateToggle(): void {
         const self = this;
         const $selfElement = jQuery(this.elementRef.nativeElement);
         const $inputs = $selfElement.find('input[data-userid]');
-
-        jQuery.each($inputs, (index, element) => {
-            jQuery(element).bootstrapToggle({
-                on: 'Busy',
-                off: 'Available'
-            }, 'disable');
-            jQuery(element).change(($event) => {
-                self.datachanged($event);
-            });
+        jQuery($inputs).change(($event) => {
+            self.datachanged($event);
         });
+        this.scrollpos();
     }
 
     public datachanged($event: any): void {
+        var elmnt = document.getElementById("userid");
         const $element: JQuery = jQuery($event.currentTarget);
         const userId = $element.data('userid');
         const obj: MemberCurrentEngagementModelToView = this.memberEngagementsToView
             .find((x) => x.UserId.toString() == userId);
+
 
         if ($element.prop('checked')) {
             obj.isRemarksSubmitted = true;
@@ -206,6 +211,7 @@ export class MemberTrackComponent implements OnInit, OnDestroy, AfterViewChecked
         this.currentDepartmentId = +UtilityService.GetFromSession('CurrentDepartmentId');
         this.currentIncidentId = +UtilityService.GetFromSession('CurrentIncidentId');
         this.pageInitialCall(this.currentDepartmentId, this.currentIncidentId);
+
     }
 
 
@@ -260,6 +266,7 @@ export class MemberTrackComponent implements OnInit, OnDestroy, AfterViewChecked
                 this.availblecount = this.memberEngagementsToView.filter((x) => x.IsBusy === false).length;
                 this.freecount = this.memberEngagementsToView.filter((x) => x.IsBusy === true).length;
                 this.GenerateToggle();
+                this.scrollpos();
             }, (error: any) => {
                 console.log(`Error: ${error.message}`);
             });

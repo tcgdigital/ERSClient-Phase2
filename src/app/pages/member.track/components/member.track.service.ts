@@ -38,6 +38,7 @@ export class MemberTrackService extends ServiceBase<MemberCurrentEngagementModel
         return this._membertrackService.Query()
             .Filter(`IncidentId eq ${incidentId} and UserId eq ${userId}`)
             .Expand('Department($select=DepartmentName)')
+            .OrderBy('DeployedOn desc')
             .Execute();
 
     }
