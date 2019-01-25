@@ -19,7 +19,7 @@ export class PeopleOnBoardWidgetService {
         private affectedPeopleService: AffectedPeopleService,
         private involvedPartyService: InvolvePartyService,
         private enquiryService: EnquiryService) {
-            this.peopleOnBoard = new PeopleOnBoardModel();
+        this.peopleOnBoard = new PeopleOnBoardModel();
     }
 
     GetPeopleOnBoardDataCount(incidentId: number): Observable<PeopleOnBoardModel> {
@@ -36,19 +36,21 @@ export class PeopleOnBoardWidgetService {
                     });
                 }
                 this.peopleOnBoard.totalAffectedPassengerCount = isNaN(passengerListLocal.length) ? 0 : passengerListLocal.length;
-
-                let genKPIData = _.countBy(passengerListLocal, "PassengerGender");
-                let natiionalityKPIData = _.countBy(passengerListLocal, "PassengerNationality");
-                let paxTypeKPIData = _.countBy(passengerListLocal, "PassengerType");
                 
-                //let temp: number;
-                this.peopleOnBoard.totalGenderTypeCount = Object.keys(genKPIData)
-                    .map(x => { return { Key: x, Value: genKPIData[x] }; });
+                if (passengerListLocal.length > 0) {
+                    let genKPIData = _.countBy(passengerListLocal.filter(x=>x.PassengerType == 'ADU'), "PassengerGender");
+                    let natiionalityKPIData = _.countBy(passengerListLocal, "PassengerNationality");
+                    let paxTypeKPIData = _.countBy(passengerListLocal, "PassengerType");
 
-                this.peopleOnBoard.totalNationalityTypeCount = Object.keys(natiionalityKPIData)
-                    .map(x => { return { Key: x, Value: natiionalityKPIData[x] }; });
-                this.peopleOnBoard.totalPaxTypeCount = Object.keys(paxTypeKPIData)
-                    .map(x => { return { Key: x, Value: paxTypeKPIData[x] }; });
+                    //let temp: number;
+                    this.peopleOnBoard.totalGenderTypeCount = Object.keys(genKPIData)
+                        .map(x => { return { Key: x, Value: genKPIData[x] }; });
+
+                    this.peopleOnBoard.totalNationalityTypeCount = Object.keys(natiionalityKPIData)
+                        .map(x => { return { Key: x, Value: natiionalityKPIData[x] }; });
+                    this.peopleOnBoard.totalPaxTypeCount = Object.keys(paxTypeKPIData)
+                        .map(x => { return { Key: x, Value: paxTypeKPIData[x] }; });
+                }
 
                 return this.peopleOnBoard;
             })
