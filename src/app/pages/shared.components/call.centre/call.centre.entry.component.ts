@@ -747,8 +747,9 @@ export class EnquiryEntryComponent implements OnInit, OnDestroy {
                 this.affectedObjects.find((x) => x.AffectedObjectId === demand.AffectedObjectId).AWB : null;
 
             demand.ContactNumber = this.caller.ContactNumber;
+            let callBackDepartmentId = +this.activeKeyValues.find((x: KeyValueModel) => x.Key === 'TargetDepartmentCallBack').Value;
 
-            demand.TargetDepartmentId = isCallback ? this.currentDepartmentId
+            demand.TargetDepartmentId = isCallback ? (callBackDepartmentId > 0 ? callBackDepartmentId : this.currentDepartmentId)
                 : (isTravelRequest ? +this.activeKeyValues.find((x: KeyValueModel) => x.Key === 'TargetDepartmentTravel').Value
                     : (isAdmin ? +this.activeKeyValues.find((x: KeyValueModel) => x.Key === 'TargetDepartmentAdmin').Value
                         : +this.activeKeyValues.find((x: KeyValueModel) => x.Key === 'TargetDepartmentCrew').Value));

@@ -3,7 +3,7 @@ import { ToastrService, ToastrConfig } from 'ngx-toastr';
 import {
     FormGroup, FormControl, Validators
 } from '@angular/forms';
-import { KeyValueService, KeyValueModel, ResponseModel, GlobalConstants } from '../../../shared';
+import { KeyValueService, KeyValueModel, ResponseModel, GlobalConstants, KeyVal, KeyValue } from '../../../shared';
 import { DepartmentService, DepartmentModel } from '../department';
 import { Subject, Observable } from 'rxjs';
 
@@ -25,6 +25,7 @@ export class SpileComponent implements OnInit, OnDestroy {
     public isDropdown: boolean = false;
     private updatedKeyValue: KeyValueModel;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
+    public selectedKey: string = "";
 
     constructor(private keyValueService: KeyValueService,
         private toastrService: ToastrService,
@@ -83,6 +84,8 @@ export class SpileComponent implements OnInit, OnDestroy {
 
     keyvalueChange(target: any, Key: string, activeKeyValues: KeyValueModel[]): void {
         if (Key != '') {
+            this.selectedKey = Key;
+            console.log(this.selectedKey);
             let controlType: string = target.selectedOptions[0].getAttribute('ControlType');
             if (controlType.toLowerCase() == 'textbox') {
                 this.isTextbox = true;
@@ -144,7 +147,7 @@ export class SpileComponent implements OnInit, OnDestroy {
                 this.keyValueService.Update(KeyVal, KeyVal.KeyValueId).subscribe(() => {
                     this.initializeForm();
                     this.getAllActiveKeyValues();
-                    this.toastrService.success('Spiel Text Saved successfully.', 'Success', this.toastrConfig);
+                    this.toastrService.success('Configuration data saved successfully.', 'Success', this.toastrConfig);
                 }, (error: any) => {
                     console.log(`Error: ${error.message}`);
                 }
@@ -155,4 +158,27 @@ export class SpileComponent implements OnInit, OnDestroy {
             this.submitted = true;
         }
     }
+
+    public ResetCallBackDept(): void {
+        let KeyVal: KeyValueModel = new KeyValueModel();
+        delete KeyVal.ActiveFlag;
+        delete KeyVal.CreatedBy;
+        delete KeyVal.CreatedOn;
+        delete KeyVal.Description;
+        delete KeyVal.Key;
+        delete KeyVal.ControlType;
+        KeyVal.KeyValueId=13;
+        KeyVal.Key='TargetDepartmentCallBack';
+        KeyVal.Value='0';
+        this.keyValueService.Update(KeyVal, KeyVal.KeyValueId).subscribe(() => {
+            jQuery('select#DeptDropDown option[value=""]').attr('selected','selected');
+            this.toastrService.success('Reset successfully.', 'Success', this.toastrConfig);
+            this.getAllActiveKeyValues();
+        }, (error: any) => {
+            console.log(`Error: ${error.message}`);
+        }
+        );
+    }
+
 }
+
