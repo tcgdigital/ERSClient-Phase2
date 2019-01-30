@@ -9,13 +9,13 @@
                     <label for="Spiel">Config Parameter:<span class="required">*</span></label>
                     <select id="SpielType" class="form-control" formControlName="SpielType" name="SpielType" (change)="keyvalueChange($event.target,$event.target.value,activeKeyValues)">
                         <option value=''>Select Parameter</option>
-                        <option *ngFor="let keyValue of activeKeyValues" [attr.ControlType]="keyValue.ControlType" [value]="keyValue.Key" >
+                        <option *ngFor="let keyValue of activeKeyValues" [attr.ControlType]="keyValue.ControlType" [value]="keyValue.Key">
                             {{keyValue.Description}}
                         </option>
                     </select>
                     <small *ngIf="!generalform.controls.SpielType.valid && submitted" class="text-danger">
                         Required.
-                </small>
+                    </small>
                 </div>
             </div>
             <div *ngIf="isTextbox || isDropdown || isTextArea" class="row">
@@ -24,7 +24,7 @@
                     <input *ngIf="isTextbox" type="text" class="form-control" formControlName="SpielText" name="SpielText" />
                     <select *ngIf="isDropdown" class="form-control" formControlName="SpielText" name="SpielText" id="DeptDropDown">
                         <option value=''>Select Department</option>
-                        <option *ngFor="let department of activeDepartments" [value]="department.DepartmentId" >
+                        <option *ngFor="let department of activeDepartments" [value]="department.DepartmentId">
                             {{department.Description}}
                         </option>
                     </select>
@@ -32,15 +32,15 @@
                     </textarea>
                     <small *ngIf="!generalform.controls.SpielText.valid && submitted" class="text-danger">
                         Required.
-                </small>
+                    </small>
                 </div>
             </div>
             <div *ngIf="isTextbox || isDropdown || isTextArea" class="row">
-                <div class="form-group col-lg-2 col-sm-6 col-md-4">
+                <div class="col-sm-3">
+                    <div class="fromtop1">
                         <button class="btn btn-primary" type="button" (click)="spielSave()">Submit</button>
-                </div>
-                <div class="form-group col-lg-2 col-sm-6 col-md-4" *ngIf="selectedKey=='TargetDepartmentCallBack'">
-                    <button class="btn btn-warning" type="button" (click)="ResetCallBackDept()">Reset</button>
+                        <button class="btn btn-warning" type="button" (click)="ResetCallBackDept()">Reset</button>
+                    </div>
                 </div>
             </div>
         </form>
