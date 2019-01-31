@@ -39,8 +39,9 @@ export class TemplateEntryComponent implements OnInit, OnDestroy {
     templateForm: FormGroup;
     private ngUnsubscribe: Subject<any> = new Subject<any>();
     public toolbarConfig: any = GlobalConstants.EditorToolbarConfig;
-    public showAddText: string="";
+    public showAddText: string = "";
     showModified: Boolean = false;
+    braces: string = "{{}}";
 
 
     ngOnInit(): void {
@@ -49,8 +50,8 @@ export class TemplateEntryComponent implements OnInit, OnDestroy {
             (model: TemplateModel) => {
                 this.templateModel = model;
                 this.mapFormWithModel(this.templateModel);
-                this.showModified=true;
-                window.scrollTo(0,0);
+                this.showModified = true;
+                window.scrollTo(0, 0);
             });
     }
 
@@ -73,18 +74,17 @@ export class TemplateEntryComponent implements OnInit, OnDestroy {
 
             this.templateService.Update(modeifiedTemplateModel, this.templateModel.TemplateId)
                 .subscribe((response: TemplateModel) => {
-                    this.toastrService.success(`Template successfuly updated.`, 'Success', this.toastrConfig);
+                    this.toastrService.success(`Template successfully updated.`, 'Success', this.toastrConfig);
                     this.templateModel.Subject = modeifiedTemplateModel.Subject;
                     this.templateModel.Description = modeifiedTemplateModel.Description;
                     this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.TemplateOnEdited, this.templateModel);
-                    this.showModified=false;
+                    this.showModified = false;
                 }, (error: any) => {
                     console.log(`Error: ${error.message}`);
-                    if(error && error.message && error.message != '')
-                    {
-                        let errMessage: String=error.message;
-                        this.toastrService.error(`${errMessage.replace('|','<br/>')}`, 'Error', this.toastrConfig);
-                    }                    
+                    if (error && error.message && error.message != '') {
+                        let errMessage: String = error.message;
+                        this.toastrService.error(`${errMessage.replace('|', '<br/>')}`, 'Error', this.toastrConfig);
+                    }
                 });
         }
     }
@@ -104,12 +104,12 @@ export class TemplateEntryComponent implements OnInit, OnDestroy {
     }
 
     public cancel(): void {
-        this.showModified=false;
-       
+        this.showModified = false;
+
 
     }
 
-    ngOnDestroy(): void{
+    ngOnDestroy(): void {
 
     }
 
