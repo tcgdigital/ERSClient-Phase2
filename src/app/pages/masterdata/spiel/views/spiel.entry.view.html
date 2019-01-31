@@ -39,7 +39,7 @@
                 <div class="col-sm-3">
                     <div class="fromtop1">
                         <button class="btn btn-primary" type="button" (click)="spielSave()">Submit</button>
-                        <button class="btn btn-warning" type="button" (click)="ResetCallBackDept()">Reset</button>
+                        <button class="btn btn-warning" type="button" (click)="ResetCallBackDept()" *ngIf="selectedKey=='TargetDepartmentCallBack'">Reset</button>
                     </div>
                 </div>
             </div>

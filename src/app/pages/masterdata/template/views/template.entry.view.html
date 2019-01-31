@@ -1,0 +1,44 @@
+<div class="row" *ngIf="showModified">
+    <div class="col-lg">
+        <div class="formStyle card-block entryHolder">
+            <form [formGroup]="templateForm" (ngSubmit)="onSubmit()">
+                <div class="row">
+                    <div class="form-group col-sm-12">
+                        <label for="Subject">Subject:</label>
+                        <input class="form-control" type="text" formControlName="Subject" />
+                        <small *ngIf="templateForm.controls.Subject.hasError('required')" [hidden]="templateForm.controls.Subject.valid || (templateForm.controls.Subject.pristine && !submitted)"
+                            class="text-danger">
+                            Required.
+                        </small>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label for="Description">Description:</label>
+                        <ckeditor formControlName="Description" debounce="500" [config]="toolbarConfig">
+                        </ckeditor>
+
+                        <small *ngIf="templateForm.controls.Description.hasError('required')" [hidden]="templateForm.controls.Description.valid || (templateForm.controls.Description.pristine && !submitted)"
+                            class="text-danger">
+                            Required.
+                        </small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-12">
+                        <strong>Donts:</strong>
+                        <ol>
+                            <li>Any change in the placeholder is restricted.</li>
+                            <li>Don't add any new placeholder.</li>
+                            <li>Deletion of any placeholder is not allowed.</li>
+                        </ol>
+                    </div>
+                    <div class="col-lg-6 col-sm-12">
+                        <div class="buttonholder">
+                            <button class="btn btn-primary" type="submit">Submit</button>
+                            <button class="btn btn-warning" type="button" (click)="cancel()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

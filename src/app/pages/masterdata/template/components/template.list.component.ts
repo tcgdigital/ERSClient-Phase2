@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewEncapsulation, ViewChild } from '@angular/core';
 import { TemplateModel } from './template.model';
 import { TemplateService } from './template.service';
 import { Subject, Observable } from 'rxjs/Rx';
@@ -6,8 +6,9 @@ import { EmergencySituationService } from '../../emergency.situation';
 import {
     ResponseModel, DataExchangeService,
     GlobalConstants, SearchDropdown,
-    NameValue, SearchConfigModel
+    NameValue, SearchConfigModel, UtilityService
 } from '../../../../shared';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
     selector: 'template-list',
@@ -16,6 +17,7 @@ import {
     styleUrls: ['../styles/template.style.scss']
 })
 export class TemplateListComponent implements OnInit, OnDestroy {
+    @ViewChild('childModal') public childModal: ModalDirective;
     vari: any = null;
     templates: TemplateModel[] = [];
     searchConfigs: SearchConfigModel<any>[] = [];
@@ -25,10 +27,13 @@ export class TemplateListComponent implements OnInit, OnDestroy {
     expandSearch: boolean = false;
     searchValue: string = "Expand Search";
     private ngUnsubscribe: Subject<any> = new Subject<any>();
+    templateEdit: TemplateModel = new TemplateModel();
+    public isShow: boolean=true;
+    currentDepartmentId: number;
 
     constructor(private templateService: TemplateService,
         private emergencySituationService: EmergencySituationService,
-        private dataExchange: DataExchangeService<TemplateModel>) {
+        private dataExchange: DataExchangeService<TemplateModel>,) {
     }
 
     initiateQuickLinkModelPatch(): void {
@@ -67,20 +72,28 @@ export class TemplateListComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.getTemplates();
         this.initiateSearchConfigurations();
-        //this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.QuickLinkModelSaved, 
-        //model => this.onTemplateSaveSuccess(model));
+        this.currentDepartmentId = +UtilityService.GetFromSession("CurrentDepartmentId");
+        this.dataExchange.Subscribe(GlobalConstants.DataExchangeConstant.TemplateOnEdited,
+            (model: TemplateModel) => this.onTemplateModifiedSuccess(model));
+    }
+
+    public onTemplateModifiedSuccess(data: TemplateModel): void{
+       if(this.templates.length>0)
+       {
+           let modifiedTemplate=this.templates.find(x=>x.TemplateId==data.TemplateId);
+           if(modifiedTemplate != null && modifiedTemplate != undefined)
+           {
+               modifiedTemplate=data;
+           }
+       }
+        this.initiateSearchConfigurations();
     }
 
     ngOnDestroy(): void {
-        //this.dataExchange.Unsubscribe(GlobalConstants.DataExchangeConstant.QuickLinkModelSaved);
-
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
     }
 
-    editQuickLink(editedQuickLink: TemplateModel): void {
-        //this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.QuickLinkModelEdited, editedQuickLink);
-    }
 
     IsActive(event: any, editedTemplate: TemplateModel): void {
         this.initiateQuickLinkModelPatch();
@@ -135,5 +148,9 @@ export class TemplateListComponent implements OnInit, OnDestroy {
                     .map(x => x.map(y => new NameValue<number>(y.EmergencySituationName, y.EmergencySituationId)))
             })
         ];
+    }
+
+    openTemplateDetail(editedTemplate: TemplateModel): void {
+        this.dataExchange.Publish(GlobalConstants.DataExchangeConstant.TemplateOnEditing, editedTemplate);
     }
 }

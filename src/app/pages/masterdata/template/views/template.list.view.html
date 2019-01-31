@@ -20,16 +20,22 @@
                         <tr>
                             <th>Media</th>
                             <th>Situation</th>
+                            <th>Subject</th>
                             <th>Description</th>
+                            <th>Edit</th>
                         </tr>
                     </thead>
                     <tr [hidden]="templates.length != 0">
-                        <td colspan="3">No records found.</td>
+                        <td colspan="5">No records found.</td>
                     </tr>
                     <tr *ngFor="let template of templates">
                         <td data-title="Media">{{template.TemplateMediaId}}&nbsp;</td>
                         <td data-title="Situation">{{template.EmergencySituation.EmergencySituationName}}&nbsp;</td>
+                        <td data-title="Subject">{{template.Subject}}&nbsp;</td>
                         <td data-title="Description" [innerHTML]="template.Description">&nbsp;</td>
+                        <td data-title="Edit">
+                            <i class="fa fa-edit fa-2x pt-2" (click)="openTemplateDetail(template)" *ngIf="isShow | accesibility:currentDepartmentId:'NotificationTemplateEdit'"></i>
+                        </td>
                     </tr>
                 </table>
             </responsive-table>

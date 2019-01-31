@@ -6,9 +6,10 @@ import { MdCheckboxModule } from '@angular2-material/checkbox';
 
 import { TemplateRouting } from './template.routing';
 import { TemplateComponent } from './template.component';
-import { TemplateListComponent, TemplateService } from './components';
+import { TemplateListComponent, TemplateService, TemplateEntryComponent } from './components';
 import { EmergencySituationService } from '../emergency.situation/components';
-import { DataExchangeService,SharedModule } from '../../../shared';
+import { DataExchangeService,SharedModule, GlobalStateService, UtilityService } from '../../../shared';
+import { CKEditorModule } from 'ng2-ckeditor';
 
 @NgModule({
     imports: [
@@ -19,16 +20,19 @@ import { DataExchangeService,SharedModule } from '../../../shared';
         FormsModule,
         TemplateRouting,
         MdCheckboxModule,
+        CKEditorModule,
         SharedModule
     ],
     declarations: [
         TemplateListComponent,
+        TemplateEntryComponent,
         TemplateComponent
     ],
     providers: [
         TemplateService,
         DataExchangeService,
-        EmergencySituationService
+        EmergencySituationService,
+        UtilityService
     ]
 })
 export class TemplateModule { }
