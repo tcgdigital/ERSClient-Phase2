@@ -90,9 +90,13 @@ export class AffectedPeopleService extends ServiceBase<AffectedPeopleModel>
             : (affectedPerson.Crew == null ? 'NA' : affectedPerson.Crew.CrewGender);
         affectedPeopleForView.Nationality = affectedPerson.Passenger != null ? (affectedPerson.Passenger.PassengerNationality == null ? 'NA' : affectedPerson.Passenger.PassengerNationality)
             : (affectedPerson.Crew == null ? 'NA' : affectedPerson.Crew.CrewNationality);
-        affectedPeopleForView.PassportNumber = affectedPerson.Passenger != null ? (affectedPerson.Passenger.Passport == null ? 'NA' : affectedPerson.Passenger.Passport) :
-            (affectedPerson.Crew == null ? 'NA' : affectedPerson.Crew.PassportNumber);
-        const now = moment(new Date());
+        
+        if (!affectedPerson.IsCrew)
+            affectedPeopleForView.PassportNumber = (affectedPerson.Passenger.IdentificationDocType == 'P') ? affectedPerson.Passenger.IdentificationDocNumber : '';
+        else    
+            affectedPeopleForView.PassportNumber = (affectedPerson.Crew.PassportNumber != null) ? affectedPerson.Crew.PassportNumber : '';
+        
+            const now = moment(new Date());
         const dob = affectedPerson.Passenger != null ? moment(affectedPerson.Passenger.PassengerDob) : moment(affectedPerson.Crew.CrewDob);
         if (dob == null || dob == undefined) {
             affectedPeopleForView.Age = '';
