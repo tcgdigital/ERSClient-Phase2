@@ -24,8 +24,10 @@
 
                             <small *ngIf="form.controls.UserId.hasError('required')" [hidden]="form.controls.UserId.valid || (form.controls.UserId.pristine && !submitted)"
                                 class="text-danger">Required</small>
+                            <small *ngIf="form.controls.UserId.hasError('minLength')" [hidden]="form.controls.UserId.valid || (form.controls.UserId.pristine && !submitted)"
+                                class="text-danger">Minimum Length is 5</small>
                             <small *ngIf="form.controls.UserId.hasError('validateUserId')" [hidden]="form.controls.UserId.valid || (form.controls.UserId.pristine && !submitted)"
-                                class="text-danger">Invalid Input</small>
+                                class="text-danger">Space not allowed, min length 5.</small>
                         </div>
                     </div>
 

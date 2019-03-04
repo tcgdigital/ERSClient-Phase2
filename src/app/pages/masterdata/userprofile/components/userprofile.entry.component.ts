@@ -72,11 +72,10 @@ export class UserProfileEntryComponent implements OnInit, OnDestroy {
         this.userProfileModel = userProfileModel;
         this.userProfileModel.UserProfileId = userProfileModel.UserProfileId;
         this.Action = 'Edit';
-
         this.form = new FormGroup({
             UserProfileId: new FormControl(userProfileModel.UserProfileId),
             Email: new FormControl(userProfileModel.Email, [Validators.required, Validators.pattern(GlobalConstants.EMAIL_PATTERN)]),
-            UserId: new FormControl(userProfileModel.UserId, [Validators.required, UserIdValidator.validate]),
+            UserId: new FormControl(userProfileModel.UserId, [Validators.required,Validators.minLength(5), UserIdValidator.validate]),
             Name: new FormControl(userProfileModel.Name, [Validators.required]),
             MainContact: new FormControl(userProfileModel.MainContact, [Validators.required]),
             AlternateContact: new FormControl(userProfileModel.AlternateContact),

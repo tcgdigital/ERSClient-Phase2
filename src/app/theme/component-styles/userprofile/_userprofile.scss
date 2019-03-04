@@ -32,7 +32,7 @@
 @mixin fixed-column {
     .fixed-column-container {
         overflow-x: hidden;
-        margin-left: 622px;
+        margin-left: 558px;
     }
     table.fixed-column {
         th {
@@ -64,14 +64,21 @@
                 border-top: 1px solid #c1b971 !important;
                 margin-top: -1px;
                 position: absolute;
-                left: 217px;
+                left: 50px;
             }
             &:nth-child(3) {
                 background-color: #f9f09e;
                 border-top: 1px solid #c1b971 !important;
                 margin-top: -1px;
                 position: absolute;
-                left: 424px;
+                left: 160px;
+            }
+            &:nth-child(4) {
+                background-color: #f9f09e;
+                border-top: 1px solid #c1b971 !important;
+                margin-top: -1px;
+                position: absolute;
+                left: 360px;
             }
         }
         >tbody>tr>td {
@@ -90,7 +97,7 @@
                 position: absolute;
                 padding: 23px 5px 0 5px;
                 margin-top: 1px;
-                left: 217px;
+                left: 50px;
             }
             &:nth-child(3) {
                 text-overflow: ellipsis;
@@ -98,7 +105,15 @@
                 position: absolute;
                 padding: 23px 5px 0 5px;
                 margin-top: 1px;
-                left: 424px;
+                left: 160px;
+            }
+            &:nth-child(4) {
+                text-overflow: ellipsis;
+                background-color: #f3eec0;
+                position: absolute;
+                padding: 23px 5px 0 5px;
+                margin-top: 1px;
+                left: 360px;
             }
         }
     }

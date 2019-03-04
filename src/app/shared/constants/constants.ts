@@ -1013,7 +1013,9 @@ export class GlobalConstants {
 
         AffectedPersonSelected: 'AffectedPersonSelected',
         CareMemberCreated: 'CareMemberCreated',
-        CareMemberForAllPDACreated: 'CareMemberForAllPDACreated'
+        CareMemberForAllPDACreated: 'CareMemberForAllPDACreated',
+        TemplateOnEditing: 'TemplateOnEditing',
+        TemplateOnEdited: 'TemplateOnEdited'
     };
 
     public static NotificationConstant = {

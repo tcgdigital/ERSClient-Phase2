@@ -18,6 +18,7 @@
         <table responsive-table-body class="fixed-column">
             <thead>
                 <tr>
+                    <th>Edit</th>
                     <th>User Id</th>
                     <th>Name</th>
                     <th>Email</th>
@@ -33,7 +34,7 @@
                     <th>NOK Details</th>
                     <th>Active Indicator</th>
                     <th>Volunteer Indicator</th>
-                    <th>Edit</th>
+                    <!-- <th>Edit</th> -->
                 </tr>
             </thead>
             <tbody>
@@ -50,6 +51,7 @@
         <table responsive-table-body class="fixed-column">
             <thead>
                 <tr>
+                    <th>Edit</th>
                     <th>User Id</th>
                     <th>Name</th>
                     <th>Email</th>
@@ -65,7 +67,7 @@
                     <th>NOK Details</th>
                     <th>Active Indicator</th>
                     <th>Volunteer Indicator</th>
-                    <th>Edit</th>
+                    <!-- <th>Edit</th> -->
                 </tr>
             </thead>
             <tbody>
@@ -73,6 +75,9 @@
                     <td colspan="16" class="non-frozen">No records found.</td>
                 </tr>
                 <tr *ngFor="let userprofile of userProfiles">
+                    <td data-title="Edit">
+                        <i class="fa fa-edit fa-2x" (click)="UpdateUserProfile(userprofile)"></i>
+                    </td>
                     <td data-title="User Id" title="{{userprofile.UserId}}">
                         {{userprofile.UserId}}&nbsp;
                     </td>
@@ -148,9 +153,9 @@
                             aria-label="ActiveFlag">
                         </md-checkbox>
                     </td>
-                    <td data-title="Edit">
+                    <!-- <td data-title="Edit">
                         <i class="fa fa-edit fa-2x" (click)="UpdateUserProfile(userprofile)"></i>
-                    </td>
+                    </td> -->
                 </tr>
             </tbody>
         </table>

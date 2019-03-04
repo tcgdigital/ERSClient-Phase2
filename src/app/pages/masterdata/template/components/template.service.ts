@@ -60,4 +60,11 @@ export class TemplateService
         .Filter(`EmergencySituationId eq ${emergencySituationId}`)
         .Execute();
     }
+
+    GetTemplateDetail(templateId: number): Observable<ResponseModel<TemplateModel>>{
+        return this._dataService.Query()
+        .Filter(`TemplateMediaId eq CMS.DataModel.Enum.TemplateMediaType'Email' and TemplateId eq ${templateId}`)
+            .Expand("EmergencySituation")
+            .Execute();
+    }
 }
