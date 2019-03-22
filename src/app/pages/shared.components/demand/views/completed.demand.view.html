@@ -55,13 +55,13 @@
                         <td data-title="Accept">
                             <md-checkbox [disabled]="isArchive" *ngIf="isShowAcceptRejectDemand | accesibility:currentDepartmentId:'AcceptRejectDemand'"
                                 class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsClosed" [disabled]="demand.IsRejected"
-                                aria-label="Done">
+                                aria-label="Done" [checked]='demand.IsClosed' (change)="myFunction('Accept',demand)">
                             </md-checkbox>
                         </td>
                         <td data-title="Reject">
                             <md-checkbox [disabled]="isArchive" *ngIf="isShowAcceptRejectDemand | accesibility:currentDepartmentId:'AcceptRejectDemand'"
                                 class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsRejected" [disabled]="demand.IsClosed"
-                                aria-label="Done">
+                                aria-label="Done" [checked]='demand.IsRejected' (change)="myFunction('Reject',demand)">
                             </md-checkbox>
                         </td>
                     </tr>

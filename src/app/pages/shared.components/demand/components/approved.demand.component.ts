@@ -331,4 +331,25 @@ export class ApprovedDemandComponent implements OnInit, OnDestroy, AfterContentI
         this.getDemandsForApproval(this.currentDepartmentId, this.currentIncidentId);
         this.currentDepartmentName = department.Key;
     }
+   
+    public myFunction(status: string, demand: DemandModelToView): void {
+        if (status == 'Approve') {
+            if (demand.IsApproved) {
+                demand.IsApproved = true;
+                demand.IsRejected = false;
+            }
+            else {
+                demand.IsRejected = false;
+            }
+        }
+        else if (status == 'Reject') {
+            if (demand.IsRejected) {
+                demand.IsRejected = true;
+                demand.IsApproved = false;
+            }
+            else {
+                demand.IsRejected = false;
+            }
+        }
+    }
 }

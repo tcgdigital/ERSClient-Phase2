@@ -345,4 +345,25 @@ export class CompletedDemandComponent implements OnInit, OnDestroy {
         this.getCompletedDemands(this.currentDepartmentId, this.currentIncidentId);
         this.getCurrentDepartmentName(this.currentDepartmentId);
     }
+
+    public myFunction(status: string, demand: DemandModelToView): void {
+        if (status == 'Accept') {
+            if (demand.IsClosed) {
+                demand.IsClosed = true;
+                demand.IsRejected = false;
+            }
+            else {
+                demand.IsClosed = false;
+            }
+        }
+        else if (status == 'Reject') {
+            if (demand.IsRejected) {
+                demand.IsRejected = true;
+                demand.IsClosed = false;
+            }
+            else {
+                demand.IsRejected = false;
+            }
+        }
+    }
 }
