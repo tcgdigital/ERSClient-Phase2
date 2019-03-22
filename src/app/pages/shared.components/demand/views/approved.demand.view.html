@@ -54,12 +54,12 @@
                         </td>
                         <td data-title="Approve">
                             <md-checkbox *ngIf="!isArchive" class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsApproved" [disabled]="demand.IsRejected"
-                                aria-label="Done">
+                                aria-label="Done" [checked]='demand.IsApproved' (change)="myFunction('Approve',demand)">
                             </md-checkbox>
                         </td>
                         <td data-title="Reject">
                             <md-checkbox *ngIf="!isArchive" class="Marght" id="Done" name="Done" [(ngModel)]="demand.IsRejected" [disabled]="demand.IsApproved"
-                                aria-label="Done">
+                                aria-label="Done" [checked]='demand.IsRejected' (change)="myFunction('Reject',demand)">
                             </md-checkbox>
                         </td>
                     </tr>
